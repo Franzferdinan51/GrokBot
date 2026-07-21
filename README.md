@@ -2,15 +2,15 @@
 
 <p align="center">
     <picture>
-        <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/grokbot/grokbot/main/docs/assets/grokbot-banner-light.png">
-        <img src="https://raw.githubusercontent.com/grokbot/grokbot/main/docs/assets/grokbot-banner-dark.png" alt="GrokBot — EXFOLIATE! EXFOLIATE! Your personal AI assistant, running on your own devices.">
+        <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/Franzferdinan51/GrokBot/main/docs/assets/grokbot-banner-light.png">
+        <img src="https://raw.githubusercontent.com/Franzferdinan51/GrokBot/main/docs/assets/grokbot-banner-dark.png" alt="GrokBot — EXFOLIATE! EXFOLIATE! Your personal AI assistant, running on your own devices.">
     </picture>
 </p>
 
 <p align="center">
-  <a href="https://github.com/grokbot/grokbot/actions/workflows/ci.yml?branch=main"><img src="https://img.shields.io/github/actions/workflow/status/grokbot/grokbot/ci.yml?branch=main&style=for-the-badge" alt="CI status"></a>
-  <a href="https://github.com/grokbot/grokbot/releases"><img src="https://img.shields.io/github/v/release/grokbot/grokbot?include_prereleases&style=for-the-badge" alt="GitHub release"></a>
-  <a href="https://discord.gg/clawd"><img src="https://img.shields.io/discord/1456350064065904867?label=Discord&logo=discord&logoColor=white&color=5865F2&style=for-the-badge" alt="Discord"></a>
+  <a href="https://github.com/Franzferdinan51/GrokBot/actions/workflows/ci.yml?branch=main"><img src="https://img.shields.io/github/actions/workflow/status/Franzferdinan51/GrokBot/ci.yml?branch=main&style=for-the-badge" alt="CI status"></a>
+  <a href="https://github.com/Franzferdinan51/GrokBot/releases"><img src="https://img.shields.io/github/v/release/Franzferdinan51/GrokBot?include_prereleases&style=for-the-badge" alt="GitHub release"></a>
+  <a href="https://TODO-DISCORD-INVITE"><img src="https://img.shields.io/discord/1456350064065904867?label=Discord&logo=discord&logoColor=white&color=5865F2&style=for-the-badge" alt="Discord"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge" alt="MIT License"></a>
 </p>
 
@@ -21,7 +21,7 @@ If you want a personal, single-user assistant that feels local, fast, and always
 
 Supported channels include: WhatsApp, Telegram, Slack, Discord, Google Chat, Signal, iMessage, IRC, Microsoft Teams, Matrix, Feishu, LINE, Mattermost, Nextcloud Talk, Nostr, Synology Chat, Tlon, Twitch, Zalo, Zalo Personal, WeChat, QQ, WebChat.
 
-[Website](https://grokbot.ai) · [Docs](https://docs.grokbot.ai) · [Vision](VISION.md) · [Third-party notices](THIRD_PARTY_NOTICES.md) · [DeepWiki](https://deepwiki.com/grokbot/grokbot) · [Getting Started](https://docs.grokbot.ai/start/getting-started) · [Updating](https://docs.grokbot.ai/install/updating) · [Showcase](https://docs.grokbot.ai/start/showcase) · [FAQ](https://docs.grokbot.ai/help/faq) · [Onboarding](https://docs.grokbot.ai/start/wizard) · [Nix](https://github.com/grokbot/nix-grokbot) · [Docker](https://docs.grokbot.ai/install/docker) · [Discord](https://discord.gg/clawd)
+[Website](https://grokbot.ai) · [Docs](https://docs.grokbot.ai) · [Vision](VISION.md) · [Third-party notices](THIRD_PARTY_NOTICES.md) · [DeepWiki](https://deepwiki.com/grokbot/grokbot) · [Getting Started](https://docs.grokbot.ai/start/getting-started) · [Updating](https://docs.grokbot.ai/install/updating) · [Showcase](https://docs.grokbot.ai/start/showcase) · [FAQ](https://docs.grokbot.ai/help/faq) · [Onboarding](https://docs.grokbot.ai/start/wizard) · [Nix](https://github.com/grokbot/nix-grokbot) · [Docker](https://docs.grokbot.ai/install/docker) · [Discord](https://TODO-DISCORD-INVITE)
 
 New install? Start here: [Getting started](https://docs.grokbot.ai/start/getting-started)
 
@@ -169,7 +169,7 @@ root is not a supported source setup.
 For the dev loop:
 
 ```bash
-git clone https://github.com/grokbot/grokbot.git
+git clone https://github.com/Franzferdinan51/GrokBot.git
 cd grokbot
 
 pnpm install
@@ -241,8 +241,8 @@ by Peter Steinberger and the community.
 ## Community
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines, maintainers, and how to submit PRs.
-Use the [issue chooser](https://github.com/grokbot/grokbot/issues/new/choose) for bugs, docs bugs, and feature requests;
-ask setup/support questions in [Discord](https://discord.gg/clawd); and report vulnerabilities through [SECURITY.md](SECURITY.md).
+Use the [issue chooser](https://github.com/Franzferdinan51/GrokBot/issues/new/choose) for bugs, docs bugs, and feature requests;
+ask setup/support questions in [Discord](https://TODO-DISCORD-INVITE); and report vulnerabilities through [SECURITY.md](SECURITY.md).
 PRs should link the relevant issue when possible and follow the [PR template](.github/pull_request_template.md) with problem, impact, and evidence.
 AI/vibe-coded PRs welcome! 🤖
 
