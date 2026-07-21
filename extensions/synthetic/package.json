@@ -1,0 +1,15 @@
+{
+  "name": "@grokbot/synthetic-provider",
+  "version": "2026.7.2",
+  "private": true,
+  "description": "GrokBot Synthetic provider plugin",
+  "type": "module",
+  "devDependencies": {
+    "@grokbot/plugin-sdk": "workspace:*"
+  },
+  "grokbot": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

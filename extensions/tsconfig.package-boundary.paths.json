@@ -1,0 +1,858 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "paths": {
+      "grokbot/plugin-sdk/*": [
+        "../dist/plugin-sdk/*.d.ts"
+      ],
+      "grokbot/plugin-sdk/provider-setup": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/provider-setup.d.ts"
+      ],
+      "grokbot/plugin-sdk/sandbox": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/sandbox.d.ts"
+      ],
+      "grokbot/plugin-sdk/runtime-doctor": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/runtime-doctor.d.ts"
+      ],
+      "grokbot/plugin-sdk/approval-reference-runtime": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/approval-reference-runtime.d.ts"
+      ],
+      "grokbot/plugin-sdk/approval-reaction-runtime": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/approval-reaction-runtime.d.ts"
+      ],
+      "grokbot/plugin-sdk/cron-store-runtime": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/cron-store-runtime.d.ts"
+      ],
+      "grokbot/plugin-sdk/json-schema-runtime": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/json-schema-runtime.d.ts"
+      ],
+      "grokbot/plugin-sdk/json-unsafe-integers": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/json-unsafe-integers.d.ts"
+      ],
+      "grokbot/plugin-sdk/reply-reference": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/reply-reference.d.ts"
+      ],
+      "grokbot/plugin-sdk/reply-payload-testing": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/reply-payload-testing.d.ts"
+      ],
+      "grokbot/plugin-sdk/outbound-media": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/outbound-media.d.ts"
+      ],
+      "grokbot/plugin-sdk/pair-loop-guard-runtime": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/pair-loop-guard-runtime.d.ts"
+      ],
+      "grokbot/plugin-sdk/poll-runtime": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/poll-runtime.d.ts"
+      ],
+      "grokbot/plugin-sdk/async-lock-runtime": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/async-lock-runtime.d.ts"
+      ],
+      "grokbot/plugin-sdk/channel-activity-runtime": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/channel-activity-runtime.d.ts"
+      ],
+      "grokbot/plugin-sdk/concurrency-runtime": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/concurrency-runtime.d.ts"
+      ],
+      "grokbot/plugin-sdk/delivery-queue-runtime": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/delivery-queue-runtime.d.ts"
+      ],
+      "grokbot/plugin-sdk/file-access-runtime": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/file-access-runtime.d.ts"
+      ],
+      "grokbot/plugin-sdk/heartbeat-runtime": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/heartbeat-runtime.d.ts"
+      ],
+      "grokbot/plugin-sdk/expect-runtime": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/expect-runtime.d.ts"
+      ],
+      "grokbot/plugin-sdk/number-runtime": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/number-runtime.d.ts"
+      ],
+      "grokbot/plugin-sdk/secure-random-runtime": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/secure-random-runtime.d.ts"
+      ],
+      "grokbot/plugin-sdk/system-event-runtime": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/system-event-runtime.d.ts"
+      ],
+      "grokbot/plugin-sdk/transport-ready-runtime": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/transport-ready-runtime.d.ts"
+      ],
+      "grokbot/plugin-sdk/exec-approvals-runtime": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/exec-approvals-runtime.d.ts"
+      ],
+      "grokbot/plugin-sdk/talk-config-runtime": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/talk-config-runtime.d.ts"
+      ],
+      "grokbot/plugin-sdk/ssrf-runtime-internal": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/ssrf-runtime-internal.d.ts"
+      ],
+      "grokbot/plugin-sdk/embedding-providers": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/embedding-providers.d.ts"
+      ],
+      "grokbot/plugin-sdk/media-generation-runtime": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/media-generation-runtime.d.ts"
+      ],
+      "grokbot/plugin-sdk/conversation-binding-runtime": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/conversation-binding-runtime.d.ts"
+      ],
+      "grokbot/plugin-sdk/thread-bindings-runtime": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/thread-bindings-runtime.d.ts"
+      ],
+      "grokbot/plugin-sdk/thread-bindings-session-runtime": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/thread-bindings-session-runtime.d.ts"
+      ],
+      "grokbot/plugin-sdk/simple-completion-runtime": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/simple-completion-runtime.d.ts"
+      ],
+      "grokbot/plugin-sdk/speech-core": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/speech-core.d.ts"
+      ],
+      "grokbot/plugin-sdk/tts-runtime": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/tts-runtime.d.ts"
+      ],
+      "grokbot/plugin-sdk/channel-secret-tts-runtime": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/channel-secret-tts-runtime.d.ts"
+      ],
+      "grokbot/plugin-sdk/secret-file-runtime": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/secret-file-runtime.d.ts"
+      ],
+      "grokbot/plugin-sdk/cli-runtime": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/cli-runtime.d.ts"
+      ],
+      "grokbot/plugin-sdk/cli-backend": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/cli-backend.d.ts"
+      ],
+      "grokbot/plugin-sdk/codex-mcp-projection": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/codex-mcp-projection.d.ts"
+      ],
+      "grokbot/plugin-sdk/codex-native-task-runtime": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/codex-native-task-runtime.d.ts"
+      ],
+      "grokbot/plugin-sdk/agent-harness-task-runtime": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/agent-harness-task-runtime.d.ts"
+      ],
+      "grokbot/plugin-sdk/agent-harness-exec-review-runtime": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/agent-harness-exec-review-runtime.d.ts"
+      ],
+      "grokbot/plugin-sdk/agent-harness-tool-runtime": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/agent-harness-tool-runtime.d.ts"
+      ],
+      "grokbot/plugin-sdk/html-entity-runtime": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/html-entity-runtime.d.ts"
+      ],
+      "grokbot/plugin-sdk/host-runtime": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/host-runtime.d.ts"
+      ],
+      "grokbot/plugin-sdk/types": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/types.d.ts"
+      ],
+      "grokbot/plugin-sdk/process-runtime": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/process-runtime.d.ts"
+      ],
+      "grokbot/plugin-sdk/windows-spawn": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/windows-spawn.d.ts"
+      ],
+      "grokbot/plugin-sdk/acp-runtime": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/acp-runtime.d.ts"
+      ],
+      "grokbot/plugin-sdk/acp-runtime-backend": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/acp-runtime-backend.d.ts"
+      ],
+      "grokbot/plugin-sdk/acp-binding-runtime": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/acp-binding-runtime.d.ts"
+      ],
+      "grokbot/plugin-sdk/acp-binding-resolve-runtime": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/acp-binding-resolve-runtime.d.ts"
+      ],
+      "grokbot/plugin-sdk/agent-runtime-test-contracts": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/agent-runtime-test-contracts.d.ts"
+      ],
+      "grokbot/plugin-sdk/channel-target-testing": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/channel-target-testing.d.ts"
+      ],
+      "grokbot/plugin-sdk/channel-test-helpers": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/channel-test-helpers.d.ts"
+      ],
+      "grokbot/plugin-sdk/plugin-test-api": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/plugin-test-api.d.ts"
+      ],
+      "grokbot/plugin-sdk/plugin-test-contracts": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/plugin-test-contracts.d.ts"
+      ],
+      "grokbot/plugin-sdk/plugin-test-runtime": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/plugin-test-runtime.d.ts"
+      ],
+      "grokbot/plugin-sdk/provider-http-test-mocks": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/provider-http-test-mocks.d.ts"
+      ],
+      "grokbot/plugin-sdk/provider-test-contracts": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/provider-test-contracts.d.ts"
+      ],
+      "grokbot/plugin-sdk/test-env": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/test-env.d.ts"
+      ],
+      "grokbot/plugin-sdk/test-fixtures": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/test-fixtures.d.ts"
+      ],
+      "grokbot/plugin-sdk/test-live": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/test-live.d.ts"
+      ],
+      "grokbot/plugin-sdk/test-live-auth": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/test-live-auth.d.ts"
+      ],
+      "grokbot/plugin-sdk/test-media-generation": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/test-media-generation.d.ts"
+      ],
+      "grokbot/plugin-sdk/test-media-understanding": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/test-media-understanding.d.ts"
+      ],
+      "grokbot/plugin-sdk/test-node-mocks": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/test-node-mocks.d.ts"
+      ],
+      "grokbot/plugin-sdk/time-runtime": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/time-runtime.d.ts"
+      ],
+      "grokbot/plugin-sdk/migration": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/migration.d.ts"
+      ],
+      "grokbot/plugin-sdk/migration-runtime": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/migration-runtime.d.ts"
+      ],
+      "grokbot/plugin-sdk/plugin-state-runtime": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/plugin-state-runtime.d.ts"
+      ],
+      "grokbot/plugin-sdk/plugin-state-test-runtime": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/plugin-state-test-runtime.d.ts"
+      ],
+      "grokbot/plugin-sdk/markdown-table-runtime": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/markdown-table-runtime.d.ts"
+      ],
+      "grokbot/plugin-sdk/account-resolution-runtime": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/account-resolution-runtime.d.ts"
+      ],
+      "grokbot/plugin-sdk/access-groups": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/access-groups.d.ts"
+      ],
+      "grokbot/plugin-sdk/browser-config": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/browser-config.d.ts"
+      ],
+      "grokbot/plugin-sdk/channel-contract-testing": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/channel-contract-testing.d.ts"
+      ],
+      "grokbot/plugin-sdk/dangerous-name-runtime": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/dangerous-name-runtime.d.ts"
+      ],
+      "grokbot/plugin-sdk/command-status-runtime": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/command-status-runtime.d.ts"
+      ],
+      "grokbot/plugin-sdk/command-surface": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/command-surface.d.ts"
+      ],
+      "grokbot/plugin-sdk/direct-dm-guard-policy": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/direct-dm-guard-policy.d.ts"
+      ],
+      "grokbot/plugin-sdk/channel-config-writes": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/channel-config-writes.d.ts"
+      ],
+      "grokbot/plugin-sdk/bundled-channel-config-schema": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/bundled-channel-config-schema.d.ts"
+      ],
+      "grokbot/plugin-sdk/chat-channel-ids": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/chat-channel-ids.d.ts"
+      ],
+      "grokbot/plugin-sdk/channel-mention-gating": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/channel-mention-gating.d.ts"
+      ],
+      "grokbot/plugin-sdk/channel-route": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/channel-route.d.ts"
+      ],
+      "grokbot/plugin-sdk/channel-targets": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/channel-targets.d.ts"
+      ],
+      "grokbot/plugin-sdk/context-visibility-runtime": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/context-visibility-runtime.d.ts"
+      ],
+      "grokbot/plugin-sdk/file-lock": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/file-lock.d.ts"
+      ],
+      "grokbot/plugin-sdk/fetch-runtime": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/fetch-runtime.d.ts"
+      ],
+      "grokbot/plugin-sdk/runtime-fetch": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/runtime-fetch.d.ts"
+      ],
+      "grokbot/plugin-sdk/inline-image-data-url-runtime": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/inline-image-data-url-runtime.d.ts"
+      ],
+      "grokbot/plugin-sdk/node-host": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/node-host.d.ts"
+      ],
+      "grokbot/plugin-sdk/response-limit-runtime": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/response-limit-runtime.d.ts"
+      ],
+      "grokbot/plugin-sdk/session-binding-runtime": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/session-binding-runtime.d.ts"
+      ],
+      "grokbot/plugin-sdk/session-catalog": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/session-catalog.d.ts"
+      ],
+      "grokbot/plugin-sdk/session-key-runtime": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/session-key-runtime.d.ts"
+      ],
+      "grokbot/plugin-sdk/session-transcript-runtime": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/session-transcript-runtime.d.ts"
+      ],
+      "grokbot/plugin-sdk/sqlite-runtime": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/sqlite-runtime.d.ts"
+      ],
+      "grokbot/plugin-sdk/sqlite-runtime-testing": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/sqlite-runtime-testing.d.ts"
+      ],
+      "grokbot/plugin-sdk/session-transcript-hit": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/session-transcript-hit.d.ts"
+      ],
+      "grokbot/plugin-sdk/session-visibility": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/session-visibility.d.ts"
+      ],
+      "grokbot/plugin-sdk/ssrf-dispatcher": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/ssrf-dispatcher.d.ts"
+      ],
+      "grokbot/plugin-sdk/group-activation": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/group-activation.d.ts"
+      ],
+      "grokbot/plugin-sdk/global-singleton": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/global-singleton.d.ts"
+      ],
+      "grokbot/plugin-sdk/directory-config-runtime": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/directory-config-runtime.d.ts"
+      ],
+      "grokbot/plugin-sdk/image-generation": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/image-generation.d.ts"
+      ],
+      "grokbot/plugin-sdk/image-generation-runtime": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/image-generation-runtime.d.ts"
+      ],
+      "grokbot/plugin-sdk/image-generation-core": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/image-generation-core.d.ts"
+      ],
+      "grokbot/plugin-sdk/music-generation": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/music-generation.d.ts"
+      ],
+      "grokbot/plugin-sdk/video-generation": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/video-generation.d.ts"
+      ],
+      "grokbot/plugin-sdk/video-generation-runtime": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/video-generation-runtime.d.ts"
+      ],
+      "grokbot/plugin-sdk/video-generation-core": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/video-generation-core.d.ts"
+      ],
+      "grokbot/plugin-sdk/realtime-transcription": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/realtime-transcription.d.ts"
+      ],
+      "grokbot/plugin-sdk/realtime-bootstrap-context": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/realtime-bootstrap-context.d.ts"
+      ],
+      "grokbot/plugin-sdk/realtime-voice": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/realtime-voice.d.ts"
+      ],
+      "grokbot/plugin-sdk/transcripts": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/transcripts.d.ts"
+      ],
+      "grokbot/plugin-sdk/request-url": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/request-url.d.ts"
+      ],
+      "grokbot/plugin-sdk/keyed-async-queue": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/keyed-async-queue.d.ts"
+      ],
+      "grokbot/plugin-sdk/qa-runner-runtime": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/qa-runner-runtime.d.ts"
+      ],
+      "grokbot/plugin-sdk/memory-core-host-embedding-registry": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/memory-core-host-embedding-registry.d.ts"
+      ],
+      "grokbot/plugin-sdk/memory-core-host-engine-embeddings": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/memory-core-host-engine-embeddings.d.ts"
+      ],
+      "grokbot/plugin-sdk/memory-core-host-engine-qmd": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/memory-core-host-engine-qmd.d.ts"
+      ],
+      "grokbot/plugin-sdk/memory-core-host-engine-storage": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/memory-core-host-engine-storage.d.ts"
+      ],
+      "grokbot/plugin-sdk/memory-core-host-secret": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/memory-core-host-secret.d.ts"
+      ],
+      "grokbot/plugin-sdk/memory-core-host-status": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/memory-core-host-status.d.ts"
+      ],
+      "grokbot/plugin-sdk/memory-core-host-runtime-cli": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/memory-core-host-runtime-cli.d.ts"
+      ],
+      "grokbot/plugin-sdk/memory-core-host-runtime-core": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/memory-core-host-runtime-core.d.ts"
+      ],
+      "grokbot/plugin-sdk/memory-core-host-runtime-files": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/memory-core-host-runtime-files.d.ts"
+      ],
+      "grokbot/plugin-sdk/memory-host-events": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/memory-host-events.d.ts"
+      ],
+      "grokbot/plugin-sdk/memory-host-markdown": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/memory-host-markdown.d.ts"
+      ],
+      "grokbot/plugin-sdk/memory-host-search": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/memory-host-search.d.ts"
+      ],
+      "grokbot/plugin-sdk/message-tool-delivery-hints": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/message-tool-delivery-hints.d.ts"
+      ],
+      "grokbot/plugin-sdk/provider-oauth-runtime": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/provider-oauth-runtime.d.ts"
+      ],
+      "grokbot/plugin-sdk/provider-auth-runtime": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/provider-auth-runtime.d.ts"
+      ],
+      "grokbot/plugin-sdk/provider-auth-login-flow-runtime": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/provider-auth-login-flow-runtime.d.ts"
+      ],
+      "grokbot/plugin-sdk/provider-auth-api-key": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/provider-auth-api-key.d.ts"
+      ],
+      "grokbot/plugin-sdk/provider-auth-result": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/provider-auth-result.d.ts"
+      ],
+      "grokbot/plugin-sdk/provider-selection-runtime": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/provider-selection-runtime.d.ts"
+      ],
+      "grokbot/plugin-sdk/provider-catalog-live-runtime": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/provider-catalog-live-runtime.d.ts"
+      ],
+      "grokbot/plugin-sdk/provider-catalog-shared": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/provider-catalog-shared.d.ts"
+      ],
+      "grokbot/plugin-sdk/provider-entry": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/provider-entry.d.ts"
+      ],
+      "grokbot/plugin-sdk/provider-env-vars": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/provider-env-vars.d.ts"
+      ],
+      "grokbot/plugin-sdk/provider-http": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/provider-http.d.ts"
+      ],
+      "grokbot/plugin-sdk/provider-model-types": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/provider-model-types.d.ts"
+      ],
+      "grokbot/plugin-sdk/provider-model-shared": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/provider-model-shared.d.ts"
+      ],
+      "grokbot/plugin-sdk/provider-onboard": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/provider-onboard.d.ts"
+      ],
+      "grokbot/plugin-sdk/provider-stream-family": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/provider-stream-family.d.ts"
+      ],
+      "grokbot/plugin-sdk/provider-stream-shared": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/provider-stream-shared.d.ts"
+      ],
+      "grokbot/plugin-sdk/provider-transport-runtime": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/provider-transport-runtime.d.ts"
+      ],
+      "grokbot/plugin-sdk/provider-stream": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/provider-stream.d.ts"
+      ],
+      "grokbot/plugin-sdk/provider-tools": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/provider-tools.d.ts"
+      ],
+      "grokbot/plugin-sdk/provider-usage": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/provider-usage.d.ts"
+      ],
+      "grokbot/plugin-sdk/document-extractor": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/document-extractor.d.ts"
+      ],
+      "grokbot/plugin-sdk/web-content-extractor": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/web-content-extractor.d.ts"
+      ],
+      "grokbot/plugin-sdk/provider-web-fetch-contract": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/provider-web-fetch-contract.d.ts"
+      ],
+      "grokbot/plugin-sdk/provider-web-fetch": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/provider-web-fetch.d.ts"
+      ],
+      "grokbot/plugin-sdk/provider-web-search-config-contract": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/provider-web-search-config-contract.d.ts"
+      ],
+      "grokbot/plugin-sdk/provider-web-search-contract": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/provider-web-search-contract.d.ts"
+      ],
+      "grokbot/plugin-sdk/provider-web-search": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/provider-web-search.d.ts"
+      ],
+      "grokbot/plugin-sdk/retry-runtime": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/retry-runtime.d.ts"
+      ],
+      "grokbot/plugin-sdk/speech": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/speech.d.ts"
+      ],
+      "grokbot/plugin-sdk/string-normalization-runtime": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/string-normalization-runtime.d.ts"
+      ],
+      "grokbot/plugin-sdk/target-resolver-runtime": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/target-resolver-runtime.d.ts"
+      ],
+      "grokbot/plugin-sdk/text-autolink-runtime": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/text-autolink-runtime.d.ts"
+      ],
+      "grokbot/plugin-sdk/text-utility-runtime": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/text-utility-runtime.d.ts"
+      ],
+      "grokbot/plugin-sdk/tool-payload": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/tool-payload.d.ts"
+      ],
+      "grokbot/plugin-sdk/tool-results": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/tool-results.d.ts"
+      ],
+      "grokbot/plugin-sdk/webhook-targets": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/webhook-targets.d.ts"
+      ],
+      "grokbot/plugin-sdk/agent-core": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/agent-core.d.ts"
+      ],
+      "grokbot/plugin-sdk/agent-sessions": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/agent-sessions.d.ts"
+      ],
+      "grokbot/plugin-sdk/llm": [
+        "../packages/plugin-sdk/dist/src/plugin-sdk/llm.d.ts"
+      ],
+      "grokbot/plugin-sdk/account-id": [
+        "../dist/plugin-sdk/account-id.d.ts"
+      ],
+      "grokbot/plugin-sdk/channel-entry-contract": [
+        "../dist/plugin-sdk/channel-entry-contract.d.ts"
+      ],
+      "grokbot/plugin-sdk/browser-maintenance": [
+        "../packages/plugin-sdk/dist/extensions/browser/browser-maintenance.d.ts"
+      ],
+      "grokbot/plugin-sdk/channel-secret-basic-runtime": [
+        "../dist/plugin-sdk/channel-secret-basic-runtime.d.ts"
+      ],
+      "grokbot/plugin-sdk/channel-secret-runtime": [
+        "../dist/plugin-sdk/channel-secret-runtime.d.ts"
+      ],
+      "grokbot/plugin-sdk/channel-streaming": [
+        "../dist/plugin-sdk/channel-streaming.d.ts"
+      ],
+      "grokbot/plugin-sdk/error-runtime": [
+        "../dist/plugin-sdk/error-runtime.d.ts"
+      ],
+      "grokbot/plugin-sdk/secret-ref-runtime": [
+        "../dist/plugin-sdk/secret-ref-runtime.d.ts"
+      ],
+      "grokbot/plugin-sdk/ssrf-runtime": [
+        "../dist/plugin-sdk/ssrf-runtime.d.ts"
+      ],
+      "@grokbot/qa-channel/api.js": [
+        "../dist/plugin-sdk/extensions/qa-channel/api.d.ts"
+      ],
+      "@grokbot/matrix/test-api.js": [
+        "../dist/plugin-sdk/extensions/matrix/test-api.d.ts"
+      ],
+      "@grokbot/discord/api.js": [
+        "../dist/plugin-sdk/extensions/discord/api.d.ts"
+      ],
+      "@grokbot/slack/api.js": [
+        "../dist/plugin-sdk/extensions/slack/api.d.ts"
+      ],
+      "@grokbot/telegram/api.js": [
+        "../dist/plugin-sdk/extensions/telegram/api.d.ts"
+      ],
+      "@grokbot/whatsapp/api.js": [
+        "../dist/plugin-sdk/extensions/whatsapp/api.d.ts"
+      ],
+      "@grokbot/ai": [
+        "../dist/plugin-sdk/packages/ai/src/index.d.ts"
+      ],
+      "@grokbot/ai/diagnostics": [
+        "../dist/plugin-sdk/packages/ai/src/utils/diagnostics.d.ts"
+      ],
+      "@grokbot/ai/event-stream": [
+        "../dist/plugin-sdk/packages/ai/src/utils/event-stream.d.ts"
+      ],
+      "@grokbot/ai/providers": [
+        "../dist/plugin-sdk/packages/ai/src/providers.d.ts"
+      ],
+      "@grokbot/ai/types": [
+        "../dist/plugin-sdk/packages/ai/src/types.d.ts"
+      ],
+      "@grokbot/ai/validation": [
+        "../dist/plugin-sdk/packages/ai/src/validation.d.ts"
+      ],
+      "@grokbot/ai/internal/*": [
+        "../dist/plugin-sdk/packages/ai/src/internal/*.d.ts"
+      ],
+      "@grokbot/llm-core": [
+        "../dist/plugin-sdk/packages/llm-core/src/index.d.ts"
+      ],
+      "@grokbot/llm-core/diagnostics": [
+        "../dist/plugin-sdk/packages/llm-core/src/utils/diagnostics.d.ts"
+      ],
+      "@grokbot/llm-core/event-stream": [
+        "../dist/plugin-sdk/packages/llm-core/src/utils/event-stream.d.ts"
+      ],
+      "@grokbot/llm-core/types": [
+        "../dist/plugin-sdk/packages/llm-core/src/types.d.ts"
+      ],
+      "@grokbot/llm-core/validation": [
+        "../dist/plugin-sdk/packages/llm-core/src/validation.d.ts"
+      ],
+      "@grokbot/llm-core/*": [
+        "../dist/plugin-sdk/packages/llm-core/src/*.d.ts"
+      ],
+      "@grokbot/model-catalog-core": [
+        "../dist/plugin-sdk/packages/model-catalog-core/src/index.d.ts"
+      ],
+      "@grokbot/model-catalog-core/configured-model-refs": [
+        "../dist/plugin-sdk/packages/model-catalog-core/src/configured-model-refs.d.ts"
+      ],
+      "@grokbot/model-catalog-core/model-catalog-refs": [
+        "../dist/plugin-sdk/packages/model-catalog-core/src/model-catalog-refs.d.ts"
+      ],
+      "@grokbot/model-catalog-core/model-catalog-normalize": [
+        "../dist/plugin-sdk/packages/model-catalog-core/src/model-catalog-normalize.d.ts"
+      ],
+      "@grokbot/model-catalog-core/model-catalog-types": [
+        "../dist/plugin-sdk/packages/model-catalog-core/src/model-catalog-types.d.ts"
+      ],
+      "@grokbot/model-catalog-core/provider-id": [
+        "../dist/plugin-sdk/packages/model-catalog-core/src/provider-id.d.ts"
+      ],
+      "@grokbot/model-catalog-core/provider-model-id-normalization": [
+        "../dist/plugin-sdk/packages/model-catalog-core/src/provider-model-id-normalization.d.ts"
+      ],
+      "@grokbot/model-catalog-core/provider-model-id-normalize": [
+        "../dist/plugin-sdk/packages/model-catalog-core/src/provider-model-id-normalize.d.ts"
+      ],
+      "@grokbot/model-catalog-core/*": [
+        "../dist/plugin-sdk/packages/model-catalog-core/src/*.d.ts"
+      ],
+      "@grokbot/markdown-core": [
+        "../dist/plugin-sdk/packages/markdown-core/src/index.d.ts"
+      ],
+      "@grokbot/markdown-core/code-spans": [
+        "../dist/plugin-sdk/packages/markdown-core/src/code-spans.d.ts"
+      ],
+      "@grokbot/markdown-core/fences": [
+        "../dist/plugin-sdk/packages/markdown-core/src/fences.d.ts"
+      ],
+      "@grokbot/markdown-core/frontmatter": [
+        "../dist/plugin-sdk/packages/markdown-core/src/frontmatter.d.ts"
+      ],
+      "@grokbot/markdown-core/ir": [
+        "../dist/plugin-sdk/packages/markdown-core/src/ir.d.ts"
+      ],
+      "@grokbot/markdown-core/render": [
+        "../dist/plugin-sdk/packages/markdown-core/src/render.d.ts"
+      ],
+      "@grokbot/markdown-core/render-aware-chunking": [
+        "../dist/plugin-sdk/packages/markdown-core/src/render-aware-chunking.d.ts"
+      ],
+      "@grokbot/markdown-core/tables": [
+        "../dist/plugin-sdk/packages/markdown-core/src/tables.d.ts"
+      ],
+      "@grokbot/markdown-core/types": [
+        "../dist/plugin-sdk/packages/markdown-core/src/types.d.ts"
+      ],
+      "@grokbot/markdown-core/*": [
+        "../dist/plugin-sdk/packages/markdown-core/src/*.d.ts"
+      ],
+      "@grokbot/media-generation-core": [
+        "../dist/plugin-sdk/packages/media-generation-core/src/index.d.ts"
+      ],
+      "@grokbot/media-generation-core/capability-model-ref": [
+        "../dist/plugin-sdk/packages/media-generation-core/src/capability-model-ref.d.ts"
+      ],
+      "@grokbot/media-generation-core/catalog": [
+        "../dist/plugin-sdk/packages/media-generation-core/src/catalog.d.ts"
+      ],
+      "@grokbot/media-generation-core/model-ref": [
+        "../dist/plugin-sdk/packages/media-generation-core/src/model-ref.d.ts"
+      ],
+      "@grokbot/media-generation-core/normalization": [
+        "../dist/plugin-sdk/packages/media-generation-core/src/normalization.d.ts"
+      ],
+      "@grokbot/media-generation-core/*": [
+        "../dist/plugin-sdk/packages/media-generation-core/src/*.d.ts"
+      ],
+      "@grokbot/media-core": [
+        "../dist/plugin-sdk/packages/media-core/src/index.d.ts"
+      ],
+      "@grokbot/media-core/base64": [
+        "../dist/plugin-sdk/packages/media-core/src/base64.d.ts"
+      ],
+      "@grokbot/media-core/constants": [
+        "../dist/plugin-sdk/packages/media-core/src/constants.d.ts"
+      ],
+      "@grokbot/media-core/content-length": [
+        "../dist/plugin-sdk/packages/media-core/src/content-length.d.ts"
+      ],
+      "@grokbot/media-core/file-name": [
+        "../dist/plugin-sdk/packages/media-core/src/file-name.d.ts"
+      ],
+      "@grokbot/media-core/inbound-path-policy": [
+        "../dist/plugin-sdk/packages/media-core/src/inbound-path-policy.d.ts"
+      ],
+      "@grokbot/media-core/inline-image-data-url": [
+        "../dist/plugin-sdk/packages/media-core/src/inline-image-data-url.d.ts"
+      ],
+      "@grokbot/media-core/media-source-url": [
+        "../dist/plugin-sdk/packages/media-core/src/media-source-url.d.ts"
+      ],
+      "@grokbot/media-core/mime": [
+        "../dist/plugin-sdk/packages/media-core/src/mime.d.ts"
+      ],
+      "@grokbot/media-core/read-byte-stream-with-limit": [
+        "../dist/plugin-sdk/packages/media-core/src/read-byte-stream-with-limit.d.ts"
+      ],
+      "@grokbot/media-core/*": [
+        "../dist/plugin-sdk/packages/media-core/src/*.d.ts"
+      ],
+      "@grokbot/normalization-core/record-coerce": [
+        "../dist/plugin-sdk/packages/normalization-core/src/record-coerce.d.ts"
+      ],
+      "@grokbot/normalization-core/string-coerce": [
+        "../dist/plugin-sdk/packages/normalization-core/src/string-coerce.d.ts"
+      ],
+      "@grokbot/normalization-core/*": [
+        "../dist/plugin-sdk/packages/normalization-core/src/*.d.ts"
+      ],
+      "@grokbot/retry": [
+        "../dist/plugin-sdk/packages/retry/src/index.d.ts"
+      ],
+      "@grokbot/workboard-contract": [
+        "../packages/workboard-contract/src/index.ts"
+      ],
+      "@grokbot/acp-core": [
+        "../dist/plugin-sdk/packages/acp-core/src/index.d.ts"
+      ],
+      "@grokbot/acp-core/normalize-text": [
+        "../dist/plugin-sdk/packages/acp-core/src/normalize-text.d.ts"
+      ],
+      "@grokbot/acp-core/meta": [
+        "../dist/plugin-sdk/packages/acp-core/src/meta.d.ts"
+      ],
+      "@grokbot/acp-core/numeric-options": [
+        "../dist/plugin-sdk/packages/acp-core/src/numeric-options.d.ts"
+      ],
+      "@grokbot/acp-core/record-shared": [
+        "../dist/plugin-sdk/packages/acp-core/src/record-shared.d.ts"
+      ],
+      "@grokbot/acp-core/session": [
+        "../dist/plugin-sdk/packages/acp-core/src/session.d.ts"
+      ],
+      "@grokbot/acp-core/session-interaction-mode": [
+        "../dist/plugin-sdk/packages/acp-core/src/session-interaction-mode.d.ts"
+      ],
+      "@grokbot/acp-core/session-lineage-meta": [
+        "../dist/plugin-sdk/packages/acp-core/src/session-lineage-meta.d.ts"
+      ],
+      "@grokbot/acp-core/types": [
+        "../dist/plugin-sdk/packages/acp-core/src/types.d.ts"
+      ],
+      "@grokbot/acp-core/runtime/error-text": [
+        "../dist/plugin-sdk/packages/acp-core/src/runtime/error-text.d.ts"
+      ],
+      "@grokbot/acp-core/runtime/errors": [
+        "../dist/plugin-sdk/packages/acp-core/src/runtime/errors.d.ts"
+      ],
+      "@grokbot/acp-core/runtime/session-identifiers": [
+        "../dist/plugin-sdk/packages/acp-core/src/runtime/session-identifiers.d.ts"
+      ],
+      "@grokbot/acp-core/runtime/session-identity": [
+        "../dist/plugin-sdk/packages/acp-core/src/runtime/session-identity.d.ts"
+      ],
+      "@grokbot/acp-core/runtime/types": [
+        "../dist/plugin-sdk/packages/acp-core/src/runtime/types.d.ts"
+      ],
+      "@grokbot/acp-core/*": [
+        "../dist/plugin-sdk/packages/acp-core/src/*.d.ts"
+      ],
+      "@grokbot/terminal-core": [
+        "../dist/plugin-sdk/packages/terminal-core/src/index.d.ts"
+      ],
+      "@grokbot/terminal-core/ansi": [
+        "../dist/plugin-sdk/packages/terminal-core/src/ansi.d.ts"
+      ],
+      "@grokbot/terminal-core/decorative-emoji": [
+        "../dist/plugin-sdk/packages/terminal-core/src/decorative-emoji.d.ts"
+      ],
+      "@grokbot/terminal-core/health-style": [
+        "../dist/plugin-sdk/packages/terminal-core/src/health-style.d.ts"
+      ],
+      "@grokbot/terminal-core/links": [
+        "../dist/plugin-sdk/packages/terminal-core/src/links.d.ts"
+      ],
+      "@grokbot/terminal-core/note": [
+        "../dist/plugin-sdk/packages/terminal-core/src/note.d.ts"
+      ],
+      "@grokbot/terminal-core/osc-progress": [
+        "../dist/plugin-sdk/packages/terminal-core/src/osc-progress.d.ts"
+      ],
+      "@grokbot/terminal-core/palette": [
+        "../dist/plugin-sdk/packages/terminal-core/src/palette.d.ts"
+      ],
+      "@grokbot/terminal-core/progress-line": [
+        "../dist/plugin-sdk/packages/terminal-core/src/progress-line.d.ts"
+      ],
+      "@grokbot/terminal-core/prompt-select-styled": [
+        "../dist/plugin-sdk/packages/terminal-core/src/prompt-select-styled.d.ts"
+      ],
+      "@grokbot/terminal-core/prompt-select-styled-params": [
+        "../dist/plugin-sdk/packages/terminal-core/src/prompt-select-styled-params.d.ts"
+      ],
+      "@grokbot/terminal-core/prompt-style": [
+        "../dist/plugin-sdk/packages/terminal-core/src/prompt-style.d.ts"
+      ],
+      "@grokbot/terminal-core/restore": [
+        "../dist/plugin-sdk/packages/terminal-core/src/restore.d.ts"
+      ],
+      "@grokbot/terminal-core/safe-text": [
+        "../dist/plugin-sdk/packages/terminal-core/src/safe-text.d.ts"
+      ],
+      "@grokbot/terminal-core/stream-writer": [
+        "../dist/plugin-sdk/packages/terminal-core/src/stream-writer.d.ts"
+      ],
+      "@grokbot/terminal-core/table": [
+        "../dist/plugin-sdk/packages/terminal-core/src/table.d.ts"
+      ],
+      "@grokbot/terminal-core/terminal-link": [
+        "../dist/plugin-sdk/packages/terminal-core/src/terminal-link.d.ts"
+      ],
+      "@grokbot/terminal-core/theme": [
+        "../dist/plugin-sdk/packages/terminal-core/src/theme.d.ts"
+      ],
+      "@grokbot/terminal-core/*": [
+        "../dist/plugin-sdk/packages/terminal-core/src/*.d.ts"
+      ],
+      "@grokbot/*.js": [
+        "../packages/plugin-sdk/dist/extensions/*.d.ts",
+        "../extensions/*"
+      ],
+      "@grokbot/*": [
+        "../packages/plugin-sdk/dist/extensions/*",
+        "../extensions/*"
+      ],
+      "grokbot/plugin-sdk/qa-channel": [
+        "../dist/plugin-sdk/src/plugin-sdk/qa-channel.d.ts"
+      ],
+      "grokbot/plugin-sdk/qa-channel-protocol": [
+        "../dist/plugin-sdk/src/plugin-sdk/qa-channel-protocol.d.ts"
+      ],
+      "grokbot/plugin-sdk/qa-runtime": [
+        "../dist/plugin-sdk/src/plugin-sdk/qa-runtime.d.ts"
+      ],
+      "@grokbot/plugin-sdk/*": [
+        "../dist/plugin-sdk/*.d.ts"
+      ]
+    }
+  }
+}

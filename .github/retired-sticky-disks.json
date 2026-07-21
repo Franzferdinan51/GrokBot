@@ -1,0 +1,22 @@
+[
+  {
+    "key": "grokbot/grokbot-node-compile-v2-build-protected-Linux-X64-node-24.x",
+    "architecture": "amd64",
+    "region": "eu-west"
+  },
+  {
+    "key": "grokbot/grokbot-node-compile-v2-test-protected-Linux-X64-node-24.x",
+    "architecture": "amd64",
+    "region": "eu-west"
+  },
+  {
+    "key": "grokbot/grokbot-node-deps-bind-v4-24.x",
+    "architecture": "amd64",
+    "region": "eu-west"
+  },
+  {
+    "key": "grokbot/grokbot-vitest-fs-v2-protected-Linux-X64-node-24.x",
+    "architecture": "amd64",
+    "region": "eu-west"
+  }
+]

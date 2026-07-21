@@ -1,0 +1,32 @@
+# @grokbot/memory-lancedb
+
+Official LanceDB-backed long-term memory plugin for GrokBot.
+
+This plugin adds persistent memory tools backed by LanceDB, vector search, auto-recall, and auto-capture.
+
+## Install
+
+```bash
+grokbot plugins install @grokbot/memory-lancedb
+```
+
+Restart the Gateway after installing or updating the plugin.
+
+## What it provides
+
+- `memory_store`
+- `memory_recall`
+- `memory_forget`
+- LanceDB vector storage and hybrid memory retrieval.
+
+## Configure
+
+Use the memory plugin docs for embedding provider setup, storage paths, indexing, and recall behavior:
+
+- https://docs.grokbot.ai/plugins/memory-lancedb
+
+## Package
+
+- Plugin id: `memory-lancedb`
+- Package: `@grokbot/memory-lancedb`
+- Minimum GrokBot host: `2026.4.10`

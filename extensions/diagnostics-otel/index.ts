@@ -1,0 +1,12 @@
+// Diagnostics Otel plugin entrypoint registers its GrokBot integration.
+import { definePluginEntry } from "grokbot/plugin-sdk/plugin-entry";
+import { createDiagnosticsOtelService } from "./runtime-api.js";
+
+export default definePluginEntry({
+  id: "diagnostics-otel",
+  name: "Diagnostics OpenTelemetry",
+  description: "Export diagnostics events to OpenTelemetry",
+  register(api) {
+    api.registerService(createDiagnosticsOtelService());
+  },
+});

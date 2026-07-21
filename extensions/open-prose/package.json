@@ -1,0 +1,15 @@
+{
+  "name": "@grokbot/open-prose",
+  "version": "2026.7.2",
+  "private": true,
+  "description": "OpenProse VM skill pack plugin (slash command + telemetry).",
+  "type": "module",
+  "devDependencies": {
+    "@grokbot/plugin-sdk": "workspace:*"
+  },
+  "grokbot": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

@@ -1,0 +1,224 @@
+import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
+import {
+  clearAgentHarnesses,
+  listRegisteredAgentHarnesses,
+  registerAgentHarness,
+  restoreRegisteredAgentHarnesses,
+} from "./harness/registry.js";
+import type { AgentHarness } from "./harness/types.js";
+import { resolveCandidateThinkingLevel, resolveEffectiveAgentRuntime } from "./thinking-runtime.js";
+
+function openAIConfig(runtime: string): OpenClawConfig {
+  return {
+    agents: {
+      defaults: {
+        models: {
+          "openai/gpt-5.6-luna": { agentRuntime: { id: runtime } },
+        },
+      },
+    },
+  };
+}
+
+describe("resolveEffectiveAgentRuntime", () => {
+  let registeredHarnesses: ReturnType<typeof listRegisteredAgentHarnesses>;
+
+  beforeAll(() => {
+    registeredHarnesses = listRegisteredAgentHarnesses();
+  });
+
+  beforeEach(() => {
+    clearAgentHarnesses();
+  });
+
+  afterAll(() => {
+    restoreRegisteredAgentHarnesses(registeredHarnesses);
+  });
+
+  it("keeps cold-start official OpenAI Luna on implicit Codex policy", () => {
+    expect(
+      resolveEffectiveAgentRuntime({
+        cfg: {},
+        provider: "openai",
+        modelId: "gpt-5.6-luna",
+      }),
+    ).toBe("codex");
+  });
+
+  it("resolves residual auto to GrokBot when no plugin harness is registered", () => {
+    expect(
+      resolveEffectiveAgentRuntime({
+        cfg: {
+          models: {
+            providers: {
+              openai: {
+                baseUrl: "http://127.0.0.1:8080/v1",
+                models: [],
+              },
+            },
+          },
+        },
+        provider: "openai",
+        modelId: "gpt-5.6-luna",
+      }),
+    ).toBe("grokbot");
+  });
+
+  it("uses static auto-selection facts before resolving provider routes", () => {
+    const supports = vi.fn<AgentHarness["supports"]>(() => ({ supported: true, priority: 100 }));
+    registerAgentHarness({
+      id: "codex",
+      label: "Codex",
+      autoSelection: { providerIds: ["openai", "codex"] },
+      supports,
+      runAttempt: async () => {
+        throw new Error("not exercised");
+      },
+    });
+
+    expect(
+      resolveEffectiveAgentRuntime({
+        cfg: {},
+        provider: "deepseek",
+        modelId: "deepseek-v4-pro",
+      }),
+    ).toBe("grokbot");
+    expect(supports).not.toHaveBeenCalled();
+  });
+
+  it("keeps an authored custom route on GrokBot before registered harness selection", () => {
+    const supports = vi.fn<AgentHarness["supports"]>(({ provider }) =>
+      provider === "openai" ? { supported: true, priority: 100 } : { supported: false },
+    );
+    const codexHarness: AgentHarness = {
+      id: "codex",
+      label: "Codex",
+      supports,
+      runAttempt: async () => {
+        throw new Error("not exercised");
+      },
+    };
+    registerAgentHarness(codexHarness);
+
+    expect(
+      resolveEffectiveAgentRuntime({
+        cfg: {
+          models: {
+            providers: {
+              openai: {
+                baseUrl: "http://127.0.0.1:8080/v1",
+                models: [],
+              },
+            },
+          },
+        },
+        provider: "openai",
+        modelId: "gpt-5.6-luna",
+      }),
+    ).toBe("grokbot");
+    expect(supports).not.toHaveBeenCalled();
+  });
+
+  it("prefers explicit session overrides", () => {
+    const cfg = openAIConfig("grokbot");
+    expect(
+      resolveEffectiveAgentRuntime({
+        cfg,
+        provider: "openai",
+        modelId: "gpt-5.6-luna",
+        sessionEntry: { agentRuntimeOverride: "codex", agentHarnessId: "grokbot" },
+      }),
+    ).toBe("codex");
+  });
+
+  it("ignores legacy harness ids when choosing a runtime", () => {
+    const cfg = openAIConfig("grokbot");
+    expect(
+      resolveEffectiveAgentRuntime({
+        cfg,
+        provider: "openai",
+        modelId: "gpt-5.6-luna",
+        sessionEntry: { agentHarnessId: "codex" },
+      }),
+    ).toBe("grokbot");
+  });
+
+  it("uses configured runtime policy without session hints", () => {
+    const cfg = openAIConfig("grokbot");
+    expect(
+      resolveEffectiveAgentRuntime({
+        cfg,
+        provider: "openai",
+        modelId: "gpt-5.6-luna",
+      }),
+    ).toBe("grokbot");
+  });
+
+  it("lets an explicit GrokBot override replace configured Codex policy", () => {
+    expect(
+      resolveEffectiveAgentRuntime({
+        cfg: openAIConfig("codex"),
+        provider: "openai",
+        modelId: "gpt-5.6-luna",
+        sessionEntry: { agentRuntimeOverride: "grokbot", agentHarnessId: "codex" },
+      }),
+    ).toBe("grokbot");
+  });
+
+  it("keeps a supported candidate level unchanged", () => {
+    expect(
+      resolveCandidateThinkingLevel({
+        cfg: {},
+        provider: "demo",
+        modelId: "demo-model",
+        level: "medium",
+      }),
+    ).toBe("medium");
+  });
+
+  it("clamps an unsupported candidate level without changing the requested value", () => {
+    const requested = "ultra" as const;
+
+    expect(
+      resolveCandidateThinkingLevel({
+        cfg: {},
+        provider: "demo",
+        modelId: "demo-model",
+        level: requested,
+      }),
+    ).toBe("high");
+    expect(requested).toBe("ultra");
+  });
+
+  it("re-evaluates every candidate from the immutable request so later support can upgrade", () => {
+    const cfg: OpenClawConfig = {
+      agents: {
+        defaults: {
+          models: {
+            "openai/gpt-5.6-luna": { agentRuntime: { id: "codex" } },
+            "openai/gpt-5.6-sol": { agentRuntime: { id: "codex" } },
+          },
+        },
+      },
+    };
+    const requested = "ultra" as const;
+
+    expect(
+      resolveCandidateThinkingLevel({
+        cfg,
+        provider: "openai",
+        modelId: "gpt-5.6-luna",
+        level: requested,
+      }),
+    ).toBe("max");
+    expect(
+      resolveCandidateThinkingLevel({
+        cfg,
+        provider: "openai",
+        modelId: "gpt-5.6-sol",
+        level: requested,
+      }),
+    ).toBe("ultra");
+  });
+});

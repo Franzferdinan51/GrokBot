@@ -1,0 +1,20 @@
+{
+  "name": "@grokbot/pixverse-provider",
+  "version": "2026.7.2",
+  "lockfileVersion": 3,
+  "requires": true,
+  "packages": {
+    "": {
+      "name": "@grokbot/pixverse-provider",
+      "version": "2026.7.2",
+      "peerDependencies": {
+        "grokbot": ">=2026.7.2"
+      },
+      "peerDependenciesMeta": {
+        "grokbot": {
+          "optional": true
+        }
+      }
+    }
+  }
+}

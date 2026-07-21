@@ -1,0 +1,37 @@
+{
+  "name": "@grokbot/llama-cpp-provider",
+  "version": "2026.7.2",
+  "description": "GrokBot llama.cpp text inference and embedding provider plugin",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/grokbot/grokbot"
+  },
+  "type": "module",
+  "optionalDependencies": {
+    "node-llama-cpp": "3.19.0"
+  },
+  "devDependencies": {
+    "@grokbot/plugin-sdk": "workspace:*"
+  },
+  "grokbot": {
+    "extensions": [
+      "./index.ts"
+    ],
+    "install": {
+      "npmSpec": "@grokbot/llama-cpp-provider",
+      "defaultChoice": "npm",
+      "minHostVersion": ">=2026.6.2"
+    },
+    "compat": {
+      "pluginApi": ">=2026.7.2"
+    },
+    "build": {
+      "openclawVersion": "2026.7.2"
+    },
+    "release": {
+      "bundleRuntimeDependencies": false,
+      "publishToClawHub": true,
+      "publishToNpm": true
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "name": "@grokbot/google-plugin",
+  "version": "2026.7.2",
+  "private": true,
+  "description": "GrokBot Google plugin",
+  "type": "module",
+  "dependencies": {
+    "@google/genai": "2.10.0",
+    "google-auth-library": "10.9.0"
+  },
+  "devDependencies": {
+    "@grokbot/plugin-sdk": "workspace:*"
+  },
+  "grokbot": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

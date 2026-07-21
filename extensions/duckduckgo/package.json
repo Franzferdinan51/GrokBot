@@ -1,0 +1,15 @@
+{
+  "name": "@grokbot/duckduckgo-plugin",
+  "version": "2026.7.2",
+  "private": true,
+  "description": "GrokBot DuckDuckGo plugin",
+  "type": "module",
+  "devDependencies": {
+    "@grokbot/plugin-sdk": "workspace:*"
+  },
+  "grokbot": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

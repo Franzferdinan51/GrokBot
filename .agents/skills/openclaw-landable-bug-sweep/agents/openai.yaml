@@ -1,0 +1,4 @@
+interface:
+  display_name: "GrokBot Landable Bug Sweep"
+  short_description: "Find five small non-SDK landable bugfix PRs"
+  default_prompt: "Use $grokbot-landable-bug-sweep to find or repair five small high-confidence non-SDK-boundary GrokBot bugfix PRs and get them landable."

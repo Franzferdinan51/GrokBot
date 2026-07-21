@@ -1,0 +1,23 @@
+---
+summary: "Automatic work journal: captures periodic screen snapshots from a paired node and turns them into a reviewable timeline of your day."
+read_when:
+  - You are installing, configuring, or auditing the logbook plugin
+title: "Logbook plugin"
+---
+
+# Logbook plugin
+
+Automatic work journal: captures periodic screen snapshots from a paired node and turns them into a reviewable timeline of your day.
+
+## Distribution
+
+- Package: `@grokbot/logbook`
+- Install route: included in GrokBot
+
+## Surface
+
+plugin
+
+## Related docs
+
+- [logbook](/plugins/logbook)

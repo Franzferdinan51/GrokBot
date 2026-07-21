@@ -1,0 +1,23 @@
+---
+summary: "HashiCorp Vault SecretRef provider integration."
+read_when:
+  - You are installing, configuring, or auditing the vault plugin
+title: "Vault plugin"
+---
+
+# Vault plugin
+
+HashiCorp Vault SecretRef provider integration.
+
+## Distribution
+
+- Package: `@grokbot/vault`
+- Install route: included in GrokBot
+
+## Surface
+
+plugin
+
+## Related docs
+
+- [vault](/plugins/vault)

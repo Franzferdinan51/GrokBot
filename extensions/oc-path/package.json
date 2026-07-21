@@ -1,0 +1,29 @@
+{
+  "name": "@grokbot/oc-path",
+  "version": "2026.7.2",
+  "private": true,
+  "description": "GrokBot oc:// workspace path plugin",
+  "type": "module",
+  "dependencies": {
+    "jsonc-parser": "3.3.1",
+    "markdown-it": "14.3.0",
+    "yaml": "2.9.0"
+  },
+  "devDependencies": {
+    "@grokbot/plugin-sdk": "workspace:*",
+    "grokbot": "workspace:*"
+  },
+  "peerDependencies": {
+    "grokbot": ">=2026.7.2"
+  },
+  "peerDependenciesMeta": {
+    "grokbot": {
+      "optional": true
+    }
+  },
+  "grokbot": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

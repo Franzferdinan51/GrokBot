@@ -1,0 +1,15 @@
+{
+  "name": "@grokbot/azure-speech",
+  "version": "2026.7.2",
+  "private": true,
+  "description": "GrokBot Azure Speech plugin",
+  "type": "module",
+  "devDependencies": {
+    "@grokbot/plugin-sdk": "workspace:*"
+  },
+  "grokbot": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}

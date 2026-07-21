@@ -1,0 +1,12 @@
+{
+  "name": "@grokbot/qianfan-provider",
+  "version": "2026.7.2",
+  "lockfileVersion": 3,
+  "requires": true,
+  "packages": {
+    "": {
+      "name": "@grokbot/qianfan-provider",
+      "version": "2026.7.2"
+    }
+  }
+}

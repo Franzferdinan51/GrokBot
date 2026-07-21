@@ -1,0 +1,11 @@
+{
+  "name": "@grokbot/media-understanding-core",
+  "version": "2026.7.2",
+  "private": true,
+  "description": "GrokBot media understanding runtime package",
+  "type": "module",
+  "devDependencies": {
+    "@grokbot/plugin-sdk": "workspace:*"
+  },
+  "grokbot": {}
+}

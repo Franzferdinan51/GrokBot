@@ -1,0 +1,31 @@
+{
+  "name": "@grokbot/memory-wiki",
+  "version": "2026.7.2",
+  "private": true,
+  "description": "GrokBot persistent wiki plugin",
+  "type": "module",
+  "dependencies": {
+    "mdast-util-from-markdown": "2.0.3",
+    "p-map": "7.0.5",
+    "typebox": "1.3.3",
+    "yaml": "2.9.0",
+    "zod": "4.4.3"
+  },
+  "devDependencies": {
+    "@grokbot/plugin-sdk": "workspace:*",
+    "grokbot": "workspace:*"
+  },
+  "peerDependencies": {
+    "grokbot": ">=2026.7.2"
+  },
+  "peerDependenciesMeta": {
+    "grokbot": {
+      "optional": true
+    }
+  },
+  "grokbot": {
+    "extensions": [
+      "./index.ts"
+    ]
+  }
+}
