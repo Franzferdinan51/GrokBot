@@ -33,6 +33,7 @@ import { expandToolGroups, mergeAlsoAllowPolicy, normalizeToolName } from "../to
 import type { SystemAgentToolOptions } from "../tools/system-agent-tool.js";
 import { resolveAgentHarnessAutoSelectionHint } from "./auto-selection.js";
 import { createOpenClawAgentHarness } from "./builtin-grokbot.js";
+import { createGrokCliAgentHarness } from "./builtin-grok-cli.js";
 import { MissingAgentHarnessError } from "./errors.js";
 import { runAgentHarnessLifecycleAttempt } from "./lifecycle.js";
 import {
@@ -302,6 +303,16 @@ function selectAgentHarnessDecision(
       harness: openClawHarness,
       policy,
       selectedReason,
+      candidates: listHarnessCandidates(pluginHarnesses),
+    });
+  }
+  // Grok CLI harness — selected when runtime is "grok-cli"
+  if (runtime === "grok-cli") {
+    const grokCliHarness = createGrokCliAgentHarness();
+    return buildSelectionDecision({
+      harness: grokCliHarness,
+      policy,
+      selectedReason: selectedRuntimeOverride ? "forced_grok_cli" : "auto_grok_cli",
       candidates: listHarnessCandidates(pluginHarnesses),
     });
   }

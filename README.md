@@ -30,66 +30,7 @@ GrokBot Onboard guides you step by step through setting up the gateway, workspac
 Windows desktop users can start with the native [Windows Hub](https://docs.grokbot.ai/platforms/windows) companion app for setup, tray status, chat, node mode, and local MCP mode.
 Works with npm, pnpm, or bun.
 
-## Sponsors
 
-<table>
-  <tr>
-    <td align="center" width="16.66%">
-      <a href="https://openai.com/">
-        <picture>
-          <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/grokbot/grokbot/main/docs/assets/sponsors/openai-light.svg">
-          <img src="https://raw.githubusercontent.com/grokbot/grokbot/main/docs/assets/sponsors/openai.svg" alt="OpenAI" height="28">
-        </picture>
-      </a>
-    </td>
-    <td align="center" width="16.66%">
-      <a href="https://github.com/">
-        <picture>
-          <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/grokbot/grokbot/main/docs/assets/sponsors/github-light.svg">
-          <img src="https://raw.githubusercontent.com/grokbot/grokbot/main/docs/assets/sponsors/github.svg" alt="GitHub" height="28">
-        </picture>
-      </a>
-    </td>
-    <td align="center" width="16.66%">
-      <a href="https://www.nvidia.com/">
-        <picture>
-          <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/grokbot/grokbot/main/docs/assets/sponsors/nvidia.svg">
-          <img src="https://raw.githubusercontent.com/grokbot/grokbot/main/docs/assets/sponsors/nvidia-dark.svg" alt="NVIDIA" height="28">
-        </picture>
-      </a>
-    </td>
-    <td align="center" width="16.66%">
-      <a href="https://vercel.com/">
-        <picture>
-          <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/grokbot/grokbot/main/docs/assets/sponsors/vercel-light.svg">
-          <img src="https://raw.githubusercontent.com/grokbot/grokbot/main/docs/assets/sponsors/vercel.svg" alt="Vercel" height="24">
-        </picture>
-      </a>
-    </td>
-    <td align="center" width="16.66%">
-      <a href="https://blacksmith.sh/">
-        <picture>
-          <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/grokbot/grokbot/main/docs/assets/sponsors/blacksmith-light.svg">
-          <img src="https://raw.githubusercontent.com/grokbot/grokbot/main/docs/assets/sponsors/blacksmith.svg" alt="Blacksmith" height="28">
-        </picture>
-      </a>
-    </td>
-    <td align="center" width="16.66%">
-      <a href="https://www.convex.dev/">
-        <picture>
-          <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/grokbot/grokbot/main/docs/assets/sponsors/convex-light.svg">
-          <img src="https://raw.githubusercontent.com/grokbot/grokbot/main/docs/assets/sponsors/convex.svg" alt="Convex" height="24">
-        </picture>
-      </a>
-    </td>
-  </tr>
-</table>
-
-**Subscriptions (OAuth):**
-
-- **[OpenAI](https://openai.com/)** (ChatGPT/Codex)
-
-Model note: while many providers and models are supported, prefer a current flagship model from the provider you trust and already use. See [Onboarding](https://docs.grokbot.ai/start/wizard).
 
 ## Install (recommended)
 
