@@ -1,12 +1,12 @@
 ---
-summary: "Deploy OpenClaw on Railway with one-click template"
+summary: "Deploy GrokBot on Railway with one-click template"
 read_when:
-  - Deploying OpenClaw to Railway
+  - Deploying GrokBot to Railway
   - You want a one-click cloud deploy with browser-based Control UI
 title: "Railway"
 ---
 
-Deploy OpenClaw on Railway with a one-click template and access it through the web Control UI. This is the easiest "no terminal on the server" path: Railway runs the Gateway for you.
+Deploy GrokBot on Railway with a one-click template and access it through the web Control UI. This is the easiest "no terminal on the server" path: Railway runs the Gateway for you.
 
 ## One-click deploy
 
@@ -47,7 +47,7 @@ Deploy OpenClaw on Railway with a one-click template and access it through the w
 
 ## What you get
 
-- Hosted OpenClaw Gateway + Control UI
+- Hosted GrokBot Gateway + Control UI
 - Persistent storage via the Railway Volume (`/data`), so `openclaw.json`, per-agent `auth-profiles.json`, channel/provider state, sessions, and workspace survive redeploys
 
 ## Connect a channel
@@ -66,10 +66,10 @@ Export your state, config, auth profiles, and workspace:
 openclaw backup create
 ```
 
-This creates a portable backup archive with OpenClaw state plus any configured workspace. See [Backup](/cli/backup) for details.
+This creates a portable backup archive with GrokBot state plus any configured workspace. See [Backup](/cli/backup) for details.
 
 ## Next steps
 
 - Set up messaging channels: [Channels](/channels)
 - Configure the Gateway: [Gateway configuration](/gateway/configuration)
-- Keep OpenClaw up to date: [Updating](/install/updating)
+- Keep GrokBot up to date: [Updating](/install/updating)
