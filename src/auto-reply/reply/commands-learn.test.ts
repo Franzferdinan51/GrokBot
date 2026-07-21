@@ -1,6 +1,6 @@
 // Tests /learn prompt rewriting, defaults, standards, and availability gating.
 import { describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import { DEFAULT_LEARN_REQUEST } from "../../skills/workshop/learn-prompt.js";
 import { INTERNAL_MESSAGE_CHANNEL } from "../../utils/message-channel.js";
 import { handleLearnCommand } from "./commands-learn.js";

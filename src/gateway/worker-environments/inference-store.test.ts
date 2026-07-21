@@ -12,7 +12,7 @@ import {
   closeOpenClawStateDatabaseForTest,
   openOpenClawStateDatabase,
   type OpenClawStateDatabase,
-} from "../../state/openclaw-state-db.js";
+} from "../../state/grokbot-state-db.js";
 import type { WorkerConnectionIdentity } from "./connection-identity.js";
 import {
   createWorkerInferenceStore,
@@ -82,7 +82,7 @@ describe("worker inference SQLite store", () => {
   let store: WorkerInferenceStore;
 
   beforeEach(async () => {
-    root = await fs.mkdtemp(path.join(await fs.realpath(os.tmpdir()), "openclaw-inference-store-"));
+    root = await fs.mkdtemp(path.join(await fs.realpath(os.tmpdir()), "grokbot-inference-store-"));
     nowMs = 1_000;
     database = openOpenClawStateDatabase({ env: { OPENCLAW_STATE_DIR: root } });
     createWorkerEnvironmentStore({ database, now: () => nowMs }).createIntent({

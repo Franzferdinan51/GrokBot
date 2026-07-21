@@ -3,7 +3,7 @@ import { promises as fs } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import type { SkillStatusEntry } from "../skills/discovery/status.js";
 import { withEnvAsync } from "../test-utils/env.js";
 import {
@@ -46,8 +46,8 @@ function createSkill(overrides: Partial<SkillStatusEntry> = {}): SkillStatusEntr
     description: "Missing tool",
     source: "workspace",
     bundled: false,
-    filePath: "/tmp/openclaw-test-workspace/skills/missing-tool/SKILL.md",
-    baseDir: "/tmp/openclaw-test-workspace/skills/missing-tool",
+    filePath: "/tmp/grokbot-test-workspace/skills/missing-tool/SKILL.md",
+    baseDir: "/tmp/grokbot-test-workspace/skills/missing-tool",
     skillKey: "missing-tool",
     always: false,
     disabled: false,
@@ -59,14 +59,14 @@ function createSkill(overrides: Partial<SkillStatusEntry> = {}): SkillStatusEntr
     userInvocable: true,
     commandVisible: false,
     requirements: {
-      bins: ["openclaw-test-missing-skill-bin"],
+      bins: ["grokbot-test-missing-skill-bin"],
       anyBins: [],
       env: [],
       config: [],
       os: [],
     },
     missing: {
-      bins: ["openclaw-test-missing-skill-bin"],
+      bins: ["grokbot-test-missing-skill-bin"],
       anyBins: [],
       env: [],
       config: [],
@@ -365,7 +365,7 @@ describe("CORE_HEALTH_CHECKS", () => {
     const cfg: OpenClawConfig = {
       agents: {
         defaults: {
-          workspace: "/tmp/openclaw-test-workspace",
+          workspace: "/tmp/grokbot-test-workspace",
           skills: ["missing-tool"],
         },
       },
@@ -388,7 +388,7 @@ describe("CORE_HEALTH_CHECKS", () => {
       mode: "lint",
       runtime,
       cfg,
-      cwd: "/tmp/openclaw-test-workspace",
+      cwd: "/tmp/grokbot-test-workspace",
     });
     expect(findings).toContainEqual(
       expect.objectContaining({
@@ -403,7 +403,7 @@ describe("CORE_HEALTH_CHECKS", () => {
           mode: "fix",
           runtime,
           cfg,
-          cwd: "/tmp/openclaw-test-workspace",
+          cwd: "/tmp/grokbot-test-workspace",
         },
         { paths: ["skills.entries.other-tool.enabled"] },
       ),
@@ -414,7 +414,7 @@ describe("CORE_HEALTH_CHECKS", () => {
           mode: "fix",
           runtime,
           cfg,
-          cwd: "/tmp/openclaw-test-workspace",
+          cwd: "/tmp/grokbot-test-workspace",
         },
         { paths: ["skills.entries.missing-tool.enabled"] },
       ),
@@ -429,7 +429,7 @@ describe("CORE_HEALTH_CHECKS", () => {
         mode: "fix",
         runtime,
         cfg,
-        cwd: "/tmp/openclaw-test-workspace",
+        cwd: "/tmp/grokbot-test-workspace",
       },
       findings,
     );
@@ -521,7 +521,7 @@ describe("CORE_HEALTH_CHECKS", () => {
         target: "openai/gpt-5.5",
         requirement: "Codex plugin enabled for routes that use the Codex runtime.",
         fixHint:
-          "Enable plugins.entries.codex and plugin loading, and remove codex from plugins.deny; or set the affected OpenAI models to an OpenClaw runtime policy.",
+          "Enable plugins.entries.codex and plugin loading, and remove codex from plugins.deny; or set the affected OpenAI models to an GrokBot runtime policy.",
       }),
     ]);
     expect(findings[0]?.message).toContain("Codex plugin is disabled by config");
@@ -612,7 +612,7 @@ describe("CORE_HEALTH_CHECKS", () => {
   });
 
   it("does not execute or warn for valid exec SecretRefs during default gateway auth lint checks", async () => {
-    tmp = await fs.mkdtemp(join(tmpdir(), "openclaw-health-exec-ref-"));
+    tmp = await fs.mkdtemp(join(tmpdir(), "grokbot-health-exec-ref-"));
     const markerPath = join(tmp, "exec-ran");
     const check = CORE_HEALTH_CHECKS.find((entry) => entry.id === "core/doctor/gateway-auth");
 
@@ -651,7 +651,7 @@ describe("CORE_HEALTH_CHECKS", () => {
   });
 
   it("executes exec SecretRefs when gateway auth lint explicitly allows exec checks", async () => {
-    tmp = await fs.mkdtemp(join(tmpdir(), "openclaw-health-exec-ref-"));
+    tmp = await fs.mkdtemp(join(tmpdir(), "grokbot-health-exec-ref-"));
     const markerPath = join(tmp, "exec-ran");
     const resolverPath = join(tmp, "resolve-token.cjs");
     await fs.writeFile(
@@ -705,7 +705,7 @@ describe("CORE_HEALTH_CHECKS", () => {
   });
 
   it("reports exec SecretRef failures when gateway auth lint explicitly allows exec checks", async () => {
-    tmp = await fs.mkdtemp(join(tmpdir(), "openclaw-health-exec-ref-"));
+    tmp = await fs.mkdtemp(join(tmpdir(), "grokbot-health-exec-ref-"));
     const resolverPath = join(tmp, "fail-token.cjs");
     await fs.writeFile(
       resolverPath,
@@ -753,7 +753,7 @@ describe("CORE_HEALTH_CHECKS", () => {
         severity: "warning",
         message: expect.stringContaining("Gateway token SecretRef could not be resolved:"),
         fixHint:
-          "Run `openclaw doctor --allow-exec` to verify exec SecretRefs during doctor, or `openclaw secrets audit --allow-exec` to audit all exec SecretRefs.",
+          "Run `grokbot doctor --allow-exec` to verify exec SecretRefs during doctor, or `grokbot secrets audit --allow-exec` to audit all exec SecretRefs.",
       }),
     );
   });
@@ -764,7 +764,7 @@ describe("CORE_HEALTH_CHECKS", () => {
         createDeps({
           async collectWorkspaceSuggestionNotes(): Promise<readonly string[]> {
             return [
-              "- Tip: back up the agent workspace in a private git repo; keep ~/.openclaw out of git (credentials, sessions). Details: /concepts/agent-workspace#git-backup-recommended",
+              "- Tip: back up the agent workspace in a private git repo; keep ~/.grokbot out of git (credentials, sessions). Details: /concepts/agent-workspace#git-backup-recommended",
               "Memory system not found in workspace.",
             ];
           },
@@ -779,11 +779,11 @@ describe("CORE_HEALTH_CHECKS", () => {
       cfg: {
         agents: {
           defaults: {
-            workspace: "/tmp/openclaw-test-workspace",
+            workspace: "/tmp/grokbot-test-workspace",
           },
         },
       },
-      cwd: "/tmp/openclaw-test-workspace",
+      cwd: "/tmp/grokbot-test-workspace",
     });
 
     expect(findings).toContainEqual(
@@ -791,7 +791,7 @@ describe("CORE_HEALTH_CHECKS", () => {
         checkId: "core/doctor/workspace-suggestions",
         severity: "info",
         message:
-          "Tip: back up the agent workspace in a private git repo; keep ~/.openclaw out of git (credentials, sessions). Details: /concepts/agent-workspace#git-backup-recommended",
+          "Tip: back up the agent workspace in a private git repo; keep ~/.grokbot out of git (credentials, sessions). Details: /concepts/agent-workspace#git-backup-recommended",
       }),
     );
     expect(findings).toContainEqual(
@@ -889,7 +889,7 @@ describe("CORE_HEALTH_CHECKS", () => {
           mode: "fix",
           runtime,
           cfg: {},
-          cwd: "/tmp/openclaw-test-workspace",
+          cwd: "/tmp/grokbot-test-workspace",
         },
         [],
       ),
@@ -913,7 +913,7 @@ describe("core/doctor/bootstrap-size", () => {
   });
 
   it("honors the per-agent bootstrapMaxChars override in health findings", async () => {
-    tmp = await fs.mkdtemp(join(tmpdir(), "openclaw-health-bootstrap-"));
+    tmp = await fs.mkdtemp(join(tmpdir(), "grokbot-health-bootstrap-"));
     // This size fits the global default but exceeds the default agent's effective budget.
     await fs.writeFile(join(tmp, "AGENTS.md"), "a".repeat(15_000), "utf-8");
 

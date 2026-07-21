@@ -2,7 +2,7 @@
 import os from "node:os";
 import path from "node:path";
 import { describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { resolveUserPath } from "../utils.js";
 import { createPluginRecord } from "./loader-records.js";
 import { createPluginRegistry } from "./registry.js";
@@ -25,7 +25,7 @@ function createTestRegistry(runtime: PluginRuntime) {
 
 describe("plugin registry runtime config scope", () => {
   it("resolves plugin API paths against the plugin root", () => {
-    const pluginRoot = path.join(os.tmpdir(), "openclaw-plugins", "demo");
+    const pluginRoot = path.join(os.tmpdir(), "grokbot-plugins", "demo");
     const pluginRegistry = createTestRegistry(createPluginRuntime());
     const record = createPluginRecord({
       id: "path-plugin",
@@ -42,13 +42,13 @@ describe("plugin registry runtime config scope", () => {
     expect(api.resolvePath("data/cache.json")).toBe(path.join(pluginRoot, "data", "cache.json"));
     expect(api.resolvePath("./data/cache.json")).toBe(path.join(pluginRoot, "data", "cache.json"));
     expect(api.resolvePath(absolute)).toBe(absolute);
-    expect(api.resolvePath("~/openclaw/plugin.txt")).toBe(resolveUserPath("~/openclaw/plugin.txt"));
+    expect(api.resolvePath("~/grokbot/plugin.txt")).toBe(resolveUserPath("~/grokbot/plugin.txt"));
   });
 
   it("adds plugin context to lazy runtime resolution failures", () => {
     const runtime = new Proxy({} as PluginRuntime, {
       get() {
-        throw new Error("Unable to resolve plugin runtime module; loader=/tmp/openclaw-loader.js");
+        throw new Error("Unable to resolve plugin runtime module; loader=/tmp/grokbot-loader.js");
       },
     });
     const pluginRegistry = createTestRegistry(runtime);
@@ -83,10 +83,10 @@ describe("plugin registry runtime config scope", () => {
     let replaceScope = getPluginRuntimeGatewayRequestScope();
     const config = {} as OpenClawConfig;
     const replaceResult = {
-      path: "/tmp/openclaw.json",
+      path: "/tmp/grokbot.json",
       previousHash: null,
       persistedHash: "persisted-hash",
-      snapshot: { path: "/tmp/openclaw.json" },
+      snapshot: { path: "/tmp/grokbot.json" },
       nextConfig: config,
       afterWrite: { mode: "auto" },
       followUp: { mode: "auto", requiresRestart: false },
@@ -556,7 +556,7 @@ describe("plugin registry runtime config scope", () => {
     await expect(
       voiceApi.runtime.agent.runEmbeddedAgent({
         ...delegatedRunParams,
-        agentHarnessRuntimeOverride: "openclaw",
+        agentHarnessRuntimeOverride: "grokbot",
       }),
     ).rejects.toThrow("only with its exact persisted identity and harness");
     await expect(

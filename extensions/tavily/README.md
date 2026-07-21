@@ -1,13 +1,13 @@
-# Tavily OpenClaw plugin
+# Tavily GrokBot plugin
 
-Official OpenClaw plugin for Tavily.
+Official GrokBot plugin for Tavily.
 
 ## Install
 
 ```sh
-openclaw plugins install @openclaw/tavily-plugin
+grokbot plugins install @grokbot/tavily-plugin
 ```
 
 ## Docs
 
-See `docs/tools/tavily.md` in the OpenClaw repository, or the published docs at `https://docs.openclaw.ai/tools/tavily`.
+See `docs/tools/tavily.md` in the GrokBot repository, or the published docs at `https://docs.grokbot.ai/tools/tavily`.

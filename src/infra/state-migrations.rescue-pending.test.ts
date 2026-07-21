@@ -10,10 +10,10 @@ import {
 const tempDirs = useAutoCleanupTempDirTracker(afterEach);
 
 function makeStateDir(): string {
-  return tempDirs.make("openclaw-rescue-migration-");
+  return tempDirs.make("grokbot-rescue-migration-");
 }
 
-function writeLegacyApproval(stateDir: string, owner: "crestodian" | "openclaw"): string {
+function writeLegacyApproval(stateDir: string, owner: "crestodian" | "grokbot"): string {
   const sourcePath = path.join(stateDir, owner, "rescue-pending", "approval.json");
   fs.mkdirSync(path.dirname(sourcePath), { recursive: true });
   fs.writeFileSync(sourcePath, "{}\n");
@@ -24,7 +24,7 @@ describe("legacy rescue pending cleanup", () => {
   it("discards both retired stores only during explicit doctor migration", () => {
     const stateDir = makeStateDir();
     const crestodianPath = writeLegacyApproval(stateDir, "crestodian");
-    const openclawPath = writeLegacyApproval(stateDir, "openclaw");
+    const openclawPath = writeLegacyApproval(stateDir, "grokbot");
 
     const runtimeDetection = detectLegacyRescuePending({ stateDir });
     expect(runtimeDetection.hasLegacy).toBe(false);
@@ -53,7 +53,7 @@ describe("legacy rescue pending cleanup", () => {
 
   it("recomputes fixed owner paths instead of trusting detection paths", () => {
     const stateDir = makeStateDir();
-    const openclawPath = writeLegacyApproval(stateDir, "openclaw");
+    const openclawPath = writeLegacyApproval(stateDir, "grokbot");
 
     discardLegacyRescuePending({
       detected: { hasLegacy: true, sourcePaths: [path.join(stateDir, "untrusted")] },
@@ -66,8 +66,8 @@ describe("legacy rescue pending cleanup", () => {
   it("refuses to traverse a symlinked owner directory", () => {
     const stateDir = makeStateDir();
     const externalDir = makeStateDir();
-    const externalApproval = writeLegacyApproval(externalDir, "openclaw");
-    fs.symlinkSync(path.join(externalDir, "openclaw"), path.join(stateDir, "openclaw"));
+    const externalApproval = writeLegacyApproval(externalDir, "grokbot");
+    fs.symlinkSync(path.join(externalDir, "grokbot"), path.join(stateDir, "grokbot"));
 
     const detected = detectLegacyRescuePending({ stateDir, doctorOnlyStateMigrations: true });
     const result = discardLegacyRescuePending({ detected, stateDir });

@@ -1,4 +1,4 @@
-// Computes git, dependency, and registry update status for OpenClaw installs.
+// Computes git, dependency, and registry update status for GrokBot installs.
 import fs from "node:fs/promises";
 import path from "node:path";
 import { runCommandWithTimeout } from "../process/exec.js";
@@ -75,7 +75,7 @@ export type UpdateCheckResult = {
 };
 
 const PUBLIC_NPM_REGISTRY_URL = "https://registry.npmjs.org/";
-const PUBLIC_NPM_PACKAGE_NAME = "openclaw";
+const PUBLIC_NPM_PACKAGE_NAME = "grokbot";
 
 function isLoopbackNpmRegistry(raw: string): boolean {
   try {

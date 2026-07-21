@@ -1,7 +1,7 @@
 // Verifies createOpenClawTools wires shared config and context into the TTS tool.
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
-import { createOpenClawTools } from "./openclaw-tools.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
+import { createOpenClawTools } from "./grokbot-tools.js";
 import type { AnyAgentTool } from "./tools/common.js";
 
 const mocks = vi.hoisted(() => {
@@ -25,18 +25,18 @@ const mocks = vi.hoisted(() => {
     createVideoGenerateToolOptions: vi.fn(),
     textToSpeech: vi.fn(async () => ({
       success: true,
-      audioPath: "/tmp/openclaw/tts-config-test.opus",
+      audioPath: "/tmp/grokbot/tts-config-test.opus",
       provider: "microsoft",
       voiceCompatible: true,
     })),
   };
 });
 
-vi.mock("./openclaw-plugin-tools.js", () => ({
+vi.mock("./grokbot-plugin-tools.js", () => ({
   resolveOpenClawPluginToolsForOptions: () => [],
 }));
 
-vi.mock("./openclaw-tools.nodes-workspace-guard.js", () => ({
+vi.mock("./grokbot-tools.nodes-workspace-guard.js", () => ({
   applyNodesToolWorkspaceGuard: (tool: AnyAgentTool) => tool,
 }));
 

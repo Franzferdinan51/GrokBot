@@ -1,10 +1,10 @@
 // Line plugin module implements rich menu behavior.
 import { messagingApi } from "@line/bot-sdk";
-import { getAgentScopedMediaLocalRoots } from "openclaw/plugin-sdk/agent-media-payload";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { mimeTypeFromFilePath } from "openclaw/plugin-sdk/media-mime";
-import { logVerbose } from "openclaw/plugin-sdk/runtime-env";
-import { loadWebMediaRaw } from "openclaw/plugin-sdk/web-media";
+import { getAgentScopedMediaLocalRoots } from "grokbot/plugin-sdk/agent-media-payload";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { mimeTypeFromFilePath } from "grokbot/plugin-sdk/media-mime";
+import { logVerbose } from "grokbot/plugin-sdk/runtime-env";
+import { loadWebMediaRaw } from "grokbot/plugin-sdk/web-media";
 import { resolveLineAccount } from "./accounts.js";
 import { messageAction } from "./actions.js";
 import { resolveLineChannelAccessToken } from "./channel-access-token.js";

@@ -7,15 +7,15 @@ import {
   type AgentMessage,
   type EmbeddedRunAttemptParams,
   type EmbeddedRunAttemptResult,
-} from "openclaw/plugin-sdk/agent-harness-runtime";
-import type { AssistantMessage, Usage } from "openclaw/plugin-sdk/llm";
+} from "grokbot/plugin-sdk/agent-harness-runtime";
+import type { AssistantMessage, Usage } from "grokbot/plugin-sdk/llm";
 import {
   publishSessionTranscriptUpdateByIdentity,
   withSessionTranscriptWriteLock,
   type SessionTranscriptTargetParams,
   type SessionTranscriptWriteLockParams,
-} from "openclaw/plugin-sdk/session-transcript-runtime";
-import { normalizeOptionalString } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/session-transcript-runtime";
+import { normalizeOptionalString } from "grokbot/plugin-sdk/string-coerce-runtime";
 import type { CodexThread, JsonValue } from "./protocol.js";
 import {
   attachCodexMirrorIdentity,
@@ -283,7 +283,7 @@ export function projectBoundedCodexThreadHistory(params: {
   };
 }
 
-/** Imports a bounded, user-visible Codex history tail into a new OpenClaw transcript. */
+/** Imports a bounded, user-visible Codex history tail into a new GrokBot transcript. */
 export async function importCodexThreadHistoryToTranscript(params: {
   thread: CodexThread;
   throughTurnId: string | null;

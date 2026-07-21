@@ -2,8 +2,8 @@
 import { mkdtempSync, readFileSync, rmSync, truncateSync, writeFileSync } from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import type { SpeechProviderConfig, SpeechSynthesisRequest } from "openclaw/plugin-sdk/speech-core";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import type { SpeechProviderConfig, SpeechSynthesisRequest } from "grokbot/plugin-sdk/speech-core";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 type SpeechSynthesisTarget = SpeechSynthesisRequest["target"];
@@ -11,11 +11,11 @@ type SpeechSynthesisTarget = SpeechSynthesisRequest["target"];
 const runFfmpegMock = vi.hoisted(() => vi.fn<(args: string[]) => Promise<string | void>>());
 const debugLogMock = vi.hoisted(() => vi.fn());
 
-vi.mock("openclaw/plugin-sdk/media-runtime", () => ({
+vi.mock("grokbot/plugin-sdk/media-runtime", () => ({
   runFfmpeg: runFfmpegMock,
 }));
 
-vi.mock("openclaw/plugin-sdk/runtime-env", () => ({
+vi.mock("grokbot/plugin-sdk/runtime-env", () => ({
   createSubsystemLogger: () => ({ debug: debugLogMock }),
 }));
 
@@ -25,7 +25,7 @@ const TEST_CFG = {} as OpenClawConfig;
 const MAX_AUDIO_OUTPUT_BYTES = 50 * 1024 * 1024;
 
 function createCliFixture(): { dir: string; script: string } {
-  const dir = mkdtempSync(path.join(os.tmpdir(), "openclaw-cli-tts-test-"));
+  const dir = mkdtempSync(path.join(os.tmpdir(), "grokbot-cli-tts-test-"));
   const script = path.join(dir, "write-audio.mjs");
   writeFileSync(
     script,
@@ -353,7 +353,7 @@ mkdirSync(process.argv[outIndex + 1]);
     "keeps %s debug previews free of lone surrogates",
     async (method) => {
       const text = `${"a".repeat(49)}😀tail`;
-      const providerConfig = { command: "missing-openclaw-tts-test-command" };
+      const providerConfig = { command: "missing-grokbot-tts-test-command" };
       const run =
         method === "synthesize"
           ? synthesize({ providerConfig, text })
@@ -375,8 +375,8 @@ mkdirSync(process.argv[outIndex + 1]);
       return;
     }
     const fixture = createCliFixture();
-    const rawFfmpeg = await vi.importActual<typeof import("openclaw/plugin-sdk/media-runtime")>(
-      "openclaw/plugin-sdk/media-runtime",
+    const rawFfmpeg = await vi.importActual<typeof import("grokbot/plugin-sdk/media-runtime")>(
+      "grokbot/plugin-sdk/media-runtime",
     );
     runFfmpegMock.mockImplementation(async (args) => {
       await rawFfmpeg.runFfmpeg(args);

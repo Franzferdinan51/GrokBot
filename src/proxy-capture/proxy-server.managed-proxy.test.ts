@@ -5,7 +5,7 @@ import { Socket, type AddressInfo } from "node:net";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { closeOpenClawStateDatabaseForTest } from "../state/openclaw-state-db.js";
+import { closeOpenClawStateDatabaseForTest } from "../state/grokbot-state-db.js";
 import type { DebugProxySettings } from "./env.js";
 import { startDebugProxyServer } from "./proxy-server.js";
 import { closeDebugProxyCaptureStore } from "./store.sqlite.js";
@@ -30,7 +30,7 @@ async function cleanupTestDirs(): Promise<void> {
 }
 
 async function makeSettings(): Promise<DebugProxySettings> {
-  testRoot = await mkdtemp(join(tmpdir(), "openclaw-debug-proxy-managed-proxy-"));
+  testRoot = await mkdtemp(join(tmpdir(), "grokbot-debug-proxy-managed-proxy-"));
   const certDir = join(testRoot, "certs");
   await mkdir(certDir, { recursive: true });
   await writeFile(join(certDir, "root-ca.pem"), "test root cert\n", "utf8");

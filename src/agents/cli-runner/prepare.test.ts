@@ -3,14 +3,14 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { SYSTEM_PROMPT_CACHE_BOUNDARY } from "@openclaw/ai/internal/shared";
-import { expectDefined } from "@openclaw/normalization-core";
-import { CURRENT_SESSION_VERSION } from "openclaw/plugin-sdk/agent-sessions";
+import { SYSTEM_PROMPT_CACHE_BOUNDARY } from "@grokbot/ai/internal/shared";
+import { expectDefined } from "@grokbot/normalization-core";
+import { CURRENT_SESSION_VERSION } from "grokbot/plugin-sdk/agent-sessions";
 import { Type } from "typebox";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { buildGroupChatContext, buildGroupIntro } from "../../auto-reply/reply/groups.js";
 import type { ChannelPlugin } from "../../channels/plugins/types.plugin.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import { registerLegacyContextEngine } from "../../context-engine/legacy.registration.js";
 import { registerContextEngineForOwner } from "../../context-engine/registry.js";
 import type { ContextEngine } from "../../context-engine/types.js";
@@ -124,13 +124,13 @@ function createTestMcpLoopbackServerConfig(port: number) {
   // substitution without starting the real MCP HTTP server.
   return {
     mcpServers: {
-      openclaw: {
+      grokbot: {
         type: "http",
         url: `http://127.0.0.1:${port}/mcp`,
         alwaysLoad: true,
         headers: {
           Authorization: "Bearer ${OPENCLAW_MCP_TOKEN}",
-          "x-openclaw-cli-capture-key": "${OPENCLAW_MCP_CLI_CAPTURE_KEY}",
+          "x-grokbot-cli-capture-key": "${OPENCLAW_MCP_CLI_CAPTURE_KEY}",
         },
       },
     },
@@ -235,9 +235,9 @@ function setCliBackendForPrepareTest(
 }
 
 function createSessionFile() {
-  // Prepare tests use canonical OpenClaw session paths because several cases
+  // Prepare tests use canonical GrokBot session paths because several cases
   // assert that external or stale transcript paths are ignored.
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-cli-prepare-"));
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-cli-prepare-"));
   sessionFileEnvSnapshot ??= captureEnv(["OPENCLAW_STATE_DIR"]);
   setTestEnvValue("OPENCLAW_STATE_DIR", dir);
   const sessionFile = path.join(dir, "agents", "main", "sessions", "session-test.jsonl");
@@ -469,7 +469,7 @@ describe("prepareCliRunContext", () => {
   it("honors an explicit auth agent directory independently of session identity", async () => {
     const { dir, sessionFile } = createSessionFile();
     const modelOwnerAgentDir = path.join(dir, "ops-agent");
-    const systemAgentDir = path.join(dir, "openclaw-agent");
+    const systemAgentDir = path.join(dir, "grokbot-agent");
     const prepareExecution = vi.fn(async () => undefined);
     fs.mkdirSync(modelOwnerAgentDir, { recursive: true });
     cliBackendsTesting.setDepsForTest({
@@ -494,8 +494,8 @@ describe("prepareCliRunContext", () => {
     try {
       const context = await prepareCliRunContext({
         sessionId: "session-test",
-        sessionKey: "agent:openclaw:main",
-        agentId: "openclaw",
+        sessionKey: "agent:grokbot:main",
+        agentId: "grokbot",
         sessionFile,
         workspaceDir: dir,
         agentDir: modelOwnerAgentDir,
@@ -509,7 +509,7 @@ describe("prepareCliRunContext", () => {
           agents: {
             list: [
               { id: "ops", default: true, agentDir: modelOwnerAgentDir },
-              { id: "openclaw", agentDir: systemAgentDir },
+              { id: "grokbot", agentDir: systemAgentDir },
             ],
           },
         },
@@ -1111,8 +1111,8 @@ describe("prepareCliRunContext", () => {
         mcp?: { allowed?: string[] };
         mcpServers?: Record<string, { url?: string }>;
       };
-      expect(generatedSettings.mcp?.allowed).toEqual(["openclaw"]);
-      expect(generatedSettings.mcpServers?.openclaw?.url).toBe("http://127.0.0.1:31783/mcp");
+      expect(generatedSettings.mcp?.allowed).toEqual(["grokbot"]);
+      expect(generatedSettings.mcpServers?.grokbot?.url).toBe("http://127.0.0.1:31783/mcp");
       expect(context.preparedBackend.env?.GEMINI_CLI_SYSTEM_SETTINGS_PATH).toBe(
         profileSystemSettingsPath,
       );
@@ -1340,7 +1340,7 @@ describe("prepareCliRunContext", () => {
       expect(skillsCleanup).toHaveBeenCalledOnce();
       expect(fs.existsSync(skillsPluginDir)).toBe(false);
       expect(
-        fs.readdirSync(tempRoot).filter((entry) => entry.startsWith("openclaw-cli-mcp-")),
+        fs.readdirSync(tempRoot).filter((entry) => entry.startsWith("grokbot-cli-mcp-")),
       ).toEqual([]);
     } finally {
       tempEnvSnapshot.restore();
@@ -1760,7 +1760,7 @@ describe("prepareCliRunContext", () => {
     });
     try {
       // Room resumes carry compact event text into the CLI prompt but keep the
-      // richer room context in OpenClaw history for reseed and audits.
+      // richer room context in GrokBot history for reseed and audits.
       const context = await prepareCliRunContext({
         sessionId: "session-test",
         sessionKey: "agent:main:test",
@@ -1768,7 +1768,7 @@ describe("prepareCliRunContext", () => {
         trigger: "user",
         sessionFile,
         workspaceDir: dir,
-        prompt: "[OpenClaw room event]",
+        prompt: "[GrokBot room event]",
         currentInboundEventKind: "room_event",
         currentInboundContext: {
           text: "Room context:\nAlice: lunch?\n\nCurrent event:\nBob: yes",
@@ -1787,7 +1787,7 @@ describe("prepareCliRunContext", () => {
       });
 
       expect(context.reusableCliSession).toEqual({ mode: "reuse", sessionId: "cli-session" });
-      expect(context.params.prompt).toBe("Current event:\nBob: yes\n\n[OpenClaw room event]");
+      expect(context.params.prompt).toBe("Current event:\nBob: yes\n\n[GrokBot room event]");
       expect(context.openClawHistoryPrompt).toContain("Room context:\nAlice: lunch?");
       expect(context.openClawHistoryPrompt).toContain("Current event:\nBob: yes");
     } finally {
@@ -1971,7 +1971,7 @@ describe("prepareCliRunContext", () => {
 
       expect(context.params.prompt).toBe("latest ask");
       expect(context.systemPrompt).toContain(
-        "You are a personal assistant running inside OpenClaw.",
+        "You are a personal assistant running inside GrokBot.",
       );
       expect(context.systemPrompt).toContain("Current model identity: test-cli/test-model.");
       expect(context.systemPrompt).not.toContain("hook exploded");
@@ -2093,7 +2093,7 @@ describe("prepareCliRunContext", () => {
           hostRequirements: {
             "agent-run": {
               requiredCapabilities: ["assemble-before-prompt"],
-              unsupportedMessage: "Use the native Codex or OpenClaw embedded runtime.",
+              unsupportedMessage: "Use the native Codex or GrokBot embedded runtime.",
             },
           },
         },
@@ -2292,7 +2292,7 @@ describe("prepareCliRunContext", () => {
 
   it("uses cwd for CLI system prompt workspace guidance", async () => {
     const { dir, sessionFile } = createSessionFile();
-    const taskDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-cli-task-"));
+    const taskDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-cli-task-"));
     try {
       const context = await prepareCliRunContext({
         sessionId: "session-test",
@@ -2418,7 +2418,7 @@ describe("prepareCliRunContext", () => {
       });
       expect(context.openClawHistoryPrompt).toBeUndefined();
       expect(context.params.prompt).toContain(
-        "OpenClaw resumed this CLI session after prompt content changed.",
+        "GrokBot resumed this CLI session after prompt content changed.",
       );
       expect(context.params.prompt).toContain("changed=system-prompt");
       expect(context.params.prompt).toContain("latest ask");
@@ -2454,7 +2454,7 @@ describe("prepareCliRunContext", () => {
         invalidatedReason: "system-prompt",
       });
       expect(context.params.prompt).not.toContain(
-        "OpenClaw resumed this CLI session after prompt content changed.",
+        "GrokBot resumed this CLI session after prompt content changed.",
       );
     } finally {
       fs.rmSync(dir, { recursive: true, force: true });
@@ -3585,14 +3585,14 @@ describe("prepareCliRunContext", () => {
       const rawBundle = JSON.parse(fs.readFileSync(mcpConfigPath ?? "", "utf-8")) as {
         mcpServers?: Record<string, unknown>;
       };
-      expect(Object.keys(rawBundle.mcpServers ?? {})).toEqual(["openclaw"]);
+      expect(Object.keys(rawBundle.mcpServers ?? {})).toEqual(["grokbot"]);
     } finally {
       await cleanup?.();
       fs.rmSync(dir, { recursive: true, force: true });
     }
   });
 
-  it("serves only the openclaw MCP server for ring-zero runs", async () => {
+  it("serves only the grokbot MCP server for ring-zero runs", async () => {
     const { dir, sessionFile } = createSessionFile();
     try {
       const getActiveMcpLoopbackRuntime = vi.fn(() => undefined);
@@ -3640,7 +3640,7 @@ describe("prepareCliRunContext", () => {
         provider: "claude-cli",
         model: "test-model",
         timeoutMs: 1_000,
-        runId: "run-test-openclaw-mcp",
+        runId: "run-test-grokbot-mcp",
         config: createCliBackendConfig(),
         systemAgentTool: { surface: "cli" },
         cliToolAvailability: {
@@ -3672,9 +3672,9 @@ describe("prepareCliRunContext", () => {
       const raw = JSON.parse(fs.readFileSync(mcpConfigPath, "utf-8")) as {
         mcpServers?: Record<string, { env?: Record<string, string> }>;
       };
-      expect(Object.keys(raw.mcpServers ?? {})).toEqual(["openclaw"]);
-      expect(raw.mcpServers?.openclaw?.env).toMatchObject({
-        OPENCLAW_TOOLS_MCP_TOOLS: "openclaw",
+      expect(Object.keys(raw.mcpServers ?? {})).toEqual(["grokbot"]);
+      expect(raw.mcpServers?.grokbot?.env).toMatchObject({
+        OPENCLAW_TOOLS_MCP_TOOLS: "grokbot",
         OPENCLAW_TOOLS_MCP_SYSTEM_AGENT_SURFACE: "cli",
       });
 
@@ -3818,7 +3818,7 @@ describe("prepareCliRunContext", () => {
       });
 
       // Candidate is invalidated (no native --resume) yet reseed still fires:
-      // prepare hands the prior OpenClaw conversation forward as history.
+      // prepare hands the prior GrokBot conversation forward as history.
       expect(context.reusableCliSession).toEqual({
         mode: "invalidate",
         invalidatedReason: "missing-transcript",
@@ -4000,14 +4000,14 @@ describe("prepareCliRunContext", () => {
 
       const context = await prepareCliRunContext({
         sessionId: "session-test",
-        sessionKey: "agent:openclaw:main",
+        sessionKey: "agent:grokbot:main",
         sessionFile,
         workspaceDir: dir,
         prompt: "approve the proposal",
         provider: "claude-cli",
         model: "opus",
         timeoutMs: 1_000,
-        runId: "run-openclaw-process-per-turn",
+        runId: "run-grokbot-process-per-turn",
         cliSessionBinding: { sessionId: "native-claude-sid" },
         config: createCliBackendConfig(),
         disableCliLiveSession: true,
@@ -4252,7 +4252,7 @@ describe("prepareCliRunContext", () => {
 
   it("renders CLI skills from sandbox-readable paths instead of persisted host snapshots", async () => {
     const { dir, sessionFile } = createSessionFile();
-    const hostSkillDir = "/home/tzdai/.npm-global/lib/node_modules/openclaw/skills/gog";
+    const hostSkillDir = "/home/tzdai/.npm-global/lib/node_modules/grokbot/skills/gog";
     const hostSkillPath = `${hostSkillDir}/SKILL.md`;
     const materializedWorkspace = path.join(dir, "state", "sandbox-skills");
     const materializedSkillDir = path.join(materializedWorkspace, "skills", "gog");
@@ -4307,10 +4307,10 @@ describe("prepareCliRunContext", () => {
               description: "Read Gmail safely.",
               filePath: hostSkillPath,
               baseDir: hostSkillDir,
-              source: "openclaw-bundled",
+              source: "grokbot-bundled",
               sourceInfo: {
                 path: hostSkillPath,
-                source: "openclaw-bundled",
+                source: "grokbot-bundled",
                 scope: "project",
                 origin: "top-level",
                 baseDir: hostSkillDir,
@@ -4327,7 +4327,7 @@ describe("prepareCliRunContext", () => {
         workspaceDir: dir,
       });
       expect(context.systemPrompt).toContain(
-        "/workspace/.openclaw/sandbox-skills/skills/gog/SKILL.md",
+        "/workspace/.grokbot/sandbox-skills/skills/gog/SKILL.md",
       );
       expect(context.systemPrompt).not.toContain(hostSkillPath);
       expect(context.systemPromptReport.skills.promptChars).toBeGreaterThan(0);
@@ -4377,9 +4377,9 @@ describe("prepareCliRunContext", () => {
       });
       setCliRunnerPrepareTestDeps({
         prepareClaudeCliSkillsPlugin: vi.fn(async () => ({
-          args: ["--plugin-dir", path.join(dir, "openclaw-skills")],
+          args: ["--plugin-dir", path.join(dir, "grokbot-skills")],
           cleanup: vi.fn(async () => undefined),
-          pluginDir: path.join(dir, "openclaw-skills"),
+          pluginDir: path.join(dir, "grokbot-skills"),
         })),
       });
 
@@ -4429,7 +4429,7 @@ describe("prepareCliRunContext", () => {
       expect(context.systemPromptReport.skills.promptChars).toBe(0);
       expect(context.claudeSkillsPluginArgs).toEqual([
         "--plugin-dir",
-        path.join(dir, "openclaw-skills"),
+        path.join(dir, "grokbot-skills"),
       ]);
     } finally {
       fs.rmSync(dir, { recursive: true, force: true });
@@ -4677,7 +4677,7 @@ describe("prepareCliRunContext", () => {
 
       expect(context.openClawHistoryPrompt).toBeDefined();
       expect(context.openClawHistoryPrompt).toContain(summaryMarker);
-      expect(context.openClawHistoryPrompt).not.toContain("OpenClaw reseed history truncated");
+      expect(context.openClawHistoryPrompt).not.toContain("GrokBot reseed history truncated");
     } finally {
       fs.rmSync(dir, { recursive: true, force: true });
     }
@@ -4732,7 +4732,7 @@ describe("prepareCliRunContext", () => {
 
       expect(context.openClawHistoryPrompt).toBeDefined();
       expect(context.openClawHistoryPrompt).toContain(summaryMarker);
-      expect(context.openClawHistoryPrompt).not.toContain("OpenClaw reseed history truncated");
+      expect(context.openClawHistoryPrompt).not.toContain("GrokBot reseed history truncated");
     } finally {
       fs.rmSync(dir, { recursive: true, force: true });
     }
@@ -4765,7 +4765,7 @@ describe("prepareCliRunContext", () => {
       });
 
       expect(context.openClawHistoryPrompt).toBeDefined();
-      expect(context.openClawHistoryPrompt).toContain("OpenClaw reseed history truncated");
+      expect(context.openClawHistoryPrompt).toContain("GrokBot reseed history truncated");
     } finally {
       fs.rmSync(dir, { recursive: true, force: true });
     }
@@ -4843,7 +4843,7 @@ describe("prepareCliRunContext", () => {
       expect(context.openClawHistoryPrompt).toBeDefined();
       expect(context.openClawHistoryPrompt).toContain(recentMarker);
       expect(context.openClawHistoryPrompt).toContain("EARLIEST_USER");
-      expect(context.openClawHistoryPrompt).not.toContain("OpenClaw reseed history truncated");
+      expect(context.openClawHistoryPrompt).not.toContain("GrokBot reseed history truncated");
     } finally {
       fs.rmSync(dir, { recursive: true, force: true });
     }

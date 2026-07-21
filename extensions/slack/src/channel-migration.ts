@@ -1,8 +1,8 @@
 // Slack plugin module implements channel migration behavior.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import type { SlackChannelConfig } from "openclaw/plugin-sdk/config-contracts";
-import { normalizeAccountId } from "openclaw/plugin-sdk/routing";
-import { normalizeLowercaseStringOrEmpty } from "openclaw/plugin-sdk/string-coerce-runtime";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import type { SlackChannelConfig } from "grokbot/plugin-sdk/config-contracts";
+import { normalizeAccountId } from "grokbot/plugin-sdk/routing";
+import { normalizeLowercaseStringOrEmpty } from "grokbot/plugin-sdk/string-coerce-runtime";
 
 type SlackChannels = Record<string, SlackChannelConfig>;
 

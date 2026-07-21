@@ -2,7 +2,7 @@
 set -euo pipefail
 trap "" PIPE
 export TERM=xterm-256color
-source scripts/lib/openclaw-e2e-instance.sh
+source scripts/lib/grokbot-e2e-instance.sh
 OPENCLAW_ONBOARD_SCENARIO_SOURCE_ONLY="${OPENCLAW_ONBOARD_SCENARIO_SOURCE_ONLY:-0}"
 if [ "$OPENCLAW_ONBOARD_SCENARIO_SOURCE_ONLY" != "1" ]; then
   openclaw_e2e_eval_test_state_from_b64 "${OPENCLAW_TEST_STATE_FUNCTION_B64:?missing OPENCLAW_TEST_STATE_FUNCTION_B64}"
@@ -16,7 +16,7 @@ ONBOARD_TMP_ROOT="${OPENCLAW_ONBOARD_E2E_TMPDIR:-${TMPDIR:-/tmp}}"
 ONBOARD_TMP_ROOT="${ONBOARD_TMP_ROOT%/}"
 [ -n "$ONBOARD_TMP_ROOT" ] || ONBOARD_TMP_ROOT="/tmp"
 mkdir -p "$ONBOARD_TMP_ROOT"
-ONBOARD_TMP_DIR="$(mktemp -d "$ONBOARD_TMP_ROOT/openclaw-onboard.XXXXXX")"
+ONBOARD_TMP_DIR="$(mktemp -d "$ONBOARD_TMP_ROOT/grokbot-onboard.XXXXXX")"
 OPENCLAW_E2E_LOG_DIR="$ONBOARD_TMP_DIR/logs"
 GATEWAY_LOG_PATH="$ONBOARD_TMP_DIR/gateway-e2e.log"
 export OPENCLAW_E2E_LOG_DIR

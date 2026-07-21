@@ -213,8 +213,8 @@ async function validatePackagePayload(params: {
       failures.push({
         pluginId: params.pluginId,
         installPath: params.installPath,
-        reason: "missing-openclaw-peer-link",
-        detail: `Plugin declares peerDependency "openclaw" but peer link audit failed: ${peerIssue.reason}.`,
+        reason: "missing-grokbot-peer-link",
+        detail: `Plugin declares peerDependency "grokbot" but peer link audit failed: ${peerIssue.reason}.`,
       });
     }
   }
@@ -228,7 +228,7 @@ async function validatePackagePayload(params: {
       detail: `Plugin extension entry validation failed: ${
         extensionResolution.status === "invalid"
           ? extensionResolution.error
-          : "package.json openclaw.extensions is empty"
+          : "package.json grokbot.extensions is empty"
       }`,
     });
     return failures;
@@ -335,7 +335,7 @@ function manifestDeclaresOpenClawPeer(manifest: PackageManifest): boolean {
     typeof peerDependencies === "object" &&
     peerDependencies !== null &&
     !Array.isArray(peerDependencies) &&
-    typeof (peerDependencies as Record<string, unknown>).openclaw === "string"
+    typeof (peerDependencies as Record<string, unknown>).grokbot === "string"
   );
 }
 

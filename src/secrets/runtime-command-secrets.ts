@@ -1,7 +1,7 @@
 /** Resolves command-scoped secrets, including web provider override credentials. */
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
-import { uniqueStrings } from "@openclaw/normalization-core/string-normalization";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import { normalizeOptionalString } from "@grokbot/normalization-core/string-coerce";
+import { uniqueStrings } from "@grokbot/normalization-core/string-normalization";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { resolveSecretInputRef } from "../config/types.secrets.js";
 import { resolveManifestContractOwnerPluginId } from "../plugins/plugin-registry.js";
 import {

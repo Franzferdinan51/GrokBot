@@ -1,12 +1,12 @@
 /**
  * Implements sandboxed HTTP requests for Codex native tools by routing network
- * access through the active OpenClaw sandbox backend.
+ * access through the active GrokBot sandbox backend.
  */
 import { spawn, type ChildProcessWithoutNullStreams } from "node:child_process";
-import { embeddedAgentLog } from "openclaw/plugin-sdk/agent-harness-runtime";
-import type { SandboxContext } from "openclaw/plugin-sdk/sandbox";
-import { SsrFBlockedError, isBlockedHostnameOrIp } from "openclaw/plugin-sdk/ssrf-runtime";
-import { sliceUtf16Safe } from "openclaw/plugin-sdk/text-utility-runtime";
+import { embeddedAgentLog } from "grokbot/plugin-sdk/agent-harness-runtime";
+import type { SandboxContext } from "grokbot/plugin-sdk/sandbox";
+import { SsrFBlockedError, isBlockedHostnameOrIp } from "grokbot/plugin-sdk/ssrf-runtime";
+import { sliceUtf16Safe } from "grokbot/plugin-sdk/text-utility-runtime";
 import type { WebSocket } from "ws";
 import type { JsonObject, JsonValue } from "../protocol.js";
 import { readHttpHeaders, requireNumber, requireObject, requireString } from "./json-rpc.js";
@@ -121,7 +121,7 @@ async function runStreamingSandboxHttpRequest(
   try {
     const [command, ...args] = execSpec.argv;
     if (!command) {
-      throw new Error("OpenClaw sandbox HTTP exec spec did not provide a command.");
+      throw new Error("GrokBot sandbox HTTP exec spec did not provide a command.");
     }
     child = spawn(command, args, {
       env: execSpec.env,
@@ -281,7 +281,7 @@ function readStreamingSandboxHttpResponse(params: {
 }
 
 const SANDBOX_HTTP_REQUEST_SCRIPT = String.raw`
-tmp=$(mktemp "$TMPDIR/openclaw-http.XXXXXX.py" 2>/dev/null || mktemp "/tmp/openclaw-http.XXXXXX.py") || exit 1
+tmp=$(mktemp "$TMPDIR/grokbot-http.XXXXXX.py" 2>/dev/null || mktemp "/tmp/grokbot-http.XXXXXX.py") || exit 1
 trap 'rm -f "$tmp"' EXIT
 cat > "$tmp" <<'PY'
 import base64

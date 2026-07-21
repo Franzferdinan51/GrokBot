@@ -144,7 +144,7 @@ class FakeWorkerGateway {
   }
 
   async start(): Promise<void> {
-    this.rootDir = await mkdtemp(path.join(tmpdir(), "openclaw-worker-gateway-"));
+    this.rootDir = await mkdtemp(path.join(tmpdir(), "grokbot-worker-gateway-"));
     this.socketPath = path.join(this.rootDir, "gateway.sock");
     await new Promise<void>((resolve, reject) => {
       const onError = (error: Error) => {
@@ -746,7 +746,7 @@ async function setup(options?: FakeGatewayOptions): Promise<{
   const gateway = new FakeWorkerGateway(options);
   gateways.push(gateway);
   await gateway.start();
-  const workspaceDir = await mkdtemp(path.join(tmpdir(), "openclaw-worker-workspace-"));
+  const workspaceDir = await mkdtemp(path.join(tmpdir(), "grokbot-worker-workspace-"));
   tempDirs.push(workspaceDir);
   return { gateway, workspaceDir, launch: descriptor(gateway.socketPath, workspaceDir) };
 }

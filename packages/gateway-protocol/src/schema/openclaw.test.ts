@@ -8,9 +8,9 @@ import {
   SystemAgentChatHistoryResultSchema,
   SystemAgentSetupDetectResultSchema,
   SystemAgentSetupVerifyResultSchema,
-} from "./openclaw.js";
+} from "./grokbot.js";
 
-describe("OpenClaw chat history protocol", () => {
+describe("GrokBot chat history protocol", () => {
   it("accepts the default request and bounds explicit limits", () => {
     expect(validateSystemAgentChatHistoryParams({})).toBe(true);
     expect(validateSystemAgentChatHistoryParams({ limit: 1 })).toBe(true);
@@ -36,7 +36,7 @@ describe("OpenClaw chat history protocol", () => {
   });
 });
 
-describe("OpenClaw setup detection protocol", () => {
+describe("GrokBot setup detection protocol", () => {
   it("accepts additive presentation metadata and older results without installs", () => {
     const result = {
       candidates: [
@@ -88,7 +88,7 @@ describe("OpenClaw setup detection protocol", () => {
   });
 });
 
-describe("OpenClaw setup verification protocol", () => {
+describe("GrokBot setup verification protocol", () => {
   it("accepts only an empty request", () => {
     expect(validateSystemAgentSetupVerifyParams({})).toBe(true);
     expect(validateSystemAgentSetupVerifyParams({ modelRef: "openai/gpt-5.5" })).toBe(false);

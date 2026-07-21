@@ -174,7 +174,7 @@ export function validateExtendedStableRunIdentity({
 }) {
   const expectedWorkflowName =
     kind === "preflight"
-      ? "OpenClaw NPM Release"
+      ? "GrokBot NPM Release"
       : kind === "plugin"
         ? "Plugin NPM Release"
         : "Full Release Validation";
@@ -284,8 +284,8 @@ export async function verifyExtendedStableRegistryReadback({
   let exactVersion = "missing";
   let extendedStableSelector = "missing";
   for (let attempt = 1; attempt <= attempts; attempt += 1) {
-    const exactResult = await query(`openclaw@${expectedVersion}`);
-    const extendedStableResult = await query("openclaw@extended-stable");
+    const exactResult = await query(`grokbot@${expectedVersion}`);
+    const extendedStableResult = await query("grokbot@extended-stable");
     exactVersion = exactResult.status === 0 ? exactResult.stdout.trim() : "missing";
     extendedStableSelector =
       extendedStableResult.status === 0 ? extendedStableResult.stdout.trim() : "missing";
@@ -297,7 +297,7 @@ export async function verifyExtendedStableRegistryReadback({
     }
   }
   throw new Error(
-    `npm registry did not converge to openclaw@${expectedVersion} and openclaw@extended-stable=${expectedVersion} after ${attempts} attempts (exact=${exactVersion}, extended-stable=${extendedStableSelector}).`,
+    `npm registry did not converge to grokbot@${expectedVersion} and grokbot@extended-stable=${expectedVersion} after ${attempts} attempts (exact=${exactVersion}, extended-stable=${extendedStableSelector}).`,
   );
 }
 
@@ -307,7 +307,7 @@ export function extendedStableSelectorRepairCommand(expectedVersion) {
   if (parsed === null || parsed.channel !== "stable" || parsed.correctionNumber !== undefined) {
     throw new Error("Extended-stable selector repair requires an exact final YYYY.M.P version.");
   }
-  return `npm dist-tag add openclaw@${parsed.version} extended-stable`;
+  return `npm dist-tag add grokbot@${parsed.version} extended-stable`;
 }
 
 function git(args) {
@@ -505,7 +505,7 @@ async function main() {
   if (command === "capture-selector") {
     const previous = capturePriorExtendedStableSelector({
       query: () =>
-        spawnSync("npm", ["view", "openclaw", "dist-tags", "--json"], { encoding: "utf8" }),
+        spawnSync("npm", ["view", "grokbot", "dist-tags", "--json"], { encoding: "utf8" }),
     });
     appendOutput({ previous });
     return;
@@ -538,7 +538,7 @@ if (import.meta.url === pathToFileURL(process.argv[1] ?? "").href) {
     await main();
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
-    console.error(`openclaw-npm-extended-stable-release: ${message}`);
+    console.error(`grokbot-npm-extended-stable-release: ${message}`);
     process.exit(1);
   }
 }

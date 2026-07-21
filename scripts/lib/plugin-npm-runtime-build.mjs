@@ -24,8 +24,8 @@ function readJsonFile(filePath) {
 /** Return whether a plugin package publishes through an artifact release workflow. */
 function isPublishablePluginPackage(packageJson) {
   return (
-    packageJson.openclaw?.release?.publishToNpm === true ||
-    packageJson.openclaw?.release?.publishToClawHub === true
+    packageJson.grokbot?.release?.publishToNpm === true ||
+    packageJson.grokbot?.release?.publishToClawHub === true
   );
 }
 
@@ -38,7 +38,7 @@ function isTypeScriptEntry(entry) {
 }
 
 function resolveRuntimeBuildFormat(packageJson) {
-  return packageJson.openclaw?.build?.runtimeFormat === "cjs" ? "cjs" : "esm";
+  return packageJson.grokbot?.build?.runtimeFormat === "cjs" ? "cjs" : "esm";
 }
 
 function runtimeBuildExtension(runtimeFormat) {
@@ -78,7 +78,7 @@ function getRecord(value) {
 function createNeverBundleDependencyMatcher(packageJson) {
   const externalDependencies = collectExternalDependencyNames(packageJson);
   return (id) => {
-    if (id === "openclaw" || id.startsWith("openclaw/")) {
+    if (id === "grokbot" || id.startsWith("grokbot/")) {
       return true;
     }
     for (const dependency of externalDependencies) {
@@ -169,8 +169,8 @@ function resolvePluginNpmRuntimePackageFiles(plan) {
       : [],
   );
   merged.add("dist/**");
-  if (packageRelativePathExists(plan.packageDir, "openclaw.plugin.json")) {
-    merged.add("openclaw.plugin.json");
+  if (packageRelativePathExists(plan.packageDir, "grokbot.plugin.json")) {
+    merged.add("grokbot.plugin.json");
   }
   if (packageRelativePathExists(plan.packageDir, "npm-shrinkwrap.json")) {
     merged.add("npm-shrinkwrap.json");
@@ -199,33 +199,33 @@ function normalizeOpenClawPeerRange(value) {
 
 function resolveOpenClawPeerRange(packageJson, rootPackageJson) {
   return (
-    normalizeOpenClawPeerRange(packageJson.openclaw?.compat?.pluginApi) ||
-    normalizeOpenClawPeerRange(packageJson.peerDependencies?.openclaw) ||
-    normalizeOpenClawPeerRange(packageJson.openclaw?.build?.openclawVersion) ||
+    normalizeOpenClawPeerRange(packageJson.grokbot?.compat?.pluginApi) ||
+    normalizeOpenClawPeerRange(packageJson.peerDependencies?.grokbot) ||
+    normalizeOpenClawPeerRange(packageJson.grokbot?.build?.openclawVersion) ||
     normalizeOpenClawPeerRange(rootPackageJson?.version) ||
     normalizeOpenClawPeerRange(packageJson.version)
   );
 }
 
-/** Resolve package peer dependency metadata for the OpenClaw plugin API. */
+/** Resolve package peer dependency metadata for the GrokBot plugin API. */
 function resolvePluginNpmRuntimePackagePeerMetadata(plan) {
   const openclawPeerRange = resolveOpenClawPeerRange(plan.packageJson, plan.rootPackageJson);
   if (!openclawPeerRange) {
     throw new Error(
-      `cannot infer openclaw peerDependency range for ${plan.pluginDir}; set openclaw.compat.pluginApi or package version`,
+      `cannot infer grokbot peerDependency range for ${plan.pluginDir}; set grokbot.compat.pluginApi or package version`,
     );
   }
   const existingPeerDependencies = getStringRecord(plan.packageJson.peerDependencies);
   const existingPeerDependenciesMeta = getRecord(plan.packageJson.peerDependenciesMeta);
-  const existingOpenClawMeta = getRecord(existingPeerDependenciesMeta.openclaw);
+  const existingOpenClawMeta = getRecord(existingPeerDependenciesMeta.grokbot);
   return {
     peerDependencies: {
       ...existingPeerDependencies,
-      openclaw: openclawPeerRange,
+      grokbot: openclawPeerRange,
     },
     peerDependenciesMeta: {
       ...existingPeerDependenciesMeta,
-      openclaw: {
+      grokbot: {
         ...existingOpenClawMeta,
         optional: true,
       },
@@ -281,15 +281,15 @@ export function resolvePluginNpmRuntimeBuildPlan(params) {
     entry,
     outDir: path.join(packageDir, "dist"),
     runtimeFormat,
-    runtimeExtensions: (Array.isArray(packageJson.openclaw?.extensions)
-      ? packageJson.openclaw.extensions
+    runtimeExtensions: (Array.isArray(packageJson.grokbot?.extensions)
+      ? packageJson.grokbot.extensions
       : []
     )
       .map(normalizePackageEntry)
       .filter(Boolean)
       .map((runtimeEntry) => toPackageRuntimeEntry(runtimeEntry, runtimeFormat)),
-    runtimeSetupEntry: normalizePackageEntry(packageJson.openclaw?.setupEntry)
-      ? toPackageRuntimeEntry(packageJson.openclaw.setupEntry, runtimeFormat)
+    runtimeSetupEntry: normalizePackageEntry(packageJson.grokbot?.setupEntry)
+      ? toPackageRuntimeEntry(packageJson.grokbot.setupEntry, runtimeFormat)
       : undefined,
   };
   return {

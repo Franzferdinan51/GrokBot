@@ -1,19 +1,19 @@
 // Memory host dreaming helpers record and load memory dreaming artifacts.
 import path from "node:path";
-import { parseBoolean } from "@openclaw/normalization-core/boolean-coercion";
+import { parseBoolean } from "@grokbot/normalization-core/boolean-coercion";
 import {
   parseStrictNonNegativeInteger,
   parseStrictPositiveInteger,
-} from "@openclaw/normalization-core/number-coercion";
-import { asNullableRecord } from "@openclaw/normalization-core/record-coerce";
+} from "@grokbot/normalization-core/number-coercion";
+import { asNullableRecord } from "@grokbot/normalization-core/record-coerce";
 import {
   lowercasePreservingWhitespace,
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalLowercaseString,
   normalizeStringifiedOptionalString,
-} from "@openclaw/normalization-core/string-coerce";
+} from "@grokbot/normalization-core/string-coerce";
 import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from "../agents/agent-scope.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 
 const DEFAULT_MEMORY_DREAMING_ENABLED = false;
 const DEFAULT_MEMORY_DREAMING_TIMEZONE = undefined;

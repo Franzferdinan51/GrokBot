@@ -2,15 +2,15 @@
  * Bundled Codex plugin entry: app-server harness, media understanding,
  * migration provider, CLI-session commands, and binding hooks.
  */
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { mutateConfigFile } from "openclaw/plugin-sdk/config-mutation";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { mutateConfigFile } from "grokbot/plugin-sdk/config-mutation";
 import {
   normalizePluginsConfig,
   resolveEffectiveEnableState,
   resolveLivePluginConfigObject,
-} from "openclaw/plugin-sdk/plugin-config-runtime";
-import { definePluginEntry } from "openclaw/plugin-sdk/plugin-entry";
-import type { PluginStateSyncKeyedStore } from "openclaw/plugin-sdk/plugin-state-runtime";
+} from "grokbot/plugin-sdk/plugin-config-runtime";
+import { definePluginEntry } from "grokbot/plugin-sdk/plugin-entry";
+import type { PluginStateSyncKeyedStore } from "grokbot/plugin-sdk/plugin-state-runtime";
 import { registerCodexCliMetadata } from "./cli-metadata.js";
 import { createCodexAppServerAgentHarness } from "./harness.js";
 import { buildCodexMediaUnderstandingProvider } from "./media-understanding-provider.js";

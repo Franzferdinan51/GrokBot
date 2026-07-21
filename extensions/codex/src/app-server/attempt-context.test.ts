@@ -5,11 +5,11 @@ import path from "node:path";
 import {
   embeddedAgentLog,
   type EmbeddedRunAttemptParams,
-} from "openclaw/plugin-sdk/agent-harness-runtime";
+} from "grokbot/plugin-sdk/agent-harness-runtime";
 import {
   clearMemoryPluginState,
   registerMemoryCapability,
-} from "openclaw/plugin-sdk/memory-host-core";
+} from "grokbot/plugin-sdk/memory-host-core";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   buildCodexWorkspaceBootstrapContext,
@@ -60,7 +60,7 @@ describe("Codex app-server attempt context", () => {
       },
       {
         type: "namespace",
-        name: "openclaw",
+        name: "grokbot",
         description: "",
         tools: [
           {

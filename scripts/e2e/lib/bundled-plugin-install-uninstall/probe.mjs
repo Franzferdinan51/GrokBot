@@ -43,7 +43,7 @@ function resolveStateDir() {
   if (process.env.OPENCLAW_STATE_DIR) {
     return process.env.OPENCLAW_STATE_DIR;
   }
-  return path.join(process.env.HOME || os.homedir(), ".openclaw");
+  return path.join(process.env.HOME || os.homedir(), ".grokbot");
 }
 
 function pathReferencesBundledRuntime(value, pluginDir) {
@@ -141,7 +141,7 @@ function parseJsonValue(text) {
 }
 
 function pluginRequiresConfig(pluginDir) {
-  const manifestPath = path.join(pluginDir, "openclaw.plugin.json");
+  const manifestPath = path.join(pluginDir, "grokbot.plugin.json");
   if (!fs.existsSync(manifestPath)) {
     throw new Error(`missing bundled plugin manifest: ${manifestPath}`);
   }
@@ -213,7 +213,7 @@ async function selectedManifestEntries() {
 
 function assertInstalled(pluginId, pluginDir, requiresConfig, selectedPluginRoot = "") {
   const stateDir = resolveStateDir();
-  const configPath = path.join(stateDir, "openclaw.json");
+  const configPath = path.join(stateDir, "grokbot.json");
   const config = readJson(configPath);
   const records = readPluginInstallRecords({ stateDir, configPath });
   const record = records[pluginId];
@@ -266,7 +266,7 @@ function assertInstalled(pluginId, pluginDir, requiresConfig, selectedPluginRoot
 
 function assertUninstalled(pluginId, pluginDir) {
   const stateDir = resolveStateDir();
-  const configPath = path.join(stateDir, "openclaw.json");
+  const configPath = path.join(stateDir, "grokbot.json");
   const config = fs.existsSync(configPath) ? readJson(configPath) : {};
   const records = readPluginInstallRecords({ stateDir, configPath });
   if (records[pluginId]) {

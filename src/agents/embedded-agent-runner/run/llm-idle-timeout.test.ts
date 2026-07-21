@@ -1,12 +1,12 @@
-import { notifyLlmRequestActivity } from "@openclaw/ai/internal/runtime";
-import { expectDefined } from "@openclaw/normalization-core";
+import { notifyLlmRequestActivity } from "@grokbot/ai/internal/runtime";
+import { expectDefined } from "@grokbot/normalization-core";
 // LLM idle-timeout tests cover timeout selection and stream wrapping for
 // embedded provider calls, including local-provider and cron exceptions.
-import { MAX_TIMER_TIMEOUT_MS } from "@openclaw/normalization-core/number-coercion";
+import { MAX_TIMER_TIMEOUT_MS } from "@grokbot/normalization-core/number-coercion";
 import {
   createAssistantMessageEventStream,
   type AssistantMessageEventStream,
-} from "openclaw/plugin-sdk/llm";
+} from "grokbot/plugin-sdk/llm";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import type { OpenClawConfig } from "../../../config/config.js";
 import type { StreamFn } from "../../runtime/index.js";

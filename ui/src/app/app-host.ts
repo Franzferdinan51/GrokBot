@@ -1,6 +1,6 @@
 import { ContextProvider } from "@lit/context";
-import type { UiCommandParams } from "@openclaw/gateway-protocol";
-import type { RouteLocation, RouterState } from "@openclaw/uirouter";
+import type { UiCommandParams } from "@grokbot/gateway-protocol";
+import type { RouteLocation, RouterState } from "@grokbot/uirouter";
 import { html, nothing } from "lit";
 import { property, query, state } from "lit/decorators.js";
 import {
@@ -49,7 +49,7 @@ import { isWorkboardEnabledInConfigSnapshot } from "../lib/plugin-activation.ts"
 import { searchForSession } from "../lib/sessions/index.ts";
 import { isTerminalAvailable } from "../lib/terminal-availability.ts";
 import "../lib/toast.ts";
-import { OpenClawLightDomElement } from "../lit/openclaw-element.ts";
+import { OpenClawLightDomElement } from "../lit/grokbot-element.ts";
 import { SubscriptionsController } from "../lit/subscriptions-controller.ts";
 import { findSettingsSearchBlocks } from "../pages/config/settings-search.ts";
 import { newSessionSearch, type NewSessionTarget } from "../pages/new-session/location.ts";
@@ -194,7 +194,7 @@ function renderApprovalDocument(runtime: ApplicationRuntime) {
     return nothing;
   }
   return html`
-    <openclaw-approval-page .approvalId=${documentMode.approvalId ?? ""}>
+    <grokbot-approval-page .approvalId=${documentMode.approvalId ?? ""}>
       <main class="approval-page approval-page--booting" role="status" aria-live="polite">
         <img
           class="connect-splash__logo"
@@ -203,7 +203,7 @@ function renderApprovalDocument(runtime: ApplicationRuntime) {
         />
         <span>${t("common.loading")}</span>
       </main>
-    </openclaw-approval-page>
+    </grokbot-approval-page>
   `;
 }
 
@@ -281,7 +281,7 @@ class OpenClawApp extends OpenClawLightDomElement {
     // their lazy source getters bind on both the initial mount and reconnect.
     this.requestUpdate();
     void this.runtime.start().catch((error: unknown) => {
-      console.error("[openclaw] application start failed", error);
+      console.error("[grokbot] application start failed", error);
     });
   }
 
@@ -342,7 +342,7 @@ class OpenClawApp extends OpenClawLightDomElement {
     const gatewaySnapshot = context.gateway.snapshot;
     const gatewayUrlConfirmation = this.pendingGatewayUrl
       ? html`
-          <openclaw-gateway-url-confirmation
+          <grokbot-gateway-url-confirmation
             .props=${{
               pendingGatewayUrl: this.pendingGatewayUrl,
               onConfirm: () => {
@@ -354,7 +354,7 @@ class OpenClawApp extends OpenClawLightDomElement {
                 this.pendingGatewayUrl = null;
               },
             }}
-          ></openclaw-gateway-url-confirmation>
+          ></grokbot-gateway-url-confirmation>
         `
       : nothing;
     // Embedded mobile terminals own the whole document. Keep the generic login
@@ -366,12 +366,12 @@ class OpenClawApp extends OpenClawLightDomElement {
       );
       // Embedded clients query this host immediately; keep it stable while the chunk loads.
       return html`
-        <openclaw-terminal-panel
+        <grokbot-terminal-panel
           .client=${gatewaySnapshot.connected ? gatewaySnapshot.client : null}
           .available=${terminalAvailable}
           .themeMode=${resolveTerminalThemeMode()}
           fullscreen
-        ></openclaw-terminal-panel>
+        ></grokbot-terminal-panel>
         ${!isOptionalElementDefined(TERMINAL_PANEL_ELEMENT) && terminalAvailable
           ? renderConnectingSplash(context.basePath)
           : nothing}
@@ -395,17 +395,17 @@ class OpenClawApp extends OpenClawLightDomElement {
       gatewaySnapshot.client !== null;
     if (initialConnectPending) {
       return html`
-        <openclaw-tooltip-provider>
+        <grokbot-tooltip-provider>
           ${renderConnectingSplash(context.basePath)} ${gatewayUrlConfirmation}
-        </openclaw-tooltip-provider>
+        </grokbot-tooltip-provider>
       `;
     }
     const showLoginGate =
       !gatewaySnapshot.connected && (this.loginGatePinned || !gatewaySnapshot.reconnecting);
     if (showLoginGate) {
       return html`
-        <openclaw-tooltip-provider>
-          <openclaw-login-gate
+        <grokbot-tooltip-provider>
+          <grokbot-login-gate
             .props=${{
               basePath: context.basePath,
               connected: gatewaySnapshot.connected,
@@ -442,28 +442,28 @@ class OpenClawApp extends OpenClawLightDomElement {
                 });
               },
             }}
-          ></openclaw-login-gate>
+          ></grokbot-login-gate>
           ${gatewayUrlConfirmation}
-        </openclaw-tooltip-provider>
+        </grokbot-tooltip-provider>
       `;
     }
     if (runtime.documentMode?.kind === "approval") {
       return html`
-        <openclaw-tooltip-provider>
+        <grokbot-tooltip-provider>
           ${gatewayUrlConfirmation} ${renderApprovalDocument(runtime)}
-        </openclaw-tooltip-provider>
+        </grokbot-tooltip-provider>
       `;
     }
     return html`
-      <openclaw-tooltip-provider>
-        <openclaw-github-link-hovercard-provider .client=${gatewaySnapshot.client}>
+      <grokbot-tooltip-provider>
+        <grokbot-github-link-hovercard-provider .client=${gatewaySnapshot.client}>
           ${gatewayUrlConfirmation}
-          <openclaw-app-shell
+          <grokbot-app-shell
             .runtime=${runtime}
             .onboarding=${this.onboarding}
-          ></openclaw-app-shell>
-        </openclaw-github-link-hovercard-provider>
-      </openclaw-tooltip-provider>
+          ></grokbot-app-shell>
+        </grokbot-github-link-hovercard-provider>
+      </grokbot-tooltip-provider>
     `;
   }
 }
@@ -481,8 +481,8 @@ class OpenClawShell extends OpenClawLightDomElement {
   private readonly terminalPanelElement = TERMINAL_PANEL_ELEMENT;
   private readonly browserPanelElement = BROWSER_PANEL_ELEMENT;
   private readonly execApprovalElement = EXEC_APPROVAL_ELEMENT;
-  @query("openclaw-command-palette") private commandPalette?: CommandPaletteElement;
-  @query("openclaw-exec-approval")
+  @query("grokbot-command-palette") private commandPalette?: CommandPaletteElement;
+  @query("grokbot-exec-approval")
   private approvalOverlay?: HTMLElement & { show(): void };
   private commandPaletteTarget?: CommandPaletteTargetDetail;
   private navDrawerTrigger: HTMLElement | null = null;
@@ -629,10 +629,10 @@ class OpenClawShell extends OpenClawLightDomElement {
     // Shipped Mac app builds without web chrome still drive these events; the
     // app's ⌘N menu item reuses native-new-session, while its ⌘K menu item
     // uses native-toggle-search because the legacy open-search is open-only.
-    window.addEventListener("openclaw:native-toggle-sidebar", this.handleNativeToggleSidebar);
-    window.addEventListener("openclaw:native-open-search", this.handleNativeOpenSearch);
-    window.addEventListener("openclaw:native-toggle-search", this.handleNativeToggleSearch);
-    window.addEventListener("openclaw:native-new-session", this.handleNativeNewSession);
+    window.addEventListener("grokbot:native-toggle-sidebar", this.handleNativeToggleSidebar);
+    window.addEventListener("grokbot:native-open-search", this.handleNativeOpenSearch);
+    window.addEventListener("grokbot:native-toggle-search", this.handleNativeToggleSearch);
+    window.addEventListener("grokbot:native-new-session", this.handleNativeNewSession);
     window.addEventListener(TERMINAL_PANEL_TOGGLE_EVENT, this.handleDeferredTerminalToggle);
     window.addEventListener(BROWSER_PANEL_TOGGLE_EVENT, this.handleDeferredBrowserToggle);
     // Write-through of synced display prefs to config ui.prefs. Server-applied
@@ -658,10 +658,10 @@ class OpenClawShell extends OpenClawLightDomElement {
     window.removeEventListener("dragover", this.handleUnhandledFileDrag);
     window.removeEventListener("drop", this.handleUnhandledFileDrag);
     window.removeEventListener(NATIVE_HISTORY_STATE_EVENT, this.handleNativeHistoryState);
-    window.removeEventListener("openclaw:native-toggle-sidebar", this.handleNativeToggleSidebar);
-    window.removeEventListener("openclaw:native-open-search", this.handleNativeOpenSearch);
-    window.removeEventListener("openclaw:native-toggle-search", this.handleNativeToggleSearch);
-    window.removeEventListener("openclaw:native-new-session", this.handleNativeNewSession);
+    window.removeEventListener("grokbot:native-toggle-sidebar", this.handleNativeToggleSidebar);
+    window.removeEventListener("grokbot:native-open-search", this.handleNativeOpenSearch);
+    window.removeEventListener("grokbot:native-toggle-search", this.handleNativeToggleSearch);
+    window.removeEventListener("grokbot:native-new-session", this.handleNativeNewSession);
     window.removeEventListener(TERMINAL_PANEL_TOGGLE_EVENT, this.handleDeferredTerminalToggle);
     window.removeEventListener(BROWSER_PANEL_TOGGLE_EVENT, this.handleDeferredBrowserToggle);
     setSettingsChangeListener(null);
@@ -695,7 +695,7 @@ class OpenClawShell extends OpenClawLightDomElement {
   private readonly handleGatewayEvent = (event: GatewayEventFrame) => {
     if (event.event === "config.changed") {
       // Another writer (agent-approved config_set, other device, CLI) changed
-      // openclaw.json; refresh the snapshot so ui.prefs reconcile live. A
+      // grokbot.json; refresh the snapshot so ui.prefs reconcile live. A
       // dirty local settings draft wins — the autosave/conflict flow owns it.
       const runtimeConfig = this.context?.runtimeConfig;
       if (runtimeConfig && !runtimeConfig.state.configFormDirty) {
@@ -1003,7 +1003,7 @@ class OpenClawShell extends OpenClawLightDomElement {
 
   private dismissSidebarTransientMenus(): boolean {
     return (
-      this.querySelector<AppSidebarElement>("openclaw-app-sidebar")?.dismissTransientMenus() ??
+      this.querySelector<AppSidebarElement>("grokbot-app-sidebar")?.dismissTransientMenus() ??
       false
     );
   }
@@ -1427,14 +1427,14 @@ class OpenClawShell extends OpenClawLightDomElement {
     // and the upgraded panels catch the first toggle instead of dropping the event.
     return html`
       ${isOptionalElementDefined(this.commandPaletteElement)
-        ? html`<openclaw-command-palette
+        ? html`<grokbot-command-palette
             .onNavigate=${(routeId: RouteId) => this.navigate(routeId)}
             .onSelectSession=${(sessionKey: string) => {
               context.gateway.setSessionKey(sessionKey);
               this.navigate("chat", { search: searchForSession(sessionKey) });
             }}
             .onSlashCommand=${this.handleCommandPaletteSlashCommand}
-          ></openclaw-command-palette>`
+          ></grokbot-command-palette>`
         : nothing}
       <div
         class="shell ${chatLikeRoute ? "shell--chat" : ""} ${navCollapsed
@@ -1457,7 +1457,7 @@ class OpenClawShell extends OpenClawLightDomElement {
         ></button>
         ${isNativeWebChromeHost() && !onboarding
           ? html`
-              <openclaw-macos-titlebar-controls
+              <grokbot-macos-titlebar-controls
                 .navCollapsed=${this.nativeNavCollapsed()}
                 .historyOnly=${settingsTakeover}
                 .canGoBack=${this.nativeHistoryState.canGoBack}
@@ -1465,20 +1465,20 @@ class OpenClawShell extends OpenClawLightDomElement {
                 .onToggleSidebar=${() => this.toggleNavigationSurface()}
                 .onOpenPalette=${this.openPalette}
                 .onOpenNewSession=${this.handleNativeNewSession}
-              ></openclaw-macos-titlebar-controls>
+              ></grokbot-macos-titlebar-controls>
             `
           : nothing}
-        <openclaw-app-topbar
+        <grokbot-app-topbar
           .basePath=${context.basePath}
           .searchDisabled=${false}
           .navDrawerOpen=${navDrawerOpen}
           .onboarding=${onboarding}
           .onOpenPalette=${this.openPalette}
           .onToggleDrawer=${(trigger: HTMLElement) => this.toggleNavigationSurface(trigger)}
-        ></openclaw-app-topbar>
+        ></grokbot-app-topbar>
         ${navCollapsed && !onboarding
           ? html`
-              <openclaw-tooltip .content=${`${t("nav.expand")} (⌘B)`}>
+              <grokbot-tooltip .content=${`${t("nav.expand")} (⌘B)`}>
                 <button
                   type="button"
                   class="shell-nav-expand"
@@ -1488,7 +1488,7 @@ class OpenClawShell extends OpenClawLightDomElement {
                 >
                   ${icons.panelLeftOpen}
                 </button>
-              </openclaw-tooltip>
+              </grokbot-tooltip>
             `
           : nothing}
         <div class="shell-nav">
@@ -1516,7 +1516,7 @@ class OpenClawShell extends OpenClawLightDomElement {
                 },
                 preloadTimers: this.settingsPreloadTimers,
               })
-            : html`<openclaw-app-sidebar
+            : html`<grokbot-app-sidebar
                 .basePath=${context.basePath}
                 .activeRouteId=${activeRoute}
                 .activePluginTabId=${activePluginTabId}
@@ -1555,7 +1555,7 @@ class OpenClawShell extends OpenClawLightDomElement {
                   this.navigate(routeId, options)}
                 .onPreloadRoute=${(routeId: string) =>
                   isRouteId(routeId) ? context.preload(routeId) : Promise.resolve()}
-              ></openclaw-app-sidebar>`}
+              ></grokbot-app-sidebar>`}
         </div>
         ${!navCollapsed && !onboarding && !settingsTakeover
           ? html`
@@ -1581,13 +1581,13 @@ class OpenClawShell extends OpenClawLightDomElement {
         >
           ${gatewaySnapshot.connected
             ? nothing
-            : html`<openclaw-connection-banner
+            : html`<grokbot-connection-banner
                 .props=${{
                   lastError: gatewaySnapshot.lastError,
                   onRetry: () => context.gateway.connect(),
                 }}
-              ></openclaw-connection-banner>`}
-          <openclaw-update-banner
+              ></grokbot-connection-banner>`}
+          <grokbot-update-banner
             .props=${{
               statusBanner: overlaySnapshot.controlUiRefreshRequired
                 ? {
@@ -1599,12 +1599,12 @@ class OpenClawShell extends OpenClawLightDomElement {
                 ? { label: t("common.refresh"), onClick: this.refreshControlUi }
                 : undefined,
             }}
-          ></openclaw-update-banner>
-          <openclaw-update-banner
+          ></grokbot-update-banner>
+          <grokbot-update-banner
             .props=${{
               statusBanner: overlaySnapshot.updateStatusBanner,
             }}
-          ></openclaw-update-banner>
+          ></grokbot-update-banner>
           ${renderFloatingUpdateCard({
             navigationSurfaceHidden,
             onboarding,
@@ -1612,18 +1612,18 @@ class OpenClawShell extends OpenClawLightDomElement {
             updateRunning: overlaySnapshot.updateRunning,
             onUpdate: () => void context.overlays.runUpdate(),
           })}
-          <openclaw-router-outlet
+          <grokbot-router-outlet
             .router=${runtime.router}
             .retryContext=${context}
             .onNotFound=${() => this.replaceChatWithCurrentSession()}
-          ></openclaw-router-outlet>
+          ></grokbot-router-outlet>
         </main>
-        <openclaw-terminal-panel
+        <grokbot-terminal-panel
           .client=${gatewaySnapshot.connected ? gatewaySnapshot.client : null}
           .available=${terminalAvailable}
           .themeMode=${resolveTerminalThemeMode()}
-        ></openclaw-terminal-panel>
-        <openclaw-browser-panel
+        ></grokbot-terminal-panel>
+        <grokbot-browser-panel
           .client=${gatewaySnapshot.connected ? gatewaySnapshot.client : null}
           .available=${browserPanelAvailable}
           .basePath=${context.basePath}
@@ -1632,9 +1632,9 @@ class OpenClawShell extends OpenClawLightDomElement {
             settings: { token: context.gateway.connection.token },
             password: context.gateway.connection.password,
           })}
-        ></openclaw-browser-panel>
+        ></grokbot-browser-panel>
         ${isOptionalElementDefined(this.execApprovalElement)
-          ? html`<openclaw-exec-approval
+          ? html`<grokbot-exec-approval
               .props=${{
                 queue: overlaySnapshot.approvalQueue,
                 busy: overlaySnapshot.approvalBusy,
@@ -1646,7 +1646,7 @@ class OpenClawShell extends OpenClawLightDomElement {
                   decision: Parameters<typeof context.overlays.decideApproval>[0],
                 ) => context.overlays.decideApproval(decision, approvalId),
               }}
-            ></openclaw-exec-approval>`
+            ></grokbot-exec-approval>`
           : nothing}
         ${renderDevicePairSetup({
           open: overlaySnapshot.devicePairSetupOpen,
@@ -1669,20 +1669,20 @@ class OpenClawShell extends OpenClawLightDomElement {
           },
         })}
         ${onboarding && activeRoute !== "custodian"
-          ? html`<openclaw-onboarding-memory-import
+          ? html`<grokbot-onboarding-memory-import
               .active=${true}
               .context=${context}
-            ></openclaw-onboarding-memory-import>`
+            ></grokbot-onboarding-memory-import>`
           : nothing}
-        <openclaw-toast-host></openclaw-toast-host>
+        <grokbot-toast-host></grokbot-toast-host>
       </div>
     `;
   }
 }
-if (!customElements.get("openclaw-app")) {
-  customElements.define("openclaw-app", OpenClawApp);
+if (!customElements.get("grokbot-app")) {
+  customElements.define("grokbot-app", OpenClawApp);
 }
-if (!customElements.get("openclaw-app-shell")) {
-  customElements.define("openclaw-app-shell", OpenClawShell);
+if (!customElements.get("grokbot-app-shell")) {
+  customElements.define("grokbot-app-shell", OpenClawShell);
 }
 /* oxlint-disable max-lines -- TODO: split this grandfathered oversized file. */

@@ -1,21 +1,21 @@
 ---
-name: openclaw-ci-limits
-description: Manage OpenClaw GitHub Actions and Blacksmith CI capacity, runner-registration budgets, fanout caps, main-push single-flight, shard sizing, hosted-runner offload, queue health, and safe ramp-down/ramp-up changes. Use when tuning `.github/workflows/*`, `docs/ci.md`, CI runner labels, matrix `max-parallel`, ClawSweeper/Blacksmith burst protection, CodeQL runner placement, or investigating slow/queued OpenClaw CI.
+name: grokbot-ci-limits
+description: Manage GrokBot GitHub Actions and Blacksmith CI capacity, runner-registration budgets, fanout caps, main-push single-flight, shard sizing, hosted-runner offload, queue health, and safe ramp-down/ramp-up changes. Use when tuning `.github/workflows/*`, `docs/ci.md`, CI runner labels, matrix `max-parallel`, ClawSweeper/Blacksmith burst protection, CodeQL runner placement, or investigating slow/queued GrokBot CI.
 ---
 
-# OpenClaw CI Limits
+# GrokBot CI Limits
 
 Use this skill for CI capacity changes, not ordinary test failure triage. The
-goal is to keep OpenClaw fast while staying below GitHub's self-hosted runner
+goal is to keep GrokBot fast while staying below GitHub's self-hosted runner
 registration edge limit.
 
 ## Core Facts
 
 - The scarce resource is Blacksmith runner registrations, not Blacksmith vCPU
   capacity.
-- GitHub runner registrations for `openclaw` currently report a 10,000 per
+- GitHub runner registrations for `grokbot` currently report a 10,000 per
   5-minute bucket in `actions_runner_registration`. Verify the live bucket
-  before each tuning pass because GitHub can change it. The `openclaw`
+  before each tuning pass because GitHub can change it. The `grokbot`
   organization shares one bucket.
 - Core REST quota does not draw down this bucket. Check
   `actions_runner_registration` separately; core quota can be healthy while
@@ -34,10 +34,10 @@ Before changing CI, collect current pressure:
 
 ```bash
 ghx api rate_limit --jq '{core:.resources.core,graphql:.resources.graphql,search:.resources.search,actions_runner_registration:.resources.actions_runner_registration}'
-ghx run list -R openclaw/openclaw --limit 20 --json databaseId,status,conclusion,workflowName,event,headBranch,createdAt,updatedAt,url
-ghx run list -R openclaw/clawsweeper --limit 20 --json databaseId,status,conclusion,workflowName,event,headBranch,createdAt,updatedAt,url
-curl -fsS https://clawsweeper.openclaw.ai/api/status | jq '{generated_at,fleet,diagnostics:{errors:.diagnostics.errors}}'
-curl -fsS https://clawsweeper.openclaw.ai/api/exact-review-queue | jq '.'
+ghx run list -R grokbot/grokbot --limit 20 --json databaseId,status,conclusion,workflowName,event,headBranch,createdAt,updatedAt,url
+ghx run list -R grokbot/clawsweeper --limit 20 --json databaseId,status,conclusion,workflowName,event,headBranch,createdAt,updatedAt,url
+curl -fsS https://clawsweeper.grokbot.ai/api/status | jq '{generated_at,fleet,diagnostics:{errors:.diagnostics.errors}}'
+curl -fsS https://clawsweeper.grokbot.ai/api/exact-review-queue | jq '.'
 node scripts/ci-run-timings.mjs --latest-main
 node scripts/ci-run-timings.mjs --recent 10
 ```
@@ -62,12 +62,12 @@ Classify the issue before changing caps:
   Blacksmith job count.
 - **Blacksmith capacity:** Blacksmith dashboard shows actual concurrency caps or
   unavailable capacity. Do not solve this with GitHub workflow fanout alone.
-- **OpenClaw test runtime:** jobs start quickly but one lane dominates wall time.
-  Use `$openclaw-test-performance` instead of runner tuning.
+- **GrokBot test runtime:** jobs start quickly but one lane dominates wall time.
+  Use `$grokbot-test-performance` instead of runner tuning.
 - **Real failing CI:** one job fails after starting. Use `$github:gh-fix-ci` or
-  `$openclaw-testing`, not this skill.
+  `$grokbot-testing`, not this skill.
 - **ClawSweeper backlog:** exact-review queue grows while CI is healthy. Tune
-  ClawSweeper workers in `openclaw/clawsweeper`, not OpenClaw CI.
+  ClawSweeper workers in `grokbot/clawsweeper`, not GrokBot CI.
 
 ## Registration Budget Math
 
@@ -93,7 +93,7 @@ active main matrix plus its next pending matrix, not every intermediate merge.
 Reject a change unless the org-level worst case stays below about 60% of the
 live bucket. With the current 10,000-registration bucket, keep planned
 Blacksmith burst load under 6,000 registrations per 5 minutes with headroom for
-ClawSweeper, ClawHub, Clownfish, OpenClaw RTT, and Clawbench.
+ClawSweeper, ClawHub, Clownfish, GrokBot RTT, and Clawbench.
 
 ## Safe Levers
 
@@ -108,7 +108,7 @@ Prefer these in order:
 5. Lower `strategy.max-parallel` for bursty Blacksmith matrices.
 6. Right-size runners from timing evidence. Use fewer/larger jobs only when
    elapsed time improves enough to justify registration count.
-7. Split truly slow tests with `$openclaw-test-performance`; do not hide a slow
+7. Split truly slow tests with `$grokbot-test-performance`; do not hide a slow
    test problem by registering more runners.
 
 Do not:
@@ -121,7 +121,7 @@ Do not:
 - treat cancelled superseded pull-request runs as failures without checking the
   newest run for the same ref.
 
-## Current OpenClaw Knobs
+## Current GrokBot Knobs
 
 These are intentionally guarded by `test/scripts/ci-workflow-guards.test.ts`:
 
@@ -156,7 +156,7 @@ For workflow-only or docs/skill-only changes in a Codex worktree:
 node scripts/run-vitest.mjs test/scripts/ci-workflow-guards.test.ts
 node scripts/check-workflows.mjs
 node scripts/docs-list.js
-./node_modules/.bin/oxfmt --check .github/workflows/ci.yml .github/workflows/codeql-critical-quality.yml docs/ci.md test/scripts/ci-workflow-guards.test.ts .agents/skills/openclaw-ci-limits/SKILL.md .agents/skills/openclaw-ci-limits/agents/openai.yaml
+./node_modules/.bin/oxfmt --check .github/workflows/ci.yml .github/workflows/codeql-critical-quality.yml docs/ci.md test/scripts/ci-workflow-guards.test.ts .agents/skills/grokbot-ci-limits/SKILL.md .agents/skills/grokbot-ci-limits/agents/openai.yaml
 git diff --check
 ```
 
@@ -167,7 +167,7 @@ For a PR before requesting maintainer approval:
 
 ```bash
 .agents/skills/autoreview/scripts/autoreview --mode branch --base origin/main
-ghx pr checks <pr> -R openclaw/openclaw --watch --interval 15
+ghx pr checks <pr> -R grokbot/grokbot --watch --interval 15
 ```
 
 Use hosted exact-head gates for CI workflow tuning. Do not burn local
@@ -192,11 +192,11 @@ land the PR. Both commands mutate GitHub state.
 After merge, watch at least one fresh main cycle and the adjacent repos:
 
 ```bash
-ghx run list -R openclaw/openclaw --limit 20 --json databaseId,status,conclusion,workflowName,event,headBranch,createdAt,updatedAt,url
-for repo in openclaw/clawsweeper openclaw/clawhub openclaw/clownfish openclaw/openclaw-rtt openclaw/clawbench; do
+ghx run list -R grokbot/grokbot --limit 20 --json databaseId,status,conclusion,workflowName,event,headBranch,createdAt,updatedAt,url
+for repo in grokbot/clawsweeper grokbot/clawhub grokbot/clownfish grokbot/grokbot-rtt grokbot/clawbench; do
   ghx run list -R "$repo" --limit 12 --json databaseId,status,conclusion,workflowName,event,headBranch,createdAt,updatedAt,url
 done
-curl -fsS https://clawsweeper.openclaw.ai/api/exact-review-queue | jq '.'
+curl -fsS https://clawsweeper.grokbot.ai/api/exact-review-queue | jq '.'
 ```
 
 Report:

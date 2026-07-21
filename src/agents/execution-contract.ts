@@ -1,8 +1,8 @@
 /**
  * Resolves strict agentic execution contracts for provider/model pairs.
  */
-import { normalizeLowercaseStringOrEmpty } from "@openclaw/normalization-core/string-coerce";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import { normalizeLowercaseStringOrEmpty } from "@grokbot/normalization-core/string-coerce";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { resolveAgentExecutionContract, resolveSessionAgentIds } from "./agent-scope.js";
 
 /**
@@ -59,7 +59,7 @@ export function isStrictAgenticSupportedProviderModel(params: {
 }
 
 /**
- * Returns the effective execution contract for an embedded OpenClaw run.
+ * Returns the effective execution contract for an embedded GrokBot run.
  *
  * strict-agentic is a GPT-5-family OpenAI-only runtime contract,
  * so an unsupported provider/model pair always collapses to `"default"`

@@ -1,5 +1,5 @@
 // Plugin state store exposes persisted per-plugin state operations.
-import { closeOpenClawStateDatabaseForTest } from "../state/openclaw-state-db.js";
+import { closeOpenClawStateDatabaseForTest } from "../state/grokbot-state-db.js";
 import {
   clearPluginStateDatabaseForTests,
   closePluginStateDatabase,
@@ -613,7 +613,7 @@ export function resetPluginStateStoreForTests(options: { closeDatabase?: boolean
 }
 
 if (process.env.VITEST || process.env.NODE_ENV === "test") {
-  (globalThis as Record<PropertyKey, unknown>)[Symbol.for("openclaw.pluginStateStoreTestApi")] = {
+  (globalThis as Record<PropertyKey, unknown>)[Symbol.for("grokbot.pluginStateStoreTestApi")] = {
     clearPluginStateStoreForTests,
   };
 }

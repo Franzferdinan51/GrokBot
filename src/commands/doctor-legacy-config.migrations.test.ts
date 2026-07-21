@@ -73,7 +73,7 @@ vi.mock("../secrets/target-registry.js", () => {
   const entry = {
     id: "channels.discord.token",
     targetType: "channels.discord.token",
-    configFile: "openclaw.json",
+    configFile: "grokbot.json",
     pathPattern: "channels.discord.token",
     secretShape: "secret_input",
     expectedResolvedValue: "string",
@@ -158,7 +158,7 @@ describe("normalizeCompatibilityConfigValues", () => {
 
   beforeAll(() => {
     previousOauthDir = process.env.OPENCLAW_OAUTH_DIR;
-    tempOauthDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-oauth-"));
+    tempOauthDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-oauth-"));
     process.env.OPENCLAW_OAUTH_DIR = tempOauthDir;
   });
 
@@ -183,13 +183,13 @@ describe("normalizeCompatibilityConfigValues", () => {
       },
       messages: {
         groupChat: {
-          mentionPatterns: ["@openclaw"],
+          mentionPatterns: ["@grokbot"],
         },
       },
     });
 
     expect(res.config.messages?.groupChat).toEqual({
-      mentionPatterns: ["@openclaw"],
+      mentionPatterns: ["@grokbot"],
     });
     expect(res.changes.some((change) => change.includes("messages.groupChat.visibleReplies"))).toBe(
       false,
@@ -280,7 +280,7 @@ describe("normalizeCompatibilityConfigValues", () => {
       normalizeCompatibilityConfigValues({
         messages: {
           groupChat: {
-            mentionPatterns: ["@openclaw"],
+            mentionPatterns: ["@grokbot"],
           },
         },
       }).changes,
@@ -1229,7 +1229,7 @@ describe("normalizeCompatibilityConfigValues", () => {
             agentRuntime: { id: "claude-cli" },
             model: "anthropic/claude-opus-4-7",
             models: {
-              "anthropic/claude-opus-4-7": { agentRuntime: { id: "openclaw" } },
+              "anthropic/claude-opus-4-7": { agentRuntime: { id: "grokbot" } },
             },
           },
         ],
@@ -1238,7 +1238,7 @@ describe("normalizeCompatibilityConfigValues", () => {
 
     expect(res.config.agents?.list?.[0]?.agentRuntime).toEqual({ id: "claude-cli" });
     expect(res.config.agents?.list?.[0]?.models).toEqual({
-      "anthropic/claude-opus-4-7": { agentRuntime: { id: "openclaw" } },
+      "anthropic/claude-opus-4-7": { agentRuntime: { id: "grokbot" } },
     });
     expect(res.changes).toStrictEqual([]);
   });

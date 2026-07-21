@@ -116,7 +116,7 @@ function pathsEqual(left, right) {
 function configPath() {
   return (
     process.env.OPENCLAW_CONFIG_PATH ??
-    path.join(process.env.HOME ?? "", ".openclaw", "openclaw.json")
+    path.join(process.env.HOME ?? "", ".grokbot", "grokbot.json")
   );
 }
 
@@ -136,14 +136,14 @@ function installRecords() {
 
 function assertOnboard() {
   const home = process.argv[3];
-  const stateDir = path.join(home, ".openclaw");
+  const stateDir = path.join(home, ".grokbot");
   const authPath = path.join(stateDir, "agents", "main", "agent", "auth-profiles.json");
-  assert(fs.existsSync(configPath()), "onboard did not write openclaw.json");
+  assert(fs.existsSync(configPath()), "onboard did not write grokbot.json");
   const stateRaw =
     fs.readFileSync(configPath(), "utf8") +
     (fs.existsSync(authPath) ? fs.readFileSync(authPath, "utf8") : "");
   assert(
-    !stateRaw.includes("sk-openclaw-release-user-journey"),
+    !stateRaw.includes("sk-grokbot-release-user-journey"),
     "onboard persisted raw OpenAI key",
   );
 }

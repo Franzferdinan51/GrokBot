@@ -1,5 +1,5 @@
-import { isRecord } from "@openclaw/normalization-core/record-coerce";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import { isRecord } from "@grokbot/normalization-core/record-coerce";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import type { PluginInstallRecord } from "../config/types.plugins.js";
 import type { ClawHubTrustErrorCode } from "../infra/clawhub-install-trust.js";
 import { parseClawHubPluginSpec } from "../infra/clawhub-spec.js";
@@ -312,7 +312,7 @@ export async function resolveTrustedOfficialPrereleaseFallbackMetadataForUpdate(
   const parsedSpec = parseRegistryNpmSpec(params.spec);
   if (
     !parsedSpec ||
-    !parsedSpec.name.startsWith("@openclaw/") ||
+    !parsedSpec.name.startsWith("@grokbot/") ||
     !params.metadata.version ||
     isPrereleaseResolutionAllowed({
       spec: parsedSpec,

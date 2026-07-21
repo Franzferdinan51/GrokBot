@@ -85,7 +85,7 @@ If you want a heartbeat to do something very specific (e.g. "check Gmail PubSub 
 - If nothing needs attention, reply with **`HEARTBEAT_OK`**.
 - Heartbeat runs may instead call `heartbeat_respond` with `notify: false` for no visible update, or `notify: true` plus `notificationText` for an alert. When present, the structured tool response takes precedence over the text fallback.
 - A meaningful `heartbeat_respond` result with `notify: false` remains silent but is remembered as bounded internal context for the next user turn in that session. `no_change` acknowledgments and visible notifications are not stored this way.
-- During heartbeat runs, OpenClaw treats `HEARTBEAT_OK` as an ack when it appears at the **start or end** of the reply. The token is stripped and the reply is dropped if the remaining content is **≤ `ackMaxChars`** (default: 300).
+- During heartbeat runs, GrokBot treats `HEARTBEAT_OK` as an ack when it appears at the **start or end** of the reply. The token is stripped and the reply is dropped if the remaining content is **≤ `ackMaxChars`** (default: 300).
 - If `HEARTBEAT_OK` appears in the **middle** of a reply, it is not treated specially.
 - For alerts, **do not** include `HEARTBEAT_OK`; return only the alert text.
 
@@ -244,7 +244,7 @@ Use `accountId` to target a specific account on multi-account channels like Tele
   Optional session key for heartbeat runs.
 
 - `main` (default): agent main session.
-- Explicit session key (copy from `openclaw sessions --json` or the [sessions CLI](/cli/sessions)).
+- Explicit session key (copy from `grokbot sessions --json` or the [sessions CLI](/cli/sessions)).
 - Session key formats: see [Sessions](/concepts/session) and [Groups](/channels/groups).
 
 </ParamField>
@@ -312,8 +312,8 @@ Use `accountId` to target a specific account on multi-account channels like Tele
   </Accordion>
   <Accordion title="Visibility and skip behavior">
     - If `showOk`, `showAlerts`, and `useIndicator` are all disabled, the run is skipped up front as `reason=alerts-disabled`.
-    - If only alert delivery is disabled, OpenClaw can still run the heartbeat, update due-task timestamps, restore the session idle timestamp, and suppress the outward alert payload.
-    - If the resolved heartbeat target supports typing, OpenClaw shows typing while the heartbeat run is active. This uses the same target the heartbeat would send chat output to, and it is disabled by `typingMode: "never"`.
+    - If only alert delivery is disabled, GrokBot can still run the heartbeat, update due-task timestamps, restore the session idle timestamp, and suppress the outward alert payload.
+    - If the resolved heartbeat target supports typing, GrokBot shows typing while the heartbeat run is active. This uses the same target the heartbeat would send chat output to, and it is disabled by `typingMode: "never"`.
 
   </Accordion>
   <Accordion title="Session lifecycle and audit">
@@ -353,7 +353,7 @@ Precedence: per-account → per-channel → channel defaults → built-in defaul
 - `showAlerts`: sends the alert content when the model returns a non-OK reply.
 - `useIndicator`: emits indicator events for UI status surfaces.
 
-If **all three** are false, OpenClaw skips the heartbeat run entirely (no model call).
+If **all three** are false, GrokBot skips the heartbeat run entirely (no model call).
 
 ### Per-channel vs per-account examples
 
@@ -393,7 +393,7 @@ On normal runs, `HEARTBEAT.md` is only injected when heartbeat guidance is enabl
 
 On the native Codex harness, `HEARTBEAT.md` content is not injected into the turn like other bootstrap files. If the file exists and has non-whitespace content, a heartbeat collaboration-mode note points Codex at the file and tells it to read the file before proceeding.
 
-If `HEARTBEAT.md` exists but is effectively empty (only blank lines, Markdown/HTML comments, Markdown headings like `# Heading`, fence markers, or empty checklist stubs), OpenClaw skips the heartbeat run to save API calls. That skip is reported as `reason=empty-heartbeat-file`. If the file is missing, the heartbeat still runs and the model decides what to do.
+If `HEARTBEAT.md` exists but is effectively empty (only blank lines, Markdown/HTML comments, Markdown headings like `# Heading`, fence markers, or empty checklist stubs), GrokBot skips the heartbeat run to save API calls. That skip is reported as `reason=empty-heartbeat-file`. If the file is missing, the heartbeat still runs and the model decides what to do.
 
 Keep it tiny (short checklist or reminders) to avoid prompt bloat.
 
@@ -431,7 +431,7 @@ tasks:
 
 <AccordionGroup>
   <Accordion title="Behavior">
-    - OpenClaw parses the `tasks:` block and checks each task against its own `interval`.
+    - GrokBot parses the `tasks:` block and checks each task against its own `interval`.
     - Only **due** tasks are included in the heartbeat prompt for that tick.
     - If no tasks are due, the heartbeat is skipped entirely (`reason=no-tasks-due`) to avoid a wasted model call.
     - Non-task content in `HEARTBEAT.md` is preserved and appended as additional context after the due-task list.
@@ -460,10 +460,10 @@ Don't put secrets (API keys, phone numbers, private tokens) into `HEARTBEAT.md` 
 
 ## Manual wake (on-demand)
 
-Use `openclaw system event` to enqueue a system event and optionally trigger an immediate heartbeat:
+Use `grokbot system event` to enqueue a system event and optionally trigger an immediate heartbeat:
 
 ```bash
-openclaw system event --text "Check for urgent follow-ups" --mode now
+grokbot system event --text "Check for urgent follow-ups" --mode now
 ```
 
 | Flag                         | Description                                                                                      |
@@ -478,9 +478,9 @@ If no `--session-key` is given and multiple agents have `heartbeat` configured, 
 Related heartbeat controls in the same CLI group:
 
 ```bash
-openclaw system heartbeat last     # show the last heartbeat event
-openclaw system heartbeat enable   # enable heartbeats
-openclaw system heartbeat disable  # disable heartbeats
+grokbot system heartbeat last     # show the last heartbeat event
+grokbot system heartbeat enable   # enable heartbeats
+grokbot system heartbeat disable  # disable heartbeats
 ```
 
 ## Reasoning delivery (optional)
@@ -505,7 +505,7 @@ Heartbeats run full agent turns. Shorter intervals burn more tokens. To reduce c
 
 ## Context overflow after heartbeat
 
-Heartbeats preserve the shared session's existing runtime model after the run completes, so a heartbeat that switched a session to a smaller local model (for example an Ollama model with a 32k window) can leave that model in place for the next main-session turn. If that next turn then reports context overflow, and the session's last runtime model matches configured `heartbeat.model`, OpenClaw's recovery message calls out heartbeat model bleed as the likely cause and suggests a fix.
+Heartbeats preserve the shared session's existing runtime model after the run completes, so a heartbeat that switched a session to a smaller local model (for example an Ollama model with a 32k window) can leave that model in place for the next main-session turn. If that next turn then reports context overflow, and the session's last runtime model matches configured `heartbeat.model`, GrokBot's recovery message calls out heartbeat model bleed as the likely cause and suggests a fix.
 
 To avoid this: use `isolatedSession: true` to run heartbeats in a fresh session (optionally combined with `lightContext: true` for the smallest prompt), or choose a heartbeat model with a context window large enough for the shared session.
 

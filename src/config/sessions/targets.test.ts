@@ -1,7 +1,7 @@
 // Session target tests cover persisted channel targets for sessions.
 import fs from "node:fs/promises";
 import path from "node:path";
-import { withTempHome } from "openclaw/plugin-sdk/test-env";
+import { withTempHome } from "grokbot/plugin-sdk/test-env";
 import { describe, expect, it } from "vitest";
 import type { OpenClawConfig } from "../config.js";
 import { resolveStorePath } from "./paths.js";
@@ -81,7 +81,7 @@ describe("resolveSessionStoreTargets", () => {
     await withTempHome(async () => {
       const cfg: OpenClawConfig = {
         session: {
-          store: "~/.openclaw/agents/{agentId}/sessions/sessions.json",
+          store: "~/.grokbot/agents/{agentId}/sessions/sessions.json",
         },
         agents: {
           list: [{ id: "main", default: true }, { id: "work" }],
@@ -107,7 +107,7 @@ describe("resolveSessionStoreTargets", () => {
     await withTempHome(async () => {
       const cfg: OpenClawConfig = {
         session: {
-          store: "~/.openclaw/agents/{agentId}/sessions/sessions.json",
+          store: "~/.grokbot/agents/{agentId}/sessions/sessions.json",
         },
         agents: {
           list: [
@@ -166,7 +166,7 @@ describe("resolveSessionStoreTargets", () => {
 
   it("uses the path-owned agent id for explicit agent store paths", async () => {
     await withTempHome(async (home) => {
-      const stateDir = path.join(home, ".openclaw");
+      const stateDir = path.join(home, ".grokbot");
       const storePaths = await createAgentSessionStores(stateDir, ["codex-proof"]);
       const env = { ...process.env, OPENCLAW_STATE_DIR: stateDir };
 
@@ -373,7 +373,7 @@ describe("resolveExistingAgentSessionStoreTargetsSync", () => {
 describe("resolveAllAgentSessionStoreTargetsSync", () => {
   it("includes discovered on-disk agent stores alongside configured targets", async () => {
     await withTempHome(async (home) => {
-      const stateDir = path.join(home, ".openclaw");
+      const stateDir = path.join(home, ".grokbot");
       const storePaths = await createAgentSessionStores(stateDir, ["ops", "retired"]);
 
       const cfg: OpenClawConfig = {
@@ -391,7 +391,7 @@ describe("resolveAllAgentSessionStoreTargetsSync", () => {
 
   it("includes legacy JSON stores before an agent SQLite database exists", async () => {
     await withTempHome(async (home) => {
-      const stateDir = path.join(home, ".openclaw");
+      const stateDir = path.join(home, ".grokbot");
       const sessionsDir = path.join(stateDir, "agents", "legacy", "sessions");
       const storePath = path.join(sessionsDir, "sessions.json");
       await fs.mkdir(sessionsDir, { recursive: true });
@@ -507,7 +507,7 @@ describe("resolveAllAgentSessionStoreTargetsSync", () => {
       await fs.mkdir(opsSessionsDir, { recursive: true });
       await fs.mkdir(opsAgentDbDir, { recursive: true });
       await fs.writeFile(leakedFile, JSON.stringify({ leak: { secret: "x" } }), "utf8");
-      await fs.symlink(leakedFile, path.join(opsAgentDbDir, "openclaw-agent.sqlite"));
+      await fs.symlink(leakedFile, path.join(opsAgentDbDir, "grokbot-agent.sqlite"));
 
       const targets = resolveAllAgentSessionStoreTargetsSync(createCustomRootCfg(customRoot), {
         env: process.env,
@@ -523,7 +523,7 @@ describe("resolveAllAgentSessionStoreTargetsSync", () => {
 
   it("skips discovered directories that only normalize into the default main agent", async () => {
     await withTempHome(async (home) => {
-      const stateDir = path.join(home, ".openclaw");
+      const stateDir = path.join(home, ".grokbot");
       const mainSessionsDir = path.join(stateDir, "agents", "main", "sessions");
       const junkSessionsDir = path.join(stateDir, "agents", "###", "sessions");
       await fs.mkdir(mainSessionsDir, { recursive: true });
@@ -561,7 +561,7 @@ describe("resolveAllAgentSessionStoreTargetsSync", () => {
 describe("resolveAllAgentSessionStoreCandidateTargetsSync", () => {
   it("includes configured targets before either state file exists", async () => {
     await withTempHome(async (home) => {
-      const stateDir = path.join(home, ".openclaw");
+      const stateDir = path.join(home, ".grokbot");
       const env = { ...process.env, OPENCLAW_STATE_DIR: stateDir };
       const storePath = resolveStorePath(undefined, { agentId: "main", env });
 
@@ -576,7 +576,7 @@ describe("resolveAllAgentSessionStoreCandidateTargetsSync", () => {
 
   it("includes retired agent directories after both state files are removed", async () => {
     await withTempHome(async (home) => {
-      const stateDir = path.join(home, ".openclaw");
+      const stateDir = path.join(home, ".grokbot");
       const retiredAgentDir = path.join(stateDir, "agents", "retired");
       await fs.mkdir(retiredAgentDir, { recursive: true });
       const env = { ...process.env, OPENCLAW_STATE_DIR: stateDir };
@@ -593,7 +593,7 @@ describe("resolveAllAgentSessionStoreCandidateTargetsSync", () => {
       if (process.platform === "win32") {
         return;
       }
-      const stateDir = path.join(home, ".openclaw");
+      const stateDir = path.join(home, ".grokbot");
       const agentDir = path.join(stateDir, "agents", "retired");
       const outsideSessionsDir = path.join(home, "outside-sessions");
       await fs.mkdir(agentDir, { recursive: true });

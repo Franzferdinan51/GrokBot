@@ -1,6 +1,6 @@
 /** Builds plugin status reports from persisted metadata without importing full plugin runtimes. */
 import { getRuntimeConfig } from "../config/config.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { loadPluginMetadataSnapshot } from "./plugin-metadata-snapshot.js";
 import {
   loadPluginRegistrySnapshotWithMetadata,
@@ -11,7 +11,7 @@ import { createEmptyPluginRegistry, type PluginRecord, type PluginRegistry } fro
 import { buildPluginDependencyStatus } from "./status-dependencies-core.js";
 import type { PluginLogger } from "./types.js";
 
-/** Control-plane plugin status shape used by `openclaw plugins status` style surfaces. */
+/** Control-plane plugin status shape used by `grokbot plugins status` style surfaces. */
 export type PluginRegistryStatusReport = PluginRegistry & {
   workspaceDir?: string;
   registrySource: PluginRegistrySnapshotSource;
@@ -70,7 +70,7 @@ function buildPluginRecordFromInstalledIndex(
   plugin: import("./installed-plugin-index.js").InstalledPluginIndexRecord,
   manifest?: import("./manifest-registry.js").PluginManifestRecord,
 ): PluginRecord {
-  const format = plugin.format ?? manifest?.format ?? "openclaw";
+  const format = plugin.format ?? manifest?.format ?? "grokbot";
   const bundleFormat = plugin.bundleFormat ?? manifest?.bundleFormat;
   return {
     id: plugin.pluginId,

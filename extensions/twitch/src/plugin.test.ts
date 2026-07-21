@@ -16,16 +16,16 @@ describe("twitchPlugin outbound session routing", () => {
       cfg: {},
       agentId: "ops",
       accountId: "stream",
-      target: "twitch:channel:OpenClaw",
+      target: "twitch:channel:GrokBot",
     });
 
     expect(route).toMatchObject({
-      sessionKey: "agent:ops:twitch:group:openclaw",
-      baseSessionKey: "agent:ops:twitch:group:openclaw",
+      sessionKey: "agent:ops:twitch:group:grokbot",
+      baseSessionKey: "agent:ops:twitch:group:grokbot",
       recipientSessionExact: true,
-      peer: { kind: "group", id: "openclaw" },
+      peer: { kind: "group", id: "grokbot" },
       chatType: "group",
-      to: "openclaw",
+      to: "grokbot",
     });
   });
 

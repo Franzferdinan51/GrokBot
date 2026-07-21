@@ -1,9 +1,9 @@
 // Host policy ports for the reusable transport package. Fetch guarding,
 // secret redaction, strict-tool policy, and diagnostics logging are owned by
-// the embedding application (OpenClaw core installs its implementations via
+// the embedding application (GrokBot core installs its implementations via
 // configureAiTransportHost); the library defaults below are inert so external
 // consumers get safe, dependency-free behavior without wiring anything.
-import type { Model } from "@openclaw/llm-core";
+import type { Model } from "@grokbot/llm-core";
 
 /** Strict-tool policy inputs for OpenAI-compatible routes. */
 export interface OpenAIStrictToolSettingOptions {

@@ -1,8 +1,8 @@
 // Imessage plugin module implements persisted echo cache behavior.
 import { createHash } from "node:crypto";
-import type { MediaPlaceholderTextFact } from "openclaw/plugin-sdk/channel-inbound";
-import type { PluginStateSyncKeyedStore } from "openclaw/plugin-sdk/plugin-state-runtime";
-import { logVerbose } from "openclaw/plugin-sdk/runtime-env";
+import type { MediaPlaceholderTextFact } from "grokbot/plugin-sdk/channel-inbound";
+import type { PluginStateSyncKeyedStore } from "grokbot/plugin-sdk/plugin-state-runtime";
+import { logVerbose } from "grokbot/plugin-sdk/runtime-env";
 import { getIMessageRuntime } from "../runtime.js";
 import { stripLeadingEchoTextCorruptionMarkers } from "./echo-text-corruption.js";
 

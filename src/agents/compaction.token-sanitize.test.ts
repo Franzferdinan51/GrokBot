@@ -1,5 +1,5 @@
 // Verifies compaction token planning strips private/non-model fields first.
-import type { AgentMessage } from "openclaw/plugin-sdk/agent-core";
+import type { AgentMessage } from "grokbot/plugin-sdk/agent-core";
 import { describe, expect, it, vi } from "vitest";
 
 const agentSessionMocks = vi.hoisted(() => ({
@@ -7,9 +7,9 @@ const agentSessionMocks = vi.hoisted(() => ({
   generateSummary: vi.fn(async () => "summary"),
 }));
 
-vi.mock("openclaw/plugin-sdk/agent-sessions", async () => {
-  const actual = await vi.importActual<typeof import("openclaw/plugin-sdk/agent-sessions")>(
-    "openclaw/plugin-sdk/agent-sessions",
+vi.mock("grokbot/plugin-sdk/agent-sessions", async () => {
+  const actual = await vi.importActual<typeof import("grokbot/plugin-sdk/agent-sessions")>(
+    "grokbot/plugin-sdk/agent-sessions",
   );
   return {
     ...actual,
@@ -71,7 +71,7 @@ describe("compaction token accounting sanitization", () => {
       } as AgentMessage,
       {
         role: "custom",
-        customType: "openclaw.runtime-context",
+        customType: "grokbot.runtime-context",
         content: "internal",
         timestamp: 2,
       } as AgentMessage,

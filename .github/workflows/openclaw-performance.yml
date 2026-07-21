@@ -1,6 +1,6 @@
-name: OpenClaw Performance
+name: GrokBot Performance
 
-run-name: ${{ inputs.dispatch_id != '' && format('OpenClaw Performance {0}', inputs.dispatch_id) || 'OpenClaw Performance' }}
+run-name: ${{ inputs.dispatch_id != '' && format('GrokBot Performance {0}', inputs.dispatch_id) || 'GrokBot Performance' }}
 
 on:
   schedule:
@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
     inputs:
       target_ref:
-        description: OpenClaw ref to benchmark; defaults to the workflow ref
+        description: GrokBot ref to benchmark; defaults to the workflow ref
         required: false
         default: ""
         type: string
@@ -43,12 +43,12 @@ on:
         default: false
         type: boolean
       publish_reports:
-        description: Publish completed reports to openclaw/clawgrit-reports
+        description: Publish completed reports to grokbot/clawgrit-reports
         required: false
         default: true
         type: boolean
       kova_ref:
-        description: openclaw/Kova Git ref to install
+        description: grokbot/Kova Git ref to install
         required: false
         default: f3d037b5b8aacd6adf8ef1dd2ea4c1d778ec7c6c
         type: string
@@ -69,7 +69,7 @@ env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
   OCM_VERSION: v0.2.25
   OCM_LINUX_X64_SHA256: 57530199d21eb5bfa29695749928b40fd2869484c7edff69b7c65bfc84f2f1aa
-  KOVA_REPOSITORY: openclaw/Kova
+  KOVA_REPOSITORY: grokbot/Kova
   PERFORMANCE_MODEL_ID: gpt-5.6-luna
   # Release matrices cold-build the candidate runtime before measurement.
   KOVA_SCENARIO_TIMEOUT_MS: ${{ inputs.profile == 'release' && '900000' || '300000' }}
@@ -84,7 +84,7 @@ jobs:
       tested_ref: ${{ steps.resolve.outputs.tested_ref }}
       tested_sha: ${{ steps.resolve.outputs.tested_sha }}
     steps:
-      - name: Resolve OpenClaw target ref
+      - name: Resolve GrokBot target ref
         id: resolve
         env:
           GH_TOKEN: ${{ github.token }}
@@ -106,11 +106,11 @@ jobs:
 
           encoded_ref="$(node -e 'process.stdout.write(encodeURIComponent(process.argv[1]))' "$requested")"
           if ! resolved_sha="$(gh api "repos/${GITHUB_REPOSITORY}/commits/${encoded_ref}" --jq '.sha')"; then
-            echo "::error::Unable to resolve OpenClaw target_ref '${requested}'."
+            echo "::error::Unable to resolve GrokBot target_ref '${requested}'."
             exit 1
           fi
           if [[ ! "$resolved_sha" =~ ^[0-9a-f]{40}$ ]]; then
-            echo "::error::OpenClaw target_ref '${requested}' resolved to invalid SHA '${resolved_sha}'."
+            echo "::error::GrokBot target_ref '${requested}' resolved to invalid SHA '${resolved_sha}'."
             exit 1
           fi
           echo "checkout_ref=$resolved_sha" >> "$GITHUB_OUTPUT"
@@ -193,7 +193,7 @@ jobs:
             echo "Skipping ${LANE_ID}: ${reason}" >> "$GITHUB_STEP_SUMMARY"
           fi
 
-      - name: Checkout OpenClaw
+      - name: Checkout GrokBot
         if: steps.lane.outputs.run == 'true'
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
         with:
@@ -500,7 +500,7 @@ jobs:
           set -e
           if [[ "$summary_status" != "0" ]]; then
             cat > "$summary_path" <<EOF
-          # OpenClaw Performance Report
+          # GrokBot Performance Report
 
           - Lane: ${LANE_ID}
           - Kova report: ${report_json}
@@ -560,7 +560,7 @@ jobs:
         if: ${{ always() && steps.lane.outputs.run == 'true' }}
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
-          name: openclaw-performance-${{ matrix.lane }}-${{ github.run_id }}-${{ github.run_attempt }}
+          name: grokbot-performance-${{ matrix.lane }}-${{ github.run_id }}-${{ github.run_attempt }}
           path: |
             .artifacts/kova/reports/${{ matrix.lane }}
             .artifacts/kova/bundles/${{ matrix.lane }}
@@ -569,20 +569,20 @@ jobs:
           retention-days: ${{ matrix.deep_profile == 'true' && 14 || 30 }}
 
   source_performance:
-    name: OpenClaw source performance probes
+    name: GrokBot source performance probes
     needs: resolve_target
     runs-on: blacksmith-16vcpu-ubuntu-2404
     timeout-minutes: 120
     env:
       PERFORMANCE_HELPER_DIR: ${{ github.workspace }}/.artifacts/performance-workflow
-      SOURCE_PERF_DIR: ${{ github.workspace }}/.artifacts/openclaw-performance/source/mock-provider
+      SOURCE_PERF_DIR: ${{ github.workspace }}/.artifacts/grokbot-performance/source/mock-provider
       TARGET_REF: ${{ needs.resolve_target.outputs.tested_ref }}
       EXPECTED_TESTED_SHA: ${{ needs.resolve_target.outputs.tested_sha }}
       TESTED_REF: ${{ needs.resolve_target.outputs.tested_ref }}
       TESTED_SHA: ${{ needs.resolve_target.outputs.tested_sha }}
       REQUESTED_REPEAT: ${{ inputs.repeat || '3' }}
     steps:
-      - name: Checkout OpenClaw source target
+      - name: Checkout GrokBot source target
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
         with:
           ref: ${{ needs.resolve_target.outputs.checkout_ref }}
@@ -625,18 +625,18 @@ jobs:
           reports_root=".artifacts/clawgrit-baseline"
           mkdir -p "$reports_root"
           git -C "$reports_root" init -b main
-          git -C "$reports_root" remote add origin "https://github.com/openclaw/clawgrit-reports.git"
+          git -C "$reports_root" remote add origin "https://github.com/grokbot/clawgrit-reports.git"
           if ! git -C "$reports_root" fetch --filter=blob:none --depth=1 origin main; then
             echo "No previous source performance baseline could be fetched." >> "$GITHUB_STEP_SUMMARY"
             exit 0
           fi
           ref_slug="$(printf '%s' "${TESTED_REF}" | tr -c 'A-Za-z0-9._-' '-')"
-          pointer="openclaw-performance/${ref_slug}/latest-mock-provider.json"
+          pointer="grokbot-performance/${ref_slug}/latest-mock-provider.json"
           if ! git -C "$reports_root" cat-file -e "FETCH_HEAD:${pointer}"; then
             echo "No previous source performance baseline exists for ${TESTED_REF}." >> "$GITHUB_STEP_SUMMARY"
             exit 0
           fi
-          if ! latest_path="$(git -C "$reports_root" show "FETCH_HEAD:${pointer}" | node -e "const fs=require('node:fs'); const data=JSON.parse(fs.readFileSync(0,'utf8')); const value=String(data.path || ''); if (!/^openclaw-performance\\/[A-Za-z0-9._-]+\\/[0-9]+-[0-9]+\\/mock-provider$/u.test(value)) process.exit(1); process.stdout.write(value);")"; then
+          if ! latest_path="$(git -C "$reports_root" show "FETCH_HEAD:${pointer}" | node -e "const fs=require('node:fs'); const data=JSON.parse(fs.readFileSync(0,'utf8')); const value=String(data.path || ''); if (!/^grokbot-performance\\/[A-Za-z0-9._-]+\\/[0-9]+-[0-9]+\\/mock-provider$/u.test(value)) process.exit(1); process.stdout.write(value);")"; then
             echo "Previous source performance baseline pointer is invalid." >> "$GITHUB_STEP_SUMMARY"
             exit 0
           fi
@@ -652,7 +652,7 @@ jobs:
             echo "Previous source performance baseline has no source directory." >> "$GITHUB_STEP_SUMMARY"
           fi
 
-      - name: Run OpenClaw source performance probes
+      - name: Run GrokBot source performance probes
         shell: bash
         run: |
           set -euo pipefail
@@ -662,9 +662,9 @@ jobs:
           fi
 
           mkdir -p "$SOURCE_PERF_DIR/mock-hello"
-          if ! node -e "const fs=require('node:fs'); const scripts=require('./package.json').scripts||{}; process.exit(scripts['test:gateway:cpu-scenarios'] && scripts['test:extensions:memory'] && scripts.openclaw && fs.existsSync('scripts/bench-cli-startup.ts') && fs.existsSync('scripts/profile-extension-memory.mjs') ? 0 : 1)"; then
+          if ! node -e "const fs=require('node:fs'); const scripts=require('./package.json').scripts||{}; process.exit(scripts['test:gateway:cpu-scenarios'] && scripts['test:extensions:memory'] && scripts.grokbot && fs.existsSync('scripts/bench-cli-startup.ts') && fs.existsSync('scripts/profile-extension-memory.mjs') ? 0 : 1)"; then
             cat > "$SOURCE_PERF_DIR/index.md" <<EOF
-          # OpenClaw Source Performance
+          # GrokBot Source Performance
 
           Generated: $(date -u +%Y-%m-%dT%H:%M:%SZ)
 
@@ -674,7 +674,7 @@ jobs:
 
           - Tested ref: ${TESTED_REF}
           - Tested SHA: ${TESTED_SHA}
-          - Required scripts: test:gateway:cpu-scenarios, test:extensions:memory, openclaw, scripts/bench-cli-startup.ts, scripts/profile-extension-memory.mjs
+          - Required scripts: test:gateway:cpu-scenarios, test:extensions:memory, grokbot, scripts/bench-cli-startup.ts, scripts/profile-extension-memory.mjs
           EOF
             cat "$SOURCE_PERF_DIR/index.md" >> "$GITHUB_STEP_SUMMARY"
             exit 0
@@ -704,7 +704,7 @@ jobs:
 
           for run_index in $(seq 1 "$source_runs"); do
             run_dir="$SOURCE_PERF_DIR/mock-hello/run-$(printf '%03d' "$run_index")"
-            pnpm openclaw qa suite \
+            pnpm grokbot qa suite \
               --provider-mode mock-openai \
               --model "mock-openai/${PERFORMANCE_MODEL_ID}" \
               --concurrency 1 \
@@ -714,8 +714,8 @@ jobs:
 
           gateway_home="$(mktemp -d)"
           gateway_port="$(node -e "const net=require('node:net'); const s=net.createServer(); s.listen(0,'127.0.0.1',()=>{ console.log(s.address().port); s.close(); });")"
-          gateway_state="$gateway_home/.openclaw"
-          gateway_config="$gateway_state/openclaw.json"
+          gateway_state="$gateway_home/.grokbot"
+          gateway_config="$gateway_state/grokbot.json"
           gateway_log="$SOURCE_PERF_DIR/cli-gateway.log"
           gateway_pid=""
           mkdir -p "$gateway_state"
@@ -791,7 +791,7 @@ jobs:
             echo "SQLite state smoke probe is not available in ${TESTED_REF}; continuing with the remaining source probes." >> "$GITHUB_STEP_SUMMARY"
           fi
 
-          summary_args=(node "$PERFORMANCE_HELPER_DIR/scripts/openclaw-performance-source-summary.mjs" \
+          summary_args=(node "$PERFORMANCE_HELPER_DIR/scripts/grokbot-performance-source-summary.mjs" \
             --source-dir "$SOURCE_PERF_DIR" \
             --output "$SOURCE_PERF_DIR/index.md")
           if [[ -n "${SOURCE_PERF_BASELINE_DIR:-}" && -d "$SOURCE_PERF_BASELINE_DIR" ]]; then
@@ -805,8 +805,8 @@ jobs:
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
-          name: openclaw-performance-source-${{ github.run_id }}-${{ github.run_attempt }}
-          path: .artifacts/openclaw-performance/source
+          name: grokbot-performance-source-${{ github.run_id }}-${{ github.run_attempt }}
+          path: .artifacts/grokbot-performance/source
           if-no-files-found: error
           retention-days: 30
 
@@ -873,8 +873,8 @@ jobs:
         run: |
           set -euo pipefail
           annotation="$([[ "$REPORT_PUBLISH_REQUIRED" == "true" ]] && printf error || printf warning)"
-          prefix="openclaw-performance-${LANE_ID}-${GITHUB_RUN_ID}-"
-          source_prefix="openclaw-performance-source-${GITHUB_RUN_ID}-"
+          prefix="grokbot-performance-${LANE_ID}-${GITHUB_RUN_ID}-"
+          source_prefix="grokbot-performance-source-${GITHUB_RUN_ID}-"
           if ! artifacts="$(gh api --paginate "repos/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}/artifacts?per_page=100" --jq '.artifacts[] | select(.expired == false) | [.id, .name] | @tsv')"; then
             echo "::${annotation}::Unable to list Kova artifacts for this workflow run."
             exit 1
@@ -1027,7 +1027,7 @@ jobs:
             fi
             # The mock lane downloads two IDs, so its source artifact is nested
             # under the immutable artifact name rather than extracted directly.
-            source_path="${input_root}/openclaw-performance-source-${GITHUB_RUN_ID}-${SOURCE_PRODUCER_ATTEMPT}/${LANE_ID}"
+            source_path="${input_root}/grokbot-performance-source-${GITHUB_RUN_ID}-${SOURCE_PRODUCER_ATTEMPT}/${LANE_ID}"
             if [[ ! -d "$source_path" ]]; then
               echo "::${annotation}::Source probe artifact is missing for ${LANE_ID}."
               exit 1
@@ -1044,9 +1044,9 @@ jobs:
 
           git -C "$reports_root" init -b main
           git -C "$reports_root" config core.hooksPath /dev/null
-          git -C "$reports_root" remote add origin "https://github.com/openclaw/clawgrit-reports.git"
+          git -C "$reports_root" remote add origin "https://github.com/grokbot/clawgrit-reports.git"
           if ! timeout 120s git -C "$reports_root" fetch --depth=1 origin main; then
-            echo "::${annotation}::Unable to fetch openclaw/clawgrit-reports before publishing."
+            echo "::${annotation}::Unable to fetch grokbot/clawgrit-reports before publishing."
             exit 1
           fi
           git -C "$reports_root" checkout -B main FETCH_HEAD
@@ -1057,8 +1057,8 @@ jobs:
             exit 1
           fi
           run_slug="${GITHUB_RUN_ID}-${PRODUCER_ATTEMPT}"
-          dest_rel="openclaw-performance/${ref_slug}/${run_slug}/${LANE_ID}"
-          report_url="https://github.com/openclaw/clawgrit-reports/tree/main/${dest_rel}"
+          dest_rel="grokbot-performance/${ref_slug}/${run_slug}/${LANE_ID}"
+          report_url="https://github.com/grokbot/clawgrit-reports/tree/main/${dest_rel}"
           if git -C "$reports_root" cat-file -e "HEAD:${dest_rel}/report.json" 2>/dev/null; then
             {
               echo "### Clawgrit report already published"
@@ -1110,7 +1110,7 @@ jobs:
             --arg lane "$LANE_ID" \
             --arg path "$dest_rel" \
             '{repository:$repository,ref:$ref,sha:$sha,tested_ref:$ref,tested_sha:$sha,workflow_ref:$workflow_ref,workflow_sha:$workflow_sha,workflow:$workflow,run_id:$run_id,run_attempt:$run_attempt,lane:$lane,path:$path}' \
-            > "${reports_root}/openclaw-performance/${ref_slug}/latest-${LANE_ID}.json"
+            > "${reports_root}/grokbot-performance/${ref_slug}/latest-${LANE_ID}.json"
 
           node "$PERFORMANCE_PUBLISHER_HELPER" \
             --bundle-dir "$bundle" \
@@ -1118,11 +1118,11 @@ jobs:
             --publish-root "$dest" \
             --max-file-bytes "$PUBLISHED_REPORT_MAX_FILE_BYTES"
 
-          git -C "$reports_root" config user.name "openclaw-performance[bot]"
-          git -C "$reports_root" config user.email "openclaw-performance[bot]@users.noreply.github.com"
-          git -C "$reports_root" add -- openclaw-performance
+          git -C "$reports_root" config user.name "grokbot-performance[bot]"
+          git -C "$reports_root" config user.email "grokbot-performance[bot]@users.noreply.github.com"
+          git -C "$reports_root" add -- grokbot-performance
           if ! git -C "$reports_root" diff --cached --quiet; then
-            git -C "$reports_root" commit -m "perf: add OpenClaw ${LANE_ID} report ${TESTED_SHA::12}"
+            git -C "$reports_root" commit -m "perf: add GrokBot ${LANE_ID} report ${TESTED_SHA::12}"
           fi
           report_commit="$(git -C "$reports_root" rev-parse HEAD)"
           echo "already_published=false" >> "$GITHUB_OUTPUT"
@@ -1140,7 +1140,7 @@ jobs:
         with:
           client-id: Iv23liOECG0slfuhz093
           private-key: ${{ secrets.CLAWSWEEPER_APP_PRIVATE_KEY }}
-          owner: openclaw
+          owner: grokbot
           repositories: clawgrit-reports
           permission-contents: write
 
@@ -1173,11 +1173,11 @@ jobs:
           echo "::add-mask::${auth_header}"
 
           reports_root="$(realpath "$REPORTS_ROOT")"
-          if [[ "$reports_root" != "$RUNNER_TEMP/"* || ! "$REPORT_COMMIT" =~ ^[0-9a-f]{40}$ || ! "$DEST_REL" =~ ^openclaw-performance/[A-Za-z0-9._-]+/[0-9]+-[0-9]+/[A-Za-z0-9._-]+$ ]]; then
+          if [[ "$reports_root" != "$RUNNER_TEMP/"* || ! "$REPORT_COMMIT" =~ ^[0-9a-f]{40}$ || ! "$DEST_REL" =~ ^grokbot-performance/[A-Za-z0-9._-]+/[0-9]+-[0-9]+/[A-Za-z0-9._-]+$ ]]; then
             echo "::${annotation}::Prepared report metadata failed validation."
             exit 1
           fi
-          if [[ "$REPORT_URL" != "https://github.com/openclaw/clawgrit-reports/tree/main/${DEST_REL}" ]]; then
+          if [[ "$REPORT_URL" != "https://github.com/grokbot/clawgrit-reports/tree/main/${DEST_REL}" ]]; then
             echo "::${annotation}::Prepared report URL failed validation."
             exit 1
           fi
@@ -1200,12 +1200,12 @@ jobs:
               echo "### Clawgrit report publish failed"
               echo
               echo "Kova artifacts were uploaded, but publishing the clawgrit report failed after $1 attempts."
-              echo "Check the ClawSweeper GitHub App installation and contents permission for openclaw/clawgrit-reports."
+              echo "Check the ClawSweeper GitHub App installation and contents permission for grokbot/clawgrit-reports."
             } >> "$GITHUB_STEP_SUMMARY"
             echo "::${annotation}::Kova artifacts uploaded, but clawgrit report publish failed after $1 attempts."
           }
 
-          if [[ "$(git_local config --local --get core.hooksPath)" != "/dev/null" || "$(git_local remote get-url origin)" != "https://github.com/openclaw/clawgrit-reports.git" ]]; then
+          if [[ "$(git_local config --local --get core.hooksPath)" != "/dev/null" || "$(git_local remote get-url origin)" != "https://github.com/grokbot/clawgrit-reports.git" ]]; then
             echo "::${annotation}::Prepared reports checkout failed integrity validation."
             exit 1
           fi
@@ -1221,7 +1221,7 @@ jobs:
             sleep $((attempt * 2))
             if ! timeout 120s git -C "$reports_root" -c core.hooksPath=/dev/null fetch --depth=1 origin main; then
               if [[ "$attempt" != "5" ]]; then
-                echo "::warning::Unable to refresh openclaw/clawgrit-reports after publish attempt ${attempt}; retrying."
+                echo "::warning::Unable to refresh grokbot/clawgrit-reports after publish attempt ${attempt}; retrying."
                 continue
               fi
             else

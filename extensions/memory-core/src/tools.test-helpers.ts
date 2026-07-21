@@ -1,4 +1,4 @@
-import type { OpenClawPluginToolContext } from "openclaw/plugin-sdk/plugin-entry";
+import type { OpenClawPluginToolContext } from "grokbot/plugin-sdk/plugin-entry";
 // Memory Core helper module supports tools helpers behavior.
 import { expect } from "vitest";
 import type { OpenClawConfig } from "../api.js";

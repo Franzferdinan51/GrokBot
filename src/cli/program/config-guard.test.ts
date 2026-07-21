@@ -36,7 +36,7 @@ function makeSnapshot() {
     issues: [] as ConfigIssue[],
     warnings: [] as ConfigIssue[],
     legacyIssues: [] as ConfigIssue[],
-    path: "/tmp/openclaw.json",
+    path: "/tmp/grokbot.json",
   };
 }
 
@@ -100,7 +100,7 @@ describe("ensureConfigReady", () => {
   }
 
   function useTempOpenClawHome(): string {
-    const root = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-config-guard-"));
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-config-guard-"));
     tempRoots.push(root);
     setTestEnvValue("OPENCLAW_HOME", root);
     deleteTestEnvValue("OPENCLAW_NIX_MODE");
@@ -110,20 +110,20 @@ describe("ensureConfigReady", () => {
   }
 
   function writeLegacyTaskSidecarMarker(root: string): void {
-    const markerPath = path.join(root, ".openclaw", "tasks", "runs.sqlite");
+    const markerPath = path.join(root, ".grokbot", "tasks", "runs.sqlite");
     fs.mkdirSync(path.dirname(markerPath), { recursive: true });
     fs.writeFileSync(markerPath, "");
   }
 
   function writePendingTaskSidecarArchiveMarker(root: string): void {
-    const markerPath = path.join(root, ".openclaw", "tasks", "runs.sqlite");
+    const markerPath = path.join(root, ".grokbot", "tasks", "runs.sqlite");
     fs.mkdirSync(path.dirname(markerPath), { recursive: true });
     fs.writeFileSync(`${markerPath}.migrated`, "");
     fs.writeFileSync(`${markerPath}-wal`, "");
   }
 
   function writeStateMarker(root: string, relativePath: string): void {
-    const markerPath = path.join(root, ".openclaw", relativePath);
+    const markerPath = path.join(root, ".grokbot", relativePath);
     fs.mkdirSync(path.dirname(markerPath), { recursive: true });
     fs.writeFileSync(markerPath, "{}");
   }
@@ -290,7 +290,7 @@ describe("ensureConfigReady", () => {
 
   it("runs doctor flow for legacy sessions without task sidecars", async () => {
     const root = useTempOpenClawHome();
-    fs.mkdirSync(path.join(root, ".openclaw", "sessions"), { recursive: true });
+    fs.mkdirSync(path.join(root, ".grokbot", "sessions"), { recursive: true });
 
     await runEnsureConfigReady(["status"]);
 
@@ -341,7 +341,7 @@ describe("ensureConfigReady", () => {
 
   it("preserves plugin listing migrations when the shared state database exists", async () => {
     const root = useTempOpenClawHome();
-    writeStateMarker(root, "state/openclaw.sqlite");
+    writeStateMarker(root, "state/grokbot.sqlite");
 
     await runEnsureConfigReady(["plugins", "list"]);
 
@@ -360,7 +360,7 @@ describe("ensureConfigReady", () => {
       const stateDir = path.join(root, "custom-state");
       setTestEnvValue("OPENCLAW_STATE_DIR", stateDir);
       writeStateMarker(root, source);
-      const sourcePath = path.join(root, ".openclaw", source);
+      const sourcePath = path.join(root, ".grokbot", source);
       const sourceRaw = fs.readFileSync(sourcePath, "utf8");
 
       await runEnsureConfigReady(commandPath);
@@ -375,7 +375,7 @@ describe("ensureConfigReady", () => {
   it("keeps named profiles isolated from default-profile approval migrations", async () => {
     const root = useTempOpenClawHome();
     setTestEnvValue("OPENCLAW_PROFILE", "work");
-    setTestEnvValue("OPENCLAW_STATE_DIR", path.join(root, ".openclaw-work"));
+    setTestEnvValue("OPENCLAW_STATE_DIR", path.join(root, ".grokbot-work"));
     writeStateMarker(root, "exec-approvals.json");
     writeStateMarker(root, "plugin-binding-approvals.json");
 
@@ -406,7 +406,7 @@ describe("ensureConfigReady", () => {
   });
 
   it("uses shared tilde expansion for OPENCLAW_HOME in the startup detector", async () => {
-    const root = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-config-guard-home-"));
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-config-guard-home-"));
     tempRoots.push(root);
     setTestEnvValue("HOME", root);
     setTestEnvValue("OPENCLAW_HOME", "~/svc");
@@ -508,14 +508,14 @@ describe("ensureConfigReady", () => {
     const runtime = await runEnsureConfigReady(["message"]);
 
     expect(plainErrorCalls(runtime)).toEqual([
-      "OpenClaw config is invalid",
-      "File: /tmp/openclaw.json",
+      "GrokBot config is invalid",
+      "File: /tmp/grokbot.json",
       "Problem:",
       "  - channels.quietchat: invalid",
       "",
-      `Inspect: ${formatCliCommand("openclaw config validate")}`,
+      `Inspect: ${formatCliCommand("grokbot config validate")}`,
       "Audit, status, health, logs, tasks list/audit, and doctor commands still run with invalid config.",
-      `Run "${formatCliCommand("openclaw doctor --fix")}" to repair the config, then retry.`,
+      `Run "${formatCliCommand("grokbot doctor --fix")}" to repair the config, then retry.`,
     ]);
     expect(runtime.exit).toHaveBeenCalledWith(1);
   });
@@ -542,7 +542,7 @@ describe("ensureConfigReady", () => {
     );
 
     expect(confirm).toHaveBeenCalledWith(
-      `Run "${formatCliCommand("openclaw doctor --fix")}" now?`,
+      `Run "${formatCliCommand("grokbot doctor --fix")}" now?`,
       true,
     );
     expect(runDoctor).toHaveBeenCalledOnce();
@@ -614,7 +614,7 @@ describe("ensureConfigReady", () => {
     const calls = plainErrorCalls(runtime);
 
     expect(calls).toContain(`Fix: ${pluginPackagingRecoveryHint}`);
-    expect(calls).not.toContain(`Fix: ${formatCliCommand("openclaw doctor --fix")}`);
+    expect(calls).not.toContain(`Fix: ${formatCliCommand("grokbot doctor --fix")}`);
     expect(runtime.exit).toHaveBeenCalledWith(1);
 
     const gatewayRuntime = await runEnsureConfigReady(["gateway", "start"]);

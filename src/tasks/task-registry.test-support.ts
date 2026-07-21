@@ -21,7 +21,7 @@ type TaskRegistryTestApi = {
 
 function getTestApi(): TaskRegistryTestApi {
   const api = (globalThis as Record<PropertyKey, unknown>)[
-    Symbol.for("openclaw.taskRegistryTestApi")
+    Symbol.for("grokbot.taskRegistryTestApi")
   ];
   if (!api) {
     throw new Error("task registry test API is unavailable");

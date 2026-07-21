@@ -2,7 +2,7 @@
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import type { AgentMessage } from "openclaw/plugin-sdk/agent-core";
+import type { AgentMessage } from "grokbot/plugin-sdk/agent-core";
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { HEARTBEAT_TRANSCRIPT_PROMPT } from "../../../auto-reply/heartbeat.js";
 import {
@@ -306,7 +306,7 @@ describe("runEmbeddedAttempt context engine sessionKey forwarding", () => {
     vi.restoreAllMocks();
   });
 
-  it("enables Tool Search controls for embedded OpenClaw runs when configured", async () => {
+  it("enables Tool Search controls for embedded GrokBot runs when configured", async () => {
     expect(toolSearchControlsCase.includeToolSearchControls).toBe(true);
     expect(toolSearchControlsCase.toolSearchCatalogRef).toEqual({});
   });
@@ -878,12 +878,12 @@ describe("runEmbeddedAttempt context engine sessionKey forwarding", () => {
     expectFields(
       findRecord(
         requireRecords(seen.messages, "seen messages"),
-        (message) => message.customType === "openclaw.runtime-context",
+        (message) => message.customType === "grokbot.runtime-context",
         "runtime context message",
       ),
       {
         role: "custom",
-        customType: "openclaw.runtime-context",
+        customType: "grokbot.runtime-context",
         display: false,
       },
     );
@@ -1199,7 +1199,7 @@ describe("runEmbeddedAttempt context engine sessionKey forwarding", () => {
   });
 
   it("rebuilds skill prompt inputs from the sandbox workspace for non-rw sandbox runs", async () => {
-    const sandboxWorkspace = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-sandbox-skills-"));
+    const sandboxWorkspace = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-sandbox-skills-"));
     tempPaths.push(sandboxWorkspace);
     hoisted.resolveSandboxContextMock.mockResolvedValue({
       enabled: true,
@@ -1214,22 +1214,22 @@ describe("runEmbeddedAttempt context engine sessionKey forwarding", () => {
       attemptOverrides: {
         skillsSnapshot: {
           prompt:
-            "<available_skills><skill><location>~/.openclaw/skills/smaug/SKILL.md</location></skill></available_skills>",
+            "<available_skills><skill><location>~/.grokbot/skills/smaug/SKILL.md</location></skill></available_skills>",
           skills: [{ name: "smaug" }],
           resolvedSkills: [
             {
               name: "smaug",
               description: "Host copy",
               disableModelInvocation: false,
-              filePath: "/Users/alice/.openclaw/skills/smaug/SKILL.md",
-              baseDir: "/Users/alice/.openclaw/skills/smaug",
-              source: "openclaw-workspace",
+              filePath: "/Users/alice/.grokbot/skills/smaug/SKILL.md",
+              baseDir: "/Users/alice/.grokbot/skills/smaug",
+              source: "grokbot-workspace",
               sourceInfo: {
-                path: "/Users/alice/.openclaw/skills/smaug/SKILL.md",
-                source: "openclaw-workspace",
+                path: "/Users/alice/.grokbot/skills/smaug/SKILL.md",
+                source: "grokbot-workspace",
                 scope: "project",
                 origin: "top-level",
-                baseDir: "/Users/alice/.openclaw/skills/smaug",
+                baseDir: "/Users/alice/.grokbot/skills/smaug",
               },
             },
           ],
@@ -1717,7 +1717,7 @@ describe("runEmbeddedAttempt context engine sessionKey forwarding", () => {
     expect(result.finalPromptText).toBe(seen.prompt);
     const runtimeContext = findRecord(
       requireRecords(seen.messages, "seen messages"),
-      (message) => message.customType === "openclaw.runtime-context",
+      (message) => message.customType === "grokbot.runtime-context",
       "runtime context message",
     );
     expect(runtimeContext.content).toContain("secret runtime context");
@@ -1731,13 +1731,13 @@ describe("runEmbeddedAttempt context engine sessionKey forwarding", () => {
       bootstrapFiles: [
         {
           name: "AGENTS.md",
-          path: "/tmp/openclaw-warning-workspace/AGENTS.md",
+          path: "/tmp/grokbot-warning-workspace/AGENTS.md",
           content: "A".repeat(200),
           missing: false,
         },
       ],
       contextFiles: [
-        { path: "/tmp/openclaw-warning-workspace/AGENTS.md", content: "A".repeat(20) },
+        { path: "/tmp/grokbot-warning-workspace/AGENTS.md", content: "A".repeat(20) },
       ],
     });
 
@@ -1782,14 +1782,14 @@ describe("runEmbeddedAttempt context engine sessionKey forwarding", () => {
       bootstrapFiles: [
         {
           name: "BOOTSTRAP.md",
-          path: "/tmp/openclaw-bootstrap-workspace/BOOTSTRAP.md",
+          path: "/tmp/grokbot-bootstrap-workspace/BOOTSTRAP.md",
           content: "Ask who I am.",
           missing: false,
         },
       ],
       contextFiles: [
         {
-          path: "/tmp/openclaw-bootstrap-workspace/BOOTSTRAP.md",
+          path: "/tmp/grokbot-bootstrap-workspace/BOOTSTRAP.md",
           content: "Ask who I am.",
         },
       ],
@@ -1825,14 +1825,14 @@ describe("runEmbeddedAttempt context engine sessionKey forwarding", () => {
     expect(promptInput.bootstrapMode).toBe("full");
     expect(promptInput.contextFiles).toEqual([
       {
-        path: "/tmp/openclaw-bootstrap-workspace/BOOTSTRAP.md",
+        path: "/tmp/grokbot-bootstrap-workspace/BOOTSTRAP.md",
         content: "Ask who I am.",
       },
     ]);
   });
 
   it("includes hook-adjusted bootstrap files preloaded before routing", async () => {
-    const workspaceDir = "/tmp/openclaw-hook-workspace";
+    const workspaceDir = "/tmp/grokbot-hook-workspace";
     hoisted.resolveBootstrapFilesForRunMock.mockResolvedValueOnce([
       {
         name: "BOOTSTRAP.md",
@@ -1959,7 +1959,7 @@ describe("runEmbeddedAttempt context engine sessionKey forwarding", () => {
     expect(result.finalPromptText).toBe(seenPrompt);
     const runtimeContext = findRecord(
       requireRecords(seenMessages, "seen messages"),
-      (message) => message.customType === "openclaw.runtime-context",
+      (message) => message.customType === "grokbot.runtime-context",
       "runtime context message",
     );
     expect(runtimeContext.content).toContain(
@@ -2045,7 +2045,7 @@ describe("runEmbeddedAttempt context engine sessionKey forwarding", () => {
     expect(JSON.stringify(seen.modelMessages)).not.toContain("secret runtime context");
     const runtimeContext = findRecord(
       requireRecords(seen.messages, "seen messages"),
-      (message) => message.customType === "openclaw.runtime-context",
+      (message) => message.customType === "grokbot.runtime-context",
       "runtime context message",
     );
     expect(seen.systemPrompt).not.toContain("[Inter-session message]");
@@ -2097,8 +2097,8 @@ describe("runEmbeddedAttempt context engine sessionKey forwarding", () => {
       },
     });
 
-    expect(seenPrompt).toBe("Continue the OpenClaw runtime event.");
-    expect(result.finalPromptText).toBe("Continue the OpenClaw runtime event.");
+    expect(seenPrompt).toBe("Continue the GrokBot runtime event.");
+    expect(result.finalPromptText).toBe("Continue the GrokBot runtime event.");
     expect(JSON.stringify(seenModelMessages)).toContain("dynamic hook context");
     expect(JSON.stringify(seenModelMessages)).toContain("internal heartbeat event");
     expect(JSON.stringify(seenModelMessages)).toContain("dynamic hook tail");
@@ -2154,7 +2154,7 @@ describe("runEmbeddedAttempt context engine sessionKey forwarding", () => {
     const contextCompiled = trajectoryEvents.find((event) => event.type === "context.compiled");
     const runtimeContext = findRecord(
       requireRecords(seenMessages, "seen messages"),
-      (message) => message.customType === "openclaw.runtime-context",
+      (message) => message.customType === "grokbot.runtime-context",
       "runtime context message",
     );
     expect(runtimeContext.content).toContain("internal heartbeat event");
@@ -2198,7 +2198,7 @@ describe("runEmbeddedAttempt context engine sessionKey forwarding", () => {
 
     expect(seenPrompt).toContain("Reply target of current user message (untrusted, for context):");
     expect(seenPrompt).toContain("Hello from the replied message");
-    expect(seenPrompt).toContain("Continue the OpenClaw runtime event.");
+    expect(seenPrompt).toContain("Continue the GrokBot runtime event.");
     expect(result.finalPromptText).toBe(seenPrompt);
     const trajectoryEvents = await readTrajectoryEvents(tempPaths);
     const contextCompiled = trajectoryEvents.find((event) => event.type === "context.compiled");
@@ -2225,12 +2225,12 @@ describe("runEmbeddedAttempt context engine sessionKey forwarding", () => {
       tempPaths,
       trajectory: true,
       attemptOverrides: {
-        prompt: "[OpenClaw room event]",
+        prompt: "[GrokBot room event]",
         transcriptPrompt: "",
         currentInboundEventKind: "room_event",
         currentInboundContext: {
           text: [
-            "[OpenClaw room event]",
+            "[GrokBot room event]",
             "inbound_event_kind: room_event",
             "visible_reply_contract: message_tool_only",
             "Room context:\n#2001 Alice: lunch at 2?\n#2002 Bob: works",
@@ -2260,14 +2260,14 @@ describe("runEmbeddedAttempt context engine sessionKey forwarding", () => {
 
     // The user prompt stays the bare room-event marker; the room context is
     // routed into the runtime-context carrier instead of the user text.
-    expect(seenPrompt).toBe("[OpenClaw room event]");
+    expect(seenPrompt).toBe("[GrokBot room event]");
     expect(seenPrompt).not.toContain("inbound_event_kind: room_event");
-    expect(seenPrompt).not.toBe("Continue the OpenClaw runtime event.");
+    expect(seenPrompt).not.toBe("Continue the GrokBot runtime event.");
     expect(seenPrompt).not.toContain("dynamic hook context");
     expect(seenPrompt).not.toContain("dynamic hook tail");
     const roomRuntimeContext = findRecord(
       requireRecords(seenMessages, "seen messages"),
-      (message) => message.customType === "openclaw.runtime-context",
+      (message) => message.customType === "grokbot.runtime-context",
       "runtime context message",
     );
     expect(roomRuntimeContext.content).toContain("inbound_event_kind: room_event");
@@ -2284,7 +2284,7 @@ describe("runEmbeddedAttempt context engine sessionKey forwarding", () => {
     expect(contextCompiled?.data?.prompt).not.toContain(
       "visible_reply_contract: message_tool_only",
     );
-    expect(contextCompiled?.data?.prompt).toContain("[OpenClaw room event]");
+    expect(contextCompiled?.data?.prompt).toContain("[GrokBot room event]");
   });
 
   it("skips blank visible prompts with replay history before provider submission", async () => {
@@ -2813,7 +2813,7 @@ describe("runEmbeddedAttempt context engine sessionKey forwarding", () => {
       tempPaths,
       attemptOverrides: {
         currentInboundEventKind: "room_event",
-        currentInboundContext: { text: "[OpenClaw room event]" },
+        currentInboundContext: { text: "[GrokBot room event]" },
         suppressNextUserMessagePersistence: true,
         transcriptPrompt: "",
       },
@@ -2847,7 +2847,7 @@ describe("runEmbeddedAttempt context engine sessionKey forwarding", () => {
   });
 
   it("uses SQLite transcript messages for bootstrap without treating the marker as a file", async () => {
-    const storeDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-ctx-engine-sqlite-"));
+    const storeDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-ctx-engine-sqlite-"));
     tempPaths.push(storeDir);
     const storePath = path.join(storeDir, "sessions.json");
     const created = await createSessionEntryWithTranscript(

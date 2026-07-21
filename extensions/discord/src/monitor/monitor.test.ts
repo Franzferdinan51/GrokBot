@@ -1,7 +1,7 @@
 // Discord tests cover monitor plugin behavior.
 import { ChannelType } from "discord-api-types/v10";
-import type { DiscordAccountConfig, OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { buildPluginBindingApprovalCustomId } from "openclaw/plugin-sdk/conversation-runtime";
+import type { DiscordAccountConfig, OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { buildPluginBindingApprovalCustomId } from "grokbot/plugin-sdk/conversation-runtime";
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { clearDiscordComponentEntriesForTest } from "../components-registry.test-support.js";
 import type { DiscordComponentEntry, DiscordModalEntry } from "../components.js";
@@ -29,7 +29,7 @@ type CreateDiscordComponentModal =
   typeof import("./agent-components.js").createDiscordComponentModal;
 type CreateDiscordComponentStringSelect = CreateDiscordComponentButton;
 type DispatchReplyWithBufferedBlockDispatcherFn =
-  typeof import("openclaw/plugin-sdk/reply-dispatch-runtime").dispatchReplyWithBufferedBlockDispatcher;
+  typeof import("grokbot/plugin-sdk/reply-dispatch-runtime").dispatchReplyWithBufferedBlockDispatcher;
 type DispatchReplyWithBufferedBlockDispatcherResult = Awaited<
   ReturnType<DispatchReplyWithBufferedBlockDispatcherFn>
 >;
@@ -330,7 +330,7 @@ describe("discord component interactions", () => {
       );
     recordInboundSessionMock.mockClear().mockResolvedValue(undefined);
     readSessionUpdatedAtMock.mockClear().mockReturnValue(undefined);
-    resolveStorePathMock.mockClear().mockReturnValue("/tmp/openclaw-sessions-test.json");
+    resolveStorePathMock.mockClear().mockReturnValue("/tmp/grokbot-sessions-test.json");
     dispatchPluginInteractiveHandlerMock.mockReset().mockResolvedValue({
       matched: false,
       handled: false,

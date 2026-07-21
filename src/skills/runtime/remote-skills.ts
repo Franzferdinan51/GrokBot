@@ -219,9 +219,9 @@ export function mergeRemoteNodeSkillEntries(
         filePath,
         baseDir: filePath.slice(0, -"/SKILL.md".length),
         promptVersion: computeSkillPromptVersion(skill.content),
-        source: "openclaw-node",
+        source: "grokbot-node",
         sourceInfo: createSyntheticSourceInfo(filePath, {
-          source: "openclaw-node",
+          source: "grokbot-node",
           scope: "temporary",
           origin: "top-level",
           baseDir: filePath.slice(0, -"/SKILL.md".length),
@@ -250,7 +250,7 @@ function resetRemoteNodeSkillsForTests(): void {
 }
 
 if (process.env.VITEST || process.env.NODE_ENV === "test") {
-  (globalThis as Record<PropertyKey, unknown>)[Symbol.for("openclaw.remoteNodeSkillsTestApi")] = {
+  (globalThis as Record<PropertyKey, unknown>)[Symbol.for("grokbot.remoteNodeSkillsTestApi")] = {
     resetRemoteNodeSkillsForTests,
   };
 }

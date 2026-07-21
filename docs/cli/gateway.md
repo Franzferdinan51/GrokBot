@@ -1,5 +1,5 @@
 ---
-summary: "OpenClaw Gateway CLI (`openclaw gateway`) — run, query, and discover gateways"
+summary: "GrokBot Gateway CLI (`grokbot gateway`) — run, query, and discover gateways"
 read_when:
   - Running the Gateway from the CLI (dev or servers)
   - Debugging Gateway auth, bind modes, and connectivity
@@ -9,14 +9,14 @@ title: "Gateway"
 sidebarTitle: "Gateway"
 ---
 
-The Gateway is OpenClaw's WebSocket server (channels, nodes, sessions, hooks). All subcommands below live under `openclaw gateway ...`.
+The Gateway is GrokBot's WebSocket server (channels, nodes, sessions, hooks). All subcommands below live under `grokbot gateway ...`.
 
 <CardGroup cols={3}>
   <Card title="Bonjour discovery" href="/gateway/bonjour">
     Local mDNS + wide-area DNS-SD setup.
   </Card>
   <Card title="Discovery overview" href="/gateway/discovery">
-    How OpenClaw advertises and finds gateways.
+    How GrokBot advertises and finds gateways.
   </Card>
   <Card title="Configuration" href="/gateway/configuration">
     Top-level gateway config keys.
@@ -26,18 +26,18 @@ The Gateway is OpenClaw's WebSocket server (channels, nodes, sessions, hooks). A
 ## Run the Gateway
 
 ```bash
-openclaw gateway
-openclaw gateway run   # equivalent, explicit form
+grokbot gateway
+grokbot gateway run   # equivalent, explicit form
 ```
 
 <AccordionGroup>
   <Accordion title="Startup behavior">
-    - Refuses to start unless `gateway.mode=local` is set in `~/.openclaw/openclaw.json`. Use `--allow-unconfigured` for ad-hoc/dev runs; it bypasses the guard without writing or repairing config.
-    - When startup finds a repairable invalid config, an interactive terminal offers to run `openclaw doctor --fix` and retries startup once after consent. Non-interactive runs never repair automatically; they print the command instead. If the repaired config is still invalid, startup remains stopped.
-    - `openclaw onboard --mode local` and `openclaw setup` write `gateway.mode=local`. If the config file exists but `gateway.mode` is missing, that is treated as damaged/clobbered config and the Gateway refuses to guess `local` for you — re-run onboarding, set the key manually, or pass `--allow-unconfigured`.
+    - Refuses to start unless `gateway.mode=local` is set in `~/.grokbot/grokbot.json`. Use `--allow-unconfigured` for ad-hoc/dev runs; it bypasses the guard without writing or repairing config.
+    - When startup finds a repairable invalid config, an interactive terminal offers to run `grokbot doctor --fix` and retries startup once after consent. Non-interactive runs never repair automatically; they print the command instead. If the repaired config is still invalid, startup remains stopped.
+    - `grokbot onboard --mode local` and `grokbot setup` write `gateway.mode=local`. If the config file exists but `gateway.mode` is missing, that is treated as damaged/clobbered config and the Gateway refuses to guess `local` for you — re-run onboarding, set the key manually, or pass `--allow-unconfigured`.
     - Binding beyond loopback without auth is blocked.
     - `--bind` values `lan`, `tailnet`, and `custom` resolve over IPv4-only paths today; IPv6-only bring-your-own-host setups need an IPv4 sidecar or proxy in front of the Gateway.
-    - `SIGUSR1` triggers an in-process restart when authorized. `commands.restart` (default: enabled) gates externally-sent `SIGUSR1`; set it to `false` to block manual OS-signal restarts. The agent-facing `gateway` tool is read-only; agents request restart through the human-approved `openclaw` delegation tool.
+    - `SIGUSR1` triggers an in-process restart when authorized. `commands.restart` (default: enabled) gates externally-sent `SIGUSR1`; set it to `false` to block manual OS-signal restarts. The agent-facing `gateway` tool is read-only; agents request restart through the human-approved `grokbot` delegation tool.
     - `SIGINT`/`SIGTERM` stop the process but do not restore custom terminal state — if you wrap the CLI in a TUI or raw-mode input, restore the terminal yourself before exit.
 
   </Accordion>
@@ -107,11 +107,11 @@ For `--bind custom`, set `gateway.customBindHost` to an IPv4 address. Any addres
 ## Restart the Gateway
 
 ```bash
-openclaw gateway restart
-openclaw gateway restart --safe
-openclaw gateway restart --safe --skip-deferral
-openclaw gateway restart --force
-openclaw gateway restart --wait 30s
+grokbot gateway restart
+grokbot gateway restart --safe
+grokbot gateway restart --safe --skip-deferral
+grokbot gateway restart --force
+grokbot gateway restart --wait 30s
 ```
 
 `--safe` asks the running Gateway to preflight active work and schedule one coalesced restart after that work drains. The wait is bounded to 5 minutes; when the budget expires the restart is forced. `--safe` cannot combine with `--force` or `--wait`.
@@ -130,9 +130,9 @@ Inline `--password` can be exposed in local process listings. Prefer `--password
 
 Set `OPENCLAW_SUPERVISOR_MODE=external` only when another process manager owns the Gateway lifecycle. In this mode:
 
-- `openclaw gateway restart` preserves the existing safe, forced, and bounded-wait behavior while targeting the verified running Gateway instead of launchd, systemd, or Task Scheduler.
+- `grokbot gateway restart` preserves the existing safe, forced, and bounded-wait behavior while targeting the verified running Gateway instead of launchd, systemd, or Task Scheduler.
 - Native service install, start, stop, and uninstall operations are refused with guidance to use the external supervisor.
-- OpenClaw self-update is refused so the supervisor can stop the Gateway, replace and finalize the runtime, and restart it safely.
+- GrokBot self-update is refused so the supervisor can stop the Gateway, replace and finalize the runtime, and restart it safely.
 - A fresh-process restart writes a bounded SQLite handoff before clean exit. If persistence fails, the Gateway falls back to an in-process restart instead of exiting without a consumable handoff.
 
 `OPENCLAW_SERVICE_REPAIR_POLICY=external` remains a separate Doctor repair policy. It does not declare runtime ownership; supervisors that need both behaviors should set both variables.
@@ -140,13 +140,13 @@ Set `OPENCLAW_SUPERVISOR_MODE=external` only when another process manager owns t
 External supervisors can negotiate and consume restart handoffs through the hidden machine contract:
 
 ```bash
-openclaw gateway restart-handoff capabilities --json
-openclaw gateway restart-handoff consume --expected-pid <pid> --json
+grokbot gateway restart-handoff capabilities --json
+grokbot gateway restart-handoff consume --expected-pid <pid> --json
 ```
 
 Protocol version `1` supports the `consume` operation. Consumption validates the expected PID and bounded handoff fields inside one immediate SQLite transaction. An accepted handoff is deleted before success is returned, so concurrent or replayed consumers cannot both accept it. A PID mismatch is retained for the matching owner; missing, expired, and invalid rows do not authorize a restart.
 
-Valid machine requests return JSON with exit code `0`, including non-restart results. Invalid arguments return `reason: "invalid-expected-pid"` with exit code `2`; state-store failures return `reason: "store-unavailable"` with exit code `1`. Supervisors should probe `capabilities` on the exact runtime or launcher they will use rather than infer support from an OpenClaw version string or read the private SQLite schema directly.
+Valid machine requests return JSON with exit code `0`, including non-restart results. Invalid arguments return `reason: "invalid-expected-pid"` with exit code `2`; state-store failures return `reason: "store-unavailable"` with exit code `1`. Supervisors should probe `capabilities` on the exact runtime or launcher they will use rather than infer support from an GrokBot version string or read the private SQLite schema directly.
 
 ### Gateway profiling
 
@@ -185,8 +185,8 @@ When you set `--url`, the CLI does not fall back to config or environment creden
 ### `gateway health`
 
 ```bash
-openclaw gateway health --url ws://127.0.0.1:18789
-openclaw gateway health --port 18789
+grokbot gateway health --url ws://127.0.0.1:18789
+grokbot gateway health --port 18789
 ```
 
 `/healthz` is a liveness probe: it returns as soon as the server can answer HTTP. `/readyz` is stricter and stays red while startup plugin sidecars, channels, or configured hooks are still settling. Local or authenticated detailed `/readyz` responses include an `eventLoop` diagnostic block (delay, utilization, CPU-core ratio, `degraded` flag).
@@ -200,11 +200,11 @@ openclaw gateway health --port 18789
 Fetch usage-cost summaries from session logs.
 
 ```bash
-openclaw gateway usage-cost
-openclaw gateway usage-cost --days 7
-openclaw gateway usage-cost --agent work --json
-openclaw gateway usage-cost --all-agents
-openclaw gateway usage-cost --json
+grokbot gateway usage-cost
+grokbot gateway usage-cost --days 7
+grokbot gateway usage-cost --agent work --json
+grokbot gateway usage-cost --all-agents
+grokbot gateway usage-cost --json
 ```
 
 <ParamField path="--days <days>" type="number" default="30">
@@ -222,11 +222,11 @@ openclaw gateway usage-cost --json
 Fetch the recent diagnostic stability recorder from a running Gateway.
 
 ```bash
-openclaw gateway stability
-openclaw gateway stability --type payload.large
-openclaw gateway stability --bundle latest
-openclaw gateway stability --bundle latest --export
-openclaw gateway stability --json
+grokbot gateway stability
+grokbot gateway stability --type payload.large
+grokbot gateway stability --bundle latest
+grokbot gateway stability --bundle latest --export
+grokbot gateway stability --json
 ```
 
 <ParamField path="--limit <limit>" type="number" default="25">
@@ -251,7 +251,7 @@ openclaw gateway stability --json
 <AccordionGroup>
   <Accordion title="Privacy and bundle behavior">
     - Records keep operational metadata: event names, counts, byte sizes, memory readings, queue/session state, approval ids, channel/plugin names, and redacted session summaries. They exclude chat text, webhook bodies, tool outputs, raw request/response bodies, tokens, cookies, secret values, hostnames, and raw session ids. Set `diagnostics.enabled: false` to disable the recorder entirely.
-    - Fatal Gateway exits, shutdown timeouts, and restart startup failures write the same diagnostic snapshot to `~/.openclaw/logs/stability/openclaw-stability-*.json` when the recorder has events. Inspect the newest bundle with `openclaw gateway stability --bundle latest`; `--limit`, `--type`, and `--since-seq` apply to bundle output too.
+    - Fatal Gateway exits, shutdown timeouts, and restart startup failures write the same diagnostic snapshot to `~/.grokbot/logs/stability/grokbot-stability-*.json` when the recorder has events. Inspect the newest bundle with `grokbot gateway stability --bundle latest`; `--limit`, `--type`, and `--since-seq` apply to bundle output too.
 
   </Accordion>
 </AccordionGroup>
@@ -261,9 +261,9 @@ openclaw gateway stability --json
 Write a local diagnostics zip designed for bug reports. For the privacy model and bundle contents, see [Diagnostics Export](/gateway/diagnostics).
 
 ```bash
-openclaw gateway diagnostics export
-openclaw gateway diagnostics export --output openclaw-diagnostics.zip
-openclaw gateway diagnostics export --json
+grokbot gateway diagnostics export
+grokbot gateway diagnostics export --output grokbot-diagnostics.zip
+grokbot gateway diagnostics export --json
 ```
 
 <ParamField path="--output <path>" type="string">
@@ -294,7 +294,7 @@ openclaw gateway diagnostics export --json
   Print the written path, size, and manifest as JSON.
 </ParamField>
 
-The export bundles: `manifest.json` (file inventory), `summary.md` (Markdown summary), `diagnostics.json` (top-level config/logs/discovery/stability/status/health summary), `config/sanitized.json`, `status/gateway-status.json`, `health/gateway-health.json`, `logs/openclaw-sanitized.jsonl`, and `stability/latest.json` when a bundle exists.
+The export bundles: `manifest.json` (file inventory), `summary.md` (Markdown summary), `diagnostics.json` (top-level config/logs/discovery/stability/status/health summary), `config/sanitized.json`, `status/gateway-status.json`, `health/gateway-health.json`, `logs/grokbot-sanitized.jsonl`, and `stability/latest.json` when a bundle exists.
 
 It is designed to be shared. It keeps operational details useful for debugging — safe log fields, subsystem names, status codes, durations, configured modes, ports, plugin/provider ids, non-secret feature settings, and redacted operational log messages — and omits or redacts chat text, webhook bodies, tool outputs, credentials, cookies, account/message identifiers, prompt/instruction text, hostnames, and secret values. When a log message looks like user/chat/tool payload text (e.g. "user said", "chat text", "tool output", "webhook body"), the export keeps only the fact that a message was omitted plus its byte count.
 
@@ -303,9 +303,9 @@ It is designed to be shared. It keeps operational details useful for debugging �
 Shows the Gateway service (launchd/systemd/schtasks) plus an optional connectivity/auth probe.
 
 ```bash
-openclaw gateway status
-openclaw gateway status --json
-openclaw gateway status --require-rpc
+grokbot gateway status
+grokbot gateway status --json
+grokbot gateway status --require-rpc
 ```
 
 <ParamField path="--url <url>" type="string">
@@ -366,9 +366,9 @@ If multiple probe targets are reachable, all are printed. An SSH tunnel, TLS/pro
 </Note>
 
 ```bash
-openclaw gateway probe
-openclaw gateway probe --json
-openclaw gateway probe --port 18789
+grokbot gateway probe
+grokbot gateway probe --json
+grokbot gateway probe --port 18789
 ```
 
 <ParamField path="--port <port>" type="number">
@@ -404,10 +404,10 @@ openclaw gateway probe --port 18789
   </Accordion>
   <Accordion title="Common warning codes">
     - `ssh_tunnel_failed`: SSH tunnel setup failed; the command fell back to direct probes.
-    - `multiple_gateways`: distinct gateway identities were reachable, or OpenClaw could not prove reachable targets are the same gateway. An SSH tunnel, proxy URL, or configured remote URL to the same gateway does not trigger this.
+    - `multiple_gateways`: distinct gateway identities were reachable, or GrokBot could not prove reachable targets are the same gateway. An SSH tunnel, proxy URL, or configured remote URL to the same gateway does not trigger this.
     - `auth_secretref_unresolved`: a configured auth SecretRef could not be resolved for a failed target.
     - `probe_scope_limited`: WebSocket connect succeeded, but the read probe was limited by missing `operator.read`.
-    - `local_tls_runtime_unavailable`: local Gateway TLS is enabled but OpenClaw could not load the local certificate fingerprint.
+    - `local_tls_runtime_unavailable`: local Gateway TLS is enabled but GrokBot could not load the local certificate fingerprint.
 
   </Accordion>
 </AccordionGroup>
@@ -419,7 +419,7 @@ The macOS app "Remote over SSH" mode uses a local port-forward so a loopback-onl
 CLI equivalent:
 
 ```bash
-openclaw gateway probe --ssh user@gateway-host
+grokbot gateway probe --ssh user@gateway-host
 ```
 
 <ParamField path="--ssh <target>" type="string">
@@ -439,8 +439,8 @@ Config defaults (optional): `gateway.remote.sshTarget`, `gateway.remote.sshIdent
 Low-level RPC helper.
 
 ```bash
-openclaw gateway call status
-openclaw gateway call logs.tail --params '{"limit": 200}'
+grokbot gateway call status
+grokbot gateway call logs.tail --params '{"limit": 200}'
 ```
 
 <ParamField path="--params <json>" type="string" default="{}">
@@ -472,41 +472,41 @@ openclaw gateway call logs.tail --params '{"limit": 200}'
 ## Manage the Gateway service
 
 ```bash
-openclaw gateway install
-openclaw gateway start
-openclaw gateway stop
-openclaw gateway restart
-openclaw gateway uninstall
+grokbot gateway install
+grokbot gateway start
+grokbot gateway stop
+grokbot gateway restart
+grokbot gateway uninstall
 ```
 
 ### Install with a wrapper
 
-Use `--wrapper` when the managed service must start through another executable, for example a secrets manager shim or a run-as helper. The wrapper receives the normal Gateway args and is responsible for eventually exec'ing `openclaw` or Node with those args.
+Use `--wrapper` when the managed service must start through another executable, for example a secrets manager shim or a run-as helper. The wrapper receives the normal Gateway args and is responsible for eventually exec'ing `grokbot` or Node with those args.
 
 ```bash
-cat > ~/.local/bin/openclaw-doppler <<'EOF'
+cat > ~/.local/bin/grokbot-doppler <<'EOF'
 #!/usr/bin/env bash
 set -euo pipefail
-exec doppler run --project my-project --config production -- openclaw "$@"
+exec doppler run --project my-project --config production -- grokbot "$@"
 EOF
-chmod +x ~/.local/bin/openclaw-doppler
+chmod +x ~/.local/bin/grokbot-doppler
 
-openclaw gateway install --wrapper ~/.local/bin/openclaw-doppler --force
-openclaw gateway restart
+grokbot gateway install --wrapper ~/.local/bin/grokbot-doppler --force
+grokbot gateway restart
 ```
 
 You can also set the wrapper through the environment. `gateway install` validates that the path is an executable file, writes the wrapper into the service `ProgramArguments`, and persists `OPENCLAW_WRAPPER` in the service environment for later forced reinstalls, updates, and doctor repairs.
 
 ```bash
-OPENCLAW_WRAPPER="$HOME/.local/bin/openclaw-doppler" openclaw gateway install --force
-openclaw doctor
+OPENCLAW_WRAPPER="$HOME/.local/bin/grokbot-doppler" grokbot gateway install --force
+grokbot doctor
 ```
 
 To remove a persisted wrapper, clear `OPENCLAW_WRAPPER` while reinstalling:
 
 ```bash
-OPENCLAW_WRAPPER= openclaw gateway install --force
-openclaw gateway restart
+OPENCLAW_WRAPPER= grokbot gateway install --force
+grokbot gateway restart
 ```
 
 <AccordionGroup>
@@ -531,7 +531,7 @@ openclaw gateway restart
     - `gateway install` writes a heap-only `NODE_OPTIONS` value for the managed Gateway service. It targets 50% of constrained memory when Node reports a container or service limit, otherwise 50% of physical memory.
     - The nominal target range is 2048–8192 MiB, with an additional 75% native-headroom cap. On small hosts, that headroom cap can put the applied limit below the nominal 2048 MiB floor.
     - A valid explicit `--max-old-space-size` already stored in the installed service is preserved across forced reinstalls and doctor repairs. Other `NODE_OPTIONS` flags are not carried into the managed service.
-    - Ambient shell `NODE_OPTIONS` does not override this policy. Use `gateway status` or `doctor` to inspect the installed value; run `openclaw gateway install --force` to regenerate older service metadata that has no managed heap setting.
+    - Ambient shell `NODE_OPTIONS` does not override this policy. Use `gateway status` or `doctor` to inspect the installed value; run `grokbot gateway install --force` to regenerate older service metadata that has no managed heap setting.
     - The policy applies only to the managed Gateway service. Foreground `gateway run`, node services, and hand-written supervisor units retain their own runtime configuration.
 
   </Accordion>
@@ -547,10 +547,10 @@ openclaw gateway restart
 
 ## Discover gateways (Bonjour)
 
-`gateway discover` scans for Gateway beacons (`_openclaw-gw._tcp`).
+`gateway discover` scans for Gateway beacons (`_grokbot-gw._tcp`).
 
 - Multicast DNS-SD: `local.`
-- Unicast DNS-SD (wide-area Bonjour): choose a domain (example: `openclaw.internal.`) and set up split DNS + a DNS server; see [Bonjour](/gateway/bonjour).
+- Unicast DNS-SD (wide-area Bonjour): choose a domain (example: `grokbot.internal.`) and set up split DNS + a DNS server; see [Bonjour](/gateway/bonjour).
 
 Only gateways with Bonjour discovery enabled (default) advertise the beacon.
 
@@ -559,7 +559,7 @@ TXT hints on every beacon: `role` (gateway role hint), `transport` (transport hi
 ### `gateway discover`
 
 ```bash
-openclaw gateway discover
+grokbot gateway discover
 ```
 
 <ParamField path="--timeout <ms>" type="number" default="2000">
@@ -572,8 +572,8 @@ openclaw gateway discover
 Examples:
 
 ```bash
-openclaw gateway discover --timeout 4000
-openclaw gateway discover --json | jq '.beacons[].wsUrl'
+grokbot gateway discover --timeout 4000
+grokbot gateway discover --json | jq '.beacons[].wsUrl'
 ```
 
 <Note>

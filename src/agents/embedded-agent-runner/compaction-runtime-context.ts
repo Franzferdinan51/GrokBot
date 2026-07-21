@@ -4,7 +4,7 @@
 import type { SourceReplyDeliveryMode } from "../../auto-reply/get-reply-options.types.js";
 import type { ReasoningLevel, ThinkLevel } from "../../auto-reply/thinking.js";
 import type { ChatType } from "../../channels/chat-type.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import type { SkillSnapshot } from "../../skills/types.js";
 import { isDefaultAgentRuntimeId, normalizeOptionalAgentRuntimeId } from "../agent-runtime-id.js";
 import {
@@ -129,9 +129,9 @@ export function resolveEmbeddedCompactionTarget(params: {
     // defaults choose new runs; they cannot move an existing transcript.
     const useNativeHarnessRuntime =
       selectedHarnessRuntime !== undefined &&
-      selectedHarnessRuntime !== "openclaw" &&
+      selectedHarnessRuntime !== "grokbot" &&
       !isDefaultAgentRuntimeId(selectedHarnessRuntime);
-    const harnessRuntime = useNativeHarnessRuntime ? selectedHarnessRuntime : "openclaw";
+    const harnessRuntime = useNativeHarnessRuntime ? selectedHarnessRuntime : "grokbot";
     const runtimeProvider = resolveSelectedOpenAIRuntimeProvider({
       provider: targetProvider,
       harnessRuntime: harnessRuntime ?? undefined,

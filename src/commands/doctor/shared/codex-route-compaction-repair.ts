@@ -1,6 +1,6 @@
-import { asOptionalRecord as asMutableRecord } from "@openclaw/normalization-core/record-coerce";
-import { normalizeOptionalLowercaseString as normalizeString } from "@openclaw/normalization-core/string-coerce";
-import type { OpenClawConfig } from "../../../config/types.openclaw.js";
+import { asOptionalRecord as asMutableRecord } from "@grokbot/normalization-core/record-coerce";
+import { normalizeOptionalLowercaseString as normalizeString } from "@grokbot/normalization-core/string-coerce";
+import type { OpenClawConfig } from "../../../config/types.grokbot.js";
 import {
   canAutoMigrateLegacyLosslessCompaction,
   collectLegacyLosslessCompactionConfigs,

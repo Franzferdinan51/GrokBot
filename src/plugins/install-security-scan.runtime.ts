@@ -1,10 +1,10 @@
 // Runtime bridge for plugin install security scanning.
 import fs from "node:fs/promises";
 import path from "node:path";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { formatErrorMessage } from "../infra/errors.js";
 import { tryReadJson } from "../infra/json-files.js";
-import { resolveOpenClawPackageRootSync } from "../infra/openclaw-root.js";
+import { resolveOpenClawPackageRootSync } from "../infra/grokbot-root.js";
 import { parseStrictPositiveInteger } from "../infra/parse-finite-number.js";
 import {
   runInstallPolicy,
@@ -183,11 +183,11 @@ function pathContainsNodeModulesSegment(relativePath: string): boolean {
 
 function isPackageRootOpenClawPeerSymlink(segments: string[]): boolean {
   return (
-    (segments.length === 2 && segments[0] === "node_modules" && segments[1] === "openclaw") ||
+    (segments.length === 2 && segments[0] === "node_modules" && segments[1] === "grokbot") ||
     (segments.length === 3 &&
       segments[0] === "node_modules" &&
       segments[1] === ".bin" &&
-      segments[2] === "openclaw")
+      segments[2] === "grokbot")
   );
 }
 
@@ -354,7 +354,7 @@ function collectManifestRuntimeDependencyNames(manifest: PackageManifest): strin
     }
   }
   for (const dependencyName of Object.keys(manifest.peerDependencies ?? {})) {
-    if (dependencyName !== "openclaw" && isInstallScannableDependencyName(dependencyName)) {
+    if (dependencyName !== "grokbot" && isInstallScannableDependencyName(dependencyName)) {
       dependencyNames.add(dependencyName);
     }
   }
@@ -792,7 +792,7 @@ function resolvePolicySource(params: {
   if (params.requestKind === "skill-install") {
     switch (params.origin?.type) {
       case "clawhub":
-        return { kind: "clawhub", authority: "openclaw", mutable: false, network: true };
+        return { kind: "clawhub", authority: "grokbot", mutable: false, network: true };
       case "git":
         return {
           kind: "git",
@@ -804,11 +804,11 @@ function resolvePolicySource(params: {
         return { kind: "local-path", authority: "user", mutable: true, network: false };
       case "upload":
         return { kind: "upload", authority: "user", mutable: false, network: false };
-      case "openclaw-bundled":
-        return { kind: "bundled", authority: "openclaw", mutable: false, network: false };
-      case "openclaw-managed":
-      case "openclaw-extra":
-        return { kind: "managed", authority: "openclaw", mutable: false, network: false };
+      case "grokbot-bundled":
+        return { kind: "bundled", authority: "grokbot", mutable: false, network: false };
+      case "grokbot-managed":
+      case "grokbot-extra":
+        return { kind: "managed", authority: "grokbot", mutable: false, network: false };
       default:
         return { kind: "workspace", authority: "user", mutable: true, network: false };
     }
@@ -844,7 +844,7 @@ function shouldBypassOpenClawInstallFriction(params: {
     return source.kind === "clawhub" || source.kind === "git" || source.kind === "npm";
   }
   return (
-    source.authority === "openclaw" && (source.kind === "bundled" || source.kind === "managed")
+    source.authority === "grokbot" && (source.kind === "bundled" || source.kind === "managed")
   );
 }
 

@@ -1,26 +1,26 @@
 // Slack plugin module implements context behavior.
 import type { App } from "@slack/bolt";
-import { resolveDefaultAgentId } from "openclaw/plugin-sdk/agent-runtime";
-import { formatAllowlistMatchMeta } from "openclaw/plugin-sdk/allow-from";
-import type { ChannelRuntimeSurface } from "openclaw/plugin-sdk/channel-contract";
+import { resolveDefaultAgentId } from "grokbot/plugin-sdk/agent-runtime";
+import { formatAllowlistMatchMeta } from "grokbot/plugin-sdk/allow-from";
+import type { ChannelRuntimeSurface } from "grokbot/plugin-sdk/channel-contract";
 import type {
   OpenClawConfig,
   SlackReactionNotificationMode,
-} from "openclaw/plugin-sdk/config-contracts";
-import type { SessionScope } from "openclaw/plugin-sdk/config-contracts";
-import type { DmPolicy, GroupPolicy } from "openclaw/plugin-sdk/config-contracts";
-import { resolveRuntimeConversationBindingRoute } from "openclaw/plugin-sdk/conversation-runtime";
-import { createDedupeCache } from "openclaw/plugin-sdk/dedupe-runtime";
-import type { HistoryEntry } from "openclaw/plugin-sdk/reply-history";
-import { resolveAgentRoute } from "openclaw/plugin-sdk/routing";
-import { resolveThreadSessionKeys } from "openclaw/plugin-sdk/routing";
-import { logVerbose } from "openclaw/plugin-sdk/runtime-env";
-import { getChildLogger } from "openclaw/plugin-sdk/runtime-env";
-import type { RuntimeEnv } from "openclaw/plugin-sdk/runtime-env";
+} from "grokbot/plugin-sdk/config-contracts";
+import type { SessionScope } from "grokbot/plugin-sdk/config-contracts";
+import type { DmPolicy, GroupPolicy } from "grokbot/plugin-sdk/config-contracts";
+import { resolveRuntimeConversationBindingRoute } from "grokbot/plugin-sdk/conversation-runtime";
+import { createDedupeCache } from "grokbot/plugin-sdk/dedupe-runtime";
+import type { HistoryEntry } from "grokbot/plugin-sdk/reply-history";
+import { resolveAgentRoute } from "grokbot/plugin-sdk/routing";
+import { resolveThreadSessionKeys } from "grokbot/plugin-sdk/routing";
+import { logVerbose } from "grokbot/plugin-sdk/runtime-env";
+import { getChildLogger } from "grokbot/plugin-sdk/runtime-env";
+import type { RuntimeEnv } from "grokbot/plugin-sdk/runtime-env";
 import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalString,
-} from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/string-coerce-runtime";
 import { formatSlackError } from "../errors.js";
 import type { SlackMessageEvent } from "../types.js";
 import { normalizeAllowList, normalizeAllowListLower, normalizeSlackSlug } from "./allow-list.js";
@@ -147,7 +147,7 @@ export type SlackMonitorContext = {
   replyToMode: "off" | "first" | "all" | "batched";
   threadHistoryScope: "thread" | "channel";
   threadInheritParent: boolean;
-  slashCommand: Required<import("openclaw/plugin-sdk/config-contracts").SlackSlashCommandConfig>;
+  slashCommand: Required<import("grokbot/plugin-sdk/config-contracts").SlackSlashCommandConfig>;
   textLimit: number;
   ackReactionScope: string;
   typingReaction: string;

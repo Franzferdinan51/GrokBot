@@ -1,7 +1,7 @@
 // Gateway session event broadcaster.
 // Projects transcript and lifecycle updates to websocket subscribers.
-import { asPositiveSafeInteger } from "@openclaw/normalization-core/number-coercion";
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+import { asPositiveSafeInteger } from "@grokbot/normalization-core/number-coercion";
+import { normalizeOptionalString } from "@grokbot/normalization-core/string-coerce";
 import { resolveDefaultAgentId } from "../agents/agent-scope.js";
 import { getRuntimeConfig } from "../config/io.js";
 import {
@@ -50,11 +50,11 @@ function readMessageSenderIsOwner(message: unknown): boolean | undefined {
   if (!message || typeof message !== "object" || Array.isArray(message)) {
     return undefined;
   }
-  const openclaw = (message as Record<string, unknown>)["__openclaw"];
-  if (!openclaw || typeof openclaw !== "object" || Array.isArray(openclaw)) {
+  const grokbot = (message as Record<string, unknown>)["__openclaw"];
+  if (!grokbot || typeof grokbot !== "object" || Array.isArray(grokbot)) {
     return undefined;
   }
-  const value = (openclaw as Record<string, unknown>).senderIsOwner;
+  const value = (grokbot as Record<string, unknown>).senderIsOwner;
   return typeof value === "boolean" ? value : undefined;
 }
 

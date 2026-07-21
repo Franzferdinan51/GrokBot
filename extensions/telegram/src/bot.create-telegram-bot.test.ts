@@ -2,31 +2,31 @@
 import { mkdtempSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
-import { expectDefined } from "@openclaw/normalization-core";
-import { escapeRegExp, formatEnvelopeTimestamp } from "openclaw/plugin-sdk/channel-test-helpers";
-import type { TelegramGroupConfig } from "openclaw/plugin-sdk/config-contracts";
+import { expectDefined } from "@grokbot/normalization-core";
+import { escapeRegExp, formatEnvelopeTimestamp } from "grokbot/plugin-sdk/channel-test-helpers";
+import type { TelegramGroupConfig } from "grokbot/plugin-sdk/config-contracts";
 import {
   buildPluginBindingApprovalCustomId,
   resolvePluginConversationBindingApproval,
-} from "openclaw/plugin-sdk/conversation-runtime";
+} from "grokbot/plugin-sdk/conversation-runtime";
 import {
   clearPluginInteractiveHandlers,
   registerPluginInteractiveHandler,
-} from "openclaw/plugin-sdk/plugin-runtime";
-import type { GetReplyOptions, MsgContext } from "openclaw/plugin-sdk/reply-runtime";
-import { withEnvAsync } from "openclaw/plugin-sdk/test-env";
-import { sanitizeTerminalText } from "openclaw/plugin-sdk/test-fixtures";
+} from "grokbot/plugin-sdk/plugin-runtime";
+import type { GetReplyOptions, MsgContext } from "grokbot/plugin-sdk/reply-runtime";
+import { withEnvAsync } from "grokbot/plugin-sdk/test-env";
+import { sanitizeTerminalText } from "grokbot/plugin-sdk/test-fixtures";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import type { TelegramBotOptions } from "./bot.types.js";
 import type { TelegramGetChat } from "./bot/types.js";
 import { buildTelegramOpaqueCallbackData } from "./native-command-callback-data.js";
 
-vi.mock("openclaw/plugin-sdk/conversation-runtime", { spy: true });
+vi.mock("grokbot/plugin-sdk/conversation-runtime", { spy: true });
 
 const harness = await import("./bot.create-telegram-bot.test-harness.js");
-const pluginStateTestRuntime = await import("openclaw/plugin-sdk/plugin-state-test-runtime");
-const configMutation = await import("openclaw/plugin-sdk/config-mutation");
-const sessionStoreRuntime = await import("openclaw/plugin-sdk/session-store-runtime");
+const pluginStateTestRuntime = await import("grokbot/plugin-sdk/plugin-state-test-runtime");
+const configMutation = await import("grokbot/plugin-sdk/config-mutation");
+const sessionStoreRuntime = await import("grokbot/plugin-sdk/session-store-runtime");
 const EYES_EMOJI = "\u{1F440}";
 const tempStateDirs: string[] = [];
 let previousStateDir: string | undefined;
@@ -94,7 +94,7 @@ let createTelegramBot: (
 ) => ReturnType<typeof import("./bot-core.js").createTelegramBotCore>;
 
 function createTelegramBotTestStateDir(): string {
-  const dir = mkdtempSync(path.join(tmpdir(), "openclaw-telegram-bot-"));
+  const dir = mkdtempSync(path.join(tmpdir(), "grokbot-telegram-bot-"));
   tempStateDirs.push(dir);
   return dir;
 }
@@ -375,7 +375,7 @@ describe("createTelegramBot", () => {
     const botInfo = {
       id: 123456,
       is_bot: true,
-      first_name: "OpenClaw",
+      first_name: "GrokBot",
       username: "openclaw_bot",
       can_join_groups: true,
       can_read_all_group_messages: false,
@@ -1797,7 +1797,7 @@ describe("createTelegramBot", () => {
         ctx: {
           update: { update_id: 104 },
           message: {
-            chat: { id: -1007, type: "supergroup", title: "OpenClaw Ops" },
+            chat: { id: -1007, type: "supergroup", title: "GrokBot Ops" },
             text: "first",
             date: 1736380804,
             message_id: 104,
@@ -1815,7 +1815,7 @@ describe("createTelegramBot", () => {
         ctx: {
           update: { update_id: 105 },
           message: {
-            chat: { id: -1007, type: "supergroup", title: "OpenClaw Ops" },
+            chat: { id: -1007, type: "supergroup", title: "GrokBot Ops" },
             text: "stop",
             date: 1736380805,
             message_id: 105,
@@ -1874,7 +1874,7 @@ describe("createTelegramBot", () => {
       return { handled: true };
     });
     expect(
-      registerPluginInteractiveHandler("openclaw-code-agent", {
+      registerPluginInteractiveHandler("grokbot-code-agent", {
         channel: "telegram",
         namespace: "code-agent",
         handler: pluginHandler,
@@ -2270,7 +2270,7 @@ describe("createTelegramBot", () => {
       const pairingText = String(sendMessageSpy.mock.calls.at(0)?.[1]);
       expect(pairingText, testCase.name).toContain(`Your Telegram user id: ${senderId}`);
       expect(pairingText, testCase.name).toContain("Pairing code:");
-      expect(pairingText, testCase.name).toContain("openclaw pairing approve telegram");
+      expect(pairingText, testCase.name).toContain("grokbot pairing approve telegram");
       expectRecordFields(
         sendMessageSpy.mock.calls.at(0)?.[2],
         { parse_mode: "HTML" },
@@ -2486,16 +2486,16 @@ describe("createTelegramBot", () => {
         chat: { id: 1234, type: "private", first_name: "Harold" },
         message_id: 1884,
         date: 1736380800,
-        from: { id: 7, is_bot: true, first_name: "OpenClaw", username: "openclaw_bot" },
+        from: { id: 7, is_bot: true, first_name: "GrokBot", username: "openclaw_bot" },
         pinned_message: {
           message_id: 1883,
           date: 1736380799,
           chat: { id: 1234, type: "private", first_name: "Harold" },
-          from: { id: 7, is_bot: true, first_name: "OpenClaw", username: "openclaw_bot" },
-          text: "Binding: Review pull request 54118 (openclaw)",
+          from: { id: 7, is_bot: true, first_name: "GrokBot", username: "openclaw_bot" },
+          text: "Binding: Review pull request 54118 (grokbot)",
         },
       },
-      me: { id: 7, is_bot: true, first_name: "OpenClaw", username: "openclaw_bot" },
+      me: { id: 7, is_bot: true, first_name: "GrokBot", username: "openclaw_bot" },
       getFile: async () => ({ download: async () => new Uint8Array() }),
     });
 
@@ -2757,13 +2757,13 @@ describe("createTelegramBot", () => {
 
     await handler({
       message: {
-        chat: { id: -1001234, type: "supergroup", title: "OpenClaw Ops" },
+        chat: { id: -1001234, type: "supergroup", title: "GrokBot Ops" },
         message_id: 1884,
         date: 1736380800,
-        from: { id: 7, is_bot: true, first_name: "OpenClaw", username: "openclaw_bot" },
+        from: { id: 7, is_bot: true, first_name: "GrokBot", username: "openclaw_bot" },
         text: "approval card update",
       },
-      me: { id: 7, is_bot: true, first_name: "OpenClaw", username: "openclaw_bot" },
+      me: { id: 7, is_bot: true, first_name: "GrokBot", username: "openclaw_bot" },
       getFile: async () => ({ download: async () => new Uint8Array() }),
     });
 
@@ -5212,7 +5212,7 @@ describe("createTelegramBot", () => {
     }
   });
   it("honors routed group activation from session store", async () => {
-    const storePath = "/tmp/openclaw-telegram-group-activation.json";
+    const storePath = "/tmp/grokbot-telegram-group-activation.json";
     const routedGroupEntry = {
       sessionId: "agent:ops:telegram:group:123",
       updatedAt: 0,

@@ -7,14 +7,14 @@ import os from "node:os";
 import path from "node:path";
 import { applyMergePatch } from "../../config/merge-patch.js";
 import type { CliBackendConfig } from "../../config/types.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import { formatErrorMessage } from "../../infra/errors.js";
 import { tryReadJson } from "../../infra/json-files.js";
 import {
   OPENCLAW_TOOLS_MCP_SYSTEM_AGENT_APPROVAL_ARMED_ENV,
   OPENCLAW_TOOLS_MCP_SYSTEM_AGENT_PROPOSAL_ENV,
   OPENCLAW_TOOLS_MCP_TOOLS_ENV,
-} from "../../mcp/openclaw-tools-serve-config.js";
+} from "../../mcp/grokbot-tools-serve-config.js";
 import { extractMcpServerMap, type BundleMcpConfig } from "../../plugins/bundle-mcp.js";
 import type { CliBundleMcpMode } from "../../plugins/types.js";
 import { loadMergedBundleMcpConfig, toCliBundleMcpServerConfig } from "../bundle-mcp-config.js";
@@ -66,13 +66,13 @@ function normalizeOpenClawLoopbackUrl(value: string): string {
   if (!match) {
     return value;
   }
-  return `${match[1]}:<openclaw-loopback>${match[2]}`;
+  return `${match[1]}:<grokbot-loopback>${match[2]}`;
 }
 
 function canonicalizeSystemAgentTurnStateForResume(
   server: BundleMcpConfig["mcpServers"][string],
 ): BundleMcpConfig["mcpServers"][string] {
-  if (!isRecord(server.env) || server.env[OPENCLAW_TOOLS_MCP_TOOLS_ENV] !== "openclaw") {
+  if (!isRecord(server.env) || server.env[OPENCLAW_TOOLS_MCP_TOOLS_ENV] !== "grokbot") {
     return server;
   }
   // The host reissues approval authority through a fresh stdio server each turn.
@@ -81,19 +81,19 @@ function canonicalizeSystemAgentTurnStateForResume(
     ...server,
     env: {
       ...server.env,
-      [OPENCLAW_TOOLS_MCP_SYSTEM_AGENT_APPROVAL_ARMED_ENV]: "<openclaw-turn-state>",
-      [OPENCLAW_TOOLS_MCP_SYSTEM_AGENT_PROPOSAL_ENV]: "<openclaw-turn-state>",
+      [OPENCLAW_TOOLS_MCP_SYSTEM_AGENT_APPROVAL_ARMED_ENV]: "<grokbot-turn-state>",
+      [OPENCLAW_TOOLS_MCP_SYSTEM_AGENT_PROPOSAL_ENV]: "<grokbot-turn-state>",
     },
   };
 }
 
 function canonicalizeBundleMcpConfigForResume(config: BundleMcpConfig): BundleMcpConfig {
-  // The OpenClaw loopback MCP port changes across runs. Replace it before
+  // The GrokBot loopback MCP port changes across runs. Replace it before
   // hashing so resume compatibility tracks config shape, not ephemeral ports.
   const canonicalServers = Object.fromEntries(
     Object.entries(config.mcpServers).map(([name, server]) => {
       const canonicalServer = canonicalizeSystemAgentTurnStateForResume(server);
-      if (name !== "openclaw" || typeof canonicalServer.url !== "string") {
+      if (name !== "grokbot" || typeof canonicalServer.url !== "string") {
         return [name, sortJsonValue(canonicalServer)];
       }
       return [
@@ -175,7 +175,7 @@ async function prepareModeSpecificBundleMcpConfig(params: {
     };
   }
 
-  const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-cli-mcp-"));
+  const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-cli-mcp-"));
   const mcpConfigPath = path.join(tempDir, "mcp.json");
   const runtimeConfig = resolveOpenClawMcpEnvTemplates(
     params.mergedConfig,
@@ -212,8 +212,8 @@ export async function prepareCliBundleMcpConfig(params: {
   additionalConfig?: BundleMcpConfig;
   /**
    * Serve exactly these servers, skipping user/plugin/additional merges.
-   * Ring-zero OpenClaw runs use this so the CLI harness sees only the
-   * openclaw MCP server instead of the normal openclaw tool surface.
+   * Ring-zero GrokBot runs use this so the CLI harness sees only the
+   * grokbot MCP server instead of the normal grokbot tool surface.
    */
   exclusiveConfig?: BundleMcpConfig;
   env?: Record<string, string>;

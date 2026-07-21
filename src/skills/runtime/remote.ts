@@ -2,10 +2,10 @@
 import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalString,
-} from "@openclaw/normalization-core/string-coerce";
-import { normalizeStringEntries } from "@openclaw/normalization-core/string-normalization";
+} from "@grokbot/normalization-core/string-coerce";
+import { normalizeStringEntries } from "@grokbot/normalization-core/string-normalization";
 import { listAgentWorkspaceDirs } from "../../agents/workspace-dirs.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import type { NodeRegistry } from "../../gateway/node-registry.js";
 import { listNodePairing, updatePairedNodeBins } from "../../infra/node-pairing.js";
 import { createSubsystemLogger } from "../../logging/subsystem.js";

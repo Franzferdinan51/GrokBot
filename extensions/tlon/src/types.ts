@@ -4,13 +4,13 @@ import {
   listCombinedAccountIds,
   normalizeAccountId,
   resolveMergedAccountConfig,
-} from "openclaw/plugin-sdk/account-resolution";
-import type { ResolvedChannelImplicitMentions } from "openclaw/plugin-sdk/channel-ingress-runtime";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+} from "grokbot/plugin-sdk/account-resolution";
+import type { ResolvedChannelImplicitMentions } from "grokbot/plugin-sdk/channel-ingress-runtime";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import {
   hasLegacyFlatAllowPrivateNetworkAlias,
   isPrivateNetworkOptInEnabled,
-} from "openclaw/plugin-sdk/ssrf-runtime";
+} from "grokbot/plugin-sdk/ssrf-runtime";
 
 type TlonAccountConfig = {
   name?: string;

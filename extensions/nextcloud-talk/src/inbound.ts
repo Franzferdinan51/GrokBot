@@ -1,21 +1,21 @@
 import {
   buildChannelInboundEventContext,
   resolveChannelInboundRouteEnvelope,
-} from "openclaw/plugin-sdk/channel-inbound";
+} from "grokbot/plugin-sdk/channel-inbound";
 // Nextcloud Talk plugin module implements inbound behavior.
 import {
   channelIngressRoutes,
   resolveStableChannelMessageIngress,
-} from "openclaw/plugin-sdk/channel-ingress-runtime";
+} from "grokbot/plugin-sdk/channel-ingress-runtime";
 import {
   bindIngressLifecycleToReplyOptions,
   resolveChannelStreamingBlockEnabled,
-} from "openclaw/plugin-sdk/channel-outbound";
+} from "grokbot/plugin-sdk/channel-outbound";
 import {
   normalizeOptionalString,
   normalizeStringEntries,
-} from "openclaw/plugin-sdk/string-coerce-runtime";
-import { sanitizeAssistantVisibleText } from "openclaw/plugin-sdk/text-chunking";
+} from "grokbot/plugin-sdk/string-coerce-runtime";
+import { sanitizeAssistantVisibleText } from "grokbot/plugin-sdk/text-chunking";
 import {
   GROUP_POLICY_BLOCKED_LABEL,
   resolveAllowlistProviderRuntimeGroupPolicy,

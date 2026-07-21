@@ -113,7 +113,7 @@ describe("tool-cards", () => {
         {
           id: "msg:selectable",
           name: "web_search",
-          args: { query: "openclaw" },
+          args: { query: "grokbot" },
         },
         { expanded: false, onToggleExpanded: toggle },
       ),
@@ -587,8 +587,8 @@ describe("tool-cards", () => {
     expect(
       formatDistinctCollapsedToolSummaryText("heartbeat_respond", "Heartbeat Respond"),
     ).toBeUndefined();
-    expect(formatDistinctCollapsedToolSummaryText("run openclaw doctor", "Bash")).toBe(
-      "run openclaw doctor",
+    expect(formatDistinctCollapsedToolSummaryText("run grokbot doctor", "Bash")).toBe(
+      "run grokbot doctor",
     );
   });
 

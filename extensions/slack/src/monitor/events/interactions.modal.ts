@@ -1,5 +1,5 @@
 // Slack plugin module implements interactions.modal behavior.
-import { enqueueSystemEvent } from "openclaw/plugin-sdk/system-event-runtime";
+import { enqueueSystemEvent } from "grokbot/plugin-sdk/system-event-runtime";
 import { dispatchSlackPluginInteractiveHandler } from "../../interactive-dispatch.js";
 import { parseSlackModalPrivateMetadata } from "../../modal-metadata.js";
 import { authorizeSlackSystemEventSender } from "../auth.js";
@@ -56,7 +56,7 @@ export type RegisterSlackModalHandler = (
 ) => void;
 
 type SlackInteractionContextPrefix = "slack:interaction:view" | "slack:interaction:view-closed";
-const OPENCLAW_MODAL_CALLBACK_PREFIX = "openclaw:";
+const OPENCLAW_MODAL_CALLBACK_PREFIX = "grokbot:";
 
 function resolveSlackModalPluginInteractiveData(params: {
   callbackId: string;

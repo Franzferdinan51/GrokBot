@@ -1,5 +1,5 @@
 #!/usr/bin/env -S node --import tsx
-// Openclaw Prepack script supports OpenClaw repository automation.
+// Openclaw Prepack script supports GrokBot repository automation.
 
 import { spawnSync, type SpawnSyncOptions } from "node:child_process";
 import { existsSync, readFileSync, readdirSync } from "node:fs";
@@ -24,7 +24,7 @@ const OCM_WORKSPACE_DIRS_ENV = "OPENCLAW_OCM_WORKSPACE_DEPENDENCY_DIRS";
 const OCM_ADAPTER_BASENAME = "ocm-npm-workspace-deps.mjs";
 const NPM_COMMAND_ENV = "npm_command";
 const SELF_CONTAINED_SOURCE_PACK_COMMAND =
-  "node scripts/package-openclaw-for-docker.mjs --allow-unreleased-changelog";
+  "node scripts/package-grokbot-for-docker.mjs --allow-unreleased-changelog";
 
 type PreparedFileReader = {
   existsSync: typeof existsSync;
@@ -73,16 +73,16 @@ export function collectSourcePackWorkspaceDependencyErrors(
   if (env[PREPARED_RELEASE_ENV]?.trim() === "1") {
     return [];
   }
-  const aiDependency = packageJson.dependencies?.["@openclaw/ai"];
+  const aiDependency = packageJson.dependencies?.["@grokbot/ai"];
   if (typeof aiDependency !== "string" || !aiDependency.trim().startsWith("workspace:")) {
     return [];
   }
-  if (ocmExternalizesWorkspacePackage("@openclaw/ai", env)) {
+  if (ocmExternalizesWorkspacePackage("@grokbot/ai", env)) {
     return [];
   }
   return [
-    `plain root packing cannot safely resolve @openclaw/ai from ${aiDependency}: pnpm rewrites the workspace dependency to an exact version without bundling the package`,
-    `use \`${SELF_CONTAINED_SOURCE_PACK_COMMAND}\` for a self-contained source package; official npm release automation prepares and publishes @openclaw/ai separately`,
+    `plain root packing cannot safely resolve @grokbot/ai from ${aiDependency}: pnpm rewrites the workspace dependency to an exact version without bundling the package`,
+    `use \`${SELF_CONTAINED_SOURCE_PACK_COMMAND}\` for a self-contained source package; official npm release automation prepares and publishes @grokbot/ai separately`,
   ];
 }
 

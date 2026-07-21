@@ -5,11 +5,11 @@ import {
   closeOpenClawAgentDatabasesForTest,
   isOpenClawAgentDatabaseOpen,
   resolveOpenClawAgentSqlitePath,
-} from "../../state/openclaw-agent-db.js";
+} from "../../state/grokbot-agent-db.js";
 import {
   closeOpenClawStateDatabaseForTest,
   openOpenClawStateDatabase,
-} from "../../state/openclaw-state-db.js";
+} from "../../state/grokbot-state-db.js";
 import {
   listSessionEntries,
   listSessionEntriesReadOnly,
@@ -37,7 +37,7 @@ afterEach(() => {
 
 describe("session accessor readonly listing", () => {
   it("returns the same entries as the writable listing for a populated agent database", async () => {
-    const stateDir = makeTempDir(tempDirs, "openclaw-session-readonly-populated-");
+    const stateDir = makeTempDir(tempDirs, "grokbot-session-readonly-populated-");
     const env = { OPENCLAW_STATE_DIR: stateDir };
     const listScope = { agentId: "worker-1", env };
 
@@ -56,7 +56,7 @@ describe("session accessor readonly listing", () => {
   });
 
   it("returns an empty list without creating or registering a missing agent database", () => {
-    const stateDir = makeTempDir(tempDirs, "openclaw-session-readonly-missing-");
+    const stateDir = makeTempDir(tempDirs, "grokbot-session-readonly-missing-");
     const env = { OPENCLAW_STATE_DIR: stateDir };
     const agentId = "worker-1";
     const databasePath = resolveOpenClawAgentSqlitePath({ agentId, env });
@@ -68,7 +68,7 @@ describe("session accessor readonly listing", () => {
   });
 
   it("does not register a populated database during readonly health-style listing", async () => {
-    const stateDir = makeTempDir(tempDirs, "openclaw-session-readonly-registry-");
+    const stateDir = makeTempDir(tempDirs, "grokbot-session-readonly-registry-");
     const env = { OPENCLAW_STATE_DIR: stateDir };
     const agentId = "worker-1";
     const scope = { agentId, env };

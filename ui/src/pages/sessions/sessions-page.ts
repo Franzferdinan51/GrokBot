@@ -39,7 +39,7 @@ import {
 import { normalizeOptionalString } from "../../lib/string-coerce.ts";
 import { showToast } from "../../lib/toast.ts";
 import { captureSessionToWorkboard } from "../../lib/workboard/index.ts";
-import { OpenClawLightDomElement } from "../../lit/openclaw-element.ts";
+import { OpenClawLightDomElement } from "../../lit/grokbot-element.ts";
 import { SubscriptionsController } from "../../lit/subscriptions-controller.ts";
 import {
   searchVisibleSessionTranscripts,
@@ -1180,7 +1180,7 @@ class SessionsPage extends OpenClawLightDomElement {
       }),
     );
     return html`
-      <openclaw-session-menu
+      <grokbot-session-menu
         .session=${{
           label: normalizeOptionalString(row.label) ?? row.key,
           icon: row.icon,
@@ -1257,7 +1257,7 @@ class SessionsPage extends OpenClawLightDomElement {
               break;
           }
         }}
-      ></openclaw-session-menu>
+      ></grokbot-session-menu>
     `;
   }
 
@@ -1422,7 +1422,7 @@ class SessionsPage extends OpenClawLightDomElement {
   }
 }
 
-if (!customElements.get("openclaw-sessions-page")) {
-  customElements.define("openclaw-sessions-page", SessionsPage);
+if (!customElements.get("grokbot-sessions-page")) {
+  customElements.define("grokbot-sessions-page", SessionsPage);
 }
 /* oxlint-disable max-lines -- TODO: split this grandfathered oversized file. */

@@ -278,7 +278,7 @@ export const ko: TranslationMap = {
     pairing: {
       button: "모바일 기기 페어링",
       adminRequired: "설정 코드를 생성하려면 관리자 권한이 필요합니다.",
-      title: "OpenClaw 모바일",
+      title: "GrokBot 모바일",
       subtitle: "새 휴대폰을 연결하려면 모바일 앱에서 이 QR 코드를 스캔하세요.",
       generating: "보안 설정 코드를 생성하는 중…",
       accessTitle: "모바일 액세스",
@@ -291,14 +291,14 @@ export const ko: TranslationMap = {
       transportLimitedHint:
         "이 Gateway URL은 암호화되지 않은 ws://를 사용합니다. wss:// 또는 Tailscale Serve를 사용한 다음, 전체 액세스를 위한 새 코드를 생성하세요.",
       failed: "설정 코드를 생성할 수 없습니다.",
-      qrAlt: "OpenClaw 모바일 페어링 QR 코드",
+      qrAlt: "GrokBot 모바일 페어링 QR 코드",
       qrUnavailable: "QR을 사용할 수 없습니다. 대신 설정 코드를 복사하세요.",
       copySetupCode: "설정 코드 복사",
       newCode: "새 코드",
       showSetupCode: "설정 코드 표시",
       pending: "검토 대기 중인 기기 요청: {count}",
       review: "검토",
-      waiting: "공식 OpenClaw 모바일 앱은 스캔 후 자동으로 연결됩니다.",
+      waiting: "공식 GrokBot 모바일 앱은 스캔 후 자동으로 연결됩니다.",
       help: "페어링 도움말",
       manageDevices: "기기 관리",
     },
@@ -1335,7 +1335,7 @@ export const ko: TranslationMap = {
     autoSaveFailed: "저장 실패",
     autoSaveConflict: "다른 곳에서 설정이 변경됨",
     retry: "재시도",
-    applyBannerText: "openclaw.json에 저장됨 — Gateway를 재시작하여 적용하세요.",
+    applyBannerText: "grokbot.json에 저장됨 — Gateway를 재시작하여 적용하세요.",
     applyBannerAction: "재시작 및 적용",
     rawDiscard: "변경 사항 버리기",
     rawDraftBlocksApply:
@@ -1390,7 +1390,7 @@ export const ko: TranslationMap = {
     },
   },
   approvalPage: {
-    brandName: "OpenClaw",
+    brandName: "GrokBot",
     eyebrow: "Operator approval",
     loadingTitle: "Loading approval",
     loadingDescription: "Checking the current approval state with the Gateway.",
@@ -1399,7 +1399,7 @@ export const ko: TranslationMap = {
       "This approval could not be found or this device is not authorized to review it.",
     connectionErrorTitle: "Connection interrupted",
     connectionErrorDescription:
-      "OpenClaw cannot confirm or record a decision while disconnected. Reconnect to check the current status.",
+      "GrokBot cannot confirm or record a decision while disconnected. Reconnect to check the current status.",
     retry: "Retry",
     execTitle: "Command approval",
     pending: "Waiting for your decision",
@@ -1725,7 +1725,7 @@ export const ko: TranslationMap = {
     skillWorkshop: "제안이 실제 Skills가 되기 전에 검토하고, 다듬고, 적용하세요.",
     nodes: "페어링된 디바이스 및 명령.",
     chat: "빠른 개입을 위한 Gateway 채팅.",
-    config: "openclaw.json 편집.",
+    config: "grokbot.json 편집.",
     profile: "에이전트의 통계, 연속 기록, 산호초에서의 활동을 확인하세요.",
     communications: "채널, 메시지, 오디오 설정.",
     appearance: "테마, UI, 설정 마법사 설정.",
@@ -1883,7 +1883,7 @@ export const ko: TranslationMap = {
       unknownError: "요청 실패",
       doneTitle: "메모리 가져오기 완료",
       doneBody:
-        "{migrated}개 마이그레이션됨, {skipped}개 건너뜀. OpenClaw 설정을 계속할 수 있습니다.",
+        "{migrated}개 마이그레이션됨, {skipped}개 건너뜀. GrokBot 설정을 계속할 수 있습니다.",
     },
   },
   mcpPage: {
@@ -2018,7 +2018,7 @@ export const ko: TranslationMap = {
     detailPluginId: "플러그인 ID",
     offlineTitle: "Gateway 오프라인",
     offlineBody: "설치된 플러그인과 추천 플러그인을 찾아보려면 연결하세요.",
-    optionalCapability: "선택적 OpenClaw 기능입니다.",
+    optionalCapability: "선택적 GrokBot 기능입니다.",
     enabled: "사용 설정됨",
     disabled: "사용 중지됨",
     available: "사용 가능",
@@ -2053,7 +2053,7 @@ export const ko: TranslationMap = {
       "{name}을(를) 비활성화했습니다. 변경 사항을 적용하려면 Gateway를 다시 시작해야 합니다.",
   },
   aboutPage: {
-    productName: "OpenClaw",
+    productName: "GrokBot",
     tagline: "내 기기에서 실행되는 나만의 AI 어시스턴트.",
     waveHello: "Clawd에게 손을 흔들어 인사하세요",
     linksLabel: "커뮤니티 및 리소스",
@@ -2062,7 +2062,7 @@ export const ko: TranslationMap = {
     linkGitHub: "GitHub",
     linkDiscord: "Discord",
     linkChangelog: "변경 내역",
-    license: "© 2026 OpenClaw Foundation — MIT 라이선스.",
+    license: "© 2026 GrokBot Foundation — MIT 라이선스.",
     artifactTitle: "Control UI",
     artifactSubtitle: "이 브라우저 아티팩트가 빌드될 때 포함된 ID입니다.",
     artifactDetails: "Control UI 빌드 세부 정보",
@@ -2435,7 +2435,7 @@ export const ko: TranslationMap = {
       onboardingTitle: "No workspaces yet",
       onboardingSubtitle:
         "Ask your agent to build a workspace, or create one from the command line.",
-      onboardingCommand: "openclaw workspaces tabs create --title Main",
+      onboardingCommand: "grokbot workspaces tabs create --title Main",
       tabTitle: "This workspace is empty",
       tabSubtitle: "Ask your agent to add a widget, or add one yourself.",
       noVisibleTabs: "Every workspace tab is hidden. Restore one from the hidden menu.",
@@ -3443,9 +3443,9 @@ export const ko: TranslationMap = {
         title: "인증 필요",
         summary:
           "Gateway에 연결할 수 있지만 이 브라우저가 연결되기 전에 일치하는 토큰 또는 비밀번호가 필요합니다.",
-        stepPaste: "openclaw dashboard --no-open의 토큰을 붙여넣거나 구성된 비밀번호를 입력하세요.",
+        stepPaste: "grokbot dashboard --no-open의 토큰을 붙여넣거나 구성된 비밀번호를 입력하세요.",
         stepGenerate:
-          "토큰이 구성되어 있지 않으면 Gateway 호스트에서 openclaw doctor --generate-gateway-token을 실행하세요.",
+          "토큰이 구성되어 있지 않으면 Gateway 호스트에서 grokbot doctor --generate-gateway-token을 실행하세요.",
         stepConnect: "자격 증명을 업데이트한 뒤 Connect를 다시 클릭하세요.",
       },
       authFailed: {
@@ -3453,7 +3453,7 @@ export const ko: TranslationMap = {
         summary:
           "제공한 자격 증명이 거부되었습니다. 가장 흔한 원인은 오래된 토큰이거나 다른 Gateway URL에서 복사한 토큰입니다.",
         stepDashboard:
-          "openclaw dashboard --no-open을 실행하고 새 URL을 열거나 해당 토큰을 붙여넣으세요.",
+          "grokbot dashboard --no-open을 실행하고 새 URL을 열거나 해당 토큰을 붙여넣으세요.",
         stepReplace:
           "오래된 토큰/비밀번호 값을 교체하세요. 다른 Gateway URL의 토큰을 재사용하지 마세요.",
         stepMode:
@@ -3475,8 +3475,8 @@ export const ko: TranslationMap = {
         summary: "이 브라우저가 Control UI를 사용하려면 Gateway 호스트의 일회성 승인이 필요합니다.",
         upgradeSummary:
           "이 브라우저는 이미 알려져 있지만 요청한 액세스가 변경되어 새 승인이 필요합니다.",
-        stepList: "Gateway 호스트에서 openclaw devices list를 실행하세요.",
-        stepApproveId: "이 요청을 승인하세요: openclaw devices approve {requestId}.",
+        stepList: "Gateway 호스트에서 grokbot devices list를 실행하세요.",
+        stepApproveId: "이 요청을 승인하세요: grokbot devices approve {requestId}.",
         stepApprove: "해당 목록에서 대기 중인 브라우저/장치 요청을 승인하세요.",
         stepReconnect: "승인이 완료된 뒤 다시 연결하세요.",
       },
@@ -3503,7 +3503,7 @@ export const ko: TranslationMap = {
         summary:
           "제공된 Control UI와 실행 중인 Gateway가 지원되는 연결 프로토콜에 동의하지 않습니다.",
         stepDashboard:
-          "UI와 Gateway가 같은 설치에서 오도록 openclaw dashboard로 제공된 dashboard를 다시 여세요.",
+          "UI와 Gateway가 같은 설치에서 오도록 grokbot dashboard로 제공된 dashboard를 다시 여세요.",
         stepDevUi:
           "pnpm ui:dev를 사용하는 경우 현재 checkout 기준으로 개발 UI를 다시 빌드하거나 다시 시작하세요.",
         stepRestart:
@@ -3514,11 +3514,11 @@ export const ko: TranslationMap = {
         summary:
           "브라우저가 Gateway 연결을 완료할 수 없습니다. 자격 증명을 다시 시도하기 전에 대상과 전송 방식을 확인하세요.",
         stepGateway:
-          "openclaw status 또는 openclaw gateway run으로 Gateway가 실행 중인지 확인하세요.",
+          "grokbot status 또는 grokbot gateway run으로 Gateway가 실행 중인지 확인하세요.",
         stepUrl:
           "WebSocket URL을 확인하고 Gateway가 HTTPS/Tailscale Serve 뒤에 있으면 wss://를 사용하세요.",
         stepDashboard:
-          "openclaw dashboard --no-open으로 dashboard를 다시 열어 현재 URL과 인증 세부 정보를 다시 복사하세요.",
+          "grokbot dashboard --no-open으로 dashboard를 다시 열어 현재 URL과 인증 세부 정보를 다시 복사하세요.",
       },
     },
   },
@@ -3543,7 +3543,7 @@ export const ko: TranslationMap = {
       remoteViewOnly: "이 세션은 페어링된 노드에 있으며 보기 전용입니다.",
       unsupportedViewOnly: "이 외부 세션 소스는 보기 전용입니다.",
       sessionMenu: "External session actions",
-      openInOpenClaw: "Open in OpenClaw",
+      openInOpenClaw: "Open in GrokBot",
       openInTerminal: "Open in terminal",
       terminalUnavailable: "Terminal opening is unavailable for this session.",
     },
@@ -3598,7 +3598,7 @@ export const ko: TranslationMap = {
     followUpModeOverriding: "서버 기본값 재정의 중 ({mode})",
     followUpModeReset: "서버 기본값으로 재설정",
     catalogOpenTarget: "Open Codex/Claude sessions in",
-    catalogOpenTargetViewer: "OpenClaw viewer",
+    catalogOpenTargetViewer: "GrokBot viewer",
     catalogOpenTargetTerminal: "Terminal",
     onboardingDisabled: "설정 중에는 비활성화됨",
     gatewayStatus: "Gateway 상태: {status}",

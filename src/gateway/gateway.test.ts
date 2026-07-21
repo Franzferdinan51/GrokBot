@@ -14,7 +14,7 @@ import {
 import { resetConfigOverrides, setConfigOverride } from "../config/runtime-overrides.js";
 import { clearSessionStoreCacheForTest } from "../config/sessions/store.js";
 import type { GatewayAuthConfig, GatewayTailscaleConfig } from "../config/types.gateway.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { resetAgentEventsForTest } from "../infra/agent-events.js";
 import { clearGatewaySubagentRuntime } from "../plugins/runtime/gateway-bindings.test-fixtures.js";
 import { captureEnv, deleteTestEnvValue, setTestEnvValue } from "../test-utils/env.js";
@@ -54,13 +54,13 @@ function nextGatewayId(prefix: string): string {
 }
 
 async function createEmptyBundledPluginsDir(tempHome: string): Promise<string> {
-  const bundledPluginsDir = path.join(tempHome, "openclaw-test-empty-bundled-plugins");
+  const bundledPluginsDir = path.join(tempHome, "grokbot-test-empty-bundled-plugins");
   await fs.mkdir(bundledPluginsDir, { recursive: true });
   return bundledPluginsDir;
 }
 
 async function createGatewayConfigPath(tempHome: string): Promise<string> {
-  const configPath = path.join(tempHome, ".openclaw", "openclaw.json");
+  const configPath = path.join(tempHome, ".grokbot", "grokbot.json");
   await fs.mkdir(path.dirname(configPath), { recursive: true });
   return configPath;
 }
@@ -91,10 +91,10 @@ async function writeWorkspacePlugin(params: {
   body: string;
   activation?: { onStartup?: boolean };
 }): Promise<void> {
-  const pluginDir = path.join(params.workspaceDir, ".openclaw", "extensions", params.id);
+  const pluginDir = path.join(params.workspaceDir, ".grokbot", "extensions", params.id);
   await fs.mkdir(pluginDir, { recursive: true });
   await fs.writeFile(
-    path.join(pluginDir, "openclaw.plugin.json"),
+    path.join(pluginDir, "grokbot.plugin.json"),
     `${JSON.stringify(
       {
         id: params.id,
@@ -147,7 +147,7 @@ async function setupGatewayTempHome(params: { prefix: string; minimalGateway?: b
 
   const tempHome = await fs.mkdtemp(path.join(os.tmpdir(), params.prefix));
   setTestEnvValue("HOME", tempHome);
-  setTestEnvValue("OPENCLAW_STATE_DIR", path.join(tempHome, ".openclaw"));
+  setTestEnvValue("OPENCLAW_STATE_DIR", path.join(tempHome, ".grokbot"));
   deleteTestEnvValue("OPENCLAW_CONFIG_PATH");
   setTestEnvValue("OPENCLAW_SKIP_CHANNELS", "1");
   setTestEnvValue("OPENCLAW_SKIP_GMAIL_WATCHER", "1");
@@ -161,7 +161,7 @@ async function setupGatewayTempHome(params: { prefix: string; minimalGateway?: b
     deleteTestEnvValue("OPENCLAW_TEST_MINIMAL_GATEWAY");
   }
 
-  const workspaceDir = path.join(tempHome, "openclaw");
+  const workspaceDir = path.join(tempHome, "grokbot");
   await fs.mkdir(workspaceDir, { recursive: true });
   setTestEnvValue("OPENCLAW_BUNDLED_PLUGINS_DIR", await createEmptyBundledPluginsDir(tempHome));
   setTestEnvValue("OPENCLAW_DISABLE_BUNDLED_PLUGINS", "1");
@@ -190,7 +190,7 @@ describe("gateway e2e", () => {
     "preserves %s auth across a safe direct gateway reload",
     async (authSource) => {
       const { envSnapshot, tempHome } = await setupGatewayTempHome({
-        prefix: "openclaw-gw-direct-reload-",
+        prefix: "grokbot-gw-direct-reload-",
       });
       let server: Awaited<ReturnType<typeof startGatewayServer>> | undefined;
       let client: Awaited<ReturnType<typeof connectGatewayClient>> | undefined;
@@ -374,7 +374,7 @@ describe("gateway e2e", () => {
     { timeout: GATEWAY_E2E_TIMEOUT_MS },
     async () => {
       const { envSnapshot, tempHome } = await setupGatewayTempHome({
-        prefix: "openclaw-gw-startup-auth-ref-",
+        prefix: "grokbot-gw-startup-auth-ref-",
       });
       let server: Awaited<ReturnType<typeof startGatewayServer>> | undefined;
       let oldClient: Awaited<ReturnType<typeof connectGatewayClient>> | undefined;
@@ -446,7 +446,7 @@ describe("gateway e2e", () => {
 
   it("preserves runtime-seeded Control UI origins across a safe direct reload", async () => {
     const { envSnapshot, tempHome } = await setupGatewayTempHome({
-      prefix: "openclaw-gw-direct-origins-",
+      prefix: "grokbot-gw-direct-origins-",
     });
     const token = nextGatewayId("direct-origins-token");
     const configPath = await createGatewayConfigPath(tempHome);
@@ -509,7 +509,7 @@ describe("gateway e2e", () => {
     async () => {
       const { baseUrl: openaiBaseUrl, restore } = installOpenAiResponsesMock();
       const { envSnapshot, tempHome, workspaceDir } = await setupGatewayTempHome({
-        prefix: "openclaw-gw-mock-home-",
+        prefix: "grokbot-gw-mock-home-",
         minimalGateway: true,
       });
 
@@ -592,7 +592,7 @@ describe("gateway e2e", () => {
     { timeout: GATEWAY_E2E_TIMEOUT_MS },
     async () => {
       const { envSnapshot, tempHome, workspaceDir } = await setupGatewayTempHome({
-        prefix: "openclaw-gw-http-tools-home-",
+        prefix: "grokbot-gw-http-tools-home-",
       });
 
       const token = nextGatewayId("http-tools-token");
@@ -671,7 +671,7 @@ module.exports = {
     { timeout: GATEWAY_E2E_TIMEOUT_MS },
     async () => {
       const { envSnapshot, tempHome } = await setupGatewayTempHome({
-        prefix: "openclaw-wizard-home-",
+        prefix: "grokbot-wizard-home-",
         minimalGateway: true,
       });
       deleteTestEnvValue("OPENCLAW_GATEWAY_TOKEN");
@@ -793,7 +793,7 @@ module.exports = {
     { timeout: GATEWAY_E2E_TIMEOUT_MS },
     async () => {
       const { envSnapshot, tempHome } = await setupGatewayTempHome({
-        prefix: "openclaw-wizard-channels-home-",
+        prefix: "grokbot-wizard-channels-home-",
         minimalGateway: true,
       });
       const wizAuth = nextGatewayId("wiz-chan");
@@ -888,11 +888,11 @@ module.exports = {
         "DISCORD_BOT_TOKEN",
       ]);
 
-      const tempHome = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-minimal-gateway-home-"));
+      const tempHome = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-minimal-gateway-home-"));
       const configPath = await createGatewayConfigPath(tempHome);
-      const bundledPluginsDir = path.join(tempHome, "openclaw-test-no-bundled-extensions");
+      const bundledPluginsDir = path.join(tempHome, "grokbot-test-no-bundled-extensions");
       setTestEnvValue("HOME", tempHome);
-      setTestEnvValue("OPENCLAW_STATE_DIR", path.join(tempHome, ".openclaw"));
+      setTestEnvValue("OPENCLAW_STATE_DIR", path.join(tempHome, ".grokbot"));
       setTestEnvValue("OPENCLAW_CONFIG_PATH", configPath);
       setTestEnvValue("OPENCLAW_SKIP_CHANNELS", "1");
       setTestEnvValue("OPENCLAW_SKIP_GMAIL_WATCHER", "1");

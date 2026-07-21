@@ -38,22 +38,22 @@ const rawSqliteAllowPathGroups = {
     "src/infra/sqlite-transaction.ts",
     "src/infra/sqlite-user-version.ts",
     "src/infra/sqlite-wal.ts",
-    "src/state/openclaw-agent-db-maintenance.ts",
-    "src/state/openclaw-agent-db-registry.ts",
-    "src/state/openclaw-agent-db-schema-helpers.ts",
-    "src/state/openclaw-agent-db-schema.ts",
-    "src/state/openclaw-agent-db-session-migrations.ts",
-    "src/state/openclaw-agent-db-session-provenance.ts",
-    "src/state/openclaw-agent-db.ts",
-    "src/state/openclaw-state-db-audit-migration.ts",
-    "src/state/openclaw-state-db-legacy-backfills.ts",
-    "src/state/openclaw-state-db-maintenance.ts",
-    "src/state/openclaw-state-db-operator-approval-migration.ts",
-    "src/state/openclaw-state-db-schema-additive.ts",
-    "src/state/openclaw-state-db-schema-helpers.ts",
-    "src/state/openclaw-state-db-schema-repair.ts",
-    "src/state/openclaw-state-db-startup-checkpoint.ts",
-    "src/state/openclaw-state-db.ts",
+    "src/state/grokbot-agent-db-maintenance.ts",
+    "src/state/grokbot-agent-db-registry.ts",
+    "src/state/grokbot-agent-db-schema-helpers.ts",
+    "src/state/grokbot-agent-db-schema.ts",
+    "src/state/grokbot-agent-db-session-migrations.ts",
+    "src/state/grokbot-agent-db-session-provenance.ts",
+    "src/state/grokbot-agent-db.ts",
+    "src/state/grokbot-state-db-audit-migration.ts",
+    "src/state/grokbot-state-db-legacy-backfills.ts",
+    "src/state/grokbot-state-db-maintenance.ts",
+    "src/state/grokbot-state-db-operator-approval-migration.ts",
+    "src/state/grokbot-state-db-schema-additive.ts",
+    "src/state/grokbot-state-db-schema-helpers.ts",
+    "src/state/grokbot-state-db-schema-repair.ts",
+    "src/state/grokbot-state-db-startup-checkpoint.ts",
+    "src/state/grokbot-state-db.ts",
     "src/state/sqlite-schema-shape.test-support.ts",
   ],
   "cross-process SQLite coordination locks": ["src/infra/device-identity-coordinator.ts"],
@@ -64,15 +64,15 @@ const rawSqliteAllowPathGroups = {
   ],
   "agent auth profile read-only bootstrap": ["src/agents/auth-profiles/sqlite.ts"],
   "read-only shared state database access": [
-    "src/state/openclaw-agent-db-readonly.ts",
-    "src/state/openclaw-state-db-readonly.ts",
+    "src/state/grokbot-agent-db-readonly.ts",
+    "src/state/grokbot-state-db-readonly.ts",
   ],
   "read-only schema preflight and integrity verification access": [
-    "src/state/openclaw-database-preflight.ts",
-    "src/state/openclaw-database-verify.worker.ts",
+    "src/state/grokbot-database-preflight.ts",
+    "src/state/grokbot-database-verify.worker.ts",
   ],
   "quarantine store must work when other databases are damaged": [
-    "src/state/openclaw-quarantine-store.ts",
+    "src/state/grokbot-quarantine-store.ts",
   ],
   "read-only SQLite status probes": [
     "src/commands/doctor-db-bloat.ts",
@@ -191,7 +191,7 @@ function collectImports(sourceFile) {
       source.endsWith("node-sqlite.js") ||
       source.endsWith("sqlite-transaction.js") ||
       source.endsWith("sqlite-wal.js") ||
-      source.endsWith("openclaw-state-db.js")
+      source.endsWith("grokbot-state-db.js")
     ) {
       hasSqliteContext = true;
     }

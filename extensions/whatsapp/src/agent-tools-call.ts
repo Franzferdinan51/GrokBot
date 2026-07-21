@@ -1,19 +1,19 @@
 // WhatsApp plugin tool places requester-bound calls through the MeowCaller companion CLI.
 import fs from "node:fs/promises";
 import path from "node:path";
-import { normalizeAccountId } from "openclaw/plugin-sdk/account-id";
-import { normalizeE164 } from "openclaw/plugin-sdk/account-resolution";
-import { createActionGate, stringEnum } from "openclaw/plugin-sdk/channel-actions";
+import { normalizeAccountId } from "grokbot/plugin-sdk/account-id";
+import { normalizeE164 } from "grokbot/plugin-sdk/account-resolution";
+import { createActionGate, stringEnum } from "grokbot/plugin-sdk/channel-actions";
 import type {
   AnyAgentTool,
   OpenClawPluginApi,
   OpenClawPluginToolContext,
-} from "openclaw/plugin-sdk/core";
-import { mulawToPcm } from "openclaw/plugin-sdk/realtime-voice";
-import { detectBinary } from "openclaw/plugin-sdk/setup-tools";
-import { resolveOAuthDir } from "openclaw/plugin-sdk/state-paths";
-import { resolvePreferredOpenClawTmpDir } from "openclaw/plugin-sdk/temp-path";
-import { jsonResult } from "openclaw/plugin-sdk/tool-results";
+} from "grokbot/plugin-sdk/core";
+import { mulawToPcm } from "grokbot/plugin-sdk/realtime-voice";
+import { detectBinary } from "grokbot/plugin-sdk/setup-tools";
+import { resolveOAuthDir } from "grokbot/plugin-sdk/state-paths";
+import { resolvePreferredOpenClawTmpDir } from "grokbot/plugin-sdk/temp-path";
+import { jsonResult } from "grokbot/plugin-sdk/tool-results";
 import { Type } from "typebox";
 import { resolveWhatsAppAccount } from "./accounts.js";
 import { getWhatsAppConnectionController } from "./connection-controller-runtime-context.js";
@@ -228,7 +228,7 @@ function createWhatsAppCallToolWithDependencies(
           setupShell: process.platform === "win32" ? "PowerShell" : "POSIX shell",
           requiredCommand:
             "meowcaller notify --store <path> --answer-timeout 45s --max-duration 65s <target> <file>",
-          note: "MeowCaller uses a separate WhatsApp linked-device session; it cannot reuse OpenClaw's Baileys credentials.",
+          note: "MeowCaller uses a separate WhatsApp linked-device session; it cannot reuse GrokBot's Baileys credentials.",
         });
       }
 
@@ -259,7 +259,7 @@ function createWhatsAppCallToolWithDependencies(
       const linkedSelf = await resolveLinkedWhatsAppSelfE164({ accountId, cfg });
       if (linkedSelf === target) {
         throw new Error(
-          "WhatsApp cannot call the linked account itself; use a dedicated OpenClaw WhatsApp number",
+          "WhatsApp cannot call the linked account itself; use a dedicated GrokBot WhatsApp number",
         );
       }
 
@@ -275,7 +275,7 @@ function createWhatsAppCallToolWithDependencies(
         const pcm = normalizeTelephonyPcm(speech.audioBuffer, speech.outputFormat);
         const callWindowMs = resolveCallWindowMs(pcm.length, speech.sampleRate);
         const tempDir = await fs.mkdtemp(
-          path.join(resolvePreferredOpenClawTmpDir(), "openclaw-whatsapp-call-"),
+          path.join(resolvePreferredOpenClawTmpDir(), "grokbot-whatsapp-call-"),
         );
         const audioPath = path.join(tempDir, "message.wav");
         try {

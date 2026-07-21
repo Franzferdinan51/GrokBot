@@ -2,7 +2,7 @@
 
 Stop typing `docker-compose` commands. Just type `clawdock-start`.
 
-Inspired by Simon Willison's [Running OpenClaw in Docker](https://til.simonwillison.net/llms/openclaw-docker).
+Inspired by Simon Willison's [Running GrokBot in Docker](https://til.simonwillison.net/llms/grokbot-docker).
 
 - [Quickstart](#quickstart)
 - [Available Commands](#available-commands)
@@ -32,14 +32,14 @@ Inspired by Simon Willison's [Running OpenClaw in Docker](https://til.simonwilli
 **Install:**
 
 ```bash
-mkdir -p ~/.clawdock && curl -sL https://raw.githubusercontent.com/openclaw/openclaw/main/scripts/clawdock/clawdock-helpers.sh -o ~/.clawdock/clawdock-helpers.sh
+mkdir -p ~/.clawdock && curl -sL https://raw.githubusercontent.com/grokbot/grokbot/main/scripts/clawdock/clawdock-helpers.sh -o ~/.clawdock/clawdock-helpers.sh
 ```
 
 ```bash
 echo 'source ~/.clawdock/clawdock-helpers.sh' >> ~/.zshrc && source ~/.zshrc
 ```
 
-Canonical docs page: https://docs.openclaw.ai/install/clawdock
+Canonical docs page: https://docs.grokbot.ai/install/clawdock
 
 If you previously installed ClawDock from `scripts/shell-helpers/clawdock-helpers.sh`, rerun the install command above. The old raw GitHub path has been removed.
 
@@ -49,9 +49,9 @@ If you previously installed ClawDock from `scripts/shell-helpers/clawdock-helper
 clawdock-help
 ```
 
-On first command, ClawDock auto-detects your OpenClaw directory:
+On first command, ClawDock auto-detects your GrokBot directory:
 
-- Checks common paths (`~/openclaw`, `~/workspace/openclaw`, etc.)
+- Checks common paths (`~/grokbot`, `~/workspace/grokbot`, etc.)
 - If found, asks you to confirm
 - Saves to `~/.clawdock/config`
 
@@ -98,7 +98,7 @@ clawdock-approve <request-id>
 | Command                   | Description                                    |
 | ------------------------- | ---------------------------------------------- |
 | `clawdock-shell`          | Interactive shell inside the gateway container |
-| `clawdock-cli <command>`  | Run OpenClaw CLI commands                      |
+| `clawdock-cli <command>`  | Run GrokBot CLI commands                      |
 | `clawdock-exec <command>` | Execute arbitrary commands in the container    |
 
 ### Web UI & Devices
@@ -129,8 +129,8 @@ clawdock-approve <request-id>
 | ---------------------- | ----------------------------------------- |
 | `clawdock-health`      | Run gateway health check                  |
 | `clawdock-token`       | Display the gateway authentication token  |
-| `clawdock-cd`          | Jump to the OpenClaw project directory    |
-| `clawdock-config`      | Open the OpenClaw config directory        |
+| `clawdock-cd`          | Jump to the GrokBot project directory    |
+| `clawdock-config`      | Open the GrokBot config directory        |
 | `clawdock-show-config` | Print config files with redacted values   |
 | `clawdock-workspace`   | Open the workspace directory              |
 | `clawdock-help`        | Show all available commands with examples |
@@ -143,8 +143,8 @@ The Docker setup uses three config files on the host. The container never stores
 
 | File                          | Purpose                                                                        |
 | ----------------------------- | ------------------------------------------------------------------------------ |
-| `Dockerfile`                  | Builds the `openclaw:local` image (Node 22, pnpm, non-root `node` user)        |
-| `docker-compose.yml`          | Defines `openclaw-gateway` and `openclaw-cli` services, bind-mounts, ports     |
+| `Dockerfile`                  | Builds the `grokbot:local` image (Node 22, pnpm, non-root `node` user)        |
+| `docker-compose.yml`          | Defines `grokbot-gateway` and `grokbot-cli` services, bind-mounts, ports     |
 | `docker-compose.override.yml` | Standard Docker Compose overrides — auto-loaded by ClawDock helpers if present |
 | `docker-compose.extra.yml`    | Additional overrides — loaded after the standard override if present           |
 | `scripts/docker/setup.sh`     | First-time setup — builds image, creates `.env` from `.env.example`            |
@@ -155,19 +155,19 @@ The Docker setup uses three config files on the host. The container never stores
 | File                        | Purpose                                          | Examples                                                                                                |
 | --------------------------- | ------------------------------------------------ | ------------------------------------------------------------------------------------------------------- |
 | `<project>/.env`            | **Docker infra** — image, ports, gateway token   | `OPENCLAW_GATEWAY_TOKEN`, `OPENCLAW_IMAGE`, `OPENCLAW_GATEWAY_PORT`, `OPENCLAW_AUTH_PROFILE_SECRET_DIR` |
-| `~/.openclaw/.env`          | **Secrets** — API keys and bot tokens            | `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, `TELEGRAM_BOT_TOKEN`                                             |
-| `~/.openclaw/openclaw.json` | **Behavior config** — models, channels, policies | Model selection, WhatsApp allowlists, agent settings                                                    |
+| `~/.grokbot/.env`          | **Secrets** — API keys and bot tokens            | `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, `TELEGRAM_BOT_TOKEN`                                             |
+| `~/.grokbot/grokbot.json` | **Behavior config** — models, channels, policies | Model selection, WhatsApp allowlists, agent settings                                                    |
 
-**Do NOT** put API keys or bot tokens in `openclaw.json`. Use `~/.openclaw/.env` for all secrets.
+**Do NOT** put API keys or bot tokens in `grokbot.json`. Use `~/.grokbot/.env` for all secrets.
 
 ### Initial Setup
 
 `./scripts/docker/setup.sh` handles first-time Docker configuration:
 
-- Builds the `openclaw:local` image from `Dockerfile`
+- Builds the `grokbot:local` image from `Dockerfile`
 - Creates `<project>/.env` from `.env.example` with a generated gateway token
 - Creates the auth-profile secret key directory
-- Sets up `~/.openclaw` directories if they don't exist
+- Sets up `~/.grokbot` directories if they don't exist
 
 ```bash
 ./scripts/docker/setup.sh
@@ -176,7 +176,7 @@ The Docker setup uses three config files on the host. The container never stores
 After setup, add your API keys:
 
 ```bash
-vim ~/.openclaw/.env
+vim ~/.grokbot/.env
 ```
 
 See `.env.example` for all supported keys.
@@ -193,27 +193,27 @@ The `Dockerfile` supports optional build args:
 
 ```yaml
 volumes:
-  - ${OPENCLAW_CONFIG_DIR}:/home/node/.openclaw
-  - ${OPENCLAW_WORKSPACE_DIR}:/home/node/.openclaw/workspace
-  - ${OPENCLAW_AUTH_PROFILE_SECRET_DIR}:/home/node/.config/openclaw
+  - ${OPENCLAW_CONFIG_DIR}:/home/node/.grokbot
+  - ${OPENCLAW_WORKSPACE_DIR}:/home/node/.grokbot/workspace
+  - ${OPENCLAW_AUTH_PROFILE_SECRET_DIR}:/home/node/.config/grokbot
 ```
 
 This means:
 
-- `~/.openclaw/.env` is available inside the container at `/home/node/.openclaw/.env` — OpenClaw loads it automatically as the global env fallback
-- `~/.openclaw/openclaw.json` is available at `/home/node/.openclaw/openclaw.json` — the gateway watches it and hot-reloads most changes
-- `~/.openclaw-auth-profile-secrets` is available at `/home/node/.config/openclaw` — OpenClaw stores the auth-profile encryption key there
-- Downloadable external plugin packages and install records live under the mounted OpenClaw home
-- Bundled OpenClaw channel plugins, such as Discord when present in the image,
+- `~/.grokbot/.env` is available inside the container at `/home/node/.grokbot/.env` — GrokBot loads it automatically as the global env fallback
+- `~/.grokbot/grokbot.json` is available at `/home/node/.grokbot/grokbot.json` — the gateway watches it and hot-reloads most changes
+- `~/.grokbot-auth-profile-secrets` is available at `/home/node/.config/grokbot` — GrokBot stores the auth-profile encryption key there
+- Downloadable external plugin packages and install records live under the mounted GrokBot home
+- Bundled GrokBot channel plugins, such as Discord when present in the image,
   should normally load from the image-matched bundled copy. Avoid installing
-  pinned `@openclaw/*` channel packages into the mounted home unless you
+  pinned `@grokbot/*` channel packages into the mounted home unless you
   deliberately want an external npm override.
 - No need to add API keys to `docker-compose.yml` or configure anything inside the container
 - Keys survive `clawdock-update`, `clawdock-rebuild`, and `clawdock-clean` because they live on the host
 
-The project `.env` feeds Docker Compose directly (gateway token, image name, ports). The `~/.openclaw/.env` feeds the OpenClaw process inside the container.
+The project `.env` feeds Docker Compose directly (gateway token, image name, ports). The `~/.grokbot/.env` feeds the GrokBot process inside the container.
 
-### Example `~/.openclaw/.env`
+### Example `~/.grokbot/.env`
 
 ```bash
 OPENAI_API_KEY=sk-...
@@ -224,31 +224,31 @@ TELEGRAM_BOT_TOKEN=123456:ABCDEF...
 ### Example `<project>/.env`
 
 ```bash
-OPENCLAW_CONFIG_DIR=/Users/you/.openclaw
-OPENCLAW_WORKSPACE_DIR=/Users/you/.openclaw/workspace
+OPENCLAW_CONFIG_DIR=/Users/you/.grokbot
+OPENCLAW_WORKSPACE_DIR=/Users/you/.grokbot/workspace
 OPENCLAW_GATEWAY_PORT=18789
 OPENCLAW_BRIDGE_PORT=18790
 OPENCLAW_GATEWAY_BIND=lan
 OPENCLAW_GATEWAY_TOKEN=<generated-by-docker-setup>
-OPENCLAW_AUTH_PROFILE_SECRET_DIR=/Users/you/.openclaw-auth-profile-secrets
-OPENCLAW_IMAGE=openclaw:local
+OPENCLAW_AUTH_PROFILE_SECRET_DIR=/Users/you/.grokbot-auth-profile-secrets
+OPENCLAW_IMAGE=grokbot:local
 ```
 
 ### Env Precedence
 
-OpenClaw loads env vars in this order (highest wins, never overrides existing):
+GrokBot loads env vars in this order (highest wins, never overrides existing):
 
 1. **Process environment** — `docker-compose.yml` `environment:` block (gateway token, session keys)
 2. **`.env` in CWD** — project root `.env` (Docker infra vars)
-3. **`~/.openclaw/.env`** — global secrets (API keys, bot tokens)
-4. **`openclaw.json` `env` block** — inline vars, applied only if still missing
+3. **`~/.grokbot/.env`** — global secrets (API keys, bot tokens)
+4. **`grokbot.json` `env` block** — inline vars, applied only if still missing
 5. **Shell env import** — optional login-shell scrape (`OPENCLAW_LOAD_SHELL_ENV=1`)
 
 ## Common Workflows
 
-### Update OpenClaw
+### Update GrokBot
 
-> **Important:** `openclaw update` does not work inside Docker.
+> **Important:** `grokbot update` does not work inside Docker.
 > The container runs as a non-root user with a source-built image, so `npm i -g` fails with EACCES.
 > Use `clawdock-update` instead — it pulls, rebuilds, and restarts from the host.
 
@@ -295,7 +295,7 @@ clawdock-shell
 **Inside the container, login to WhatsApp:**
 
 ```bash
-openclaw channels login --channel whatsapp --verbose
+grokbot channels login --channel whatsapp --verbose
 ```
 
 Scan the QR code with WhatsApp on your phone.
@@ -303,7 +303,7 @@ Scan the QR code with WhatsApp on your phone.
 **Verify connection:**
 
 ```bash
-openclaw status
+grokbot status
 ```
 
 ### Troubleshooting Device Pairing
@@ -333,7 +333,7 @@ clawdock-fix-token
 This will:
 
 1. Read the token from your `.env` file
-2. Configure it in the OpenClaw config
+2. Configure it in the GrokBot config
 3. Restart the gateway
 4. Verify the configuration
 
@@ -349,7 +349,7 @@ docker ps
 
 - Docker and Docker Compose installed
 - Bash or Zsh shell
-- OpenClaw project (run `scripts/docker/setup.sh`)
+- GrokBot project (run `scripts/docker/setup.sh`)
 
 ## Development
 

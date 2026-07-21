@@ -15,7 +15,7 @@ const PREPARE_PACKAGE_PATH = path.resolve(
 const tempRoots: string[] = [];
 
 function mkTempRoot() {
-  const root = mkdtempSync(path.join(tmpdir(), "openclaw-npm-telegram-live-"));
+  const root = mkdtempSync(path.join(tmpdir(), "grokbot-npm-telegram-live-"));
   tempRoots.push(root);
   return root;
 }
@@ -92,7 +92,7 @@ describe("package Telegram live Docker E2E", () => {
     expect(script).toContain('credential_role="maintainer"');
   });
 
-  it("bounds installed-package hot path OpenClaw commands", () => {
+  it("bounds installed-package hot path GrokBot commands", () => {
     const script = readFileSync(DOCKER_SCRIPT_PATH, "utf8");
     const runtimeRunStart = script.indexOf("# Mount only QA harness source");
     const runtimeRun = script.slice(runtimeRunStart);
@@ -101,29 +101,29 @@ describe("package Telegram live Docker E2E", () => {
     expect(script).toContain(
       '-e OPENCLAW_E2E_COMMAND_TIMEOUT="${OPENCLAW_E2E_COMMAND_TIMEOUT:-300s}"',
     );
-    expect(runtimeRun).toContain("source scripts/lib/openclaw-e2e-instance.sh");
-    expect(runtimeRun).toContain("openclaw_e2e_run_command openclaw --version");
-    expect(runtimeRun).toContain("openclaw_e2e_run_command openclaw onboard");
+    expect(runtimeRun).toContain("source scripts/lib/grokbot-e2e-instance.sh");
+    expect(runtimeRun).toContain("openclaw_e2e_run_command grokbot --version");
+    expect(runtimeRun).toContain("openclaw_e2e_run_command grokbot onboard");
     expect(runtimeRun).toContain(
-      'OPENAI_API_KEY="$hotpath_model_value" openclaw_e2e_run_command openclaw onboard',
+      'OPENAI_API_KEY="$hotpath_model_value" openclaw_e2e_run_command grokbot onboard',
     );
     expect(runtimeRun).not.toContain("export OPENAI_API_KEY=");
-    expect(runtimeRun).toContain("openclaw_e2e_run_command openclaw channels add");
-    expect(runtimeRun).toContain("openclaw_e2e_run_command openclaw doctor --fix");
-    expect(runtimeRun).toContain("openclaw_e2e_run_command openclaw doctor --non-interactive");
+    expect(runtimeRun).toContain("openclaw_e2e_run_command grokbot channels add");
+    expect(runtimeRun).toContain("openclaw_e2e_run_command grokbot doctor --fix");
+    expect(runtimeRun).toContain("openclaw_e2e_run_command grokbot doctor --non-interactive");
     expect(runtimeRun).toContain('openclaw_e2e_print_log "$file"');
     expect(runtimeRun).not.toContain("sed -n '1,220p'");
-    expect(runtimeRun).not.toMatch(/^\s*openclaw (onboard|channels add|doctor )/mu);
+    expect(runtimeRun).not.toMatch(/^\s*grokbot (onboard|channels add|doctor )/mu);
   });
 
   it("isolates onboarding hot-path config from the live suite", () => {
     const script = readFileSync(DOCKER_SCRIPT_PATH, "utf8");
 
     expect(script).toContain(
-      'runtime_home="$(mktemp -d "/tmp/openclaw-npm-telegram-runtime.XXXXXX")"',
+      'runtime_home="$(mktemp -d "/tmp/grokbot-npm-telegram-runtime.XXXXXX")"',
     );
     expect(script).toContain(
-      'hotpath_home="$(mktemp -d "/tmp/openclaw-npm-telegram-hotpath.XXXXXX")"',
+      'hotpath_home="$(mktemp -d "/tmp/grokbot-npm-telegram-hotpath.XXXXXX")"',
     );
     expect(script).toContain('export HOME="$hotpath_home"');
     expect(script).toContain('export HOME="$runtime_home"');
@@ -160,16 +160,16 @@ describe("package Telegram live Docker E2E", () => {
 
     expect(script).toContain("OPENCLAW_NPM_TELEGRAM_PACKAGE_DIR");
     expect(script).toContain('package_source_kind="prepared-package-set"');
-    expect(script).toContain('package_install_source="openclaw@$(read_package_version');
+    expect(script).toContain('package_install_source="grokbot@$(read_package_version');
     expect(script).toContain('-v "$resolved_package_dir:/package-under-test:ro"');
     expect(script).toContain(
-      '-v "$ROOT_DIR/scripts/e2e/lib/bounded-response-text.mjs:/tmp/openclaw-e2e/lib/bounded-response-text.mjs:ro"',
+      '-v "$ROOT_DIR/scripts/e2e/lib/bounded-response-text.mjs:/tmp/grokbot-e2e/lib/bounded-response-text.mjs:ro"',
     );
     expect(script).toContain(
-      '-v "$ROOT_DIR/scripts/e2e/lib/plugins/npm-registry-server.mjs:/tmp/openclaw-e2e/lib/plugins/npm-registry-server.mjs:ro"',
+      '-v "$ROOT_DIR/scripts/e2e/lib/plugins/npm-registry-server.mjs:/tmp/grokbot-e2e/lib/plugins/npm-registry-server.mjs:ro"',
     );
     expect(script).toContain("OPENCLAW_NPM_TELEGRAM_PACKAGE_SET");
-    expect(script).toContain("node /tmp/openclaw-e2e/lib/plugins/npm-registry-server.mjs");
+    expect(script).toContain("node /tmp/grokbot-e2e/lib/plugins/npm-registry-server.mjs");
     expect(script).toContain("OPENCLAW_NPM_REGISTRY_UPSTREAM=https://registry.npmjs.org");
     expect(script).toContain('export NPM_CONFIG_REGISTRY="$registry_url"');
   });
@@ -211,9 +211,9 @@ describe("package Telegram live Docker E2E", () => {
     ).toBe(".artifacts/custom");
   });
 
-  it("keeps the installed OpenClaw command as the package SUT", async () => {
+  it("keeps the installed GrokBot command as the package SUT", async () => {
     const prefix = mkTempRoot();
-    const command = path.join(prefix, "bin", "openclaw");
+    const command = path.join(prefix, "bin", "grokbot");
     mkdirSync(path.dirname(command), { recursive: true });
     writeFileSync(command, "#!/bin/sh\n");
 
@@ -247,7 +247,7 @@ describe("package Telegram live Docker E2E", () => {
     expect(script).toContain('-v "$OUTPUT_DIR_HOST:$OUTPUT_DIR_CONTAINER"');
   });
 
-  it("uses the container temp root for OpenClaw runtime scratch files", () => {
+  it("uses the container temp root for GrokBot runtime scratch files", () => {
     const script = readFileSync(DOCKER_SCRIPT_PATH, "utf8");
     const dockerEnvStart = script.indexOf("docker_env=(");
     const dockerEnvEnd = script.indexOf(")\n\nforward_env_if_set", dockerEnvStart);
@@ -292,13 +292,13 @@ describe("package Telegram live Docker E2E", () => {
     expect(script).toContain('-v "$ROOT_DIR/qa/scenarios:/app/qa/scenarios:ro"');
     expect(script).not.toContain('ln -sfnT /app/extensions "$openclaw_package_dir/extensions"');
     expect(script).toContain("node scripts/e2e/lib/npm-telegram-live/prepare-package.mjs");
-    expect(script).toContain("/app/node_modules/openclaw/package.json");
+    expect(script).toContain("/app/node_modules/grokbot/package.json");
     expect(preparePackage).toContain('pkg.exports["./plugin-sdk/gateway-runtime"]');
     expect(preparePackage).toContain('"./dist/plugin-sdk/gateway-runtime.js"');
-    expect(gatewayRpcClient).toContain('from "openclaw/plugin-sdk/gateway-runtime"');
-    expect(qaRuntimeApi).toContain('from "openclaw/plugin-sdk/gateway-runtime"');
+    expect(gatewayRpcClient).toContain('from "grokbot/plugin-sdk/gateway-runtime"');
+    expect(qaRuntimeApi).toContain('from "grokbot/plugin-sdk/gateway-runtime"');
     for (const source of qaHarnessSources) {
-      expect(source).not.toContain('from "openclaw/plugin-sdk/qa-runtime"');
+      expect(source).not.toContain('from "grokbot/plugin-sdk/qa-runtime"');
     }
   });
 
@@ -307,7 +307,7 @@ describe("package Telegram live Docker E2E", () => {
 
     expect(script).toContain("link_installed_package_dependency()");
     expect(script).toContain(
-      'local source="/npm-global/lib/node_modules/openclaw/node_modules/$name"',
+      'local source="/npm-global/lib/node_modules/grokbot/node_modules/$name"',
     );
     expect(script).toContain('ln -sfn "$source" "$target"');
     expect(script).toContain('link_installed_package_dependency "$dependency"');
@@ -368,7 +368,7 @@ describe("package Telegram live Docker E2E", () => {
       count: 20,
       timeoutMs: 30_000,
       markerPrefix: "QA-TELEGRAM-RTT",
-      textPrefix: "@openclaw Telegram RTT check. Reply exactly: ",
+      textPrefix: "@grokbot Telegram RTT check. Reply exactly: ",
       chainReplies: true,
       input: {
         conversation: { id: "telegram-rtt-room", kind: "group" },
@@ -397,7 +397,7 @@ describe("package Telegram live Docker E2E", () => {
     writeFileSync(
       summaryPath,
       JSON.stringify({
-        kind: "openclaw.qa.evidence-summary",
+        kind: "grokbot.qa.evidence-summary",
         schemaVersion: 2,
         generatedAt: "2026-05-01T00:00:00.000Z",
         entries: [{ result: { status: "fail" } }],

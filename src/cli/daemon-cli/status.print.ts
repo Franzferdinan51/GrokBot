@@ -144,7 +144,7 @@ export function printDaemonStatus(status: DaemonStatus, opts: { json: boolean; d
     }
     defaultRuntime.error(
       warnText(
-        `Recommendation: run "${formatCliCommand("openclaw doctor")}" (or "${formatCliCommand("openclaw doctor --repair")}").`,
+        `Recommendation: run "${formatCliCommand("grokbot doctor")}" (or "${formatCliCommand("grokbot doctor --repair")}").`,
       ),
     );
   }
@@ -198,7 +198,7 @@ export function printDaemonStatus(status: DaemonStatus, opts: { json: boolean; d
       );
       defaultRuntime.error(
         errorText(
-          `Fix: rerun \`${formatCliCommand("openclaw gateway install --force")}\` from the same --profile / OPENCLAW_STATE_DIR you expect.`,
+          `Fix: rerun \`${formatCliCommand("grokbot gateway install --force")}\` from the same --profile / OPENCLAW_STATE_DIR you expect.`,
         ),
       );
     }
@@ -248,12 +248,12 @@ export function printDaemonStatus(status: DaemonStatus, opts: { json: boolean; d
     if (status.cli?.version && status.cli.version !== gatewayVersion) {
       defaultRuntime.error(
         warnText(
-          `Warning: this OpenClaw command is version ${status.cli.version}, but the running Gateway is version ${gatewayVersion}.`,
+          `Warning: this GrokBot command is version ${status.cli.version}, but the running Gateway is version ${gatewayVersion}.`,
         ),
       );
       defaultRuntime.error(
         warnText(
-          "Check `openclaw --version`, `which openclaw`, and `openclaw gateway status --deep`; if this mismatch is unexpected, update PATH so `openclaw` points to the version you want, or reinstall the Gateway service from that same OpenClaw install.",
+          "Check `grokbot --version`, `which grokbot`, and `grokbot gateway status --deep`; if this mismatch is unexpected, update PATH so `grokbot` points to the version you want, or reinstall the Gateway service from that same GrokBot install.",
         ),
       );
     }
@@ -335,7 +335,7 @@ export function printDaemonStatus(status: DaemonStatus, opts: { json: boolean; d
     );
     defaultRuntime.error(
       errorText(
-        `Fix: run ${formatCliCommand("openclaw gateway restart")} and re-check with ${formatCliCommand("openclaw gateway status --deep")}.`,
+        `Fix: run ${formatCliCommand("grokbot gateway restart")} and re-check with ${formatCliCommand("grokbot gateway status --deep")}.`,
       ),
     );
     spacer();
@@ -355,7 +355,7 @@ export function printDaemonStatus(status: DaemonStatus, opts: { json: boolean; d
     }
     defaultRuntime.log(
       warnText(
-        "If logs show protocol mismatch after rollback, stop stale OpenClaw client processes listed here and re-run gateway status.",
+        "If logs show protocol mismatch after rollback, stop stale GrokBot client processes listed here and re-run gateway status.",
       ),
     );
     spacer();
@@ -412,7 +412,7 @@ export function printDaemonStatus(status: DaemonStatus, opts: { json: boolean; d
           ? // systemd gave up restarting after repeated crashes; sending the operator
             // to restart (which now clears the failed latch) beats "exited immediately".
             `systemd stopped restarting the gateway after repeated crashes; run ${formatCliCommand(
-              "openclaw gateway restart",
+              "grokbot gateway restart",
             )} or inspect logs.`
           : "Service is loaded but not running (likely exited immediately).",
       ),
@@ -436,13 +436,13 @@ export function printDaemonStatus(status: DaemonStatus, opts: { json: boolean; d
       ),
     );
     defaultRuntime.error(
-      errorText(`Then reinstall: ${formatCliCommand("openclaw gateway install")}`),
+      errorText(`Then reinstall: ${formatCliCommand("grokbot gateway install")}`),
     );
     spacer();
   }
 
   if (service.staleUpdateLaunchdJobs?.length) {
-    defaultRuntime.error(errorText("Stale OpenClaw updater launchd job(s) detected."));
+    defaultRuntime.error(errorText("Stale GrokBot updater launchd job(s) detected."));
     for (const job of service.staleUpdateLaunchdJobs) {
       const exitStatus =
         job.lastExitStatus !== undefined ? `, last exit ${job.lastExitStatus}` : "";
@@ -451,7 +451,7 @@ export function printDaemonStatus(status: DaemonStatus, opts: { json: boolean; d
     }
     defaultRuntime.error(
       errorText(
-        `Fix after confirming no update is running: launchctl remove <label>, then run ${formatCliCommand("openclaw gateway restart")}.`,
+        `Fix after confirming no update is running: launchctl remove <label>, then run ${formatCliCommand("grokbot gateway restart")}.`,
       ),
     );
     spacer();
@@ -535,19 +535,19 @@ export function printDaemonStatus(status: DaemonStatus, opts: { json: boolean; d
       );
       if (updateCommands.length === 1) {
         defaultRuntime.log(
-          `${label("Fix:")} ${updateCommands[0]} && ${formatCliCommand("openclaw gateway restart")}.`,
+          `${label("Fix:")} ${updateCommands[0]} && ${formatCliCommand("grokbot gateway restart")}.`,
         );
       } else {
         defaultRuntime.log(`${label("Fix:")} update each drifted plugin:`);
         for (const command of updateCommands) {
           defaultRuntime.log(`- ${command}`);
         }
-        defaultRuntime.log(`Then run ${formatCliCommand("openclaw gateway restart")}.`);
+        defaultRuntime.log(`Then run ${formatCliCommand("grokbot gateway restart")}.`);
       }
     } else {
       defaultRuntime.log(
         infoText(
-          `Run ${formatCliCommand("openclaw gateway status --deep")} for affected plugin ids and fix commands.`,
+          `Run ${formatCliCommand("grokbot gateway status --deep")} for affected plugin ids and fix commands.`,
         ),
       );
     }
@@ -568,6 +568,6 @@ export function printDaemonStatus(status: DaemonStatus, opts: { json: boolean; d
     spacer();
   }
 
-  defaultRuntime.log(`${label("Troubles:")} run ${formatCliCommand("openclaw status")}`);
-  defaultRuntime.log(`${label("Troubleshooting:")} https://docs.openclaw.ai/troubleshooting`);
+  defaultRuntime.log(`${label("Troubles:")} run ${formatCliCommand("grokbot status")}`);
+  defaultRuntime.log(`${label("Troubleshooting:")} https://docs.grokbot.ai/troubleshooting`);
 }

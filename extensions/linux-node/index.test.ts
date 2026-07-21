@@ -2,7 +2,7 @@ import type {
   OpenClawPluginApi,
   OpenClawPluginNodeHostCommand,
   OpenClawPluginNodeInvokePolicy,
-} from "openclaw/plugin-sdk/plugin-entry";
+} from "grokbot/plugin-sdk/plugin-entry";
 import { describe, expect, it } from "vitest";
 import plugin from "./index.js";
 

@@ -1,13 +1,13 @@
 // Device-pairing setup-code method produces the connect QR/setup code a mobile
 // or companion client scans to connect to this gateway. It reuses the same
-// pairing helpers as `openclaw qr` so non-terminal clients can display the
+// pairing helpers as `grokbot qr` so non-terminal clients can display the
 // connect QR that was previously only renderable in a terminal.
 import {
   ErrorCodes,
   errorShape,
   validateDevicePairSetupCodeParams,
 } from "../../../packages/gateway-protocol/src/index.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import { renderQrPngDataUrl } from "../../media/qr-image.js";
 import { encodePairingSetupCode, resolvePairingSetupFromConfig } from "../../pairing/setup-code.js";
 import { runCommandWithTimeout } from "../../process/exec.js";
@@ -61,7 +61,7 @@ export const devicePairSetupHandlers: GatewayRequestHandlers = {
                   : PAIRING_SETUP_BOOTSTRAP_PROFILE,
             }
           : {}),
-        // Lets Tailscale serve/funnel URLs resolve, mirroring the `openclaw qr` CLI.
+        // Lets Tailscale serve/funnel URLs resolve, mirroring the `grokbot qr` CLI.
         runCommandWithTimeout: async (argv, runOpts) =>
           await runCommandWithTimeout(argv, { timeoutMs: runOpts.timeoutMs }),
       });

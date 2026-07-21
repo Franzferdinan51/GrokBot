@@ -6,8 +6,8 @@ import { createHash } from "node:crypto";
 import { type BigIntStats, readFileSync, statSync } from "node:fs";
 import fs from "node:fs/promises";
 import { isDeepStrictEqual } from "node:util";
-import { clampTimerTimeoutMs } from "@openclaw/normalization-core/number-coercion";
-import { normalizeStringEntries } from "@openclaw/normalization-core/string-normalization";
+import { clampTimerTimeoutMs } from "@grokbot/normalization-core/number-coercion";
+import { normalizeStringEntries } from "@grokbot/normalization-core/string-normalization";
 import { parseSqliteSessionFileMarker } from "../../../config/sessions/sqlite-marker.js";
 import {
   type OwnedSessionTranscriptPublishedEntry,
@@ -17,7 +17,7 @@ import {
 } from "../../../config/sessions/transcript-write-context.js";
 import { toErrorObject } from "../../../infra/errors.js";
 import { resolveGlobalSingleton } from "../../../shared/global-singleton.js";
-import { isTranscriptOnlyOpenClawAssistantMessage } from "../../../shared/transcript-only-openclaw-assistant.js";
+import { isTranscriptOnlyOpenClawAssistantMessage } from "../../../shared/transcript-only-grokbot-assistant.js";
 import { isSessionWriteLockAcquireError } from "../../session-write-lock-error.js";
 import type { acquireSessionWriteLock } from "../../session-write-lock.js";
 import type {
@@ -900,9 +900,9 @@ type TrustedSessionFileState = {
   fingerprint: SessionFileFingerprint;
 };
 
-// Controllers in the same OpenClaw process can legitimately take turns writing
+// Controllers in the same GrokBot process can legitimately take turns writing
 // the same session file while another attempt is released for model I/O. Track
-// only fingerprints that changed while OpenClaw held the write lock so the
+// only fingerprints that changed while GrokBot held the write lock so the
 // takeover fence can distinguish those locked in-process writes from unowned
 // external file changes.
 const ownedSessionFileWrites = new Map<string, OwnedSessionFileWriteHistory>();
@@ -931,7 +931,7 @@ type SessionFileOwnerState = {
 };
 
 const EMBEDDED_ATTEMPT_SESSION_FILE_OWNER_STATE_KEY = Symbol.for(
-  "openclaw.embeddedAttemptSessionFileOwnerState",
+  "grokbot.embeddedAttemptSessionFileOwnerState",
 );
 
 const sessionFileOwnerState = resolveGlobalSingleton(
@@ -1079,7 +1079,7 @@ function resetEmbeddedAttemptSessionFileOwnersForTest(): void {
 
 if (process.env.VITEST || process.env.NODE_ENV === "test") {
   (globalThis as Record<PropertyKey, unknown>)[
-    Symbol.for("openclaw.embeddedAttemptSessionFileOwnersTestApi")
+    Symbol.for("grokbot.embeddedAttemptSessionFileOwnersTestApi")
   ] = { resetEmbeddedAttemptSessionFileOwnersForTest };
 }
 

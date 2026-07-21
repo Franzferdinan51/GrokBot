@@ -1,8 +1,8 @@
 // Telegram reply-chain cache and prompt-context projection.
 import type { Message } from "grammy/types";
-import type { OpenClawConfig, TelegramAccountConfig } from "openclaw/plugin-sdk/config-contracts";
-import { DEFAULT_GROUP_HISTORY_LIMIT } from "openclaw/plugin-sdk/reply-history";
-import { stripInlineDirectiveTagsForDelivery } from "openclaw/plugin-sdk/text-chunking";
+import type { OpenClawConfig, TelegramAccountConfig } from "grokbot/plugin-sdk/config-contracts";
+import { DEFAULT_GROUP_HISTORY_LIMIT } from "grokbot/plugin-sdk/reply-history";
+import { stripInlineDirectiveTagsForDelivery } from "grokbot/plugin-sdk/text-chunking";
 import type { TelegramMessageSessionRuntime } from "./bot-handlers.message-session.runtime.js";
 import type { TelegramMediaRef } from "./bot-message-context.js";
 import type {

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Builds the OpenClaw package artifact used by Docker E2E.
+// Builds the GrokBot package artifact used by Docker E2E.
 // The script owns the build/inventory/pack sequence so local scheduler, shell
 // helpers, and GitHub Actions all prepare the exact same npm tarball.
 import { spawn } from "node:child_process";
@@ -20,8 +20,8 @@ const PROCESS_GROUP_EXIT_POLL_MS = 25;
 const POST_FORCE_KILL_WAIT_MS = 1_000;
 const DEFAULT_CAPTURED_STDOUT_MAX_BYTES = 1024 * 1024;
 const MAX_TIMER_TIMEOUT_MS = 2_147_000_000;
-const AI_RUNTIME_PACKAGE = "@openclaw/ai";
-const AI_RUNTIME_BACKUP_DIR = ".openclaw-ai-package-backup";
+const AI_RUNTIME_PACKAGE = "@grokbot/ai";
+const AI_RUNTIME_BACKUP_DIR = ".grokbot-ai-package-backup";
 const ACTIVE_CHILD_KILLERS = new Set();
 const PACKAGE_BUILD_PLUGIN_SELECTION_ENV_NAMES = [
   "OPENCLAW_EXTENSIONS",
@@ -117,7 +117,7 @@ function resolvePackedOpenClawFileName(value) {
   const filename = value.trim();
   if (
     !filename.endsWith(".tgz") ||
-    (!filename.startsWith("openclaw-") &&
+    (!filename.startsWith("grokbot-") &&
       !filename.includes(":") &&
       !filename.includes("/") &&
       !filename.includes("\\"))
@@ -125,12 +125,12 @@ function resolvePackedOpenClawFileName(value) {
     return "";
   }
   if (
-    !/^openclaw-[A-Za-z0-9._-]+\.tgz$/u.test(filename) ||
+    !/^grokbot-[A-Za-z0-9._-]+\.tgz$/u.test(filename) ||
     filename.includes("\0") ||
     filename !== path.basename(filename) ||
     filename !== path.win32.basename(filename)
   ) {
-    throw new Error(`npm pack reported unsafe OpenClaw tarball filename: ${filename}`);
+    throw new Error(`npm pack reported unsafe GrokBot tarball filename: ${filename}`);
   }
   return filename;
 }
@@ -366,7 +366,7 @@ function run(command, args, cwd, options = {}) {
 
 const PACKAGE_ARTIFACT_BUILD_STEPS = [
   {
-    label: "Building OpenClaw package artifacts",
+    label: "Building GrokBot package artifacts",
     command: "node",
     // The full profile keeps canonical declaration emission; ciArtifacts is a
     // PR-CI-only profile whose step env forces dts off and would clobber the
@@ -443,7 +443,7 @@ async function newestOpenClawTarball(outputDir, packOutput) {
     .toSorted()
     .at(-1);
   if (!packed) {
-    throw new Error(`missing packed OpenClaw tarball in ${outputDir}`);
+    throw new Error(`missing packed GrokBot tarball in ${outputDir}`);
   }
   return path.join(outputDir, packed);
 }
@@ -497,7 +497,7 @@ async function cleanPackedOpenClawTarballs(outputDir) {
 }
 
 function isPackedAiRuntimeTarball(filename) {
-  return /^openclaw-ai-[A-Za-z0-9._-]+\.tgz$/u.test(filename);
+  return /^grokbot-ai-[A-Za-z0-9._-]+\.tgz$/u.test(filename);
 }
 
 export async function prepareBundledAiRuntimePackage(
@@ -508,11 +508,11 @@ export async function prepareBundledAiRuntimePackage(
 ) {
   const packageJsonPath = path.join(sourceDir, "package.json");
   const aiRuntimePackageJsonPath = path.join(sourceDir, "packages", "ai", "package.json");
-  const aiRuntimePath = path.join(sourceDir, "node_modules", "@openclaw", "ai");
+  const aiRuntimePath = path.join(sourceDir, "node_modules", "@grokbot", "ai");
   const aiRuntimeBackupPath = path.join(
     sourceDir,
     "node_modules",
-    "@openclaw",
+    "@grokbot",
     AI_RUNTIME_BACKUP_DIR,
   );
   const extractAiRuntime =
@@ -548,10 +548,10 @@ export async function prepareBundledAiRuntimePackage(
     return async () => {};
   }
   if (!hasAiRuntimeWorkspace) {
-    throw new Error("@openclaw/ai dependency requires the packages/ai workspace");
+    throw new Error("@grokbot/ai dependency requires the packages/ai workspace");
   }
   if (typeof aiRuntimeDependency !== "string") {
-    throw new Error("root package.json must declare @openclaw/ai as a dependency");
+    throw new Error("root package.json must declare @grokbot/ai as a dependency");
   }
 
   try {
@@ -615,7 +615,7 @@ export async function prepareBundledAiRuntimePackage(
       .map((filename) => path.join(outputDir, filename));
     if (packedAiTarballs.length !== 1) {
       throw new Error(
-        `expected one packed @openclaw/ai tarball in ${outputDir}, found ${packedAiTarballs.length}`,
+        `expected one packed @grokbot/ai tarball in ${outputDir}, found ${packedAiTarballs.length}`,
       );
     }
 
@@ -635,12 +635,12 @@ export async function prepareBundledAiRuntimePackage(
     const stagedPackageJsonPath = path.join(aiRuntimePath, "package.json");
     const stagedPackageJson = JSON.parse(await fs.readFile(stagedPackageJsonPath, "utf8"));
     if (typeof stagedPackageJson.version !== "string" || !stagedPackageJson.version) {
-      throw new Error("packed @openclaw/ai package must declare a version");
+      throw new Error("packed @grokbot/ai package must declare a version");
     }
     for (const [name, version] of Object.entries(stagedPackageJson.dependencies ?? {})) {
       if (packageJson.dependencies[name] !== version) {
         throw new Error(
-          `root package.json must declare ${name}@${version} to bundle @openclaw/ai without duplicate dependencies`,
+          `root package.json must declare ${name}@${version} to bundle @grokbot/ai without duplicate dependencies`,
         );
       }
     }
@@ -678,7 +678,7 @@ export async function packOpenClawPackageForDocker(sourceDir, outputDir, options
   if (options.packJsonPath && options.pnpmPack) {
     throw new Error("packJsonPath cannot be combined with pnpmPack");
   }
-  console.error("==> Packing OpenClaw package");
+  console.error("==> Packing GrokBot package");
   await prepareChangelog(sourceDir);
   let packOutput;
   let cleanupBundledAiRuntime = async () => {};
@@ -756,7 +756,7 @@ async function main() {
     await buildPackageArtifacts(sourceDir);
   }
 
-  console.error("==> Writing OpenClaw package inventory");
+  console.error("==> Writing GrokBot package inventory");
   await writePackageInventoryForDocker(sourceDir);
 
   const tarball = await packOpenClawPackageForDocker(sourceDir, outputDir, {
@@ -766,12 +766,12 @@ async function main() {
     pnpmPack: options.pnpmPack,
   });
 
-  console.error("==> Checking OpenClaw package tarball");
+  console.error("==> Checking GrokBot package tarball");
   const checkStartedAt = Date.now();
   await run(
     "node",
     [
-      path.join(ROOT_DIR, "scripts/check-openclaw-package-tarball.mjs"),
+      path.join(ROOT_DIR, "scripts/check-grokbot-package-tarball.mjs"),
       "--require-bundled-workspace-deps",
       tarball,
     ],
@@ -784,7 +784,7 @@ async function main() {
     },
   );
   console.error(
-    `==> OpenClaw package tarball check finished in ${Math.round((Date.now() - checkStartedAt) / 1000)}s`,
+    `==> GrokBot package tarball check finished in ${Math.round((Date.now() - checkStartedAt) / 1000)}s`,
   );
 
   process.stdout.write(`${tarball}\n`);

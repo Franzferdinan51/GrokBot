@@ -9,7 +9,7 @@ import {
 import { createStorageMock } from "../test-helpers/storage.ts";
 import "./sidebar-update-card.ts";
 
-const DISMISS_KEY = "openclaw:control-ui:update-banner-dismissed:v1";
+const DISMISS_KEY = "grokbot:control-ui:update-banner-dismissed:v1";
 
 type SidebarUpdateCardElement = HTMLElement & {
   updateAvailable: UpdateAvailable | null;
@@ -23,7 +23,7 @@ let originalLocalStorage: PropertyDescriptor | undefined;
 
 async function mount(update: UpdateAvailable | null) {
   const element = document.createElement(
-    "openclaw-sidebar-update-card",
+    "grokbot-sidebar-update-card",
   ) as SidebarUpdateCardElement;
   element.updateAvailable = update;
   document.body.append(element);

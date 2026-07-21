@@ -6,8 +6,8 @@ import type { BrowserRequest } from "./types.js";
 const routeState = vi.hoisted(() => ({
   profileCtx: {
     profile: {
-      driver: "openclaw" as const,
-      name: "openclaw",
+      driver: "grokbot" as const,
+      name: "grokbot",
       cdpUrl: "http://127.0.0.1:18800",
       cdpIsLoopback: true,
     },

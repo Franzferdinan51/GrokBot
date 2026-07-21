@@ -5,7 +5,7 @@ import { normalizeChatChannelId } from "../../../channels/ids.js";
 import { listReadOnlyChannelPluginsForConfig } from "../../../channels/plugins/read-only.js";
 import { formatCliCommand } from "../../../cli/command-format.js";
 import { resolveAgentModelPrimaryValue } from "../../../config/model-input.js";
-import type { OpenClawConfig } from "../../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../../config/types.grokbot.js";
 import { resolveCronDeliveryPlan } from "../../../cron/delivery-plan.js";
 import type { CronJob } from "../../../cron/types.js";
 import { runExec } from "../../../process/exec.js";
@@ -119,7 +119,7 @@ export function noteCronModelOverrides(params: {
     lines.push(`- Examples: ${mismatchExamples.join(", ")}`);
   }
   lines.push(
-    `Review with ${formatCliCommand("openclaw cron list")} and ${formatCliCommand("openclaw cron show <job-id>")}; remove \`payload.model\` from jobs that should inherit the default.`,
+    `Review with ${formatCliCommand("grokbot cron list")} and ${formatCliCommand("grokbot cron show <job-id>")}; remove \`payload.model\` from jobs that should inherit the default.`,
   );
 
   note(lines.join("\n"), "Cron");
@@ -210,7 +210,7 @@ function collectCronDeliveryTargetAdvisory(params: {
     `- ${pluralize(unavailableCount, "job")} ${unavailableCount === 1 ? "announces" : "announce"} to a channel whose plugin is not active; the next scheduled run will fail to deliver`,
     `- Channels: ${formatSortedCounts(channelCounts)}`,
     `- Examples: ${examples.join(", ")}`,
-    `Reactivate the channel plugin or update the job's \`delivery.channel\` after reviewing with ${formatCliCommand("openclaw cron list")} and ${formatCliCommand("openclaw cron show <job-id>")}.`,
+    `Reactivate the channel plugin or update the job's \`delivery.channel\` after reviewing with ${formatCliCommand("grokbot cron list")} and ${formatCliCommand("grokbot cron show <job-id>")}.`,
   ].join("\n");
 }
 
@@ -299,8 +299,8 @@ export async function collectLegacyWhatsAppCrontabHealthWarning(
 
   return [
     "Legacy WhatsApp crontab health check detected.",
-    "`~/.openclaw/bin/ensure-whatsapp.sh` is not maintained by current OpenClaw and can misreport `Gateway inactive` from cron when the systemd user bus environment is missing.",
-    `Remove the stale crontab entry with ${formatCliCommand("crontab -e")}; use ${formatCliCommand("openclaw channels status --probe")}, ${formatCliCommand("openclaw doctor")}, and ${formatCliCommand("openclaw gateway status")} for current health checks.`,
+    "`~/.grokbot/bin/ensure-whatsapp.sh` is not maintained by current GrokBot and can misreport `Gateway inactive` from cron when the systemd user bus environment is missing.",
+    `Remove the stale crontab entry with ${formatCliCommand("crontab -e")}; use ${formatCliCommand("grokbot channels status --probe")}, ${formatCliCommand("grokbot doctor")}, and ${formatCliCommand("grokbot gateway status")} for current health checks.`,
     `Matched ${pluralize(legacyLines.length, "entry")}.`,
   ].join("\n");
 }

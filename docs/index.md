@@ -1,22 +1,22 @@
 ---
-summary: "OpenClaw is a multi-channel gateway for AI agents that runs on any OS."
+summary: "GrokBot is a multi-channel gateway for AI agents that runs on any OS."
 read_when:
-  - Introducing OpenClaw to newcomers
-title: "OpenClaw"
+  - Introducing GrokBot to newcomers
+title: "GrokBot"
 ---
 
-# OpenClaw 🦞
+# GrokBot 🦞
 
 <p align="center">
     <img
-        src="/assets/openclaw-hero-light.png"
-        alt="OpenClaw"
+        src="/assets/grokbot-hero-light.png"
+        alt="GrokBot"
         width="500"
         class="dark:hidden"
     />
     <img
-        src="/assets/openclaw-hero-dark.png"
-        alt="OpenClaw"
+        src="/assets/grokbot-hero-dark.png"
+        alt="GrokBot"
         width="500"
         class="hidden dark:block"
     />
@@ -31,10 +31,10 @@ title: "OpenClaw"
 
 <Columns>
   <Card title="Get Started" href="/start/getting-started" icon="rocket">
-    Install OpenClaw and bring up the Gateway in minutes.
+    Install GrokBot and bring up the Gateway in minutes.
   </Card>
   <Card title="Run Onboarding" href="/start/wizard" icon="list-checks">
-    Guided setup with `openclaw onboard` and pairing flows.
+    Guided setup with `grokbot onboard` and pairing flows.
   </Card>
   <Card title="Connect a Channel" href="/channels" icon="message-circle">
     Link Discord, Signal, Telegram, WhatsApp, and more to chat from anywhere.
@@ -85,9 +85,9 @@ these hub links to reach the same top-level docs areas from the page body.
   </Card>
 </Columns>
 
-## What is OpenClaw?
+## What is GrokBot?
 
-OpenClaw is a **self-hosted gateway** that connects your favorite chat apps — Discord, Google Chat, iMessage, Matrix, Microsoft Teams, Signal, Slack, Telegram, WhatsApp, Zalo, and more via channel plugins — to AI coding agents. You run a single Gateway process on your own machine (or a server), and it becomes the bridge between your messaging apps and an always-available AI assistant.
+GrokBot is a **self-hosted gateway** that connects your favorite chat apps — Discord, Google Chat, iMessage, Matrix, Microsoft Teams, Signal, Slack, Telegram, WhatsApp, Zalo, and more via channel plugins — to AI coding agents. You run a single Gateway process on your own machine (or a server), and it becomes the bridge between your messaging apps and an always-available AI assistant.
 
 **Who is it for?** Developers and power users who want a personal AI assistant they can message from anywhere — without giving up control of their data or relying on a hosted service.
 
@@ -105,7 +105,7 @@ OpenClaw is a **self-hosted gateway** that connects your favorite chat apps — 
 ```mermaid
 flowchart LR
   A["Chat apps + plugins"] --> B["Gateway"]
-  B --> C["OpenClaw agent"]
+  B --> C["GrokBot agent"]
   B --> D["CLI"]
   B --> E["Web Control UI"]
   B --> F["macOS app"]
@@ -140,21 +140,21 @@ The Gateway is the single source of truth for sessions, routing, and channel con
 ## Quick start
 
 <Steps>
-  <Step title="Install OpenClaw">
+  <Step title="Install GrokBot">
     ```bash
-    npm install -g openclaw@latest
+    npm install -g grokbot@latest
     ```
   </Step>
   <Step title="Onboard and install the service">
     ```bash
-    openclaw onboard --install-daemon
+    grokbot onboard --install-daemon
     ```
   </Step>
   <Step title="Chat">
     Open the Control UI in your browser and send a message:
 
     ```bash
-    openclaw dashboard
+    grokbot dashboard
     ```
 
     Or connect a channel ([Telegram](/channels/telegram) is fastest) and chat from your phone.
@@ -172,14 +172,14 @@ Open the browser Control UI after the Gateway starts.
 - Remote access: [Web surfaces](/web) and [Tailscale](/gateway/tailscale)
 
 <p align="center">
-  <img src="/whatsapp-openclaw.jpg" alt="OpenClaw" width="420" />
+  <img src="/whatsapp-grokbot.jpg" alt="GrokBot" width="420" />
 </p>
 
 ## Configuration (optional)
 
-Config lives at `~/.openclaw/openclaw.json`.
+Config lives at `~/.grokbot/grokbot.json`.
 
-- If you **do nothing**, OpenClaw uses the bundled OpenClaw agent runtime; DMs share the agent's main session, and each group chat gets its own session.
+- If you **do nothing**, GrokBot uses the bundled GrokBot agent runtime; DMs share the agent's main session, and each group chat gets its own session.
 - If you want to lock it down, start with `channels.whatsapp.allowFrom` and (for groups) mention rules.
 
 Example:
@@ -192,7 +192,7 @@ Example:
       groups: { "*": { requireMention: true } },
     },
   },
-  messages: { groupChat: { mentionPatterns: ["@openclaw"] } },
+  messages: { groupChat: { mentionPatterns: ["@grokbot"] } },
 }
 ```
 

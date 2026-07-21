@@ -72,7 +72,7 @@ describe("applyInlineDirectiveOverrides", () => {
       modelPolicyRepairConfigPath,
       expected,
     }) => {
-      const directives = parseInlineDirectives("hello /model openai/gpt-5.4 --runtime openclaw");
+      const directives = parseInlineDirectives("hello /model openai/gpt-5.4 --runtime grokbot");
       const typing = {
         onReplyStart: async () => {},
         startTypingLoop: async () => {},
@@ -107,7 +107,7 @@ describe("applyInlineDirectiveOverrides", () => {
 
       const result = await applyInlineDirectiveOverrides({
         ctx: buildTestCtx({
-          Body: "hello /model openai/gpt-5.4 --runtime openclaw",
+          Body: "hello /model openai/gpt-5.4 --runtime grokbot",
           CommandAuthorized: true,
         }),
         cfg: {},
@@ -127,8 +127,8 @@ describe("applyInlineDirectiveOverrides", () => {
           ownerList: [],
           senderIsOwner: true,
           isAuthorizedSender: true,
-          rawBodyNormalized: "hello /model openai/gpt-5.4 --runtime openclaw",
-          commandBodyNormalized: "hello /model openai/gpt-5.4 --runtime openclaw",
+          rawBodyNormalized: "hello /model openai/gpt-5.4 --runtime grokbot",
+          commandBodyNormalized: "hello /model openai/gpt-5.4 --runtime grokbot",
         },
         directives,
         messageProviderKey: "webchat",

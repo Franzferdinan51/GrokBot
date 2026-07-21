@@ -1,5 +1,5 @@
 /** Converts loaded plugin registries into stable plugin records for status and diagnostics. */
-import { normalizeLowercaseStringOrEmpty } from "@openclaw/normalization-core/string-coerce";
+import { normalizeLowercaseStringOrEmpty } from "@grokbot/normalization-core/string-coerce";
 import type { PluginCompatCode } from "./compat/registry.js";
 import type { PluginActivationState } from "./config-state.js";
 import type { PluginBundleFormat, PluginDiagnosticCode, PluginFormat } from "./manifest-types.js";
@@ -42,7 +42,7 @@ export function createPluginRecord(params: {
     description: params.description,
     version: params.version,
     packageName: params.packageName,
-    format: params.format ?? "openclaw",
+    format: params.format ?? "grokbot",
     bundleFormat: params.bundleFormat,
     bundleCapabilities: params.bundleCapabilities,
     source: params.source,

@@ -1,12 +1,12 @@
 // Doctor web fetch proxy tests cover explicit opt-in diagnostics without exposing proxy values.
 import { describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { noteWebFetchProxyDiagnostic } from "./doctor-web-fetch-proxy.js";
 
 function serviceWithEnv(environment?: Record<string, string>) {
   return {
     readCommand: vi.fn(async () =>
-      environment ? { programArguments: ["openclaw", "gateway"], environment } : null,
+      environment ? { programArguments: ["grokbot", "gateway"], environment } : null,
     ),
   };
 }
@@ -42,8 +42,8 @@ describe("web_fetch proxy doctor diagnostic", () => {
     );
     expect(diagnostic).toContain("web_fetch still uses direct connections");
     expect(diagnostic).toContain("tools.web.fetch.useTrustedEnvProxy is not enabled");
-    expect(diagnostic).toContain("Direct TLS connectivity to docs.openclaw.ai:443 failed");
-    expect(diagnostic).toContain("openclaw config set tools.web.fetch.useTrustedEnvProxy true");
+    expect(diagnostic).toContain("Direct TLS connectivity to docs.grokbot.ai:443 failed");
+    expect(diagnostic).toContain("grokbot config set tools.web.fetch.useTrustedEnvProxy true");
     expect(diagnostic).not.toContain(proxyUrl);
     expect(diagnostic).not.toContain("proxy-value-marker");
   });
@@ -57,7 +57,7 @@ describe("web_fetch proxy doctor diagnostic", () => {
     });
 
     expect(diagnostic).toContain("proxy environment detected in the doctor process: http_proxy");
-    expect(diagnostic).toContain("Direct TLS connectivity to docs.openclaw.ai:443 succeeded");
+    expect(diagnostic).toContain("Direct TLS connectivity to docs.grokbot.ai:443 succeeded");
   });
 
   it("reports both process and installed service proxy sources", async () => {

@@ -29,7 +29,7 @@ function mount(params: {
   onStateChange?: SessionDiscussionStateListener;
   canOpen?: boolean;
 }): DiscussionPanelElement {
-  const panel = document.createElement("openclaw-session-discussion") as DiscussionPanelElement;
+  const panel = document.createElement("grokbot-session-discussion") as DiscussionPanelElement;
   panel.sessionKey = "agent:main:first";
   panel.loadInfo = params.loadInfo;
   panel.openDiscussion = params.openDiscussion;

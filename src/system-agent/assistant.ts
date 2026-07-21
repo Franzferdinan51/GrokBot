@@ -1,4 +1,4 @@
-// OpenClaw assistant planning converts fuzzy user text into one safe command.
+// GrokBot assistant planning converts fuzzy user text into one safe command.
 import { randomUUID } from "node:crypto";
 import fs from "node:fs/promises";
 import os from "node:os";
@@ -82,7 +82,7 @@ export async function planSystemAgentCommandWithConfiguredModel(params: {
   const result = await runConfiguredSystemAgentText({
     prompt,
     systemPrompt: SYSTEM_AGENT_ASSISTANT_SYSTEM_PROMPT,
-    runIdPrefix: "openclaw-planner",
+    runIdPrefix: "grokbot-planner",
     verifiedInference: params.verifiedInference,
     deps: params.deps,
   });
@@ -101,7 +101,7 @@ export async function planSystemAgentGreetingWithConfiguredModel(params: {
   const result = await runConfiguredSystemAgentText({
     prompt: buildSystemAgentGreetingUserPrompt(params),
     systemPrompt: SYSTEM_AGENT_GREETING_SYSTEM_PROMPT,
-    runIdPrefix: "openclaw-greeting",
+    runIdPrefix: "grokbot-greeting",
     verifiedInference: params.verifiedInference,
     deps: params.deps,
     timeoutMs: params.timeoutMs,
@@ -137,7 +137,7 @@ async function runConfiguredSystemAgentText(params: {
       (params.deps?.resolveAssistantTimeoutMs ?? resolveSystemAgentAssistantTimeoutMs)(route);
     const shared = {
       sessionId: `${runId}-session`,
-      agentId: "openclaw",
+      agentId: "grokbot",
       trigger: "manual" as const,
       sessionFile: path.join(tempDir, "session.jsonl"),
       workspaceDir: tempDir,
@@ -152,8 +152,8 @@ async function runConfiguredSystemAgentText(params: {
       runId,
       extraSystemPrompt: params.systemPrompt,
       extraSystemPromptStatic: params.systemPrompt,
-      messageChannel: "openclaw",
-      messageProvider: "openclaw",
+      messageChannel: "grokbot",
+      messageProvider: "grokbot",
       disableTools: true,
       disableTrajectory: true,
       ...(route.authProfileId ? { authProfileId: route.authProfileId } : {}),
@@ -215,7 +215,7 @@ async function requireVerifiedPlannerRoute(
 }
 
 async function createTempPlannerDir(): Promise<string> {
-  return await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-planner-"));
+  return await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-planner-"));
 }
 
 async function removeTempPlannerDir(dir: string): Promise<void> {

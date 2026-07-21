@@ -1,12 +1,12 @@
-# OpenClaw Kilo Gateway Provider
+# GrokBot Kilo Gateway Provider
 
-Official OpenClaw provider plugin for Kilo Gateway.
+Official GrokBot provider plugin for Kilo Gateway.
 
-Install from OpenClaw:
+Install from GrokBot:
 
 ```bash
-openclaw plugins install @openclaw/kilocode-provider
-openclaw gateway restart
+grokbot plugins install @grokbot/kilocode-provider
+grokbot gateway restart
 ```
 
-See <https://docs.openclaw.ai/providers/kilocode> for setup and configuration.
+See <https://docs.grokbot.ai/providers/kilocode> for setup and configuration.

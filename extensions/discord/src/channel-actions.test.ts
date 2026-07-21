@@ -1,7 +1,7 @@
 // Discord tests cover channel actions plugin behavior.
-import type { ChannelMessageActionContext } from "openclaw/plugin-sdk/channel-contract";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { withEnv } from "openclaw/plugin-sdk/test-env";
+import type { ChannelMessageActionContext } from "grokbot/plugin-sdk/channel-contract";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { withEnv } from "grokbot/plugin-sdk/test-env";
 import { describe, expect, it, vi } from "vitest";
 
 const handleDiscordMessageActionMock = vi.hoisted(() =>

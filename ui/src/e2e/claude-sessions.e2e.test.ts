@@ -508,7 +508,7 @@ suite("Claude native session catalog", () => {
     await expect
       .poll(() =>
         page
-          .locator("openclaw-chat-pane")
+          .locator("grokbot-chat-pane")
           .evaluate(
             (element) =>
               (element as HTMLElement & { catalogMessages: unknown[] }).catalogMessages.length,
@@ -638,7 +638,7 @@ suite("Claude native session catalog", () => {
     await expect
       .poll(() =>
         page
-          .locator("openclaw-chat-pane")
+          .locator("grokbot-chat-pane")
           .evaluate(
             (element) =>
               (element as HTMLElement & { state: { chatMessages: unknown[] } }).state.chatMessages

@@ -1,7 +1,7 @@
 {
   "id": "longcat",
   "name": "LongCat",
-  "description": "OpenClaw LongCat provider plugin.",
+  "description": "GrokBot LongCat provider plugin.",
   "activation": {
     "onStartup": false
   },

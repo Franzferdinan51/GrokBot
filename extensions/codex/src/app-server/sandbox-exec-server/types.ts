@@ -3,7 +3,7 @@
  * WebSocket bridge.
  */
 import type { ChildProcessWithoutNullStreams } from "node:child_process";
-import type { SandboxContext } from "openclaw/plugin-sdk/sandbox";
+import type { SandboxContext } from "grokbot/plugin-sdk/sandbox";
 import type { WebSocketServer } from "ws";
 import type { JsonObject, JsonValue } from "../protocol.js";
 

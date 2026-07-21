@@ -1,6 +1,6 @@
 /** Core Canvas host enablement from the shipped Canvas plugin configuration surface. */
-import { isRecord } from "@openclaw/normalization-core/record-coerce";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import { isRecord } from "@grokbot/normalization-core/record-coerce";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { isTruthyEnvValue } from "../infra/env.js";
 
 /** Returns whether core-owned widget hosting and tools should be active. */

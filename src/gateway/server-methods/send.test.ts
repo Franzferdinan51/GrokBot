@@ -3,7 +3,7 @@
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   GATEWAY_CLIENT_MODES,
@@ -77,7 +77,7 @@ vi.mock("../../channels/plugins/message-action-dispatch.js", () => ({
   dispatchChannelMessageAction: mocks.dispatchChannelMessageAction,
 }));
 
-const TEST_AGENT_WORKSPACE = "/tmp/openclaw-test-workspace";
+const TEST_AGENT_WORKSPACE = "/tmp/grokbot-test-workspace";
 let sendHandlers: typeof import("./send.js").sendHandlers;
 
 function resolveAgentIdFromSessionKeyForTests(params: { sessionKey?: string }): string {
@@ -1114,14 +1114,14 @@ describe("gateway send mirroring", () => {
     const { respond } = await runSend({
       to: "channel:C1",
       message: "voice note",
-      mediaUrl: "file:///tmp/openclaw-voice.ogg",
+      mediaUrl: "file:///tmp/grokbot-voice.ogg",
       asVoice: true,
       channel: "slack",
       idempotencyKey: "idem-voice",
     });
 
     expect(deliveryCall()?.payloads?.[0]?.text).toBe("voice note");
-    expect(deliveryCall()?.payloads?.[0]?.mediaUrl).toBe("file:///tmp/openclaw-voice.ogg");
+    expect(deliveryCall()?.payloads?.[0]?.mediaUrl).toBe("file:///tmp/grokbot-voice.ogg");
     expect(deliveryCall()?.payloads?.[0]?.audioAsVoice).toBe(true);
     const response = firstRespondCall(respond);
     expect(response?.[0]).toBe(true);

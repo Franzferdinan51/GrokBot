@@ -1,4 +1,4 @@
-name: OpenClaw Stable Main Closeout
+name: GrokBot Stable Main Closeout
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: Stable OpenClaw tag to replay or repair, for example v2026.6.8 or v2026.6.8-2
+        description: Stable GrokBot tag to replay or repair, for example v2026.6.8 or v2026.6.8-2
         required: false
         type: string
       rollback_drill_id:
@@ -28,7 +28,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: openclaw-stable-main-closeout-${{ github.event_name == 'workflow_dispatch' && (inputs.tag || github.run_id) || github.ref }}
+  group: grokbot-stable-main-closeout-${{ github.event_name == 'workflow_dispatch' && (inputs.tag || github.run_id) || github.ref }}
   cancel-in-progress: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
 
 jobs:
@@ -154,11 +154,11 @@ jobs:
             exit 1
           fi
           evidence_version="${evidence_source_tag#v}"
-          evidence_asset="openclaw-${evidence_version}-postpublish-evidence.json"
+          evidence_asset="grokbot-${evidence_version}-postpublish-evidence.json"
           evidence_checksum_asset="${evidence_asset}.sha256"
-          release_manifest_asset="openclaw-${evidence_version}-release-manifest.json"
+          release_manifest_asset="grokbot-${evidence_version}-release-manifest.json"
           release_manifest_checksum_asset="${release_manifest_asset}.sha256"
-          closeout_asset="openclaw-${release_asset_version}-stable-main-closeout.json"
+          closeout_asset="grokbot-${release_asset_version}-stable-main-closeout.json"
           closeout_checksum_asset="${closeout_asset}.sha256"
           closeout_dir="$RUNNER_TEMP/release-closeout-evidence"
           mkdir -p "$closeout_dir"
@@ -431,12 +431,12 @@ jobs:
           import { readFileSync } from "node:fs";
           const run = JSON.parse(readFileSync(process.argv[2], "utf8"));
           for (const [key, expected] of [
-            ["workflowName", "OpenClaw Release Publish"],
+            ["workflowName", "GrokBot Release Publish"],
             ["event", "workflow_dispatch"],
             ["status", "completed"],
           ]) {
             if (run[key] !== expected) {
-              throw new Error(`OpenClaw Release Publish must have ${key}=${expected}, got ${run[key] ?? "<missing>"}.`);
+              throw new Error(`GrokBot Release Publish must have ${key}=${expected}, got ${run[key] ?? "<missing>"}.`);
             }
           }
           const recoveryRequested = process.env.ALLOW_FAILED_PUBLISH_RECOVERY === "true";
@@ -448,7 +448,7 @@ jobs:
           const failedRecovery = recoveryRequested && run.conclusion === "failure";
           if (run.conclusion !== "success" && !failedRecovery) {
             throw new Error(
-              `OpenClaw Release Publish must have conclusion=success, got ${run.conclusion ?? "<missing>"}.`,
+              `GrokBot Release Publish must have conclusion=success, got ${run.conclusion ?? "<missing>"}.`,
             );
           }
           if (failedRecovery) {
@@ -461,7 +461,7 @@ jobs:
             gh_with_retry run view "$RELEASE_PUBLISH_RUN_ID" --repo "$GITHUB_REPOSITORY" --log \
               > "$parent_log"
             mapfile -t windows_node_run_ids < <(
-              sed -nE '/Dispatched windows-node-release\.yml/ { s#.*https://github\.com/openclaw/openclaw/actions/runs/([1-9][0-9]*).*#\1#p; }' "$parent_log" |
+              sed -nE '/Dispatched windows-node-release\.yml/ { s#.*https://github\.com/grokbot/grokbot/actions/runs/([1-9][0-9]*).*#\1#p; }' "$parent_log" |
                 LC_ALL=C sort -u
             )
             if [[ "${#windows_node_run_ids[@]}" != "1" ]]; then
@@ -498,7 +498,7 @@ jobs:
               for (const name of [
                 "Validate inputs",
                 "Verify Authenticode signatures",
-                "Upload to OpenClaw release",
+                "Upload to GrokBot release",
                 "Verify promoted release asset contract",
               ]) {
                 const steps = (jobs[0].steps ?? []).filter(
@@ -557,7 +557,7 @@ jobs:
           rm -rf "$manifest_dir"
           mkdir -p "$manifest_dir"
           evidence_version="${EVIDENCE_TAG#v}"
-          manifest_asset="openclaw-${evidence_version}-release-manifest.json"
+          manifest_asset="grokbot-${evidence_version}-release-manifest.json"
           manifest_checksum_asset="${manifest_asset}.sha256"
           gh_with_retry release download "$EVIDENCE_TAG" --repo "$GITHUB_REPOSITORY" \
             --pattern "$manifest_asset" \
@@ -599,7 +599,7 @@ jobs:
           ROLLBACK_DRILL_DATE: ${{ needs.resolve.outputs.rollback_drill_date }}
           REPAIR_PARTIAL_CLOSEOUT: ${{ needs.resolve.outputs.repair_partial_closeout }}
           ALLOW_FAILED_PUBLISH_RECOVERY: ${{ github.event_name == 'workflow_dispatch' && inputs.allow_failed_publish_recovery && 'true' || 'false' }}
-          CLOSEOUT_DIR: ${{ runner.temp }}/openclaw-stable-main-closeout
+          CLOSEOUT_DIR: ${{ runner.temp }}/grokbot-stable-main-closeout
         run: |
           set -euo pipefail
           mkdir -p "$CLOSEOUT_DIR"
@@ -611,8 +611,8 @@ jobs:
             recovery_dir="$CLOSEOUT_DIR/platform-recovery"
             mkdir -p "$recovery_dir"
             gh_with_retry release download "$RELEASE_TAG" --repo "$GITHUB_REPOSITORY" \
-              --pattern OpenClaw-Android.apk \
-              --pattern OpenClaw-Android-SHA256SUMS.txt \
+              --pattern GrokBot-Android.apk \
+              --pattern GrokBot-Android-SHA256SUMS.txt \
               --pattern OpenClawCompanion-Setup-arm64.exe \
               --pattern OpenClawCompanion-Setup-x64.exe \
               --pattern OpenClawCompanion-SHA256SUMS.txt \
@@ -633,13 +633,13 @@ jobs:
                 sha256sum --strict --check "$normalized"
                 rm -f "$normalized"
               }
-              verify_checksum_manifest OpenClaw-Android-SHA256SUMS.txt \
-                OpenClaw-Android.apk
+              verify_checksum_manifest GrokBot-Android-SHA256SUMS.txt \
+                GrokBot-Android.apk
               verify_checksum_manifest OpenClawCompanion-SHA256SUMS.txt \
                 OpenClawCompanion-Setup-arm64.exe \
                 OpenClawCompanion-Setup-x64.exe
             )
-            gh_with_retry attestation verify "$recovery_dir/OpenClaw-Android.apk" \
+            gh_with_retry attestation verify "$recovery_dir/GrokBot-Android.apk" \
               --repo "$GITHUB_REPOSITORY" \
               --signer-workflow "$GITHUB_REPOSITORY/.github/workflows/android-release.yml" \
               --source-ref "refs/tags/$RELEASE_TAG" \
@@ -661,7 +661,7 @@ jobs:
             --windows-node-installer-digests "${WINDOWS_NODE_INSTALLER_DIGESTS:-}" \
             --output "$CLOSEOUT_DIR/stable-main-closeout.json"
           release_version="${RELEASE_TAG#v}"
-          sha256sum "$CLOSEOUT_DIR/stable-main-closeout.json" | awk -v asset="openclaw-${release_version}-stable-main-closeout.json" \
+          sha256sum "$CLOSEOUT_DIR/stable-main-closeout.json" | awk -v asset="grokbot-${release_version}-stable-main-closeout.json" \
             '{print $1 "  " asset}' \
             > "$CLOSEOUT_DIR/stable-main-closeout.json.sha256"
 
@@ -669,7 +669,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           RELEASE_TAG: ${{ needs.resolve.outputs.tag }}
-          CLOSEOUT_DIR: ${{ runner.temp }}/openclaw-stable-main-closeout
+          CLOSEOUT_DIR: ${{ runner.temp }}/grokbot-stable-main-closeout
         run: |
           set -euo pipefail
           . "$RUNNER_TEMP/github-api-backoff.sh"
@@ -696,14 +696,14 @@ jobs:
           }
           attach_or_verify \
             "$CLOSEOUT_DIR/stable-main-closeout.json" \
-            "openclaw-${release_version}-stable-main-closeout.json"
+            "grokbot-${release_version}-stable-main-closeout.json"
           attach_or_verify \
             "$CLOSEOUT_DIR/stable-main-closeout.json.sha256" \
-            "openclaw-${release_version}-stable-main-closeout.json.sha256"
+            "grokbot-${release_version}-stable-main-closeout.json.sha256"
 
       - name: Upload closeout workflow evidence
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
-          name: openclaw-stable-main-closeout-${{ needs.resolve.outputs.tag }}
-          path: ${{ runner.temp }}/openclaw-stable-main-closeout
+          name: grokbot-stable-main-closeout-${{ needs.resolve.outputs.tag }}
+          path: ${{ runner.temp }}/grokbot-stable-main-closeout
           if-no-files-found: error

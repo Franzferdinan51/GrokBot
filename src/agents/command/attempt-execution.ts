@@ -1,12 +1,12 @@
 /**
  * Orchestrates one agent attempt across embedded, CLI, and ACP runtimes.
  */
-import type { AcpRuntimeEvent } from "@openclaw/acp-core/runtime/types";
+import type { AcpRuntimeEvent } from "@grokbot/acp-core/runtime/types";
 import {
   normalizeOptionalLowercaseString,
   type FastMode,
-} from "@openclaw/normalization-core/string-coerce";
-import { truncateUtf16Safe } from "@openclaw/normalization-core/utf16-slice";
+} from "@grokbot/normalization-core/string-coerce";
+import { truncateUtf16Safe } from "@grokbot/normalization-core/utf16-slice";
 import { sanitizeForLog } from "../../../packages/terminal-core/src/ansi.js";
 import { ACP_TURN_TIMEOUT_DETAIL_CODE } from "../../acp/control-plane/manager.turn-timeout.js";
 import { formatAcpErrorChain } from "../../acp/runtime/errors.js";
@@ -22,7 +22,7 @@ import type { ThinkLevel, VerboseLevel } from "../../auto-reply/thinking.js";
 import { persistSessionTranscriptTurn } from "../../config/sessions/session-accessor.js";
 import { readTailAssistantTextFromSessionTranscript } from "../../config/sessions/transcript.js";
 import type { SessionEntry } from "../../config/sessions/types.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import {
   injectTimestamp,
   timestampOptsFromConfig,
@@ -392,7 +392,7 @@ export async function persistAcpTurnTranscript(params: {
     ...(params.userInput ? { userMessage: buildPersistedUserTurnMessage(params.userInput) } : {}),
     assistant: {
       api: "openai-responses",
-      provider: "openclaw",
+      provider: "grokbot",
       model: "acp-runtime",
     },
   });
@@ -537,7 +537,7 @@ export function runAgentAttempt(params: {
   );
   const bootstrapPromptWarningSignature =
     bootstrapPromptWarningSignaturesSeen[bootstrapPromptWarningSignaturesSeen.length - 1];
-  const requestedAgentHarnessId = isRawModelRun ? "openclaw" : undefined;
+  const requestedAgentHarnessId = isRawModelRun ? "grokbot" : undefined;
   const sessionRuntimeOverride = isRawModelRun ? undefined : params.agentHarnessRuntimeOverride;
   const locksSessionRuntimeOverride =
     sessionRuntimeOverride !== undefined && params.sessionEntry?.modelSelectionLocked === true;
@@ -577,7 +577,7 @@ export function runAgentAttempt(params: {
       agentId: params.sessionAgentId,
     });
   const agentHarnessPolicy = isRawModelRun
-    ? ({ runtime: "openclaw", runtimeSource: "model" } as const)
+    ? ({ runtime: "grokbot", runtimeSource: "model" } as const)
     : sessionRuntimeOverride
       ? ({ runtime: sessionRuntimeOverride, runtimeSource: "model" } as const)
       : resolveAvailableAgentHarnessPolicy({
@@ -638,8 +638,8 @@ export function runAgentAttempt(params: {
   const embeddedAgentHarnessOverride =
     requestedAgentHarnessId ??
     sessionRuntimeOverride ??
-    (agentHarnessPolicy.runtime === "openclaw" && agentHarnessPolicy.runtimeSource !== "implicit"
-      ? "openclaw"
+    (agentHarnessPolicy.runtime === "grokbot" && agentHarnessPolicy.runtimeSource !== "implicit"
+      ? "grokbot"
       : undefined);
   if (!isRawModelRun && isCliExecutionProvider) {
     const cliSessionBinding = getCliSessionBinding(params.sessionEntry, cliExecutionProvider);
@@ -696,7 +696,7 @@ export function runAgentAttempt(params: {
       // The store is already cleared above, so no stale --resume can leak to a
       // later turn. Still return the bound id as the reuse candidate: prepare
       // re-detects the missing transcript, keeps useResume=false, and arms
-      // raw-transcript reseed from prior OpenClaw history. Returning undefined
+      // raw-transcript reseed from prior GrokBot history. Returning undefined
       // strips the candidate and starves reseed, losing warm-stdin continuity.
       return cliSessionBinding;
     };

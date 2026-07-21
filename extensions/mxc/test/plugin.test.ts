@@ -2,7 +2,7 @@ import type {
   OpenClawPluginApi,
   OpenClawPluginService,
   OpenClawPluginServiceContext,
-} from "openclaw/plugin-sdk/plugin-entry";
+} from "grokbot/plugin-sdk/plugin-entry";
 import { afterEach, beforeEach, describe, expect, test, vi } from "vitest";
 
 const {
@@ -29,7 +29,7 @@ const {
   };
 });
 
-vi.mock("openclaw/plugin-sdk/sandbox", () => ({
+vi.mock("grokbot/plugin-sdk/sandbox", () => ({
   registerSandboxBackend: registerSandboxBackendMock,
 }));
 

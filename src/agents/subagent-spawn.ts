@@ -5,8 +5,8 @@
  */
 import crypto from "node:crypto";
 import { promises as fs } from "node:fs";
-import { finiteSecondsToTimerSafeMilliseconds } from "@openclaw/normalization-core/number-coercion";
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+import { finiteSecondsToTimerSafeMilliseconds } from "@grokbot/normalization-core/number-coercion";
+import { normalizeOptionalString } from "@grokbot/normalization-core/string-coerce";
 import { isAcpRuntimeSpawnAvailable } from "../acp/runtime/availability.js";
 import { routeFromBindingRecord, routeToDeliveryFields } from "../channels/route-projection.js";
 import {
@@ -19,7 +19,7 @@ import {
   resolveThreadBindingSpawnPolicy,
 } from "../channels/thread-bindings-policy.js";
 import type { SessionEntry } from "../config/sessions/types.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import type { SubagentSpawnPreparation } from "../context-engine/types.js";
 import { stringifyRouteThreadId } from "../plugin-sdk/channel-route.js";
 import { listRegisteredPluginAgentPromptGuidance } from "../plugins/command-registry-state.js";
@@ -620,7 +620,7 @@ async function prepareSubagentSessionContext(params: {
     }
     if (forkedResult.status === "failed" || forkedResult.status === "missing-entry") {
       throw new Error(
-        'context="fork" requested but OpenClaw could not fork the requester transcript.',
+        'context="fork" requested but GrokBot could not fork the requester transcript.',
       );
     }
     parentEntry = forkedResult.parentEntry;
@@ -650,7 +650,7 @@ async function prepareSubagentSessionContext(params: {
         }
         return {
           status: "error",
-          error: 'context="fork" requested but OpenClaw could not prepare forked context.',
+          error: 'context="fork" requested but GrokBot could not prepare forked context.',
         };
       }
       return {
@@ -1924,7 +1924,7 @@ const testing = {
   },
 };
 if (process.env.VITEST || process.env.NODE_ENV === "test") {
-  (globalThis as Record<PropertyKey, unknown>)[Symbol.for("openclaw.subagentSpawnTestApi")] =
+  (globalThis as Record<PropertyKey, unknown>)[Symbol.for("grokbot.subagentSpawnTestApi")] =
     testing;
 }
 /* oxlint-disable max-lines -- TODO: split this grandfathered oversized file. */

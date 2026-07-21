@@ -31,19 +31,19 @@ function mkdirSafe(dir: string) {
 }
 
 function makeTempDir() {
-  return makeTrackedTempDir("openclaw-manifest-registry", tempDirs);
+  return makeTrackedTempDir("grokbot-manifest-registry", tempDirs);
 }
 
 function makeOpenClawDevSourceRoot() {
   const root = makeTempDir();
-  fs.writeFileSync(path.join(root, "package.json"), JSON.stringify({ name: "openclaw" }), "utf-8");
+  fs.writeFileSync(path.join(root, "package.json"), JSON.stringify({ name: "grokbot" }), "utf-8");
   mkdirSafe(path.join(root, "src"));
   mkdirSafe(path.join(root, "extensions"));
   return root;
 }
 
 function writeManifest(dir: string, manifest: Record<string, unknown>) {
-  fs.writeFileSync(path.join(dir, "openclaw.plugin.json"), JSON.stringify(manifest), "utf-8");
+  fs.writeFileSync(path.join(dir, "grokbot.plugin.json"), JSON.stringify(manifest), "utf-8");
 }
 
 function writeTextFile(rootDir: string, relativePath: string, value: string) {
@@ -74,7 +74,7 @@ function createPluginCandidate(params: {
   rootDir: string;
   sourceName?: string;
   origin: "bundled" | "global" | "workspace" | "config";
-  format?: "openclaw" | "bundle";
+  format?: "grokbot" | "bundle";
   bundleFormat?: "codex" | "claude" | "cursor";
   packageName?: string;
   packageVersion?: string;
@@ -105,10 +105,10 @@ function createMsteamsClawHubInstallRecord(
 ): PluginInstallRecord {
   const record: PluginInstallRecord = {
     source: "clawhub",
-    spec: "clawhub:@openclaw/msteams",
+    spec: "clawhub:@grokbot/msteams",
     installPath,
     clawhubUrl: "https://clawhub.ai",
-    clawhubPackage: "@openclaw/msteams",
+    clawhubPackage: "@grokbot/msteams",
     clawhubChannel: "official",
   };
   return { ...record, ...overrides };
@@ -125,7 +125,7 @@ function resolveMsteamsClawHubTrust(overrides: Partial<PluginInstallRecord> = {}
       createPluginCandidate({
         idHint: "msteams",
         rootDir: dir,
-        packageName: "@openclaw/msteams",
+        packageName: "@grokbot/msteams",
         origin: "global",
       }),
     ],
@@ -140,11 +140,11 @@ function resolveDiffsNpmTrust(overrides: Partial<PluginInstallRecord> = {}) {
     installRecords: {
       diffs: {
         source: "npm",
-        spec: "@openclaw/diffs",
+        spec: "@grokbot/diffs",
         installPath: dir,
-        resolvedName: "@openclaw/diffs",
+        resolvedName: "@grokbot/diffs",
         resolvedVersion: "2026.7.16",
-        resolvedSpec: "@openclaw/diffs@2026.7.16",
+        resolvedSpec: "@grokbot/diffs@2026.7.16",
         ...overrides,
       },
     },
@@ -152,7 +152,7 @@ function resolveDiffsNpmTrust(overrides: Partial<PluginInstallRecord> = {}) {
       createPluginCandidate({
         idHint: "diffs",
         rootDir: dir,
-        packageName: "@openclaw/diffs",
+        packageName: "@grokbot/diffs",
         origin: "global",
       }),
     ],
@@ -261,8 +261,8 @@ function prepareLinkedManifestFixture(params: { id: string; mode: "symlink" | "h
 } {
   const rootDir = makeTempDir();
   const outsideDir = makeTempDir();
-  const outsideManifest = path.join(outsideDir, "openclaw.plugin.json");
-  const linkedManifest = path.join(rootDir, "openclaw.plugin.json");
+  const outsideManifest = path.join(outsideDir, "grokbot.plugin.json");
+  const linkedManifest = path.join(rootDir, "grokbot.plugin.json");
   fs.writeFileSync(path.join(rootDir, "index.ts"), "export default function () {}", "utf-8");
   fs.writeFileSync(
     outsideManifest,
@@ -317,7 +317,7 @@ function loadRegistryForMinHostVersionCase(params: {
         origin: "global",
         packageManifest: {
           install: {
-            npmSpec: "@openclaw/synology-chat",
+            npmSpec: "@grokbot/synology-chat",
             minHostVersion: params.minHostVersion,
           },
         },
@@ -343,7 +343,7 @@ function loadRegistryForPluginApiCase(params: {
         origin: params.origin ?? "global",
         packageManifest: {
           install: {
-            npmSpec: "@openclaw/synology-chat",
+            npmSpec: "@grokbot/synology-chat",
             minHostVersion: ">=2026.4.25",
           },
           compat: {
@@ -480,12 +480,12 @@ describe("loadPluginManifestRegistry", () => {
     fs.writeFileSync(
       path.join(pluginDir, "package.json"),
       JSON.stringify({
-        name: "@openclaw/cached-manifest",
-        openclaw: { extensions: ["./index.js"] },
+        name: "@grokbot/cached-manifest",
+        grokbot: { extensions: ["./index.js"] },
       }),
       "utf-8",
     );
-    const manifestPath = path.join(pluginDir, "openclaw.plugin.json");
+    const manifestPath = path.join(pluginDir, "grokbot.plugin.json");
     writeManifest(pluginDir, {
       id: "cached-manifest",
       name: "Before",
@@ -892,7 +892,7 @@ describe("loadPluginManifestRegistry", () => {
     { name: "complete records", overrides: {} },
     {
       name: "versioned ClawHub specs",
-      overrides: { spec: "clawhub:@openclaw/msteams@2026.6.11" },
+      overrides: { spec: "clawhub:@grokbot/msteams@2026.6.11" },
     },
     {
       name: "legacy spec-only records",
@@ -904,15 +904,15 @@ describe("loadPluginManifestRegistry", () => {
     },
     {
       name: "matching npm resolved specs",
-      overrides: { resolvedSpec: "@openclaw/msteams@2026.6.11" },
+      overrides: { resolvedSpec: "@grokbot/msteams@2026.6.11" },
     },
     {
       name: "matching ClawHub resolved specs",
-      overrides: { resolvedSpec: "clawhub:@openclaw/msteams@2026.6.11" },
+      overrides: { resolvedSpec: "clawhub:@grokbot/msteams@2026.6.11" },
     },
     {
       name: "matching resolved package names",
-      overrides: { resolvedName: "@openclaw/msteams" },
+      overrides: { resolvedName: "@grokbot/msteams" },
     },
   ] satisfies Array<{ name: string; overrides: Partial<PluginInstallRecord> }>)(
     "marks official npm-only ClawHub installs with $name as trusted",
@@ -940,19 +940,19 @@ describe("loadPluginManifestRegistry", () => {
     },
     {
       name: "conflicting ClawHub package",
-      overrides: { clawhubPackage: "@openclaw/line" },
+      overrides: { clawhubPackage: "@grokbot/line" },
     },
     {
       name: "conflicting requested spec",
-      overrides: { spec: "clawhub:@openclaw/line" },
+      overrides: { spec: "clawhub:@grokbot/line" },
     },
     {
       name: "conflicting npm resolved spec",
-      overrides: { resolvedSpec: "@openclaw/line@2026.6.11" },
+      overrides: { resolvedSpec: "@grokbot/line@2026.6.11" },
     },
     {
       name: "conflicting ClawHub resolved spec",
-      overrides: { resolvedSpec: "clawhub:@openclaw/line@2026.6.11" },
+      overrides: { resolvedSpec: "clawhub:@grokbot/line@2026.6.11" },
     },
     {
       name: "blank ClawHub package",
@@ -960,11 +960,11 @@ describe("loadPluginManifestRegistry", () => {
     },
     {
       name: "malformed ClawHub package",
-      overrides: { clawhubPackage: "@openclaw/msteams@2026.6.11" },
+      overrides: { clawhubPackage: "@grokbot/msteams@2026.6.11" },
     },
     {
       name: "malformed requested spec",
-      overrides: { spec: "@openclaw/msteams" },
+      overrides: { spec: "@grokbot/msteams" },
     },
     {
       name: "malformed resolved spec",
@@ -972,11 +972,11 @@ describe("loadPluginManifestRegistry", () => {
     },
     {
       name: "conflicting resolved package name",
-      overrides: { resolvedName: "@openclaw/line" },
+      overrides: { resolvedName: "@grokbot/line" },
     },
     {
       name: "malformed resolved package name",
-      overrides: { resolvedName: "@openclaw/msteams@2026.6.11" },
+      overrides: { resolvedName: "@grokbot/msteams@2026.6.11" },
     },
     {
       name: "missing package identities",
@@ -991,7 +991,7 @@ describe("loadPluginManifestRegistry", () => {
       overrides: {
         clawhubPackage: undefined,
         spec: undefined,
-        resolvedSpec: "@openclaw/msteams@2026.6.11",
+        resolvedSpec: "@grokbot/msteams@2026.6.11",
       },
     },
   ] satisfies Array<{ name: string; overrides: Partial<PluginInstallRecord> }>)(
@@ -1016,7 +1016,7 @@ describe("loadPluginManifestRegistry", () => {
         createPluginCandidate({
           idHint: "msteams",
           rootDir: dir,
-          packageName: "@openclaw/msteams",
+          packageName: "@grokbot/msteams",
           origin: "config",
         }),
       ],
@@ -1033,10 +1033,10 @@ describe("loadPluginManifestRegistry", () => {
       installRecords: {
         "diagnostics-otel": {
           source: "clawhub",
-          spec: "clawhub:@openclaw/diagnostics-otel",
+          spec: "clawhub:@grokbot/diagnostics-otel",
           installPath: dir,
           clawhubUrl: "https://example.invalid",
-          clawhubPackage: "@openclaw/diagnostics-otel",
+          clawhubPackage: "@grokbot/diagnostics-otel",
           clawhubChannel: "official",
         },
       },
@@ -1044,7 +1044,7 @@ describe("loadPluginManifestRegistry", () => {
         createPluginCandidate({
           idHint: "diagnostics-otel",
           rootDir: dir,
-          packageName: "@openclaw/diagnostics-otel",
+          packageName: "@grokbot/diagnostics-otel",
           origin: "global",
         }),
       ],
@@ -1061,7 +1061,7 @@ describe("loadPluginManifestRegistry", () => {
       installRecords: {
         "diagnostics-otel": {
           source: "clawhub",
-          spec: "clawhub:@openclaw/diagnostics-otel@2026.5.18",
+          spec: "clawhub:@grokbot/diagnostics-otel@2026.5.18",
           installPath: dir,
         },
       },
@@ -1069,7 +1069,7 @@ describe("loadPluginManifestRegistry", () => {
         createPluginCandidate({
           idHint: "diagnostics-otel",
           rootDir: dir,
-          packageName: "@openclaw/diagnostics-otel",
+          packageName: "@grokbot/diagnostics-otel",
           origin: "global",
         }),
       ],
@@ -1086,18 +1086,18 @@ describe("loadPluginManifestRegistry", () => {
       installRecords: {
         "diagnostics-otel": {
           source: "npm",
-          spec: "@openclaw/diagnostics-otel",
+          spec: "@grokbot/diagnostics-otel",
           installPath: dir,
-          resolvedName: "@openclaw/diagnostics-otel",
+          resolvedName: "@grokbot/diagnostics-otel",
           resolvedVersion: "2026.5.18",
-          resolvedSpec: "@openclaw/diagnostics-otel@2026.5.18",
+          resolvedSpec: "@grokbot/diagnostics-otel@2026.5.18",
         },
       },
       candidates: [
         createPluginCandidate({
           idHint: "diagnostics-otel",
           rootDir: dir,
-          packageName: "@openclaw/diagnostics-otel",
+          packageName: "@grokbot/diagnostics-otel",
           origin: "config",
         }),
       ],
@@ -1119,7 +1119,7 @@ describe("loadPluginManifestRegistry", () => {
         "diagnostics-prometheus": {
           source: "npm",
           installPath: dir,
-          resolvedName: "@openclaw/diagnostics-prometheus",
+          resolvedName: "@grokbot/diagnostics-prometheus",
           resolvedVersion: "2026.5.3",
         },
       },
@@ -1127,13 +1127,13 @@ describe("loadPluginManifestRegistry", () => {
         createPluginCandidate({
           idHint: "diagnostics-prometheus",
           rootDir: dir,
-          packageName: "@openclaw/diagnostics-prometheus",
+          packageName: "@grokbot/diagnostics-prometheus",
           origin: "global",
         }),
         createPluginCandidate({
           idHint: "diagnostics-prometheus",
           rootDir: dir,
-          packageName: "@openclaw/diagnostics-prometheus",
+          packageName: "@grokbot/diagnostics-prometheus",
           origin: "config",
         }),
       ],
@@ -1156,7 +1156,7 @@ describe("loadPluginManifestRegistry", () => {
         createPluginCandidate({
           idHint: "diagnostics-prometheus",
           rootDir: dir,
-          packageName: "@openclaw/diagnostics-prometheus",
+          packageName: "@grokbot/diagnostics-prometheus",
           origin: "global",
         }),
       ],
@@ -1175,7 +1175,7 @@ describe("loadPluginManifestRegistry", () => {
         createPluginCandidate({
           idHint: "msteams",
           rootDir: dir,
-          packageName: "@openclaw/msteams",
+          packageName: "@grokbot/msteams",
           origin: "global",
         }),
       ],
@@ -1676,7 +1676,7 @@ describe("loadPluginManifestRegistry", () => {
     expectDiagnosticFields(registry, {
       level: "warn",
       pluginId: "external-chat",
-      source: path.join(dir, "openclaw.plugin.json"),
+      source: path.join(dir, "grokbot.plugin.json"),
       messageIncludes: "without channelConfigs metadata",
     });
   });
@@ -1741,17 +1741,17 @@ describe("loadPluginManifestRegistry", () => {
   it("hydrates supplemental official external catalog contracts for lagging npm manifests", () => {
     const dir = makeTempDir();
     writeManifest(dir, {
-      id: "wecom-openclaw-plugin",
+      id: "wecom-grokbot-plugin",
       channels: ["wecom"],
       configSchema: { type: "object" },
     });
 
     const registry = loadRegistry([
       createPluginCandidate({
-        idHint: "wecom-openclaw-plugin",
+        idHint: "wecom-grokbot-plugin",
         rootDir: dir,
         origin: "global",
-        packageName: "@wecom/wecom-openclaw-plugin",
+        packageName: "@wecom/wecom-grokbot-plugin",
       }),
     ]);
 
@@ -1780,7 +1780,7 @@ describe("loadPluginManifestRegistry", () => {
         idHint: "diffs",
         rootDir: dir,
         origin: "global",
-        packageName: "@openclaw/diffs",
+        packageName: "@grokbot/diffs",
       }),
     ]);
 
@@ -1790,7 +1790,7 @@ describe("loadPluginManifestRegistry", () => {
   it("fills missing official external catalog descriptors for partial npm channel configs", () => {
     const dir = makeTempDir();
     writeManifest(dir, {
-      id: "wecom-openclaw-plugin",
+      id: "wecom-grokbot-plugin",
       channels: ["wecom"],
       configSchema: { type: "object" },
       channelConfigs: {
@@ -1808,10 +1808,10 @@ describe("loadPluginManifestRegistry", () => {
 
     const registry = loadRegistry([
       createPluginCandidate({
-        idHint: "wecom-openclaw-plugin",
+        idHint: "wecom-grokbot-plugin",
         rootDir: dir,
         origin: "global",
-        packageName: "@wecom/wecom-openclaw-plugin",
+        packageName: "@wecom/wecom-grokbot-plugin",
       }),
     ]);
 
@@ -1835,7 +1835,7 @@ describe("loadPluginManifestRegistry", () => {
     const dir = makeTempDir();
     writeTextFile(
       dir,
-      "openclaw.plugin.json",
+      "grokbot.plugin.json",
       JSON.stringify({
         id: "external-chat",
         channels: ["safe-chat"],
@@ -1934,7 +1934,7 @@ describe("loadPluginManifestRegistry", () => {
     expectDiagnosticFields(registry, {
       level: "warn",
       pluginId: "outside-provider",
-      source: path.join(pluginDir, "openclaw.plugin.json"),
+      source: path.join(pluginDir, "grokbot.plugin.json"),
       messageIncludes: "providerCatalogEntry must resolve inside the plugin root",
     });
   });
@@ -1961,7 +1961,7 @@ describe("loadPluginManifestRegistry", () => {
     expectDiagnosticFields(registry, {
       level: "warn",
       pluginId: "absolute-provider",
-      source: path.join(dir, "openclaw.plugin.json"),
+      source: path.join(dir, "grokbot.plugin.json"),
       messageIncludes: "providerCatalogEntry must resolve inside the plugin root",
     });
   });
@@ -1988,7 +1988,7 @@ describe("loadPluginManifestRegistry", () => {
     expectDiagnosticFields(registry, {
       level: "warn",
       pluginId: "absolute-catalog",
-      source: path.join(dir, "openclaw.plugin.json"),
+      source: path.join(dir, "grokbot.plugin.json"),
       messageIncludes: "providerCatalogEntry must resolve inside the plugin root",
     });
   });
@@ -2024,7 +2024,7 @@ describe("loadPluginManifestRegistry", () => {
     expectDiagnosticFields(registry, {
       level: "warn",
       pluginId: "symlink-provider",
-      source: path.join(dir, "openclaw.plugin.json"),
+      source: path.join(dir, "grokbot.plugin.json"),
       messageIncludes: "providerCatalogEntry must resolve inside the plugin root",
     });
   });
@@ -2060,7 +2060,7 @@ describe("loadPluginManifestRegistry", () => {
     expectDiagnosticFields(registry, {
       level: "warn",
       pluginId: "fallback-symlink-provider",
-      source: path.join(dir, "openclaw.plugin.json"),
+      source: path.join(dir, "grokbot.plugin.json"),
       messageIncludes: "providerCatalogEntry must resolve inside the plugin root",
     });
   });
@@ -2099,7 +2099,7 @@ describe("loadPluginManifestRegistry", () => {
     expectDiagnosticFields(registry, {
       level: "warn",
       pluginId: "hardlink-provider",
-      source: path.join(dir, "openclaw.plugin.json"),
+      source: path.join(dir, "grokbot.plugin.json"),
       messageIncludes: "providerCatalogEntry must resolve inside the plugin root",
     });
   });
@@ -2138,7 +2138,7 @@ describe("loadPluginManifestRegistry", () => {
     expectDiagnosticFields(registry, {
       level: "warn",
       pluginId: "fallback-hardlink-provider",
-      source: path.join(dir, "openclaw.plugin.json"),
+      source: path.join(dir, "grokbot.plugin.json"),
       messageIncludes: "providerCatalogEntry must resolve inside the plugin root",
     });
   });
@@ -2418,7 +2418,7 @@ describe("loadPluginManifestRegistry", () => {
     writeManifest(dir, {
       id: "workflow-harness",
       contracts: {
-        agentToolResultMiddleware: ["openclaw", "codex"],
+        agentToolResultMiddleware: ["grokbot", "codex"],
         trustedToolPolicies: ["workflow-budget"],
       },
       configSchema: { type: "object" },
@@ -2431,7 +2431,7 @@ describe("loadPluginManifestRegistry", () => {
     });
 
     expect(registry.plugins[0]?.contracts).toEqual({
-      agentToolResultMiddleware: ["openclaw", "codex"],
+      agentToolResultMiddleware: ["grokbot", "codex"],
       trustedToolPolicies: ["workflow-budget"],
     });
   });
@@ -2524,7 +2524,7 @@ describe("loadPluginManifestRegistry", () => {
         idHint: "telegram",
         rootDir: dir,
         origin: "bundled",
-        bundledManifestPath: path.join(dir, "openclaw.plugin.json"),
+        bundledManifestPath: path.join(dir, "grokbot.plugin.json"),
         bundledManifest: {
           id: "telegram",
           configSchema: { type: "object" },
@@ -2649,20 +2649,20 @@ describe("loadPluginManifestRegistry", () => {
       name: "skips plugins whose minHostVersion is newer than the current host",
       minHostVersion: ">=2026.3.22",
       env: { OPENCLAW_VERSION: "2026.3.21" } as NodeJS.ProcessEnv,
-      expectedMessage: "plugin requires OpenClaw >=2026.3.22, but this host is 2026.3.21",
+      expectedMessage: "plugin requires GrokBot >=2026.3.22, but this host is 2026.3.21",
       expectWarn: true,
     },
     {
       name: "skips plugins whose beta minHostVersion is newer than the current host",
       minHostVersion: ">=2026.5.1-beta.1",
       env: { OPENCLAW_VERSION: "2026.4.30" } as NodeJS.ProcessEnv,
-      expectedMessage: "plugin requires OpenClaw >=2026.5.1-beta.1, but this host is 2026.4.30",
+      expectedMessage: "plugin requires GrokBot >=2026.5.1-beta.1, but this host is 2026.4.30",
       expectWarn: true,
     },
     {
       name: "rejects invalid minHostVersion metadata",
       minHostVersion: "2026.3.22",
-      expectedMessage: "plugin manifest invalid | openclaw.install.minHostVersion must use",
+      expectedMessage: "plugin manifest invalid | grokbot.install.minHostVersion must use",
       expectWarn: false,
     },
     {
@@ -2708,7 +2708,7 @@ describe("loadPluginManifestRegistry", () => {
           origin: "global",
           packageManifest: {
             install: {
-              npmSpec: "@openclaw/codex",
+              npmSpec: "@grokbot/codex",
               minHostVersion: "2026.3.22",
             },
           },
@@ -2717,7 +2717,7 @@ describe("loadPluginManifestRegistry", () => {
     });
 
     expect(registry.plugins.map((plugin) => plugin.id)).toEqual(["codex"]);
-    expectNoRegistryDiagnosticContains(registry, "openclaw.install.minHostVersion must use");
+    expectNoRegistryDiagnosticContains(registry, "grokbot.install.minHostVersion must use");
   });
 
   it("does not runtime-gate bundled source plugins by install minHostVersion", () => {
@@ -2733,7 +2733,7 @@ describe("loadPluginManifestRegistry", () => {
           origin: "bundled",
           packageManifest: {
             install: {
-              npmSpec: "@openclaw/codex",
+              npmSpec: "@grokbot/codex",
               minHostVersion: ">=2026.5.1-beta.1",
             },
           },
@@ -2743,7 +2743,7 @@ describe("loadPluginManifestRegistry", () => {
     });
 
     expect(registry.plugins.map((plugin) => plugin.id)).toContain("codex");
-    expectNoRegistryDiagnosticContains(registry, "requires OpenClaw");
+    expectNoRegistryDiagnosticContains(registry, "requires GrokBot");
   });
 
   it("skips installed plugins whose package plugin API range is newer than the current host", () => {
@@ -2777,7 +2777,7 @@ describe("loadPluginManifestRegistry", () => {
     expect(registry.plugins).toStrictEqual([]);
     expectRegistryDiagnosticContains(
       registry,
-      "plugin manifest invalid | package.json openclaw.compat.pluginApi must be a string",
+      "plugin manifest invalid | package.json grokbot.compat.pluginApi must be a string",
     );
     expect(registry.diagnostics.map((diag) => diag.level)).toContain("error");
   });
@@ -2896,23 +2896,23 @@ describe("loadPluginManifestRegistry", () => {
   it("suppresses duplicate warning when global candidates come from the same package artifact", () => {
     const firstDir = makeTempDir();
     const secondDir = makeTempDir();
-    const manifest = { id: "opik-openclaw", configSchema: { type: "object" } };
+    const manifest = { id: "opik-grokbot", configSchema: { type: "object" } };
     writeManifest(firstDir, manifest);
     writeManifest(secondDir, manifest);
 
     const candidates: PluginCandidate[] = [
       createPluginCandidate({
-        idHint: "opik-openclaw",
+        idHint: "opik-grokbot",
         rootDir: firstDir,
         origin: "global",
-        packageName: "@opik/opik-openclaw",
+        packageName: "@opik/opik-grokbot",
         packageVersion: "0.2.14",
       }),
       createPluginCandidate({
-        idHint: "opik-openclaw",
+        idHint: "opik-grokbot",
         rootDir: secondDir,
         origin: "global",
-        packageName: "@opik/opik-openclaw",
+        packageName: "@opik/opik-grokbot",
         packageVersion: "0.2.14",
       }),
     ];
@@ -3200,7 +3200,7 @@ describe("loadPluginManifestRegistry", () => {
         origin: "global",
         packageManifest: {
           install: {
-            npmSpec: "@openclaw/synology-chat",
+            npmSpec: "@grokbot/synology-chat",
             minHostVersion: ">=2026.3.22",
           },
         },

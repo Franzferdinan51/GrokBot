@@ -7,7 +7,7 @@ read_when:
   - Reviewing what diagnostics data is recorded or redacted
 ---
 
-OpenClaw can build a local diagnostics `.zip` for bug reports: sanitized Gateway
+GrokBot can build a local diagnostics `.zip` for bug reports: sanitized Gateway
 status, health, logs, config shape, and recent payload-free stability events.
 
 Treat diagnostics bundles like secrets until reviewed. Payloads and credentials
@@ -17,19 +17,19 @@ host-level runtime state.
 ## Quick start
 
 ```bash
-openclaw gateway diagnostics export
+grokbot gateway diagnostics export
 ```
 
 Prints the written zip path. Choose an output path:
 
 ```bash
-openclaw gateway diagnostics export --output openclaw-diagnostics.zip
+grokbot gateway diagnostics export --output grokbot-diagnostics.zip
 ```
 
 For automation:
 
 ```bash
-openclaw gateway diagnostics export --json
+grokbot gateway diagnostics export --json
 ```
 
 ## Chat command
@@ -38,24 +38,24 @@ Owners can run `/diagnostics [note]` in any conversation to request a local
 Gateway export as one copy-pasteable support report:
 
 1. Send `/diagnostics`, optionally with a short note (`/diagnostics bad tool choice`).
-2. OpenClaw sends a preamble and asks for one explicit exec approval, which runs
-   `openclaw gateway diagnostics export --json`. Do not approve diagnostics via
+2. GrokBot sends a preamble and asks for one explicit exec approval, which runs
+   `grokbot gateway diagnostics export --json`. Do not approve diagnostics via
    an allow-all rule.
-3. After approval, OpenClaw replies with the local bundle path, manifest
+3. After approval, GrokBot replies with the local bundle path, manifest
    summary, privacy notes, and relevant session ids.
 
-In group chats, an owner can still run `/diagnostics`, but OpenClaw sends the
+In group chats, an owner can still run `/diagnostics`, but GrokBot sends the
 export result, approval prompts, and Codex session/thread breakdown to the
 owner privately. The group only sees a short notice that diagnostics were sent
 privately. If no private owner route exists, the command fails closed and asks
 the owner to run it from a DM.
 
 When the active session uses the native OpenAI Codex harness, the same exec
-approval also covers an OpenAI feedback upload for the Codex threads OpenClaw
+approval also covers an OpenAI feedback upload for the Codex threads GrokBot
 knows about. That upload is separate from the local Gateway zip and only
 happens for Codex harness sessions. The approval prompt states that approving
 also sends Codex feedback, without listing Codex session or thread ids. After
-approval, the reply lists channels, OpenClaw session ids, Codex thread ids, and
+approval, the reply lists channels, GrokBot session ids, Codex thread ids, and
 local resume commands for the threads that were sent to OpenAI. Denying or
 ignoring the approval skips the export, the Codex feedback upload, and the
 Codex id list.
@@ -118,38 +118,38 @@ embedded run active.
 Inspect the live recorder:
 
 ```bash
-openclaw gateway stability
-openclaw gateway stability --type payload.large
-openclaw gateway stability --json
+grokbot gateway stability
+grokbot gateway stability --type payload.large
+grokbot gateway stability --json
 ```
 
 Inspect the newest persisted bundle after a fatal exit, shutdown timeout, or
 restart startup failure:
 
 ```bash
-openclaw gateway stability --bundle latest
+grokbot gateway stability --bundle latest
 ```
 
 Create a diagnostics zip from the newest persisted bundle:
 
 ```bash
-openclaw gateway stability --bundle latest --export
+grokbot gateway stability --bundle latest --export
 ```
 
-Persisted bundles live under `~/.openclaw/logs/stability/` when events exist.
+Persisted bundles live under `~/.grokbot/logs/stability/` when events exist.
 
 ## Useful options
 
 ```bash
-openclaw gateway diagnostics export \
-  --output openclaw-diagnostics.zip \
+grokbot gateway diagnostics export \
+  --output grokbot-diagnostics.zip \
   --log-lines 5000 \
   --log-bytes 1000000
 ```
 
 | Flag                    | Default                                                                       | Description                                        |
 | ----------------------- | ----------------------------------------------------------------------------- | -------------------------------------------------- |
-| `--output <path>`       | `$OPENCLAW_STATE_DIR/logs/support/openclaw-diagnostics-<timestamp>-<pid>.zip` | Write to a specific zip path (or directory).       |
+| `--output <path>`       | `$OPENCLAW_STATE_DIR/logs/support/grokbot-diagnostics-<timestamp>-<pid>.zip` | Write to a specific zip path (or directory).       |
 | `--log-lines <count>`   | `5000`                                                                        | Maximum sanitized log lines to include.            |
 | `--log-bytes <bytes>`   | `1000000`                                                                     | Maximum log bytes to inspect.                      |
 | `--url <url>`           | -                                                                             | Gateway WebSocket URL for status/health snapshots. |

@@ -2,17 +2,17 @@ import crypto from "node:crypto";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { setTimeout as sleep } from "node:timers/promises";
-import { resolveAgentDir, resolveAgentWorkspaceDir } from "openclaw/plugin-sdk/agent-runtime";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import type { OpenClawPluginApi } from "openclaw/plugin-sdk/plugin-entry";
-import { parseAgentSessionKey } from "openclaw/plugin-sdk/routing";
+import { resolveAgentDir, resolveAgentWorkspaceDir } from "grokbot/plugin-sdk/agent-runtime";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import type { OpenClawPluginApi } from "grokbot/plugin-sdk/plugin-entry";
+import { parseAgentSessionKey } from "grokbot/plugin-sdk/routing";
 import {
   cleanupSessionLifecycleArtifacts,
   formatSqliteSessionFileMarker,
   patchSessionEntry,
-} from "openclaw/plugin-sdk/session-store-runtime";
-import { readSessionTranscriptEvents } from "openclaw/plugin-sdk/session-transcript-runtime";
-import { tempWorkspace, resolvePreferredOpenClawTmpDir } from "openclaw/plugin-sdk/temp-path";
+} from "grokbot/plugin-sdk/session-store-runtime";
+import { readSessionTranscriptEvents } from "grokbot/plugin-sdk/session-transcript-runtime";
+import { tempWorkspace, resolvePreferredOpenClawTmpDir } from "grokbot/plugin-sdk/temp-path";
 import {
   applyActiveMemoryRuntimeConfigSnapshot,
   isMissingRegisteredMemoryToolsError,
@@ -186,7 +186,7 @@ async function runRecallSubagent(params: {
     ? undefined
     : await tempWorkspace({
         rootDir: resolvePreferredOpenClawTmpDir(),
-        prefix: "openclaw-active-memory-",
+        prefix: "grokbot-active-memory-",
       });
   const tempDir = transientWorkspace?.dir;
   const persistedDir = params.config.persistTranscripts

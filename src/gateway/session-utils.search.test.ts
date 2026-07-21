@@ -3,7 +3,7 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { afterEach, beforeAll, describe, expect, test } from "vitest";
 import { ANTHROPIC_CONTEXT_1M_TOKENS } from "../agents/context-resolution.js";
 import {
@@ -17,8 +17,8 @@ import {
   replaceSessionEntry,
 } from "../config/sessions/session-accessor.js";
 import { registerAgentRunContext, resetAgentEventsForTest } from "../infra/agent-events.js";
-import { closeOpenClawAgentDatabasesForTest } from "../state/openclaw-agent-db.js";
-import { closeOpenClawStateDatabaseForTest } from "../state/openclaw-state-db.js";
+import { closeOpenClawAgentDatabasesForTest } from "../state/grokbot-agent-db.js";
+import { closeOpenClawStateDatabaseForTest } from "../state/grokbot-state-db.js";
 import {
   buildGatewaySessionInfo,
   filterAndSortSessionEntries,
@@ -385,7 +385,7 @@ describe("listSessionsFromStore search", () => {
           updatedAt: Date.now(),
         } as SessionEntry,
       },
-      storePath: "/tmp/openclaw-session-search-warm.json",
+      storePath: "/tmp/grokbot-session-search-warm.json",
       opts: { search: "anthropic" },
     });
   });
@@ -721,7 +721,7 @@ describe("listSessionsFromStore search", () => {
 
   test("prefers persisted estimated session cost from the store", async () => {
     await withAnthropicTranscriptFixture({
-      prefix: "openclaw-session-utils-store-cost-",
+      prefix: "grokbot-session-utils-store-cost-",
       run: ({ storePath, now }) => {
         const result = listMainSession({
           cfg: baseCfg,
@@ -752,7 +752,7 @@ describe("listSessionsFromStore search", () => {
 
   test("falls back to transcript usage for totalTokens and zero estimatedCostUsd", async () => {
     await withFreeOpenAiTranscriptFixture({
-      prefix: "openclaw-session-utils-zero-cost-",
+      prefix: "grokbot-session-utils-zero-cost-",
       run: ({ storePath, now }) => {
         const result = listMainSession({
           cfg: baseCfg,
@@ -772,7 +772,7 @@ describe("listSessionsFromStore search", () => {
 
   test("falls back to transcript usage for totalTokens and estimatedCostUsd, and derives contextTokens from the resolved model", async () => {
     await withAnthropicTranscriptFixture({
-      prefix: "openclaw-session-utils-",
+      prefix: "grokbot-session-utils-",
       run: ({ storePath, now }) => {
         const result = listMainSession({
           cfg: createAnthropicContext1mConfig(),
@@ -790,7 +790,7 @@ describe("listSessionsFromStore search", () => {
 
   test("chat history session metadata keeps model context and projects a catalog-pinned harness", async () => {
     await withAnthropicTranscriptFixture({
-      prefix: "openclaw-session-info-context-",
+      prefix: "grokbot-session-info-context-",
       run: ({ storePath, now }) => {
         const entry: SessionEntry = {
           sessionId: MAIN_SESSION_ID,
@@ -836,7 +836,7 @@ describe("listSessionsFromStore search", () => {
 
   test("uses subagent run model immediately for child sessions while transcript usage fills live totals", async () => {
     await withAnthropicTranscriptFixture({
-      prefix: "openclaw-session-utils-subagent-",
+      prefix: "grokbot-session-utils-subagent-",
       transcriptId: "sess-child",
       run: ({ storePath, now }) => {
         registerRunningSubagent({
@@ -866,7 +866,7 @@ describe("listSessionsFromStore search", () => {
 
   test("keeps a running subagent model when transcript fallback still reflects an older run", async () => {
     await withAnthropicTranscriptFixture({
-      prefix: "openclaw-session-utils-subagent-stale-model-",
+      prefix: "grokbot-session-utils-subagent-stale-model-",
       transcriptId: "sess-child-stale",
       run: ({ storePath, now }) => {
         registerRunningSubagent({
@@ -896,7 +896,7 @@ describe("listSessionsFromStore search", () => {
 
   test("keeps the selected override model when runtime identity was intentionally cleared", async () => {
     await withAnthropicTranscriptFixture({
-      prefix: "openclaw-session-utils-cleared-runtime-model-",
+      prefix: "grokbot-session-utils-cleared-runtime-model-",
       transcriptId: "sess-override",
       run: ({ storePath, now }) => {
         const result = listMainSession({
@@ -916,7 +916,7 @@ describe("listSessionsFromStore search", () => {
 
   test("does not replace the current runtime model when transcript fallback is only for missing pricing", async () => {
     await withAnthropicTranscriptFixture({
-      prefix: "openclaw-session-utils-pricing-",
+      prefix: "grokbot-session-utils-pricing-",
       transcriptId: "sess-pricing",
       run: ({ storePath, now }) => {
         const result = listMainSession({

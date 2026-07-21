@@ -1,4 +1,4 @@
-// Generates setup codes used to pair external channels with OpenClaw.
+// Generates setup codes used to pair external channels with GrokBot.
 import os from "node:os";
 import {
   isCarrierGradeNatIpv4Address,
@@ -7,11 +7,11 @@ import {
   isLoopbackIpAddress,
   isRfc1918Ipv4Address,
   parseCanonicalIpAddress,
-} from "@openclaw/net-policy/ip";
+} from "@grokbot/net-policy/ip";
 import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalString,
-} from "@openclaw/normalization-core/string-coerce";
+} from "@grokbot/normalization-core/string-coerce";
 import { resolveGatewayPort } from "../config/paths.js";
 import type { OpenClawConfig } from "../config/types.js";
 import { normalizeSecretInputString, resolveSecretInputRef } from "../config/types.secrets.js";

@@ -1,10 +1,10 @@
 // Nextcloud Talk plugin module implements bot preflight behavior.
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
-import { parseStrictNonNegativeInteger } from "openclaw/plugin-sdk/number-runtime";
+import { formatErrorMessage } from "grokbot/plugin-sdk/error-runtime";
+import { parseStrictNonNegativeInteger } from "grokbot/plugin-sdk/number-runtime";
 import {
   readProviderJsonResponse,
   readResponseTextLimited,
-} from "openclaw/plugin-sdk/provider-http";
+} from "grokbot/plugin-sdk/provider-http";
 import { fetchWithSsrFGuard } from "../runtime-api.js";
 import type { ResolvedNextcloudTalkAccount } from "./accounts.js";
 import { resolveNextcloudTalkApiCredentials } from "./api-credentials.js";

@@ -1,17 +1,17 @@
 ---
-summary: "Use ElevenLabs speech, Scribe STT, and realtime transcription with OpenClaw"
+summary: "Use ElevenLabs speech, Scribe STT, and realtime transcription with GrokBot"
 read_when:
-  - You want ElevenLabs text-to-speech in OpenClaw
+  - You want ElevenLabs text-to-speech in GrokBot
   - You want ElevenLabs Scribe speech-to-text for audio attachments
   - You want ElevenLabs realtime transcription for Voice Call or Google Meet
 title: "ElevenLabs"
 ---
 
-OpenClaw uses ElevenLabs for text-to-speech, batch speech-to-text with Scribe
+GrokBot uses ElevenLabs for text-to-speech, batch speech-to-text with Scribe
 v2, and streaming STT with Scribe v2 Realtime. The plugin is bundled and
 enabled by default; no `plugins install` step is needed.
 
-| Capability               | OpenClaw surface                                                     | Default                  |
+| Capability               | GrokBot surface                                                     | Default                  |
 | ------------------------ | -------------------------------------------------------------------- | ------------------------ |
 | Text-to-speech           | `messages.tts` / `talk`                                              | `eleven_multilingual_v2` |
 | Batch speech-to-text     | `tools.media.audio`                                                  | `scribe_v2`              |
@@ -44,14 +44,14 @@ export ELEVENLABS_API_KEY="..."
 }
 ```
 
-Set `modelId` to `eleven_v3` to use ElevenLabs v3 TTS. OpenClaw keeps
+Set `modelId` to `eleven_v3` to use ElevenLabs v3 TTS. GrokBot keeps
 `eleven_multilingual_v2` as the default for existing installs.
 
 Discord voice channels use ElevenLabs' streaming TTS endpoint when ElevenLabs
 is the selected `voice.tts`/`messages.tts` provider: playback starts from the
-returned audio stream instead of waiting for OpenClaw to download the whole
+returned audio stream instead of waiting for GrokBot to download the whole
 audio file first. `latencyTier` maps to ElevenLabs' `optimize_streaming_latency`
-query parameter for models that accept it; OpenClaw omits that parameter for
+query parameter for models that accept it; GrokBot omits that parameter for
 `eleven_v3`, which rejects it.
 
 ## Speech-to-text
@@ -71,7 +71,7 @@ Use Scribe v2 for inbound audio attachments and short recorded voice segments:
 }
 ```
 
-OpenClaw sends multipart audio to ElevenLabs `/v1/speech-to-text` with
+GrokBot sends multipart audio to ElevenLabs `/v1/speech-to-text` with
 `model_id: "scribe_v2"`. Language hints map to `language_code` when present.
 
 ## Streaming STT

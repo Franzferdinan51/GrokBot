@@ -2,7 +2,7 @@
 import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   clearActiveEmbeddedRun,
@@ -488,7 +488,7 @@ describe("runPreparedReply media-only handling", () => {
         resolvedThinkLevel: "high",
         sessionEntry,
         sessionStore,
-        storePath: "/tmp/openclaw-sessions.json",
+        storePath: "/tmp/grokbot-sessions.json",
         modelState: {
           resolveDefaultThinkingLevel: async () => "high",
           resolveThinkingCatalog: async () => [
@@ -1156,7 +1156,7 @@ describe("runPreparedReply media-only handling", () => {
   });
 
   it("hydrates current image MediaPaths by extension when MediaTypes are missing", async () => {
-    const tmpDir = await mkdtemp(path.join(os.tmpdir(), "openclaw-followup-image-"));
+    const tmpDir = await mkdtemp(path.join(os.tmpdir(), "grokbot-followup-image-"));
     cleanupPaths.push(tmpDir);
     const imagePath = path.join(tmpDir, "inbound.png");
     await writeFile(
@@ -1331,7 +1331,7 @@ describe("runPreparedReply media-only handling", () => {
   });
 
   it("does not rehydrate current MediaPaths after image understanding enriched the prompt", async () => {
-    const tmpDir = await mkdtemp(path.join(os.tmpdir(), "openclaw-followup-image-"));
+    const tmpDir = await mkdtemp(path.join(os.tmpdir(), "grokbot-followup-image-"));
     cleanupPaths.push(tmpDir);
     const imagePath = path.join(tmpDir, "inbound.png");
     await writeFile(
@@ -1402,7 +1402,7 @@ describe("runPreparedReply media-only handling", () => {
   });
 
   it("rehydrates only current MediaPaths missing image understanding", async () => {
-    const tmpDir = await mkdtemp(path.join(os.tmpdir(), "openclaw-followup-image-"));
+    const tmpDir = await mkdtemp(path.join(os.tmpdir(), "grokbot-followup-image-"));
     cleanupPaths.push(tmpDir);
     const imagePath = path.join(tmpDir, "inbound.png");
     await writeFile(
@@ -1655,7 +1655,7 @@ describe("runPreparedReply media-only handling", () => {
         sessionId: "session-goal-interrupt",
         sessionEntry: activeEntry,
         sessionStore: { "session-key": activeEntry },
-        storePath: "/tmp/openclaw-session-store.json",
+        storePath: "/tmp/grokbot-session-store.json",
       }),
     );
     while (!activeRun.abortSignal.aborted) {
@@ -1667,7 +1667,7 @@ describe("runPreparedReply media-only handling", () => {
 
     await expect(runPromise).resolves.toEqual({ text: "ok" });
     expect(loadSessionEntryMock).toHaveBeenCalledWith({
-      storePath: "/tmp/openclaw-session-store.json",
+      storePath: "/tmp/grokbot-session-store.json",
       sessionKey: "session-key",
       readConsistency: "latest",
     });
@@ -1705,7 +1705,7 @@ describe("runPreparedReply media-only handling", () => {
         isNewSession: false,
         sessionEntry,
         sessionStore,
-        storePath: "/tmp/openclaw-session-store.json",
+        storePath: "/tmp/grokbot-session-store.json",
       }),
     );
 
@@ -1720,7 +1720,7 @@ describe("runPreparedReply media-only handling", () => {
         isNewSession: false,
         sessionEntry,
         sessionStore,
-        storePath: "/tmp/openclaw-session-store.json",
+        storePath: "/tmp/grokbot-session-store.json",
       }),
     );
 
@@ -2399,14 +2399,14 @@ describe("runPreparedReply media-only handling", () => {
           AmbientTranscriptMessageId: "35676",
           AmbientTranscriptTimestampMs: 1_710_000_000_000,
         },
-        storePath: "/tmp/openclaw-session-store.json",
+        storePath: "/tmp/grokbot-session-store.json",
       }),
     );
 
     const call = requireLastRunReplyAgentCall();
-    expect(call?.commandBody).toBe("[OpenClaw room event]");
+    expect(call?.commandBody).toBe("[GrokBot room event]");
     expect(call?.transcriptCommandBody).toBe("#35676 Keśava: No wtf");
-    expect(call?.followupRun.prompt).toBe("[OpenClaw room event]");
+    expect(call?.followupRun.prompt).toBe("[GrokBot room event]");
     expect(call?.followupRun.transcriptPrompt).toBe("#35676 Keśava: No wtf");
     expect(call?.followupRun.currentInboundEventKind).toBe("room_event");
     expect(call?.followupRun.currentInboundAudio).toBe(true);
@@ -2438,7 +2438,7 @@ describe("runPreparedReply media-only handling", () => {
       timestamp: 1_710_000_000_000,
     });
     expect(updateAmbientTranscriptWatermarkMock).toHaveBeenCalledWith({
-      storePath: "/tmp/openclaw-session-store.json",
+      storePath: "/tmp/grokbot-session-store.json",
       sessionKey: "session-key",
       key: '["telegram","","-100123",""]',
       messageId: "35676",
@@ -2448,7 +2448,7 @@ describe("runPreparedReply media-only handling", () => {
     expect(call?.followupRun.currentInboundContext?.text).toContain(
       "#35675 obviyus ->#35674: Are you fr fr",
     );
-    expect(call?.followupRun.currentInboundContext?.text).toContain("[OpenClaw room event]");
+    expect(call?.followupRun.currentInboundContext?.text).toContain("[GrokBot room event]");
     expect(call?.followupRun.currentInboundContext?.text).toContain(
       ROOM_EVENT_MESSAGE_TOOL_DIRECTIVE,
     );
@@ -2506,7 +2506,7 @@ describe("runPreparedReply media-only handling", () => {
     expect(call.shouldFollowup).toBe(true);
     expect(call.isActive).toBe(true);
     expect(call.resolvedQueue.mode).toBe("steer");
-    expect(call.followupRun.prompt).toBe("[OpenClaw room event]");
+    expect(call.followupRun.prompt).toBe("[GrokBot room event]");
     expect(call.followupRun.currentInboundEventKind).toBe("room_event");
     expect(call.followupRun.abortSignal).toBe(abortController.signal);
     expect(call.followupRun.currentInboundContext?.text).toContain("Current event:");
@@ -2824,8 +2824,8 @@ describe("runPreparedReply media-only handling", () => {
     const call = requireLastRunReplyAgentCall();
     expect(call?.commandBody).toContain(heartbeatPrompt);
     expect(call?.followupRun.prompt).toContain(heartbeatPrompt);
-    expect(call?.transcriptCommandBody).toBe("[OpenClaw heartbeat poll]");
-    expect(call?.followupRun.transcriptPrompt).toBe("[OpenClaw heartbeat poll]");
+    expect(call?.transcriptCommandBody).toBe("[GrokBot heartbeat poll]");
+    expect(call?.followupRun.transcriptPrompt).toBe("[GrokBot heartbeat poll]");
     expect(call?.followupRun.userTurnTranscriptRecorder?.message).toMatchObject({
       provenance: { kind: "internal_system", sourceTool: "heartbeat" },
     });
@@ -3319,8 +3319,8 @@ describe("runPreparedReply media-only handling", () => {
       expect(call?.commandBody).toContain("telegram-user-1");
       expect(call?.followupRun.prompt).toContain("A new session was started via /new or /reset.");
       expect(call?.followupRun.prompt).toContain("Sender (untrusted metadata):");
-      expect(call?.transcriptCommandBody).toBe(`[OpenClaw session ${startupAction}]`);
-      expect(call?.followupRun.transcriptPrompt).toBe(`[OpenClaw session ${startupAction}]`);
+      expect(call?.transcriptCommandBody).toBe(`[GrokBot session ${startupAction}]`);
+      expect(call?.followupRun.transcriptPrompt).toBe(`[GrokBot session ${startupAction}]`);
       expect(call?.followupRun.transcriptPrompt).not.toContain("Sender (untrusted metadata):");
     },
   );

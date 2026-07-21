@@ -2398,7 +2398,7 @@ describe("loadChatHistory filtering", () => {
         content: [
           {
             type: "text",
-            text: "[openclaw] missing tool result in session history; inserted synthetic error result for transcript repair.",
+            text: "[grokbot] missing tool result in session history; inserted synthetic error result for transcript repair.",
           },
         ],
       },
@@ -2424,11 +2424,11 @@ describe("loadChatHistory filtering", () => {
 
   it("keeps image-only user messages that carry transcript media paths", async () => {
     const messages = [
-      { role: "user", content: "", MediaPath: "/tmp/openclaw/user-upload.png" },
+      { role: "user", content: "", MediaPath: "/tmp/grokbot/user-upload.png" },
       {
         role: "user",
         content: "",
-        MediaPaths: ["/tmp/openclaw/first.png", "/tmp/openclaw/second.jpg"],
+        MediaPaths: ["/tmp/grokbot/first.png", "/tmp/grokbot/second.jpg"],
       },
       { role: "user", content: "" },
     ];
@@ -2452,7 +2452,7 @@ describe("loadChatHistory filtering", () => {
         content: [
           {
             type: "text",
-            text: "[openclaw] missing tool result in session history; inserted synthetic error result for transcript repair.",
+            text: "[grokbot] missing tool result in session history; inserted synthetic error result for transcript repair.",
           },
         ],
       },

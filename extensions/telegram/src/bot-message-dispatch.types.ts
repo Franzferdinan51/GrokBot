@@ -4,9 +4,9 @@ import type {
   OpenClawConfig,
   ReplyToMode,
   TelegramAccountConfig,
-} from "openclaw/plugin-sdk/config-contracts";
-import type { ReplyPayload } from "openclaw/plugin-sdk/reply-payload";
-import type { RuntimeEnv } from "openclaw/plugin-sdk/runtime-env";
+} from "grokbot/plugin-sdk/config-contracts";
+import type { ReplyPayload } from "grokbot/plugin-sdk/reply-payload";
+import type { RuntimeEnv } from "grokbot/plugin-sdk/runtime-env";
 import type { TelegramBotDeps } from "./bot-deps.js";
 import type { TelegramMessageContext } from "./bot-message-context.js";
 import type { SessionEntry } from "./bot-message-dispatch.runtime.js";

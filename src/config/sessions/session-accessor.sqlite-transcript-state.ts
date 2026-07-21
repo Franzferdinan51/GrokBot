@@ -3,7 +3,7 @@ import {
   executeSqliteQuerySync,
   executeSqliteQueryTakeFirstSync,
 } from "../../infra/kysely-sync.js";
-import type { OpenClawAgentDatabase } from "../../state/openclaw-agent-db.js";
+import type { OpenClawAgentDatabase } from "../../state/grokbot-agent-db.js";
 import { normalizeSqliteNumber } from "./session-accessor.sqlite-normalize.js";
 import { getSessionKysely, type ResolvedTranscriptScope } from "./session-accessor.sqlite-scope.js";
 import { deleteSessionTranscriptIndexInTransaction } from "./session-transcript-index.js";

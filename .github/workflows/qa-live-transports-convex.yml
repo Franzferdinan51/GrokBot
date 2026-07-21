@@ -279,7 +279,7 @@ jobs:
 
       - name: Run OpenAI candidate lane
         run: |
-          pnpm openclaw qa suite \
+          pnpm grokbot qa suite \
             --provider-mode mock-openai \
             --parity-pack agentic \
             --concurrency "${QA_PARITY_CONCURRENCY}" \
@@ -289,7 +289,7 @@ jobs:
 
       - name: Run Opus 4.8 lane
         run: |
-          pnpm openclaw qa suite \
+          pnpm grokbot qa suite \
             --provider-mode mock-openai \
             --parity-pack agentic \
             --concurrency "${QA_PARITY_CONCURRENCY}" \
@@ -299,7 +299,7 @@ jobs:
 
       - name: Generate parity report
         run: |
-          pnpm openclaw qa parity-report \
+          pnpm grokbot qa parity-report \
             --repo-root . \
             --candidate-summary .artifacts/qa-e2e/openai-candidate/qa-suite-summary.json \
             --baseline-summary .artifacts/qa-e2e/anthropic-baseline/qa-suite-summary.json \
@@ -372,7 +372,7 @@ jobs:
           mkdir -p "${output_dir}"
           printf 'Runtime token-efficiency lane started.\n' > "${output_dir}/runtime-lane-started.txt"
 
-          pnpm openclaw qa suite \
+          pnpm grokbot qa suite \
             --repo-root . \
             --provider-mode live-frontier \
             --runtime-parity-tier standard \
@@ -380,7 +380,7 @@ jobs:
             --concurrency "${QA_PARITY_CONCURRENCY}" \
             --model "${OPENCLAW_CI_OPENAI_MODEL}" \
             --alt-model "${OPENCLAW_CI_OPENAI_FALLBACK_MODEL}" \
-            --runtime-pair openclaw,codex \
+            --runtime-pair grokbot,codex \
             --fast \
             --allow-failures \
             --output-dir "${output_dir}/runtime-suite"
@@ -391,7 +391,7 @@ jobs:
         run: |
           set -euo pipefail
 
-          pnpm openclaw qa parity-report \
+          pnpm grokbot qa parity-report \
             --repo-root . \
             --runtime-axis \
             --token-efficiency \
@@ -485,7 +485,7 @@ jobs:
             printf '%s\n' "${requested}"
           }
 
-          matrix_help="$(pnpm openclaw qa matrix --help 2>&1)"
+          matrix_help="$(pnpm grokbot qa matrix --help 2>&1)"
           matrix_profile="$(resolve_matrix_profile "${INPUT_MATRIX_PROFILE}" "${matrix_help}")"
           if [[ "${matrix_profile}" != "${INPUT_MATRIX_PROFILE}" ]]; then
             echo "Selected target does not support Matrix profile '${INPUT_MATRIX_PROFILE}'; using '${matrix_profile}'."
@@ -496,7 +496,7 @@ jobs:
 
           for attempt in $(seq 1 "${MATRIX_ATTEMPTS}"); do
             attempt_output_dir="${output_dir}/attempt-${attempt}"
-            if pnpm openclaw qa matrix \
+            if pnpm grokbot qa matrix \
               --repo-root . \
               --output-dir "${attempt_output_dir}" \
               --provider-mode "${MATRIX_PROVIDER_MODE}" \
@@ -607,7 +607,7 @@ jobs:
           output_dir=".artifacts/qa-e2e/matrix-live-${{ matrix.profile }}-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
           echo "output_dir=${output_dir}" >> "$GITHUB_OUTPUT"
 
-          pnpm openclaw qa matrix \
+          pnpm grokbot qa matrix \
             --repo-root . \
             --output-dir "${output_dir}" \
             --provider-mode live-frontier \
@@ -702,7 +702,7 @@ jobs:
 
           echo "output_dir=${output_dir}" >> "$GITHUB_OUTPUT"
 
-          pnpm openclaw qa telegram \
+          pnpm grokbot qa telegram \
             --repo-root . \
             --output-dir "${output_dir}" \
             --provider-mode live-frontier \
@@ -777,7 +777,7 @@ jobs:
 
           echo "output_dir=${output_dir}" >> "$GITHUB_OUTPUT"
 
-          pnpm openclaw qa discord \
+          pnpm grokbot qa discord \
             --repo-root . \
             --output-dir "${output_dir}" \
             --provider-mode live-frontier \
@@ -855,7 +855,7 @@ jobs:
 
           echo "output_dir=${output_dir}" >> "$GITHUB_OUTPUT"
 
-          pnpm openclaw qa whatsapp \
+          pnpm grokbot qa whatsapp \
             --repo-root . \
             --output-dir "${output_dir}" \
             --provider-mode live-frontier \
@@ -931,7 +931,7 @@ jobs:
 
           echo "output_dir=${output_dir}" >> "$GITHUB_OUTPUT"
 
-          pnpm openclaw qa slack \
+          pnpm grokbot qa slack \
             --repo-root . \
             --output-dir "${output_dir}" \
             --provider-mode live-frontier \

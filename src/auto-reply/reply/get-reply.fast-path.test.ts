@@ -2,7 +2,7 @@
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { testing as cliBackendsTesting } from "../../agents/cli-backends.test-support.js";
 import type { OpenClawConfig } from "../../config/config.js";
@@ -68,7 +68,7 @@ vi.mock("../../agents/prepared-model-catalog.js", () => ({
 }));
 
 vi.mock("../../agents/workspace.js", () => ({
-  DEFAULT_AGENT_WORKSPACE_DIR: "/tmp/openclaw-workspace",
+  DEFAULT_AGENT_WORKSPACE_DIR: "/tmp/grokbot-workspace",
   ensureAgentWorkspace: (...args: unknown[]) => mocks.ensureAgentWorkspace(...args),
 }));
 registerGetReplyRuntimeOverrides(mocks);
@@ -159,7 +159,7 @@ describe("getReplyFromConfig fast test bootstrap", () => {
         agentThinkingDefault ??
         status.cfg.agents?.defaults?.thinkingDefault ??
         (await status.resolveDefaultThinkingLevel());
-      return { text: `OpenClaw\nThink: ${thinkLevel ?? "off"}` };
+      return { text: `GrokBot\nThink: ${thinkLevel ?? "off"}` };
     });
     mocks.ensureAgentWorkspace.mockReset();
     mocks.handleCommands.mockReset();
@@ -212,12 +212,12 @@ describe("getReplyFromConfig fast test bootstrap", () => {
   });
 
   it("skips getRuntimeConfig, workspace bootstrap, and session bootstrap for marked test configs", async () => {
-    const home = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-fast-reply-"));
+    const home = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-fast-reply-"));
     const cfg = markCompleteReplyConfig({
       agents: {
         defaults: {
           model: "anthropic/claude-opus-4-6",
-          workspace: path.join(home, "openclaw"),
+          workspace: path.join(home, "grokbot"),
         },
       },
       channels: { telegram: { allowFrom: ["*"] } },
@@ -323,7 +323,7 @@ describe("getReplyFromConfig fast test bootstrap", () => {
   });
 
   it("clears stale ack-only heartbeat pending delivery before running heartbeat", async () => {
-    const home = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-heartbeat-pending-clear-"));
+    const home = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-heartbeat-pending-clear-"));
     const storePath = path.join(home, "sessions.json");
     const sessionKey = "agent:main:telegram:123";
     await seedFastPathSessionStore(storePath, {
@@ -361,7 +361,7 @@ describe("getReplyFromConfig fast test bootstrap", () => {
   });
 
   it("keeps non-ack heartbeat pending delivery without direct replay", async () => {
-    const home = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-heartbeat-pending-replay-"));
+    const home = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-heartbeat-pending-replay-"));
     const storePath = path.join(home, "sessions.json");
     const sessionKey = "agent:main:telegram:123";
     await seedFastPathSessionStore(storePath, {
@@ -394,7 +394,7 @@ describe("getReplyFromConfig fast test bootstrap", () => {
   });
 
   it("does not replay stale heartbeat pending delivery", async () => {
-    const home = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-heartbeat-pending-suppress-"));
+    const home = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-heartbeat-pending-suppress-"));
     const storePath = path.join(home, "sessions.json");
     const sessionKey = "agent:main:telegram:123";
     await seedFastPathSessionStore(storePath, {
@@ -430,7 +430,7 @@ describe("getReplyFromConfig fast test bootstrap", () => {
   });
 
   it("handles native /status before workspace bootstrap", async () => {
-    const home = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-native-status-fast-"));
+    const home = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-native-status-fast-"));
     const targetSessionKey = "agent:main:telegram:123";
     const cfg = markCompleteReplyConfig({
       agents: {
@@ -465,7 +465,7 @@ describe("getReplyFromConfig fast test bootstrap", () => {
     if (!reply || Array.isArray(reply) || typeof reply.text !== "string") {
       throw new Error("expected status reply text");
     }
-    expect(reply.text.includes("OpenClaw")).toBe(true);
+    expect(reply.text.includes("GrokBot")).toBe(true);
     expect(reply.text.includes("Think: medium")).toBe(true);
     expect(mocks.loadModelCatalog).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -484,7 +484,7 @@ describe("getReplyFromConfig fast test bootstrap", () => {
   });
 
   it("uses configured agent thinking defaults for native /status", async () => {
-    const home = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-native-status-agent-think-"));
+    const home = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-native-status-agent-think-"));
     const targetSessionKey = "agent:main:telegram:123";
     const cfg = markCompleteReplyConfig({
       agents: {
@@ -542,7 +542,7 @@ describe("getReplyFromConfig fast test bootstrap", () => {
   });
 
   it("uses the target session thinking override for native /status", async () => {
-    const home = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-native-status-think-"));
+    const home = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-native-status-think-"));
     const storePath = path.join(home, "sessions.json");
     const targetSessionKey = "agent:main:telegram:123";
     await seedFastPathSessionStore(storePath, {
@@ -602,7 +602,7 @@ describe("getReplyFromConfig fast test bootstrap", () => {
   });
 
   it("handles native slash directives before workspace bootstrap", async () => {
-    const home = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-native-slash-fast-"));
+    const home = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-native-slash-fast-"));
     const targetSessionKey = "agent:main:telegram:123";
     const cfg = markCompleteReplyConfig({
       agents: {
@@ -650,7 +650,7 @@ describe("getReplyFromConfig fast test bootstrap", () => {
   });
 
   it("continues native slash goal starts with the rewritten command-safe prompt", async () => {
-    const home = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-native-goal-fast-"));
+    const home = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-native-goal-fast-"));
     const targetSessionKey = "agent:main:telegram:123";
     const storePath = path.join(home, "sessions.json");
     const cfg = markCompleteReplyConfig({
@@ -760,7 +760,7 @@ describe("getReplyFromConfig fast test bootstrap", () => {
   });
 
   it("preserves usage footer mode during fast reset bootstrap", async () => {
-    const home = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-fast-reset-usage-"));
+    const home = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-fast-reset-usage-"));
     const storePath = path.join(home, "sessions.json");
     const sessionKey = "agent:main:telegram:123";
     await seedFastPathSessionStore(storePath, {
@@ -789,7 +789,7 @@ describe("getReplyFromConfig fast test bootstrap", () => {
   });
 
   it("rejects a fast reset bootstrap for a model-locked session", async () => {
-    const home = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-fast-reset-locked-"));
+    const home = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-fast-reset-locked-"));
     const storePath = path.join(home, "sessions.json");
     const sessionKey = "agent:main:telegram:123";
     await seedFastPathSessionStore(storePath, {
@@ -823,7 +823,7 @@ describe("getReplyFromConfig fast test bootstrap", () => {
   });
 
   it("captures the initial SQLite session entry during fast bootstrap", async () => {
-    const home = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-fast-initial-entry-"));
+    const home = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-fast-initial-entry-"));
     const storePath = path.join(home, "sessions.json");
     const sessionKey = "agent:main:telegram:123";
     await seedFastPathSessionStore(storePath, {
@@ -894,7 +894,7 @@ describe("getReplyFromConfig fast test bootstrap", () => {
   });
 
   it("keeps the existing session for /reset newline soft during fast bootstrap", async () => {
-    const home = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-fast-reset-newline-soft-"));
+    const home = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-fast-reset-newline-soft-"));
     const storePath = path.join(home, "sessions.json");
     const sessionKey = "agent:main:telegram:123";
     await seedFastPathSessionStore(storePath, {
@@ -923,7 +923,7 @@ describe("getReplyFromConfig fast test bootstrap", () => {
   });
 
   it("keeps the existing session for /reset: soft during fast bootstrap", async () => {
-    const home = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-fast-reset-colon-soft-"));
+    const home = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-fast-reset-colon-soft-"));
     const storePath = path.join(home, "sessions.json");
     const sessionKey = "agent:main:telegram:123";
     await seedFastPathSessionStore(storePath, {

@@ -1,8 +1,8 @@
 // Discord plugin module implements native command route behavior.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import * as conversationRuntime from "openclaw/plugin-sdk/conversation-binding-runtime";
-import type { ResolvedAgentRoute } from "openclaw/plugin-sdk/routing";
-import { normalizeOptionalString } from "openclaw/plugin-sdk/string-coerce-runtime";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import * as conversationRuntime from "grokbot/plugin-sdk/conversation-binding-runtime";
+import type { ResolvedAgentRoute } from "grokbot/plugin-sdk/routing";
+import { normalizeOptionalString } from "grokbot/plugin-sdk/string-coerce-runtime";
 import {
   resolveDiscordBoundConversationRoute,
   resolveDiscordEffectiveRoute,

@@ -4,10 +4,10 @@ import type {
   WorkboardCard,
   WorkboardExecution,
   WorkboardWorkspace,
-} from "@openclaw/workboard-contract";
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
-import type { PluginRuntime } from "openclaw/plugin-sdk/plugin-runtime";
-import { canonicalPathFromExistingAncestor } from "openclaw/plugin-sdk/security-runtime";
+} from "@grokbot/workboard-contract";
+import { formatErrorMessage } from "grokbot/plugin-sdk/error-runtime";
+import type { PluginRuntime } from "grokbot/plugin-sdk/plugin-runtime";
+import { canonicalPathFromExistingAncestor } from "grokbot/plugin-sdk/security-runtime";
 import {
   assertRestrictedWorkboardTarget,
   managedWorktreeName,
@@ -194,7 +194,7 @@ function buildWorkerPrompt(params: {
   token: string;
 }): string {
   return [
-    `Work on this OpenClaw Workboard card: ${params.card.title}`,
+    `Work on this GrokBot Workboard card: ${params.card.title}`,
     "",
     "## Worker protocol",
     `Card id: ${params.card.id}`,

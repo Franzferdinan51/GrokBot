@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { SlackMessageEvent } from "../../types.js";
 import type { SlackMediaResult } from "../media-types.js";
@@ -163,7 +163,7 @@ describe("Slack captionless audio preflight", () => {
   });
 
   it("removes preflight downloads when the transcript does not admit the message", async () => {
-    const root = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-slack-audio-preflight-"));
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-slack-audio-preflight-"));
     const audioPath = path.join(root, "voice.mp4");
     await fs.writeFile(audioPath, "voice");
 

@@ -6,7 +6,7 @@ import { applyConfigEnvVars } from "./config-env-vars.js";
 import { resolveConfigEnvVars } from "./env-substitution.js";
 import { readConfigIncludeFileWithGuards, resolveConfigIncludes } from "./includes.js";
 import { resolveConfigPath, resolveIncludeRoots } from "./paths.js";
-import type { OpenClawConfig } from "./types.openclaw.js";
+import type { OpenClawConfig } from "./types.grokbot.js";
 
 const GATEWAY_DISPATCH_SHELL_ENV_EXPECTED_KEYS = [
   "OPENCLAW_GATEWAY_TOKEN",

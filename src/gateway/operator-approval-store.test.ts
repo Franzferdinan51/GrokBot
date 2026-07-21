@@ -11,12 +11,12 @@ import {
   executeSqliteQueryTakeFirstSync,
   getNodeSqliteKysely,
 } from "../infra/kysely-sync.js";
-import type { DB as OpenClawStateKyselyDatabase } from "../state/openclaw-state-db.generated.js";
+import type { DB as OpenClawStateKyselyDatabase } from "../state/grokbot-state-db.generated.js";
 import {
   closeOpenClawStateDatabaseForTest,
   openOpenClawStateDatabase,
   type OpenClawStateDatabaseOptions,
-} from "../state/openclaw-state-db.js";
+} from "../state/grokbot-state-db.js";
 import {
   closeOrphanedOperatorApprovals,
   consumeOperatorApprovalAllowOnce,
@@ -45,7 +45,7 @@ const tempDirs: string[] = [];
 
 function createDatabaseOptions(): OpenClawStateDatabaseOptions {
   const stateDir = fs.realpathSync(
-    fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-operator-approval-")),
+    fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-operator-approval-")),
   );
   tempDirs.push(stateDir);
   return { env: { ...process.env, OPENCLAW_STATE_DIR: stateDir } };

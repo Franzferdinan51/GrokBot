@@ -7,7 +7,7 @@ import {
   type ChannelSetupDmPolicy,
   type ChannelSetupWizard,
   type OpenClawConfig,
-} from "openclaw/plugin-sdk/setup";
+} from "grokbot/plugin-sdk/setup";
 import { resolveDefaultZaloAccountId, resolveZaloAccount } from "./accounts.js";
 
 const t = createSetupTranslator();

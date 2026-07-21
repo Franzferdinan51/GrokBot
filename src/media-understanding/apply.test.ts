@@ -6,7 +6,7 @@ import path from "node:path";
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import type { MsgContext } from "../auto-reply/templating.js";
 import type { OpenClawConfig } from "../config/types.js";
-import { resolvePreferredOpenClawTmpDir } from "../infra/tmp-openclaw-dir.js";
+import { resolvePreferredOpenClawTmpDir } from "../infra/tmp-grokbot-dir.js";
 import { withEnvAsync } from "../test-utils/env.js";
 import { CLI_OUTPUT_MAX_BUFFER } from "./defaults.constants.js";
 import { createSafeAudioFixtureBuffer } from "./runner.test-utils.js";
@@ -40,7 +40,7 @@ const mockedRunFfmpeg = runFfmpegMock;
 const mockedConvertHeicToJpeg = convertHeicToJpegMock;
 const mockedRunExec = runExecMock;
 
-const TEMP_MEDIA_PREFIX = "openclaw-media-";
+const TEMP_MEDIA_PREFIX = "grokbot-media-";
 const SHA256_HEX_PATTERN = /^[0-9a-f]{64}$/;
 let suiteTempMediaRootDir = "";
 let tempMediaDirCounter = 0;
@@ -583,7 +583,7 @@ describe("applyMediaUnderstanding", () => {
         kind: "audio.transcription",
         attachmentIndex: 0,
         text: "[Voice note could not be transcribed because the audio attachment was too small]",
-        provider: "openclaw",
+        provider: "grokbot",
         model: "synthetic-empty-audio",
       },
     ]);
@@ -629,7 +629,7 @@ describe("applyMediaUnderstanding", () => {
         kind: "audio.transcription",
         attachmentIndex: 0,
         text: "[Voice note could not be transcribed because the audio attachment was too small]",
-        provider: "openclaw",
+        provider: "grokbot",
         model: "synthetic-empty-audio",
       },
     ]);
@@ -1066,7 +1066,7 @@ describe("applyMediaUnderstanding", () => {
     const [_probeCommand, _probeArgs, probeOptions] = getRunExecCall(0);
     expect(probeOptions).toEqual({
       timeoutMs: 3000,
-      cwd: expect.stringContaining("openclaw-antigravity-probe-"),
+      cwd: expect.stringContaining("grokbot-antigravity-probe-"),
     });
     const [command, args, options] = getRunExecCall(1);
     expect(command).toBe(path.join(binDir, "agy"));
@@ -1197,8 +1197,8 @@ describe("applyMediaUnderstanding", () => {
     const result = await applyMediaUnderstanding({
       ctx,
       cfg,
-      agentDir: "/tmp/openclaw-agent",
-      workspaceDir: "/tmp/openclaw-workspace",
+      agentDir: "/tmp/grokbot-agent",
+      workspaceDir: "/tmp/grokbot-workspace",
       providers: {
         openai: {
           id: "openai",
@@ -1211,8 +1211,8 @@ describe("applyMediaUnderstanding", () => {
     expect(result.appliedImage).toBe(true);
     expect(describeImage).toHaveBeenCalledWith(
       expect.objectContaining({
-        agentDir: "/tmp/openclaw-agent",
-        workspaceDir: "/tmp/openclaw-workspace",
+        agentDir: "/tmp/grokbot-agent",
+        workspaceDir: "/tmp/grokbot-workspace",
         fileName: "workspace.jpg",
         provider: "openai",
         model: "gpt-5.4",
@@ -1245,7 +1245,7 @@ describe("applyMediaUnderstanding", () => {
     const result = await applyMediaUnderstanding({
       ctx,
       cfg,
-      agentDir: "/tmp/openclaw-agent",
+      agentDir: "/tmp/grokbot-agent",
       providers: {
         openai: {
           id: "openai",

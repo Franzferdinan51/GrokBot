@@ -5,8 +5,8 @@ import { afterEach, describe, expect, it } from "vitest";
 import { parse } from "yaml";
 import { useAutoCleanupTempDirTracker } from "../helpers/temp-dir.js";
 
-const RELEASE_CHECKS_PATH = ".github/workflows/openclaw-release-checks.yml";
-const WORKFLOW_PATH = ".github/workflows/openclaw-release-telegram-qa.yml";
+const RELEASE_CHECKS_PATH = ".github/workflows/grokbot-release-checks.yml";
+const WORKFLOW_PATH = ".github/workflows/grokbot-release-telegram-qa.yml";
 const tempDirs = useAutoCleanupTempDirTracker(afterEach);
 
 type WorkflowJob = {
@@ -56,17 +56,17 @@ function runIdentityVerification(params: {
   oidcWorkflowSha?: string;
   workflowSha?: string;
 }) {
-  const repository = "openclaw/openclaw";
-  const trustedWorkflowRef = `${repository}/.github/workflows/openclaw-release-telegram-qa.yml@refs/heads/main`;
+  const repository = "grokbot/grokbot";
+  const trustedWorkflowRef = `${repository}/.github/workflows/grokbot-release-telegram-qa.yml@refs/heads/main`;
   const invocation = params.invocation ?? "dispatch";
   const workflowRef =
     invocation === "dispatch"
       ? trustedWorkflowRef
-      : `${repository}/.github/workflows/openclaw-release-checks.yml@refs/heads/release-ci/test`;
+      : `${repository}/.github/workflows/grokbot-release-checks.yml@refs/heads/release-ci/test`;
   const workflowRefName =
     invocation === "dispatch" ? "refs/heads/main" : "refs/heads/release-ci/test";
   const targetSha = "a".repeat(40);
-  const workdir = tempDirs.make("openclaw-telegram-identity-");
+  const workdir = tempDirs.make("grokbot-telegram-identity-");
   const fakeBin = join(workdir, "bin");
   const curlPath = join(fakeBin, "curl");
   const githubOutput = join(workdir, "github-output");
@@ -74,7 +74,7 @@ function runIdentityVerification(params: {
   const workflowSha = params.workflowSha ?? params.expectedTrustedWorkflowSha;
   const oidcWorkflowSha = params.oidcWorkflowSha ?? workflowSha;
   const payload = {
-    aud: "openclaw-release-telegram-qa",
+    aud: "grokbot-release-telegram-qa",
     event_name: "workflow_dispatch",
     iss: "https://token.actions.githubusercontent.com",
     ...(invocation === "reusable"
@@ -139,7 +139,7 @@ function runAdvisoryStatus(overrides: Record<string, string> = {}) {
   const runAttempt = "1";
   const targetSha = "a".repeat(40);
   const workflowSha = "b".repeat(40);
-  const workdir = tempDirs.make("openclaw-telegram-advisory-status-");
+  const workdir = tempDirs.make("grokbot-telegram-advisory-status-");
   const githubOutput = join(workdir, "github-output");
   const script = workflowStep(workflowJob("advisory_status"), "Record advisory status").run;
   if (!script) {
@@ -323,16 +323,16 @@ describe("release Telegram QA workflow", () => {
       .filter((name) => name.endsWith(".yml"))
       .flatMap((name) => {
         const path = `.github/workflows/${name}`;
-        return readFileSync(path, "utf8").includes('workflow="openclaw-release-telegram-qa.yml"')
+        return readFileSync(path, "utf8").includes('workflow="grokbot-release-telegram-qa.yml"')
           ? [path]
           : [];
       });
     expect(dispatchers).toEqual([RELEASE_CHECKS_PATH]);
     expect(reusableSource).toContain(
-      "openclaw/openclaw/.github/workflows/openclaw-release-telegram-qa.yml@refs/heads/main",
+      "grokbot/grokbot/.github/workflows/grokbot-release-telegram-qa.yml@refs/heads/main",
     );
     expect(reusableSource).toContain(
-      '--cert-identity "https://github.com/openclaw/openclaw/.github/workflows/openclaw-release-telegram-qa.yml@refs/heads/main"',
+      '--cert-identity "https://github.com/grokbot/grokbot/.github/workflows/grokbot-release-telegram-qa.yml@refs/heads/main"',
     );
     expect(reusableSource).toContain('--signer-digest "$CALLED_WORKFLOW_SHA"');
     const resolveJob = releaseWorkflow.jobs?.resolve_target;
@@ -377,7 +377,7 @@ describe("release Telegram QA workflow", () => {
     const identityJob = workflowJob("trusted_identity");
     const identityStep = workflowStep(identityJob, "Verify dispatched-main identity");
     const oidcRequest = identityStep.run?.match(
-      /curl --fail --silent --show-error[\s\S]*?audience=openclaw-release-telegram-qa/u,
+      /curl --fail --silent --show-error[\s\S]*?audience=grokbot-release-telegram-qa/u,
     )?.[0];
 
     expect(identityJob["timeout-minutes"]).toBe(5);
@@ -613,9 +613,9 @@ describe("release Telegram QA workflow", () => {
     expect(captureStep?.run).toContain("cut -z -f2-");
     expect(captureStep?.run).toContain("((${#gateway_logs[@]} <= 8))");
     expect(captureStep?.run).toContain("((${#model_config_proofs[@]} > 0))");
-    expect(captureStep?.run).toContain("-name 'openclaw-*.log'");
+    expect(captureStep?.run).toContain("-name 'grokbot-*.log'");
     expect(captureStep?.run).toContain(
-      'trusted_temp_root="$(mktemp -d "${RUNNER_TEMP}/openclaw-telegram-diagnostics.XXXXXX")"',
+      'trusted_temp_root="$(mktemp -d "${RUNNER_TEMP}/grokbot-telegram-diagnostics.XXXXXX")"',
     );
     expect(captureStep?.run).not.toContain(".raw");
     expect(captureStep?.run).toContain(
@@ -637,7 +637,7 @@ describe("release Telegram QA workflow", () => {
     expect(captureStep?.run).toContain("redactQaGatewayDebugText");
     expect(captureStep?.run).toContain("model_config_proofs");
     expect(captureStep?.run).toContain("proof_bytes > 0 && proof_bytes <= 65536");
-    expect(captureStep?.run).not.toContain("-name openclaw.json");
+    expect(captureStep?.run).not.toContain("-name grokbot.json");
     expect(
       job?.steps?.findIndex(
         (step) => step.name === "Capture isolated Telegram runtime diagnostics",
@@ -675,7 +675,7 @@ describe("release Telegram QA workflow", () => {
     )?.[0];
     expect(selectorSource).toBeTruthy();
 
-    const workdir = tempDirs.make("openclaw-telegram-log-selector-");
+    const workdir = tempDirs.make("grokbot-telegram-log-selector-");
     const runtimeRoot = join(workdir, "runtime");
     const fakeBin = join(workdir, "bin");
     mkdirSync(join(runtimeRoot, "tmp"), { recursive: true });
@@ -684,7 +684,7 @@ describe("release Telegram QA workflow", () => {
 
     const logPaths = Array.from({ length: 12 }, (_, index) => {
       const logDir = join(runtimeRoot, "tmp", `gateway-${index}`);
-      const logPath = join(logDir, `openclaw-${index}.log`);
+      const logPath = join(logDir, `grokbot-${index}.log`);
       mkdirSync(logDir);
       writeFileSync(logPath, `${index}\n`);
       utimesSync(logPath, index + 1, index + 1);
@@ -712,7 +712,7 @@ describe("release Telegram QA workflow", () => {
     )?.[1];
     expect(redactorSource).toBeTruthy();
 
-    const workdir = tempDirs.make("openclaw-telegram-log-filter-");
+    const workdir = tempDirs.make("grokbot-telegram-log-filter-");
     const scriptPath = join(workdir, "redact-gateway-tail.mts");
     const outputPath = join(workdir, "gateway.log");
     writeFileSync(scriptPath, redactorSource ?? "");
@@ -797,7 +797,7 @@ describe("release Telegram QA workflow", () => {
     expect(source).toContain("runtime_stage=write-sandbox-proof");
     expect(source).toContain("runtime_stage=exec-runtime");
     expect(source).toContain('TMPDIR="${SUT_RUNTIME_ROOT}/tmp"');
-    expect(source).toContain('"$RUNTIME_ROOT"/tmp/openclaw-qa-suite-*');
+    expect(source).toContain('"$RUNTIME_ROOT"/tmp/grokbot-qa-suite-*');
     expect(source.indexOf("launcher_stage=enter-mount-namespace")).toBeLessThan(
       source.indexOf("/usr/bin/unshare"),
     );
@@ -813,11 +813,11 @@ describe("release Telegram QA workflow", () => {
     expect(source).toContain('for masked_path in "$RUNNER_HOME" /tmp /var/tmp /dev/shm');
     expect(source).not.toMatch(/^\s+node_bin="\$\(realpath -e "\$\(command -v node\)"\)"$/mu);
     expect(source).toContain('temp_root="$(realpath -e "${OPENCLAW_QA_TEMP_ROOT:?}")"');
-    expect(source).toContain("sudo install -d -o root -g root -m 0700 /tmp/openclaw");
+    expect(source).toContain("sudo install -d -o root -g root -m 0700 /tmp/grokbot");
     expect(source).toContain(
-      '-m 0711 \\\n            "${runtime_root}/tmp/openclaw-${runner_uid}"',
+      '-m 0711 \\\n            "${runtime_root}/tmp/grokbot-${runner_uid}"',
     );
-    expect(source).toContain('"$RUNTIME_ROOT"/tmp/openclaw-"$RUNNER_UID"/openclaw-qa-suite-*');
+    expect(source).toContain('"$RUNTIME_ROOT"/tmp/grokbot-"$RUNNER_UID"/grokbot-qa-suite-*');
     expect(source).toContain('proc_stat="$(cat "/proc/${pid}/stat")"');
     expect(source).not.toContain('proc_stat="$(cat /proc/self/stat)"');
     expect(source).toContain('if [[ "${1:-}" == "--root-verify" ]]');
@@ -869,11 +869,11 @@ describe("release Telegram QA workflow", () => {
       )?.[0];
       expect(captureSource).toBeTruthy();
 
-      const workdir = tempDirs.make("openclaw-telegram-model-proof-");
+      const workdir = tempDirs.make("grokbot-telegram-model-proof-");
       const runtimeRoot = join(workdir, "runtime");
       const evidenceRoot = join(workdir, "evidence");
-      const configPath = join(workdir, "openclaw.json");
-      const duplicateConfigPath = join(workdir, "openclaw-duplicate.json");
+      const configPath = join(workdir, "grokbot.json");
+      const duplicateConfigPath = join(workdir, "grokbot-duplicate.json");
       mkdirSync(runtimeRoot);
       mkdirSync(evidenceRoot);
       writeFileSync(
@@ -946,7 +946,7 @@ describe("release Telegram QA workflow", () => {
     const preloadSource = createSutStep.run?.match(/<<'PRELOAD'\n([\s\S]*?)\nPRELOAD/u)?.[1];
     expect(preloadSource).toBeTruthy();
 
-    const workdir = tempDirs.make("openclaw-telegram-preload-");
+    const workdir = tempDirs.make("grokbot-telegram-preload-");
     const preloadPath = join(workdir, "preload.mjs");
     writeFileSync(preloadPath, preloadSource ?? "");
     const env = { ...process.env };
@@ -998,7 +998,7 @@ describe("release Telegram QA workflow", () => {
     const trapLine = source.match(/^\s+(trap 'exit_status=.*' ERR)$/mu)?.[1];
     expect(trapLine).toBeTruthy();
 
-    const workdir = tempDirs.make("openclaw-telegram-launcher-stage-");
+    const workdir = tempDirs.make("grokbot-telegram-launcher-stage-");
     const stagePath = join(workdir, "stage");
     writeFileSync(stagePath, "mount-proc\n");
     const result = spawnSync(

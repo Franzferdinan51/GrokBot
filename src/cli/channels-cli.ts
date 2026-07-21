@@ -112,18 +112,18 @@ export async function registerChannelsCli(
       "after",
       () =>
         `\n${theme.heading("Examples:")}\n${formatHelpExamples([
-          ["openclaw channels list", "List configured channels."],
-          ["openclaw channels list --all", "Show configured, bundled, and installable channels."],
-          ["openclaw channels add", "Open guided channel setup."],
-          ["openclaw channels status --probe", "Run channel status checks and probes."],
+          ["grokbot channels list", "List configured channels."],
+          ["grokbot channels list --all", "Show configured, bundled, and installable channels."],
+          ["grokbot channels add", "Open guided channel setup."],
+          ["grokbot channels status --probe", "Run channel status checks and probes."],
           [
-            "openclaw channels add --channel telegram --token <token>",
+            "grokbot channels add --channel telegram --token <token>",
             "Add or update a channel account non-interactively.",
           ],
-          ["openclaw channels login --channel whatsapp", "Link a WhatsApp Web account."],
+          ["grokbot channels login --channel whatsapp", "Link a WhatsApp Web account."],
         ])}\n\n${theme.muted("Docs:")} ${formatDocsLink(
           "/cli/channels",
-          "docs.openclaw.ai/cli/channels",
+          "docs.grokbot.ai/cli/channels",
         )}\n`,
     );
 
@@ -249,12 +249,12 @@ export async function registerChannelsCli(
       "after",
       () =>
         `\n${theme.heading("Examples:")}\n${formatHelpExamples([
-          ["openclaw channels add", "Open guided setup for available chat channels."],
+          ["grokbot channels add", "Open guided setup for available chat channels."],
           [
-            "openclaw channels add --channel telegram --token <token>",
+            "grokbot channels add --channel telegram --token <token>",
             "Add or update Telegram non-interactively.",
           ],
-          ["openclaw channels list --all", "Find channel ids before using --channel."],
+          ["grokbot channels list --all", "Find channel ids before using --channel."],
         ])}\n`,
     )
     .option("--channel <name>", `Channel (${channelNames})`)

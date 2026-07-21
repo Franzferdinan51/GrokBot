@@ -1,18 +1,18 @@
 {
-  "name": "@openclaw/searxng-plugin",
+  "name": "@grokbot/searxng-plugin",
   "version": "2026.7.2",
-  "description": "OpenClaw SearXNG plugin",
+  "description": "GrokBot SearXNG plugin",
   "type": "module",
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@grokbot/plugin-sdk": "workspace:*"
   },
-  "openclaw": {
+  "grokbot": {
     "extensions": [
       "./index.ts"
     ],
     "install": {
-      "clawhubSpec": "clawhub:@openclaw/searxng-plugin",
-      "npmSpec": "@openclaw/searxng-plugin",
+      "clawhubSpec": "clawhub:@grokbot/searxng-plugin",
+      "npmSpec": "@grokbot/searxng-plugin",
       "defaultChoice": "npm",
       "minHostVersion": ">=2026.6.9",
       "allowInvalidConfigRecovery": true
@@ -31,6 +31,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/openclaw/openclaw"
+    "url": "https://github.com/grokbot/grokbot"
   }
 }

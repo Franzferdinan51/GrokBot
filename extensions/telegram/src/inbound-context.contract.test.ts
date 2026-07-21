@@ -1,6 +1,6 @@
 // Telegram tests cover inbound context.contract plugin behavior.
-import { expectChannelInboundContextContract } from "openclaw/plugin-sdk/channel-contract-testing";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import { expectChannelInboundContextContract } from "grokbot/plugin-sdk/channel-contract-testing";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import { describe, it } from "vitest";
 import { buildTelegramMessageContextForTest } from "./bot-message-context.test-harness.js";
 

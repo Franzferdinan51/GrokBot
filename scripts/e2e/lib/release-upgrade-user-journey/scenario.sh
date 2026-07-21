@@ -4,7 +4,7 @@ trap "" PIPE
 export TERM=xterm-256color
 export NO_COLOR=1
 
-source scripts/lib/openclaw-e2e-instance.sh
+source scripts/lib/grokbot-e2e-instance.sh
 
 openclaw_e2e_eval_test_state_from_b64 "${OPENCLAW_TEST_STATE_SCRIPT_B64:?missing OPENCLAW_TEST_STATE_SCRIPT_B64}"
 openclaw_e2e_install_trash_shim
@@ -14,14 +14,14 @@ export PATH="$NPM_CONFIG_PREFIX/bin:$PATH"
 export npm_config_loglevel=error
 export npm_config_fund=false
 export npm_config_audit=false
-export OPENAI_API_KEY="sk-openclaw-release-upgrade-user-journey"
+export OPENAI_API_KEY="sk-grokbot-release-upgrade-user-journey"
 export CLICKCLACK_BOT_TOKEN="clickclack-release-upgrade-token"
 
 PORT="18789"
 MOCK_PORT="44210"
 CLICKCLACK_PORT="44211"
 SUCCESS_MARKER="OPENCLAW_E2E_OK_RELEASE_UPGRADE"
-scenario_tmp="$(mktemp -d "${TMPDIR:-/tmp}/openclaw-release-upgrade-user-journey.XXXXXX")"
+scenario_tmp="$(mktemp -d "${TMPDIR:-/tmp}/grokbot-release-upgrade-user-journey.XXXXXX")"
 LOG_DIR="$scenario_tmp/logs"
 mkdir -p "$LOG_DIR"
 BASELINE_INSTALL_LOG="$LOG_DIR/baseline-install.log"
@@ -97,7 +97,7 @@ if ! openclaw_e2e_maybe_timeout "${OPENCLAW_E2E_NPM_INSTALL_TIMEOUT:-600s}" npm 
   cat "$BASELINE_INSTALL_LOG" >&2 || true
   exit 1
 fi
-command -v openclaw >/dev/null
+command -v grokbot >/dev/null
 baseline_root="$(openclaw_e2e_package_root)"
 baseline_entry="$(openclaw_e2e_package_entrypoint "$baseline_root")"
 openclaw_e2e_enable_openclaw_cli_timeout
@@ -142,18 +142,18 @@ node scripts/e2e/lib/release-scenarios/write-cli-plugin.mjs \
   "Release Upgrade Plugin" \
   release-upgrade \
   "release-upgrade-plugin:pong"
-openclaw plugins install "$plugin_dir" --force >"$PLUGIN_INSTALL_LOG" 2>&1
-openclaw release-upgrade ping >"$PLUGIN_CLI_BEFORE_LOG" 2>&1
+grokbot plugins install "$plugin_dir" --force >"$PLUGIN_INSTALL_LOG" 2>&1
+grokbot release-upgrade ping >"$PLUGIN_CLI_BEFORE_LOG" 2>&1
 node scripts/e2e/lib/release-scenarios/assertions.mjs assert-file-contains "$PLUGIN_CLI_BEFORE_LOG" "release-upgrade-plugin:pong"
 node scripts/e2e/lib/release-user-journey/assertions.mjs configure-clickclack "http://127.0.0.1:$CLICKCLACK_PORT"
 
-openclaw_e2e_install_package "$CANDIDATE_INSTALL_LOG" "candidate OpenClaw package"
+openclaw_e2e_install_package "$CANDIDATE_INSTALL_LOG" "candidate GrokBot package"
 package_root="$(openclaw_e2e_package_root)"
 entry="$(openclaw_e2e_package_entrypoint "$package_root")"
 openclaw_e2e_enable_openclaw_cli_timeout
 node scripts/e2e/lib/release-scenarios/assertions.mjs assert-package-version "$package_root" "$candidate_version" candidate
 
-openclaw agent --local \
+grokbot agent --local \
   --agent main \
   --session-id release-upgrade-user-journey-agent \
   --message "Return marker $SUCCESS_MARKER" \
@@ -161,16 +161,16 @@ openclaw agent --local \
   --json >"$AGENT_LOG" 2>&1
 node scripts/e2e/lib/release-scenarios/assertions.mjs assert-agent-turn "$SUCCESS_MARKER" "$AGENT_LOG" "$MOCK_REQUEST_LOG"
 
-openclaw release-upgrade ping >"$PLUGIN_CLI_AFTER_LOG" 2>&1
+grokbot release-upgrade ping >"$PLUGIN_CLI_AFTER_LOG" 2>&1
 node scripts/e2e/lib/release-scenarios/assertions.mjs assert-file-contains "$PLUGIN_CLI_AFTER_LOG" "release-upgrade-plugin:pong"
 
 clickclack_plugin_dir="$(mktemp -d "$scenario_tmp/clickclack-plugin.XXXXXX")"
 node scripts/e2e/lib/release-user-journey/write-clickclack-plugin.mjs "$clickclack_plugin_dir"
-openclaw plugins install "$clickclack_plugin_dir" --force >"$CLICKCLACK_PLUGIN_INSTALL_LOG" 2>&1
+grokbot plugins install "$clickclack_plugin_dir" --force >"$CLICKCLACK_PLUGIN_INSTALL_LOG" 2>&1
 
-openclaw channels status --json >"$STATUS_JSON" 2>"$STATUS_ERR"
+grokbot channels status --json >"$STATUS_JSON" 2>"$STATUS_ERR"
 node scripts/e2e/lib/release-user-journey/assertions.mjs assert-channel-status clickclack "$STATUS_JSON"
-openclaw message send \
+grokbot message send \
   --channel clickclack \
   --target channel:general \
   --message "release upgrade outbound" \

@@ -7,7 +7,7 @@ import {
   closeOpenClawStateDatabaseForTest,
   openOpenClawStateDatabase,
   type OpenClawStateDatabase,
-} from "../../state/openclaw-state-db.js";
+} from "../../state/grokbot-state-db.js";
 import type { MintedWorkerCredential } from "./credential.js";
 import type {
   WorkerDispatchEnvironmentService,
@@ -329,7 +329,7 @@ describe("worker placement dispatch", () => {
   let placementStore: PlacementStore;
 
   beforeEach(async () => {
-    root = await fs.mkdtemp(path.join(await fs.realpath(os.tmpdir()), "openclaw-dispatch-"));
+    root = await fs.mkdtemp(path.join(await fs.realpath(os.tmpdir()), "grokbot-dispatch-"));
     database = openOpenClawStateDatabase({ env: { OPENCLAW_STATE_DIR: root } });
     placementStore = createWorkerSessionPlacementStore({ database, now: () => 1_000 });
   });

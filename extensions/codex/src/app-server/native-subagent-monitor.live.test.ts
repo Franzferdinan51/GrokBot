@@ -6,8 +6,8 @@ import { setTimeout as delay } from "node:timers/promises";
 import type {
   AgentHarnessTaskRecord,
   AgentHarnessTaskRuntimeScope,
-} from "openclaw/plugin-sdk/agent-harness-task-runtime";
-import { withTempDir } from "openclaw/plugin-sdk/test-env";
+} from "grokbot/plugin-sdk/agent-harness-task-runtime";
+import { withTempDir } from "grokbot/plugin-sdk/test-env";
 import { describe, expect, it } from "vitest";
 import type { CodexAppServerClient } from "./client.js";
 import { resolveCodexAppServerRuntimeOptions } from "./config.js";
@@ -73,7 +73,7 @@ describeLive("codex native subagent monitor live", () => {
     if (!apiKey) {
       throw new Error("OPENAI_API_KEY is required for this live test");
     }
-    await withTempDir("openclaw-codex-native-subagent-", async (root) => {
+    await withTempDir("grokbot-codex-native-subagent-", async (root) => {
       let client: CodexAppServerClient | undefined;
       try {
         const codexHome = path.join(root, "codex-home");
@@ -139,7 +139,7 @@ describeLive("codex native subagent monitor live", () => {
 
         // Detached-child scenario: the parent replies immediately while the
         // child still owes its own model round (plus a sleep for margin), so
-        // the parent turn completes first, like an OpenClaw run cleaning up
+        // the parent turn completes first, like an GrokBot run cleaning up
         // after yield while its native subagent is still working.
         await client.request(
           "turn/start",

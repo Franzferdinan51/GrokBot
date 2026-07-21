@@ -17,16 +17,16 @@ vi.mock("../agents/utility-model.js", () => ({
   resolveUtilityModelRefForAgent,
 }));
 
-import type { OpenClawConfig } from "../config/types.openclaw.js";
-import { closeOpenClawAgentDatabases } from "../state/openclaw-agent-db.js";
-import { closeOpenClawStateDatabaseForTest } from "../state/openclaw-state-db.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
+import { closeOpenClawAgentDatabases } from "../state/grokbot-agent-db.js";
+import { closeOpenClawStateDatabaseForTest } from "../state/grokbot-state-db.js";
 import { generateToolCallTitles } from "./chat-tool-titles.js";
 
 const AGENT_ID = "main";
 
 function mockPreparedModel(): void {
   prepareSimpleCompletionModelForAgent.mockResolvedValue({
-    selection: { provider: "openai", modelId: "gpt-test", agentDir: "/tmp/openclaw-agent" },
+    selection: { provider: "openai", modelId: "gpt-test", agentDir: "/tmp/grokbot-agent" },
     model: { provider: "openai", id: "gpt-test", maxTokens: 8192 },
     auth: { apiKey: "k", mode: "api-key" },
   });
@@ -50,7 +50,7 @@ describe("generateToolCallTitles", () => {
     // Default: canonical utility routing resolves a cheap same-provider model.
     resolveUtilityModelRefForAgent.mockReturnValue("openai/gpt-test");
     // realpath: macOS tmpdir is a /var -> /private/var symlink and DB paths resolve canonically.
-    stateDir = fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-tool-titles-")));
+    stateDir = fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-tool-titles-")));
     previousStateDir = process.env.OPENCLAW_STATE_DIR;
     process.env.OPENCLAW_STATE_DIR = stateDir;
   });

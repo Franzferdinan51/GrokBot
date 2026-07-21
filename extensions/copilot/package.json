@@ -1,25 +1,25 @@
 {
-  "name": "@openclaw/copilot",
+  "name": "@grokbot/copilot",
   "version": "2026.7.2",
-  "description": "OpenClaw GitHub Copilot agent runtime plugin (registers a `github-copilot` AgentHarness backed by @github/copilot-sdk over JSON-RPC to the GitHub Copilot CLI)",
+  "description": "GrokBot GitHub Copilot agent runtime plugin (registers a `github-copilot` AgentHarness backed by @github/copilot-sdk over JSON-RPC to the GitHub Copilot CLI)",
   "repository": {
     "type": "git",
-    "url": "https://github.com/openclaw/openclaw"
+    "url": "https://github.com/grokbot/grokbot"
   },
   "type": "module",
   "dependencies": {
     "@github/copilot-sdk": "1.0.5"
   },
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@grokbot/plugin-sdk": "workspace:*"
   },
-  "openclaw": {
+  "grokbot": {
     "extensions": [
       "./index.ts"
     ],
     "install": {
-      "clawhubSpec": "clawhub:@openclaw/copilot",
-      "npmSpec": "@openclaw/copilot",
+      "clawhubSpec": "clawhub:@grokbot/copilot",
+      "npmSpec": "@grokbot/copilot",
       "defaultChoice": "npm",
       "minHostVersion": ">=2026.5.28"
     },

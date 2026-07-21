@@ -1,8 +1,8 @@
-import { normalizeStringEntries } from "@openclaw/normalization-core/string-normalization";
+import { normalizeStringEntries } from "@grokbot/normalization-core/string-normalization";
 import {
   parsePackageOpenClawSchemaVersions,
   type OpenClawSchemaVersions,
-} from "../state/openclaw-schema-versions.js";
+} from "../state/grokbot-schema-versions.js";
 import { isBetaTag, isStableTag, type UpdateChannel } from "./update-channels.js";
 import { compareSemverStrings } from "./update-check.js";
 import type { CommandRunner, UpdateRunnerOptions } from "./update-runner-types.js";

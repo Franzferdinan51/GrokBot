@@ -1,4 +1,4 @@
-name: OpenClaw Release Publish
+name: GrokBot Release Publish
 
 on:
   workflow_dispatch:
@@ -8,11 +8,11 @@ on:
         required: true
         type: string
       preflight_run_id:
-        description: Successful OpenClaw NPM Release preflight run id, required for OpenClaw npm or all-publishable plugin publication
+        description: Successful GrokBot NPM Release preflight run id, required for GrokBot npm or all-publishable plugin publication
         required: false
         type: string
       full_release_validation_run_id:
-        description: Successful Full Release Validation run id for this tag/SHA, required for OpenClaw npm or all-publishable plugin publication
+        description: Successful Full Release Validation run id for this tag/SHA, required for GrokBot npm or all-publishable plugin publication
         required: false
         type: string
       full_release_validation_run_attempt:
@@ -20,7 +20,7 @@ on:
         required: false
         type: string
       windows_node_tag:
-        description: Exact openclaw-windows-node release tag, required for stable OpenClaw publish
+        description: Exact grokbot-windows-node release tag, required for stable GrokBot publish
         required: false
         type: string
       windows_node_installer_digests:
@@ -32,11 +32,11 @@ on:
         required: false
         type: string
       openclaw_npm_resume_run_id:
-        description: Successful original OpenClaw NPM Release run id when resuming an already-published package
+        description: Successful original GrokBot NPM Release run id when resuming an already-published package
         required: false
         type: string
       npm_dist_tag:
-        description: npm dist-tag for the OpenClaw package
+        description: npm dist-tag for the GrokBot package
         required: true
         default: beta
         type: choice
@@ -45,7 +45,7 @@ on:
           - beta
           - latest
       plugin_publish_scope:
-        description: Plugin publish scope to run before OpenClaw publish
+        description: Plugin publish scope to run before GrokBot publish
         required: true
         default: all-publishable
         type: choice
@@ -57,7 +57,7 @@ on:
         required: false
         type: string
       publish_openclaw_npm:
-        description: Publish the OpenClaw npm package after plugin npm succeeds; ClawHub may still run
+        description: Publish the GrokBot npm package after plugin npm succeeds; ClawHub may still run
         required: true
         default: true
         type: boolean
@@ -83,7 +83,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: openclaw-release-publish-${{ inputs.tag }}
+  group: grokbot-release-publish-${{ inputs.tag }}
   cancel-in-progress: false
 
 env:
@@ -125,11 +125,11 @@ jobs:
             exit 1
           fi
           if [[ "${RELEASE_TAG}" == *"-alpha."* && "${RELEASE_NPM_DIST_TAG}" != "alpha" ]]; then
-            echo "Alpha prerelease tags must publish OpenClaw to npm dist-tag alpha." >&2
+            echo "Alpha prerelease tags must publish GrokBot to npm dist-tag alpha." >&2
             exit 1
           fi
           if [[ "${RELEASE_TAG}" == *"-beta."* && "${RELEASE_NPM_DIST_TAG}" != "beta" ]]; then
-            echo "Beta prerelease tags must publish OpenClaw to npm dist-tag beta." >&2
+            echo "Beta prerelease tags must publish GrokBot to npm dist-tag beta." >&2
             exit 1
           fi
           release_evidence_required=false
@@ -142,11 +142,11 @@ jobs:
           fi
           if [[ "${release_evidence_required}" == "true" || "${release_evidence_supplied}" == "true" ]]; then
             if [[ -z "${PREFLIGHT_RUN_ID//[[:space:]]/}" ]]; then
-              echo "OpenClaw npm and all-publishable plugin publication require preflight_run_id; supplied release evidence must also be complete." >&2
+              echo "GrokBot npm and all-publishable plugin publication require preflight_run_id; supplied release evidence must also be complete." >&2
               exit 1
             fi
             if [[ -z "${FULL_RELEASE_VALIDATION_RUN_ID//[[:space:]]/}" ]]; then
-              echo "OpenClaw npm and all-publishable plugin publication require full_release_validation_run_id; supplied release evidence must also be complete." >&2
+              echo "GrokBot npm and all-publishable plugin publication require full_release_validation_run_id; supplied release evidence must also be complete." >&2
               exit 1
             fi
           fi
@@ -171,15 +171,15 @@ jobs:
             stable_release=false
           fi
           if [[ -n "${WINDOWS_NODE_TAG}" && ! "${WINDOWS_NODE_TAG}" =~ ^v[0-9]+\.[0-9]+\.[0-9]+([-.][0-9A-Za-z]+([.-][0-9A-Za-z]+)*)?$ ]]; then
-            echo "windows_node_tag must be an explicit openclaw-windows-node release tag, not latest: ${WINDOWS_NODE_TAG}" >&2
+            echo "windows_node_tag must be an explicit grokbot-windows-node release tag, not latest: ${WINDOWS_NODE_TAG}" >&2
             exit 1
           fi
           if [[ "${PUBLISH_OPENCLAW_NPM}" == "true" && "${stable_release}" == "true" && -z "${WINDOWS_NODE_TAG}" ]]; then
-            echo "Stable OpenClaw publish requires an explicit windows_node_tag." >&2
+            echo "Stable GrokBot publish requires an explicit windows_node_tag." >&2
             exit 1
           fi
           if [[ "${PUBLISH_OPENCLAW_NPM}" == "true" && "${stable_release}" == "true" && -z "${WINDOWS_NODE_INSTALLER_DIGESTS}" ]]; then
-            echo "Stable OpenClaw publish requires candidate-approved windows_node_installer_digests." >&2
+            echo "Stable GrokBot publish requires candidate-approved windows_node_installer_digests." >&2
             exit 1
           fi
           tideclaw_alpha_publish=false
@@ -203,11 +203,11 @@ jobs:
             sha_pinned_release_publish=true
           fi
           if [[ "${WORKFLOW_REF}" != "refs/heads/main" && "${tideclaw_alpha_publish}" != "true" && "${sha_pinned_release_publish}" != "true" ]]; then
-            echo "OpenClaw Release Publish must use trusted main workflow tooling, a protected SHA-pinned release-publish tag, or a matching Tideclaw alpha branch." >&2
+            echo "GrokBot Release Publish must use trusted main workflow tooling, a protected SHA-pinned release-publish tag, or a matching Tideclaw alpha branch." >&2
             exit 1
           fi
           if [[ "${PUBLISH_OPENCLAW_NPM}" == "true" && "${PLUGIN_PUBLISH_SCOPE}" != "all-publishable" ]]; then
-            echo "publish_openclaw_npm=true requires plugin_publish_scope=all-publishable so every publishable official plugin is released with OpenClaw." >&2
+            echo "publish_openclaw_npm=true requires plugin_publish_scope=all-publishable so every publishable official plugin is released with GrokBot." >&2
             exit 1
           fi
           if [[ "${PLUGIN_PUBLISH_SCOPE}" == "selected" && -z "${PLUGINS//[[:space:]]/}" ]]; then
@@ -241,18 +241,18 @@ jobs:
           fi
 
           source_json="$(gh release view "${WINDOWS_NODE_TAG}" \
-            --repo openclaw/openclaw-windows-node \
+            --repo grokbot/grokbot-windows-node \
             --json tagName,isDraft,isPrerelease,assets,url)"
           if [[ "$(printf '%s' "${source_json}" | jq -r '.tagName')" != "${WINDOWS_NODE_TAG}" ]]; then
             echo "Windows source release tag does not match ${WINDOWS_NODE_TAG}." >&2
             exit 1
           fi
           if [[ "$(printf '%s' "${source_json}" | jq -r '.isDraft')" == "true" ]]; then
-            echo "Stable OpenClaw publish requires a published Windows source release." >&2
+            echo "Stable GrokBot publish requires a published Windows source release." >&2
             exit 1
           fi
           if [[ "$(printf '%s' "${source_json}" | jq -r '.isPrerelease')" == "true" ]]; then
-            echo "Stable OpenClaw publish requires a non-prerelease Windows source release." >&2
+            echo "Stable GrokBot publish requires a non-prerelease Windows source release." >&2
             exit 1
           fi
 
@@ -293,7 +293,7 @@ jobs:
           echo "installer_digests=${approved_installer_digests}" >> "$GITHUB_OUTPUT"
           echo "- Windows Node source release: prevalidated \`${WINDOWS_NODE_TAG}\`" >> "$GITHUB_STEP_SUMMARY"
 
-      - name: Download OpenClaw npm preflight manifest
+      - name: Download GrokBot npm preflight manifest
         id: preflight_artifact
         if: ${{ inputs.publish_openclaw_npm || inputs.plugin_publish_scope == 'all-publishable' || inputs.preflight_run_id != '' || inputs.full_release_validation_run_id != '' }}
         env:
@@ -303,8 +303,8 @@ jobs:
         run: |
           set -euo pipefail
 
-          preferred_name="openclaw-npm-preflight-${RELEASE_TAG}"
-          preflight_dir="${RUNNER_TEMP}/openclaw-npm-preflight-manifest"
+          preferred_name="grokbot-npm-preflight-${RELEASE_TAG}"
+          preflight_dir="${RUNNER_TEMP}/grokbot-npm-preflight-manifest"
           rm -rf "${preflight_dir}"
           mkdir -p "${preflight_dir}"
 
@@ -333,9 +333,9 @@ jobs:
           echo "::warning::${preferred_name} not found; checking run artifacts for a single compatible preflight artifact."
           mapfile -t matches < <(gh api -X GET "repos/${GITHUB_REPOSITORY}/actions/runs/${PREFLIGHT_RUN_ID}/artifacts" \
             --jq '.artifacts[] | select(.expired != true) | .name' |
-            grep '^openclaw-npm-preflight-' || true)
+            grep '^grokbot-npm-preflight-' || true)
           if [[ "${#matches[@]}" != "1" ]]; then
-            echo "Expected ${preferred_name}, or exactly one openclaw-npm-preflight-* fallback artifact in run ${PREFLIGHT_RUN_ID}." >&2
+            echo "Expected ${preferred_name}, or exactly one grokbot-npm-preflight-* fallback artifact in run ${PREFLIGHT_RUN_ID}." >&2
             printf 'Available preflight candidates:\n' >&2
             printf -- '- %s\n' "${matches[@]:-<none>}" >&2
             exit 1
@@ -410,7 +410,7 @@ jobs:
         id: ref
         run: echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
 
-      - name: Validate OpenClaw npm preflight manifest
+      - name: Validate GrokBot npm preflight manifest
         id: manifest
         if: ${{ inputs.publish_openclaw_npm || inputs.plugin_publish_scope == 'all-publishable' || inputs.preflight_run_id != '' || inputs.full_release_validation_run_id != '' }}
         env:
@@ -419,10 +419,10 @@ jobs:
           EXPECTED_SHA: ${{ steps.ref.outputs.sha }}
         run: |
           set -euo pipefail
-          preflight_dir="${RUNNER_TEMP}/openclaw-npm-preflight-manifest"
+          preflight_dir="${RUNNER_TEMP}/grokbot-npm-preflight-manifest"
           manifest="${preflight_dir}/preflight-manifest.json"
           if [[ ! -f "$manifest" ]]; then
-            echo "OpenClaw npm preflight manifest is missing." >&2
+            echo "GrokBot npm preflight manifest is missing." >&2
             ls -la "$preflight_dir" >&2 || true
             exit 1
           fi
@@ -565,7 +565,7 @@ jobs:
           } >> "$GITHUB_STEP_SUMMARY"
 
   publish:
-    name: Publish plugins, then OpenClaw
+    name: Publish plugins, then GrokBot
     needs: [resolve_release_target]
     permissions:
       actions: write
@@ -638,7 +638,7 @@ jobs:
           PLUGINS: ${{ inputs.plugins }}
         run: |
           set -euo pipefail
-          plan_path="${RUNNER_TEMP}/openclaw-release-clawhub-plan.json"
+          plan_path="${RUNNER_TEMP}/grokbot-release-clawhub-plan.json"
           if [[ "${BOOTSTRAP_WORKFLOW_REF}" == "main" ]]; then
             bootstrap_workflow_sha="$(
               gh api "repos/${GITHUB_REPOSITORY}/git/ref/heads/main" \
@@ -665,7 +665,7 @@ jobs:
 
           CLAWHUB_REGISTRY="${CLAWHUB_REGISTRY:-https://clawhub.ai}" \
             node --import tsx \
-              "${GITHUB_WORKSPACE}/.release-harness/scripts/openclaw-release-clawhub-plan.ts" \
+              "${GITHUB_WORKSPACE}/.release-harness/scripts/grokbot-release-clawhub-plan.ts" \
               "${plan_args[@]}" > "${plan_path}"
           cat "${plan_path}"
 
@@ -709,7 +709,7 @@ jobs:
             version: 2,
             kind: "clawhub-bootstrap",
             repository: process.env.GITHUB_REPOSITORY,
-            workflow: "OpenClaw Release Publish",
+            workflow: "GrokBot Release Publish",
             parentRunId: process.env.GITHUB_RUN_ID,
             parentRunAttempt: Number(process.env.GITHUB_RUN_ATTEMPT),
             workflowBranch: process.env.PARENT_WORKFLOW_BRANCH,
@@ -773,7 +773,7 @@ jobs:
           const approval = {
             version: 1,
             repository: process.env.GITHUB_REPOSITORY,
-            workflow: "OpenClaw Release Publish",
+            workflow: "GrokBot Release Publish",
             parentRunId: process.env.RELEASE_PUBLISH_RUN_ID,
             workflowBranch: process.env.RELEASE_PUBLISH_BRANCH,
             releaseTag: process.env.RELEASE_TAG,
@@ -821,9 +821,9 @@ jobs:
           OPENCLAW_NPM_RESUME_RUN_ID: ${{ inputs.openclaw_npm_resume_run_id }}
           WINDOWS_NODE_TAG: ${{ inputs.windows_node_tag }}
           WINDOWS_NODE_INSTALLER_DIGESTS: ${{ needs.resolve_release_target.outputs.windows_node_installer_digests }}
-          POSTPUBLISH_EVIDENCE_DIR: ${{ runner.temp }}/openclaw-release-postpublish-evidence
+          POSTPUBLISH_EVIDENCE_DIR: ${{ runner.temp }}/grokbot-release-postpublish-evidence
           FULL_RELEASE_VALIDATION_MANIFEST_DIR: ${{ runner.temp }}/full-release-validation-manifest
-          CLAWHUB_PLAN_PATH: ${{ runner.temp }}/openclaw-release-clawhub-plan.json
+          CLAWHUB_PLAN_PATH: ${{ runner.temp }}/grokbot-release-clawhub-plan.json
         run: |
           set -euo pipefail
 
@@ -1273,7 +1273,7 @@ jobs:
             fi
 
             release_version="${RELEASE_TAG#v}"
-            asset_name="openclaw-${release_version}-dependency-evidence.zip"
+            asset_name="grokbot-${release_version}-dependency-evidence.zip"
             has_sha="$(printf '%s' "${release_json}" | jq --arg sha "${TARGET_SHA}" -r '.body | contains($sha)')"
             has_proof="$(printf '%s' "${release_json}" | jq -r '.body | contains("### Release verification")')"
             has_asset="$(printf '%s' "${release_json}" | jq --arg name "${asset_name}" -r 'any(.assets[]?; .name == $name)')"
@@ -1321,7 +1321,7 @@ jobs:
             fi
 
             release_version="${RELEASE_TAG#v}"
-            if ! npm view "openclaw@${release_version}" version >/dev/null 2>&1; then
+            if ! npm view "grokbot@${release_version}" version >/dev/null 2>&1; then
               return 0
             fi
 
@@ -1329,8 +1329,8 @@ jobs:
             # that far. Resume is only safe when the registry serves the exact
             # tarball this tag's preflight built; the same version from any
             # other artifact is immutable on npm and needs a correction tag.
-            artifact_name="${PREFLIGHT_ARTIFACT_NAME:-openclaw-npm-preflight-${RELEASE_TAG}}"
-            manifest_dir="${RUNNER_TEMP}/openclaw-npm-resume-preflight"
+            artifact_name="${PREFLIGHT_ARTIFACT_NAME:-grokbot-npm-preflight-${RELEASE_TAG}}"
+            manifest_dir="${RUNNER_TEMP}/grokbot-npm-resume-preflight"
             rm -rf "${manifest_dir}"
             mkdir -p "${manifest_dir}"
             gh run download "${PREFLIGHT_RUN_ID}" \
@@ -1341,10 +1341,10 @@ jobs:
             manifest_sha="$(jq -er '.releaseSha' "${manifest_path}")"
             manifest_tarball_sha="$(jq -er '.tarballSha256' "${manifest_path}")"
             if [[ "${manifest_sha}" != "${TARGET_SHA}" ]]; then
-              echo "openclaw@${release_version} is already on npm but preflight ${PREFLIGHT_RUN_ID} was built from ${manifest_sha}, not ${TARGET_SHA}; refusing to resume." >&2
+              echo "grokbot@${release_version} is already on npm but preflight ${PREFLIGHT_RUN_ID} was built from ${manifest_sha}, not ${TARGET_SHA}; refusing to resume." >&2
               exit 1
             fi
-            published_tarball_url="$(npm view "openclaw@${release_version}" dist.tarball)"
+            published_tarball_url="$(npm view "grokbot@${release_version}" dist.tarball)"
             published_tarball_path="${manifest_dir}/published.tgz"
             # Keep registry identity verification bounded if a connected
             # tarball endpoint stops transferring during a release resume.
@@ -1357,7 +1357,7 @@ jobs:
             published_sha="$(sha256sum "${published_tarball_path}" | awk '{print $1}')"
             if [[ "${published_sha}" != "${manifest_tarball_sha}" ]]; then
               {
-                echo "openclaw@${release_version} is already published on npm but its tarball does not match this tag's preflight artifact."
+                echo "grokbot@${release_version} is already published on npm but its tarball does not match this tag's preflight artifact."
                 echo "Published sha256: ${published_sha}"
                 echo "Preflight tarballSha256: ${manifest_tarball_sha}"
                 echo "Cut a correction tag instead of resuming this publish."
@@ -1366,10 +1366,10 @@ jobs:
             fi
 
             if [[ -z "${OPENCLAW_NPM_RESUME_RUN_ID//[[:space:]]/}" ]]; then
-              echo "openclaw@${release_version} is already published; openclaw_npm_resume_run_id is required to bind postpublish proof to the original workflow identity." >&2
+              echo "grokbot@${release_version} is already published; openclaw_npm_resume_run_id is required to bind postpublish proof to the original workflow identity." >&2
               exit 1
             fi
-            resume_state="$(node "${GITHUB_WORKSPACE}/.release-harness/scripts/openclaw-npm-resume-run.mjs" \
+            resume_state="$(node "${GITHUB_WORKSPACE}/.release-harness/scripts/grokbot-npm-resume-run.mjs" \
               --repo "${GITHUB_REPOSITORY}" \
               --run-id "${OPENCLAW_NPM_RESUME_RUN_ID}")"
             resume_url="$(printf '%s' "${resume_state}" | jq -er '.url')"
@@ -1377,14 +1377,14 @@ jobs:
             openclaw_npm_expected_workflow_sha="$(printf '%s' "${resume_state}" | jq -er '.workflowSha')"
 
             openclaw_npm_already_published="true"
-            echo "openclaw@${release_version} is already published on npm with this tag's preflight tarball; resuming from ${resume_url}."
+            echo "grokbot@${release_version} is already published on npm with this tag's preflight tarball; resuming from ${resume_url}."
           }
 
           resolve_clawhub_release_plan() {
             clawhub_plan_path="${CLAWHUB_PLAN_PATH}"
             test -s "${clawhub_plan_path}"
 
-            echo "Resolved OpenClaw release ClawHub dispatch plan:"
+            echo "Resolved GrokBot release ClawHub dispatch plan:"
             cat "${clawhub_plan_path}"
 
             clawhub_workflow_ref="$(jq -r '.clawHubWorkflowRef' "${clawhub_plan_path}")"
@@ -1424,7 +1424,7 @@ jobs:
             local force_skip_clawhub="$1"
             local output_path="$2"
             node --import tsx \
-              "${GITHUB_WORKSPACE}/.release-harness/scripts/openclaw-release-clawhub-runtime-state.ts" \
+              "${GITHUB_WORKSPACE}/.release-harness/scripts/grokbot-release-clawhub-runtime-state.ts" \
               --repository "${GITHUB_REPOSITORY}" \
               --wait-for-clawhub "${WAIT_FOR_CLAWHUB}" \
               --force-skip-clawhub "${force_skip_clawhub}" \
@@ -1510,7 +1510,7 @@ jobs:
             local existing_body_file existing_state release_version title latest_arg prerelease_arg
             verify_release_tag_target
             release_version="${RELEASE_TAG#v}"
-            title="openclaw ${release_version}"
+            title="grokbot ${release_version}"
 
             prerelease_arg="--prerelease=false"
             latest_arg="--latest=false"
@@ -1576,39 +1576,39 @@ jobs:
           verify_android_release_asset_contract() {
             local actual_android_assets actual_digest expected_android_assets expected_digest expected_hash release_json verify_dir
             local -a required_assets=(
-              "OpenClaw-Android.apk"
-              "OpenClaw-Android-SHA256SUMS.txt"
+              "GrokBot-Android.apk"
+              "GrokBot-Android-SHA256SUMS.txt"
             )
 
             release_json="$(gh release view "${RELEASE_TAG}" --repo "${GITHUB_REPOSITORY}" --json assets,url)" || return 1
             expected_android_assets="$(printf '%s\n' "${required_assets[@]}" | jq -R . | jq -sc 'sort')"
             actual_android_assets="$(printf '%s' "${release_json}" | jq -c '
-              [.assets[]? | select(.name | startswith("OpenClaw-Android")) | .name] | sort
+              [.assets[]? | select(.name | startswith("GrokBot-Android")) | .name] | sort
             ')"
             if [[ "${actual_android_assets}" != "${expected_android_assets}" ]]; then
               echo "Stable release Android asset names do not match the canonical contract." >&2
               return 1
             fi
 
-            verify_dir="${RUNNER_TEMP}/openclaw-android-release-contract"
+            verify_dir="${RUNNER_TEMP}/grokbot-android-release-contract"
             rm -rf "${verify_dir}"
             mkdir -p "${verify_dir}"
             gh release download "${RELEASE_TAG}" \
               --repo "${GITHUB_REPOSITORY}" \
-              --pattern "OpenClaw-Android.apk" \
-              --pattern "OpenClaw-Android-SHA256SUMS.txt" \
+              --pattern "GrokBot-Android.apk" \
+              --pattern "GrokBot-Android-SHA256SUMS.txt" \
               --dir "${verify_dir}" || return 1
             (
               cd "${verify_dir}"
-              sha256sum --strict --check OpenClaw-Android-SHA256SUMS.txt
+              sha256sum --strict --check GrokBot-Android-SHA256SUMS.txt
             ) || return 1
-            expected_hash="$(awk '$2 == "OpenClaw-Android.apk" { print $1 }' "${verify_dir}/OpenClaw-Android-SHA256SUMS.txt")"
+            expected_hash="$(awk '$2 == "GrokBot-Android.apk" { print $1 }' "${verify_dir}/GrokBot-Android-SHA256SUMS.txt")"
             if [[ ! "${expected_hash}" =~ ^[a-f0-9]{64}$ ]]; then
               echo "Android checksum manifest does not contain the canonical APK entry." >&2
               return 1
             fi
             expected_digest="sha256:${expected_hash}"
-            actual_digest="$(printf '%s' "${release_json}" | jq -r '.assets[]? | select(.name == "OpenClaw-Android.apk") | .digest // empty')"
+            actual_digest="$(printf '%s' "${release_json}" | jq -r '.assets[]? | select(.name == "GrokBot-Android.apk") | .digest // empty')"
             if [[ "${actual_digest}" != "${expected_digest}" ]]; then
               echo "Android release APK digest does not match its checksum manifest." >&2
               return 1
@@ -1616,7 +1616,7 @@ jobs:
             # Explicit guard: this function doubles as an `if` predicate, where
             # bash suppresses errexit, so a failed attestation must not fall
             # through to the summary echo.
-            gh attestation verify "${verify_dir}/OpenClaw-Android.apk" \
+            gh attestation verify "${verify_dir}/GrokBot-Android.apk" \
               --repo "${GITHUB_REPOSITORY}" \
               --signer-workflow "${GITHUB_REPOSITORY}/.github/workflows/android-release.yml" \
               --source-ref "refs/tags/${RELEASE_TAG}" \
@@ -1652,7 +1652,7 @@ jobs:
               fi
             done
 
-            manifest_dir="${RUNNER_TEMP}/openclaw-windows-release-contract"
+            manifest_dir="${RUNNER_TEMP}/grokbot-windows-release-contract"
             manifest_path="${manifest_dir}/OpenClawCompanion-SHA256SUMS.txt"
             rm -rf "${manifest_dir}"
             mkdir -p "${manifest_dir}"
@@ -1754,10 +1754,10 @@ jobs:
           upload_dependency_evidence_release_asset() {
             local release_version download_dir asset_path asset_name artifact_name
             release_version="${RELEASE_TAG#v}"
-            download_dir="${RUNNER_TEMP}/openclaw-release-dependency-evidence-asset"
-            asset_name="openclaw-${release_version}-dependency-evidence.zip"
+            download_dir="${RUNNER_TEMP}/grokbot-release-dependency-evidence-asset"
+            asset_name="grokbot-${release_version}-dependency-evidence.zip"
             asset_path="${RUNNER_TEMP}/${asset_name}"
-            artifact_name="${PREFLIGHT_ARTIFACT_NAME:-openclaw-npm-preflight-${RELEASE_TAG}}"
+            artifact_name="${PREFLIGHT_ARTIFACT_NAME:-grokbot-npm-preflight-${RELEASE_TAG}}"
 
             rm -rf "${download_dir}" "${asset_path}"
             mkdir -p "${download_dir}"
@@ -1767,7 +1767,7 @@ jobs:
               --dir "${download_dir}"
 
             if [[ ! -d "${download_dir}/dependency-evidence" ]]; then
-              echo "Dependency evidence is missing from OpenClaw npm preflight artifact." >&2
+              echo "Dependency evidence is missing from GrokBot npm preflight artifact." >&2
               find "${download_dir}" -maxdepth 2 -type f -print >&2 || true
               exit 1
             fi
@@ -1793,7 +1793,7 @@ jobs:
             local source_path="$1"
             local asset_name="$2"
             local comparison_mode="${3:-exact}"
-            local existing_dir="${RUNNER_TEMP}/openclaw-release-existing-assets/${asset_name}"
+            local existing_dir="${RUNNER_TEMP}/grokbot-release-existing-assets/${asset_name}"
             local existing_path="${existing_dir}/${asset_name}"
 
             case "${comparison_mode}" in
@@ -1839,8 +1839,8 @@ jobs:
             release_version="${RELEASE_TAG#v}"
             manifest_path="${FULL_RELEASE_VALIDATION_MANIFEST_DIR}/full-release-validation-manifest.json"
             evidence_path="${POSTPUBLISH_EVIDENCE_DIR}/release-postpublish-evidence.json"
-            manifest_asset="openclaw-${release_version}-release-manifest.json"
-            evidence_asset="openclaw-${release_version}-postpublish-evidence.json"
+            manifest_asset="grokbot-${release_version}-release-manifest.json"
+            evidence_asset="grokbot-${release_version}-postpublish-evidence.json"
 
             if [[ ! -f "${manifest_path}" ]]; then
               echo "Full release validation manifest is missing from ${FULL_RELEASE_VALIDATION_MANIFEST_DIR}." >&2
@@ -1900,9 +1900,9 @@ jobs:
             # Resumed publishes have no core npm run of their own; the
             # registry package check still verifies the published state.
             if [[ -n "${openclaw_npm_run_id// }" ]]; then
-              verify_args+=(--openclaw-npm-run "${openclaw_npm_run_id}")
+              verify_args+=(--grokbot-npm-run "${openclaw_npm_run_id}")
             fi
-            clawhub_runtime_state_path="${RUNNER_TEMP}/openclaw-release-clawhub-runtime-state-verify.json"
+            clawhub_runtime_state_path="${RUNNER_TEMP}/grokbot-release-clawhub-runtime-state-verify.json"
             write_clawhub_runtime_state "${skip_clawhub}" "${clawhub_runtime_state_path}"
             while IFS= read -r arg; do
               verify_args+=("${arg}")
@@ -1925,7 +1925,7 @@ jobs:
             if [[ "${PUBLISH_OPENCLAW_NPM}" == "true" ]]; then
               verify_args+=(
                 --postpublish-verifier
-                "${GITHUB_WORKSPACE}/.release-harness/scripts/openclaw-npm-postpublish-verify.ts"
+                "${GITHUB_WORKSPACE}/.release-harness/scripts/grokbot-npm-postpublish-verify.ts"
               )
             fi
 
@@ -1990,17 +1990,17 @@ jobs:
             else
               telegram_line="- npm Telegram beta E2E: not supplied"
             fi
-            clawhub_runtime_state_path="${RUNNER_TEMP}/openclaw-release-clawhub-runtime-state-proof.json"
+            clawhub_runtime_state_path="${RUNNER_TEMP}/grokbot-release-clawhub-runtime-state-proof.json"
             write_clawhub_runtime_state false "${clawhub_runtime_state_path}"
             clawhub_line="$(jq -r '.proofLines.normal' "${clawhub_runtime_state_path}")"
             clawhub_bootstrap_line="$(jq -r '.proofLines.bootstrap' "${clawhub_runtime_state_path}")"
             windows_line=""
             if [[ -n "${windows_node_run_id// }" ]]; then
-              windows_line="- Windows Hub promotion: https://github.com/${GITHUB_REPOSITORY}/actions/runs/${windows_node_run_id} from openclaw/openclaw-windows-node@${WINDOWS_NODE_TAG}"
+              windows_line="- Windows Hub promotion: https://github.com/${GITHUB_REPOSITORY}/actions/runs/${windows_node_run_id} from grokbot/grokbot-windows-node@${WINDOWS_NODE_TAG}"
             fi
             android_line=""
             if [[ -n "${android_release_run_id// }" ]]; then
-              android_line="- Android APK: https://github.com/${GITHUB_REPOSITORY}/releases/download/${RELEASE_TAG}/OpenClaw-Android.apk (https://github.com/${GITHUB_REPOSITORY}/actions/runs/${android_release_run_id})"
+              android_line="- Android APK: https://github.com/${GITHUB_REPOSITORY}/releases/download/${RELEASE_TAG}/GrokBot-Android.apk (https://github.com/${GITHUB_REPOSITORY}/actions/runs/${android_release_run_id})"
             fi
 
             RELEASE_PROOF_FILE="${proof_file}" \
@@ -2031,11 +2031,11 @@ jobs:
           const section = [
             "### Release verification",
             "",
-            `- npm package: https://www.npmjs.com/package/openclaw/v/${process.env.RELEASE_VERSION}`,
+            `- npm package: https://www.npmjs.com/package/grokbot/v/${process.env.RELEASE_VERSION}`,
             `- registry tarball: ${process.env.RELEASE_TARBALL}`,
             `- integrity: \`${process.env.RELEASE_INTEGRITY}\``,
             `- release SHA: \`${process.env.RELEASE_SHA}\``,
-            `- full release CI report: https://github.com/openclaw/releases/blob/main/evidence/${process.env.RELEASE_VERSION}/release-evidence.md`,
+            `- full release CI report: https://github.com/grokbot/releases/blob/main/evidence/${process.env.RELEASE_VERSION}/release-evidence.md`,
             `- release publish: https://github.com/${process.env.RELEASE_REPO}/actions/runs/${process.env.RELEASE_PUBLISH_RUN_ID}`,
             `- npm preflight: https://github.com/${process.env.RELEASE_REPO}/actions/runs/${process.env.PREFLIGHT_RUN_ID}`,
             `- full release validation: https://github.com/${process.env.RELEASE_REPO}/actions/runs/${process.env.FULL_RELEASE_VALIDATION_RUN_ID}`,
@@ -2046,7 +2046,7 @@ jobs:
             // have no core npm run of their own to cite.
             ...(process.env.OPENCLAW_NPM_RUN_ID
               ? [
-                  `- OpenClaw npm publish: https://github.com/${process.env.RELEASE_REPO}/actions/runs/${process.env.OPENCLAW_NPM_RUN_ID}`,
+                  `- GrokBot npm publish: https://github.com/${process.env.RELEASE_REPO}/actions/runs/${process.env.OPENCLAW_NPM_RUN_ID}`,
                 ]
               : []),
             process.env.TELEGRAM_LINE,
@@ -2080,15 +2080,15 @@ jobs:
             echo "- Release approval: this workflow job"
             echo "- Plugin npm and ClawHub publish: dispatched in parallel"
             if [[ "${PUBLISH_OPENCLAW_NPM}" == "true" ]]; then
-              echo "- OpenClaw npm publish: starts after plugin npm succeeds"
+              echo "- GrokBot npm publish: starts after plugin npm succeeds"
             else
-              echo "- OpenClaw npm publish: skipped by input"
+              echo "- GrokBot npm publish: skipped by input"
             fi
             if is_android_release && [[ "${PUBLISH_OPENCLAW_NPM}" == "true" ]]; then
-              echo "- Android APK: promoted concurrently with the OpenClaw npm publish; required before the GitHub release can be published"
+              echo "- Android APK: promoted concurrently with the GrokBot npm publish; required before the GitHub release can be published"
             fi
             if is_stable_release && [[ "${PUBLISH_OPENCLAW_NPM}" == "true" ]]; then
-              echo "- Windows Hub promotion: promoted concurrently with the OpenClaw npm publish; required before the GitHub release can be published"
+              echo "- Windows Hub promotion: promoted concurrently with the GrokBot npm publish; required before the GitHub release can be published"
             fi
             if [[ "${WAIT_FOR_CLAWHUB}" == "true" ]]; then
               echo "- Workflow completion waits for ClawHub"
@@ -2182,9 +2182,9 @@ jobs:
             # first so those stages can run concurrently.
             create_or_update_github_release
             if [[ "${openclaw_npm_already_published}" == "true" ]]; then
-              echo "- OpenClaw npm publish: already on npm; resuming postpublish stages" >> "$GITHUB_STEP_SUMMARY"
+              echo "- GrokBot npm publish: already on npm; resuming postpublish stages" >> "$GITHUB_STEP_SUMMARY"
             else
-              openclaw_npm_run_id="$(dispatch_workflow openclaw-npm-release.yml \
+              openclaw_npm_run_id="$(dispatch_workflow grokbot-npm-release.yml \
                 -f tag="${RELEASE_TAG}" \
                 -f preflight_only=false \
                 -f preflight_run_id="${PREFLIGHT_RUN_ID}" \
@@ -2192,10 +2192,10 @@ jobs:
                 -f full_release_validation_run_attempt="${FULL_RELEASE_VALIDATION_RUN_ATTEMPT}" \
                 -f release_publish_run_id="${GITHUB_RUN_ID}" \
                 -f npm_dist_tag="${RELEASE_NPM_DIST_TAG}")"
-              echo "- OpenClaw npm run ID: \`${openclaw_npm_run_id}\`" >> "$GITHUB_STEP_SUMMARY"
+              echo "- GrokBot npm run ID: \`${openclaw_npm_run_id}\`" >> "$GITHUB_STEP_SUMMARY"
             fi
           else
-            echo "- OpenClaw npm publish: skipped by input" >> "$GITHUB_STEP_SUMMARY"
+            echo "- GrokBot npm publish: skipped by input" >> "$GITHUB_STEP_SUMMARY"
           fi
 
           clawhub_result=""
@@ -2242,9 +2242,9 @@ jobs:
           openclaw_result=""
           openclaw_pid=""
           if [[ -n "${openclaw_npm_run_id}" ]]; then
-            openclaw_result="$RUNNER_TEMP/openclaw-npm-result.txt"
+            openclaw_result="$RUNNER_TEMP/grokbot-npm-result.txt"
             wait_run_pid=""
-            wait_for_run_background openclaw-npm-release.yml "${openclaw_npm_run_id}" "${PARENT_WORKFLOW_SHA}" "${openclaw_result}"
+            wait_for_run_background grokbot-npm-release.yml "${openclaw_npm_run_id}" "${PARENT_WORKFLOW_SHA}" "${openclaw_result}"
             openclaw_pid="${wait_run_pid}"
           fi
 
@@ -2344,6 +2344,6 @@ jobs:
         if: ${{ always() && inputs.publish_openclaw_npm }}
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
-          name: openclaw-release-postpublish-evidence-${{ inputs.tag }}
-          path: ${{ runner.temp }}/openclaw-release-postpublish-evidence
+          name: grokbot-release-postpublish-evidence-${{ inputs.tag }}
+          path: ${{ runner.temp }}/grokbot-release-postpublish-evidence
           if-no-files-found: error

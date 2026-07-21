@@ -5,7 +5,7 @@ read_when:
 title: "TypeBox"
 ---
 
-TypeBox is a TypeScript-first schema library. OpenClaw uses it to define the **Gateway WebSocket protocol** (handshake, request/response, server events). Those schemas drive **runtime validation** (AJV), **JSON Schema export**, and **Swift codegen** for the macOS app. One source of truth; everything else is generated.
+TypeBox is a TypeScript-first schema library. GrokBot uses it to define the **Gateway WebSocket protocol** (handshake, request/response, server events). Those schemas drive **runtime validation** (AJV), **JSON Schema export**, and **Swift codegen** for the macOS app. One source of truth; everything else is generated.
 
 For the higher-level protocol context, start with [Gateway architecture](/concepts/architecture).
 
@@ -80,7 +80,7 @@ Connect (first message):
     "minProtocol": 3,
     "maxProtocol": 4,
     "client": {
-      "id": "openclaw-macos",
+      "id": "grokbot-macos",
       "displayName": "macos",
       "version": "1.0.0",
       "platform": "macos 15.1",
@@ -268,7 +268,7 @@ Unknown frame types are preserved as raw payloads for forward compatibility.
 
 Generated JSON Schema is a build artifact, not committed to the repo. The published raw file is typically available at:
 
-- [https://raw.githubusercontent.com/openclaw/openclaw/main/dist/protocol.schema.json](https://raw.githubusercontent.com/openclaw/openclaw/main/dist/protocol.schema.json)
+- [https://raw.githubusercontent.com/grokbot/grokbot/main/dist/protocol.schema.json](https://raw.githubusercontent.com/grokbot/grokbot/main/dist/protocol.schema.json)
 
 ## When you change schemas
 

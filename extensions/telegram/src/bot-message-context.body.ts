@@ -13,27 +13,27 @@ import {
   type BuildMentionRegexesOptions,
   type InboundEventKind,
   type NormalizedLocation,
-} from "openclaw/plugin-sdk/channel-inbound";
-import { resolveChannelGroupPolicy } from "openclaw/plugin-sdk/channel-policy";
-import { hasControlCommand } from "openclaw/plugin-sdk/command-detection";
-import { isAbortRequestText } from "openclaw/plugin-sdk/command-primitives-runtime";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+} from "grokbot/plugin-sdk/channel-inbound";
+import { resolveChannelGroupPolicy } from "grokbot/plugin-sdk/channel-policy";
+import { hasControlCommand } from "grokbot/plugin-sdk/command-detection";
+import { isAbortRequestText } from "grokbot/plugin-sdk/command-primitives-runtime";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import type {
   TelegramDirectConfig,
   TelegramGroupConfig,
   TelegramTopicConfig,
-} from "openclaw/plugin-sdk/config-contracts";
+} from "grokbot/plugin-sdk/config-contracts";
 import {
   createInternalHookEvent,
   fireAndForgetHook,
   toInternalMessageReceivedContext,
   triggerInternalHook,
-} from "openclaw/plugin-sdk/hook-runtime";
-import { createLazyRuntimeModule } from "openclaw/plugin-sdk/lazy-runtime";
-import type { HistoryEntry } from "openclaw/plugin-sdk/reply-history";
-import type { MsgContext } from "openclaw/plugin-sdk/reply-runtime";
-import { logVerbose } from "openclaw/plugin-sdk/runtime-env";
-import { normalizeOptionalLowercaseString } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/hook-runtime";
+import { createLazyRuntimeModule } from "grokbot/plugin-sdk/lazy-runtime";
+import type { HistoryEntry } from "grokbot/plugin-sdk/reply-history";
+import type { MsgContext } from "grokbot/plugin-sdk/reply-runtime";
+import { logVerbose } from "grokbot/plugin-sdk/runtime-env";
+import { normalizeOptionalLowercaseString } from "grokbot/plugin-sdk/string-coerce-runtime";
 import type { NormalizedAllowFrom } from "./bot-access.js";
 import type {
   TelegramLogger,

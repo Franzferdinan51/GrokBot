@@ -88,7 +88,7 @@ describe("scripts/lib/live-docker-auth.sh", () => {
   });
 
   it("adds a kill-after grace period when timeout supports it", () => {
-    const binDir = makeTempBin("openclaw-live-docker-auth-gnu-");
+    const binDir = makeTempBin("grokbot-live-docker-auth-gnu-");
     writeExecutable(
       path.join(binDir, "timeout"),
       [
@@ -117,7 +117,7 @@ describe("scripts/lib/live-docker-auth.sh", () => {
   });
 
   it("caps default CPU limits to the runner capacity", () => {
-    const binDir = makeTempBin("openclaw-live-docker-auth-cpus-");
+    const binDir = makeTempBin("grokbot-live-docker-auth-cpus-");
     writeExecutable(
       path.join(binDir, "timeout"),
       [
@@ -168,7 +168,7 @@ describe("scripts/lib/live-docker-auth.sh", () => {
   });
 
   it("falls back to plain timeout when kill-after is unavailable", () => {
-    const binDir = makeTempBin("openclaw-live-docker-auth-plain-");
+    const binDir = makeTempBin("grokbot-live-docker-auth-plain-");
     writeExecutable(
       path.join(binDir, "timeout"),
       ["#!/bin/sh", 'if [ "$1" = "--kill-after=1s" ]; then', "  exit 1", "fi", "exit 0", ""].join(
@@ -191,7 +191,7 @@ describe("scripts/lib/live-docker-auth.sh", () => {
   });
 
   it("uses gtimeout when timeout is unavailable", () => {
-    const binDir = makeTempBin("openclaw-live-docker-auth-gtimeout-");
+    const binDir = makeTempBin("grokbot-live-docker-auth-gtimeout-");
     writeExecutable(
       path.join(binDir, "gtimeout"),
       [
@@ -220,7 +220,7 @@ describe("scripts/lib/live-docker-auth.sh", () => {
   });
 
   it("allows live Docker resource limits to be disabled", () => {
-    const binDir = makeTempBin("openclaw-live-docker-auth-no-limits-");
+    const binDir = makeTempBin("grokbot-live-docker-auth-no-limits-");
     writeExecutable(
       path.join(binDir, "timeout"),
       [
@@ -265,7 +265,7 @@ describe("scripts/lib/live-docker-auth.sh", () => {
   });
 
   it("normalizes live Docker pids limits", () => {
-    const binDir = makeTempBin("openclaw-live-docker-auth-pids-");
+    const binDir = makeTempBin("grokbot-live-docker-auth-pids-");
     writeExecutable(
       path.join(binDir, "timeout"),
       [
@@ -307,7 +307,7 @@ describe("scripts/lib/live-docker-auth.sh", () => {
     ["live", "OPENCLAW_LIVE_DOCKER_PIDS_LIMIT"],
     ["shared", "OPENCLAW_DOCKER_E2E_PIDS_LIMIT"],
   ])("rejects invalid %s Docker pids limits before live Docker setup", (_label, envName) => {
-    const binDir = makeTempBin("openclaw-live-docker-auth-invalid-pids-");
+    const binDir = makeTempBin("grokbot-live-docker-auth-invalid-pids-");
     writeExecutable(
       path.join(binDir, "timeout"),
       [
@@ -350,7 +350,7 @@ describe("scripts/lib/live-docker-auth.sh", () => {
   });
 
   it("fails fast when no timeout wrapper is available", () => {
-    const binDir = makeTempBin("openclaw-live-docker-auth-no-timeout-");
+    const binDir = makeTempBin("grokbot-live-docker-auth-no-timeout-");
 
     const result = runDockerRunArgs(binDir);
     expect(result.status).toBe(127);

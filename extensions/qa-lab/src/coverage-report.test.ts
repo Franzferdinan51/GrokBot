@@ -1,5 +1,5 @@
 // Qa Lab tests cover coverage report plugin behavior.
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { describe, expect, it, vi } from "vitest";
 import YAML from "yaml";
 import {
@@ -321,7 +321,7 @@ describe("qa coverage report", () => {
     });
 
     expect(report).toContain(
-      "- Suite command: `pnpm openclaw qa suite --scenario control-ui-chat-flow-playwright`",
+      "- Suite command: `pnpm grokbot qa suite --scenario control-ui-chat-flow-playwright`",
     );
     expect(report).toContain("  - execution: playwright ui/src/e2e/chat-flow.e2e.test.ts");
     expect(report).not.toContain("Native test refs");
@@ -338,7 +338,7 @@ describe("qa coverage report", () => {
     });
 
     expect(report).toContain(
-      "- Suite command: `pnpm openclaw qa suite --channel-driver live --channel whatsapp --scenario whatsapp-access-control-group-disabled`",
+      "- Suite command: `pnpm grokbot qa suite --channel-driver live --channel whatsapp --scenario whatsapp-access-control-group-disabled`",
     );
   });
 
@@ -353,7 +353,7 @@ describe("qa coverage report", () => {
     });
 
     expect(report).toContain(
-      "- Suite command: `pnpm openclaw qa suite --scenario instruction-followthrough-repo-contract`",
+      "- Suite command: `pnpm grokbot qa suite --scenario instruction-followthrough-repo-contract`",
     );
     expect(report).not.toContain("--channel-driver live --channel qa-channel");
   });
@@ -366,7 +366,7 @@ describe("qa coverage report", () => {
     });
 
     expect(report).toContain(
-      "- Suite command: `pnpm openclaw qa suite --channel-driver live --channel matrix --scenario dm-per-room-session`",
+      "- Suite command: `pnpm grokbot qa suite --channel-driver live --channel matrix --scenario dm-per-room-session`",
     );
   });
 
@@ -433,9 +433,9 @@ describe("qa coverage report", () => {
     });
 
     expect(report).toContain("- Suite commands:");
-    expect(report).toContain("  - flow: `pnpm openclaw qa suite --scenario flow-proof`");
+    expect(report).toContain("  - flow: `pnpm grokbot qa suite --scenario flow-proof`");
     expect(report).toContain(
-      "  - playwright: `pnpm openclaw qa suite --scenario playwright-proof`",
+      "  - playwright: `pnpm grokbot qa suite --scenario playwright-proof`",
     );
   });
 
@@ -666,7 +666,7 @@ describe("qa coverage report", () => {
         scenarioWithCoverage({
           primary: [TEST_EXECUTABLE_COVERAGE_ID],
           executionKind: "playwright",
-          executionPath: "../outside-openclaw.test.ts",
+          executionPath: "../outside-grokbot.test.ts",
         }),
       ],
     });

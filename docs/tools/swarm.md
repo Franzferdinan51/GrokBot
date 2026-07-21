@@ -24,7 +24,7 @@ The recommended path is **Settings → Labs → Swarm** in the Control UI. The
 toggle takes effect immediately and writes `tools.swarm.enabled` to your
 configuration.
 
-You can also enable Swarm directly in `openclaw.json`:
+You can also enable Swarm directly in `grokbot.json`:
 
 ```json5
 {
@@ -61,7 +61,7 @@ their defaults:
 | `waitTimeoutSecondsMax` | `600`   | Maximum timeout accepted by one `agents_wait` call. The call default is 30 seconds.                                            |
 | `defaultAgentId`        | `""`    | Target agent used when a spawn omits `agentId`. An empty value uses the requesting agent. Existing sub-agent allowlists apply. |
 
-Numeric values must be positive integers. OpenClaw bounds
+Numeric values must be positive integers. GrokBot bounds
 `maxConcurrent` to `1`–`1000`, `maxChildrenPerGroup` to `1`–`10000`,
 `maxTotalPerGroup` to `1`–`100000`, and `waitTimeoutSecondsMax` to
 `1`–`86400`.
@@ -73,7 +73,7 @@ You can override Swarm for one configured agent with
 ## Requirements
 
 The `agents.run`, `phase`, and `log` guest globals require both Swarm and
-OpenClaw Code Mode:
+GrokBot Code Mode:
 
 ```json5
 {
@@ -91,7 +91,7 @@ See [Code Mode activation](/tools/code-mode#activation) and
 unavailable.
 
 `defaultAgentId` and per-run `agentId` values must name a configured target
-permitted by the requester's `subagents.allowAgents` policy. OpenClaw rejects
+permitted by the requester's `subagents.allowAgents` policy. GrokBot rejects
 an unknown or disallowed target instead of falling back to another agent.
 
 ## Write a Swarm script
@@ -168,7 +168,7 @@ return await agents.run(
 );
 ```
 
-`Promise.all` is the fan-out and fan-in boundary. OpenClaw starts up to
+`Promise.all` is the fan-out and fan-in boundary. GrokBot starts up to
 `maxConcurrent` children for the group and queues the rest in submission
 order.
 
@@ -237,7 +237,7 @@ The target agent resolves in this order:
 3. The requesting agent.
 
 A dedicated, lean worker agent is useful when swarm children need a smaller
-tool surface, cheaper model, or tighter sandbox policy. OpenClaw does not ship
+tool surface, cheaper model, or tighter sandbox policy. GrokBot does not ship
 a built-in `worker` agent id; configure one before naming it as the default.
 Harden that worker with `tools.swarm: false` in its per-agent configuration so
 it can be spawned but cannot start swarms from its own top-level sessions:
@@ -262,7 +262,7 @@ Collector approvals fail closed. A child never opens an operator approval
 prompt. A tool action that would require approval is denied, and the child can
 report that denial in its result so the script can decide what to do next.
 
-For structured output, OpenClaw adds a synthetic `structured_output` tool to
+For structured output, GrokBot adds a synthetic `structured_output` tool to
 the child and validates its payload against the supplied JSON Schema. An
 invalid or missing payload gets one corrective nudge. If the retry still does
 not validate, the collector completion keeps the child's raw text, leaves
@@ -315,18 +315,18 @@ to inspect a collector child or open its transcript without losing the swarm
 hierarchy.
 
 Collector results remain waitable until their group is archived. After every
-member reaches its retention deadline, OpenClaw archives the group's children
+member reaches its retention deadline, GrokBot archives the group's children
 as a batch so completed swarms do not remain in the live session tree.
 
 ## Use Swarm from other harnesses
 
-You can use Swarm without OpenClaw Code Mode. Its core tools are
+You can use Swarm without GrokBot Code Mode. Its core tools are
 harness-independent: start collector children with
 `sessions_spawn({ collect: true })` and drain them with bounded `agents_wait`
 calls.
 
-Codex Code Mode automatically exposes eligible dynamic OpenClaw tools under
-`tools.*`. It does not use OpenClaw's QuickJS guest API or require
+Codex Code Mode automatically exposes eligible dynamic GrokBot tools under
+`tools.*`. It does not use GrokBot's QuickJS guest API or require
 `tools.codeMode`, but `tools.swarm` must still be enabled. Codex harness
 `agents_wait` calls support the full 600-second timeout. Use this pattern:
 
@@ -415,7 +415,7 @@ or its authorized parent chain can wait on a collector.
 
 This is bounded long polling, not a busy status loop. Keep passing only the
 remaining run ids until `pending` is empty. Collector mode supports native
-OpenClaw sub-agents; it does not support ACP runtime, thread binding, visible
+GrokBot sub-agents; it does not support ACP runtime, thread binding, visible
 sessions, or persistent session mode.
 
 ## Limits and roadmap

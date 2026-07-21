@@ -1,14 +1,14 @@
 // MCP loopback HTTP request helpers.
 // Authenticates local MCP POST requests and extracts scoped Gateway context.
 import type { IncomingMessage, ServerResponse } from "node:http";
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+import { normalizeOptionalString } from "@grokbot/normalization-core/string-coerce";
 import type {
   SourceReplyDeliveryMode,
   TaskSuggestionDeliveryMode,
 } from "../auto-reply/get-reply-options.types.js";
 import type { InboundEventKind } from "../channels/inbound-event/kind.js";
 import { resolveMainSessionKey } from "../config/sessions.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { isTruthyEnvValue } from "../infra/env.js";
 import { safeEqualSecret } from "../security/secret-equal.js";
 import { normalizeMessageChannel } from "../utils/message-channel.js";
@@ -130,7 +130,7 @@ function resolveMcpSender(params: {
     return { senderIsOwner: ownerTokenMatched };
   }
   const grantToken = authHeader.startsWith("Bearer ") ? authHeader.slice("Bearer ".length) : "";
-  const captureKey = normalizeOptionalString(getHeader(params.req, "x-openclaw-cli-capture-key"));
+  const captureKey = normalizeOptionalString(getHeader(params.req, "x-grokbot-cli-capture-key"));
   const clientGrant =
     grantToken && captureKey
       ? resolveMcpLoopbackClientGrant({
@@ -395,7 +395,7 @@ export function resolveMcpCliCaptureKey(
   if (auth.boundContext || auth.boundSessionKey) {
     return auth.boundCaptureKey;
   }
-  return normalizeOptionalString(getHeader(req, "x-openclaw-cli-capture-key"));
+  return normalizeOptionalString(getHeader(req, "x-grokbot-cli-capture-key"));
 }
 
 function normalizeMcpClientCapsHeader(value: string | undefined): string[] | undefined {
@@ -438,28 +438,28 @@ export function resolveMcpRequestContext(
   }
   return {
     sessionKey: resolveScopedSessionKey(cfg, getHeader(req, "x-session-key")),
-    sessionId: normalizeOptionalString(getHeader(req, "x-openclaw-session-id")),
+    sessionId: normalizeOptionalString(getHeader(req, "x-grokbot-session-id")),
     messageProvider:
-      normalizeMessageChannel(getHeader(req, "x-openclaw-message-channel")) ?? undefined,
+      normalizeMessageChannel(getHeader(req, "x-grokbot-message-channel")) ?? undefined,
     // The token-authenticated loopback client is gateway-spawned on 127.0.0.1. Caps only
     // widen tool availability; sender ownership remains derived from the bearer token.
-    clientCaps: normalizeMcpClientCapsHeader(getHeader(req, "x-openclaw-client-caps")),
-    currentChannelId: normalizeOptionalString(getHeader(req, "x-openclaw-current-channel-id")),
-    currentThreadTs: normalizeOptionalString(getHeader(req, "x-openclaw-current-thread-ts")),
-    currentMessageId: normalizeOptionalString(getHeader(req, "x-openclaw-current-message-id")),
+    clientCaps: normalizeMcpClientCapsHeader(getHeader(req, "x-grokbot-client-caps")),
+    currentChannelId: normalizeOptionalString(getHeader(req, "x-grokbot-current-channel-id")),
+    currentThreadTs: normalizeOptionalString(getHeader(req, "x-grokbot-current-thread-ts")),
+    currentMessageId: normalizeOptionalString(getHeader(req, "x-grokbot-current-message-id")),
     currentInboundAudio: normalizeMcpBooleanHeader(
-      getHeader(req, "x-openclaw-current-inbound-audio"),
+      getHeader(req, "x-grokbot-current-inbound-audio"),
     ),
-    accountId: normalizeOptionalString(getHeader(req, "x-openclaw-account-id")),
-    inboundEventKind: normalizeMcpInboundEventKind(getHeader(req, "x-openclaw-inbound-event-kind")),
+    accountId: normalizeOptionalString(getHeader(req, "x-grokbot-account-id")),
+    inboundEventKind: normalizeMcpInboundEventKind(getHeader(req, "x-grokbot-inbound-event-kind")),
     sourceReplyDeliveryMode: normalizeMcpSourceReplyDeliveryMode(
-      getHeader(req, "x-openclaw-source-reply-delivery-mode"),
+      getHeader(req, "x-grokbot-source-reply-delivery-mode"),
     ),
     taskSuggestionDeliveryMode: normalizeMcpTaskSuggestionDeliveryMode(
-      getHeader(req, "x-openclaw-task-suggestion-delivery-mode"),
+      getHeader(req, "x-grokbot-task-suggestion-delivery-mode"),
     ),
     requireExplicitMessageTarget: normalizeMcpBooleanHeader(
-      getHeader(req, "x-openclaw-require-explicit-message-target"),
+      getHeader(req, "x-grokbot-require-explicit-message-target"),
     ),
     senderIsOwner: auth.senderIsOwner,
   };

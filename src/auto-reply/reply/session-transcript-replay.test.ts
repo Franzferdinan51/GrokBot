@@ -2,7 +2,7 @@
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { replayRecentUserAssistantMessages } from "../../config/sessions/transcript-replay.js";
 
@@ -69,7 +69,7 @@ async function expectPathMissing(targetPath: string): Promise<void> {
 describe("replayRecentUserAssistantMessages", () => {
   let root = "";
   beforeEach(async () => {
-    root = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-replay-"));
+    root = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-replay-"));
   });
   afterEach(async () => {
     await fs.rm(root, { recursive: true, force: true });

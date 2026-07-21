@@ -1,13 +1,13 @@
 // Openai plugin module implements shared behavior.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { findCatalogTemplate } from "openclaw/plugin-sdk/provider-catalog-shared";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { findCatalogTemplate } from "grokbot/plugin-sdk/provider-catalog-shared";
 import {
   cloneFirstTemplateModel,
   matchesExactOrPrefix,
   type ProviderPlugin,
-} from "openclaw/plugin-sdk/provider-model-shared";
-import { buildProviderStreamFamilyHooks } from "openclaw/plugin-sdk/provider-stream-family";
-import { normalizeOptionalString } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/provider-model-shared";
+import { buildProviderStreamFamilyHooks } from "grokbot/plugin-sdk/provider-stream-family";
+import { normalizeOptionalString } from "grokbot/plugin-sdk/string-coerce-runtime";
 import { createOpenAINativeWebSearchWrapper } from "./native-web-search.js";
 import { buildOpenAIReplayPolicy } from "./replay-policy.js";
 import {

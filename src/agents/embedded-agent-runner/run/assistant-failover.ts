@@ -2,7 +2,7 @@
  * Handles assistant-stage failover decisions during embedded-agent attempts.
  */
 import { sanitizeForLog } from "../../../../packages/terminal-core/src/ansi.js";
-import type { OpenClawConfig } from "../../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../../config/types.grokbot.js";
 import type { AssistantMessage } from "../../../llm/types.js";
 import { classifyRateLimitWindow } from "../../../llm/utils/rate-limit-window.js";
 import type { AuthProfileFailureReason } from "../../auth-profiles.js";

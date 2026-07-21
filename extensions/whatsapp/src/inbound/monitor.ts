@@ -9,21 +9,21 @@ import type {
   WAMessageKey,
   WASocket,
 } from "baileys";
-import { recordChannelActivity } from "openclaw/plugin-sdk/channel-activity-runtime";
+import { recordChannelActivity } from "grokbot/plugin-sdk/channel-activity-runtime";
 import {
   formatInboundMediaUnavailableText,
   formatLocationText,
   type MediaPlaceholderTextFact,
-} from "openclaw/plugin-sdk/channel-inbound";
-import { createInboundDebouncer } from "openclaw/plugin-sdk/channel-inbound-debounce";
-import { getChildLogger } from "openclaw/plugin-sdk/logging-core";
+} from "grokbot/plugin-sdk/channel-inbound";
+import { createInboundDebouncer } from "grokbot/plugin-sdk/channel-inbound-debounce";
+import { getChildLogger } from "grokbot/plugin-sdk/logging-core";
 import {
   asDateTimestampMs,
   parseStrictFiniteNumber,
   resolveExpiresAtMsFromDurationMs,
-} from "openclaw/plugin-sdk/number-runtime";
-import { defaultRuntime } from "openclaw/plugin-sdk/runtime-env";
-import { createSubsystemLogger } from "openclaw/plugin-sdk/runtime-env";
+} from "grokbot/plugin-sdk/number-runtime";
+import { defaultRuntime } from "grokbot/plugin-sdk/runtime-env";
+import { createSubsystemLogger } from "grokbot/plugin-sdk/runtime-env";
 import { maybeResolveWhatsAppApprovalReaction } from "../approval-reactions.js";
 import { readWebSelfIdentityForDecision, WhatsAppAuthUnstableError } from "../auth-store.js";
 import { getWhatsAppConnectionController } from "../connection-controller-runtime-context.js";

@@ -29,7 +29,7 @@ const os = loadNodeOs();
 import {
   resolveTimerTimeoutMs,
   clampTimerTimeoutMs,
-} from "@openclaw/normalization-core/number-coercion";
+} from "@grokbot/normalization-core/number-coercion";
 import { getEnvApiKey } from "../env-api-keys.js";
 import { getAiTransportHost, resolveAiTransportHeaderSentinels } from "../host.js";
 import { parseRetryAfterHttpDateMs } from "../internal/retry-after.js";
@@ -1658,10 +1658,10 @@ function buildBaseCodexHeaders(
   }
   headers.set("Authorization", `Bearer ${token}`);
   headers.set("chatgpt-account-id", accountId);
-  headers.set("originator", "openclaw");
+  headers.set("originator", "grokbot");
   const userAgent = os
-    ? `openclaw (${os.platform()} ${os.release()}; ${os.arch()})`
-    : "openclaw (browser)";
+    ? `grokbot (${os.platform()} ${os.release()}; ${os.arch()})`
+    : "grokbot (browser)";
   headers.set("User-Agent", userAgent);
   return headers;
 }

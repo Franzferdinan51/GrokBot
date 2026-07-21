@@ -3,7 +3,7 @@ import crypto from "node:crypto";
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { normalizeUniqueStringEntries } from "@openclaw/normalization-core/string-normalization";
+import { normalizeUniqueStringEntries } from "@grokbot/normalization-core/string-normalization";
 import pMap from "p-map";
 import {
   resolveAgentDir,
@@ -39,7 +39,7 @@ import {
   resolveSessionTranscriptPath,
   resolveSessionTranscriptsDirForAgent,
 } from "../../config/sessions/paths.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import {
   coerceSecretRef,
   hasConfiguredSecretInput,
@@ -47,7 +47,7 @@ import {
 } from "../../config/types.secrets.js";
 import { type SecretRefResolveCache, resolveSecretRefString } from "../../secrets/resolve.js";
 import { createLazyImportLoader } from "../../shared/lazy-promise.js";
-import { disposeOpenClawAgentDatabaseByPath } from "../../state/openclaw-agent-db.js";
+import { disposeOpenClawAgentDatabaseByPath } from "../../state/grokbot-agent-db.js";
 import { redactSecrets } from "../status-all/format.js";
 import { buildProbeCandidateMap, selectProbeModel } from "./list.probe.models.js";
 import { formatMs } from "./shared.js";
@@ -777,7 +777,7 @@ async function probeTarget(params: {
       // disposeOpenClawAgentDatabaseByPath's exact-path guard would otherwise
       // skip the registry row, leaking an agent_databases entry per probe.
       isolatedAgentDir = await fs.realpath(
-        await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-auth-probe-")),
+        await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-auth-probe-")),
       );
     }
     if (target.boundValue && !target.useRuntimeAuth && isolatedAgentDir) {

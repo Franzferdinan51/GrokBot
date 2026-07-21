@@ -1,5 +1,5 @@
-// Nextcloud Talk plugin entrypoint registers its OpenClaw integration.
-import { defineBundledChannelEntry } from "openclaw/plugin-sdk/channel-entry-contract";
+// Nextcloud Talk plugin entrypoint registers its GrokBot integration.
+import { defineBundledChannelEntry } from "grokbot/plugin-sdk/channel-entry-contract";
 
 export default defineBundledChannelEntry({
   id: "nextcloud-talk",

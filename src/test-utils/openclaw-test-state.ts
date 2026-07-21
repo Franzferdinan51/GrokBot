@@ -1,8 +1,8 @@
-// Creates isolated OpenClaw state directories for integration-style tests.
+// Creates isolated GrokBot state directories for integration-style tests.
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { uniqueStrings } from "@openclaw/normalization-core/string-normalization";
+import { uniqueStrings } from "@grokbot/normalization-core/string-normalization";
 import { resolveAuthProfileDatabasePath } from "../agents/auth-profiles/sqlite.js";
 import { saveAuthProfileStore } from "../agents/auth-profiles/store.js";
 import type { AuthProfileStore } from "../agents/auth-profiles/types.js";
@@ -59,7 +59,7 @@ export type OpenClawTestState = {
   cleanup: () => Promise<void>;
 };
 
-const DEFAULT_PREFIX = "openclaw-test-state-";
+const DEFAULT_PREFIX = "grokbot-test-state-";
 const ENV_KEYS = [
   "HOME",
   "USERPROFILE",
@@ -117,11 +117,11 @@ function resolveLayout(
 } {
   if (layout === "home") {
     const home = path.join(root, "home");
-    const stateDir = path.join(home, ".openclaw");
+    const stateDir = path.join(home, ".grokbot");
     return {
       home,
       stateDir,
-      configPath: path.join(stateDir, "openclaw.json"),
+      configPath: path.join(stateDir, "grokbot.json"),
       workspaceDir: path.join(home, "workspace"),
     };
   }
@@ -131,7 +131,7 @@ function resolveLayout(
     return {
       home,
       stateDir,
-      configPath: path.join(root, "config", "openclaw.json"),
+      configPath: path.join(root, "config", "grokbot.json"),
       workspaceDir: path.join(root, "workspace"),
     };
   }
@@ -139,7 +139,7 @@ function resolveLayout(
   return {
     home: path.join(root, "home"),
     stateDir,
-    configPath: path.join(stateDir, "openclaw.json"),
+    configPath: path.join(stateDir, "grokbot.json"),
     workspaceDir: path.join(root, "workspace"),
   };
 }
@@ -167,7 +167,7 @@ function scenarioConfig(options: OpenClawTestStateOptions): Record<string, unkno
         bind: "loopback",
         auth: {
           mode: "token",
-          token: options.gateway?.token ?? "openclaw-test-token",
+          token: options.gateway?.token ?? "grokbot-test-token",
         },
         controlUi: {
           enabled: false,
@@ -190,7 +190,7 @@ function scenarioConfig(options: OpenClawTestStateOptions): Record<string, unkno
         port: options.gateway?.port ?? 18789,
         auth: {
           mode: "token",
-          token: options.gateway?.token ?? "openclaw-test-token",
+          token: options.gateway?.token ?? "grokbot-test-token",
         },
         controlUi: {
           enabled: false,
@@ -335,7 +335,7 @@ export async function createOpenClawTestState(
     applyEnv: () => {
       resetConfigRuntimeStateForTest();
       for (const [key, value] of Object.entries(envVars)) {
-        // Test fixtures apply a fixed OpenClaw env set, not plugin-provided host env.
+        // Test fixtures apply a fixed GrokBot env set, not plugin-provided host env.
         if (value === undefined) {
           Reflect.deleteProperty(process.env, key);
         } else {

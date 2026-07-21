@@ -1,8 +1,8 @@
-// Summarizes channel token/account credential fields for `openclaw status --all`.
+// Summarizes channel token/account credential fields for `grokbot status --all`.
 // The display path is intentionally secret-safe unless the caller explicitly requests disclosure.
 
-import { asRecord } from "@openclaw/normalization-core/record-coerce";
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+import { asRecord } from "@grokbot/normalization-core/record-coerce";
+import { normalizeOptionalString } from "@grokbot/normalization-core/string-coerce";
 import { hasConfiguredUnavailableCredentialStatus } from "../../channels/account-snapshot-fields.js";
 import type { ChannelAccountSnapshot } from "../../channels/plugins/types.public.js";
 import { sha256HexPrefix } from "../../logging/redact-identifier.js";

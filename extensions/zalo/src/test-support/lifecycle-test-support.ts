@@ -3,7 +3,7 @@ import { request as httpRequest } from "node:http";
 import {
   createPluginRuntimeMediaMock,
   createPluginRuntimeMock,
-} from "openclaw/plugin-sdk/channel-test-helpers";
+} from "grokbot/plugin-sdk/channel-test-helpers";
 import { expect, vi } from "vitest";
 import type { OpenClawConfig, PluginRuntime } from "../runtime-api.js";
 import type { ResolvedZaloAccount } from "../types.js";

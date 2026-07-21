@@ -1,7 +1,7 @@
-/** Builds the interactive `openclaw secrets configure` target list and apply plan. */
+/** Builds the interactive `grokbot secrets configure` target list and apply plan. */
 import { isDeepStrictEqual } from "node:util";
 import type { AuthProfileStore } from "../agents/auth-profiles/types.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import {
   resolveSecretInputRef,
   type SecretProviderConfig,
@@ -15,13 +15,13 @@ import {
   discoverConfigSecretTargets,
 } from "./target-registry.js";
 
-/** Credential target shown by `openclaw secrets configure` before a SecretRef is selected. */
+/** Credential target shown by `grokbot secrets configure` before a SecretRef is selected. */
 export type ConfigureCandidate = {
   type: string;
   path: string;
   pathSegments: string[];
   label: string;
-  configFile: "openclaw.json" | "auth-profiles.json";
+  configFile: "grokbot.json" | "auth-profiles.json";
   expectedResolvedValue: "string" | "string-or-object";
   existingRef?: SecretRef;
   isDerived?: boolean;
@@ -54,7 +54,7 @@ function configureCandidateSortKey(candidate: ConfigureCandidate): string {
     const agentId = candidate.agentId ?? "";
     return `auth-profiles:${agentId}:${candidate.path}`;
   }
-  return `openclaw:${candidate.path}`;
+  return `grokbot:${candidate.path}`;
 }
 
 function resolveAuthProfileProvider(
@@ -73,7 +73,7 @@ function resolveAuthProfileProvider(
   return provider.length > 0 ? provider : undefined;
 }
 
-/** Builds configure candidates for OpenClaw config plus an optional auth-profile scope. */
+/** Builds configure candidates for GrokBot config plus an optional auth-profile scope. */
 export function buildConfigureCandidatesForScope(params: {
   config: OpenClawConfig;
   authoredOpenClawConfig?: OpenClawConfig;
@@ -107,7 +107,7 @@ export function buildConfigureCandidatesForScope(params: {
           path: entry.path,
           pathSegments: [...entry.pathSegments],
           label: entry.path,
-          configFile: `openclaw.json` as const,
+          configFile: `grokbot.json` as const,
           expectedResolvedValue: entry.entry.expectedResolvedValue,
         },
         resolved.ref ? { existingRef: resolved.ref } : {},
@@ -242,7 +242,7 @@ export function buildSecretsConfigurePlan(params: {
     version: 1,
     protocolVersion: 1,
     generatedAt: params.generatedAt ?? new Date().toISOString(),
-    generatedBy: "openclaw secrets configure",
+    generatedBy: "grokbot secrets configure",
     targets: [...params.selectedTargets.values()].map((entry) =>
       Object.assign(
         {

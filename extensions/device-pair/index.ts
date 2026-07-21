@@ -1,14 +1,14 @@
-// Device Pair plugin entrypoint registers its OpenClaw integration.
+// Device Pair plugin entrypoint registers its GrokBot integration.
 import { rm } from "node:fs/promises";
 import { isIP } from "node:net";
 import os from "node:os";
 import path from "node:path";
-import { createLazyRuntimeModule } from "openclaw/plugin-sdk/lazy-runtime";
-import { definePluginEntry, type OpenClawPluginApi } from "openclaw/plugin-sdk/plugin-entry";
+import { createLazyRuntimeModule } from "grokbot/plugin-sdk/lazy-runtime";
+import { definePluginEntry, type OpenClawPluginApi } from "grokbot/plugin-sdk/plugin-entry";
 import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalString,
-} from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/string-coerce-runtime";
 import { buildDevicePairPairingQrChannelData } from "./pairing-qr-channel-data.js";
 type NotifyModule = typeof import("./notify.js");
 
@@ -711,7 +711,7 @@ async function sendQrPngToSupportedChannel(params: {
 export default definePluginEntry({
   id: "device-pair",
   name: "Device Pair",
-  description: "QR/bootstrap pairing helpers for OpenClaw devices",
+  description: "QR/bootstrap pairing helpers for GrokBot devices",
   register(api: OpenClawPluginApi) {
     let notifierService: ReturnType<NotifyModule["createPairingNotifierService"]> | undefined;
     api.registerService({
@@ -874,7 +874,7 @@ export default definePluginEntry({
                 ctx,
                 sender: qrChannelSender,
                 target,
-                caption: ["Scan this QR code with the OpenClaw iOS app:", "", ...infoLines].join(
+                caption: ["Scan this QR code with the GrokBot iOS app:", "", ...infoLines].join(
                   "\n",
                 ),
                 qrFilePath,
@@ -932,7 +932,7 @@ export default definePluginEntry({
             }
             return {
               text: [
-                "Scan this QR code with the OpenClaw iOS app:",
+                "Scan this QR code with the GrokBot iOS app:",
                 "",
                 formatQrInfoMarkdown({
                   payload,

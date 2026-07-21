@@ -1,13 +1,13 @@
 import { afterEach, describe, expect, it } from "vitest";
 import { executeSqliteQuerySync, getNodeSqliteKysely } from "../infra/kysely-sync.js";
-import { withOpenClawTestState } from "../test-utils/openclaw-test-state.js";
-import { closeOpenClawAgentDatabasesForTest } from "./openclaw-agent-db.js";
-import type { DB as OpenClawStateKyselyDatabase } from "./openclaw-state-db.generated.js";
+import { withOpenClawTestState } from "../test-utils/grokbot-test-state.js";
+import { closeOpenClawAgentDatabasesForTest } from "./grokbot-agent-db.js";
+import type { DB as OpenClawStateKyselyDatabase } from "./grokbot-state-db.generated.js";
 import {
   closeOpenClawStateDatabaseForTest,
   runOpenClawStateWriteTransaction,
-} from "./openclaw-state-db.js";
-import { withOpenClawStateLease } from "./openclaw-state-lease.js";
+} from "./grokbot-state-db.js";
+import { withOpenClawStateLease } from "./grokbot-state-lease.js";
 
 type LeaseDatabase = Pick<OpenClawStateKyselyDatabase, "state_leases">;
 
@@ -16,7 +16,7 @@ afterEach(() => {
   closeOpenClawStateDatabaseForTest();
 });
 
-describe("OpenClaw state lease", () => {
+describe("GrokBot state lease", () => {
   it("rechecks exact ownership inside the caller's write transaction", async () => {
     await withOpenClawTestState({ label: "core-state-lease" }, async () => {
       await expect(

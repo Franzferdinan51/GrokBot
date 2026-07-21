@@ -34,7 +34,7 @@ import {
   validateFullReleaseValidationEvidence,
 } from "./validate-full-release-validation-evidence.mjs";
 
-const DEFAULT_REPO = "openclaw/openclaw";
+const DEFAULT_REPO = "grokbot/grokbot";
 const DEFAULT_PROVIDER = "openai";
 const DEFAULT_MODE = "both";
 const DEFAULT_NPM_DIST_TAG = "beta";
@@ -47,7 +47,7 @@ const TOOLING_ROOT = fileURLToPath(new URL("../", import.meta.url));
 const TIDECLAW_ALPHA_WORKFLOW_REF_PATTERN =
   /^tideclaw\/alpha\/[0-9]{4}-[0-9]{2}-[0-9]{2}-[0-9]{4}Z$/u;
 const WINDOWS_NODE_TAG_PATTERN = /^v[0-9]+\.[0-9]+\.[0-9]+([-.][0-9A-Za-z]+([.-][0-9A-Za-z]+)*)?$/u;
-const WINDOWS_NODE_REPO = "openclaw/openclaw-windows-node";
+const WINDOWS_NODE_REPO = "grokbot/grokbot-windows-node";
 const WINDOWS_NODE_REQUIRED_ASSETS = [
   "OpenClawCompanion-Setup-x64.exe",
   "OpenClawCompanion-Setup-arm64.exe",
@@ -79,14 +79,14 @@ function usage() {
 
 Dispatches or consumes release validation runs, validates the prepared npm tarball,
 builds plugin publish plans, writes a green evidence bundle, then prints the exact
-OpenClaw Release Publish command only after everything is green.
+GrokBot Release Publish command only after everything is green.
 
 Options:
   --tag <tag>                         Release tag to validate.
   --workflow-ref <ref>                Trusted workflow ref. Default: main; matching Tideclaw branch required for alpha.
   --repo <owner/repo>                 GitHub repo. Default: ${DEFAULT_REPO}
   --full-release-run <id>             Reuse successful Full Release Validation run.
-  --npm-preflight-run <id>            Reuse successful OpenClaw NPM Release preflight run.
+  --npm-preflight-run <id>            Reuse successful GrokBot NPM Release preflight run.
   --windows-node-tag <tag>            Exact Windows Node release tag. Required for stable.
   --skip-dispatch                     Require both run ids; do not dispatch workflows.
   --skip-local-generated-check        Do not run local generated release baseline checks before dispatch.
@@ -248,7 +248,7 @@ export function parseArgs(argv) {
   }
   if (options.pluginPublishScope === "selected") {
     throw new Error(
-      "--plugin-publish-scope selected is only for plugin-only repair publishes; release candidates publish OpenClaw with --plugin-publish-scope all-publishable",
+      "--plugin-publish-scope selected is only for plugin-only repair publishes; release candidates publish GrokBot with --plugin-publish-scope all-publishable",
     );
   }
   if (options.pluginPublishScope === "all-publishable" && options.plugins.trim()) {
@@ -510,7 +510,7 @@ function fetchTrustedWorkflowSha(workflowRef, toolingRoot) {
 
 function runFromTrustedTooling(argv, { targetRoot, workflowRef }) {
   const trustedToolingSha = fetchTrustedWorkflowSha(workflowRef, targetRoot);
-  const tempRoot = mkdtempSync(join(tmpdir(), "openclaw-release-tooling-"));
+  const tempRoot = mkdtempSync(join(tmpdir(), "grokbot-release-tooling-"));
   const toolingRoot = join(tempRoot, "checkout");
   let worktreeAdded = false;
   try {
@@ -1170,7 +1170,7 @@ export function buildPublishCommand(options) {
     "gh",
     "workflow",
     "run",
-    "openclaw-release-publish.yml",
+    "grokbot-release-publish.yml",
     "--repo",
     options.repo,
     "--ref",
@@ -1345,7 +1345,7 @@ async function runTelegramIfNeeded(options, artifact, manifest, runAttempt, sour
     sourceSha,
   });
   const runId = dispatchWorkflow(options.repo, workflowFile, options.workflowRef, {
-    package_spec: `openclaw@${options.tag.replace(/^v/u, "")}`,
+    package_spec: `grokbot@${options.tag.replace(/^v/u, "")}`,
     package_label: options.tag,
     ...artifactInputs,
     harness_ref: options.workflowRef,
@@ -1448,7 +1448,7 @@ async function main() {
   }
 
   if (!options.npmPreflightRunId && !options.skipDispatch) {
-    const workflowFile = "openclaw-npm-release.yml";
+    const workflowFile = "grokbot-npm-release.yml";
     options.npmPreflightRunId = dispatchWorkflow(options.repo, workflowFile, options.workflowRef, {
       tag: options.tag,
       preflight_only: "true",
@@ -1469,7 +1469,7 @@ async function main() {
     allowShaPinnedWorkflowRef: true,
   });
   const npmRun = await waitForSuccessfulRun(options.repo, options.npmPreflightRunId, {
-    workflowName: "OpenClaw NPM Release",
+    workflowName: "GrokBot NPM Release",
     workflowRef: options.workflowRef,
   });
   const npmPreflightSource = validateNpmPreflightRunSource({
@@ -1482,8 +1482,8 @@ async function main() {
   const npmArtifact = await downloadResolvedArtifact(
     options.repo,
     options.npmPreflightRunId,
-    `openclaw-npm-preflight-${options.tag}`,
-    "openclaw-npm-preflight-",
+    `grokbot-npm-preflight-${options.tag}`,
+    "grokbot-npm-preflight-",
     npmDir,
   );
   const npmArtifactName = npmArtifact.name;

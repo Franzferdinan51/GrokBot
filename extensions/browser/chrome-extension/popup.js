@@ -16,9 +16,9 @@ const pageShareStatus = document.getElementById("pageShareStatus");
 let sendingPage = false;
 
 const STATE_LABEL = {
-  on: "Connected to OpenClaw",
+  on: "Connected to GrokBot",
   connecting: "Connecting…",
-  error: "Relay unreachable — is the OpenClaw gateway running?",
+  error: "Relay unreachable — is the GrokBot gateway running?",
   off: "Not connected",
 };
 
@@ -53,7 +53,7 @@ async function refresh() {
   copilotButton.dataset.path = panel?.path ?? "";
   const { shared } = await chrome.runtime.sendMessage({ type: "isTabShared", tabId: tab.id });
   shareButton.classList.remove("hidden");
-  shareButton.textContent = shared ? "Stop sharing this tab" : "Share this tab with OpenClaw";
+  shareButton.textContent = shared ? "Stop sharing this tab" : "Share this tab with GrokBot";
   shareButton.dataset.tabId = String(tab.id);
 }
 

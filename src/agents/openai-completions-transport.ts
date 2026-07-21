@@ -10,7 +10,7 @@ import {
   reconcileOpenAICompletionsToolChoice,
   resolveOpenAIReasoningEffortForModel,
   type OpenAIReasoningEffort,
-} from "@openclaw/ai/internal/openai";
+} from "@grokbot/ai/internal/openai";
 import {
   applyProviderReportedUsageCost,
   calculateCost,
@@ -21,10 +21,10 @@ import {
   getFirstStreamEventTimeoutMs,
   parseStreamingJson,
   withFirstStreamEventTimeout,
-} from "@openclaw/ai/internal/runtime";
-import { stripSystemPromptCacheBoundary } from "@openclaw/ai/internal/shared";
-import { isRecord } from "@openclaw/normalization-core/record-coerce";
-import { uniqueStrings } from "@openclaw/normalization-core/string-normalization";
+} from "@grokbot/ai/internal/runtime";
+import { stripSystemPromptCacheBoundary } from "@grokbot/ai/internal/shared";
+import { isRecord } from "@grokbot/normalization-core/record-coerce";
+import { uniqueStrings } from "@grokbot/normalization-core/string-normalization";
 import OpenAI from "openai";
 import type { ChatCompletionChunk } from "openai/resources/chat/completions.js";
 import type { Context, Model } from "../llm/types.js";
@@ -1055,7 +1055,7 @@ function getCompletionsContentDeltas(content: unknown): CompletionsReasoningDelt
   if (!text) {
     return [];
   }
-  // Preserve provider reasoning as OpenClaw thinking blocks so channel/UI
+  // Preserve provider reasoning as GrokBot thinking blocks so channel/UI
   // surfaces can decide whether to show it instead of leaking it as answer text.
   if (type.includes("thinking") || type.includes("reasoning")) {
     return [{ kind: "thinking", signature: "content", text }];

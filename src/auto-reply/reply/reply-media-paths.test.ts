@@ -263,11 +263,11 @@ describe("createReplyMediaPathNormalizer", () => {
       workspaceDir: "/tmp/sandboxes/session-1",
       containerWorkdir: "/workspace",
     });
-    const absolutePath = "/Users/peter/.openclaw/workspace/reports/screenshot.png";
+    const absolutePath = "/Users/peter/.grokbot/workspace/reports/screenshot.png";
     const normalize = createReplyMediaPathNormalizer({
       cfg: {},
       sessionKey: "session-key",
-      workspaceDir: "/Users/peter/.openclaw/workspace",
+      workspaceDir: "/Users/peter/.grokbot/workspace",
     });
 
     const result = await normalize({
@@ -281,11 +281,11 @@ describe("createReplyMediaPathNormalizer", () => {
   });
 
   it("stages absolute workspace media paths so the PR scenario now works", async () => {
-    const absolutePath = "/Users/peter/.openclaw/workspace/exports/images/chart.png";
+    const absolutePath = "/Users/peter/.grokbot/workspace/exports/images/chart.png";
     const normalize = createReplyMediaPathNormalizer({
       cfg: { agents: { defaults: { mediaMaxMb: 8 } } },
       sessionKey: "session-key",
-      workspaceDir: "/Users/peter/.openclaw/workspace",
+      workspaceDir: "/Users/peter/.grokbot/workspace",
     });
 
     const result = await normalize({
@@ -297,7 +297,7 @@ describe("createReplyMediaPathNormalizer", () => {
   });
 
   it("prefers channel account media limits when staging reply attachments", async () => {
-    const absolutePath = "/Users/peter/.openclaw/workspace/exports/images/chart.png";
+    const absolutePath = "/Users/peter/.grokbot/workspace/exports/images/chart.png";
     const normalize = createReplyMediaPathNormalizer({
       cfg: {
         channels: {
@@ -313,7 +313,7 @@ describe("createReplyMediaPathNormalizer", () => {
         agents: { defaults: { mediaMaxMb: 8 } },
       },
       sessionKey: undefined,
-      workspaceDir: "/Users/peter/.openclaw/workspace",
+      workspaceDir: "/Users/peter/.grokbot/workspace",
       messageProvider: "whatsapp",
       accountId: "work",
     });
@@ -360,7 +360,7 @@ describe("createReplyMediaPathNormalizer", () => {
   });
 
   it("keeps managed generated media under the shared media root", async () => {
-    setTestEnvValue("OPENCLAW_STATE_DIR", "/Users/peter/.openclaw");
+    setTestEnvValue("OPENCLAW_STATE_DIR", "/Users/peter/.grokbot");
     const normalize = createReplyMediaPathNormalizer({
       cfg: {},
       sessionKey: "session-key",
@@ -368,11 +368,11 @@ describe("createReplyMediaPathNormalizer", () => {
     });
 
     const result = await normalize({
-      mediaUrls: ["/Users/peter/.openclaw/media/tool-image-generation/generated.png"],
+      mediaUrls: ["/Users/peter/.grokbot/media/tool-image-generation/generated.png"],
     });
 
-    expectMedia(result, "/Users/peter/.openclaw/media/tool-image-generation/generated.png", [
-      "/Users/peter/.openclaw/media/tool-image-generation/generated.png",
+    expectMedia(result, "/Users/peter/.grokbot/media/tool-image-generation/generated.png", [
+      "/Users/peter/.grokbot/media/tool-image-generation/generated.png",
     ]);
     expect(resolveOutboundAttachmentFromUrl).not.toHaveBeenCalled();
   });
@@ -382,7 +382,7 @@ describe("createReplyMediaPathNormalizer", () => {
       workspaceDir: "/tmp/sandboxes/session-1",
       containerWorkdir: "/workspace",
     });
-    setTestEnvValue("OPENCLAW_STATE_DIR", "/Users/peter/.openclaw");
+    setTestEnvValue("OPENCLAW_STATE_DIR", "/Users/peter/.grokbot");
     const normalize = createReplyMediaPathNormalizer({
       cfg: {},
       sessionKey: "session-key",
@@ -390,11 +390,11 @@ describe("createReplyMediaPathNormalizer", () => {
     });
 
     const result = await normalize({
-      mediaUrls: ["/Users/peter/.openclaw/media/outbound/generated.png"],
+      mediaUrls: ["/Users/peter/.grokbot/media/outbound/generated.png"],
     });
 
-    expectMedia(result, "/Users/peter/.openclaw/media/outbound/generated.png", [
-      "/Users/peter/.openclaw/media/outbound/generated.png",
+    expectMedia(result, "/Users/peter/.grokbot/media/outbound/generated.png", [
+      "/Users/peter/.grokbot/media/outbound/generated.png",
     ]);
     expect(resolveOutboundAttachmentFromUrl).not.toHaveBeenCalled();
   });
@@ -403,8 +403,8 @@ describe("createReplyMediaPathNormalizer", () => {
     if (process.platform === "win32") {
       return;
     }
-    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-reply-media-state-"));
-    const outsideDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-reply-media-outside-"));
+    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-reply-media-state-"));
+    const outsideDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-reply-media-outside-"));
     const outsideFile = path.join(outsideDir, "secret.png");
     const symlinkPath = path.join(stateDir, "media", "outbound", "linked-secret.png");
     try {

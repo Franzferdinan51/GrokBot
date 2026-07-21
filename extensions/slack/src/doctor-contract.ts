@@ -2,9 +2,9 @@
 import type {
   ChannelDoctorConfigMutation,
   ChannelDoctorLegacyConfigRule,
-} from "openclaw/plugin-sdk/channel-contract";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { asObjectRecord, defineChannelAliasMigration } from "openclaw/plugin-sdk/runtime-doctor";
+} from "grokbot/plugin-sdk/channel-contract";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { asObjectRecord, defineChannelAliasMigration } from "grokbot/plugin-sdk/runtime-doctor";
 import { resolveSlackNativeStreaming, resolveSlackStreamingMode } from "./streaming-compat.js";
 
 const streamingAliasMigration = defineChannelAliasMigration({
@@ -138,26 +138,26 @@ export const legacyConfigRules: ChannelDoctorLegacyConfigRule[] = [
   {
     path: ["channels", "slack"],
     message:
-      'channels.slack.dm.replyToMode moved to replyToModeByChatType.direct. Run "openclaw doctor --fix".',
+      'channels.slack.dm.replyToMode moved to replyToModeByChatType.direct. Run "grokbot doctor --fix".',
     match: hasLegacyDmReplyMode,
   },
   {
     path: ["channels", "slack", "accounts"],
     message:
-      'channels.slack.accounts.<id>.dm.replyToMode moved to replyToModeByChatType.direct. Run "openclaw doctor --fix".',
+      'channels.slack.accounts.<id>.dm.replyToMode moved to replyToModeByChatType.direct. Run "grokbot doctor --fix".',
     match: (value) =>
       Object.values(asObjectRecord(value) ?? {}).some((account) => hasLegacyDmReplyMode(account)),
   },
   {
     path: ["channels", "slack"],
     message:
-      'channels.slack.thread.requireExplicitMention is legacy; use channels.slack.implicitMentions.threadParticipation instead. Run "openclaw doctor --fix".',
+      'channels.slack.thread.requireExplicitMention is legacy; use channels.slack.implicitMentions.threadParticipation instead. Run "grokbot doctor --fix".',
     match: hasLegacySlackThreadMentionPolicy,
   },
   {
     path: ["channels", "slack", "accounts"],
     message:
-      'channels.slack.accounts.<id>.thread.requireExplicitMention is legacy; use channels.slack.accounts.<id>.implicitMentions.threadParticipation instead. Run "openclaw doctor --fix".',
+      'channels.slack.accounts.<id>.thread.requireExplicitMention is legacy; use channels.slack.accounts.<id>.implicitMentions.threadParticipation instead. Run "grokbot doctor --fix".',
     match: (value) => {
       const accounts = asObjectRecord(value);
       return Boolean(
@@ -169,13 +169,13 @@ export const legacyConfigRules: ChannelDoctorLegacyConfigRule[] = [
   {
     path: ["channels", "slack"],
     message:
-      'channels.slack.channels.<id>.allow is legacy; use channels.slack.channels.<id>.enabled instead. Run "openclaw doctor --fix".',
+      'channels.slack.channels.<id>.allow is legacy; use channels.slack.channels.<id>.enabled instead. Run "grokbot doctor --fix".',
     match: hasLegacySlackChannelAllowAlias,
   },
   {
     path: ["channels", "slack", "accounts"],
     message:
-      'channels.slack.accounts.<id>.channels.<id>.allow is legacy; use channels.slack.accounts.<id>.channels.<id>.enabled instead. Run "openclaw doctor --fix".',
+      'channels.slack.accounts.<id>.channels.<id>.allow is legacy; use channels.slack.accounts.<id>.channels.<id>.enabled instead. Run "grokbot doctor --fix".',
     match: (value) => {
       const accounts = asObjectRecord(value);
       if (!accounts) {

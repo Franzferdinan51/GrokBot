@@ -12,7 +12,7 @@ type TokenEfficiencyRuntimeUsage = {
 type TokenEfficiencyRow = {
   scenarioId: string;
   usageSource: "live-usage" | "mock-estimate";
-  openclaw: TokenEfficiencyRuntimeUsage;
+  grokbot: TokenEfficiencyRuntimeUsage;
   codex: TokenEfficiencyRuntimeUsage;
   deltaPercent: number;
   classification: "regression" | "savings" | "neutral";
@@ -29,7 +29,7 @@ type TokenEfficiencyReport = {
   rows: TokenEfficiencyRow[];
   notApplicableScenarios: Array<{ scenarioId: string; reason: string }>;
   aggregate: {
-    openclaw: { totalTokens: number; p50PerScenario: number; p90PerScenario: number };
+    grokbot: { totalTokens: number; p50PerScenario: number; p90PerScenario: number };
     codex: { totalTokens: number; p50PerScenario: number; p90PerScenario: number };
     deltaPercent: number;
     flaggedScenarios: string[];
@@ -61,7 +61,7 @@ type BuildTokenEfficiencyReportParams = {
 
 const DEFAULT_THRESHOLD_PERCENT = 15;
 const ZERO_AGGREGATE: TokenEfficiencyReport["aggregate"] = {
-  openclaw: { totalTokens: 0, p50PerScenario: 0, p90PerScenario: 0 },
+  grokbot: { totalTokens: 0, p50PerScenario: 0, p90PerScenario: 0 },
   codex: { totalTokens: 0, p50PerScenario: 0, p90PerScenario: 0 },
   deltaPercent: 0,
   flaggedScenarios: [],
@@ -74,7 +74,7 @@ function normalizeRuntimePair(
   if (pair?.[0] && pair?.[1]) {
     return pair;
   }
-  return ["openclaw", "codex"];
+  return ["grokbot", "codex"];
 }
 
 function normalizeTokenCount(value: number): number {
@@ -115,9 +115,9 @@ function runtimeUsage(cell: RuntimeParityCell): TokenEfficiencyRuntimeUsage {
   };
 }
 
-function toolNamesForCells(openclaw: RuntimeParityCell, codex: RuntimeParityCell): string[] {
+function toolNamesForCells(grokbot: RuntimeParityCell, codex: RuntimeParityCell): string[] {
   return [
-    ...new Set([...openclaw.toolCalls, ...codex.toolCalls].map((call) => call.tool)),
+    ...new Set([...grokbot.toolCalls, ...codex.toolCalls].map((call) => call.tool)),
   ].toSorted((left, right) => left.localeCompare(right));
 }
 
@@ -126,9 +126,9 @@ function buildRow(params: {
   thresholdPercent: number;
   usageSource: TokenEfficiencyRow["usageSource"];
 }): TokenEfficiencyRow {
-  const openclaw = runtimeUsage(params.result.cells.openclaw);
+  const grokbot = runtimeUsage(params.result.cells.grokbot);
   const codex = runtimeUsage(params.result.cells.codex);
-  const delta = deltaPercent(openclaw.totalTokens, codex.totalTokens);
+  const delta = deltaPercent(grokbot.totalTokens, codex.totalTokens);
   const flagged = params.usageSource === "live-usage" && delta > params.thresholdPercent;
   const classification =
     delta > params.thresholdPercent
@@ -139,22 +139,22 @@ function buildRow(params: {
   return {
     scenarioId: params.result.scenarioId,
     usageSource: params.usageSource,
-    openclaw,
+    grokbot,
     codex,
     deltaPercent: delta,
     classification,
     flagged,
-    toolsUsed: toolNamesForCells(params.result.cells.openclaw, params.result.cells.codex),
+    toolsUsed: toolNamesForCells(params.result.cells.grokbot, params.result.cells.codex),
   };
 }
 
 function buildAggregate(rows: readonly TokenEfficiencyRow[]): TokenEfficiencyReport["aggregate"] {
-  const openclawTotals = rows.map((row) => row.openclaw.totalTokens);
+  const openclawTotals = rows.map((row) => row.grokbot.totalTokens);
   const codexTotals = rows.map((row) => row.codex.totalTokens);
   const openclawTotalTokens = openclawTotals.reduce((sum, value) => sum + value, 0);
   const codexTotalTokens = codexTotals.reduce((sum, value) => sum + value, 0);
   return {
-    openclaw: {
+    grokbot: {
       totalTokens: openclawTotalTokens,
       p50PerScenario: percentile(openclawTotals, 50),
       p90PerScenario: percentile(openclawTotals, 90),
@@ -174,8 +174,8 @@ function buildAggregate(rows: readonly TokenEfficiencyRow[]): TokenEfficiencyRep
 
 function liveEvidenceFailures(row: TokenEfficiencyRow): string[] {
   const failures: string[] = [];
-  if (row.openclaw.totalTokens <= 0) {
-    failures.push(`${row.scenarioId} openclaw live usage totalTokens=${row.openclaw.totalTokens}`);
+  if (row.grokbot.totalTokens <= 0) {
+    failures.push(`${row.scenarioId} grokbot live usage totalTokens=${row.grokbot.totalTokens}`);
   }
   if (row.codex.totalTokens <= 0) {
     failures.push(`${row.scenarioId} codex live usage totalTokens=${row.codex.totalTokens}`);
@@ -276,7 +276,7 @@ export function buildTokenEfficiencyReport(
     const rowFailures =
       liveUsage && result
         ? [
-            ...liveUsageShapeFailures(row.scenarioId, "openclaw", result.cells.openclaw.usage),
+            ...liveUsageShapeFailures(row.scenarioId, "grokbot", result.cells.grokbot.usage),
             ...liveUsageShapeFailures(row.scenarioId, "codex", result.cells.codex.usage),
             ...liveEvidenceFailures(row),
           ]
@@ -302,7 +302,7 @@ export function buildTokenEfficiencyReport(
     failures,
     notes: [
       "Token totals are read from RuntimeParityCell.usage, which is captured from normalized AssistantMessage.usage.",
-      "Codex savings are reported as savings and do not fail the gate; only positive Codex-over-OpenClaw live deltas exceed the threshold.",
+      "Codex savings are reported as savings and do not fail the gate; only positive Codex-over-GrokBot live deltas exceed the threshold.",
       usageSource === "mock-estimate"
         ? "Mock-provider token totals are labeled as estimates and do not block the token-efficiency gate."
         : "The report does not inspect provider transport payload token counters.",
@@ -312,7 +312,7 @@ export function buildTokenEfficiencyReport(
 
 export function renderTokenEfficiencyMarkdownReport(report: TokenEfficiencyReport): string {
   const lines = [
-    `# OpenClaw Runtime Token Efficiency - ${report.runtimePair[0]} vs ${report.runtimePair[1]}`,
+    `# GrokBot Runtime Token Efficiency - ${report.runtimePair[0]} vs ${report.runtimePair[1]}`,
     "",
     `- Generated at: ${report.generatedAt}`,
     ...(report.providerMode ? [`- Provider mode: ${report.providerMode}`] : []),
@@ -331,7 +331,7 @@ export function renderTokenEfficiencyMarkdownReport(report: TokenEfficiencyRepor
     "",
     "| Runtime | Total tokens | p50 per scenario | p90 per scenario |",
     "| --- | ---: | ---: | ---: |",
-    `| openclaw | ${report.aggregate.openclaw.totalTokens} | ${report.aggregate.openclaw.p50PerScenario} | ${report.aggregate.openclaw.p90PerScenario} |`,
+    `| grokbot | ${report.aggregate.grokbot.totalTokens} | ${report.aggregate.grokbot.p50PerScenario} | ${report.aggregate.grokbot.p90PerScenario} |`,
     `| codex | ${report.aggregate.codex.totalTokens} | ${report.aggregate.codex.p50PerScenario} | ${report.aggregate.codex.p90PerScenario} |`,
     `| delta | ${formatPercent(report.aggregate.deltaPercent)} |  |  |`,
     "",
@@ -341,12 +341,12 @@ export function renderTokenEfficiencyMarkdownReport(report: TokenEfficiencyRepor
     lines.push(
       "## Scenario Efficiency",
       "",
-      "| Scenario | Source | OpenClaw in/out/total/tools | Codex in/out/total/tools | Token delta | Classification | Flagged | Tools used |",
+      "| Scenario | Source | GrokBot in/out/total/tools | Codex in/out/total/tools | Token delta | Classification | Flagged | Tools used |",
       "| --- | --- | ---: | ---: | ---: | --- | --- | --- |",
     );
     for (const row of report.rows) {
       lines.push(
-        `| ${row.scenarioId} | ${row.usageSource} | ${row.openclaw.inputTokens}/${row.openclaw.outputTokens}/${row.openclaw.totalTokens}/${row.openclaw.toolCallCount} | ${row.codex.inputTokens}/${row.codex.outputTokens}/${row.codex.totalTokens}/${row.codex.toolCallCount} | ${formatPercent(row.deltaPercent)} | ${row.classification} | ${row.flagged ? "yes" : "no"} | ${row.toolsUsed.join(", ")} |`,
+        `| ${row.scenarioId} | ${row.usageSource} | ${row.grokbot.inputTokens}/${row.grokbot.outputTokens}/${row.grokbot.totalTokens}/${row.grokbot.toolCallCount} | ${row.codex.inputTokens}/${row.codex.outputTokens}/${row.codex.totalTokens}/${row.codex.toolCallCount} | ${formatPercent(row.deltaPercent)} | ${row.classification} | ${row.flagged ? "yes" : "no"} | ${row.toolsUsed.join(", ")} |`,
       );
     }
     lines.push("");

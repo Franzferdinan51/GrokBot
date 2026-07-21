@@ -1,8 +1,8 @@
 // Memory Core tests cover index plugin behavior.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import type { OpenClawPluginApi, OpenClawPluginCommandDefinition } from "openclaw/plugin-sdk/core";
-import type { MemoryPluginRuntime } from "openclaw/plugin-sdk/memory-core-host-runtime-core";
-import { createTestPluginApi } from "openclaw/plugin-sdk/plugin-test-api";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import type { OpenClawPluginApi, OpenClawPluginCommandDefinition } from "grokbot/plugin-sdk/core";
+import type { MemoryPluginRuntime } from "grokbot/plugin-sdk/memory-core-host-runtime-core";
+import { createTestPluginApi } from "grokbot/plugin-sdk/plugin-test-api";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { buildMemoryFlushPlan } from "./src/flush-plan.js";
 import type { MemoryCoreRuntimeHost } from "./src/memory/runtime-host.js";

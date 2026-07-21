@@ -4,7 +4,7 @@ import {
   OpenClawStateLeaseError,
   type OpenClawStateLeaseErrorCode,
   withOpenClawStateLease,
-} from "../state/openclaw-state-lease.js";
+} from "../state/grokbot-state-lease.js";
 import {
   PluginStateLeaseError,
   type PluginStateLeaseContext,
@@ -111,7 +111,7 @@ function mapErrorCode(code: OpenClawStateLeaseErrorCode): PluginStateLeaseErrorC
     case "OPENCLAW_STATE_LEASE_STORAGE_FAILED":
       return "PLUGIN_STATE_LEASE_STORAGE_FAILED";
     default:
-      throw new Error(`unsupported OpenClaw state lease error code: ${String(code)}`);
+      throw new Error(`unsupported GrokBot state lease error code: ${String(code)}`);
   }
 }
 

@@ -8,33 +8,33 @@ export type {
   OpenClawConfig,
   OpenClawPluginApi,
   ReplyPayload,
-} from "openclaw/plugin-sdk/core";
-export type { RuntimeEnv } from "openclaw/plugin-sdk/runtime";
-export { resolveAllowlistMatchSimple } from "openclaw/plugin-sdk/allow-from";
-export { logInboundDrop } from "openclaw/plugin-sdk/channel-inbound";
-export { createChannelPairingController } from "openclaw/plugin-sdk/channel-pairing";
-export { createChannelMessageReplyPipeline } from "openclaw/plugin-sdk/channel-outbound";
-export { logTypingFailure } from "openclaw/plugin-sdk/channel-feedback";
-export { listSkillCommandsForAgents } from "openclaw/plugin-sdk/command-auth-native";
-export { buildModelsProviderData } from "openclaw/plugin-sdk/models-provider-runtime";
-export { isDangerousNameMatchingEnabled } from "openclaw/plugin-sdk/dangerous-name-runtime";
+} from "grokbot/plugin-sdk/core";
+export type { RuntimeEnv } from "grokbot/plugin-sdk/runtime";
+export { resolveAllowlistMatchSimple } from "grokbot/plugin-sdk/allow-from";
+export { logInboundDrop } from "grokbot/plugin-sdk/channel-inbound";
+export { createChannelPairingController } from "grokbot/plugin-sdk/channel-pairing";
+export { createChannelMessageReplyPipeline } from "grokbot/plugin-sdk/channel-outbound";
+export { logTypingFailure } from "grokbot/plugin-sdk/channel-feedback";
+export { listSkillCommandsForAgents } from "grokbot/plugin-sdk/command-auth-native";
+export { buildModelsProviderData } from "grokbot/plugin-sdk/models-provider-runtime";
+export { isDangerousNameMatchingEnabled } from "grokbot/plugin-sdk/dangerous-name-runtime";
 export {
   resolveAllowlistProviderRuntimeGroupPolicy,
   resolveDefaultGroupPolicy,
   warnMissingProviderGroupPolicyFallbackOnce,
-} from "openclaw/plugin-sdk/runtime-group-policy";
-export { resolveChannelMediaMaxBytes } from "openclaw/plugin-sdk/media-runtime";
-export { loadOutboundMediaFromUrl } from "openclaw/plugin-sdk/outbound-media";
+} from "grokbot/plugin-sdk/runtime-group-policy";
+export { resolveChannelMediaMaxBytes } from "grokbot/plugin-sdk/media-runtime";
+export { loadOutboundMediaFromUrl } from "grokbot/plugin-sdk/outbound-media";
 // Legacy map-helper exports stay for older plugin consumers. New message-turn
 // code should use createChannelHistoryWindow.
 export {
   DEFAULT_GROUP_HISTORY_LIMIT,
   createChannelHistoryWindow,
-} from "openclaw/plugin-sdk/reply-history";
-export { registerPluginHttpRoute } from "openclaw/plugin-sdk/webhook-targets";
+} from "grokbot/plugin-sdk/reply-history";
+export { registerPluginHttpRoute } from "grokbot/plugin-sdk/webhook-targets";
 export {
   isRequestBodyLimitError,
   readRequestBodyWithLimit,
-} from "openclaw/plugin-sdk/webhook-ingress";
-export { isTrustedProxyAddress, resolveClientIp } from "openclaw/plugin-sdk/core";
-export { parseTcpPort } from "openclaw/plugin-sdk/number-runtime";
+} from "grokbot/plugin-sdk/webhook-ingress";
+export { isTrustedProxyAddress, resolveClientIp } from "grokbot/plugin-sdk/core";
+export { parseTcpPort } from "grokbot/plugin-sdk/number-runtime";

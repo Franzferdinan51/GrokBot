@@ -9,7 +9,7 @@ import type {
   SandboxBackendFactory,
   SandboxBackendManager,
   SshSandboxSession,
-} from "openclaw/plugin-sdk/sandbox";
+} from "grokbot/plugin-sdk/sandbox";
 import {
   createRemoteShellSandboxFsBridge,
   disposeSshSandboxSession,
@@ -17,8 +17,8 @@ import {
   runSshSandboxCommand,
   sanitizeEnvVars,
   withTempWorkspace,
-} from "openclaw/plugin-sdk/sandbox";
-import { normalizeLowercaseStringOrEmpty } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/sandbox";
+import { normalizeLowercaseStringOrEmpty } from "grokbot/plugin-sdk/string-coerce-runtime";
 import type { OpenShellSandboxBackend } from "./backend.types.js";
 import {
   buildValidatedExecRemoteCommand,
@@ -45,7 +45,7 @@ type PendingExec = {
   sshSession: SshSandboxSession;
 };
 
-const MATERIALIZED_SKILLS_REMOTE_PARTS = [".openclaw", "sandbox-skills"] as const;
+const MATERIALIZED_SKILLS_REMOTE_PARTS = [".grokbot", "sandbox-skills"] as const;
 function buildOpenShellDirectoryUploadArgs(params: {
   sandboxName: string;
   localPath: string;
@@ -589,7 +589,7 @@ class OpenShellSandboxBackendImpl {
           "/bin/sh",
           "-c",
           params.script,
-          "openclaw-openshell-fs",
+          "grokbot-openshell-fs",
           ...(params.args ?? []),
         ]),
         stdin: params.stdin,
@@ -795,7 +795,7 @@ class OpenShellSandboxBackendImpl {
 
   private async syncWorkspaceFromRemote(): Promise<void> {
     await withTempWorkspace(
-      { rootDir: resolveOpenShellTmpRoot(), prefix: "openclaw-openshell-sync-" },
+      { rootDir: resolveOpenShellTmpRoot(), prefix: "grokbot-openshell-sync-" },
       async ({ dir: tmpDir }) => {
         const result = await runOpenShellCli({
           context: this.params.execContext,
@@ -836,7 +836,7 @@ class OpenShellSandboxBackendImpl {
 
   private async uploadPathToRemote(localPath: string, remotePath: string): Promise<void> {
     await withTempWorkspace(
-      { rootDir: resolveOpenShellTmpRoot(), prefix: "openclaw-openshell-upload-" },
+      { rootDir: resolveOpenShellTmpRoot(), prefix: "grokbot-openshell-upload-" },
       async ({ dir: tmpDir }) => {
         // Stage a symlink-free snapshot so upload never dereferences host paths
         // outside the mirrored workspace tree.
@@ -901,7 +901,7 @@ function buildOpenShellSandboxName(scopeKey: string): string {
     (acc, char) => ((acc * 33) ^ char.charCodeAt(0)) >>> 0,
     5381,
   );
-  return `openclaw-${safe || "session"}-${hash.toString(16).slice(0, 8)}`;
+  return `grokbot-${safe || "session"}-${hash.toString(16).slice(0, 8)}`;
 }
 
 function resolveRemoteMaterializedSkillsWorkspaceDir(remoteWorkspaceDir: string): string {
@@ -943,7 +943,7 @@ async function moveMaterializedSkillsShadowAside(params: {
     return undefined;
   }
   const preserveRoot = await fs.mkdtemp(
-    path.join(path.dirname(params.tmpDir), "openclaw-openshell-preserve-"),
+    path.join(path.dirname(params.tmpDir), "grokbot-openshell-preserve-"),
   );
   const preservedPath = path.join(preserveRoot, "sandbox-skills");
   await movePathWithCopyFallback({ from: shadowPath, to: preservedPath });

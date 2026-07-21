@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import type { Model } from "../../llm/types.js";
 import type { AuthProfileStore } from "../auth-profiles.js";
 import { resolveAgentHarnessPreparedAuthSupport } from "../harness/support.js";
@@ -424,7 +424,7 @@ describe("prepareAgentRuntimeAuthPlan", () => {
     expect(plan.modelRoute).toBeUndefined();
     expect(plan.deferredRouteSupport).toEqual({
       requestTransportOverrides: "none",
-      runtimePolicy: { compatibleIds: ["openclaw", "codex"] },
+      runtimePolicy: { compatibleIds: ["grokbot", "codex"] },
     });
     expect(resolveAgentHarnessPreparedAuthSupport({ plan })).toEqual({ source: "harness" });
   });
@@ -1908,7 +1908,7 @@ describe("prepareAgentRuntimeAuthPlan", () => {
       baseUrl: "https://relay.example.test/v1",
       authRequirement: "api-key",
       requestTransportOverrides: "none",
-      runtimePolicy: { compatibleIds: ["openclaw"] },
+      runtimePolicy: { compatibleIds: ["grokbot"] },
     });
   });
 

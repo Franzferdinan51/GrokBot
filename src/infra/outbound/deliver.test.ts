@@ -3,7 +3,7 @@
 import fsPromises from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import type { TrustedMessageAuditEvent } from "../../audit/message-audit-events.js";
 import { onTrustedMessageAuditEventForTest as onTrustedMessageAuditEvent } from "../../audit/message-audit-events.test-support.js";
@@ -38,7 +38,7 @@ import {
   type DiagnosticEventPayload,
 } from "../diagnostic-events.js";
 import { retryAsync } from "../retry.js";
-import { resolvePreferredOpenClawTmpDir } from "../tmp-openclaw-dir.js";
+import { resolvePreferredOpenClawTmpDir } from "../tmp-grokbot-dir.js";
 import { PlatformMessageNotDispatchedError } from "./deliver-types.js";
 
 const mocks = vi.hoisted(() => ({
@@ -3656,7 +3656,7 @@ describe("deliverOutboundPayloads", () => {
     expect(sendFormattedMediaCall?.mediaLocalRoots).toContain(expectedPreferredTmpRoot);
     expect(
       sendFormattedMediaCall?.mediaLocalRoots?.some((root) =>
-        root.endsWith(path.join(".openclaw", "workspace-work")),
+        root.endsWith(path.join(".grokbot", "workspace-work")),
       ),
     ).toBe(true);
     expect(sendMedia).not.toHaveBeenCalled();
@@ -3932,7 +3932,7 @@ describe("deliverOutboundPayloads", () => {
     expect(afterCommit).toHaveBeenCalledTimes(1);
   });
 
-  it("includes OpenClaw tmp root in plugin mediaLocalRoots", async () => {
+  it("includes GrokBot tmp root in plugin mediaLocalRoots", async () => {
     const sendMatrix = vi.fn().mockResolvedValue({ messageId: "m-media", roomId: "!room" });
 
     await deliverOutboundPayloads({
@@ -4836,7 +4836,7 @@ describe("deliverOutboundPayloads", () => {
           text: [
             "visible",
             "<<<BEGIN_OPENCLAW_INTERNAL_CONTEXT>>>",
-            "OpenClaw runtime context (internal):",
+            "GrokBot runtime context (internal):",
             "<<<BEGIN_UNTRUSTED_CHILD_RESULT>>>",
             "raw child output",
             "<<<END_UNTRUSTED_CHILD_RESULT>>>",
@@ -4918,14 +4918,14 @@ describe("deliverOutboundPayloads", () => {
   it("queues a spool copy while the live send keeps the producer's path", async () => {
     const sendMatrix = vi.fn().mockResolvedValue({ messageId: "m-spool", roomId: "!room:example" });
     // Production shape: no explicit mediaAccess, and the source sits in the
-    // OpenClaw temp root that TTS actually writes to. Staging must resolve the
+    // GrokBot temp root that TTS actually writes to. Staging must resolve the
     // same capability the live send resolves, so a fabricated localRoots here
     // would hide whether the two gates agree.
     const sourceDir = await fsPromises.realpath(
       await fsPromises.mkdtemp(path.join(resolvePreferredOpenClawTmpDir(), "deliver-spool-")),
     );
     const stateDir = await fsPromises.realpath(
-      await fsPromises.mkdtemp(path.join(os.tmpdir(), "openclaw-deliver-spool-state-")),
+      await fsPromises.mkdtemp(path.join(os.tmpdir(), "grokbot-deliver-spool-state-")),
     );
     const previousStateDir = process.env.OPENCLAW_STATE_DIR;
     // Real MPEG-1 Layer III frames: host-local media sends are buffer-verified,
@@ -4989,11 +4989,11 @@ describe("deliverOutboundPayloads", () => {
       ...matrixChunkConfig,
       tools: { fs: { workspaceOnly: true } },
     } as OpenClawConfig;
-    // Deliberately outside the OpenClaw temp root: that root is itself a default
+    // Deliberately outside the GrokBot temp root: that root is itself a default
     // media root, so a state dir inside it would admit the source by containment
     // and hide whether the agent-scoped capability is what grants access.
     const stateDir = await fsPromises.realpath(
-      await fsPromises.mkdtemp(path.join(os.tmpdir(), "openclaw-deliver-ws-")),
+      await fsPromises.mkdtemp(path.join(os.tmpdir(), "grokbot-deliver-ws-")),
     );
     const previousStateDir = process.env.OPENCLAW_STATE_DIR;
     const workspaceDir = path.join(stateDir, "workspace-proofagent");
@@ -5160,7 +5160,7 @@ describe("deliverOutboundPayloads", () => {
   });
 
   it("bails out without sending when a concurrent drain already claimed the queue entry", async () => {
-    // Regression for openclaw/openclaw#70386: if a reconnect or startup drain
+    // Regression for grokbot/grokbot#70386: if a reconnect or startup drain
     // observes the newly enqueued entry and claims it before the live send
     // path claims it, the live path must not send. The drain already owns
     // ack/fail for that id; sending here would duplicate the outbound and

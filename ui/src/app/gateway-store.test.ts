@@ -266,8 +266,8 @@ describe("createApplicationGateway reconnecting snapshot", () => {
   it("does not copy selected-remote settings into an ephemeral document Gateway", () => {
     const pageGateway = "ws://127.0.0.1:18789";
     const remoteGateway = "wss://saved-remote.example.test";
-    const pageSettingsKey = `openclaw.control.settings.v1:${pageGateway}`;
-    const selectionKey = `openclaw.control.currentGateway.v1:${pageGateway}`;
+    const pageSettingsKey = `grokbot.control.settings.v1:${pageGateway}`;
+    const selectionKey = `grokbot.control.currentGateway.v1:${pageGateway}`;
     const storedPageSettings = JSON.stringify({
       gatewayUrl: pageGateway,
       theme: "claw",
@@ -302,8 +302,8 @@ describe("createApplicationGateway reconnecting snapshot", () => {
     const pageGateway = "ws://127.0.0.1:18789";
     const remoteGateway = "wss://saved-remote.example.test";
     const otherGateway = "wss://other-remote.example.test";
-    const pageSettingsKey = `openclaw.control.settings.v1:${pageGateway}`;
-    const selectionKey = `openclaw.control.currentGateway.v1:${pageGateway}`;
+    const pageSettingsKey = `grokbot.control.settings.v1:${pageGateway}`;
+    const selectionKey = `grokbot.control.currentGateway.v1:${pageGateway}`;
     const settings = {
       ...loadSettings(),
       gatewayUrl: pageGateway,

@@ -2,13 +2,13 @@
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   archiveLegacyCronStoreForMigration,
   loadLegacyCronStoreForMigration,
 } from "../commands/doctor/cron/legacy-store-migration.js";
-import { openOpenClawStateDatabase } from "../state/openclaw-state-db.js";
+import { openOpenClawStateDatabase } from "../state/grokbot-state-db.js";
 import { captureEnv, setTestEnvValue } from "../test-utils/env.js";
 import {
   loadCronJobsStoreWithConfigJobs,
@@ -26,7 +26,7 @@ let fixtureRoot = "";
 let caseId = 0;
 
 beforeAll(async () => {
-  fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-cron-store-"));
+  fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-cron-store-"));
 });
 
 afterAll(async () => {
@@ -89,11 +89,11 @@ describe("resolveCronStorePath", () => {
   });
 
   it("uses OPENCLAW_HOME for tilde expansion", () => {
-    setTestEnvValue("OPENCLAW_HOME", "/srv/openclaw-home");
+    setTestEnvValue("OPENCLAW_HOME", "/srv/grokbot-home");
     setTestEnvValue("HOME", "/home/other");
 
     const result = resolveCronStorePath("~/cron/jobs.json");
-    expect(result).toBe(path.resolve("/srv/openclaw-home", "cron", "jobs.json"));
+    expect(result).toBe(path.resolve("/srv/grokbot-home", "cron", "jobs.json"));
   });
 });
 

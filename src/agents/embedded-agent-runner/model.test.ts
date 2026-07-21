@@ -2,7 +2,7 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { MAX_TIMER_TIMEOUT_MS } from "@openclaw/normalization-core/number-coercion";
+import { MAX_TIMER_TIMEOUT_MS } from "@grokbot/normalization-core/number-coercion";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { withEnvAsync } from "../../test-utils/env.js";
 import { discoverAuthStorage, discoverModels } from "../agent-model-discovery.js";
@@ -40,7 +40,7 @@ const preparedSnapshotState = vi.hoisted(() => ({
 
 vi.mock("../model-suppression.js", () => {
   // Mirrors the canonical manifest-driven suppression in
-  // extensions/qwen/openclaw.plugin.json and src/plugins/manifest-model-suppression.ts.
+  // extensions/qwen/grokbot.plugin.json and src/plugins/manifest-model-suppression.ts.
   function isQwenCodingPlanBaseUrl(value: string | undefined): boolean {
     const trimmed = value?.trim();
     if (!trimmed) {
@@ -136,10 +136,10 @@ vi.mock("../model-suppression.js", () => {
         (provider === "openai" || provider === "azure-openai-responses" || provider === "openai") &&
         id?.trim().toLowerCase() === "gpt-5.3-codex-spark"
       ) {
-        return `Unknown model: ${provider}/gpt-5.3-codex-spark. gpt-5.3-codex-spark is available only through ChatGPT/Codex OAuth. Run \`openclaw models auth login --provider openai\` and use openai/gpt-5.3-codex-spark with that OAuth profile; OpenAI API-key auth cannot use this model.`;
+        return `Unknown model: ${provider}/gpt-5.3-codex-spark. gpt-5.3-codex-spark is available only through ChatGPT/Codex OAuth. Run \`grokbot models auth login --provider openai\` and use openai/gpt-5.3-codex-spark with that OAuth profile; OpenAI API-key auth cannot use this model.`;
       }
       if (isUnsupportedXaiMultiAgentModel(provider, id)) {
-        return "Unknown model: xai/grok-4.20-multi-agent-0309. OpenClaw does not currently support xAI multi-agent models; choose another xAI model. See https://docs.openclaw.ai/providers/xai.";
+        return "Unknown model: xai/grok-4.20-multi-agent-0309. GrokBot does not currently support xAI multi-agent models; choose another xAI model. See https://docs.grokbot.ai/providers/xai.";
       }
       return undefined;
     },
@@ -521,7 +521,7 @@ describe("resolveModel", () => {
   });
 
   it("does not poll generated plugin catalogs between lifecycle generations", async () => {
-    const rootDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-model-cache-plugin-"));
+    const rootDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-model-cache-plugin-"));
     const agentDir = path.join(rootDir, "agent");
     fs.mkdirSync(agentDir, { recursive: true });
     mockDiscoveredModel(discoverModels, {
@@ -555,7 +555,7 @@ describe("resolveModel", () => {
   });
 
   it("reuses inherited auth from one lifecycle generation", async () => {
-    const rootDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-model-cache-"));
+    const rootDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-model-cache-"));
     const agentDir = path.join(rootDir, "agent");
     const defaultAgentDir = path.join(rootDir, "default-agent");
     fs.mkdirSync(agentDir, { recursive: true });
@@ -599,7 +599,7 @@ describe("resolveModel", () => {
   });
 
   it("uses the resolved default agent workspace for prepared model discovery", () => {
-    const rootDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-model-workspace-"));
+    const rootDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-model-workspace-"));
     const agentDir = path.join(rootDir, "agent");
     const workspaceDir = path.join(rootDir, "workspace");
     fs.mkdirSync(agentDir, { recursive: true });
@@ -674,7 +674,7 @@ describe("resolveModel", () => {
   );
 
   it("does not poll implicit main auth during request resolution", async () => {
-    const rootDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-model-cache-state-"));
+    const rootDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-model-cache-state-"));
     const agentDir = path.join(rootDir, "agents", "worker", "agent");
     const mainAgentDir = path.join(rootDir, "agents", "main", "agent");
     fs.mkdirSync(agentDir, { recursive: true });
@@ -773,7 +773,7 @@ describe("resolveModel", () => {
     expect(discoverModels).toHaveBeenCalledTimes(1);
   });
 
-  it("skips OpenClaw auth and model discovery during dynamic model resolution", async () => {
+  it("skips GrokBot auth and model discovery during dynamic model resolution", async () => {
     const result = await resolveModelAsync(
       "openrouter",
       "openrouter/auto",
@@ -993,7 +993,7 @@ describe("resolveModel", () => {
     );
   });
 
-  it("prefers user openclaw.json config over the Fireworks manifest for the same id", () => {
+  it("prefers user grokbot.json config over the Fireworks manifest for the same id", () => {
     resolveBundledStaticCatalogModelMock.mockReturnValue({
       ...makeModel("accounts/fireworks/models/kimi-k2p6"),
       provider: "fireworks",
@@ -1403,7 +1403,7 @@ describe("resolveModel", () => {
     expect(expectResolvedModel(result).input).toEqual(["text"]);
   });
 
-  it("defaults missing model cost before handing models to OpenClaw", () => {
+  it("defaults missing model cost before handing models to GrokBot", () => {
     const cfg: OpenClawConfig = {
       models: {
         providers: {
@@ -1607,7 +1607,7 @@ describe("resolveModel", () => {
   });
 
   it("leaves maxTokens undefined when no configured or catalog value is available (regression: #98295)", () => {
-    // Regression for https://github.com/openclaw/openclaw/issues/98295.
+    // Regression for https://github.com/grokbot/grokbot/issues/98295.
     // A custom provider entry without maxTokens (and no matching bundled
     // static catalog row) must not synthesize an oversized output cap from
     // DEFAULT_CONTEXT_TOKENS. Leaving maxTokens undefined lets the transport
@@ -3477,7 +3477,7 @@ describe("resolveModel", () => {
     });
 
     expect(result.error).toBe(
-      'Unknown model: microsoft-foundry/Kimi-K2.6-1. Found agents.defaults.models["microsoft-foundry/Kimi-K2.6-1"], but no matching models.providers["microsoft-foundry"].models[] entry. Add { "id": "Kimi-K2.6-1", "name": "Kimi-K2.6-1" } to models.providers["microsoft-foundry"].models[] to register this provider model. For custom or proxy providers, also set api and baseUrl so requests route to the intended endpoint. See https://docs.openclaw.ai/concepts/model-providers.',
+      'Unknown model: microsoft-foundry/Kimi-K2.6-1. Found agents.defaults.models["microsoft-foundry/Kimi-K2.6-1"], but no matching models.providers["microsoft-foundry"].models[] entry. Add { "id": "Kimi-K2.6-1", "name": "Kimi-K2.6-1" } to models.providers["microsoft-foundry"].models[] to register this provider model. For custom or proxy providers, also set api and baseUrl so requests route to the intended endpoint. See https://docs.grokbot.ai/concepts/model-providers.',
     );
   });
 
@@ -3519,7 +3519,7 @@ describe("resolveModel", () => {
     );
 
     expect(result.error).toBe(
-      'Unknown model: openai-codex/gpt-5.4. "openai-codex" is a legacy provider ID. Run `openclaw doctor --fix` to migrate legacy model and provider config to the current OpenAI format. If the provider has no authenticated profile, run `openclaw models status` to check provider auth and re-authenticate if needed. See https://docs.openclaw.ai/concepts/model-providers.',
+      'Unknown model: openai-codex/gpt-5.4. "openai-codex" is a legacy provider ID. Run `grokbot doctor --fix` to migrate legacy model and provider config to the current OpenAI format. If the provider has no authenticated profile, run `grokbot models status` to check provider auth and re-authenticate if needed. See https://docs.grokbot.ai/concepts/model-providers.',
     );
   });
 
@@ -3540,7 +3540,7 @@ describe("resolveModel", () => {
     });
 
     expect(result.error).toBe(
-      'Unknown model: custom-provider/some-model. Found agents.defaults.models["custom-provider/some-model"], but no matching models.providers["custom-provider"].models[] entry. Add { "id": "some-model", "name": "some-model" } to models.providers["custom-provider"].models[] to register this provider model. For custom or proxy providers, also set api and baseUrl so requests route to the intended endpoint. See https://docs.openclaw.ai/concepts/model-providers.',
+      'Unknown model: custom-provider/some-model. Found agents.defaults.models["custom-provider/some-model"], but no matching models.providers["custom-provider"].models[] entry. Add { "id": "some-model", "name": "some-model" } to models.providers["custom-provider"].models[] to register this provider model. For custom or proxy providers, also set api and baseUrl so requests route to the intended endpoint. See https://docs.grokbot.ai/concepts/model-providers.',
     );
   });
 
@@ -3563,7 +3563,7 @@ describe("resolveModel", () => {
     });
 
     expect(result.error).toBe(
-      'Unknown model: openai/gpt-5.3-codex. Found agents.defaults.models["openai/gpt-5.3-codex"] bound to the "codex" agent runtime. Models served by an agent runtime come from that runtime and its linked account, not from models.providers["openai"].models[] — registering it there will not make it usable. Confirm "gpt-5.3-codex" is still offered by the "codex" runtime and switch agents.defaults.model.primary to a currently available model (run `openclaw models list --provider openai` to list them). See https://docs.openclaw.ai/concepts/model-providers.',
+      'Unknown model: openai/gpt-5.3-codex. Found agents.defaults.models["openai/gpt-5.3-codex"] bound to the "codex" agent runtime. Models served by an agent runtime come from that runtime and its linked account, not from models.providers["openai"].models[] — registering it there will not make it usable. Confirm "gpt-5.3-codex" is still offered by the "codex" runtime and switch agents.defaults.model.primary to a currently available model (run `grokbot models list --provider openai` to list them). See https://docs.grokbot.ai/concepts/model-providers.',
     );
   });
 
@@ -4226,7 +4226,7 @@ describe("resolveModel", () => {
 
     expect(result.model).toBeUndefined();
     expect(result.error).toBe(
-      "Unknown model: openai/gpt-5.3-codex-spark. gpt-5.3-codex-spark is available only through ChatGPT/Codex OAuth. Run `openclaw models auth login --provider openai` and use openai/gpt-5.3-codex-spark with that OAuth profile; OpenAI API-key auth cannot use this model.",
+      "Unknown model: openai/gpt-5.3-codex-spark. gpt-5.3-codex-spark is available only through ChatGPT/Codex OAuth. Run `grokbot models auth login --provider openai` and use openai/gpt-5.3-codex-spark with that OAuth profile; OpenAI API-key auth cannot use this model.",
     );
   });
 
@@ -4247,7 +4247,7 @@ describe("resolveModel", () => {
 
     expect(result.model).toBeUndefined();
     expect(result.error).toBe(
-      "Unknown model: xai/grok-4.20-multi-agent-0309. OpenClaw does not currently support xAI multi-agent models; choose another xAI model. See https://docs.openclaw.ai/providers/xai.",
+      "Unknown model: xai/grok-4.20-multi-agent-0309. GrokBot does not currently support xAI multi-agent models; choose another xAI model. See https://docs.grokbot.ai/providers/xai.",
     );
   });
 
@@ -4266,7 +4266,7 @@ describe("resolveModel", () => {
 
     expect(result.model).toBeUndefined();
     expect(result.error).toBe(
-      "Unknown model: openai/gpt-5.3-codex-spark. gpt-5.3-codex-spark is available only through ChatGPT/Codex OAuth. Run `openclaw models auth login --provider openai` and use openai/gpt-5.3-codex-spark with that OAuth profile; OpenAI API-key auth cannot use this model.",
+      "Unknown model: openai/gpt-5.3-codex-spark. gpt-5.3-codex-spark is available only through ChatGPT/Codex OAuth. Run `grokbot models auth login --provider openai` and use openai/gpt-5.3-codex-spark with that OAuth profile; OpenAI API-key auth cannot use this model.",
     );
   });
 
@@ -4676,7 +4676,7 @@ describe("resolveModel", () => {
 
     expect(result.model).toBeUndefined();
     expect(result.error).toBe(
-      "Unknown model: openai/gpt-5.3-codex-spark. gpt-5.3-codex-spark is available only through ChatGPT/Codex OAuth. Run `openclaw models auth login --provider openai` and use openai/gpt-5.3-codex-spark with that OAuth profile; OpenAI API-key auth cannot use this model.",
+      "Unknown model: openai/gpt-5.3-codex-spark. gpt-5.3-codex-spark is available only through ChatGPT/Codex OAuth. Run `grokbot models auth login --provider openai` and use openai/gpt-5.3-codex-spark with that OAuth profile; OpenAI API-key auth cannot use this model.",
     );
   });
 

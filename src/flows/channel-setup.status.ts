@@ -19,7 +19,7 @@ import { shouldShowChannelInSetup } from "../commands/channel-setup/discovery.js
 import { resolveChannelSetupWizardAdapterForPlugin } from "../commands/channel-setup/registry.js";
 import type { ChannelChoice } from "../commands/onboard-types.js";
 import { isChannelConfigured } from "../config/channel-configured.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import {
   findBundledPluginSourceInMap,
   resolveBundledPluginSources,
@@ -481,11 +481,11 @@ export async function noteChannelPrimer(
     [
       t("wizard.channelsPrimer.inboundSafety"),
       t("wizard.channelsPrimer.approveWith", {
-        command: formatCliCommand("openclaw pairing approve <channel> <code>"),
+        command: formatCliCommand("grokbot pairing approve <channel> <code>"),
       }),
       t("wizard.channelsPrimer.openDm"),
       t("wizard.channelsPrimer.multiUserDm", {
-        command: formatCliCommand('openclaw config set session.dmScope "per-channel-peer"'),
+        command: formatCliCommand('grokbot config set session.dmScope "per-channel-peer"'),
       }),
       t("wizard.channelsPrimer.docs", {
         link: formatDocsLink("/channels/pairing", "channels/pairing"),

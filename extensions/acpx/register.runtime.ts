@@ -7,9 +7,9 @@ import {
   registerAcpRuntimeBackend,
   unregisterAcpRuntimeBackend,
   type AcpRuntime,
-} from "openclaw/plugin-sdk/acp-runtime-backend";
-import type { OpenClawPluginService, OpenClawPluginServiceContext } from "openclaw/plugin-sdk/core";
-import { createLazyRuntimeModule } from "openclaw/plugin-sdk/lazy-runtime";
+} from "grokbot/plugin-sdk/acp-runtime-backend";
+import type { OpenClawPluginService, OpenClawPluginServiceContext } from "grokbot/plugin-sdk/core";
+import { createLazyRuntimeModule } from "grokbot/plugin-sdk/lazy-runtime";
 import { createLazyAcpRuntimeProxy } from "./src/runtime-proxy.js";
 
 const ACPX_BACKEND_ID = "acpx";

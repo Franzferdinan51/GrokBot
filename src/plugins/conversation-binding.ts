@@ -1,6 +1,6 @@
 // Binds plugin conversations to stable channel and agent identifiers.
 import crypto from "node:crypto";
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+import { normalizeOptionalString } from "@grokbot/normalization-core/string-coerce";
 import type { ReplyPayload } from "../auto-reply/reply-payload.js";
 import {
   createConversationBindingRecord,
@@ -13,11 +13,11 @@ import { executeSqliteQuerySync, getNodeSqliteKysely } from "../infra/kysely-syn
 import type { ConversationRef } from "../infra/outbound/session-binding-service.js";
 import { createSubsystemLogger } from "../logging/subsystem.js";
 import { resolveGlobalMap, resolveGlobalSingleton } from "../shared/global-singleton.js";
-import type { DB as OpenClawStateKyselyDatabase } from "../state/openclaw-state-db.generated.js";
+import type { DB as OpenClawStateKyselyDatabase } from "../state/grokbot-state-db.generated.js";
 import {
   openOpenClawStateDatabase,
   runOpenClawStateWriteTransaction,
-} from "../state/openclaw-state-db.js";
+} from "../state/grokbot-state-db.js";
 import {
   buildPluginBindingSessionKey,
   normalizeChannel,
@@ -37,8 +37,8 @@ const log = createSubsystemLogger("plugins/binding");
 const PLUGIN_BINDING_CUSTOM_ID_PREFIX = "pluginbind";
 const PLUGIN_BINDING_OWNER = "plugin";
 const LEGACY_CODEX_PLUGIN_SESSION_PREFIXES = [
-  "openclaw-app-server:thread:",
-  "openclaw-codex-app-server:thread:",
+  "grokbot-app-server:thread:",
+  "grokbot-codex-app-server:thread:",
 ] as const;
 
 // Runtime plugin conversation bindings are approval-driven and distinct from
@@ -115,7 +115,7 @@ type PluginBindingResolveResult =
       status: "expired";
     };
 
-const PLUGIN_BINDING_PENDING_REQUESTS_KEY = Symbol.for("openclaw.pluginBindingPendingRequests");
+const PLUGIN_BINDING_PENDING_REQUESTS_KEY = Symbol.for("grokbot.pluginBindingPendingRequests");
 
 const pendingRequests = resolveGlobalMap<string, PendingPluginBindingRequest>(
   PLUGIN_BINDING_PENDING_REQUESTS_KEY,
@@ -144,7 +144,7 @@ type PluginConversationBindingState = {
   isLegacyForeignBinding: boolean;
 };
 
-const pluginBindingGlobalStateKey = Symbol.for("openclaw.plugins.binding.global-state");
+const pluginBindingGlobalStateKey = Symbol.for("grokbot.plugins.binding.global-state");
 const pluginBindingGlobalState = resolveGlobalSingleton<PluginBindingGlobalState>(
   pluginBindingGlobalStateKey,
   () => ({
@@ -651,7 +651,7 @@ function buildDetachHintSuffix(detachHint?: string): string {
 }
 
 export function buildPluginBindingUnavailableText(binding: PluginConversationBinding): string {
-  return `The bound plugin ${resolvePluginBindingDisplayName(binding)} is not currently loaded. Routing this message to OpenClaw instead. If this started after an update, run "openclaw doctor --fix"; otherwise reinstall or enable the plugin.${buildDetachHintSuffix(binding.detachHint)}`;
+  return `The bound plugin ${resolvePluginBindingDisplayName(binding)} is not currently loaded. Routing this message to GrokBot instead. If this started after an update, run "grokbot doctor --fix"; otherwise reinstall or enable the plugin.${buildDetachHintSuffix(binding.detachHint)}`;
 }
 
 export function buildPluginBindingDeclinedText(binding: PluginConversationBinding): string {

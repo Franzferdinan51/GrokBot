@@ -1,4 +1,4 @@
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import { normalizePluginsConfig } from "../../plugins/config-state.js";
 import { normalizeConfiguredProviderCatalogModelId } from "../model-ref-shared.js";
 import type { ModelManifestNormalizationContext } from "../model-selection-normalize.js";

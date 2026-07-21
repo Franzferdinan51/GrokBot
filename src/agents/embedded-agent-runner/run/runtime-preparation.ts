@@ -146,7 +146,7 @@ export async function prepareEmbeddedRunRuntime(input: {
   input.notifyExecutionPhase("model_resolution", { provider, model: modelId });
 
   agentHarness = selectHarnessForModel(effectiveModel);
-  pluginHarnessOwnsTransport = agentHarness.id !== "openclaw";
+  pluginHarnessOwnsTransport = agentHarness.id !== "grokbot";
   const authStages = log.isEnabled("trace") ? createEmbeddedRunStageTracker() : undefined;
   const preparedAuthPlan = await prepareEmbeddedRunAuthPlan({
     runParams: params,
@@ -162,7 +162,7 @@ export async function prepareEmbeddedRunRuntime(input: {
     getAgentHarness: () => agentHarness,
     setAgentHarness: (nextHarness) => {
       agentHarness = nextHarness;
-      pluginHarnessOwnsTransport = agentHarness.id !== "openclaw";
+      pluginHarnessOwnsTransport = agentHarness.id !== "grokbot";
     },
     getRuntimeModel: () => runtimeModel,
     getEffectiveModel: () => effectiveModel,

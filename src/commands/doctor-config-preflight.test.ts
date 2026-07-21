@@ -6,11 +6,11 @@ import { applyCliProfileEnv } from "../cli/profile.js";
 import { promoteConfigSnapshotToLastKnownGood, readConfigFileSnapshot } from "../config/config.js";
 import { withEnvOverride, withTempHome, writeOpenClawConfig } from "../config/test-helpers.js";
 import { executeSqliteQueryTakeFirstSync, getNodeSqliteKysely } from "../infra/kysely-sync.js";
-import type { DB as OpenClawStateKyselyDatabase } from "../state/openclaw-state-db.generated.js";
+import type { DB as OpenClawStateKyselyDatabase } from "../state/grokbot-state-db.generated.js";
 import {
   closeOpenClawStateDatabaseForTest,
   openOpenClawStateDatabase,
-} from "../state/openclaw-state-db.js";
+} from "../state/grokbot-state-db.js";
 import {
   runDoctorConfigPreflight,
   shouldSkipPluginValidationForDoctorConfigPreflight,
@@ -61,8 +61,8 @@ describe("runDoctorConfigPreflight", () => {
     await withTempHome(async (home) => {
       await writeLegacyConfig(home);
       const stateDir = await fs.realpath(await fs.mkdtemp(path.join(home, "custom-state-")));
-      const configPath = path.join(stateDir, "openclaw.json");
-      const defaultConfigPath = path.join(home, ".openclaw", "openclaw.json");
+      const configPath = path.join(stateDir, "grokbot.json");
+      const defaultConfigPath = path.join(home, ".grokbot", "grokbot.json");
 
       await withEnvOverride(
         {
@@ -88,7 +88,7 @@ describe("runDoctorConfigPreflight", () => {
     await withTempHome(async (home) => {
       await writeLegacyConfig(home);
       const configRoot = await fs.realpath(await fs.mkdtemp(path.join(home, "custom-config-")));
-      const configPath = path.join(configRoot, "nested", "custom-openclaw.json");
+      const configPath = path.join(configRoot, "nested", "custom-grokbot.json");
 
       await withEnvOverride(
         {
@@ -112,8 +112,8 @@ describe("runDoctorConfigPreflight", () => {
   it("migrates legacy config into the selected profile", async () => {
     await withTempHome(async (home) => {
       await writeLegacyConfig(home);
-      const profileStateDir = path.join(home, ".openclaw-work");
-      const configPath = path.join(profileStateDir, "openclaw.json");
+      const profileStateDir = path.join(home, ".grokbot-work");
+      const configPath = path.join(profileStateDir, "grokbot.json");
 
       await withEnvOverride(
         {
@@ -211,7 +211,7 @@ describe("runDoctorConfigPreflight", () => {
 
   it("preserves and rejects unparseable config without last-known-good during repair preflight", async () => {
     await withTempHome(async (home) => {
-      const configPath = path.join(home, ".openclaw", "openclaw.json");
+      const configPath = path.join(home, ".grokbot", "grokbot.json");
       const brokenRaw = '{ "gateway": { "mode": "local" }, "models": {';
       await fs.mkdir(path.dirname(configPath), { recursive: true });
       await fs.writeFile(configPath, brokenRaw, "utf-8");
@@ -231,7 +231,7 @@ describe("runDoctorConfigPreflight", () => {
 
       await expect(fs.readFile(configPath, "utf-8")).resolves.toBe(brokenRaw);
       const entries = await fs.readdir(path.dirname(configPath));
-      const clobbered = entries.filter((entry) => entry.startsWith("openclaw.json.clobbered."));
+      const clobbered = entries.filter((entry) => entry.startsWith("grokbot.json.clobbered."));
       expect(clobbered).toHaveLength(1);
       const clobberedPath = path.join(path.dirname(configPath), clobbered[0] ?? "missing");
       expect((failure as Error).message).toContain(`Original preserved at ${clobberedPath}.`);

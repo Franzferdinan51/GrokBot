@@ -528,11 +528,11 @@ describe("dispatchCronDelivery — double-announce guard", () => {
         to: "123456",
       })
       .mockResolvedValueOnce({
-        sessionKey: "agent:main:openclaw-weixin:direct:123456",
-        baseSessionKey: "agent:main:openclaw-weixin:direct:123456",
+        sessionKey: "agent:main:grokbot-weixin:direct:123456",
+        baseSessionKey: "agent:main:grokbot-weixin:direct:123456",
         peer: { kind: "direct", id: "123456" },
         chatType: "direct",
-        from: "openclaw-weixin:123456",
+        from: "grokbot-weixin:123456",
         to: "123456",
       });
 
@@ -565,7 +565,7 @@ describe("dispatchCronDelivery — double-announce guard", () => {
             via: "message_tool",
             target: {
               tool: "message",
-              provider: "openclaw-weixin",
+              provider: "grokbot-weixin",
               to: "123456",
               text: "Shared cron update.",
             },
@@ -589,8 +589,8 @@ describe("dispatchCronDelivery — double-announce guard", () => {
     expect(enqueueSystemEvent).toHaveBeenCalledWith(
       "A scheduled cron job delivered this message to this channel:\nShared cron update.",
       {
-        sessionKey: "agent:main:openclaw-weixin:direct:123456",
-        contextKey: "cron-direct-delivery:v1:cron:test-job:1000:openclaw-weixin::123456:",
+        sessionKey: "agent:main:grokbot-weixin:direct:123456",
+        contextKey: "cron-direct-delivery:v1:cron:test-job:1000:grokbot-weixin::123456:",
       },
     );
   });
@@ -696,8 +696,8 @@ describe("dispatchCronDelivery — double-announce guard", () => {
 
   it("queues message-tool awareness for explicit off-plan message-tool deliveries", async () => {
     mockResolvedOutboundRoute({
-      sessionKey: "agent:main:openclaw-weixin:direct:user-123",
-      baseSessionKey: "agent:main:openclaw-weixin:direct:user-123",
+      sessionKey: "agent:main:grokbot-weixin:direct:user-123",
+      baseSessionKey: "agent:main:grokbot-weixin:direct:user-123",
       to: "user-123",
     });
 
@@ -725,7 +725,7 @@ describe("dispatchCronDelivery — double-announce guard", () => {
             via: "message_tool",
             target: {
               tool: "message",
-              provider: "openclaw-weixin",
+              provider: "grokbot-weixin",
               to: "user-123",
               text: "386502",
             },
@@ -740,7 +740,7 @@ describe("dispatchCronDelivery — double-announce guard", () => {
 
     expect(resolveOutboundSessionRoute).toHaveBeenCalledWith(
       expect.objectContaining({
-        channel: "openclaw-weixin",
+        channel: "grokbot-weixin",
         target: "user-123",
         accountId: undefined,
         threadId: undefined,
@@ -749,8 +749,8 @@ describe("dispatchCronDelivery — double-announce guard", () => {
     expect(enqueueSystemEvent).toHaveBeenCalledExactlyOnceWith(
       "A scheduled cron job delivered this message to this channel:\n386502",
       {
-        sessionKey: "agent:main:openclaw-weixin:direct:user-123",
-        contextKey: "cron-direct-delivery:v1:cron:test-job:1000:openclaw-weixin::user-123:",
+        sessionKey: "agent:main:grokbot-weixin:direct:user-123",
+        contextKey: "cron-direct-delivery:v1:cron:test-job:1000:grokbot-weixin::user-123:",
       },
     );
   });
@@ -2318,7 +2318,7 @@ describe("dispatchCronDelivery — double-announce guard", () => {
       "sessionKey is required to resolve delivery.channel=last",
     );
     expect(state.result?.error).toContain(
-      "the agent used the message tool, but OpenClaw could not verify",
+      "the agent used the message tool, but GrokBot could not verify",
     );
   });
 
@@ -2410,7 +2410,7 @@ describe("dispatchCronDelivery — double-announce guard", () => {
       archivedAt: Date.now(),
     });
 
-    const params = makeBaseParams({ synthesizedText: "Delivered outside OpenClaw" });
+    const params = makeBaseParams({ synthesizedText: "Delivered outside GrokBot" });
     params.resolvedDelivery = makeResolvedDelivery({
       channel: "whatsapp",
       to: "+15551234567",

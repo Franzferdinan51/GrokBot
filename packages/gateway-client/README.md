@@ -1,25 +1,25 @@
-# `@openclaw/gateway-client`
+# `@grokbot/gateway-client`
 
-Reference WebSocket client for the OpenClaw Gateway protocol. It provides the
-connection state machine used by OpenClaw's own Node and browser clients:
+Reference WebSocket client for the GrokBot Gateway protocol. It provides the
+connection state machine used by GrokBot's own Node and browser clients:
 challenge-based authentication, typed protocol frames, request correlation,
 timeouts, reconnect backoff, device-token handling, and event delivery.
 
 The current wire protocol is version 4. General clients must negotiate v4 with
 `minProtocol: 4` and `maxProtocol: 4`. See the
-[Gateway protocol specification](https://docs.openclaw.ai/gateway/protocol) for
+[Gateway protocol specification](https://docs.grokbot.ai/gateway/protocol) for
 the complete handshake, authentication, role, scope, and method contracts.
 
 ## Versioning
 
-Package versions follow the OpenClaw calendar release train: `YYYY.M.PATCH`,
-including the OpenClaw prerelease suffix when applicable. The package version is
+Package versions follow the GrokBot calendar release train: `YYYY.M.PATCH`,
+including the GrokBot prerelease suffix when applicable. The package version is
 separate from the negotiated wire protocol number.
 
 ## Install
 
 ```bash
-npm install @openclaw/gateway-client @openclaw/gateway-protocol
+npm install @grokbot/gateway-client @grokbot/gateway-protocol
 ```
 
 Node consumers use the `ws` transport included as a runtime dependency. Browser
@@ -28,21 +28,21 @@ client surface.
 
 ## Entry points
 
-- `@openclaw/gateway-client` exports the Node `GatewayClient`, device-auth
+- `@grokbot/gateway-client` exports the Node `GatewayClient`, device-auth
   helpers, readiness helpers, and timeout utilities.
-- `@openclaw/gateway-client/browser` exports the browser-safe protocol client,
+- `@grokbot/gateway-client/browser` exports the browser-safe protocol client,
   browser device-auth lifecycle, reconnect policy, and lightweight protocol
   constants. Its module graph does not import Node built-ins or `ws`.
-- `@openclaw/gateway-client/readiness` exports helpers that delay client startup
+- `@grokbot/gateway-client/readiness` exports helpers that delay client startup
   until the event loop can process Gateway IO.
-- `@openclaw/gateway-client/timeouts` exports timeout constants and safe timer
+- `@grokbot/gateway-client/timeouts` exports timeout constants and safe timer
   resolution helpers.
 
 ## Node quickstart
 
 ```ts
-import { GatewayClient } from "@openclaw/gateway-client";
-import { PROTOCOL_VERSION } from "@openclaw/gateway-protocol/version";
+import { GatewayClient } from "@grokbot/gateway-client";
+import { PROTOCOL_VERSION } from "@grokbot/gateway-protocol/version";
 
 const connected = Promise.withResolvers<void>();
 const client = new GatewayClient({
@@ -77,7 +77,7 @@ not cross an untrusted network without transport security.
 
 ## Browser clients
 
-Import `@openclaw/gateway-client/browser` when the host owns the WebSocket
+Import `@grokbot/gateway-client/browser` when the host owns the WebSocket
 adapter and device-key storage. The browser entry includes
 `GatewayProtocolClient` and `GatewayBrowserDeviceAuthLifecycle`; it deliberately
 omits the Node transport, TLS fingerprint handling, and private-network address
@@ -104,7 +104,7 @@ the next delay.
 
 The canonical defaults table and the server policy fields that can replace
 pre-handshake values are documented in the
-[Gateway protocol specification](https://docs.openclaw.ai/gateway/protocol#client-constants).
+[Gateway protocol specification](https://docs.grokbot.ai/gateway/protocol#client-constants).
 
 Use the `./timeouts` entry point when a host must align readiness or watchdog
 budgets with these defaults. Use the `./readiness` entry point when startup must
@@ -112,15 +112,15 @@ wait for an event-loop probe before opening the socket.
 
 ## Bundled internals
 
-The retry supervisor and the small `@openclaw/net-policy/ip` implementation are
+The retry supervisor and the small `@grokbot/net-policy/ip` implementation are
 inlined into the published JavaScript and declarations. They are implementation
 details, not public exports or supported API surfaces. `ipaddr.js` remains an
 external dependency because the inlined IP helpers use its public runtime and
 types.
 
-`ws`, `@openclaw/gateway-protocol`, and `ipaddr.js` remain external in the
+`ws`, `@grokbot/gateway-protocol`, and `ipaddr.js` remain external in the
 published distribution. Consumers should import protocol types and constants
-from `@openclaw/gateway-protocol`, not from bundled implementation paths.
+from `@grokbot/gateway-protocol`, not from bundled implementation paths.
 
 ## Contract notes
 

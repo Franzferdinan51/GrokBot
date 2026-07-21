@@ -11,7 +11,7 @@ import { monitorSqliteWalDuring } from "../../scripts/lib/sqlite-reliability-wal
 const tempDirs: string[] = [];
 
 function makeTempDir(): string {
-  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-sqlite-reliability-test-"));
+  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-sqlite-reliability-test-"));
   tempDirs.push(tempDir);
   return tempDir;
 }

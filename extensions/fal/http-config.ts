@@ -1,11 +1,11 @@
 // Fal helper module supports http config behavior.
-import type { AuthProfileStore, OpenClawConfig } from "openclaw/plugin-sdk/provider-auth";
-import { resolveApiKeyForProvider } from "openclaw/plugin-sdk/provider-auth-runtime";
+import type { AuthProfileStore, OpenClawConfig } from "grokbot/plugin-sdk/provider-auth";
+import { resolveApiKeyForProvider } from "grokbot/plugin-sdk/provider-auth-runtime";
 import {
   resolveProviderHttpRequestConfig,
   type ProviderRequestCapability,
-} from "openclaw/plugin-sdk/provider-http";
-import { normalizeOptionalString } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/provider-http";
+import { normalizeOptionalString } from "grokbot/plugin-sdk/string-coerce-runtime";
 
 const DEFAULT_FAL_BASE_URL = "https://fal.run";
 

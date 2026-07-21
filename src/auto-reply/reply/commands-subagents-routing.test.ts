@@ -98,7 +98,7 @@ function buildParams(
     directives: {} as HandleCommandsParams["directives"],
     elevated: { enabled: true, allowed: true, failures: [] },
     sessionKey,
-    workspaceDir: "/tmp/openclaw-commands-subagents",
+    workspaceDir: "/tmp/grokbot-commands-subagents",
     defaultGroupActivation: () => "mention",
     resolvedVerboseLevel: "off",
     resolvedReasoningLevel: "off",

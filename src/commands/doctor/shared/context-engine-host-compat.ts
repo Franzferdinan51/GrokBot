@@ -1,13 +1,13 @@
 // Doctor checks for context engine host requirements against configured agent runtimes.
-import { parseModelCatalogRef } from "@openclaw/model-catalog-core/model-catalog-refs";
-import { uniqueStrings } from "@openclaw/normalization-core/string-normalization";
+import { parseModelCatalogRef } from "@grokbot/model-catalog-core/model-catalog-refs";
+import { uniqueStrings } from "@grokbot/normalization-core/string-normalization";
 import { normalizeEmbeddedAgentRuntime } from "../../../agents/agent-runtime-id.js";
 import { resolveDefaultAgentDir } from "../../../agents/agent-scope-config.js";
 import { resolveCliBackendConfig } from "../../../agents/cli-backends.js";
 import { DEFAULT_MODEL, DEFAULT_PROVIDER } from "../../../agents/defaults.js";
 import { resolveAgentHarnessPolicy } from "../../../agents/harness/policy.js";
 import { getRegisteredAgentHarness } from "../../../agents/harness/registry.js";
-import type { OpenClawConfig } from "../../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../../config/types.grokbot.js";
 import {
   buildGenericCliContextEngineHostSupport,
   CODEX_APP_SERVER_CONTEXT_ENGINE_HOST,
@@ -159,7 +159,7 @@ function runtimeHostCandidate(params: {
   paths: string[];
 }): HostCandidate {
   const runtimeId = normalizeRuntimeId(params.runtimeId) ?? params.runtimeId;
-  if (runtimeId === "openclaw" || runtimeId === "auto") {
+  if (runtimeId === "grokbot" || runtimeId === "auto") {
     return { runtimeId, host: OPENCLAW_EMBEDDED_CONTEXT_ENGINE_HOST, paths: params.paths };
   }
   if (runtimeId === "codex") {

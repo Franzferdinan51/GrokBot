@@ -1,6 +1,6 @@
 import path from "node:path";
 import type { DatabaseSync } from "node:sqlite";
-import { isRecord } from "@openclaw/normalization-core/record-coerce";
+import { isRecord } from "@grokbot/normalization-core/record-coerce";
 import {
   backfillAcpReplayEstimatedBytes,
   backfillCronJobsFromJobJson,
@@ -10,8 +10,8 @@ import {
   migrateLegacyCronDeliveryThreadIds,
   repairLegacyTaskAgentAttribution,
   repairLegacyTaskDeliveryStatuses,
-} from "./openclaw-state-db-legacy-backfills.js";
-import { ensureColumn } from "./openclaw-state-db-schema-helpers.js";
+} from "./grokbot-state-db-legacy-backfills.js";
+import { ensureColumn } from "./grokbot-state-db-schema-helpers.js";
 
 export function ensureAgentDeletionJournalSchema(database: DatabaseSync): void {
   database.exec(`

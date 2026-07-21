@@ -1,14 +1,14 @@
-// Keep the runtime class on the public package specifier so OpenClaw and
+// Keep the runtime class on the public package specifier so GrokBot and
 // external consumers share one constructor identity.
-import { EventStream as LlmEventStream } from "@openclaw/ai/event-stream";
+import { EventStream as LlmEventStream } from "@grokbot/ai/event-stream";
 import type {
   AssistantMessage,
   AssistantMessageEvent,
   Context,
   EventStream,
   ToolResultMessage,
-} from "@openclaw/llm-core";
-import type { EventStream as SourceEventStream } from "@openclaw/llm-core";
+} from "@grokbot/llm-core";
+import type { EventStream as SourceEventStream } from "@grokbot/llm-core";
 import { TranscriptNotContinuableError } from "./errors.js";
 import { uuidv7 } from "./harness/session/uuid.js";
 import { resolveAgentReasoningOption } from "./reasoning.js";

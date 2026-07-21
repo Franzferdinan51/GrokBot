@@ -1,11 +1,11 @@
-# OpenClaw WhatsApp
+# GrokBot WhatsApp
 
-Official OpenClaw channel plugin for WhatsApp Web chats.
+Official GrokBot channel plugin for WhatsApp Web chats.
 
-Install from OpenClaw:
+Install from GrokBot:
 
 ```bash
-openclaw plugin add @openclaw/whatsapp
+grokbot plugin add @grokbot/whatsapp
 ```
 
-Link a WhatsApp account through the plugin's setup flow, then configure which chats OpenClaw agents should monitor and reply to.
+Link a WhatsApp account through the plugin's setup flow, then configure which chats GrokBot agents should monitor and reply to.

@@ -10,7 +10,7 @@ import type {
 import { formatCliCommand } from "../cli/command-format.js";
 import type { ChannelChoice } from "../commands/onboard-types.js";
 import type { DmPolicy } from "../config/types.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "../routing/session-key.js";
 import { t } from "../wizard/i18n/index.js";
 import type { WizardPrompter, WizardSelectOption } from "../wizard/prompts.js";
@@ -130,12 +130,12 @@ export async function maybeConfigureDmPolicies(params: {
       [
         t("wizard.channels.dmPolicyDefault"),
         t("wizard.channels.dmPolicyApprove", {
-          command: formatCliCommand(`openclaw pairing approve ${policy.channel} <code>`),
+          command: formatCliCommand(`grokbot pairing approve ${policy.channel} <code>`),
         }),
         t("wizard.channels.dmPolicyAllowlist", { allowFromKey, policyKey }),
         t("wizard.channels.dmPolicyOpen", { allowFromKey, policyKey }),
         t("wizard.channels.dmPolicyMultiUser", {
-          command: formatCliCommand('openclaw config set session.dmScope "per-channel-peer"'),
+          command: formatCliCommand('grokbot config set session.dmScope "per-channel-peer"'),
         }),
         t("wizard.channels.docs", {
           link: formatDocsLink("/channels/pairing", "channels/pairing"),

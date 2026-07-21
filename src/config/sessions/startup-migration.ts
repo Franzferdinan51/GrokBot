@@ -1,5 +1,5 @@
 import { migrateOrphanedSessionKeys } from "../../infra/state-migrations.js";
-import type { OpenClawConfig } from "../types.openclaw.js";
+import type { OpenClawConfig } from "../types.grokbot.js";
 import { sweepOrphanSessionStoreTemps } from "./store-temp-cleanup.js";
 import { resolveAllAgentSessionStoreTargetsSync } from "./targets.js";
 

@@ -2,7 +2,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { isAcpRuntimeSpawnAvailable } from "../../acp/runtime/availability.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import { walkDirectorySync } from "../../infra/fs-safe.js";
 import { createSubsystemLogger } from "../../logging/subsystem.js";
 import {
@@ -189,10 +189,10 @@ function hasPublishableSkillFile(params: { skillDir: string; rootDir: string }):
 
 /**
  * Creates symlinks from each resolved plugin skill directory into the
- * plugin skills directory (~/.openclaw/plugin-skills/) so the agent SDK can
+ * plugin skills directory (~/.grokbot/plugin-skills/) so the agent SDK can
  * discover them at the conventional file-system path.
  *
- * The plugin-skills directory is fully owned by OpenClaw — every entry is
+ * The plugin-skills directory is fully owned by GrokBot — every entry is
  * a generated symlink. Cleanup of stale links is therefore safe.
  */
 function publishPluginSkills(skillDirs: string[], opts?: { pluginSkillsDir?: string }): void {
@@ -207,7 +207,7 @@ function publishPluginSkills(skillDirs: string[], opts?: { pluginSkillsDir?: str
     collectSkillTargets(dir, managedTargets);
   }
 
-  // Plugin skill symlinks are owned by OpenClaw and publish at extra-dir
+  // Plugin skill symlinks are owned by GrokBot and publish at extra-dir
   // precedence, so they never shadow managed or bundled skills.
   for (const [name, target] of managedTargets) {
     const linkPath = path.join(pluginSkillsDir, name);
@@ -244,7 +244,7 @@ function publishPluginSkills(skillDirs: string[], opts?: { pluginSkillsDir?: str
   }
 
   // Clean up stale symlinks for plugin skills that are no longer active.
-  // The plugin-skills directory is fully owned by OpenClaw: every entry is a
+  // The plugin-skills directory is fully owned by GrokBot: every entry is a
   // generated symlink, so stale-link removal is safe without extra proof.
   let existingEntries: fs.Dirent[];
   try {

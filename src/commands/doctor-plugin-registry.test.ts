@@ -1,7 +1,7 @@
 // Doctor plugin registry tests cover plugin registry checks and repair diagnostics.
 import fs from "node:fs";
 import path from "node:path";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { note } from "../../packages/terminal-core/src/note.js";
 import type { PluginCandidate } from "../plugins/discovery.js";
@@ -33,7 +33,7 @@ afterEach(() => {
 });
 
 function makeTempDir() {
-  return makeTrackedTempDir("openclaw-doctor-plugin-registry", tempDirs);
+  return makeTrackedTempDir("grokbot-doctor-plugin-registry", tempDirs);
 }
 
 async function readRequiredPersistedInstalledPluginIndex(
@@ -62,7 +62,7 @@ function createCandidate(rootDir: string, id = "demo"): PluginCandidate {
     "utf8",
   );
   fs.writeFileSync(
-    path.join(rootDir, "openclaw.plugin.json"),
+    path.join(rootDir, "grokbot.plugin.json"),
     JSON.stringify({
       id,
       name: id,
@@ -91,7 +91,7 @@ function createBundledCandidate(params: {
     "utf8",
   );
   fs.writeFileSync(
-    path.join(params.rootDir, "openclaw.plugin.json"),
+    path.join(params.rootDir, "grokbot.plugin.json"),
     JSON.stringify({
       id: params.id,
       name: params.id,
@@ -179,14 +179,14 @@ function createManagedNpmPlugin(params: {
       name: params.packageName,
       version: params.version,
       ...(params.peerDependencies ? { peerDependencies: params.peerDependencies } : {}),
-      openclaw: {
+      grokbot: {
         extensions: ["."],
       },
     }),
     "utf8",
   );
   fs.writeFileSync(
-    path.join(packageDir, "openclaw.plugin.json"),
+    path.join(packageDir, "grokbot.plugin.json"),
     JSON.stringify({
       id: params.id,
       name: params.id,
@@ -263,7 +263,7 @@ function expectedPluginIndexRecord(params: {
     pluginId: params.pluginId,
     ...(params.packageName ? { packageName: params.packageName } : {}),
     ...(params.packageVersion ? { packageVersion: params.packageVersion } : {}),
-    manifestPath: path.join(params.rootDir, "openclaw.plugin.json"),
+    manifestPath: path.join(params.rootDir, "grokbot.plugin.json"),
     manifestHash: expect.any(String),
     manifestFile: {
       size: expect.any(Number),
@@ -318,7 +318,7 @@ describe("maybeRepairPluginRegistryState", () => {
       checkId: "core/doctor/plugin-registry",
       severity: "warning",
       path: registryPath,
-      fixHint: "Run `openclaw doctor --fix` to rebuild the plugin registry from enabled plugins.",
+      fixHint: "Run `grokbot doctor --fix` to rebuild the plugin registry from enabled plugins.",
     });
     expect(pluginRegistryIssueToRepairEffect(expectDefined(issue, "issue test invariant"))).toEqual(
       {
@@ -337,7 +337,7 @@ describe("maybeRepairPluginRegistryState", () => {
     const managed = createManagedNpmPlugin({
       stateDir,
       id: "google-meet",
-      packageName: "@openclaw/google-meet",
+      packageName: "@grokbot/google-meet",
       version: "2026.5.2",
     });
     await writePersistedInstalledPluginIndex(createCurrentIndex(), { stateDir });
@@ -348,7 +348,7 @@ describe("maybeRepairPluginRegistryState", () => {
         createBundledCandidate({
           rootDir: bundledDir,
           id: "google-meet",
-          packageName: "@openclaw/google-meet",
+          packageName: "@grokbot/google-meet",
           version: "2026.5.3",
         }),
       ],
@@ -371,7 +371,7 @@ describe("maybeRepairPluginRegistryState", () => {
     expect(staleIssue).toMatchObject({
       kind: "stale-managed-npm-bundled-plugin",
       pluginId: "google-meet",
-      packageName: "@openclaw/google-meet",
+      packageName: "@grokbot/google-meet",
       packageDir: managed.packageDir,
       version: "2026.5.2",
     });
@@ -411,7 +411,7 @@ describe("maybeRepairPluginRegistryState", () => {
         createBundledCandidate({
           rootDir: bundledDir,
           id: "discord",
-          packageName: "@openclaw/discord",
+          packageName: "@grokbot/discord",
           version: "2026.5.20-beta.1",
         }),
       ],
@@ -479,7 +479,7 @@ describe("maybeRepairPluginRegistryState", () => {
     const managed = createManagedNpmPlugin({
       stateDir,
       id: "google-meet",
-      packageName: "@openclaw/google-meet",
+      packageName: "@grokbot/google-meet",
       version: "2026.5.2",
     });
     await writePersistedInstalledPluginIndex(createCurrentIndex(), { stateDir });
@@ -490,7 +490,7 @@ describe("maybeRepairPluginRegistryState", () => {
         createBundledCandidate({
           rootDir: bundledDir,
           id: "google-meet",
-          packageName: "@openclaw/google-meet",
+          packageName: "@grokbot/google-meet",
           version: "2026.5.3",
         }),
       ],
@@ -512,7 +512,7 @@ describe("maybeRepairPluginRegistryState", () => {
     expect(vi.mocked(note).mock.calls.join("\n")).toContain(
       "Managed npm plugin packages shadow bundled plugins",
     );
-    expect(vi.mocked(note).mock.calls.join("\n")).toContain("@openclaw/google-meet@2026.5.2");
+    expect(vi.mocked(note).mock.calls.join("\n")).toContain("@grokbot/google-meet@2026.5.2");
     expect(fs.existsSync(managed.packageDir)).toBe(true);
   });
 
@@ -523,7 +523,7 @@ describe("maybeRepairPluginRegistryState", () => {
     const managed = createManagedNpmPlugin({
       stateDir,
       id: "google-meet",
-      packageName: "@openclaw/google-meet",
+      packageName: "@grokbot/google-meet",
       version: "2026.5.2",
     });
     await writePersistedInstalledPluginIndex(createCurrentIndex(), { stateDir });
@@ -534,7 +534,7 @@ describe("maybeRepairPluginRegistryState", () => {
         createBundledCandidate({
           rootDir: bundledDir,
           id: "google-meet",
-          packageName: "@openclaw/google-meet",
+          packageName: "@grokbot/google-meet",
           version: "2026.5.3",
         }),
       ],
@@ -564,7 +564,7 @@ describe("maybeRepairPluginRegistryState", () => {
         pluginId: "google-meet",
         rootDir: bundledDir,
         origin: "bundled",
-        packageName: "@openclaw/google-meet",
+        packageName: "@grokbot/google-meet",
         packageVersion: "2026.5.3",
       }),
     ]);
@@ -580,7 +580,7 @@ describe("maybeRepairPluginRegistryState", () => {
     const managed = createManagedNpmPlugin({
       stateDir,
       id: "google-meet",
-      packageName: "@openclaw/google-meet",
+      packageName: "@grokbot/google-meet",
       version: "2026.5.2",
     });
     await markRetainedManagedNpmInstall({
@@ -597,7 +597,7 @@ describe("maybeRepairPluginRegistryState", () => {
         createBundledCandidate({
           rootDir: bundledDir,
           id: "google-meet",
-          packageName: "@openclaw/google-meet",
+          packageName: "@grokbot/google-meet",
           version: "2026.5.3",
         }),
       ],
@@ -629,13 +629,13 @@ describe("maybeRepairPluginRegistryState", () => {
     const managed = createManagedNpmPlugin({
       stateDir,
       id: "google-meet",
-      packageName: "@openclaw/google-meet",
+      packageName: "@grokbot/google-meet",
       version: "2026.5.3",
     });
     await writePersistedInstalledPluginIndex(
       createCurrentIndexWithNpmRecord({
         pluginId: "google-meet",
-        packageName: "@openclaw/google-meet",
+        packageName: "@grokbot/google-meet",
         packageDir: managed.packageDir,
         version: "2026.5.3",
       }),
@@ -648,7 +648,7 @@ describe("maybeRepairPluginRegistryState", () => {
         createBundledCandidate({
           rootDir: bundledDir,
           id: "google-meet",
-          packageName: "@openclaw/google-meet",
+          packageName: "@grokbot/google-meet",
           version: "2026.5.3",
         }),
       ],
@@ -676,7 +676,7 @@ describe("maybeRepairPluginRegistryState", () => {
         pluginId: "google-meet",
         rootDir: bundledDir,
         origin: "bundled",
-        packageName: "@openclaw/google-meet",
+        packageName: "@grokbot/google-meet",
         packageVersion: "2026.5.3",
       }),
     ]);
@@ -704,7 +704,7 @@ describe("maybeRepairPluginRegistryState", () => {
         createBundledCandidate({
           rootDir: bundledDir,
           id: "discord",
-          packageName: "@openclaw/discord",
+          packageName: "@grokbot/discord",
           version: "2026.5.20-beta.1",
         }),
       ],
@@ -753,7 +753,7 @@ describe("maybeRepairPluginRegistryState", () => {
         createBundledCandidate({
           rootDir: bundledDir,
           id: "discord",
-          packageName: "@openclaw/discord",
+          packageName: "@grokbot/discord",
           version: "2026.5.20-beta.1",
         }),
       ],
@@ -780,7 +780,7 @@ describe("maybeRepairPluginRegistryState", () => {
         pluginId: "discord",
         rootDir: bundledDir,
         origin: "bundled",
-        packageName: "@openclaw/discord",
+        packageName: "@grokbot/discord",
         packageVersion: "2026.5.20-beta.1",
       }),
     ]);
@@ -796,7 +796,7 @@ describe("maybeRepairPluginRegistryState", () => {
     const managed = createManagedNpmPlugin({
       stateDir,
       id: "google-meet",
-      packageName: "@openclaw/google-meet",
+      packageName: "@grokbot/google-meet",
       version: "2026.5.2",
       packageLock: true,
     });
@@ -808,7 +808,7 @@ describe("maybeRepairPluginRegistryState", () => {
         createBundledCandidate({
           rootDir: bundledDir,
           id: "google-meet",
-          packageName: "@openclaw/google-meet",
+          packageName: "@grokbot/google-meet",
           version: "2026.5.3",
         }),
       ],
@@ -831,12 +831,12 @@ describe("maybeRepairPluginRegistryState", () => {
       fs.readFileSync(path.join(managed.npmRoot, "package-lock.json"), "utf8"),
     );
     expect(packageLock.packages[""].dependencies).toEqual({ "other-plugin": "1.0.0" });
-    expect(packageLock.packages).not.toHaveProperty("node_modules/@openclaw/google-meet");
-    expect(packageLock.dependencies).not.toHaveProperty("@openclaw/google-meet");
+    expect(packageLock.packages).not.toHaveProperty("node_modules/@grokbot/google-meet");
+    expect(packageLock.dependencies).not.toHaveProperty("@grokbot/google-meet");
     expect(packageLock.dependencies).toHaveProperty("other-plugin");
   });
 
-  it("repairs managed npm openclaw peer links during registry repair", async () => {
+  it("repairs managed npm grokbot peer links during registry repair", async () => {
     const stateDir = makeTempDir();
     const managed = createManagedNpmPlugin({
       stateDir,
@@ -844,7 +844,7 @@ describe("maybeRepairPluginRegistryState", () => {
       packageName: "codex-plugin",
       version: "2026.5.3",
       peerDependencies: {
-        openclaw: ">=2026.5.3",
+        grokbot: ">=2026.5.3",
       },
     });
     await writePersistedInstalledPluginIndex(
@@ -864,13 +864,13 @@ describe("maybeRepairPluginRegistryState", () => {
       prompter: { shouldRepair: true },
     });
 
-    const linkPath = path.join(managed.packageDir, "node_modules", "openclaw");
+    const linkPath = path.join(managed.packageDir, "node_modules", "grokbot");
     expect(fs.lstatSync(linkPath).isSymbolicLink()).toBe(true);
     expect(fs.realpathSync(linkPath)).toBe(fs.realpathSync(process.cwd()));
-    expect(vi.mocked(note).mock.calls.join("\n")).toContain("Repaired OpenClaw host peer link");
+    expect(vi.mocked(note).mock.calls.join("\n")).toContain("Repaired GrokBot host peer link");
   });
 
-  it("warns about broken managed npm openclaw peer links without repairing them", async () => {
+  it("warns about broken managed npm grokbot peer links without repairing them", async () => {
     const stateDir = makeTempDir();
     const managed = createManagedNpmPlugin({
       stateDir,
@@ -878,7 +878,7 @@ describe("maybeRepairPluginRegistryState", () => {
       packageName: "codex-plugin",
       version: "2026.5.3",
       peerDependencies: {
-        openclaw: ">=2026.5.3",
+        grokbot: ">=2026.5.3",
       },
     });
     await writePersistedInstalledPluginIndex(
@@ -898,11 +898,11 @@ describe("maybeRepairPluginRegistryState", () => {
       prompter: { shouldRepair: false },
     });
 
-    const linkPath = path.join(managed.packageDir, "node_modules", "openclaw");
+    const linkPath = path.join(managed.packageDir, "node_modules", "grokbot");
     const notes = vi.mocked(note).mock.calls.join("\n");
-    expect(notes).toContain("Managed npm OpenClaw host peer links need repair");
+    expect(notes).toContain("Managed npm GrokBot host peer links need repair");
     expect(notes).toContain("codex-plugin");
-    expect(notes).toContain("openclaw doctor --fix");
+    expect(notes).toContain("grokbot doctor --fix");
     expect(fs.existsSync(linkPath)).toBe(false);
   });
 

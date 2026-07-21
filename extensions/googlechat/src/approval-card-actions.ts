@@ -1,10 +1,10 @@
 import crypto from "node:crypto";
-import type { ExecApprovalDecision } from "openclaw/plugin-sdk/approval-runtime";
-import { pruneMapToMaxSize } from "openclaw/plugin-sdk/collection-runtime";
-import { normalizeOptionalString } from "openclaw/plugin-sdk/string-coerce-runtime";
+import type { ExecApprovalDecision } from "grokbot/plugin-sdk/approval-runtime";
+import { pruneMapToMaxSize } from "grokbot/plugin-sdk/collection-runtime";
+import { normalizeOptionalString } from "grokbot/plugin-sdk/string-coerce-runtime";
 import type { GoogleChatActionParameter, GoogleChatEvent } from "./types.js";
 
-export const GOOGLECHAT_APPROVAL_ACTION = "openclaw.approval";
+export const GOOGLECHAT_APPROVAL_ACTION = "grokbot.approval";
 const GOOGLECHAT_APPROVAL_ACTION_PARAM = "openclaw_action";
 const GOOGLECHAT_APPROVAL_TOKEN_PARAM = "token";
 const GOOGLECHAT_APPROVAL_ACTION_VALUE = "approval";

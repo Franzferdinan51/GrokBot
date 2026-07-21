@@ -33,7 +33,7 @@ import {
   type CronState,
 } from "../../lib/cron/index.ts";
 import { searchForSession } from "../../lib/sessions/index.ts";
-import { OpenClawLightDomElement } from "../../lit/openclaw-element.ts";
+import { OpenClawLightDomElement } from "../../lit/grokbot-element.ts";
 import { SubscriptionsController } from "../../lit/subscriptions-controller.ts";
 import {
   buildCronSuggestions,
@@ -467,6 +467,6 @@ class CronPage extends OpenClawLightDomElement {
 }
 
 // Module re-evaluation can retain the shared registry (for example, in Vitest).
-if (!customElements.get("openclaw-cron-page")) {
-  customElements.define("openclaw-cron-page", CronPage);
+if (!customElements.get("grokbot-cron-page")) {
+  customElements.define("grokbot-cron-page", CronPage);
 }

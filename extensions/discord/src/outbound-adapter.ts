@@ -1,19 +1,19 @@
 // Discord plugin module implements outbound adapter behavior.
-import type { OutboundIdentity } from "openclaw/plugin-sdk/channel-outbound";
-import { resolveOutboundSendDep } from "openclaw/plugin-sdk/channel-outbound";
+import type { OutboundIdentity } from "grokbot/plugin-sdk/channel-outbound";
+import { resolveOutboundSendDep } from "grokbot/plugin-sdk/channel-outbound";
 import {
   attachChannelToResult,
   type ChannelOutboundAdapter,
   createAttachedChannelResultAdapter,
-} from "openclaw/plugin-sdk/channel-send-result";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { createLazyRuntimeModule } from "openclaw/plugin-sdk/lazy-runtime";
-import { questionGatewayRuntime } from "openclaw/plugin-sdk/question-gateway-runtime";
+} from "grokbot/plugin-sdk/channel-send-result";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { createLazyRuntimeModule } from "grokbot/plugin-sdk/lazy-runtime";
+import { questionGatewayRuntime } from "grokbot/plugin-sdk/question-gateway-runtime";
 import {
   normalizeOptionalString,
   normalizeOptionalStringifiedId,
-} from "openclaw/plugin-sdk/string-coerce-runtime";
-import { truncateUtf16Safe } from "openclaw/plugin-sdk/text-utility-runtime";
+} from "grokbot/plugin-sdk/string-coerce-runtime";
+import { truncateUtf16Safe } from "grokbot/plugin-sdk/text-utility-runtime";
 import { formatDiscordApprovalDisplayValue } from "./approval-message-safety.js";
 import { chunkDiscordTextWithMode } from "./chunk.js";
 import { notifyDiscordInboundEventOutboundPayloadSuccess } from "./inbound-event-delivery.js";

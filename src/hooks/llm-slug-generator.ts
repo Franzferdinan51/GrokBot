@@ -5,8 +5,8 @@
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { normalizeLowercaseStringOrEmpty } from "@openclaw/normalization-core/string-coerce";
-import { truncateUtf16Safe } from "@openclaw/normalization-core/utf16-slice";
+import { normalizeLowercaseStringOrEmpty } from "@grokbot/normalization-core/string-coerce";
+import { truncateUtf16Safe } from "@grokbot/normalization-core/utf16-slice";
 import {
   resolveDefaultAgentId,
   resolveAgentWorkspaceDir,
@@ -14,7 +14,7 @@ import {
 } from "../agents/agent-scope.js";
 import { runEmbeddedAgent } from "../agents/embedded-agent.js";
 import { resolveAgentTimeoutMs } from "../agents/timeout.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { createSubsystemLogger } from "../logging/subsystem.js";
 import {
   extractLeadingHttpStatus,
@@ -84,7 +84,7 @@ export async function generateSlugViaLLM(params: {
     const agentDir = resolveAgentDir(params.cfg, agentId);
 
     // Create a temporary session file for this one-off LLM call
-    const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-slug-"));
+    const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-slug-"));
     tempSessionFile = path.join(tempDir, "session.jsonl");
 
     const prompt = `Based on this conversation, generate a short 1-2 word filename slug (lowercase, hyphen-separated, no file extension).

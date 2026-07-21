@@ -1,5 +1,5 @@
 ---
-summary: "Frequently asked questions about OpenClaw setup, configuration, and usage"
+summary: "Frequently asked questions about GrokBot setup, configuration, and usage"
 read_when:
   - Answering common setup, install, onboarding, or runtime support questions
   - Triaging user-reported issues before deeper debugging
@@ -13,48 +13,48 @@ Quick answers plus deeper troubleshooting for real-world setups (local dev, VPS,
 <Steps>
   <Step title="Quick status">
     ```bash
-    openclaw status
+    grokbot status
     ```
     Fast local summary: OS + update, gateway/service reachability, agents/sessions, provider config + runtime issues (when the gateway is reachable).
   </Step>
   <Step title="Pasteable report (safe to share)">
     ```bash
-    openclaw status --all
+    grokbot status --all
     ```
     Read-only diagnosis with a log tail (tokens redacted).
   </Step>
   <Step title="Daemon + port state">
     ```bash
-    openclaw gateway status
+    grokbot gateway status
     ```
     Shows supervisor runtime vs RPC reachability, the probe target URL, and which config the service likely used.
   </Step>
   <Step title="Deep probes">
     ```bash
-    openclaw status --deep
+    grokbot status --deep
     ```
     Live gateway health probe, including channel probes when supported (requires a reachable gateway). See [Health](/gateway/health).
   </Step>
   <Step title="Tail the latest log">
     ```bash
-    openclaw logs --follow
+    grokbot logs --follow
     ```
     If RPC is down, fall back to:
     ```bash
-    tail -f "$(ls -t /tmp/openclaw/openclaw-*.log | head -1)"
+    tail -f "$(ls -t /tmp/grokbot/grokbot-*.log | head -1)"
     ```
     File logs are separate from service logs; see [Logging](/logging) and [Troubleshooting](/gateway/troubleshooting).
   </Step>
   <Step title="Run the doctor (repairs)">
     ```bash
-    openclaw doctor
+    grokbot doctor
     ```
     Repairs/migrates config and state, then runs health checks. See [Doctor](/gateway/doctor).
   </Step>
   <Step title="Gateway snapshot (WS-only)">
     ```bash
-    openclaw health --json
-    openclaw health --verbose   # shows the target URL + config path on errors
+    grokbot health --json
+    grokbot health --verbose   # shows the target URL + config path on errors
     ```
     Asks the running gateway for a full snapshot. See [Health](/gateway/health).
   </Step>
@@ -64,15 +64,15 @@ Quick answers plus deeper troubleshooting for real-world setups (local dev, VPS,
 
 First-run Q&A - install, onboard, auth routes, subscriptions, initial failures - lives on the [First-run FAQ](/help/faq-first-run).
 
-## What is OpenClaw?
+## What is GrokBot?
 
 <AccordionGroup>
-  <Accordion title="What is OpenClaw, in one paragraph?">
-    OpenClaw is a personal AI assistant you run on your own devices. It replies on the messaging surfaces you already use (Discord, Google Chat, iMessage, Mattermost, Signal, Slack, Telegram, WebChat, WhatsApp, and bundled channel plugins such as QQ Bot) and can also do voice plus a live Canvas on supported platforms. The **Gateway** is the always-on control plane; the assistant is the product.
+  <Accordion title="What is GrokBot, in one paragraph?">
+    GrokBot is a personal AI assistant you run on your own devices. It replies on the messaging surfaces you already use (Discord, Google Chat, iMessage, Mattermost, Signal, Slack, Telegram, WebChat, WhatsApp, and bundled channel plugins such as QQ Bot) and can also do voice plus a live Canvas on supported platforms. The **Gateway** is the always-on control plane; the assistant is the product.
   </Accordion>
 
   <Accordion title="Value proposition">
-    OpenClaw is not "just a Claude wrapper." It is a **local-first control plane** that runs a capable assistant on **your own hardware**, reachable from the chat apps you already use, with stateful sessions, memory, and tools - without handing your workflows to a hosted SaaS.
+    GrokBot is not "just a Claude wrapper." It is a **local-first control plane** that runs a capable assistant on **your own hardware**, reachable from the chat apps you already use, with stateful sessions, memory, and tools - without handing your workflows to a hosted SaaS.
 
     - **Your devices, your data**: run the Gateway wherever you want (Mac, Linux, VPS) and keep the workspace and session history local.
     - **Real channels, not a web sandbox**: Discord/iMessage/Signal/Slack/Telegram/WhatsApp/etc, plus mobile voice and Canvas on supported platforms.
@@ -92,7 +92,7 @@ First-run Q&A - install, onboard, auth routes, subscriptions, initial failures -
 
   </Accordion>
 
-  <Accordion title="What are the top five everyday use cases for OpenClaw?">
+  <Accordion title="What are the top five everyday use cases for GrokBot?">
     - **Personal briefings**: summaries of inbox, calendar, and news you care about.
     - **Research and drafting**: quick research, summaries, and first drafts for emails or docs.
     - **Reminders and follow-ups**: cron- or heartbeat-driven nudges and checklists.
@@ -101,17 +101,17 @@ First-run Q&A - install, onboard, auth routes, subscriptions, initial failures -
 
   </Accordion>
 
-  <Accordion title="Can OpenClaw help with lead gen, outreach, ads, and blogs for a SaaS?">
+  <Accordion title="Can GrokBot help with lead gen, outreach, ads, and blogs for a SaaS?">
     Yes, for **research, qualification, and drafting**: scanning sites, building shortlists, summarizing prospects, writing outreach or ad copy drafts.
 
-    For **outreach or ad runs**, keep a human in the loop. Avoid spam, follow local laws and platform policies, and review anything before it sends. Let OpenClaw draft; you approve.
+    For **outreach or ad runs**, keep a human in the loop. Avoid spam, follow local laws and platform policies, and review anything before it sends. Let GrokBot draft; you approve.
 
     Docs: [Security](/gateway/security).
 
   </Accordion>
 
   <Accordion title="What are the advantages vs Claude Code for web development?">
-    OpenClaw is a **personal assistant** and coordination layer, not an IDE replacement. Use Claude Code or Codex for the fastest direct coding loop inside a repo. Use OpenClaw for durable memory, cross-device access, and tool orchestration.
+    GrokBot is a **personal assistant** and coordination layer, not an IDE replacement. Use Claude Code or Codex for the fastest direct coding loop inside a repo. Use GrokBot for durable memory, cross-device access, and tool orchestration.
 
     - Persistent memory and workspace across sessions.
     - Multi-platform access (Telegram, WhatsApp, TUI, WebChat).
@@ -119,7 +119,7 @@ First-run Q&A - install, onboard, auth routes, subscriptions, initial failures -
     - Always-on Gateway (run on a VPS, interact from anywhere).
     - Nodes for local browser/screen/camera/exec.
 
-    Showcase: [https://openclaw.ai/showcase](https://openclaw.ai/showcase).
+    Showcase: [https://grokbot.ai/showcase](https://grokbot.ai/showcase).
 
   </Accordion>
 </AccordionGroup>
@@ -128,11 +128,11 @@ First-run Q&A - install, onboard, auth routes, subscriptions, initial failures -
 
 <AccordionGroup>
   <Accordion title="How do I customize skills without keeping the repo dirty?">
-    Use managed overrides instead of editing the repo copy. Put changes in `~/.openclaw/skills/<name>/SKILL.md` (or add a folder via `skills.load.extraDirs` in `~/.openclaw/openclaw.json`). Precedence: `<workspace>/skills` -> `<workspace>/.agents/skills` -> `~/.agents/skills` -> `~/.openclaw/skills` -> bundled -> `skills.load.extraDirs`, so managed overrides win over bundled skills without touching git. To install globally but limit visibility to some agents, keep the shared copy in `~/.openclaw/skills` and control visibility with `agents.defaults.skills` / `agents.list[].skills`. Only upstream-worthy edits should go out as PRs against the repo copy.
+    Use managed overrides instead of editing the repo copy. Put changes in `~/.grokbot/skills/<name>/SKILL.md` (or add a folder via `skills.load.extraDirs` in `~/.grokbot/grokbot.json`). Precedence: `<workspace>/skills` -> `<workspace>/.agents/skills` -> `~/.agents/skills` -> `~/.grokbot/skills` -> bundled -> `skills.load.extraDirs`, so managed overrides win over bundled skills without touching git. To install globally but limit visibility to some agents, keep the shared copy in `~/.grokbot/skills` and control visibility with `agents.defaults.skills` / `agents.list[].skills`. Only upstream-worthy edits should go out as PRs against the repo copy.
   </Accordion>
 
   <Accordion title="Can I load skills from a custom folder?">
-    Yes: add directories via `skills.load.extraDirs` in `~/.openclaw/openclaw.json` (lowest precedence in the order above). `clawhub` installs into `./skills` by default, which OpenClaw treats as `<workspace>/skills` on the next session. To limit visibility to certain agents, pair with `agents.defaults.skills` or `agents.list[].skills`.
+    Yes: add directories via `skills.load.extraDirs` in `~/.grokbot/grokbot.json` (lowest precedence in the order above). `clawhub` installs into `./skills` by default, which GrokBot treats as `<workspace>/skills` on the next session. To limit visibility to certain agents, pair with `agents.defaults.skills` or `agents.list[].skills`.
   </Accordion>
 
   <Accordion title="How can I use different models or settings for different tasks?">
@@ -199,12 +199,12 @@ First-run Q&A - install, onboard, auth routes, subscriptions, initial failures -
     Check the resolved requester route:
 
     - Completion-mode subagent delivery prefers a bound thread or conversation route when one exists.
-    - If the completion origin only carries a channel, OpenClaw falls back to the requester session's stored route (`lastChannel` / `lastTo` / `lastAccountId`) so direct delivery can still succeed.
+    - If the completion origin only carries a channel, GrokBot falls back to the requester session's stored route (`lastChannel` / `lastTo` / `lastAccountId`) so direct delivery can still succeed.
     - No bound route and no usable stored route: direct delivery can fail and the result falls back to queued session delivery instead of posting immediately.
     - Invalid or stale targets can also force queue fallback or final delivery failure.
-    - If the child's last visible assistant reply is exactly `NO_REPLY` / `no_reply` or `ANNOUNCE_SKIP`, OpenClaw intentionally suppresses the announce instead of posting stale earlier progress.
+    - If the child's last visible assistant reply is exactly `NO_REPLY` / `no_reply` or `ANNOUNCE_SKIP`, GrokBot intentionally suppresses the announce instead of posting stale earlier progress.
 
-    Debug: `openclaw tasks show <lookup>` where `<lookup>` is a task id, run id, or session key.
+    Debug: `grokbot tasks show <lookup>` where `<lookup>` is a task id, run id, or session key.
 
     Docs: [Sub-agents](/tools/subagents), [Background Tasks](/automation/tasks), [Session Tools](/concepts/session-tool).
 
@@ -219,8 +219,8 @@ First-run Q&A - install, onboard, auth routes, subscriptions, initial failures -
 
     Debug:
     ```bash
-    openclaw cron run <jobId>
-    openclaw cron runs --id <jobId> --limit 50
+    grokbot cron run <jobId>
+    grokbot cron runs --id <jobId> --limit 50
     ```
 
     Docs: [Cron jobs](/automation/cron-jobs), [Automation](/automation).
@@ -239,8 +239,8 @@ First-run Q&A - install, onboard, auth routes, subscriptions, initial failures -
 
     Debug:
     ```bash
-    openclaw cron runs --id <jobId> --limit 50
-    openclaw tasks show <lookup>
+    grokbot cron runs --id <jobId> --limit 50
+    grokbot tasks show <lookup>
     ```
 
     Docs: [Cron jobs](/automation/cron-jobs), [Background Tasks](/automation/tasks).
@@ -256,7 +256,7 @@ First-run Q&A - install, onboard, auth routes, subscriptions, initial failures -
 
     Debug:
     ```bash
-    openclaw cron runs --id <jobId> --limit 50
+    grokbot cron runs --id <jobId> --limit 50
     ```
 
     Docs: [Cron jobs](/automation/cron-jobs), [cron CLI](/cli/cron).
@@ -264,26 +264,26 @@ First-run Q&A - install, onboard, auth routes, subscriptions, initial failures -
   </Accordion>
 
   <Accordion title="How do I install skills on Linux?">
-    Use native `openclaw skills` commands or drop skills into your workspace; the macOS Skills UI is not available on Linux. Browse skills at [https://clawhub.ai](https://clawhub.ai).
+    Use native `grokbot skills` commands or drop skills into your workspace; the macOS Skills UI is not available on Linux. Browse skills at [https://clawhub.ai](https://clawhub.ai).
 
     ```bash
-    openclaw skills search "calendar"
-    openclaw skills search --limit 20
-    openclaw skills install @owner/<skill-slug>
-    openclaw skills install @owner/<skill-slug> --version <version>
-    openclaw skills install @owner/<skill-slug> --force
-    openclaw skills install @owner/<skill-slug> --global
-    openclaw skills update --all
-    openclaw skills update --all --global
-    openclaw skills list --eligible
-    openclaw skills check
+    grokbot skills search "calendar"
+    grokbot skills search --limit 20
+    grokbot skills install @owner/<skill-slug>
+    grokbot skills install @owner/<skill-slug> --version <version>
+    grokbot skills install @owner/<skill-slug> --force
+    grokbot skills install @owner/<skill-slug> --global
+    grokbot skills update --all
+    grokbot skills update --all --global
+    grokbot skills list --eligible
+    grokbot skills check
     ```
 
-    Native `openclaw skills install` writes into the active workspace `skills/` directory by default. Add `--global` to install into the shared managed skills directory for all local agents. Install the separate `clawhub` CLI only to publish or sync your own skills. Use `agents.defaults.skills` or `agents.list[].skills` to narrow which agents see shared skills.
+    Native `grokbot skills install` writes into the active workspace `skills/` directory by default. Add `--global` to install into the shared managed skills directory for all local agents. Install the separate `clawhub` CLI only to publish or sync your own skills. Use `agents.defaults.skills` or `agents.list[].skills` to narrow which agents see shared skills.
 
   </Accordion>
 
-  <Accordion title="Can OpenClaw run tasks on a schedule or continuously in the background?">
+  <Accordion title="Can GrokBot run tasks on a schedule or continuously in the background?">
     Yes, via the Gateway scheduler:
 
     - **Cron jobs** for scheduled or recurring tasks (persist across restarts).
@@ -295,13 +295,13 @@ First-run Q&A - install, onboard, auth routes, subscriptions, initial failures -
   </Accordion>
 
   <Accordion title="Can I run Apple macOS-only skills from Linux?">
-    Not directly. macOS skills are gated by `metadata.openclaw.os` plus required binaries, and only load when eligible on the **Gateway host**. On Linux, `darwin`-only skills (`apple-notes`, `apple-reminders`, `things-mac`) will not load unless you override the gating.
+    Not directly. macOS skills are gated by `metadata.grokbot.os` plus required binaries, and only load when eligible on the **Gateway host**. On Linux, `darwin`-only skills (`apple-notes`, `apple-reminders`, `things-mac`) will not load unless you override the gating.
 
     Three supported patterns:
 
     **Option A - run the Gateway on a Mac (simplest)**. Run the Gateway where the macOS binaries exist, then connect from Linux in [remote mode](#gateway-ports-already-running-and-remote-mode) or over Tailscale. Skills load normally because the Gateway host is macOS.
 
-    **Option B - use a macOS node (no SSH)**. Run the Gateway on Linux, pair a macOS node (menubar app), and set **Node Run Commands** to "Always Ask" or "Always Allow" on the Mac. OpenClaw treats macOS-only skills as eligible when required binaries exist on the node; the agent runs them via the `nodes` tool. With "Always Ask," approving "Always Allow" in the prompt adds that command to the allowlist.
+    **Option B - use a macOS node (no SSH)**. Run the Gateway on Linux, pair a macOS node (menubar app), and set **Node Run Commands** to "Always Ask" or "Always Allow" on the Mac. GrokBot treats macOS-only skills as eligible when required binaries exist on the node; the agent runs them via the `nodes` tool. With "Always Ask," approving "Always Allow" in the prompt adds that command to the allowlist.
 
     **Option C - proxy macOS binaries over SSH (advanced)**. Keep the Gateway on Linux, but make the required CLI binaries resolve to SSH wrappers that run on a Mac, then override the skill to allow Linux so it stays eligible.
 
@@ -312,12 +312,12 @@ First-run Q&A - install, onboard, auth routes, subscriptions, initial failures -
        exec ssh -T user@mac-host /opt/homebrew/bin/memo "$@"
        ```
     2. Put the wrapper on `PATH` on the Linux host (for example `~/bin/memo`).
-    3. Override the skill metadata (workspace or `~/.openclaw/skills`) to allow Linux:
+    3. Override the skill metadata (workspace or `~/.grokbot/skills`) to allow Linux:
        ```markdown
        ---
        name: apple-notes
        description: Manage Apple Notes via the memo CLI on macOS.
-       metadata: { "openclaw": { "os": ["darwin", "linux"], "requires": { "bins": ["memo"] } } }
+       metadata: { "grokbot": { "os": ["darwin", "linux"], "requires": { "bins": ["memo"] } } }
        ---
        ```
     4. Start a new session so the skills snapshot refreshes.
@@ -335,8 +335,8 @@ First-run Q&A - install, onboard, auth routes, subscriptions, initial failures -
     For a native integration, open a feature request or build a skill against those APIs.
 
     ```bash
-    openclaw skills install @owner/<skill-slug>
-    openclaw skills update --all
+    grokbot skills install @owner/<skill-slug>
+    grokbot skills update --all
     ```
 
     Native installs land in the active workspace `skills/` directory; use `--global` for all local agents, or configure `agents.defaults.skills` / `agents.list[].skills` to limit visibility. Some skills expect Homebrew-installed binaries; on Linux that means Linuxbrew.
@@ -345,24 +345,24 @@ First-run Q&A - install, onboard, auth routes, subscriptions, initial failures -
 
   </Accordion>
 
-  <Accordion title="How do I use my existing signed-in Chrome with OpenClaw?">
+  <Accordion title="How do I use my existing signed-in Chrome with GrokBot?">
     Use the built-in `user` browser profile, which attaches through Chrome DevTools MCP:
 
     ```bash
-    openclaw browser --browser-profile user tabs
-    openclaw browser --browser-profile user snapshot
+    grokbot browser --browser-profile user tabs
+    grokbot browser --browser-profile user snapshot
     ```
 
     For a custom name, create an explicit MCP profile:
 
     ```bash
-    openclaw browser create-profile --name chrome-live --driver existing-session
-    openclaw browser --browser-profile chrome-live tabs
+    grokbot browser create-profile --name chrome-live --driver existing-session
+    grokbot browser --browser-profile chrome-live tabs
     ```
 
     This can use the local host browser or a connected browser node. If the Gateway runs elsewhere, run a node host on the browser machine, or use remote CDP instead.
 
-    Current limits on `existing-session` / `user` profiles versus the managed `openclaw` profile:
+    Current limits on `existing-session` / `user` profiles versus the managed `grokbot` profile:
 
     - `click`, `type`, `hover`, `scrollIntoView`, `drag`, and `select` require snapshot refs, not CSS selectors.
     - Upload hooks require `ref` or `inputRef`, one file at a time, no CSS `element`.
@@ -402,16 +402,16 @@ First-run Q&A - install, onboard, auth routes, subscriptions, initial failures -
   <Accordion title="How do I bind a host folder into the sandbox?">
     Set `agents.defaults.sandbox.docker.binds` to `["host:container:mode"]` (for example `"/home/user/src:/src:ro"`). Global and per-agent binds merge; per-agent binds are ignored when `scope: "shared"`. Use `:ro` for anything sensitive; binds bypass the sandbox filesystem walls.
 
-    OpenClaw validates bind sources against both the normalized path and the canonical path resolved through the deepest existing ancestor, so symlink-parent escapes fail closed even when the final path segment does not exist yet.
+    GrokBot validates bind sources against both the normalized path and the canonical path resolved through the deepest existing ancestor, so symlink-parent escapes fail closed even when the final path segment does not exist yet.
 
     See [Sandboxing](/gateway/sandboxing#custom-bind-mounts) and [Sandbox vs Tool Policy vs Elevated](/gateway/sandbox-vs-tool-policy-vs-elevated#bind-mounts-security-quick-check).
 
   </Accordion>
 
   <Accordion title="How does memory work?">
-    OpenClaw memory is Markdown files in the agent workspace: daily notes in `memory/YYYY-MM-DD.md`, curated long-term notes in `MEMORY.md` (main/private sessions only).
+    GrokBot memory is Markdown files in the agent workspace: daily notes in `memory/YYYY-MM-DD.md`, curated long-term notes in `MEMORY.md` (main/private sessions only).
 
-    OpenClaw also runs a silent **pre-compaction memory flush** before compaction summarizes the conversation, reminding the model to write durable notes first. It only runs when the workspace is writable (read-only sandboxes skip it); disable with `agents.defaults.compaction.memoryFlush.enabled: false`. See [Memory](/concepts/memory).
+    GrokBot also runs a silent **pre-compaction memory flush** before compaction summarizes the conversation, reminding the model to write durable notes first. It only runs when the workspace is writable (read-only sandboxes skip it); disable with `agents.defaults.compaction.memoryFlush.enabled: false`. See [Memory](/concepts/memory).
 
   </Accordion>
 
@@ -440,10 +440,10 @@ First-run Q&A - install, onboard, auth routes, subscriptions, initial failures -
 ## Where things live on disk
 
 <AccordionGroup>
-  <Accordion title="Is all data used with OpenClaw saved locally?">
-    No: **OpenClaw's own state is local**, but **external services still see what you send them**.
+  <Accordion title="Is all data used with GrokBot saved locally?">
+    No: **GrokBot's own state is local**, but **external services still see what you send them**.
 
-    - **Local by default**: sessions, memory files, config, and workspace live on the Gateway host (`~/.openclaw` plus your workspace directory).
+    - **Local by default**: sessions, memory files, config, and workspace live on the Gateway host (`~/.grokbot` plus your workspace directory).
     - **Remote by necessity**: messages sent to model providers (Anthropic/OpenAI/etc.) go to their APIs, and chat platforms (Slack/Telegram/WhatsApp/etc.) store message data on their servers.
     - **You control the footprint**: local models keep prompts on your machine, but channel traffic still goes through the channel's servers.
 
@@ -451,38 +451,38 @@ First-run Q&A - install, onboard, auth routes, subscriptions, initial failures -
 
   </Accordion>
 
-  <Accordion title="Where does OpenClaw store its data?">
-    Everything lives under `$OPENCLAW_STATE_DIR` (default: `~/.openclaw`):
+  <Accordion title="Where does GrokBot store its data?">
+    Everything lives under `$OPENCLAW_STATE_DIR` (default: `~/.grokbot`):
 
     | Path                                                               | Purpose                                                            |
     | ------------------------------------------------------------------ | ------------------------------------------------------------------ |
-    | `$OPENCLAW_STATE_DIR/openclaw.json`                                 | Main config (JSON5)                                                 |
+    | `$OPENCLAW_STATE_DIR/grokbot.json`                                 | Main config (JSON5)                                                 |
     | `$OPENCLAW_STATE_DIR/credentials/oauth.json`                        | Legacy OAuth import (copied into auth profiles on first use)        |
     | `$OPENCLAW_STATE_DIR/agents/<agentId>/agent/auth-profiles.json`     | Auth profiles (OAuth, API keys, optional `keyRef`/`tokenRef`)        |
     | `$OPENCLAW_STATE_DIR/secrets.json`                                  | Optional file-backed secret payload for `file` SecretRef providers   |
     | `$OPENCLAW_STATE_DIR/agents/<agentId>/agent/auth.json`              | Legacy compatibility file (static `api_key` entries scrubbed)        |
     | `$OPENCLAW_STATE_DIR/credentials/`                                  | Provider state (for example `whatsapp/<accountId>/creds.json`)      |
     | `$OPENCLAW_STATE_DIR/agents/`                                       | Per-agent state (agentDir + legacy/archive session artifacts)        |
-    | `$OPENCLAW_STATE_DIR/agents/<agentId>/agent/openclaw-agent.sqlite`  | Per-agent SQLite state, including session rows and transcripts      |
+    | `$OPENCLAW_STATE_DIR/agents/<agentId>/agent/grokbot-agent.sqlite`  | Per-agent SQLite state, including session rows and transcripts      |
     | `$OPENCLAW_STATE_DIR/agents/<agentId>/sessions/`                    | Legacy session migration sources and archive/support artifacts      |
 
-    Legacy single-agent path `~/.openclaw/agent/*` is migrated by `openclaw doctor`.
+    Legacy single-agent path `~/.grokbot/agent/*` is migrated by `grokbot doctor`.
 
-    Your **workspace** (AGENTS.md, memory files, skills, etc.) is separate, configured via `agents.defaults.workspace` (default: `~/.openclaw/workspace`).
+    Your **workspace** (AGENTS.md, memory files, skills, etc.) is separate, configured via `agents.defaults.workspace` (default: `~/.grokbot/workspace`).
 
   </Accordion>
 
   <Accordion title="Where should AGENTS.md / SOUL.md / USER.md / MEMORY.md live?">
-    These live in the **agent workspace**, not `~/.openclaw`.
+    These live in the **agent workspace**, not `~/.grokbot`.
 
-    - **Workspace (per agent)**: `AGENTS.md`, `SOUL.md`, `IDENTITY.md`, `USER.md`, `MEMORY.md`, `memory/YYYY-MM-DD.md`, optional `HEARTBEAT.md`. Lowercase root `memory.md` is legacy repair input only; `openclaw doctor --fix` can merge it into `MEMORY.md` when both exist.
-    - **State dir (`~/.openclaw`)**: config, channel/provider state, auth profiles, sessions, logs, shared skills (`~/.openclaw/skills`).
+    - **Workspace (per agent)**: `AGENTS.md`, `SOUL.md`, `IDENTITY.md`, `USER.md`, `MEMORY.md`, `memory/YYYY-MM-DD.md`, optional `HEARTBEAT.md`. Lowercase root `memory.md` is legacy repair input only; `grokbot doctor --fix` can merge it into `MEMORY.md` when both exist.
+    - **State dir (`~/.grokbot`)**: config, channel/provider state, auth profiles, sessions, logs, shared skills (`~/.grokbot/skills`).
 
-    Default workspace is `~/.openclaw/workspace`, configurable:
+    Default workspace is `~/.grokbot/workspace`, configurable:
 
     ```json5
     {
-      agents: { defaults: { workspace: "~/.openclaw/workspace" } },
+      agents: { defaults: { workspace: "~/.grokbot/workspace" } },
     }
     ```
 
@@ -521,18 +521,18 @@ First-run Q&A - install, onboard, auth routes, subscriptions, initial failures -
   <Accordion title="Recommended backup strategy">
     Put your **agent workspace** in a **private** git repo and back it up somewhere private (for example GitHub private). This captures memory plus AGENTS/SOUL/USER files and lets you restore the assistant's "mind" later.
 
-    Do **not** commit anything under `~/.openclaw` (credentials, sessions, tokens, encrypted secrets payloads). For a full restore, back up the workspace and state directory separately.
+    Do **not** commit anything under `~/.grokbot` (credentials, sessions, tokens, encrypted secrets payloads). For a full restore, back up the workspace and state directory separately.
 
     Docs: [Agent workspace](/concepts/agent-workspace).
 
   </Accordion>
 
-  <Accordion title="How do I completely uninstall OpenClaw?">
+  <Accordion title="How do I completely uninstall GrokBot?">
     See [Uninstall](/install/uninstall).
   </Accordion>
 
   <Accordion title="Can agents work outside the workspace?">
-    Yes. The workspace is the **default cwd** and memory anchor, not a hard sandbox. Relative paths resolve inside the workspace; absolute paths can access other host locations unless sandboxing is enabled. For isolation, use [`agents.defaults.sandbox`](/gateway/sandboxing) or per-agent sandbox settings. To make a repo the default working directory, point that agent's `workspace` at the repo root - the OpenClaw repo itself is just source code, so keep the workspace separate unless you intentionally want the agent to work inside it.
+    Yes. The workspace is the **default cwd** and memory anchor, not a hard sandbox. Relative paths resolve inside the workspace; absolute paths can access other host locations unless sandboxing is enabled. For isolation, use [`agents.defaults.sandbox`](/gateway/sandboxing) or per-agent sandbox settings. To make a repo the default working directory, point that agent's `workspace` at the repo root - the GrokBot repo itself is just source code, so keep the workspace separate unless you intentionally want the agent to work inside it.
 
     ```json5
     {
@@ -555,7 +555,7 @@ First-run Q&A - install, onboard, auth routes, subscriptions, initial failures -
 
 <AccordionGroup>
   <Accordion title="What format is the config? Where is it?">
-    OpenClaw reads an optional **JSON5** config from `$OPENCLAW_CONFIG_PATH` (default: `~/.openclaw/openclaw.json`). If the file is missing, it uses safe-ish defaults, including a default workspace of `~/.openclaw/workspace`.
+    GrokBot reads an optional **JSON5** config from `$OPENCLAW_CONFIG_PATH` (default: `~/.grokbot/grokbot.json`). If the file is missing, it uses safe-ish defaults, including a default workspace of `~/.grokbot/workspace`.
   </Accordion>
 
   <Accordion title='I set gateway.bind: "lan" (or "tailnet") and now nothing listens / the UI says unauthorized'>
@@ -582,9 +582,9 @@ First-run Q&A - install, onboard, auth routes, subscriptions, initial failures -
   </Accordion>
 
   <Accordion title="Why do I need a token on localhost now?">
-    OpenClaw enforces gateway auth by default, including loopback. If no explicit auth path is configured, startup resolves to token mode and generates a runtime-only token for that startup, so local WS clients must authenticate. This blocks other local processes from calling the Gateway.
+    GrokBot enforces gateway auth by default, including loopback. If no explicit auth path is configured, startup resolves to token mode and generates a runtime-only token for that startup, so local WS clients must authenticate. This blocks other local processes from calling the Gateway.
 
-    Configure `gateway.auth.token`, `gateway.auth.password`, `OPENCLAW_GATEWAY_TOKEN`, or `OPENCLAW_GATEWAY_PASSWORD` explicitly when clients need a stable secret across restarts. You can also choose password mode, or `trusted-proxy` for identity-aware reverse proxies. For open loopback, set `gateway.auth.mode: "none"` explicitly. `openclaw doctor --generate-gateway-token` generates a token any time.
+    Configure `gateway.auth.token`, `gateway.auth.password`, `OPENCLAW_GATEWAY_TOKEN`, or `OPENCLAW_GATEWAY_PASSWORD` explicitly when clients need a stable secret across restarts. You can also choose password mode, or `trusted-proxy` for identity-aware reverse proxies. For open loopback, set `gateway.auth.mode: "none"` explicitly. `grokbot doctor --generate-gateway-token` generates a token any time.
 
   </Accordion>
 
@@ -606,7 +606,7 @@ First-run Q&A - install, onboard, auth routes, subscriptions, initial failures -
     ```
 
     - `off`: hides tagline text but keeps the banner title/version line.
-    - `default`: always uses `All your chats, one OpenClaw.`.
+    - `default`: always uses `All your chats, one GrokBot.`.
     - `random`: rotating funny/seasonal taglines (default behavior).
     - For no banner at all, set env `OPENCLAW_HIDE_BANNER=1`.
 
@@ -630,9 +630,9 @@ First-run Q&A - install, onboard, auth routes, subscriptions, initial failures -
     | SearXNG | Yes (self-hosted) | `SEARXNG_BASE_URL` |
     | Tavily | No | `TAVILY_API_KEY` |
 
-    Grok can also reuse xAI OAuth from model auth (`openclaw onboard --auth-choice xai-oauth`).
+    Grok can also reuse xAI OAuth from model auth (`grokbot onboard --auth-choice xai-oauth`).
 
-    **Recommended**: `openclaw configure --section web` and pick a provider.
+    **Recommended**: `grokbot configure --section web` and pick a provider.
 
     ```json5
     {
@@ -667,8 +667,8 @@ First-run Q&A - install, onboard, auth routes, subscriptions, initial failures -
 
     - Allowlists: add `web_search`/`web_fetch`/`x_search`, or `group:web` for all three.
     - `web_fetch` is enabled by default.
-    - If `tools.web.fetch.provider` is omitted, OpenClaw auto-detects the first ready fetch fallback provider from available credentials; the official Firecrawl plugin provides that fallback.
-    - Daemons read env vars from `~/.openclaw/.env` (or the service environment).
+    - If `tools.web.fetch.provider` is omitted, GrokBot auto-detects the first ready fetch fallback provider from available credentials; the official Firecrawl plugin provides that fallback.
+    - Daemons read env vars from `~/.grokbot/.env` (or the service environment).
 
     Docs: [Web tools](/tools/web).
 
@@ -677,23 +677,23 @@ First-run Q&A - install, onboard, auth routes, subscriptions, initial failures -
   <Accordion title="config.apply wiped my config. How do I recover and avoid this?">
     `config.apply` replaces the **entire config**; a partial object removes everything else.
 
-    Current OpenClaw protects most accidental clobbers:
+    Current GrokBot protects most accidental clobbers:
 
-    - OpenClaw-owned config writes validate the full post-change config before writing.
-    - Invalid or destructive OpenClaw-owned writes are rejected and saved as `openclaw.json.rejected.*`.
-    - A direct edit that breaks startup or hot reload makes the Gateway fail closed or skip the reload; it does not rewrite `openclaw.json`.
-    - `openclaw doctor --fix` owns repair, can restore last-known-good, and saves the rejected file as `openclaw.json.clobbered.*`.
+    - GrokBot-owned config writes validate the full post-change config before writing.
+    - Invalid or destructive GrokBot-owned writes are rejected and saved as `grokbot.json.rejected.*`.
+    - A direct edit that breaks startup or hot reload makes the Gateway fail closed or skip the reload; it does not rewrite `grokbot.json`.
+    - `grokbot doctor --fix` owns repair, can restore last-known-good, and saves the rejected file as `grokbot.json.clobbered.*`.
 
     Recover:
 
-    - Check `openclaw logs --follow` for `Invalid config at`, `Config write rejected:`, or `config reload skipped (invalid config)`.
-    - Inspect the newest `openclaw.json.clobbered.*` or `openclaw.json.rejected.*` beside the active config.
-    - Run `openclaw config validate` and `openclaw doctor --fix`.
-    - Copy only the intended keys back with `openclaw config set` or `config.patch`.
-    - No last-known-good or rejected payload: restore from backup, or re-run `openclaw doctor` and reconfigure channels/models.
+    - Check `grokbot logs --follow` for `Invalid config at`, `Config write rejected:`, or `config reload skipped (invalid config)`.
+    - Inspect the newest `grokbot.json.clobbered.*` or `grokbot.json.rejected.*` beside the active config.
+    - Run `grokbot config validate` and `grokbot doctor --fix`.
+    - Copy only the intended keys back with `grokbot config set` or `config.patch`.
+    - No last-known-good or rejected payload: restore from backup, or re-run `grokbot doctor` and reconfigure channels/models.
     - Unexpected loss: file a bug with your last known config or a backup. A local coding agent can often reconstruct a working config from logs or history.
 
-    Avoid it: use `openclaw config set` for small changes, `openclaw configure` for interactive edits, `config.schema.lookup` to inspect an unfamiliar path (returns a shallow schema node plus immediate child summaries), and `config.patch` for partial RPC edits - reserve `config.apply` for full-config replacement. The agent-facing `gateway` runtime tool refuses to rewrite `tools.exec.ask` / `tools.exec.security` even via legacy `tools.bash.*` aliases.
+    Avoid it: use `grokbot config set` for small changes, `grokbot configure` for interactive edits, `config.schema.lookup` to inspect an unfamiliar path (returns a shallow schema node plus immediate child summaries), and `config.patch` for partial RPC edits - reserve `config.apply` for full-config replacement. The agent-facing `gateway` runtime tool refuses to rewrite `tools.exec.ask` / `tools.exec.security` even via legacy `tools.bash.*` aliases.
 
     Docs: [Config](/cli/config), [Configure](/cli/configure), [Gateway troubleshooting](/gateway/troubleshooting#gateway-rejected-invalid-config), [Doctor](/gateway/doctor).
 
@@ -712,7 +712,7 @@ First-run Q&A - install, onboard, auth routes, subscriptions, initial failures -
 
   </Accordion>
 
-  <Accordion title="Can the OpenClaw browser run headless?">
+  <Accordion title="Can the GrokBot browser run headless?">
     Yes:
 
     ```json5
@@ -756,8 +756,8 @@ First-run Q&A - install, onboard, auth routes, subscriptions, initial failures -
     4. Open the macOS app locally and connect in **Remote over SSH** mode (or direct tailnet) so it registers as a node.
     5. Approve the node:
        ```bash
-       openclaw devices list
-       openclaw devices approve <requestId>
+       grokbot devices list
+       grokbot devices approve <requestId>
        ```
 
     No separate TCP bridge is required; nodes connect over the Gateway WebSocket.
@@ -772,9 +772,9 @@ First-run Q&A - install, onboard, auth routes, subscriptions, initial failures -
     Check the basics:
 
     ```bash
-    openclaw gateway status
-    openclaw status
-    openclaw channels status
+    grokbot gateway status
+    grokbot status
+    grokbot channels status
     ```
 
     Then verify auth and routing: if you use Tailscale Serve, confirm `gateway.auth.allowTailscale` is set correctly; if you connect via SSH tunnel, confirm the tunnel is up and points at the right port; confirm your DM/group allowlists include your account.
@@ -783,15 +783,15 @@ First-run Q&A - install, onboard, auth routes, subscriptions, initial failures -
 
   </Accordion>
 
-  <Accordion title="Can two OpenClaw instances talk to each other (local + VPS)?">
+  <Accordion title="Can two GrokBot instances talk to each other (local + VPS)?">
     Yes, though there is no built-in bot-to-bot bridge.
 
     **Simplest**: use a normal chat channel both bots can access (Slack/Telegram/WhatsApp). Have Bot A message Bot B, then let Bot B reply as usual.
 
-    **CLI bridge (generic)**: run a script that calls the other Gateway with `openclaw agent --message ... --deliver`, targeting a chat where the other bot listens. If one bot is on a remote VPS, point your CLI at that remote Gateway via SSH/Tailscale (see [Remote access](/gateway/remote)):
+    **CLI bridge (generic)**: run a script that calls the other Gateway with `grokbot agent --message ... --deliver`, targeting a chat where the other bot listens. If one bot is on a remote VPS, point your CLI at that remote Gateway via SSH/Tailscale (see [Remote access](/gateway/remote)):
 
     ```bash
-    openclaw agent --message "Hello from local bot" --deliver --channel telegram --reply-to <chat-id>
+    grokbot agent --message "Hello from local bot" --deliver --channel telegram --reply-to <chat-id>
     ```
 
     Add a guardrail so the two bots do not loop endlessly (mention-only, channel allowlists, or a "do not reply to bot messages" rule).
@@ -839,7 +839,7 @@ First-run Q&A - install, onboard, auth routes, subscriptions, initial failures -
   <Accordion title="Minimal sane config for a first install">
     ```json5
     {
-      agents: { defaults: { workspace: "~/.openclaw/workspace" } },
+      agents: { defaults: { workspace: "~/.grokbot/workspace" } },
       channels: { whatsapp: { allowFrom: ["+15555550123"] } },
     }
     ```
@@ -861,7 +861,7 @@ First-run Q&A - install, onboard, auth routes, subscriptions, initial failures -
     For the Control UI without SSH, use Tailscale Serve on the VPS:
 
     ```bash
-    openclaw gateway --tailscale serve
+    grokbot gateway --tailscale serve
     ```
 
     This keeps the gateway bound to loopback and exposes HTTPS via Tailscale. See [Tailscale](/gateway/tailscale).
@@ -875,8 +875,8 @@ First-run Q&A - install, onboard, auth routes, subscriptions, initial failures -
     2. Use the macOS app in Remote mode (SSH target can be the tailnet hostname) - it tunnels the Gateway port and connects as a node.
     3. Approve the node:
        ```bash
-       openclaw devices list
-       openclaw devices approve <requestId>
+       grokbot devices list
+       grokbot devices approve <requestId>
        ```
 
     Docs: [Gateway protocol](/gateway/protocol), [Discovery](/gateway/discovery), [macOS remote mode](/platforms/mac/remote).
@@ -894,13 +894,13 @@ First-run Q&A - install, onboard, auth routes, subscriptions, initial failures -
 ## Env vars and .env loading
 
 <AccordionGroup>
-  <Accordion title="How does OpenClaw load environment variables?">
-    OpenClaw reads env vars from the parent process (shell, launchd/systemd, CI, etc.) and additionally loads:
+  <Accordion title="How does GrokBot load environment variables?">
+    GrokBot reads env vars from the parent process (shell, launchd/systemd, CI, etc.) and additionally loads:
 
     - `.env` from the current working directory.
-    - a global fallback `.env` from `~/.openclaw/.env` (`$OPENCLAW_STATE_DIR/.env`).
+    - a global fallback `.env` from `~/.grokbot/.env` (`$OPENCLAW_STATE_DIR/.env`).
 
-    Neither `.env` file overrides existing env vars. Provider credential and endpoint-routing keys are an exception for workspace `.env`: keys such as `GEMINI_API_KEY`, `XAI_API_KEY`, `MISTRAL_API_KEY`, or any key ending in `_ENDPOINT` (and other bundled-provider auth or endpoint env vars) are ignored from workspace `.env` and should live in the process environment, `~/.openclaw/.env`, or config `env`.
+    Neither `.env` file overrides existing env vars. Provider credential and endpoint-routing keys are an exception for workspace `.env`: keys such as `GEMINI_API_KEY`, `XAI_API_KEY`, `MISTRAL_API_KEY`, or any key ending in `_ENDPOINT` (and other bundled-provider auth or endpoint env vars) are ignored from workspace `.env` and should live in the process environment, `~/.grokbot/.env`, or config `env`.
 
     Inline env vars in config apply only if missing from the process env:
 
@@ -920,7 +920,7 @@ First-run Q&A - install, onboard, auth routes, subscriptions, initial failures -
   <Accordion title="I started the Gateway via the service and my env vars disappeared. What now?">
     Two fixes:
 
-    1. Put the missing keys in `~/.openclaw/.env` so they load even when the service does not inherit your shell env.
+    1. Put the missing keys in `~/.grokbot/.env` so they load even when the service does not inherit your shell env.
     2. Enable shell import (opt-in convenience):
        ```json5
        {
@@ -937,12 +937,12 @@ First-run Q&A - install, onboard, auth routes, subscriptions, initial failures -
   </Accordion>
 
   <Accordion title='I set COPILOT_GITHUB_TOKEN, but models status shows "Shell env: off." Why?'>
-    `openclaw models status` reports whether **shell env import** is enabled. "Shell env: off" does **not** mean your env vars are missing - it just means OpenClaw will not load your login shell automatically.
+    `grokbot models status` reports whether **shell env import** is enabled. "Shell env: off" does **not** mean your env vars are missing - it just means GrokBot will not load your login shell automatically.
 
-    If the Gateway runs as a service (launchd/systemd), it will not inherit your shell environment. Fix by putting the token in `~/.openclaw/.env`, enabling `env.shellEnv.enabled: true`, or adding it to config `env` (applies only if missing), then restarting the gateway and rechecking:
+    If the Gateway runs as a service (launchd/systemd), it will not inherit your shell environment. Fix by putting the token in `~/.grokbot/.env`, enabling `env.shellEnv.enabled: true`, or adding it to config `env` (applies only if missing), then restarting the gateway and rechecking:
 
     ```bash
-    openclaw models status
+    grokbot models status
     ```
 
     Copilot tokens resolve in this order: `OPENCLAW_GITHUB_TOKEN`, then `COPILOT_GITHUB_TOKEN`, then `GH_TOKEN`, then `GITHUB_TOKEN`.
@@ -981,7 +981,7 @@ First-run Q&A - install, onboard, auth routes, subscriptions, initial failures -
 
   </Accordion>
 
-  <Accordion title="Is there a way to make a team of OpenClaw instances (one CEO and many agents)?">
+  <Accordion title="Is there a way to make a team of GrokBot instances (one CEO and many agents)?">
     Yes, via **multi-agent routing** and **sub-agents**: one coordinator agent plus several worker agents with their own workspaces and models.
 
     This is best seen as a fun experiment - it is token-heavy and often less efficient than one bot with separate sessions. The typical model is one bot you talk to, with different sessions for parallel work, spawning sub-agents when needed.
@@ -1001,24 +1001,24 @@ First-run Q&A - install, onboard, auth routes, subscriptions, initial failures -
 
   </Accordion>
 
-  <Accordion title="How do I completely reset OpenClaw but keep it installed?">
+  <Accordion title="How do I completely reset GrokBot but keep it installed?">
     ```bash
-    openclaw reset
+    grokbot reset
     ```
 
     Non-interactive full reset:
 
     ```bash
-    openclaw reset --scope full --yes --non-interactive
+    grokbot reset --scope full --yes --non-interactive
     ```
 
     Then re-run setup:
 
     ```bash
-    openclaw onboard --install-daemon
+    grokbot onboard --install-daemon
     ```
 
-    Onboarding also offers **Reset** if it detects an existing config; see [Onboarding (CLI)](/start/wizard). If you used profiles (`--profile` / `OPENCLAW_PROFILE`), reset each state dir (default `~/.openclaw-<profile>`). Dev-only reset: `openclaw gateway --dev --reset` wipes dev config, credentials, sessions, and workspace.
+    Onboarding also offers **Reset** if it detects an existing config; see [Onboarding (CLI)](/start/wizard). If you used profiles (`--profile` / `OPENCLAW_PROFILE`), reset each state dir (default `~/.grokbot-<profile>`). Dev-only reset: `grokbot gateway --dev --reset` wipes dev config, credentials, sessions, and workspace.
 
   </Accordion>
 
@@ -1054,14 +1054,14 @@ First-run Q&A - install, onboard, auth routes, subscriptions, initial failures -
     }
     ```
 
-    If `HEARTBEAT.md` exists but is effectively empty (only blank lines, Markdown/HTML comments, ATX headings, fence markers, or empty list-item stubs), OpenClaw skips the heartbeat run to save API calls. If the file is missing, the heartbeat still runs and the model decides what to do.
+    If `HEARTBEAT.md` exists but is effectively empty (only blank lines, Markdown/HTML comments, ATX headings, fence markers, or empty list-item stubs), GrokBot skips the heartbeat run to save API calls. If the file is missing, the heartbeat still runs and the model decides what to do.
 
     Per-agent overrides use `agents.list[].heartbeat`. Docs: [Heartbeat](/gateway/heartbeat).
 
   </Accordion>
 
   <Accordion title='Do I need to add a "bot account" to a WhatsApp group?'>
-    No. OpenClaw runs on **your own account** - if you are in the group, OpenClaw can see it. By default, group replies are blocked until you allow senders (`groupPolicy: "allowlist"`).
+    No. GrokBot runs on **your own account** - if you are in the group, GrokBot can see it. By default, group replies are blocked until you allow senders (`groupPolicy: "allowlist"`).
 
     To restrict group replies to only you:
 
@@ -1082,7 +1082,7 @@ First-run Q&A - install, onboard, auth routes, subscriptions, initial failures -
     Fastest: tail logs and send a test message in the group.
 
     ```bash
-    openclaw logs --follow --json
+    grokbot logs --follow --json
     ```
 
     Look for `chatId` (or `from`) ending in `@g.us`, like `1234567890-1234567890@g.us`.
@@ -1090,14 +1090,14 @@ First-run Q&A - install, onboard, auth routes, subscriptions, initial failures -
     If already configured/allowlisted, list groups from config:
 
     ```bash
-    openclaw directory groups list --channel whatsapp
+    grokbot directory groups list --channel whatsapp
     ```
 
     Docs: [WhatsApp](/channels/whatsapp), [Directory](/cli/directory), [Logs](/cli/logs).
 
   </Accordion>
 
-  <Accordion title="Why does OpenClaw not reply in a group?">
+  <Accordion title="Why does GrokBot not reply in a group?">
     Two common causes: mention gating is on by default (you must @mention the bot, or match `mentionPatterns`), or you configured `channels.whatsapp.groups` without `"*"` and the group is not allowlisted.
 
     See [Groups](/channels/groups) and [Group messages](/channels/group-messages).
@@ -1111,11 +1111,11 @@ First-run Q&A - install, onboard, auth routes, subscriptions, initial failures -
   <Accordion title="How many workspaces and agents can I create?">
     No hard limits - dozens or even hundreds are fine, but watch:
 
-    - **Disk growth**: active sessions and transcripts live in the per-agent SQLite database; legacy/archive artifacts can still accumulate under `~/.openclaw/agents/<agentId>/sessions/`.
+    - **Disk growth**: active sessions and transcripts live in the per-agent SQLite database; legacy/archive artifacts can still accumulate under `~/.grokbot/agents/<agentId>/sessions/`.
     - **Token cost**: more agents means more concurrent model usage.
     - **Ops overhead**: per-agent auth profiles, workspaces, and channel routing.
 
-    Keep one **active** workspace per agent (`agents.defaults.workspace`), prune old sessions with `openclaw sessions cleanup` if disk grows (do not edit active SQLite state by hand), and use `openclaw doctor` to spot stray workspaces and profile mismatches.
+    Keep one **active** workspace per agent (`agents.defaults.workspace`), prune old sessions with `grokbot sessions cleanup` if disk grows (do not edit active SQLite state by hand), and use `grokbot doctor` to spot stray workspaces and profile mismatches.
 
   </Accordion>
 
@@ -1147,29 +1147,29 @@ Model Q&A - defaults, selection, aliases, switching, failover, auth profiles - l
 
   </Accordion>
 
-  <Accordion title='Why does openclaw gateway status say "Runtime: running" but "Connectivity probe: failed"?'>
-    "Running" is the **supervisor's** view (launchd/systemd/schtasks); the connectivity probe is the CLI actually connecting to the gateway WebSocket. Trust these lines from `openclaw gateway status`: `Probe target:` (the URL the probe used), `Listening:` (what is actually bound on the port), `Last gateway error:` (common root cause when the process is alive but the port is not listening).
+  <Accordion title='Why does grokbot gateway status say "Runtime: running" but "Connectivity probe: failed"?'>
+    "Running" is the **supervisor's** view (launchd/systemd/schtasks); the connectivity probe is the CLI actually connecting to the gateway WebSocket. Trust these lines from `grokbot gateway status`: `Probe target:` (the URL the probe used), `Listening:` (what is actually bound on the port), `Last gateway error:` (common root cause when the process is alive but the port is not listening).
   </Accordion>
 
-  <Accordion title='Why does openclaw gateway status show "Config (cli)" and "Config (service)" different?'>
+  <Accordion title='Why does grokbot gateway status show "Config (cli)" and "Config (service)" different?'>
     You are editing one config file while the service runs another (often a `--profile` / `OPENCLAW_STATE_DIR` mismatch).
 
     Fix, run from the same `--profile` / environment you want the service to use:
 
     ```bash
-    openclaw gateway install --force
+    grokbot gateway install --force
     ```
 
   </Accordion>
 
   <Accordion title='What does "another gateway instance is already listening" mean?'>
-    OpenClaw enforces a runtime lock by binding the WebSocket listener immediately on startup (default `ws://127.0.0.1:18789`). If the bind fails with `EADDRINUSE`, it throws `GatewayLockError` ("another gateway instance is already listening").
+    GrokBot enforces a runtime lock by binding the WebSocket listener immediately on startup (default `ws://127.0.0.1:18789`). If the bind fails with `EADDRINUSE`, it throws `GatewayLockError` ("another gateway instance is already listening").
 
-    Fix: stop the other instance, free the port, or run with `openclaw gateway --port <port>`.
+    Fix: stop the other instance, free the port, or run with `grokbot gateway --port <port>`.
 
   </Accordion>
 
-  <Accordion title="How do I run OpenClaw in remote mode (client connects to a Gateway elsewhere)?">
+  <Accordion title="How do I run GrokBot in remote mode (client connects to a Gateway elsewhere)?">
     Set `gateway.mode: "remote"` and point to a remote WebSocket URL, optionally with shared-secret remote credentials:
 
     ```json5
@@ -1185,7 +1185,7 @@ Model Q&A - defaults, selection, aliases, switching, failover, auth profiles - l
     }
     ```
 
-    - `openclaw gateway` only starts when `gateway.mode` is `local` (or you pass an override flag).
+    - `grokbot gateway` only starts when `gateway.mode` is `local` (or you pass an override flag).
     - The macOS app watches the config file and switches modes live when these values change.
     - `gateway.remote.token` / `.password` are client-side remote credentials only; they do not enable local gateway auth by themselves.
 
@@ -1204,19 +1204,19 @@ Model Q&A - defaults, selection, aliases, switching, failover, auth profiles - l
 
     Fix:
 
-    - Fastest: `openclaw dashboard` (prints + copies the dashboard URL, tries to open; shows an SSH hint if headless).
-    - No token yet: `openclaw doctor --generate-gateway-token`.
+    - Fastest: `grokbot dashboard` (prints + copies the dashboard URL, tries to open; shows an SSH hint if headless).
+    - No token yet: `grokbot doctor --generate-gateway-token`.
     - Remote: tunnel first with `ssh -N -L 18789:127.0.0.1:18789 user@host`, then open `http://127.0.0.1:18789/`.
     - Shared-secret mode: set `gateway.auth.token` / `OPENCLAW_GATEWAY_TOKEN` or `gateway.auth.password` / `OPENCLAW_GATEWAY_PASSWORD`, then paste the matching secret in Control UI settings.
     - Tailscale Serve mode: confirm `gateway.auth.allowTailscale` is enabled and you are opening the Serve URL, not a raw loopback/tailnet URL that bypasses Tailscale identity headers.
     - Trusted-proxy mode: confirm you are coming through the configured identity-aware proxy. Same-host loopback proxies also need `gateway.auth.trustedProxy.allowLoopback = true`.
     - Mismatch persists after the one retry: rotate/re-approve the paired device token:
       ```bash
-      openclaw devices list
-      openclaw devices rotate --device <id> --role operator
+      grokbot devices list
+      grokbot devices rotate --device <id> --role operator
       ```
     - Rotate denied: paired-device sessions can rotate only their **own** device unless they also have `operator.admin`, and explicit `--scope` values cannot exceed the caller's current operator scopes.
-    - Still stuck: `openclaw status --all` plus [Troubleshooting](/gateway/troubleshooting). See [Dashboard](/web/dashboard) for auth details.
+    - Still stuck: `grokbot status --all` plus [Troubleshooting](/gateway/troubleshooting). See [Dashboard](/web/dashboard) for auth details.
 
   </Accordion>
 
@@ -1232,9 +1232,9 @@ Model Q&A - defaults, selection, aliases, switching, failover, auth profiles - l
   <Accordion title="Can I run multiple Gateways on the same host?">
     Usually no - one Gateway can run multiple messaging channels and agents. Use multiple Gateways only for redundancy (for example a rescue bot) or hard isolation, and isolate each with its own `OPENCLAW_CONFIG_PATH`, `OPENCLAW_STATE_DIR`, `agents.defaults.workspace`, and unique `gateway.port`.
 
-    Recommended: `openclaw --profile <name> ...` per instance (auto-creates `~/.openclaw-<name>`), a unique `gateway.port` per profile config (or `--port` for manual runs), and a per-profile service with `openclaw --profile <name> gateway install`.
+    Recommended: `grokbot --profile <name> ...` per instance (auto-creates `~/.grokbot-<name>`), a unique `gateway.port` per profile config (or `--port` for manual runs), and a per-profile service with `grokbot --profile <name> gateway install`.
 
-    Profiles also suffix service names: launchd `ai.openclaw.<profile>`, systemd `openclaw-gateway-<profile>.service`, Windows `OpenClaw Gateway (<profile>)`. The unqualified `openclaw-gateway` systemd unit only exists for the default profile; the legacy pre-rename systemd unit name `clawdbot-gateway` is migrated automatically.
+    Profiles also suffix service names: launchd `ai.grokbot.<profile>`, systemd `grokbot-gateway-<profile>.service`, Windows `GrokBot Gateway (<profile>)`. The unqualified `grokbot-gateway` systemd unit only exists for the default profile; the legacy pre-rename systemd unit name `clawdbot-gateway` is migrated automatically.
 
     Full guide: [Multiple gateways](/gateway/multiple-gateways).
 
@@ -1248,7 +1248,7 @@ Model Q&A - defaults, selection, aliases, switching, failover, auth profiles - l
     Fix: use the WS URL (`ws://<host>:18789`, or `wss://...` over HTTPS), do not open the WS port in a normal browser tab, and include the token/password in the `connect` frame when auth is on. CLI/TUI example:
 
     ```bash
-    openclaw tui --url ws://<host>:18789 --token <token>
+    grokbot tui --url ws://<host>:18789 --token <token>
     ```
 
     Protocol details: [Gateway protocol](/gateway/protocol).
@@ -1260,19 +1260,19 @@ Model Q&A - defaults, selection, aliases, switching, failover, auth profiles - l
 
 <AccordionGroup>
   <Accordion title="Where are logs?">
-    File logs (structured): `/tmp/openclaw/openclaw-YYYY-MM-DD.log`. Set a stable path via `logging.file`; file log level via `logging.level`; console verbosity via `--verbose` and `logging.consoleLevel`.
+    File logs (structured): `/tmp/grokbot/grokbot-YYYY-MM-DD.log`. Set a stable path via `logging.file`; file log level via `logging.level`; console verbosity via `--verbose` and `logging.consoleLevel`.
 
     Fastest tail:
 
     ```bash
-    openclaw logs --follow
+    grokbot logs --follow
     ```
 
     Service/supervisor logs (when the gateway runs via launchd/systemd):
 
-    - macOS launchd stdout: `~/Library/Logs/openclaw/gateway.log` (profiles use `gateway-<profile>.log`; stderr is suppressed).
-    - Linux: `journalctl --user -u openclaw-gateway[-<profile>].service -n 200 --no-pager`.
-    - Windows: `schtasks /Query /TN "OpenClaw Gateway (<profile>)" /V /FO LIST`.
+    - macOS launchd stdout: `~/Library/Logs/grokbot/gateway.log` (profiles use `gateway-<profile>.log`; stderr is suppressed).
+    - Linux: `journalctl --user -u grokbot-gateway[-<profile>].service -n 200 --no-pager`.
+    - Windows: `schtasks /Query /TN "GrokBot Gateway (<profile>)" /V /FO LIST`.
 
     See [Troubleshooting](/gateway/troubleshooting) for more.
 
@@ -1280,33 +1280,33 @@ Model Q&A - defaults, selection, aliases, switching, failover, auth profiles - l
 
   <Accordion title="How do I start/stop/restart the Gateway service?">
     ```bash
-    openclaw gateway status
-    openclaw gateway restart
+    grokbot gateway status
+    grokbot gateway restart
     ```
 
-    If you run the gateway manually, `openclaw gateway --force` can reclaim the port. See [Gateway](/gateway).
+    If you run the gateway manually, `grokbot gateway --force` can reclaim the port. See [Gateway](/gateway).
 
   </Accordion>
 
-  <Accordion title="I closed my terminal on Windows - how do I restart OpenClaw?">
+  <Accordion title="I closed my terminal on Windows - how do I restart GrokBot?">
     Three Windows install modes:
 
-    **1) Windows Hub local setup**: the native app manages a local app-owned WSL Gateway. Open **OpenClaw Companion** from the Start menu or tray, then use **Gateway Setup** or the Connections tab.
+    **1) Windows Hub local setup**: the native app manages a local app-owned WSL Gateway. Open **GrokBot Companion** from the Start menu or tray, then use **Gateway Setup** or the Connections tab.
 
     **2) Manual WSL2 Gateway**: the Gateway runs inside Linux.
     ```powershell
     wsl
-    openclaw gateway status
-    openclaw gateway restart
+    grokbot gateway status
+    grokbot gateway restart
     ```
-    If you never installed the service, start it in the foreground: `openclaw gateway run`.
+    If you never installed the service, start it in the foreground: `grokbot gateway run`.
 
     **3) Native Windows CLI/Gateway**: runs directly in Windows.
     ```powershell
-    openclaw gateway status
-    openclaw gateway restart
+    grokbot gateway status
+    grokbot gateway restart
     ```
-    If you run it manually (no service): `openclaw gateway run`.
+    If you run it manually (no service): `grokbot gateway run`.
 
     Docs: [Windows](/platforms/windows), [Gateway service runbook](/gateway).
 
@@ -1316,10 +1316,10 @@ Model Q&A - defaults, selection, aliases, switching, failover, auth profiles - l
     Quick health sweep:
 
     ```bash
-    openclaw status
-    openclaw models status
-    openclaw channels status
-    openclaw logs --follow
+    grokbot status
+    grokbot models status
+    grokbot channels status
+    grokbot logs --follow
     ```
 
     Common causes: model auth not loaded on the **gateway host** (check `models status`), channel pairing/allowlist blocking replies (check channel config and logs), or WebChat/Dashboard open without the right token. If remote, confirm the tunnel/Tailscale connection is up and the Gateway WebSocket is reachable.
@@ -1329,12 +1329,12 @@ Model Q&A - defaults, selection, aliases, switching, failover, auth profiles - l
   </Accordion>
 
   <Accordion title='"Disconnected from gateway: no reason" - what now?'>
-    Usually means the UI lost the WebSocket connection. Check: is the Gateway running (`openclaw gateway status`)? Is it healthy (`openclaw status`)? Does the UI have the right token (`openclaw dashboard`)? If remote, is the tunnel/Tailscale link up?
+    Usually means the UI lost the WebSocket connection. Check: is the Gateway running (`grokbot gateway status`)? Is it healthy (`grokbot status`)? Does the UI have the right token (`grokbot dashboard`)? If remote, is the tunnel/Tailscale link up?
 
     Then tail logs:
 
     ```bash
-    openclaw logs --follow
+    grokbot logs --follow
     ```
 
     Docs: [Dashboard](/web/dashboard), [Remote access](/gateway/remote), [Troubleshooting](/gateway/troubleshooting).
@@ -1343,13 +1343,13 @@ Model Q&A - defaults, selection, aliases, switching, failover, auth profiles - l
 
   <Accordion title="Telegram setMyCommands fails. What should I check?">
     ```bash
-    openclaw channels status
-    openclaw channels logs --channel telegram
+    grokbot channels status
+    grokbot channels logs --channel telegram
     ```
 
     Then match the error:
 
-    - `BOT_COMMANDS_TOO_MUCH`: the Telegram menu has too many entries. OpenClaw already trims to the Telegram limit and retries with fewer commands, but some menu entries may still be dropped. Reduce plugin/skill/custom commands, or disable `channels.telegram.commands.native` if you do not need the menu.
+    - `BOT_COMMANDS_TOO_MUCH`: the Telegram menu has too many entries. GrokBot already trims to the Telegram limit and retries with fewer commands, but some menu entries may still be dropped. Reduce plugin/skill/custom commands, or disable `channels.telegram.commands.native` if you do not need the menu.
     - `TypeError: fetch failed`, `Network request for 'setMyCommands' failed!`, or similar network errors: on a VPS or behind a proxy, confirm outbound HTTPS is allowed and DNS works for `api.telegram.org`.
 
     If the Gateway is remote, check logs on the Gateway host.
@@ -1360,9 +1360,9 @@ Model Q&A - defaults, selection, aliases, switching, failover, auth profiles - l
 
   <Accordion title="TUI shows no output. What should I check?">
     ```bash
-    openclaw status
-    openclaw models status
-    openclaw logs --follow
+    grokbot status
+    grokbot models status
+    grokbot logs --follow
     ```
 
     In the TUI, use `/status` to see the current state. If you expect replies in a chat channel, confirm delivery is enabled (`/deliver on`).
@@ -1375,18 +1375,18 @@ Model Q&A - defaults, selection, aliases, switching, failover, auth profiles - l
     If you installed the service (launchd on macOS, systemd on Linux):
 
     ```bash
-    openclaw gateway stop
-    openclaw gateway start
+    grokbot gateway stop
+    grokbot gateway start
     ```
 
-    In the foreground, stop with Ctrl-C, then `openclaw gateway run`.
+    In the foreground, stop with Ctrl-C, then `grokbot gateway run`.
 
     Docs: [Gateway service runbook](/gateway).
 
   </Accordion>
 
-  <Accordion title="ELI5: openclaw gateway restart vs openclaw gateway">
-    `openclaw gateway restart` restarts the **background service** (launchd/systemd). `openclaw gateway` runs the gateway **in the foreground** for this terminal session. Use the gateway subcommands if you installed the service; use the bare foreground run for a one-off.
+  <Accordion title="ELI5: grokbot gateway restart vs grokbot gateway">
+    `grokbot gateway restart` restarts the **background service** (launchd/systemd). `grokbot gateway` runs the gateway **in the foreground** for this terminal session. Use the gateway subcommands if you installed the service; use the bare foreground run for a one-off.
   </Accordion>
 
   <Accordion title="Fastest way to get more details when something fails">
@@ -1398,10 +1398,10 @@ Model Q&A - defaults, selection, aliases, switching, failover, auth profiles - l
 
 <AccordionGroup>
   <Accordion title="My skill generated an image/PDF, but nothing was sent">
-    Outbound attachments from the agent must use structured media fields such as `media`, `mediaUrl`, `path`, or `filePath`. See [OpenClaw assistant setup](/start/openclaw) and [Agent send](/tools/agent-send).
+    Outbound attachments from the agent must use structured media fields such as `media`, `mediaUrl`, `path`, or `filePath`. See [GrokBot assistant setup](/start/grokbot) and [Agent send](/tools/agent-send).
 
     ```bash
-    openclaw message send --target +15555550123 --message "Here you go" --media /path/to/file.png
+    grokbot message send --target +15555550123 --message "Here you go" --media /path/to/file.png
     ```
 
     Also check: the target channel supports outbound media and is not blocked by allowlists; the file is within the provider's size limits (images resize to a max side of 2048px); `tools.fs.workspaceOnly=true` limits local-path sends to workspace, temp/media-store, and sandbox-validated files; `tools.fs.workspaceOnly=false` (default) lets structured local media sends use host-local files the agent can already read, for media plus safe document types (images, audio, video, PDF, Office docs, and validated text documents such as Markdown/MD, TXT, JSON, YAML/YML). This is not a secret scanner - an agent-readable `secret.txt` or `config.json` can be attached when the extension and content validation match. Keep sensitive files outside agent-readable paths, or keep `tools.fs.workspaceOnly=true` for stricter local-path sends.
@@ -1414,13 +1414,13 @@ Model Q&A - defaults, selection, aliases, switching, failover, auth profiles - l
 ## Security and access control
 
 <AccordionGroup>
-  <Accordion title="Is it safe to expose OpenClaw to inbound DMs?">
+  <Accordion title="Is it safe to expose GrokBot to inbound DMs?">
     Treat inbound DMs as untrusted input. Defaults reduce risk:
 
-    - Default behavior on DM-capable channels is **pairing**: unknown senders receive a pairing code and their message is not processed. Approve with `openclaw pairing approve --channel <channel> [--account <id>] <code>`. Pending requests are capped at **3 per channel**; check `openclaw pairing list --channel <channel> [--account <id>]` if a code did not arrive.
+    - Default behavior on DM-capable channels is **pairing**: unknown senders receive a pairing code and their message is not processed. Approve with `grokbot pairing approve --channel <channel> [--account <id>] <code>`. Pending requests are capped at **3 per channel**; check `grokbot pairing list --channel <channel> [--account <id>]` if a code did not arrive.
     - Opening DMs publicly requires explicit opt-in (`dmPolicy: "open"` and allowlist `"*"`).
 
-    Run `openclaw doctor` to surface risky DM policies.
+    Run `grokbot doctor` to surface risky DM policies.
 
   </Accordion>
 
@@ -1438,29 +1438,29 @@ Model Q&A - defaults, selection, aliases, switching, failover, auth profiles - l
 
   </Accordion>
 
-  <Accordion title="Is OpenClaw less safe because it uses TypeScript/Node instead of Rust/WASM?">
+  <Accordion title="Is GrokBot less safe because it uses TypeScript/Node instead of Rust/WASM?">
     Language and runtime matter, but are not the main risk for a personal agent. The practical risks are gateway exposure, who can message the bot, prompt injection, tool scope, credential handling, browser access, exec access, and third-party skill/plugin trust.
 
-    Rust and WASM can provide stronger isolation for some code classes, but do not solve prompt injection, bad allowlists, public gateway exposure, overbroad tools, or a browser profile already logged in to sensitive accounts. Treat these as the primary controls: keep the Gateway private or authenticated, use pairing and allowlists for DMs/groups, deny or sandbox risky tools for untrusted inputs, install only trusted plugins and skills, and run `openclaw security audit --deep` after config changes.
+    Rust and WASM can provide stronger isolation for some code classes, but do not solve prompt injection, bad allowlists, public gateway exposure, overbroad tools, or a browser profile already logged in to sensitive accounts. Treat these as the primary controls: keep the Gateway private or authenticated, use pairing and allowlists for DMs/groups, deny or sandbox risky tools for untrusted inputs, install only trusted plugins and skills, and run `grokbot security audit --deep` after config changes.
 
     Details: [Security](/gateway/security), [Sandboxing](/gateway/sandboxing).
 
   </Accordion>
 
-  <Accordion title="I saw reports about exposed OpenClaw instances. What should I check?">
+  <Accordion title="I saw reports about exposed GrokBot instances. What should I check?">
     ```bash
-    openclaw security audit --deep
-    openclaw gateway status
+    grokbot security audit --deep
+    grokbot gateway status
     ```
 
     A safer baseline: Gateway bound to `loopback`, or exposed only through authenticated private access (tailnet, SSH tunnel, token/password auth, or a correctly configured trusted proxy); DMs in `pairing` or `allowlist` mode; groups allowlisted and mention-gated unless every member is trusted; high-risk tools (`exec`, `browser`, `gateway`, `cron`) denied or tightly scoped for agents that read untrusted content; sandboxing enabled where tool execution needs a smaller blast radius.
 
-    Public binds without auth, open DMs/groups with tools, and exposed browser control are the findings to fix first. Details: [openclaw security audit](/gateway/security#openclaw-security-audit).
+    Public binds without auth, open DMs/groups with tools, and exposed browser control are the findings to fix first. Details: [grokbot security audit](/gateway/security#grokbot-security-audit).
 
   </Accordion>
 
   <Accordion title="Are ClawHub skills and third-party plugins safe to install?">
-    Treat third-party skills and plugins as code you are choosing to trust. ClawHub skill pages expose scan state before install, but scans are not a complete security boundary. OpenClaw does not run built-in local dangerous-code blocking during plugin/skill install or update; use operator-owned `security.installPolicy` for local allow/block decisions.
+    Treat third-party skills and plugins as code you are choosing to trust. ClawHub skill pages expose scan state before install, but scans are not a complete security boundary. GrokBot does not run built-in local dangerous-code blocking during plugin/skill install or update; use operator-owned `security.installPolicy` for local allow/block decisions.
 
     Safer pattern: prefer trusted authors and pinned versions, read the skill/plugin before enabling it, keep plugin/skill allowlists narrow, run untrusted-input workflows in a sandbox with minimal tools, and avoid giving third-party code broad filesystem, exec, browser, or secret access.
 
@@ -1494,7 +1494,7 @@ Model Q&A - defaults, selection, aliases, switching, failover, auth profiles - l
     Check pending requests:
 
     ```bash
-    openclaw pairing list telegram
+    grokbot pairing list telegram
     ```
 
     For immediate access, allowlist your sender id or set `dmPolicy: "open"` for that account.
@@ -1502,11 +1502,11 @@ Model Q&A - defaults, selection, aliases, switching, failover, auth profiles - l
   </Accordion>
 
   <Accordion title="WhatsApp: will it message my contacts? How does pairing work?">
-    No. Default WhatsApp DM policy is **pairing**. Unknown senders only get a pairing code; their message is **not processed**. OpenClaw only replies to chats it receives or to explicit sends you trigger.
+    No. Default WhatsApp DM policy is **pairing**. Unknown senders only get a pairing code; their message is **not processed**. GrokBot only replies to chats it receives or to explicit sends you trigger.
 
     ```bash
-    openclaw pairing approve whatsapp <code>
-    openclaw pairing list whatsapp
+    grokbot pairing approve whatsapp <code>
+    grokbot pairing list whatsapp
     ```
 
     The wizard's phone number prompt sets your **allowlist/owner** so your own DMs are permitted - it is not used for auto-sending. On your personal WhatsApp number, use that number and enable `channels.whatsapp.selfChatMode`.
@@ -1535,7 +1535,7 @@ Model Q&A - defaults, selection, aliases, switching, failover, auth profiles - l
   </Accordion>
 
   <Accordion title="How do I stop/cancel a running task?">
-    Send any of these **as a standalone message** (no slash) to trigger an abort: `stop`, `stop action`, `stop current action`, `stop run`, `stop current run`, `stop agent`, `stop the agent`, `stop openclaw`, `openclaw stop`, `stop don't do anything`, `stop do not do anything`, `stop doing anything`, `do not do that`, `please stop`, `stop please`, `abort`, `esc`, `exit`, `interrupt`, `halt`. Common non-English triggers (French, German, Spanish, Chinese, Japanese, Hindi, Arabic, Russian) also work.
+    Send any of these **as a standalone message** (no slash) to trigger an abort: `stop`, `stop action`, `stop current action`, `stop run`, `stop current run`, `stop agent`, `stop the agent`, `stop grokbot`, `grokbot stop`, `stop don't do anything`, `stop do not do anything`, `stop doing anything`, `do not do that`, `please stop`, `stop please`, `abort`, `esc`, `exit`, `interrupt`, `halt`. Common non-English triggers (French, German, Spanish, Chinese, Japanese, Hindi, Arabic, Russian) also work.
 
     For background processes started by the exec tool, ask the agent to run:
 
@@ -1548,7 +1548,7 @@ Model Q&A - defaults, selection, aliases, switching, failover, auth profiles - l
   </Accordion>
 
   <Accordion title='How do I send a Discord message from Telegram? ("Cross-context messaging denied")'>
-    OpenClaw blocks **cross-provider** messaging by default. If a tool call is bound to Telegram, it will not send to Discord unless you explicitly allow it - and this takes effect immediately, no gateway restart needed:
+    GrokBot blocks **cross-provider** messaging by default. If a tool call is bound to Telegram, it will not send to Discord unless you explicitly allow it - and this takes effect immediately, no gateway restart needed:
 
     ```json5
     {
@@ -1588,7 +1588,7 @@ Model Q&A - defaults, selection, aliases, switching, failover, auth profiles - l
 
 ---
 
-Still stuck? Ask in [Discord](https://discord.com/invite/clawd) or open a [GitHub discussion](https://github.com/openclaw/openclaw/discussions).
+Still stuck? Ask in [Discord](https://discord.com/invite/clawd) or open a [GitHub discussion](https://github.com/grokbot/grokbot/discussions).
 
 ## Related
 

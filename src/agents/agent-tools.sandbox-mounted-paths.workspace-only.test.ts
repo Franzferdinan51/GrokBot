@@ -180,7 +180,7 @@ describe("tools.fs.workspaceOnly", () => {
         const skillDir = path.join(skillsWorkspaceDir!, "skills", "demo");
         const userOwnedShadowDir = path.join(
           sandbox.workspaceDir,
-          ".openclaw",
+          ".grokbot",
           "sandbox-skills",
           "skills",
           "demo",
@@ -196,18 +196,18 @@ describe("tools.fs.workspaceOnly", () => {
 
         const tools = createSandboxFsTools({ sandbox, workspaceOnly: true });
         const { readTool } = expectReadWriteEditTools(tools);
-        const containerSkillPath = "/workspace/.openclaw/sandbox-skills/skills/demo/SKILL.md";
+        const containerSkillPath = "/workspace/.grokbot/sandbox-skills/skills/demo/SKILL.md";
 
         const readResult = await readTool?.execute("t1", { path: containerSkillPath });
         expect(getTextContent(readResult)).toContain("materialized");
         expect(getTextContent(readResult)).not.toContain("user-owned shadow");
         const relativeReadResult = await readTool?.execute("t2", {
-          path: ".openclaw/sandbox-skills/skills/demo/SKILL.md",
+          path: ".grokbot/sandbox-skills/skills/demo/SKILL.md",
         });
         expect(getTextContent(relativeReadResult)).toContain("materialized");
         expect(getTextContent(relativeReadResult)).not.toContain("user-owned shadow");
         const fileUrlReadResult = await readTool?.execute("t3", {
-          path: "file:///workspace/.openclaw/sandbox-skills/skills/demo/SKILL.md",
+          path: "file:///workspace/.grokbot/sandbox-skills/skills/demo/SKILL.md",
         });
         expect(getTextContent(fileUrlReadResult)).toContain("materialized");
         expect(getTextContent(fileUrlReadResult)).not.toContain("user-owned shadow");

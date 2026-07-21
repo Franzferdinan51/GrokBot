@@ -16,7 +16,7 @@ function expectedTaskkillPath(): string {
 }
 
 function makeTempDir(): string {
-  const root = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-secret-provider-proof-"));
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-secret-provider-proof-"));
   tempDirs.push(root);
   return root;
 }
@@ -90,7 +90,7 @@ function writeStallingOpenClaw(
         )}, "x"), 5);`,
       ].join("\n")
     : "";
-  const scriptPath = path.join(root, "fake-openclaw.mjs");
+  const scriptPath = path.join(root, "fake-grokbot.mjs");
   fs.writeFileSync(
     scriptPath,
     [
@@ -119,7 +119,7 @@ function writeStallingOpenClaw(
       "  await delay(60_000);",
       "  process.exit(0);",
       "}",
-      "console.error(`unexpected fake openclaw args: ${args.join(' ')}`);",
+      "console.error(`unexpected fake grokbot args: ${args.join(' ')}`);",
       "process.exit(2);",
       "",
     ].join("\n"),
@@ -129,7 +129,7 @@ function writeStallingOpenClaw(
 }
 
 function writeLeakingStartupOpenClaw(root: string): string {
-  const scriptPath = path.join(root, "fake-leaking-openclaw.mjs");
+  const scriptPath = path.join(root, "fake-leaking-grokbot.mjs");
   fs.writeFileSync(
     scriptPath,
     [
@@ -149,7 +149,7 @@ function writeLeakingStartupOpenClaw(root: string): string {
 }
 
 function writeSignaledStartupOpenClaw(root: string): string {
-  const scriptPath = path.join(root, "fake-signaled-openclaw.mjs");
+  const scriptPath = path.join(root, "fake-signaled-grokbot.mjs");
   fs.writeFileSync(
     scriptPath,
     [
@@ -172,7 +172,7 @@ function writeSignaledStartupOpenClaw(root: string): string {
 }
 
 function writeNoisySecretsConfigureOpenClaw(root: string): string {
-  const scriptPath = path.join(root, "fake-noisy-secrets-configure-openclaw.mjs");
+  const scriptPath = path.join(root, "fake-noisy-secrets-configure-grokbot.mjs");
   fs.writeFileSync(
     scriptPath,
     [
@@ -217,7 +217,7 @@ afterEach(() => {
 });
 
 describe("secret provider integration proof harness", () => {
-  it("runs pnpm-backed OpenClaw commands through the repo pnpm runner", async () => {
+  it("runs pnpm-backed GrokBot commands through the repo pnpm runner", async () => {
     const root = makeTempDir();
     const fakePnpm = path.join(root, "pnpm.cjs");
     fs.writeFileSync(fakePnpm, "#!/usr/bin/env node\n", { mode: 0o755 });
@@ -229,12 +229,12 @@ describe("secret provider integration proof harness", () => {
       {
         nodeExecPath: "/opt/node/bin/node",
         npmExecPath: fakePnpm,
-        runner: { pnpm: true, baseArgs: ["openclaw"], label: "pnpm openclaw" },
+        runner: { pnpm: true, baseArgs: ["grokbot"], label: "pnpm grokbot" },
       },
     );
 
     expect(command.command).toBe("/opt/node/bin/node");
-    expect(command.args).toEqual([fakePnpm, "openclaw", "gateway", "status"]);
+    expect(command.args).toEqual([fakePnpm, "grokbot", "gateway", "status"]);
     expect(command.options.env.OPENCLAW_SECRET_PROOF_SENTINEL).toBe("1");
     expect(command.options.shell).toBe(false);
   });
@@ -453,7 +453,7 @@ describe("secret provider integration proof harness", () => {
     "cleans PTY configure descendants before timeout failure",
     async () => {
       const root = makeTempDir();
-      const fakeOpenClaw = path.join(root, "fake-openclaw-pty-timeout.mjs");
+      const fakeOpenClaw = path.join(root, "fake-grokbot-pty-timeout.mjs");
       const descendantPidPath = path.join(root, "descendant.pid");
       const readyPath = path.join(root, "ready");
       let descendantPid = 0;
@@ -605,7 +605,7 @@ describe("secret provider integration proof harness", () => {
 
     try {
       await expect(
-        proof.cleanupEnv("/tmp/openclaw-secret-provider-proof-stuck", {
+        proof.cleanupEnv("/tmp/grokbot-secret-provider-proof-stuck", {
           attempts: 3,
           retryDelayMs: 1,
         }),

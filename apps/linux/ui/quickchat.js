@@ -99,8 +99,8 @@ function canonicalInlineWidgetTarget(raw) {
     return null;
   }
   try {
-    const parsed = new URL(target, "http://openclaw.invalid");
-    return parsed.origin === "http://openclaw.invalid" && parsed.pathname === path ? target : null;
+    const parsed = new URL(target, "http://grokbot.invalid");
+    return parsed.origin === "http://grokbot.invalid" && parsed.pathname === path ? target : null;
   } catch {
     return null;
   }

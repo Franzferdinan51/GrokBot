@@ -13,8 +13,8 @@ import {
   type IncompatibleOpenClawDatabase,
   type IndeterminateOpenClawDatabase,
   type OpenClawDatabaseSchemaPreflight,
-} from "../../state/openclaw-database-preflight.js";
-import type { OpenClawSchemaVersions } from "../../state/openclaw-schema-versions.js";
+} from "../../state/grokbot-database-preflight.js";
+import type { OpenClawSchemaVersions } from "../../state/grokbot-schema-versions.js";
 import { createUpdateProgress, printResult } from "./progress.js";
 import {
   createGlobalCommandRunner,

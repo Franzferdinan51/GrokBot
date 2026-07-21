@@ -2,17 +2,17 @@
 import { createHash } from "node:crypto";
 import fs from "node:fs/promises";
 import path from "node:path";
-import { expectDefined } from "@openclaw/normalization-core";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { RequestScopedSubagentRuntimeError } from "openclaw/plugin-sdk/error-runtime";
+import { expectDefined } from "@grokbot/normalization-core";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { RequestScopedSubagentRuntimeError } from "grokbot/plugin-sdk/error-runtime";
 import {
   resolveMemoryDreamingPluginConfig,
   resolveSessionTranscriptsDirForAgent,
-} from "openclaw/plugin-sdk/memory-core-host-runtime-core";
-import { clearRuntimeConfigSnapshot } from "openclaw/plugin-sdk/runtime-config-snapshot";
-import { upsertSessionEntry } from "openclaw/plugin-sdk/session-store-runtime";
-import { appendSessionTranscriptMessageByIdentity } from "openclaw/plugin-sdk/session-transcript-runtime";
-import { formatSqliteSessionFileMarker } from "openclaw/plugin-sdk/sqlite-runtime-testing";
+} from "grokbot/plugin-sdk/memory-core-host-runtime-core";
+import { clearRuntimeConfigSnapshot } from "grokbot/plugin-sdk/runtime-config-snapshot";
+import { upsertSessionEntry } from "grokbot/plugin-sdk/session-store-runtime";
+import { appendSessionTranscriptMessageByIdentity } from "grokbot/plugin-sdk/session-transcript-runtime";
+import { formatSqliteSessionFileMarker } from "grokbot/plugin-sdk/sqlite-runtime-testing";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   filterRecallEntriesWithinLookback,
@@ -349,7 +349,7 @@ function dailyCapStressLines(label: string): string[] {
 }
 
 async function createDreamingWorkspace(): Promise<string> {
-  const workspaceDir = await createTempWorkspace("openclaw-dreaming-phases-");
+  const workspaceDir = await createTempWorkspace("grokbot-dreaming-phases-");
   await fs.mkdir(path.join(workspaceDir, "memory"), { recursive: true });
   return workspaceDir;
 }
@@ -682,7 +682,7 @@ describe("memory-core dreaming phases", () => {
       [
         "# Dream Diary",
         "",
-        "<!-- openclaw:dreaming:diary:start -->",
+        "<!-- grokbot:dreaming:diary:start -->",
         ...staleSnippets.flatMap((snippet, index) => [
           "---",
           "",
@@ -691,7 +691,7 @@ describe("memory-core dreaming phases", () => {
           snippet,
           "",
         ]),
-        "<!-- openclaw:dreaming:diary:end -->",
+        "<!-- grokbot:dreaming:diary:end -->",
         "",
       ].join("\n"),
       "utf-8",
@@ -798,16 +798,16 @@ describe("memory-core dreaming phases", () => {
         "- Move backups to S3 Glacier.",
         "",
         "## Light Sleep",
-        "<!-- openclaw:dreaming:light:start -->",
+        "<!-- grokbot:dreaming:light:start -->",
         "- Candidate: Old staged summary.",
         "",
         "## Ops",
         "- Rotate access keys.",
         "",
         "## Light Sleep",
-        "<!-- openclaw:dreaming:light:start -->",
+        "<!-- grokbot:dreaming:light:start -->",
         "- Candidate: Fresh staged summary.",
-        "<!-- openclaw:dreaming:light:end -->",
+        "<!-- grokbot:dreaming:light:end -->",
       ]);
 
       const { beforeAgentReply } = createLightDreamingHarness(workspaceDir);

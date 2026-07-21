@@ -1,11 +1,11 @@
-// Openai tests cover openclaw.plugin plugin behavior.
+// Openai tests cover grokbot.plugin plugin behavior.
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { buildOpenAIProvider } from "./openai-provider.js";
 import { buildOpenAISetupProvider } from "./setup-api.js";
 
 const manifest = JSON.parse(
-  readFileSync(new URL("./openclaw.plugin.json", import.meta.url), "utf8"),
+  readFileSync(new URL("./grokbot.plugin.json", import.meta.url), "utf8"),
 ) as {
   mediaUnderstandingProviderMetadata?: Record<
     string,
@@ -108,7 +108,7 @@ function expectWizardFields(
 
 describe("OpenAI plugin manifest", () => {
   it("keeps runtime dependencies in the package manifest", () => {
-    expect(packageJson.devDependencies?.["@openclaw/plugin-sdk"]).toBe("workspace:*");
+    expect(packageJson.devDependencies?.["@grokbot/plugin-sdk"]).toBe("workspace:*");
     expect(packageJson.dependencies?.ws).toBe("8.21.0");
   });
 

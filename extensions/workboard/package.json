@@ -1,26 +1,26 @@
 {
-  "name": "@openclaw/workboard",
+  "name": "@grokbot/workboard",
   "version": "2026.7.2",
   "private": true,
-  "description": "OpenClaw dashboard workboard plugin",
+  "description": "GrokBot dashboard workboard plugin",
   "type": "module",
   "dependencies": {
     "typebox": "1.3.3"
   },
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*",
-    "@openclaw/workboard-contract": "workspace:*",
-    "openclaw": "workspace:*"
+    "@grokbot/plugin-sdk": "workspace:*",
+    "@grokbot/workboard-contract": "workspace:*",
+    "grokbot": "workspace:*"
   },
   "peerDependencies": {
-    "openclaw": ">=2026.7.2"
+    "grokbot": ">=2026.7.2"
   },
   "peerDependenciesMeta": {
-    "openclaw": {
+    "grokbot": {
       "optional": true
     }
   },
-  "openclaw": {
+  "grokbot": {
     "extensions": [
       "./index.ts"
     ]

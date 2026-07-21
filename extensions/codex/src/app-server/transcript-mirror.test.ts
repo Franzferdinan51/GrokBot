@@ -4,19 +4,19 @@ import { createHash } from "node:crypto";
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import type { AgentMessage } from "openclaw/plugin-sdk/agent-harness-runtime";
+import type { AgentMessage } from "grokbot/plugin-sdk/agent-harness-runtime";
 import {
   initializeGlobalHookRunner,
   resetGlobalHookRunner,
-} from "openclaw/plugin-sdk/hook-runtime";
-import { createMockPluginRegistry } from "openclaw/plugin-sdk/plugin-test-runtime";
-import { upsertSessionEntry } from "openclaw/plugin-sdk/session-store-runtime";
-import { readSessionTranscriptEvents } from "openclaw/plugin-sdk/session-transcript-runtime";
+} from "grokbot/plugin-sdk/hook-runtime";
+import { createMockPluginRegistry } from "grokbot/plugin-sdk/plugin-test-runtime";
+import { upsertSessionEntry } from "grokbot/plugin-sdk/session-store-runtime";
+import { readSessionTranscriptEvents } from "grokbot/plugin-sdk/session-transcript-runtime";
 import {
   castAgentMessage,
   makeAgentAssistantMessage,
   makeAgentUserMessage,
-} from "openclaw/plugin-sdk/test-fixtures";
+} from "grokbot/plugin-sdk/test-fixtures";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import type { CodexThread } from "./protocol.js";
 import { readCodexMirroredSessionHistoryMessages } from "./session-history.js";
@@ -33,9 +33,9 @@ const mirrorTranscriptBestEffort = codexTranscriptMirrorRuntime.mirrorBestEffort
 
 const publishSessionTranscriptUpdateByIdentityMock = vi.hoisted(() => vi.fn());
 
-vi.mock("openclaw/plugin-sdk/session-transcript-runtime", async (importOriginal) => {
+vi.mock("grokbot/plugin-sdk/session-transcript-runtime", async (importOriginal) => {
   const actual =
-    await importOriginal<typeof import("openclaw/plugin-sdk/session-transcript-runtime")>();
+    await importOriginal<typeof import("grokbot/plugin-sdk/session-transcript-runtime")>();
   return {
     ...actual,
     publishSessionTranscriptUpdateByIdentity: publishSessionTranscriptUpdateByIdentityMock,
@@ -130,7 +130,7 @@ async function createSqliteMirrorTarget(prefix: string, options: { sessionId?: s
   const agentId = "main";
   const sessionId = options.sessionId ?? "session-1";
   const sessionKey = `agent:${agentId}:${sessionId}`;
-  const storePath = path.join(root, "openclaw-agent.sqlite");
+  const storePath = path.join(root, "grokbot-agent.sqlite");
   await upsertSessionEntry({
     agentId,
     sessionKey,
@@ -179,7 +179,7 @@ async function readMirrorMessages(target: {
 
 describe("importCodexThreadHistoryToTranscript", () => {
   it("imports only bounded user-visible conversation items with stable identities", async () => {
-    const target = await createSqliteMirrorTarget("openclaw-codex-history-", {
+    const target = await createSqliteMirrorTarget("grokbot-codex-history-", {
       sessionId: "session-history",
     });
     const sessionFile = `sqlite:${target.agentId}:${target.sessionId}:${target.storePath}`;
@@ -304,7 +304,7 @@ describe("importCodexThreadHistoryToTranscript", () => {
   });
 
   it("keeps the newest 200 visible messages and deduplicates a retried import", async () => {
-    const target = await createSqliteMirrorTarget("openclaw-codex-bounded-history-", {
+    const target = await createSqliteMirrorTarget("grokbot-codex-bounded-history-", {
       sessionId: "session-bounded-history",
     });
     const thread = {
@@ -351,7 +351,7 @@ describe("importCodexThreadHistoryToTranscript", () => {
   });
 
   it("assigns canonical assistant attribution and numeric fallback timestamps", async () => {
-    const target = await createSqliteMirrorTarget("openclaw-codex-fallback-history-", {
+    const target = await createSqliteMirrorTarget("grokbot-codex-fallback-history-", {
       sessionId: "session-fallback-history",
     });
     const sessionFile = `sqlite:${target.agentId}:${target.sessionId}:${target.storePath}`;
@@ -627,7 +627,7 @@ describe("projectBoundedCodexThreadHistory", () => {
 
 describe("mirrorCodexAppServerTranscript", () => {
   it("mirrors user, assistant, and tool result messages by SQLite identity", async () => {
-    const target = await createSqliteMirrorTarget("openclaw-codex-mirror-basic-");
+    const target = await createSqliteMirrorTarget("grokbot-codex-mirror-basic-");
     const userMessage = makeAgentUserMessage({
       content: [{ type: "text", text: "hello" }],
       timestamp: Date.now(),
@@ -672,7 +672,7 @@ describe("mirrorCodexAppServerTranscript", () => {
   });
 
   it("preserves gateway user-turn identity across Codex transcript mirroring", async () => {
-    const target = await createSqliteMirrorTarget("openclaw-codex-mirror-user-identity-");
+    const target = await createSqliteMirrorTarget("grokbot-codex-mirror-user-identity-");
     const userMessage = castAgentMessage({
       ...makeAgentUserMessage({
         content: [{ type: "text", text: "client prompt" }],
@@ -704,7 +704,7 @@ describe("mirrorCodexAppServerTranscript", () => {
   });
 
   it("emits message-bearing updates for newly appended mirrored messages only", async () => {
-    const target = await createSqliteMirrorTarget("openclaw-codex-mirror-live-updates-");
+    const target = await createSqliteMirrorTarget("grokbot-codex-mirror-live-updates-");
     const userMessage = attachCodexMirrorIdentity(
       makeAgentUserMessage({
         content: [{ type: "text", text: "show me live" }],
@@ -752,7 +752,7 @@ describe("mirrorCodexAppServerTranscript", () => {
   });
 
   it("emits stable sequence numbers for multi-message mirror batches", async () => {
-    const target = await createSqliteMirrorTarget("openclaw-codex-mirror-seq-");
+    const target = await createSqliteMirrorTarget("grokbot-codex-mirror-seq-");
 
     await mirrorCodexAppServerTranscript({
       ...target,
@@ -789,7 +789,7 @@ describe("mirrorCodexAppServerTranscript", () => {
 
   it("keeps assistant ownership when live update publication fails", async () => {
     publishSessionTranscriptUpdateByIdentityMock.mockRejectedValueOnce(new Error("publish failed"));
-    const target = await createSqliteMirrorTarget("openclaw-codex-mirror-publish-failure-");
+    const target = await createSqliteMirrorTarget("grokbot-codex-mirror-publish-failure-");
     const assistantMessage = attachCodexMirrorIdentity(
       makeAgentAssistantMessage({
         content: [{ type: "text", text: "durably persisted" }],
@@ -823,7 +823,7 @@ describe("mirrorCodexAppServerTranscript", () => {
   });
 
   it("deduplicates app-server turn mirrors by idempotency scope", async () => {
-    const target = await createSqliteMirrorTarget("openclaw-codex-mirror-dedupe-");
+    const target = await createSqliteMirrorTarget("grokbot-codex-mirror-dedupe-");
     const messages = [
       makeAgentUserMessage({
         content: [{ type: "text", text: "hello" }],
@@ -850,7 +850,7 @@ describe("mirrorCodexAppServerTranscript", () => {
   });
 
   it("reports final assistant ownership for new and idempotent mirrors", async () => {
-    const target = await createSqliteMirrorTarget("openclaw-codex-mirror-assistant-owned-");
+    const target = await createSqliteMirrorTarget("grokbot-codex-mirror-assistant-owned-");
     const assistantMessage = attachCodexMirrorIdentity(
       makeAgentAssistantMessage({
         content: [{ type: "text", text: "owned once" }],
@@ -891,7 +891,7 @@ describe("mirrorCodexAppServerTranscript", () => {
         },
       ]),
     );
-    const target = await createSqliteMirrorTarget("openclaw-codex-mirror-hook-");
+    const target = await createSqliteMirrorTarget("grokbot-codex-mirror-hook-");
     const sourceMessage = makeAgentAssistantMessage({
       content: [{ type: "text", text: "hello" }],
       timestamp: Date.now(),
@@ -924,7 +924,7 @@ describe("mirrorCodexAppServerTranscript", () => {
         },
       ]),
     );
-    const target = await createSqliteMirrorTarget("openclaw-codex-mirror-duplicates-");
+    const target = await createSqliteMirrorTarget("grokbot-codex-mirror-duplicates-");
     const sourceMessage = makeAgentUserMessage({
       content: [{ type: "text", text: "secret prompt" }],
       timestamp: Date.now(),
@@ -967,7 +967,7 @@ describe("mirrorCodexAppServerTranscript", () => {
         },
       ]),
     );
-    const target = await createSqliteMirrorTarget("openclaw-codex-mirror-key-hook-");
+    const target = await createSqliteMirrorTarget("grokbot-codex-mirror-key-hook-");
     const sourceMessage = makeAgentAssistantMessage({
       content: [{ type: "text", text: "hello" }],
       timestamp: Date.now(),
@@ -992,7 +992,7 @@ describe("mirrorCodexAppServerTranscript", () => {
         { hookName: "before_message_write", handler: () => ({ block: true }) },
       ]),
     );
-    const target = await createSqliteMirrorTarget("openclaw-codex-mirror-blocked-");
+    const target = await createSqliteMirrorTarget("grokbot-codex-mirror-blocked-");
 
     const result = await mirrorCodexAppServerTranscript({
       ...target,
@@ -1013,7 +1013,7 @@ describe("mirrorCodexAppServerTranscript", () => {
   });
 
   it("leaves the assistant unowned when transcript persistence fails", async () => {
-    const root = await makeRoot("openclaw-codex-transcript-failure-");
+    const root = await makeRoot("grokbot-codex-transcript-failure-");
     const assistantMessage = attachCodexMirrorIdentity(
       makeAgentAssistantMessage({
         content: [{ type: "text", text: "needs fallback persistence" }],
@@ -1040,7 +1040,7 @@ describe("mirrorCodexAppServerTranscript", () => {
   });
 
   it("dedupes mirrored messages despite snapshot positional shifts", async () => {
-    const target = await createSqliteMirrorTarget("openclaw-codex-mirror-shift-");
+    const target = await createSqliteMirrorTarget("grokbot-codex-mirror-shift-");
     const userMessage = attachCodexMirrorIdentity(
       makeAgentUserMessage({
         content: [{ type: "text", text: "hello" }],
@@ -1082,7 +1082,7 @@ describe("mirrorCodexAppServerTranscript", () => {
   });
 
   it("keeps repeated same-content turns distinct", async () => {
-    const target = await createSqliteMirrorTarget("openclaw-codex-mirror-repeat-");
+    const target = await createSqliteMirrorTarget("grokbot-codex-mirror-repeat-");
     const userTurn1 = attachCodexMirrorIdentity(
       makeAgentUserMessage({ content: [{ type: "text", text: "yes" }], timestamp: Date.now() }),
       "turn-1:prompt",
@@ -1126,7 +1126,7 @@ describe("mirrorCodexAppServerTranscript", () => {
   });
 
   it("dedupes prior-turn entries re-emitted into a later turn's snapshot", async () => {
-    const target = await createSqliteMirrorTarget("openclaw-codex-mirror-reemit-");
+    const target = await createSqliteMirrorTarget("grokbot-codex-mirror-reemit-");
     const userTurn1 = attachCodexMirrorIdentity(
       makeAgentUserMessage({ content: [{ type: "text", text: "msg1" }], timestamp: Date.now() }),
       "turn-1:prompt",
@@ -1173,7 +1173,7 @@ describe("mirrorCodexAppServerTranscript", () => {
   });
 
   it("uses the role+content fingerprint when no identity is attached", async () => {
-    const target = await createSqliteMirrorTarget("openclaw-codex-mirror-fingerprint-");
+    const target = await createSqliteMirrorTarget("grokbot-codex-mirror-fingerprint-");
     const userMessage = makeAgentUserMessage({
       content: [{ type: "text", text: "hello" }],
       timestamp: Date.now(),

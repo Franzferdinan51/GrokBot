@@ -1,7 +1,7 @@
 // Discord plugin module implements account inspect behavior.
-import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "openclaw/plugin-sdk/account-id";
-import { normalizeSecretInputString } from "openclaw/plugin-sdk/secret-input";
-import { normalizeOptionalString } from "openclaw/plugin-sdk/string-coerce-runtime";
+import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "grokbot/plugin-sdk/account-id";
+import { normalizeSecretInputString } from "grokbot/plugin-sdk/secret-input";
+import { normalizeOptionalString } from "grokbot/plugin-sdk/string-coerce-runtime";
 import { inspectDiscordConfiguredToken } from "./account-token-inspect.js";
 import {
   mergeDiscordAccountConfig,

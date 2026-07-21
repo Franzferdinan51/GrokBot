@@ -3,15 +3,15 @@
  * Records failures under the store lock, applies WHAM usage probes for OpenAI
  * OAuth profiles, and exposes display helpers for unavailable profiles.
  */
-import { normalizeProviderId } from "@openclaw/model-catalog-core/provider-id";
+import { normalizeProviderId } from "@grokbot/model-catalog-core/provider-id";
 import {
   asDateTimestampMs,
   isFutureDateTimestampMs,
   positiveSecondsToSafeMilliseconds,
   resolveExpiresAtMsFromDurationMs,
   resolveExpiresAtMsFromEpochSeconds,
-} from "@openclaw/normalization-core/number-coercion";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+} from "@grokbot/normalization-core/number-coercion";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import { createSubsystemLogger } from "../../logging/subsystem.js";
 import { readProviderJsonResponse } from "../provider-http-errors.js";
 import { resolveProviderRequestHeaders } from "../provider-request-config.js";
@@ -60,7 +60,7 @@ const testing = {
   },
 };
 if (process.env.VITEST || process.env.NODE_ENV === "test") {
-  (globalThis as Record<PropertyKey, unknown>)[Symbol.for("openclaw.authProfileUsageTestApi")] =
+  (globalThis as Record<PropertyKey, unknown>)[Symbol.for("grokbot.authProfileUsageTestApi")] =
     testing;
 }
 
@@ -269,9 +269,9 @@ async function probeWhamForCooldown(
     const defaultHeaders: Record<string, string> = {
       Authorization: `Bearer ${profile.access}`,
       Accept: "application/json",
-      originator: "openclaw",
+      originator: "grokbot",
       ...(version ? { version } : {}),
-      "User-Agent": `openclaw/${version || "dev"}`,
+      "User-Agent": `grokbot/${version || "dev"}`,
     };
     if (profile.accountId) {
       defaultHeaders["ChatGPT-Account-Id"] = profile.accountId;

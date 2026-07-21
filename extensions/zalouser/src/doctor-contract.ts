@@ -2,8 +2,8 @@
 import type {
   ChannelDoctorConfigMutation,
   ChannelDoctorLegacyConfigRule,
-} from "openclaw/plugin-sdk/channel-contract";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+} from "grokbot/plugin-sdk/channel-contract";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 
 type ZalouserChannelsConfig = NonNullable<OpenClawConfig["channels"]>;
 
@@ -139,13 +139,13 @@ export const legacyConfigRules: ChannelDoctorLegacyConfigRule[] = [
   {
     path: ["channels", "zalouser", "groups"],
     message:
-      'channels.zalouser.groups.<id>.allow is legacy; use channels.zalouser.groups.<id>.enabled instead. Run "openclaw doctor --fix".',
+      'channels.zalouser.groups.<id>.allow is legacy; use channels.zalouser.groups.<id>.enabled instead. Run "grokbot doctor --fix".',
     match: hasLegacyZalouserGroupAllowAliases,
   },
   {
     path: ["channels", "zalouser", "accounts"],
     message:
-      'channels.zalouser.accounts.<id>.groups.<id>.allow is legacy; use channels.zalouser.accounts.<id>.groups.<id>.enabled instead. Run "openclaw doctor --fix".',
+      'channels.zalouser.accounts.<id>.groups.<id>.allow is legacy; use channels.zalouser.accounts.<id>.groups.<id>.enabled instead. Run "grokbot doctor --fix".',
     match: hasLegacyZalouserAccountGroupAllowAliases,
   },
 ];

@@ -46,19 +46,19 @@ function pullListItem(overrides: Record<string, unknown> = {}): Record<string, u
   return {
     number: 103469,
     title: "fix(macos): tighten the link-browser tab header",
-    html_url: "https://github.com/openclaw/openclaw/pull/103469",
+    html_url: "https://github.com/grokbot/grokbot/pull/103469",
     state: "open",
     draft: false,
     merged_at: null,
     head: { sha: "a".repeat(40) },
-    base: { repo: { name: "openclaw", owner: { login: "openclaw" } } },
+    base: { repo: { name: "grokbot", owner: { login: "grokbot" } } },
     ...overrides,
   };
 }
 
 const context: GitContext = {
-  owner: "openclaw",
-  repo: "openclaw",
+  owner: "grokbot",
+  repo: "grokbot",
   branch: "claude/browser-tabs-tighter-header",
 };
 
@@ -68,17 +68,17 @@ let cacheEvictionEpoch = 0;
 
 describe("parseGitHubRemoteUrl", () => {
   it("parses https, scp-like, and ssh remotes", () => {
-    const expected = { owner: "openclaw", repo: "openclaw" };
-    expect(parseGitHubRemoteUrl("https://github.com/openclaw/openclaw.git")).toEqual(expected);
-    expect(parseGitHubRemoteUrl("https://github.com/openclaw/openclaw")).toEqual(expected);
-    expect(parseGitHubRemoteUrl("git@github.com:openclaw/openclaw.git")).toEqual(expected);
-    expect(parseGitHubRemoteUrl("ssh://git@github.com/openclaw/openclaw.git")).toEqual(expected);
+    const expected = { owner: "grokbot", repo: "grokbot" };
+    expect(parseGitHubRemoteUrl("https://github.com/grokbot/grokbot.git")).toEqual(expected);
+    expect(parseGitHubRemoteUrl("https://github.com/grokbot/grokbot")).toEqual(expected);
+    expect(parseGitHubRemoteUrl("git@github.com:grokbot/grokbot.git")).toEqual(expected);
+    expect(parseGitHubRemoteUrl("ssh://git@github.com/grokbot/grokbot.git")).toEqual(expected);
   });
 
   it("rejects non-GitHub and malformed remotes", () => {
-    expect(parseGitHubRemoteUrl("https://gitlab.com/openclaw/openclaw.git")).toBeNull();
-    expect(parseGitHubRemoteUrl("git@github.com:openclaw")).toBeNull();
-    expect(parseGitHubRemoteUrl("https://github.com/openclaw/openclaw/extra")).toBeNull();
+    expect(parseGitHubRemoteUrl("https://gitlab.com/grokbot/grokbot.git")).toBeNull();
+    expect(parseGitHubRemoteUrl("git@github.com:grokbot")).toBeNull();
+    expect(parseGitHubRemoteUrl("https://github.com/grokbot/grokbot/extra")).toBeNull();
     expect(parseGitHubRemoteUrl("/local/path/repo.git")).toBeNull();
   });
 });
@@ -176,24 +176,24 @@ describe("loadControlUiSessionPullRequests", () => {
       pullRequests: [
         {
           number: 103469,
-          owner: "openclaw",
-          repo: "openclaw",
+          owner: "grokbot",
+          repo: "grokbot",
           branch: context.branch,
           title: "fix(macos): tighten the link-browser tab header",
-          url: "https://github.com/openclaw/openclaw/pull/103469",
+          url: "https://github.com/grokbot/grokbot/pull/103469",
           state: "open",
           additions: 4,
           deletions: 3,
           checks: { state: "passing", passed: 1, failed: 0, skipped: 1, running: 0 },
-          checksUrl: "https://github.com/openclaw/openclaw/pull/103469/checks",
+          checksUrl: "https://github.com/grokbot/grokbot/pull/103469/checks",
         },
       ],
       branch: {
-        owner: "openclaw",
-        repo: "openclaw",
+        owner: "grokbot",
+        repo: "grokbot",
         branch: context.branch,
         createUrl:
-          "https://github.com/openclaw/openclaw/pull/new/claude/browser-tabs-tighter-header",
+          "https://github.com/grokbot/grokbot/pull/new/claude/browser-tabs-tighter-header",
       },
       rateLimited: false,
     });
@@ -215,11 +215,11 @@ describe("loadControlUiSessionPullRequests", () => {
     expect(result.pullRequests).toEqual([
       {
         number: 103469,
-        owner: "openclaw",
-        repo: "openclaw",
+        owner: "grokbot",
+        repo: "grokbot",
         branch: context.branch,
         title: "fix(macos): tighten the link-browser tab header",
-        url: "https://github.com/openclaw/openclaw/pull/103469",
+        url: "https://github.com/grokbot/grokbot/pull/103469",
         state: "merged",
       },
     ]);
@@ -283,19 +283,19 @@ describe("loadControlUiSessionPullRequests", () => {
   it("falls back to the fork parent repo when the origin repo has no PRs", async () => {
     const fetchImpl = routedFetch([
       {
-        match: "/repos/fork-owner/openclaw/pulls?head=",
+        match: "/repos/fork-owner/grokbot/pulls?head=",
         response: () => githubJson([]),
       },
       {
-        match: "/repos/fork-owner/openclaw",
+        match: "/repos/fork-owner/grokbot",
         response: () =>
           githubJson({
             fork: true,
-            parent: { name: "openclaw", owner: { login: "openclaw" } },
+            parent: { name: "grokbot", owner: { login: "grokbot" } },
           }),
       },
       {
-        match: "/repos/openclaw/openclaw/pulls?head=",
+        match: "/repos/grokbot/grokbot/pulls?head=",
         response: () => githubJson([pullListItem({ merged_at: "2026-07-09T10:00:00Z" })]),
       },
     ]);
@@ -403,7 +403,7 @@ describe("loadControlUiSessionPullRequests", () => {
     let pulls: Record<string, unknown>[] = [];
     const fetchImpl = routedFetch([
       { match: "/pulls?head=", response: () => githubJson(pulls) },
-      { match: "/repos/openclaw/openclaw", response: () => githubJson({ fork: false }) },
+      { match: "/repos/grokbot/grokbot", response: () => githubJson({ fork: false }) },
     ]);
 
     const initial = await loadControlUiSessionPullRequests(
@@ -466,7 +466,7 @@ describe("loadControlUiSessionPullRequests", () => {
           return githubJson([pullListItem({ merged_at: "2026-07-09T10:00:00Z" })]);
         },
       },
-      { match: "/repos/openclaw/openclaw", response: () => githubJson({ fork: false }) },
+      { match: "/repos/grokbot/grokbot", response: () => githubJson({ fork: false }) },
     ]);
 
     const initial = loadControlUiSessionPullRequests(
@@ -520,11 +520,11 @@ describe("loadControlUiSessionPullRequests", () => {
     expect(result).toEqual({
       pullRequests: [],
       branch: {
-        owner: "openclaw",
-        repo: "openclaw",
+        owner: "grokbot",
+        repo: "grokbot",
         branch: context.branch,
         createUrl:
-          "https://github.com/openclaw/openclaw/pull/new/claude/browser-tabs-tighter-header",
+          "https://github.com/grokbot/grokbot/pull/new/claude/browser-tabs-tighter-header",
       },
       rateLimited: true,
     });
@@ -555,11 +555,11 @@ describe("loadControlUiSessionPullRequests", () => {
     expect(result.pullRequests).toEqual([
       {
         number: 103469,
-        owner: "openclaw",
-        repo: "openclaw",
+        owner: "grokbot",
+        repo: "grokbot",
         branch: context.branch,
         title: "fix(macos): tighten the link-browser tab header",
-        url: "https://github.com/openclaw/openclaw/pull/103469",
+        url: "https://github.com/grokbot/grokbot/pull/103469",
         state: "open",
       },
     ]);
@@ -581,7 +581,7 @@ describe("loadControlUiSessionPullRequests", () => {
     const fetchImpl = routedFetch([
       { match: "/pulls?head=", response: () => githubJson([]) },
       // Empty PR lists trigger the fork-parent probe; answer "not a fork".
-      { match: "/repos/openclaw/openclaw", response: () => githubJson({ fork: false }) },
+      { match: "/repos/grokbot/grokbot", response: () => githubJson({ fork: false }) },
     ]);
     const result = await loadControlUiSessionPullRequests(
       { sessionKey: "agent:main:main" },
@@ -591,7 +591,7 @@ describe("loadControlUiSessionPullRequests", () => {
       },
     );
     expect(result.branch?.createUrl).toBe(
-      "https://github.com/openclaw/openclaw/pull/new/claude/fix%20%231",
+      "https://github.com/grokbot/grokbot/pull/new/claude/fix%20%231",
     );
   });
 });
@@ -601,12 +601,12 @@ describe("session branch diff stats", () => {
   let root: string;
 
   const git = (...args: string[]) =>
-    execFileAsync("git", ["-c", "user.email=test@openclaw.ai", "-c", "user.name=Test", ...args], {
+    execFileAsync("git", ["-c", "user.email=test@grokbot.ai", "-c", "user.name=Test", ...args], {
       cwd: root,
     });
 
   beforeEach(async () => {
-    root = await fs.realpath(await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-session-prs-")));
+    root = await fs.realpath(await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-session-prs-")));
   });
 
   afterEach(async () => {
@@ -634,7 +634,7 @@ describe("session branch diff stats", () => {
 
     const fetchImpl = routedFetch([
       { match: "/pulls?head=", response: () => githubJson([]) },
-      { match: "/repos/openclaw/openclaw", response: () => githubJson({ fork: false }) },
+      { match: "/repos/grokbot/grokbot", response: () => githubJson({ fork: false }) },
     ]);
     const result = await loadControlUiSessionPullRequests(
       { sessionKey: "agent:main:main" },
@@ -650,12 +650,12 @@ describe("session branch diff stats", () => {
     );
 
     expect(result.branch).toEqual({
-      owner: "openclaw",
-      repo: "openclaw",
+      owner: "grokbot",
+      repo: "grokbot",
       branch: "feature",
       additions: 4,
       deletions: 1,
-      createUrl: "https://github.com/openclaw/openclaw/pull/new/feature",
+      createUrl: "https://github.com/grokbot/grokbot/pull/new/feature",
     });
   });
 
@@ -679,7 +679,7 @@ describe("session branch diff stats", () => {
 
     const fetchImpl = routedFetch([
       { match: "/pulls?head=", response: () => githubJson([]) },
-      { match: "/repos/openclaw/openclaw", response: () => githubJson({ fork: false }) },
+      { match: "/repos/grokbot/grokbot", response: () => githubJson({ fork: false }) },
     ]);
     const result = await loadControlUiSessionPullRequests(
       { sessionKey: "agent:main:main" },
@@ -709,7 +709,7 @@ describe("session branch diff stats", () => {
 
     const fetchImpl = routedFetch([
       { match: "/pulls?head=", response: () => githubJson([]) },
-      { match: "/repos/openclaw/openclaw", response: () => githubJson({ fork: false }) },
+      { match: "/repos/grokbot/grokbot", response: () => githubJson({ fork: false }) },
     ]);
     const result = await loadControlUiSessionPullRequests(
       { sessionKey: "agent:main:main" },
@@ -741,7 +741,7 @@ describe("session branch diff stats", () => {
 
     const fetchImpl = routedFetch([
       { match: "/pulls?head=", response: () => githubJson([]) },
-      { match: "/repos/openclaw/openclaw", response: () => githubJson({ fork: false }) },
+      { match: "/repos/grokbot/grokbot", response: () => githubJson({ fork: false }) },
     ]);
     const result = await loadControlUiSessionPullRequests(
       { sessionKey: "agent:main:main" },
@@ -759,8 +759,8 @@ describe("session branch diff stats", () => {
     // GitHub's pull/new page 404s for unpushed branches, so no Create PR
     // link — but the session's changed files still get a row.
     expect(result.branch).toEqual({
-      owner: "openclaw",
-      repo: "openclaw",
+      owner: "grokbot",
+      repo: "grokbot",
       branch: "feature",
       additions: 1,
       deletions: 0,
@@ -779,7 +779,7 @@ describe("session branch diff stats", () => {
 
     const fetchImpl = routedFetch([
       { match: "/pulls?head=", response: () => githubJson([]) },
-      { match: "/repos/openclaw/openclaw", response: () => githubJson({ fork: false }) },
+      { match: "/repos/grokbot/grokbot", response: () => githubJson({ fork: false }) },
     ]);
     const result = await loadControlUiSessionPullRequests(
       { sessionKey: "agent:main:main" },
@@ -797,8 +797,8 @@ describe("session branch diff stats", () => {
     // origin/feature == origin/main, so no Create PR link yet, but the dirty
     // working tree is visible work the row must surface.
     expect(result.branch).toEqual({
-      owner: "openclaw",
-      repo: "openclaw",
+      owner: "grokbot",
+      repo: "grokbot",
       branch: "feature",
       additions: 1,
       deletions: 0,
@@ -815,7 +815,7 @@ describe("session branch diff stats", () => {
 
     const fetchImpl = routedFetch([
       { match: "/pulls?head=", response: () => githubJson([]) },
-      { match: "/repos/openclaw/openclaw", response: () => githubJson({ fork: false }) },
+      { match: "/repos/grokbot/grokbot", response: () => githubJson({ fork: false }) },
     ]);
     const result = await loadControlUiSessionPullRequests(
       { sessionKey: "agent:main:main" },

@@ -2,8 +2,8 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { withEnv } from "openclaw/plugin-sdk/test-env";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { withEnv } from "grokbot/plugin-sdk/test-env";
 import { describe, expect, it } from "vitest";
 import { inspectTelegramAccount } from "./account-inspect.js";
 
@@ -151,7 +151,7 @@ describe("inspectTelegramAccount SecretRef resolution", () => {
   it.runIf(process.platform !== "win32")(
     "treats symlinked token files as configured_unavailable",
     () => {
-      const dir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-telegram-inspect-"));
+      const dir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-telegram-inspect-"));
       const tokenFile = path.join(dir, "token.txt");
       const tokenLink = path.join(dir, "token-link.txt");
       fs.writeFileSync(tokenFile, "123:token\n", "utf8");

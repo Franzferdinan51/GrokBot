@@ -1,7 +1,7 @@
 import { createServer } from "node:http";
 import type { AddressInfo } from "node:net";
-import type { Context, Model } from "@openclaw/ai";
-import { streamOpenAICompletions } from "@openclaw/ai/internal/openai";
+import type { Context, Model } from "@grokbot/ai";
+import { streamOpenAICompletions } from "@grokbot/ai/internal/openai";
 import { describe, expect, it } from "vitest";
 import { classifyAssistantFailoverReason } from "./embedded-agent-helpers/errors.js";
 

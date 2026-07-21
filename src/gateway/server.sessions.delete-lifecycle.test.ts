@@ -22,7 +22,7 @@ import {
   beginSessionWorkAdmission,
   runExclusiveSessionLifecycleMutation,
 } from "../sessions/session-lifecycle-admission.js";
-import { closeOpenClawStateDatabaseForTest } from "../state/openclaw-state-db.js";
+import { closeOpenClawStateDatabaseForTest } from "../state/grokbot-state-db.js";
 import { embeddedRunMock, rpcReq, testState, writeSessionStore } from "./test-helpers.js";
 import {
   setupGatewaySessionsTestHarness,
@@ -52,13 +52,13 @@ async function initializeRemoteBackedGitWorkspace(root: string): Promise<string>
   const remote = path.join(root, "remote.git");
   await fs.mkdir(workspace, { recursive: true });
   await execFileAsync("git", ["-C", workspace, "init", "-b", "main"]);
-  await execFileAsync("git", ["-C", workspace, "config", "user.name", "OpenClaw Test"]);
+  await execFileAsync("git", ["-C", workspace, "config", "user.name", "GrokBot Test"]);
   await execFileAsync("git", [
     "-C",
     workspace,
     "config",
     "user.email",
-    "openclaw-test@example.invalid",
+    "grokbot-test@example.invalid",
   ]);
   await fs.writeFile(path.join(workspace, "README.md"), "base\n");
   await execFileAsync("git", ["-C", workspace, "add", "README.md"]);
@@ -120,7 +120,7 @@ function expectThreadBindingsUnbound(targetSessionKey: string) {
 
 test("sessions.delete snapshots and removes session worktrees", async () => {
   const root = await fs.mkdtemp(
-    path.join(await fs.realpath(os.tmpdir()), "openclaw-delete-worktree-"),
+    path.join(await fs.realpath(os.tmpdir()), "grokbot-delete-worktree-"),
   );
   const workspace = await initializeRemoteBackedGitWorkspace(root);
   const previousStateDir = process.env.OPENCLAW_STATE_DIR;
@@ -149,7 +149,7 @@ test("sessions.delete snapshots and removes session worktrees", async () => {
     await expect(fs.access(cleanWorktree!.path)).rejects.toThrow();
     expect(getRegistryWorktree(process.env, cleanWorktree!.id)).toMatchObject({
       removedAt: expect.any(Number),
-      snapshotRef: expect.stringMatching(/^refs\/openclaw\/snapshots\//),
+      snapshotRef: expect.stringMatching(/^refs\/grokbot\/snapshots\//),
     });
     const registered = await execFileAsync("git", [
       "-C",
@@ -183,7 +183,7 @@ test("sessions.delete snapshots and removes session worktrees", async () => {
     await expect(fs.access(dirtyWorktree!.path)).rejects.toThrow();
     expect(getRegistryWorktree(process.env, dirtyWorktree!.id)).toMatchObject({
       removedAt: expect.any(Number),
-      snapshotRef: expect.stringMatching(/^refs\/openclaw\/snapshots\//),
+      snapshotRef: expect.stringMatching(/^refs\/grokbot\/snapshots\//),
     });
     dirtyWorktreeId = undefined;
   } finally {

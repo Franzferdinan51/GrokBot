@@ -8,7 +8,7 @@ import {
   closeOpenClawStateDatabaseForTest,
   openOpenClawStateDatabase,
   type OpenClawStateDatabase,
-} from "../../state/openclaw-state-db.js";
+} from "../../state/grokbot-state-db.js";
 import { hashWorkerCredential } from "./credential.js";
 import { createWorkerEnvironmentStore, type WorkerEnvironmentStore } from "./store.js";
 
@@ -20,7 +20,7 @@ const HOST_KEY = ["ssh-ed25519", "AAAA"].join(" ");
 const SSH_ENDPOINT: WorkerEnvironmentSshEndpoint = {
   host: "worker.example.test",
   port: 22,
-  user: "openclaw",
+  user: "grokbot",
   hostKey: HOST_KEY,
   keyRef: {
     source: "file",
@@ -42,7 +42,7 @@ describe("worker environment store", () => {
   let nowMs: number;
 
   beforeEach(async () => {
-    root = await fs.mkdtemp(path.join(await fs.realpath(os.tmpdir()), "openclaw-worker-env-"));
+    root = await fs.mkdtemp(path.join(await fs.realpath(os.tmpdir()), "grokbot-worker-env-"));
     database = openOpenClawStateDatabase({ env: { OPENCLAW_STATE_DIR: root } });
     nowMs = 1_000;
     store = createWorkerEnvironmentStore({ database, now: () => nowMs });

@@ -1,12 +1,12 @@
-# OpenClaw DeepInfra Provider
+# GrokBot DeepInfra Provider
 
-Official OpenClaw provider plugin for DeepInfra.
+Official GrokBot provider plugin for DeepInfra.
 
-Install from OpenClaw:
+Install from GrokBot:
 
 ```bash
-openclaw plugins install @openclaw/deepinfra-provider
-openclaw gateway restart
+grokbot plugins install @grokbot/deepinfra-provider
+grokbot gateway restart
 ```
 
-See <https://docs.openclaw.ai/providers/deepinfra> for setup and configuration.
+See <https://docs.grokbot.ai/providers/deepinfra> for setup and configuration.

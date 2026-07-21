@@ -4,7 +4,7 @@ description: "Gemini CLI one-shot prompts, summaries, generation, skills, hooks,
 homepage: https://ai.google.dev/
 metadata:
   {
-    "openclaw":
+    "grokbot":
       {
         "emoji": "✨",
         "requires": { "bins": ["gemini"] },

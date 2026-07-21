@@ -2,12 +2,12 @@
 import {
   createOpenClawTestState,
   type OpenClawTestState,
-} from "../../test-utils/openclaw-test-state.js";
+} from "../../test-utils/grokbot-test-state.js";
 
-/** Creates isolated OpenClaw state for install download tests. */
+/** Creates isolated GrokBot state for install download tests. */
 export async function createInstallDownloadTestState(): Promise<OpenClawTestState> {
   return await createOpenClawTestState({
     layout: "state-only",
-    prefix: "openclaw-skills-install-",
+    prefix: "grokbot-skills-install-",
   });
 }

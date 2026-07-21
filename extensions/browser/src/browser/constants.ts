@@ -8,12 +8,12 @@
 export const DEFAULT_OPENCLAW_BROWSER_ENABLED = true;
 /** Default JavaScript evaluation permission for managed browser actions. */
 export const DEFAULT_BROWSER_EVALUATE_ENABLED = true;
-/** Default color for the managed OpenClaw browser profile. */
+/** Default color for the managed GrokBot browser profile. */
 export const DEFAULT_OPENCLAW_BROWSER_COLOR = "#FF4500";
 /** Default managed profile name shown to users. */
-export const DEFAULT_OPENCLAW_BROWSER_PROFILE_NAME = "openclaw";
+export const DEFAULT_OPENCLAW_BROWSER_PROFILE_NAME = "grokbot";
 /** Default browser profile selected when no profile is requested. */
-export const DEFAULT_BROWSER_DEFAULT_PROFILE_NAME = "openclaw";
+export const DEFAULT_BROWSER_DEFAULT_PROFILE_NAME = "grokbot";
 /** Default timeout for browser action execution. */
 export const DEFAULT_BROWSER_ACTION_TIMEOUT_MS = 60_000;
 /** Default timeout for browser download capture. */

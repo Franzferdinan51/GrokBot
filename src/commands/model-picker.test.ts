@@ -1,6 +1,6 @@
 // Model picker tests cover catalog rows, provider metadata, backend defaults, and prompt choices.
 import path from "node:path";
-import type { NormalizedModelCatalogRow } from "@openclaw/model-catalog-core/model-catalog-types";
+import type { NormalizedModelCatalogRow } from "@grokbot/model-catalog-core/model-catalog-types";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { testing as cliBackendsTesting } from "../agents/cli-backends.test-support.js";
 import type { ModelCatalogEntry } from "../agents/model-catalog.js";
@@ -439,7 +439,7 @@ describe("promptDefaultModel", () => {
     const options = pickerOptions(select as MockCallSource);
     const canonical = requireOption(options, "openai/gpt-5.5");
     expect(canonical.hint).toContain("Codex runtime route");
-    expect(canonical.hint).not.toContain("OpenClaw runtime route");
+    expect(canonical.hint).not.toContain("GrokBot runtime route");
   });
 
   it.each([
@@ -449,7 +449,7 @@ describe("promptDefaultModel", () => {
       { models: { "openai/gpt-5.5": { params: { text_verbosity: "low" } } } },
     ],
   ] as const)(
-    "labels official OpenAI with %s as an OpenClaw runtime route",
+    "labels official OpenAI with %s as an GrokBot runtime route",
     async (_label, defaults) => {
       loadModelCatalog.mockResolvedValue([
         {
@@ -471,7 +471,7 @@ describe("promptDefaultModel", () => {
       });
 
       const option = requireOption(pickerOptions(select as MockCallSource), "openai/gpt-5.5");
-      expect(option.hint).toContain("OpenClaw runtime route");
+      expect(option.hint).toContain("GrokBot runtime route");
       expect(option.hint).not.toContain("Codex runtime route");
     },
   );
@@ -479,7 +479,7 @@ describe("promptDefaultModel", () => {
   it.each([
     ["custom endpoint", "openai-responses", "https://example.test/v1"],
     ["authored Completions", "openai-completions", "https://api.openai.com/v1"],
-  ] as const)("labels an OpenAI %s as an OpenClaw runtime route", async (_label, api, baseUrl) => {
+  ] as const)("labels an OpenAI %s as an GrokBot runtime route", async (_label, api, baseUrl) => {
     loadModelCatalog.mockResolvedValue([
       { provider: "openai", id: "gpt-5.5", name: "GPT-5.5", api, baseUrl },
     ]);
@@ -502,7 +502,7 @@ describe("promptDefaultModel", () => {
     });
 
     const option = requireOption(pickerOptions(select as MockCallSource), "openai/gpt-5.5");
-    expect(option.hint).toContain("OpenClaw runtime route");
+    expect(option.hint).toContain("GrokBot runtime route");
     expect(option.hint).not.toContain("Codex runtime route");
   });
 
@@ -1339,7 +1339,7 @@ describe("promptDefaultModel", () => {
     const prompter = makePrompter({ select });
     const env = {
       ...process.env,
-      OPENCLAW_STATE_DIR: "/tmp/openclaw-picker-state",
+      OPENCLAW_STATE_DIR: "/tmp/grokbot-picker-state",
     };
     const config = {
       agents: {
@@ -1364,7 +1364,7 @@ describe("promptDefaultModel", () => {
     expect(loadPreferredProviderPickerCatalog).toHaveBeenCalledWith({
       cfg: config,
       preferredProvider: "nvidia",
-      agentDir: "/tmp/openclaw-picker-state/agents/worker/agent",
+      agentDir: "/tmp/grokbot-picker-state/agents/worker/agent",
       env,
     });
   });
@@ -1420,7 +1420,7 @@ describe("promptDefaultModel", () => {
       includeManual: false,
       includeProviderPluginSetups: true,
       ignoreAllowlist: true,
-      agentDir: "/tmp/openclaw-agent",
+      agentDir: "/tmp/grokbot-agent",
       runtime: {} as never,
     });
 
@@ -1484,7 +1484,7 @@ describe("promptDefaultModel", () => {
       includeManual: false,
       includeProviderPluginSetups: true,
       ignoreAllowlist: true,
-      agentDir: "/tmp/openclaw-agent",
+      agentDir: "/tmp/grokbot-agent",
       runtime: {} as never,
     });
 
@@ -1513,7 +1513,7 @@ describe("promptDefaultModel", () => {
       ignoreAllowlist: true,
       includeProviderPluginSetups: true,
       loadCatalog: false,
-      agentDir: "/tmp/openclaw-agent",
+      agentDir: "/tmp/grokbot-agent",
       runtime: {} as never,
     });
 
@@ -1565,7 +1565,7 @@ describe("promptDefaultModel", () => {
       includeManual: false,
       includeProviderPluginSetups: true,
       ignoreAllowlist: true,
-      agentDir: "/tmp/openclaw-agent",
+      agentDir: "/tmp/grokbot-agent",
       runtime: {} as never,
     });
 

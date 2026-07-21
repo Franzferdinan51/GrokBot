@@ -1,4 +1,4 @@
-import { normalizeProviderId } from "@openclaw/model-catalog-core/provider-id";
+import { normalizeProviderId } from "@grokbot/model-catalog-core/provider-id";
 import { sanitizeForLog } from "../../../packages/terminal-core/src/ansi.js";
 import { formatCliCommand } from "../../cli/command-format.js";
 /**
@@ -221,20 +221,20 @@ export function buildOAuthRefreshFailureLoginCommand(
   if (sanitizedProvider === "claude-cli") {
     // claude-cli is not a standalone provider id; it is the Anthropic provider
     // accessed via the CLI auth method. Refresh the local Claude CLI session
-    // first, then re-register that auth method with OpenClaw.
+    // first, then re-register that auth method with GrokBot.
     const claudeLoginCommand = formatCliCommand("claude auth login");
     const openclawLoginCommand = formatCliCommand(
       sanitizedProfileId
-        ? `openclaw models auth login --provider anthropic --method cli --profile-id ${quoteShellArg(sanitizedProfileId)}`
-        : "openclaw models auth login --provider anthropic --method cli",
+        ? `grokbot models auth login --provider anthropic --method cli --profile-id ${quoteShellArg(sanitizedProfileId)}`
+        : "grokbot models auth login --provider anthropic --method cli",
     );
     return `${claudeLoginCommand} && ${openclawLoginCommand}`;
   }
   return sanitizedProvider
     ? formatCliCommand(
         sanitizedProfileId
-          ? `openclaw models auth login --provider ${sanitizedProvider} --profile-id ${quoteShellArg(sanitizedProfileId)}`
-          : `openclaw models auth login --provider ${sanitizedProvider}`,
+          ? `grokbot models auth login --provider ${sanitizedProvider} --profile-id ${quoteShellArg(sanitizedProfileId)}`
+          : `grokbot models auth login --provider ${sanitizedProvider}`,
       )
-    : formatCliCommand("openclaw models auth login");
+    : formatCliCommand("grokbot models auth login");
 }

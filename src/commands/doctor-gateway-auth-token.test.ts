@@ -108,7 +108,7 @@ describe("resolveGatewayAuthTokenForService", () => {
   });
 
   it("skips exec SecretRefs by default for service token checks", async () => {
-    const tmp = await fs.mkdtemp(join(tmpdir(), "openclaw-service-token-exec-ref-"));
+    const tmp = await fs.mkdtemp(join(tmpdir(), "grokbot-service-token-exec-ref-"));
     const markerPath = join(tmp, "exec-ran");
     try {
       const resolved = await resolveGatewayAuthTokenForService(
@@ -124,7 +124,7 @@ describe("resolveGatewayAuthTokenForService", () => {
   });
 
   it("executes exec SecretRefs for service token checks when explicitly allowed", async () => {
-    const tmp = await fs.mkdtemp(join(tmpdir(), "openclaw-service-token-exec-ref-"));
+    const tmp = await fs.mkdtemp(join(tmpdir(), "grokbot-service-token-exec-ref-"));
     const markerPath = join(tmp, "exec-ran");
     try {
       const resolved = await resolveGatewayAuthTokenForService(

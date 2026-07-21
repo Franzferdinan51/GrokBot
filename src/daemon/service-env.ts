@@ -2,7 +2,7 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+import { normalizeOptionalString } from "@grokbot/normalization-core/string-coerce";
 import { resolveNodeStartupTlsEnvironment } from "../bootstrap/node-startup-env.js";
 import { VERSION } from "../version.js";
 import {
@@ -61,7 +61,7 @@ export const SERVICE_PROXY_ENV_KEYS = [
 function readServiceProxyEnvironment(
   env: Record<string, string | undefined>,
 ): Record<string, string | undefined> {
-  // Service env intentionally preserves only the canonical OpenClaw proxy knob;
+  // Service env intentionally preserves only the canonical GrokBot proxy knob;
   // generic shell proxy vars are audited but not frozen into services.
   const proxyUrl = normalizeOptionalString(env.OPENCLAW_PROXY_URL);
   return proxyUrl ? { OPENCLAW_PROXY_URL: proxyUrl } : {};

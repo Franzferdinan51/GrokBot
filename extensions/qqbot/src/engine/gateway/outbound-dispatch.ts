@@ -10,13 +10,13 @@
  * Separated from gateway.ts for testability and to keep handleMessage thin.
  */
 
-import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from "openclaw/plugin-sdk/agent-runtime";
-import { buildChannelInboundEventContext } from "openclaw/plugin-sdk/channel-inbound";
-import { bindIngressLifecycleToReplyOptions } from "openclaw/plugin-sdk/channel-outbound";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { isSilentReplyPayloadText, SILENT_REPLY_TOKEN } from "openclaw/plugin-sdk/reply-chunking";
-import type { FinalizedMsgContext } from "openclaw/plugin-sdk/reply-runtime";
-import { truncateUtf16Safe } from "openclaw/plugin-sdk/text-utility-runtime";
+import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from "grokbot/plugin-sdk/agent-runtime";
+import { buildChannelInboundEventContext } from "grokbot/plugin-sdk/channel-inbound";
+import { bindIngressLifecycleToReplyOptions } from "grokbot/plugin-sdk/channel-outbound";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { isSilentReplyPayloadText, SILENT_REPLY_TOKEN } from "grokbot/plugin-sdk/reply-chunking";
+import type { FinalizedMsgContext } from "grokbot/plugin-sdk/reply-runtime";
+import { truncateUtf16Safe } from "grokbot/plugin-sdk/text-utility-runtime";
 import { createQQBotMarkdownChunker } from "../messaging/markdown-table-chunking.js";
 import {
   parseAndSendMediaTags,

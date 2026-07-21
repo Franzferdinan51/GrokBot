@@ -2,7 +2,7 @@
 import { existsSync } from "node:fs";
 import { readFile, rm } from "node:fs/promises";
 import path from "node:path";
-import { normalizeOptionalLowercaseString } from "@openclaw/normalization-core/string-coerce";
+import { normalizeOptionalLowercaseString } from "@grokbot/normalization-core/string-coerce";
 import { stripAnsi } from "../../../../packages/terminal-core/src/ansi.js";
 import { sanitizeTerminalText } from "../../../../packages/terminal-core/src/safe-text.js";
 import {
@@ -10,7 +10,7 @@ import {
   listPotentialConfiguredChannelIds,
 } from "../../../channels/config-presence.js";
 import { listRawChannelPluginCatalogEntries } from "../../../channels/plugins/catalog.js";
-import type { OpenClawConfig } from "../../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../../config/types.grokbot.js";
 import type { PluginInstallRecord } from "../../../config/types.plugins.js";
 import type { HealthFinding, HealthRepairEffect } from "../../../flows/health-checks.js";
 import { parseClawHubPluginSpec } from "../../../infra/clawhub-spec.js";
@@ -137,7 +137,7 @@ function appendClawHubRiskAcknowledgementGuidance(params: {
   }
   const sanitizedSpec = sanitizeTerminalText(params.spec);
   const shellSpec = shellQuotePosixArg(sanitizedSpec);
-  return `${params.message} To review and acknowledge this ClawHub package, run \`openclaw plugins install ${shellSpec} --acknowledge-clawhub-risk\` from a trusted shell, then rerun repair.`;
+  return `${params.message} To review and acknowledge this ClawHub package, run \`grokbot plugins install ${shellSpec} --acknowledge-clawhub-risk\` from a trusted shell, then rerun repair.`;
 }
 
 function shellQuotePosixArg(value: string): string {
@@ -1674,7 +1674,7 @@ export function configuredPluginInstallIssueToHealthFinding(
         severity: "warning",
         message: `Configured plugin ${issue.pluginId} is not installed.`,
         target,
-        fixHint: `Run \`openclaw doctor --fix\` to install ${issue.installSpec}.`,
+        fixHint: `Run \`grokbot doctor --fix\` to install ${issue.installSpec}.`,
       };
     case "missing-installed-payload":
       return {
@@ -1683,7 +1683,7 @@ export function configuredPluginInstallIssueToHealthFinding(
         message: `Configured plugin ${issue.pluginId} has an install record but its package payload is missing.`,
         target,
         ...(issue.installPath ? { path: issue.installPath } : {}),
-        fixHint: "Run `openclaw doctor --fix` to reinstall the configured plugin package.",
+        fixHint: "Run `grokbot doctor --fix` to reinstall the configured plugin package.",
       };
     case "repairable-installed-plugin":
       return {
@@ -1692,16 +1692,16 @@ export function configuredPluginInstallIssueToHealthFinding(
         message: `Configured plugin ${issue.pluginId} has a repairable package install problem.`,
         target,
         ...(issue.installPath ? { path: issue.installPath } : {}),
-        fixHint: "Run `openclaw doctor --fix` to repair the configured plugin package.",
+        fixHint: "Run `grokbot doctor --fix` to repair the configured plugin package.",
       };
     case "stale-version-bound-runtime":
       return {
         checkId: CONFIGURED_PLUGIN_INSTALLS_CHECK_ID,
         severity: "warning",
-        message: `Configured runtime plugin ${issue.pluginId} is older than this OpenClaw version.`,
+        message: `Configured runtime plugin ${issue.pluginId} is older than this GrokBot version.`,
         target,
         ...(issue.installPath ? { path: issue.installPath } : {}),
-        fixHint: "Run `openclaw doctor --fix` to refresh the configured runtime plugin.",
+        fixHint: "Run `grokbot doctor --fix` to refresh the configured runtime plugin.",
       };
     case "stale-channel-config-descriptor":
       return {
@@ -1710,7 +1710,7 @@ export function configuredPluginInstallIssueToHealthFinding(
         message: `Configured plugin ${issue.pluginId} has stale channel config metadata.`,
         target,
         ...(issue.installPath ? { path: issue.installPath } : {}),
-        fixHint: "Run `openclaw doctor --fix` to repair the configured plugin install metadata.",
+        fixHint: "Run `grokbot doctor --fix` to repair the configured plugin install metadata.",
       };
     case "deferred-package-manager-repair":
       return {
@@ -1719,7 +1719,7 @@ export function configuredPluginInstallIssueToHealthFinding(
         message: `Configured plugin ${issue.pluginId} package repair is deferred until the package update finishes.`,
         target,
         ...(issue.installPath ? { path: issue.installPath } : {}),
-        fixHint: "Rerun `openclaw doctor --fix` after the package update completes.",
+        fixHint: "Rerun `grokbot doctor --fix` after the package update completes.",
       };
   }
   return assertNeverConfiguredPluginInstallIssue(issue);
@@ -1800,7 +1800,7 @@ type RepairMissingPluginInstallsResult = {
   records: Record<string, PluginInstallRecord>;
 };
 
-/** Repair missing installs inferred from the current OpenClaw config. */
+/** Repair missing installs inferred from the current GrokBot config. */
 export async function repairMissingConfiguredPluginInstalls(params: {
   cfg: OpenClawConfig;
   env?: NodeJS.ProcessEnv;
@@ -1978,7 +1978,7 @@ async function repairMissingPluginInstalls(params: {
       if (!record || !isInstalledRecordMissingOnDisk(record, env)) {
         continue;
       }
-      const detail = `Skipped package-manager repair for configured plugin "${pluginId}" during package update; rerun "openclaw doctor --fix" after the update completes.`;
+      const detail = `Skipped package-manager repair for configured plugin "${pluginId}" during package update; rerun "grokbot doctor --fix" after the update completes.`;
       changes.push(detail);
       deferredRepairDetails.push(detail);
     }

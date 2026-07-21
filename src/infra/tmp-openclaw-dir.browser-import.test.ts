@@ -1,11 +1,11 @@
 // Covers browser-safe importing of temp-dir helpers with fs shims.
 import { Buffer } from "node:buffer";
 import crypto from "node:crypto";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { build, type Plugin } from "esbuild";
 import { describe, expect, it } from "vitest";
 
-describe("tmp-openclaw-dir browser-safe import", () => {
+describe("tmp-grokbot-dir browser-safe import", () => {
   it("loads when a browser fs shim omits constants", async () => {
     const resultKey = `__openclawTmpDirBrowserImport_${crypto.randomUUID().replaceAll("-", "_")}`;
     const nodeShimPlugin: Plugin = {
@@ -37,7 +37,7 @@ describe("tmp-openclaw-dir browser-safe import", () => {
       plugins: [nodeShimPlugin],
       stdin: {
         contents: `
-          import { POSIX_OPENCLAW_TMP_DIR, resolvePreferredOpenClawTmpDir } from "./src/infra/tmp-openclaw-dir.ts";
+          import { POSIX_OPENCLAW_TMP_DIR, resolvePreferredOpenClawTmpDir } from "./src/infra/tmp-grokbot-dir.ts";
           globalThis.${resultKey} = {
             posixTmpDir: POSIX_OPENCLAW_TMP_DIR,
             resolverType: typeof resolvePreferredOpenClawTmpDir,
@@ -45,7 +45,7 @@ describe("tmp-openclaw-dir browser-safe import", () => {
         `,
         loader: "ts",
         resolveDir: process.cwd(),
-        sourcefile: "tmp-openclaw-dir-browser-entry.ts",
+        sourcefile: "tmp-grokbot-dir-browser-entry.ts",
       },
       write: false,
     });
@@ -59,7 +59,7 @@ describe("tmp-openclaw-dir browser-safe import", () => {
 
     try {
       expect((globalThis as Record<string, unknown>)[resultKey]).toEqual({
-        posixTmpDir: "/tmp/openclaw",
+        posixTmpDir: "/tmp/grokbot",
         resolverType: "function",
       });
     } finally {

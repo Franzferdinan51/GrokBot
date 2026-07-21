@@ -1,6 +1,6 @@
-import { buildExecApprovalPendingReplyPayload } from "openclaw/plugin-sdk/approval-reply-runtime";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import type { ReplyPayload } from "openclaw/plugin-sdk/reply-runtime";
+import { buildExecApprovalPendingReplyPayload } from "grokbot/plugin-sdk/approval-reply-runtime";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import type { ReplyPayload } from "grokbot/plugin-sdk/reply-runtime";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
   clearSignalApprovalReactionTargetsForTest,

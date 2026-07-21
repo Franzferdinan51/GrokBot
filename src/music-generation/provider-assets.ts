@@ -1,8 +1,8 @@
 // Validates and normalizes provider asset attachments for music generation.
-import { maxBytesForKind } from "@openclaw/media-core/constants";
-import { extensionForMime } from "@openclaw/media-core/mime";
-import { isRecord } from "@openclaw/normalization-core/record-coerce";
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+import { maxBytesForKind } from "@grokbot/media-core/constants";
+import { extensionForMime } from "@grokbot/media-core/mime";
+import { isRecord } from "@grokbot/normalization-core/record-coerce";
+import { normalizeOptionalString } from "@grokbot/normalization-core/string-coerce";
 import { readResponseWithLimit } from "../infra/http-body.js";
 import {
   createProviderOperationDeadline,

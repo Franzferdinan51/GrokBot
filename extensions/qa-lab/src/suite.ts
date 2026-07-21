@@ -2,12 +2,12 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { setTimeout as sleep } from "node:timers/promises";
-import type { OpenClawCrablineChannelDriverSelection } from "@openclaw/crabline";
-import { disposeRegisteredAgentHarnesses } from "openclaw/plugin-sdk/agent-harness";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
-import { parseStrictPositiveInteger } from "openclaw/plugin-sdk/number-runtime";
-import { fetchWithSsrFGuard } from "openclaw/plugin-sdk/ssrf-runtime";
+import type { OpenClawCrablineChannelDriverSelection } from "@grokbot/crabline";
+import { disposeRegisteredAgentHarnesses } from "grokbot/plugin-sdk/agent-harness";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { formatErrorMessage } from "grokbot/plugin-sdk/error-runtime";
+import { parseStrictPositiveInteger } from "grokbot/plugin-sdk/number-runtime";
+import { fetchWithSsrFGuard } from "grokbot/plugin-sdk/ssrf-runtime";
 import { assertQaSuiteArtifactWritten } from "./artifact-assertion.js";
 import {
   hasQaCrablineArtifactPath,
@@ -93,7 +93,7 @@ import type { QaSuiteRuntimeEnv } from "./suite-runtime-types.js";
 import { countQaSuiteFailedScenarios, type QaSuiteSummaryJson } from "./suite-summary.js";
 import { closeQaWebSessions } from "./web-runtime.js";
 
-type QaCrablineRuntime = typeof import("@openclaw/crabline");
+type QaCrablineRuntime = typeof import("@grokbot/crabline");
 type QaCrablineChannelDriverSmokeResult = Awaited<
   ReturnType<QaCrablineRuntime["runOpenClawCrablineChannelDriverSmoke"]>
 >;
@@ -495,7 +495,7 @@ function buildRuntimeParityScenarioResult(params: {
   result: RuntimeParityResult;
 }): QaSuiteScenarioResult {
   const driftStepStatus = isRuntimeParityPass(params.result) ? "pass" : "fail";
-  const openclawCell = params.result.cells.openclaw;
+  const openclawCell = params.result.cells.grokbot;
   return {
     name: params.scenarioName,
     status: driftStepStatus,
@@ -1035,7 +1035,7 @@ async function writeQaSuiteArtifacts(params: {
   // Non-Crabline package acceptance mounts this source without plugin-local
   // dependencies. Keep the owner runtime outside every unrelated live path.
   const crablineRuntime = crablineChannelDriverSelection
-    ? await import("@openclaw/crabline")
+    ? await import("@grokbot/crabline")
     : undefined;
   let crablineChannelDriverSmoke: QaCrablineChannelDriverSmokeResult | undefined;
   if (crablineChannelDriverSelection) {
@@ -1062,7 +1062,7 @@ async function writeQaSuiteArtifacts(params: {
         }
       : crablineChannelDriverSelection;
   const report = renderQaMarkdownReport({
-    title: "OpenClaw QA Scenario Suite",
+    title: "GrokBot QA Scenario Suite",
     startedAt: params.startedAt,
     finishedAt: params.finishedAt,
     checks: [],
@@ -1119,7 +1119,7 @@ async function writeQaSuiteArtifacts(params: {
       `${JSON.stringify(
         {
           version: 1,
-          source: "openclaw/crabline",
+          source: "grokbot/crabline",
           channelDriver: crablineChannelDriverSelection.channelDriver,
           selectedChannel: crablineChannelDriverSelection.channel,
           manifestPath: crablineChannelDriverSmoke.manifestPath,
@@ -1141,7 +1141,7 @@ async function writeQaSuiteArtifacts(params: {
       `${JSON.stringify(
         {
           version: 1,
-          source: "openclaw/crabline",
+          source: "grokbot/crabline",
           channelDriver: crablineChannelDriverSelection.channelDriver,
           selectedChannel: crablineChannelDriverSelection.channel,
           manifestPath: crablineChannelDriverSmoke.manifestPath,
@@ -1346,7 +1346,7 @@ export async function runQaFlowSuite(params?: QaSuiteRunParams): Promise<QaSuite
     ...new Set([
       ...collectQaSuitePluginIds(selectedScenarios),
       ...(params?.enabledPluginIds ?? []).map((pluginId) => pluginId.trim()).filter(Boolean),
-      ...(params?.forcedRuntime && params.forcedRuntime !== "openclaw"
+      ...(params?.forcedRuntime && params.forcedRuntime !== "grokbot"
         ? [params.forcedRuntime]
         : []),
     ]),

@@ -56,44 +56,44 @@ function expectSpawn(mock: unknown, callIndex: number, command: string, args: Ar
 describe("gateway-watch tmux wrapper", () => {
   it("derives stable session names from profile and port", () => {
     expect(resolveGatewayWatchTmuxSessionName({ args: ["gateway", "--force"], env: {} })).toBe(
-      "openclaw-gateway-watch-main",
+      "grokbot-gateway-watch-main",
     );
     expect(
       resolveGatewayWatchTmuxSessionName({
         args: ["gateway", "--force", "--port", "19001"],
         env: { OPENCLAW_PROFILE: "Dev Profile" },
       }),
-    ).toBe("openclaw-gateway-watch-dev-profile-19001");
+    ).toBe("grokbot-gateway-watch-dev-profile-19001");
     expect(
       resolveGatewayWatchTmuxSessionName({
         args: ["--dev", "gateway", "--port=18789"],
         env: {},
       }),
-    ).toBe("openclaw-gateway-watch-dev");
+    ).toBe("grokbot-gateway-watch-dev");
     expect(
       resolveGatewayWatchTmuxSessionName({
         args: ["gateway", "--dev", "--port=18789"],
         env: {},
       }),
-    ).toBe("openclaw-gateway-watch-main");
+    ).toBe("grokbot-gateway-watch-main");
     expect(
       resolveGatewayWatchTmuxSessionName({
         args: ["gateway", "--profile", "work", "--port=18789"],
         env: { OPENCLAW_PROFILE: "main" },
       }),
-    ).toBe("openclaw-gateway-watch-work");
+    ).toBe("grokbot-gateway-watch-work");
     expect(
       resolveGatewayWatchTmuxSessionName({
         args: ["gateway", "--force"],
         env: { OPENCLAW_GATEWAY_PORT: "127.0.0.1:18789" },
       }),
-    ).toBe("openclaw-gateway-watch-main");
+    ).toBe("grokbot-gateway-watch-main");
   });
 
   it("builds a login-shell command that runs the raw watcher in the repo", () => {
     const command = buildGatewayWatchTmuxCommand({
       args: ["gateway", "--force", "--raw-stream-path", "a b.jsonl"],
-      cwd: "/repo with spaces/openclaw",
+      cwd: "/repo with spaces/grokbot",
       env: {
         OPENCLAW_GATEWAY_PORT: "19001",
         OPENCLAW_GATEWAY_RESTART_TRACE: "1",
@@ -104,13 +104,13 @@ describe("gateway-watch tmux wrapper", () => {
         SHELL: "/bin/zsh",
       },
       nodePath: "/opt/node",
-      sessionName: "openclaw-gateway-watch-main",
+      sessionName: "grokbot-gateway-watch-main",
     });
 
     expect(command).toContain("exec '/bin/zsh' -lc");
-    expect(command).toContain("/repo with spaces/openclaw");
+    expect(command).toContain("/repo with spaces/grokbot");
     expect(command).toContain("'OPENCLAW_GATEWAY_WATCH_TMUX_CHILD=1'");
-    expect(command).toContain("'OPENCLAW_GATEWAY_WATCH_SESSION=openclaw-gateway-watch-main'");
+    expect(command).toContain("'OPENCLAW_GATEWAY_WATCH_SESSION=grokbot-gateway-watch-main'");
     expect(command).toContain("'\\''-u'\\'' '\\''NO_COLOR'\\''");
     expect(command).toContain("'FORCE_COLOR=1'");
     expect(command).toContain("'OPENCLAW_GATEWAY_PORT=19001'");
@@ -136,7 +136,7 @@ describe("gateway-watch tmux wrapper", () => {
       cwd: "/repo",
       env: { SHELL: "/bin/zsh" },
       nodePath: "/opt/node",
-      sessionName: "openclaw-gateway-watch-main",
+      sessionName: "grokbot-gateway-watch-main",
     });
 
     expect(command).toContain("scripts/gateway-watch-tmux.mjs");
@@ -457,7 +457,7 @@ describe("gateway-watch tmux wrapper", () => {
         SHELL: "/bin/zsh",
       },
       nodePath: "/opt/node",
-      sessionName: "openclaw-gateway-watch-main",
+      sessionName: "grokbot-gateway-watch-main",
     });
 
     expect(command).toContain("'FORCE_COLOR=0'");
@@ -485,7 +485,7 @@ describe("gateway-watch tmux wrapper", () => {
 
     expect(code).toBe(0);
     expect(
-      expectSpawn(spawnSync, 0, "tmux", ["has-session", "-t", "openclaw-gateway-watch-main"])
+      expectSpawn(spawnSync, 0, "tmux", ["has-session", "-t", "grokbot-gateway-watch-main"])
         .encoding,
     ).toBe("utf8");
     const newSessionCall = spawnCall(spawnSync, 1);
@@ -495,7 +495,7 @@ describe("gateway-watch tmux wrapper", () => {
       "new-session",
       "-d",
       "-s",
-      "openclaw-gateway-watch-main",
+      "grokbot-gateway-watch-main",
       "-c",
       "/repo",
     ]);
@@ -506,7 +506,7 @@ describe("gateway-watch tmux wrapper", () => {
         "set-option",
         "-w",
         "-t",
-        "openclaw-gateway-watch-main",
+        "grokbot-gateway-watch-main",
         "remain-on-exit",
         "on",
       ]).encoding,
@@ -518,7 +518,7 @@ describe("gateway-watch tmux wrapper", () => {
       "respawn-pane",
       "-k",
       "-t",
-      "openclaw-gateway-watch-main",
+      "grokbot-gateway-watch-main",
       "-c",
       "/repo",
     ]);
@@ -529,8 +529,8 @@ describe("gateway-watch tmux wrapper", () => {
         "set-option",
         "-q",
         "-t",
-        "openclaw-gateway-watch-main",
-        "@openclaw.gateway_watch.cwd",
+        "grokbot-gateway-watch-main",
+        "@grokbot.gateway_watch.cwd",
         "/repo",
       ]).encoding,
     ).toBe("utf8");
@@ -538,20 +538,20 @@ describe("gateway-watch tmux wrapper", () => {
       expectSpawn(spawnSync, 5, "tmux", [
         "set-environment",
         "-t",
-        "openclaw-gateway-watch-main",
+        "grokbot-gateway-watch-main",
         "OPENCLAW_GATEWAY_WATCH_CWD",
         "/repo",
       ]).encoding,
     ).toBe("utf8");
     expect(stderr.chunks.join("")).toContain(
-      "gateway:watch started in tmux session openclaw-gateway-watch-main",
+      "gateway:watch started in tmux session grokbot-gateway-watch-main",
     );
-    expect(stdout.chunks.join("")).toContain("tmux attach -t openclaw-gateway-watch-main");
+    expect(stdout.chunks.join("")).toContain("tmux attach -t grokbot-gateway-watch-main");
     expect(stdout.chunks.join("")).toContain(
-      "tmux capture-pane -ep -t openclaw-gateway-watch-main -S -200",
+      "tmux capture-pane -ep -t grokbot-gateway-watch-main -S -200",
     );
     expect(stdout.chunks.join("")).toContain(
-      "tmux show-options -v -t openclaw-gateway-watch-main @openclaw.gateway_watch.cwd",
+      "tmux show-options -v -t grokbot-gateway-watch-main @grokbot.gateway_watch.cwd",
     );
   });
 
@@ -577,7 +577,7 @@ describe("gateway-watch tmux wrapper", () => {
 
     expect(code).toBe(0);
     expect(
-      expectSpawn(spawnSync, 6, "tmux", ["attach-session", "-t", "openclaw-gateway-watch-main"])
+      expectSpawn(spawnSync, 6, "tmux", ["attach-session", "-t", "grokbot-gateway-watch-main"])
         .stdio,
     ).toBe("inherit");
     expect(stdout.chunks.join("")).not.toContain("tmux attach -t");
@@ -607,7 +607,7 @@ describe("gateway-watch tmux wrapper", () => {
 
       expect(code).toBe(0);
       expect(spawnSync).toHaveBeenCalledTimes(6);
-      expect(stdout.chunks.join("")).toContain("tmux attach -t openclaw-gateway-watch-main");
+      expect(stdout.chunks.join("")).toContain("tmux attach -t grokbot-gateway-watch-main");
     },
   );
 
@@ -630,7 +630,7 @@ describe("gateway-watch tmux wrapper", () => {
 
     expect(code).toBe(0);
     expect(
-      expectSpawn(spawnSync, 5, "tmux", ["switch-client", "-t", "openclaw-gateway-watch-main"])
+      expectSpawn(spawnSync, 5, "tmux", ["switch-client", "-t", "grokbot-gateway-watch-main"])
         .stdio,
     ).toBe("inherit");
   });
@@ -657,7 +657,7 @@ describe("gateway-watch tmux wrapper", () => {
 
     expect(code).toBe(0);
     expect(spawnSync).toHaveBeenCalledTimes(6);
-    expect(stdout.chunks.join("")).toContain("tmux attach -t openclaw-gateway-watch-main");
+    expect(stdout.chunks.join("")).toContain("tmux attach -t grokbot-gateway-watch-main");
   });
 
   it("respawns the existing tmux pane on repeated runs", () => {
@@ -684,7 +684,7 @@ describe("gateway-watch tmux wrapper", () => {
       "set-option",
       "-w",
       "-t",
-      "openclaw-gateway-watch-dev-19001",
+      "grokbot-gateway-watch-dev-19001",
       "remain-on-exit",
       "on",
     ]);
@@ -695,7 +695,7 @@ describe("gateway-watch tmux wrapper", () => {
       "respawn-pane",
       "-k",
       "-t",
-      "openclaw-gateway-watch-dev-19001",
+      "grokbot-gateway-watch-dev-19001",
       "-c",
       "/repo",
     ]);
@@ -704,7 +704,7 @@ describe("gateway-watch tmux wrapper", () => {
     expect(String(respawnArgs[6])).toContain("OPENCLAW_SKIP_CHANNELS");
     expect(requireRecord(respawnCall[2], "spawn options").encoding).toBe("utf8");
     expect(stderr.chunks.join("")).toContain(
-      "gateway:watch restarted in tmux session openclaw-gateway-watch-dev-19001",
+      "gateway:watch restarted in tmux session grokbot-gateway-watch-dev-19001",
     );
   });
 
@@ -732,12 +732,12 @@ describe("gateway-watch tmux wrapper", () => {
       "set-option",
       "-w",
       "-t",
-      "openclaw-gateway-watch-main",
+      "grokbot-gateway-watch-main",
       "remain-on-exit",
       "on",
     ]);
     expect(
-      expectSpawn(spawnSync, 2, "tmux", ["kill-session", "-t", "openclaw-gateway-watch-main"])
+      expectSpawn(spawnSync, 2, "tmux", ["kill-session", "-t", "grokbot-gateway-watch-main"])
         .encoding,
     ).toBe("utf8");
     const recreatedCall = spawnCall(spawnSync, 3);
@@ -747,7 +747,7 @@ describe("gateway-watch tmux wrapper", () => {
       "new-session",
       "-d",
       "-s",
-      "openclaw-gateway-watch-main",
+      "grokbot-gateway-watch-main",
       "-c",
       "/repo",
     ]);
@@ -757,7 +757,7 @@ describe("gateway-watch tmux wrapper", () => {
       "set-option",
       "-w",
       "-t",
-      "openclaw-gateway-watch-main",
+      "grokbot-gateway-watch-main",
       "remain-on-exit",
       "on",
     ]);
@@ -768,7 +768,7 @@ describe("gateway-watch tmux wrapper", () => {
       "respawn-pane",
       "-k",
       "-t",
-      "openclaw-gateway-watch-main",
+      "grokbot-gateway-watch-main",
       "-c",
       "/repo",
     ]);

@@ -5,7 +5,7 @@
 import {
   readProviderJsonResponse,
   readResponseTextLimited,
-} from "openclaw/plugin-sdk/provider-http";
+} from "grokbot/plugin-sdk/provider-http";
 import { WebSocket } from "ws";
 import type {
   ClickClackBotCommand,

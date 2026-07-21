@@ -1,10 +1,10 @@
 {
-  "name": "@openclaw/discord",
+  "name": "@grokbot/discord",
   "version": "2026.7.2",
-  "description": "OpenClaw Discord channel plugin for channels, DMs, commands, and app events.",
+  "description": "GrokBot Discord channel plugin for channels, DMs, commands, and app events.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/openclaw/openclaw"
+    "url": "https://github.com/grokbot/grokbot"
   },
   "type": "module",
   "dependencies": {
@@ -18,18 +18,18 @@
     "ws": "8.21.0"
   },
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*",
-    "openclaw": "workspace:*"
+    "@grokbot/plugin-sdk": "workspace:*",
+    "grokbot": "workspace:*"
   },
   "peerDependencies": {
-    "openclaw": ">=2026.7.2"
+    "grokbot": ">=2026.7.2"
   },
   "peerDependenciesMeta": {
-    "openclaw": {
+    "grokbot": {
       "optional": true
     }
   },
-  "openclaw": {
+  "grokbot": {
     "extensions": [
       "./index.ts"
     ],
@@ -62,7 +62,7 @@
       }
     },
     "install": {
-      "npmSpec": "@openclaw/discord",
+      "npmSpec": "@grokbot/discord",
       "defaultChoice": "npm",
       "minHostVersion": ">=2026.5.26",
       "allowInvalidConfigRecovery": true

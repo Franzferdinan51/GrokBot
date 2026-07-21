@@ -663,7 +663,7 @@ describe("resolveAgentRoute", () => {
       name: "defaultAgentId is used when no binding matches",
       cfg: {
         agents: {
-          list: [{ id: "home", default: true, workspace: "~/openclaw-home" }],
+          list: [{ id: "home", default: true, workspace: "~/grokbot-home" }],
         },
       } satisfies OpenClawConfig,
       channel: "whatsapp" as const,

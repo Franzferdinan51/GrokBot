@@ -19,25 +19,25 @@ export function resetPairingSecurityMocks(config: Record<string, unknown>) {
   upsertPairingRequestMock.mockReset().mockResolvedValue({ code: "PAIRCODE", created: true });
 }
 
-vi.mock("openclaw/plugin-sdk/runtime-config-snapshot", async () => {
+vi.mock("grokbot/plugin-sdk/runtime-config-snapshot", async () => {
   const actual = await vi.importActual<
-    typeof import("openclaw/plugin-sdk/runtime-config-snapshot")
-  >("openclaw/plugin-sdk/runtime-config-snapshot");
+    typeof import("grokbot/plugin-sdk/runtime-config-snapshot")
+  >("grokbot/plugin-sdk/runtime-config-snapshot");
   return {
     ...actual,
     getRuntimeConfig: (...args: unknown[]) => loadConfigMock(...args),
   };
 });
 
-vi.mock("openclaw/plugin-sdk/conversation-runtime", () => {
+vi.mock("grokbot/plugin-sdk/conversation-runtime", () => {
   return {
     upsertChannelPairingRequest: (...args: unknown[]) => upsertPairingRequestMock(...args),
   };
 });
 
-vi.mock("openclaw/plugin-sdk/security-runtime", async () => {
-  const actual = await vi.importActual<typeof import("openclaw/plugin-sdk/security-runtime")>(
-    "openclaw/plugin-sdk/security-runtime",
+vi.mock("grokbot/plugin-sdk/security-runtime", async () => {
+  const actual = await vi.importActual<typeof import("grokbot/plugin-sdk/security-runtime")>(
+    "grokbot/plugin-sdk/security-runtime",
   );
   return {
     ...actual,

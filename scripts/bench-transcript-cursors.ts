@@ -9,8 +9,8 @@ import {
 import {
   closeOpenClawAgentDatabasesForTest,
   openOpenClawAgentDatabase,
-} from "../src/state/openclaw-agent-db.js";
-import { closeOpenClawStateDatabaseForTest } from "../src/state/openclaw-state-db.js";
+} from "../src/state/grokbot-agent-db.js";
+import { closeOpenClawStateDatabaseForTest } from "../src/state/grokbot-state-db.js";
 
 const EVENT_COUNT = 100_000;
 const DELTA_COUNT = 20;
@@ -121,7 +121,7 @@ function readFrontierCursor(scope: Parameters<typeof readTranscriptRawDelta>[0])
 }
 
 function main(): void {
-  const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-transcript-bench-"));
+  const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-transcript-bench-"));
   const env = { ...process.env, OPENCLAW_STATE_DIR: stateDir };
   const agentId = "benchmark";
   const sessionId = "cursor-benchmark";

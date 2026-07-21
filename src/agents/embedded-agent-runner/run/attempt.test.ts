@@ -5,9 +5,9 @@ import { streamSimple } from "../../../llm/stream.js";
 vi.mock("../context-engine-capabilities.js", () => ({
   resolveContextEngineCapabilities: async () => ({ llm: undefined }),
 }));
-import type { LlmRuntime } from "@openclaw/ai";
-import { defaultLlmRuntime } from "@openclaw/ai/internal/runtime";
-import { SYSTEM_PROMPT_CACHE_BOUNDARY } from "@openclaw/ai/internal/shared";
+import type { LlmRuntime } from "@grokbot/ai";
+import { defaultLlmRuntime } from "@grokbot/ai/internal/runtime";
+import { SYSTEM_PROMPT_CACHE_BOUNDARY } from "@grokbot/ai/internal/shared";
 import type { OpenClawConfig } from "../../../config/config.js";
 import { addSession } from "../../bash-process-registry.js";
 import { createProcessSessionFixture } from "../../bash-process-registry.test-helpers.js";
@@ -241,7 +241,7 @@ describe("composeSystemPromptWithHookContext", () => {
 
   it("keeps bootstrap truncation notices in the system prompt instead of the user prompt", () => {
     const baseSystemPrompt = buildAgentSystemPrompt({
-      workspaceDir: "/tmp/openclaw",
+      workspaceDir: "/tmp/grokbot",
       contextFiles: [{ path: "AGENTS.md", content: "Follow AGENTS guidance." }],
       toolNames: ["read"],
       bootstrapTruncationNotice:
@@ -2163,7 +2163,7 @@ describe("wrapStreamFnSanitizeMalformedToolCalls", () => {
     expect(repairedToolResult.content).toEqual([
       {
         type: "text",
-        text: "[openclaw] missing tool result in session history; inserted synthetic error result for transcript repair.",
+        text: "[grokbot] missing tool result in session history; inserted synthetic error result for transcript repair.",
       },
     ]);
     expect(repairedToolResult.isError).toBe(true);
@@ -3366,7 +3366,7 @@ describe("buildAfterTurnRuntimeContext", () => {
         skillsSnapshot: undefined,
         provider: "openai",
         modelId: "gpt-5.5",
-        agentHarnessId: "openclaw",
+        agentHarnessId: "grokbot",
         modelSelectionLocked: true,
         thinkLevel: "off",
       },

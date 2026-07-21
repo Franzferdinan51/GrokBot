@@ -2,8 +2,8 @@
 import type {
   ExecApprovalPendingView,
   PluginApprovalPendingView,
-} from "openclaw/plugin-sdk/approval-handler-runtime";
-import { resolveExecApprovalCommandDisplay } from "openclaw/plugin-sdk/approval-runtime";
+} from "grokbot/plugin-sdk/approval-handler-runtime";
+import { resolveExecApprovalCommandDisplay } from "grokbot/plugin-sdk/approval-runtime";
 import { describe, expect, it } from "vitest";
 import type { InlineKeyboard } from "../../engine/types.js";
 import { qqbotApprovalNativeRuntime } from "./handler-runtime.js";

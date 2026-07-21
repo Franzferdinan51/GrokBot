@@ -1,5 +1,5 @@
 // Whatsapp plugin module implements message line behavior.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import {
   getPrimaryIdentityId,
   getReplyContext,

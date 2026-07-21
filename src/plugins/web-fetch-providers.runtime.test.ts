@@ -27,7 +27,7 @@ function firstPluginLoadOptions(mock: { mock: { calls: unknown[][] } }): PluginL
 
 function createWebFetchEnv(overrides?: Partial<NodeJS.ProcessEnv>) {
   return {
-    OPENCLAW_HOME: "/tmp/openclaw-home",
+    OPENCLAW_HOME: "/tmp/grokbot-home",
     ...overrides,
   } as NodeJS.ProcessEnv;
 }
@@ -48,7 +48,7 @@ function createManifestRegistryFixture(origin: "bundled" | "global" = "bundled")
         origin,
         rootDir: "/tmp/firecrawl",
         source: "/tmp/firecrawl/index.js",
-        manifestPath: "/tmp/firecrawl/openclaw.plugin.json",
+        manifestPath: "/tmp/firecrawl/grokbot.plugin.json",
         channels: [],
         providers: [],
         cliBackends: [],
@@ -64,7 +64,7 @@ function createManifestRegistryFixture(origin: "bundled" | "global" = "bundled")
         origin: "bundled",
         rootDir: "/tmp/noise",
         source: "/tmp/noise/index.js",
-        manifestPath: "/tmp/noise/openclaw.plugin.json",
+        manifestPath: "/tmp/noise/grokbot.plugin.json",
         channels: [],
         providers: [],
         cliBackends: [],

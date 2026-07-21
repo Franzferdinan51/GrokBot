@@ -1,5 +1,5 @@
 // Doctor runtime checks inspect tool names, browser residue, and runtime state.
-import { redactSensitiveUrlLikeString } from "@openclaw/net-policy/redact-sensitive-url";
+import { redactSensitiveUrlLikeString } from "@grokbot/net-policy/redact-sensitive-url";
 import { TOOL_NAME_SEPARATOR } from "../agents/agent-bundle-mcp-names.js";
 import {
   type McpToolCatalogDiagnostic,
@@ -33,7 +33,7 @@ import type { AnyAgentTool } from "../agents/tools/common.js";
 import { probeGatewayStatus } from "../cli/daemon-cli/probe.js";
 import { collectUnavailableAgentSkills } from "../commands/doctor-skills-core.js";
 import { gatewayProbeResultSawGateway } from "../commands/gateway-health-auth-diagnostic.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import {
   getSystemdCgroupHygieneSummary,
   type GatewayServiceRuntime,
@@ -119,7 +119,7 @@ export async function collectGatewayHealthFindings(
         message: `Gateway health probe could not be prepared: ${formatErrorMessage(error)}`,
         path: ctx.cfg.gateway?.mode === "remote" ? "gateway.remote.url" : "gateway",
         fixHint:
-          "Fix Gateway connection configuration, then rerun `openclaw doctor --lint --only core/doctor/gateway-health`.",
+          "Fix Gateway connection configuration, then rerun `grokbot doctor --lint --only core/doctor/gateway-health`.",
       },
     ];
   }
@@ -146,7 +146,7 @@ export async function collectGatewayHealthFindings(
       fixHint:
         mode === "remote"
           ? "Verify the remote Gateway URL, network path, TLS settings, and credentials."
-          : "Start the Gateway service or run `openclaw doctor --fix` for service repair prompts.",
+          : "Start the Gateway service or run `grokbot doctor --fix` for service repair prompts.",
     },
   ];
 }
@@ -171,7 +171,7 @@ export async function collectGatewayDaemonFindings(
       message: "Gateway service is not installed.",
       path: "gateway.mode",
       target: service.label,
-      fixHint: "Run `openclaw doctor --fix` or `openclaw gateway install` to install it.",
+      fixHint: "Run `grokbot doctor --fix` or `grokbot gateway install` to install it.",
     });
     return findings;
   }
@@ -182,7 +182,7 @@ export async function collectGatewayDaemonFindings(
       message: "Gateway service is installed but not loaded.",
       path: state.command?.sourcePath,
       target: service.label,
-      fixHint: "Run `openclaw doctor --fix` or `openclaw gateway start` to load it.",
+      fixHint: "Run `grokbot doctor --fix` or `grokbot gateway start` to load it.",
     });
   }
   const status = gatewayRuntimeStatus(state.runtime);
@@ -195,7 +195,7 @@ export async function collectGatewayDaemonFindings(
         : "Gateway service is loaded but runtime status could not confirm it is running.",
       path: state.command?.sourcePath,
       target: service.label,
-      fixHint: "Run `openclaw gateway status --deep` or `openclaw doctor --fix` for repair hints.",
+      fixHint: "Run `grokbot gateway status --deep` or `grokbot doctor --fix` for repair hints.",
     });
   }
   if (state.runtime?.missingGuiSession) {

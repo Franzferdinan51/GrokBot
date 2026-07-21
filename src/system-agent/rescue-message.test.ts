@@ -1,10 +1,10 @@
-// OpenClaw rescue message tests cover generated rescue message content.
+// GrokBot rescue message tests cover generated rescue message content.
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import type { CommandContext } from "../auto-reply/reply/commands-types.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import {
   createCorePluginStateSyncKeyedStore,
   resetPluginStateStoreForTests,
@@ -25,7 +25,7 @@ function readLastAuditEntry(): Record<string, unknown> {
 
 const mockConfig = vi.hoisted(() => {
   const state = {
-    path: "/tmp/openclaw.json",
+    path: "/tmp/grokbot.json",
     config: {} as TestConfig,
     hash: "mock-hash-0" as string | undefined,
   };
@@ -50,7 +50,7 @@ const mockConfig = vi.hoisted(() => {
   };
   return {
     reset() {
-      state.path = "/tmp/openclaw.json";
+      state.path = "/tmp/grokbot.json";
       state.config = {};
       state.hash = "mock-hash-0";
     },
@@ -156,8 +156,8 @@ function commandContext(overrides: Partial<CommandContext> = {}): CommandContext
     senderIsOwner: true,
     isAuthorizedSender: true,
     senderId: "user:owner",
-    rawBodyNormalized: "/openclaw models",
-    commandBodyNormalized: "/openclaw models",
+    rawBodyNormalized: "/grokbot models",
+    commandBodyNormalized: "/grokbot models",
     from: "user:owner",
     to: "account:default",
     ...overrides,
@@ -196,7 +196,7 @@ async function runRescue(
   });
 }
 
-describe("OpenClaw rescue message", () => {
+describe("GrokBot rescue message", () => {
   beforeAll(async () => {
     tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "system-agent-rescue-"));
   });
@@ -216,15 +216,15 @@ describe("OpenClaw rescue message", () => {
     resetPluginStateStoreForTests();
   });
 
-  it("recognizes the OpenClaw rescue command", () => {
-    expect(extractSystemAgentRescueMessage("/openclaw status")).toBe("status");
-    expect(extractSystemAgentRescueMessage("/openclaw")).toBe("");
+  it("recognizes the GrokBot rescue command", () => {
+    expect(extractSystemAgentRescueMessage("/grokbot status")).toBe("status");
+    expect(extractSystemAgentRescueMessage("/grokbot")).toBe("");
     expect(extractSystemAgentRescueMessage("/status")).toBeNull();
   });
 
   it("denies rescue when sandboxing is active", async () => {
     await expect(
-      runRescue("/openclaw status", {
+      runRescue("/grokbot status", {
         systemAgent: { rescue: { enabled: true } },
         agents: { defaults: { sandbox: { mode: "all" } } },
       }),
@@ -240,9 +240,9 @@ describe("OpenClaw rescue message", () => {
     };
 
     await expect(
-      runRescue("/openclaw talk to agent", cfg, commandContext(), deps),
+      runRescue("/grokbot talk to agent", cfg, commandContext(), deps),
     ).resolves.toContain("cannot open the local TUI");
-    await expect(runRescue("/openclaw chat", cfg, commandContext(), deps)).resolves.toContain(
+    await expect(runRescue("/grokbot chat", cfg, commandContext(), deps)).resolves.toContain(
       "cannot open the local TUI",
     );
     expect(deps.runTui).not.toHaveBeenCalled();
@@ -258,10 +258,10 @@ describe("OpenClaw rescue message", () => {
     // Questions must never become mutation plans (previously "why did my
     // gateway stop" keyword-matched into a gateway-stop proposal).
     await expect(
-      runRescue("/openclaw why did my gateway stop", cfg, commandContext(), deps),
+      runRescue("/grokbot why did my gateway stop", cfg, commandContext(), deps),
     ).resolves.toContain("I can run doctor/status/health");
     await expect(
-      runRescue("/openclaw explain how restart gateway works", cfg, commandContext(), deps),
+      runRescue("/grokbot explain how restart gateway works", cfg, commandContext(), deps),
     ).resolves.toContain("I can run doctor/status/health");
     expect(deps.runGatewayStop).not.toHaveBeenCalled();
     expect(deps.runGatewayRestart).not.toHaveBeenCalled();
@@ -269,16 +269,16 @@ describe("OpenClaw rescue message", () => {
 
   it("refuses channel setup from remote rescue with a local pointer", async () => {
     const cfg: OpenClawConfig = { systemAgent: { rescue: { enabled: true } } };
-    await expect(runRescue("/openclaw connect telegram", cfg)).resolves.toContain(
+    await expect(runRescue("/grokbot connect telegram", cfg)).resolves.toContain(
       "cannot host the interactive channel setup",
     );
   });
 
   it("refuses model provider setup from remote rescue with a local pointer", async () => {
     const cfg: OpenClawConfig = { systemAgent: { rescue: { enabled: true } } };
-    const reply = await runRescue("/openclaw configure model provider", cfg);
+    const reply = await runRescue("/grokbot configure model provider", cfg);
     expect(reply).toContain("cannot host model-provider credential setup");
-    expect(reply).toContain("openclaw onboard");
+    expect(reply).toContain("grokbot onboard");
   });
 
   it("refuses doctor repairs without creating a pending approval", async () => {
@@ -291,10 +291,10 @@ describe("OpenClaw rescue message", () => {
       };
 
       await expect(
-        runRescue("/openclaw doctor fix", cfg, commandContext(), deps),
-      ).resolves.toContain("run `openclaw doctor --fix` in a terminal");
-      await expect(runRescue("/openclaw yes", cfg, commandContext(), deps)).resolves.toBe(
-        "No pending OpenClaw rescue change is waiting for approval.",
+        runRescue("/grokbot doctor fix", cfg, commandContext(), deps),
+      ).resolves.toContain("run `grokbot doctor --fix` in a terminal");
+      await expect(runRescue("/grokbot yes", cfg, commandContext(), deps)).resolves.toBe(
+        "No pending GrokBot rescue change is waiting for approval.",
       );
       expect(deps.runDoctor).not.toHaveBeenCalled();
     });
@@ -306,13 +306,13 @@ describe("OpenClaw rescue message", () => {
       const deps = { runGatewayRestart: vi.fn(async () => {}) };
 
       await expect(
-        runRescue("/openclaw restart gateway", cfg, commandContext(), deps),
-      ).resolves.toContain("Reply /openclaw yes to apply");
-      await expect(runRescue("/openclaw no", cfg, commandContext(), deps)).resolves.toContain(
-        "Dropped the pending OpenClaw rescue change",
+        runRescue("/grokbot restart gateway", cfg, commandContext(), deps),
+      ).resolves.toContain("Reply /grokbot yes to apply");
+      await expect(runRescue("/grokbot no", cfg, commandContext(), deps)).resolves.toContain(
+        "Dropped the pending GrokBot rescue change",
       );
-      await expect(runRescue("/openclaw yes", cfg, commandContext(), deps)).resolves.toBe(
-        "No pending OpenClaw rescue change is waiting for approval.",
+      await expect(runRescue("/grokbot yes", cfg, commandContext(), deps)).resolves.toBe(
+        "No pending GrokBot rescue change is waiting for approval.",
       );
       expect(deps.runGatewayRestart).not.toHaveBeenCalled();
     });
@@ -327,13 +327,13 @@ describe("OpenClaw rescue message", () => {
       };
 
       await expect(
-        runRescue("/openclaw restart gateway", cfg, commandContext(), deps),
-      ).resolves.toContain("Reply /openclaw yes to apply");
-      await expect(runRescue("/openclaw plugins list", cfg, commandContext(), deps)).resolves.toBe(
+        runRescue("/grokbot restart gateway", cfg, commandContext(), deps),
+      ).resolves.toContain("Reply /grokbot yes to apply");
+      await expect(runRescue("/grokbot plugins list", cfg, commandContext(), deps)).resolves.toBe(
         "plugin rows",
       );
-      await expect(runRescue("/openclaw yes", cfg, commandContext(), deps)).resolves.toBe(
-        "No pending OpenClaw rescue change is waiting for approval.",
+      await expect(runRescue("/grokbot yes", cfg, commandContext(), deps)).resolves.toBe(
+        "No pending GrokBot rescue change is waiting for approval.",
       );
       expect(deps.runGatewayRestart).not.toHaveBeenCalled();
     });
@@ -344,15 +344,15 @@ describe("OpenClaw rescue message", () => {
       const cfg: OpenClawConfig = { systemAgent: { rescue: { enabled: true } } };
       const deps = { runGatewayRestart: vi.fn(async () => {}) };
 
-      await runRescue("/openclaw restart gateway", cfg, commandContext(), deps);
+      await runRescue("/grokbot restart gateway", cfg, commandContext(), deps);
       const replies = await Promise.all([
-        runRescue("/openclaw yes", cfg, commandContext(), deps),
-        runRescue("/openclaw yes", cfg, commandContext(), deps),
+        runRescue("/grokbot yes", cfg, commandContext(), deps),
+        runRescue("/grokbot yes", cfg, commandContext(), deps),
       ]);
 
       expect(deps.runGatewayRestart).toHaveBeenCalledTimes(1);
-      expect(replies).toContain("No pending OpenClaw rescue change is waiting for approval.");
-      expect(replies.some((reply) => reply?.includes("[openclaw] done: gateway.restart"))).toBe(
+      expect(replies).toContain("No pending GrokBot rescue change is waiting for approval.");
+      expect(replies.some((reply) => reply?.includes("[grokbot] done: gateway.restart"))).toBe(
         true,
       );
     });
@@ -367,12 +367,12 @@ describe("OpenClaw rescue message", () => {
         }),
       };
 
-      await runRescue("/openclaw restart gateway", cfg, commandContext(), deps);
-      await expect(runRescue("/openclaw yes", cfg, commandContext(), deps)).rejects.toThrow(
+      await runRescue("/grokbot restart gateway", cfg, commandContext(), deps);
+      await expect(runRescue("/grokbot yes", cfg, commandContext(), deps)).rejects.toThrow(
         "restart failed",
       );
-      await expect(runRescue("/openclaw yes", cfg, commandContext(), deps)).resolves.toBe(
-        "No pending OpenClaw rescue change is waiting for approval.",
+      await expect(runRescue("/grokbot yes", cfg, commandContext(), deps)).resolves.toBe(
+        "No pending GrokBot rescue change is waiting for approval.",
       );
       expect(deps.runGatewayRestart).toHaveBeenCalledTimes(1);
     });
@@ -397,14 +397,14 @@ describe("OpenClaw rescue message", () => {
         runGatewayStart: vi.fn(async () => {}),
       };
 
-      await runRescue("/openclaw restart gateway", cfg, commandContext(), deps);
-      const approval = runRescue("/openclaw yes", cfg, commandContext(), deps);
+      await runRescue("/grokbot restart gateway", cfg, commandContext(), deps);
+      const approval = runRescue("/grokbot yes", cfg, commandContext(), deps);
       await restartEntered;
-      await runRescue("/openclaw start gateway", cfg, commandContext(), deps);
+      await runRescue("/grokbot start gateway", cfg, commandContext(), deps);
       releaseRestart?.();
-      await expect(approval).resolves.toContain("[openclaw] done: gateway.restart");
-      await expect(runRescue("/openclaw yes", cfg, commandContext(), deps)).resolves.toContain(
-        "[openclaw] done: gateway.start",
+      await expect(approval).resolves.toContain("[grokbot] done: gateway.restart");
+      await expect(runRescue("/grokbot yes", cfg, commandContext(), deps)).resolves.toContain(
+        "[grokbot] done: gateway.start",
       );
       expect(deps.runGatewayRestart).toHaveBeenCalledTimes(1);
       expect(deps.runGatewayStart).toHaveBeenCalledTimes(1);
@@ -419,12 +419,12 @@ describe("OpenClaw rescue message", () => {
         runGatewayStart: vi.fn(async () => {}),
       };
 
-      const olderPlan = runRescue("/openclaw restart gateway", cfg, commandContext(), deps);
-      const newerPlan = runRescue("/openclaw start gateway", cfg, commandContext(), deps);
+      const olderPlan = runRescue("/grokbot restart gateway", cfg, commandContext(), deps);
+      const newerPlan = runRescue("/grokbot start gateway", cfg, commandContext(), deps);
       await expect(olderPlan).resolves.toContain("restart the Gateway");
       await expect(newerPlan).resolves.toContain("start the Gateway");
-      await expect(runRescue("/openclaw yes", cfg, commandContext(), deps)).resolves.toContain(
-        "[openclaw] done: gateway.start",
+      await expect(runRescue("/grokbot yes", cfg, commandContext(), deps)).resolves.toContain(
+        "[grokbot] done: gateway.start",
       );
       expect(deps.runGatewayRestart).not.toHaveBeenCalled();
       expect(deps.runGatewayStart).toHaveBeenCalledTimes(1);
@@ -436,14 +436,14 @@ describe("OpenClaw rescue message", () => {
       const cfg: OpenClawConfig = { systemAgent: { rescue: { enabled: true } } };
       const deps = { runGatewayRestart: vi.fn(async () => {}) };
 
-      await runRescue("/openclaw restart gateway", cfg, commandContext(), deps);
+      await runRescue("/grokbot restart gateway", cfg, commandContext(), deps);
       resetPluginStateStoreForTests();
 
-      await expect(runRescue("/openclaw yes", cfg, commandContext(), deps)).resolves.toContain(
-        "[openclaw] done: gateway.restart",
+      await expect(runRescue("/grokbot yes", cfg, commandContext(), deps)).resolves.toContain(
+        "[grokbot] done: gateway.restart",
       );
       expect(deps.runGatewayRestart).toHaveBeenCalledTimes(1);
-      await expect(fs.access(path.join(stateDir, "openclaw", "rescue-pending"))).rejects.toThrow(
+      await expect(fs.access(path.join(stateDir, "grokbot", "rescue-pending"))).rejects.toThrow(
         /ENOENT/,
       );
     });
@@ -455,18 +455,18 @@ describe("OpenClaw rescue message", () => {
       const deps = { runGatewayRestart: vi.fn(async () => {}) };
       const original = commandContext();
 
-      await runRescue("/openclaw restart gateway", cfg, original, deps);
+      await runRescue("/grokbot restart gateway", cfg, original, deps);
       for (const isolated of [
         commandContext({ accountId: "secondary" }),
         commandContext({ channelId: "telegram" }),
         commandContext({ from: "user:other", senderId: "user:other" }),
       ]) {
-        await expect(runRescue("/openclaw yes", cfg, isolated, deps)).resolves.toBe(
-          "No pending OpenClaw rescue change is waiting for approval.",
+        await expect(runRescue("/grokbot yes", cfg, isolated, deps)).resolves.toBe(
+          "No pending GrokBot rescue change is waiting for approval.",
         );
       }
-      await expect(runRescue("/openclaw yes", cfg, original, deps)).resolves.toContain(
-        "[openclaw] done: gateway.restart",
+      await expect(runRescue("/grokbot yes", cfg, original, deps)).resolves.toContain(
+        "[grokbot] done: gateway.restart",
       );
       expect(deps.runGatewayRestart).toHaveBeenCalledTimes(1);
     });
@@ -478,17 +478,17 @@ describe("OpenClaw rescue message", () => {
       const deps = { runGatewayRestart: vi.fn(async () => {}) };
       const original = commandContext({ accountId: undefined, to: "bot:primary" });
 
-      await runRescue("/openclaw restart gateway", cfg, original, deps);
+      await runRescue("/grokbot restart gateway", cfg, original, deps);
       await expect(
         runRescue(
-          "/openclaw yes",
+          "/grokbot yes",
           cfg,
           commandContext({ accountId: undefined, to: "bot:secondary" }),
           deps,
         ),
-      ).resolves.toBe("No pending OpenClaw rescue change is waiting for approval.");
-      await expect(runRescue("/openclaw yes", cfg, original, deps)).resolves.toContain(
-        "[openclaw] done: gateway.restart",
+      ).resolves.toBe("No pending GrokBot rescue change is waiting for approval.");
+      await expect(runRescue("/grokbot yes", cfg, original, deps)).resolves.toContain(
+        "[grokbot] done: gateway.restart",
       );
       expect(deps.runGatewayRestart).toHaveBeenCalledTimes(1);
     });
@@ -503,7 +503,7 @@ describe("OpenClaw rescue message", () => {
     };
 
     await expect(
-      runRescue("/openclaw plugin install clawhub:openclaw-demo", cfg, commandContext(), deps),
+      runRescue("/grokbot plugin install clawhub:grokbot-demo", cfg, commandContext(), deps),
     ).resolves.toContain("cannot install plugins from a message channel");
     expect(deps.runPluginInstall).not.toHaveBeenCalled();
   });
@@ -520,10 +520,10 @@ describe("OpenClaw rescue message", () => {
     };
 
     await expect(
-      runRescue("/openclaw plugins list", cfg, commandContext(), deps),
+      runRescue("/grokbot plugins list", cfg, commandContext(), deps),
     ).resolves.toContain("plugin rows");
     await expect(
-      runRescue("/openclaw plugins search calendar", cfg, commandContext(), deps),
+      runRescue("/grokbot plugins search calendar", cfg, commandContext(), deps),
     ).resolves.toContain("search rows: calendar");
     expect(deps.runPluginsList).toHaveBeenCalledTimes(1);
     expect(deps.runPluginsSearch).toHaveBeenCalledTimes(1);
@@ -546,9 +546,9 @@ describe("OpenClaw rescue message", () => {
         })),
       };
       await expect(
-        runRescue("/openclaw set default model openai/gpt-5.2", cfg, commandContext(), deps),
-      ).resolves.toContain("Reply /openclaw yes to apply");
-      await expect(runRescue("/openclaw yes", cfg, commandContext(), deps)).resolves.toContain(
+        runRescue("/grokbot set default model openai/gpt-5.2", cfg, commandContext(), deps),
+      ).resolves.toContain("Reply /grokbot yes to apply");
+      await expect(runRescue("/grokbot yes", cfg, commandContext(), deps)).resolves.toContain(
         "Default model: openai/gpt-5.2",
       );
 
@@ -573,10 +573,10 @@ describe("OpenClaw rescue message", () => {
       const deps = { runGatewayRestart: vi.fn(async () => {}) };
 
       await expect(
-        runRescue("/openclaw restart gateway", cfg, commandContext(), deps),
-      ).resolves.toBe("Plan: restart the Gateway. Reply /openclaw yes to apply.");
-      await expect(runRescue("/openclaw yes", cfg, commandContext(), deps)).resolves.toContain(
-        "[openclaw] done: gateway.restart",
+        runRescue("/grokbot restart gateway", cfg, commandContext(), deps),
+      ).resolves.toBe("Plan: restart the Gateway. Reply /grokbot yes to apply.");
+      await expect(runRescue("/grokbot yes", cfg, commandContext(), deps)).resolves.toContain(
+        "[grokbot] done: gateway.restart",
       );
 
       expect(deps.runGatewayRestart).toHaveBeenCalledTimes(1);
@@ -599,10 +599,10 @@ describe("OpenClaw rescue message", () => {
         const cfg: OpenClawConfig = { systemAgent: { rescue: { enabled: true } } };
 
         await expect(
-          runRescue("/openclaw restart gateway", cfg, commandContext()),
+          runRescue("/grokbot restart gateway", cfg, commandContext()),
         ).resolves.toContain("expiry clock is invalid");
 
-        await expect(fs.readdir(path.join(tempDir, "openclaw", "rescue-pending"))).rejects.toThrow(
+        await expect(fs.readdir(path.join(tempDir, "grokbot", "rescue-pending"))).rejects.toThrow(
           /ENOENT/,
         );
       } finally {
@@ -619,15 +619,15 @@ describe("OpenClaw rescue message", () => {
       const deps = { runGatewayRestart: vi.fn(async () => {}) };
 
       await runRescue(
-        "/openclaw restart gateway",
+        "/grokbot restart gateway",
         { systemAgent: { rescue: { enabled: true, pendingTtlMinutes: 1 } } },
         commandContext(),
         deps,
       );
       vi.advanceTimersByTime(60_001);
 
-      await expect(runRescue("/openclaw yes", cfg, commandContext(), deps)).resolves.toBe(
-        "No pending OpenClaw rescue change is waiting for approval.",
+      await expect(runRescue("/grokbot yes", cfg, commandContext(), deps)).resolves.toBe(
+        "No pending GrokBot rescue change is waiting for approval.",
       );
       expect(deps.runGatewayRestart).not.toHaveBeenCalled();
     });
@@ -638,7 +638,7 @@ describe("OpenClaw rescue message", () => {
       const cfg: OpenClawConfig = { systemAgent: { rescue: { enabled: true } } };
       const deps = { runGatewayRestart: vi.fn(async () => {}) };
 
-      await runRescue("/openclaw restart gateway", cfg, commandContext(), deps);
+      await runRescue("/grokbot restart gateway", cfg, commandContext(), deps);
       const store = openRescuePendingTestStore();
       const [entry] = store.entries();
       if (!entry) {
@@ -650,11 +650,11 @@ describe("OpenClaw rescue message", () => {
         { ttlMs: 60_000 },
       );
 
-      await expect(runRescue("/openclaw yes", cfg, commandContext(), deps)).resolves.toBe(
-        "No pending OpenClaw rescue change is waiting for approval.",
+      await expect(runRescue("/grokbot yes", cfg, commandContext(), deps)).resolves.toBe(
+        "No pending GrokBot rescue change is waiting for approval.",
       );
-      await expect(runRescue("/openclaw yes", cfg, commandContext(), deps)).resolves.toBe(
-        "No pending OpenClaw rescue change is waiting for approval.",
+      await expect(runRescue("/grokbot yes", cfg, commandContext(), deps)).resolves.toBe(
+        "No pending GrokBot rescue change is waiting for approval.",
       );
       expect(deps.runGatewayRestart).not.toHaveBeenCalled();
     });
@@ -675,12 +675,12 @@ describe("OpenClaw rescue message", () => {
       };
 
       await expect(
-        runRescue("/openclaw create agent work workspace /tmp/work", cfg, commandContext(), deps),
+        runRescue("/grokbot create agent work workspace /tmp/work", cfg, commandContext(), deps),
       ).resolves.toBe(
-        "Plan: create agent work with workspace /tmp/work. Reply /openclaw yes to apply.",
+        "Plan: create agent work with workspace /tmp/work. Reply /grokbot yes to apply.",
       );
-      await expect(runRescue("/openclaw yes", cfg, commandContext(), deps)).resolves.toContain(
-        "[openclaw] done: agents.create",
+      await expect(runRescue("/grokbot yes", cfg, commandContext(), deps)).resolves.toContain(
+        "[grokbot] done: agents.create",
       );
 
       expect(deps.createAgent).toHaveBeenCalledTimes(1);

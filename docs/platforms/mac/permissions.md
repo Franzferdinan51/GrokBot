@@ -12,8 +12,8 @@ macOS permission grants are fragile. TCC associates a permission grant with the 
 
 ## Requirements for stable permissions
 
-- Same path: run the app from a fixed location (for OpenClaw, `dist/OpenClaw.app`).
-- Same bundle identifier: OpenClaw's bundle ID is `ai.openclaw.mac`; changing it creates a new permission identity.
+- Same path: run the app from a fixed location (for GrokBot, `dist/GrokBot.app`).
+- Same bundle identifier: GrokBot's bundle ID is `ai.grokbot.mac`; changing it creates a new permission identity.
 - Signed app: unsigned or ad-hoc signed builds do not persist permissions.
 - Consistent signature: use a real Apple Development or Developer ID certificate so the signature stays stable across rebuilds.
 
@@ -21,7 +21,7 @@ Ad-hoc signatures generate a new identity every build. macOS forgets previous gr
 
 ## Accessibility grants for Node and CLI runtimes
 
-Prefer granting Accessibility to OpenClaw.app, Peekaboo.app, or another signed helper with its own bundle identifier instead of a generic `node` binary.
+Prefer granting Accessibility to GrokBot.app, Peekaboo.app, or another signed helper with its own bundle identifier instead of a generic `node` binary.
 
 macOS TCC grants Accessibility to the code identity of the process it sees. If a Homebrew, nvm, pnpm, or npm workflow causes a shared `node` executable to receive Accessibility, any JavaScript package launched through that same executable may inherit GUI automation privileges.
 
@@ -37,11 +37,11 @@ If you accidentally granted Accessibility to `node`, remove that entry from Syst
 4. If the prompt still does not appear, reset TCC entries with `tccutil` and try again.
 5. Some permissions only reappear after a full macOS restart.
 
-Example resets (using OpenClaw's bundle ID, `ai.openclaw.mac`):
+Example resets (using GrokBot's bundle ID, `ai.grokbot.mac`):
 
 ```bash
-sudo tccutil reset Accessibility ai.openclaw.mac
-sudo tccutil reset ScreenCapture ai.openclaw.mac
+sudo tccutil reset Accessibility ai.grokbot.mac
+sudo tccutil reset ScreenCapture ai.grokbot.mac
 sudo tccutil reset AppleEvents
 ```
 
@@ -49,7 +49,7 @@ sudo tccutil reset AppleEvents
 
 macOS may also gate Desktop, Documents, and Downloads for terminal/background processes. If file reads or directory listings hang, grant access to the same process context that performs file operations (for example Terminal/iTerm, LaunchAgent-launched app, or SSH process).
 
-Workaround: move files into the OpenClaw workspace (`~/.openclaw/workspace`) if you want to avoid per-folder grants.
+Workaround: move files into the GrokBot workspace (`~/.grokbot/workspace`) if you want to avoid per-folder grants.
 
 If you are testing permissions, always sign with a real certificate. Ad-hoc builds are only acceptable for quick local runs where permissions do not matter.
 

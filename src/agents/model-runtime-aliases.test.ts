@@ -1,6 +1,6 @@
 // Verifies CLI runtime alias resolution and runtime model-ref equivalence.
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { testing as cliBackendsTesting } from "./cli-backends.test-support.js";
 import {
   createModelPickerVisibleProviderPredicate,
@@ -103,15 +103,15 @@ describe("resolveCliRuntimeExecutionProvider", () => {
     ).toBe("claude-cli");
   });
 
-  it("does not override an explicit OpenClaw model-runtime policy with CLI auth", () => {
+  it("does not override an explicit GrokBot model-runtime policy with CLI auth", () => {
     // Runtime policy is more explicit than profile order, so CLI auth cannot
-    // force a model onto the CLI harness when config says OpenClaw.
+    // force a model onto the CLI harness when config says GrokBot.
     expect(
       resolveCliRuntimeExecutionProvider({
         cfg: createAnthropicAuthConfig({
           order: ["anthropic:claude-cli"],
           models: {
-            "anthropic/opus-4.7": { agentRuntime: { id: "openclaw" } },
+            "anthropic/opus-4.7": { agentRuntime: { id: "grokbot" } },
           },
         }),
         provider: "anthropic",

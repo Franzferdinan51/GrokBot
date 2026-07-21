@@ -1,6 +1,6 @@
 // Archive install helpers extract and validate skill archives during installation.
 import path from "node:path";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import type { ArchiveLogger } from "../../infra/archive.js";
 import { formatErrorMessage } from "../../infra/errors.js";
 import { pathExists } from "../../infra/fs-safe.js";
@@ -212,7 +212,7 @@ export async function installSkillArchiveFromPath(params: {
 }): Promise<SkillArchiveInstallResult> {
   const result = await withExtractedArchiveRoot({
     archivePath: params.archivePath,
-    tempDirPrefix: "openclaw-skill-archive-",
+    tempDirPrefix: "grokbot-skill-archive-",
     timeoutMs: params.timeoutMs ?? 120_000,
     logger: params.logger,
     rootMarkers: ["SKILL.md"],

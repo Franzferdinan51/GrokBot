@@ -1,5 +1,5 @@
-// Minimax plugin entrypoint registers its OpenClaw integration.
-import { definePluginEntry } from "openclaw/plugin-sdk/plugin-entry";
+// Minimax plugin entrypoint registers its GrokBot integration.
+import { definePluginEntry } from "grokbot/plugin-sdk/plugin-entry";
 import {
   buildMinimaxImageGenerationProvider,
   buildMinimaxPortalImageGenerationProvider,

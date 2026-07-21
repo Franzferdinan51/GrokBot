@@ -1,9 +1,9 @@
 // CLI for reading and mutating exec approval allowlists locally, via gateway, or via node.
 import fs from "node:fs/promises";
-import { readByteStreamWithLimit } from "@openclaw/media-core/read-byte-stream-with-limit";
-import { expectDefined } from "@openclaw/normalization-core";
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
-import { truncateUtf16Safe } from "@openclaw/normalization-core/utf16-slice";
+import { readByteStreamWithLimit } from "@grokbot/media-core/read-byte-stream-with-limit";
+import { expectDefined } from "@grokbot/normalization-core";
+import { normalizeOptionalString } from "@grokbot/normalization-core/string-coerce";
+import { truncateUtf16Safe } from "@grokbot/normalization-core/utf16-slice";
 import type { Command } from "commander";
 import JSON5 from "json5";
 import {
@@ -513,7 +513,7 @@ async function loadPendingApprovals(
   const [exec, plugin, systemAgent] = await Promise.all([
     listCall("exec.approval.list"),
     listCall("plugin.approval.list"),
-    listCall("openclaw.approval.list"),
+    listCall("grokbot.approval.list"),
   ]);
   return [
     ...readPendingApprovalList(exec, "exec"),
@@ -759,7 +759,7 @@ function buildEffectivePolicyReport(params: {
     return {
       scopes: [],
       note: params.nativePolicy
-        ? "This node enforces a host-native exec policy; OpenClaw approvals-file policy math does not apply."
+        ? "This node enforces a host-native exec policy; GrokBot approvals-file policy math does not apply."
         : "Approvals file unavailable.",
     };
   }
@@ -1114,7 +1114,7 @@ export function registerExecApprovalsCli(program: Command) {
     .addHelpText(
       "after",
       () =>
-        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/approvals", "docs.openclaw.ai/cli/approvals")}\n`,
+        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/approvals", "docs.grokbot.ai/cli/approvals")}\n`,
     );
 
   const pendingCmd = approvals
@@ -1246,18 +1246,18 @@ export function registerExecApprovalsCli(program: Command) {
       "after",
       () =>
         `\n${theme.heading("Examples:")}\n${formatExample(
-          'openclaw approvals allowlist add "~/Projects/**/bin/rg"',
+          'grokbot approvals allowlist add "~/Projects/**/bin/rg"',
           "Allowlist a local binary pattern for the main agent.",
         )}\n${formatExample(
-          'openclaw approvals allowlist add --agent main --node <id|name|ip> "/usr/bin/uptime"',
+          'grokbot approvals allowlist add --agent main --node <id|name|ip> "/usr/bin/uptime"',
           "Allowlist on a specific node/agent.",
         )}\n${formatExample(
-          'openclaw approvals allowlist add --agent "*" "/usr/bin/uname"',
+          'grokbot approvals allowlist add --agent "*" "/usr/bin/uname"',
           "Allowlist for all agents (wildcard).",
         )}\n${formatExample(
-          'openclaw approvals allowlist remove "~/Projects/**/bin/rg"',
+          'grokbot approvals allowlist remove "~/Projects/**/bin/rg"',
           "Remove an allowlist pattern.",
-        )}\n\n${theme.muted("Docs:")} ${formatDocsLink("/cli/approvals", "docs.openclaw.ai/cli/approvals")}\n`,
+        )}\n\n${theme.muted("Docs:")} ${formatDocsLink("/cli/approvals", "docs.grokbot.ai/cli/approvals")}\n`,
     );
 
   registerAllowlistMutationCommand({

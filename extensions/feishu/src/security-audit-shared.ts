@@ -1,5 +1,5 @@
 // Feishu plugin module implements security audit shared behavior.
-import { hasConfiguredSecretInput } from "openclaw/plugin-sdk/secret-input";
+import { hasConfiguredSecretInput } from "grokbot/plugin-sdk/secret-input";
 import type { OpenClawConfig } from "../runtime-api.js";
 
 function asRecord(value: unknown): Record<string, unknown> | undefined {

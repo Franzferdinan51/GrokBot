@@ -1,9 +1,9 @@
 import fs from "node:fs";
-import { normalizeOptionalLowercaseString as normalizeString } from "@openclaw/normalization-core/string-coerce";
+import { normalizeOptionalLowercaseString as normalizeString } from "@grokbot/normalization-core/string-coerce";
 import { loadSessionStore, updateSessionStore } from "../../../config/sessions/store.js";
 import { resolveAllAgentSessionStoreTargetsSync } from "../../../config/sessions/targets.js";
 import type { SessionEntry } from "../../../config/sessions/types.js";
-import type { OpenClawConfig } from "../../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../../config/types.grokbot.js";
 import { isValidAgentHarnessSessionStoreEntry } from "../../../sessions/agent-harness-session-key.js";
 import {
   isOpenAICodexAuthProfileRef,
@@ -114,11 +114,11 @@ function preserveRepairedSessionRuntimeIntent(entry: SessionEntry): boolean {
   const harnessRuntime = normalizeRuntimeString(entry.agentHarnessId);
   const overrideRuntime = normalizeRuntimeString(entry.agentRuntimeOverride);
   let changed = false;
-  if (entry.agentHarnessId !== undefined && harnessRuntime !== "openclaw") {
+  if (entry.agentHarnessId !== undefined && harnessRuntime !== "grokbot") {
     delete entry.agentHarnessId;
     changed = true;
   }
-  if (overrideRuntime !== "openclaw" && entry.agentRuntimeOverride !== "codex") {
+  if (overrideRuntime !== "grokbot" && entry.agentRuntimeOverride !== "codex") {
     entry.agentRuntimeOverride = "codex";
     changed = true;
   }
@@ -214,7 +214,7 @@ function repairCodexSessionStoreRoutes(params: {
 
 if (process.env.VITEST || process.env.NODE_ENV === "test") {
   (globalThis as Record<PropertyKey, unknown>)[
-    Symbol.for("openclaw.codexRouteSessionRepairTestApi")
+    Symbol.for("grokbot.codexRouteSessionRepairTestApi")
   ] = { repairCodexSessionStoreRoutes };
 }
 
@@ -309,7 +309,7 @@ export async function maybeRepairCodexSessionRoutes(params: {
               [
                 "- Legacy `codex/*` or `openai-codex/*` session route state detected.",
                 `- Affected sessions: ${stale.length}.`,
-                "- Run `openclaw doctor --fix` to rewrite stale session model/provider pins across all agent session stores.",
+                "- Run `grokbot doctor --fix` to rewrite stale session model/provider pins across all agent session stores.",
               ].join("\n"),
             ]
           : [],

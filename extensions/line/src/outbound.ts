@@ -3,15 +3,15 @@ import {
   defineChannelMessageAdapter,
   type ChannelMessageSendResult,
   type MessageReceiptPartKind,
-} from "openclaw/plugin-sdk/channel-outbound";
+} from "grokbot/plugin-sdk/channel-outbound";
 import {
   createAttachedChannelResultAdapter,
   createEmptyChannelResult,
-} from "openclaw/plugin-sdk/channel-send-result";
-import { createLazyRuntimeModule } from "openclaw/plugin-sdk/lazy-runtime";
-import { resolveOutboundMediaUrls } from "openclaw/plugin-sdk/reply-payload";
-import { sanitizeAssistantVisibleText } from "openclaw/plugin-sdk/text-chunking";
-import { truncateUtf16Safe } from "openclaw/plugin-sdk/text-utility-runtime";
+} from "grokbot/plugin-sdk/channel-send-result";
+import { createLazyRuntimeModule } from "grokbot/plugin-sdk/lazy-runtime";
+import { resolveOutboundMediaUrls } from "grokbot/plugin-sdk/reply-payload";
+import { sanitizeAssistantVisibleText } from "grokbot/plugin-sdk/text-chunking";
+import { truncateUtf16Safe } from "grokbot/plugin-sdk/text-utility-runtime";
 import type { ChannelPlugin, ResolvedLineAccount } from "./channel-api.js";
 import {
   buildLineMediaMessage,

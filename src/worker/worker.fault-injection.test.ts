@@ -18,7 +18,7 @@ import {
   resolveSessionTranscriptRuntimeTarget,
   upsertSessionEntry,
 } from "../config/sessions/session-accessor.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import {
   attachWorkerWsMessageHandler,
   type WorkerConnectionService,
@@ -54,7 +54,7 @@ import {
   closeOpenClawStateDatabaseForTest,
   openOpenClawStateDatabase,
   type OpenClawStateDatabase,
-} from "../state/openclaw-state-db.js";
+} from "../state/grokbot-state-db.js";
 import { buildWorkerConnectParams, type WorkerLaunchDescriptor } from "./launch-descriptor.js";
 import {
   createWorkerConnection,
@@ -80,7 +80,7 @@ const HOST_KEY = [["ssh", "ed25519"].join("-"), "AAAA"].join(" ");
 const SSH_ENDPOINT: WorkerSshEndpoint = {
   host: "worker.example.test",
   port: 22,
-  user: "openclaw",
+  user: "grokbot",
   hostKey: HOST_KEY,
   keyRef: { source: "file", provider: "worker-fixtures", id: "/development-key" },
 };
@@ -231,7 +231,7 @@ class ComposedGatewayHarness {
 
   static async create(): Promise<ComposedGatewayHarness> {
     const root = await fs.mkdtemp(
-      path.join(await fs.realpath(os.tmpdir()), "openclaw-worker-fault-"),
+      path.join(await fs.realpath(os.tmpdir()), "grokbot-worker-fault-"),
     );
     const sessionsDir = path.join(root, "agents", "main", "sessions");
     const storePath = path.join(sessionsDir, "sessions.json");

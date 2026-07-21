@@ -5,7 +5,7 @@ import {
   resolveAccountEntry,
   resolveMergedAccountConfig,
   type OpenClawConfig,
-} from "openclaw/plugin-sdk/account-core";
+} from "grokbot/plugin-sdk/account-core";
 import type { WhatsAppAccountConfig } from "./account-types.js";
 
 function resolveWhatsAppDefaultAccountSharedConfig(

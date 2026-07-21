@@ -2,13 +2,13 @@
 import crypto from "node:crypto";
 import fs from "node:fs/promises";
 import path from "node:path";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { closeOpenClawAgentDatabasesForTest } from "../../state/openclaw-agent-db.js";
+import { closeOpenClawAgentDatabasesForTest } from "../../state/grokbot-agent-db.js";
 import {
   createOpenClawTestState,
   type OpenClawTestState,
-} from "../../test-utils/openclaw-test-state.js";
+} from "../../test-utils/grokbot-test-state.js";
 import {
   resolveTrajectoryFilePath,
   resolveTrajectoryPointerFilePath,
@@ -20,7 +20,7 @@ import {
 import type { TrajectoryEvent } from "../../trajectory/types.js";
 import type { SessionEntry } from "./types.js";
 
-// Keep integration tests deterministic: never read a real openclaw.json.
+// Keep integration tests deterministic: never read a real grokbot.json.
 vi.mock("../config.js", async () => ({
   ...(await vi.importActual<typeof import("../config.js")>("../config.js")),
   getRuntimeConfig: vi.fn().mockReturnValue({}),
@@ -169,7 +169,7 @@ async function seedSqliteTrajectoryEvent(params: {
   storePath: string;
 }): Promise<void> {
   const event: TrajectoryEvent = {
-    traceSchema: "openclaw-trajectory",
+    traceSchema: "grokbot-trajectory",
     schemaVersion: 1,
     traceId: params.sessionId,
     source: "runtime",
@@ -199,7 +199,7 @@ describe("Integration: saveSessionStore with pruning", () => {
     mockLoadConfig.mockReset();
     disableAutomaticDiskBudget(mockLoadConfig);
     testState = await createOpenClawTestState({
-      prefix: "openclaw-pruning-integ-",
+      prefix: "grokbot-pruning-integ-",
       layout: "state-only",
     });
     testDir = testState.sessionsDir();
@@ -316,7 +316,7 @@ describe("Integration: saveSessionStore with pruning", () => {
 
   it("sessions cleanup dry-run does not create a missing SQLite store", async () => {
     applyEnforcedMaintenanceConfig(mockLoadConfig);
-    const sqlitePath = path.join(testDir, "openclaw-agent.sqlite");
+    const sqlitePath = path.join(testDir, "grokbot-agent.sqlite");
 
     await expectPathMissing(sqlitePath);
 
@@ -436,12 +436,12 @@ describe("Integration: saveSessionStore with pruning", () => {
     const freshPointer = resolveTrajectoryPointerFilePath(freshTranscript);
     await fs.writeFile(staleTranscript, '{"type":"session"}\n', "utf-8");
     await fs.writeFile(freshTranscript, '{"type":"session"}\n', "utf-8");
-    await fs.writeFile(staleRuntime, '{"traceSchema":"openclaw-trajectory"}\n', "utf-8");
-    await fs.writeFile(freshRuntime, '{"traceSchema":"openclaw-trajectory"}\n', "utf-8");
+    await fs.writeFile(staleRuntime, '{"traceSchema":"grokbot-trajectory"}\n', "utf-8");
+    await fs.writeFile(freshRuntime, '{"traceSchema":"grokbot-trajectory"}\n', "utf-8");
     await fs.writeFile(
       stalePointer,
       JSON.stringify({
-        traceSchema: "openclaw-trajectory-pointer",
+        traceSchema: "grokbot-trajectory-pointer",
         schemaVersion: 1,
         sessionId: staleSessionId,
         runtimeFile: staleRuntime,
@@ -451,7 +451,7 @@ describe("Integration: saveSessionStore with pruning", () => {
     await fs.writeFile(
       freshPointer,
       JSON.stringify({
-        traceSchema: "openclaw-trajectory-pointer",
+        traceSchema: "grokbot-trajectory-pointer",
         schemaVersion: 1,
         sessionId: freshSessionId,
         runtimeFile: freshRuntime,

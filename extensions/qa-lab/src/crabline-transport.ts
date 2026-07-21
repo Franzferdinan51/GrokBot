@@ -7,15 +7,15 @@ import {
   type OpenClawCrablineChannelDriverSelection,
   type OpenClawCrablineInbound,
   type StartedOpenClawCrablineAdapter,
-} from "@openclaw/crabline";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
-import { fetchWithSsrFGuard } from "openclaw/plugin-sdk/ssrf-runtime";
+} from "@grokbot/crabline";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { formatErrorMessage } from "grokbot/plugin-sdk/error-runtime";
+import { fetchWithSsrFGuard } from "grokbot/plugin-sdk/ssrf-runtime";
 import {
   isRecord,
   normalizeStringifiedOptionalString,
   readStringValue,
-} from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/string-coerce-runtime";
 import { createQaBusState, type QaBusState } from "./bus-state.js";
 import {
   createCrablineProviderDelivery,
@@ -110,8 +110,8 @@ function readTelegramLifecycleEvent(params: {
       id: chatId,
       kind: chatId.startsWith("-") ? "group" : "direct",
     },
-    senderId: "openclaw",
-    senderName: "OpenClaw QA",
+    senderId: "grokbot",
+    senderName: "GrokBot QA",
     text,
     timestamp: Date.now(),
     ...(threadId ? { threadId } : {}),
@@ -437,7 +437,7 @@ class QaCrablineTransport extends QaStateBackedTransportAdapter {
   };
 
   createReportNotes = (_params: QaTransportReportParams) => [
-    `Runs OpenClaw's ${this.#selection.channel} channel plugin against a Crabline local provider server.`,
+    `Runs GrokBot's ${this.#selection.channel} channel plugin against a Crabline local provider server.`,
     "No live channel service or external credential lease is required.",
   ];
 

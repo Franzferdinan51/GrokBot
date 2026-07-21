@@ -1,5 +1,5 @@
-# Raft (OpenClaw plugin)
+# Raft (GrokBot plugin)
 
-Raft CLI wake bridge channel plugin for OpenClaw.
+Raft CLI wake bridge channel plugin for GrokBot.
 
-Docs: https://docs.openclaw.ai/channels/raft
+Docs: https://docs.grokbot.ai/channels/raft

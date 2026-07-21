@@ -9,7 +9,7 @@ import type {
   AnyAgentTool,
   EmbeddedRunAttemptParams,
   SandboxContext,
-} from "openclaw/plugin-sdk/agent-harness-runtime";
+} from "grokbot/plugin-sdk/agent-harness-runtime";
 import {
   applyEmbeddedAttemptToolsAllow,
   buildEmbeddedAttemptToolRunContext,
@@ -21,11 +21,11 @@ import {
   resolveEmbeddedAttemptToolConstructionPlan,
   resolveModelAuthMode,
   sanitizeToolResult,
-} from "openclaw/plugin-sdk/agent-harness-runtime";
-import { createAgentHarnessToolSurfaceRuntime } from "openclaw/plugin-sdk/agent-harness-tool-runtime";
+} from "grokbot/plugin-sdk/agent-harness-runtime";
+import { createAgentHarnessToolSurfaceRuntime } from "grokbot/plugin-sdk/agent-harness-tool-runtime";
 
 type CreateOpenClawCodingTools =
-  (typeof import("openclaw/plugin-sdk/agent-harness"))["createOpenClawCodingTools"];
+  (typeof import("grokbot/plugin-sdk/agent-harness"))["createOpenClawCodingTools"];
 type OpenClawCodingToolsOptions = NonNullable<Parameters<CreateOpenClawCodingTools>[0]>;
 type AgentHarnessToolSurfaceRuntime = ReturnType<typeof createAgentHarnessToolSurfaceRuntime>;
 type CatalogExecuteParams = Parameters<
@@ -51,7 +51,7 @@ interface CopilotSessionHolder {
  * authoritative `createOpenClawCodingTools({...})` call shape).
  *
  * Declared as `Partial<EmbeddedRunAttemptParams>` (imported from the
- * `openclaw/plugin-sdk/agent-harness-runtime` boundary, *not* from
+ * `grokbot/plugin-sdk/agent-harness-runtime` boundary, *not* from
  * `attempt.ts` in this extension) to avoid an `attempt.ts` ↔
  * `tool-bridge.ts` import cycle while keeping the field shapes
  * authoritative. Production callers pass the live attempt params; test
@@ -191,7 +191,7 @@ export async function createCopilotToolBridge(
 
   const createOpenClawCodingTools =
     input.createOpenClawCodingTools ??
-    (await import("openclaw/plugin-sdk/agent-harness")).createOpenClawCodingTools;
+    (await import("grokbot/plugin-sdk/agent-harness")).createOpenClawCodingTools;
 
   const toolSurfaceRuntime = createAgentHarnessToolSurfaceRuntime({
     abortSignal: input.abortSignal,
@@ -281,7 +281,7 @@ export async function createCopilotToolBridge(
  * Builds the full `createOpenClawCodingTools` options bag mirroring the
  * PI in-tree call at `src/agents/pi-embedded-runner/run/attempt.ts:1029-1117`.
  *
- * Why PI parity matters: bridged OpenClaw tools register with the SDK
+ * Why PI parity matters: bridged GrokBot tools register with the SDK
  * as `overridesBuiltInTool: true, skipPermission: true` (see
  * `convertOpenClawToolToSdkTool` below). That means the wrapped-tool
  * enforcement layer
@@ -587,7 +587,7 @@ function convertOpenClawToolToSdkTool(
       );
     }
 
-    // OpenClaw tools throw for execution failures. Error-shaped details remain
+    // GrokBot tools throw for execution failures. Error-shaped details remain
     // lifecycle metadata; successful content uses the SDK's MCP converter.
     const sdkResult = convertMcpCallToolResult({ content: result.content });
     const sanitizedResult = sanitizeToolResult(result);
@@ -632,26 +632,26 @@ function convertOpenClawToolToSdkTool(
     description: sourceTool.description,
     handler,
     name: sourceTool.name,
-    // OpenClaw owns its bridged tools by design (the harness docs:
-    // "OpenClaw still owns ... OpenClaw dynamic tools (bridged)"). The bundled
+    // GrokBot owns its bridged tools by design (the harness docs:
+    // "GrokBot still owns ... GrokBot dynamic tools (bridged)"). The bundled
     // Copilot CLI ships built-in tools whose names (edit, read, write, bash,
-    // ...) collide with OpenClaw's coding-tool set. Mark every bridged tool as
+    // ...) collide with GrokBot's coding-tool set. Mark every bridged tool as
     // an explicit override so the SDK accepts the registration rather than
     // throwing "External tool 'edit' conflicts with a built-in tool of the
-    // same name." OpenClaw's tool layer is the source of truth for these
+    // same name." GrokBot's tool layer is the source of truth for these
     // names within a copilot attempt.
     overridesBuiltInTool: true,
     parameters: sourceTool.parameters as Record<string, unknown> | undefined,
-    // Bridged OpenClaw tools enforce their own permission/policy decisions
+    // Bridged GrokBot tools enforce their own permission/policy decisions
     // inside `wrapToolWithBeforeToolCallHook` (see
     // `src/agents/pi-tools.before-tool-call.ts` — the same hook PI itself
     // uses, providing loop detection, trusted plugin policies,
     // before-tool-call hooks, and two-phase plugin approvals via the
     // gateway). Asking the SDK to fire `onPermissionRequest` for
-    // `kind: "custom-tool"` would either short-circuit OpenClaw's richer
+    // `kind: "custom-tool"` would either short-circuit GrokBot's richer
     // enforcement (if we allow-all) or block every call (if we
     // reject-all) — neither matches PI parity. The in-tree codex harness
-    // takes the same approach: bridged OpenClaw tools are wrapped with
+    // takes the same approach: bridged GrokBot tools are wrapped with
     // `wrapToolWithBeforeToolCallHook` and the SDK gate is bypassed
     // (see `extensions/codex/src/app-server/dynamic-tools.ts`).
     skipPermission: true,

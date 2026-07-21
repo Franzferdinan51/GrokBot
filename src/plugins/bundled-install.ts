@@ -1,5 +1,5 @@
-import { isRecord } from "@openclaw/normalization-core/record-coerce";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import { isRecord } from "@grokbot/normalization-core/record-coerce";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import type { RuntimeEnv } from "../runtime.js";
 import type { BundledPluginSource } from "./bundled-sources.js";
 import {
@@ -67,7 +67,7 @@ export async function installBundledPluginSource(params: {
     : prepareConfigForDisabledBundledInstall(params.snapshot.config, params.bundledSource.pluginId);
   const configWarning = shouldEnable
     ? undefined
-    : `Installed bundled plugin "${params.bundledSource.pluginId}" without enabling it because it requires configuration first. Configure it, then run \`openclaw plugins enable ${params.bundledSource.pluginId}\`.`;
+    : `Installed bundled plugin "${params.bundledSource.pluginId}" without enabling it because it requires configuration first. Configure it, then run \`grokbot plugins enable ${params.bundledSource.pluginId}\`.`;
   const warnings = [params.warning, configWarning].filter((warning): warning is string =>
     Boolean(warning),
   );

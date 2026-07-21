@@ -1,6 +1,6 @@
 import os from "node:os";
 import path from "node:path";
-import type { AssistantMessageEvent, Context, Model } from "openclaw/plugin-sdk/llm";
+import type { AssistantMessageEvent, Context, Model } from "grokbot/plugin-sdk/llm";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => {
@@ -59,7 +59,7 @@ const {
   mapContextToLlamaChatHistory,
   mapToolsToLlamaFunctions,
 } = (globalThis as Record<PropertyKey, unknown>)[
-  Symbol.for("openclaw.llamaCppInferenceTestApi")
+  Symbol.for("grokbot.llamaCppInferenceTestApi")
 ] as {
   clearLlamaCppInferenceCacheForTests: () => Promise<void>;
   mapContextToLlamaChatHistory: (context: Context) => unknown[];
@@ -106,7 +106,7 @@ afterEach(async () => {
 });
 
 describe("llama.cpp inference provider", () => {
-  it("maps OpenClaw history and tool results into the model chat template history", () => {
+  it("maps GrokBot history and tool results into the model chat template history", () => {
     const context = {
       systemPrompt: "Be concise.",
       messages: [

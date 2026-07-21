@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import * as configModule from "../config/config.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import type { RuntimeEnv } from "../runtime.js";
 import { projectDefaultInferenceRoute } from "./inference-route.js";
 
@@ -114,7 +114,7 @@ function snapshot(hash: string | null, config: OpenClawConfig): ConfigSnapshot {
   return {
     exists: hash !== null,
     valid: true,
-    path: "/tmp/openclaw.json",
+    path: "/tmp/grokbot.json",
     hash,
     config,
     sourceConfig: config,
@@ -139,7 +139,7 @@ function codexPluginMetadataSnapshot(homeScope: "agent" | "user") {
           hooks: [],
           rootDir: "/tmp/codex",
           source: "/tmp/codex/index.js",
-          manifestPath: "/tmp/codex/openclaw.plugin.json",
+          manifestPath: "/tmp/codex/grokbot.plugin.json",
           configSchema: {
             type: "object",
             additionalProperties: false,
@@ -175,7 +175,7 @@ function materializePluginDefaults(
 
 function baseParams(overrides: Partial<Parameters<typeof applySystemAgentSetup>[0]> = {}) {
   return {
-    workspace: "/tmp/openclaw-workspace",
+    workspace: "/tmp/grokbot-workspace",
     surface: "gateway" as const,
     runtime,
     ...overrides,
@@ -256,7 +256,7 @@ describe("applySystemAgentSetup transaction boundaries", () => {
       mocks.state.persistedConfig = result.nextConfig;
       return {
         nextConfig: result.nextConfig,
-        path: "/tmp/openclaw.json",
+        path: "/tmp/grokbot.json",
         previousHash: mocks.state.commitPreviousHash,
         persistedHash: "persisted",
         result: result.result,
@@ -324,7 +324,7 @@ describe("applySystemAgentSetup transaction boundaries", () => {
     expect(result.configHashBefore).toBeNull();
     expect(result.bootstrapPending).toBe(true);
     expect(mocks.state.persistedConfig).toMatchObject({
-      agents: { defaults: { workspace: "/tmp/openclaw-workspace" } },
+      agents: { defaults: { workspace: "/tmp/grokbot-workspace" } },
     });
   });
 
@@ -345,13 +345,13 @@ describe("applySystemAgentSetup transaction boundaries", () => {
     const config = {
       agents: {
         defaults: { model: "openai/gpt-5.5" },
-        list: [{ id: "OpenClaw" }],
+        list: [{ id: "GrokBot" }],
       },
     } satisfies OpenClawConfig;
     mocks.state.initialSnapshot = snapshot("reserved", config);
 
     await expect(applySystemAgentSetup(baseParams())).rejects.toThrow(
-      'Agent id "openclaw" is reserved',
+      'Agent id "grokbot" is reserved',
     );
 
     expect(mocks.commit).not.toHaveBeenCalled();
@@ -459,7 +459,7 @@ describe("applySystemAgentSetup transaction boundaries", () => {
     expect(mocks.state.persistedConfig).toMatchObject({
       agents: {
         defaults: {
-          workspace: "/tmp/openclaw-workspace",
+          workspace: "/tmp/grokbot-workspace",
           maxConcurrent: 7,
           model: { primary: "openai/gpt-5.5" },
         },
@@ -467,7 +467,7 @@ describe("applySystemAgentSetup transaction boundaries", () => {
       logging: { level: "debug" },
       plugins: { entries: { codex: { enabled: true } } },
     });
-    expect(result.configPath).toBe("/tmp/openclaw.json");
+    expect(result.configPath).toBe("/tmp/grokbot.json");
   });
 
   it("rejects route drift before opening the config transaction", async () => {
@@ -589,7 +589,7 @@ describe("applySystemAgentSetup transaction boundaries", () => {
       mocks.state.persistedConfig = result.nextConfig;
       return {
         nextConfig: result.nextConfig,
-        path: "/tmp/openclaw.json",
+        path: "/tmp/grokbot.json",
         previousHash: "hash-2",
         persistedHash: "persisted",
         result: result.result,
@@ -646,7 +646,7 @@ describe("applySystemAgentSetup transaction boundaries", () => {
       mocks.state.persistedConfig = drifted;
       return {
         nextConfig: drifted,
-        path: "/tmp/openclaw.json",
+        path: "/tmp/grokbot.json",
         previousHash: "probe",
         persistedHash: "persisted",
         result: result.result,
@@ -779,7 +779,7 @@ describe("applySystemAgentSetup transaction boundaries", () => {
       mocks.events.push("commit");
       return {
         nextConfig: result.nextConfig,
-        path: "/tmp/openclaw.json",
+        path: "/tmp/grokbot.json",
         previousHash: "probe",
         persistedHash: currentHash,
         result: result.result,
@@ -849,7 +849,7 @@ describe("applySystemAgentSetup transaction boundaries", () => {
     expect(result.lines).toEqual(
       expect.arrayContaining([
         "Workspace files: workspace exploded",
-        "OpenClaw exec approval: approval exploded; local model harnesses may ask again.",
+        "GrokBot exec approval: approval exploded; local model harnesses may ask again.",
         "Plugin registry refresh failed: registry exploded",
         "Gateway service: service exploded",
       ]),

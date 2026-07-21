@@ -17,7 +17,7 @@ import {
 } from "../../plugin-sdk/message-tool-delivery-hints.js";
 import { wrapToolWithBeforeToolCallHook } from "../agent-tools.before-tool-call.js";
 type CreateMessageTool = typeof import("./message-tool.js").createMessageTool;
-type CreateOpenClawTools = typeof import("../openclaw-tools.js").createOpenClawTools;
+type CreateOpenClawTools = typeof import("../grokbot-tools.js").createOpenClawTools;
 type ResetPluginRuntimeStateForTest =
   typeof import("../../plugins/runtime.js").resetPluginRuntimeStateForTest;
 type SetActivePluginRegistry = typeof import("../../plugins/runtime.js").setActivePluginRegistry;
@@ -352,7 +352,7 @@ beforeAll(async () => {
     await import("../../plugins/runtime.js"));
   ({ createTestRegistry } = await import("../../test-utils/channel-plugins.js"));
   ({ createMessageTool } = await import("./message-tool.js"));
-  ({ createOpenClawTools } = await import("../openclaw-tools.js"));
+  ({ createOpenClawTools } = await import("../grokbot-tools.js"));
 });
 
 const mintedTurnCapabilities: string[] = [];
@@ -1941,7 +1941,7 @@ describe("message tool loop detection action runner proof", () => {
               id: "loop-room",
               chatType: "channel",
             },
-            senderId: "openclaw",
+            senderId: "grokbot",
             text: "same visible reply",
             timestamp: 1_800_000_000_000 + callIndex,
           },

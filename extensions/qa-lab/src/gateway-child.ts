@@ -13,19 +13,19 @@ import net from "node:net";
 import os from "node:os";
 import path from "node:path";
 import { setTimeout as sleep } from "node:timers/promises";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
-import { resolveTimerTimeoutMs } from "openclaw/plugin-sdk/number-runtime";
-import type { ModelProviderConfig } from "openclaw/plugin-sdk/provider-model-shared";
-import { fetchWithSsrFGuard } from "openclaw/plugin-sdk/ssrf-runtime";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { formatErrorMessage } from "grokbot/plugin-sdk/error-runtime";
+import { resolveTimerTimeoutMs } from "grokbot/plugin-sdk/number-runtime";
+import type { ModelProviderConfig } from "grokbot/plugin-sdk/provider-model-shared";
+import { fetchWithSsrFGuard } from "grokbot/plugin-sdk/ssrf-runtime";
 import {
   isRecord,
   normalizeOptionalString,
   normalizeStringEntries,
   uniqueStrings,
-} from "openclaw/plugin-sdk/string-coerce-runtime";
-import { resolvePreferredOpenClawTmpDir } from "openclaw/plugin-sdk/temp-path";
-import { sliceUtf16Safe } from "openclaw/plugin-sdk/text-utility-runtime";
+} from "grokbot/plugin-sdk/string-coerce-runtime";
+import { resolvePreferredOpenClawTmpDir } from "grokbot/plugin-sdk/temp-path";
+import { sliceUtf16Safe } from "grokbot/plugin-sdk/text-utility-runtime";
 import {
   createQaBundledPluginsDir,
   resolveQaBundledPluginSourceDir,
@@ -159,7 +159,7 @@ function resolveQaGatewayChildCommand(repoRoot: string): QaGatewayChildCommand {
     };
   }
 
-  throw new Error("OpenClaw CLI entry not found: expected dist/index.(m)js or src/entry.ts");
+  throw new Error("GrokBot CLI entry not found: expected dist/index.(m)js or src/entry.ts");
 }
 
 async function runQaGatewayCliCommand(params: {
@@ -204,7 +204,7 @@ async function readQaGatewayCliCommand(child: ChildProcess): Promise<string> {
   const exitCode = await new Promise<number>((resolve, reject) => {
     monitorQaChildFailure(child, (failure) => {
       if (failure.source === "process") {
-        reject(toQaErrorObject(failure.error, "OpenClaw CLI process failed"));
+        reject(toQaErrorObject(failure.error, "GrokBot CLI process failed"));
         return;
       }
       if (!hasChildExited(child) && !child.killed) {
@@ -226,7 +226,7 @@ async function readQaGatewayCliCommand(child: ChildProcess): Promise<string> {
   const stdoutText = readQaChildOutput(stdout);
   if (exitCode !== 0) {
     const stderrText = formatQaChildOutputTail(stderr, "stderr");
-    throw new Error(`OpenClaw CLI exited ${exitCode}: ${stderrText || stdoutText}`);
+    throw new Error(`GrokBot CLI exited ${exitCode}: ${stderrText || stdoutText}`);
   }
   return stdoutText;
 }
@@ -1014,7 +1014,7 @@ export async function startQaGatewayChild(params: {
   // Verified launchers may require every runtime artifact to stay inside their
   // prepared root; carry that root forward instead of rediscovering host temp policy.
   const tempParentDir = params.command?.tempParentDir ?? resolvePreferredOpenClawTmpDir();
-  const tempRoot = await fs.mkdtemp(path.join(tempParentDir, "openclaw-qa-suite-"));
+  const tempRoot = await fs.mkdtemp(path.join(tempParentDir, "grokbot-qa-suite-"));
   const runtimeCwd = tempRoot;
   const distEntryPath = path.join(params.repoRoot, "dist", "index.js");
   const gatewayCommand =
@@ -1030,7 +1030,7 @@ export async function startQaGatewayChild(params: {
   const xdgConfigHome = path.join(tempRoot, "xdg-config");
   const xdgDataHome = path.join(tempRoot, "xdg-data");
   const xdgCacheHome = path.join(tempRoot, "xdg-cache");
-  const configPath = path.join(tempRoot, "openclaw.json");
+  const configPath = path.join(tempRoot, "grokbot.json");
   const gatewayToken = `qa-suite-${randomUUID()}`;
   const transport = params.transport ?? createQaGatewayEmptyTransport();
   await seedQaAgentWorkspace({

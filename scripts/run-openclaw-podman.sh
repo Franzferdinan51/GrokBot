@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
-# Rootless OpenClaw in Podman: run after one-time setup.
+# Rootless GrokBot in Podman: run after one-time setup.
 #
 # One-time setup (from repo root): ./scripts/podman/setup.sh
 # Then:
-#   ./scripts/run-openclaw-podman.sh launch        # Start gateway
-#   ./scripts/run-openclaw-podman.sh launch setup  # Onboarding wizard
+#   ./scripts/run-grokbot-podman.sh launch        # Start gateway
+#   ./scripts/run-grokbot-podman.sh launch setup  # Onboarding wizard
 #
 # Manage the running container from the host CLI:
-#   openclaw --container openclaw dashboard --no-open
-#   openclaw --container openclaw channels login
+#   grokbot --container grokbot dashboard --no-open
+#   grokbot --container grokbot channels login
 #
 # Legacy: "setup-host" delegates to the Podman setup script
 
@@ -204,7 +204,7 @@ if [[ -z "$EFFECTIVE_HOME" ]]; then
   EFFECTIVE_HOME="$(resolve_user_home "$EFFECTIVE_USER")"
 fi
 if [[ "$(id -u)" -eq 0 ]]; then
-  fail "Run run-openclaw-podman.sh as your normal user so Podman stays rootless."
+  fail "Run run-grokbot-podman.sh as your normal user so Podman stays rootless."
 fi
 
 # Legacy: setup-host -> run the Podman setup script
@@ -228,7 +228,7 @@ if [[ -z "${EFFECTIVE_HOME:-}" ]]; then
 fi
 validate_absolute_path "effective home" "$EFFECTIVE_HOME"
 
-CONFIG_DIR="${OPENCLAW_CONFIG_DIR:-$EFFECTIVE_HOME/.openclaw}"
+CONFIG_DIR="${OPENCLAW_CONFIG_DIR:-$EFFECTIVE_HOME/.grokbot}"
 ENV_FILE="${OPENCLAW_PODMAN_ENV:-$CONFIG_DIR/.env}"
 # Bootstrap `.env` may set runtime/container options, but it must not
 # relocate the config/workspace/env paths mid-run. Those path overrides are
@@ -237,11 +237,11 @@ if [[ -f "$ENV_FILE" ]]; then
   load_podman_env_file "$ENV_FILE"
 fi
 
-CONFIG_DIR="${OPENCLAW_CONFIG_DIR:-$EFFECTIVE_HOME/.openclaw}"
+CONFIG_DIR="${OPENCLAW_CONFIG_DIR:-$EFFECTIVE_HOME/.grokbot}"
 ENV_FILE="${OPENCLAW_PODMAN_ENV:-$CONFIG_DIR/.env}"
 WORKSPACE_DIR="${OPENCLAW_WORKSPACE_DIR:-$CONFIG_DIR/workspace}"
-CONTAINER_NAME="${OPENCLAW_PODMAN_CONTAINER:-openclaw}"
-OPENCLAW_IMAGE="${OPENCLAW_PODMAN_IMAGE:-${OPENCLAW_IMAGE:-openclaw:local}}"
+CONTAINER_NAME="${OPENCLAW_PODMAN_CONTAINER:-grokbot}"
+OPENCLAW_IMAGE="${OPENCLAW_PODMAN_IMAGE:-${OPENCLAW_IMAGE:-grokbot:local}}"
 PODMAN_PULL="${OPENCLAW_PODMAN_PULL:-never}"
 PODMAN_RUN_TIMEOUT="${OPENCLAW_PODMAN_RUN_TIMEOUT:-600s}"
 HOST_GATEWAY_PORT="${OPENCLAW_PODMAN_GATEWAY_HOST_PORT:-${OPENCLAW_GATEWAY_PORT:-18789}}"
@@ -272,11 +272,11 @@ ensure_private_existing_dir_owned_by_user "workspace directory" "$WORKSPACE_DIR"
 
 resolve_config_gateway_bind() {
   local config_dir="$1"
-  if ! command -v openclaw >/dev/null 2>&1; then
+  if ! command -v grokbot >/dev/null 2>&1; then
     return 0
   fi
   OPENCLAW_CONTAINER="" OPENCLAW_CONFIG_DIR="$config_dir" \
-    openclaw config get gateway.bind 2>/dev/null || true
+    grokbot config get gateway.bind 2>/dev/null || true
 }
 
 # For published container ports, the gateway must listen on the container
@@ -348,20 +348,20 @@ sync_local_control_ui_origins_via_cli() {
   local allowed_json=""
   local merged_json=""
   config_dir="$(dirname "$file")"
-  if ! command -v openclaw >/dev/null 2>&1; then
-    echo "Warning: openclaw not found; unable to sync gateway.controlUi.allowedOrigins in $file." >&2
+  if ! command -v grokbot >/dev/null 2>&1; then
+    echo "Warning: grokbot not found; unable to sync gateway.controlUi.allowedOrigins in $file." >&2
     return 0
   fi
   if ! command -v python3 >/dev/null 2>&1; then
     OPENCLAW_CONTAINER="" OPENCLAW_CONFIG_DIR="$config_dir" \
-      openclaw config set gateway.controlUi.allowedOrigins \
+      grokbot config set gateway.controlUi.allowedOrigins \
       "[\"http://127.0.0.1:${port}\",\"http://localhost:${port}\"]" \
       --strict-json >/dev/null
     return 0
   fi
   allowed_json="$(
     OPENCLAW_CONTAINER="" OPENCLAW_CONFIG_DIR="$config_dir" \
-      openclaw config get gateway.controlUi.allowedOrigins --json 2>/dev/null || true
+      grokbot config get gateway.controlUi.allowedOrigins --json 2>/dev/null || true
   )"
   merged_json="$(python3 - "$port" "$allowed_json" <<'PY'
 import json
@@ -395,7 +395,7 @@ print(json.dumps(cleaned))
 PY
   )"
   OPENCLAW_CONTAINER="" OPENCLAW_CONFIG_DIR="$config_dir" \
-    openclaw config set gateway.controlUi.allowedOrigins "$merged_json" --strict-json >/dev/null
+    grokbot config set gateway.controlUi.allowedOrigins "$merged_json" --strict-json >/dev/null
 }
 
 sync_local_control_ui_origins() {
@@ -491,7 +491,7 @@ if [[ -z "${OPENCLAW_GATEWAY_TOKEN:-}" ]]; then
   echo "Generated OPENCLAW_GATEWAY_TOKEN and wrote it to $ENV_FILE." >&2
 fi
 
-CONFIG_JSON="$CONFIG_DIR/openclaw.json"
+CONFIG_JSON="$CONFIG_DIR/grokbot.json"
 if [[ ! -f "$CONFIG_JSON" ]]; then
   (
     umask 077
@@ -543,11 +543,11 @@ if [[ "$RUN_SETUP" == true ]]; then
     --init \
     "${USERNS_ARGS[@]}" "${RUN_USER_ARGS[@]}" \
     -e HOME=/home/node -e TERM=xterm-256color -e BROWSER=echo \
-    -e NPM_CONFIG_CACHE=/home/node/.openclaw/.npm \
+    -e NPM_CONFIG_CACHE=/home/node/.grokbot/.npm \
     -e OPENCLAW_NO_RESPAWN=1 \
     --env-file "$TOKEN_ENV_FILE" \
-    -v "$CONFIG_DIR:/home/node/.openclaw:rw${SELINUX_MOUNT_OPTS}" \
-    -v "$WORKSPACE_DIR:/home/node/.openclaw/workspace:rw${SELINUX_MOUNT_OPTS}" \
+    -v "$CONFIG_DIR:/home/node/.grokbot:rw${SELINUX_MOUNT_OPTS}" \
+    -v "$WORKSPACE_DIR:/home/node/.grokbot/workspace:rw${SELINUX_MOUNT_OPTS}" \
     "$OPENCLAW_IMAGE" \
     node dist/index.js onboard "$@"
   exit 0
@@ -559,19 +559,19 @@ run_podman_detached --pull="$PODMAN_PULL" -d --replace \
   --init \
   "${USERNS_ARGS[@]}" "${RUN_USER_ARGS[@]}" \
   -e HOME=/home/node -e TERM=xterm-256color \
-  -e NPM_CONFIG_CACHE=/home/node/.openclaw/.npm \
+  -e NPM_CONFIG_CACHE=/home/node/.grokbot/.npm \
   -e OPENCLAW_NO_RESPAWN=1 \
   --env-file "$TOKEN_ENV_FILE" \
-  -v "$CONFIG_DIR:/home/node/.openclaw:rw${SELINUX_MOUNT_OPTS}" \
-  -v "$WORKSPACE_DIR:/home/node/.openclaw/workspace:rw${SELINUX_MOUNT_OPTS}" \
+  -v "$CONFIG_DIR:/home/node/.grokbot:rw${SELINUX_MOUNT_OPTS}" \
+  -v "$WORKSPACE_DIR:/home/node/.grokbot/workspace:rw${SELINUX_MOUNT_OPTS}" \
   -p "${PUBLISH_HOST}:${HOST_GATEWAY_PORT}:18789" \
   -p "${PUBLISH_HOST}:${HOST_BRIDGE_PORT}:18790" \
   "$OPENCLAW_IMAGE" \
   node dist/index.js gateway --bind "$GATEWAY_BIND" --port 18789 >/dev/null
 
 echo "Container $CONTAINER_NAME started: http://127.0.0.1:${HOST_GATEWAY_PORT}/"
-echo "podman exec -it $CONTAINER_NAME openclaw dashboard --no-open"
-echo "podman exec -it $CONTAINER_NAME openclaw devices approve --latest  # if pairing required"
+echo "podman exec -it $CONTAINER_NAME grokbot dashboard --no-open"
+echo "podman exec -it $CONTAINER_NAME grokbot devices approve --latest  # if pairing required"
 echo "podman logs -f $CONTAINER_NAME"
 if [[ "$PLATFORM_NAME" == "Linux" ]]; then
   echo "For auto-start/restarts, use: ./scripts/podman/setup.sh --quadlet (Quadlet + systemd user service)."

@@ -1,9 +1,9 @@
 // Memory Core plugin module implements tools behavior.
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
+import { formatErrorMessage } from "grokbot/plugin-sdk/error-runtime";
 import type {
   MemoryReadResult,
   MemorySource,
-} from "openclaw/plugin-sdk/memory-core-host-engine-storage";
+} from "grokbot/plugin-sdk/memory-core-host-engine-storage";
 import {
   asToolParamsRecord,
   jsonResult,
@@ -14,17 +14,17 @@ import {
   resolveMemorySearchConfig,
   type MemoryCorpusSearchResult,
   type OpenClawConfig,
-} from "openclaw/plugin-sdk/memory-core-host-runtime-core";
+} from "grokbot/plugin-sdk/memory-core-host-runtime-core";
 import type {
   MemorySearchResult,
   MemorySearchRuntimeDebug,
-} from "openclaw/plugin-sdk/memory-core-host-runtime-files";
+} from "grokbot/plugin-sdk/memory-core-host-runtime-files";
 import {
   resolveMemoryDreamingConfig,
   resolveMemoryDeepDreamingConfig,
-} from "openclaw/plugin-sdk/memory-core-host-status";
-import type { OpenClawPluginToolContext } from "openclaw/plugin-sdk/plugin-entry";
-import type { PluginStateLeaseRunner } from "openclaw/plugin-sdk/plugin-state-runtime";
+} from "grokbot/plugin-sdk/memory-core-host-status";
+import type { OpenClawPluginToolContext } from "grokbot/plugin-sdk/plugin-entry";
+import type { PluginStateLeaseRunner } from "grokbot/plugin-sdk/plugin-state-runtime";
 import { asRecord } from "./dreaming-shared.js";
 import type { MemoryCoreAcquireLocalService } from "./memory/embedding-local-service.js";
 import {
@@ -173,7 +173,7 @@ async function closeMemoryManagers(
 const PAUSED_MEMORY_INDEX_WARNING =
   "Tell the user: memory search is paused because the memory index was built with a different embedding provider/model/settings.";
 const PAUSED_MEMORY_INDEX_ACTION =
-  "Tell the user to run: openclaw memory status --index or openclaw memory index --force.";
+  "Tell the user to run: grokbot memory status --index or grokbot memory index --force.";
 
 function resolvePausedMemoryIndexIdentityReason(status: { custom?: unknown }): string | undefined {
   const indexIdentity = asRecord(asRecord(status.custom)?.indexIdentity);

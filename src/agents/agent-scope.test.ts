@@ -40,7 +40,7 @@ describe("resolveAgentConfig", () => {
   it("should return undefined when agent id does not exist", () => {
     const cfg: OpenClawConfig = {
       agents: {
-        list: [{ id: "main", workspace: "~/openclaw" }],
+        list: [{ id: "main", workspace: "~/grokbot" }],
       },
     };
     const result = resolveAgentConfig(cfg, "nonexistent");
@@ -54,8 +54,8 @@ describe("resolveAgentConfig", () => {
           {
             id: "main",
             name: "Main Agent",
-            workspace: "~/openclaw",
-            agentDir: "~/.openclaw/agents/main",
+            workspace: "~/grokbot",
+            agentDir: "~/.grokbot/agents/main",
             model: "anthropic/claude-sonnet-4-6",
             utilityModel: "openai/gpt-5.4-mini",
           },
@@ -65,8 +65,8 @@ describe("resolveAgentConfig", () => {
     const result = resolveAgentConfig(cfg, "main");
     expect(result).toEqual({
       name: "Main Agent",
-      workspace: "~/openclaw",
-      agentDir: "~/.openclaw/agents/main",
+      workspace: "~/grokbot",
+      agentDir: "~/.grokbot/agents/main",
       model: "anthropic/claude-sonnet-4-6",
       utilityModel: "openai/gpt-5.4-mini",
       identity: undefined,
@@ -1032,7 +1032,7 @@ describe("resolveAgentConfig", () => {
         list: [
           {
             id: "work",
-            workspace: "~/openclaw-work",
+            workspace: "~/grokbot-work",
             sandbox: {
               mode: "all",
               scope: "agent",
@@ -1060,7 +1060,7 @@ describe("resolveAgentConfig", () => {
         list: [
           {
             id: "restricted",
-            workspace: "~/openclaw-restricted",
+            workspace: "~/grokbot-restricted",
             tools: {
               allow: ["read"],
               deny: ["exec", "write", "edit"],
@@ -1090,7 +1090,7 @@ describe("resolveAgentConfig", () => {
         list: [
           {
             id: "family",
-            workspace: "~/openclaw-family",
+            workspace: "~/grokbot-family",
             sandbox: {
               mode: "all",
               scope: "agent",
@@ -1111,28 +1111,28 @@ describe("resolveAgentConfig", () => {
   it("should normalize agent id", () => {
     const cfg: OpenClawConfig = {
       agents: {
-        list: [{ id: "main", workspace: "~/openclaw" }],
+        list: [{ id: "main", workspace: "~/grokbot" }],
       },
     };
     // Should normalize to "main" (default)
     const result = resolveAgentConfig(cfg, "");
-    expect(result?.workspace).toBe("~/openclaw");
+    expect(result?.workspace).toBe("~/grokbot");
   });
 
   it("uses OPENCLAW_HOME for default agent workspace", () => {
-    const home = path.join(path.sep, "srv", "openclaw-home");
+    const home = path.join(path.sep, "srv", "grokbot-home");
     withEnv({ OPENCLAW_HOME: home }, () => {
       const workspace = resolveAgentWorkspaceDir({} as OpenClawConfig, "main");
-      expect(workspace).toBe(path.join(path.resolve(home), ".openclaw", "workspace"));
+      expect(workspace).toBe(path.join(path.resolve(home), ".grokbot", "workspace"));
     });
   });
 
   it("uses OPENCLAW_WORKSPACE_DIR for default agent workspace", () => {
-    const workspaceDir = path.join(path.sep, "srv", "openclaw-workspace");
+    const workspaceDir = path.join(path.sep, "srv", "grokbot-workspace");
     withEnv(
       {
         OPENCLAW_WORKSPACE_DIR: workspaceDir,
-        OPENCLAW_HOME: path.join(path.sep, "srv", "openclaw-home"),
+        OPENCLAW_HOME: path.join(path.sep, "srv", "grokbot-home"),
       },
       () => {
         const workspace = resolveAgentWorkspaceDir({} as OpenClawConfig, "main");
@@ -1142,10 +1142,10 @@ describe("resolveAgentConfig", () => {
   });
 
   it("uses OPENCLAW_HOME for default agentDir", () => {
-    const home = path.join(path.sep, "srv", "openclaw-home");
+    const home = path.join(path.sep, "srv", "grokbot-home");
     withEnv({ OPENCLAW_HOME: home, OPENCLAW_STATE_DIR: "" }, () => {
       const agentDir = resolveAgentDir({} as OpenClawConfig, "main");
-      expect(agentDir).toBe(path.join(path.resolve(home), ".openclaw", "agents", "main", "agent"));
+      expect(agentDir).toBe(path.join(path.resolve(home), ".grokbot", "agents", "main", "agent"));
     });
   });
 
@@ -1200,7 +1200,7 @@ describe("resolveAgentConfig", () => {
 
 describe("resolveAgentIdByWorkspacePath", () => {
   it("returns the most specific workspace match for a directory", () => {
-    const workspaceRoot = `/tmp/openclaw-agent-scope-${Date.now()}-root`;
+    const workspaceRoot = `/tmp/grokbot-agent-scope-${Date.now()}-root`;
     const opsWorkspace = `${workspaceRoot}/projects/ops`;
     const cfg: OpenClawConfig = {
       agents: {
@@ -1215,7 +1215,7 @@ describe("resolveAgentIdByWorkspacePath", () => {
   });
 
   it("returns undefined when directory has no matching workspace", () => {
-    const workspaceRoot = `/tmp/openclaw-agent-scope-${Date.now()}-root`;
+    const workspaceRoot = `/tmp/grokbot-agent-scope-${Date.now()}-root`;
     const cfg: OpenClawConfig = {
       agents: {
         list: [
@@ -1226,12 +1226,12 @@ describe("resolveAgentIdByWorkspacePath", () => {
     };
 
     expect(
-      resolveAgentIdByWorkspacePath(cfg, `/tmp/openclaw-agent-scope-${Date.now()}-unrelated`),
+      resolveAgentIdByWorkspacePath(cfg, `/tmp/grokbot-agent-scope-${Date.now()}-unrelated`),
     ).toBeUndefined();
   });
 
   it("matches workspace paths through symlink aliases", () => {
-    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-agent-scope-"));
+    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-agent-scope-"));
     const realWorkspaceRoot = path.join(tempRoot, "real-root");
     const realOpsWorkspace = path.join(realWorkspaceRoot, "projects", "ops");
     const aliasWorkspaceRoot = path.join(tempRoot, "alias-root");
@@ -1266,7 +1266,7 @@ describe("resolveAgentIdByWorkspacePath", () => {
 
 describe("resolveAgentIdsByWorkspacePath", () => {
   it("returns matching workspaces ordered by specificity", () => {
-    const workspaceRoot = `/tmp/openclaw-agent-scope-${Date.now()}-root`;
+    const workspaceRoot = `/tmp/grokbot-agent-scope-${Date.now()}-root`;
     const opsWorkspace = `${workspaceRoot}/projects/ops`;
     const opsDevWorkspace = `${opsWorkspace}/dev`;
     const cfg: OpenClawConfig = {

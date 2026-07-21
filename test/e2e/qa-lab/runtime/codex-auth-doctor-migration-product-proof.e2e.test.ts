@@ -1,10 +1,10 @@
 // QA Lab product proof for the legacy Codex auth doctor migration matrix.
 import { afterEach, describe, it } from "vitest";
-import { closeOpenClawAgentDatabasesForTest } from "../../../../src/state/openclaw-agent-db.js";
+import { closeOpenClawAgentDatabasesForTest } from "../../../../src/state/grokbot-agent-db.js";
 import {
   createOpenClawTestInstance,
   type OpenClawTestInstance,
-} from "../../../helpers/openclaw-test-instance.js";
+} from "../../../helpers/grokbot-test-instance.js";
 import {
   type CodexAuthMigrationShape,
   runCodexAuthDoctorMigrationProof,

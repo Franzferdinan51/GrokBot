@@ -25,7 +25,7 @@ vi.mock("../plugins/channel-catalog-registry.js", () => ({
 // The channel-catalog.json fallback still walks package roots via
 // resolveOpenClawPackageRootSync. Isolate from the real repo by mocking
 // moduleUrl/argv1 resolution to null and deriving only from the tmp cwd.
-vi.mock("../infra/openclaw-root.js", () => ({
+vi.mock("../infra/grokbot-root.js", () => ({
   resolveOpenClawPackageRootSync: (opts: { cwd?: string; argv1?: string; moduleUrl?: string }) =>
     opts.cwd ?? null,
   resolveOpenClawPackageRoot: async (opts: { cwd?: string; argv1?: string; moduleUrl?: string }) =>
@@ -67,7 +67,7 @@ function useBundledPluginsDir(extensionsRoot: string | undefined): void {
 
 function seedRoot(prefix: string): string {
   const root = makeTempRepoRoot(tempDirs, prefix);
-  writeJsonFile(path.join(root, "package.json"), { name: "openclaw" });
+  writeJsonFile(path.join(root, "package.json"), { name: "grokbot" });
   vi.spyOn(process, "cwd").mockReturnValue(root);
   return root;
 }
@@ -85,8 +85,8 @@ function seedChannelPkg(
 ): void {
   const pluginDir = path.dirname(pkgJsonPath);
   writeJsonFile(pkgJsonPath, {
-    name: `@openclaw/${opts.id}`,
-    openclaw: {
+    name: `@grokbot/${opts.id}`,
+    grokbot: {
       channel: {
         id: opts.id,
         label: opts.label ?? opts.id,
@@ -97,7 +97,7 @@ function seedChannelPkg(
       },
     },
   });
-  writeJsonFile(path.join(pluginDir, "openclaw.plugin.json"), {
+  writeJsonFile(path.join(pluginDir, "grokbot.plugin.json"), {
     id: opts.id,
     configSchema: { type: "object" },
     channels: [opts.id],
@@ -147,8 +147,8 @@ describe("listBundledChannelCatalogEntries", () => {
     writeJsonFile(path.join(root, "dist", "channel-catalog.json"), {
       entries: [
         {
-          name: "@openclaw/qqbot",
-          openclaw: {
+          name: "@grokbot/qqbot",
+          grokbot: {
             channel: {
               id: "qqbot",
               label: "QQ Bot",
@@ -179,8 +179,8 @@ describe("listBundledChannelCatalogEntries", () => {
     writeJsonFile(path.join(root, "dist", "channel-catalog.json"), {
       entries: [
         {
-          name: "@openclaw/matrix",
-          openclaw: {
+          name: "@grokbot/matrix",
+          grokbot: {
             channel: {
               id: "matrix",
               label: "Matrix",
@@ -206,8 +206,8 @@ describe("listBundledChannelCatalogEntries", () => {
     writeJsonFile(path.join(root, "dist", "channel-catalog.json"), {
       entries: [
         {
-          name: "@openclaw/fallback",
-          openclaw: {
+          name: "@grokbot/fallback",
+          grokbot: {
             channel: {
               id: "fallback-channel",
               label: "Fallback",
@@ -235,8 +235,8 @@ describe("listBundledChannelCatalogEntries", () => {
     writeJsonFile(path.join(root, "dist", "channel-catalog.json"), {
       entries: [
         {
-          name: "@openclaw/fallback",
-          openclaw: {
+          name: "@grokbot/fallback",
+          grokbot: {
             channel: {
               id: "fallback-channel",
               label: "Fallback",

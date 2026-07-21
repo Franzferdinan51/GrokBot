@@ -1,21 +1,21 @@
 ---
-summary: "Use OpenClaw Code Mode to discover, call, and combine large tool catalogs in compact JavaScript or TypeScript workflows"
+summary: "Use GrokBot Code Mode to discover, call, and combine large tool catalogs in compact JavaScript or TypeScript workflows"
 title: "Code Mode"
 sidebarTitle: "Code Mode"
 read_when:
-  - You want to enable OpenClaw code mode for an agent run
+  - You want to enable GrokBot code mode for an agent run
   - You need to explain why Code Mode is different from Codex Code Mode
   - You are reviewing the compact tool contract, QuickJS-WASI sandbox, TypeScript transform, or hidden tool-catalog bridge
   - You are adding or reviewing an internal code-mode namespace registry integration
 ---
 
-Code mode is an experimental, opt-in OpenClaw agent-runtime feature. When
+Code mode is an experimental, opt-in GrokBot agent-runtime feature. When
 enabled, the model no longer sees every enabled tool schema; instead, it sees
 `exec`, `wait`, and any direct-only tool whose structured result cannot cross
 the JSON-only guest bridge. The model writes a small JavaScript or TypeScript
 program that searches, describes, and calls the hidden tool catalog.
 
-This page documents OpenClaw code mode, not Codex Code Mode. The two features
+This page documents GrokBot code mode, not Codex Code Mode. The two features
 share a name and the same control-tool names (`exec`, `wait`), but they are
 separate implementations:
 
@@ -23,7 +23,7 @@ separate implementations:
   freeform-grammar tool: the model writes raw JavaScript source (optionally
   prefixed by a `// @exec: {...}` pragma line for execution options), executed
   in Codex's in-process V8 Code Mode runtime.
-- OpenClaw code mode runs in the generic OpenClaw agent runtime and is
+- GrokBot code mode runs in the generic GrokBot agent runtime and is
   disabled unless `tools.codeMode.enabled: true` is configured. Its `exec`
   tool takes a JSON `{ code, language }` payload, executed in a QuickJS-WASI
   worker.
@@ -39,10 +39,10 @@ identically-named `exec`/`wait` tools.
   cannot survive the guest bridge.
 - `exec` evaluates model-generated JavaScript or TypeScript in an isolated
   QuickJS-WASI worker thread.
-- Every catalog-eligible enabled tool (OpenClaw core, plugin, MCP, client) is hidden as a
+- Every catalog-eligible enabled tool (GrokBot core, plugin, MCP, client) is hidden as a
   standalone model tool and exposed inside the guest program through `ALL_TOOLS`
   and `tools`.
-- The `exec` description carries a bounded quick index of exact OpenClaw/plugin
+- The `exec` description carries a bounded quick index of exact GrokBot/plugin
   catalog ids, compact input hints, and compact declared output hints when a
   trusted tool provides an output schema. It omits descriptions, full schemas,
   MCP entries, and overflow entries; guest-side catalog lookup remains the fallback.
@@ -67,7 +67,7 @@ behavior, or model selection.
   conditional logic, and parallel nested tool calls inside one code cell.
 - Fewer model round trips: a declared output contract lets the model call and
   transform a tool result in one `exec`; unknown outputs remain raw-first.
-- Provider neutral: works for OpenClaw, plugin, MCP, and client tools without
+- Provider neutral: works for GrokBot, plugin, MCP, and client tools without
   depending on provider-native code execution.
 - Fails closed: if code mode is enabled but the QuickJS-WASI runtime is
   unavailable, the run fails instead of silently falling back to broad direct
@@ -159,7 +159,7 @@ targeted logging:
 OPENCLAW_DEBUG_CODE_MODE=1 \
 OPENCLAW_DEBUG_MODEL_TRANSPORT=1 \
 OPENCLAW_DEBUG_MODEL_PAYLOAD=tools \
-openclaw gateway
+grokbot gateway
 ```
 
 With code mode active, the logged model-facing tool names should be `exec` and
@@ -186,8 +186,8 @@ validating high-risk deployments.
 | ------------------- | ------------------------------------------------------------------------------------------- |
 | Runtime             | [`quickjs-wasi`](https://github.com/vercel-labs/quickjs-wasi)                               |
 | Default state       | disabled                                                                                    |
-| Stability           | experimental OpenClaw surface (Codex Code Mode is a separate, stable Codex harness surface) |
-| Target surface      | generic OpenClaw agent runs                                                                 |
+| Stability           | experimental GrokBot surface (Codex Code Mode is a separate, stable Codex harness surface) |
+| Target surface      | generic GrokBot agent runs                                                                 |
 | Security posture    | model code is hostile                                                                       |
 | User-facing promise | enabling code mode never silently falls back to broad direct tool exposure                  |
 
@@ -213,11 +213,11 @@ Provider-owned tools such as remote Python sandboxes are separate tools. See
 
 ## Terms
 
-- **Code mode**: the OpenClaw runtime mode that hides catalog-compatible model
+- **Code mode**: the GrokBot runtime mode that hides catalog-compatible model
   tools and exposes `exec`, `wait`, plus required direct-only tools.
 - **Guest runtime**: the QuickJS-WASI JavaScript VM that evaluates model code.
 - **Host bridge**: the narrow JSON-compatible callback surface from guest code
-  back into OpenClaw.
+  back into GrokBot.
 - **Catalog**: the run-scoped list of effective tools after normal tool
   policy, plugin, MCP, and client-tool resolution.
 - **Nested tool call**: a tool call made from guest code through the host
@@ -245,7 +245,7 @@ enable the feature on its own.
 | `searchDefaultLimit`  | `8`                            | clamped to `maxSearchLimit`                     |
 | `maxSearchLimit`      | `50`                           | `1`-`50`                                        |
 
-If code mode is enabled but QuickJS-WASI cannot load, OpenClaw fails closed
+If code mode is enabled but QuickJS-WASI cannot load, GrokBot fails closed
 for that run; it does not silently expose normal tools as a fallback.
 
 ## Activation
@@ -255,7 +255,7 @@ final model request is assembled:
 
 1. Resolve the agent, model, provider, sandbox, channel, sender, and run
    policy.
-2. Build the effective OpenClaw tool list, adding eligible plugin, MCP, and
+2. Build the effective GrokBot tool list, adding eligible plugin, MCP, and
    client tools.
 3. Apply allow/deny policy.
 4. If `tools.codeMode.enabled` is false, continue with normal tool exposure.
@@ -267,7 +267,7 @@ final model request is assembled:
 
 Runs that intentionally have no tools (raw model calls, `disableTools: true`,
 or an empty `tools.allow` list) do not activate the code-mode surface even
-when `tools.codeMode.enabled: true` is configured. Code mode and OpenClaw Tool
+when `tools.codeMode.enabled: true` is configured. Code mode and GrokBot Tool
 Search are mutually exclusive for a run; if code mode activates, Tool Search's
 compaction does not.
 
@@ -304,12 +304,12 @@ Rules:
 - One of `code` or `command` must be non-empty.
 - `code` is the documented model-facing field.
 - `command` is accepted as an exec-compatible alias for hook policies and
-  trusted rewrites (the normal OpenClaw shell exec tool also uses a `command`
+  trusted rewrites (the normal GrokBot shell exec tool also uses a `command`
   field); when both are present, the values must match.
 - `language` defaults to `"javascript"`; the schema exposes it as a flat
   string enum (`"javascript" | "typescript"`), not a `oneOf`/`anyOf` union,
   since some providers reject those shapes.
-- If `language` is `"typescript"`, OpenClaw transpiles before evaluation.
+- If `language` is `"typescript"`, GrokBot transpiles before evaluation.
 - `exec` rejects `import`, `require`, dynamic import, and module-loader
   patterns.
 - `exec` never exposes the normal shell `exec` implementation recursively.
@@ -359,7 +359,7 @@ turn instead of forcing one model tool call per await. Restart-safe runs never
 auto-drain; their pending work still goes through the replay-safe checks.
 
 `exec` returns `completed` only when the guest VM has no pending work and the
-final value is JSON-compatible after OpenClaw's output adapter runs.
+final value is JSON-compatible after GrokBot's output adapter runs.
 
 ## `wait`
 
@@ -375,18 +375,18 @@ type CodeModeWaitInput = {
 
 Output is the same `CodeModeResult` union returned by `exec`.
 
-`wait` exists because nested OpenClaw tools can be slow, interactive, approval
+`wait` exists because nested GrokBot tools can be slow, interactive, approval
 gated, or stream partial updates; the model should not need to keep one long
 `exec` call open while the host waits for external work.
 
 QuickJS-WASI snapshot/restore is the resume mechanism:
 
 1. `exec` evaluates code until completion, failure, or suspension.
-2. On suspension, OpenClaw snapshots the QuickJS VM and records pending host
+2. On suspension, GrokBot snapshots the QuickJS VM and records pending host
    work.
 3. When pending work settles, `wait` restores the VM snapshot and
    re-registers host callbacks by stable names.
-4. OpenClaw delivers nested tool results into the restored VM and drains
+4. GrokBot delivers nested tool results into the restored VM and drains
    QuickJS pending jobs.
 5. `wait` returns `completed`, `failed`, or another `waiting` result.
 
@@ -417,7 +417,7 @@ declare function yield_control(reason?: string): Promise<void>;
 
 `ALL_TOOLS` is compact metadata for the run-scoped catalog; it does not contain
 full schemas by default. The model-visible `exec` description also includes a
-bounded, deterministic subset of exact OpenClaw/plugin ids, compact input
+bounded, deterministic subset of exact GrokBot/plugin ids, compact input
 hints, and trusted declared output hints. Descriptions remain deferred so
 adversarial catalog prose cannot steer the model. When that index omits a tool,
 read `ALL_TOOLS` or call `tools.search(...)` inside the guest program.
@@ -435,7 +435,7 @@ type ToolCatalogEntry = {
   name: string;
   label?: string;
   description: string;
-  source: "openclaw" | "mcp" | "client";
+  source: "grokbot" | "mcp" | "client";
   sourceName?: string;
   input: string;
   output?: string;
@@ -446,11 +446,11 @@ type ToolCatalogEntry = {
 `tools.describe(...)` when the exact full schema is still needed. Remote MCP
 and client entries use `input: "unknown"` so their untrusted schemas stay
 deferred until `describe`. `output` is
-present only for a complete compact hint derived from a trusted OpenClaw core
+present only for a complete compact hint derived from a trusted GrokBot core
 or plugin `outputSchema`. MCP and client output-schema claims are not promoted
 into this trusted catalog hint.
 
-Plugin tools use `source: "openclaw"` with `sourceName` set to the owning
+Plugin tools use `source: "grokbot"` with `sourceName` set to the owning
 plugin id; there is no separate `"plugin"` source value. `source: "mcp"` is
 used only for MCP entries in `sourceName`/`mcp` metadata (and is filtered out
 of `ALL_TOOLS`/`tools.*`, see below).
@@ -484,7 +484,7 @@ const fileRead = await tools.describe(files[0].id);
 const content = await tools.callValue(fileRead.id, { path: "README.md" });
 
 // If the hidden catalog has an unambiguous `web_search` entry:
-const hits = await tools.web_search({ query: "OpenClaw code mode" });
+const hits = await tools.web_search({ query: "GrokBot code mode" });
 ```
 
 `tools.callValue(...)` returns a normal tool's JSON `details` value directly.
@@ -493,7 +493,7 @@ that need content blocks or other result metadata.
 
 ## Declared output contracts
 
-OpenClaw tools can declare `outputSchema` for the structured value placed in
+GrokBot tools can declare `outputSchema` for the structured value placed in
 `AgentToolResult.details`. This is useful for Code Mode and Tool Search; it is
 not a provider-native tool response schema and does not change direct tool
 exposure.
@@ -503,7 +503,7 @@ For a tool made with `defineToolPlugin`, declare the schema beside
 
 ```typescript
 import { Type } from "typebox";
-import { defineToolPlugin } from "openclaw/plugin-sdk/tool-plugin";
+import { defineToolPlugin } from "grokbot/plugin-sdk/tool-plugin";
 
 const Shipment = Type.Object(
   {
@@ -535,7 +535,7 @@ property on the returned `AnyAgentTool` object.
 
 Current built-in contracts include `agents_list`, `apply_patch`,
 `conversations_list`, `conversations_send`, `conversations_turn`, `edit`,
-`openclaw`, `read`, `screen`,
+`grokbot`, `read`, `screen`,
 `sessions_history`, `sessions_list`, `sessions_search`, `sessions_send`,
 `session_status`, `spawn_task`, `terminal`, `web_fetch`, and `web_search`.
 Exact passthroughs can reuse their owning protocol schema instead of
@@ -573,7 +573,7 @@ The contract rules are strict:
 - Close object layers with `{ additionalProperties: false }` for a complete
   quick-index hint. Open, oversized, or otherwise partial schemas stay
   available through `tools.describe(...)` but do not enable one-turn field use.
-- OpenClaw compiles the schema before running the tool, then validates final
+- GrokBot compiles the schema before running the tool, then validates final
   `details` after normal tool hooks and before a catalog call returns. An
   invalid schema cannot run the tool; a mismatch fails without printing the
   value.
@@ -596,8 +596,8 @@ const files = await API.list("mcp");
 const githubApi = await API.read("mcp/github.d.ts");
 
 const issue = await MCP.github.createIssue({
-  owner: "openclaw",
-  repo: "openclaw",
+  owner: "grokbot",
+  repo: "grokbot",
   title: "Investigate gateway logs",
 });
 
@@ -640,7 +640,7 @@ declare namespace MCP.github {
 ```
 
 Declaration files are virtual, not written under the workspace or state
-directory. For each code-mode `exec` call, OpenClaw builds the run-scoped tool
+directory. For each code-mode `exec` call, GrokBot builds the run-scoped tool
 catalog, keeps the visible MCP entries, renders `mcp/index.d.ts` plus one
 `mcp/<server>.d.ts` per visible server, and injects that small read-only table
 into the QuickJS worker. Guest code sees only the `API` object:
@@ -840,7 +840,7 @@ Namespace changes should cover the security boundary and the guest behavior:
 - plugin rollback clears the owning namespace registrations
 
 Namespaces complement the generic `tools.search`/`tools.call` catalog: use the
-catalog for arbitrary enabled OpenClaw, plugin, and client tools; use `MCP`
+catalog for arbitrary enabled GrokBot, plugin, and client tools; use `MCP`
 for MCP tools; use other namespaces for plugin-owned, documented domain APIs
 where concise code is more reliable than repeated schema lookups.
 
@@ -859,12 +859,12 @@ type CodeModeOutput = { type: "text"; text: string } | { type: "json"; value: un
 Rules: output order matches guest calls; output is capped by
 `maxOutputBytes`; non-serializable values are converted to plain strings or
 errors; binary values are not supported. Images and files travel through
-ordinary OpenClaw tools, not through the code-mode bridge.
+ordinary GrokBot tools, not through the code-mode bridge.
 
 ## Tool catalog
 
 The hidden catalog includes tools after effective policy filtering, in this
-order: OpenClaw core tools, bundled plugin tools, external plugin tools, MCP
+order: GrokBot core tools, bundled plugin tools, external plugin tools, MCP
 tools, then client-provided tools for the current run.
 
 Catalog ids are stable within one run and deterministic across equivalent
@@ -874,13 +874,13 @@ tool sets when possible. Actual shape:
 <source>:<owner>:<tool-name>
 ```
 
-where `<source>` is `openclaw`, `mcp`, or `client` (plugin tools use
-`openclaw` with the plugin id as `<owner>`; core tools use `openclaw:core:*`).
+where `<source>` is `grokbot`, `mcp`, or `client` (plugin tools use
+`grokbot` with the plugin id as `<owner>`; core tools use `grokbot:core:*`).
 Examples:
 
 ```text
-openclaw:core:message
-openclaw:browser:browser_request
+grokbot:core:message
+grokbot:browser:browser_request
 mcp:github:create_issue
 client:app:select_file
 ```
@@ -899,44 +899,44 @@ exact catalog id and dispatches through the same executor path.
 
 ## Tool Search interaction
 
-Code mode supersedes the OpenClaw Tool Search model surface for runs where it
+Code mode supersedes the GrokBot Tool Search model surface for runs where it
 is active.
 
 When `tools.codeMode.enabled` is true and code mode activates:
 
-- OpenClaw does not expose `tool_search_code`, `tool_search`, `tool_describe`,
+- GrokBot does not expose `tool_search_code`, `tool_search`, `tool_describe`,
   or `tool_call` as model-visible tools.
 - The same cataloging idea moves inside the guest runtime.
 - The guest runtime receives compact `ALL_TOOLS` metadata and search/describe/
   call helpers for non-MCP tools.
 - MCP calls use the generated `MCP` namespace and its `$api()` headers instead
   of `tools.call(...)`.
-- Nested calls dispatch through the same OpenClaw executor path that Tool
+- Nested calls dispatch through the same GrokBot executor path that Tool
   Search uses.
 
-See [Tool Search](/tools/tool-search) for the OpenClaw compact catalog bridge
+See [Tool Search](/tools/tool-search) for the GrokBot compact catalog bridge
 that code mode supersedes for active runs.
 
 ## Tool names and collisions
 
-The model-visible `exec` tool is the code-mode tool. If the normal OpenClaw
+The model-visible `exec` tool is the code-mode tool. If the normal GrokBot
 shell `exec` tool is enabled, it is hidden from the model and cataloged like
 any other tool.
 
 Inside the guest runtime:
 
-- `tools.call("openclaw:core:exec", input)` can call the shell exec tool if
+- `tools.call("grokbot:core:exec", input)` can call the shell exec tool if
   policy allows it.
 - `tools.exec(...)` is installed only if the shell exec catalog entry has an
   unambiguous safe name.
 - the code-mode `exec` tool is never recursively available through `tools`.
 
-If two tools normalize to the same safe convenience name, OpenClaw omits the
+If two tools normalize to the same safe convenience name, GrokBot omits the
 convenience function and requires `tools.call(id, input)`.
 
 ## Nested tool execution
 
-Every nested tool call crosses the host bridge and re-enters OpenClaw,
+Every nested tool call crosses the host bridge and re-enters GrokBot,
 preserving: active agent id, session id and key, sender and channel context,
 sandbox policy, approval policy, plugin `before_tool_call` hooks, abort
 signal, streaming updates where available, and trajectory/audit events.
@@ -964,14 +964,14 @@ session.`.
 - A run's snapshot is removed from the map as soon as it settles to
   `completed` or `failed`, or is dropped on Gateway shutdown (nothing
   survives a restart: this is transient runtime state).
-- For read-only work, `exec` can set `restartSafe: true`. OpenClaw then rejects
+- For read-only work, `exec` can set `restartSafe: true`. GrokBot then rejects
   side-effecting catalog calls and plugin namespaces before execution and
   marks suspended results as replay-safe. If a restart interrupts `wait`,
   [restart recovery](/gateway/restart-recovery) reconstructs the turn from the
   transcript instead of restoring the process-local snapshot. The recovery
   turn itself remains limited to audited read-only core tools and explicitly
   replay-safe plugin tools.
-- OpenClaw caps the number of concurrently suspended runs per process (64) and
+- GrokBot caps the number of concurrently suspended runs per process (64) and
   rejects new suspensions past that cap with `too many suspended code mode
 runs.`.
 
@@ -980,7 +980,7 @@ suspended-run cap above, and `snapshotTtlSeconds`.
 
 ## QuickJS-WASI runtime
 
-OpenClaw loads `quickjs-wasi` as a direct dependency in the owning package; it
+GrokBot loads `quickjs-wasi` as a direct dependency in the owning package; it
 does not rely on a transitive copy installed for an unrelated dependency.
 
 Runtime responsibilities: compile/load the QuickJS-WASI WebAssembly module;
@@ -989,7 +989,7 @@ by stable names; set memory and interrupt limits; evaluate JavaScript; drain
 pending jobs; snapshot suspended VM state; restore snapshots for `wait`;
 dispose VM handles and snapshots after terminal states.
 
-The runtime executes in a Node.js worker thread, outside OpenClaw's main
+The runtime executes in a Node.js worker thread, outside GrokBot's main
 event loop. A guest infinite loop must not block the Gateway process
 indefinitely; the worker's interrupt handler enforces the wall-clock timeout
 independent of guest code cooperating.
@@ -1048,12 +1048,12 @@ objects, prototypes, and host functions do not cross into QuickJS.
 ## Telemetry
 
 Each result's `telemetry` field reports: hidden catalog size and a source
-breakdown (`openclaw`/`mcp`/`client` counts), cumulative search/describe/call
+breakdown (`grokbot`/`mcp`/`client` counts), cumulative search/describe/call
 counts for the run's catalog, and the model-visible tool names (`exec`,
 `wait`, and retained direct-only tools).
 
 Telemetry must not include secrets, raw environment values, or unredacted
-tool inputs beyond existing OpenClaw trajectory policy.
+tool inputs beyond existing GrokBot trajectory policy.
 
 ## Debugging
 
@@ -1065,7 +1065,7 @@ OPENCLAW_DEBUG_CODE_MODE=1 \
 OPENCLAW_DEBUG_MODEL_TRANSPORT=1 \
 OPENCLAW_DEBUG_MODEL_PAYLOAD=tools \
 OPENCLAW_DEBUG_SSE=events \
-openclaw gateway
+grokbot gateway
 ```
 
 For payload-shape debugging, use `OPENCLAW_DEBUG_MODEL_PAYLOAD=full-redacted`.
@@ -1106,7 +1106,7 @@ Code mode coverage should prove:
 - all catalog-eligible effective non-MCP tools appear in `ALL_TOOLS`
 - direct-only tools stay model-visible and do not appear in `ALL_TOOLS`
 - denied tools do not appear in `ALL_TOOLS`
-- `tools.search`, `tools.describe`, `tools.callValue`, and `tools.call` work for OpenClaw tools
+- `tools.search`, `tools.describe`, `tools.callValue`, and `tools.call` work for GrokBot tools
 - `API.list("mcp")` and `API.read("mcp/<server>.d.ts")` expose TypeScript-style
   MCP declarations without a bridge/tool call
 - MCP namespace `$api()` remains available as an inline fallback for schemas
@@ -1137,12 +1137,12 @@ Run these as integration or end-to-end tests when changing the runtime:
 2. Send an agent turn with a small direct tool set.
 3. Assert the model-visible tools are unchanged.
 4. Restart with `tools.codeMode.enabled: true`.
-5. Send an agent turn with OpenClaw, plugin, MCP, and client test tools.
+5. Send an agent turn with GrokBot, plugin, MCP, and client test tools.
 6. Assert the model-visible tool list is `exec`, `wait`, plus only configured
    direct-only tools.
 7. In `exec`, read `ALL_TOOLS` and assert the catalog-eligible effective test
    tools are present while direct-only tools are absent.
-8. In `exec`, call OpenClaw/plugin/client tools through `tools.search`,
+8. In `exec`, call GrokBot/plugin/client tools through `tools.search`,
    `tools.describe`, and `tools.callValue` (or raw `tools.call`).
 9. In `exec`, call `API.list("mcp")` and `API.read("mcp/<server>.d.ts")` and
    assert the declaration files describe visible MCP tools.

@@ -5,12 +5,12 @@ import { useAutoCleanupTempDirTracker } from "../../test/helpers/temp-dir.js";
 import { requireNodeSqlite } from "../infra/node-sqlite.js";
 import type { RuntimeEnv } from "../runtime.js";
 import { createLocalSqliteSnapshotProvider } from "../snapshot/local-repository.js";
-import { OPENCLAW_AGENT_SCHEMA_VERSION } from "../state/openclaw-agent-db.js";
-import { resolveOpenClawAgentSqlitePath } from "../state/openclaw-agent-db.paths.js";
-import { OPENCLAW_AGENT_SCHEMA_SQL } from "../state/openclaw-agent-schema.generated.js";
-import { OPENCLAW_STATE_SCHEMA_VERSION } from "../state/openclaw-state-db.js";
-import { resolveOpenClawStateSqlitePath } from "../state/openclaw-state-db.paths.js";
-import { OPENCLAW_STATE_SCHEMA_SQL } from "../state/openclaw-state-schema.generated.js";
+import { OPENCLAW_AGENT_SCHEMA_VERSION } from "../state/grokbot-agent-db.js";
+import { resolveOpenClawAgentSqlitePath } from "../state/grokbot-agent-db.paths.js";
+import { OPENCLAW_AGENT_SCHEMA_SQL } from "../state/grokbot-agent-schema.generated.js";
+import { OPENCLAW_STATE_SCHEMA_VERSION } from "../state/grokbot-state-db.js";
+import { resolveOpenClawStateSqlitePath } from "../state/grokbot-state-db.paths.js";
+import { OPENCLAW_STATE_SCHEMA_SQL } from "../state/grokbot-state-schema.generated.js";
 import {
   backupSqliteCreateCommand,
   backupSqliteListCommand,
@@ -119,11 +119,11 @@ function createAgentDatabase(databasePath: string, agentId: string): void {
 
 describe("SQLite backup commands", () => {
   it("creates, lists, verifies, and fresh-restores the global database", async () => {
-    const tempDir = tempDirs.make("openclaw-backup-sqlite-");
+    const tempDir = tempDirs.make("grokbot-backup-sqlite-");
     const stateDir = path.join(tempDir, "state");
     const repositoryPath = path.join(tempDir, "snapshots");
     const scratchPath = path.join(tempDir, "scratch");
-    const restorePath = path.join(tempDir, "restore", "openclaw.sqlite");
+    const restorePath = path.join(tempDir, "restore", "grokbot.sqlite");
     process.env.OPENCLAW_STATE_DIR = stateDir;
     const databasePath = resolveOpenClawStateSqlitePath();
     await fs.mkdir(path.dirname(databasePath), { recursive: true });
@@ -139,7 +139,7 @@ describe("SQLite backup commands", () => {
     });
     expect(created.manifest.database).toMatchObject({
       role: "global",
-      basename: "openclaw.sqlite",
+      basename: "grokbot.sqlite",
       userVersion: OPENCLAW_STATE_SCHEMA_VERSION,
     });
     expect(JSON.parse(runtime.logs.shift() ?? "{}")).toEqual(created);
@@ -184,7 +184,7 @@ describe("SQLite backup commands", () => {
   });
 
   it("creates a snapshot for a normalized per-agent database", async () => {
-    const tempDir = tempDirs.make("openclaw-backup-sqlite-");
+    const tempDir = tempDirs.make("grokbot-backup-sqlite-");
     const stateDir = path.join(tempDir, "state");
     const repositoryPath = path.join(tempDir, "snapshots");
     process.env.OPENCLAW_STATE_DIR = stateDir;
@@ -201,14 +201,14 @@ describe("SQLite backup commands", () => {
     expect(created.manifest.database).toEqual({
       role: "agent",
       agentId: "ops-team",
-      basename: "openclaw-agent.sqlite",
+      basename: "grokbot-agent.sqlite",
       userVersion: OPENCLAW_AGENT_SCHEMA_VERSION,
     });
     expect(runtime.logs).toEqual([expect.stringContaining("Database: agent:ops-team")]);
     expect(runtime.errors).toEqual([]);
   });
 
-  it("requires exactly one named OpenClaw database source", async () => {
+  it("requires exactly one named GrokBot database source", async () => {
     const runtime = createRuntimeCapture();
 
     await expect(
@@ -238,7 +238,7 @@ describe("SQLite backup commands", () => {
   });
 
   it("rejects generic provider artifacts before verify or restore", async () => {
-    const tempDir = tempDirs.make("openclaw-backup-sqlite-");
+    const tempDir = tempDirs.make("grokbot-backup-sqlite-");
     const databasePath = path.join(tempDir, "generic.sqlite");
     const repositoryPath = path.join(tempDir, "snapshots");
     const restorePath = path.join(tempDir, "restore", "generic.sqlite");

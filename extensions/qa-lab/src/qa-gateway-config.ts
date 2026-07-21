@@ -1,7 +1,7 @@
 // Qa Lab helper module supports qa gateway config behavior.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import type { ModelProviderConfig } from "openclaw/plugin-sdk/provider-model-shared";
-import { uniqueStrings } from "openclaw/plugin-sdk/string-coerce-runtime";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import type { ModelProviderConfig } from "grokbot/plugin-sdk/provider-model-shared";
+import { uniqueStrings } from "grokbot/plugin-sdk/string-coerce-runtime";
 import {
   defaultQaModelForMode,
   normalizeQaProviderMode,
@@ -138,7 +138,7 @@ export function buildQaGatewayConfig(params: {
     ]),
   ];
   const resolveModelEntry = (modelRef: string) => {
-    // Codex owns its app-server transport. OpenClaw provider params would make
+    // Codex owns its app-server transport. GrokBot provider params would make
     // the forced parity cell an authored route that Codex correctly rejects.
     if (params.forcedRuntime === "codex") {
       return {};

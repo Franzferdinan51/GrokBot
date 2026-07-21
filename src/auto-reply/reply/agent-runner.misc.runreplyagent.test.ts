@@ -156,7 +156,7 @@ vi.mock("../../agents/thinking-runtime.js", async (importOriginal) => {
     resolveCandidateThinkingLevel: (
       params: Parameters<typeof actual.resolveCandidateThinkingLevel>[0],
     ) => params.level,
-    resolveEffectiveAgentRuntime: () => "openclaw",
+    resolveEffectiveAgentRuntime: () => "grokbot",
   };
 });
 
@@ -211,7 +211,7 @@ vi.mock("../../utils/provider-utils.js", () => ({
 
 const loadCronStoreMock = vi.fn();
 vi.mock("../../cron/store.js", () => {
-  const resolveCronPath = (storePath?: string) => storePath ?? "/tmp/openclaw-cron-store.json";
+  const resolveCronPath = (storePath?: string) => storePath ?? "/tmp/grokbot-cron-store.json";
   return {
     loadCronJobsStore: (...args: unknown[]) => loadCronStoreMock(...args),
     loadCronStore: (...args: unknown[]) => loadCronStoreMock(...args),
@@ -537,7 +537,7 @@ describe("runReplyAgent auto-compaction token update", () => {
 
   it("updates totalTokens from lastCallUsage even without compaction", async () => {
     const { sessionKey, stored } = await runBaseReplyWithAgentMeta({
-      tmpPrefix: "openclaw-usage-last-",
+      tmpPrefix: "grokbot-usage-last-",
       agentMeta: {
         // Tool-use loop: accumulated input is higher than last call's input
         usage: { input: 75_000, output: 5_000, total: 80_000 },
@@ -550,7 +550,7 @@ describe("runReplyAgent auto-compaction token update", () => {
   }, 180_000);
 
   it("keeps an unarmed preflight drain visible instead of dropping the reply", async () => {
-    const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-preflight-drain-"));
+    const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-preflight-drain-"));
     const storePath = path.join(tmp, "sessions.json");
     const sessionKey = "main";
     const sessionEntry = {
@@ -877,7 +877,7 @@ describe("runReplyAgent auto-compaction token update", () => {
 
   it("reports live diagnostic context from promptTokens, not provider usage totals", async () => {
     const { usageEvent } = await runBaseReplyWithAgentMeta({
-      tmpPrefix: "openclaw-usage-diagnostic-",
+      tmpPrefix: "grokbot-usage-diagnostic-",
       collectDiagnostics: true,
       agentMeta: {
         usage: { input: 75_000, output: 5_000, cacheRead: 25_000, total: 105_000 },
@@ -917,7 +917,7 @@ describe("runReplyAgent auto-compaction token update", () => {
 
   it("falls back to last-call prompt usage for live diagnostic context", async () => {
     const { usageEvent } = await runBaseReplyWithAgentMeta({
-      tmpPrefix: "openclaw-usage-diagnostic-last-",
+      tmpPrefix: "grokbot-usage-diagnostic-last-",
       collectDiagnostics: true,
       agentMeta: {
         usage: { input: 75_000, output: 5_000, cacheRead: 25_000, total: 105_000 },
@@ -961,7 +961,7 @@ describe("runReplyAgent auto-compaction token update", () => {
 
   it("does not treat diagnostic compaction metadata as a context-refresh trigger", async () => {
     const workspaceDir = await fs.mkdtemp(
-      path.join(os.tmpdir(), "openclaw-post-compaction-workspace-"),
+      path.join(os.tmpdir(), "grokbot-post-compaction-workspace-"),
     );
     await fs.writeFile(
       path.join(workspaceDir, "AGENTS.md"),
@@ -976,7 +976,7 @@ describe("runReplyAgent auto-compaction token update", () => {
     );
 
     const { sessionKey } = await runBaseReplyWithAgentMeta({
-      tmpPrefix: "openclaw-post-compaction-workspace-root-",
+      tmpPrefix: "grokbot-post-compaction-workspace-root-",
       workspaceDir,
       config: {
         agents: {
@@ -1221,7 +1221,7 @@ describe("runReplyAgent Active Memory inline debug", () => {
   }
 
   it("appends inline Active Memory status payload when verbose is enabled", async () => {
-    const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-active-memory-inline-"));
+    const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-active-memory-inline-"));
     const storePath = path.join(tmp, "sessions.json");
     const sessionKey = "main";
     const sessionEntry: SessionEntry = {
@@ -1309,7 +1309,7 @@ describe("runReplyAgent Active Memory inline debug", () => {
   });
 
   it("appends inline Active Memory status and trace payloads when verbose and trace are enabled", async () => {
-    const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-active-memory-inline-"));
+    const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-active-memory-inline-"));
     const storePath = path.join(tmp, "sessions.json");
     const sessionKey = "main";
     const sessionEntry: SessionEntry = {
@@ -1398,7 +1398,7 @@ describe("runReplyAgent Active Memory inline debug", () => {
   });
 
   it("appends inline Active Memory trace payload when only trace is enabled", async () => {
-    const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-active-memory-inline-"));
+    const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-active-memory-inline-"));
     const storePath = path.join(tmp, "sessions.json");
     const sessionKey = "main";
     const sessionEntry: SessionEntry = {
@@ -1486,7 +1486,7 @@ describe("runReplyAgent Active Memory inline debug", () => {
   });
 
   it("appends raw trace payloads when trace raw is enabled", async () => {
-    const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-trace-raw-usage-"));
+    const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-trace-raw-usage-"));
     const storePath = path.join(tmp, "sessions.json");
     const sessionFile = path.join(tmp, "session.jsonl");
     const sessionKey = "main";
@@ -1723,7 +1723,7 @@ describe("runReplyAgent Active Memory inline debug", () => {
   });
 
   it("does not emit persisted trace output to an unauthorized sender", async () => {
-    const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-trace-raw-unauthorized-"));
+    const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-trace-raw-unauthorized-"));
     const storePath = path.join(tmp, "sessions.json");
     const sessionFile = path.join(tmp, "session.jsonl");
     const sessionKey = "main";
@@ -1819,7 +1819,7 @@ describe("runReplyAgent Active Memory inline debug", () => {
   });
 
   it("shows session and last-turn usage totals without per-call usage blocks", async () => {
-    const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-trace-raw-usage-"));
+    const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-trace-raw-usage-"));
     const storePath = path.join(tmp, "sessions.json");
     const sessionFile = path.join(tmp, "session.jsonl");
     const sessionKey = "main";
@@ -1929,7 +1929,7 @@ describe("runReplyAgent Active Memory inline debug", () => {
   });
 
   it("escapes markdown fence delimiters inside raw trace blocks", async () => {
-    const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-trace-raw-fence-"));
+    const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-trace-raw-fence-"));
     const storePath = path.join(tmp, "sessions.json");
     const sessionFile = path.join(tmp, "session.jsonl");
     const sessionKey = "main";
@@ -2026,7 +2026,7 @@ describe("runReplyAgent Active Memory inline debug", () => {
   });
 
   it("does not reload the session store when verbose is disabled", async () => {
-    const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-active-memory-inline-"));
+    const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-active-memory-inline-"));
     const storePath = path.join(tmp, "sessions.json");
     const sessionKey = "main";
     const sessionEntry: SessionEntry = {
@@ -3404,7 +3404,7 @@ describe("runReplyAgent private message_tool_only final warning (#85714)", () =>
     replyOperation?: ReturnType<typeof createReplyOperation>;
     turnAdoptionLifecycle?: FollowupRun["turnAdoptionLifecycle"];
   }) {
-    const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-stranded-"));
+    const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-stranded-"));
     const storePath = path.join(tmp, "sessions.json");
     const sessionKey = "stranded";
     const sessionEntry = {

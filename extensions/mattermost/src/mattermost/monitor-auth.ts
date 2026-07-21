@@ -1,16 +1,16 @@
 // Mattermost plugin module implements monitor auth behavior.
-import { parseAccessGroupAllowFromEntry } from "openclaw/plugin-sdk/access-groups";
+import { parseAccessGroupAllowFromEntry } from "grokbot/plugin-sdk/access-groups";
 import {
   type ChannelIngressDecision,
   type ChannelIngressEventInput,
   type ChannelIngressIdentifierKind,
   resolveStableChannelMessageIngress,
   type StableChannelIngressIdentityParams,
-} from "openclaw/plugin-sdk/channel-ingress-runtime";
+} from "grokbot/plugin-sdk/channel-ingress-runtime";
 import {
   normalizeLowercaseStringOrEmpty,
   uniqueStrings,
-} from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/string-coerce-runtime";
 import type { ResolvedMattermostAccount } from "./accounts.js";
 import type { MattermostChannel } from "./client.js";
 import type { ChatType, OpenClawConfig } from "./runtime-api.js";

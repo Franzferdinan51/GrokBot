@@ -1,6 +1,6 @@
 // Discord plugin module implements message handler.preflight behavior.
-import { formatAllowlistMatchMeta } from "openclaw/plugin-sdk/allow-from";
-import { recordChannelActivity } from "openclaw/plugin-sdk/channel-activity-runtime";
+import { formatAllowlistMatchMeta } from "grokbot/plugin-sdk/allow-from";
+import { recordChannelActivity } from "grokbot/plugin-sdk/channel-activity-runtime";
 import {
   buildMentionRegexes,
   classifyChannelInboundEvent,
@@ -10,17 +10,17 @@ import {
   resolveUnmentionedGroupInboundPolicy,
   recordDroppedChannelInboundHistory,
   toInboundMediaFacts,
-} from "openclaw/plugin-sdk/channel-inbound";
-import { isRecentOutboundMessageIdentity } from "openclaw/plugin-sdk/channel-outbound";
-import { hasControlCommand } from "openclaw/plugin-sdk/command-detection";
-import { isAbortRequestText } from "openclaw/plugin-sdk/command-primitives-runtime";
-import { shouldHandleTextCommands } from "openclaw/plugin-sdk/command-surface";
-import { isDangerousNameMatchingEnabled } from "openclaw/plugin-sdk/dangerous-name-runtime";
-import { logDebug } from "openclaw/plugin-sdk/logging-core";
-import { mimeTypeFromFilePath } from "openclaw/plugin-sdk/media-mime";
-import type { HistoryEntry } from "openclaw/plugin-sdk/reply-history";
-import { getChildLogger, logVerbose } from "openclaw/plugin-sdk/runtime-env";
-import { enqueueSystemEvent } from "openclaw/plugin-sdk/system-event-runtime";
+} from "grokbot/plugin-sdk/channel-inbound";
+import { isRecentOutboundMessageIdentity } from "grokbot/plugin-sdk/channel-outbound";
+import { hasControlCommand } from "grokbot/plugin-sdk/command-detection";
+import { isAbortRequestText } from "grokbot/plugin-sdk/command-primitives-runtime";
+import { shouldHandleTextCommands } from "grokbot/plugin-sdk/command-surface";
+import { isDangerousNameMatchingEnabled } from "grokbot/plugin-sdk/dangerous-name-runtime";
+import { logDebug } from "grokbot/plugin-sdk/logging-core";
+import { mimeTypeFromFilePath } from "grokbot/plugin-sdk/media-mime";
+import type { HistoryEntry } from "grokbot/plugin-sdk/reply-history";
+import { getChildLogger, logVerbose } from "grokbot/plugin-sdk/runtime-env";
+import { enqueueSystemEvent } from "grokbot/plugin-sdk/system-event-runtime";
 import { resolveDefaultDiscordAccountId } from "../accounts.js";
 import { ChannelType, MessageType, type User } from "../internal/discord.js";
 import {

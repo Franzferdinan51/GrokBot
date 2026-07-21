@@ -1,12 +1,12 @@
 // Whatsapp plugin module implements action runtime behavior.
-import type { AgentToolResult } from "openclaw/plugin-sdk/agent-core";
+import type { AgentToolResult } from "grokbot/plugin-sdk/agent-core";
 import {
   createActionGate,
   jsonResult,
   readReactionParams,
   readStringParam,
-} from "openclaw/plugin-sdk/channel-actions";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+} from "grokbot/plugin-sdk/channel-actions";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import { resolveAuthorizedWhatsAppOutboundTarget } from "./action-runtime-target-auth.js";
 import { resolveWhatsAppReactionLevel } from "./reaction-level.js";
 import { sendReactionWhatsApp } from "./send.js";

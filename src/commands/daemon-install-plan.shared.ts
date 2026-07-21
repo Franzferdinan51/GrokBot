@@ -63,12 +63,12 @@ export function resolveDaemonNodeBinDir(nodePath?: string): string[] | undefined
 }
 
 function isOpenClawCommandBasename(basename: string, platform: NodeJS.Platform): boolean {
-  if (basename === "openclaw") {
+  if (basename === "grokbot") {
     return true;
   }
   if (platform === "win32") {
     return (
-      basename === "openclaw.cmd" || basename === "openclaw.ps1" || basename === "openclaw.exe"
+      basename === "grokbot.cmd" || basename === "grokbot.ps1" || basename === "grokbot.exe"
     );
   }
   return false;
@@ -95,7 +95,7 @@ function addUniquePathDir(dirs: string[], dir: string | undefined): void {
   dirs.push(dir);
 }
 
-/** Resolve the OpenClaw CLI binary directory from argv/PATH for daemon PATH. */
+/** Resolve the GrokBot CLI binary directory from argv/PATH for daemon PATH. */
 function resolveDaemonOpenClawBinDir(
   params: {
     argv?: string[];
@@ -129,7 +129,7 @@ function resolveDaemonOpenClawBinDir(
     if (!path.isAbsolute(segment)) {
       continue;
     }
-    const candidate = path.join(segment, platform === "win32" ? "openclaw.cmd" : "openclaw");
+    const candidate = path.join(segment, platform === "win32" ? "grokbot.cmd" : "grokbot");
     if (!existsSync(candidate)) {
       continue;
     }
@@ -143,7 +143,7 @@ function resolveDaemonOpenClawBinDir(
   return dirs.length > 0 ? dirs : undefined;
 }
 
-/** Merge Node and OpenClaw binary directories for the daemon service PATH. */
+/** Merge Node and GrokBot binary directories for the daemon service PATH. */
 export function resolveDaemonServicePathDirs(params: {
   nodePath?: string;
   argv?: string[];

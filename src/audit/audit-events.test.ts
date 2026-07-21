@@ -11,7 +11,7 @@ import {
 import {
   closeOpenClawStateDatabaseForTest,
   openOpenClawStateDatabase,
-} from "../state/openclaw-state-db.js";
+} from "../state/grokbot-state-db.js";
 import { createAgentEventAuditRecorder } from "./agent-event-audit.js";
 import { listAuditEvents, pruneExpiredAuditEvents, recordAuditEvent } from "./audit-event-store.js";
 import type { AuditEventInput, ToolActionAuditEventInput } from "./audit-event-types.js";
@@ -25,7 +25,7 @@ let auditTestRunSequence = 0;
 let currentAuditTestRunId = "run-test-0";
 
 function createDatabaseOptions() {
-  return { env: { OPENCLAW_STATE_DIR: makeTempDir(tempDirs, "openclaw-audit-") } };
+  return { env: { OPENCLAW_STATE_DIR: makeTempDir(tempDirs, "grokbot-audit-") } };
 }
 
 function auditInput(overrides: Partial<AuditEventInput> = {}): AuditEventInput {

@@ -11,7 +11,7 @@ import {
 
 type WorkerBundleArtifact = Extract<WorkerInstallationArtifact, { install: "bundle" }>;
 const fixturePackageJson = `${JSON.stringify({
-  name: "openclaw",
+  name: "grokbot",
   version: "1.2.3",
   type: "module",
   files: ["dist/"],
@@ -23,7 +23,7 @@ async function writeFixture(
 ): Promise<void> {
   await fs.mkdir(packageRoot, { recursive: true });
   await fs.writeFile(path.join(packageRoot, "package.json"), fixturePackageJson, "utf8");
-  await fs.writeFile(path.join(packageRoot, "openclaw.mjs"), "import './dist/entry.js';\n", {
+  await fs.writeFile(path.join(packageRoot, "grokbot.mjs"), "import './dist/entry.js';\n", {
     encoding: "utf8",
     mode: 0o755,
   });
@@ -52,14 +52,14 @@ function bundleArtifact(overrides: Partial<WorkerBundleArtifact> = {}): WorkerBu
     openclawVersion: "1.2.3",
     protocolFeatures: [],
     tarballSha256: "b".repeat(64),
-    tarballPath: "/tmp/openclaw-worker.tgz",
+    tarballPath: "/tmp/grokbot-worker.tgz",
     ...overrides,
   };
 }
 
 describe("worker bundle producer", () => {
   it("hashes the same file manifest deterministically", async () => {
-    await withTempDir({ prefix: "openclaw-worker-bundle-" }, async (root) => {
+    await withTempDir({ prefix: "grokbot-worker-bundle-" }, async (root) => {
       const packageA = path.join(root, "package-a");
       const packageB = path.join(root, "package-b");
       const files = [
@@ -87,24 +87,24 @@ describe("worker bundle producer", () => {
       await expect(listTarball(first.tarballPath)).resolves.toEqual([
         "dist/entry.js",
         "dist/nested/worker.js",
-        "openclaw.mjs",
+        "grokbot.mjs",
         "package.json",
       ]);
     });
   });
 
   it("prunes workspace deps and lifecycle fields from dev manifests", async () => {
-    await withTempDir({ prefix: "openclaw-worker-bundle-prune-" }, async (root) => {
+    await withTempDir({ prefix: "grokbot-worker-bundle-prune-" }, async (root) => {
       const packageRoot = path.join(root, "package");
       await writeFixture(packageRoot, [["dist/entry.js", "export const entry = true;\n"]]);
       await fs.writeFile(
         path.join(packageRoot, "package.json"),
         `${JSON.stringify({
-          name: "openclaw",
+          name: "grokbot",
           version: "1.2.3",
           type: "module",
           files: ["dist/"],
-          dependencies: { json5: "2.2.3", "@openclaw/gateway-protocol": "workspace:*" },
+          dependencies: { json5: "2.2.3", "@grokbot/gateway-protocol": "workspace:*" },
           devDependencies: { vitest: "4.0.0" },
           scripts: { prepare: "node scripts/prepare.mjs" },
           pnpm: { patchedDependencies: {} },
@@ -131,32 +131,32 @@ describe("worker bundle producer", () => {
   });
 
   it("vendors workspace packages that the shipped dist imports", async () => {
-    await withTempDir({ prefix: "openclaw-worker-bundle-vendor-" }, async (root) => {
+    await withTempDir({ prefix: "grokbot-worker-bundle-vendor-" }, async (root) => {
       const packageRoot = path.join(root, "package");
       await writeFixture(packageRoot, [
-        ["dist/entry.js", 'import { fake } from "@openclaw/fake-pkg";\nexport { fake };\n'],
+        ["dist/entry.js", 'import { fake } from "@grokbot/fake-pkg";\nexport { fake };\n'],
       ]);
       await fs.writeFile(
         path.join(packageRoot, "package.json"),
         `${JSON.stringify({
-          name: "openclaw",
+          name: "grokbot",
           version: "1.2.3",
           type: "module",
           files: ["dist/"],
           dependencies: {
             json5: "2.2.3",
-            "@openclaw/fake-pkg": "workspace:*",
-            "@openclaw/gateway-protocol": "workspace:*",
+            "@grokbot/fake-pkg": "workspace:*",
+            "@grokbot/gateway-protocol": "workspace:*",
           },
         })}\n`,
         "utf8",
       );
-      const vendorSource = path.join(packageRoot, "node_modules/@openclaw/fake-pkg");
+      const vendorSource = path.join(packageRoot, "node_modules/@grokbot/fake-pkg");
       await fs.mkdir(path.join(vendorSource, "dist"), { recursive: true });
       await fs.writeFile(
         path.join(vendorSource, "package.json"),
         `${JSON.stringify({
-          name: "@openclaw/fake-pkg",
+          name: "@grokbot/fake-pkg",
           version: "1.2.3",
           type: "module",
           main: "./dist/index.js",
@@ -180,10 +180,10 @@ describe("worker bundle producer", () => {
 
       await expect(listTarball(bundle.tarballPath)).resolves.toEqual([
         "dist/entry.js",
-        "openclaw.mjs",
+        "grokbot.mjs",
         "package.json",
-        "vendor/openclaw-fake-pkg/dist/index.js",
-        "vendor/openclaw-fake-pkg/package.json",
+        "vendor/grokbot-fake-pkg/dist/index.js",
+        "vendor/grokbot-fake-pkg/package.json",
       ]);
       const extractRoot = path.join(root, "extract");
       await fs.mkdir(extractRoot, { recursive: true });
@@ -193,10 +193,10 @@ describe("worker bundle producer", () => {
       ) as Record<string, unknown>;
       expect(staged.dependencies).toEqual({
         json5: "2.2.3",
-        "@openclaw/fake-pkg": "file:./vendor/openclaw-fake-pkg",
+        "@grokbot/fake-pkg": "file:./vendor/grokbot-fake-pkg",
       });
       const vendored = JSON.parse(
-        await fs.readFile(path.join(extractRoot, "vendor/openclaw-fake-pkg/package.json"), "utf8"),
+        await fs.readFile(path.join(extractRoot, "vendor/grokbot-fake-pkg/package.json"), "utf8"),
       ) as Record<string, unknown>;
       expect(vendored.dependencies).toEqual({ "partial-json": "0.1.7" });
       expect(vendored).not.toHaveProperty("scripts");
@@ -205,19 +205,19 @@ describe("worker bundle producer", () => {
   });
 
   it("fails closed when a dist-referenced workspace package is not installed", async () => {
-    await withTempDir({ prefix: "openclaw-worker-bundle-vendor-missing-" }, async (root) => {
+    await withTempDir({ prefix: "grokbot-worker-bundle-vendor-missing-" }, async (root) => {
       const packageRoot = path.join(root, "package");
       await writeFixture(packageRoot, [
-        ["dist/entry.js", 'import "@openclaw/fake-pkg";\nexport {};\n'],
+        ["dist/entry.js", 'import "@grokbot/fake-pkg";\nexport {};\n'],
       ]);
       await fs.writeFile(
         path.join(packageRoot, "package.json"),
         `${JSON.stringify({
-          name: "openclaw",
+          name: "grokbot",
           version: "1.2.3",
           type: "module",
           files: ["dist/"],
-          dependencies: { "@openclaw/fake-pkg": "workspace:*" },
+          dependencies: { "@grokbot/fake-pkg": "workspace:*" },
         })}\n`,
         "utf8",
       );
@@ -228,12 +228,12 @@ describe("worker bundle producer", () => {
           cacheDir: path.join(root, "cache"),
           openclawVersion: "1.2.3",
         }).prepare(),
-      ).rejects.toThrow("cannot resolve workspace dependency @openclaw/fake-pkg");
+      ).rejects.toThrow("cannot resolve workspace dependency @grokbot/fake-pkg");
     });
   });
 
   it("changes the hash when file contents change", async () => {
-    await withTempDir({ prefix: "openclaw-worker-bundle-change-" }, async (root) => {
+    await withTempDir({ prefix: "grokbot-worker-bundle-change-" }, async (root) => {
       const packageRoot = path.join(root, "package");
       const cacheDir = path.join(root, "cache");
       await writeFixture(packageRoot, [["dist/entry.js", "export const value = 1;\n"]]);
@@ -253,7 +253,7 @@ describe("worker bundle producer", () => {
   });
 
   it("archives the staged bytes when the source changes during packaging", async () => {
-    await withTempDir({ prefix: "openclaw-worker-bundle-mutation-" }, async (root) => {
+    await withTempDir({ prefix: "grokbot-worker-bundle-mutation-" }, async (root) => {
       const baselineRoot = path.join(root, "baseline");
       const packageRoot = path.join(root, "package");
       const originalContents = "export const value = 'before';\n";
@@ -298,7 +298,7 @@ describe("worker bundle producer", () => {
   });
 
   it("owns one immutable build snapshot for its lifecycle", async () => {
-    await withTempDir({ prefix: "openclaw-worker-bundle-cache-" }, async (root) => {
+    await withTempDir({ prefix: "grokbot-worker-bundle-cache-" }, async (root) => {
       const packageRoot = path.join(root, "package");
       await writeFixture(packageRoot, [["dist/entry.js", "export {};\n"]]);
       const producer = createWorkerBundleProducer({
@@ -319,7 +319,7 @@ describe("worker bundle producer", () => {
   });
 
   it("retries after a failed preparation without polling a successful snapshot", async () => {
-    await withTempDir({ prefix: "openclaw-worker-bundle-retry-" }, async (root) => {
+    await withTempDir({ prefix: "grokbot-worker-bundle-retry-" }, async (root) => {
       const packageRoot = path.join(root, "package");
       const producer = createWorkerBundleProducer({
         packageRoot,
@@ -338,7 +338,7 @@ describe("worker bundle producer", () => {
   });
 
   it("replaces a corrupt content-addressed cache entry", async () => {
-    await withTempDir({ prefix: "openclaw-worker-bundle-corrupt-" }, async (root) => {
+    await withTempDir({ prefix: "grokbot-worker-bundle-corrupt-" }, async (root) => {
       const packageRoot = path.join(root, "package");
       const cacheDir = path.join(root, "cache");
       await writeFixture(packageRoot, [["dist/entry.js", "export {};\n"]]);
@@ -351,32 +351,32 @@ describe("worker bundle producer", () => {
       expect(repaired.tarballPath).toBe(first.tarballPath);
       await expect(listTarball(repaired.tarballPath)).resolves.toEqual([
         "dist/entry.js",
-        "openclaw.mjs",
+        "grokbot.mjs",
         "package.json",
       ]);
     });
   });
 
   it.skipIf(process.platform === "win32")("rejects symlinked runtime files", async () => {
-    await withTempDir({ prefix: "openclaw-worker-bundle-symlink-" }, async (root) => {
+    await withTempDir({ prefix: "grokbot-worker-bundle-symlink-" }, async (root) => {
       const packageRoot = path.join(root, "package");
       await writeFixture(packageRoot, [["dist/entry.js", "export {};\n"]]);
       await fs.rename(
-        path.join(packageRoot, "openclaw.mjs"),
+        path.join(packageRoot, "grokbot.mjs"),
         path.join(packageRoot, "launcher-target.mjs"),
       );
-      await fs.symlink("launcher-target.mjs", path.join(packageRoot, "openclaw.mjs"));
+      await fs.symlink("launcher-target.mjs", path.join(packageRoot, "grokbot.mjs"));
 
       await expect(
         createWorkerBundleProducer({ packageRoot, cacheDir: path.join(root, "cache") }).prepare(),
-      ).rejects.toThrow("Unsafe worker bundle path: openclaw.mjs");
+      ).rejects.toThrow("Unsafe worker bundle path: grokbot.mjs");
     });
   });
 });
 
 describe("worker npm installation artifact", () => {
   it("uses an exact registry-proven gateway package", async () => {
-    await withTempDir({ prefix: "openclaw-worker-npm-release-" }, async (packageRoot) => {
+    await withTempDir({ prefix: "grokbot-worker-npm-release-" }, async (packageRoot) => {
       await writeFixture(packageRoot, [["dist/entry.js", "export {};\n"]]);
       await fs.writeFile(path.join(packageRoot, "npm-shrinkwrap.json"), "{}\n", "utf8");
       const packageIntegrity = `sha512-${Buffer.alloc(64).toString("base64")}`;
@@ -398,14 +398,14 @@ describe("worker npm installation artifact", () => {
         openclawVersion: "1.2.3",
         packageIntegrity,
         protocolFeatures: ["admission"],
-        packageSpec: "openclaw@1.2.3",
+        packageSpec: "grokbot@1.2.3",
       });
     });
   });
 
   it("rejects dev and packages that fail release verification", async () => {
     const verifyRelease = vi.fn(async (): Promise<string> => {
-      throw new Error("OpenClaw 1.2.3 is not published; use the worker bundle install");
+      throw new Error("GrokBot 1.2.3 is not published; use the worker bundle install");
     });
     await expect(
       resolveWorkerNpmInstallationArtifact({
@@ -425,7 +425,7 @@ describe("worker npm installation artifact", () => {
   });
 
   it("rejects a source checkout even when its version is published", async () => {
-    await withTempDir({ prefix: "openclaw-worker-npm-source-" }, async (packageRoot) => {
+    await withTempDir({ prefix: "grokbot-worker-npm-source-" }, async (packageRoot) => {
       await writeFixture(packageRoot, [["dist/entry.js", "export {};\n"]]);
       await fs.writeFile(path.join(packageRoot, "npm-shrinkwrap.json"), "{}\n", "utf8");
       await fs.mkdir(path.join(packageRoot, ".git"));

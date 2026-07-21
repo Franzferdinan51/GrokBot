@@ -1,4 +1,4 @@
-import { definePage } from "@openclaw/uirouter";
+import { definePage } from "@grokbot/uirouter";
 import { html } from "lit";
 
 export const page = definePage({
@@ -8,6 +8,6 @@ export const page = definePage({
   component: () =>
     import("./memory-import-page.ts").then(() => ({
       header: true,
-      render: () => html`<openclaw-memory-import-page></openclaw-memory-import-page>`,
+      render: () => html`<grokbot-memory-import-page></grokbot-memory-import-page>`,
     })),
 });

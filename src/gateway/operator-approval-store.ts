@@ -17,12 +17,12 @@ import {
 import type {
   DB as OpenClawStateKyselyDatabase,
   OperatorApprovals,
-} from "../state/openclaw-state-db.generated.js";
+} from "../state/grokbot-state-db.generated.js";
 import {
   openOpenClawStateDatabase,
   runOpenClawStateWriteTransaction,
   type OpenClawStateDatabaseOptions,
-} from "../state/openclaw-state-db.js";
+} from "../state/grokbot-state-db.js";
 
 const OPERATOR_APPROVAL_TERMINAL_RETENTION_MS = 30 * 24 * 60 * 60_000;
 export const OPERATOR_APPROVAL_MAX_AUDIENCE_SESSION_KEYS = 64;

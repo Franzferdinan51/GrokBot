@@ -49,7 +49,7 @@ describe("formatCliBannerLine", () => {
       richTty: false,
     });
 
-    expect(line).toBe("🦞 OpenClaw 2026.3.7 (abc1234)");
+    expect(line).toBe("🦞 GrokBot 2026.3.7 (abc1234)");
   });
 
   it("uses default tagline when cli.banner.taglineMode is default", () => {
@@ -63,7 +63,7 @@ describe("formatCliBannerLine", () => {
       richTty: false,
     });
 
-    expect(line).toBe("🦞 OpenClaw 2026.3.7 (abc1234) — All your chats, one OpenClaw.");
+    expect(line).toBe("🦞 GrokBot 2026.3.7 (abc1234) — All your chats, one GrokBot.");
   });
 
   it("prefers explicit tagline mode over config", () => {
@@ -78,7 +78,7 @@ describe("formatCliBannerLine", () => {
       mode: "default",
     });
 
-    expect(line).toBe("🦞 OpenClaw 2026.3.7 (abc1234) — All your chats, one OpenClaw.");
+    expect(line).toBe("🦞 GrokBot 2026.3.7 (abc1234) — All your chats, one GrokBot.");
   });
 
   it("drops decorative emoji for generic Linux terminals", () => {
@@ -92,7 +92,7 @@ describe("formatCliBannerLine", () => {
       richTty: false,
     });
 
-    expect(line).toBe("OpenClaw 2026.3.7 (abc1234)");
+    expect(line).toBe("GrokBot 2026.3.7 (abc1234)");
   });
 });
 
@@ -103,7 +103,7 @@ describe("emitCliBanner", () => {
     const writeSpy = vi.spyOn(process.stdout, "write").mockImplementation(() => true);
 
     emitCliBanner("2026.3.7", {
-      argv: ["node", "openclaw"],
+      argv: ["node", "grokbot"],
       commit: "abc1234",
       isTty: false,
       mode: "off",
@@ -120,7 +120,7 @@ describe("emitCliBanner", () => {
     const writeSpy = vi.spyOn(process.stdout, "write").mockImplementation(() => true);
 
     emitCliBanner("2026.3.7", {
-      argv: ["node", "openclaw"],
+      argv: ["node", "grokbot"],
       commit: "abc1234",
       env: { LANG: "en_US.UTF-8" },
       isTty: true,
@@ -129,7 +129,7 @@ describe("emitCliBanner", () => {
       richTty: false,
     });
 
-    expect(writeSpy).toHaveBeenCalledWith("\n🦞 OpenClaw 2026.3.7 (abc1234)\n\n");
+    expect(writeSpy).toHaveBeenCalledWith("\n🦞 GrokBot 2026.3.7 (abc1234)\n\n");
     expect(hasEmittedCliBanner()).toBe(true);
   });
 
@@ -139,7 +139,7 @@ describe("emitCliBanner", () => {
     const writeSpy = vi.spyOn(process.stdout, "write").mockImplementation(() => true);
 
     emitCliBanner("2026.3.7", {
-      argv: ["node", "openclaw"],
+      argv: ["node", "grokbot"],
       commit: "abc1234",
       env: { LANG: "en_US.UTF-8" },
       isTty: true,
@@ -158,7 +158,7 @@ describe("emitCliBanner", () => {
     setStdoutIsTty(true);
     const writeSpy = vi.spyOn(process.stdout, "write").mockImplementation(() => true);
     const base = {
-      argv: ["node", "openclaw"],
+      argv: ["node", "grokbot"],
       commit: "abc1234",
       env: { LANG: "en_US.UTF-8" },
       isTty: true,
@@ -180,7 +180,7 @@ describe("emitCliBanner", () => {
     const writeSpy = vi.spyOn(process.stdout, "write").mockImplementation(() => true);
 
     const options = {
-      argv: ["node", "openclaw"],
+      argv: ["node", "grokbot"],
       commit: "abc1234",
       env: { LANG: "en_US.UTF-8" },
       isTty: true,

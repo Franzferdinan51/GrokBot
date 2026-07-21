@@ -2,7 +2,7 @@
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { redactMigrationPlan } from "openclaw/plugin-sdk/migration";
+import { redactMigrationPlan } from "grokbot/plugin-sdk/migration";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { resolveHomePath } from "./helpers.js";
 import { buildMemoryItems } from "./memory.js";
@@ -41,7 +41,7 @@ describe("Claude migration provider", () => {
 
   it("resolves tilde source paths against the OS home when OPENCLAW_HOME is set", () => {
     const previous = process.env.OPENCLAW_HOME;
-    process.env.OPENCLAW_HOME = path.join(path.sep, "tmp", "openclaw-home");
+    process.env.OPENCLAW_HOME = path.join(path.sep, "tmp", "grokbot-home");
     try {
       expect(resolveHomePath("~/.claude")).toBe(path.join(os.homedir(), ".claude"));
     } finally {
@@ -320,7 +320,7 @@ describe("Claude migration provider", () => {
           itemKinds: ["memory"],
         }),
       ),
-    ).rejects.toThrow("source and OpenClaw import destination must be separate");
+    ).rejects.toThrow("source and GrokBot import destination must be separate");
   });
 
   it.runIf(process.platform !== "win32")(

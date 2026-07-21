@@ -1,8 +1,8 @@
-// OpenClaw test instance tests cover spawned test instance lifecycle.
+// GrokBot test instance tests cover spawned test instance lifecycle.
 import fs from "node:fs/promises";
 import path from "node:path";
 import { describe, expect, it, vi } from "vitest";
-import { createOpenClawTestInstance, testing } from "./openclaw-test-instance.js";
+import { createOpenClawTestInstance, testing } from "./grokbot-test-instance.js";
 
 async function expectPathMissing(targetPath: string): Promise<void> {
   try {
@@ -14,7 +14,7 @@ async function expectPathMissing(targetPath: string): Promise<void> {
   throw new Error(`Expected missing path: ${targetPath}`);
 }
 
-describe("openclaw test instance", () => {
+describe("grokbot test instance", () => {
   it("keeps only bounded child output tails in helper logs", () => {
     const stdout = testing.createBoundedStringLog();
     const stderr = testing.createBoundedStringLog();
@@ -81,8 +81,8 @@ describe("openclaw test instance", () => {
     try {
       expect(process.env.HOME).toBe(previousHome);
       expect(inst.homeDir).toBe(path.join(inst.state.root, "home"));
-      expect(inst.stateDir).toBe(path.join(inst.homeDir, ".openclaw"));
-      expect(inst.configPath).toBe(path.join(inst.stateDir, "openclaw.json"));
+      expect(inst.stateDir).toBe(path.join(inst.homeDir, ".grokbot"));
+      expect(inst.configPath).toBe(path.join(inst.stateDir, "grokbot.json"));
       expect(inst.env.HOME).toBe(inst.homeDir);
       expect(inst.env.OPENCLAW_STATE_DIR).toBe(inst.stateDir);
       expect(inst.env.OPENCLAW_CONFIG_PATH).toBe(inst.configPath);

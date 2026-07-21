@@ -5,8 +5,8 @@
   "entries": [
     {
       "id": "native.android.85cc8de945e3929c",
-      "source": "OpenClaw translations · $languageTag",
-      "translated": "ترجمات OpenClaw · $languageTag"
+      "source": "GrokBot translations · $languageTag",
+      "translated": "ترجمات GrokBot · $languageTag"
     },
     {
       "id": "native.android.914725056e04bd7a",
@@ -360,13 +360,13 @@
     },
     {
       "id": "native.android.25ce6f89dd2fda90",
-      "source": "OpenClaw Node · Talk",
-      "translated": "عقدة OpenClaw · المحادثة"
+      "source": "GrokBot Node · Talk",
+      "translated": "عقدة GrokBot · المحادثة"
     },
     {
       "id": "native.android.b48f7aeb7a884942",
-      "source": "OpenClaw Node · Connected",
-      "translated": "عقدة OpenClaw · متصلة"
+      "source": "GrokBot Node · Connected",
+      "translated": "عقدة GrokBot · متصلة"
     },
     {
       "id": "native.android.b781a577d8da896d",
@@ -375,8 +375,8 @@
     },
     {
       "id": "native.android.97365bea9725ae80",
-      "source": "OpenClaw Node",
-      "translated": "عقدة OpenClaw"
+      "source": "GrokBot Node",
+      "translated": "عقدة GrokBot"
     },
     {
       "id": "native.android.3e0889d921c92cab",
@@ -395,8 +395,8 @@
     },
     {
       "id": "native.android.f4886ad80e8149cf",
-      "source": "OpenClaw node connection status",
-      "translated": "حالة اتصال عقدة OpenClaw"
+      "source": "GrokBot node connection status",
+      "translated": "حالة اتصال عقدة GrokBot"
     },
     {
       "id": "native.android.20fb810920ccb98c",
@@ -925,8 +925,8 @@
     },
     {
       "id": "native.android.3b076d12026fd953",
-      "source": "OpenClaw is syncing back up",
-      "translated": "يقوم OpenClaw بإعادة المزامنة"
+      "source": "GrokBot is syncing back up",
+      "translated": "يقوم GrokBot بإعادة المزامنة"
     },
     {
       "id": "native.android.8dd8abf489f1fe50",
@@ -945,8 +945,8 @@
     },
     {
       "id": "native.android.8e22550e0205b237",
-      "source": "Welcome to OpenClaw",
-      "translated": "مرحبًا بك في OpenClaw"
+      "source": "Welcome to GrokBot",
+      "translated": "مرحبًا بك في GrokBot"
     },
     {
       "id": "native.android.fee881b8134958ab",
@@ -1025,8 +1025,8 @@
     },
     {
       "id": "native.android.237761be968be3f4",
-      "source": "OpenClaw needs ${labels.joinToString(\", \")} permissions to continue.",
-      "translated": "يحتاج OpenClaw إلى أذونات ${labels.joinToString(\", \")} للمتابعة."
+      "source": "GrokBot needs ${labels.joinToString(\", \")} permissions to continue.",
+      "translated": "يحتاج GrokBot إلى أذونات ${labels.joinToString(\", \")} للمتابعة."
     },
     {
       "id": "native.android.f9b9d558dc078d96",
@@ -1195,18 +1195,18 @@
     },
     {
       "id": "native.android.c9b3801fdf5499a9",
-      "source": "OpenClaw Passive",
-      "translated": "OpenClaw سلبي"
+      "source": "GrokBot Passive",
+      "translated": "GrokBot سلبي"
     },
     {
       "id": "native.android.e2a79a2c3ddba922",
-      "source": "OpenClaw Time Sensitive",
-      "translated": "OpenClaw حساس للوقت"
+      "source": "GrokBot Time Sensitive",
+      "translated": "GrokBot حساس للوقت"
     },
     {
       "id": "native.android.a79d6ccab877c9ca",
-      "source": "OpenClaw Active",
-      "translated": "OpenClaw نشط"
+      "source": "GrokBot Active",
+      "translated": "GrokBot نشط"
     },
     {
       "id": "native.android.356609f717b92350",
@@ -1425,8 +1425,8 @@
     },
     {
       "id": "native.android.5ce94621017855b6",
-      "source": "Talk or dictate with OpenClaw",
-      "translated": "تحدّث أو أملِ باستخدام OpenClaw"
+      "source": "Talk or dictate with GrokBot",
+      "translated": "تحدّث أو أملِ باستخدام GrokBot"
     },
     {
       "id": "native.android.e2cf5a38587382cb",
@@ -1470,8 +1470,8 @@
     },
     {
       "id": "native.android.9f877120690b0c59",
-      "source": "Search OpenClaw",
-      "translated": "البحث في OpenClaw"
+      "source": "Search GrokBot",
+      "translated": "البحث في GrokBot"
     },
     {
       "id": "native.android.c142846e7b88306c",
@@ -1510,8 +1510,8 @@
     },
     {
       "id": "native.android.9a839f6e3e05a744",
-      "source": "OpenClaw thread",
-      "translated": "محادثة OpenClaw"
+      "source": "GrokBot thread",
+      "translated": "محادثة GrokBot"
     },
     {
       "id": "native.android.d83f82a1e4a5ed99",
@@ -2625,8 +2625,8 @@
     },
     {
       "id": "native.android.8b55ed05cd70b8d9",
-      "source": "Device pairing actions are unavailable in this Gateway session. Run openclaw devices list on the Gateway host and manage the request there. Node capability approval is separate and still uses nodes approve <request id>.",
-      "translated": "إجراءات إقران الأجهزة غير متاحة في جلسة Gateway هذه. شغّل openclaw devices list على مضيف Gateway وأدِر الطلب من هناك. الموافقة على إمكانات العقدة منفصلة، ولا تزال تستخدم nodes approve <request id>."
+      "source": "Device pairing actions are unavailable in this Gateway session. Run grokbot devices list on the Gateway host and manage the request there. Node capability approval is separate and still uses nodes approve <request id>.",
+      "translated": "إجراءات إقران الأجهزة غير متاحة في جلسة Gateway هذه. شغّل grokbot devices list على مضيف Gateway وأدِر الطلب من هناك. الموافقة على إمكانات العقدة منفصلة، ولا تزال تستخدم nodes approve <request id>."
     },
     {
       "id": "native.android.0d8e9ede9c229b8e",
@@ -2685,18 +2685,18 @@
     },
     {
       "id": "native.android.1556c7b90c4a24ff",
-      "source": "Enter the setup code from openclaw qr.",
-      "translated": "أدخل رمز الإعداد من openclaw qr."
+      "source": "Enter the setup code from grokbot qr.",
+      "translated": "أدخل رمز الإعداد من grokbot qr."
     },
     {
       "id": "native.android.c6d2aa9f033cecc8",
-      "source": "Setup code was not accepted. Generate a fresh code with openclaw qr.",
-      "translated": "لم يتم قبول رمز الإعداد. أنشئ رمزًا جديدًا باستخدام openclaw qr."
+      "source": "Setup code was not accepted. Generate a fresh code with grokbot qr.",
+      "translated": "لم يتم قبول رمز الإعداد. أنشئ رمزًا جديدًا باستخدام grokbot qr."
     },
     {
       "id": "native.android.3c50060d3efc154d",
-      "source": "That QR code is not an OpenClaw setup QR. Generate a fresh code with openclaw qr, then try again.",
-      "translated": "رمز QR هذا ليس رمز إعداد QR خاصًا بـ OpenClaw. أنشئ رمزًا جديدًا باستخدام openclaw qr، ثم حاول مرة أخرى."
+      "source": "That QR code is not an GrokBot setup QR. Generate a fresh code with grokbot qr, then try again.",
+      "translated": "رمز QR هذا ليس رمز إعداد QR خاصًا بـ GrokBot. أنشئ رمزًا جديدًا باستخدام grokbot qr، ثم حاول مرة أخرى."
     },
     {
       "id": "native.android.f8cd1cbe29c4c582",
@@ -2705,13 +2705,13 @@
     },
     {
       "id": "native.android.63ed21b4888ba5d3",
-      "source": "Could not read that image. Choose a clear screenshot or image of the QR from openclaw qr.",
-      "translated": "تعذّرت قراءة هذه الصورة. اختر لقطة شاشة واضحة أو صورة لرمز QR من openclaw qr."
+      "source": "Could not read that image. Choose a clear screenshot or image of the QR from grokbot qr.",
+      "translated": "تعذّرت قراءة هذه الصورة. اختر لقطة شاشة واضحة أو صورة لرمز QR من grokbot qr."
     },
     {
       "id": "native.android.61beaad5c5279eb9",
-      "source": "No setup QR code was found in that image. Choose the QR generated by openclaw qr, or enter the setup code manually.",
-      "translated": "لم يتم العثور على رمز QR للإعداد في هذه الصورة. اختر رمز QR الذي أنشأه openclaw qr، أو أدخل رمز الإعداد يدويًا."
+      "source": "No setup QR code was found in that image. Choose the QR generated by grokbot qr, or enter the setup code manually.",
+      "translated": "لم يتم العثور على رمز QR للإعداد في هذه الصورة. اختر رمز QR الذي أنشأه grokbot qr، أو أدخل رمز الإعداد يدويًا."
     },
     {
       "id": "native.android.4c4912a456b4213a",
@@ -2755,18 +2755,18 @@
     },
     {
       "id": "native.android.64c8db13ef91513c",
-      "source": "Welcome to OpenClaw",
-      "translated": "مرحبًا بك في OpenClaw"
+      "source": "Welcome to GrokBot",
+      "translated": "مرحبًا بك في GrokBot"
     },
     {
       "id": "native.android.c38e106cc8f1e9ff",
-      "source": "Turn this device into a secure OpenClaw node for chat, voice, camera, and device tools.",
-      "translated": "حوّل هذا الجهاز إلى عقدة OpenClaw آمنة للدردشة والصوت والكاميرا وأدوات الجهاز."
+      "source": "Turn this device into a secure GrokBot node for chat, voice, camera, and device tools.",
+      "translated": "حوّل هذا الجهاز إلى عقدة GrokBot آمنة للدردشة والصوت والكاميرا وأدوات الجهاز."
     },
     {
       "id": "native.android.f941909a3fa51055",
-      "source": "OpenClaw logo",
-      "translated": "شعار OpenClaw"
+      "source": "GrokBot logo",
+      "translated": "شعار GrokBot"
     },
     {
       "id": "native.android.cc878f72a6b70b23",
@@ -2780,8 +2780,8 @@
     },
     {
       "id": "native.android.3bfe29d4d13d3c3e",
-      "source": "Use OpenClaw from your phone",
-      "translated": "استخدم OpenClaw من هاتفك"
+      "source": "Use GrokBot from your phone",
+      "translated": "استخدم GrokBot من هاتفك"
     },
     {
       "id": "native.android.c0b539eeb4612f5d",
@@ -2790,8 +2790,8 @@
     },
     {
       "id": "native.android.5aed4b5c8d6b246d",
-      "source": "The connected OpenClaw agent can use device capabilities you enable. Continue only if you trust the Gateway and agent you connect to.",
-      "translated": "يمكن لوكيل OpenClaw المتصل استخدام إمكانات الجهاز التي تفعّلها. تابع فقط إذا كنت تثق بـ Gateway والوكيل الذي تتصل به."
+      "source": "The connected GrokBot agent can use device capabilities you enable. Continue only if you trust the Gateway and agent you connect to.",
+      "translated": "يمكن لوكيل GrokBot المتصل استخدام إمكانات الجهاز التي تفعّلها. تابع فقط إذا كنت تثق بـ Gateway والوكيل الذي تتصل به."
     },
     {
       "id": "native.android.63c31ee564d63347",
@@ -2800,8 +2800,8 @@
     },
     {
       "id": "native.android.f50a9c1ee6d47055",
-      "source": "Scan a QR code or use the setup code from your OpenClaw Gateway.",
-      "translated": "امسح رمز QR ضوئيًا أو استخدم رمز الإعداد من OpenClaw Gateway لديك."
+      "source": "Scan a QR code or use the setup code from your GrokBot Gateway.",
+      "translated": "امسح رمز QR ضوئيًا أو استخدم رمز الإعداد من GrokBot Gateway لديك."
     },
     {
       "id": "native.android.58d80589d9d4b7ff",
@@ -2830,8 +2830,8 @@
     },
     {
       "id": "native.android.c8a43dbba02941f0",
-      "source": "Have a terminal open on the device running OpenClaw.",
-      "translated": "اجعل نافذة طرفية مفتوحة على الجهاز الذي يشغّل OpenClaw."
+      "source": "Have a terminal open on the device running GrokBot.",
+      "translated": "اجعل نافذة طرفية مفتوحة على الجهاز الذي يشغّل GrokBot."
     },
     {
       "id": "native.android.71ce00f359981a0b",
@@ -2865,8 +2865,8 @@
     },
     {
       "id": "native.android.d4b295b5146af4b8",
-      "source": "openclaw gateway",
-      "translated": "openclaw gateway"
+      "source": "grokbot gateway",
+      "translated": "grokbot gateway"
     },
     {
       "id": "native.android.250b7dda7cff6b5d",
@@ -2880,8 +2880,8 @@
     },
     {
       "id": "native.android.db24e4be7a1b5547",
-      "source": "openclaw qr",
-      "translated": "رمز QR لـ OpenClaw"
+      "source": "grokbot qr",
+      "translated": "رمز QR لـ GrokBot"
     },
     {
       "id": "native.android.96d40475de2885d6",
@@ -2905,8 +2905,8 @@
     },
     {
       "id": "native.android.05987e822ac102ec",
-      "source": "Open the camera and frame the code from openclaw qr.",
-      "translated": "افتح الكاميرا وضع الرمز من openclaw qr داخل الإطار."
+      "source": "Open the camera and frame the code from grokbot qr.",
+      "translated": "افتح الكاميرا وضع الرمز من grokbot qr داخل الإطار."
     },
     {
       "id": "native.android.90fa932d2e0adbd9",
@@ -3075,8 +3075,8 @@
     },
     {
       "id": "native.android.f43cb6ed03dc6766",
-      "source": "Gateway pairing is complete. Approve this phone as a node so OpenClaw can use the device capabilities you enable.",
-      "translated": "اكتمل إقران Gateway. وافق على هذا الهاتف كعقدة حتى يتمكن OpenClaw من استخدام إمكانات الجهاز التي تفعّلها."
+      "source": "Gateway pairing is complete. Approve this phone as a node so GrokBot can use the device capabilities you enable.",
+      "translated": "اكتمل إقران Gateway. وافق على هذا الهاتف كعقدة حتى يتمكن GrokBot من استخدام إمكانات الجهاز التي تفعّلها."
     },
     {
       "id": "native.android.8e49feba12c350ac",
@@ -3120,8 +3120,8 @@
     },
     {
       "id": "native.android.d4c3bcf880727fb3",
-      "source": "Only enable access you are comfortable letting OpenClaw use while this phone is connected. You can change these later in Android Settings.",
-      "translated": "فعّل فقط الوصول الذي ترتاح إلى السماح لـ OpenClaw باستخدامه أثناء اتصال هذا الهاتف. يمكنك تغيير ذلك لاحقًا في إعدادات Android."
+      "source": "Only enable access you are comfortable letting GrokBot use while this phone is connected. You can change these later in Android Settings.",
+      "translated": "فعّل فقط الوصول الذي ترتاح إلى السماح لـ GrokBot باستخدامه أثناء اتصال هذا الهاتف. يمكنك تغيير ذلك لاحقًا في إعدادات Android."
     },
     {
       "id": "native.android.44549cfd7e6a1ab8",
@@ -3166,7 +3166,7 @@
     {
       "id": "native.android.176b4f5d1c9f8ce2",
       "source": "Approval is in progress.\nOpenClaw will reconnect automatically.",
-      "translated": "الموافقة قيد التنفيذ.\nسيعيد OpenClaw الاتصال تلقائيًا."
+      "translated": "الموافقة قيد التنفيذ.\nسيعيد GrokBot الاتصال تلقائيًا."
     },
     {
       "id": "native.android.466e3fb210732587",
@@ -3175,8 +3175,8 @@
     },
     {
       "id": "native.android.7b95b9e103bbbb92",
-      "source": "OpenClaw is checking gateway and node access.",
-      "translated": "يتحقق OpenClaw من الوصول إلى Gateway والعقدة."
+      "source": "GrokBot is checking gateway and node access.",
+      "translated": "يتحقق GrokBot من الوصول إلى Gateway والعقدة."
     },
     {
       "id": "native.android.a75fc5ca269cbb15",
@@ -3270,8 +3270,8 @@
     },
     {
       "id": "native.android.1c93d0cbb8e05a7a",
-      "source": "Gateway approval is pending. Run openclaw devices list on the gateway host, approve this phone, then retry.",
-      "translated": "موافقة Gateway معلّقة. شغّل openclaw devices list على مضيف Gateway، ووافق على هذا الهاتف، ثم أعد المحاولة."
+      "source": "Gateway approval is pending. Run grokbot devices list on the gateway host, approve this phone, then retry.",
+      "translated": "موافقة Gateway معلّقة. شغّل grokbot devices list على مضيف Gateway، ووافق على هذا الهاتف، ثم أعد المحاولة."
     },
     {
       "id": "native.android.d0c1dcc8236a1ab9",
@@ -3285,8 +3285,8 @@
     },
     {
       "id": "native.android.bdd063b9f766050b",
-      "source": "Gateway approval is in progress. OpenClaw will retry automatically.",
-      "translated": "موافقة Gateway قيد التنفيذ. سيعيد OpenClaw المحاولة تلقائيًا."
+      "source": "Gateway approval is in progress. GrokBot will retry automatically.",
+      "translated": "موافقة Gateway قيد التنفيذ. سيعيد GrokBot المحاولة تلقائيًا."
     },
     {
       "id": "native.android.45cfb86623fa2251",
@@ -3340,18 +3340,18 @@
     },
     {
       "id": "native.android.c94c164d474cb0db",
-      "source": "This app is older than the Gateway. Update OpenClaw on this device, then retry.",
-      "translated": "هذا التطبيق أقدم من Gateway. حدّث OpenClaw على هذا الجهاز، ثم أعد المحاولة."
+      "source": "This app is older than the Gateway. Update GrokBot on this device, then retry.",
+      "translated": "هذا التطبيق أقدم من Gateway. حدّث GrokBot على هذا الجهاز، ثم أعد المحاولة."
     },
     {
       "id": "native.android.48ba24436b643607",
-      "source": "The Gateway is older than this app. Update OpenClaw on the Gateway host, then retry.",
-      "translated": "إصدار Gateway أقدم من هذا التطبيق. حدّث OpenClaw على مضيف Gateway، ثم أعد المحاولة."
+      "source": "The Gateway is older than this app. Update GrokBot on the Gateway host, then retry.",
+      "translated": "إصدار Gateway أقدم من هذا التطبيق. حدّث GrokBot على مضيف Gateway، ثم أعد المحاولة."
     },
     {
       "id": "native.android.1473077d05ac1739",
-      "source": "The app and Gateway use incompatible protocol versions. Update OpenClaw on both, then retry.",
-      "translated": "يستخدم التطبيق وGateway إصدارات بروتوكول غير متوافقة. حدّث OpenClaw على كليهما، ثم أعد المحاولة."
+      "source": "The app and Gateway use incompatible protocol versions. Update GrokBot on both, then retry.",
+      "translated": "يستخدم التطبيق وGateway إصدارات بروتوكول غير متوافقة. حدّث GrokBot على كليهما، ثم أعد المحاولة."
     },
     {
       "id": "native.android.6379bfb6b09ef8cd",
@@ -3360,23 +3360,23 @@
     },
     {
       "id": "native.android.ee7dad03cd78babe",
-      "source": "openclaw devices approve $requestId",
-      "translated": "openclaw devices approve $requestId"
+      "source": "grokbot devices approve $requestId",
+      "translated": "grokbot devices approve $requestId"
     },
     {
       "id": "native.android.3792801e2951bb11",
-      "source": "openclaw devices list",
-      "translated": "openclaw devices list"
+      "source": "grokbot devices list",
+      "translated": "grokbot devices list"
     },
     {
       "id": "native.android.8fe20d8f8090064d",
-      "source": "openclaw nodes approve $requestId",
-      "translated": "openclaw nodes approve $requestId"
+      "source": "grokbot nodes approve $requestId",
+      "translated": "grokbot nodes approve $requestId"
     },
     {
       "id": "native.android.2961a521c1b6837f",
-      "source": "openclaw nodes approve REQUEST_ID",
-      "translated": "openclaw nodes approve REQUEST_ID"
+      "source": "grokbot nodes approve REQUEST_ID",
+      "translated": "grokbot nodes approve REQUEST_ID"
     },
     {
       "id": "native.android.a7933196a18ec924",
@@ -3480,8 +3480,8 @@
     },
     {
       "id": "native.android.d096df67bff5e611",
-      "source": "Show OpenClaw alerts",
-      "translated": "عرض تنبيهات OpenClaw"
+      "source": "Show GrokBot alerts",
+      "translated": "عرض تنبيهات GrokBot"
     },
     {
       "id": "native.android.93cbec65dbc5de69",
@@ -3770,8 +3770,8 @@
     },
     {
       "id": "native.android.fc145645b9620e57",
-      "source": "OpenClaw thread",
-      "translated": "محادثة OpenClaw"
+      "source": "GrokBot thread",
+      "translated": "محادثة GrokBot"
     },
     {
       "id": "native.android.71cbb8dde8bf138b",
@@ -3835,8 +3835,8 @@
     },
     {
       "id": "native.android.b5e4ae7f8c9eca2d",
-      "source": "OpenClaw",
-      "translated": "OpenClaw"
+      "source": "GrokBot",
+      "translated": "GrokBot"
     },
     {
       "id": "native.android.f46b06f8550516e4",
@@ -4025,8 +4025,8 @@
     },
     {
       "id": "native.android.5e3e4cd42004cb28",
-      "source": "Scheduled OpenClaw work from your gateway.",
-      "translated": "أعمال OpenClaw المجدولة من Gateway لديك."
+      "source": "Scheduled GrokBot work from your gateway.",
+      "translated": "أعمال GrokBot المجدولة من Gateway لديك."
     },
     {
       "id": "native.android.31a5440e22667f02",
@@ -4185,8 +4185,8 @@
     },
     {
       "id": "native.android.fea93eda5bf97d9e",
-      "source": "How this phone appears to OpenClaw.",
-      "translated": "كيف يظهر هذا الهاتف في OpenClaw."
+      "source": "How this phone appears to GrokBot.",
+      "translated": "كيف يظهر هذا الهاتف في GrokBot."
     },
     {
       "id": "native.android.695229fd01afbc2d",
@@ -4225,8 +4225,8 @@
     },
     {
       "id": "native.android.6e58157abced395f",
-      "source": "Runs on-device while OpenClaw is visible.",
-      "translated": "يعمل على الجهاز أثناء ظهور OpenClaw."
+      "source": "Runs on-device while GrokBot is visible.",
+      "translated": "يعمل على الجهاز أثناء ظهور GrokBot."
     },
     {
       "id": "native.android.6464166ab71fde3f",
@@ -4305,8 +4305,8 @@
     },
     {
       "id": "native.android.5ff888931aae2738",
-      "source": "Check that OpenClaw can speak clearly on this phone.",
-      "translated": "تحقّق من أن OpenClaw يمكنه التحدث بوضوح على هذا الهاتف."
+      "source": "Check that GrokBot can speak clearly on this phone.",
+      "translated": "تحقّق من أن GrokBot يمكنه التحدث بوضوح على هذا الهاتف."
     },
     {
       "id": "native.android.f82d5d81f5dc9b43",
@@ -4415,8 +4415,8 @@
     },
     {
       "id": "native.android.9feed8722db5d2cc",
-      "source": "Choose what reaches OpenClaw.",
-      "translated": "اختر ما يصل إلى OpenClaw."
+      "source": "Choose what reaches GrokBot.",
+      "translated": "اختر ما يصل إلى GrokBot."
     },
     {
       "id": "native.android.d32071018de11907",
@@ -4435,8 +4435,8 @@
     },
     {
       "id": "native.android.5a077bf9cf4f47c8",
-      "source": "OpenClaw can receive selected alerts.",
-      "translated": "يمكن لـ OpenClaw تلقي التنبيهات المحددة."
+      "source": "GrokBot can receive selected alerts.",
+      "translated": "يمكن لـ GrokBot تلقي التنبيهات المحددة."
     },
     {
       "id": "native.android.a04ee29c0a3b68f5",
@@ -4595,8 +4595,8 @@
     },
     {
       "id": "native.android.bdafaceb7af93f5a",
-      "source": "OpenClaw can list launcher-visible apps.",
-      "translated": "يمكن لـ OpenClaw عرض قائمة التطبيقات الظاهرة في المشغّل."
+      "source": "GrokBot can list launcher-visible apps.",
+      "translated": "يمكن لـ GrokBot عرض قائمة التطبيقات الظاهرة في المشغّل."
     },
     {
       "id": "native.android.be89d5601904322a",
@@ -4625,8 +4625,8 @@
     },
     {
       "id": "native.android.58549715b04997cc",
-      "source": "Always allows requested location checks while OpenClaw is in the background; Android shows this in the persistent node notification.",
-      "translated": "يسمح دائمًا بفحوصات الموقع المطلوبة أثناء وجود OpenClaw في الخلفية؛ يعرض Android ذلك في إشعار العقدة المستمر."
+      "source": "Always allows requested location checks while GrokBot is in the background; Android shows this in the persistent node notification.",
+      "translated": "يسمح دائمًا بفحوصات الموقع المطلوبة أثناء وجود GrokBot في الخلفية؛ يعرض Android ذلك في إشعار العقدة المستمر."
     },
     {
       "id": "native.android.d5a8d7f97a7971b1",
@@ -4635,8 +4635,8 @@
     },
     {
       "id": "native.android.031d3ed6fb8a6559",
-      "source": "OpenClaw only checks location when your paired Gateway requests it. On the next Android screen, choose $backgroundPermissionLabel to allow checks while the app is in the background.",
-      "translated": "لا يتحقق OpenClaw من الموقع إلا عندما يطلب Gateway المقترن ذلك. في شاشة Android التالية، اختر $backgroundPermissionLabel للسماح بعمليات التحقق أثناء عمل التطبيق في الخلفية."
+      "source": "GrokBot only checks location when your paired Gateway requests it. On the next Android screen, choose $backgroundPermissionLabel to allow checks while the app is in the background.",
+      "translated": "لا يتحقق GrokBot من الموقع إلا عندما يطلب Gateway المقترن ذلك. في شاشة Android التالية، اختر $backgroundPermissionLabel للسماح بعمليات التحقق أثناء عمل التطبيق في الخلفية."
     },
     {
       "id": "native.android.c48805f3de1d72ca",
@@ -4650,13 +4650,13 @@
     },
     {
       "id": "native.android.c3a001bb0191892d",
-      "source": "OpenClaw collects and sends the names, package IDs, and status of apps visible on this phone when your paired OpenClaw Gateway asks for them. This lets your assistant answer questions and take actions using installed apps.",
-      "translated": "يجمع OpenClaw ويرسل أسماء التطبيقات ومعرّفات الحزم وحالتها الظاهرة على هذا الهاتف عندما يطلبها Gateway المقترن بـ OpenClaw. يتيح ذلك لمساعدك الإجابة عن الأسئلة واتخاذ الإجراءات باستخدام التطبيقات المثبَّتة."
+      "source": "GrokBot collects and sends the names, package IDs, and status of apps visible on this phone when your paired GrokBot Gateway asks for them. This lets your assistant answer questions and take actions using installed apps.",
+      "translated": "يجمع GrokBot ويرسل أسماء التطبيقات ومعرّفات الحزم وحالتها الظاهرة على هذا الهاتف عندما يطلبها Gateway المقترن بـ GrokBot. يتيح ذلك لمساعدك الإجابة عن الأسئلة واتخاذ الإجراءات باستخدام التطبيقات المثبَّتة."
     },
     {
       "id": "native.android.b05f8909de072d71",
-      "source": "Your phone sends this information to your Gateway, not to a server run by OpenClaw. Your Gateway may include it in requests to the AI provider you chose.",
-      "translated": "يرسل هاتفك هذه المعلومات إلى Gateway الخاص بك، وليس إلى خادم تديره OpenClaw. قد يُضمّنها Gateway في الطلبات المُرسَلة إلى موفر الذكاء الاصطناعي الذي اخترته."
+      "source": "Your phone sends this information to your Gateway, not to a server run by GrokBot. Your Gateway may include it in requests to the AI provider you chose.",
+      "translated": "يرسل هاتفك هذه المعلومات إلى Gateway الخاص بك، وليس إلى خادم تديره GrokBot. قد يُضمّنها Gateway في الطلبات المُرسَلة إلى موفر الذكاء الاصطناعي الذي اخترته."
     },
     {
       "id": "native.android.95a3cc1b163c1edf",
@@ -4700,7 +4700,7 @@
     },
     {
       "id": "native.android.9d658ff26e59274b",
-      "source": "Connection between this phone and OpenClaw.",
+      "source": "Connection between this phone and GrokBot.",
       "translated": "الاتصال بين هذا الهاتف وOpenClaw."
     },
     {
@@ -4810,8 +4810,8 @@
     },
     {
       "id": "native.android.de12fd162a566974",
-      "source": "Android can scan or paste an existing setup code, but this gateway does not expose setup-code generation to the app yet. Generate the QR/code on the gateway host with openclaw qr, then scan it here or paste the setup code below.",
-      "translated": "يمكن لـ Android مسح رمز إعداد موجود أو لصقه، لكن هذه البوابة لا تتيح بعد إنشاء رمز الإعداد للتطبيق. أنشئ رمز QR/الرمز على مضيف البوابة باستخدام openclaw qr، ثم امسحه هنا أو الصق رمز الإعداد أدناه."
+      "source": "Android can scan or paste an existing setup code, but this gateway does not expose setup-code generation to the app yet. Generate the QR/code on the gateway host with grokbot qr, then scan it here or paste the setup code below.",
+      "translated": "يمكن لـ Android مسح رمز إعداد موجود أو لصقه، لكن هذه البوابة لا تتيح بعد إنشاء رمز الإعداد للتطبيق. أنشئ رمز QR/الرمز على مضيف البوابة باستخدام grokbot qr، ثم امسحه هنا أو الصق رمز الإعداد أدناه."
     },
     {
       "id": "native.android.ac1032dabe06ab02",
@@ -4910,8 +4910,8 @@
     },
     {
       "id": "native.android.f6ab96d066bd583c",
-      "source": "Use a secure wss:// or Tailscale Serve Gateway, generate a full-access setup code in the Control UI or with openclaw qr, then scan or paste it below and reconnect to enable settings and upgrades.",
-      "translated": "استخدم Gateway آمنًا عبر wss:// أو Tailscale Serve، وأنشئ رمز إعداد بوصول كامل في Control UI أو باستخدام openclaw qr، ثم امسحه ضوئيًا أو الصقه أدناه وأعد الاتصال لتمكين الإعدادات والترقيات."
+      "source": "Use a secure wss:// or Tailscale Serve Gateway, generate a full-access setup code in the Control UI or with grokbot qr, then scan or paste it below and reconnect to enable settings and upgrades.",
+      "translated": "استخدم Gateway آمنًا عبر wss:// أو Tailscale Serve، وأنشئ رمز إعداد بوصول كامل في Control UI أو باستخدام grokbot qr، ثم امسحه ضوئيًا أو الصقه أدناه وأعد الاتصال لتمكين الإعدادات والترقيات."
     },
     {
       "id": "native.android.5311e446ce2bf857",
@@ -5020,8 +5020,8 @@
     },
     {
       "id": "native.android.c2d37ac2ad4c9e3c",
-      "source": "OpenClaw for Android.",
-      "translated": "OpenClaw لنظام Android."
+      "source": "GrokBot for Android.",
+      "translated": "GrokBot لنظام Android."
     },
     {
       "id": "native.android.38889ec3f682dcf8",
@@ -5065,18 +5065,18 @@
     },
     {
       "id": "native.android.aac3310699b496c8",
-      "source": "© 2026 OpenClaw Foundation — MIT License.",
-      "translated": "© 2026 OpenClaw Foundation — ترخيص MIT."
+      "source": "© 2026 GrokBot Foundation — MIT License.",
+      "translated": "© 2026 GrokBot Foundation — ترخيص MIT."
     },
     {
       "id": "native.android.a157bbb606e9b398",
-      "source": "OpenClaw logo",
-      "translated": "شعار OpenClaw"
+      "source": "GrokBot logo",
+      "translated": "شعار GrokBot"
     },
     {
       "id": "native.android.7b78b4869baf2160",
-      "source": "OpenClaw",
-      "translated": "OpenClaw"
+      "source": "GrokBot",
+      "translated": "GrokBot"
     },
     {
       "id": "native.android.ad4c14835d1b71ca",
@@ -5090,8 +5090,8 @@
     },
     {
       "id": "native.android.996367534eb94cc2",
-      "source": "OpenClaw appreciates its partners in the open-source community.",
-      "translated": "تقدّر OpenClaw شركاءها في مجتمع المصدر المفتوح."
+      "source": "GrokBot appreciates its partners in the open-source community.",
+      "translated": "تقدّر GrokBot شركاءها في مجتمع المصدر المفتوح."
     },
     {
       "id": "native.android.24da1d2eb750ba07",
@@ -5140,8 +5140,8 @@
     },
     {
       "id": "native.android.c971506716c96e91",
-      "source": "OpenClaw turns this phone into a clean mobile command surface for threads, voice, providers, and Gateway.",
-      "translated": "يحوّل OpenClaw هذا الهاتف إلى واجهة أوامر محمولة ومنظّمة لسلاسل المحادثات والصوت ومزوّدي الخدمة وGateway."
+      "source": "GrokBot turns this phone into a clean mobile command surface for threads, voice, providers, and Gateway.",
+      "translated": "يحوّل GrokBot هذا الهاتف إلى واجهة أوامر محمولة ومنظّمة لسلاسل المحادثات والصوت ومزوّدي الخدمة وGateway."
     },
     {
       "id": "native.android.3a3bea53e6a6ada7",
@@ -5605,8 +5605,8 @@
     },
     {
       "id": "native.android.2e33a4fd5f60b550",
-      "source": "Start a chat and your active OpenClaw conversations will appear here.",
-      "translated": "ابدأ محادثة وستظهر محادثات OpenClaw النشطة هنا."
+      "source": "Start a chat and your active GrokBot conversations will appear here.",
+      "translated": "ابدأ محادثة وستظهر محادثات GrokBot النشطة هنا."
     },
     {
       "id": "native.android.85726cfd4207d48a",
@@ -5815,8 +5815,8 @@
     },
     {
       "id": "native.android.4f369a09c8731092",
-      "source": "OpenClaw",
-      "translated": "OpenClaw"
+      "source": "GrokBot",
+      "translated": "GrokBot"
     },
     {
       "id": "native.android.b5ee8fce135f41e6",
@@ -6035,8 +6035,8 @@
     },
     {
       "id": "native.android.ca1451df912ed5cf",
-      "source": "OpenClaw ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})",
-      "translated": "OpenClaw ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
+      "source": "GrokBot ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})",
+      "translated": "GrokBot ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
     },
     {
       "id": "native.android.b7d8c506999a68f7",
@@ -6225,8 +6225,8 @@
     },
     {
       "id": "native.android.e197964b10ba02ce",
-      "source": "OpenClaw mobile",
-      "translated": "OpenClaw للجوال"
+      "source": "GrokBot mobile",
+      "translated": "GrokBot للجوال"
     },
     {
       "id": "native.android.45005deba537cc59",
@@ -6910,8 +6910,8 @@
     },
     {
       "id": "native.android.9d977253fdcda216",
-      "source": "OpenClaw speaking",
-      "translated": "OpenClaw يتحدث"
+      "source": "GrokBot speaking",
+      "translated": "GrokBot يتحدث"
     },
     {
       "id": "native.android.1babfd757bbcfeb4",
@@ -6990,8 +6990,8 @@
     },
     {
       "id": "native.android.2e2b5efe4ca2380a",
-      "source": "OpenClaw is replying",
-      "translated": "OpenClaw يرد"
+      "source": "GrokBot is replying",
+      "translated": "GrokBot يرد"
     },
     {
       "id": "native.android.64731fc46a862f86",
@@ -7090,8 +7090,8 @@
     },
     {
       "id": "native.android.253debc9d0714dda",
-      "source": "OpenClaw",
-      "translated": "OpenClaw"
+      "source": "GrokBot",
+      "translated": "GrokBot"
     },
     {
       "id": "native.android.24057bba4bbfa27a",
@@ -7110,8 +7110,8 @@
     },
     {
       "id": "native.android.5b8bd9f2b69b91ea",
-      "source": "OpenClaw is preparing a response.",
-      "translated": "يقوم OpenClaw بتحضير رد."
+      "source": "GrokBot is preparing a response.",
+      "translated": "يقوم GrokBot بتحضير رد."
     },
     {
       "id": "native.android.420cccbd48298a8d",
@@ -7125,8 +7125,8 @@
     },
     {
       "id": "native.android.285eeed928be0fc1",
-      "source": "OpenClaw only listens when you start Talk or Dictation.",
-      "translated": "لا يستمع OpenClaw إلا عندما تبدأ المحادثة أو الإملاء."
+      "source": "GrokBot only listens when you start Talk or Dictation.",
+      "translated": "لا يستمع GrokBot إلا عندما تبدأ المحادثة أو الإملاء."
     },
     {
       "id": "native.android.b10a51fe9d4b8d2d",
@@ -7135,8 +7135,8 @@
     },
     {
       "id": "native.android.c8bff891c9a442d9",
-      "source": "OpenClaw is speaking",
-      "translated": "OpenClaw يتحدث"
+      "source": "GrokBot is speaking",
+      "translated": "GrokBot يتحدث"
     },
     {
       "id": "native.android.248e1292eff12b84",
@@ -7605,8 +7605,8 @@
     },
     {
       "id": "native.android.dfbd755eb43b4d26",
-      "source": "OpenClaw · Live",
-      "translated": "OpenClaw · مباشر"
+      "source": "GrokBot · Live",
+      "translated": "GrokBot · مباشر"
     },
     {
       "id": "native.android.b3ff30d4e0b3ce58",
@@ -7620,8 +7620,8 @@
     },
     {
       "id": "native.android.82e9fe45e93909b6",
-      "source": "OpenClaw",
-      "translated": "OpenClaw"
+      "source": "GrokBot",
+      "translated": "GrokBot"
     },
     {
       "id": "native.android.02b4598277aca860",
@@ -7810,8 +7810,8 @@
     },
     {
       "id": "native.android.ebe49a8b8df80bd3",
-      "source": "Catch me up on my recent OpenClaw threads and suggest next steps.",
-      "translated": "أطلعني على آخر مستجدات سلاسل محادثاتي الأخيرة في OpenClaw واقترح الخطوات التالية."
+      "source": "Catch me up on my recent GrokBot threads and suggest next steps.",
+      "translated": "أطلعني على آخر مستجدات سلاسل محادثاتي الأخيرة في GrokBot واقترح الخطوات التالية."
     },
     {
       "id": "native.android.79f64f0b5ecaa07c",
@@ -7835,8 +7835,8 @@
     },
     {
       "id": "native.android.1656b8b922a5e3f2",
-      "source": "Ask OpenClaw to use Android capabilities.",
-      "translated": "اطلب من OpenClaw استخدام إمكانات Android."
+      "source": "Ask GrokBot to use Android capabilities.",
+      "translated": "اطلب من GrokBot استخدام إمكانات Android."
     },
     {
       "id": "native.android.04c826e3507eb47e",
@@ -7845,8 +7845,8 @@
     },
     {
       "id": "native.android.67075c8d2ccc0bb5",
-      "source": "OpenClaw · Live",
-      "translated": "OpenClaw · مباشر"
+      "source": "GrokBot · Live",
+      "translated": "GrokBot · مباشر"
     },
     {
       "id": "native.android.869f1130ca16bab5",
@@ -7860,8 +7860,8 @@
     },
     {
       "id": "native.android.25d8575c0063aee5",
-      "source": "OpenClaw",
-      "translated": "OpenClaw"
+      "source": "GrokBot",
+      "translated": "GrokBot"
     },
     {
       "id": "native.android.5aafbef3744d86f3",
@@ -7880,8 +7880,8 @@
     },
     {
       "id": "native.android.d851a32f367f8b31",
-      "source": "OpenClaw is working",
-      "translated": "OpenClaw يعمل"
+      "source": "GrokBot is working",
+      "translated": "GrokBot يعمل"
     },
     {
       "id": "native.android.0fd6b75cadc0ce75",
@@ -7895,8 +7895,8 @@
     },
     {
       "id": "native.android.98a0d4d5bba788c4",
-      "source": "OpenClaw is preparing a response.",
-      "translated": "OpenClaw يجهّز ردًا."
+      "source": "GrokBot is preparing a response.",
+      "translated": "GrokBot يجهّز ردًا."
     },
     {
       "id": "native.android.22d747642a3887cd",
@@ -7975,8 +7975,8 @@
     },
     {
       "id": "native.android.f1d69eb66c5dfa39",
-      "source": "Message OpenClaw",
-      "translated": "مراسلة OpenClaw"
+      "source": "Message GrokBot",
+      "translated": "مراسلة GrokBot"
     },
     {
       "id": "native.android.9b42791ed9da90d3",
@@ -8135,8 +8135,8 @@
     },
     {
       "id": "native.android.79d7a1026ef43e80",
-      "source": "OpenClaw",
-      "translated": "OpenClaw"
+      "source": "GrokBot",
+      "translated": "GrokBot"
     },
     {
       "id": "native.android.e8318a46a213cb91",
@@ -8170,13 +8170,13 @@
     },
     {
       "id": "native.android.794873efdfcdff4f",
-      "source": "OpenClaw gateway",
-      "translated": "بوابة OpenClaw"
+      "source": "GrokBot gateway",
+      "translated": "بوابة GrokBot"
     },
     {
       "id": "native.android.2d3b6dd9a8f186fe",
-      "source": "Ask OpenClaw anything",
-      "translated": "اسأل OpenClaw أي شيء"
+      "source": "Ask GrokBot anything",
+      "translated": "اسأل GrokBot أي شيء"
     },
     {
       "id": "native.android.608ccdaeababf056",
@@ -8210,8 +8210,8 @@
     },
     {
       "id": "native.android.3457b4ee28d964ee",
-      "source": "OpenClaw will surface approvals, failed jobs, and channel issues here.",
-      "translated": "سيعرض OpenClaw الموافقات والمهام الفاشلة ومشكلات القنوات هنا."
+      "source": "GrokBot will surface approvals, failed jobs, and channel issues here.",
+      "translated": "سيعرض GrokBot الموافقات والمهام الفاشلة ومشكلات القنوات هنا."
     },
     {
       "id": "native.android.7a6a37643fcfb2d9",
@@ -8495,23 +8495,23 @@
     },
     {
       "id": "native.android.f392ee2d50d6b7ce",
-      "source": "ask OpenClaw $prompt",
-      "translated": "اسأل OpenClaw $prompt"
+      "source": "ask GrokBot $prompt",
+      "translated": "اسأل GrokBot $prompt"
     },
     {
       "id": "native.android.ea9d1a78cfa13033",
-      "source": "tell OpenClaw to $prompt",
-      "translated": "أخبر OpenClaw أن $prompt"
+      "source": "tell GrokBot to $prompt",
+      "translated": "أخبر GrokBot أن $prompt"
     },
     {
       "id": "native.android.7f96ac9b9e10abd0",
-      "source": "open OpenClaw and ask $prompt",
-      "translated": "افتح OpenClaw واسأل $prompt"
+      "source": "open GrokBot and ask $prompt",
+      "translated": "افتح GrokBot واسأل $prompt"
     },
     {
       "id": "native.android.a3c395b04ae7a621",
-      "source": "OpenClaw Node",
-      "translated": "عقدة OpenClaw"
+      "source": "GrokBot Node",
+      "translated": "عقدة GrokBot"
     },
     {
       "id": "native.android.cd32b06480d9bb69",
@@ -8595,13 +8595,13 @@
     },
     {
       "id": "native.android.e3661fcea979a74c",
-      "source": "OpenClaw Git commit",
-      "translated": "التزام Git لـ OpenClaw"
+      "source": "GrokBot Git commit",
+      "translated": "التزام Git لـ GrokBot"
     },
     {
       "id": "native.android.a610564c863cdef7",
-      "source": "OpenClaw build timestamp",
-      "translated": "الطابع الزمني لبناء OpenClaw"
+      "source": "GrokBot build timestamp",
+      "translated": "الطابع الزمني لبناء GrokBot"
     },
     {
       "id": "native.android.9b9a42b4f56bea2a",
@@ -8615,8 +8615,8 @@
     },
     {
       "id": "native.apple.8f741d09cc1d5495",
-      "source": "OpenClaw Activity",
-      "translated": "نشاط OpenClaw"
+      "source": "GrokBot Activity",
+      "translated": "نشاط GrokBot"
     },
     {
       "id": "native.apple.093081590556db7f",
@@ -8625,8 +8625,8 @@
     },
     {
       "id": "native.apple.86d546e1f1247028",
-      "source": "OpenClaw",
-      "translated": "OpenClaw"
+      "source": "GrokBot",
+      "translated": "GrokBot"
     },
     {
       "id": "native.apple.9fd01bdb5a753f3e",
@@ -8695,8 +8695,8 @@
     },
     {
       "id": "native.apple.9168fcd110c3019a",
-      "source": "OpenClaw Share",
-      "translated": "OpenClaw Share"
+      "source": "GrokBot Share",
+      "translated": "GrokBot Share"
     },
     {
       "id": "native.apple.382fd936eaf238f7",
@@ -10860,8 +10860,8 @@
     },
     {
       "id": "native.apple.3548c8d1ab43e85e",
-      "source": "OpenClaw could not prepare the Markdown file.",
-      "translated": "تعذّر على OpenClaw إعداد ملف Markdown."
+      "source": "GrokBot could not prepare the Markdown file.",
+      "translated": "تعذّر على GrokBot إعداد ملف Markdown."
     },
     {
       "id": "native.apple.202b97e93b938049",
@@ -10975,13 +10975,13 @@
     },
     {
       "id": "native.apple.14492e334b87e4f2",
-      "source": "Check OpenClaw status",
-      "translated": "تحقق من حالة OpenClaw"
+      "source": "Check GrokBot status",
+      "translated": "تحقق من حالة GrokBot"
     },
     {
       "id": "native.apple.bbf7bd23da1e7865",
-      "source": "Summarize the current OpenClaw status and tell me what needs attention.",
-      "translated": "لخّص حالة OpenClaw الحالية وأخبرني بما يحتاج إلى اهتمام."
+      "source": "Summarize the current GrokBot status and tell me what needs attention.",
+      "translated": "لخّص حالة GrokBot الحالية وأخبرني بما يحتاج إلى اهتمام."
     },
     {
       "id": "native.apple.ea8cbb1b4230c652",
@@ -12090,8 +12090,8 @@
     },
     {
       "id": "native.apple.56935c5384889b8e",
-      "source": "Browse the current OpenClaw reference.",
-      "translated": "تصفّح مرجع OpenClaw الحالي."
+      "source": "Browse the current GrokBot reference.",
+      "translated": "تصفّح مرجع GrokBot الحالي."
     },
     {
       "id": "native.apple.2ee2f8c71fa2d2cc",
@@ -12120,8 +12120,8 @@
     },
     {
       "id": "native.apple.cf9bb65f8e405cc8",
-      "source": "OpenClaw",
-      "translated": "OpenClaw"
+      "source": "GrokBot",
+      "translated": "GrokBot"
     },
     {
       "id": "native.apple.20d011936ab5cd30",
@@ -12415,8 +12415,8 @@
     },
     {
       "id": "native.apple.756ff21ca904b2d8",
-      "source": "Choose when OpenClaw may share this iPhone's location with gateway tools.",
-      "translated": "اختر متى يمكن لـ OpenClaw مشاركة موقع هذا الـ iPhone مع أدوات Gateway."
+      "source": "Choose when GrokBot may share this iPhone's location with gateway tools.",
+      "translated": "اختر متى يمكن لـ GrokBot مشاركة موقع هذا الـ iPhone مع أدوات Gateway."
     },
     {
       "id": "native.apple.9515109ce97ec94e",
@@ -12445,8 +12445,8 @@
     },
     {
       "id": "native.apple.9bb1dae351d0e3a4",
-      "source": "Enable OpenClaw Hosted Push Relay?",
-      "translated": "هل تريد تفعيل OpenClaw Hosted Push Relay؟"
+      "source": "Enable GrokBot Hosted Push Relay?",
+      "translated": "هل تريد تفعيل GrokBot Hosted Push Relay؟"
     },
     {
       "id": "native.apple.f8c042a923222472",
@@ -12680,13 +12680,13 @@
     },
     {
       "id": "native.apple.3503aca018f04865",
-      "source": "Setup sent. Open OpenClaw on the watch to connect.",
-      "translated": "تم إرسال الإعداد. افتح OpenClaw على الساعة للاتصال."
+      "source": "Setup sent. Open GrokBot on the watch to connect.",
+      "translated": "تم إرسال الإعداد. افتح GrokBot على الساعة للاتصال."
     },
     {
       "id": "native.apple.a9a778465dfe1198",
-      "source": "Setup queued for the watch. Open OpenClaw before the code expires.",
-      "translated": "تم وضع الإعداد في قائمة الانتظار للساعة. افتح OpenClaw قبل انتهاء صلاحية الرمز."
+      "source": "Setup queued for the watch. Open GrokBot before the code expires.",
+      "translated": "تم وضع الإعداد في قائمة الانتظار للساعة. افتح GrokBot قبل انتهاء صلاحية الرمز."
     },
     {
       "id": "native.apple.ba8d38a642bee7f3",
@@ -12695,8 +12695,8 @@
     },
     {
       "id": "native.apple.07668650c75a20f1",
-      "source": "Pairing required. Run /pair approve in your OpenClaw chat, then connect again.",
-      "translated": "الإقران مطلوب. شغّل /pair approve في دردشة OpenClaw، ثم اتصل مجددًا."
+      "source": "Pairing required. Run /pair approve in your GrokBot chat, then connect again.",
+      "translated": "الإقران مطلوب. شغّل /pair approve في دردشة GrokBot، ثم اتصل مجددًا."
     },
     {
       "id": "native.apple.101b491eed1648ce",
@@ -12775,8 +12775,8 @@
     },
     {
       "id": "native.apple.3d805ac21285b092",
-      "source": "Foreground approvals still appear while OpenClaw is connected.",
-      "translated": "تظل طلبات الموافقة في الواجهة ظاهرة أثناء اتصال OpenClaw."
+      "source": "Foreground approvals still appear while GrokBot is connected.",
+      "translated": "تظل طلبات الموافقة في الواجهة ظاهرة أثناء اتصال GrokBot."
     },
     {
       "id": "native.apple.0b7a54926d06b7d8",
@@ -12915,18 +12915,18 @@
     },
     {
       "id": "native.apple.817057c658a751c7",
-      "source": "This build uses OpenClaw's hosted push relay at %@ for notification delivery data.",
-      "translated": "يستخدم هذا الإصدار وسيط الإشعارات الفورية المستضاف من OpenClaw على %@ لبيانات تسليم الإشعارات."
+      "source": "This build uses GrokBot's hosted push relay at %@ for notification delivery data.",
+      "translated": "يستخدم هذا الإصدار وسيط الإشعارات الفورية المستضاف من GrokBot على %@ لبيانات تسليم الإشعارات."
     },
     {
       "id": "native.apple.d70d23305da2016a",
-      "source": "This build is not configured to use OpenClaw's hosted push relay.",
-      "translated": "هذا الإصدار غير مهيأ لاستخدام وسيط الإشعارات الفورية المستضاف من OpenClaw."
+      "source": "This build is not configured to use GrokBot's hosted push relay.",
+      "translated": "هذا الإصدار غير مهيأ لاستخدام وسيط الإشعارات الفورية المستضاف من GrokBot."
     },
     {
       "id": "native.apple.6c81c3d48548ca05",
-      "source": "Enabling this sends delivery data through OpenClaw's hosted push relay.",
-      "translated": "يؤدي تمكين هذا الخيار إلى إرسال بيانات التسليم عبر وسيط الإشعارات الفورية المستضاف من OpenClaw."
+      "source": "Enabling this sends delivery data through GrokBot's hosted push relay.",
+      "translated": "يؤدي تمكين هذا الخيار إلى إرسال بيانات التسليم عبر وسيط الإشعارات الفورية المستضاف من GrokBot."
     },
     {
       "id": "native.apple.80fade864c8ad242",
@@ -13045,8 +13045,8 @@
     },
     {
       "id": "native.apple.7793f5de6975faef",
-      "source": "Use a secure wss:// or Tailscale Serve Gateway, then scan a full-access setup code from the Control UI or openclaw qr and reconnect to enable settings and upgrades.",
-      "translated": "استخدم Gateway آمنًا عبر wss:// أو Tailscale Serve، ثم امسح رمز إعداد بوصول كامل من Control UI أو openclaw qr وأعد الاتصال لتمكين الإعدادات والترقيات."
+      "source": "Use a secure wss:// or Tailscale Serve Gateway, then scan a full-access setup code from the Control UI or grokbot qr and reconnect to enable settings and upgrades.",
+      "translated": "استخدم Gateway آمنًا عبر wss:// أو Tailscale Serve، ثم امسح رمز إعداد بوصول كامل من Control UI أو grokbot qr وأعد الاتصال لتمكين الإعدادات والترقيات."
     },
     {
       "id": "native.apple.666cea428e126188",
@@ -13110,8 +13110,8 @@
     },
     {
       "id": "native.apple.1bd0f0b41f4d4750",
-      "source": "Install the OpenClaw watch app before enabling direct mode.",
-      "translated": "ثبّت تطبيق OpenClaw للساعة قبل تمكين الوضع المباشر."
+      "source": "Install the GrokBot watch app before enabling direct mode.",
+      "translated": "ثبّت تطبيق GrokBot للساعة قبل تمكين الوضع المباشر."
     },
     {
       "id": "native.apple.3710cda9cb13870f",
@@ -13150,8 +13150,8 @@
     },
     {
       "id": "native.apple.2e042499c42824f5",
-      "source": "Enable Notifications to receive approval alerts while OpenClaw is not open.",
-      "translated": "فعّل الإشعارات لتلقي تنبيهات الموافقة عندما لا يكون OpenClaw مفتوحًا."
+      "source": "Enable Notifications to receive approval alerts while GrokBot is not open.",
+      "translated": "فعّل الإشعارات لتلقي تنبيهات الموافقة عندما لا يكون GrokBot مفتوحًا."
     },
     {
       "id": "native.apple.fc1f2fdbe437cb9d",
@@ -13260,8 +13260,8 @@
     },
     {
       "id": "native.apple.d1ee91d07764faf0",
-      "source": "Turns OpenClaw notification delivery on or off",
-      "translated": "تشغيل أو إيقاف تسليم إشعارات OpenClaw"
+      "source": "Turns GrokBot notification delivery on or off",
+      "translated": "تشغيل أو إيقاف تسليم إشعارات GrokBot"
     },
     {
       "id": "native.apple.31f9c5fa6c3ca5dd",
@@ -13280,13 +13280,13 @@
     },
     {
       "id": "native.apple.a82dc4a746268028",
-      "source": "OpenClaw appreciates its partners in the open-source community.",
-      "translated": "تقدّر OpenClaw شركاءها في مجتمع المصادر المفتوحة."
+      "source": "GrokBot appreciates its partners in the open-source community.",
+      "translated": "تقدّر GrokBot شركاءها في مجتمع المصادر المفتوحة."
     },
     {
       "id": "native.apple.fc49f9b63e160581",
-      "source": "OpenClaw",
-      "translated": "OpenClaw"
+      "source": "GrokBot",
+      "translated": "GrokBot"
     },
     {
       "id": "native.apple.eaa4fe72f3730f3f",
@@ -13320,8 +13320,8 @@
     },
     {
       "id": "native.apple.b962116ff5bf1905",
-      "source": "© 2026 OpenClaw Foundation — MIT License.",
-      "translated": "© 2026 OpenClaw Foundation — ترخيص MIT."
+      "source": "© 2026 GrokBot Foundation — MIT License.",
+      "translated": "© 2026 GrokBot Foundation — ترخيص MIT."
     },
     {
       "id": "native.apple.106434d1305d153b",
@@ -13700,13 +13700,13 @@
     },
     {
       "id": "native.apple.675219772ee5adf0",
-      "source": "OpenClaw can show approval prompts and event alerts when the app is not active.",
-      "translated": "يمكن لـ OpenClaw عرض مطالبات الموافقة وتنبيهات الأحداث عندما لا يكون التطبيق نشطًا."
+      "source": "GrokBot can show approval prompts and event alerts when the app is not active.",
+      "translated": "يمكن لـ GrokBot عرض مطالبات الموافقة وتنبيهات الأحداث عندما لا يكون التطبيق نشطًا."
     },
     {
       "id": "native.apple.44133229b2b05062",
-      "source": "OpenClaw notifications are off.",
-      "translated": "إشعارات OpenClaw متوقفة."
+      "source": "GrokBot notifications are off.",
+      "translated": "إشعارات GrokBot متوقفة."
     },
     {
       "id": "native.apple.9794732a37cb580f",
@@ -13725,8 +13725,8 @@
     },
     {
       "id": "native.apple.bfe6a918d23fa20e",
-      "source": "OpenClaw cannot determine the current notification permission state.",
-      "translated": "لا يستطيع OpenClaw تحديد الحالة الحالية لإذن الإشعارات."
+      "source": "GrokBot cannot determine the current notification permission state.",
+      "translated": "لا يستطيع GrokBot تحديد الحالة الحالية لإذن الإشعارات."
     },
     {
       "id": "native.apple.fc7d007916016c0d",
@@ -13740,8 +13740,8 @@
     },
     {
       "id": "native.apple.737eb52b08f2640c",
-      "source": "Connected to openclaw-gateway.tailnet.ts.net.",
-      "translated": "متصل بـ openclaw-gateway.tailnet.ts.net."
+      "source": "Connected to grokbot-gateway.tailnet.ts.net.",
+      "translated": "متصل بـ grokbot-gateway.tailnet.ts.net."
     },
     {
       "id": "native.apple.b59e37e73db49f94",
@@ -14205,8 +14205,8 @@
     },
     {
       "id": "native.apple.c218ef5194d0ee56",
-      "source": "Run OpenClaw agent?",
-      "translated": "تشغيل وكيل OpenClaw؟"
+      "source": "Run GrokBot agent?",
+      "translated": "تشغيل وكيل GrokBot؟"
     },
     {
       "id": "native.apple.5d2fb30a9c85ad10",
@@ -14555,8 +14555,8 @@
     },
     {
       "id": "native.apple.c18f5bd36f119282",
-      "source": "Run openclaw gateway --port 18789.",
-      "translated": "شغّل openclaw gateway --port 18789."
+      "source": "Run grokbot gateway --port 18789.",
+      "translated": "شغّل grokbot gateway --port 18789."
     },
     {
       "id": "native.apple.a4eb9a9b02915961",
@@ -14600,8 +14600,8 @@
     },
     {
       "id": "native.apple.8f6f60c9a5196918",
-      "source": "Exec approvals can only be reviewed while OpenClaw is open and connected.\n\nEnable Notifications to receive approval notifications while OpenClaw is not open.",
-      "translated": "لا يمكن مراجعة موافقات التنفيذ إلا أثناء فتح OpenClaw واتصاله.\n\nفعّل الإشعارات لتلقي إشعارات الموافقة عندما لا يكون OpenClaw مفتوحًا."
+      "source": "Exec approvals can only be reviewed while GrokBot is open and connected.\n\nEnable Notifications to receive approval notifications while GrokBot is not open.",
+      "translated": "لا يمكن مراجعة موافقات التنفيذ إلا أثناء فتح GrokBot واتصاله.\n\nفعّل الإشعارات لتلقي إشعارات الموافقة عندما لا يكون GrokBot مفتوحًا."
     },
     {
       "id": "native.apple.a2378696390cca1e",
@@ -14650,73 +14650,73 @@
     },
     {
       "id": "native.apple.cf820096080f7031",
-      "source": "OpenClaw uses your calendars to show events and scheduling context when you enable calendar access.",
-      "translated": "يستخدم OpenClaw تقويماتك لعرض الأحداث وسياق الجدولة عند تفعيل الوصول إلى التقويم."
+      "source": "GrokBot uses your calendars to show events and scheduling context when you enable calendar access.",
+      "translated": "يستخدم GrokBot تقويماتك لعرض الأحداث وسياق الجدولة عند تفعيل الوصول إلى التقويم."
     },
     {
       "id": "native.apple.fe85b609e9a9a144",
-      "source": "OpenClaw uses your calendars to add events when you enable calendar access.",
-      "translated": "يستخدم OpenClaw تقويماتك لإضافة أحداث عند تفعيل الوصول إلى التقويم."
+      "source": "GrokBot uses your calendars to add events when you enable calendar access.",
+      "translated": "يستخدم GrokBot تقويماتك لإضافة أحداث عند تفعيل الوصول إلى التقويم."
     },
     {
       "id": "native.apple.ff5729a17d66ad91",
-      "source": "OpenClaw uses the camera when you scan a Gateway setup QR code or ask your paired Gateway or assistant to capture a photo or short video from this iPhone, for example to connect to your Gateway or show your assistant a document, device screen, or workspace.",
-      "translated": "يستخدم OpenClaw الكاميرا عند مسح رمز QR لإعداد Gateway أو عندما تطلب من Gateway المقترن أو المساعد التقاط صورة أو فيديو قصير من هذا iPhone، مثلًا للاتصال بـ Gateway أو لعرض مستند أو شاشة جهاز أو مساحة عمل على مساعدك."
+      "source": "GrokBot uses the camera when you scan a Gateway setup QR code or ask your paired Gateway or assistant to capture a photo or short video from this iPhone, for example to connect to your Gateway or show your assistant a document, device screen, or workspace.",
+      "translated": "يستخدم GrokBot الكاميرا عند مسح رمز QR لإعداد Gateway أو عندما تطلب من Gateway المقترن أو المساعد التقاط صورة أو فيديو قصير من هذا iPhone، مثلًا للاتصال بـ Gateway أو لعرض مستند أو شاشة جهاز أو مساحة عمل على مساعدك."
     },
     {
       "id": "native.apple.2f21aa6f5cd72915",
-      "source": "OpenClaw uses your contacts so you can search and reference people while using the assistant.",
-      "translated": "يستخدم OpenClaw جهات اتصالك حتى تتمكن من البحث عن الأشخاص والإشارة إليهم أثناء استخدام المساعد."
+      "source": "GrokBot uses your contacts so you can search and reference people while using the assistant.",
+      "translated": "يستخدم GrokBot جهات اتصالك حتى تتمكن من البحث عن الأشخاص والإشارة إليهم أثناء استخدام المساعد."
     },
     {
       "id": "native.apple.9d550c77a37bb165",
-      "source": "OpenClaw discovers and connects to your OpenClaw gateway on the local network.",
-      "translated": "يكتشف OpenClaw ويتصل ببوابة OpenClaw الخاصة بك على الشبكة المحلية."
+      "source": "GrokBot discovers and connects to your GrokBot gateway on the local network.",
+      "translated": "يكتشف GrokBot ويتصل ببوابة GrokBot الخاصة بك على الشبكة المحلية."
     },
     {
       "id": "native.apple.d822c41a0b7e9739",
-      "source": "OpenClaw can share your location in the background when you enable Always.",
-      "translated": "يمكن لـ OpenClaw مشاركة موقعك في الخلفية عند تفعيل دائمًا."
+      "source": "GrokBot can share your location in the background when you enable Always.",
+      "translated": "يمكن لـ GrokBot مشاركة موقعك في الخلفية عند تفعيل دائمًا."
     },
     {
       "id": "native.apple.441062ce99375692",
-      "source": "OpenClaw uses your location when you allow location sharing.",
-      "translated": "يستخدم OpenClaw موقعك عندما تسمح بمشاركة الموقع."
+      "source": "GrokBot uses your location when you allow location sharing.",
+      "translated": "يستخدم GrokBot موقعك عندما تسمح بمشاركة الموقع."
     },
     {
       "id": "native.apple.7c2cbe7077e4eff1",
-      "source": "OpenClaw uses the microphone for realtime chat, voice wake, push-to-talk, and voice notes.",
-      "translated": "يستخدم OpenClaw الميكروفون للدردشة الفورية، والتنبيه الصوتي، والضغط للتحدث، والملاحظات الصوتية."
+      "source": "GrokBot uses the microphone for realtime chat, voice wake, push-to-talk, and voice notes.",
+      "translated": "يستخدم GrokBot الميكروفون للدردشة الفورية، والتنبيه الصوتي، والضغط للتحدث، والملاحظات الصوتية."
     },
     {
       "id": "native.apple.85345f18204d67ec",
-      "source": "OpenClaw may use motion data to support device-aware interactions and automations.",
-      "translated": "قد يستخدم OpenClaw بيانات الحركة لدعم التفاعلات والأتمتة الواعية بالجهاز."
+      "source": "GrokBot may use motion data to support device-aware interactions and automations.",
+      "translated": "قد يستخدم GrokBot بيانات الحركة لدعم التفاعلات والأتمتة الواعية بالجهاز."
     },
     {
       "id": "native.apple.1d3a6099d7e11895",
-      "source": "OpenClaw reads your steps, sleep, resting heart rate, and workouts from the Apple Health app to create summaries you request and send them through your Gateway to your configured AI provider.",
-      "translated": "يقرأ OpenClaw بيانات خطواتك ونومك ومعدل نبض قلبك أثناء الراحة وتمارينك من تطبيق صحّة Apple لإنشاء الملخصات التي تطلبها وإرسالها عبر Gateway إلى مزوّد الذكاء الاصطناعي الذي أعددته."
+      "source": "GrokBot reads your steps, sleep, resting heart rate, and workouts from the Apple Health app to create summaries you request and send them through your Gateway to your configured AI provider.",
+      "translated": "يقرأ GrokBot بيانات خطواتك ونومك ومعدل نبض قلبك أثناء الراحة وتمارينك من تطبيق صحّة Apple لإنشاء الملخصات التي تطلبها وإرسالها عبر Gateway إلى مزوّد الذكاء الاصطناعي الذي أعددته."
     },
     {
       "id": "native.apple.c90a204b3232c401",
-      "source": "OpenClaw does not write to the Apple Health app. It uses read-only data to create summaries you request and send them through your Gateway to your configured AI provider.",
-      "translated": "لا يكتب OpenClaw أي بيانات إلى تطبيق صحّة Apple. بل يستخدم البيانات المتاحة للقراءة فقط لإنشاء الملخصات التي تطلبها وإرسالها عبر Gateway إلى مزوّد الذكاء الاصطناعي الذي أعددته."
+      "source": "GrokBot does not write to the Apple Health app. It uses read-only data to create summaries you request and send them through your Gateway to your configured AI provider.",
+      "translated": "لا يكتب GrokBot أي بيانات إلى تطبيق صحّة Apple. بل يستخدم البيانات المتاحة للقراءة فقط لإنشاء الملخصات التي تطلبها وإرسالها عبر Gateway إلى مزوّد الذكاء الاصطناعي الذي أعددته."
     },
     {
       "id": "native.apple.40ed4259ec869f1b",
-      "source": "OpenClaw lets your assistant read photos you allow and lets you choose photos to share.",
-      "translated": "يتيح OpenClaw لمساعدك قراءة الصور التي تسمح بها، ويتيح لك اختيار الصور لمشاركتها."
+      "source": "GrokBot lets your assistant read photos you allow and lets you choose photos to share.",
+      "translated": "يتيح GrokBot لمساعدك قراءة الصور التي تسمح بها، ويتيح لك اختيار الصور لمشاركتها."
     },
     {
       "id": "native.apple.81b673f0c6fc4371",
-      "source": "OpenClaw uses your reminders to list, add, and complete tasks when you enable reminders access.",
-      "translated": "يستخدم OpenClaw تذكيراتك لعرض المهام وإضافتها وإكمالها عند تفعيل الوصول إلى التذكيرات."
+      "source": "GrokBot uses your reminders to list, add, and complete tasks when you enable reminders access.",
+      "translated": "يستخدم GrokBot تذكيراتك لعرض المهام وإضافتها وإكمالها عند تفعيل الوصول إلى التذكيرات."
     },
     {
       "id": "native.apple.2275552c26460945",
-      "source": "OpenClaw uses on-device speech recognition for talk mode and voice wake.",
-      "translated": "يستخدم OpenClaw التعرف على الكلام على الجهاز لوضع التحدث والتنبيه الصوتي."
+      "source": "GrokBot uses on-device speech recognition for talk mode and voice wake.",
+      "translated": "يستخدم GrokBot التعرف على الكلام على الجهاز لوضع التحدث والتنبيه الصوتي."
     },
     {
       "id": "native.apple.46111fe0569488ab",
@@ -14790,18 +14790,18 @@
     },
     {
       "id": "native.apple.2dc593065171c201",
-      "source": "Location sharing is disabled in OpenClaw. Location Services are off in iOS Settings.",
-      "translated": "مشاركة الموقع معطّلة في OpenClaw. خدمات الموقع متوقفة في إعدادات iOS."
+      "source": "Location sharing is disabled in GrokBot. Location Services are off in iOS Settings.",
+      "translated": "مشاركة الموقع معطّلة في GrokBot. خدمات الموقع متوقفة في إعدادات iOS."
     },
     {
       "id": "native.apple.1dc990a9cc0500c5",
-      "source": "Location sharing is disabled in OpenClaw. iOS currently allows Always.",
-      "translated": "مشاركة الموقع معطّلة في OpenClaw. يسمح iOS حاليًا بالخيار دائمًا."
+      "source": "Location sharing is disabled in GrokBot. iOS currently allows Always.",
+      "translated": "مشاركة الموقع معطّلة في GrokBot. يسمح iOS حاليًا بالخيار دائمًا."
     },
     {
       "id": "native.apple.9a4e858d2b218d41",
-      "source": "Location sharing is disabled in OpenClaw. iOS currently allows While Using.",
-      "translated": "مشاركة الموقع معطّلة في OpenClaw. يسمح iOS حاليًا بالخيار أثناء الاستخدام."
+      "source": "Location sharing is disabled in GrokBot. iOS currently allows While Using.",
+      "translated": "مشاركة الموقع معطّلة في GrokBot. يسمح iOS حاليًا بالخيار أثناء الاستخدام."
     },
     {
       "id": "native.apple.ab481eb11214797f",
@@ -14875,8 +14875,8 @@
     },
     {
       "id": "native.apple.633f011b81108a8c",
-      "source": "OpenClaw cannot determine the current iOS location permission.",
-      "translated": "يتعذّر على OpenClaw تحديد إذن الموقع الحالي في iOS."
+      "source": "GrokBot cannot determine the current iOS location permission.",
+      "translated": "يتعذّر على GrokBot تحديد إذن الموقع الحالي في iOS."
     },
     {
       "id": "native.apple.e5673992d3aeac64",
@@ -14905,8 +14905,8 @@
     },
     {
       "id": "native.apple.f6b19113d5d8e7db",
-      "source": "OpenClaw cannot determine the current iOS location permission.",
-      "translated": "لا يستطيع OpenClaw تحديد إذن الموقع الحالي في iOS."
+      "source": "GrokBot cannot determine the current iOS location permission.",
+      "translated": "لا يستطيع GrokBot تحديد إذن الموقع الحالي في iOS."
     },
     {
       "id": "native.apple.2892e5b02c6789f0",
@@ -15180,8 +15180,8 @@
     },
     {
       "id": "native.apple.d4d9568dca8ceaa9",
-      "source": "The connected OpenClaw agent can use device capabilities you enable.",
-      "translated": "يمكن لوكيل OpenClaw المتصل استخدام إمكانات الجهاز التي تمكّنها."
+      "source": "The connected GrokBot agent can use device capabilities you enable.",
+      "translated": "يمكن لوكيل GrokBot المتصل استخدام إمكانات الجهاز التي تمكّنها."
     },
     {
       "id": "native.apple.fdd93eb6b6eef525",
@@ -15205,8 +15205,8 @@
     },
     {
       "id": "native.apple.e8b4dc00cd23ae73",
-      "source": "OpenClaw",
-      "translated": "OpenClaw"
+      "source": "GrokBot",
+      "translated": "GrokBot"
     },
     {
       "id": "native.apple.9b414850baa618da",
@@ -15380,8 +15380,8 @@
     },
     {
       "id": "native.apple.559dccb9f9dfbbad",
-      "source": "OpenClaw is checking gateway and node access.",
-      "translated": "يتحقق OpenClaw من الوصول إلى Gateway والعقدة."
+      "source": "GrokBot is checking gateway and node access.",
+      "translated": "يتحقق GrokBot من الوصول إلى Gateway والعقدة."
     },
     {
       "id": "native.apple.4404f435fb496b62",
@@ -15400,13 +15400,13 @@
     },
     {
       "id": "native.apple.da636328de464a40",
-      "source": "Request ID: check `openclaw devices list`.",
-      "translated": "معرّف الطلب: تحقّق من `openclaw devices list`."
+      "source": "Request ID: check `grokbot devices list`.",
+      "translated": "معرّف الطلب: تحقّق من `grokbot devices list`."
     },
     {
       "id": "native.apple.d5a5f13a1dd28c9d",
-      "source": "Approve this device on the gateway.\n1) `%1$@`\n2) `/pair approve` in your OpenClaw chat\n%2$@\nOpenClaw will also retry automatically when you return to this app.",
-      "translated": "وافق على هذا الجهاز في Gateway.\n1) `%1$@`\n2) `/pair approve` في دردشة OpenClaw\n%2$@\nسيعيد OpenClaw المحاولة تلقائيًا أيضًا عند عودتك إلى هذا التطبيق."
+      "source": "Approve this device on the gateway.\n1) `%1$@`\n2) `/pair approve` in your GrokBot chat\n%2$@\nOpenClaw will also retry automatically when you return to this app.",
+      "translated": "وافق على هذا الجهاز في Gateway.\n1) `%1$@`\n2) `/pair approve` في دردشة GrokBot\n%2$@\nسيعيد GrokBot المحاولة تلقائيًا أيضًا عند عودتك إلى هذا التطبيق."
     },
     {
       "id": "native.apple.af3890b1e07c3084",
@@ -15490,8 +15490,8 @@
     },
     {
       "id": "native.apple.5b46de1ccb06852b",
-      "source": "OpenClaw",
-      "translated": "OpenClaw"
+      "source": "GrokBot",
+      "translated": "GrokBot"
     },
     {
       "id": "native.apple.0e07e7044608f954",
@@ -15595,8 +15595,8 @@
     },
     {
       "id": "native.apple.8855710a55de2ed5",
-      "source": "OpenClaw",
-      "translated": "OpenClaw"
+      "source": "GrokBot",
+      "translated": "GrokBot"
     },
     {
       "id": "native.apple.7029e1235380a92c",
@@ -15780,8 +15780,8 @@
     },
     {
       "id": "native.apple.a55a43940452b04b",
-      "source": "OpenClaw iOS",
-      "translated": "OpenClaw iOS"
+      "source": "GrokBot iOS",
+      "translated": "GrokBot iOS"
     },
     {
       "id": "native.apple.35b6f99d627028f6",
@@ -16000,8 +16000,8 @@
     },
     {
       "id": "native.apple.4ebb39f445d7dbff",
-      "source": "OpenClaw reacts when any trigger appears in a transcription. Keep them short to avoid false positives.",
-      "translated": "يستجيب OpenClaw عند ظهور أي مشغّل في النسخ الصوتي. اجعلها قصيرة لتجنب النتائج الإيجابية الخاطئة."
+      "source": "GrokBot reacts when any trigger appears in a transcription. Keep them short to avoid false positives.",
+      "translated": "يستجيب GrokBot عند ظهور أي مشغّل في النسخ الصوتي. اجعلها قصيرة لتجنب النتائج الإيجابية الخاطئة."
     },
     {
       "id": "native.apple.994760420a194561",
@@ -16275,18 +16275,18 @@
     },
     {
       "id": "native.apple.5b40cb9cf4ee4d4f",
-      "source": "Asking OpenClaw",
-      "translated": "جارٍ سؤال OpenClaw"
+      "source": "Asking GrokBot",
+      "translated": "جارٍ سؤال GrokBot"
     },
     {
       "id": "native.apple.34531893ae6091b1",
-      "source": "Still asking OpenClaw",
-      "translated": "لا يزال السؤال موجّهًا إلى OpenClaw"
+      "source": "Still asking GrokBot",
+      "translated": "لا يزال السؤال موجّهًا إلى GrokBot"
     },
     {
       "id": "native.apple.027ab0bbb4553124",
-      "source": "Updating OpenClaw",
-      "translated": "جارٍ تحديث OpenClaw"
+      "source": "Updating GrokBot",
+      "translated": "جارٍ تحديث GrokBot"
     },
     {
       "id": "native.apple.471dc394d6b9e443",
@@ -16340,8 +16340,8 @@
     },
     {
       "id": "native.apple.deb282fd61fd2de3",
-      "source": "OpenClaw unavailable",
-      "translated": "OpenClaw غير متاح"
+      "source": "GrokBot unavailable",
+      "translated": "GrokBot غير متاح"
     },
     {
       "id": "native.apple.f4adf2762402e92a",
@@ -16405,13 +16405,13 @@
     },
     {
       "id": "native.apple.1065cfe92d7c1eb6",
-      "source": "Asking OpenClaw",
-      "translated": "جارٍ سؤال OpenClaw"
+      "source": "Asking GrokBot",
+      "translated": "جارٍ سؤال GrokBot"
     },
     {
       "id": "native.apple.d2db26b3bb266491",
-      "source": "Updating OpenClaw",
-      "translated": "جارٍ تحديث OpenClaw"
+      "source": "Updating GrokBot",
+      "translated": "جارٍ تحديث GrokBot"
     },
     {
       "id": "native.apple.4b89dccea20c58fa",
@@ -16420,8 +16420,8 @@
     },
     {
       "id": "native.apple.8a62f0e9416188e3",
-      "source": "OpenClaw unavailable",
-      "translated": "OpenClaw غير متاح"
+      "source": "GrokBot unavailable",
+      "translated": "GrokBot غير متاح"
     },
     {
       "id": "native.apple.8a944b06087fe8ef",
@@ -16500,8 +16500,8 @@
     },
     {
       "id": "native.apple.12a4a51d251f65c0",
-      "source": "OpenClaw connects this Apple Watch directly to your Gateway on trusted local networks.",
-      "translated": "يربط OpenClaw ساعة Apple Watch هذه مباشرةً بـ Gateway الخاص بك على الشبكات المحلية الموثوقة."
+      "source": "GrokBot connects this Apple Watch directly to your Gateway on trusted local networks.",
+      "translated": "يربط GrokBot ساعة Apple Watch هذه مباشرةً بـ Gateway الخاص بك على الشبكات المحلية الموثوقة."
     },
     {
       "id": "native.apple.130180e0065c80fc",
@@ -16550,8 +16550,8 @@
     },
     {
       "id": "native.apple.32473b10033ac0f4",
-      "source": "Reconnects when OpenClaw is active",
-      "translated": "يعيد الاتصال عندما يكون OpenClaw نشطًا"
+      "source": "Reconnects when GrokBot is active",
+      "translated": "يعيد الاتصال عندما يكون GrokBot نشطًا"
     },
     {
       "id": "native.apple.760267006777c454",
@@ -16840,8 +16840,8 @@
     },
     {
       "id": "native.apple.ca02fd2965efe74e",
-      "source": "OpenClaw",
-      "translated": "OpenClaw"
+      "source": "GrokBot",
+      "translated": "GrokBot"
     },
     {
       "id": "native.apple.1ba2f03dc98103c0",
@@ -16990,8 +16990,8 @@
     },
     {
       "id": "native.apple.c7d87356e6cdb374",
-      "source": "Uses Wi-Fi or cellular while OpenClaw is active",
-      "translated": "يستخدم Wi-Fi أو الشبكة الخلوية أثناء نشاط OpenClaw"
+      "source": "Uses Wi-Fi or cellular while GrokBot is active",
+      "translated": "يستخدم Wi-Fi أو الشبكة الخلوية أثناء نشاط GrokBot"
     },
     {
       "id": "native.apple.08583448d9b2455e",
@@ -17180,8 +17180,8 @@
     },
     {
       "id": "native.apple.3fdc651e507de84b",
-      "source": "OpenClaw",
-      "translated": "OpenClaw"
+      "source": "GrokBot",
+      "translated": "GrokBot"
     },
     {
       "id": "native.apple.c1de056da9ee1b27",
@@ -17220,8 +17220,8 @@
     },
     {
       "id": "native.apple.b816e4b9e492ae6c",
-      "source": "Message OpenClaw",
-      "translated": "مراسلة OpenClaw"
+      "source": "Message GrokBot",
+      "translated": "مراسلة GrokBot"
     },
     {
       "id": "native.apple.502a884cec1f0d5d",
@@ -17345,8 +17345,8 @@
     },
     {
       "id": "native.apple.5ac0c79487a492b4",
-      "source": "OpenClaw",
-      "translated": "OpenClaw"
+      "source": "GrokBot",
+      "translated": "GrokBot"
     },
     {
       "id": "native.apple.95b5730738a28d71",
@@ -17390,8 +17390,8 @@
     },
     {
       "id": "native.apple.4ec07761308f7f50",
-      "source": "© 2026 OpenClaw Foundation — MIT License.",
-      "translated": "© 2026 OpenClaw Foundation — MIT License."
+      "source": "© 2026 GrokBot Foundation — MIT License.",
+      "translated": "© 2026 GrokBot Foundation — MIT License."
     },
     {
       "id": "native.apple.37661ff1af405580",
@@ -17460,28 +17460,28 @@
     },
     {
       "id": "native.apple.edfef1f4b5cb081f",
-      "source": "OpenClaw couldn’t be installed in Applications. Move it there manually, then open that copy.",
-      "translated": "تعذّر تثبيت OpenClaw في التطبيقات. انقله إلى هناك يدويًا، ثم افتح تلك النسخة."
+      "source": "GrokBot couldn’t be installed in Applications. Move it there manually, then open that copy.",
+      "translated": "تعذّر تثبيت GrokBot في التطبيقات. انقله إلى هناك يدويًا، ثم افتح تلك النسخة."
     },
     {
       "id": "native.apple.7f86f5acf3d32ec2",
-      "source": "Replace the older OpenClaw in Applications?",
-      "translated": "استبدال النسخة الأقدم من OpenClaw في التطبيقات؟"
+      "source": "Replace the older GrokBot in Applications?",
+      "translated": "استبدال النسخة الأقدم من GrokBot في التطبيقات؟"
     },
     {
       "id": "native.apple.088b39cc34b44e54",
-      "source": "Install OpenClaw in Applications?",
-      "translated": "تثبيت OpenClaw في التطبيقات؟"
+      "source": "Install GrokBot in Applications?",
+      "translated": "تثبيت GrokBot في التطبيقات؟"
     },
     {
       "id": "native.apple.c8898d685457401f",
-      "source": "This copy is newer than the installed app. OpenClaw will replace it and reopen from Applications.",
-      "translated": "هذه النسخة أحدث من التطبيق المثبَّت. سيستبدلها OpenClaw ويعيد الفتح من التطبيقات."
+      "source": "This copy is newer than the installed app. GrokBot will replace it and reopen from Applications.",
+      "translated": "هذه النسخة أحدث من التطبيق المثبَّت. سيستبدلها GrokBot ويعيد الفتح من التطبيقات."
     },
     {
       "id": "native.apple.a77a46d0ca32551f",
-      "source": "OpenClaw will copy itself to Applications and reopen there so updates and launch at login stay reliable.",
-      "translated": "سيقوم OpenClaw بنسخ نفسه إلى التطبيقات وإعادة الفتح هناك للحفاظ على موثوقية التحديثات والتشغيل عند تسجيل الدخول."
+      "source": "GrokBot will copy itself to Applications and reopen there so updates and launch at login stay reliable.",
+      "translated": "سيقوم GrokBot بنسخ نفسه إلى التطبيقات وإعادة الفتح هناك للحفاظ على موثوقية التحديثات والتشغيل عند تسجيل الدخول."
     },
     {
       "id": "native.apple.22ebb7b228c8275a",
@@ -17495,8 +17495,8 @@
     },
     {
       "id": "native.apple.9ac444c15bd52f0e",
-      "source": "OpenClaw is installed in Applications, but couldn’t reopen automatically. Open it there manually.",
-      "translated": "تم تثبيت OpenClaw في التطبيقات، لكن تعذّرت إعادة فتحه تلقائيًا. افتحه هناك يدويًا."
+      "source": "GrokBot is installed in Applications, but couldn’t reopen automatically. Open it there manually.",
+      "translated": "تم تثبيت GrokBot في التطبيقات، لكن تعذّرت إعادة فتحه تلقائيًا. افتحه هناك يدويًا."
     },
     {
       "id": "native.apple.d1faee12838b677f",
@@ -17615,18 +17615,18 @@
     },
     {
       "id": "native.apple.cfc2509b8bbcf1d7",
-      "source": "OpenClaw Gateway \\(version) is ready.",
-      "translated": "OpenClaw Gateway \\(version) جاهز."
+      "source": "GrokBot Gateway \\(version) is ready.",
+      "translated": "GrokBot Gateway \\(version) جاهز."
     },
     {
       "id": "native.apple.9b767e46895714f9",
-      "source": "OpenClaw Gateway is not installed yet.",
-      "translated": "لم يتم تثبيت OpenClaw Gateway بعد."
+      "source": "GrokBot Gateway is not installed yet.",
+      "translated": "لم يتم تثبيت GrokBot Gateway بعد."
     },
     {
       "id": "native.apple.b4dc58a1b294e140",
-      "source": "The OpenClaw Gateway could not be verified. Setup will repair it.",
-      "translated": "تعذّر التحقق من OpenClaw Gateway. سيقوم الإعداد بإصلاحه."
+      "source": "The GrokBot Gateway could not be verified. Setup will repair it.",
+      "translated": "تعذّر التحقق من GrokBot Gateway. سيقوم الإعداد بإصلاحه."
     },
     {
       "id": "native.apple.4088056ae7b0f3b4",
@@ -17635,13 +17635,13 @@
     },
     {
       "id": "native.apple.86e7c86924ad0c70",
-      "source": "Repairing the OpenClaw Gateway update…",
-      "translated": "جارٍ إصلاح تحديث OpenClaw Gateway…"
+      "source": "Repairing the GrokBot Gateway update…",
+      "translated": "جارٍ إصلاح تحديث GrokBot Gateway…"
     },
     {
       "id": "native.apple.b59713e1e3e7ee65",
-      "source": "Updating the OpenClaw Gateway to \\(targetVersion)…",
-      "translated": "جارٍ تحديث OpenClaw Gateway إلى \\(targetVersion)…"
+      "source": "Updating the GrokBot Gateway to \\(targetVersion)…",
+      "translated": "جارٍ تحديث GrokBot Gateway إلى \\(targetVersion)…"
     },
     {
       "id": "native.apple.7772913c171b78ac",
@@ -17660,8 +17660,8 @@
     },
     {
       "id": "native.apple.66f44c526206f5de",
-      "source": "OpenClaw Gateway \\(installedVersion) is installed.",
-      "translated": "تم تثبيت OpenClaw Gateway \\(installedVersion)."
+      "source": "GrokBot Gateway \\(installedVersion) is installed.",
+      "translated": "تم تثبيت GrokBot Gateway \\(installedVersion)."
     },
     {
       "id": "native.apple.6f14c557e2573526",
@@ -17745,8 +17745,8 @@
     },
     {
       "id": "native.apple.81435e60c0b78093",
-      "source": "OpenClaw could not load editable settings for this channel.",
-      "translated": "تعذر على OpenClaw تحميل الإعدادات القابلة للتعديل لهذه القناة."
+      "source": "GrokBot could not load editable settings for this channel.",
+      "translated": "تعذر على GrokBot تحميل الإعدادات القابلة للتعديل لهذه القناة."
     },
     {
       "id": "native.apple.f74dfc887ee4f936",
@@ -17815,8 +17815,8 @@
     },
     {
       "id": "native.apple.60f2b09010a7809b",
-      "source": "Config invalid; fix it in ~/.openclaw/openclaw.json.",
-      "translated": "Config invalid; fix it in ~/.openclaw/openclaw.json."
+      "source": "Config invalid; fix it in ~/.grokbot/grokbot.json.",
+      "translated": "Config invalid; fix it in ~/.grokbot/grokbot.json."
     },
     {
       "id": "native.apple.313dabb10c37e00c",
@@ -17970,8 +17970,8 @@
     },
     {
       "id": "native.apple.8103e662c0e40760",
-      "source": "Edit ~/.openclaw/openclaw.json using the schema-driven form.",
-      "translated": "حرّر ~/.openclaw/openclaw.json باستخدام النموذج المستند إلى المخطط."
+      "source": "Edit ~/.grokbot/grokbot.json using the schema-driven form.",
+      "translated": "حرّر ~/.grokbot/grokbot.json باستخدام النموذج المستند إلى المخطط."
     },
     {
       "id": "native.apple.a3465ec90e435ea9",
@@ -18220,8 +18220,8 @@
     },
     {
       "id": "native.apple.df6243155293f80b",
-      "source": "What should OpenClaw do?",
-      "translated": "ماذا ينبغي أن يفعل OpenClaw؟"
+      "source": "What should GrokBot do?",
+      "translated": "ماذا ينبغي أن يفعل GrokBot؟"
     },
     {
       "id": "native.apple.81b5ba441a230f07",
@@ -18565,8 +18565,8 @@
     },
     {
       "id": "native.apple.d8b3e55c41a77627",
-      "source": "When enabled, OpenClaw won't install or manage \\(gatewayLaunchdLabel). It will only attach to an existing Gateway.",
-      "translated": "عند التمكين، لن يقوم OpenClaw بتثبيت \\(gatewayLaunchdLabel) أو إدارته. سيقوم فقط بالإرفاق بـ Gateway موجود."
+      "source": "When enabled, GrokBot won't install or manage \\(gatewayLaunchdLabel). It will only attach to an existing Gateway.",
+      "translated": "عند التمكين، لن يقوم GrokBot بتثبيت \\(gatewayLaunchdLabel) أو إدارته. سيقوم فقط بالإرفاق بـ Gateway موجود."
     },
     {
       "id": "native.apple.15e528c55a96394f",
@@ -18650,8 +18650,8 @@
     },
     {
       "id": "native.apple.f8e4e2b25dbdbd44",
-      "source": "Deep links (openclaw://…) are always enabled; the key controls unattended runs.",
-      "translated": "الروابط العميقة (openclaw://…) مفعّلة دائمًا؛ يتحكم المفتاح في عمليات التشغيل غير المراقبة."
+      "source": "Deep links (grokbot://…) are always enabled; the key controls unattended runs.",
+      "translated": "الروابط العميقة (grokbot://…) مفعّلة دائمًا؛ يتحكم المفتاح في عمليات التشغيل غير المراقبة."
     },
     {
       "id": "native.apple.aeba5ae43a292c55",
@@ -18700,8 +18700,8 @@
     },
     {
       "id": "native.apple.5437c7d545b749ca",
-      "source": "Writes a rotating, local-only log under ~/Library/Logs/OpenClaw/. Enable only while actively debugging.",
-      "translated": "Writes a rotating, local-only log under ~/Library/Logs/OpenClaw/. Enable only while actively debugging."
+      "source": "Writes a rotating, local-only log under ~/Library/Logs/GrokBot/. Enable only while actively debugging.",
+      "translated": "Writes a rotating, local-only log under ~/Library/Logs/GrokBot/. Enable only while actively debugging."
     },
     {
       "id": "native.apple.5b35a89bea603457",
@@ -18750,13 +18750,13 @@
     },
     {
       "id": "native.apple.5e9e8bf8e35c48ef",
-      "source": "OpenClaw project root",
-      "translated": "جذر مشروع OpenClaw"
+      "source": "GrokBot project root",
+      "translated": "جذر مشروع GrokBot"
     },
     {
       "id": "native.apple.8b01a6daf7a7b94e",
-      "source": "Path to openclaw repo",
-      "translated": "المسار إلى مستودع openclaw"
+      "source": "Path to grokbot repo",
+      "translated": "المسار إلى مستودع grokbot"
     },
     {
       "id": "native.apple.b9e064d213c6b451",
@@ -18785,8 +18785,8 @@
     },
     {
       "id": "native.apple.a8154f17cda71415",
-      "source": "Used by the CLI session loader; stored in ~/.openclaw/openclaw.json.",
-      "translated": "يُستخدم بواسطة محمّل جلسات CLI؛ ويُخزّن في ~/.openclaw/openclaw.json."
+      "source": "Used by the CLI session loader; stored in ~/.grokbot/grokbot.json.",
+      "translated": "يُستخدم بواسطة محمّل جلسات CLI؛ ويُخزّن في ~/.grokbot/grokbot.json."
     },
     {
       "id": "native.apple.3e472353e27107af",
@@ -18815,13 +18815,13 @@
     },
     {
       "id": "native.apple.3307505d507faf31",
-      "source": "Note: macOS may require restarting OpenClaw after enabling Accessibility or Screen Recording.",
-      "translated": "ملاحظة: قد يتطلب macOS إعادة تشغيل OpenClaw بعد تمكين إمكانية الوصول أو تسجيل الشاشة."
+      "source": "Note: macOS may require restarting GrokBot after enabling Accessibility or Screen Recording.",
+      "translated": "ملاحظة: قد يتطلب macOS إعادة تشغيل GrokBot بعد تمكين إمكانية الوصول أو تسجيل الشاشة."
     },
     {
       "id": "native.apple.e52d463773aef1e1",
-      "source": "Restart OpenClaw",
-      "translated": "إعادة تشغيل OpenClaw"
+      "source": "Restart GrokBot",
+      "translated": "إعادة تشغيل GrokBot"
     },
     {
       "id": "native.apple.e299e77f3ad75a75",
@@ -18940,13 +18940,13 @@
     },
     {
       "id": "native.apple.a8af393b84d63ab8",
-      "source": "OpenClaw is paused",
-      "translated": "OpenClaw متوقف مؤقتًا"
+      "source": "GrokBot is paused",
+      "translated": "GrokBot متوقف مؤقتًا"
     },
     {
       "id": "native.apple.7ba1542539c0d40b",
-      "source": "Unpause OpenClaw to run agent actions.",
-      "translated": "ألغِ إيقاف OpenClaw المؤقت لتشغيل إجراءات الوكيل."
+      "source": "Unpause GrokBot to run agent actions.",
+      "translated": "ألغِ إيقاف GrokBot المؤقت لتشغيل إجراءات الوكيل."
     },
     {
       "id": "native.apple.7c1e1dbfde976ab9",
@@ -18970,8 +18970,8 @@
     },
     {
       "id": "native.apple.50f1211af2a1945e",
-      "source": "Run OpenClaw agent?",
-      "translated": "تشغيل وكيل OpenClaw؟"
+      "source": "Run GrokBot agent?",
+      "translated": "تشغيل وكيل GrokBot؟"
     },
     {
       "id": "native.apple.4f3841d5de0135c4",
@@ -19055,8 +19055,8 @@
     },
     {
       "id": "native.apple.66ad783199ef9729",
-      "source": "Discover OpenClaw gateways on your LAN",
-      "translated": "اكتشف gateways الخاصة بـ OpenClaw على شبكة LAN لديك"
+      "source": "Discover GrokBot gateways on your LAN",
+      "translated": "اكتشف gateways الخاصة بـ GrokBot على شبكة LAN لديك"
     },
     {
       "id": "native.apple.110f6e64e25dcd2e",
@@ -19100,8 +19100,8 @@
     },
     {
       "id": "native.apple.1c4fca89983d7487",
-      "source": "Everyday OpenClaw app behavior.",
-      "translated": "سلوك تطبيق OpenClaw اليومي."
+      "source": "Everyday GrokBot app behavior.",
+      "translated": "سلوك تطبيق GrokBot اليومي."
     },
     {
       "id": "native.apple.7d03158a40ddb60a",
@@ -19115,13 +19115,13 @@
     },
     {
       "id": "native.apple.405e74c96498b7c0",
-      "source": "Automatically start OpenClaw after you sign in.",
-      "translated": "ابدأ OpenClaw تلقائيًا بعد تسجيل دخولك."
+      "source": "Automatically start GrokBot after you sign in.",
+      "translated": "ابدأ GrokBot تلقائيًا بعد تسجيل دخولك."
     },
     {
       "id": "native.apple.8b74758a60f78642",
-      "source": "Move OpenClaw to Applications before enabling launch at login.",
-      "translated": "انقل OpenClaw إلى Applications قبل تمكين التشغيل عند تسجيل الدخول."
+      "source": "Move GrokBot to Applications before enabling launch at login.",
+      "translated": "انقل GrokBot إلى Applications قبل تمكين التشغيل عند تسجيل الدخول."
     },
     {
       "id": "native.apple.927819c087ca3520",
@@ -19130,8 +19130,8 @@
     },
     {
       "id": "native.apple.e7a0819bd2f4e1dc",
-      "source": "Keep OpenClaw visible in the Dock. When off, windows still show the Dock icon while open.",
-      "translated": "إبقاء OpenClaw ظاهرًا في Dock. عند إيقاف ذلك، ستظل النوافذ تُظهر أيقونة Dock أثناء فتحها."
+      "source": "Keep GrokBot visible in the Dock. When off, windows still show the Dock icon while open.",
+      "translated": "إبقاء GrokBot ظاهرًا في Dock. عند إيقاف ذلك، ستظل النوافذ تُظهر أيقونة Dock أثناء فتحها."
     },
     {
       "id": "native.apple.af23f7b5fb03a877",
@@ -19260,13 +19260,13 @@
     },
     {
       "id": "native.apple.64e197a4a8b384ef",
-      "source": "OpenClaw paused",
-      "translated": "OpenClaw متوقف مؤقتًا"
+      "source": "GrokBot paused",
+      "translated": "GrokBot متوقف مؤقتًا"
     },
     {
       "id": "native.apple.7fe6df69d8050832",
-      "source": "OpenClaw active",
-      "translated": "OpenClaw نشط"
+      "source": "GrokBot active",
+      "translated": "GrokBot نشط"
     },
     {
       "id": "native.apple.2f4258fa73e04344",
@@ -19320,8 +19320,8 @@
     },
     {
       "id": "native.apple.8021dcd7963a4cc2",
-      "source": "OpenClaw starts and monitors the Gateway on this Mac.",
-      "translated": "يقوم OpenClaw بتشغيل Gateway ومراقبته على هذا الـ Mac."
+      "source": "GrokBot starts and monitors the Gateway on this Mac.",
+      "translated": "يقوم GrokBot بتشغيل Gateway ومراقبته على هذا الـ Mac."
     },
     {
       "id": "native.apple.fe2a790f28ffd1ae",
@@ -19335,8 +19335,8 @@
     },
     {
       "id": "native.apple.d261da13966fa812",
-      "source": "OpenClaw runs",
-      "translated": "يعمل OpenClaw"
+      "source": "GrokBot runs",
+      "translated": "يعمل GrokBot"
     },
     {
       "id": "native.apple.397850fa5e803f53",
@@ -19435,8 +19435,8 @@
     },
     {
       "id": "native.apple.c663b8a50de8a7d8",
-      "source": "/home/you/Projects/openclaw",
-      "translated": "/home/you/Projects/openclaw"
+      "source": "/home/you/Projects/grokbot",
+      "translated": "/home/you/Projects/grokbot"
     },
     {
       "id": "native.apple.938ee646aac4ce66",
@@ -19445,8 +19445,8 @@
     },
     {
       "id": "native.apple.09f99e863e081f9f",
-      "source": "/Applications/OpenClaw.app/.../openclaw",
-      "translated": "/Applications/OpenClaw.app/.../openclaw"
+      "source": "/Applications/GrokBot.app/.../grokbot",
+      "translated": "/Applications/GrokBot.app/.../grokbot"
     },
     {
       "id": "native.apple.f588f7dad51aae2e",
@@ -19520,8 +19520,8 @@
     },
     {
       "id": "native.apple.24aa092829f9a3b1",
-      "source": "The current gateway.remote.token value is not plain text. OpenClaw for macOS cannot use it directly; enter a plaintext token here to replace it.",
-      "translated": "قيمة gateway.remote.token الحالية ليست نصًا عاديًا. لا يمكن لـ OpenClaw لـ macOS استخدامها مباشرةً؛ أدخل رمزًا بنص عادي هنا لاستبدالها."
+      "source": "The current gateway.remote.token value is not plain text. GrokBot for macOS cannot use it directly; enter a plaintext token here to replace it.",
+      "translated": "قيمة gateway.remote.token الحالية ليست نصًا عاديًا. لا يمكن لـ GrokBot لـ macOS استخدامها مباشرةً؛ أدخل رمزًا بنص عادي هنا لاستبدالها."
     },
     {
       "id": "native.apple.d0b21bc12ab63cad",
@@ -19660,8 +19660,8 @@
     },
     {
       "id": "native.apple.876c066efa88aee3",
-      "source": "Latest presence beacons from OpenClaw nodes. Updated periodically.",
-      "translated": "أحدث إشارات الحضور من عُقد OpenClaw. يتم التحديث دوريًا."
+      "source": "Latest presence beacons from GrokBot nodes. Updated periodically.",
+      "translated": "أحدث إشارات الحضور من عُقد GrokBot. يتم التحديث دوريًا."
     },
     {
       "id": "native.apple.8a6bcd51fd9f1f62",
@@ -19765,13 +19765,13 @@
     },
     {
       "id": "native.apple.13a7356f48278757",
-      "source": "OpenClaw - Voice Wake live meter active",
-      "translated": "OpenClaw - عدّاد التنبيه الصوتي المباشر نشط"
+      "source": "GrokBot - Voice Wake live meter active",
+      "translated": "GrokBot - عدّاد التنبيه الصوتي المباشر نشط"
     },
     {
       "id": "native.apple.fae2cf18519da0d5",
-      "source": "OpenClaw",
-      "translated": "OpenClaw"
+      "source": "GrokBot",
+      "translated": "GrokBot"
     },
     {
       "id": "native.apple.ef59188264be95d4",
@@ -19880,8 +19880,8 @@
     },
     {
       "id": "native.apple.fbab65790d6eca89",
-      "source": "About OpenClaw",
-      "translated": "حول OpenClaw"
+      "source": "About GrokBot",
+      "translated": "حول GrokBot"
     },
     {
       "id": "native.apple.14c8f4b1a57569f3",
@@ -19895,18 +19895,18 @@
     },
     {
       "id": "native.apple.5021ed413c045620",
-      "source": "OpenClaw Not Configured",
-      "translated": "لم يتم تكوين OpenClaw"
+      "source": "GrokBot Not Configured",
+      "translated": "لم يتم تكوين GrokBot"
     },
     {
       "id": "native.apple.4d10ab5feb4add3f",
-      "source": "Remote OpenClaw Active",
-      "translated": "OpenClaw البعيد نشط"
+      "source": "Remote GrokBot Active",
+      "translated": "GrokBot البعيد نشط"
     },
     {
       "id": "native.apple.b49dea5c1fdb3dd3",
-      "source": "OpenClaw Active",
-      "translated": "OpenClaw نشط"
+      "source": "GrokBot Active",
+      "translated": "GrokBot نشط"
     },
     {
       "id": "native.apple.1df24a30d7963640",
@@ -20185,8 +20185,8 @@
     },
     {
       "id": "native.apple.e3e27d22fd2312a2",
-      "source": "OpenClaw will check again before changing any inference settings.",
-      "translated": "سيتحقق OpenClaw مرة أخرى قبل تغيير أي من إعدادات الاستدلال."
+      "source": "GrokBot will check again before changing any inference settings.",
+      "translated": "سيتحقق GrokBot مرة أخرى قبل تغيير أي من إعدادات الاستدلال."
     },
     {
       "id": "native.apple.a0a8f45082d0ba99",
@@ -20225,8 +20225,8 @@
     },
     {
       "id": "native.apple.a0431b20c0650139",
-      "source": "Need help? Chat with OpenClaw",
-      "translated": "هل تحتاج إلى مساعدة؟ دردش مع OpenClaw"
+      "source": "Need help? Chat with GrokBot",
+      "translated": "هل تحتاج إلى مساعدة؟ دردش مع GrokBot"
     },
     {
       "id": "native.apple.6526ced182e1fe50",
@@ -20295,8 +20295,8 @@
     },
     {
       "id": "native.apple.4a1e5a5600b907f4",
-      "source": "Use an existing subscription or provider account. OpenClaw opens the provider’s own sign-in flow, then verifies it with a real reply.",
-      "translated": "استخدم اشتراكًا أو حساب مزوّد موجودًا. يفتح OpenClaw مسار تسجيل الدخول الخاص بالمزوّد، ثم يتحقق منه بردّ حقيقي."
+      "source": "Use an existing subscription or provider account. GrokBot opens the provider’s own sign-in flow, then verifies it with a real reply.",
+      "translated": "استخدم اشتراكًا أو حساب مزوّد موجودًا. يفتح GrokBot مسار تسجيل الدخول الخاص بالمزوّد، ثم يتحقق منه بردّ حقيقي."
     },
     {
       "id": "native.apple.14b23c357d7a9eff",
@@ -20415,8 +20415,8 @@
     },
     {
       "id": "native.apple.e874bd0fad63f012",
-      "source": "OpenClaw — setup helper",
-      "translated": "OpenClaw — مساعد الإعداد"
+      "source": "GrokBot — setup helper",
+      "translated": "GrokBot — مساعد الإعداد"
     },
     {
       "id": "native.apple.bea852c8622c8214",
@@ -20475,18 +20475,18 @@
     },
     {
       "id": "native.apple.b92f94ddc6bbc8e5",
-      "source": "OpenClaw was interrupted. Restart to try again.",
-      "translated": "توقف OpenClaw. أعد التشغيل للمحاولة مرة أخرى."
+      "source": "GrokBot was interrupted. Restart to try again.",
+      "translated": "توقف GrokBot. أعد التشغيل للمحاولة مرة أخرى."
     },
     {
       "id": "native.apple.829845818e97978a",
-      "source": "The Gateway connection changed. Restart OpenClaw to reconnect.",
-      "translated": "تغير اتصال Gateway. أعد تشغيل OpenClaw لإعادة الاتصال."
+      "source": "The Gateway connection changed. Restart GrokBot to reconnect.",
+      "translated": "تغير اتصال Gateway. أعد تشغيل GrokBot لإعادة الاتصال."
     },
     {
       "id": "native.apple.012861f82eff0ca9",
-      "source": "OpenClaw is working…",
-      "translated": "OpenClaw قيد العمل…"
+      "source": "GrokBot is working…",
+      "translated": "GrokBot قيد العمل…"
     },
     {
       "id": "native.apple.2f7ad21b747fbc15",
@@ -20500,8 +20500,8 @@
     },
     {
       "id": "native.apple.35a542956f4f5497",
-      "source": "Reply to OpenClaw… (yes sets everything up)",
-      "translated": "رد على OpenClaw… (تؤدي الإجابة بنعم إلى إعداد كل شيء)"
+      "source": "Reply to GrokBot… (yes sets everything up)",
+      "translated": "رد على GrokBot… (تؤدي الإجابة بنعم إلى إعداد كل شيء)"
     },
     {
       "id": "native.apple.134b9ae1d8a543df",
@@ -20530,8 +20530,8 @@
     },
     {
       "id": "native.apple.b57ee4f83cff23f3",
-      "source": "OpenClaw can bring useful context from AI tools you already use into your new assistant.",
-      "translated": "يمكن لـ OpenClaw نقل سياق مفيد من أدوات الذكاء الاصطناعي التي تستخدمها بالفعل إلى مساعدك الجديد."
+      "source": "GrokBot can bring useful context from AI tools you already use into your new assistant.",
+      "translated": "يمكن لـ GrokBot نقل سياق مفيد من أدوات الذكاء الاصطناعي التي تستخدمها بالفعل إلى مساعدك الجديد."
     },
     {
       "id": "native.apple.46cab71d748860b8",
@@ -20610,8 +20610,8 @@
     },
     {
       "id": "native.apple.6dbe5b174271b62a",
-      "source": "Imported \\(imported) \\(self.memoryLabel(imported)) into OpenClaw.",
-      "translated": "تم استيراد \\(imported) \\(self.memoryLabel(imported)) إلى OpenClaw."
+      "source": "Imported \\(imported) \\(self.memoryLabel(imported)) into GrokBot.",
+      "translated": "تم استيراد \\(imported) \\(self.memoryLabel(imported)) إلى GrokBot."
     },
     {
       "id": "native.apple.d47b887f98e13e24",
@@ -20625,8 +20625,8 @@
     },
     {
       "id": "native.apple.ea8beaeecef15e54",
-      "source": "Welcome to OpenClaw",
-      "translated": "مرحبًا بك في OpenClaw"
+      "source": "Welcome to GrokBot",
+      "translated": "مرحبًا بك في GrokBot"
     },
     {
       "id": "native.apple.0629bbbd6db95199",
@@ -20670,8 +20670,8 @@
     },
     {
       "id": "native.apple.fb64a5b187cfdc15",
-      "source": "OpenClaw can take actions using the permissions and services you enable. Review prompts and only connect tools you trust.",
-      "translated": "يمكن لـ OpenClaw تنفيذ إجراءات باستخدام الأذونات والخدمات التي تفعّلها. راجع المطالبات ولا تربط إلا الأدوات التي تثق بها."
+      "source": "GrokBot can take actions using the permissions and services you enable. Review prompts and only connect tools you trust.",
+      "translated": "يمكن لـ GrokBot تنفيذ إجراءات باستخدام الأذونات والخدمات التي تفعّلها. راجع المطالبات ولا تربط إلا الأدوات التي تثق بها."
     },
     {
       "id": "native.apple.a5d02aaf6208e924",
@@ -20680,8 +20680,8 @@
     },
     {
       "id": "native.apple.e6acb60b10ef1206",
-      "source": "Most people pick this Mac — OpenClaw installs everything and keeps it running in the background. You can change this anytime in Settings.",
-      "translated": "يختار معظم الأشخاص جهاز Mac هذا — يثبّت OpenClaw كل شيء ويبقيه قيد التشغيل في الخلفية. يمكنك تغيير ذلك في أي وقت من الإعدادات."
+      "source": "Most people pick this Mac — GrokBot installs everything and keeps it running in the background. You can change this anytime in Settings.",
+      "translated": "يختار معظم الأشخاص جهاز Mac هذا — يثبّت GrokBot كل شيء ويبقيه قيد التشغيل في الخلفية. يمكنك تغيير ذلك في أي وقت من الإعدادات."
     },
     {
       "id": "native.apple.21f1053c1054db24",
@@ -20705,8 +20705,8 @@
     },
     {
       "id": "native.apple.d54084b48f40aa0a",
-      "source": "OK — OpenClaw won’t start anything yet. Pick Local or Remote later in Settings → General.",
-      "translated": "حسنًا — لن يبدأ OpenClaw أي شيء بعد. اختر محليًا أو عن بُعد لاحقًا من الإعدادات → عام."
+      "source": "OK — GrokBot won’t start anything yet. Pick Local or Remote later in Settings → General.",
+      "translated": "حسنًا — لن يبدأ GrokBot أي شيء بعد. اختر محليًا أو عن بُعد لاحقًا من الإعدادات → عام."
     },
     {
       "id": "native.apple.8d9eb247d41a0ca7",
@@ -20805,8 +20805,8 @@
     },
     {
       "id": "native.apple.dca75ab0dd73f0a4",
-      "source": "/home/you/Projects/openclaw",
-      "translated": "/home/you/Projects/openclaw"
+      "source": "/home/you/Projects/grokbot",
+      "translated": "/home/you/Projects/grokbot"
     },
     {
       "id": "native.apple.6998a7754dea6eb1",
@@ -20815,8 +20815,8 @@
     },
     {
       "id": "native.apple.5a3f4f943c8ee86a",
-      "source": "/Applications/OpenClaw.app/.../openclaw",
-      "translated": "/Applications/OpenClaw.app/.../openclaw"
+      "source": "/Applications/GrokBot.app/.../grokbot",
+      "translated": "/Applications/GrokBot.app/.../grokbot"
     },
     {
       "id": "native.apple.56e9b0831ec1eded",
@@ -20860,8 +20860,8 @@
     },
     {
       "id": "native.apple.2a50c3ee94dde35d",
-      "source": "The current gateway.remote.token value is not plain text. OpenClaw for macOS cannot use it directly; enter a plaintext token here to replace it.",
-      "translated": "قيمة gateway.remote.token الحالية ليست نصًا عاديًا. لا يمكن لـ OpenClaw for macOS استخدامها مباشرةً؛ أدخل رمزًا بنص عادي هنا لاستبدالها."
+      "source": "The current gateway.remote.token value is not plain text. GrokBot for macOS cannot use it directly; enter a plaintext token here to replace it.",
+      "translated": "قيمة gateway.remote.token الحالية ليست نصًا عاديًا. لا يمكن لـ GrokBot for macOS استخدامها مباشرةً؛ أدخل رمزًا بنص عادي هنا لاستبدالها."
     },
     {
       "id": "native.apple.ef011af3c0e22127",
@@ -20880,8 +20880,8 @@
     },
     {
       "id": "native.apple.ce0d1241d7417406",
-      "source": "These macOS permissions let OpenClaw automate apps and capture context on this Mac. Status updates automatically.",
-      "translated": "تتيح أذونات macOS هذه لـ OpenClaw أتمتة التطبيقات والتقاط السياق على هذا الـ Mac. يتم تحديث الحالة تلقائيًا."
+      "source": "These macOS permissions let GrokBot automate apps and capture context on this Mac. Status updates automatically.",
+      "translated": "تتيح أذونات macOS هذه لـ GrokBot أتمتة التطبيقات والتقاط السياق على هذا الـ Mac. يتم تحديث الحالة تلقائيًا."
     },
     {
       "id": "native.apple.42af85cdf91d0264",
@@ -20890,8 +20890,8 @@
     },
     {
       "id": "native.apple.d0b8cf59f852b3d0",
-      "source": "Install OpenClaw",
-      "translated": "ثبّت OpenClaw"
+      "source": "Install GrokBot",
+      "translated": "ثبّت GrokBot"
     },
     {
       "id": "native.apple.0b0fc42b8827e01f",
@@ -20965,8 +20965,8 @@
     },
     {
       "id": "native.apple.952e85bfb2d4b4f5",
-      "source": "On your gateway host: install/update the `openclaw` package and make sure credentials exist\n(typically `~/.openclaw/credentials/oauth.json`). Then connect again if needed.",
-      "translated": "على مضيف Gateway لديك: ثبّت/حدّث حزمة `openclaw` وتأكد من وجود بيانات الاعتماد\n(عادةً `~/.openclaw/credentials/oauth.json`). ثم اتصل مرة أخرى إذا لزم الأمر."
+      "source": "On your gateway host: install/update the `grokbot` package and make sure credentials exist\n(typically `~/.grokbot/credentials/oauth.json`). Then connect again if needed.",
+      "translated": "على مضيف Gateway لديك: ثبّت/حدّث حزمة `grokbot` وتأكد من وجود بيانات الاعتماد\n(عادةً `~/.grokbot/credentials/oauth.json`). ثم اتصل مرة أخرى إذا لزم الأمر."
     },
     {
       "id": "native.apple.4e5ccb411db3e80f",
@@ -20975,8 +20975,8 @@
     },
     {
       "id": "native.apple.409bfb3a6e0f9f7c",
-      "source": "Click the OpenClaw menu bar icon for the compact chat panel and status.",
-      "translated": "انقر على أيقونة OpenClaw في شريط القوائم لعرض لوحة الدردشة المصغّرة والحالة."
+      "source": "Click the GrokBot menu bar icon for the compact chat panel and status.",
+      "translated": "انقر على أيقونة GrokBot في شريط القوائم لعرض لوحة الدردشة المصغّرة والحالة."
     },
     {
       "id": "native.apple.1b6cfcf3be8765c2",
@@ -21110,13 +21110,13 @@
     },
     {
       "id": "native.apple.11b1b5e9dd510766",
-      "source": "A node wants to connect to OpenClaw.",
-      "translated": "عقدة تريد الاتصال بـ OpenClaw."
+      "source": "A node wants to connect to GrokBot.",
+      "translated": "عقدة تريد الاتصال بـ GrokBot."
     },
     {
       "id": "native.apple.2e9d9d1f5d4346d4",
-      "source": "A device wants to connect to OpenClaw.",
-      "translated": "جهاز يريد الاتصال بـ OpenClaw."
+      "source": "A device wants to connect to GrokBot.",
+      "translated": "جهاز يريد الاتصال بـ GrokBot."
     },
     {
       "id": "native.apple.2412e85f7d11395e",
@@ -21125,8 +21125,8 @@
     },
     {
       "id": "native.apple.a09a61f4efe1e63e",
-      "source": "OpenClaw Mac app",
-      "translated": "تطبيق OpenClaw لنظام Mac"
+      "source": "GrokBot Mac app",
+      "translated": "تطبيق GrokBot لنظام Mac"
     },
     {
       "id": "native.apple.6b29ec65de666dab",
@@ -21200,8 +21200,8 @@
     },
     {
       "id": "native.apple.4344ff6c0e9d7187",
-      "source": "OpenClaw only asks for macOS capabilities when a feature needs them.",
-      "translated": "لا يطلب OpenClaw إمكانات macOS إلا عندما تحتاج إليها ميزة ما."
+      "source": "GrokBot only asks for macOS capabilities when a feature needs them.",
+      "translated": "لا يطلب GrokBot إمكانات macOS إلا عندما تحتاج إليها ميزة ما."
     },
     {
       "id": "native.apple.4fecdab98e2f6a11",
@@ -21325,13 +21325,13 @@
     },
     {
       "id": "native.apple.65c21de72f06fd33",
-      "source": "OpenClaw updated",
-      "translated": "تم تحديث OpenClaw"
+      "source": "GrokBot updated",
+      "translated": "تم تحديث GrokBot"
     },
     {
       "id": "native.apple.6197fc2d1ebd6b2e",
-      "source": "Finishing your OpenClaw update",
-      "translated": "جارٍ إنهاء تحديث OpenClaw"
+      "source": "Finishing your GrokBot update",
+      "translated": "جارٍ إنهاء تحديث GrokBot"
     },
     {
       "id": "native.apple.226b698fbbfc3cc4",
@@ -21345,8 +21345,8 @@
     },
     {
       "id": "native.apple.91debe404bb7affc",
-      "source": "The managed OpenClaw runtime could not be reinstalled.",
-      "translated": "تعذرت إعادة تثبيت بيئة تشغيل OpenClaw المُدارة."
+      "source": "The managed GrokBot runtime could not be reinstalled.",
+      "translated": "تعذرت إعادة تثبيت بيئة تشغيل GrokBot المُدارة."
     },
     {
       "id": "native.apple.1cc391ec928070c4",
@@ -21370,43 +21370,43 @@
     },
     {
       "id": "native.apple.69b54e24b90414dd",
-      "source": "OpenClaw \\(receipt.toVersion) and its Gateway are ready.",
-      "translated": "أصبح OpenClaw \\(receipt.toVersion) وGateway الخاص به جاهزين."
+      "source": "GrokBot \\(receipt.toVersion) and its Gateway are ready.",
+      "translated": "أصبح GrokBot \\(receipt.toVersion) وGateway الخاص به جاهزين."
     },
     {
       "id": "native.apple.f9d6fa6d7aaf23b6",
-      "source": "OpenClaw \\(receipt.toVersion) and its Mac node runtime are ready.",
-      "translated": "أصبح OpenClaw \\(receipt.toVersion) وبيئة تشغيل عقدة Mac الخاصة به جاهزين."
+      "source": "GrokBot \\(receipt.toVersion) and its Mac node runtime are ready.",
+      "translated": "أصبح GrokBot \\(receipt.toVersion) وبيئة تشغيل عقدة Mac الخاصة به جاهزين."
     },
     {
       "id": "native.apple.a3fa88f5fd3c2732",
-      "source": "Your agent could not be notified yet. OpenClaw will retry after the next app launch.",
-      "translated": "تعذر إبلاغ وكيلك حتى الآن. سيعيد OpenClaw المحاولة بعد تشغيل التطبيق في المرة القادمة."
+      "source": "Your agent could not be notified yet. GrokBot will retry after the next app launch.",
+      "translated": "تعذر إبلاغ وكيلك حتى الآن. سيعيد GrokBot المحاولة بعد تشغيل التطبيق في المرة القادمة."
     },
     {
       "id": "native.apple.e9020028ddab1ba6",
-      "source": "OpenClaw could not notify your agent automatically. The app and Gateway update are complete.",
-      "translated": "تعذّر على OpenClaw إشعار وكيلك تلقائيًا. اكتمل تحديث التطبيق وGateway."
+      "source": "GrokBot could not notify your agent automatically. The app and Gateway update are complete.",
+      "translated": "تعذّر على GrokBot إشعار وكيلك تلقائيًا. اكتمل تحديث التطبيق وGateway."
     },
     {
       "id": "native.apple.afc120cf0a96ea30",
-      "source": "OpenClaw could not notify your agent automatically. The app and Mac node update are complete.",
-      "translated": "تعذّر على OpenClaw إشعار وكيلك تلقائيًا. اكتمل تحديث التطبيق وعقدة Mac."
+      "source": "GrokBot could not notify your agent automatically. The app and Mac node update are complete.",
+      "translated": "تعذّر على GrokBot إشعار وكيلك تلقائيًا. اكتمل تحديث التطبيق وعقدة Mac."
     },
     {
       "id": "native.apple.71ad85442725f45c",
-      "source": "OpenClaw could not confirm the agent notification. It will not retry, to avoid a duplicate welcome.",
-      "translated": "تعذّر على OpenClaw تأكيد إشعار الوكيل. لن يعيد المحاولة لتجنب تكرار رسالة الترحيب."
+      "source": "GrokBot could not confirm the agent notification. It will not retry, to avoid a duplicate welcome.",
+      "translated": "تعذّر على GrokBot تأكيد إشعار الوكيل. لن يعيد المحاولة لتجنب تكرار رسالة الترحيب."
     },
     {
       "id": "native.apple.a3deea03e4870dd0",
-      "source": "The remote Gateway is older than this Mac app, so OpenClaw skipped the agent notification.",
-      "translated": "إصدار Gateway البعيد أقدم من تطبيق Mac هذا، لذا تخطّى OpenClaw إشعار الوكيل."
+      "source": "The remote Gateway is older than this Mac app, so GrokBot skipped the agent notification.",
+      "translated": "إصدار Gateway البعيد أقدم من تطبيق Mac هذا، لذا تخطّى GrokBot إشعار الوكيل."
     },
     {
       "id": "native.apple.3636a8b503ff00d2",
-      "source": "The Gateway remains paused, so OpenClaw did not wake your agent.",
-      "translated": "لا يزال Gateway متوقفًا مؤقتًا، لذا لم يوقظ OpenClaw وكيلك."
+      "source": "The Gateway remains paused, so GrokBot did not wake your agent.",
+      "translated": "لا يزال Gateway متوقفًا مؤقتًا، لذا لم يوقظ GrokBot وكيلك."
     },
     {
       "id": "native.apple.0f533623878f3d67",
@@ -21450,8 +21450,8 @@
     },
     {
       "id": "native.apple.9ac2dfa295929a92",
-      "source": "OpenClaw installed the update but could not verify the Gateway connection.",
-      "translated": "ثبّت OpenClaw التحديث، لكنه تعذّر عليه التحقق من اتصال Gateway."
+      "source": "GrokBot installed the update but could not verify the Gateway connection.",
+      "translated": "ثبّت GrokBot التحديث، لكنه تعذّر عليه التحقق من اتصال Gateway."
     },
     {
       "id": "native.apple.3abafcfb64b362fb",
@@ -21460,8 +21460,8 @@
     },
     {
       "id": "native.apple.00e3d2037782506c",
-      "source": "OpenClaw could not read the Gateway service ownership record. Retry after checking the Gateway LaunchAgent.",
-      "translated": "تعذر على OpenClaw قراءة سجل ملكية خدمة Gateway. أعد المحاولة بعد التحقق من Gateway LaunchAgent."
+      "source": "GrokBot could not read the Gateway service ownership record. Retry after checking the Gateway LaunchAgent.",
+      "translated": "تعذر على GrokBot قراءة سجل ملكية خدمة Gateway. أعد المحاولة بعد التحقق من Gateway LaunchAgent."
     },
     {
       "id": "native.apple.c4b8806a570dad31",
@@ -21470,8 +21470,8 @@
     },
     {
       "id": "native.apple.0483bf19d612560b",
-      "source": "OpenClaw could not read the node service ownership record. Retry after checking the node LaunchAgent.",
-      "translated": "تعذر على OpenClaw قراءة سجل ملكية خدمة العقدة. أعد المحاولة بعد التحقق من node LaunchAgent."
+      "source": "GrokBot could not read the node service ownership record. Retry after checking the node LaunchAgent.",
+      "translated": "تعذر على GrokBot قراءة سجل ملكية خدمة العقدة. أعد المحاولة بعد التحقق من node LaunchAgent."
     },
     {
       "id": "native.apple.d0f712a2ed470a3e",
@@ -21590,8 +21590,8 @@
     },
     {
       "id": "native.apple.507c2d9c7e94716f",
-      "source": "Allow OpenClaw to read text from \\(appName)",
-      "translated": "السماح لـ OpenClaw بقراءة النص من \\(appName)"
+      "source": "Allow GrokBot to read text from \\(appName)",
+      "translated": "السماح لـ GrokBot بقراءة النص من \\(appName)"
     },
     {
       "id": "native.apple.c5313d544a833af0",
@@ -21760,13 +21760,13 @@
     },
     {
       "id": "native.apple.88d0123c86b06144",
-      "source": "Allow OpenClaw to capture windows",
-      "translated": "السماح لـ OpenClaw بالتقاط النوافذ"
+      "source": "Allow GrokBot to capture windows",
+      "translated": "السماح لـ GrokBot بالتقاط النوافذ"
     },
     {
       "id": "native.apple.677c5733cd132aed",
-      "source": "Allow OpenClaw to capture a screen area",
-      "translated": "السماح لـ OpenClaw بالتقاط منطقة من الشاشة"
+      "source": "Allow GrokBot to capture a screen area",
+      "translated": "السماح لـ GrokBot بالتقاط منطقة من الشاشة"
     },
     {
       "id": "native.apple.529a6fc5aeba03b0",
@@ -21820,8 +21820,8 @@
     },
     {
       "id": "native.apple.b52cb4aae7ca6573",
-      "source": "Paste the token configured on the gateway host. On the gateway host, run `openclaw config get gateway.auth.token`. If the gateway uses an environment variable instead, use `OPENCLAW_GATEWAY_TOKEN`.",
-      "translated": "Paste the token configured on the gateway host. On the gateway host, run `openclaw config get gateway.auth.token`. If the gateway uses an environment variable instead, use `OPENCLAW_GATEWAY_TOKEN`."
+      "source": "Paste the token configured on the gateway host. On the gateway host, run `grokbot config get gateway.auth.token`. If the gateway uses an environment variable instead, use `OPENCLAW_GATEWAY_TOKEN`.",
+      "translated": "Paste the token configured on the gateway host. On the gateway host, run `grokbot config get gateway.auth.token`. If the gateway uses an environment variable instead, use `OPENCLAW_GATEWAY_TOKEN`."
     },
     {
       "id": "native.apple.bbb87d21ce8a291e",
@@ -21835,8 +21835,8 @@
     },
     {
       "id": "native.apple.83145f8f53d7be34",
-      "source": "Scan or paste a fresh setup code from an already-paired OpenClaw client, then try again.",
-      "translated": "امسح ضوئيًا أو الصق رمز إعداد جديدًا من عميل OpenClaw مقترن بالفعل، ثم حاول مرة أخرى."
+      "source": "Scan or paste a fresh setup code from an already-paired GrokBot client, then try again.",
+      "translated": "امسح ضوئيًا أو الصق رمز إعداد جديدًا من عميل GrokBot مقترن بالفعل، ثم حاول مرة أخرى."
     },
     {
       "id": "native.apple.a8bf4f7ab4a35dc0",
@@ -21845,8 +21845,8 @@
     },
     {
       "id": "native.apple.52c0f97f0b3bb792",
-      "source": "Approve this device from an already-paired OpenClaw client. In your OpenClaw chat, run `/pair approve`, then click **Check connection** again.",
-      "translated": "Approve this device from an already-paired OpenClaw client. In your OpenClaw chat, run `/pair approve`, then click **Check connection** again."
+      "source": "Approve this device from an already-paired GrokBot client. In your GrokBot chat, run `/pair approve`, then click **Check connection** again.",
+      "translated": "Approve this device from an already-paired GrokBot client. In your GrokBot chat, run `/pair approve`, then click **Check connection** again."
     },
     {
       "id": "native.apple.e73170e4ab1dbe8f",
@@ -21875,8 +21875,8 @@
     },
     {
       "id": "native.apple.3e5a2b2a24f73418",
-      "source": "Pairing required. In an already-paired OpenClaw client, run /pair approve, then check the connection again.",
-      "translated": "Pairing required. In an already-paired OpenClaw client, run /pair approve, then check the connection again."
+      "source": "Pairing required. In an already-paired GrokBot client, run /pair approve, then check the connection again.",
+      "translated": "Pairing required. In an already-paired GrokBot client, run /pair approve, then check the connection again."
     },
     {
       "id": "native.apple.58e76e9c8b04290a",
@@ -21920,48 +21920,48 @@
     },
     {
       "id": "native.apple.2d7556d00f123112",
-      "source": "OpenClaw needs notification permission to show alerts for agent actions.",
-      "translated": "يحتاج OpenClaw إلى إذن الإشعارات لعرض تنبيهات لإجراءات الوكيل."
+      "source": "GrokBot needs notification permission to show alerts for agent actions.",
+      "translated": "يحتاج GrokBot إلى إذن الإشعارات لعرض تنبيهات لإجراءات الوكيل."
     },
     {
       "id": "native.apple.d9e7be03543b508f",
-      "source": "OpenClaw captures the screen when the agent needs screenshots for context.",
-      "translated": "يلتقط OpenClaw الشاشة عندما يحتاج الوكيل إلى لقطات شاشة للسياق."
+      "source": "GrokBot captures the screen when the agent needs screenshots for context.",
+      "translated": "يلتقط GrokBot الشاشة عندما يحتاج الوكيل إلى لقطات شاشة للسياق."
     },
     {
       "id": "native.apple.eca927767423799c",
-      "source": "OpenClaw can capture photos or short video clips when requested by the agent.",
-      "translated": "يمكن لـ OpenClaw التقاط صور أو مقاطع فيديو قصيرة عندما يطلب الوكيل ذلك."
+      "source": "GrokBot can capture photos or short video clips when requested by the agent.",
+      "translated": "يمكن لـ GrokBot التقاط صور أو مقاطع فيديو قصيرة عندما يطلب الوكيل ذلك."
     },
     {
       "id": "native.apple.9389d1100944a1fd",
-      "source": "OpenClaw can share your location when requested by the agent.",
-      "translated": "يمكن لـ OpenClaw مشاركة موقعك عندما يطلب الوكيل ذلك."
+      "source": "GrokBot can share your location when requested by the agent.",
+      "translated": "يمكن لـ GrokBot مشاركة موقعك عندما يطلب الوكيل ذلك."
     },
     {
       "id": "native.apple.59da76aed1cb07ee",
-      "source": "OpenClaw uses the local network to connect to your remote OpenClaw gateway over LAN, Tailnet, or SSH.",
-      "translated": "يستخدم OpenClaw الشبكة المحلية للاتصال بـ Gateway OpenClaw البعيدة لديك عبر LAN أو Tailnet أو SSH."
+      "source": "GrokBot uses the local network to connect to your remote GrokBot gateway over LAN, Tailnet, or SSH.",
+      "translated": "يستخدم GrokBot الشبكة المحلية للاتصال بـ Gateway GrokBot البعيدة لديك عبر LAN أو Tailnet أو SSH."
     },
     {
       "id": "native.apple.5db9a976fd1c7fcb",
-      "source": "OpenClaw needs the mic for Voice Wake tests and agent audio capture.",
-      "translated": "يحتاج OpenClaw إلى الميكروفون لاختبارات Voice Wake والتقاط صوت الوكيل."
+      "source": "GrokBot needs the mic for Voice Wake tests and agent audio capture.",
+      "translated": "يحتاج GrokBot إلى الميكروفون لاختبارات Voice Wake والتقاط صوت الوكيل."
     },
     {
       "id": "native.apple.b7aba524ef867e7f",
-      "source": "OpenClaw uses speech recognition to detect your Voice Wake trigger phrase.",
-      "translated": "يستخدم OpenClaw التعرف على الكلام لاكتشاف عبارة تشغيل Voice Wake الخاصة بك."
+      "source": "GrokBot uses speech recognition to detect your Voice Wake trigger phrase.",
+      "translated": "يستخدم GrokBot التعرف على الكلام لاكتشاف عبارة تشغيل Voice Wake الخاصة بك."
     },
     {
       "id": "native.apple.2d5411b5cc54a93e",
-      "source": "OpenClaw needs Automation (AppleScript) permission to drive Terminal and other apps for agent actions.",
-      "translated": "يحتاج OpenClaw إلى إذن Automation (AppleScript) للتحكم في Terminal وتطبيقات أخرى لإجراءات الوكيل."
+      "source": "GrokBot needs Automation (AppleScript) permission to drive Terminal and other apps for agent actions.",
+      "translated": "يحتاج GrokBot إلى إذن Automation (AppleScript) للتحكم في Terminal وتطبيقات أخرى لإجراءات الوكيل."
     },
     {
       "id": "native.apple.e16fc45de0f2bb86",
-      "source": "OpenClaw can access Reminders when requested by the agent for the apple-reminders skill.",
-      "translated": "يمكن لـ OpenClaw الوصول إلى Reminders عندما يطلب الوكيل ذلك لمهارة apple-reminders."
+      "source": "GrokBot can access Reminders when requested by the agent for the apple-reminders skill.",
+      "translated": "يمكن لـ GrokBot الوصول إلى Reminders عندما يطلب الوكيل ذلك لمهارة apple-reminders."
     },
     {
       "id": "native.apple.6f7c6ef00a40a571",
@@ -22100,8 +22100,8 @@
     },
     {
       "id": "native.apple.59bed721dff1a25f",
-      "source": "OpenClaw",
-      "translated": "OpenClaw"
+      "source": "GrokBot",
+      "translated": "GrokBot"
     },
     {
       "id": "native.apple.04b9c8402f19b8ce",
@@ -22350,8 +22350,8 @@
     },
     {
       "id": "native.apple.d769a8ac65441d48",
-      "source": "Saved to openclaw.json under skills.entries.\\(self.editor.skillKey)",
-      "translated": "تم الحفظ في openclaw.json ضمن skills.entries.\\(self.editor.skillKey)"
+      "source": "Saved to grokbot.json under skills.entries.\\(self.editor.skillKey)",
+      "translated": "تم الحفظ في grokbot.json ضمن skills.entries.\\(self.editor.skillKey)"
     },
     {
       "id": "native.apple.af47aadb262d225d",
@@ -22390,8 +22390,8 @@
     },
     {
       "id": "native.apple.4b27b3be5f3f1f66",
-      "source": "OpenClaw",
-      "translated": "OpenClaw"
+      "source": "GrokBot",
+      "translated": "GrokBot"
     },
     {
       "id": "native.apple.9427da914cdbfbf3",
@@ -22740,8 +22740,8 @@
     },
     {
       "id": "native.apple.800bb607f45c05e4",
-      "source": "Stored in ~/.openclaw/openclaw.json. Prefer OPENCLAW_GATEWAY_PASSWORD for production.",
-      "translated": "مخزّنة في ~/.openclaw/openclaw.json. يُفضّل استخدام OPENCLAW_GATEWAY_PASSWORD للإنتاج."
+      "source": "Stored in ~/.grokbot/grokbot.json. Prefer OPENCLAW_GATEWAY_PASSWORD for production.",
+      "translated": "مخزّنة في ~/.grokbot/grokbot.json. يُفضّل استخدام OPENCLAW_GATEWAY_PASSWORD للإنتاج."
     },
     {
       "id": "native.apple.3942d43ca047de29",
@@ -23020,8 +23020,8 @@
     },
     {
       "id": "native.apple.237e9371a693b0ff",
-      "source": "OpenClaw reacts when any trigger appears in a transcription. Keep phrases short to avoid false positives.",
-      "translated": "يتفاعل OpenClaw عند ظهور أي كلمة تشغيل في النسخ. اجعل العبارات قصيرة لتجنب النتائج الإيجابية الخاطئة."
+      "source": "GrokBot reacts when any trigger appears in a transcription. Keep phrases short to avoid false positives.",
+      "translated": "يتفاعل GrokBot عند ظهور أي كلمة تشغيل في النسخ. اجعل العبارات قصيرة لتجنب النتائج الإيجابية الخاطئة."
     },
     {
       "id": "native.apple.2bcc6f4eca98f7f2",
@@ -23105,13 +23105,13 @@
     },
     {
       "id": "native.apple.448dfe21a7f3a883",
-      "source": "Check OpenClaw status",
-      "translated": "تحقق من حالة OpenClaw"
+      "source": "Check GrokBot status",
+      "translated": "تحقق من حالة GrokBot"
     },
     {
       "id": "native.apple.00f4977e0123ce7a",
-      "source": "Summarize the current OpenClaw status and tell me what needs attention.",
-      "translated": "لخّص حالة OpenClaw الحالية وأخبرني بما يحتاج إلى اهتمام."
+      "source": "Summarize the current GrokBot status and tell me what needs attention.",
+      "translated": "لخّص حالة GrokBot الحالية وأخبرني بما يحتاج إلى اهتمام."
     },
     {
       "id": "native.apple.9c1a9be47ac92727",
@@ -24820,8 +24820,8 @@
     },
     {
       "id": "native.apple.1823d7bddaa73a1a",
-      "source": "OpenClaw could not read the gateway certificate for %@.",
-      "translated": "تعذّر على OpenClaw قراءة شهادة Gateway لـ %@."
+      "source": "GrokBot could not read the gateway certificate for %@.",
+      "translated": "تعذّر على GrokBot قراءة شهادة Gateway لـ %@."
     },
     {
       "id": "native.apple.b737f84578f558eb",

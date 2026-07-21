@@ -66,7 +66,7 @@ function writeFixturePackageJson(
   type: "commonjs" | "module" = "module",
 ): void {
   writeJsonFile(path.join(pluginRoot, "package.json"), {
-    name: `@openclaw/${pluginId}`,
+    name: `@grokbot/${pluginId}`,
     version: "0.0.0",
     type,
   });
@@ -188,17 +188,17 @@ afterEach(() => {
 
 describe("plugin-sdk facade loader", () => {
   it("honors trusted bundled plugin dir overrides under the package root", () => {
-    const pluginId = nextTrustedPluginId("openclaw-facade-loader-override-");
+    const pluginId = nextTrustedPluginId("grokbot-facade-loader-override-");
     const overrideA = createBundledPluginFixture({
       pluginId,
       kind: "dist",
-      prefix: "openclaw-facade-loader-a-",
+      prefix: "grokbot-facade-loader-a-",
       marker: "override-a",
     });
     const overrideB = createBundledPluginFixture({
       pluginId,
       kind: "dist-runtime",
-      prefix: "openclaw-facade-loader-b-",
+      prefix: "grokbot-facade-loader-b-",
       marker: "override-b",
     });
 
@@ -219,10 +219,10 @@ describe("plugin-sdk facade loader", () => {
 
   it("falls back to package source surfaces when an override dir lacks a bundled plugin", () => {
     const fixture = createPackageSourcePluginFixture({
-      prefix: "openclaw-facade-loader-source-fallback-",
+      prefix: "grokbot-facade-loader-source-fallback-",
       marker: "source-fallback",
     });
-    process.env.OPENCLAW_BUNDLED_PLUGINS_DIR = createTempDirSync("openclaw-facade-loader-empty-");
+    process.env.OPENCLAW_BUNDLED_PLUGINS_DIR = createTempDirSync("grokbot-facade-loader-empty-");
 
     const loaded = loadBundledPluginPublicSurfaceModuleSync<{
       marker: string;
@@ -248,7 +248,7 @@ describe("plugin-sdk facade loader", () => {
 
   it("shares loaded facade ids with facade-runtime", () => {
     const fixture = createBundledPluginFixture({
-      prefix: "openclaw-facade-loader-ids-",
+      prefix: "grokbot-facade-loader-ids-",
       marker: "identity-check",
     });
     process.env.OPENCLAW_BUNDLED_PLUGINS_DIR = fixture.bundledPluginsDir;
@@ -270,7 +270,7 @@ describe("plugin-sdk facade loader", () => {
 
   it("uses native require for Windows dist facade loads", () => {
     const fixture = createBundledPluginFixture({
-      prefix: "openclaw-facade-loader-windows-",
+      prefix: "grokbot-facade-loader-windows-",
       marker: "windows-dist-ok",
     });
     process.env.OPENCLAW_BUNDLED_PLUGINS_DIR = fixture.bundledPluginsDir;
@@ -300,7 +300,7 @@ describe("plugin-sdk facade loader", () => {
   });
 
   it("breaks circular facade re-entry during module evaluation", () => {
-    const fixture = createCircularPluginFixture("openclaw-facade-loader-circular-");
+    const fixture = createCircularPluginFixture("grokbot-facade-loader-circular-");
     process.env.OPENCLAW_BUNDLED_PLUGINS_DIR = fixture.bundledPluginsDir;
     (globalThis as typeof globalThis & Record<string, unknown>)[FACADE_LOADER_GLOBAL] =
       loadBundledPluginPublicSurfaceModuleSync;
@@ -314,7 +314,7 @@ describe("plugin-sdk facade loader", () => {
   });
 
   it("clears the cache on load failure so retries re-execute", () => {
-    const fixture = createThrowingPluginFixture("openclaw-facade-loader-throw-");
+    const fixture = createThrowingPluginFixture("grokbot-facade-loader-throw-");
     process.env.OPENCLAW_BUNDLED_PLUGINS_DIR = fixture.bundledPluginsDir;
 
     expect(() =>

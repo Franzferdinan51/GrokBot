@@ -3,4 +3,4 @@ export {
   definePluginEntry,
   type OpenClawPluginApi,
   type OpenClawPluginService,
-} from "openclaw/plugin-sdk/plugin-entry";
+} from "grokbot/plugin-sdk/plugin-entry";

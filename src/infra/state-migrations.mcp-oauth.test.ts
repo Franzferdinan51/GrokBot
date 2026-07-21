@@ -8,11 +8,11 @@ import { useAutoCleanupTempDirTracker } from "../../test/helpers/temp-dir.js";
 import { createMcpOAuthClientProvider } from "../agents/mcp-oauth-provider.js";
 import { resolveMcpOAuthStoreKey } from "../agents/mcp-oauth-store.js";
 import { clearMcpOAuthCredentials, resolveMcpOAuthAccessToken } from "../agents/mcp-oauth.js";
-import type { DB as OpenClawStateKyselyDatabase } from "../state/openclaw-state-db.generated.js";
+import type { DB as OpenClawStateKyselyDatabase } from "../state/grokbot-state-db.generated.js";
 import {
   closeOpenClawStateDatabaseForTest,
   openOpenClawStateDatabase,
-} from "../state/openclaw-state-db.js";
+} from "../state/grokbot-state-db.js";
 import { acquireGatewayLock } from "./gateway-lock.js";
 import {
   executeSqliteQuerySync,
@@ -41,7 +41,7 @@ describe("legacy MCP OAuth Doctor migration", () => {
   });
 
   function useStateDir(): { env: NodeJS.ProcessEnv; stateDir: string } {
-    const stateDir = tempDirs.make("openclaw-mcp-oauth-migration-");
+    const stateDir = tempDirs.make("grokbot-mcp-oauth-migration-");
     return { env: { ...process.env, OPENCLAW_STATE_DIR: stateDir }, stateDir };
   }
 
@@ -306,7 +306,7 @@ describe("legacy MCP OAuth Doctor migration", () => {
         authorizationChallenge: true,
         scope: "docs.read",
       }),
-    ).rejects.toThrow("Run openclaw mcp login Remote Docs.");
+    ).rejects.toThrow("Run grokbot mcp login Remote Docs.");
     const provider = createMcpOAuthClientProvider({
       serverName,
       serverUrl,
@@ -464,7 +464,7 @@ describe("legacy MCP OAuth Doctor migration", () => {
     "rejects a symlinked legacy directory before creating lock sidecars",
     async () => {
       const { env, stateDir } = useStateDir();
-      const externalDir = tempDirs.make("openclaw-mcp-oauth-external-");
+      const externalDir = tempDirs.make("grokbot-mcp-oauth-external-");
       const externalSource = path.join(externalDir, DEFAULT_FILE_NAME);
       await fsp.writeFile(externalSource, JSON.stringify(validStore()));
       await fsp.mkdir(stateDir, { recursive: true });
@@ -488,7 +488,7 @@ describe("legacy MCP OAuth Doctor migration", () => {
       const sourcePath = await writeLegacy({ stateDir });
       const sourceDir = path.dirname(sourcePath);
       const displacedDir = `${sourceDir}.displaced`;
-      const externalDir = tempDirs.make("openclaw-mcp-oauth-swap-external-");
+      const externalDir = tempDirs.make("grokbot-mcp-oauth-swap-external-");
       const externalSource = path.join(externalDir, DEFAULT_FILE_NAME);
       await fsp.writeFile(externalSource, JSON.stringify(validStore()));
 

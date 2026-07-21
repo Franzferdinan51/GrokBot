@@ -1,6 +1,6 @@
 // Memory Core plugin module implements tools.shared behavior.
-import { optionalFiniteNumberSchema, stringEnum } from "openclaw/plugin-sdk/channel-actions";
-import { createLazyRuntimeModule } from "openclaw/plugin-sdk/lazy-runtime";
+import { optionalFiniteNumberSchema, stringEnum } from "grokbot/plugin-sdk/channel-actions";
+import { createLazyRuntimeModule } from "grokbot/plugin-sdk/lazy-runtime";
 import {
   listMemoryCorpusSupplements,
   resolveMemorySearchConfig,
@@ -8,9 +8,9 @@ import {
   type MemoryCorpusSearchResult,
   type AnyAgentTool,
   type OpenClawConfig,
-} from "openclaw/plugin-sdk/memory-core-host-runtime-core";
-import type { PluginStateLeaseRunner } from "openclaw/plugin-sdk/plugin-state-runtime";
-import { normalizeLowercaseStringOrEmpty } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/memory-core-host-runtime-core";
+import type { PluginStateLeaseRunner } from "grokbot/plugin-sdk/plugin-state-runtime";
+import { normalizeLowercaseStringOrEmpty } from "grokbot/plugin-sdk/string-coerce-runtime";
 import { Type } from "typebox";
 import type { MemoryCoreAcquireLocalService } from "./memory/embedding-local-service.js";
 type MemorySearchManagerResult = Awaited<
@@ -136,14 +136,14 @@ export function buildMemorySearchUnavailableResult(
     (isQuotaError
       ? "Memory search is unavailable because the embedding provider quota is exhausted."
       : isMissingNodeSqlite
-        ? "Memory search is unavailable because this OpenClaw Node runtime does not provide SQLite support."
+        ? "Memory search is unavailable because this GrokBot Node runtime does not provide SQLite support."
         : "Memory search is unavailable due to an embedding/provider error.");
   const action =
     overrides?.action ??
     (isQuotaError
       ? "Top up or switch embedding provider, then retry memory_search."
       : isMissingNodeSqlite
-        ? "Run OpenClaw with a Node runtime that includes node:sqlite, then retry memory_search."
+        ? "Run GrokBot with a Node runtime that includes node:sqlite, then retry memory_search."
         : "Check embedding provider configuration and retry memory_search.");
   return {
     results: [],

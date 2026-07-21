@@ -1,9 +1,9 @@
 // Comfy tests cover comfy plugin behavior.
-import { resolveDefaultAgentDir } from "openclaw/plugin-sdk/agent-runtime";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { createTestPluginApi } from "openclaw/plugin-sdk/plugin-test-api";
-import { getRuntimeConfig } from "openclaw/plugin-sdk/runtime-config-snapshot";
-import { isLiveTestEnabled } from "openclaw/plugin-sdk/test-live";
+import { resolveDefaultAgentDir } from "grokbot/plugin-sdk/agent-runtime";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { createTestPluginApi } from "grokbot/plugin-sdk/plugin-test-api";
+import { getRuntimeConfig } from "grokbot/plugin-sdk/runtime-config-snapshot";
+import { isLiveTestEnabled } from "grokbot/plugin-sdk/test-live";
 import { beforeAll, describe, expect, it } from "vitest";
 import plugin from "./index.js";
 import { getComfyConfigForTesting } from "./test-support.js";

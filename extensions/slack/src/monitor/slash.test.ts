@@ -1,9 +1,9 @@
 // Slack tests cover slash plugin behavior.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import {
   clearRuntimeConfigSnapshot,
   setRuntimeConfigSnapshot,
-} from "openclaw/plugin-sdk/runtime-config-snapshot";
+} from "grokbot/plugin-sdk/runtime-config-snapshot";
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { getSlackSlashMocks, resetSlackSlashMocks } from "./slash.test-harness.js";
 
@@ -11,9 +11,9 @@ const slashCommandMenuMocks = vi.hoisted(() => ({
   resolveCommandArgMenu: vi.fn(),
 }));
 
-vi.mock("openclaw/plugin-sdk/agent-runtime", async () => {
-  const actual = await vi.importActual<typeof import("openclaw/plugin-sdk/agent-runtime")>(
-    "openclaw/plugin-sdk/agent-runtime",
+vi.mock("grokbot/plugin-sdk/agent-runtime", async () => {
+  const actual = await vi.importActual<typeof import("grokbot/plugin-sdk/agent-runtime")>(
+    "grokbot/plugin-sdk/agent-runtime",
   );
   return {
     ...actual,
@@ -411,7 +411,7 @@ function createArgMenusHarness(
     channelsConfig: undefined,
     slashCommand: {
       enabled: false,
-      name: "openclaw",
+      name: "grokbot",
       ephemeral: true,
       sessionPrefix: "slack:slash",
     },
@@ -775,7 +775,7 @@ describe("Slack native command argument menus", () => {
 
     expect(
       [...configuredHarness.commands.keys()].some(
-        (command) => command instanceof RegExp && command.test("/openclaw"),
+        (command) => command instanceof RegExp && command.test("/grokbot"),
       ),
     ).toBe(true);
     expect(configuredHarness.commands.has("/usage")).toBe(false);
@@ -794,7 +794,7 @@ describe("Slack native command argument menus", () => {
     expect(testHarness.optionsReceiverContexts[0]).toBe(testHarness.app);
   });
 
-  it.each(["codex", "openclaw"] as const)(
+  it.each(["codex", "grokbot"] as const)(
     "passes the configured %s runtime to dynamic /think choices",
     async (agentRuntime) => {
       const testHarness = createArgMenusHarness({
@@ -1307,7 +1307,7 @@ function createPolicyHarness(overrides?: {
     channelsConfig: overrides?.channelsConfig,
     slashCommand: {
       enabled: overrides?.slashCommandEnabled ?? true,
-      name: overrides?.slashCommandName ?? "openclaw",
+      name: overrides?.slashCommandName ?? "grokbot",
       ephemeral: overrides?.slashEphemeral ?? true,
       sessionPrefix: "slack:slash",
     },

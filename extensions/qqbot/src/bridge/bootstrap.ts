@@ -23,14 +23,14 @@
  * vitest (which resolves bare specifiers via `resolve.alias`, not Node CJS).
  */
 
-import type { ApprovalResolveResult } from "openclaw/plugin-sdk/approval-gateway-runtime";
-import { createLazyRuntimeNamedExport } from "openclaw/plugin-sdk/lazy-runtime";
+import type { ApprovalResolveResult } from "grokbot/plugin-sdk/approval-gateway-runtime";
+import { createLazyRuntimeNamedExport } from "grokbot/plugin-sdk/lazy-runtime";
 import {
   hasConfiguredSecretInput,
   normalizeResolvedSecretInputString,
   normalizeSecretInputString,
-} from "openclaw/plugin-sdk/secret-input";
-import { resolvePreferredOpenClawTmpDir } from "openclaw/plugin-sdk/temp-path";
+} from "grokbot/plugin-sdk/secret-input";
+import { resolvePreferredOpenClawTmpDir } from "grokbot/plugin-sdk/temp-path";
 import {
   registerPlatformAdapter,
   registerPlatformAdapterFactory,
@@ -41,7 +41,7 @@ import type { FetchMediaOptions, FetchMediaResult } from "../engine/adapter/type
 import { getBridgeLogger } from "./logger.js";
 
 const loadReadRemoteMediaBuffer = createLazyRuntimeNamedExport(
-  () => import("openclaw/plugin-sdk/media-runtime"),
+  () => import("grokbot/plugin-sdk/media-runtime"),
   "readRemoteMediaBuffer",
 );
 
@@ -104,9 +104,9 @@ function createBuiltinAdapter(): PlatformAdapter {
 
     async resolveApproval(params): Promise<ApprovalResolveResult> {
       try {
-        const { getRuntimeConfig } = await import("openclaw/plugin-sdk/runtime-config-snapshot");
+        const { getRuntimeConfig } = await import("grokbot/plugin-sdk/runtime-config-snapshot");
         const { resolveApprovalOverGateway } =
-          await import("openclaw/plugin-sdk/approval-gateway-runtime");
+          await import("grokbot/plugin-sdk/approval-gateway-runtime");
         const cfg = getRuntimeConfig();
         return await resolveApprovalOverGateway({
           cfg,

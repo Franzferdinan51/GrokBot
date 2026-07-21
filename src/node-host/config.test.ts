@@ -8,12 +8,12 @@ import {
   executeSqliteQueryTakeFirstSync,
   getNodeSqliteKysely,
 } from "../infra/kysely-sync.js";
-import type { DB as OpenClawStateKyselyDatabase } from "../state/openclaw-state-db.generated.js";
+import type { DB as OpenClawStateKyselyDatabase } from "../state/grokbot-state-db.generated.js";
 import {
   closeOpenClawStateDatabaseForTest,
   openOpenClawStateDatabase,
   runOpenClawStateWriteTransaction,
-} from "../state/openclaw-state-db.js";
+} from "../state/grokbot-state-db.js";
 import { configureNodeHost, loadNodeHostConfig, type NodeHostConfig } from "./config.js";
 
 const fixtureDigest = ["fixture", "digest"].join("-");
@@ -144,7 +144,7 @@ describe("node-host SQLite config", () => {
   });
 
   function makeTestEnv(): { env: NodeJS.ProcessEnv; stateDir: string } {
-    const stateDir = tempDirs.make("openclaw-node-host-config-");
+    const stateDir = tempDirs.make("grokbot-node-host-config-");
     return { env: { ...process.env, OPENCLAW_STATE_DIR: stateDir }, stateDir };
   }
 
@@ -159,7 +159,7 @@ describe("node-host SQLite config", () => {
         port: 18443,
         tls: false,
         tlsFingerprint: fixtureDigest,
-        contextPath: "/openclaw-gw",
+        contextPath: "/grokbot-gw",
       },
       env,
       nowMs: 1_234,
@@ -175,7 +175,7 @@ describe("node-host SQLite config", () => {
         port: 18443,
         tls: false,
         tlsFingerprint: fixtureDigest,
-        contextPath: "/openclaw-gw",
+        contextPath: "/grokbot-gw",
       },
     });
     closeOpenClawStateDatabaseForTest();
@@ -349,10 +349,10 @@ describe("node-host SQLite config", () => {
         await fs.symlink(path.join(stateDir, "missing-node.json"), sourcePath);
       }
 
-      await expect(loadNodeHostConfig(env)).rejects.toThrow("openclaw doctor --fix");
+      await expect(loadNodeHostConfig(env)).rejects.toThrow("grokbot doctor --fix");
       await expect(
         configureNodeHost({ fallbackDisplayName: "node", gateway: {}, env }),
-      ).rejects.toThrow("openclaw doctor --fix");
+      ).rejects.toThrow("grokbot doctor --fix");
     },
   );
 });

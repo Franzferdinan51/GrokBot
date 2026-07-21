@@ -32,11 +32,11 @@ permissions:
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
   PNPM_CONFIG_CHILD_CONCURRENCY: "1"
-  PNPM_CONFIG_MODULES_DIR: "/var/tmp/openclaw-pnpm/node_modules"
+  PNPM_CONFIG_MODULES_DIR: "/var/tmp/grokbot-pnpm/node_modules"
   PNPM_CONFIG_NETWORK_CONCURRENCY: "1"
   PNPM_CONFIG_STORE_DIR: "/var/cache/crabbox/pnpm/store"
   PNPM_CONFIG_VERIFY_DEPS_BEFORE_RUN: "false"
-  PNPM_CONFIG_VIRTUAL_STORE_DIR: "/var/tmp/openclaw-pnpm/virtual-store"
+  PNPM_CONFIG_VIRTUAL_STORE_DIR: "/var/tmp/grokbot-pnpm/virtual-store"
 
 jobs:
   hydrate:
@@ -128,7 +128,7 @@ jobs:
             fi
           }
           prepare_crabbox_pnpm_dirs() {
-            local volatile_root="/var/tmp/openclaw-pnpm"
+            local volatile_root="/var/tmp/grokbot-pnpm"
             case "${PNPM_CONFIG_MODULES_DIR:?}" in "$volatile_root"/*) ;; *) echo "::error::PNPM_CONFIG_MODULES_DIR must stay under $volatile_root"; exit 1 ;; esac
             case "${PNPM_CONFIG_VIRTUAL_STORE_DIR:?}" in "$volatile_root"/*) ;; *) echo "::error::PNPM_CONFIG_VIRTUAL_STORE_DIR must stay under $volatile_root"; exit 1 ;; esac
             rm -rf -- "$volatile_root"
@@ -152,7 +152,7 @@ jobs:
               test -f "$PNPM_CONFIG_MODULES_DIR/typescript/package.json"
           }
           run_pnpm_install() {
-            local log_file="$RUNNER_TEMP/openclaw-pnpm-install.log"
+            local log_file="$RUNNER_TEMP/grokbot-pnpm-install.log"
             local pnpm_pid
             local done_seen=0
             rm -f "$log_file"
@@ -437,7 +437,7 @@ jobs:
           $env:XDG_CACHE_HOME = Join-Path $cacheRoot "cache"
           $env:COREPACK_HOME = Join-Path $env:XDG_CACHE_HOME "corepack"
           $env:PNPM_HOME = Join-Path $cacheRoot "pnpm-home"
-          $pnpmCacheRoot = Join-Path $cacheRoot "openclaw-pnpm"
+          $pnpmCacheRoot = Join-Path $cacheRoot "grokbot-pnpm"
           $env:PNPM_CONFIG_STORE_DIR = Join-Path $pnpmCacheRoot "store"
           $env:PNPM_CONFIG_MODULES_DIR = Join-Path $pnpmCacheRoot "node_modules"
           $env:PNPM_CONFIG_VIRTUAL_STORE_DIR = Join-Path $pnpmCacheRoot "virtual-store"
@@ -495,7 +495,7 @@ jobs:
           $installArgs = @(
             "install",
             "--filter",
-            "openclaw",
+            "grokbot",
             "--prefer-offline",
             "--ignore-scripts=true",
             "--config.engine-strict=false",

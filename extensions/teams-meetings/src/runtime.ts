@@ -1,13 +1,13 @@
-import { resolveDefaultAgentId } from "openclaw/plugin-sdk/agent-runtime";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
+import { resolveDefaultAgentId } from "grokbot/plugin-sdk/agent-runtime";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { formatErrorMessage } from "grokbot/plugin-sdk/error-runtime";
 import {
   MeetingSessionRuntime,
   type MeetingSessionRuntimeHandles,
   type MeetingSessionRuntimeJoinContext,
-} from "openclaw/plugin-sdk/meeting-runtime";
-import type { PluginRuntime, RuntimeLogger } from "openclaw/plugin-sdk/plugin-runtime";
-import { normalizeAgentId } from "openclaw/plugin-sdk/routing";
+} from "grokbot/plugin-sdk/meeting-runtime";
+import type { PluginRuntime, RuntimeLogger } from "grokbot/plugin-sdk/plugin-runtime";
+import { normalizeAgentId } from "grokbot/plugin-sdk/routing";
 import type { TeamsMeetingsConfig, TeamsMeetingsMode, TeamsMeetingsTransport } from "./config.js";
 import {
   testTeamsMeetingListening,
@@ -123,8 +123,8 @@ export class TeamsMeetingsRuntime {
           audioBridgeUnavailable: "Realtime speech requires an active Chrome audio bridge.",
           browserUnverified: "Microsoft Teams browser state has not been verified yet.",
           manualActionFallback:
-            "Resolve the Microsoft Teams browser prompt before asking OpenClaw to speak.",
-          microphoneMuted: "Turn on the OpenClaw Teams microphone before asking OpenClaw to speak.",
+            "Resolve the Microsoft Teams browser prompt before asking GrokBot to speak.",
+          microphoneMuted: "Turn on the GrokBot Teams microphone before asking GrokBot to speak.",
           microphoneMutedReason: "teams-microphone-muted",
           notInCall: "Microsoft Teams has not reported that the browser guest is in the call.",
           notInCallReason: "not-in-call",

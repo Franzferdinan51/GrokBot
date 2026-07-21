@@ -1,6 +1,6 @@
 /** Session update helpers for skill snapshots, compaction, and lifecycle hooks. */
 import crypto from "node:crypto";
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+import { normalizeOptionalString } from "@grokbot/normalization-core/string-coerce";
 import { resolveSessionAgentId } from "../../agents/agent-scope.js";
 import {
   type ExecPolicyOverrides,
@@ -8,7 +8,7 @@ import {
 } from "../../agents/exec-defaults.js";
 import { resolveCompactionSessionFile, type SessionEntry } from "../../config/sessions.js";
 import { patchSessionEntry, updateSessionEntry } from "../../config/sessions/session-accessor.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import {
   forgetActiveSessionForShutdown,
   noteActiveSessionForShutdown,

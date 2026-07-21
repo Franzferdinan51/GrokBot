@@ -62,7 +62,7 @@ describe("loadOpenClawPlugins", () => {
         "utf-8",
       );
       fs.writeFileSync(
-        path.join(globalDir, "openclaw.plugin.json"),
+        path.join(globalDir, "grokbot.plugin.json"),
         JSON.stringify(
           {
             id: "trusted-global-channel",
@@ -78,10 +78,10 @@ describe("loadOpenClawPlugins", () => {
         path.join(globalDir, "package.json"),
         JSON.stringify(
           {
-            name: "@openclaw/trusted-global-channel",
+            name: "@grokbot/trusted-global-channel",
             version: "0.0.0-test",
             main: "./index.cjs",
-            openclaw: {
+            grokbot: {
               extensions: ["./index.cjs"],
             },
           },
@@ -147,7 +147,7 @@ describe("loadOpenClawPlugins", () => {
   };`,
     });
     fs.writeFileSync(
-      path.join(plugin.dir, "openclaw.plugin.json"),
+      path.join(plugin.dir, "grokbot.plugin.json"),
       JSON.stringify(
         {
           id: "auto-enabled-load-path-channel",
@@ -191,7 +191,7 @@ describe("loadOpenClawPlugins", () => {
       fixture: {
         id: "setup-entry-test",
         label: "Setup Entry Test",
-        packageName: "@openclaw/setup-entry-test",
+        packageName: "@grokbot/setup-entry-test",
         fullBlurb: "full entry should not run in setup-only mode",
         setupBlurb: "setup entry",
         configured: false,
@@ -221,7 +221,7 @@ describe("loadOpenClawPlugins", () => {
       fixture: {
         id: "setup-only-bundled-contract-test",
         label: "Setup Only Bundled Contract Test",
-        packageName: "@openclaw/setup-only-bundled-contract-test",
+        packageName: "@grokbot/setup-only-bundled-contract-test",
         fullBlurb: "full entry should not run in setup-only mode",
         setupBlurb: "setup-only bundled contract",
         configured: false,
@@ -252,7 +252,7 @@ describe("loadOpenClawPlugins", () => {
       fixture: {
         id: "setup-runtime-test",
         label: "Setup Runtime Test",
-        packageName: "@openclaw/setup-runtime-test",
+        packageName: "@grokbot/setup-runtime-test",
         fullBlurb: "full entry should not run while unconfigured",
         setupBlurb: "setup runtime",
         configured: false,
@@ -276,7 +276,7 @@ describe("loadOpenClawPlugins", () => {
       fixture: {
         id: "setup-runtime-bundled-contract-test",
         label: "Setup Runtime Bundled Contract Test",
-        packageName: "@openclaw/setup-runtime-bundled-contract-test",
+        packageName: "@grokbot/setup-runtime-bundled-contract-test",
         fullBlurb: "full entry should not run while unconfigured",
         setupBlurb: "setup runtime bundled contract",
         configured: false,
@@ -301,7 +301,7 @@ describe("loadOpenClawPlugins", () => {
       fixture: {
         id: "setup-runtime-bundled-contract-secrets-test",
         label: "Setup Runtime Bundled Contract Secrets Test",
-        packageName: "@openclaw/setup-runtime-bundled-contract-secrets-test",
+        packageName: "@grokbot/setup-runtime-bundled-contract-secrets-test",
         fullBlurb: "full entry should not run while unconfigured",
         setupBlurb: "setup runtime bundled contract secrets",
         configured: false,
@@ -328,7 +328,7 @@ describe("loadOpenClawPlugins", () => {
       fixture: {
         id: "setup-runtime-bundled-contract-runtime-test",
         label: "Setup Runtime Bundled Contract Runtime Test",
-        packageName: "@openclaw/setup-runtime-bundled-contract-runtime-test",
+        packageName: "@grokbot/setup-runtime-bundled-contract-runtime-test",
         fullBlurb: "full entry should not run while unconfigured",
         setupBlurb: "setup runtime bundled contract runtime",
         configured: false,
@@ -355,7 +355,7 @@ describe("loadOpenClawPlugins", () => {
       fixture: {
         id: "setup-runtime-bundled-route-test",
         label: "Setup Runtime Bundled Route Test",
-        packageName: "@openclaw/setup-runtime-bundled-route-test",
+        packageName: "@grokbot/setup-runtime-bundled-route-test",
         fullBlurb: "full entry should defer while configured",
         setupBlurb: "setup runtime route",
         configured: true,
@@ -390,7 +390,7 @@ describe("loadOpenClawPlugins", () => {
       fixture: {
         id: "setup-runtime-bundled-runtime-merge-test",
         label: "Setup Runtime Bundled Runtime Merge Test",
-        packageName: "@openclaw/setup-runtime-bundled-runtime-merge-test",
+        packageName: "@grokbot/setup-runtime-bundled-runtime-merge-test",
         fullBlurb: "full runtime plugin",
         setupBlurb: "setup runtime override",
         configured: false,
@@ -418,7 +418,7 @@ describe("loadOpenClawPlugins", () => {
       fixture: {
         id: "setup-runtime-external-deferred-test",
         label: "Setup Runtime External Deferred Test",
-        packageName: "@openclaw/setup-runtime-external-deferred-test",
+        packageName: "@grokbot/setup-runtime-external-deferred-test",
         fullBlurb: "full entry should defer while configured",
         setupBlurb: "setup runtime external deferred",
         configured: true,
@@ -452,7 +452,7 @@ describe("loadOpenClawPlugins", () => {
       fixture: {
         id: "setup-runtime-not-preferred-test",
         label: "Setup Runtime Not Preferred Test",
-        packageName: "@openclaw/setup-runtime-not-preferred-test",
+        packageName: "@grokbot/setup-runtime-not-preferred-test",
         fullBlurb: "full entry should still load without explicit startup opt-in",
         setupBlurb: "setup runtime not preferred",
         configured: true,
@@ -537,7 +537,7 @@ describe("loadOpenClawPlugins", () => {
     const built = createSetupEntryChannelPluginFixture({
       id: "setup-runtime-order-test",
       label: "Setup Runtime Order Test",
-      packageName: "@openclaw/setup-runtime-order-test",
+      packageName: "@grokbot/setup-runtime-order-test",
       fullBlurb: "full runtime plugin",
       setupBlurb: "setup runtime override",
       configured: false,
@@ -567,7 +567,7 @@ describe("loadOpenClawPlugins", () => {
     const built = createSetupEntryChannelPluginFixture({
       id: "setup-runtime-error-test",
       label: "Setup Runtime Error Test",
-      packageName: "@openclaw/setup-runtime-error-test",
+      packageName: "@grokbot/setup-runtime-error-test",
       fullBlurb: "full runtime plugin",
       setupBlurb: "setup runtime override",
       configured: false,
@@ -605,7 +605,7 @@ describe("loadOpenClawPlugins", () => {
     const built = createSetupEntryChannelPluginFixture({
       id: "setup-runtime-route-error-test",
       label: "Setup Runtime Route Error Test",
-      packageName: "@openclaw/setup-runtime-route-error-test",
+      packageName: "@grokbot/setup-runtime-route-error-test",
       fullBlurb: "full runtime plugin",
       setupBlurb: "setup runtime route",
       configured: true,
@@ -655,7 +655,7 @@ describe("loadOpenClawPlugins", () => {
     const built = createSetupEntryChannelPluginFixture({
       id: "setup-runtime-late-route-test",
       label: "Setup Runtime Late Route Test",
-      packageName: "@openclaw/setup-runtime-late-route-test",
+      packageName: "@grokbot/setup-runtime-late-route-test",
       fullBlurb: "full runtime plugin",
       setupBlurb: "setup runtime route",
       configured: true,
@@ -698,7 +698,7 @@ describe("loadOpenClawPlugins", () => {
       id: "setup-runtime-mismatch-test",
       bundledFullEntryId: "wrong-runtime-id",
       label: "Setup Runtime Mismatch Test",
-      packageName: "@openclaw/setup-runtime-mismatch-test",
+      packageName: "@grokbot/setup-runtime-mismatch-test",
       fullBlurb: "full runtime plugin",
       setupBlurb: "setup runtime override",
       configured: false,
@@ -733,7 +733,7 @@ describe("loadOpenClawPlugins", () => {
       id: "setup-export-mismatch-test",
       bundledSetupEntryId: "wrong-setup-id",
       label: "Setup Export Mismatch Test",
-      packageName: "@openclaw/setup-export-mismatch-test",
+      packageName: "@grokbot/setup-export-mismatch-test",
       fullBlurb: "full runtime plugin",
       setupBlurb: "setup runtime override",
       configured: false,
@@ -772,8 +772,8 @@ describe("loadOpenClawPlugins", () => {
       path.join(pluginDir, "package.json"),
       JSON.stringify(
         {
-          name: "@openclaw/setup-entry-throws-test",
-          openclaw: {
+          name: "@grokbot/setup-entry-throws-test",
+          grokbot: {
             extensions: ["./index.cjs"],
             setupEntry: "./setup-entry.cjs",
           },
@@ -784,7 +784,7 @@ describe("loadOpenClawPlugins", () => {
       "utf-8",
     );
     fs.writeFileSync(
-      path.join(pluginDir, "openclaw.plugin.json"),
+      path.join(pluginDir, "grokbot.plugin.json"),
       JSON.stringify(
         {
           id: "setup-entry-throws-test",
@@ -839,8 +839,8 @@ describe("loadOpenClawPlugins", () => {
       path.join(brokenDir, "package.json"),
       JSON.stringify(
         {
-          name: "@openclaw/setup-entry-throws-sibling-test",
-          openclaw: {
+          name: "@grokbot/setup-entry-throws-sibling-test",
+          grokbot: {
             extensions: ["./index.cjs"],
             setupEntry: "./setup-entry.cjs",
           },
@@ -851,7 +851,7 @@ describe("loadOpenClawPlugins", () => {
       "utf-8",
     );
     fs.writeFileSync(
-      path.join(brokenDir, "openclaw.plugin.json"),
+      path.join(brokenDir, "grokbot.plugin.json"),
       JSON.stringify(
         {
           id: "setup-entry-throws-sibling-test",
@@ -937,8 +937,8 @@ describe("loadOpenClawPlugins", () => {
       path.join(brokenDir, "package.json"),
       JSON.stringify(
         {
-          name: "@openclaw/register-channel-throws-test",
-          openclaw: {
+          name: "@grokbot/register-channel-throws-test",
+          grokbot: {
             extensions: ["./index.cjs"],
             setupEntry: "./setup-entry.cjs",
           },
@@ -949,7 +949,7 @@ describe("loadOpenClawPlugins", () => {
       "utf-8",
     );
     fs.writeFileSync(
-      path.join(brokenDir, "openclaw.plugin.json"),
+      path.join(brokenDir, "grokbot.plugin.json"),
       JSON.stringify(
         {
           id: "register-channel-throws-test",
@@ -1061,7 +1061,7 @@ describe("loadOpenClawPlugins", () => {
     mkdirSafe(sourceDir);
     mkdirSafe(runtimeDir);
     fs.writeFileSync(
-      path.join(sourceDir, "openclaw.plugin.json"),
+      path.join(sourceDir, "grokbot.plugin.json"),
       JSON.stringify(
         {
           id: "startup-artifact-test",
@@ -1119,7 +1119,7 @@ describe("loadOpenClawPlugins", () => {
     mkdirSafe(sourceDir);
     mkdirSafe(runtimeDir);
     fs.writeFileSync(
-      path.join(sourceDir, "openclaw.plugin.json"),
+      path.join(sourceDir, "grokbot.plugin.json"),
       JSON.stringify(
         {
           id: "startup-package-artifact-test",
@@ -1134,7 +1134,7 @@ describe("loadOpenClawPlugins", () => {
       path.join(sourceDir, "package.json"),
       JSON.stringify(
         {
-          openclaw: {
+          grokbot: {
             extensions: ["./index.ts"],
           },
         },
@@ -1195,7 +1195,7 @@ describe("loadOpenClawPlugins", () => {
     mkdirSafe(builtPluginDir);
     fs.writeFileSync(path.join(repoRoot, "pnpm-workspace.yaml"), "packages: []\n", "utf-8");
     fs.writeFileSync(
-      path.join(sourceDir, "openclaw.plugin.json"),
+      path.join(sourceDir, "grokbot.plugin.json"),
       JSON.stringify(
         { id: "source-only-artifact-test", configSchema: EMPTY_PLUGIN_SCHEMA },
         null,
@@ -1206,7 +1206,7 @@ describe("loadOpenClawPlugins", () => {
     fs.writeFileSync(
       path.join(sourceDir, "package.json"),
       JSON.stringify({
-        openclaw: {
+        grokbot: {
           extensions: ["./index.ts"],
           build: { bundledDist: false },
         },
@@ -1224,12 +1224,12 @@ describe("loadOpenClawPlugins", () => {
       "utf-8",
     );
     fs.copyFileSync(
-      path.join(sourceDir, "openclaw.plugin.json"),
-      path.join(builtPluginDir, "openclaw.plugin.json"),
+      path.join(sourceDir, "grokbot.plugin.json"),
+      path.join(builtPluginDir, "grokbot.plugin.json"),
     );
     fs.writeFileSync(
       path.join(builtPluginDir, "package.json"),
-      JSON.stringify({ openclaw: { extensions: ["./index.js"] } }),
+      JSON.stringify({ grokbot: { extensions: ["./index.js"] } }),
       "utf-8",
     );
     fs.writeFileSync(
@@ -1289,7 +1289,7 @@ describe("loadOpenClawPlugins", () => {
       path.join(pluginDir, "package.json"),
       JSON.stringify(
         {
-          openclaw: {
+          grokbot: {
             extensions: ["./src/index.mts"],
           },
         },
@@ -1299,7 +1299,7 @@ describe("loadOpenClawPlugins", () => {
       "utf-8",
     );
     fs.writeFileSync(
-      path.join(pluginDir, "openclaw.plugin.json"),
+      path.join(pluginDir, "grokbot.plugin.json"),
       JSON.stringify(
         {
           id: "workspace-artifact-test",
@@ -1352,7 +1352,7 @@ describe("loadOpenClawPlugins", () => {
       path.join(pluginDir, "package.json"),
       JSON.stringify(
         {
-          openclaw: {
+          grokbot: {
             extensions: ["./src/index.ts"],
           },
         },
@@ -1362,7 +1362,7 @@ describe("loadOpenClawPlugins", () => {
       "utf-8",
     );
     fs.writeFileSync(
-      path.join(pluginDir, "openclaw.plugin.json"),
+      path.join(pluginDir, "grokbot.plugin.json"),
       JSON.stringify(
         {
           id: "workspace-artifact-extension-test",
@@ -1414,7 +1414,7 @@ describe("loadOpenClawPlugins", () => {
       path.join(pluginDir, "package.json"),
       JSON.stringify(
         {
-          openclaw: {
+          grokbot: {
             extensions: ["./index.js"],
           },
         },
@@ -1424,7 +1424,7 @@ describe("loadOpenClawPlugins", () => {
       "utf-8",
     );
     fs.writeFileSync(
-      path.join(pluginDir, "openclaw.plugin.json"),
+      path.join(pluginDir, "grokbot.plugin.json"),
       JSON.stringify(
         {
           id: "workspace-explicit-js-test",
@@ -1476,7 +1476,7 @@ describe("loadOpenClawPlugins", () => {
       path.join(pluginDir, "package.json"),
       JSON.stringify(
         {
-          openclaw: {
+          grokbot: {
             extensions: ["./src/index.mts"],
           },
         },
@@ -1486,7 +1486,7 @@ describe("loadOpenClawPlugins", () => {
       "utf-8",
     );
     fs.writeFileSync(
-      path.join(pluginDir, "openclaw.plugin.json"),
+      path.join(pluginDir, "grokbot.plugin.json"),
       JSON.stringify(
         {
           id: "workspace-artifact-symlink-test",
@@ -1696,12 +1696,12 @@ describe("loadOpenClawPlugins", () => {
       filename: `${pluginId}.cjs`,
       body: `module.exports = { id: ${JSON.stringify(pluginId)}, register(api) {
     api.registerAgentToolResultMiddleware(() => new Promise(() => {}), {
-      runtimes: ["openclaw"],
+      runtimes: ["grokbot"],
     });
   } };`,
     });
     updatePluginManifest(plugin, {
-      contracts: { agentToolResultMiddleware: ["openclaw"] },
+      contracts: { agentToolResultMiddleware: ["grokbot"] },
     });
 
     const registry = loadRegistryFromSinglePlugin({
@@ -1729,7 +1729,7 @@ describe("loadOpenClawPlugins", () => {
           args: {},
           result: { content: [{ type: "text", text: "raw" }], details: {} },
         },
-        { runtime: "openclaw" },
+        { runtime: "grokbot" },
       );
       const outcome = Promise.resolve(middlewareRun).then(
         () => ({ status: "resolved" as const }),
@@ -1756,12 +1756,12 @@ describe("loadOpenClawPlugins", () => {
       filename: "tool-result-middleware-no-timeout.cjs",
       body: `module.exports = { id: "tool-result-middleware-no-timeout", register(api) {
     api.registerAgentToolResultMiddleware(() => new Promise(() => {}), {
-      runtimes: ["openclaw"],
+      runtimes: ["grokbot"],
     });
   } };`,
     });
     updatePluginManifest(plugin, {
-      contracts: { agentToolResultMiddleware: ["openclaw"] },
+      contracts: { agentToolResultMiddleware: ["grokbot"] },
     });
     const registry = loadRegistryFromSinglePlugin({
       plugin,
@@ -1783,7 +1783,7 @@ describe("loadOpenClawPlugins", () => {
             args: {},
             result: { content: [{ type: "text", text: "raw" }], details: {} },
           },
-          { runtime: "openclaw" },
+          { runtime: "grokbot" },
         ),
       ).finally(() => {
         settled = true;

@@ -3,12 +3,12 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import type { APIMessage } from "discord-api-types/v10";
-import type { ChannelIngressQueue } from "openclaw/plugin-sdk/channel-outbound";
+import type { ChannelIngressQueue } from "grokbot/plugin-sdk/channel-outbound";
 import {
   closeOpenClawStateDatabaseForTest,
   createChannelIngressQueueForTests,
-} from "openclaw/plugin-sdk/plugin-state-test-runtime";
-import type { RuntimeEnv } from "openclaw/plugin-sdk/runtime-env";
+} from "grokbot/plugin-sdk/plugin-state-test-runtime";
+import type { RuntimeEnv } from "grokbot/plugin-sdk/runtime-env";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { createDiscordIngressMonitor, type DiscordIngressLifecycle } from "./ingress.js";
 
@@ -62,7 +62,7 @@ function createDeferred() {
 async function withQueue<T>(
   fn: (queue: ChannelIngressQueue<DiscordIngressPayload>) => Promise<T>,
 ): Promise<T> {
-  const created = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-discord-ingress-"));
+  const created = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-discord-ingress-"));
   const stateDir = await fs.realpath(created);
   const queue = createChannelIngressQueueForTests<DiscordIngressPayload>({
     channelId: "discord",

@@ -1,9 +1,9 @@
-// Resolves the OpenClaw package root from runtime and package metadata.
+// Resolves the GrokBot package root from runtime and package metadata.
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { openClawRootFs, openClawRootFsSync } from "./openclaw-root.fs.runtime.js";
+import { openClawRootFs, openClawRootFsSync } from "./grokbot-root.fs.runtime.js";
 
-const CORE_PACKAGE_NAMES = new Set(["openclaw"]);
+const CORE_PACKAGE_NAMES = new Set(["grokbot"]);
 const packageNameCache = new Map<string, string | null>();
 const packageRootCache = new Map<string, string | null>();
 const packageRootsCache = new Map<string, string[]>();
@@ -95,7 +95,7 @@ function candidateDirsFromArgv1(argv1: string): string[] {
 
   // Resolve symlinks for version managers (nvm, fnm, n, Homebrew/Linuxbrew)
   // that create symlinks in bin/ pointing to the real package location. Prefer
-  // the target so a launcher nested under another OpenClaw checkout keeps its own package root.
+  // the target so a launcher nested under another GrokBot checkout keeps its own package root.
   try {
     const resolved = openClawRootFsSync.realpathSync(normalized);
     if (resolved !== normalized) {
@@ -140,7 +140,7 @@ export async function resolveOpenClawPackageRoot(opts: {
   return null;
 }
 
-// Every distinct OpenClaw package root among the runtime hints, in candidate order (symlinked
+// Every distinct GrokBot package root among the runtime hints, in candidate order (symlinked
 // launcher via realpath first, then cwd). Callers that need a specific file under the root must
 // pick the first root that actually contains it: an installed package root can resolve first but
 // omit files the npm allowlist drops (e.g. scripts/), so stopping at root[0] would skip a valid

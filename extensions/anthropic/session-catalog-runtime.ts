@@ -3,11 +3,11 @@ import {
   resolveAllowedModelRef,
   resolveDefaultAgentId,
   resolveDefaultModelForAgent,
-} from "openclaw/plugin-sdk/agent-runtime";
-import { resolveEffectiveAgentRuntime } from "openclaw/plugin-sdk/command-auth-native";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import type { OpenClawPluginApi } from "openclaw/plugin-sdk/plugin-entry";
-import { isRecord } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/agent-runtime";
+import { resolveEffectiveAgentRuntime } from "grokbot/plugin-sdk/command-auth-native";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import type { OpenClawPluginApi } from "grokbot/plugin-sdk/plugin-entry";
+import { isRecord } from "grokbot/plugin-sdk/string-coerce-runtime";
 import {
   CLAUDE_CLI_BACKEND_ID,
   CLAUDE_CLI_CANONICAL_DEFAULT_MODEL_ID,

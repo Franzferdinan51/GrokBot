@@ -216,10 +216,10 @@ describe("loadOpenClawPlugins", () => {
     const stateDir = makeTempDir();
     const bundledDir = makeTempDir();
     const plugin = writePlugin({
-      id: "openclaw-home-demo",
-      dir: path.join(openclawHome, "plugins", "openclaw-home-demo"),
+      id: "grokbot-home-demo",
+      dir: path.join(openclawHome, "plugins", "grokbot-home-demo"),
       filename: "index.cjs",
-      body: `module.exports = { id: "openclaw-home-demo", register() {} };`,
+      body: `module.exports = { id: "grokbot-home-demo", register() {} };`,
     });
 
     const registry = loadOpenClawPlugins({
@@ -232,12 +232,12 @@ describe("loadOpenClawPlugins", () => {
       },
       config: {
         plugins: {
-          allow: ["openclaw-home-demo"],
+          allow: ["grokbot-home-demo"],
           entries: {
-            "openclaw-home-demo": { enabled: true },
+            "grokbot-home-demo": { enabled: true },
           },
           load: {
-            paths: ["~/plugins/openclaw-home-demo"],
+            paths: ["~/plugins/grokbot-home-demo"],
           },
         },
       },
@@ -245,7 +245,7 @@ describe("loadOpenClawPlugins", () => {
 
     expect(
       fs.realpathSync(
-        registry.plugins.find((entry) => entry.id === "openclaw-home-demo")?.source ?? "",
+        registry.plugins.find((entry) => entry.id === "grokbot-home-demo")?.source ?? "",
       ),
     ).toBe(fs.realpathSync(plugin.file));
   });
@@ -1084,8 +1084,8 @@ describe("loadOpenClawPlugins", () => {
       path.join(pluginDir, "package.json"),
       JSON.stringify(
         {
-          name: "@openclaw/nested-default-channel",
-          openclaw: {
+          name: "@grokbot/nested-default-channel",
+          grokbot: {
             extensions: ["./index.cjs"],
           },
         },
@@ -1095,7 +1095,7 @@ describe("loadOpenClawPlugins", () => {
       "utf-8",
     );
     fs.writeFileSync(
-      path.join(pluginDir, "openclaw.plugin.json"),
+      path.join(pluginDir, "grokbot.plugin.json"),
       JSON.stringify(
         {
           id: "nested-default-channel",
@@ -1179,7 +1179,7 @@ describe("loadOpenClawPlugins", () => {
       body: `module.exports = { id: "unrelated-plugin", register() { throw new Error("unrelated plugin should not load"); } };`,
     });
     fs.writeFileSync(
-      path.join(unrelated.dir, "openclaw.plugin.json"),
+      path.join(unrelated.dir, "grokbot.plugin.json"),
       JSON.stringify(
         {
           id: "unrelated-plugin",
@@ -1242,7 +1242,7 @@ describe("loadOpenClawPlugins", () => {
   };`,
     });
     fs.writeFileSync(
-      path.join(plugin.dir, "openclaw.plugin.json"),
+      path.join(plugin.dir, "grokbot.plugin.json"),
       JSON.stringify(
         {
           id: "lazy-channel-plugin",
@@ -1334,7 +1334,7 @@ describe("loadOpenClawPlugins", () => {
   };`,
     });
     fs.writeFileSync(
-      path.join(workspacePluginDir, "openclaw.plugin.json"),
+      path.join(workspacePluginDir, "grokbot.plugin.json"),
       JSON.stringify(
         {
           id: "workspace-shadow",
@@ -1400,7 +1400,7 @@ describe("loadOpenClawPlugins", () => {
   };`,
     });
     fs.writeFileSync(
-      path.join(workspacePluginDir, "openclaw.plugin.json"),
+      path.join(workspacePluginDir, "grokbot.plugin.json"),
       JSON.stringify(
         {
           id: "trusted-workspace-shadow",
@@ -1469,7 +1469,7 @@ describe("loadOpenClawPlugins", () => {
   };`,
     });
     fs.writeFileSync(
-      path.join(plugin.dir, "openclaw.plugin.json"),
+      path.join(plugin.dir, "grokbot.plugin.json"),
       JSON.stringify(
         {
           id: "untrusted-load-path-channel",
@@ -1534,7 +1534,7 @@ describe("loadOpenClawPlugins", () => {
   };`,
     });
     fs.writeFileSync(
-      path.join(plugin.dir, "openclaw.plugin.json"),
+      path.join(plugin.dir, "grokbot.plugin.json"),
       JSON.stringify(
         {
           id: "denylisted-load-path-channel",
@@ -1604,7 +1604,7 @@ describe("loadOpenClawPlugins", () => {
         "utf-8",
       );
       fs.writeFileSync(
-        path.join(globalDir, "openclaw.plugin.json"),
+        path.join(globalDir, "grokbot.plugin.json"),
         JSON.stringify(
           {
             id: "untrusted-global-channel",
@@ -1620,10 +1620,10 @@ describe("loadOpenClawPlugins", () => {
         path.join(globalDir, "package.json"),
         JSON.stringify(
           {
-            name: "@openclaw/untrusted-global-channel",
+            name: "@grokbot/untrusted-global-channel",
             version: "0.0.0-test",
             main: "./index.cjs",
-            openclaw: {
+            grokbot: {
               extensions: ["./index.cjs"],
             },
           },

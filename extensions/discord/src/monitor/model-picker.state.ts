@@ -1,11 +1,11 @@
 // Discord plugin module implements model picker.state behavior.
 import { createHash } from "node:crypto";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { expectDefined } from "openclaw/plugin-sdk/expect-runtime";
-import { createLazyRuntimeModule } from "openclaw/plugin-sdk/lazy-runtime";
-import type { ModelsProviderData } from "openclaw/plugin-sdk/models-provider-runtime";
-import { parseStrictInteger, parseStrictPositiveInteger } from "openclaw/plugin-sdk/number-runtime";
-import { normalizeProviderId } from "openclaw/plugin-sdk/provider-model-shared";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { expectDefined } from "grokbot/plugin-sdk/expect-runtime";
+import { createLazyRuntimeModule } from "grokbot/plugin-sdk/lazy-runtime";
+import type { ModelsProviderData } from "grokbot/plugin-sdk/models-provider-runtime";
+import { parseStrictInteger, parseStrictPositiveInteger } from "grokbot/plugin-sdk/number-runtime";
+import { normalizeProviderId } from "grokbot/plugin-sdk/provider-model-shared";
 import { decodeCustomIdComponent, encodeCustomIdComponent } from "../custom-id-codec.js";
 import type { ComponentData } from "../internal/discord.js";
 
@@ -116,7 +116,7 @@ export type DiscordModelPickerModelPage = DiscordModelPickerPage<string> & {
 };
 
 const loadModelsProviderRuntime = createLazyRuntimeModule(
-  () => import("openclaw/plugin-sdk/models-provider-runtime"),
+  () => import("grokbot/plugin-sdk/models-provider-runtime"),
 );
 
 function isValidCommandContext(value: string): value is DiscordModelPickerCommandContext {

@@ -1,10 +1,10 @@
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import { describe, expect, it, vi } from "vitest";
 import { importClaudeHistory } from "./session-catalog-history.js";
 
 const appended: Array<Record<string, unknown>> = [];
 
-vi.mock("openclaw/plugin-sdk/session-transcript-runtime", () => ({
+vi.mock("grokbot/plugin-sdk/session-transcript-runtime", () => ({
   withSessionTranscriptWriteLock: async (
     _params: unknown,
     run: (transcript: {

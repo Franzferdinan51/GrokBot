@@ -1,4 +1,4 @@
-// Openclaw Test State tests cover openclaw test state script behavior.
+// Openclaw Test State tests cover grokbot test state script behavior.
 import { execFile } from "node:child_process";
 import fs from "node:fs/promises";
 import os from "node:os";
@@ -9,7 +9,7 @@ import { describe, expect, it } from "vitest";
 
 const execFileAsync = promisify(execFile);
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
-const scriptPath = path.join(repoRoot, "scripts/lib/openclaw-test-state.mjs");
+const scriptPath = path.join(repoRoot, "scripts/lib/grokbot-test-state.mjs");
 const onboardDockerScriptPath = path.join(repoRoot, "scripts/e2e/onboard-docker.sh");
 
 function shellQuote(value: string): string {
@@ -29,9 +29,9 @@ function cleanupTestStateHomeTrap(): string {
 
 const secretKeyPattern = /^[a-f0-9]{64}$/u;
 
-describe("scripts/lib/openclaw-test-state", () => {
+describe("scripts/lib/grokbot-test-state", () => {
   it("creates a sourceable env file and JSON description", async () => {
-    const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-test-state-script-"));
+    const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-test-state-script-"));
     const envFile = path.join(tempRoot, "env.sh");
     try {
       const { stdout } = await execFileAsync(process.execPath, [
@@ -54,8 +54,8 @@ describe("scripts/lib/openclaw-test-state", () => {
         expect(payload[field].length).toBeGreaterThan(0);
       }
       expect(payload.home).toBe(path.join(payload.root, "home"));
-      expect(payload.stateDir).toBe(path.join(payload.home, ".openclaw"));
-      expect(payload.configPath).toBe(path.join(payload.stateDir, "openclaw.json"));
+      expect(payload.stateDir).toBe(path.join(payload.home, ".grokbot"));
+      expect(payload.configPath).toBe(path.join(payload.stateDir, "grokbot.json"));
       expect(payload.workspaceDir).toBe(path.join(payload.home, "workspace"));
       expect(payload.env.OPENCLAW_AUTH_PROFILE_SECRET_KEY).toMatch(secretKeyPattern);
       expect(payload.env).toEqual({
@@ -97,7 +97,7 @@ describe("scripts/lib/openclaw-test-state", () => {
   });
 
   it("renders a Docker-friendly shell snippet", async () => {
-    const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-test-state-shell-"));
+    const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-test-state-shell-"));
     const snippetFile = path.join(tempRoot, "state.sh");
     try {
       const { stdout } = await execFileAsync(process.execPath, [
@@ -112,7 +112,7 @@ describe("scripts/lib/openclaw-test-state", () => {
         'OPENCLAW_TEST_STATE_TMP_ROOT="${OPENCLAW_TEST_STATE_TMPDIR:-${TMPDIR:-/tmp}}"',
       );
       expect(stdout).toContain(
-        'mktemp -d "$OPENCLAW_TEST_STATE_TMP_ROOT/openclaw-update-channel-switch-update-stable-home.XXXXXX"',
+        'mktemp -d "$OPENCLAW_TEST_STATE_TMP_ROOT/grokbot-update-channel-switch-update-stable-home.XXXXXX"',
       );
       expect(stdout).toContain("OPENCLAW_TEST_STATE_JSON");
       expect(stdout).toContain('"channel": "stable"');
@@ -126,7 +126,7 @@ describe("scripts/lib/openclaw-test-state", () => {
       const payload = JSON.parse(probe.stdout);
       expect(payload.home.startsWith(os.tmpdir())).toBe(true);
       expect(path.basename(payload.home)).toMatch(
-        /^openclaw-update-channel-switch-update-stable-home\./u,
+        /^grokbot-update-channel-switch-update-stable-home\./u,
       );
       expect(payload.openclawHome).toBe(payload.home);
       expect(payload.workspace).toBe(`${payload.home}/workspace`);
@@ -142,7 +142,7 @@ describe("scripts/lib/openclaw-test-state", () => {
       expect(customPayload.tmpRoot).toBe(customTemp);
       expect(customPayload.home).toMatch(
         new RegExp(
-          `^${escapeRegex(customTemp)}/openclaw-update-channel-switch-update-stable-home\\.`,
+          `^${escapeRegex(customTemp)}/grokbot-update-channel-switch-update-stable-home\\.`,
         ),
       );
 
@@ -154,17 +154,17 @@ describe("scripts/lib/openclaw-test-state", () => {
       expect(trailingSlashPayload.tmpRoot).toBe(customTemp);
       expect(trailingSlashPayload.home).toMatch(
         new RegExp(
-          `^${escapeRegex(customTemp)}/openclaw-update-channel-switch-update-stable-home\\.`,
+          `^${escapeRegex(customTemp)}/grokbot-update-channel-switch-update-stable-home\\.`,
         ),
       );
-      expect(trailingSlashPayload.stateDir).toBe(`${trailingSlashPayload.home}/.openclaw`);
+      expect(trailingSlashPayload.stateDir).toBe(`${trailingSlashPayload.home}/.grokbot`);
     } finally {
       await fs.rm(tempRoot, { recursive: true, force: true });
     }
   });
 
   it("keeps shell key generation independent of node", async () => {
-    const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-test-state-path-node-"));
+    const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-test-state-path-node-"));
     const fakeBin = path.join(tempRoot, "bin");
     const snippetFile = path.join(tempRoot, "state.sh");
     const functionFile = path.join(tempRoot, "state-function.sh");
@@ -245,7 +245,7 @@ describe("scripts/lib/openclaw-test-state", () => {
   });
 
   it("renders a reusable Docker shell function", async () => {
-    const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-test-state-function-"));
+    const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-test-state-function-"));
     const snippetFile = path.join(tempRoot, "state-function.sh");
     try {
       const { stdout } = await execFileAsync(process.execPath, [scriptPath, "shell-function"]);
@@ -261,7 +261,7 @@ describe("scripts/lib/openclaw-test-state", () => {
 
       const payload = JSON.parse(probe.stdout);
       expect(payload.home).toBe(`${payload.tmpDir}/${path.basename(payload.home)}`);
-      expect(payload.home).toContain("/openclaw-onboard-case-minimal-home.");
+      expect(payload.home).toContain("/grokbot-onboard-case-minimal-home.");
       expect(payload.agentDir).toBeNull();
       expect(payload.workspace).toBe(`${payload.home}/workspace`);
       expect(payload.secretKey).toMatch(secretKeyPattern);
@@ -275,7 +275,7 @@ describe("scripts/lib/openclaw-test-state", () => {
 
       const trailingPayload = JSON.parse(trailingProbe.stdout);
       expect(trailingPayload.home).toBe(`${trailingTmpDir}/${path.basename(trailingPayload.home)}`);
-      expect(trailingPayload.stateDir).toBe(`${trailingPayload.home}/.openclaw`);
+      expect(trailingPayload.stateDir).toBe(`${trailingPayload.home}/.grokbot`);
       expect(trailingPayload.workspace).toBe(`${trailingPayload.home}/workspace`);
 
       const existingHome = path.join(tempRoot, "existing-home");

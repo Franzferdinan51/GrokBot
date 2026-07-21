@@ -6,7 +6,7 @@ import path from "node:path";
 import * as tar from "tar";
 import { resolveStateDir } from "../../config/paths.js";
 import { isExactSemverVersion } from "../../infra/npm-registry-spec.js";
-import { resolveOpenClawPackageRootSync } from "../../infra/openclaw-root.js";
+import { resolveOpenClawPackageRootSync } from "../../infra/grokbot-root.js";
 import { runCommandWithTimeout } from "../../process/exec.js";
 import { VERSION } from "../../version.js";
 import {
@@ -15,7 +15,7 @@ import {
   type WorkerBundleManifestEntry,
 } from "./bundle-staging.js";
 
-export const WORKER_BUNDLE_MANIFEST_VERSION = "openclaw-worker-bundle-v1";
+export const WORKER_BUNDLE_MANIFEST_VERSION = "grokbot-worker-bundle-v1";
 const OPENCLAW_NPM_REGISTRY = "https://registry.npmjs.org/";
 const NPM_RELEASE_PROOF_TIMEOUT_MS = 60_000;
 const NPM_SHA512_INTEGRITY_PATTERN = /^sha512-[A-Za-z0-9+/]{86}==$/u;
@@ -75,7 +75,7 @@ function resolvePackageRoot(packageRoot: string | undefined): string {
     cwd: process.cwd(),
   });
   if (!resolved) {
-    throw new Error("Unable to locate the running OpenClaw package root for worker bundling");
+    throw new Error("Unable to locate the running GrokBot package root for worker bundling");
   }
   return resolved;
 }
@@ -172,14 +172,14 @@ async function verifyPublishedNpmRelease(params: {
   runCommand?: WorkerNpmProofCommandRunner;
 }): Promise<string> {
   const runCommand = params.runCommand ?? runCommandWithTimeout;
-  const temporaryRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-worker-npm-proof-"));
+  const temporaryRoot = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-worker-npm-proof-"));
   try {
     const published = parseNpmPackageIdentity(
       await runNpmProofCommand({
         argv: [
           "npm",
           "view",
-          `openclaw@${params.version}`,
+          `grokbot@${params.version}`,
           "name",
           "version",
           "dist.integrity",
@@ -187,24 +187,24 @@ async function verifyPublishedNpmRelease(params: {
           `--registry=${OPENCLAW_NPM_REGISTRY}`,
         ],
         cwd: temporaryRoot,
-        failureMessage: `OpenClaw ${params.version} is not published; use the worker bundle install`,
+        failureMessage: `GrokBot ${params.version} is not published; use the worker bundle install`,
         runCommand,
       }),
     );
     if (
-      published?.name !== "openclaw" ||
+      published?.name !== "grokbot" ||
       published.version !== params.version ||
       !NPM_SHA512_INTEGRITY_PATTERN.test(published.integrity)
     ) {
       throw new Error(
-        `Cannot verify exact public npm release openclaw@${params.version}; use the worker bundle install`,
+        `Cannot verify exact public npm release grokbot@${params.version}; use the worker bundle install`,
       );
     }
     const packedValue = await runNpmProofCommand({
       argv: [
         "npm",
         "pack",
-        `openclaw@${params.version}`,
+        `grokbot@${params.version}`,
         "--pack-destination",
         temporaryRoot,
         "--ignore-scripts",
@@ -213,7 +213,7 @@ async function verifyPublishedNpmRelease(params: {
       ],
       cwd: temporaryRoot,
       failureMessage:
-        "Unable to verify the installed OpenClaw package; use the worker bundle install",
+        "Unable to verify the installed GrokBot package; use the worker bundle install",
       runCommand,
     });
     const packed = Array.isArray(packedValue) ? parseNpmPackageIdentity(packedValue[0]) : undefined;
@@ -226,7 +226,7 @@ async function verifyPublishedNpmRelease(params: {
       packedTarballIntegrity = await hashNpmTarballIntegrity(packedTarballPath);
     } catch {
       throw new Error(
-        "Unable to verify the installed OpenClaw package; use the worker bundle install",
+        "Unable to verify the installed GrokBot package; use the worker bundle install",
       );
     }
     if (
@@ -236,7 +236,7 @@ async function verifyPublishedNpmRelease(params: {
       packedTarballIntegrity !== published.integrity
     ) {
       throw new Error(
-        `Installed OpenClaw ${params.version} does not match the published package; use the worker bundle install`,
+        `Installed GrokBot ${params.version} does not match the published package; use the worker bundle install`,
       );
     }
     const extractedRoot = path.join(temporaryRoot, "package");
@@ -255,7 +255,7 @@ async function verifyPublishedNpmRelease(params: {
     });
     if (packedBundle.bundleHash !== params.bundleHash) {
       throw new Error(
-        `Published OpenClaw ${params.version} does not match the prepared worker bundle; use the worker bundle install`,
+        `Published GrokBot ${params.version} does not match the prepared worker bundle; use the worker bundle install`,
       );
     }
     return published.integrity;
@@ -434,7 +434,7 @@ async function prepareWorkerBundle(
     : path.join(resolveStateDir(), "cache", "worker-bundles");
   const openclawVersion = (options.openclawVersion ?? VERSION).trim();
   if (!openclawVersion) {
-    throw new Error("Worker bundle requires a non-empty OpenClaw version");
+    throw new Error("Worker bundle requires a non-empty GrokBot version");
   }
   const protocolFeatures = normalizeProtocolFeatures(options.protocolFeatures ?? []);
   await fs.mkdir(cacheDir, { recursive: true });
@@ -517,6 +517,6 @@ export async function resolveWorkerNpmInstallationArtifact(params: {
     openclawVersion: version,
     packageIntegrity,
     protocolFeatures: params.bundle.protocolFeatures,
-    packageSpec: `openclaw@${version}`,
+    packageSpec: `grokbot@${version}`,
   };
 }

@@ -2,12 +2,12 @@
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { MAX_TIMER_TIMEOUT_MS } from "openclaw/plugin-sdk/number-runtime";
-import type { OpenKeyedStoreOptions } from "openclaw/plugin-sdk/plugin-state-runtime";
+import { MAX_TIMER_TIMEOUT_MS } from "grokbot/plugin-sdk/number-runtime";
+import type { OpenKeyedStoreOptions } from "grokbot/plugin-sdk/plugin-state-runtime";
 import {
   createPluginStateKeyedStoreForTests,
   resetPluginStateStoreForTests,
-} from "openclaw/plugin-sdk/plugin-state-test-runtime";
+} from "grokbot/plugin-sdk/plugin-state-test-runtime";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 const { runtimeRegistry } = vi.hoisted(() => ({
@@ -126,7 +126,7 @@ function restoreEnv(name: keyof typeof previousEnv): void {
 }
 
 async function makeTempDir(): Promise<string> {
-  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-acpx-service-"));
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-acpx-service-"));
   tempDirs.push(dir);
   return dir;
 }
@@ -151,7 +151,7 @@ afterEach(async () => {
 function createServiceContext(workspaceDir: string): OpenClawPluginServiceContext {
   return {
     workspaceDir,
-    stateDir: path.join(workspaceDir, ".openclaw-plugin-state"),
+    stateDir: path.join(workspaceDir, ".grokbot-plugin-state"),
     config: {},
     logger: {
       info: vi.fn(),
@@ -416,7 +416,7 @@ describe("createAcpxRuntimeService", () => {
       wrapperRoot,
       deps: processCleanupDeps,
     });
-    expect(ctx.logger.info).toHaveBeenCalledWith("reaped 2 stale OpenClaw-owned ACPX processes");
+    expect(ctx.logger.info).toHaveBeenCalledWith("reaped 2 stale GrokBot-owned ACPX processes");
 
     await service.stop?.(ctx);
   });
@@ -460,7 +460,7 @@ describe("createAcpxRuntimeService", () => {
       wrapperRoot,
       deps: processCleanupDeps,
     });
-    expect(ctx.logger.info).toHaveBeenCalledWith("reaped 2 stale OpenClaw-owned ACPX processes");
+    expect(ctx.logger.info).toHaveBeenCalledWith("reaped 2 stale GrokBot-owned ACPX processes");
     await expect(openProcessLeaseStore(ctx).lookup("lease-pending")).resolves.toBeUndefined();
 
     await service.stop?.(ctx);

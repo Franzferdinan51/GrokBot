@@ -2,8 +2,8 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { expectDefined } from "@openclaw/normalization-core";
-import { bundledPluginRootAt } from "openclaw/plugin-sdk/test-fixtures";
+import { expectDefined } from "@grokbot/normalization-core";
+import { bundledPluginRootAt } from "grokbot/plugin-sdk/test-fixtures";
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import type { OpenClawConfig } from "../config/config.js";
 import { withEnvAsync } from "../test-utils/env.js";
@@ -123,8 +123,8 @@ function createSuccessfulNpmUpdateResult(params?: {
 }) {
   return {
     ok: true,
-    pluginId: params?.pluginId ?? "opik-openclaw",
-    targetDir: params?.targetDir ?? "/tmp/opik-openclaw",
+    pluginId: params?.pluginId ?? "opik-grokbot",
+    targetDir: params?.targetDir ?? "/tmp/opik-grokbot",
     version: params?.version ?? "0.2.6",
     extensions: ["index.ts"],
     ...(params?.npmResolution ? { npmResolution: params.npmResolution } : {}),
@@ -140,7 +140,7 @@ function createSuccessfulClawHubUpdateResult(params?: {
   return {
     ok: true,
     pluginId: params?.pluginId ?? "legacy-chat",
-    targetDir: params?.targetDir ?? "/tmp/openclaw-plugins/legacy-chat",
+    targetDir: params?.targetDir ?? "/tmp/grokbot-plugins/legacy-chat",
     version: params?.version ?? "2026.5.1-beta.2",
     extensions: ["index.ts"],
     packageName: params?.clawhubPackage ?? "legacy-chat",
@@ -324,10 +324,10 @@ function createCodexAppServerInstallConfig(params: {
   return {
     plugins: {
       installs: {
-        "openclaw-codex-app-server": {
+        "grokbot-codex-app-server": {
           source: "npm" as const,
           spec: params.spec,
-          installPath: "/tmp/openclaw-codex-app-server",
+          installPath: "/tmp/grokbot-codex-app-server",
           ...(params.resolvedName ? { resolvedName: params.resolvedName } : {}),
           ...(params.resolvedSpec ? { resolvedSpec: params.resolvedSpec } : {}),
         },
@@ -342,7 +342,7 @@ function createInstalledPackageDir(params: {
   peerDependencies?: Record<string, string>;
   runnable?: boolean;
 }): string {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-plugin-update-test-"));
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-plugin-update-test-"));
   tempDirs.push(dir);
   fs.writeFileSync(
     path.join(dir, "package.json"),
@@ -351,7 +351,7 @@ function createInstalledPackageDir(params: {
         name: params.name ?? "test-plugin",
         version: params.version,
         ...(params.peerDependencies ? { peerDependencies: params.peerDependencies } : {}),
-        ...(params.runnable ? { openclaw: { extensions: ["./index.js"] } } : {}),
+        ...(params.runnable ? { grokbot: { extensions: ["./index.js"] } } : {}),
       },
       null,
       2,
@@ -364,7 +364,7 @@ function createInstalledPackageDir(params: {
 }
 
 function createOpenClawPeerLinkFixtures(plugins: Array<{ pluginId: string; packageName: string }>) {
-  const peerTarget = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-peer-target-"));
+  const peerTarget = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-peer-target-"));
   tempDirs.push(peerTarget);
   const installPaths = Object.fromEntries(
     plugins.map(({ pluginId, packageName }) => [
@@ -372,7 +372,7 @@ function createOpenClawPeerLinkFixtures(plugins: Array<{ pluginId: string; packa
       createInstalledPackageDir({
         name: packageName,
         version: "2026.5.4",
-        peerDependencies: { openclaw: ">=2026.5.4" },
+        peerDependencies: { grokbot: ">=2026.5.4" },
       }),
     ]),
   );
@@ -380,7 +380,7 @@ function createOpenClawPeerLinkFixtures(plugins: Array<{ pluginId: string; packa
     path.join(
       expectDefined(installPaths[pluginId], "installPaths[pluginId] test invariant"),
       "node_modules",
-      "openclaw",
+      "grokbot",
     );
   const linkPeer = (pluginId: string) => {
     fs.mkdirSync(path.dirname(peerLinkPath(pluginId)), { recursive: true });
@@ -394,7 +394,7 @@ function mockNpmViewMetadata(params: {
   version: string;
   integrity?: string;
   shasum?: string;
-  openclaw?: Record<string, unknown>;
+  grokbot?: Record<string, unknown>;
 }) {
   runCommandWithTimeoutMock.mockResolvedValueOnce({
     code: 0,
@@ -403,7 +403,7 @@ function mockNpmViewMetadata(params: {
       version: params.version,
       ...(params.integrity ? { "dist.integrity": params.integrity } : {}),
       ...(params.shasum ? { "dist.shasum": params.shasum } : {}),
-      ...(params.openclaw ? { openclaw: params.openclaw } : {}),
+      ...(params.grokbot ? { grokbot: params.grokbot } : {}),
     }),
     stderr: "",
   });
@@ -483,7 +483,7 @@ function createBundledSource(params?: { pluginId?: string; localPath?: string; n
   return {
     pluginId,
     localPath: params?.localPath ?? appBundledPluginRoot(pluginId),
-    npmSpec: params?.npmSpec ?? `@openclaw/${pluginId}`,
+    npmSpec: params?.npmSpec ?? `@grokbot/${pluginId}`,
   };
 }
 
@@ -513,10 +513,10 @@ function expectCodexAppServerInstallState(params: {
   version: string;
   resolvedSpec?: string;
 }) {
-  const install = params.result.config.plugins?.installs?.["openclaw-codex-app-server"];
+  const install = params.result.config.plugins?.installs?.["grokbot-codex-app-server"];
   expect(install?.source).toBe("npm");
   expect(install?.spec).toBe(params.spec);
-  expect(install?.installPath).toBe("/tmp/openclaw-codex-app-server");
+  expect(install?.installPath).toBe("/tmp/grokbot-codex-app-server");
   expect(install?.version).toBe(params.version);
   if (params.resolvedSpec) {
     expect(install?.resolvedSpec).toBe(params.resolvedSpec);
@@ -616,52 +616,52 @@ describe("updateNpmInstalledPlugins", () => {
     {
       name: "skips integrity drift checks for unpinned npm specs during dry-run updates",
       config: createNpmInstallConfig({
-        pluginId: "opik-openclaw",
-        spec: "@opik/opik-openclaw",
+        pluginId: "opik-grokbot",
+        spec: "@opik/opik-grokbot",
         integrity: "sha512-old",
-        installPath: "/tmp/opik-openclaw",
+        installPath: "/tmp/opik-grokbot",
       }),
-      pluginIds: ["opik-openclaw"],
+      pluginIds: ["opik-grokbot"],
       dryRun: true,
       expectedCall: {
-        spec: "@opik/opik-openclaw",
+        spec: "@opik/opik-grokbot",
         expectedIntegrity: undefined,
       },
     },
     {
       name: "keeps integrity drift checks for exact-version npm specs during dry-run updates",
       config: createNpmInstallConfig({
-        pluginId: "opik-openclaw",
-        spec: "@opik/opik-openclaw@0.2.5",
+        pluginId: "opik-grokbot",
+        spec: "@opik/opik-grokbot@0.2.5",
         integrity: "sha512-old",
-        installPath: "/tmp/opik-openclaw",
+        installPath: "/tmp/opik-grokbot",
       }),
-      pluginIds: ["opik-openclaw"],
+      pluginIds: ["opik-grokbot"],
       dryRun: true,
       expectedCall: {
-        spec: "@opik/opik-openclaw@0.2.5",
+        spec: "@opik/opik-grokbot@0.2.5",
         expectedIntegrity: "sha512-old",
       },
     },
     {
       name: "skips recorded integrity checks when an explicit npm version override changes the spec",
       config: createNpmInstallConfig({
-        pluginId: "openclaw-codex-app-server",
-        spec: "openclaw-codex-app-server@0.2.0-beta.3",
+        pluginId: "grokbot-codex-app-server",
+        spec: "grokbot-codex-app-server@0.2.0-beta.3",
         integrity: "sha512-old",
-        installPath: "/tmp/openclaw-codex-app-server",
+        installPath: "/tmp/grokbot-codex-app-server",
       }),
-      pluginIds: ["openclaw-codex-app-server"],
+      pluginIds: ["grokbot-codex-app-server"],
       specOverrides: {
-        "openclaw-codex-app-server": "openclaw-codex-app-server@0.2.0-beta.4",
+        "grokbot-codex-app-server": "grokbot-codex-app-server@0.2.0-beta.4",
       },
       installerResult: createSuccessfulNpmUpdateResult({
-        pluginId: "openclaw-codex-app-server",
-        targetDir: "/tmp/openclaw-codex-app-server",
+        pluginId: "grokbot-codex-app-server",
+        targetDir: "/tmp/grokbot-codex-app-server",
         version: "0.2.0-beta.4",
       }),
       expectedCall: {
-        spec: "openclaw-codex-app-server@0.2.0-beta.4",
+        spec: "grokbot-codex-app-server@0.2.0-beta.4",
         expectedIntegrity: undefined,
       },
     },
@@ -694,11 +694,11 @@ describe("updateNpmInstalledPlugins", () => {
 
   it("trusts official catalog npm updates when the installed package matches the catalog", async () => {
     const installPath = createInstalledPackageDir({
-      name: "@openclaw/acpx",
+      name: "@grokbot/acpx",
       version: "2026.5.2-beta.1",
     });
     mockNpmViewMetadata({
-      name: "@openclaw/acpx",
+      name: "@grokbot/acpx",
       version: "2026.5.2-beta.2",
     });
     installPluginFromNpmSpecMock.mockResolvedValue(
@@ -707,9 +707,9 @@ describe("updateNpmInstalledPlugins", () => {
         targetDir: installPath,
         version: "2026.5.2-beta.2",
         npmResolution: {
-          name: "@openclaw/acpx",
+          name: "@grokbot/acpx",
           version: "2026.5.2-beta.2",
-          resolvedSpec: "@openclaw/acpx@2026.5.2-beta.2",
+          resolvedSpec: "@grokbot/acpx@2026.5.2-beta.2",
         },
       }),
     );
@@ -717,29 +717,29 @@ describe("updateNpmInstalledPlugins", () => {
     const result = await updateNpmInstalledPlugins({
       config: createNpmInstallConfig({
         pluginId: "acpx",
-        spec: "@openclaw/acpx",
+        spec: "@grokbot/acpx",
         installPath,
-        resolvedName: "@openclaw/acpx",
-        resolvedSpec: "@openclaw/acpx@2026.5.2-beta.1",
+        resolvedName: "@grokbot/acpx",
+        resolvedSpec: "@grokbot/acpx@2026.5.2-beta.1",
         resolvedVersion: "2026.5.2-beta.1",
       }),
       pluginIds: ["acpx"],
       syncOfficialPluginInstalls: true,
     });
 
-    expect(npmInstallCall()?.spec).toBe("@openclaw/acpx");
+    expect(npmInstallCall()?.spec).toBe("@grokbot/acpx");
     expect(npmInstallCall()?.expectedPluginId).toBe("acpx");
     expect(npmInstallCall()?.trustedSourceLinkedOfficialInstall).toBe(true);
-    expect(result.config.plugins?.installs?.acpx?.spec).toBe("@openclaw/acpx@2026.5.2-beta.2");
+    expect(result.config.plugins?.installs?.acpx?.spec).toBe("@grokbot/acpx@2026.5.2-beta.2");
   });
 
   it("pins unchanged official npm records during official sync", async () => {
     const installPath = createInstalledPackageDir({
-      name: "@openclaw/acpx",
+      name: "@grokbot/acpx",
       version: "2026.5.2",
     });
     mockNpmViewMetadata({
-      name: "@openclaw/acpx",
+      name: "@grokbot/acpx",
       version: "2026.5.2",
       integrity: "sha512-old",
     });
@@ -747,10 +747,10 @@ describe("updateNpmInstalledPlugins", () => {
     const result = await updateNpmInstalledPlugins({
       config: createNpmInstallConfig({
         pluginId: "acpx",
-        spec: "@openclaw/acpx",
+        spec: "@grokbot/acpx",
         installPath,
-        resolvedName: "@openclaw/acpx",
-        resolvedSpec: "@openclaw/acpx@2026.5.2",
+        resolvedName: "@grokbot/acpx",
+        resolvedSpec: "@grokbot/acpx@2026.5.2",
         resolvedVersion: "2026.5.2",
         integrity: "sha512-old",
         installedAt: "2026-05-01T00:00:00.000Z",
@@ -762,7 +762,7 @@ describe("updateNpmInstalledPlugins", () => {
 
     expect(result.changed).toBe(true);
     expect(result.outcomes[0]?.status).toBe("unchanged");
-    expect(result.config.plugins?.installs?.acpx?.spec).toBe("@openclaw/acpx@2026.5.2");
+    expect(result.config.plugins?.installs?.acpx?.spec).toBe("@grokbot/acpx@2026.5.2");
     expect(result.config.plugins?.installs?.acpx?.installedAt).toBe("2026-05-01T00:00:00.000Z");
     expect(result.config.plugins?.installs?.acpx?.resolvedAt).toBe("2026-05-01T00:00:01.000Z");
     expect(npmInstallCall()).toBeUndefined();
@@ -770,11 +770,11 @@ describe("updateNpmInstalledPlugins", () => {
 
   it("keeps integrity drift checks for exact official pins during official sync", async () => {
     const installPath = createInstalledPackageDir({
-      name: "@openclaw/acpx",
+      name: "@grokbot/acpx",
       version: "2026.5.2",
     });
     mockNpmViewMetadata({
-      name: "@openclaw/acpx",
+      name: "@grokbot/acpx",
       version: "2026.5.2",
       integrity: "sha512-new",
     });
@@ -784,9 +784,9 @@ describe("updateNpmInstalledPlugins", () => {
         targetDir: installPath,
         version: "2026.5.2",
         npmResolution: {
-          name: "@openclaw/acpx",
+          name: "@grokbot/acpx",
           version: "2026.5.2",
-          resolvedSpec: "@openclaw/acpx@2026.5.2",
+          resolvedSpec: "@grokbot/acpx@2026.5.2",
         },
       }),
     );
@@ -794,10 +794,10 @@ describe("updateNpmInstalledPlugins", () => {
     await updateNpmInstalledPlugins({
       config: createNpmInstallConfig({
         pluginId: "acpx",
-        spec: "@openclaw/acpx@2026.5.2",
+        spec: "@grokbot/acpx@2026.5.2",
         installPath,
-        resolvedName: "@openclaw/acpx",
-        resolvedSpec: "@openclaw/acpx@2026.5.2",
+        resolvedName: "@grokbot/acpx",
+        resolvedSpec: "@grokbot/acpx@2026.5.2",
         resolvedVersion: "2026.5.2",
         integrity: "sha512-old",
       }),
@@ -806,7 +806,7 @@ describe("updateNpmInstalledPlugins", () => {
     });
 
     expectNpmUpdateCall({
-      spec: "@openclaw/acpx",
+      spec: "@grokbot/acpx",
       expectedPluginId: "acpx",
       expectedIntegrity: "sha512-old",
     });
@@ -814,14 +814,14 @@ describe("updateNpmInstalledPlugins", () => {
 
   it("skips integrity checks when official sync may choose a compatible fallback", async () => {
     const installPath = createInstalledPackageDir({
-      name: "@openclaw/acpx",
+      name: "@grokbot/acpx",
       version: "2026.5.2",
     });
     mockNpmViewMetadata({
-      name: "@openclaw/acpx",
+      name: "@grokbot/acpx",
       version: "2026.5.2",
       integrity: "sha512-old",
-      openclaw: {
+      grokbot: {
         compat: { pluginApi: ">=9999.0.0" },
       },
     });
@@ -831,9 +831,9 @@ describe("updateNpmInstalledPlugins", () => {
         targetDir: installPath,
         version: "2026.5.1",
         npmResolution: {
-          name: "@openclaw/acpx",
+          name: "@grokbot/acpx",
           version: "2026.5.1",
-          resolvedSpec: "@openclaw/acpx@2026.5.1",
+          resolvedSpec: "@grokbot/acpx@2026.5.1",
         },
       }),
     );
@@ -841,10 +841,10 @@ describe("updateNpmInstalledPlugins", () => {
     await updateNpmInstalledPlugins({
       config: createNpmInstallConfig({
         pluginId: "acpx",
-        spec: "@openclaw/acpx@2026.5.2",
+        spec: "@grokbot/acpx@2026.5.2",
         installPath,
-        resolvedName: "@openclaw/acpx",
-        resolvedSpec: "@openclaw/acpx@2026.5.2",
+        resolvedName: "@grokbot/acpx",
+        resolvedSpec: "@grokbot/acpx@2026.5.2",
         resolvedVersion: "2026.5.2",
         integrity: "sha512-old",
       }),
@@ -853,7 +853,7 @@ describe("updateNpmInstalledPlugins", () => {
     });
 
     expectNpmUpdateCall({
-      spec: "@openclaw/acpx",
+      spec: "@grokbot/acpx",
       expectedPluginId: "acpx",
       expectedIntegrity: undefined,
     });
@@ -861,17 +861,17 @@ describe("updateNpmInstalledPlugins", () => {
 
   it("keeps integrity drift checks when official latest falls back to pinned stable", async () => {
     const installPath = createInstalledPackageDir({
-      name: "@openclaw/acpx",
+      name: "@grokbot/acpx",
       version: "2026.5.2",
     });
     mockNpmViewMetadata({
-      name: "@openclaw/acpx",
+      name: "@grokbot/acpx",
       version: "2026.5.3-beta.1",
       integrity: "sha512-beta",
     });
     mockNpmViewVersions(["2026.5.2", "2026.5.3-beta.1"]);
     mockNpmViewMetadata({
-      name: "@openclaw/acpx",
+      name: "@grokbot/acpx",
       version: "2026.5.2",
       integrity: "sha512-old",
     });
@@ -881,9 +881,9 @@ describe("updateNpmInstalledPlugins", () => {
         targetDir: installPath,
         version: "2026.5.2",
         npmResolution: {
-          name: "@openclaw/acpx",
+          name: "@grokbot/acpx",
           version: "2026.5.2",
-          resolvedSpec: "@openclaw/acpx@2026.5.2",
+          resolvedSpec: "@grokbot/acpx@2026.5.2",
         },
       }),
     );
@@ -891,10 +891,10 @@ describe("updateNpmInstalledPlugins", () => {
     await updateNpmInstalledPlugins({
       config: createNpmInstallConfig({
         pluginId: "acpx",
-        spec: "@openclaw/acpx@2026.5.2",
+        spec: "@grokbot/acpx@2026.5.2",
         installPath,
-        resolvedName: "@openclaw/acpx",
-        resolvedSpec: "@openclaw/acpx@2026.5.2",
+        resolvedName: "@grokbot/acpx",
+        resolvedSpec: "@grokbot/acpx@2026.5.2",
         resolvedVersion: "2026.5.2",
         integrity: "sha512-old",
       }),
@@ -903,7 +903,7 @@ describe("updateNpmInstalledPlugins", () => {
     });
 
     expectNpmUpdateCall({
-      spec: "@openclaw/acpx",
+      spec: "@grokbot/acpx",
       expectedPluginId: "acpx",
       expectedIntegrity: "sha512-old",
     });
@@ -911,11 +911,11 @@ describe("updateNpmInstalledPlugins", () => {
 
   it("keeps integrity drift checks for exact prerelease-only official pins", async () => {
     const installPath = createInstalledPackageDir({
-      name: "@openclaw/voice-call",
+      name: "@grokbot/voice-call",
       version: "0.0.2-beta.1",
     });
     mockNpmViewMetadata({
-      name: "@openclaw/voice-call",
+      name: "@grokbot/voice-call",
       version: "0.0.2-beta.1",
       integrity: "sha512-beta",
     });
@@ -926,9 +926,9 @@ describe("updateNpmInstalledPlugins", () => {
         targetDir: installPath,
         version: "0.0.2-beta.1",
         npmResolution: {
-          name: "@openclaw/voice-call",
+          name: "@grokbot/voice-call",
           version: "0.0.2-beta.1",
-          resolvedSpec: "@openclaw/voice-call@0.0.2-beta.1",
+          resolvedSpec: "@grokbot/voice-call@0.0.2-beta.1",
         },
       }),
     );
@@ -936,10 +936,10 @@ describe("updateNpmInstalledPlugins", () => {
     await updateNpmInstalledPlugins({
       config: createNpmInstallConfig({
         pluginId: "voice-call",
-        spec: "@openclaw/voice-call@0.0.2-beta.1",
+        spec: "@grokbot/voice-call@0.0.2-beta.1",
         installPath,
-        resolvedName: "@openclaw/voice-call",
-        resolvedSpec: "@openclaw/voice-call@0.0.2-beta.1",
+        resolvedName: "@grokbot/voice-call",
+        resolvedSpec: "@grokbot/voice-call@0.0.2-beta.1",
         resolvedVersion: "0.0.2-beta.1",
         integrity: "sha512-old",
       }),
@@ -948,7 +948,7 @@ describe("updateNpmInstalledPlugins", () => {
     });
 
     expectNpmUpdateCall({
-      spec: "@openclaw/voice-call",
+      spec: "@grokbot/voice-call",
       expectedPluginId: "voice-call",
       expectedIntegrity: "sha512-old",
     });
@@ -956,23 +956,23 @@ describe("updateNpmInstalledPlugins", () => {
 
   it("keeps integrity drift checks for exact official pins during beta fallback", async () => {
     const installPath = createInstalledPackageDir({
-      name: "@openclaw/acpx",
+      name: "@grokbot/acpx",
       version: "2026.5.2",
     });
     mockNpmViewMetadata({
-      name: "@openclaw/acpx",
+      name: "@grokbot/acpx",
       version: "2026.5.3-beta.1",
       integrity: "sha512-beta",
     });
     mockNpmViewMetadata({
-      name: "@openclaw/acpx",
+      name: "@grokbot/acpx",
       version: "2026.5.2",
       integrity: "sha512-old",
     });
     installPluginFromNpmSpecMock
       .mockResolvedValueOnce({
         ok: false,
-        error: "No matching version found for @openclaw/acpx@beta",
+        error: "No matching version found for @grokbot/acpx@beta",
         code: "npm_package_not_found",
       })
       .mockResolvedValueOnce(
@@ -981,9 +981,9 @@ describe("updateNpmInstalledPlugins", () => {
           targetDir: installPath,
           version: "2026.5.2",
           npmResolution: {
-            name: "@openclaw/acpx",
+            name: "@grokbot/acpx",
             version: "2026.5.2",
-            resolvedSpec: "@openclaw/acpx@2026.5.2",
+            resolvedSpec: "@grokbot/acpx@2026.5.2",
           },
         }),
       );
@@ -991,10 +991,10 @@ describe("updateNpmInstalledPlugins", () => {
     await updateNpmInstalledPlugins({
       config: createNpmInstallConfig({
         pluginId: "acpx",
-        spec: "@openclaw/acpx@2026.5.2",
+        spec: "@grokbot/acpx@2026.5.2",
         installPath,
-        resolvedName: "@openclaw/acpx",
-        resolvedSpec: "@openclaw/acpx@2026.5.2",
+        resolvedName: "@grokbot/acpx",
+        resolvedSpec: "@grokbot/acpx@2026.5.2",
         resolvedVersion: "2026.5.2",
         integrity: "sha512-old",
       }),
@@ -1003,37 +1003,37 @@ describe("updateNpmInstalledPlugins", () => {
       updateChannel: "beta",
     });
 
-    expect(npmInstallCall(0)?.spec).toBe("@openclaw/acpx@beta");
+    expect(npmInstallCall(0)?.spec).toBe("@grokbot/acpx@beta");
     expect(npmInstallCall(0)?.expectedIntegrity).toBeUndefined();
-    expect(npmInstallCall(1)?.spec).toBe("@openclaw/acpx");
+    expect(npmInstallCall(1)?.spec).toBe("@grokbot/acpx");
     expect(npmInstallCall(1)?.expectedIntegrity).toBe("sha512-old");
   });
 
   it("keeps integrity checks when beta fallback bare spec resolves to a prerelease first", async () => {
     const installPath = createInstalledPackageDir({
-      name: "@openclaw/acpx",
+      name: "@grokbot/acpx",
       version: "2026.5.2",
     });
     mockNpmViewMetadata({
-      name: "@openclaw/acpx",
+      name: "@grokbot/acpx",
       version: "2026.5.3-beta.1",
       integrity: "sha512-beta",
     });
     mockNpmViewMetadata({
-      name: "@openclaw/acpx",
+      name: "@grokbot/acpx",
       version: "2026.5.3-beta.1",
       integrity: "sha512-beta",
     });
     mockNpmViewVersions(["2026.5.2", "2026.5.3-beta.1"]);
     mockNpmViewMetadata({
-      name: "@openclaw/acpx",
+      name: "@grokbot/acpx",
       version: "2026.5.2",
       integrity: "sha512-old",
     });
     installPluginFromNpmSpecMock
       .mockResolvedValueOnce({
         ok: false,
-        error: "No matching version found for @openclaw/acpx@beta",
+        error: "No matching version found for @grokbot/acpx@beta",
         code: "npm_package_not_found",
       })
       .mockResolvedValueOnce(
@@ -1042,9 +1042,9 @@ describe("updateNpmInstalledPlugins", () => {
           targetDir: installPath,
           version: "2026.5.2",
           npmResolution: {
-            name: "@openclaw/acpx",
+            name: "@grokbot/acpx",
             version: "2026.5.2",
-            resolvedSpec: "@openclaw/acpx@2026.5.2",
+            resolvedSpec: "@grokbot/acpx@2026.5.2",
           },
         }),
       );
@@ -1052,10 +1052,10 @@ describe("updateNpmInstalledPlugins", () => {
     await updateNpmInstalledPlugins({
       config: createNpmInstallConfig({
         pluginId: "acpx",
-        spec: "@openclaw/acpx@2026.5.2",
+        spec: "@grokbot/acpx@2026.5.2",
         installPath,
-        resolvedName: "@openclaw/acpx",
-        resolvedSpec: "@openclaw/acpx@2026.5.2",
+        resolvedName: "@grokbot/acpx",
+        resolvedSpec: "@grokbot/acpx@2026.5.2",
         resolvedVersion: "2026.5.2",
         integrity: "sha512-old",
       }),
@@ -1064,34 +1064,34 @@ describe("updateNpmInstalledPlugins", () => {
       updateChannel: "beta",
     });
 
-    expect(npmInstallCall(0)?.spec).toBe("@openclaw/acpx@beta");
+    expect(npmInstallCall(0)?.spec).toBe("@grokbot/acpx@beta");
     expect(npmInstallCall(0)?.expectedIntegrity).toBeUndefined();
-    expect(npmInstallCall(1)?.spec).toBe("@openclaw/acpx");
+    expect(npmInstallCall(1)?.spec).toBe("@grokbot/acpx");
     expect(npmInstallCall(1)?.expectedIntegrity).toBe("sha512-old");
   });
 
   it("skips fallback integrity checks when official fallback may choose a compatible version", async () => {
     const installPath = createInstalledPackageDir({
-      name: "@openclaw/acpx",
+      name: "@grokbot/acpx",
       version: "2026.5.2",
     });
     mockNpmViewMetadata({
-      name: "@openclaw/acpx",
+      name: "@grokbot/acpx",
       version: "2026.5.3-beta.1",
       integrity: "sha512-beta",
     });
     mockNpmViewMetadata({
-      name: "@openclaw/acpx",
+      name: "@grokbot/acpx",
       version: "2026.5.2",
       integrity: "sha512-old",
-      openclaw: {
+      grokbot: {
         compat: { pluginApi: ">=9999.0.0" },
       },
     });
     installPluginFromNpmSpecMock
       .mockResolvedValueOnce({
         ok: false,
-        error: "No matching version found for @openclaw/acpx@beta",
+        error: "No matching version found for @grokbot/acpx@beta",
         code: "npm_package_not_found",
       })
       .mockResolvedValueOnce(
@@ -1100,9 +1100,9 @@ describe("updateNpmInstalledPlugins", () => {
           targetDir: installPath,
           version: "2026.5.1",
           npmResolution: {
-            name: "@openclaw/acpx",
+            name: "@grokbot/acpx",
             version: "2026.5.1",
-            resolvedSpec: "@openclaw/acpx@2026.5.1",
+            resolvedSpec: "@grokbot/acpx@2026.5.1",
           },
         }),
       );
@@ -1110,10 +1110,10 @@ describe("updateNpmInstalledPlugins", () => {
     await updateNpmInstalledPlugins({
       config: createNpmInstallConfig({
         pluginId: "acpx",
-        spec: "@openclaw/acpx@2026.5.2",
+        spec: "@grokbot/acpx@2026.5.2",
         installPath,
-        resolvedName: "@openclaw/acpx",
-        resolvedSpec: "@openclaw/acpx@2026.5.2",
+        resolvedName: "@grokbot/acpx",
+        resolvedSpec: "@grokbot/acpx@2026.5.2",
         resolvedVersion: "2026.5.2",
         integrity: "sha512-old",
       }),
@@ -1122,9 +1122,9 @@ describe("updateNpmInstalledPlugins", () => {
       updateChannel: "beta",
     });
 
-    expect(npmInstallCall(0)?.spec).toBe("@openclaw/acpx@beta");
+    expect(npmInstallCall(0)?.spec).toBe("@grokbot/acpx@beta");
     expect(npmInstallCall(0)?.expectedIntegrity).toBeUndefined();
-    expect(npmInstallCall(1)?.spec).toBe("@openclaw/acpx");
+    expect(npmInstallCall(1)?.spec).toBe("@grokbot/acpx");
     expect(npmInstallCall(1)?.expectedIntegrity).toBeUndefined();
   });
 
@@ -1211,11 +1211,11 @@ describe("updateNpmInstalledPlugins", () => {
 
   it("does not skip trusted official default updates when latest resolves to the installed prerelease", async () => {
     const installPath = createInstalledPackageDir({
-      name: "@openclaw/acpx",
+      name: "@grokbot/acpx",
       version: "2026.5.2-beta.2",
     });
     mockNpmViewMetadata({
-      name: "@openclaw/acpx",
+      name: "@grokbot/acpx",
       version: "2026.5.2-beta.2",
       integrity: "sha512-beta",
       shasum: "beta",
@@ -1226,9 +1226,9 @@ describe("updateNpmInstalledPlugins", () => {
         targetDir: installPath,
         version: "2026.5.2",
         npmResolution: {
-          name: "@openclaw/acpx",
+          name: "@grokbot/acpx",
           version: "2026.5.2",
-          resolvedSpec: "@openclaw/acpx@2026.5.2",
+          resolvedSpec: "@grokbot/acpx@2026.5.2",
         },
       }),
     );
@@ -1236,19 +1236,19 @@ describe("updateNpmInstalledPlugins", () => {
     const result = await updateNpmInstalledPlugins({
       config: createNpmInstallConfig({
         pluginId: "acpx",
-        spec: "@openclaw/acpx@2026.5.2-beta.2",
+        spec: "@grokbot/acpx@2026.5.2-beta.2",
         installPath,
         integrity: "sha512-beta",
         shasum: "beta",
-        resolvedName: "@openclaw/acpx",
-        resolvedSpec: "@openclaw/acpx@2026.5.2-beta.2",
+        resolvedName: "@grokbot/acpx",
+        resolvedSpec: "@grokbot/acpx@2026.5.2-beta.2",
         resolvedVersion: "2026.5.2-beta.2",
       }),
       pluginIds: ["acpx"],
       syncOfficialPluginInstalls: true,
     });
 
-    expect(npmInstallCall()?.spec).toBe("@openclaw/acpx");
+    expect(npmInstallCall()?.spec).toBe("@grokbot/acpx");
     expect(npmInstallCall()?.expectedIntegrity).toBeUndefined();
     expect(npmInstallCall()?.expectedPluginId).toBe("acpx");
     expect(npmInstallCall()?.trustedSourceLinkedOfficialInstall).toBe(true);
@@ -1260,11 +1260,11 @@ describe("updateNpmInstalledPlugins", () => {
 
   it("updates trusted official npm plugins when latest resolves to a stable correction release", async () => {
     const installPath = createInstalledPackageDir({
-      name: "@openclaw/acpx",
+      name: "@grokbot/acpx",
       version: "2026.5.3",
     });
     mockNpmViewMetadata({
-      name: "@openclaw/acpx",
+      name: "@grokbot/acpx",
       version: "2026.5.3-1",
       integrity: "sha512-correction",
       shasum: "correction",
@@ -1275,9 +1275,9 @@ describe("updateNpmInstalledPlugins", () => {
         targetDir: installPath,
         version: "2026.5.3-1",
         npmResolution: {
-          name: "@openclaw/acpx",
+          name: "@grokbot/acpx",
           version: "2026.5.3-1",
-          resolvedSpec: "@openclaw/acpx@2026.5.3-1",
+          resolvedSpec: "@grokbot/acpx@2026.5.3-1",
         },
       }),
     );
@@ -1285,16 +1285,16 @@ describe("updateNpmInstalledPlugins", () => {
     const result = await updateNpmInstalledPlugins({
       config: createNpmInstallConfig({
         pluginId: "acpx",
-        spec: "@openclaw/acpx",
+        spec: "@grokbot/acpx",
         installPath,
-        resolvedName: "@openclaw/acpx",
-        resolvedSpec: "@openclaw/acpx@2026.5.3",
+        resolvedName: "@grokbot/acpx",
+        resolvedSpec: "@grokbot/acpx@2026.5.3",
         resolvedVersion: "2026.5.3",
       }),
       pluginIds: ["acpx"],
     });
 
-    expect(npmInstallCall()?.spec).toBe("@openclaw/acpx");
+    expect(npmInstallCall()?.spec).toBe("@grokbot/acpx");
     expect(npmInstallCall()?.expectedPluginId).toBe("acpx");
     expect(npmInstallCall()?.trustedSourceLinkedOfficialInstall).toBe(true);
     expect(result.outcomes[0]?.pluginId).toBe("acpx");
@@ -1377,7 +1377,7 @@ describe("updateNpmInstalledPlugins", () => {
       "version",
       "dist.integrity",
       "dist.shasum",
-      "openclaw",
+      "grokbot",
       "--json",
     ]);
     if (npmViewCall()?.[1] === undefined) {
@@ -1459,7 +1459,7 @@ describe("updateNpmInstalledPlugins", () => {
         "version",
         "dist.integrity",
         "dist.shasum",
-        "openclaw",
+        "grokbot",
         "--json",
       ]);
       expect(result.changed).toBe(false);
@@ -1473,7 +1473,7 @@ describe("updateNpmInstalledPlugins", () => {
           message:
             `demo is pinned to @acme/demo@1.2.3 (installed 1.2.3); ` +
             `registry ${updateChannel === "beta" ? "beta" : "latest"} resolves to ${registryVersion}. ` +
-            `Pass \`openclaw plugins update ${overrideSpec}\` to follow that registry line.`,
+            `Pass \`grokbot plugins update ${overrideSpec}\` to follow that registry line.`,
         },
       ]);
     },
@@ -1526,7 +1526,7 @@ describe("updateNpmInstalledPlugins", () => {
       "version",
       "dist.integrity",
       "dist.shasum",
-      "openclaw",
+      "grokbot",
       "--json",
     ]);
     expect(result.outcomes).toEqual([
@@ -1537,7 +1537,7 @@ describe("updateNpmInstalledPlugins", () => {
         nextVersion: "1.2.4",
         message:
           "demo is pinned to @acme/demo@1.2.3 (installed 1.2.3); registry latest resolves to 1.2.4. " +
-          "Pass `openclaw plugins update @acme/demo@latest` to follow that registry line.",
+          "Pass `grokbot plugins update @acme/demo@latest` to follow that registry line.",
       },
     ]);
   });
@@ -1545,15 +1545,15 @@ describe("updateNpmInstalledPlugins", () => {
   it("does not skip unchanged npm plugins when package metadata requires a newer plugin API", async () => {
     vi.stubEnv("OPENCLAW_COMPATIBILITY_HOST_VERSION", "2026.5.28-beta.3");
     const installPath = createInstalledPackageDir({
-      name: "@openclaw/msteams",
+      name: "@grokbot/msteams",
       version: "2026.5.28-beta.4",
     });
     mockNpmViewMetadata({
-      name: "@openclaw/msteams",
+      name: "@grokbot/msteams",
       version: "2026.5.28-beta.4",
       integrity: "sha512-newer",
       shasum: "newer",
-      openclaw: {
+      grokbot: {
         extensions: ["./dist/index.js"],
         compat: { pluginApi: ">=2026.5.28-beta.4" },
       },
@@ -1564,9 +1564,9 @@ describe("updateNpmInstalledPlugins", () => {
         targetDir: installPath,
         version: "2026.5.28-beta.3",
         npmResolution: {
-          name: "@openclaw/msteams",
+          name: "@grokbot/msteams",
           version: "2026.5.28-beta.3",
-          resolvedSpec: "@openclaw/msteams@2026.5.28-beta.3",
+          resolvedSpec: "@grokbot/msteams@2026.5.28-beta.3",
         },
       }),
     );
@@ -1574,27 +1574,27 @@ describe("updateNpmInstalledPlugins", () => {
     const result = await updateNpmInstalledPlugins({
       config: createNpmInstallConfig({
         pluginId: "msteams",
-        spec: "@openclaw/msteams",
+        spec: "@grokbot/msteams",
         installPath,
-        resolvedName: "@openclaw/msteams",
+        resolvedName: "@grokbot/msteams",
         resolvedVersion: "2026.5.28-beta.4",
-        resolvedSpec: "@openclaw/msteams@2026.5.28-beta.4",
+        resolvedSpec: "@grokbot/msteams@2026.5.28-beta.4",
         integrity: "sha512-newer",
         shasum: "newer",
       }),
       pluginIds: ["msteams"],
     });
 
-    expect(npmInstallCall()?.spec).toBe("@openclaw/msteams");
+    expect(npmInstallCall()?.spec).toBe("@grokbot/msteams");
     expect(npmInstallCall()?.mode).toBe("update");
     expect(npmInstallCall()?.expectedPluginId).toBe("msteams");
     expect(result.changed).toBe(true);
     expectRecordFields(result.config.plugins?.installs?.msteams, {
       source: "npm",
       version: "2026.5.28-beta.3",
-      resolvedName: "@openclaw/msteams",
+      resolvedName: "@grokbot/msteams",
       resolvedVersion: "2026.5.28-beta.3",
-      resolvedSpec: "@openclaw/msteams@2026.5.28-beta.3",
+      resolvedSpec: "@grokbot/msteams@2026.5.28-beta.3",
     });
     expect(result.outcomes).toEqual([
       {
@@ -1610,15 +1610,15 @@ describe("updateNpmInstalledPlugins", () => {
   it("does not skip unchanged npm plugins when package metadata requires a newer host", async () => {
     vi.stubEnv("OPENCLAW_COMPATIBILITY_HOST_VERSION", "2026.5.28-beta.3");
     const installPath = createInstalledPackageDir({
-      name: "@openclaw/msteams",
+      name: "@grokbot/msteams",
       version: "2026.5.28-beta.4",
     });
     mockNpmViewMetadata({
-      name: "@openclaw/msteams",
+      name: "@grokbot/msteams",
       version: "2026.5.28-beta.4",
       integrity: "sha512-newer",
       shasum: "newer",
-      openclaw: {
+      grokbot: {
         extensions: ["./dist/index.js"],
         install: { minHostVersion: ">=2026.5.28-beta.4" },
       },
@@ -1629,9 +1629,9 @@ describe("updateNpmInstalledPlugins", () => {
         targetDir: installPath,
         version: "2026.5.28-beta.3",
         npmResolution: {
-          name: "@openclaw/msteams",
+          name: "@grokbot/msteams",
           version: "2026.5.28-beta.3",
-          resolvedSpec: "@openclaw/msteams@2026.5.28-beta.3",
+          resolvedSpec: "@grokbot/msteams@2026.5.28-beta.3",
         },
       }),
     );
@@ -1639,37 +1639,37 @@ describe("updateNpmInstalledPlugins", () => {
     const result = await updateNpmInstalledPlugins({
       config: createNpmInstallConfig({
         pluginId: "msteams",
-        spec: "@openclaw/msteams",
+        spec: "@grokbot/msteams",
         installPath,
-        resolvedName: "@openclaw/msteams",
+        resolvedName: "@grokbot/msteams",
         resolvedVersion: "2026.5.28-beta.4",
-        resolvedSpec: "@openclaw/msteams@2026.5.28-beta.4",
+        resolvedSpec: "@grokbot/msteams@2026.5.28-beta.4",
         integrity: "sha512-newer",
         shasum: "newer",
       }),
       pluginIds: ["msteams"],
     });
 
-    expect(npmInstallCall()?.spec).toBe("@openclaw/msteams");
+    expect(npmInstallCall()?.spec).toBe("@grokbot/msteams");
     expect(npmInstallCall()?.mode).toBe("update");
     expect(result.changed).toBe(true);
     expectRecordFields(result.config.plugins?.installs?.msteams, {
       source: "npm",
       version: "2026.5.28-beta.3",
-      resolvedName: "@openclaw/msteams",
+      resolvedName: "@grokbot/msteams",
       resolvedVersion: "2026.5.28-beta.3",
-      resolvedSpec: "@openclaw/msteams@2026.5.28-beta.3",
+      resolvedSpec: "@grokbot/msteams@2026.5.28-beta.3",
     });
   });
 
-  it("repairs missing openclaw peer links before skipping unchanged npm plugins", async () => {
+  it("repairs missing grokbot peer links before skipping unchanged npm plugins", async () => {
     const installPath = createInstalledPackageDir({
-      name: "@openclaw/codex",
+      name: "@grokbot/codex",
       version: "2026.5.3",
-      peerDependencies: { openclaw: ">=2026.5.3" },
+      peerDependencies: { grokbot: ">=2026.5.3" },
     });
     mockNpmViewMetadata({
-      name: "@openclaw/codex",
+      name: "@grokbot/codex",
       version: "2026.5.3",
       integrity: "sha512-same",
       shasum: "same",
@@ -1680,9 +1680,9 @@ describe("updateNpmInstalledPlugins", () => {
         targetDir: installPath,
         version: "2026.5.3",
         npmResolution: {
-          name: "@openclaw/codex",
+          name: "@grokbot/codex",
           version: "2026.5.3",
-          resolvedSpec: "@openclaw/codex@2026.5.3",
+          resolvedSpec: "@grokbot/codex@2026.5.3",
         },
       }),
     );
@@ -1691,11 +1691,11 @@ describe("updateNpmInstalledPlugins", () => {
         installs: {
           codex: {
             source: "npm",
-            spec: "@openclaw/codex",
+            spec: "@grokbot/codex",
             installPath,
-            resolvedName: "@openclaw/codex",
+            resolvedName: "@grokbot/codex",
             resolvedVersion: "2026.5.3",
-            resolvedSpec: "@openclaw/codex@2026.5.3",
+            resolvedSpec: "@grokbot/codex@2026.5.3",
             integrity: "sha512-same",
             shasum: "same",
           },
@@ -1708,7 +1708,7 @@ describe("updateNpmInstalledPlugins", () => {
       pluginIds: ["codex"],
     });
 
-    expect(npmInstallCall()?.spec).toBe("@openclaw/codex");
+    expect(npmInstallCall()?.spec).toBe("@grokbot/codex");
     expect(npmInstallCall()?.mode).toBe("update");
     expect(npmInstallCall()?.expectedPluginId).toBe("codex");
     expect(result.changed).toBe(true);
@@ -1723,15 +1723,15 @@ describe("updateNpmInstalledPlugins", () => {
     ]);
   });
 
-  it("skips unchanged npm plugins when the openclaw peer link already resolves", async () => {
+  it("skips unchanged npm plugins when the grokbot peer link already resolves", async () => {
     const installPath = createInstalledPackageDir({
-      name: "@openclaw/codex",
+      name: "@grokbot/codex",
       version: "2026.5.3",
-      peerDependencies: { openclaw: ">=2026.5.3" },
+      peerDependencies: { grokbot: ">=2026.5.3" },
     });
-    fs.mkdirSync(path.join(installPath, "node_modules", "openclaw"), { recursive: true });
+    fs.mkdirSync(path.join(installPath, "node_modules", "grokbot"), { recursive: true });
     mockNpmViewMetadata({
-      name: "@openclaw/codex",
+      name: "@grokbot/codex",
       version: "2026.5.3",
       integrity: "sha512-same",
       shasum: "same",
@@ -1744,11 +1744,11 @@ describe("updateNpmInstalledPlugins", () => {
           installs: {
             codex: {
               source: "npm",
-              spec: "@openclaw/codex",
+              spec: "@grokbot/codex",
               installPath,
-              resolvedName: "@openclaw/codex",
+              resolvedName: "@grokbot/codex",
               resolvedVersion: "2026.5.3",
-              resolvedSpec: "@openclaw/codex@2026.5.3",
+              resolvedSpec: "@grokbot/codex@2026.5.3",
               integrity: "sha512-same",
               shasum: "same",
             },
@@ -1771,11 +1771,11 @@ describe("updateNpmInstalledPlugins", () => {
     ]);
   });
 
-  it("repairs openclaw peer links after batch npm updates prune earlier plugin links", async () => {
+  it("repairs grokbot peer links after batch npm updates prune earlier plugin links", async () => {
     const plugins = [
-      { pluginId: "brave", packageName: "@openclaw/brave-plugin" },
-      { pluginId: "codex", packageName: "@openclaw/codex" },
-      { pluginId: "discord", packageName: "@openclaw/discord" },
+      { pluginId: "brave", packageName: "@grokbot/brave-plugin" },
+      { pluginId: "codex", packageName: "@grokbot/codex" },
+      { pluginId: "discord", packageName: "@grokbot/discord" },
     ];
     const { installPaths, peerLinkPath, linkPeer } = createOpenClawPeerLinkFixtures(plugins);
     for (const { packageName } of plugins) {
@@ -1847,17 +1847,17 @@ describe("updateNpmInstalledPlugins", () => {
     );
   });
 
-  it("repairs sibling openclaw peer links after a targeted npm update prunes the shared install tree", async () => {
+  it("repairs sibling grokbot peer links after a targeted npm update prunes the shared install tree", async () => {
     const plugins = [
-      { pluginId: "brave", packageName: "@openclaw/brave-plugin" },
-      { pluginId: "codex", packageName: "@openclaw/codex" },
-      { pluginId: "discord", packageName: "@openclaw/discord" },
+      { pluginId: "brave", packageName: "@grokbot/brave-plugin" },
+      { pluginId: "codex", packageName: "@grokbot/codex" },
+      { pluginId: "discord", packageName: "@grokbot/discord" },
     ];
     const { installPaths, peerLinkPath, linkPeer } = createOpenClawPeerLinkFixtures(plugins);
     linkPeer("brave");
     linkPeer("discord");
     mockNpmViewMetadata({
-      name: "@openclaw/codex",
+      name: "@grokbot/codex",
       version: "2026.5.4",
       integrity: "sha512-same",
       shasum: "same",
@@ -1873,9 +1873,9 @@ describe("updateNpmInstalledPlugins", () => {
           targetDir: installPaths.codex,
           version: "2026.5.4",
           npmResolution: {
-            name: "@openclaw/codex",
+            name: "@grokbot/codex",
             version: "2026.5.4",
-            resolvedSpec: "@openclaw/codex@2026.5.4",
+            resolvedSpec: "@grokbot/codex@2026.5.4",
           },
         }),
       );
@@ -1910,21 +1910,21 @@ describe("updateNpmInstalledPlugins", () => {
     }
   });
 
-  it("continues repairing sibling openclaw peer links after one recorded npm install cannot be relinked", async () => {
+  it("continues repairing sibling grokbot peer links after one recorded npm install cannot be relinked", async () => {
     const plugins = [
-      { pluginId: "brave", packageName: "@openclaw/brave-plugin" },
-      { pluginId: "codex", packageName: "@openclaw/codex" },
+      { pluginId: "brave", packageName: "@grokbot/brave-plugin" },
+      { pluginId: "codex", packageName: "@grokbot/codex" },
     ];
     const { installPaths, peerLinkPath, linkPeer } = createOpenClawPeerLinkFixtures(plugins);
     const brokenInstallPath = createInstalledPackageDir({
-      name: "@openclaw/broken-plugin",
+      name: "@grokbot/broken-plugin",
       version: "2026.5.4",
-      peerDependencies: { openclaw: ">=2026.5.4" },
+      peerDependencies: { grokbot: ">=2026.5.4" },
     });
     fs.writeFileSync(path.join(brokenInstallPath, "node_modules"), "not a directory");
     linkPeer("brave");
     mockNpmViewMetadata({
-      name: "@openclaw/codex",
+      name: "@grokbot/codex",
       version: "2026.5.4",
       integrity: "sha512-same",
       shasum: "same",
@@ -1940,9 +1940,9 @@ describe("updateNpmInstalledPlugins", () => {
           targetDir: installPaths.codex,
           version: "2026.5.4",
           npmResolution: {
-            name: "@openclaw/codex",
+            name: "@grokbot/codex",
             version: "2026.5.4",
-            resolvedSpec: "@openclaw/codex@2026.5.4",
+            resolvedSpec: "@grokbot/codex@2026.5.4",
           },
         }),
       );
@@ -1955,11 +1955,11 @@ describe("updateNpmInstalledPlugins", () => {
           installs: {
             broken: {
               source: "npm",
-              spec: "@openclaw/broken-plugin",
+              spec: "@grokbot/broken-plugin",
               installPath: brokenInstallPath,
-              resolvedName: "@openclaw/broken-plugin",
+              resolvedName: "@grokbot/broken-plugin",
               resolvedVersion: "2026.5.4",
-              resolvedSpec: "@openclaw/broken-plugin@2026.5.4",
+              resolvedSpec: "@grokbot/broken-plugin@2026.5.4",
             },
             ...Object.fromEntries(
               plugins.map(({ pluginId, packageName }) => [
@@ -1987,7 +1987,7 @@ describe("updateNpmInstalledPlugins", () => {
     expect(fs.existsSync(peerLinkPath("brave"))).toBe(true);
     expect(fs.existsSync(peerLinkPath("codex"))).toBe(true);
     expect(warnMessages).toEqual([
-      `Could not repair openclaw peer link for "broken" at ${brokenInstallPath}: Skipping openclaw peerDependency link because ${path.join(brokenInstallPath, "node_modules")} is not a real directory.`,
+      `Could not repair grokbot peer link for "broken" at ${brokenInstallPath}: Skipping grokbot peerDependency link because ${path.join(brokenInstallPath, "node_modules")} is not a real directory.`,
     ]);
   });
 
@@ -2042,9 +2042,9 @@ describe("updateNpmInstalledPlugins", () => {
   });
 
   it("expands home-relative install paths before checking installed npm versions", async () => {
-    const home = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-plugin-update-home-"));
+    const home = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-plugin-update-home-"));
     tempDirs.push(home);
-    const installPath = path.join(home, ".openclaw", "extensions", "lossless-claw");
+    const installPath = path.join(home, ".grokbot", "extensions", "lossless-claw");
     fs.mkdirSync(installPath, { recursive: true });
     fs.writeFileSync(
       path.join(installPath, "package.json"),
@@ -2063,7 +2063,7 @@ describe("updateNpmInstalledPlugins", () => {
         config: createNpmInstallConfig({
           pluginId: "lossless-claw",
           spec: "@martian-engineering/lossless-claw",
-          installPath: "~/.openclaw/extensions/lossless-claw",
+          installPath: "~/.grokbot/extensions/lossless-claw",
           resolvedName: "@martian-engineering/lossless-claw",
           resolvedVersion: "0.9.0",
           resolvedSpec: "@martian-engineering/lossless-claw@0.9.0",
@@ -2344,7 +2344,7 @@ describe("updateNpmInstalledPlugins", () => {
     });
 
     const message =
-      'Disabled "lossless-claw" after plugin update failure; OpenClaw will continue without it. Failed to check lossless-claw: npm view failed: registry timeout';
+      'Disabled "lossless-claw" after plugin update failure; GrokBot will continue without it. Failed to check lossless-claw: npm view failed: registry timeout';
     expect(warn).toHaveBeenCalledWith(message);
     expect(result.changed).toBe(true);
     expect(result.config.plugins?.entries?.["lossless-claw"]).toEqual({
@@ -2410,7 +2410,7 @@ describe("updateNpmInstalledPlugins", () => {
 
   it("disables a missing plugin payload when metadata probing also fails", async () => {
     const warn = vi.fn();
-    const installPath = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-plugin-update-missing-"));
+    const installPath = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-plugin-update-missing-"));
     tempDirs.push(installPath);
     installPluginFromNpmSpecMock.mockResolvedValue({
       ok: false,
@@ -2446,7 +2446,7 @@ describe("updateNpmInstalledPlugins", () => {
     });
 
     const message =
-      'Disabled "demo" after plugin update failure; OpenClaw will continue without it. Failed to update demo: npm view failed: registry timeout';
+      'Disabled "demo" after plugin update failure; GrokBot will continue without it. Failed to update demo: npm view failed: registry timeout';
     expect(warn).toHaveBeenCalledWith(message);
     expect(result.changed).toBe(true);
     expect(result.config.plugins?.entries?.demo).toEqual({
@@ -2566,11 +2566,11 @@ describe("updateNpmInstalledPlugins", () => {
 
   it("updates disabled trusted official npm installs from the channel spec when requested", async () => {
     const installPath = createInstalledPackageDir({
-      name: "@openclaw/codex",
+      name: "@grokbot/codex",
       version: "2026.5.3",
     });
     mockNpmViewMetadata({
-      name: "@openclaw/codex",
+      name: "@grokbot/codex",
       version: "2026.5.4",
       integrity: "sha512-next",
       shasum: "next",
@@ -2581,9 +2581,9 @@ describe("updateNpmInstalledPlugins", () => {
         targetDir: installPath,
         version: "2026.5.4",
         npmResolution: {
-          name: "@openclaw/codex",
+          name: "@grokbot/codex",
           version: "2026.5.4",
-          resolvedSpec: "@openclaw/codex@2026.5.4",
+          resolvedSpec: "@grokbot/codex@2026.5.4",
         },
       }),
     );
@@ -2600,7 +2600,7 @@ describe("updateNpmInstalledPlugins", () => {
           installs: {
             codex: {
               source: "npm",
-              spec: "@openclaw/codex@2026.5.3",
+              spec: "@grokbot/codex@2026.5.3",
               installPath,
             },
           },
@@ -2610,7 +2610,7 @@ describe("updateNpmInstalledPlugins", () => {
       syncOfficialPluginInstalls: true,
     });
 
-    expect(npmInstallCall()?.spec).toBe("@openclaw/codex");
+    expect(npmInstallCall()?.spec).toBe("@grokbot/codex");
     expect(npmInstallCall()?.expectedPluginId).toBe("codex");
     expect(npmInstallCall()?.trustedSourceLinkedOfficialInstall).toBe(true);
     expect(result.changed).toBe(true);
@@ -2620,11 +2620,11 @@ describe("updateNpmInstalledPlugins", () => {
     });
     expectRecordFields(result.config.plugins?.installs?.codex, {
       source: "npm",
-      spec: "@openclaw/codex@2026.5.4",
+      spec: "@grokbot/codex@2026.5.4",
       version: "2026.5.4",
-      resolvedName: "@openclaw/codex",
+      resolvedName: "@grokbot/codex",
       resolvedVersion: "2026.5.4",
-      resolvedSpec: "@openclaw/codex@2026.5.4",
+      resolvedSpec: "@grokbot/codex@2026.5.4",
     });
     expectRecordFields(result.outcomes[0], {
       pluginId: "codex",
@@ -2636,7 +2636,7 @@ describe("updateNpmInstalledPlugins", () => {
 
   it("preserves exact official npm pins when official install sync is not requested", async () => {
     const installPath = createInstalledPackageDir({
-      name: "@openclaw/codex",
+      name: "@grokbot/codex",
       version: "2026.5.28",
     });
     installPluginFromNpmSpecMock.mockResolvedValue(
@@ -2645,9 +2645,9 @@ describe("updateNpmInstalledPlugins", () => {
         targetDir: installPath,
         version: "2026.5.28",
         npmResolution: {
-          name: "@openclaw/codex",
+          name: "@grokbot/codex",
           version: "2026.5.28",
-          resolvedSpec: "@openclaw/codex@2026.5.28",
+          resolvedSpec: "@grokbot/codex@2026.5.28",
         },
       }),
     );
@@ -2655,17 +2655,17 @@ describe("updateNpmInstalledPlugins", () => {
     const result = await updateNpmInstalledPlugins({
       config: createNpmInstallConfig({
         pluginId: "codex",
-        spec: "@openclaw/codex@2026.5.28",
+        spec: "@grokbot/codex@2026.5.28",
         installPath,
-        resolvedName: "@openclaw/codex",
-        resolvedSpec: "@openclaw/codex@2026.5.28",
+        resolvedName: "@grokbot/codex",
+        resolvedSpec: "@grokbot/codex@2026.5.28",
         resolvedVersion: "2026.5.28",
       }),
       pluginIds: ["codex"],
       dryRun: true,
     });
 
-    expect(npmInstallCall()?.spec).toBe("@openclaw/codex@2026.5.28");
+    expect(npmInstallCall()?.spec).toBe("@grokbot/codex@2026.5.28");
     expect(npmInstallCall()?.expectedPluginId).toBe("codex");
     expect(npmInstallCall()?.trustedSourceLinkedOfficialInstall).toBe(true);
     expect(result.changed).toBe(false);
@@ -2678,7 +2678,7 @@ describe("updateNpmInstalledPlugins", () => {
   });
 
   it("reinstalls missing exact official npm pins without official install sync", async () => {
-    const extensionsDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-missing-plugin-"));
+    const extensionsDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-missing-plugin-"));
     tempDirs.push(extensionsDir);
     const installPath = path.join(extensionsDir, "codex");
     installPluginFromNpmSpecMock.mockResolvedValue(
@@ -2687,9 +2687,9 @@ describe("updateNpmInstalledPlugins", () => {
         targetDir: installPath,
         version: "2026.5.28",
         npmResolution: {
-          name: "@openclaw/codex",
+          name: "@grokbot/codex",
           version: "2026.5.28",
-          resolvedSpec: "@openclaw/codex@2026.5.28",
+          resolvedSpec: "@grokbot/codex@2026.5.28",
         },
       }),
     );
@@ -2697,25 +2697,25 @@ describe("updateNpmInstalledPlugins", () => {
     const result = await updateNpmInstalledPlugins({
       config: createNpmInstallConfig({
         pluginId: "codex",
-        spec: "@openclaw/codex@2026.5.28",
+        spec: "@grokbot/codex@2026.5.28",
         installPath,
-        resolvedName: "@openclaw/codex",
-        resolvedSpec: "@openclaw/codex@2026.5.28",
+        resolvedName: "@grokbot/codex",
+        resolvedSpec: "@grokbot/codex@2026.5.28",
         resolvedVersion: "2026.5.28",
       }),
       pluginIds: ["codex"],
     });
 
-    expect(npmInstallCall()?.spec).toBe("@openclaw/codex@2026.5.28");
+    expect(npmInstallCall()?.spec).toBe("@grokbot/codex@2026.5.28");
     expect(npmInstallCall()?.extensionsDir).toBe(extensionsDir);
     expect(runCommandWithTimeoutMock).not.toHaveBeenCalled();
     expectRecordFields(result.config.plugins?.installs?.codex, {
       source: "npm",
-      spec: "@openclaw/codex@2026.5.28",
+      spec: "@grokbot/codex@2026.5.28",
       installPath,
       version: "2026.5.28",
-      resolvedName: "@openclaw/codex",
-      resolvedSpec: "@openclaw/codex@2026.5.28",
+      resolvedName: "@grokbot/codex",
+      resolvedSpec: "@grokbot/codex@2026.5.28",
       resolvedVersion: "2026.5.28",
     });
     expectRecordFields(result.outcomes[0], {
@@ -2726,11 +2726,11 @@ describe("updateNpmInstalledPlugins", () => {
   });
 
   it("keeps integrity checks when official sync repairs missing exact npm pins", async () => {
-    const extensionsDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-missing-plugin-"));
+    const extensionsDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-missing-plugin-"));
     tempDirs.push(extensionsDir);
     const installPath = path.join(extensionsDir, "codex");
     mockNpmViewMetadata({
-      name: "@openclaw/codex",
+      name: "@grokbot/codex",
       version: "2026.5.28",
       integrity: "sha512-old",
     });
@@ -2740,9 +2740,9 @@ describe("updateNpmInstalledPlugins", () => {
         targetDir: installPath,
         version: "2026.5.28",
         npmResolution: {
-          name: "@openclaw/codex",
+          name: "@grokbot/codex",
           version: "2026.5.28",
-          resolvedSpec: "@openclaw/codex@2026.5.28",
+          resolvedSpec: "@grokbot/codex@2026.5.28",
         },
       }),
     );
@@ -2750,10 +2750,10 @@ describe("updateNpmInstalledPlugins", () => {
     await updateNpmInstalledPlugins({
       config: createNpmInstallConfig({
         pluginId: "codex",
-        spec: "@openclaw/codex@2026.5.28",
+        spec: "@grokbot/codex@2026.5.28",
         installPath,
-        resolvedName: "@openclaw/codex",
-        resolvedSpec: "@openclaw/codex@2026.5.28",
+        resolvedName: "@grokbot/codex",
+        resolvedSpec: "@grokbot/codex@2026.5.28",
         resolvedVersion: "2026.5.28",
         integrity: "sha512-old",
       }),
@@ -2761,7 +2761,7 @@ describe("updateNpmInstalledPlugins", () => {
       syncOfficialPluginInstalls: true,
     });
 
-    expect(npmInstallCall()?.spec).toBe("@openclaw/codex");
+    expect(npmInstallCall()?.spec).toBe("@grokbot/codex");
     expect(npmInstallCall()?.expectedIntegrity).toBe("sha512-old");
   });
 
@@ -2898,7 +2898,7 @@ describe("updateNpmInstalledPlugins", () => {
         "version",
         "dist.integrity",
         "dist.shasum",
-        "openclaw",
+        "grokbot",
         "--json",
       ]);
       expectRecordFields(result.outcomes[0], {
@@ -2906,7 +2906,7 @@ describe("updateNpmInstalledPlugins", () => {
         status: "unchanged",
         currentVersion: "1.2.3",
         nextVersion: "1.2.4",
-        message: `demo is pinned to ${spec} (installed 1.2.3); registry latest resolves to 1.2.4. Pass \`openclaw plugins update @acme/demo@latest\` to follow that registry line.`,
+        message: `demo is pinned to ${spec} (installed 1.2.3); registry latest resolves to 1.2.4. Pass \`grokbot plugins update @acme/demo@latest\` to follow that registry line.`,
       });
     },
   );
@@ -2917,7 +2917,7 @@ describe("updateNpmInstalledPlugins", () => {
         pluginId: "diagnostics-otel",
         targetDir: "/tmp/diagnostics-otel",
         version: "2026.5.4",
-        clawhubPackage: "@openclaw/diagnostics-otel",
+        clawhubPackage: "@grokbot/diagnostics-otel",
       }),
     );
 
@@ -2925,10 +2925,10 @@ describe("updateNpmInstalledPlugins", () => {
       pluginId: "diagnostics-otel",
       installPath: "/tmp/diagnostics-otel",
       clawhubUrl: "https://clawhub.ai",
-      clawhubPackage: "@openclaw/diagnostics-otel",
+      clawhubPackage: "@grokbot/diagnostics-otel",
       clawhubFamily: "code-plugin",
       clawhubChannel: "official",
-      spec: "clawhub:@openclaw/diagnostics-otel@2026.5.3",
+      spec: "clawhub:@grokbot/diagnostics-otel@2026.5.3",
     });
     const result = await updateNpmInstalledPlugins({
       config: {
@@ -2947,13 +2947,13 @@ describe("updateNpmInstalledPlugins", () => {
       syncOfficialPluginInstalls: true,
     });
 
-    expect(clawHubInstallCall()?.spec).toBe("clawhub:@openclaw/diagnostics-otel");
+    expect(clawHubInstallCall()?.spec).toBe("clawhub:@grokbot/diagnostics-otel");
     expect(clawHubInstallCall()?.expectedPluginId).toBe("diagnostics-otel");
     expectRecordFields(result.config.plugins?.installs?.["diagnostics-otel"], {
       source: "clawhub",
-      spec: "clawhub:@openclaw/diagnostics-otel",
+      spec: "clawhub:@grokbot/diagnostics-otel",
       version: "2026.5.4",
-      clawhubPackage: "@openclaw/diagnostics-otel",
+      clawhubPackage: "@grokbot/diagnostics-otel",
       clawhubChannel: "official",
     });
     expect(result.config.plugins?.entries?.["diagnostics-otel"]).toEqual({
@@ -2968,7 +2968,7 @@ describe("updateNpmInstalledPlugins", () => {
         pluginId: "diagnostics-prometheus",
         targetDir: "/tmp/diagnostics-prometheus",
         version: "2026.5.4",
-        clawhubPackage: "@openclaw/diagnostics-prometheus",
+        clawhubPackage: "@grokbot/diagnostics-prometheus",
       }),
     );
 
@@ -2978,7 +2978,7 @@ describe("updateNpmInstalledPlugins", () => {
           installs: {
             "diagnostics-prometheus": {
               source: "clawhub",
-              spec: "clawhub:@openclaw/diagnostics-prometheus@2026.5.3",
+              spec: "clawhub:@grokbot/diagnostics-prometheus@2026.5.3",
               installPath: "/tmp/diagnostics-prometheus",
             },
           },
@@ -2987,13 +2987,13 @@ describe("updateNpmInstalledPlugins", () => {
       syncOfficialPluginInstalls: true,
     });
 
-    expect(clawHubInstallCall()?.spec).toBe("clawhub:@openclaw/diagnostics-prometheus");
+    expect(clawHubInstallCall()?.spec).toBe("clawhub:@grokbot/diagnostics-prometheus");
     expect(clawHubInstallCall()?.expectedPluginId).toBe("diagnostics-prometheus");
     expectRecordFields(result.config.plugins?.installs?.["diagnostics-prometheus"], {
       source: "clawhub",
-      spec: "clawhub:@openclaw/diagnostics-prometheus",
+      spec: "clawhub:@grokbot/diagnostics-prometheus",
       version: "2026.5.4",
-      clawhubPackage: "@openclaw/diagnostics-prometheus",
+      clawhubPackage: "@grokbot/diagnostics-prometheus",
       clawhubChannel: "official",
     });
   });
@@ -3080,7 +3080,7 @@ describe("updateNpmInstalledPlugins", () => {
     expect(npmInstallCall()?.spec).toBe("@acme/demo");
     expect(npmInstallCall()?.expectedPluginId).toBe("demo");
     const message =
-      'Disabled "demo" after plugin update failure; OpenClaw will continue without it. Failed to update demo: registry timeout';
+      'Disabled "demo" after plugin update failure; GrokBot will continue without it. Failed to update demo: registry timeout';
     expect(warn).toHaveBeenCalledWith(message);
     expect(result.changed).toBe(true);
     expect(result.config.plugins?.entries?.demo).toEqual({
@@ -3181,7 +3181,7 @@ describe("updateNpmInstalledPlugins", () => {
       warning:
         "╭─ WARNING - ClawHub found security risks in this release ─╮\n│ • Finding: suspicious payload strings │\n╰───────────────────────────────────────────────────────────────────────╯",
     });
-    const installPath = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-plugin-update-missing-"));
+    const installPath = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-plugin-update-missing-"));
     tempDirs.push(installPath);
     const config = createClawHubInstallConfig({
       pluginId: "demo",
@@ -3213,7 +3213,7 @@ describe("updateNpmInstalledPlugins", () => {
 
     expect(clawHubInstallCall()?.spec).toBe("clawhub:demo");
     const message =
-      'Disabled "demo" after plugin update failure; OpenClaw will continue without it. Failed to update demo: Update cancelled; rerun with --acknowledge-clawhub-risk to continue after reviewing the warning. (ClawHub clawhub:demo).';
+      'Disabled "demo" after plugin update failure; GrokBot will continue without it. Failed to update demo: Update cancelled; rerun with --acknowledge-clawhub-risk to continue after reviewing the warning. (ClawHub clawhub:demo).';
     expect(result.changed).toBe(true);
     expect(result.config.plugins?.entries?.demo).toEqual({
       enabled: false,
@@ -3373,7 +3373,7 @@ describe("updateNpmInstalledPlugins", () => {
       memory: "memory-core",
     });
     const message =
-      'Disabled "demo" after plugin update failure; OpenClaw will continue without it. Failed to update demo: ClawHub blocked this release; update was not started. (ClawHub clawhub:demo).';
+      'Disabled "demo" after plugin update failure; GrokBot will continue without it. Failed to update demo: ClawHub blocked this release; update was not started. (ClawHub clawhub:demo).';
     expect(warn).toHaveBeenCalledWith(message);
     expect(result.outcomes).toEqual([
       {
@@ -3397,14 +3397,14 @@ describe("updateNpmInstalledPlugins", () => {
           actualIntegrity: "sha512-new",
           resolution: {
             integrity: "sha512-new",
-            resolvedSpec: "@opik/opik-openclaw@0.2.5",
+            resolvedSpec: "@opik/opik-grokbot@0.2.5",
             version: "0.2.5",
           },
         });
         if (proceed === false) {
           return {
             ok: false,
-            error: "aborted: npm package integrity drift detected for @opik/opik-openclaw@0.2.5",
+            error: "aborted: npm package integrity drift detected for @opik/opik-grokbot@0.2.5",
           };
         }
         return createSuccessfulNpmUpdateResult();
@@ -3412,28 +3412,28 @@ describe("updateNpmInstalledPlugins", () => {
     );
 
     const config = createNpmInstallConfig({
-      pluginId: "opik-openclaw",
-      spec: "@opik/opik-openclaw@0.2.5",
+      pluginId: "opik-grokbot",
+      spec: "@opik/opik-grokbot@0.2.5",
       integrity: "sha512-old",
-      installPath: "/tmp/opik-openclaw",
+      installPath: "/tmp/opik-grokbot",
     });
     const result = await updateNpmInstalledPlugins({
       config,
-      pluginIds: ["opik-openclaw"],
+      pluginIds: ["opik-grokbot"],
       logger: { warn },
     });
 
     expect(warn).toHaveBeenCalledWith(
-      'Integrity drift for "opik-openclaw" (@opik/opik-openclaw@0.2.5): expected sha512-old, got sha512-new',
+      'Integrity drift for "opik-grokbot" (@opik/opik-grokbot@0.2.5): expected sha512-old, got sha512-new',
     );
     expect(result.changed).toBe(false);
     expect(result.config).toBe(config);
     expect(result.outcomes).toEqual([
       {
-        pluginId: "opik-openclaw",
+        pluginId: "opik-grokbot",
         status: "error",
         message:
-          "Failed to update opik-openclaw: aborted: npm package integrity drift detected for @opik/opik-openclaw@0.2.5",
+          "Failed to update opik-grokbot: aborted: npm package integrity drift detected for @opik/opik-grokbot@0.2.5",
       },
     ]);
   });
@@ -3444,15 +3444,15 @@ describe("updateNpmInstalledPlugins", () => {
       installerResult: {
         ok: false,
         code: "npm_package_not_found",
-        error: "Package not found on npm: @openclaw/missing.",
+        error: "Package not found on npm: @grokbot/missing.",
       },
       config: createNpmInstallConfig({
         pluginId: "missing",
-        spec: "@openclaw/missing",
+        spec: "@grokbot/missing",
         installPath: "/tmp/missing",
       }),
       pluginId: "missing",
-      expectedMessage: "Failed to check missing: npm package not found for @openclaw/missing.",
+      expectedMessage: "Failed to check missing: npm package not found for @grokbot/missing.",
     },
     {
       name: "falls back to raw installer error for unknown error codes",
@@ -3492,43 +3492,43 @@ describe("updateNpmInstalledPlugins", () => {
       name: "reuses a recorded npm dist-tag spec for id-based updates",
       installerResult: {
         ok: true,
-        pluginId: "openclaw-codex-app-server",
-        targetDir: "/tmp/openclaw-codex-app-server",
+        pluginId: "grokbot-codex-app-server",
+        targetDir: "/tmp/grokbot-codex-app-server",
         version: "0.2.0-beta.4",
         extensions: ["index.ts"],
       },
       config: createCodexAppServerInstallConfig({
-        spec: "openclaw-codex-app-server@beta",
-        resolvedName: "openclaw-codex-app-server",
-        resolvedSpec: "openclaw-codex-app-server@0.2.0-beta.3",
+        spec: "grokbot-codex-app-server@beta",
+        resolvedName: "grokbot-codex-app-server",
+        resolvedSpec: "grokbot-codex-app-server@0.2.0-beta.3",
       }),
-      expectedSpec: "openclaw-codex-app-server@beta",
+      expectedSpec: "grokbot-codex-app-server@beta",
       expectedVersion: "0.2.0-beta.4",
     },
     {
       name: "uses and persists an explicit npm spec override during updates",
       installerResult: {
         ok: true,
-        pluginId: "openclaw-codex-app-server",
-        targetDir: "/tmp/openclaw-codex-app-server",
+        pluginId: "grokbot-codex-app-server",
+        targetDir: "/tmp/grokbot-codex-app-server",
         version: "0.2.0-beta.4",
         extensions: ["index.ts"],
         npmResolution: {
-          name: "openclaw-codex-app-server",
+          name: "grokbot-codex-app-server",
           version: "0.2.0-beta.4",
-          resolvedSpec: "openclaw-codex-app-server@0.2.0-beta.4",
+          resolvedSpec: "grokbot-codex-app-server@0.2.0-beta.4",
         },
       },
       config: createCodexAppServerInstallConfig({
-        spec: "openclaw-codex-app-server",
+        spec: "grokbot-codex-app-server",
       }),
       specOverrides: {
-        "openclaw-codex-app-server": "openclaw-codex-app-server@beta",
+        "grokbot-codex-app-server": "grokbot-codex-app-server@beta",
       },
-      expectedSpec: "openclaw-codex-app-server@beta",
-      expectedRecordSpec: "openclaw-codex-app-server@beta",
+      expectedSpec: "grokbot-codex-app-server@beta",
+      expectedRecordSpec: "grokbot-codex-app-server@beta",
       expectedVersion: "0.2.0-beta.4",
-      expectedResolvedSpec: "openclaw-codex-app-server@0.2.0-beta.4",
+      expectedResolvedSpec: "grokbot-codex-app-server@0.2.0-beta.4",
     },
   ] as const)(
     "$name",
@@ -3545,13 +3545,13 @@ describe("updateNpmInstalledPlugins", () => {
 
       const result = await updateNpmInstalledPlugins({
         config,
-        pluginIds: ["openclaw-codex-app-server"],
+        pluginIds: ["grokbot-codex-app-server"],
         ...(specOverrides ? { specOverrides } : {}),
       });
 
       expectNpmUpdateCall({
         spec: expectedSpec,
-        expectedPluginId: "openclaw-codex-app-server",
+        expectedPluginId: "grokbot-codex-app-server",
       });
       expectCodexAppServerInstallState({
         result,
@@ -3564,11 +3564,11 @@ describe("updateNpmInstalledPlugins", () => {
 
   it("preserves explicit official npm tag overrides during manual updates", async () => {
     const installPath = createInstalledPackageDir({
-      name: "@openclaw/acpx",
+      name: "@grokbot/acpx",
       version: "2026.5.2",
     });
     mockNpmViewMetadata({
-      name: "@openclaw/acpx",
+      name: "@grokbot/acpx",
       version: "2026.5.3-beta.1",
     });
     installPluginFromNpmSpecMock.mockResolvedValue(
@@ -3577,9 +3577,9 @@ describe("updateNpmInstalledPlugins", () => {
         targetDir: installPath,
         version: "2026.5.3-beta.1",
         npmResolution: {
-          name: "@openclaw/acpx",
+          name: "@grokbot/acpx",
           version: "2026.5.3-beta.1",
-          resolvedSpec: "@openclaw/acpx@2026.5.3-beta.1",
+          resolvedSpec: "@grokbot/acpx@2026.5.3-beta.1",
         },
       }),
     );
@@ -3587,70 +3587,70 @@ describe("updateNpmInstalledPlugins", () => {
     const result = await updateNpmInstalledPlugins({
       config: createNpmInstallConfig({
         pluginId: "acpx",
-        spec: "@openclaw/acpx",
+        spec: "@grokbot/acpx",
         installPath,
-        resolvedName: "@openclaw/acpx",
-        resolvedSpec: "@openclaw/acpx@2026.5.2",
+        resolvedName: "@grokbot/acpx",
+        resolvedSpec: "@grokbot/acpx@2026.5.2",
         resolvedVersion: "2026.5.2",
       }),
       pluginIds: ["acpx"],
       specOverrides: {
-        acpx: "@openclaw/acpx@beta",
+        acpx: "@grokbot/acpx@beta",
       },
     });
 
     expectNpmUpdateCall({
-      spec: "@openclaw/acpx@beta",
+      spec: "@grokbot/acpx@beta",
       expectedPluginId: "acpx",
     });
     expectRecordFields(result.config.plugins?.installs?.acpx, {
-      spec: "@openclaw/acpx@beta",
+      spec: "@grokbot/acpx@beta",
       version: "2026.5.3-beta.1",
-      resolvedSpec: "@openclaw/acpx@2026.5.3-beta.1",
+      resolvedSpec: "@grokbot/acpx@2026.5.3-beta.1",
     });
   });
 
   it("tries npm beta for default npm specs on beta channel and preserves the default selector", async () => {
     installPluginFromNpmSpecMock.mockResolvedValue(
       createSuccessfulNpmUpdateResult({
-        pluginId: "openclaw-codex-app-server",
-        targetDir: "/tmp/openclaw-codex-app-server",
+        pluginId: "grokbot-codex-app-server",
+        targetDir: "/tmp/grokbot-codex-app-server",
         version: "0.2.0-beta.4",
         npmResolution: {
-          name: "openclaw-codex-app-server",
+          name: "grokbot-codex-app-server",
           version: "0.2.0-beta.4",
-          resolvedSpec: "openclaw-codex-app-server@0.2.0-beta.4",
+          resolvedSpec: "grokbot-codex-app-server@0.2.0-beta.4",
         },
       }),
     );
 
     const result = await updateNpmInstalledPlugins({
       config: createCodexAppServerInstallConfig({
-        spec: "openclaw-codex-app-server",
+        spec: "grokbot-codex-app-server",
       }),
-      pluginIds: ["openclaw-codex-app-server"],
+      pluginIds: ["grokbot-codex-app-server"],
       updateChannel: "beta",
     });
 
     expectNpmUpdateCall({
-      spec: "openclaw-codex-app-server@beta",
-      expectedPluginId: "openclaw-codex-app-server",
+      spec: "grokbot-codex-app-server@beta",
+      expectedPluginId: "grokbot-codex-app-server",
     });
     expectCodexAppServerInstallState({
       result,
-      spec: "openclaw-codex-app-server",
+      spec: "grokbot-codex-app-server",
       version: "0.2.0-beta.4",
-      resolvedSpec: "openclaw-codex-app-server@0.2.0-beta.4",
+      resolvedSpec: "grokbot-codex-app-server@0.2.0-beta.4",
     });
   });
 
   it("targets the exact core version for official extended-stable updates and preserves intent", async () => {
     const installPath = createInstalledPackageDir({
-      name: "@openclaw/acpx",
+      name: "@grokbot/acpx",
       version: "2026.7.21",
     });
     mockNpmViewMetadata({
-      name: "@openclaw/acpx",
+      name: "@grokbot/acpx",
       version: "2026.7.33",
     });
     installPluginFromNpmSpecMock.mockResolvedValue(
@@ -3659,9 +3659,9 @@ describe("updateNpmInstalledPlugins", () => {
         targetDir: installPath,
         version: "2026.7.33",
         npmResolution: {
-          name: "@openclaw/acpx",
+          name: "@grokbot/acpx",
           version: "2026.7.33",
-          resolvedSpec: "@openclaw/acpx@2026.7.33",
+          resolvedSpec: "@grokbot/acpx@2026.7.33",
         },
       }),
     );
@@ -3669,10 +3669,10 @@ describe("updateNpmInstalledPlugins", () => {
     const result = await updateNpmInstalledPlugins({
       config: createNpmInstallConfig({
         pluginId: "acpx",
-        spec: "@openclaw/acpx",
+        spec: "@grokbot/acpx",
         installPath,
-        resolvedName: "@openclaw/acpx",
-        resolvedSpec: "@openclaw/acpx@2026.7.21",
+        resolvedName: "@grokbot/acpx",
+        resolvedSpec: "@grokbot/acpx@2026.7.21",
         resolvedVersion: "2026.7.21",
       }),
       pluginIds: ["acpx"],
@@ -3682,19 +3682,19 @@ describe("updateNpmInstalledPlugins", () => {
     });
 
     expectNpmUpdateCall({
-      spec: "@openclaw/acpx@2026.7.33",
+      spec: "@grokbot/acpx@2026.7.33",
       expectedPluginId: "acpx",
     });
     expectRecordFields(result.config.plugins?.installs?.acpx, {
-      spec: "@openclaw/acpx",
+      spec: "@grokbot/acpx",
       version: "2026.7.33",
-      resolvedSpec: "@openclaw/acpx@2026.7.33",
+      resolvedSpec: "@grokbot/acpx@2026.7.33",
     });
   });
 
   it("preserves an explicit official pin during extended-stable updates", async () => {
     const installPath = createInstalledPackageDir({
-      name: "@openclaw/acpx",
+      name: "@grokbot/acpx",
       version: "2026.6.33",
     });
     installPluginFromNpmSpecMock.mockResolvedValue(
@@ -3708,10 +3708,10 @@ describe("updateNpmInstalledPlugins", () => {
     await updateNpmInstalledPlugins({
       config: createNpmInstallConfig({
         pluginId: "acpx",
-        spec: "@openclaw/acpx@2026.6.33",
+        spec: "@grokbot/acpx@2026.6.33",
         installPath,
-        resolvedName: "@openclaw/acpx",
-        resolvedSpec: "@openclaw/acpx@2026.6.33",
+        resolvedName: "@grokbot/acpx",
+        resolvedSpec: "@grokbot/acpx@2026.6.33",
         resolvedVersion: "2026.6.33",
       }),
       pluginIds: ["acpx"],
@@ -3722,18 +3722,18 @@ describe("updateNpmInstalledPlugins", () => {
     });
 
     expectNpmUpdateCall({
-      spec: "@openclaw/acpx@2026.6.33",
+      spec: "@grokbot/acpx@2026.6.33",
       expectedPluginId: "acpx",
     });
   });
 
   it("lets an explicit bare official spec opt a legacy pin into exact-core tracking", async () => {
     const installPath = createInstalledPackageDir({
-      name: "@openclaw/acpx",
+      name: "@grokbot/acpx",
       version: "2026.6.21",
     });
     mockNpmViewMetadata({
-      name: "@openclaw/acpx",
+      name: "@grokbot/acpx",
       version: "2026.7.33",
     });
     installPluginFromNpmSpecMock.mockResolvedValue(
@@ -3742,9 +3742,9 @@ describe("updateNpmInstalledPlugins", () => {
         targetDir: installPath,
         version: "2026.7.33",
         npmResolution: {
-          name: "@openclaw/acpx",
+          name: "@grokbot/acpx",
           version: "2026.7.33",
-          resolvedSpec: "@openclaw/acpx@2026.7.33",
+          resolvedSpec: "@grokbot/acpx@2026.7.33",
         },
       }),
     );
@@ -3752,27 +3752,27 @@ describe("updateNpmInstalledPlugins", () => {
     const result = await updateNpmInstalledPlugins({
       config: createNpmInstallConfig({
         pluginId: "acpx",
-        spec: "@openclaw/acpx@2026.6.21",
+        spec: "@grokbot/acpx@2026.6.21",
         installPath,
-        resolvedName: "@openclaw/acpx",
-        resolvedSpec: "@openclaw/acpx@2026.6.21",
+        resolvedName: "@grokbot/acpx",
+        resolvedSpec: "@grokbot/acpx@2026.6.21",
         resolvedVersion: "2026.6.21",
       }),
       pluginIds: ["acpx"],
-      specOverrides: { acpx: "@openclaw/acpx" },
+      specOverrides: { acpx: "@grokbot/acpx" },
       syncOfficialPluginInstalls: true,
       officialPluginUpdateChannel: "extended-stable",
       coreVersion: "2026.7.33",
     });
 
     expectNpmUpdateCall({
-      spec: "@openclaw/acpx@2026.7.33",
+      spec: "@grokbot/acpx@2026.7.33",
       expectedPluginId: "acpx",
     });
     expectRecordFields(result.config.plugins?.installs?.acpx, {
-      spec: "@openclaw/acpx",
+      spec: "@grokbot/acpx",
       version: "2026.7.33",
-      resolvedSpec: "@openclaw/acpx@2026.7.33",
+      resolvedSpec: "@grokbot/acpx@2026.7.33",
     });
   });
 
@@ -3781,55 +3781,55 @@ describe("updateNpmInstalledPlugins", () => {
       .mockResolvedValueOnce({
         ok: false,
         error:
-          "npm ERR! code ETARGET\nnpm ERR! No matching version found for openclaw-codex-app-server@beta.",
+          "npm ERR! code ETARGET\nnpm ERR! No matching version found for grokbot-codex-app-server@beta.",
       })
       .mockResolvedValueOnce(
         createSuccessfulNpmUpdateResult({
-          pluginId: "openclaw-codex-app-server",
-          targetDir: "/tmp/openclaw-codex-app-server",
+          pluginId: "grokbot-codex-app-server",
+          targetDir: "/tmp/grokbot-codex-app-server",
           version: "0.2.6",
           npmResolution: {
-            name: "openclaw-codex-app-server",
+            name: "grokbot-codex-app-server",
             version: "0.2.6",
-            resolvedSpec: "openclaw-codex-app-server@0.2.6",
+            resolvedSpec: "grokbot-codex-app-server@0.2.6",
           },
         }),
       );
 
     const config = createCodexAppServerInstallConfig({
-      spec: "openclaw-codex-app-server",
+      spec: "grokbot-codex-app-server",
     });
     const warnMessages: string[] = [];
     const result = await updateNpmInstalledPlugins({
       config,
-      pluginIds: ["openclaw-codex-app-server"],
+      pluginIds: ["grokbot-codex-app-server"],
       updateChannel: "beta",
       logger: { warn: (msg) => warnMessages.push(msg) },
     });
 
-    expect(npmInstallCall(0)?.spec).toBe("openclaw-codex-app-server@beta");
-    expect(npmInstallCall(1)?.spec).toBe("openclaw-codex-app-server");
+    expect(npmInstallCall(0)?.spec).toBe("grokbot-codex-app-server@beta");
+    expect(npmInstallCall(1)?.spec).toBe("grokbot-codex-app-server");
     expect(npmInstallCall(1)?.config).toBe(config);
     expect(warnMessages).toEqual([
-      'Plugin "openclaw-codex-app-server" has no beta npm release for openclaw-codex-app-server@beta; using openclaw-codex-app-server instead. Core update can still complete.',
+      'Plugin "grokbot-codex-app-server" has no beta npm release for grokbot-codex-app-server@beta; using grokbot-codex-app-server instead. Core update can still complete.',
     ]);
     expectCodexAppServerInstallState({
       result,
-      spec: "openclaw-codex-app-server",
+      spec: "grokbot-codex-app-server",
       version: "0.2.6",
-      resolvedSpec: "openclaw-codex-app-server@0.2.6",
+      resolvedSpec: "grokbot-codex-app-server@0.2.6",
     });
     expect(result.outcomes[0]?.message).toBe(
-      "Updated openclaw-codex-app-server: unknown -> 0.2.6. (warning: beta channel fallback used openclaw-codex-app-server because openclaw-codex-app-server@beta could not be used).",
+      "Updated grokbot-codex-app-server: unknown -> 0.2.6. (warning: beta channel fallback used grokbot-codex-app-server because grokbot-codex-app-server@beta could not be used).",
     );
     expect(result.outcomes[0]?.channelFallback).toEqual({
-      requestedSpec: "openclaw-codex-app-server@beta",
-      usedSpec: "openclaw-codex-app-server",
+      requestedSpec: "grokbot-codex-app-server@beta",
+      usedSpec: "grokbot-codex-app-server",
       requestedLabel: "@beta",
       usedLabel: "@latest",
       reason: "unavailable",
       message:
-        "plugin channel fallback: openclaw-codex-app-server used @latest because @beta was unavailable",
+        "plugin channel fallback: grokbot-codex-app-server used @latest because @beta was unavailable",
     });
   });
 
@@ -3838,35 +3838,35 @@ describe("updateNpmInstalledPlugins", () => {
       .mockResolvedValueOnce({
         ok: false,
         error:
-          "npm ERR! code ETARGET\nnpm ERR! No matching version found for openclaw-codex-app-server@beta.",
+          "npm ERR! code ETARGET\nnpm ERR! No matching version found for grokbot-codex-app-server@beta.",
       })
       .mockResolvedValueOnce(
         createSuccessfulNpmUpdateResult({
-          pluginId: "openclaw-codex-app-server",
-          targetDir: "/tmp/openclaw-codex-app-server",
+          pluginId: "grokbot-codex-app-server",
+          targetDir: "/tmp/grokbot-codex-app-server",
           version: "0.2.6",
           npmResolution: {
-            name: "openclaw-codex-app-server",
+            name: "grokbot-codex-app-server",
             version: "0.2.6",
-            resolvedSpec: "openclaw-codex-app-server@0.2.6",
+            resolvedSpec: "grokbot-codex-app-server@0.2.6",
           },
         }),
       );
 
     const result = await updateNpmInstalledPlugins({
       config: createCodexAppServerInstallConfig({
-        spec: "openclaw-codex-app-server",
+        spec: "grokbot-codex-app-server",
       }),
-      pluginIds: ["openclaw-codex-app-server"],
+      pluginIds: ["grokbot-codex-app-server"],
       updateChannel: "beta",
       dryRun: true,
     });
 
     expect(result.outcomes[0]?.message).toBe(
-      "Would update openclaw-codex-app-server: unknown -> 0.2.6. (warning: beta channel fallback would use openclaw-codex-app-server because openclaw-codex-app-server@beta could not be used).",
+      "Would update grokbot-codex-app-server: unknown -> 0.2.6. (warning: beta channel fallback would use grokbot-codex-app-server because grokbot-codex-app-server@beta could not be used).",
     );
     expect(result.outcomes[0]?.channelFallback?.message).toBe(
-      "plugin channel fallback: openclaw-codex-app-server would use @latest because @beta was unavailable",
+      "plugin channel fallback: grokbot-codex-app-server would use @latest because @beta was unavailable",
     );
   });
 
@@ -3878,13 +3878,13 @@ describe("updateNpmInstalledPlugins", () => {
       })
       .mockResolvedValueOnce(
         createSuccessfulNpmUpdateResult({
-          pluginId: "openclaw-codex-app-server",
-          targetDir: "/tmp/openclaw-codex-app-server",
+          pluginId: "grokbot-codex-app-server",
+          targetDir: "/tmp/grokbot-codex-app-server",
           version: "0.2.6",
           npmResolution: {
-            name: "openclaw-codex-app-server",
+            name: "grokbot-codex-app-server",
             version: "0.2.6",
-            resolvedSpec: "openclaw-codex-app-server@0.2.6",
+            resolvedSpec: "grokbot-codex-app-server@0.2.6",
           },
         }),
       );
@@ -3892,32 +3892,32 @@ describe("updateNpmInstalledPlugins", () => {
     const warnMessages: string[] = [];
     const result = await updateNpmInstalledPlugins({
       config: createCodexAppServerInstallConfig({
-        spec: "openclaw-codex-app-server",
+        spec: "grokbot-codex-app-server",
       }),
-      pluginIds: ["openclaw-codex-app-server"],
+      pluginIds: ["grokbot-codex-app-server"],
       updateChannel: "beta",
       logger: { warn: (msg) => warnMessages.push(msg) },
     });
 
-    expect(npmInstallCall(0)?.spec).toBe("openclaw-codex-app-server@beta");
-    expect(npmInstallCall(1)?.spec).toBe("openclaw-codex-app-server");
+    expect(npmInstallCall(0)?.spec).toBe("grokbot-codex-app-server@beta");
+    expect(npmInstallCall(1)?.spec).toBe("grokbot-codex-app-server");
     expect(warnMessages).toEqual([
-      'Plugin "openclaw-codex-app-server" failed beta npm update for openclaw-codex-app-server@beta; using openclaw-codex-app-server instead. Core update can still complete.',
+      'Plugin "grokbot-codex-app-server" failed beta npm update for grokbot-codex-app-server@beta; using grokbot-codex-app-server instead. Core update can still complete.',
     ]);
     expectCodexAppServerInstallState({
       result,
-      spec: "openclaw-codex-app-server",
+      spec: "grokbot-codex-app-server",
       version: "0.2.6",
-      resolvedSpec: "openclaw-codex-app-server@0.2.6",
+      resolvedSpec: "grokbot-codex-app-server@0.2.6",
     });
     expect(result.outcomes[0]?.message).toBe(
-      "Updated openclaw-codex-app-server: unknown -> 0.2.6. (warning: beta channel fallback used openclaw-codex-app-server because openclaw-codex-app-server@beta could not be used).",
+      "Updated grokbot-codex-app-server: unknown -> 0.2.6. (warning: beta channel fallback used grokbot-codex-app-server because grokbot-codex-app-server@beta could not be used).",
     );
     expect(result.outcomes[0]?.channelFallback).toMatchObject({
       requestedLabel: "@beta",
       usedLabel: "@latest",
       reason: "failed",
-      message: "plugin channel fallback: openclaw-codex-app-server used @latest after @beta failed",
+      message: "plugin channel fallback: grokbot-codex-app-server used @latest after @beta failed",
     });
   });
 
@@ -3935,27 +3935,27 @@ describe("updateNpmInstalledPlugins", () => {
 
     const result = await updateNpmInstalledPlugins({
       config: createCodexAppServerInstallConfig({
-        spec: "openclaw-codex-app-server",
+        spec: "grokbot-codex-app-server",
       }),
-      pluginIds: ["openclaw-codex-app-server"],
+      pluginIds: ["grokbot-codex-app-server"],
       updateChannel: "beta",
     });
 
     expect(installPluginFromNpmSpecMock).toHaveBeenCalledTimes(2);
     expect(result.outcomes).toEqual([
       {
-        pluginId: "openclaw-codex-app-server",
+        pluginId: "grokbot-codex-app-server",
         status: "error",
         message:
-          "Failed to update openclaw-codex-app-server: npm package not found for openclaw-codex-app-server.",
+          "Failed to update grokbot-codex-app-server: npm package not found for grokbot-codex-app-server.",
         channelFallback: {
-          requestedSpec: "openclaw-codex-app-server@beta",
-          usedSpec: "openclaw-codex-app-server",
+          requestedSpec: "grokbot-codex-app-server@beta",
+          usedSpec: "grokbot-codex-app-server",
           requestedLabel: "@beta",
           usedLabel: "@latest",
           reason: "failed",
           message:
-            "plugin channel fallback: openclaw-codex-app-server used @latest after @beta failed",
+            "plugin channel fallback: grokbot-codex-app-server used @latest after @beta failed",
         },
       },
     ]);
@@ -3975,27 +3975,27 @@ describe("updateNpmInstalledPlugins", () => {
 
     const result = await updateNpmInstalledPlugins({
       config: createCodexAppServerInstallConfig({
-        spec: "openclaw-codex-app-server",
+        spec: "grokbot-codex-app-server",
       }),
-      pluginIds: ["openclaw-codex-app-server"],
+      pluginIds: ["grokbot-codex-app-server"],
       updateChannel: "beta",
       dryRun: true,
     });
 
     expect(result.outcomes).toEqual([
       {
-        pluginId: "openclaw-codex-app-server",
+        pluginId: "grokbot-codex-app-server",
         status: "error",
         message:
-          "Failed to check openclaw-codex-app-server: npm package not found for openclaw-codex-app-server.",
+          "Failed to check grokbot-codex-app-server: npm package not found for grokbot-codex-app-server.",
         channelFallback: {
-          requestedSpec: "openclaw-codex-app-server@beta",
-          usedSpec: "openclaw-codex-app-server",
+          requestedSpec: "grokbot-codex-app-server@beta",
+          usedSpec: "grokbot-codex-app-server",
           requestedLabel: "@beta",
           usedLabel: "@latest",
           reason: "failed",
           message:
-            "plugin channel fallback: openclaw-codex-app-server would use @latest after @beta failed",
+            "plugin channel fallback: grokbot-codex-app-server would use @latest after @beta failed",
         },
       },
     ]);
@@ -4004,24 +4004,24 @@ describe("updateNpmInstalledPlugins", () => {
   it("preserves explicit npm tags when updating on the beta channel", async () => {
     installPluginFromNpmSpecMock.mockResolvedValue(
       createSuccessfulNpmUpdateResult({
-        pluginId: "openclaw-codex-app-server",
-        targetDir: "/tmp/openclaw-codex-app-server",
+        pluginId: "grokbot-codex-app-server",
+        targetDir: "/tmp/grokbot-codex-app-server",
         version: "0.2.0-rc.1",
       }),
     );
 
     await updateNpmInstalledPlugins({
       config: createCodexAppServerInstallConfig({
-        spec: "openclaw-codex-app-server@rc",
+        spec: "grokbot-codex-app-server@rc",
       }),
-      pluginIds: ["openclaw-codex-app-server"],
+      pluginIds: ["grokbot-codex-app-server"],
       updateChannel: "beta",
       dryRun: true,
     });
 
     expectNpmUpdateCall({
-      spec: "openclaw-codex-app-server@rc",
-      expectedPluginId: "openclaw-codex-app-server",
+      spec: "grokbot-codex-app-server@rc",
+      expectedPluginId: "grokbot-codex-app-server",
     });
   });
 
@@ -4176,14 +4176,14 @@ describe("updateNpmInstalledPlugins", () => {
   it("does not fall back to npm for blocked official ClawHub artifact downloads", async () => {
     const warnMessages: string[] = [];
     const installPath = createInstalledPackageDir({
-      name: "@openclaw/discord",
+      name: "@grokbot/discord",
       version: "2026.5.12",
     });
     installPluginFromClawHubMock.mockResolvedValueOnce({
       ok: false,
       code: "clawhub_download_blocked",
       error:
-        'ClawHub blocked artifact download for "@openclaw/discord@2026.5.16-beta.5"; install was not started. ClawHub /api/v1/packages/%40openclaw%2Fdiscord/versions/2026.5.16-beta.5/artifact/download failed (403): Blocked: this package release has been flagged as malicious and cannot be downloaded.',
+        'ClawHub blocked artifact download for "@grokbot/discord@2026.5.16-beta.5"; install was not started. ClawHub /api/v1/packages/%40openclaw%2Fdiscord/versions/2026.5.16-beta.5/artifact/download failed (403): Blocked: this package release has been flagged as malicious and cannot be downloaded.',
       version: "2026.5.16-beta.5",
     });
 
@@ -4192,10 +4192,10 @@ describe("updateNpmInstalledPlugins", () => {
         pluginId: "discord",
         installPath,
         clawhubUrl: "https://clawhub.ai",
-        clawhubPackage: "@openclaw/discord",
+        clawhubPackage: "@grokbot/discord",
         clawhubFamily: "code-plugin",
         clawhubChannel: "official",
-        spec: "clawhub:@openclaw/discord",
+        spec: "clawhub:@grokbot/discord",
       }),
       pluginIds: ["discord"],
       updateChannel: "beta",
@@ -4203,14 +4203,14 @@ describe("updateNpmInstalledPlugins", () => {
       logger: { warn: (msg) => warnMessages.push(msg) },
     });
 
-    expect(clawHubInstallCall()?.spec).toBe("clawhub:@openclaw/discord@beta");
+    expect(clawHubInstallCall()?.spec).toBe("clawhub:@grokbot/discord@beta");
     expect(installPluginFromNpmSpecMock).not.toHaveBeenCalled();
     expect(result.config.plugins?.entries?.discord?.enabled).toBeUndefined();
     expectRecordFields(result.config.plugins?.installs?.discord, {
       source: "clawhub",
-      spec: "clawhub:@openclaw/discord",
+      spec: "clawhub:@grokbot/discord",
       installPath,
-      clawhubPackage: "@openclaw/discord",
+      clawhubPackage: "@grokbot/discord",
     });
     expect(result.outcomes).toEqual([
       {
@@ -4219,7 +4219,7 @@ describe("updateNpmInstalledPlugins", () => {
         code: "clawhub_download_blocked",
         currentVersion: "2026.5.12",
         message:
-          'Skipped discord ClawHub update: ClawHub blocked artifact download for "@openclaw/discord@2026.5.16-beta.5"; install was not started. ClawHub /api/v1/packages/%40openclaw%2Fdiscord/versions/2026.5.16-beta.5/artifact/download failed (403): Blocked: this package release has been flagged as malicious and cannot be downloaded. Existing installed plugin left unchanged.',
+          'Skipped discord ClawHub update: ClawHub blocked artifact download for "@grokbot/discord@2026.5.16-beta.5"; install was not started. ClawHub /api/v1/packages/%40openclaw%2Fdiscord/versions/2026.5.16-beta.5/artifact/download failed (403): Blocked: this package release has been flagged as malicious and cannot be downloaded. Existing installed plugin left unchanged.',
       },
     ]);
     expect(warnMessages).toStrictEqual([]);
@@ -4228,7 +4228,7 @@ describe("updateNpmInstalledPlugins", () => {
   it("uses the default npm spec when beta ClawHub falls back before an artifact block", async () => {
     const warnMessages: string[] = [];
     const installPath = createInstalledPackageDir({
-      name: "@openclaw/discord",
+      name: "@grokbot/discord",
       version: "2026.5.12",
     });
     installPluginFromClawHubMock
@@ -4245,12 +4245,12 @@ describe("updateNpmInstalledPlugins", () => {
     installPluginFromNpmSpecMock.mockResolvedValueOnce(
       createSuccessfulNpmUpdateResult({
         pluginId: "discord",
-        targetDir: "/tmp/openclaw-plugins/discord",
+        targetDir: "/tmp/grokbot-plugins/discord",
         version: "2026.5.16",
         npmResolution: {
-          name: "@openclaw/discord",
+          name: "@grokbot/discord",
           version: "2026.5.16",
-          resolvedSpec: "@openclaw/discord@2026.5.16",
+          resolvedSpec: "@grokbot/discord@2026.5.16",
         },
       }),
     );
@@ -4260,37 +4260,37 @@ describe("updateNpmInstalledPlugins", () => {
         pluginId: "discord",
         installPath,
         clawhubUrl: "https://clawhub.ai",
-        clawhubPackage: "@openclaw/discord",
+        clawhubPackage: "@grokbot/discord",
         clawhubFamily: "code-plugin",
         clawhubChannel: "official",
-        spec: "clawhub:@openclaw/discord",
+        spec: "clawhub:@grokbot/discord",
       }),
       pluginIds: ["discord"],
       updateChannel: "beta",
       logger: { warn: (msg) => warnMessages.push(msg) },
     });
 
-    expect(clawHubInstallCall(0)?.spec).toBe("clawhub:@openclaw/discord@beta");
-    expect(clawHubInstallCall(1)?.spec).toBe("clawhub:@openclaw/discord");
-    expect(npmInstallCall()?.spec).toBe("@openclaw/discord");
+    expect(clawHubInstallCall(0)?.spec).toBe("clawhub:@grokbot/discord@beta");
+    expect(clawHubInstallCall(1)?.spec).toBe("clawhub:@grokbot/discord");
+    expect(npmInstallCall()?.spec).toBe("@grokbot/discord");
     expectRecordFields(result.config.plugins?.installs?.discord, {
       source: "npm",
-      spec: "@openclaw/discord@2026.5.16",
-      installPath: "/tmp/openclaw-plugins/discord",
+      spec: "@grokbot/discord@2026.5.16",
+      installPath: "/tmp/grokbot-plugins/discord",
       version: "2026.5.16",
     });
     expect(result.outcomes[0]?.message).toBe(
-      "Updated discord: 2026.5.12 -> 2026.5.16. (warning: official ClawHub artifact fallback used @openclaw/discord).",
+      "Updated discord: 2026.5.12 -> 2026.5.16. (warning: official ClawHub artifact fallback used @grokbot/discord).",
     );
     expect(warnMessages).toEqual([
-      'Plugin "discord" has no beta ClawHub release for clawhub:@openclaw/discord@beta; using clawhub:@openclaw/discord instead. Core update can still complete.',
-      'Plugin "discord" could not download official ClawHub artifact for clawhub:@openclaw/discord; using npm @openclaw/discord instead. Core update can still complete.',
+      'Plugin "discord" has no beta ClawHub release for clawhub:@grokbot/discord@beta; using clawhub:@grokbot/discord instead. Core update can still complete.',
+      'Plugin "discord" could not download official ClawHub artifact for clawhub:@grokbot/discord; using npm @grokbot/discord instead. Core update can still complete.',
     ]);
   });
 
   it("uses exact-core npm when an official ClawHub install falls back on extended-stable", async () => {
     const installPath = createInstalledPackageDir({
-      name: "@openclaw/discord",
+      name: "@grokbot/discord",
       version: "2026.6.33",
     });
     installPluginFromClawHubMock.mockResolvedValueOnce({
@@ -4301,12 +4301,12 @@ describe("updateNpmInstalledPlugins", () => {
     installPluginFromNpmSpecMock.mockResolvedValueOnce(
       createSuccessfulNpmUpdateResult({
         pluginId: "discord",
-        targetDir: "/tmp/openclaw-plugins/discord",
+        targetDir: "/tmp/grokbot-plugins/discord",
         version: "2026.7.33",
         npmResolution: {
-          name: "@openclaw/discord",
+          name: "@grokbot/discord",
           version: "2026.7.33",
-          resolvedSpec: "@openclaw/discord@2026.7.33",
+          resolvedSpec: "@grokbot/discord@2026.7.33",
         },
       }),
     );
@@ -4316,10 +4316,10 @@ describe("updateNpmInstalledPlugins", () => {
         pluginId: "discord",
         installPath,
         clawhubUrl: "https://clawhub.ai",
-        clawhubPackage: "@openclaw/discord",
+        clawhubPackage: "@grokbot/discord",
         clawhubFamily: "code-plugin",
         clawhubChannel: "official",
-        spec: "clawhub:@openclaw/discord",
+        spec: "clawhub:@grokbot/discord",
       }),
       pluginIds: ["discord"],
       syncOfficialPluginInstalls: true,
@@ -4327,18 +4327,18 @@ describe("updateNpmInstalledPlugins", () => {
       coreVersion: "2026.7.33",
     });
 
-    expect(npmInstallCall()?.spec).toBe("@openclaw/discord@2026.7.33");
+    expect(npmInstallCall()?.spec).toBe("@grokbot/discord@2026.7.33");
     expectRecordFields(result.config.plugins?.installs?.discord, {
       source: "npm",
-      spec: "@openclaw/discord",
+      spec: "@grokbot/discord",
       version: "2026.7.33",
-      resolvedSpec: "@openclaw/discord@2026.7.33",
+      resolvedSpec: "@grokbot/discord@2026.7.33",
     });
   });
 
   it("reports npm dry-run versions for trusted official ClawHub artifact fallback", async () => {
     const installPath = createInstalledPackageDir({
-      name: "@openclaw/discord",
+      name: "@grokbot/discord",
       version: "2026.5.16-beta.5",
     });
     installPluginFromClawHubMock.mockResolvedValueOnce({
@@ -4349,12 +4349,12 @@ describe("updateNpmInstalledPlugins", () => {
     installPluginFromNpmSpecMock.mockResolvedValueOnce({
       ok: true,
       pluginId: "discord",
-      targetDir: "/tmp/openclaw-plugins/discord",
+      targetDir: "/tmp/grokbot-plugins/discord",
       extensions: [],
       npmResolution: {
-        name: "@openclaw/discord",
+        name: "@grokbot/discord",
         version: "2026.5.16-beta.5",
-        resolvedSpec: "@openclaw/discord@2026.5.16-beta.5",
+        resolvedSpec: "@grokbot/discord@2026.5.16-beta.5",
       },
     });
 
@@ -4363,17 +4363,17 @@ describe("updateNpmInstalledPlugins", () => {
         pluginId: "discord",
         installPath,
         clawhubUrl: "https://clawhub.ai",
-        clawhubPackage: "@openclaw/discord",
+        clawhubPackage: "@grokbot/discord",
         clawhubFamily: "code-plugin",
         clawhubChannel: "official",
-        spec: "clawhub:@openclaw/discord",
+        spec: "clawhub:@grokbot/discord",
       }),
       pluginIds: ["discord"],
       updateChannel: "beta",
       dryRun: true,
     });
 
-    expect(npmInstallCall()?.spec).toBe("@openclaw/discord@beta");
+    expect(npmInstallCall()?.spec).toBe("@grokbot/discord@beta");
     expect(npmInstallCall()?.dryRun).toBe(true);
     expect(result.outcomes).toEqual([
       {
@@ -4382,14 +4382,14 @@ describe("updateNpmInstalledPlugins", () => {
         currentVersion: "2026.5.16-beta.5",
         nextVersion: "2026.5.16-beta.5",
         message:
-          "discord is up to date (2026.5.16-beta.5). (warning: official ClawHub artifact fallback would use @openclaw/discord@beta).",
+          "discord is up to date (2026.5.16-beta.5). (warning: official ClawHub artifact fallback would use @grokbot/discord@beta).",
       },
     ]);
   });
 
   it("does not fall back to trusted npm from custom ClawHub provenance", async () => {
     const installPath = createInstalledPackageDir({
-      name: "@openclaw/discord",
+      name: "@grokbot/discord",
       version: "2026.5.12",
     });
     installPluginFromClawHubMock.mockResolvedValueOnce({
@@ -4403,10 +4403,10 @@ describe("updateNpmInstalledPlugins", () => {
         pluginId: "discord",
         installPath,
         clawhubUrl: "https://custom-clawhub.example",
-        clawhubPackage: "@openclaw/discord",
+        clawhubPackage: "@grokbot/discord",
         clawhubFamily: "code-plugin",
         clawhubChannel: "official",
-        spec: "clawhub:@openclaw/discord",
+        spec: "clawhub:@grokbot/discord",
       }),
       pluginIds: ["discord"],
       updateChannel: "beta",
@@ -4418,7 +4418,7 @@ describe("updateNpmInstalledPlugins", () => {
         pluginId: "discord",
         status: "error",
         message:
-          "Failed to update discord: artifact unavailable (ClawHub clawhub:@openclaw/discord@beta).",
+          "Failed to update discord: artifact unavailable (ClawHub clawhub:@grokbot/discord@beta).",
       },
     ]);
   });
@@ -4641,8 +4641,8 @@ describe("updateNpmInstalledPlugins", () => {
   it("migrates legacy unscoped install keys when a scoped npm package updates", async () => {
     installPluginFromNpmSpecMock.mockResolvedValue({
       ok: true,
-      pluginId: "@openclaw/voice-call",
-      targetDir: "/tmp/openclaw-voice-call",
+      pluginId: "@grokbot/voice-call",
+      targetDir: "/tmp/grokbot-voice-call",
       version: "0.0.2",
       extensions: ["index.ts"],
     });
@@ -4662,7 +4662,7 @@ describe("updateNpmInstalledPlugins", () => {
           installs: {
             "voice-call": {
               source: "npm",
-              spec: "@openclaw/voice-call",
+              spec: "@grokbot/voice-call",
               installPath: "/tmp/voice-call",
             },
           },
@@ -4671,20 +4671,20 @@ describe("updateNpmInstalledPlugins", () => {
       pluginIds: ["voice-call"],
     });
 
-    expect(npmInstallCall()?.spec).toBe("@openclaw/voice-call");
+    expect(npmInstallCall()?.spec).toBe("@grokbot/voice-call");
     expect(npmInstallCall()?.expectedPluginId).toBe("voice-call");
-    expect(result.config.plugins?.allow).toEqual(["@openclaw/voice-call"]);
-    expect(result.config.plugins?.deny).toEqual(["@openclaw/voice-call"]);
-    expect(result.config.plugins?.slots?.memory).toBe("@openclaw/voice-call");
-    expect(result.config.plugins?.entries?.["@openclaw/voice-call"]).toEqual({
+    expect(result.config.plugins?.allow).toEqual(["@grokbot/voice-call"]);
+    expect(result.config.plugins?.deny).toEqual(["@grokbot/voice-call"]);
+    expect(result.config.plugins?.slots?.memory).toBe("@grokbot/voice-call");
+    expect(result.config.plugins?.entries?.["@grokbot/voice-call"]).toEqual({
       enabled: false,
       hooks: { allowPromptInjection: false },
     });
     expect(result.config.plugins?.entries?.["voice-call"]).toBeUndefined();
-    expectRecordFields(result.config.plugins?.installs?.["@openclaw/voice-call"], {
+    expectRecordFields(result.config.plugins?.installs?.["@grokbot/voice-call"], {
       source: "npm",
-      spec: "@openclaw/voice-call",
-      installPath: "/tmp/openclaw-voice-call",
+      spec: "@grokbot/voice-call",
+      installPath: "/tmp/grokbot-voice-call",
       version: "0.0.2",
     });
     expect(result.config.plugins?.installs?.["voice-call"]).toBeUndefined();
@@ -4693,8 +4693,8 @@ describe("updateNpmInstalledPlugins", () => {
   it("keeps authored plugin config shape when only the install key migrates", async () => {
     installPluginFromNpmSpecMock.mockResolvedValue({
       ok: true,
-      pluginId: "@openclaw/voice-call",
-      targetDir: "/tmp/openclaw-voice-call",
+      pluginId: "@grokbot/voice-call",
+      targetDir: "/tmp/grokbot-voice-call",
       version: "0.0.2",
       extensions: ["index.ts"],
     });
@@ -4705,7 +4705,7 @@ describe("updateNpmInstalledPlugins", () => {
           installs: {
             "voice-call": {
               source: "npm",
-              spec: "@openclaw/voice-call",
+              spec: "@grokbot/voice-call",
               installPath: "/tmp/voice-call",
             },
           },
@@ -4716,10 +4716,10 @@ describe("updateNpmInstalledPlugins", () => {
 
     expect(result.config.plugins).toEqual({
       installs: {
-        "@openclaw/voice-call": expect.objectContaining({
+        "@grokbot/voice-call": expect.objectContaining({
           source: "npm",
-          spec: "@openclaw/voice-call",
-          installPath: "/tmp/openclaw-voice-call",
+          spec: "@grokbot/voice-call",
+          installPath: "/tmp/grokbot-voice-call",
         }),
       },
     });
@@ -4728,8 +4728,8 @@ describe("updateNpmInstalledPlugins", () => {
   it("migrates context engine slot when a plugin id changes during update", async () => {
     installPluginFromNpmSpecMock.mockResolvedValue({
       ok: true,
-      pluginId: "@openclaw/context-engine",
-      targetDir: "/tmp/openclaw-context-engine",
+      pluginId: "@grokbot/context-engine",
+      targetDir: "/tmp/grokbot-context-engine",
       version: "0.0.2",
       extensions: ["index.ts"],
     });
@@ -4741,7 +4741,7 @@ describe("updateNpmInstalledPlugins", () => {
           installs: {
             "context-engine": {
               source: "npm",
-              spec: "@openclaw/context-engine",
+              spec: "@grokbot/context-engine",
               installPath: "/tmp/context-engine",
             },
           },
@@ -4750,11 +4750,11 @@ describe("updateNpmInstalledPlugins", () => {
       pluginIds: ["context-engine"],
     });
 
-    expect(result.config.plugins?.slots?.contextEngine).toBe("@openclaw/context-engine");
-    expectRecordFields(result.config.plugins?.installs?.["@openclaw/context-engine"], {
+    expect(result.config.plugins?.slots?.contextEngine).toBe("@grokbot/context-engine");
+    expectRecordFields(result.config.plugins?.installs?.["@grokbot/context-engine"], {
       source: "npm",
-      spec: "@openclaw/context-engine",
-      installPath: "/tmp/openclaw-context-engine",
+      spec: "@grokbot/context-engine",
+      installPath: "/tmp/grokbot-context-engine",
       version: "0.0.2",
     });
     expect(result.config.plugins?.installs?.["context-engine"]).toBeUndefined();
@@ -4876,28 +4876,28 @@ describe("updateNpmInstalledPlugins", () => {
   it("forwards dangerous force unsafe install to plugin update installers", async () => {
     installPluginFromNpmSpecMock.mockResolvedValue(
       createSuccessfulNpmUpdateResult({
-        pluginId: "openclaw-codex-app-server",
-        targetDir: "/tmp/openclaw-codex-app-server",
+        pluginId: "grokbot-codex-app-server",
+        targetDir: "/tmp/grokbot-codex-app-server",
         version: "0.2.0-beta.4",
       }),
     );
 
     await updateNpmInstalledPlugins({
       config: createCodexAppServerInstallConfig({
-        spec: "openclaw-codex-app-server@beta",
+        spec: "grokbot-codex-app-server@beta",
       }),
-      pluginIds: ["openclaw-codex-app-server"],
+      pluginIds: ["grokbot-codex-app-server"],
       dangerouslyForceUnsafeInstall: true,
     });
 
-    expect(npmInstallCall()?.spec).toBe("openclaw-codex-app-server@beta");
+    expect(npmInstallCall()?.spec).toBe("grokbot-codex-app-server@beta");
     expect(npmInstallCall()?.dangerouslyForceUnsafeInstall).toBe(true);
-    expect(npmInstallCall()?.expectedPluginId).toBe("openclaw-codex-app-server");
+    expect(npmInstallCall()?.expectedPluginId).toBe("grokbot-codex-app-server");
   });
 
   it("reuses the recorded managed extensions root when updating external plugins", async () => {
-    const installPath = "/var/openclaw/extensions/demo";
-    const extensionsDir = "/var/openclaw/extensions";
+    const installPath = "/var/grokbot/extensions/demo";
+    const extensionsDir = "/var/grokbot/extensions";
     const expectedExtensionsDir = path.resolve(extensionsDir);
     installPluginFromNpmSpecMock.mockResolvedValue(
       createSuccessfulNpmUpdateResult({
@@ -5003,7 +5003,7 @@ describe("syncPluginsForUpdateChannel", () => {
       config: createBundledPathInstallConfig({
         loadPaths: [appBundledPluginRoot("feishu")],
         installPath: appBundledPluginRoot("feishu"),
-        spec: "@openclaw/feishu",
+        spec: "@grokbot/feishu",
       }),
       expectedChanged: false,
       expectedLoadPaths: [appBundledPluginRoot("feishu")],
@@ -5014,7 +5014,7 @@ describe("syncPluginsForUpdateChannel", () => {
       config: createBundledPathInstallConfig({
         loadPaths: [],
         installPath: "/tmp/old-feishu",
-        spec: "@openclaw/feishu",
+        spec: "@grokbot/feishu",
       }),
       expectedChanged: true,
       expectedLoadPaths: [appBundledPluginRoot("feishu")],
@@ -5038,14 +5038,14 @@ describe("syncPluginsForUpdateChannel", () => {
         install: result.config.plugins?.installs?.feishu,
         sourcePath: appBundledPluginRoot("feishu"),
         installPath: expectedInstallPath,
-        spec: "@openclaw/feishu",
+        spec: "@grokbot/feishu",
       });
     },
   );
 
   it("forwards an explicit env to bundled plugin source resolution", async () => {
     resolveBundledPluginSourcesMock.mockReturnValue(new Map());
-    const env = { OPENCLAW_HOME: "/srv/openclaw-home" } as NodeJS.ProcessEnv;
+    const env = { OPENCLAW_HOME: "/srv/grokbot-home" } as NodeJS.ProcessEnv;
 
     await syncPluginsForUpdateChannel({
       channel: "beta",
@@ -5061,7 +5061,7 @@ describe("syncPluginsForUpdateChannel", () => {
   });
 
   it("uses the provided env when matching bundled load and install paths", async () => {
-    const bundledHome = "/tmp/openclaw-home";
+    const bundledHome = "/tmp/grokbot-home";
     mockBundledSources(
       createBundledSource({
         localPath: `${bundledHome}/plugins/feishu`,
@@ -5084,7 +5084,7 @@ describe("syncPluginsForUpdateChannel", () => {
                 source: "path",
                 sourcePath: "~/plugins/feishu",
                 installPath: "~/plugins/feishu",
-                spec: "@openclaw/feishu",
+                spec: "@grokbot/feishu",
               },
             },
           },
@@ -5106,12 +5106,12 @@ describe("syncPluginsForUpdateChannel", () => {
     installPluginFromNpmSpecMock.mockResolvedValue(
       createSuccessfulNpmUpdateResult({
         pluginId: "legacy-chat",
-        targetDir: "/tmp/openclaw-plugins/legacy-chat",
+        targetDir: "/tmp/grokbot-plugins/legacy-chat",
         version: "2.0.0",
         npmResolution: {
-          name: "@openclaw/legacy-chat",
+          name: "@grokbot/legacy-chat",
           version: "2.0.0",
-          resolvedSpec: "@openclaw/legacy-chat@2.0.0",
+          resolvedSpec: "@grokbot/legacy-chat@2.0.0",
         },
       }),
     );
@@ -5121,7 +5121,7 @@ describe("syncPluginsForUpdateChannel", () => {
       externalizedBundledPluginBridges: [
         {
           bundledPluginId: "legacy-chat",
-          npmSpec: "@openclaw/legacy-chat",
+          npmSpec: "@grokbot/legacy-chat",
           channelIds: ["legacy-chat"],
         },
       ],
@@ -5144,7 +5144,7 @@ describe("syncPluginsForUpdateChannel", () => {
       },
     });
 
-    expect(npmInstallCall()?.spec).toBe("@openclaw/legacy-chat");
+    expect(npmInstallCall()?.spec).toBe("@grokbot/legacy-chat");
     expect(npmInstallCall()?.mode).toBe("update");
     expect(npmInstallCall()?.expectedPluginId).toBe("legacy-chat");
     expect(npmInstallCall()?.trustedSourceLinkedOfficialInstall).not.toBe(true);
@@ -5154,12 +5154,12 @@ describe("syncPluginsForUpdateChannel", () => {
     expect(result.config.plugins?.load?.paths).toStrictEqual([]);
     expectRecordFields(result.config.plugins?.installs?.["legacy-chat"], {
       source: "npm",
-      spec: "@openclaw/legacy-chat",
-      installPath: "/tmp/openclaw-plugins/legacy-chat",
+      spec: "@grokbot/legacy-chat",
+      installPath: "/tmp/grokbot-plugins/legacy-chat",
       version: "2.0.0",
-      resolvedName: "@openclaw/legacy-chat",
+      resolvedName: "@grokbot/legacy-chat",
       resolvedVersion: "2.0.0",
-      resolvedSpec: "@openclaw/legacy-chat@2.0.0",
+      resolvedSpec: "@grokbot/legacy-chat@2.0.0",
     });
   });
 
@@ -5168,7 +5168,7 @@ describe("syncPluginsForUpdateChannel", () => {
     installPluginFromNpmSpecMock.mockResolvedValue(
       createSuccessfulNpmUpdateResult({
         pluginId: "voice-call",
-        targetDir: "/tmp/openclaw-plugins/voice-call",
+        targetDir: "/tmp/grokbot-plugins/voice-call",
         version: "0.0.2-beta.1",
       }),
     );
@@ -5178,7 +5178,7 @@ describe("syncPluginsForUpdateChannel", () => {
       externalizedBundledPluginBridges: [
         {
           bundledPluginId: "voice-call",
-          npmSpec: "@openclaw/voice-call",
+          npmSpec: "@grokbot/voice-call",
           channelIds: ["voice-call"],
         },
       ],
@@ -5201,7 +5201,7 @@ describe("syncPluginsForUpdateChannel", () => {
       },
     });
 
-    expect(npmInstallCall()?.spec).toBe("@openclaw/voice-call");
+    expect(npmInstallCall()?.spec).toBe("@grokbot/voice-call");
     expect(npmInstallCall()?.expectedPluginId).toBe("voice-call");
     expect(npmInstallCall()?.trustedSourceLinkedOfficialInstall).toBe(true);
   });
@@ -5211,7 +5211,7 @@ describe("syncPluginsForUpdateChannel", () => {
     installPluginFromClawHubMock.mockResolvedValue(
       createSuccessfulClawHubUpdateResult({
         pluginId: "legacy-chat",
-        targetDir: "/tmp/openclaw-plugins/legacy-chat",
+        targetDir: "/tmp/grokbot-plugins/legacy-chat",
         version: "2026.5.1-beta.2",
         clawhubPackage: "legacy-chat",
       }),
@@ -5228,7 +5228,7 @@ describe("syncPluginsForUpdateChannel", () => {
           preferredSource: "clawhub",
           clawhubSpec: "clawhub:legacy-chat@2026.5.1-beta.2",
           clawhubUrl: "https://clawhub.ai",
-          npmSpec: "@openclaw/legacy-chat",
+          npmSpec: "@grokbot/legacy-chat",
           channelIds: ["legacy-chat"],
         },
       ],
@@ -5266,7 +5266,7 @@ describe("syncPluginsForUpdateChannel", () => {
     expectRecordFields(result.config.plugins?.installs?.["legacy-chat"], {
       source: "clawhub",
       spec: "clawhub:legacy-chat@2026.5.1-beta.2",
-      installPath: "/tmp/openclaw-plugins/legacy-chat",
+      installPath: "/tmp/grokbot-plugins/legacy-chat",
       version: "2026.5.1-beta.2",
       integrity: "sha256-clawpack",
       clawhubUrl: "https://clawhub.ai",
@@ -5295,7 +5295,7 @@ describe("syncPluginsForUpdateChannel", () => {
     installPluginFromNpmSpecMock.mockResolvedValue(
       createSuccessfulNpmUpdateResult({
         pluginId: "legacy-chat",
-        targetDir: "/tmp/openclaw-plugins/legacy-chat",
+        targetDir: "/tmp/grokbot-plugins/legacy-chat",
         version: "2.0.0",
       }),
     );
@@ -5307,7 +5307,7 @@ describe("syncPluginsForUpdateChannel", () => {
           bundledPluginId: "legacy-chat",
           preferredSource: "clawhub",
           clawhubSpec: "clawhub:legacy-chat@2026.5.1-beta.2",
-          npmSpec: "@openclaw/legacy-chat",
+          npmSpec: "@grokbot/legacy-chat",
           channelIds: ["legacy-chat"],
         },
       ],
@@ -5330,7 +5330,7 @@ describe("syncPluginsForUpdateChannel", () => {
       },
     });
 
-    expect(npmInstallCall()?.spec).toBe("@openclaw/legacy-chat");
+    expect(npmInstallCall()?.spec).toBe("@grokbot/legacy-chat");
     expect(npmInstallCall()?.mode).toBe("update");
     expect(npmInstallCall()?.expectedPluginId).toBe("legacy-chat");
     expect(npmInstallCall()?.trustedSourceLinkedOfficialInstall).not.toBe(true);
@@ -5338,13 +5338,13 @@ describe("syncPluginsForUpdateChannel", () => {
     expect(result.summary.switchedToClawHub).toStrictEqual([]);
     expect(result.summary.switchedToNpm).toEqual(["legacy-chat"]);
     expect(result.summary.warnings).toEqual([
-      "ClawHub clawhub:legacy-chat@2026.5.1-beta.2 unavailable for legacy-chat; falling back to npm @openclaw/legacy-chat.",
+      "ClawHub clawhub:legacy-chat@2026.5.1-beta.2 unavailable for legacy-chat; falling back to npm @grokbot/legacy-chat.",
     ]);
     expect(result.summary.errors).toStrictEqual([]);
     expectRecordFields(result.config.plugins?.installs?.["legacy-chat"], {
       source: "npm",
-      spec: "@openclaw/legacy-chat",
-      installPath: "/tmp/openclaw-plugins/legacy-chat",
+      spec: "@grokbot/legacy-chat",
+      installPath: "/tmp/grokbot-plugins/legacy-chat",
       version: "2.0.0",
     });
   });
@@ -5359,12 +5359,12 @@ describe("syncPluginsForUpdateChannel", () => {
     installPluginFromNpmSpecMock.mockResolvedValue(
       createSuccessfulNpmUpdateResult({
         pluginId: "voice-call",
-        targetDir: "/tmp/openclaw-plugins/voice-call",
+        targetDir: "/tmp/grokbot-plugins/voice-call",
         version: "2026.7.33",
         npmResolution: {
-          name: "@openclaw/voice-call",
+          name: "@grokbot/voice-call",
           version: "2026.7.33",
-          resolvedSpec: "@openclaw/voice-call@2026.7.33",
+          resolvedSpec: "@grokbot/voice-call@2026.7.33",
         },
       }),
     );
@@ -5376,8 +5376,8 @@ describe("syncPluginsForUpdateChannel", () => {
         {
           bundledPluginId: "voice-call",
           preferredSource: "clawhub",
-          clawhubSpec: "clawhub:@openclaw/voice-call",
-          npmSpec: "@openclaw/voice-call",
+          clawhubSpec: "clawhub:@grokbot/voice-call",
+          npmSpec: "@grokbot/voice-call",
           channelIds: ["voice-call"],
         },
       ],
@@ -5395,17 +5395,17 @@ describe("syncPluginsForUpdateChannel", () => {
       },
     });
 
-    expect(npmInstallCall()?.spec).toBe("@openclaw/voice-call@2026.7.33");
+    expect(npmInstallCall()?.spec).toBe("@grokbot/voice-call@2026.7.33");
     expect(npmInstallCall()?.trustedSourceLinkedOfficialInstall).toBe(true);
     expectRecordFields(result.config.plugins?.installs?.["voice-call"], {
       source: "npm",
-      spec: "@openclaw/voice-call",
+      spec: "@grokbot/voice-call",
       version: "2026.7.33",
-      resolvedSpec: "@openclaw/voice-call@2026.7.33",
+      resolvedSpec: "@grokbot/voice-call@2026.7.33",
     });
   });
 
-  it("does not fall back from ClawHub to non-OpenClaw npm packages", async () => {
+  it("does not fall back from ClawHub to non-GrokBot npm packages", async () => {
     resolveBundledPluginSourcesMock.mockReturnValue(new Map());
     installPluginFromClawHubMock.mockResolvedValue({
       ok: false,
@@ -5464,7 +5464,7 @@ describe("syncPluginsForUpdateChannel", () => {
     installPluginFromNpmSpecMock.mockResolvedValue(
       createSuccessfulNpmUpdateResult({
         pluginId: "voice-call",
-        targetDir: "/tmp/openclaw-plugins/voice-call",
+        targetDir: "/tmp/grokbot-plugins/voice-call",
         version: "0.0.2-beta.1",
       }),
     );
@@ -5475,8 +5475,8 @@ describe("syncPluginsForUpdateChannel", () => {
         {
           bundledPluginId: "voice-call",
           preferredSource: "clawhub",
-          clawhubSpec: "clawhub:@openclaw/voice-call",
-          npmSpec: "@openclaw/voice-call",
+          clawhubSpec: "clawhub:@grokbot/voice-call",
+          npmSpec: "@grokbot/voice-call",
           channelIds: ["voice-call"],
         },
       ],
@@ -5499,7 +5499,7 @@ describe("syncPluginsForUpdateChannel", () => {
       },
     });
 
-    expect(npmInstallCall()?.spec).toBe("@openclaw/voice-call");
+    expect(npmInstallCall()?.spec).toBe("@grokbot/voice-call");
     expect(npmInstallCall()?.expectedPluginId).toBe("voice-call");
     expect(npmInstallCall()?.trustedSourceLinkedOfficialInstall).toBe(true);
   });
@@ -5509,7 +5509,7 @@ describe("syncPluginsForUpdateChannel", () => {
     installPluginFromClawHubMock.mockResolvedValue(
       createSuccessfulClawHubUpdateResult({
         pluginId: "legacy-chat",
-        targetDir: "/tmp/openclaw-plugins/legacy-chat",
+        targetDir: "/tmp/grokbot-plugins/legacy-chat",
         version: "2026.5.1-beta.2",
         clawhubPackage: "legacy-chat",
       }),
@@ -5522,7 +5522,7 @@ describe("syncPluginsForUpdateChannel", () => {
           bundledPluginId: "legacy-chat",
           preferredSource: "clawhub",
           clawhubSpec: "clawhub:legacy-chat@2026.5.1-beta.2",
-          npmSpec: "@openclaw/legacy-chat",
+          npmSpec: "@grokbot/legacy-chat",
           channelIds: ["legacy-chat"],
         },
       ],
@@ -5536,8 +5536,8 @@ describe("syncPluginsForUpdateChannel", () => {
           installs: {
             "legacy-chat": {
               source: "npm",
-              spec: "@openclaw/legacy-chat",
-              installPath: "/tmp/openclaw-plugins/legacy-chat",
+              spec: "@grokbot/legacy-chat",
+              installPath: "/tmp/grokbot-plugins/legacy-chat",
             },
           },
         },
@@ -5553,7 +5553,7 @@ describe("syncPluginsForUpdateChannel", () => {
     expectRecordFields(result.config.plugins?.installs?.["legacy-chat"], {
       source: "clawhub",
       spec: "clawhub:legacy-chat@2026.5.1-beta.2",
-      installPath: "/tmp/openclaw-plugins/legacy-chat",
+      installPath: "/tmp/grokbot-plugins/legacy-chat",
     });
   });
 
@@ -5590,7 +5590,7 @@ describe("syncPluginsForUpdateChannel", () => {
           bundledPluginId: "legacy-chat",
           preferredSource: "clawhub",
           clawhubSpec: "clawhub:legacy-chat@2026.5.1-beta.2",
-          npmSpec: "@openclaw/legacy-chat",
+          npmSpec: "@grokbot/legacy-chat",
           channelIds: ["legacy-chat"],
         },
       ],
@@ -5611,7 +5611,7 @@ describe("syncPluginsForUpdateChannel", () => {
     installPluginFromNpmSpecMock.mockResolvedValue(
       createSuccessfulNpmUpdateResult({
         pluginId: "default-chat",
-        targetDir: "/tmp/openclaw-plugins/default-chat",
+        targetDir: "/tmp/grokbot-plugins/default-chat",
         version: "2.0.0",
       }),
     );
@@ -5622,22 +5622,22 @@ describe("syncPluginsForUpdateChannel", () => {
         {
           bundledPluginId: "default-chat",
           enabledByDefault: true,
-          npmSpec: "@openclaw/default-chat",
+          npmSpec: "@grokbot/default-chat",
           channelIds: ["default-chat"],
         },
       ],
       config: {},
     });
 
-    expect(npmInstallCall()?.spec).toBe("@openclaw/default-chat");
+    expect(npmInstallCall()?.spec).toBe("@grokbot/default-chat");
     expect(npmInstallCall()?.mode).toBe("update");
     expect(npmInstallCall()?.expectedPluginId).toBe("default-chat");
     expect(result.changed).toBe(true);
     expect(result.summary.switchedToNpm).toEqual(["default-chat"]);
     expectRecordFields(result.config.plugins?.installs?.["default-chat"], {
       source: "npm",
-      spec: "@openclaw/default-chat",
-      installPath: "/tmp/openclaw-plugins/default-chat",
+      spec: "@grokbot/default-chat",
+      installPath: "/tmp/grokbot-plugins/default-chat",
       version: "2.0.0",
     });
   });
@@ -5650,7 +5650,7 @@ describe("syncPluginsForUpdateChannel", () => {
       externalizedBundledPluginBridges: [
         {
           bundledPluginId: "legacy-chat",
-          npmSpec: "@openclaw/legacy-chat",
+          npmSpec: "@grokbot/legacy-chat",
           channelIds: ["legacy-chat"],
         },
       ],
@@ -5709,7 +5709,7 @@ describe("syncPluginsForUpdateChannel", () => {
       externalizedBundledPluginBridges: [
         {
           bundledPluginId: "legacy-chat",
-          npmSpec: "@openclaw/legacy-chat",
+          npmSpec: "@grokbot/legacy-chat",
           channelIds: ["legacy-chat"],
         },
       ],
@@ -5729,7 +5729,7 @@ describe("syncPluginsForUpdateChannel", () => {
       externalizedBundledPluginBridges: [
         {
           bundledPluginId: "legacy-chat",
-          npmSpec: "@openclaw/legacy-chat",
+          npmSpec: "@grokbot/legacy-chat",
           channelIds: ["legacy-chat"],
         },
       ],
@@ -5773,7 +5773,7 @@ describe("syncPluginsForUpdateChannel", () => {
       externalizedBundledPluginBridges: [
         {
           bundledPluginId: "legacy-chat",
-          npmSpec: "@openclaw/legacy-chat",
+          npmSpec: "@grokbot/legacy-chat",
           channelIds: ["legacy-chat"],
         },
       ],
@@ -5807,7 +5807,7 @@ describe("syncPluginsForUpdateChannel", () => {
     "migrates already-externalized records to prototype-named plugin id %s",
     async (targetPluginId) => {
       const legacyPluginId = `legacy-${targetPluginId}`;
-      const npmPackageName = `openclaw-plugin-${targetPluginId}`;
+      const npmPackageName = `grokbot-plugin-${targetPluginId}`;
       resolveBundledPluginSourcesMock.mockReturnValue(new Map());
 
       const result = await syncPluginsForUpdateChannel({
@@ -5861,7 +5861,7 @@ describe("syncPluginsForUpdateChannel", () => {
       externalizedBundledPluginBridges: [
         {
           bundledPluginId: "legacy-chat",
-          npmSpec: "@openclaw/legacy-chat",
+          npmSpec: "@grokbot/legacy-chat",
           channelIds: ["legacy-chat"],
         },
       ],
@@ -5878,8 +5878,8 @@ describe("syncPluginsForUpdateChannel", () => {
           installs: {
             "legacy-chat": {
               source: "npm",
-              spec: "@openclaw/legacy-chat",
-              installPath: "/tmp/openclaw-plugins/legacy-chat",
+              spec: "@grokbot/legacy-chat",
+              installPath: "/tmp/grokbot-plugins/legacy-chat",
             },
           },
         },
@@ -5891,7 +5891,7 @@ describe("syncPluginsForUpdateChannel", () => {
     expect(result.config.plugins?.load?.paths).toEqual(["/workspace/plugins/other"]);
     expectRecordFields(result.config.plugins?.installs?.["legacy-chat"], {
       source: "npm",
-      spec: "@openclaw/legacy-chat",
+      spec: "@grokbot/legacy-chat",
     });
   });
 
@@ -5903,7 +5903,7 @@ describe("syncPluginsForUpdateChannel", () => {
       externalizedBundledPluginBridges: [
         {
           bundledPluginId: "legacy-chat",
-          npmSpec: "@openclaw/legacy-chat",
+          npmSpec: "@grokbot/legacy-chat",
           channelIds: ["legacy-chat"],
         },
       ],
@@ -5920,8 +5920,8 @@ describe("syncPluginsForUpdateChannel", () => {
           installs: {
             "legacy-chat": {
               source: "npm",
-              resolvedName: "@openclaw/legacy-chat",
-              installPath: "/tmp/openclaw-plugins/legacy-chat",
+              resolvedName: "@grokbot/legacy-chat",
+              installPath: "/tmp/grokbot-plugins/legacy-chat",
             },
           },
         },
@@ -5933,7 +5933,7 @@ describe("syncPluginsForUpdateChannel", () => {
     expect(result.config.plugins?.load?.paths).toEqual(["/workspace/plugins/other"]);
     expectRecordFields(result.config.plugins?.installs?.["legacy-chat"], {
       source: "npm",
-      resolvedName: "@openclaw/legacy-chat",
+      resolvedName: "@grokbot/legacy-chat",
     });
   });
 
@@ -5945,7 +5945,7 @@ describe("syncPluginsForUpdateChannel", () => {
       externalizedBundledPluginBridges: [
         {
           bundledPluginId: "legacy-chat",
-          npmSpec: "@openclaw/legacy-chat",
+          npmSpec: "@grokbot/legacy-chat",
           channelIds: ["legacy-chat"],
         },
       ],
@@ -5962,9 +5962,9 @@ describe("syncPluginsForUpdateChannel", () => {
           installs: {
             "legacy-chat": {
               source: "npm",
-              spec: "@openclaw/legacy-chat@1.2.3",
-              resolvedSpec: "@openclaw/legacy-chat@1.2.3",
-              installPath: "/tmp/openclaw-plugins/legacy-chat",
+              spec: "@grokbot/legacy-chat@1.2.3",
+              resolvedSpec: "@grokbot/legacy-chat@1.2.3",
+              installPath: "/tmp/grokbot-plugins/legacy-chat",
             },
           },
         },
@@ -5976,7 +5976,7 @@ describe("syncPluginsForUpdateChannel", () => {
     expect(result.config.plugins?.load?.paths).toEqual(["/workspace/plugins/other"]);
     expectRecordFields(result.config.plugins?.installs?.["legacy-chat"], {
       source: "npm",
-      spec: "@openclaw/legacy-chat@1.2.3",
+      spec: "@grokbot/legacy-chat@1.2.3",
     });
   });
 
@@ -5990,7 +5990,7 @@ describe("syncPluginsForUpdateChannel", () => {
           bundledPluginId: "legacy-chat",
           preferredSource: "clawhub",
           clawhubSpec: "clawhub:legacy-chat",
-          npmSpec: "@openclaw/legacy-chat",
+          npmSpec: "@grokbot/legacy-chat",
           channelIds: ["legacy-chat"],
         },
       ],
@@ -6009,7 +6009,7 @@ describe("syncPluginsForUpdateChannel", () => {
               source: "clawhub",
               spec: "clawhub:legacy-chat@2026.5.1",
               clawhubPackage: "legacy-chat",
-              installPath: "/tmp/openclaw-plugins/legacy-chat",
+              installPath: "/tmp/grokbot-plugins/legacy-chat",
             },
           },
         },

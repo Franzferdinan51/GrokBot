@@ -439,7 +439,7 @@ describe("buildEmbeddedCompactionRuntimeContext", () => {
     ).toBe("custom");
   });
 
-  it("preserves direct OpenAI compaction for the OpenClaw runtime", () => {
+  it("preserves direct OpenAI compaction for the GrokBot runtime", () => {
     const result = resolveEmbeddedCompactionTarget({
       config: {
         models: {
@@ -450,7 +450,7 @@ describe("buildEmbeddedCompactionRuntimeContext", () => {
       } as unknown as OpenClawConfig,
       provider: "openai",
       modelId: "gpt-5.5",
-      harnessRuntime: "openclaw",
+      harnessRuntime: "grokbot",
       defaultProvider: "openai",
       defaultModel: "gpt-5.5",
     });
@@ -462,8 +462,8 @@ describe("buildEmbeddedCompactionRuntimeContext", () => {
   });
 
   it.each([
-    { selection: "implicit OpenClaw", harnessRuntime: undefined, nativeCompaction: undefined },
-    { selection: "bound OpenClaw", harnessRuntime: "openclaw", nativeCompaction: undefined },
+    { selection: "implicit GrokBot", harnessRuntime: undefined, nativeCompaction: undefined },
+    { selection: "bound GrokBot", harnessRuntime: "grokbot", nativeCompaction: undefined },
     { selection: "bound Codex", harnessRuntime: "codex", nativeCompaction: true },
   ])("keeps $selection ownership for custom OpenAI Responses compaction", (fixture) => {
     const result = resolveEmbeddedCompactionTarget({

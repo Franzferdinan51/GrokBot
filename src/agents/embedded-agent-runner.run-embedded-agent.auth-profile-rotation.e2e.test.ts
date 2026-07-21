@@ -2,7 +2,7 @@
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import type { AssistantMessage } from "openclaw/plugin-sdk/llm";
+import type { AssistantMessage } from "grokbot/plugin-sdk/llm";
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import type { OpenClawConfig } from "../config/config.js";
 import { redactIdentifier } from "../logging/redact-identifier.js";
@@ -490,8 +490,8 @@ async function withTimedAgentWorkspace<T>(
 ) {
   vi.useFakeTimers();
   try {
-    const agentDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-agent-"));
-    const workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-workspace-"));
+    const agentDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-agent-"));
+    const workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-workspace-"));
     const now = Date.now();
     vi.setSystemTime(now);
 
@@ -509,8 +509,8 @@ async function withTimedAgentWorkspace<T>(
 async function withAgentWorkspace<T>(
   run: (ctx: { agentDir: string; workspaceDir: string }) => Promise<T>,
 ) {
-  const agentDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-agent-"));
-  const workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-workspace-"));
+  const agentDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-agent-"));
+  const workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-workspace-"));
   try {
     return await run({ agentDir, workspaceDir });
   } finally {
@@ -648,8 +648,8 @@ describe("runEmbeddedAgent auth profile rotation", () => {
   });
 
   it("refreshes copilot token after auth error and retries once", async () => {
-    const agentDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-agent-"));
-    const workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-workspace-"));
+    const agentDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-agent-"));
+    const workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-workspace-"));
     try {
       await writeCopilotAuthStore(agentDir);
       const now = Date.now();
@@ -714,8 +714,8 @@ describe("runEmbeddedAgent auth profile rotation", () => {
   });
 
   it("allows another auth refresh after a successful retry", async () => {
-    const agentDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-agent-"));
-    const workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-workspace-"));
+    const agentDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-agent-"));
+    const workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-workspace-"));
     try {
       await writeCopilotAuthStore(agentDir);
       const now = Date.now();
@@ -798,8 +798,8 @@ describe("runEmbeddedAgent auth profile rotation", () => {
   });
 
   it("does not reschedule copilot refresh after shutdown", async () => {
-    const agentDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-agent-"));
-    const workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-workspace-"));
+    const agentDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-agent-"));
+    const workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-workspace-"));
     vi.useFakeTimers();
     try {
       await writeCopilotAuthStore(agentDir);
@@ -879,7 +879,7 @@ describe("runEmbeddedAgent auth profile rotation", () => {
     setLoggerOverrideFn({
       level: "trace",
       consoleLevel: "silent",
-      file: path.join(os.tmpdir(), `openclaw-auth-rotation-${Date.now()}.log`),
+      file: path.join(os.tmpdir(), `grokbot-auth-rotation-${Date.now()}.log`),
     });
 
     await runAutoPinnedRotationCase({

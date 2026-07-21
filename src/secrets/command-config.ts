@@ -1,5 +1,5 @@
-/** Collects and analyzes command-scoped secret assignments from OpenClaw config. */
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+/** Collects and analyzes command-scoped secret assignments from GrokBot config. */
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { coerceSecretRef, resolveSecretInputRef } from "../config/types.secrets.js";
 import { getPath } from "./path-utils.js";
 import { isExpectedResolvedSecretValue } from "./secret-value.js";

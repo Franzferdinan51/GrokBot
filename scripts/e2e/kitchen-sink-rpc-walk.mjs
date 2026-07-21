@@ -15,8 +15,8 @@ import {
 } from "../lib/windows-taskkill.mjs";
 
 const PLUGIN_SPEC =
-  process.env.OPENCLAW_KITCHEN_SINK_NPM_SPEC || "npm:@openclaw/kitchen-sink@latest";
-const PLUGIN_ID = process.env.OPENCLAW_KITCHEN_SINK_PLUGIN_ID || "openclaw-kitchen-sink-fixture";
+  process.env.OPENCLAW_KITCHEN_SINK_NPM_SPEC || "npm:@grokbot/kitchen-sink@latest";
+const PLUGIN_ID = process.env.OPENCLAW_KITCHEN_SINK_PLUGIN_ID || "grokbot-kitchen-sink-fixture";
 const CHANNEL_ID = "kitchen-sink-channel";
 const CHANNEL_ACCOUNT_ID = "local";
 const TOKEN = "kitchen-sink-rpc-token";
@@ -101,16 +101,16 @@ const commandSignalHandlers = new Map(
 function usage() {
   return `Usage: node scripts/e2e/kitchen-sink-rpc-walk.mjs
 
-Runs the external Kitchen Sink plugin RPC walk against a built OpenClaw entry.
+Runs the external Kitchen Sink plugin RPC walk against a built GrokBot entry.
 
 Environment:
-  OPENCLAW_ENTRY                         Built OpenClaw entrypoint. Defaults to dist/index.mjs or dist/index.js.
-  OPENCLAW_KITCHEN_SINK_NPM_SPEC         Plugin package spec. Default: npm:@openclaw/kitchen-sink@latest.
-  OPENCLAW_KITCHEN_SINK_PLUGIN_ID        Plugin id. Default: openclaw-kitchen-sink-fixture.
+  OPENCLAW_ENTRY                         Built GrokBot entrypoint. Defaults to dist/index.mjs or dist/index.js.
+  OPENCLAW_KITCHEN_SINK_NPM_SPEC         Plugin package spec. Default: npm:@grokbot/kitchen-sink@latest.
+  OPENCLAW_KITCHEN_SINK_PLUGIN_ID        Plugin id. Default: grokbot-kitchen-sink-fixture.
   OPENCLAW_KITCHEN_SINK_PERSONALITY      Plugin fixture personality. Default: conformance.
   OPENCLAW_KITCHEN_SINK_RPC_PORT         Gateway loopback port. Default: OS-selected free port.
   OPENCLAW_KITCHEN_SINK_RPC_READY_MS     Gateway readiness timeout.
-  OPENCLAW_KITCHEN_SINK_RPC_COMMAND_MS   OpenClaw command timeout.
+  OPENCLAW_KITCHEN_SINK_RPC_COMMAND_MS   GrokBot command timeout.
   OPENCLAW_KITCHEN_SINK_RPC_INSTALL_MS   Plugin install timeout.
   OPENCLAW_KITCHEN_SINK_RPC_CALL_MS      RPC call timeout.
   OPENCLAW_KITCHEN_SINK_RPC_FETCH_MS     HTTP readiness probe timeout.
@@ -268,13 +268,13 @@ function resolveOpenClawRunner() {
       return { command: "node", baseArgs: [resolved], label: resolved };
     }
   }
-  return { pnpm: true, baseArgs: ["openclaw"], label: "pnpm openclaw" };
+  return { pnpm: true, baseArgs: ["grokbot"], label: "pnpm grokbot" };
 }
 
 export function makeEnv() {
-  const root = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-kitchen-sink-rpc-"));
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-kitchen-sink-rpc-"));
   const home = path.join(root, "home");
-  const stateDir = path.join(home, ".openclaw");
+  const stateDir = path.join(home, ".grokbot");
   fs.mkdirSync(stateDir, { recursive: true });
   return {
     root,
@@ -284,7 +284,7 @@ export function makeEnv() {
       USERPROFILE: home,
       OPENCLAW_HOME: home,
       OPENCLAW_STATE_DIR: stateDir,
-      OPENCLAW_CONFIG_PATH: path.join(stateDir, "openclaw.json"),
+      OPENCLAW_CONFIG_PATH: path.join(stateDir, "grokbot.json"),
       OPENCLAW_NO_ONBOARD: "1",
       OPENCLAW_SKIP_PROVIDERS: "0",
       OPENCLAW_KITCHEN_SINK_PERSONALITY:
@@ -2080,7 +2080,7 @@ async function samplePosixProcessTree(pid, run, commandLineNeedles) {
     const commandMatches = descendants.filter(matchesCommandNeedles);
     const rootCommandMatches = rootRow && matchesCommandNeedles(rootRow) ? [rootRow] : [];
     const gatewayTitleMatches = descendants.filter((row) =>
-      row.command.toLowerCase().includes("openclaw-gateway"),
+      row.command.toLowerCase().includes("grokbot-gateway"),
     );
     const selected = selectPeakRssProcess(
       commandMatches.length > 0

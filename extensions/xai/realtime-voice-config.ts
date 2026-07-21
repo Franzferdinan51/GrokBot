@@ -1,18 +1,18 @@
 import {
   isProviderAuthProfileConfigured,
   type OpenClawConfig,
-} from "openclaw/plugin-sdk/provider-auth";
-import { resolveApiKeyForProvider } from "openclaw/plugin-sdk/provider-auth-runtime";
+} from "grokbot/plugin-sdk/provider-auth";
+import { resolveApiKeyForProvider } from "grokbot/plugin-sdk/provider-auth-runtime";
 import type {
   RealtimeVoiceBridgeCreateRequest,
   RealtimeVoiceProviderConfig,
-} from "openclaw/plugin-sdk/realtime-voice";
-import { normalizeResolvedSecretInputString } from "openclaw/plugin-sdk/secret-input";
+} from "grokbot/plugin-sdk/realtime-voice";
+import { normalizeResolvedSecretInputString } from "grokbot/plugin-sdk/secret-input";
 import {
   asFiniteNumber,
   normalizeOptionalString,
   parseBooleanValue as readBoolean,
-} from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/string-coerce-runtime";
 import { XAI_BASE_URL } from "./model-definitions.js";
 
 type XaiRealtimeVoice = "eve" | "ara" | "rex" | "sal" | "leo";
@@ -236,7 +236,7 @@ export async function resolveXaiRealtimeApiKey(
     return oauthKey;
   }
   throw new Error(
-    "xAI credentials missing for realtime voice. Sign in with `openclaw onboard --auth-choice xai-oauth`, run `openclaw onboard --auth-choice xai-api-key`, or set XAI_API_KEY.",
+    "xAI credentials missing for realtime voice. Sign in with `grokbot onboard --auth-choice xai-oauth`, run `grokbot onboard --auth-choice xai-api-key`, or set XAI_API_KEY.",
   );
 }
 

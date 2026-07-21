@@ -2,7 +2,7 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { MAX_TIMER_TIMEOUT_MS } from "@openclaw/normalization-core/number-coercion";
+import { MAX_TIMER_TIMEOUT_MS } from "@grokbot/normalization-core/number-coercion";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { useAutoCleanupTempDirTracker } from "../../test/helpers/temp-dir.js";
 
@@ -671,7 +671,7 @@ describe("shell env fallback", () => {
     if (process.platform === "win32") {
       return;
     }
-    const root = tempDirs.make("openclaw-shell-path-");
+    const root = tempDirs.make("grokbot-shell-path-");
     const daemonBin = path.join(root, "daemon-bin");
     const shellBin = path.join(root, "shell-bin");
     fs.mkdirSync(daemonBin);

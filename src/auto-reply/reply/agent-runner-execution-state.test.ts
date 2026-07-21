@@ -301,7 +301,7 @@ describe("runAgentTurnWithFallback: session state", () => {
     const followupRun = createFollowupRun();
     followupRun.run.provider = "anthropic";
     followupRun.run.model = "claude-opus";
-    followupRun.run.authProfileId = "anthropic:openclaw";
+    followupRun.run.authProfileId = "anthropic:grokbot";
     followupRun.run.authProfileIdSource = "user";
 
     const sessionEntry: SessionEntry = {

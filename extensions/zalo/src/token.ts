@@ -1,8 +1,8 @@
 // Zalo plugin module implements token behavior.
-import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "openclaw/plugin-sdk/account-id";
-import type { BaseTokenResolution } from "openclaw/plugin-sdk/channel-contract";
-import { tryReadSecretFileSync } from "openclaw/plugin-sdk/core";
-import { resolveAccountEntry } from "openclaw/plugin-sdk/routing";
+import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "grokbot/plugin-sdk/account-id";
+import type { BaseTokenResolution } from "grokbot/plugin-sdk/channel-contract";
+import { tryReadSecretFileSync } from "grokbot/plugin-sdk/core";
+import { resolveAccountEntry } from "grokbot/plugin-sdk/routing";
 import { normalizeResolvedSecretInputString, normalizeSecretInputString } from "./secret-input.js";
 import type { ZaloConfig } from "./types.js";
 

@@ -8,12 +8,12 @@ type CoreCliCommandDescriptor = NamedCommandDescriptor;
 const coreCliCommandCatalog = defineCommandDescriptorCatalog([
   {
     name: "setup",
-    description: "Chat with OpenClaw; onboard when setup is incomplete",
+    description: "Chat with GrokBot; onboard when setup is incomplete",
     hasSubcommands: false,
   },
   {
     name: "crestodian", // hidden alias
-    description: "Deprecated: use openclaw setup",
+    description: "Deprecated: use grokbot setup",
     hasSubcommands: false,
     hidden: true,
   },
@@ -70,7 +70,7 @@ const coreCliCommandCatalog = defineCommandDescriptorCatalog([
   },
   {
     name: "mcp",
-    description: "Manage OpenClaw mcp.servers config and channel bridge",
+    description: "Manage GrokBot mcp.servers config and channel bridge",
     hasSubcommands: true,
     parentDefaultHelp: true,
   },

@@ -1,16 +1,16 @@
-import { buildExecApprovalPendingReplyPayload } from "openclaw/plugin-sdk/approval-reply-runtime";
+import { buildExecApprovalPendingReplyPayload } from "grokbot/plugin-sdk/approval-reply-runtime";
 // Signal tests cover core plugin behavior.
 import {
   createMessageReceiptFromOutboundResults,
   verifyChannelMessageAdapterCapabilityProofs,
-} from "openclaw/plugin-sdk/channel-outbound";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+} from "grokbot/plugin-sdk/channel-outbound";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import {
   createPluginSetupWizardStatus,
   createTestWizardPrompter,
   type WizardPrompter,
-} from "openclaw/plugin-sdk/plugin-test-runtime";
-import type { ReplyPayload } from "openclaw/plugin-sdk/reply-runtime";
+} from "grokbot/plugin-sdk/plugin-test-runtime";
+import type { ReplyPayload } from "grokbot/plugin-sdk/reply-runtime";
 import { describe, expect, it, vi } from "vitest";
 import {
   clearSignalApprovalReactionTargetsForTest,

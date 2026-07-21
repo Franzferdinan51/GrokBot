@@ -21,13 +21,13 @@ import {
   type ProviderBatchOutputLine,
   uploadBatchJsonlFile,
   withRemoteHttpResponse,
-} from "openclaw/plugin-sdk/memory-core-host-engine-embeddings";
+} from "grokbot/plugin-sdk/memory-core-host-engine-embeddings";
 import {
   assertOkOrThrowProviderError,
   readProviderJsonResponse,
-} from "openclaw/plugin-sdk/provider-http";
-import { readResponseWithLimit } from "openclaw/plugin-sdk/response-limit-runtime";
-import { normalizeStringEntries } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/provider-http";
+import { readResponseWithLimit } from "grokbot/plugin-sdk/response-limit-runtime";
+import { normalizeStringEntries } from "grokbot/plugin-sdk/string-coerce-runtime";
 import type { VoyageEmbeddingClient } from "./embedding-provider.js";
 
 /**
@@ -346,5 +346,5 @@ const testing = {
 } as const;
 
 if (process.env.VITEST === "true") {
-  Reflect.set(globalThis, Symbol.for("openclaw.voyageEmbeddingBatchTestApi"), testing);
+  Reflect.set(globalThis, Symbol.for("grokbot.voyageEmbeddingBatchTestApi"), testing);
 }

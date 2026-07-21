@@ -1,19 +1,19 @@
 // Telegram plugin module implements state migrations behavior.
 import fs from "node:fs";
 import path from "node:path";
-import type { ChannelLegacyStateMigrationPlan } from "openclaw/plugin-sdk/channel-contract";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { ChannelLegacyStateMigrationPlan } from "grokbot/plugin-sdk/channel-contract";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import {
   type PersistentDedupeLegacyJsonImportEntry,
   createPersistentDedupeImportEntry,
   listPersistentDedupeLegacyJsonFileEntries,
   resolvePersistentDedupePluginStateNamespace,
   shouldReplacePersistentDedupeEntry,
-} from "openclaw/plugin-sdk/persistent-dedupe";
-import { createPluginStateSyncKeyedStore } from "openclaw/plugin-sdk/runtime-doctor";
-import { fileExists } from "openclaw/plugin-sdk/security-runtime";
-import { resolveStorePath } from "openclaw/plugin-sdk/session-store-runtime";
-import { isRecord, uniqueStrings } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/persistent-dedupe";
+import { createPluginStateSyncKeyedStore } from "grokbot/plugin-sdk/runtime-doctor";
+import { fileExists } from "grokbot/plugin-sdk/security-runtime";
+import { resolveStorePath } from "grokbot/plugin-sdk/session-store-runtime";
+import { isRecord, uniqueStrings } from "grokbot/plugin-sdk/string-coerce-runtime";
 import { listTelegramAccountIds, resolveDefaultTelegramAccountId } from "./account-selection.js";
 import {
   listTelegramLegacyBotInfoCacheEntries,

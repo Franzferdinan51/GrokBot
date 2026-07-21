@@ -1,5 +1,5 @@
 #!/usr/bin/env -S node --import tsx
-// Release Check script supports OpenClaw repository automation.
+// Release Check script supports GrokBot repository automation.
 
 import { execFileSync, type ExecFileSyncOptions } from "node:child_process";
 import {
@@ -52,7 +52,7 @@ import { resolveNpmRunner } from "./npm-runner.mjs";
 import {
   collectInstalledPackageErrors,
   normalizeInstalledBinaryVersion,
-} from "./openclaw-npm-postpublish-verify.ts";
+} from "./grokbot-npm-postpublish-verify.ts";
 import { resolvePnpmRunner } from "./pnpm-runner.mjs";
 import { listStaticExtensionAssetOutputs } from "./runtime-postbuild.mjs";
 import { sparkleBuildFloorsFromShortVersion, type SparkleBuildFloors } from "./sparkle-build.ts";
@@ -113,7 +113,7 @@ const requiredPathGroups = [
   "dist/agents/model-provider-auth.worker.js",
   "dist/audit/audit-event-writer.worker.js",
   "dist/config/sessions/session-transcript-reconcile.worker.js",
-  "dist/state/openclaw-database-verify.worker.js",
+  "dist/state/grokbot-database-verify.worker.js",
   "dist/system-agent/setup-inference-detection.worker.js",
   "dist/task-registry-control.runtime.js",
   "dist/telegram-ingress-worker.runtime.js",
@@ -125,7 +125,7 @@ const forbiddenPrefixes = [
   ...rootPackageExcludedExtensionPrefixes,
   ...LOCAL_BUILD_METADATA_DIST_PATHS,
   "dist-runtime/",
-  "dist/OpenClaw.app/",
+  "dist/GrokBot.app/",
   "dist/extensions/qa-channel/",
   "dist/extensions/qa-lab/",
   "dist/plugin-sdk/extensions/qa-channel/",
@@ -173,11 +173,11 @@ const DEFAULT_RELEASE_CHECK_COMMAND_TIMEOUT_MS = 5 * 60 * 1000;
 const DEFAULT_RELEASE_CHECK_COMMAND_MAX_BUFFER_BYTES = 100 * 1024 * 1024;
 export const MAX_CRITICAL_PLUGIN_SDK_ENTRYPOINT_BYTES = 2 * 1024 * 1024;
 const CRITICAL_PLUGIN_SDK_SIZE_CHECK_SPECIFIERS = [
-  "openclaw/plugin-sdk/core",
-  "openclaw/plugin-sdk/provider-entry",
-  "openclaw/plugin-sdk/runtime",
+  "grokbot/plugin-sdk/core",
+  "grokbot/plugin-sdk/provider-entry",
+  "grokbot/plugin-sdk/runtime",
 ] as const;
-const CRITICAL_PLUGIN_SDK_IMPORT_SMOKE_SPECIFIERS = ["openclaw/plugin-sdk/core"] as const;
+const CRITICAL_PLUGIN_SDK_IMPORT_SMOKE_SPECIFIERS = ["grokbot/plugin-sdk/core"] as const;
 export const PACKED_CLI_SMOKE_COMMANDS = [
   ["--help"],
   ["onboard", "--help"],
@@ -472,13 +472,13 @@ export function resolveReleaseCheckLocalPackageTarballs(
     .map((entry) => resolve(resolvedDir, entry.name))
     .toSorted((left, right) => left.localeCompare(right));
   const aiTarballs = tarballs.filter(
-    (tarballPath) => localPackageNameForTarball(tarballPath) === "@openclaw/ai",
+    (tarballPath) => localPackageNameForTarball(tarballPath) === "@grokbot/ai",
   );
   const gatewayProtocolTarballs = tarballs.filter(
-    (tarballPath) => localPackageNameForTarball(tarballPath) === "@openclaw/gateway-protocol",
+    (tarballPath) => localPackageNameForTarball(tarballPath) === "@grokbot/gateway-protocol",
   );
   const gatewayClientTarballs = tarballs.filter(
-    (tarballPath) => localPackageNameForTarball(tarballPath) === "@openclaw/gateway-client",
+    (tarballPath) => localPackageNameForTarball(tarballPath) === "@grokbot/gateway-client",
   );
   const recognizedTarballs =
     aiTarballs.length + gatewayProtocolTarballs.length + gatewayClientTarballs.length;
@@ -489,15 +489,15 @@ export function resolveReleaseCheckLocalPackageTarballs(
   }
   const expectedAiTarballs = requiresAi ? 1 : 0;
   const aiTarballRequirement = requiresAi
-    ? "exactly one @openclaw/ai tarball"
-    : "no @openclaw/ai tarballs";
+    ? "exactly one @grokbot/ai tarball"
+    : "no @grokbot/ai tarballs";
   if (
     aiTarballs.length !== expectedAiTarballs ||
     gatewayProtocolTarballs.length > 1 ||
     gatewayClientTarballs.length > 1
   ) {
     throw new Error(
-      `release-check: ${RELEASE_CHECK_LOCAL_PACKAGE_TARBALL_DIR_ENV} must contain ${aiTarballRequirement}, at most one @openclaw/gateway-protocol tarball, and at most one @openclaw/gateway-client tarball; found ${aiTarballs.length}, ${gatewayProtocolTarballs.length}, and ${gatewayClientTarballs.length}.`,
+      `release-check: ${RELEASE_CHECK_LOCAL_PACKAGE_TARBALL_DIR_ENV} must contain ${aiTarballRequirement}, at most one @grokbot/gateway-protocol tarball, and at most one @grokbot/gateway-client tarball; found ${aiTarballs.length}, ${gatewayProtocolTarballs.length}, and ${gatewayClientTarballs.length}.`,
     );
   }
   return tarballs;
@@ -507,19 +507,19 @@ function rootPackageRequiresLocalAiTarball(): boolean {
   const packageJson = JSON.parse(readFileSync(resolve("package.json"), "utf8")) as {
     dependencies?: Record<string, unknown>;
   };
-  return typeof packageJson.dependencies?.["@openclaw/ai"] === "string";
+  return typeof packageJson.dependencies?.["@grokbot/ai"] === "string";
 }
 
 function localPackageNameForTarball(tarballPath: string): string | undefined {
   const filename = basename(tarballPath);
-  if (/^openclaw-ai(?:-.+)?\.tgz$/.test(filename)) {
-    return "@openclaw/ai";
+  if (/^grokbot-ai(?:-.+)?\.tgz$/.test(filename)) {
+    return "@grokbot/ai";
   }
-  if (/^openclaw-gateway-protocol(?:-.+)?\.tgz$/.test(filename)) {
-    return "@openclaw/gateway-protocol";
+  if (/^grokbot-gateway-protocol(?:-.+)?\.tgz$/.test(filename)) {
+    return "@grokbot/gateway-protocol";
   }
-  if (/^openclaw-gateway-client(?:-.+)?\.tgz$/.test(filename)) {
-    return "@openclaw/gateway-client";
+  if (/^grokbot-gateway-client(?:-.+)?\.tgz$/.test(filename)) {
+    return "@grokbot/gateway-client";
   }
   return undefined;
 }
@@ -557,11 +557,11 @@ export function writePackedTarballInstallManifest(
     packageName: localPackageNameForTarball(localPackageTarballPath),
     tarballPath: localPackageTarballPath,
   }));
-  const aiTarballs = localPackages.filter(({ packageName }) => packageName === "@openclaw/ai");
+  const aiTarballs = localPackages.filter(({ packageName }) => packageName === "@grokbot/ai");
   const expectedAiTarballs = requiresAi ? 1 : 0;
   const aiTarballRequirement = requiresAi
-    ? "exactly one @openclaw/ai tarball"
-    : "no @openclaw/ai tarballs";
+    ? "exactly one @grokbot/ai tarball"
+    : "no @grokbot/ai tarballs";
   if (aiTarballs.length !== expectedAiTarballs) {
     throw new Error(
       `release-check: packed install requires ${aiTarballRequirement}; found ${aiTarballs.length}.`,
@@ -582,7 +582,7 @@ export function writePackedTarballInstallManifest(
   if (Object.keys(dependencies).length !== localPackages.length) {
     throw new Error("release-check: packed install received duplicate local package tarballs.");
   }
-  dependencies.openclaw = pathToFileURL(tarballPath).href;
+  dependencies.grokbot = pathToFileURL(tarballPath).href;
   mkdirSync(prefixDir, { recursive: true });
   writeFileSync(
     join(prefixDir, "package.json"),
@@ -619,7 +619,7 @@ export function resolvePackedInstalledBinaryPath(
     prefixDir,
     "node_modules",
     ".bin",
-    platform === "win32" ? "openclaw.cmd" : "openclaw",
+    platform === "win32" ? "grokbot.cmd" : "grokbot",
   );
 }
 
@@ -738,7 +738,7 @@ export function collectPackedInstalledPackageVerificationErrors(params: {
     normalizeInstalledBinaryVersion(params.installedBinaryVersion) !== params.expectedVersion
   ) {
     errors.push(
-      `installed openclaw binary version mismatch: expected ${params.expectedVersion}, found ${params.installedBinaryVersion || "<missing>"}.`,
+      `installed grokbot binary version mismatch: expected ${params.expectedVersion}, found ${params.installedBinaryVersion || "<missing>"}.`,
     );
   }
   return errors;
@@ -781,17 +781,17 @@ export function createPackedPluginSdkTypescriptSmokeProject(params: {
   aiPackageSpec?: string;
 }): void {
   const dependencies: Record<string, string> = {
-    openclaw: params.packageSpec,
+    grokbot: params.packageSpec,
   };
   if (params.aiPackageSpec) {
-    dependencies["@openclaw/ai"] = params.aiPackageSpec;
+    dependencies["@grokbot/ai"] = params.aiPackageSpec;
   }
   mkdirSync(join(params.consumerDir, "src"), { recursive: true });
   writeFileSync(
     join(params.consumerDir, "package.json"),
     `${JSON.stringify(
       {
-        name: "openclaw-plugin-sdk-type-smoke",
+        name: "grokbot-plugin-sdk-type-smoke",
         private: true,
         type: "module",
         dependencies,
@@ -833,7 +833,7 @@ function runPackedPluginSdkTypescriptSmoke(
 ): void {
   const consumerDir = join(tmpRoot, "plugin-sdk-type-consumer");
   const aiTarball = localPackageTarballs.find(
-    (localPackageTarball) => localPackageNameForTarball(localPackageTarball) === "@openclaw/ai",
+    (localPackageTarball) => localPackageNameForTarball(localPackageTarball) === "@grokbot/ai",
   );
   createPackedPluginSdkTypescriptSmokeProject({
     consumerDir,
@@ -846,7 +846,7 @@ function runPackedPluginSdkTypescriptSmoke(
     stdio: "inherit",
   });
 
-  const installedOpenClawRoot = join(consumerDir, "node_modules", "openclaw");
+  const installedOpenClawRoot = join(consumerDir, "node_modules", "grokbot");
   const tscPath = [
     join(consumerDir, "node_modules", "typescript", "bin", "tsc"),
     join(installedOpenClawRoot, "node_modules", "typescript", "bin", "tsc"),
@@ -864,8 +864,8 @@ function runPackedPluginSdkTypescriptSmoke(
 }
 
 export function writePackedBundledPluginActivationConfig(homeDir: string): void {
-  const configPath = join(homeDir, ".openclaw", "openclaw.json");
-  mkdirSync(join(homeDir, ".openclaw"), { recursive: true });
+  const configPath = join(homeDir, ".grokbot", "grokbot.json");
+  mkdirSync(join(homeDir, ".grokbot"), { recursive: true });
   writeFileSync(
     configPath,
     `${JSON.stringify(
@@ -883,7 +883,7 @@ export function writePackedBundledPluginActivationConfig(homeDir: string): void 
         models: {
           providers: {
             openai: {
-              apiKey: "sk-openclaw-release-check",
+              apiKey: "sk-grokbot-release-check",
               baseUrl: "https://api.openai.com/v1",
               models: [],
             },
@@ -910,14 +910,14 @@ function runPackedBundledPluginActivationSmoke(packageRoot: string, tmpRoot: str
   mkdirSync(homeDir, { recursive: true });
   const env = createPackedCliSmokeEnv(process.env, {
     HOME: homeDir,
-    OPENAI_API_KEY: "sk-openclaw-release-check",
+    OPENAI_API_KEY: "sk-grokbot-release-check",
   });
 
   writePackedBundledPluginActivationConfig(homeDir);
   runReleaseCheckCommand(
     {
       command: process.execPath,
-      args: [join(packageRoot, "openclaw.mjs"), ...PACKED_BUNDLED_RUNTIME_DEPS_REPAIR_ARGS],
+      args: [join(packageRoot, "grokbot.mjs"), ...PACKED_BUNDLED_RUNTIME_DEPS_REPAIR_ARGS],
     },
     {
       cwd: packageRoot,
@@ -926,7 +926,7 @@ function runPackedBundledPluginActivationSmoke(packageRoot: string, tmpRoot: str
     },
   );
   runReleaseCheckCommand(
-    { command: process.execPath, args: [join(packageRoot, "openclaw.mjs"), "plugins", "doctor"] },
+    { command: process.execPath, args: [join(packageRoot, "grokbot.mjs"), "plugins", "doctor"] },
     {
       cwd: packageRoot,
       stdio: "inherit",
@@ -973,7 +973,7 @@ function runPackedCliSmoke(params: {
   const env = createPackedCliSmokeEnv(process.env, {
     HOME: params.homeDir,
     OPENCLAW_STATE_DIR: params.stateDir,
-    OPENAI_API_KEY: "sk-openclaw-release-check",
+    OPENAI_API_KEY: "sk-grokbot-release-check",
   });
   const windowsRoot = env.SystemRoot ?? env.WINDIR ?? "C:\\Windows";
   const trustedCmdPath = join(windowsRoot, "System32", "cmd.exe");
@@ -1007,7 +1007,7 @@ function runPackedCliSmoke(params: {
 }
 
 function runPackedBundledChannelEntrySmoke(): void {
-  const tmpRoot = mkdtempSync(join(tmpdir(), "openclaw-release-pack-smoke-"));
+  const tmpRoot = mkdtempSync(join(tmpdir(), "grokbot-release-pack-smoke-"));
   try {
     const expectedVersion = (
       JSON.parse(readFileSync(resolve("package.json"), "utf8")) as {
@@ -1029,7 +1029,7 @@ function runPackedBundledChannelEntrySmoke(): void {
     });
     installPackedTarball(prefixDir, tarballPath, tmpRoot, localPackageTarballs);
 
-    const packageRoot = join(prefixDir, "node_modules", "openclaw");
+    const packageRoot = join(prefixDir, "node_modules", "grokbot");
     verifyPackedInstalledPackage({
       expectedVersion,
       packageRoot,
@@ -1070,7 +1070,7 @@ function runPackedBundledChannelEntrySmoke(): void {
     runReleaseCheckCommand(
       {
         command: process.execPath,
-        args: [join(packageRoot, "openclaw.mjs"), ...PACKED_COMPLETION_SMOKE_ARGS],
+        args: [join(packageRoot, "grokbot.mjs"), ...PACKED_COMPLETION_SMOKE_ARGS],
       },
       {
         cwd: packageRoot,
@@ -1134,8 +1134,8 @@ export function collectForbiddenPackPaths(paths: Iterable<string>): string[] {
       (path) =>
         isLegacyPluginDependencyInstallStagePath(path) ||
         forbiddenPrefixes.some((prefix) => path.startsWith(prefix)) ||
-        /(^|\/)\.openclaw-runtime-deps-[^/]+(\/|$)/u.test(path) ||
-        path.endsWith("/.openclaw-runtime-deps-stamp.json") ||
+        /(^|\/)\.grokbot-runtime-deps-[^/]+(\/|$)/u.test(path) ||
+        path.endsWith("/.grokbot-runtime-deps-stamp.json") ||
         path.includes("node_modules/"),
     )
     .toSorted((left, right) => left.localeCompare(right));
@@ -1256,7 +1256,7 @@ function checkAppcastSparkleVersions() {
   }
 }
 
-// Critical functions that channel extension plugins import from openclaw/plugin-sdk.
+// Critical functions that channel extension plugins import from grokbot/plugin-sdk.
 // If any are missing from the compiled output, plugins crash at runtime (#27569).
 const requiredPluginSdkExports = [
   "isDangerousNameMatchingEnabled",
@@ -1337,7 +1337,7 @@ async function checkPluginSdkExports() {
 export function collectCriticalPluginSdkEntrypointSizeErrors(rootDir = process.cwd()): string[] {
   const errors: string[] = [];
   for (const specifier of CRITICAL_PLUGIN_SDK_SIZE_CHECK_SPECIFIERS) {
-    const subpath = specifier.slice("openclaw/plugin-sdk/".length);
+    const subpath = specifier.slice("grokbot/plugin-sdk/".length);
     const relativePath = `dist/plugin-sdk/${subpath}.js`;
     const filePath = resolve(rootDir, relativePath);
     if (!existsSync(filePath)) {

@@ -139,12 +139,12 @@ export function createTempHomeHarness(options: { prefix: string; beforeEachCase?
 
   async function withTempHome<T>(fn: (home: string) => Promise<T>): Promise<T> {
     const home = path.join(fixtureRoot, `case-${++caseId}`);
-    await fs.mkdir(path.join(home, ".openclaw", "agents", "main", "sessions"), { recursive: true });
+    await fs.mkdir(path.join(home, ".grokbot", "agents", "main", "sessions"), { recursive: true });
     const env: Record<string, string | undefined> = {
       HOME: home,
       USERPROFILE: home,
-      OPENCLAW_STATE_DIR: path.join(home, ".openclaw"),
-      OPENCLAW_AGENT_DIR: path.join(home, ".openclaw", "agent"),
+      OPENCLAW_STATE_DIR: path.join(home, ".grokbot"),
+      OPENCLAW_AGENT_DIR: path.join(home, ".grokbot", "agent"),
     };
     if (process.platform === "win32") {
       const match = home.match(/^([A-Za-z]:)(.*)$/);
@@ -169,7 +169,7 @@ export function makeReplyConfig(home: string) {
     agents: {
       defaults: {
         model: "anthropic/claude-opus-4-6",
-        workspace: path.join(home, "openclaw"),
+        workspace: path.join(home, "grokbot"),
       },
     },
     channels: {

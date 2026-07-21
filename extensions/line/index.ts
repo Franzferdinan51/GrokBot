@@ -1,10 +1,10 @@
-// Line plugin entrypoint registers its OpenClaw integration.
+// Line plugin entrypoint registers its GrokBot integration.
 import {
   defineBundledChannelEntry,
   type OpenClawPluginCommandDefinition,
   type OpenClawPluginApi,
-} from "openclaw/plugin-sdk/channel-entry-contract";
-import { createLazyRuntimeModule } from "openclaw/plugin-sdk/lazy-runtime";
+} from "grokbot/plugin-sdk/channel-entry-contract";
+import { createLazyRuntimeModule } from "grokbot/plugin-sdk/lazy-runtime";
 
 type RegisteredLineCardCommand = OpenClawPluginCommandDefinition;
 

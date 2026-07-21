@@ -1,8 +1,8 @@
 // Discord tests cover provider plugin behavior.
 import { EventEmitter } from "node:events";
-import type { ChannelRuntimeSurface } from "openclaw/plugin-sdk/channel-contract";
-import { createPluginRuntimeMock } from "openclaw/plugin-sdk/channel-test-helpers";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { ChannelRuntimeSurface } from "grokbot/plugin-sdk/channel-contract";
+import { createPluginRuntimeMock } from "grokbot/plugin-sdk/channel-test-helpers";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { RateLimitError } from "../internal/discord.js";
 import {
@@ -208,7 +208,7 @@ describe("monitorDiscordProvider", () => {
   };
 
   beforeAll(async () => {
-    vi.doMock("openclaw/plugin-sdk/plugin-runtime", () => ({
+    vi.doMock("grokbot/plugin-sdk/plugin-runtime", () => ({
       getPluginCommandSpecs: getPluginCommandSpecsMock,
     }));
     vi.doMock("../accounts.js", () => ({
@@ -793,7 +793,7 @@ describe("monitorDiscordProvider", () => {
     expect(drained[0]?.message).toContain("4014");
   });
 
-  it("passes OpenClaw event queue defaults to the Discord client", async () => {
+  it("passes GrokBot event queue defaults to the Discord client", async () => {
     await monitorDiscordProvider({
       config: baseConfig(),
       runtime: baseRuntime(),

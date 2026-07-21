@@ -33,8 +33,8 @@ import {
   resolveRuntimePostBuildRequirement,
 } from "../../../../scripts/run-node.mjs";
 
-const DEFAULT_CHECKOUT = "/Users/steipete/openclaw";
-const DEFAULT_EXPECTED_ORIGIN = "openclaw/openclaw";
+const DEFAULT_CHECKOUT = "/Users/steipete/grokbot";
+const DEFAULT_EXPECTED_ORIGIN = "grokbot/grokbot";
 const FULL_SHA_RE = /^[0-9a-f]{40}$/u;
 const GATEWAY_READINESS_ATTEMPTS = 3;
 const GATEWAY_READINESS_RETRY_DELAY_MS = 5_000;
@@ -419,11 +419,11 @@ function updateMain({ checkout, remote }, dependencies = {}) {
 
 function defaultLockPath(checkout) {
   const key = createHash("sha256").update(path.resolve(checkout)).digest("hex").slice(0, 12);
-  return path.join(tmpdir(), `openclaw-live-updater-${key}.lock`);
+  return path.join(tmpdir(), `grokbot-live-updater-${key}.lock`);
 }
 
 function defaultStatePath(checkout) {
-  return path.join(realpathSync(checkout), ".git", "openclaw-live-updater-state.json");
+  return path.join(realpathSync(checkout), ".git", "grokbot-live-updater-state.json");
 }
 
 function readMaintenanceState(statePath) {
@@ -447,7 +447,7 @@ function readMaintenanceState(statePath) {
 
 function writeMaintenanceState(statePath, state) {
   const directory = path.dirname(statePath);
-  const temporary = path.join(directory, `.openclaw-live-updater-${process.pid}-${randomUUID()}`);
+  const temporary = path.join(directory, `.grokbot-live-updater-${process.pid}-${randomUUID()}`);
   writeFileSync(temporary, `${JSON.stringify(state)}\n`, { flag: "wx", mode: 0o600 });
   try {
     renameSync(temporary, statePath);
@@ -602,7 +602,7 @@ export function isOwnedGatewayEntrypoint(checkout, home, entrypoint) {
     return true;
   }
 
-  const runtimeRoot = path.join(home, ".openclaw/runtime");
+  const runtimeRoot = path.join(home, ".grokbot/runtime");
   const snapshotRoot = path.dirname(path.dirname(entrypoint));
   const snapshotName = path.basename(snapshotRoot);
   if (
@@ -649,12 +649,12 @@ function resolveManagedGatewayCommand(
   programArguments,
   home,
   stateDir,
-  label = "ai.openclaw.gateway",
+  label = "ai.grokbot.gateway",
 ) {
   if (!Array.isArray(programArguments)) {
     return null;
   }
-  const defaultEnvDir = path.join(stateDir ?? path.join(home, ".openclaw"), "service-env");
+  const defaultEnvDir = path.join(stateDir ?? path.join(home, ".grokbot"), "service-env");
   let envDir = defaultEnvDir;
   let envFilePath = null;
   let commandStartIndex = 0;
@@ -765,7 +765,7 @@ function readManagedGatewayLaunchAgent(checkout) {
   if (!home) {
     throw new UpdateInvariantError("gateway_launchagent_failed", "HOME is unavailable");
   }
-  const plistPath = path.join(home, "Library/LaunchAgents/ai.openclaw.gateway.plist");
+  const plistPath = path.join(home, "Library/LaunchAgents/ai.grokbot.gateway.plist");
   let plistStat;
   try {
     plistStat = lstatSync(plistPath);
@@ -802,7 +802,7 @@ function readManagedGatewayLaunchAgent(checkout) {
   const stateDir =
     typeof environmentVariables?.OPENCLAW_STATE_DIR === "string"
       ? environmentVariables.OPENCLAW_STATE_DIR
-      : path.join(home, ".openclaw");
+      : path.join(home, ".grokbot");
   const gatewayCommand = resolveManagedGatewayCommand(programArguments, home, stateDir, label);
   const gatewayEntrypoint = gatewayCommand?.entrypoint ?? null;
   const ownsGatewayEntrypoint =
@@ -826,7 +826,7 @@ function readManagedGatewayLaunchAgent(checkout) {
   const configPath =
     typeof plist?.EnvironmentVariables?.OPENCLAW_CONFIG_PATH === "string"
       ? plist.EnvironmentVariables.OPENCLAW_CONFIG_PATH
-      : path.join(gatewayCommand.stateDir, "openclaw.json");
+      : path.join(gatewayCommand.stateDir, "grokbot.json");
   return {
     configPath,
     entrypoint: gatewayEntrypoint,
@@ -850,7 +850,7 @@ function inspectManagedGatewayDeployment(checkout) {
     return null;
   }
   const home = process.env.HOME;
-  if (!home || !existsSync(path.join(home, "Library/LaunchAgents/ai.openclaw.gateway.plist"))) {
+  if (!home || !existsSync(path.join(home, "Library/LaunchAgents/ai.grokbot.gateway.plist"))) {
     return null;
   }
   return readManagedGatewayLaunchAgent(checkout);
@@ -898,7 +898,7 @@ export function replaceLaunchAgentProgramArgument(programArguments, index, expec
 }
 
 function replaceLaunchAgentEntrypoint(deployment, entrypoint) {
-  const temporaryPath = `${deployment.plistPath}.openclaw-live-updater-${randomUUID()}`;
+  const temporaryPath = `${deployment.plistPath}.grokbot-live-updater-${randomUUID()}`;
   writeFileSync(temporaryPath, readFileSync(deployment.plistPath), {
     flag: "wx",
     mode: statSync(deployment.plistPath).mode,
@@ -1073,7 +1073,7 @@ export function runBuiltGatewayCli(checkout, args, deployment, options = {}) {
   }
   const overlayPath = path.join(
     path.dirname(effectiveConfigPath),
-    `.openclaw-live-updater-config-${randomUUID()}.json`,
+    `.grokbot-live-updater-config-${randomUUID()}.json`,
   );
   writeFileSync(
     overlayPath,
@@ -1138,7 +1138,7 @@ export function prepareGatewaySuspension(
   callGateway = runBuiltGatewayCall,
   deployment = null,
 ) {
-  const requestId = `openclaw-live-updater-${randomUUID()}`;
+  const requestId = `grokbot-live-updater-${randomUUID()}`;
   let result;
   try {
     result = JSON.parse(
@@ -1351,7 +1351,7 @@ function isOriginalMacBundle(bundlePath, originalStat) {
 }
 
 function runBuildWithPreservedMacApp(runCommand, checkout, sleep = defaultSleep) {
-  const appBundle = path.join(checkout, "dist/OpenClaw.app");
+  const appBundle = path.join(checkout, "dist/GrokBot.app");
   if (!existsSync(appBundle)) {
     runCommand("pnpm", ["build"], checkout);
     return;
@@ -1366,7 +1366,7 @@ function runBuildWithPreservedMacApp(runCommand, checkout, sleep = defaultSleep)
   const preservedBundle = path.join(
     checkout,
     ".git",
-    `.openclaw-live-mac-${process.pid}-${randomUUID()}.app`,
+    `.grokbot-live-mac-${process.pid}-${randomUUID()}.app`,
   );
   renameSync(appBundle, preservedBundle);
   try {
@@ -1438,7 +1438,7 @@ function restartGateway(
 ) {
   assertExactBuild(checkout, expectedSha);
   if (!deployment) {
-    runCommand("pnpm", ["openclaw", "gateway", "restart"], checkout);
+    runCommand("pnpm", ["grokbot", "gateway", "restart"], checkout);
     return startedAtMs;
   }
   if (bootstrap) {
@@ -1488,10 +1488,10 @@ function verifyGateway(runCommand, checkout, expectedSha, deployment = null) {
   }
   runCommand(
     "pnpm",
-    ["openclaw", "gateway", "status", "--deep", "--require-rpc", "--json"],
+    ["grokbot", "gateway", "status", "--deep", "--require-rpc", "--json"],
     checkout,
   );
-  runCommand("pnpm", ["openclaw", "health", "--verbose", "--json"], checkout);
+  runCommand("pnpm", ["grokbot", "health", "--verbose", "--json"], checkout);
 }
 
 function defaultSleep(ms) {
@@ -1581,7 +1581,7 @@ function isCurrentGatewayLogSource(source, sourceRoot, managedSourceRoots) {
     const gitPath = path.join(candidate, ".git");
     if (existsSync(packagePath) && existsSync(gitPath)) {
       try {
-        if (JSON.parse(readFileSync(packagePath, "utf8")).name === "openclaw") {
+        if (JSON.parse(readFileSync(packagePath, "utf8")).name === "grokbot") {
           return candidate === checkoutRoot;
         }
       } catch {
@@ -1668,11 +1668,11 @@ function localDateKey(date) {
 
 function readFallbackGatewayLogs(sinceMs) {
   const dates = new Set([localDateKey(new Date(sinceMs)), localDateKey(new Date())]);
-  const directories = new Set(["/tmp/openclaw", path.join(tmpdir(), "openclaw")]);
+  const directories = new Set(["/tmp/grokbot", path.join(tmpdir(), "grokbot")]);
   const contents = [];
   for (const directory of directories) {
     for (const date of dates) {
-      const logPath = path.join(directory, `openclaw-${date}.log`);
+      const logPath = path.join(directory, `grokbot-${date}.log`);
       if (existsSync(logPath)) {
         contents.push(readFileSync(logPath, "utf8"));
       }
@@ -1727,7 +1727,7 @@ function defaultAuditGatewayLogs(checkout, sinceMs, deployment = null) {
     output = execFileSync(
       process.execPath,
       [
-        "openclaw.mjs",
+        "grokbot.mjs",
         "logs",
         "--json",
         "--limit",
@@ -1792,7 +1792,7 @@ export function findExactMacTarget(processes, executable) {
 
 function defaultVerifyMacTarget(checkout) {
   execFileSync("sleep", ["10"]);
-  const executable = path.join(checkout, "dist/OpenClaw.app/Contents/MacOS/OpenClaw");
+  const executable = path.join(checkout, "dist/GrokBot.app/Contents/MacOS/GrokBot");
   const processes = execFileSync("ps", ["axww", "-o", "pid=,command="], {
     encoding: "utf8",
   });

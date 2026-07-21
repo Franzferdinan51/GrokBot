@@ -213,12 +213,12 @@ describe("resolveModelAuthLabel", () => {
     const label = resolveModelAuthLabel({
       provider: "openai",
       cfg: {},
-      codexCliCredentialsHome: "/tmp/openclaw-agent/codex-home",
+      codexCliCredentialsHome: "/tmp/grokbot-agent/codex-home",
     });
 
     expect(label).toBe("oauth (codex-cli)");
     expect(mocks.readCodexCliCredentialsCached).toHaveBeenCalledWith({
-      codexHome: "/tmp/openclaw-agent/codex-home",
+      codexHome: "/tmp/grokbot-agent/codex-home",
       ttlMs: 5_000,
       allowKeychainPrompt: false,
     });

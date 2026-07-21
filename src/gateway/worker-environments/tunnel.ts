@@ -364,7 +364,7 @@ export function createWorkerTunnelManager(options: WorkerTunnelManagerOptions = 
         ssh: request.ssh,
         pinnedHostKey: request.ssh.hostKey,
         resolveIdentity: request.resolveIdentity,
-        temporaryDirectoryPrefix: "openclaw-worker-tunnel-",
+        temporaryDirectoryPrefix: "grokbot-worker-tunnel-",
       });
       if (!isCurrent(entry)) {
         await entry.prepared.dispose();

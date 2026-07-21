@@ -1,10 +1,10 @@
 /**
  * Resolves embedded-agent provider/model selections from config, registry, and catalogs.
  */
-import { finiteSecondsToTimerSafeMilliseconds } from "@openclaw/normalization-core/number-coercion";
-import { normalizeLowercaseStringOrEmpty } from "@openclaw/normalization-core/string-coerce";
+import { finiteSecondsToTimerSafeMilliseconds } from "@grokbot/normalization-core/number-coercion";
+import { normalizeLowercaseStringOrEmpty } from "@grokbot/normalization-core/string-coerce";
 import type { ModelCompatConfig, ModelMediaInputConfig } from "../../config/types.models.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import type { ModelRegistry as CoreModelRegistry } from "../../llm/model-registry.js";
 import type { Api, Model } from "../../llm/types.js";
 import type { ProviderRuntimeModel } from "../../plugins/provider-runtime-model.types.js";
@@ -1961,7 +1961,7 @@ export async function resolveModelAsync(
  * providers before setup, the raw `Unknown model` error is too vague. Provider
  * plugins can append a targeted recovery hint here.
  *
- * See: https://github.com/openclaw/openclaw/issues/17328
+ * See: https://github.com/grokbot/grokbot/issues/17328
  */
 function buildUnknownModelError(params: {
   provider: string;
@@ -2016,7 +2016,7 @@ function buildMissingProviderModelRegistrationHint(params: {
   // or persisted routes. All of them should be repaired by doctor rather than
   // turned into a new models.providers[] registration.
   if (normalizeProviderId(params.provider) === "openai-codex") {
-    return `"openai-codex" is a legacy provider ID. Run \`openclaw doctor --fix\` to migrate legacy model and provider config to the current OpenAI format. If the provider has no authenticated profile, run \`openclaw models status\` to check provider auth and re-authenticate if needed. See https://docs.openclaw.ai/concepts/model-providers.`;
+    return `"openai-codex" is a legacy provider ID. Run \`grokbot doctor --fix\` to migrate legacy model and provider config to the current OpenAI format. If the provider has no authenticated profile, run \`grokbot models status\` to check provider auth and re-authenticate if needed. See https://docs.grokbot.ai/concepts/model-providers.`;
   }
   const configuredModels = params.cfg?.agents?.defaults?.models;
   if (!configuredModels) {
@@ -2037,7 +2037,7 @@ function buildMissingProviderModelRegistrationHint(params: {
   // offered). Point the user at the runtime's live catalog instead.
   const agentRuntimeId = configuredEntry.agentRuntime?.id;
   if (agentRuntimeId) {
-    return `Found agents.defaults.models["${agentModelKey}"] bound to the "${agentRuntimeId}" agent runtime. Models served by an agent runtime come from that runtime and its linked account, not from models.providers["${params.provider}"].models[] — registering it there will not make it usable. Confirm "${params.modelId}" is still offered by the "${agentRuntimeId}" runtime and switch agents.defaults.model.primary to a currently available model (run \`openclaw models list --provider ${params.provider}\` to list them). See https://docs.openclaw.ai/concepts/model-providers.`;
+    return `Found agents.defaults.models["${agentModelKey}"] bound to the "${agentRuntimeId}" agent runtime. Models served by an agent runtime come from that runtime and its linked account, not from models.providers["${params.provider}"].models[] — registering it there will not make it usable. Confirm "${params.modelId}" is still offered by the "${agentRuntimeId}" runtime and switch agents.defaults.model.primary to a currently available model (run \`grokbot models list --provider ${params.provider}\` to list them). See https://docs.grokbot.ai/concepts/model-providers.`;
   }
   const providerConfig = findNormalizedProviderValue(
     params.cfg?.models?.providers,
@@ -2054,6 +2054,6 @@ function buildMissingProviderModelRegistrationHint(params: {
   if (hasProviderModel) {
     return undefined;
   }
-  return `Found agents.defaults.models["${agentModelKey}"], but no matching models.providers["${params.provider}"].models[] entry. Add { "id": "${params.modelId}", "name": "${params.modelId}" } to models.providers["${params.provider}"].models[] to register this provider model. For custom or proxy providers, also set api and baseUrl so requests route to the intended endpoint. See https://docs.openclaw.ai/concepts/model-providers.`;
+  return `Found agents.defaults.models["${agentModelKey}"], but no matching models.providers["${params.provider}"].models[] entry. Add { "id": "${params.modelId}", "name": "${params.modelId}" } to models.providers["${params.provider}"].models[] to register this provider model. For custom or proxy providers, also set api and baseUrl so requests route to the intended endpoint. See https://docs.grokbot.ai/concepts/model-providers.`;
 }
 /* oxlint-disable max-lines -- TODO: split this grandfathered oversized file. */

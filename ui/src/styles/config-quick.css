@@ -7,11 +7,11 @@
  * gateway-host stats-grid escape hatch.
  */
 
-.content:has(openclaw-logs-page) {
+.content:has(grokbot-logs-page) {
   overflow: hidden;
 }
 
-.content:has(openclaw-logs-page) > openclaw-router-outlet {
+.content:has(grokbot-logs-page) > grokbot-router-outlet {
   display: flex;
   flex-direction: column;
   margin-top: 0;
@@ -20,11 +20,11 @@
   width: 100%;
 }
 
-openclaw-logs-page {
+grokbot-logs-page {
   display: contents;
 }
 
-.content:has(openclaw-logs-page) .content-header {
+.content:has(grokbot-logs-page) .content-header {
   flex: 0 0 auto;
 }
 

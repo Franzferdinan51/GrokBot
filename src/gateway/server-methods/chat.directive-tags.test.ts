@@ -4,8 +4,8 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
-import { expectDefined } from "@openclaw/normalization-core";
-import { CURRENT_SESSION_VERSION } from "openclaw/plugin-sdk/agent-sessions";
+import { expectDefined } from "@grokbot/normalization-core";
+import { CURRENT_SESSION_VERSION } from "grokbot/plugin-sdk/agent-sessions";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   GATEWAY_CLIENT_CAPS,
@@ -571,7 +571,7 @@ async function appendSourceReplyMirrorEntry(params: {
       role: "assistant",
       content: [{ type: "text", text: params.text }],
       api: "openai-responses",
-      provider: params.provider ?? "openclaw",
+      provider: params.provider ?? "grokbot",
       model: params.model ?? "delivery-mirror",
       ...(params.idempotencyKey ? { idempotencyKey: params.idempotencyKey } : {}),
       usage: {
@@ -750,7 +750,7 @@ function createScopedCliClient(
   }> = {},
   caps?: string[],
 ) {
-  const id = client.id ?? "openclaw-cli";
+  const id = client.id ?? "grokbot-cli";
   return {
     connect: {
       scopes,
@@ -967,7 +967,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("broadcasts session metadata changes reported by chat command dispatch", async () => {
-    await createTranscriptFixture("openclaw-chat-send-session-metadata-");
+    await createTranscriptFixture("grokbot-chat-send-session-metadata-");
     mockState.sessionEntry = {
       goal: {
         status: "active",
@@ -1012,7 +1012,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("broadcasts session metadata changes before later command dispatch failure", async () => {
-    await createTranscriptFixture("openclaw-chat-send-session-metadata-error-");
+    await createTranscriptFixture("grokbot-chat-send-session-metadata-error-");
     mockState.sessionMetadataChanges = [
       {
         sessionKey: "agent:main:main",
@@ -1043,7 +1043,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("persists non-agent delivery mirrors with the chat send idempotency key", async () => {
-    await createTranscriptFixture("openclaw-chat-send-final-idem-");
+    await createTranscriptFixture("grokbot-chat-send-final-idem-");
     mockState.finalText = "mirror text";
     const respond = vi.fn();
     const context = createChatContext();
@@ -1067,7 +1067,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("persists non-agent delivery mirrors to SQLite without creating active JSONL", async () => {
-    await withSqliteTranscriptFixtureState("openclaw-chat-send-final-sqlite-", async () => {
+    await withSqliteTranscriptFixtureState("grokbot-chat-send-final-sqlite-", async () => {
       mockState.finalText = "sqlite mirror text";
       const respond = vi.fn();
       const context = createChatContext();
@@ -1088,7 +1088,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("registers tool-event recipients for clients advertising tool-events capability", async () => {
-    await createTranscriptFixture("openclaw-chat-send-tool-events-");
+    await createTranscriptFixture("grokbot-chat-send-tool-events-");
     mockState.finalText = "ok";
     mockState.triggerAgentRunStart = true;
     mockState.agentRunId = "run-current";
@@ -1127,7 +1127,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("registers default global tool-event recipients for unscoped global sends", async () => {
-    await createTranscriptFixture("openclaw-chat-send-global-tool-events-");
+    await createTranscriptFixture("grokbot-chat-send-global-tool-events-");
     mockState.config = {
       agents: { list: [{ id: "main", default: true }, { id: "work" }] },
       session: { scope: "global" },
@@ -1172,7 +1172,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("registers selected global alias tool-event recipients against the canonical run key", async () => {
-    await createTranscriptFixture("openclaw-chat-send-global-alias-tool-events-");
+    await createTranscriptFixture("grokbot-chat-send-global-alias-tool-events-");
     mockState.config = {
       agents: { list: [{ id: "main", default: true }, { id: "work" }] },
       session: { scope: "global" },
@@ -1218,7 +1218,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("scopes selected-agent global aliases before loading chat session state", async () => {
-    await createTranscriptFixture("openclaw-chat-send-global-alias-load-");
+    await createTranscriptFixture("grokbot-chat-send-global-alias-load-");
     mockState.config = {
       agents: { list: [{ id: "main", default: true }, { id: "work" }] },
       session: { scope: "global" },
@@ -1242,7 +1242,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("accepts selected-agent global main aliases before loading chat session state", async () => {
-    await createTranscriptFixture("openclaw-chat-send-global-main-alias-load-");
+    await createTranscriptFixture("grokbot-chat-send-global-main-alias-load-");
     mockState.config = {
       agents: { list: [{ id: "main", default: true }, { id: "work" }] },
       session: { scope: "global" },
@@ -1273,7 +1273,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("registers selected-agent global aliases under the canonical abort key", async () => {
-    await createTranscriptFixture("openclaw-chat-send-global-alias-abort-key-");
+    await createTranscriptFixture("grokbot-chat-send-global-alias-abort-key-");
     mockState.config = {
       agents: { list: [{ id: "main", default: true }, { id: "work" }] },
       session: { scope: "global" },
@@ -1305,7 +1305,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("scopes chat history global aliases before loading session state", async () => {
-    await createTranscriptFixture("openclaw-chat-history-global-alias-load-");
+    await createTranscriptFixture("grokbot-chat-history-global-alias-load-");
     mockState.config = {
       agents: { list: [{ id: "main", default: true }, { id: "work" }] },
       session: { scope: "global" },
@@ -1334,7 +1334,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("does not register tool-event recipients without tool-events capability", async () => {
-    await createTranscriptFixture("openclaw-chat-send-tool-events-off-");
+    await createTranscriptFixture("grokbot-chat-send-tool-events-off-");
     mockState.finalText = "ok";
     mockState.triggerAgentRunStart = true;
     mockState.agentRunId = "run-no-cap";
@@ -1357,7 +1357,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("persists agent-run audio replies emitted as media-bearing block payloads", async () => {
-    await createTranscriptFixture("openclaw-chat-send-agent-audio-");
+    await createTranscriptFixture("grokbot-chat-send-agent-audio-");
     const transcriptDir = path.dirname(mockState.transcriptPath);
     const audioPath = path.join(transcriptDir, "reply.mp3");
     fs.writeFileSync(audioPath, Buffer.from([0xff, 0xfb, 0x90, 0x00]));
@@ -1412,7 +1412,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("persists auto-TTS final media as audio-only so webchat does not duplicate assistant text", async () => {
-    const transcriptDir = await createTranscriptFixture("openclaw-chat-send-agent-tts-final-");
+    const transcriptDir = await createTranscriptFixture("grokbot-chat-send-agent-tts-final-");
     const audioPath = path.join(transcriptDir, "tts.mp3");
     fs.writeFileSync(audioPath, Buffer.from([0xff, 0xfb, 0x90, 0x00]));
     mockState.config = {
@@ -1478,7 +1478,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("does not mirror agent-run stale media final text from live delivery", async () => {
-    const transcriptDir = await createTranscriptFixture("openclaw-chat-send-agent-stale-tts-");
+    const transcriptDir = await createTranscriptFixture("grokbot-chat-send-agent-stale-tts-");
     const staleAudioPath = path.join(transcriptDir, "stale.mp3");
     mockState.config = {
       agents: {
@@ -1529,7 +1529,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("does not mirror normal agent-run final text from live delivery", async () => {
-    const transcriptDir = await createTranscriptFixture("openclaw-chat-send-agent-text-only-");
+    const transcriptDir = await createTranscriptFixture("grokbot-chat-send-agent-text-only-");
     mockState.config = {
       agents: {
         defaults: {
@@ -1576,7 +1576,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("broadcasts agent-run internal-ui source replies without duplicating transcript", async () => {
-    await createTranscriptFixture("openclaw-chat-send-agent-source-reply-");
+    await createTranscriptFixture("grokbot-chat-send-agent-source-reply-");
     const mirrorIdempotencyKey = "idem-agent-source-reply:internal-source-reply:0";
     await appendSourceReplyMirrorEntry({
       idempotencyKey: mirrorIdempotencyKey,
@@ -1635,7 +1635,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("broadcasts agent-run status notices without source reply mirrors", async () => {
-    await createTranscriptFixture("openclaw-chat-send-agent-status-notice-");
+    await createTranscriptFixture("grokbot-chat-send-agent-status-notice-");
     mockState.triggerAgentRunStart = true;
     mockState.dispatchedReplies = [
       {
@@ -1668,7 +1668,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
 
   it("does not duplicate media-bearing internal-ui source replies in the transcript", async () => {
     await withTranscriptFixtureState(
-      "openclaw-chat-send-agent-source-reply-media-",
+      "grokbot-chat-send-agent-source-reply-media-",
       async (fixtureDir) => {
         const mediaUrl = `data:image/png;base64,${TINY_PNG_BASE64}`;
         const savedImagePath = path.join(fixtureDir, "source-reply.png");
@@ -1754,7 +1754,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
 
   it("rewrites source reply mirrors in SQLite without creating active JSONL", async () => {
     await withSqliteTranscriptFixtureState(
-      "openclaw-chat-send-agent-source-reply-sqlite-",
+      "grokbot-chat-send-agent-source-reply-sqlite-",
       async (fixtureDir) => {
         const mediaUrl = `data:image/png;base64,${TINY_PNG_BASE64}`;
         const savedImagePath = path.join(fixtureDir, "source-reply-sqlite.png");
@@ -1807,7 +1807,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
 
   it("backs source reply media with an equivalent deduped delivery mirror", async () => {
     await withTranscriptFixtureState(
-      "openclaw-chat-send-agent-source-reply-deduped-",
+      "grokbot-chat-send-agent-source-reply-deduped-",
       async (fixtureDir) => {
         const mediaUrl = `data:image/png;base64,${TINY_PNG_BASE64}`;
         const savedImagePath = path.join(fixtureDir, "source-reply-deduped.png");
@@ -1859,7 +1859,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
 
   it("updates each media-bearing source reply mirror independently", async () => {
     await withTranscriptFixtureState(
-      "openclaw-chat-send-agent-source-reply-multi-",
+      "grokbot-chat-send-agent-source-reply-multi-",
       async (fixtureDir) => {
         const firstMediaUrl = `data:image/png;base64,${TINY_PNG_BASE64}`;
         const secondMediaUrl = `data:image/png;base64,${TINY_PNG_BASE64}`;
@@ -1946,7 +1946,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
 
   it("keeps backed media source replies when a sibling mirror is missing", async () => {
     await withTranscriptFixtureState(
-      "openclaw-chat-send-agent-source-reply-partial-",
+      "grokbot-chat-send-agent-source-reply-partial-",
       async (fixtureDir) => {
         const firstMediaUrl = `data:image/png;base64,${TINY_PNG_BASE64}`;
         const secondMediaUrl = `data:image/png;base64,${TINY_PNG_BASE64}`;
@@ -2027,7 +2027,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
 
   it("keeps media source replies when followed by text-only source reply mirrors", async () => {
     await withTranscriptFixtureState(
-      "openclaw-chat-send-agent-source-reply-text-tail-",
+      "grokbot-chat-send-agent-source-reply-text-tail-",
       async (fixtureDir) => {
         const mediaUrl = `data:image/png;base64,${TINY_PNG_BASE64}`;
         const savedImagePath = path.join(fixtureDir, "source-reply-text-tail.png");
@@ -2104,7 +2104,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
 
   it("does not rewrite unrelated assistant messages with colliding source reply keys", async () => {
     await withTranscriptFixtureState(
-      "openclaw-chat-send-agent-source-reply-collision-",
+      "grokbot-chat-send-agent-source-reply-collision-",
       async (fixtureDir) => {
         const mediaUrl = `data:image/png;base64,${TINY_PNG_BASE64}`;
         const savedImagePath = path.join(fixtureDir, "source-reply-collision.png");
@@ -2161,7 +2161,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
 
   it("does not expose raw media refs when an unbacked source reply has no text", async () => {
     await withTranscriptFixtureState(
-      "openclaw-chat-send-agent-source-reply-media-only-",
+      "grokbot-chat-send-agent-source-reply-media-only-",
       async (fixtureDir) => {
         const mediaUrl = `data:image/png;base64,${TINY_PNG_BASE64}`;
         const savedImagePath = path.join(fixtureDir, "source-reply-media-only.png");
@@ -2208,7 +2208,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
 
   it("keeps a placeholder for unbacked media-only source reply siblings", async () => {
     await withTranscriptFixtureState(
-      "openclaw-chat-send-agent-source-reply-media-only-sibling-",
+      "grokbot-chat-send-agent-source-reply-media-only-sibling-",
       async (fixtureDir) => {
         const mediaUrl = `data:image/png;base64,${TINY_PNG_BASE64}`;
         const savedImagePath = path.join(fixtureDir, "source-reply-media-only-sibling.png");
@@ -2280,7 +2280,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
 
   it("does not rewrite source reply mirrors when later transcript entries would be replayed", async () => {
     await withTranscriptFixtureState(
-      "openclaw-chat-send-agent-source-reply-later-",
+      "grokbot-chat-send-agent-source-reply-later-",
       async (fixtureDir) => {
         const mediaUrl = `data:image/png;base64,${TINY_PNG_BASE64}`;
         const savedImagePath = path.join(fixtureDir, "source-reply-later.png");
@@ -2345,7 +2345,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("does not broadcast an error terminal after an internal-ui source reply final", async () => {
-    await createTranscriptFixture("openclaw-chat-send-agent-source-reply-error-");
+    await createTranscriptFixture("grokbot-chat-send-agent-source-reply-error-");
     mockState.triggerAgentRunStart = true;
     const sourceReply = setReplyPayloadMetadata(
       {
@@ -2402,7 +2402,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
 
   it("does not finalize an error-marked source reply as assistant transcript content", async () => {
     const mirrorIdempotencyKey = "idem-agent-source-reply-marked-error:internal-source-reply:0";
-    await createTranscriptFixture("openclaw-chat-send-agent-source-reply-marked-error-");
+    await createTranscriptFixture("grokbot-chat-send-agent-source-reply-marked-error-");
     await appendSourceReplyMirrorEntry({
       idempotencyKey: mirrorIdempotencyKey,
       text: "Original source reply",
@@ -2452,7 +2452,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("broadcasts returned agent errors after status notices", async () => {
-    await createTranscriptFixture("openclaw-chat-send-agent-status-notice-error-");
+    await createTranscriptFixture("grokbot-chat-send-agent-status-notice-error-");
     const errorMessage = "LLM idle timeout (120s): no response from model";
     mockState.triggerAgentRunStart = true;
     mockState.dispatchedReplies = [
@@ -2495,7 +2495,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("broadcasts returned agent-run error payloads after an agent starts", async () => {
-    await createGatewayUserTurnSqliteFixture("openclaw-chat-send-agent-returned-error-");
+    await createGatewayUserTurnSqliteFixture("grokbot-chat-send-agent-returned-error-");
     const errorMessage = "LLM idle timeout (120s): no response from model";
     mockState.triggerAgentRunStart = true;
     mockState.dispatchedReplies = [
@@ -2543,7 +2543,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("keeps visible text on non-agent TTS final media because no model transcript exists", async () => {
-    const transcriptDir = await createTranscriptFixture("openclaw-chat-send-command-tts-final-");
+    const transcriptDir = await createTranscriptFixture("grokbot-chat-send-command-tts-final-");
     const audioPath = path.join(transcriptDir, "tts.mp3");
     fs.writeFileSync(audioPath, Buffer.from([0xff, 0xfb, 0x90, 0x00]));
     mockState.config = {
@@ -2594,14 +2594,14 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("folds block-only non-agent command replies into the final WebChat message", async () => {
-    await createTranscriptFixture("openclaw-chat-send-command-block-final-");
+    await createTranscriptFixture("grokbot-chat-send-command-block-final-");
     mockState.dispatchedReplies = [
       {
         kind: "block",
         payload: {
           text: [
             "Trajectory exports can include prompts, model messages, tool schemas, tool results, runtime events, and local paths.",
-            "Trajectory bundle: requested `openclaw sessions export-trajectory` through exec approval. Approve once to create the bundle; do not use allow-all for trajectory exports.",
+            "Trajectory bundle: requested `grokbot sessions export-trajectory` through exec approval. Approve once to create the bundle; do not use allow-all for trajectory exports.",
           ].join("\n"),
         },
       },
@@ -2637,7 +2637,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
 
   it("keeps slash-command block text when the final payload only adds media", async () => {
     const transcriptDir = await createTranscriptFixture(
-      "openclaw-chat-send-command-block-media-final-",
+      "grokbot-chat-send-command-block-media-final-",
     );
     const audioPath = path.join(transcriptDir, "tts.mp3");
     fs.writeFileSync(audioPath, Buffer.from([0xff, 0xfb, 0x90, 0x00]));
@@ -2694,13 +2694,13 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("broadcasts sensitive pairing QR display without persisting QR content", async () => {
-    await createTranscriptFixture("openclaw-chat-send-command-pair-qr-");
-    const setupCode = "openclaw-test-pairing-setup-code";
+    await createTranscriptFixture("grokbot-chat-send-command-pair-qr-");
+    const setupCode = "grokbot-test-pairing-setup-code";
     mockState.dispatchedReplies = [
       {
         kind: "final",
         payload: {
-          text: "Scan this QR code with the OpenClaw iOS app:",
+          text: "Scan this QR code with the GrokBot iOS app:",
           channelData: {
             openclawPairingQr: {
               setupCode,
@@ -2724,7 +2724,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
     const content = getMessageContent(payload);
     expect(content[0]).toEqual({
       type: "text",
-      text: "Scan this QR code with the OpenClaw iOS app:",
+      text: "Scan this QR code with the GrokBot iOS app:",
     });
     expect(content[1]).toEqual(
       expect.objectContaining({
@@ -2736,7 +2736,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
     );
     const transcriptMessages = await readActiveAssistantTranscriptMessages();
     const serializedTranscript = JSON.stringify(transcriptMessages);
-    expect(serializedTranscript).toContain("Scan this QR code with the OpenClaw iOS app:");
+    expect(serializedTranscript).toContain("Scan this QR code with the GrokBot iOS app:");
     expect(serializedTranscript).not.toContain("openclaw_pairing_qr");
     expect(serializedTranscript).not.toContain("data:image/png");
     expect(serializedTranscript).not.toContain("terminalText");
@@ -2744,7 +2744,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("keeps visible slash-command finals alongside earlier block text", async () => {
-    await createTranscriptFixture("openclaw-chat-send-command-block-text-final-");
+    await createTranscriptFixture("grokbot-chat-send-command-block-text-final-");
     mockState.dispatchedReplies = [
       {
         kind: "block",
@@ -2774,7 +2774,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("deduplicates exact slash-command final text echoes", async () => {
-    await createTranscriptFixture("openclaw-chat-send-command-block-duplicate-text-final-");
+    await createTranscriptFixture("grokbot-chat-send-command-block-duplicate-text-final-");
     mockState.dispatchedReplies = [
       {
         kind: "block",
@@ -2812,7 +2812,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("keeps slash-command block text when the final payload only carries a reply directive", async () => {
-    await createTranscriptFixture("openclaw-chat-send-command-block-reply-directive-final-");
+    await createTranscriptFixture("grokbot-chat-send-command-block-reply-directive-final-");
     mockState.dispatchedReplies = [
       {
         kind: "block",
@@ -2848,7 +2848,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
 
   it("keeps media from duplicate slash-command finals without duplicating block text", async () => {
     const transcriptDir = await createTranscriptFixture(
-      "openclaw-chat-send-command-block-media-dupe-",
+      "grokbot-chat-send-command-block-media-dupe-",
     );
     const audioPath = path.join(transcriptDir, "tts.mp3");
     fs.writeFileSync(audioPath, Buffer.from([0xff, 0xfb, 0x90, 0x00]));
@@ -2906,7 +2906,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
 
   it("deduplicates slash-command media when file URLs and paths reference the same attachment", async () => {
     const transcriptDir = await createTranscriptFixture(
-      "openclaw-chat-send-command-block-media-file-url-",
+      "grokbot-chat-send-command-block-media-file-url-",
     );
     const audioPath = path.join(transcriptDir, "voice.mp3");
     fs.writeFileSync(audioPath, Buffer.from([0xff, 0xfb, 0x90, 0x00]));
@@ -2959,7 +2959,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
 
   it("does not downgrade a voice-note block when a duplicate final has normalized false flags", async () => {
     const transcriptDir = await createTranscriptFixture(
-      "openclaw-chat-send-command-block-voice-sticky-",
+      "grokbot-chat-send-command-block-voice-sticky-",
     );
     const audioPath = path.join(transcriptDir, "voice.mp3");
     fs.writeFileSync(audioPath, Buffer.from([0xff, 0xfb, 0x90, 0x00]));
@@ -3011,7 +3011,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
 
   it("keeps final text when only the slash-command media is duplicated", async () => {
     const transcriptDir = await createTranscriptFixture(
-      "openclaw-chat-send-command-block-media-different-final-text-",
+      "grokbot-chat-send-command-block-media-different-final-text-",
     );
     const audioPath = path.join(transcriptDir, "voice.mp3");
     fs.writeFileSync(audioPath, Buffer.from([0xff, 0xfb, 0x90, 0x00]));
@@ -3071,7 +3071,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
 
   it("keeps same-caption slash-command finals when media differs", async () => {
     const transcriptDir = await createTranscriptFixture(
-      "openclaw-chat-send-command-block-same-caption-different-media-",
+      "grokbot-chat-send-command-block-same-caption-different-media-",
     );
     const blockAudioPath = path.join(transcriptDir, "block.mp3");
     const finalAudioPath = path.join(transcriptDir, "final.mp3");
@@ -3133,7 +3133,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
 
   it("deduplicates slash-command final echoes against the same text and media block", async () => {
     const transcriptDir = await createTranscriptFixture(
-      "openclaw-chat-send-command-block-same-caption-same-media-",
+      "grokbot-chat-send-command-block-same-caption-same-media-",
     );
     const firstAudioPath = path.join(transcriptDir, "first.mp3");
     const secondAudioPath = path.join(transcriptDir, "second.mp3");
@@ -3206,7 +3206,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
 
   it("uses canonical mediaUrls when deduplicating slash-command block media", async () => {
     const transcriptDir = await createTranscriptFixture(
-      "openclaw-chat-send-command-block-media-canonical-",
+      "grokbot-chat-send-command-block-media-canonical-",
     );
     const blockAudioPath = path.join(transcriptDir, "block.mp3");
     const finalAudioPath = path.join(transcriptDir, "final.mp3");
@@ -3274,7 +3274,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
 
   it("does not spread duplicate final media flags across multi-media command blocks", async () => {
     const transcriptDir = await createTranscriptFixture(
-      "openclaw-chat-send-command-block-media-partial-",
+      "grokbot-chat-send-command-block-media-partial-",
     );
     const firstAudioPath = path.join(transcriptDir, "first.mp3");
     const secondAudioPath = path.join(transcriptDir, "second.mp3");
@@ -3339,7 +3339,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
 
   it("keeps sensitive overlapping slash-command media out of transcripts", async () => {
     const transcriptDir = await createTranscriptFixture(
-      "openclaw-chat-send-command-block-media-sensitive-overlap-",
+      "grokbot-chat-send-command-block-media-sensitive-overlap-",
     );
     const secretAudioPath = path.join(transcriptDir, "secret.mp3");
     const publicAudioPath = path.join(transcriptDir, "public.mp3");
@@ -3391,7 +3391,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
 
   it("keeps reordered slash-command final media instead of treating it as duplicate", async () => {
     const transcriptDir = await createTranscriptFixture(
-      "openclaw-chat-send-command-block-media-reordered-",
+      "grokbot-chat-send-command-block-media-reordered-",
     );
     const firstAudioPath = path.join(transcriptDir, "first.mp3");
     const secondAudioPath = path.join(transcriptDir, "second.mp3");
@@ -3448,9 +3448,9 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("renders image reply payloads as assistant image content instead of MEDIA text", async () => {
-    await createTranscriptFixture("openclaw-chat-send-agent-image-");
+    await createTranscriptFixture("grokbot-chat-send-agent-image-");
     mockState.finalPayload = {
-      text: "Scan this QR code with the OpenClaw iOS app:",
+      text: "Scan this QR code with the GrokBot iOS app:",
       mediaUrl: "data:image/png;base64,cG5n",
     };
     const respond = vi.fn();
@@ -3466,14 +3466,14 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
     expect(getMessage(payload)?.role).toBe("assistant");
     expect(content[0]).toEqual({
       type: "text",
-      text: "Scan this QR code with the OpenClaw iOS app:",
+      text: "Scan this QR code with the GrokBot iOS app:",
     });
     expect(content[1]).toEqual({ type: "input_image", image_url: "data:image/png;base64,cG5n" });
     expect(JSON.stringify(payload?.message)).not.toContain("MEDIA:data:image/png;base64,cG5n");
   });
 
   it("suppresses reasoning payloads from webchat transcript replies", async () => {
-    await createTranscriptFixture("openclaw-chat-send-reasoning-hidden-");
+    await createTranscriptFixture("grokbot-chat-send-reasoning-hidden-");
     mockState.dispatchedReplies = [
       {
         kind: "final",
@@ -3498,7 +3498,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("chat.inject keeps message defined when directive tag is the only content", async () => {
-    await createTranscriptFixture("openclaw-chat-inject-directive-only-");
+    await createTranscriptFixture("grokbot-chat-inject-directive-only-");
     const respond = vi.fn();
     const context = createChatContext();
 
@@ -3527,7 +3527,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("chat.inject rejects archived sessions without appending", async () => {
-    await createTranscriptFixture("openclaw-chat-inject-archived-");
+    await createTranscriptFixture("grokbot-chat-inject-archived-");
     mockState.sessionEntry = { archivedAt: Date.now() };
     const respond = vi.fn();
     const context = createChatContext();
@@ -3552,7 +3552,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("chat.inject rechecks archive state after lifecycle admission waits", async () => {
-    await createTranscriptFixture("openclaw-chat-inject-archive-race-");
+    await createTranscriptFixture("grokbot-chat-inject-archive-race-");
     const storePath = path.join(path.dirname(mockState.transcriptPath), "sessions.json");
     const mutationStarted = createDeferred();
     const releaseMutation = createDeferred();
@@ -3598,7 +3598,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("chat.inject persists to SQLite without creating active JSONL", async () => {
-    await withSqliteTranscriptFixtureState("openclaw-chat-inject-sqlite-", async () => {
+    await withSqliteTranscriptFixtureState("grokbot-chat-inject-sqlite-", async () => {
       const respond = vi.fn();
       const context = createChatContext();
 
@@ -3625,7 +3625,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("chat.send non-streaming final keeps message defined for directive-only assistant text", async () => {
-    await createTranscriptFixture("openclaw-chat-send-directive-only-");
+    await createTranscriptFixture("grokbot-chat-send-directive-only-");
     mockState.finalText = "[[reply_to_current]]";
     const respond = vi.fn();
     const context = createChatContext();
@@ -3645,7 +3645,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("preserves inline reply directives in transcript text while stripping them from display", async () => {
-    await createTranscriptFixture("openclaw-chat-send-inline-reply-transcript-");
+    await createTranscriptFixture("grokbot-chat-send-inline-reply-transcript-");
     mockState.finalText = "see[[reply_to_current]]now  with  spacing";
     const respond = vi.fn();
     const context = createChatContext();
@@ -3668,7 +3668,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("rejects oversized chat.send session keys before dispatch", async () => {
-    await createTranscriptFixture("openclaw-chat-send-session-key-too-long-");
+    await createTranscriptFixture("grokbot-chat-send-session-key-too-long-");
     const respond = vi.fn();
     const context = createChatContext();
 
@@ -3696,7 +3696,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("rejects chat.send creation in an agent harness-owned namespace", async () => {
-    await createTranscriptFixture("openclaw-chat-send-harness-reserved-");
+    await createTranscriptFixture("grokbot-chat-send-harness-reserved-");
     mockState.sessionMissing = true;
     const respond = vi.fn();
     const context = createChatContext();
@@ -3728,7 +3728,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("chat.inject strips external untrusted wrapper metadata from final payload text", async () => {
-    await createTranscriptFixture("openclaw-chat-inject-untrusted-meta-");
+    await createTranscriptFixture("grokbot-chat-inject-untrusted-meta-");
     const respond = vi.fn();
     const context = createChatContext();
 
@@ -3754,7 +3754,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("chat.inject broadcasts and routes on the canonical session key", async () => {
-    await createTranscriptFixture("openclaw-chat-inject-canonical-key-");
+    await createTranscriptFixture("grokbot-chat-inject-canonical-key-");
     mockState.sessionEntry = {
       canonicalKey: "agent:main:canon",
     };
@@ -3787,7 +3787,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("chat.inject advances the session registry marker after transcript append", async () => {
-    const fixtureDir = await createTranscriptFixture("openclaw-chat-inject-registry-marker-");
+    const fixtureDir = await createTranscriptFixture("grokbot-chat-inject-registry-marker-");
     const updatedAt = Date.parse("2026-05-18T11:00:00.000Z");
     const appendedAt = Date.parse("2026-05-18T11:05:00.000Z");
     await seedSqliteSessionEntry({
@@ -3827,7 +3827,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("chat.inject scopes selected-agent global sessions before appending", async () => {
-    await createTranscriptFixture("openclaw-chat-inject-selected-global-");
+    await createTranscriptFixture("grokbot-chat-inject-selected-global-");
     mockState.config = {
       agents: { list: [{ id: "main", default: true }, { id: "work" }] },
       session: { scope: "global" },
@@ -3870,7 +3870,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("chat.send non-streaming final strips external untrusted wrapper metadata from final payload text", async () => {
-    await createTranscriptFixture("openclaw-chat-send-untrusted-meta-");
+    await createTranscriptFixture("grokbot-chat-send-untrusted-meta-");
     mockState.finalText = `hello\n\n${UNTRUSTED_CONTEXT_SUFFIX}`;
     const respond = vi.fn();
     const context = createChatContext();
@@ -3884,7 +3884,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("chat.send non-streaming final broadcasts and routes on the canonical session key", async () => {
-    await createTranscriptFixture("openclaw-chat-send-canonical-key-");
+    await createTranscriptFixture("grokbot-chat-send-canonical-key-");
     mockState.sessionEntry = {
       canonicalKey: "agent:main:canon",
     };
@@ -3907,7 +3907,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("chat.send broadcasts final replies for telegram-shaped session keys", async () => {
-    await createTranscriptFixture("openclaw-chat-send-telegram-final-");
+    await createTranscriptFixture("grokbot-chat-send-telegram-final-");
     mockState.finalText = "telegram ok";
     const respond = vi.fn();
     const context = createChatContext();
@@ -3935,7 +3935,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("chat.send keeps explicit delivery routes for channel-scoped sessions", async () => {
-    await createTranscriptFixture("openclaw-chat-send-origin-routing-");
+    await createTranscriptFixture("grokbot-chat-send-origin-routing-");
     mockState.finalText = "ok";
     mockState.sessionEntry = {
       deliveryContext: {
@@ -3971,7 +3971,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("chat.send marks user slash commands as text command sources", async () => {
-    await createTranscriptFixture("openclaw-chat-send-text-command-source-");
+    await createTranscriptFixture("grokbot-chat-send-text-command-source-");
     mockState.finalText = "ok";
     const respond = vi.fn();
     const context = createChatContext();
@@ -3991,7 +3991,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("chat.send keeps thinking metadata out of command text for normal messages", async () => {
-    await createTranscriptFixture("openclaw-chat-send-thinking-normal-message-");
+    await createTranscriptFixture("grokbot-chat-send-thinking-normal-message-");
     mockState.finalText = "ok";
     const respond = vi.fn();
     const context = createChatContext();
@@ -4025,7 +4025,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("chat.send keeps explicit delivery routes for Feishu channel-scoped sessions", async () => {
-    await createTranscriptFixture("openclaw-chat-send-feishu-origin-routing-");
+    await createTranscriptFixture("grokbot-chat-send-feishu-origin-routing-");
     mockState.finalText = "ok";
     mockState.sessionEntry = {
       deliveryContext: {
@@ -4058,7 +4058,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("chat.send keeps explicit delivery routes for per-account channel-peer sessions", async () => {
-    await createTranscriptFixture("openclaw-chat-send-per-account-channel-peer-routing-");
+    await createTranscriptFixture("grokbot-chat-send-per-account-channel-peer-routing-");
     mockState.finalText = "ok";
     mockState.sessionEntry = {
       deliveryContext: {
@@ -4091,7 +4091,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("chat.send keeps explicit delivery routes for legacy channel-peer sessions", async () => {
-    await createTranscriptFixture("openclaw-chat-send-legacy-channel-peer-routing-");
+    await createTranscriptFixture("grokbot-chat-send-legacy-channel-peer-routing-");
     mockState.finalText = "ok";
     mockState.sessionEntry = {
       deliveryContext: {
@@ -4124,7 +4124,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("chat.send keeps explicit delivery routes for legacy thread sessions", async () => {
-    await createTranscriptFixture("openclaw-chat-send-legacy-thread-channel-peer-routing-");
+    await createTranscriptFixture("grokbot-chat-send-legacy-thread-channel-peer-routing-");
     mockState.finalText = "ok";
     mockState.sessionEntry = {
       deliveryContext: {
@@ -4160,7 +4160,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("chat.send does not inherit external delivery context for shared main sessions", async () => {
-    await createTranscriptFixture("openclaw-chat-send-main-no-cross-route-");
+    await createTranscriptFixture("grokbot-chat-send-main-no-cross-route-");
     mockState.finalText = "ok";
     mockState.sessionEntry = {
       deliveryContext: {
@@ -4192,7 +4192,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("chat.send does not inherit external delivery context for UI clients on main sessions", async () => {
-    await createTranscriptFixture("openclaw-chat-send-main-ui-routes-");
+    await createTranscriptFixture("grokbot-chat-send-main-ui-routes-");
     mockState.finalText = "ok";
     mockState.sessionEntry = {
       deliveryContext: {
@@ -4215,7 +4215,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
         connect: {
           client: {
             mode: GATEWAY_CLIENT_MODES.UI,
-            id: "openclaw-tui",
+            id: "grokbot-tui",
           },
         },
       } as unknown,
@@ -4231,7 +4231,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("chat.send does not inherit external delivery context for UI clients on main sessions when deliver is enabled", async () => {
-    await createTranscriptFixture("openclaw-chat-send-main-ui-deliver-no-route-");
+    await createTranscriptFixture("grokbot-chat-send-main-ui-deliver-no-route-");
     mockState.finalText = "ok";
     mockState.sessionEntry = {
       deliveryContext: {
@@ -4254,7 +4254,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
         connect: {
           client: {
             mode: GATEWAY_CLIENT_MODES.UI,
-            id: "openclaw-tui",
+            id: "grokbot-tui",
           },
         },
       } as unknown,
@@ -4272,7 +4272,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("chat.send inherits external delivery context for CLI clients on configured main sessions", async () => {
-    await createTranscriptFixture("openclaw-chat-send-config-main-cli-routes-");
+    await createTranscriptFixture("grokbot-chat-send-config-main-cli-routes-");
     mockState.mainSessionKey = "work";
     mockState.finalText = "ok";
     mockState.sessionEntry = {
@@ -4313,7 +4313,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("chat.send falls back to origin provider metadata for configured main CLI delivery inheritance", async () => {
-    await createTranscriptFixture("openclaw-chat-send-config-main-origin-provider-routes-");
+    await createTranscriptFixture("grokbot-chat-send-config-main-origin-provider-routes-");
     mockState.mainSessionKey = "work";
     mockState.finalText = "ok";
     mockState.sessionEntry = {
@@ -4351,7 +4351,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("chat.send falls back to origin thread metadata for configured main CLI delivery inheritance", async () => {
-    await createTranscriptFixture("openclaw-chat-send-config-main-origin-thread-routes-");
+    await createTranscriptFixture("grokbot-chat-send-config-main-origin-thread-routes-");
     mockState.mainSessionKey = "work";
     mockState.finalText = "ok";
     mockState.sessionEntry = {
@@ -4392,7 +4392,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("chat.send keeps configured main delivery inheritance when connect metadata omits client details", async () => {
-    await createTranscriptFixture("openclaw-chat-send-config-main-connect-no-client-");
+    await createTranscriptFixture("grokbot-chat-send-config-main-connect-no-client-");
     mockState.mainSessionKey = "work";
     mockState.finalText = "ok";
     mockState.sessionEntry = {
@@ -4428,7 +4428,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("chat.send does not inherit external delivery context for non-channel custom sessions", async () => {
-    await createTranscriptFixture("openclaw-chat-send-custom-no-cross-route-");
+    await createTranscriptFixture("grokbot-chat-send-custom-no-cross-route-");
     mockState.finalText = "ok";
     mockState.sessionEntry = {
       deliveryContext: {
@@ -4461,7 +4461,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("chat.send keeps replies on the internal surface when deliver is not enabled", async () => {
-    await createTranscriptFixture("openclaw-chat-send-no-deliver-internal-surface-");
+    await createTranscriptFixture("grokbot-chat-send-no-deliver-internal-surface-");
     mockState.finalText = "ok";
     mockState.sessionEntry = {
       deliveryContext: {
@@ -4493,7 +4493,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("chat.send does not inherit external routes for webchat clients on channel-scoped sessions", async () => {
-    await createTranscriptFixture("openclaw-chat-send-webchat-channel-scoped-no-inherit-");
+    await createTranscriptFixture("grokbot-chat-send-webchat-channel-scoped-no-inherit-");
     mockState.finalText = "ok";
     mockState.sessionEntry = {
       deliveryContext: {
@@ -4518,7 +4518,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
         connect: {
           client: {
             mode: GATEWAY_CLIENT_MODES.WEBCHAT,
-            id: "openclaw-webchat",
+            id: "grokbot-webchat",
           },
         },
       } as unknown,
@@ -4536,7 +4536,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("chat.send still inherits external routes for UI clients on channel-scoped sessions", async () => {
-    await createTranscriptFixture("openclaw-chat-send-ui-channel-scoped-inherit-");
+    await createTranscriptFixture("grokbot-chat-send-ui-channel-scoped-inherit-");
     mockState.finalText = "ok";
     mockState.sessionEntry = {
       deliveryContext: {
@@ -4559,7 +4559,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
         connect: {
           client: {
             mode: GATEWAY_CLIENT_MODES.UI,
-            id: "openclaw-tui",
+            id: "grokbot-tui",
           },
         },
       } as unknown,
@@ -4577,7 +4577,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("chat.send accepts admin-scoped synthetic originating routes without external delivery", async () => {
-    await createTranscriptFixture("openclaw-chat-send-synthetic-origin-admin-");
+    await createTranscriptFixture("grokbot-chat-send-synthetic-origin-admin-");
     mockState.finalText = "ok";
     const respond = vi.fn();
     const context = createChatContext();
@@ -4607,7 +4607,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("rejects synthetic originating routes when the caller lacks admin scope", async () => {
-    await createTranscriptFixture("openclaw-chat-send-synthetic-origin-reject-");
+    await createTranscriptFixture("grokbot-chat-send-synthetic-origin-reject-");
     mockState.finalText = "ok";
     const respond = vi.fn();
     const context = createChatContext();
@@ -4632,7 +4632,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("rejects reserved system provenance fields for non-ACP clients", async () => {
-    await createTranscriptFixture("openclaw-chat-send-system-provenance-reject-");
+    await createTranscriptFixture("grokbot-chat-send-system-provenance-reject-");
     mockState.finalText = "ok";
     const respond = vi.fn();
     const context = createChatContext();
@@ -4643,7 +4643,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
       idempotencyKey: "idem-system-provenance-reject",
       requestParams: {
         systemInputProvenance: { kind: "external_user", sourceChannel: "acp" },
-        systemProvenanceReceipt: "[Source Receipt]\nbridge=openclaw-acp\n[/Source Receipt]",
+        systemProvenanceReceipt: "[Source Receipt]\nbridge=grokbot-acp\n[/Source Receipt]",
       },
       expectBroadcast: false,
       waitForCompletion: false,
@@ -4656,7 +4656,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("rejects forged ACP metadata when the caller lacks admin scope", async () => {
-    await createTranscriptFixture("openclaw-chat-send-system-provenance-spoof-reject-");
+    await createTranscriptFixture("grokbot-chat-send-system-provenance-spoof-reject-");
     mockState.finalText = "ok";
     const respond = vi.fn();
     const context = createChatContext();
@@ -4678,7 +4678,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
           sourceTool: "openclaw_acp",
         },
         systemProvenanceReceipt:
-          "[Source Receipt]\nbridge=openclaw-acp\noriginSessionId=acp-session-spoof\n[/Source Receipt]",
+          "[Source Receipt]\nbridge=grokbot-acp\noriginSessionId=acp-session-spoof\n[/Source Receipt]",
       },
       expectBroadcast: false,
       waitForCompletion: false,
@@ -4691,7 +4691,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("allows admin-scoped clients to inject system provenance without ACP metadata", async () => {
-    await createTranscriptFixture("openclaw-chat-send-system-provenance-admin-");
+    await createTranscriptFixture("grokbot-chat-send-system-provenance-admin-");
     mockState.finalText = "ok";
     const respond = vi.fn();
     const context = createChatContext();
@@ -4712,7 +4712,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
           sourceTool: "openclaw_acp",
         },
         systemProvenanceReceipt:
-          "[Source Receipt]\nbridge=openclaw-acp\noriginSessionId=admin-session-1\n[/Source Receipt]",
+          "[Source Receipt]\nbridge=grokbot-acp\noriginSessionId=admin-session-1\n[/Source Receipt]",
       },
       expectBroadcast: false,
     });
@@ -4724,14 +4724,14 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
       sourceTool: "openclaw_acp",
     });
     expect(mockState.lastDispatchCtx?.Body).toBe(
-      "[Source Receipt]\nbridge=openclaw-acp\noriginSessionId=admin-session-1\n[/Source Receipt]\n\nops update",
+      "[Source Receipt]\nbridge=grokbot-acp\noriginSessionId=admin-session-1\n[/Source Receipt]\n\nops update",
     );
     expect(mockState.lastDispatchCtx?.RawBody).toBe("ops update");
     expect(mockState.lastDispatchCtx?.CommandBody).toBe("ops update");
   });
 
   it("forwards gateway caller scopes into the dispatch context", async () => {
-    await createTranscriptFixture("openclaw-chat-send-gateway-client-scopes-");
+    await createTranscriptFixture("grokbot-chat-send-gateway-client-scopes-");
     mockState.finalText = "ok";
     const respond = vi.fn();
     const context = createChatContext();
@@ -4753,7 +4753,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("forwards gateway client capabilities into the dispatch context", async () => {
-    await createTranscriptFixture("openclaw-chat-send-gateway-client-caps-");
+    await createTranscriptFixture("grokbot-chat-send-gateway-client-caps-");
     mockState.finalText = "ok";
     const respond = vi.fn();
     const context = createChatContext();
@@ -4773,7 +4773,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("normalizes missing gateway caller scopes to an empty array before dispatch", async () => {
-    await createTranscriptFixture("openclaw-chat-send-missing-gateway-client-scopes-");
+    await createTranscriptFixture("grokbot-chat-send-missing-gateway-client-scopes-");
     mockState.finalText = "ok";
     const respond = vi.fn();
     const context = createChatContext();
@@ -4793,7 +4793,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("injects ACP system provenance into the agent-visible body", async () => {
-    await createTranscriptFixture("openclaw-chat-send-system-provenance-acp-");
+    await createTranscriptFixture("grokbot-chat-send-system-provenance-acp-");
     mockState.finalText = "ok";
     const respond = vi.fn();
     const context = createChatContext();
@@ -4817,14 +4817,14 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
       requestParams: {
         systemInputProvenance: provenance,
         systemProvenanceReceipt:
-          "[Source Receipt]\nbridge=openclaw-acp\noriginSessionId=acp-session-1\n[/Source Receipt]",
+          "[Source Receipt]\nbridge=grokbot-acp\noriginSessionId=acp-session-1\n[/Source Receipt]",
       },
       expectBroadcast: false,
     });
 
     expect(mockState.lastDispatchCtx?.InputProvenance).toEqual(provenance);
     expect(mockState.lastDispatchCtx?.Body).toBe(
-      "[Source Receipt]\nbridge=openclaw-acp\noriginSessionId=acp-session-1\n[/Source Receipt]\n\nbench update",
+      "[Source Receipt]\nbridge=grokbot-acp\noriginSessionId=acp-session-1\n[/Source Receipt]\n\nbench update",
     );
     expect(mockState.lastDispatchCtx?.RawBody).toBe("bench update");
     expect(mockState.lastDispatchCtx?.CommandBody).toBe("bench update");
@@ -4842,7 +4842,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("prepares clean text-only chat.send user turns for Pi persistence", async () => {
-    await createTranscriptFixture("openclaw-chat-send-user-transcript-agent-run-");
+    await createTranscriptFixture("grokbot-chat-send-user-transcript-agent-run-");
     mockState.finalText = "ok";
     mockState.triggerAgentRunStart = true;
     const respond = vi.fn();
@@ -4870,7 +4870,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("does not emit pre-gate user transcript content when before_agent_run hooks are registered", async () => {
-    await createTranscriptFixture("openclaw-chat-send-user-transcript-before-run-gate-");
+    await createTranscriptFixture("grokbot-chat-send-user-transcript-before-run-gate-");
     mockState.finalText = "ok";
     mockState.triggerAgentRunStart = true;
     mockState.hasBeforeAgentRunHooks = true;
@@ -4905,7 +4905,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("does not persist raw user transcript content when a delivered before_agent_run block is followed by a dispatch error", async () => {
-    await createTranscriptFixture("openclaw-chat-send-user-transcript-blocked-delivery-error-");
+    await createTranscriptFixture("grokbot-chat-send-user-transcript-blocked-delivery-error-");
     mockState.triggerAgentRunStart = true;
     mockState.hasBeforeAgentRunHooks = true;
     mockState.dispatchBlockedByBeforeAgentRun = true;
@@ -4940,7 +4940,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("emits a user transcript update when hooks pass and the started agent throws before runtime persistence", async () => {
-    await createGatewayUserTurnSqliteFixture("openclaw-chat-send-user-transcript-gate-pass-error-");
+    await createGatewayUserTurnSqliteFixture("grokbot-chat-send-user-transcript-gate-pass-error-");
     mockState.triggerAgentRunStart = true;
     mockState.hasBeforeAgentRunHooks = true;
     mockState.dispatchErrorAfterAgentRunStart = new Error("model unavailable");
@@ -4966,7 +4966,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("prepares persisted media paths for Pi user-turn persistence", async () => {
-    await createTranscriptFixture("openclaw-chat-send-user-transcript-images-");
+    await createTranscriptFixture("grokbot-chat-send-user-transcript-images-");
     mockState.finalText = "ok";
     mockState.triggerAgentRunStart = true;
     mockState.savedMediaResults = [
@@ -5038,7 +5038,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("prepares non-image chat.send attachments as media refs without dispatch images", async () => {
-    await createTranscriptFixture("openclaw-chat-send-user-transcript-file-");
+    await createTranscriptFixture("grokbot-chat-send-user-transcript-file-");
     mockState.finalText = "ok";
     mockState.triggerAgentRunStart = true;
     mockState.savedMediaResults = [
@@ -5088,7 +5088,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("preserves offloaded attachment media paths in transcript order", async () => {
-    await createTranscriptFixture("openclaw-chat-send-user-transcript-offloaded-");
+    await createTranscriptFixture("grokbot-chat-send-user-transcript-offloaded-");
     mockState.finalText = "ok";
     mockState.triggerAgentRunStart = true;
     mockState.sessionEntry = {
@@ -5154,7 +5154,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("leaves ACP bridge user persistence to the agent runtime", async () => {
-    await createTranscriptFixture("openclaw-chat-send-user-transcript-acp-images-");
+    await createTranscriptFixture("grokbot-chat-send-user-transcript-acp-images-");
     mockState.finalText = "ok";
     mockState.triggerAgentRunStart = true;
     mockState.savedMediaResults = [
@@ -5203,7 +5203,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("waits for the user transcript update before final broadcast on non-agent attachment sends", async () => {
-    await createGatewayUserTurnSqliteFixture("openclaw-chat-send-no-agent-images-order-");
+    await createGatewayUserTurnSqliteFixture("grokbot-chat-send-no-agent-images-order-");
     mockState.finalText = "ok";
     mockState.savedMediaResults = [
       { path: "/tmp/chat-send-image-a.png", contentType: "image/png" },
@@ -5247,7 +5247,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("preserves media-only final replies in the final broadcast message", async () => {
-    await createTranscriptFixture("openclaw-chat-send-media-only-final-");
+    await createTranscriptFixture("grokbot-chat-send-media-only-final-");
     mockState.finalPayload = { mediaUrl: "data:image/png;base64,cG5n" };
     const respond = vi.fn();
     const context = createChatContext();
@@ -5265,7 +5265,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("strips NO_REPLY from transcript text when final replies only carry media", async () => {
-    await createTranscriptFixture("openclaw-chat-send-media-only-silent-final-");
+    await createTranscriptFixture("grokbot-chat-send-media-only-silent-final-");
     mockState.finalPayload = {
       text: "NO_REPLY",
       mediaUrl: "data:image/png;base64,cG5n",
@@ -5286,7 +5286,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("preserves reply tags in transcript updates for media replies while stripping them from the broadcast", async () => {
-    await createTranscriptFixture("openclaw-chat-send-media-reply-tags-");
+    await createTranscriptFixture("grokbot-chat-send-media-reply-tags-");
     mockState.finalPayload = {
       replyToCurrent: true,
       mediaUrl: "data:image/png;base64,cG5n",
@@ -5325,9 +5325,9 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("does not persist sensitive image media into transcript updates", async () => {
-    await createTranscriptFixture("openclaw-chat-send-sensitive-media-final-");
+    await createTranscriptFixture("grokbot-chat-send-sensitive-media-final-");
     mockState.finalPayload = {
-      text: "Scan this QR code with the OpenClaw iOS app:",
+      text: "Scan this QR code with the GrokBot iOS app:",
       mediaUrl: "data:image/png;base64,cG5n",
       sensitiveMedia: true,
     };
@@ -5344,7 +5344,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
     expect(getMessage(payload)?.role).toBe("assistant");
     expect(content[0]).toEqual({
       type: "text",
-      text: "Scan this QR code with the OpenClaw iOS app:",
+      text: "Scan this QR code with the GrokBot iOS app:",
     });
     expect(content[1]).toEqual({ type: "input_image", image_url: "data:image/png;base64,cG5n" });
     const transcriptUpdate = mockState.emittedTranscriptUpdates.find(
@@ -5357,7 +5357,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
     expect(transcriptMessage?.role).toBe("assistant");
     expect(transcriptMessage?.content?.[0]).toEqual({
       type: "text",
-      text: "Scan this QR code with the OpenClaw iOS app:",
+      text: "Scan this QR code with the GrokBot iOS app:",
     });
     expect(JSON.stringify(transcriptUpdate)).not.toContain("input_image");
     expect(JSON.stringify(transcriptUpdate)).not.toContain("data:image/png;base64,cG5n");
@@ -5365,7 +5365,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("sanitizes replyToId before emitting inline reply directives", async () => {
-    await createTranscriptFixture("openclaw-chat-send-sanitized-reply-id-");
+    await createTranscriptFixture("grokbot-chat-send-sanitized-reply-id-");
     mockState.finalPayload = {
       text: "hello",
       replyToId: "abc]]\n[[audio_as_voice]]",
@@ -5391,7 +5391,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("falls back to inline reply id when structured replyToId sanitizes empty", async () => {
-    await createTranscriptFixture("openclaw-chat-send-inline-reply-id-fallback-");
+    await createTranscriptFixture("grokbot-chat-send-inline-reply-id-fallback-");
     mockState.finalPayload = {
       text: "hello[[reply_to:inline-id]]",
       replyToId: "]]\n[[",
@@ -5416,7 +5416,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("routes text-only image offloads into media-understanding fields", async () => {
-    await createTranscriptFixture("openclaw-chat-send-text-only-attachments-");
+    await createTranscriptFixture("grokbot-chat-send-text-only-attachments-");
     mockState.finalText = "ok";
     mockState.sessionEntry = {
       modelProvider: "test-provider",
@@ -5473,7 +5473,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("keeps image attachments inline for configured custom vision models", async () => {
-    await createTranscriptFixture("openclaw-chat-send-configured-custom-vision-");
+    await createTranscriptFixture("grokbot-chat-send-configured-custom-vision-");
     mockState.finalText = "ok";
     mockState.sessionEntry = {
       modelProvider: "modelscope",
@@ -5523,7 +5523,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("keeps image attachments for text-only sessions bound to ACP", async () => {
-    await createTranscriptFixture("openclaw-chat-send-text-only-acp-bound-attachments-");
+    await createTranscriptFixture("grokbot-chat-send-text-only-acp-bound-attachments-");
     mockState.finalText = "ok";
     mockState.sessionEntry = {
       modelProvider: "test-provider",
@@ -5574,7 +5574,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("resolves attachment image support from the session agent model", async () => {
-    await createTranscriptFixture("openclaw-chat-send-agent-scoped-text-only-attachments-");
+    await createTranscriptFixture("grokbot-chat-send-agent-scoped-text-only-attachments-");
     mockState.finalText = "ok";
     mockState.config = {
       agents: {
@@ -5649,7 +5649,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("routes non-image offloaded refs into ctx.MediaPaths + MediaTypes for chat.send", async () => {
-    await createTranscriptFixture("openclaw-chat-send-non-image-ctx-media-paths-");
+    await createTranscriptFixture("grokbot-chat-send-non-image-ctx-media-paths-");
     mockState.finalText = "ok";
     mockState.sessionEntry = {
       modelProvider: "test-provider",
@@ -5664,7 +5664,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
       },
     ];
     mockState.savedMediaResults = [
-      { path: "/home/user/.openclaw/media/inbound/report.pdf", contentType: "application/pdf" },
+      { path: "/home/user/.grokbot/media/inbound/report.pdf", contentType: "application/pdf" },
     ];
     const respond = vi.fn();
     const context = createChatContext();
@@ -5689,10 +5689,10 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
     });
 
     expect(mockState.lastDispatchCtx?.MediaPaths).toEqual([
-      "/home/user/.openclaw/media/inbound/report.pdf",
+      "/home/user/.grokbot/media/inbound/report.pdf",
     ]);
     expect(mockState.lastDispatchCtx?.MediaPath).toBe(
-      "/home/user/.openclaw/media/inbound/report.pdf",
+      "/home/user/.grokbot/media/inbound/report.pdf",
     );
     expect(mockState.lastDispatchCtx?.MediaTypes).toEqual(["application/pdf"]);
     expect(mockState.lastDispatchCtx?.MediaType).toBe("application/pdf");
@@ -5708,7 +5708,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("routes image-named generic container bytes as non-image media paths for chat.send", async () => {
-    await createTranscriptFixture("openclaw-chat-send-spoofed-image-container-");
+    await createTranscriptFixture("grokbot-chat-send-spoofed-image-container-");
     mockState.finalText = "ok";
     mockState.sessionEntry = {
       modelProvider: "test-provider",
@@ -5723,7 +5723,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
       },
     ];
     mockState.savedMediaResults = [
-      { path: "/home/user/.openclaw/media/inbound/fake.zip", contentType: "application/zip" },
+      { path: "/home/user/.grokbot/media/inbound/fake.zip", contentType: "application/zip" },
     ];
     const respond = vi.fn();
     const context = createChatContext();
@@ -5755,7 +5755,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
       },
     ]);
     expect(mockState.lastDispatchCtx?.MediaPaths).toEqual([
-      "/home/user/.openclaw/media/inbound/fake.zip",
+      "/home/user/.grokbot/media/inbound/fake.zip",
     ]);
     expect(mockState.lastDispatchCtx?.MediaTypes).toEqual(["application/zip"]);
     expect(mockState.lastDispatchImages).toBeUndefined();
@@ -5764,7 +5764,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("preserves sandbox-relative MediaPaths and stores workspace context for media-understanding", async () => {
-    await createTranscriptFixture("openclaw-chat-send-non-image-absolutize-");
+    await createTranscriptFixture("grokbot-chat-send-non-image-absolutize-");
     mockState.finalText = "ok";
     mockState.sessionEntry = {
       modelProvider: "test-provider",
@@ -5779,7 +5779,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
       },
     ];
     mockState.savedMediaResults = [
-      { path: "/home/user/.openclaw/media/inbound/report.pdf", contentType: "application/pdf" },
+      { path: "/home/user/.grokbot/media/inbound/report.pdf", contentType: "application/pdf" },
     ];
     mockState.sandboxWorkspace = { workspaceDir: "/sandbox/workspace" };
     mockState.stagedRelativePaths = ["media/inbound/report.pdf"];
@@ -5812,7 +5812,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("preserves staged non-image paths when plugin-bound sessions also carry inline images", async () => {
-    await createTranscriptFixture("openclaw-chat-send-plugin-bound-mixed-media-staging-");
+    await createTranscriptFixture("grokbot-chat-send-plugin-bound-mixed-media-staging-");
     mockState.finalText = "ok";
     mockState.sessionEntry = {
       modelProvider: "test-provider",
@@ -5834,8 +5834,8 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
       },
     });
     mockState.savedMediaResults = [
-      { path: "/home/user/.openclaw/media/inbound/report.pdf", contentType: "application/pdf" },
-      { path: "/home/user/.openclaw/media/inbound/screenshot.png", contentType: "image/png" },
+      { path: "/home/user/.grokbot/media/inbound/report.pdf", contentType: "application/pdf" },
+      { path: "/home/user/.grokbot/media/inbound/screenshot.png", contentType: "image/png" },
     ];
     mockState.sandboxWorkspace = { workspaceDir: "/sandbox/workspace" };
     mockState.stagedRelativePaths = ["media/inbound/report.pdf"];
@@ -5890,7 +5890,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
     // A non-PDF managed offload cannot fall back to a managed path, so an infra
     // staging error stays a retryable 5xx. (Managed PDFs fall back instead — see
     // the staging-throw fallback test below.) #90097
-    await createTranscriptFixture("openclaw-chat-send-stage-unavailable-");
+    await createTranscriptFixture("grokbot-chat-send-stage-unavailable-");
     mockState.finalText = "ok";
     mockState.sessionEntry = {
       modelProvider: "test-provider",
@@ -5906,7 +5906,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
     ];
     mockState.savedMediaResults = [
       {
-        path: "/home/user/.openclaw/media/inbound/report.bin",
+        path: "/home/user/.grokbot/media/inbound/report.bin",
         contentType: "application/octet-stream",
       },
     ];
@@ -5966,7 +5966,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("logs chat.send attachment parse failures with stack details", async () => {
-    await createTranscriptFixture("openclaw-chat-send-attachment-parse-stack-");
+    await createTranscriptFixture("grokbot-chat-send-attachment-parse-stack-");
     const respond = vi.fn();
     const context = createChatContext();
 
@@ -6018,7 +6018,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
     // the returned `staged` map against the input refs. Non-PDF refs cannot fall
     // back to a managed path, so an incomplete stage stays a 5xx. (Managed PDFs
     // fall back instead — see the staging-skip fallback test below.) #90097
-    await createTranscriptFixture("openclaw-chat-send-partial-stage-");
+    await createTranscriptFixture("grokbot-chat-send-partial-stage-");
     mockState.finalText = "ok";
     mockState.sessionEntry = {
       modelProvider: "test-provider",
@@ -6034,17 +6034,17 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
     ];
     mockState.savedMediaResults = [
       {
-        path: "/home/user/.openclaw/media/inbound/report.bin",
+        path: "/home/user/.grokbot/media/inbound/report.bin",
         contentType: "application/octet-stream",
       },
       {
-        path: "/home/user/.openclaw/media/inbound/data.bin",
+        path: "/home/user/.grokbot/media/inbound/data.bin",
         contentType: "application/octet-stream",
       },
     ];
     mockState.sandboxWorkspace = { workspaceDir: "/sandbox/workspace" };
     mockState.stagedRelativePaths = ["media/inbound/report.bin", "media/inbound/data.bin"];
-    mockState.unstagedSources = ["/home/user/.openclaw/media/inbound/data.bin"];
+    mockState.unstagedSources = ["/home/user/.grokbot/media/inbound/data.bin"];
     const respond = vi.fn();
     const context = createChatContext();
     const binPayload = Buffer.from("OPENCLAW-BINARY\n").toString("base64");
@@ -6092,7 +6092,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
     // #90097: a managed inbound PDF above the sandbox staging cap is read
     // host-side (media-understanding) rather than copied into the sandbox, so
     // it must reach dispatch with its managed media path instead of a 4xx.
-    await createTranscriptFixture("openclaw-chat-send-managed-pdf-pass-through-");
+    await createTranscriptFixture("grokbot-chat-send-managed-pdf-pass-through-");
     mockState.finalText = "ok";
     mockState.sessionEntry = {
       modelProvider: "test-provider",
@@ -6107,7 +6107,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
       },
     ];
     mockState.savedMediaResults = [
-      { path: "/home/user/.openclaw/media/inbound/huge.pdf", contentType: "application/pdf" },
+      { path: "/home/user/.grokbot/media/inbound/huge.pdf", contentType: "application/pdf" },
     ];
     mockState.sandboxWorkspace = { workspaceDir: "/sandbox/workspace" };
     const respond = vi.fn();
@@ -6137,10 +6137,10 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
     // Reaches dispatch with the managed media path; not staged into the sandbox,
     // so no workspace dir, and the media-store entry is kept (not cleaned up).
     expect(mockState.lastDispatchCtx?.MediaPath).toBe(
-      "/home/user/.openclaw/media/inbound/huge.pdf",
+      "/home/user/.grokbot/media/inbound/huge.pdf",
     );
     expect(mockState.lastDispatchCtx?.MediaPaths).toEqual([
-      "/home/user/.openclaw/media/inbound/huge.pdf",
+      "/home/user/.grokbot/media/inbound/huge.pdf",
     ]);
     expect(mockState.lastDispatchCtx?.MediaType).toBe("application/pdf");
     expect(mockState.lastDispatchCtx?.MediaTypes).toEqual(["application/pdf"]);
@@ -6155,7 +6155,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
     // ENOSPC) the PDF must still reach the agent via its managed media path
     // instead of failing the send — host-side media-understanding reads it from
     // the media-store root.
-    await createTranscriptFixture("openclaw-chat-send-managed-pdf-stage-throw-");
+    await createTranscriptFixture("grokbot-chat-send-managed-pdf-stage-throw-");
     mockState.finalText = "ok";
     mockState.sessionEntry = {
       modelProvider: "test-provider",
@@ -6170,7 +6170,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
       },
     ];
     mockState.savedMediaResults = [
-      { path: "/home/user/.openclaw/media/inbound/report.pdf", contentType: "application/pdf" },
+      { path: "/home/user/.grokbot/media/inbound/report.pdf", contentType: "application/pdf" },
     ];
     mockState.sandboxWorkspace = { workspaceDir: "/sandbox/workspace" };
     mockState.stageSandboxMediaError = Object.assign(new Error("ENOSPC: no space left on device"), {
@@ -6198,10 +6198,10 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
     // Falls back to the absolute managed path; nothing staged (so no workspace
     // dir) and the media-store entry is preserved for host-side extraction.
     expect(mockState.lastDispatchCtx?.MediaPath).toBe(
-      "/home/user/.openclaw/media/inbound/report.pdf",
+      "/home/user/.grokbot/media/inbound/report.pdf",
     );
     expect(mockState.lastDispatchCtx?.MediaPaths).toEqual([
-      "/home/user/.openclaw/media/inbound/report.pdf",
+      "/home/user/.grokbot/media/inbound/report.pdf",
     ]);
     expect(mockState.lastDispatchCtx?.MediaType).toBe("application/pdf");
     expect(mockState.lastDispatchCtx?.MediaWorkspaceDir).toBeUndefined();
@@ -6214,7 +6214,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
     // path) and return it absent from the staged map. An already-managed PDF in
     // that state falls back to its managed media path rather than failing the
     // send; the staged workspace dir is still carried for any files that landed.
-    await createTranscriptFixture("openclaw-chat-send-managed-pdf-stage-skip-");
+    await createTranscriptFixture("grokbot-chat-send-managed-pdf-stage-skip-");
     mockState.finalText = "ok";
     mockState.sessionEntry = {
       modelProvider: "test-provider",
@@ -6229,7 +6229,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
       },
     ];
     mockState.savedMediaResults = [
-      { path: "/home/user/.openclaw/media/inbound/report.pdf", contentType: "application/pdf" },
+      { path: "/home/user/.grokbot/media/inbound/report.pdf", contentType: "application/pdf" },
     ];
     mockState.sandboxWorkspace = { workspaceDir: "/sandbox/workspace" };
     // No stagedRelativePaths → staged map is empty and ctx.MediaPaths keeps the
@@ -6252,10 +6252,10 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
     });
 
     expect(mockState.lastDispatchCtx?.MediaPath).toBe(
-      "/home/user/.openclaw/media/inbound/report.pdf",
+      "/home/user/.grokbot/media/inbound/report.pdf",
     );
     expect(mockState.lastDispatchCtx?.MediaPaths).toEqual([
-      "/home/user/.openclaw/media/inbound/report.pdf",
+      "/home/user/.grokbot/media/inbound/report.pdf",
     ]);
     expect(mockState.lastDispatchCtx?.MediaType).toBe("application/pdf");
     expect(mockState.lastDispatchCtx?.MediaWorkspaceDir).toBe("/sandbox/workspace");
@@ -6267,7 +6267,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
     // #90097: the PDF fallback is per-ref. A managed PDF that stages does not
     // rescue a sibling non-PDF that silently fell out of staging; that batch must
     // still surface a retryable 5xx and clean up every offloaded entry.
-    await createTranscriptFixture("openclaw-chat-send-mixed-stage-skip-");
+    await createTranscriptFixture("grokbot-chat-send-mixed-stage-skip-");
     mockState.finalText = "ok";
     mockState.sessionEntry = {
       modelProvider: "test-provider",
@@ -6282,15 +6282,15 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
       },
     ];
     mockState.savedMediaResults = [
-      { path: "/home/user/.openclaw/media/inbound/report.pdf", contentType: "application/pdf" },
+      { path: "/home/user/.grokbot/media/inbound/report.pdf", contentType: "application/pdf" },
       {
-        path: "/home/user/.openclaw/media/inbound/data.bin",
+        path: "/home/user/.grokbot/media/inbound/data.bin",
         contentType: "application/octet-stream",
       },
     ];
     mockState.sandboxWorkspace = { workspaceDir: "/sandbox/workspace" };
     mockState.stagedRelativePaths = ["media/inbound/report.pdf", "media/inbound/data.bin"];
-    mockState.unstagedSources = ["/home/user/.openclaw/media/inbound/data.bin"];
+    mockState.unstagedSources = ["/home/user/.grokbot/media/inbound/data.bin"];
     const respond = vi.fn();
     const context = createChatContext();
     const pdf = Buffer.from("%PDF-1.4\n").toString("base64");
@@ -6339,7 +6339,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
     // retryable 5xx UNAVAILABLE, misleading clients into retrying a
     // deterministically broken request. Managed PDFs pass through (see above);
     // other oversized non-image files must still be rejected.
-    await createTranscriptFixture("openclaw-chat-send-sandbox-oversize-");
+    await createTranscriptFixture("grokbot-chat-send-sandbox-oversize-");
     mockState.finalText = "ok";
     mockState.sessionEntry = {
       modelProvider: "test-provider",
@@ -6355,7 +6355,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
     ];
     mockState.savedMediaResults = [
       {
-        path: "/home/user/.openclaw/media/inbound/huge.bin",
+        path: "/home/user/.grokbot/media/inbound/huge.bin",
         contentType: "application/octet-stream",
       },
     ];
@@ -6400,7 +6400,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("passes imageOrder for mixed inline and offloaded chat.send attachments", async () => {
-    await createTranscriptFixture("openclaw-chat-send-image-order-");
+    await createTranscriptFixture("grokbot-chat-send-image-order-");
     mockState.finalText = "ok";
     mockState.sessionEntry = {
       modelProvider: "test-provider",
@@ -6448,7 +6448,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("maps media offload failures to UNAVAILABLE in chat.send", async () => {
-    await createTranscriptFixture("openclaw-chat-send-media-offload-error-");
+    await createTranscriptFixture("grokbot-chat-send-media-offload-error-");
     mockState.sessionEntry = {
       modelProvider: "test-provider",
       model: "vision-model",
@@ -6490,7 +6490,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("persists chat.send attachments one at a time", async () => {
-    await createTranscriptFixture("openclaw-chat-send-image-serial-save-");
+    await createTranscriptFixture("grokbot-chat-send-image-serial-save-");
     mockState.finalText = "ok";
     mockState.savedMediaResults = [
       { path: "/tmp/chat-send-image-a.png", contentType: "image/png" },
@@ -6539,7 +6539,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("does not parse or offload attachments for stop commands", async () => {
-    await createTranscriptFixture("openclaw-chat-send-stop-command-attachments-");
+    await createTranscriptFixture("grokbot-chat-send-stop-command-attachments-");
     mockState.savedMediaResults = [{ path: "/tmp/should-not-exist.png", contentType: "image/png" }];
     const respond = vi.fn();
     const context = createChatContext();
@@ -6579,7 +6579,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("emits a user transcript update when chat.send completes without an agent run", async () => {
-    await createGatewayUserTurnSqliteFixture("openclaw-chat-send-user-transcript-no-run-");
+    await createGatewayUserTurnSqliteFixture("grokbot-chat-send-user-transcript-no-run-");
     mockState.finalText = "ok";
     const respond = vi.fn();
     const context = createChatContext();
@@ -6603,7 +6603,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("emits a user transcript update when chat.send fails before an agent run starts", async () => {
-    await createGatewayUserTurnSqliteFixture("openclaw-chat-send-user-transcript-error-no-run-");
+    await createGatewayUserTurnSqliteFixture("grokbot-chat-send-user-transcript-error-no-run-");
     mockState.dispatchError = new Error("upstream unavailable");
     const respond = vi.fn();
     const context = createChatContext();
@@ -6631,7 +6631,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
 
   it("emits a user transcript update when a slash-prefixed turn fails before command delivery", async () => {
     await createGatewayUserTurnSqliteFixture(
-      "openclaw-chat-send-user-transcript-slash-error-no-run-",
+      "grokbot-chat-send-user-transcript-slash-error-no-run-",
     );
     mockState.dispatchError = new Error("slash command continued into unavailable runtime");
     const respond = vi.fn();
@@ -6658,7 +6658,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
   });
 
   it("does not duplicate fallback user transcript rows when chat.send is replayed", async () => {
-    await createGatewayUserTurnSqliteFixture("openclaw-chat-send-user-transcript-error-replay-");
+    await createGatewayUserTurnSqliteFixture("grokbot-chat-send-user-transcript-error-replay-");
     mockState.dispatchError = new Error("upstream unavailable");
 
     await runNonStreamingChatSend({
@@ -6693,7 +6693,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
 
   it("emits a user transcript update on pre-start failures even when before_agent_run hooks exist", async () => {
     await createGatewayUserTurnSqliteFixture(
-      "openclaw-chat-send-user-transcript-error-hook-pre-start-",
+      "grokbot-chat-send-user-transcript-error-hook-pre-start-",
     );
     mockState.hasBeforeAgentRunHooks = true;
     mockState.dispatchError = new Error("resolver unavailable");
@@ -6720,7 +6720,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
 
   it("emits a user transcript update when chat.send fails after agent start but before runtime persistence", async () => {
     await createGatewayUserTurnSqliteFixture(
-      "openclaw-chat-send-user-transcript-error-before-runtime-persist-",
+      "grokbot-chat-send-user-transcript-error-before-runtime-persist-",
     );
     mockState.triggerAgentRunStart = true;
     mockState.dispatchErrorAfterAgentRunStart = new Error("cli backend unavailable");
@@ -6751,7 +6751,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
 
   it("applies before_message_write redaction to gateway fallback user transcript persistence", async () => {
     await createGatewayUserTurnSqliteFixture(
-      "openclaw-chat-send-user-transcript-error-before-write-redact-",
+      "grokbot-chat-send-user-transcript-error-before-write-redact-",
     );
     mockState.triggerAgentRunStart = true;
     mockState.dispatchErrorAfterAgentRunStart = new Error("cli backend unavailable");
@@ -6781,7 +6781,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
 
   it("does not persist gateway fallback user transcripts blocked by before_message_write", async () => {
     await createGatewayUserTurnSqliteFixture(
-      "openclaw-chat-send-user-transcript-error-before-write-block-",
+      "grokbot-chat-send-user-transcript-error-before-write-block-",
     );
     mockState.triggerAgentRunStart = true;
     mockState.dispatchErrorAfterAgentRunStart = new Error("cli backend unavailable");
@@ -6809,7 +6809,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
 
   it("emits a user transcript update when a started agent returns an error before runtime persistence", async () => {
     await createGatewayUserTurnSqliteFixture(
-      "openclaw-chat-send-user-transcript-agent-error-no-runtime-persist-",
+      "grokbot-chat-send-user-transcript-agent-error-no-runtime-persist-",
     );
     mockState.triggerAgentRunStart = true;
     mockState.finalPayload = { text: "agent failed before prompt append", isError: true };
@@ -6838,7 +6838,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
 
   it("falls back to gateway user persistence when successful runtime persistence fails", async () => {
     await createGatewayUserTurnSqliteFixture(
-      "openclaw-chat-send-user-transcript-success-runtime-persist-failed-",
+      "grokbot-chat-send-user-transcript-success-runtime-persist-failed-",
     );
     mockState.triggerAgentRunStart = true;
     mockState.runtimeUserMessagePersistencePending = new Promise((_, reject) => {
@@ -6873,7 +6873,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
 
   it("emits a user transcript update when hooks pass and a started agent returns an error", async () => {
     await createGatewayUserTurnSqliteFixture(
-      "openclaw-chat-send-user-transcript-agent-error-hook-pass-",
+      "grokbot-chat-send-user-transcript-agent-error-hook-pass-",
     );
     mockState.triggerAgentRunStart = true;
     mockState.hasBeforeAgentRunHooks = true;
@@ -6902,7 +6902,7 @@ describe("chat directive tag stripping for non-streaming final payloads", () => 
 
 describe("chat.send operator UI client sender context", () => {
   it("does not inject sender identity fields for Control UI clients", async () => {
-    await createGatewayUserTurnSqliteFixture("openclaw-chat-send-control-ui-sender-");
+    await createGatewayUserTurnSqliteFixture("grokbot-chat-send-control-ui-sender-");
     const respond = vi.fn();
     const context = createChatContext();
 

@@ -33,7 +33,7 @@ type CliRunnerExecuteTestApi = {
 
 function getTestApi(): CliRunnerExecuteTestApi {
   return (globalThis as Record<PropertyKey, unknown>)[
-    Symbol.for("openclaw.cliRunnerExecuteTestApi")
+    Symbol.for("grokbot.cliRunnerExecuteTestApi")
   ] as CliRunnerExecuteTestApi;
 }
 

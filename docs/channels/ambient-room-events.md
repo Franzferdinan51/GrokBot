@@ -8,7 +8,7 @@ title: "Ambient room events"
 sidebarTitle: "Ambient room events"
 ---
 
-Ambient room events let OpenClaw process unmentioned group or channel chatter as quiet context. The agent can update memory and session state, but the room stays silent unless the agent explicitly calls the `message` tool.
+Ambient room events let GrokBot process unmentioned group or channel chatter as quiet context. The agent can update memory and session state, but the room stays silent unless the agent explicitly calls the `message` tool.
 
 For always-on group chats, combine `messages.groupChat.unmentionedInbound: "room_event"` with `messages.groupChat.visibleReplies: "message_tool"`. The agent listens, decides when a reply is useful, and never needs the old prompt pattern of answering `NO_REPLY`.
 
@@ -146,7 +146,7 @@ For Telegram groups, the bot must be able to see normal group messages. If `requ
 }
 ```
 
-Telegram group IDs are usually negative numbers such as `-1001234567890`. Read `chat.id` from `openclaw logs --follow`, forward a group message to an ID helper bot, or inspect Bot API `getUpdates`.
+Telegram group IDs are usually negative numbers such as `-1001234567890`. Read `chat.id` from `grokbot logs --follow`, forward a group message to an ID helper bot, or inspect Bot API `getUpdates`.
 
 ## Agent specific policy
 
@@ -165,7 +165,7 @@ Use an agent override when several agents share the same room but only one shoul
         id: "main",
         groupChat: {
           unmentionedInbound: "room_event",
-          mentionPatterns: ["@openclaw", "openclaw"],
+          mentionPatterns: ["@grokbot", "grokbot"],
         },
       },
     ],
@@ -179,7 +179,7 @@ The agent-specific `agents.list[].groupChat.unmentionedInbound` value overrides 
 
 `messages.groupChat.visibleReplies` defaults to `"automatic"` for normal group/channel user requests. Keep that default when final assistant text should post visibly without an explicit message-tool call.
 
-For ambient always-on rooms, `messages.groupChat.visibleReplies: "message_tool"` is still recommended, especially with latest-generation, tool-reliable models such as GPT-5.6 Sol. It lets the agent decide when to speak by calling the message tool. If the model returns final text without calling the tool, OpenClaw keeps that final text private and logs suppressed-delivery metadata.
+For ambient always-on rooms, `messages.groupChat.visibleReplies: "message_tool"` is still recommended, especially with latest-generation, tool-reliable models such as GPT-5.6 Sol. It lets the agent decide when to speak by calling the message tool. If the model returns final text without calling the tool, GrokBot keeps that final text private and logs suppressed-delivery metadata.
 
 Room events stay strict even when other group requests use automatic replies. Unmentioned ambient room events always require `message(action=send)` for visible output.
 
@@ -187,7 +187,7 @@ Room events stay strict even when other group requests use automatic replies. Un
 
 `messages.groupChat.historyLimit` sets the global group history default (50 when unset; must be a positive integer). Channels can override it with `channels.<channel>.historyLimit`, and some channels also support per-account history limits. Set the channel-level `historyLimit: 0` to disable group history context for that channel.
 
-Supported room-event channels keep recent ambient room messages as context. Telegram keeps an always-on rolling per-group window bounded by `historyLimit`; user-request turns select entries after the bot's last recorded reply, while room-event turns receive the full recent window so the model can see its own recent posts. The retired Telegram `includeGroupHistoryContext` mode key is removed by `openclaw doctor --fix`.
+Supported room-event channels keep recent ambient room messages as context. Telegram keeps an always-on rolling per-group window bounded by `historyLimit`; user-request turns select entries after the bot's last recorded reply, while room-event turns receive the full recent window so the model can see its own recent posts. The retired Telegram `includeGroupHistoryContext` mode key is removed by `grokbot doctor --fix`.
 
 ## Troubleshooting
 

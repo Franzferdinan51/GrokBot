@@ -4,8 +4,8 @@ import {
   resolveScopeRequireMention,
   resolveScopeToolsPolicy,
   type GroupToolPolicyConfig,
-} from "openclaw/plugin-sdk/channel-policy";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+} from "grokbot/plugin-sdk/channel-policy";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 
 type WhatsAppGroupContext = {
   cfg: OpenClawConfig;

@@ -3,9 +3,9 @@ import { createHash } from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import readline from "node:readline";
-import { asFiniteNumber } from "@openclaw/normalization-core/number-coercion";
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
-import { truncateUtf16Safe } from "@openclaw/normalization-core/utf16-slice";
+import { asFiniteNumber } from "@grokbot/normalization-core/number-coercion";
+import { normalizeOptionalString } from "@grokbot/normalization-core/string-coerce";
+import { truncateUtf16Safe } from "@grokbot/normalization-core/utf16-slice";
 import { resolveAgentDir } from "../agents/agent-scope-config.js";
 import type { NormalizedUsage, UsageLike } from "../agents/usage.js";
 import { normalizeUsage } from "../agents/usage.js";
@@ -46,11 +46,11 @@ import {
 } from "../config/sessions/transcript-tree.js";
 import { selectVisibleTranscriptEvents } from "../config/sessions/transcript-visible-events.js";
 import type { SessionEntry } from "../config/sessions/types.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { createSubsystemLogger } from "../logging/subsystem.js";
 import { normalizeAgentId } from "../routing/session-key.js";
 import { stripEnvelope, stripMessageIdHints } from "../shared/chat-envelope.js";
-import { resolveOpenClawAgentSqlitePath } from "../state/openclaw-agent-db.js";
+import { resolveOpenClawAgentSqlitePath } from "../state/grokbot-agent-db.js";
 import { runTasksWithConcurrency } from "../utils/run-with-concurrency.js";
 import { countToolResults, extractToolCallNames } from "../utils/transcript-tools.js";
 import {
@@ -1880,7 +1880,7 @@ function clearUsageCostRefreshesForTest(): void {
 }
 
 if (process.env.VITEST || process.env.NODE_ENV === "test") {
-  (globalThis as Record<PropertyKey, unknown>)[Symbol.for("openclaw.sessionCostUsageTestApi")] = {
+  (globalThis as Record<PropertyKey, unknown>)[Symbol.for("grokbot.sessionCostUsageTestApi")] = {
     requestCostUsageCacheRefresh,
     usageCostRefreshRuntime,
     clearUsageCostRefreshesForTest,

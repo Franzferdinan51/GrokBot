@@ -1,5 +1,5 @@
 ---
-summary: "Testing utilities and patterns for OpenClaw plugins"
+summary: "Testing utilities and patterns for GrokBot plugins"
 title: "Plugin testing"
 sidebarTitle: "Testing"
 read_when:
@@ -8,7 +8,7 @@ read_when:
   - You want to understand contract tests for bundled plugins
 ---
 
-Reference for test utilities, patterns, and lint enforcement for OpenClaw
+Reference for test utilities, patterns, and lint enforcement for GrokBot
 plugins.
 
 <Tip>
@@ -19,7 +19,7 @@ plugins.
 
 ## Test utilities
 
-These subpaths are repo-local source entrypoints for OpenClaw's own bundled
+These subpaths are repo-local source entrypoints for GrokBot's own bundled
 plugin tests. They are not published `package.json` exports for third-party
 plugins, and they may import Vitest or other repo-only test dependencies.
 
@@ -27,30 +27,30 @@ plugins, and they may import Vitest or other repo-only test dependencies.
 import {
   shouldAckReaction,
   removeAckReactionAfterReply,
-} from "openclaw/plugin-sdk/channel-feedback";
-import { installCommonResolveTargetErrorCases } from "openclaw/plugin-sdk/channel-target-testing";
-import { AUTH_PROFILE_RUNTIME_CONTRACT } from "openclaw/plugin-sdk/agent-runtime-test-contracts";
-import { createTestPluginApi } from "openclaw/plugin-sdk/plugin-test-api";
-import { expectChannelInboundContextContract } from "openclaw/plugin-sdk/channel-contract-testing";
-import { createStartAccountContext } from "openclaw/plugin-sdk/channel-test-helpers";
-import { describePluginRegistrationContract } from "openclaw/plugin-sdk/plugin-test-contracts";
-import { registerSingleProviderPlugin } from "openclaw/plugin-sdk/plugin-test-runtime";
-import { describeOpenAIProviderRuntimeContract } from "openclaw/plugin-sdk/provider-test-contracts";
-import { getProviderHttpMocks } from "openclaw/plugin-sdk/provider-http-test-mocks";
-import { withEnv, withFetchPreconnect, withServer } from "openclaw/plugin-sdk/test-env";
-import { isLiveTestEnabled } from "openclaw/plugin-sdk/test-live";
-import { createRequestCaptureJsonFetch } from "openclaw/plugin-sdk/test-media-understanding";
+} from "grokbot/plugin-sdk/channel-feedback";
+import { installCommonResolveTargetErrorCases } from "grokbot/plugin-sdk/channel-target-testing";
+import { AUTH_PROFILE_RUNTIME_CONTRACT } from "grokbot/plugin-sdk/agent-runtime-test-contracts";
+import { createTestPluginApi } from "grokbot/plugin-sdk/plugin-test-api";
+import { expectChannelInboundContextContract } from "grokbot/plugin-sdk/channel-contract-testing";
+import { createStartAccountContext } from "grokbot/plugin-sdk/channel-test-helpers";
+import { describePluginRegistrationContract } from "grokbot/plugin-sdk/plugin-test-contracts";
+import { registerSingleProviderPlugin } from "grokbot/plugin-sdk/plugin-test-runtime";
+import { describeOpenAIProviderRuntimeContract } from "grokbot/plugin-sdk/provider-test-contracts";
+import { getProviderHttpMocks } from "grokbot/plugin-sdk/provider-http-test-mocks";
+import { withEnv, withFetchPreconnect, withServer } from "grokbot/plugin-sdk/test-env";
+import { isLiveTestEnabled } from "grokbot/plugin-sdk/test-live";
+import { createRequestCaptureJsonFetch } from "grokbot/plugin-sdk/test-media-understanding";
 import {
   bundledPluginRoot,
   createCliRuntimeCapture,
   typedCases,
-} from "openclaw/plugin-sdk/test-fixtures";
-import { mockNodeBuiltinModule } from "openclaw/plugin-sdk/test-node-mocks";
+} from "grokbot/plugin-sdk/test-fixtures";
+import { mockNodeBuiltinModule } from "grokbot/plugin-sdk/test-node-mocks";
 ```
 
 Use these focused subpaths for bundled plugin tests. The former
-`openclaw/plugin-sdk/testing` barrel was repo-local, excluded from shipped
-packages, and has been removed. The former `openclaw/plugin-sdk/test-utils`
+`grokbot/plugin-sdk/testing` barrel was repo-local, excluded from shipped
+packages, and has been removed. The former `grokbot/plugin-sdk/test-utils`
 alias was removed with it. `pnpm run lint:plugins:no-extension-test-core-imports`
 (`scripts/check-no-extension-test-core-imports.ts`) keeps extension tests on
 the focused test subpaths above.
@@ -130,7 +130,7 @@ the focused test subpaths above.
 
 Bundled-plugin contract suites also use these SDK testing subpaths for
 test-only registry, manifest, public-artifact, and runtime fixture helpers.
-Core-only suites that depend on bundled OpenClaw inventory stay under
+Core-only suites that depend on bundled GrokBot inventory stay under
 `src/plugins/contracts` instead.
 
 ### Types
@@ -141,9 +141,9 @@ Focused testing subpaths also re-export types useful in test files:
 import type {
   ChannelAccountSnapshot,
   ChannelGatewayContext,
-} from "openclaw/plugin-sdk/channel-contract";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import type { MockFn, PluginRuntime, RuntimeEnv } from "openclaw/plugin-sdk/plugin-test-runtime";
+} from "grokbot/plugin-sdk/channel-contract";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import type { MockFn, PluginRuntime, RuntimeEnv } from "grokbot/plugin-sdk/plugin-test-runtime";
 ```
 
 ## Testing target resolution
@@ -153,7 +153,7 @@ channel target resolution:
 
 ```typescript
 import { describe } from "vitest";
-import { installCommonResolveTargetErrorCases } from "openclaw/plugin-sdk/channel-target-testing";
+import { installCommonResolveTargetErrorCases } from "grokbot/plugin-sdk/channel-target-testing";
 
 describe("my-channel target resolution", () => {
   installCommonResolveTargetErrorCases({
@@ -176,7 +176,7 @@ describe("my-channel target resolution", () => {
 ### Testing registration contracts
 
 Unit tests that pass a hand-written `api` mock to `register(api)` do not
-exercise OpenClaw's loader acceptance gates. Add at least one loader-backed
+exercise GrokBot's loader acceptance gates. Add at least one loader-backed
 smoke test for each registration surface your plugin depends on, especially
 hooks and exclusive capabilities such as memory.
 
@@ -189,7 +189,7 @@ entry to declare `kind: "memory"`.
 ### Testing runtime config access
 
 Prefer the shared plugin runtime mock from
-`openclaw/plugin-sdk/plugin-test-runtime`. Its runtime config helpers model the
+`grokbot/plugin-sdk/plugin-test-runtime`. Its runtime config helpers model the
 current snapshot and mutation APIs.
 
 ### Unit testing a channel plugin
@@ -261,8 +261,8 @@ describe("my-provider plugin", () => {
 For code that uses `createPluginRuntimeStore`, mock the runtime in tests:
 
 ```typescript
-import { createPluginRuntimeStore } from "openclaw/plugin-sdk/runtime-store";
-import type { PluginRuntime } from "openclaw/plugin-sdk/runtime-store";
+import { createPluginRuntimeStore } from "grokbot/plugin-sdk/runtime-store";
+import type { PluginRuntime } from "grokbot/plugin-sdk/runtime-store";
 
 const store = createPluginRuntimeStore<PluginRuntime>({
   pluginId: "test-plugin",
@@ -340,7 +340,7 @@ import-boundary checks in CI; each can also be run standalone locally:
 
 | Command                                                        | Enforces                                                                                     |
 | -------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
-| `pnpm run lint:plugins:no-monolithic-plugin-sdk-entry-imports` | Bundled plugins cannot import the monolithic `openclaw/plugin-sdk` root barrel.              |
+| `pnpm run lint:plugins:no-monolithic-plugin-sdk-entry-imports` | Bundled plugins cannot import the monolithic `grokbot/plugin-sdk` root barrel.              |
 | `pnpm run lint:plugins:no-extension-src-imports`               | Production extension files cannot import the repo `src/**` tree directly (`../../src/...`).  |
 | `pnpm run lint:plugins:no-extension-test-core-imports`         | Extension test files cannot import removed SDK test aliases or other core-only test helpers. |
 
@@ -349,7 +349,7 @@ patterns is recommended.
 
 ## Test configuration
 
-OpenClaw uses Vitest 4 with informational V8 coverage reporting. For plugin tests:
+GrokBot uses Vitest 4 with informational V8 coverage reporting. For plugin tests:
 
 ```bash
 # Run all tests

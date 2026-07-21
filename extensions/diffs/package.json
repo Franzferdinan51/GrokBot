@@ -1,10 +1,10 @@
 {
-  "name": "@openclaw/diffs",
+  "name": "@grokbot/diffs",
   "version": "2026.7.2",
-  "description": "OpenClaw read-only diff viewer plugin and file renderer for agents.",
+  "description": "GrokBot read-only diff viewer plugin and file renderer for agents.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/openclaw/openclaw"
+    "url": "https://github.com/grokbot/grokbot"
   },
   "type": "module",
   "dependencies": {
@@ -15,14 +15,14 @@
     "zod": "4.4.3"
   },
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@grokbot/plugin-sdk": "workspace:*"
   },
-  "openclaw": {
+  "grokbot": {
     "extensions": [
       "./index.ts"
     ],
     "install": {
-      "npmSpec": "@openclaw/diffs",
+      "npmSpec": "@grokbot/diffs",
       "localPath": "extensions/diffs",
       "defaultChoice": "npm",
       "minHostVersion": ">=2026.4.30"

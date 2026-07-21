@@ -11,7 +11,7 @@ import {
   resolveAgentTextAvatar,
 } from "../lib/agents/display.ts";
 import { resolveAgentAvatarUrl } from "../lib/avatar.ts";
-import { OpenClawLightDomElement } from "../lit/openclaw-element.ts";
+import { OpenClawLightDomElement } from "../lit/grokbot-element.ts";
 import { icons } from "./icons.ts";
 
 type WebAwesomeSelectEvent = Event & { detail: { item: Element } };

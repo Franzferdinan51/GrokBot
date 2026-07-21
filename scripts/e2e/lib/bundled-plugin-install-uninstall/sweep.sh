@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-source scripts/lib/openclaw-e2e-instance.sh
+source scripts/lib/grokbot-e2e-instance.sh
 source scripts/lib/docker-e2e-logs.sh
 
 if [ -f dist/index.mjs ]; then
@@ -69,8 +69,8 @@ echo "Selected ${#plugin_entries[@]} bundled plugins for shard ${OPENCLAW_BUNDLE
 plugin_index=0
 for plugin_entry in "${plugin_entries[@]}"; do
   IFS=$'\t' read -r plugin_id plugin_dir requires_config plugin_root <<<"$plugin_entry"
-  install_log="/tmp/openclaw-install-${plugin_index}.log"
-  uninstall_log="/tmp/openclaw-uninstall-${plugin_index}.log"
+  install_log="/tmp/grokbot-install-${plugin_index}.log"
+  uninstall_log="/tmp/grokbot-uninstall-${plugin_index}.log"
   plugin_started_at="$(now_ms)"
   echo "Installing bundled plugin: $plugin_id ($plugin_dir)"
   run_logged_sweep_command "install $plugin_id" "$install_log" \

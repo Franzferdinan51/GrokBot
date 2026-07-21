@@ -1,7 +1,7 @@
 // Plans first-start plugin convergence without loading the repair/catalog runtime.
-import { isRecord } from "@openclaw/normalization-core/record-coerce";
-import { normalizeOptionalLowercaseString } from "@openclaw/normalization-core/string-coerce";
-import type { OpenClawConfig } from "../../../config/types.openclaw.js";
+import { isRecord } from "@grokbot/normalization-core/record-coerce";
+import { normalizeOptionalLowercaseString } from "@grokbot/normalization-core/string-coerce";
+import type { OpenClawConfig } from "../../../config/types.grokbot.js";
 import type { PluginInstallRecord } from "../../../config/types.plugins.js";
 import { inspectBundledPluginStartupMetadata } from "../../../plugins/bundled-plugin-startup-metadata.js";
 import { resolveConfiguredGenericEmbeddingProviderId } from "../../../plugins/embedding-provider-config.js";

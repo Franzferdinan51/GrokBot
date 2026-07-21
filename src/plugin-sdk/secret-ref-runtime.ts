@@ -14,7 +14,7 @@ export type ResolvedSecretPlanTarget = {
 };
 
 export function resolveSecretPlanTargetByPath(params: {
-  configFile: "openclaw.json" | "auth-profiles.json";
+  configFile: "grokbot.json" | "auth-profiles.json";
   pathSegments: string[];
 }): ResolvedSecretPlanTarget | null {
   const resolved = resolveSecretPlanTargetByPathInternal(params);

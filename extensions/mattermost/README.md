@@ -1,13 +1,13 @@
-# Mattermost OpenClaw channel
+# Mattermost GrokBot channel
 
-Official OpenClaw channel plugin for Mattermost.
+Official GrokBot channel plugin for Mattermost.
 
 ## Install
 
 ```sh
-openclaw plugins install @openclaw/mattermost
+grokbot plugins install @grokbot/mattermost
 ```
 
 ## Docs
 
-See `docs/channels/mattermost.md` in the OpenClaw repository, or the published docs at `https://docs.openclaw.ai/channels/mattermost`.
+See `docs/channels/mattermost.md` in the GrokBot repository, or the published docs at `https://docs.grokbot.ai/channels/mattermost`.

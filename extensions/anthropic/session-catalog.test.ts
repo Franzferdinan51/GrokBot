@@ -1,10 +1,10 @@
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import type { OpenClawPluginApi } from "openclaw/plugin-sdk/plugin-entry";
-import type { PluginRuntime } from "openclaw/plugin-sdk/plugin-runtime";
-import type { SessionCatalogProvider } from "openclaw/plugin-sdk/session-catalog";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import type { OpenClawPluginApi } from "grokbot/plugin-sdk/plugin-entry";
+import type { PluginRuntime } from "grokbot/plugin-sdk/plugin-runtime";
+import type { SessionCatalogProvider } from "grokbot/plugin-sdk/session-catalog";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { adoptedSourceKey } from "./session-catalog-adoption.js";
 import {
@@ -50,8 +50,8 @@ const nodeHostMocks = vi.hoisted(() => ({
   userShellPaths: new Map<string, string>(),
 }));
 
-vi.mock("openclaw/plugin-sdk/node-host", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("openclaw/plugin-sdk/node-host")>();
+vi.mock("grokbot/plugin-sdk/node-host", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("grokbot/plugin-sdk/node-host")>();
   return {
     ...actual,
     runNodePtyCommand: nodeHostMocks.runNodePtyCommand,
@@ -93,7 +93,7 @@ vi.mock("openclaw/plugin-sdk/node-host", async (importOriginal) => {
 });
 
 async function createHome(): Promise<string> {
-  const home = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-claude-catalog-"));
+  const home = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-claude-catalog-"));
   homes.push(home);
   return home;
 }
@@ -426,8 +426,8 @@ describe("Claude session catalog", () => {
     const createSessionEntry = vi.fn(async (params: Record<string, unknown>) => ({
       key: `agent:main:${String(params.key)}`,
       agentId: "main",
-      sessionId: "openclaw-adopted",
-      entry: { sessionId: "openclaw-adopted", updatedAt: Date.now() },
+      sessionId: "grokbot-adopted",
+      entry: { sessionId: "grokbot-adopted", updatedAt: Date.now() },
     }));
     let provider: SessionCatalogProvider | undefined;
     const api = {
@@ -544,7 +544,7 @@ describe("Claude session catalog", () => {
           {
             id: "research",
             models: {
-              "anthropic/claude-opus-4-8": { agentRuntime: { id: "openclaw" } },
+              "anthropic/claude-opus-4-8": { agentRuntime: { id: "grokbot" } },
             },
           },
         ],
@@ -618,7 +618,7 @@ describe("Claude session catalog", () => {
         pluginExtensions: { anthropic: { sessionCatalog: { sourceThreadId: sessionId } } },
       }),
     },
-  ])("links a catalog row to an existing OpenClaw session via $label", async ({ entry }) => {
+  ])("links a catalog row to an existing GrokBot session via $label", async ({ entry }) => {
     const home = await createHome();
     process.env.HOME = home;
     const sessionId = "claude-bound-session";
@@ -686,8 +686,8 @@ describe("Claude session catalog", () => {
     const createSessionEntry = vi.fn(async (params: Record<string, unknown>) => ({
       key: `agent:main:${String(params.key)}`,
       agentId: "main",
-      sessionId: "openclaw-adopted",
-      entry: { sessionId: "openclaw-adopted", updatedAt: Date.now() },
+      sessionId: "grokbot-adopted",
+      entry: { sessionId: "grokbot-adopted", updatedAt: Date.now() },
     }));
     let provider: SessionCatalogProvider | undefined;
     const api = {
@@ -1053,7 +1053,7 @@ describe("Claude session catalog", () => {
         {
           sessionId,
           fullPath: path.join(home, ".claude", "projects", "-workspace", `${sessionId}.jsonl`),
-          projectPath: "/work/openclaw",
+          projectPath: "/work/grokbot",
           isSidechain: false,
         },
       ],
@@ -1062,7 +1062,7 @@ describe("Claude session catalog", () => {
     await writeDesktopMetadata(home, "custom-group", {
       sessionId: localSessionId,
       cliSessionId: sessionId,
-      cwd: "/work/openclaw",
+      cwd: "/work/grokbot",
       title: "Desktop custom group",
     });
     await writeDesktopGroupStore(
@@ -1088,7 +1088,7 @@ describe("Claude session catalog", () => {
         {
           sessionId,
           fullPath: path.join(home, ".claude", "projects", "-workspace", `${sessionId}.jsonl`),
-          projectPath: "/work/openclaw",
+          projectPath: "/work/grokbot",
           isSidechain: false,
         },
       ],
@@ -1097,7 +1097,7 @@ describe("Claude session catalog", () => {
     await writeDesktopMetadata(home, "garbage-group", {
       sessionId: localSessionId,
       cliSessionId: sessionId,
-      cwd: "/work/openclaw",
+      cwd: "/work/grokbot",
       title: "Desktop garbage group",
     });
     // Keep the control-byte guard as defense in depth for malformed decoded values.
@@ -1127,7 +1127,7 @@ describe("Claude session catalog", () => {
         {
           sessionId,
           fullPath: path.join(home, ".claude", "projects", "-workspace", `${sessionId}.jsonl`),
-          projectPath: "/work/openclaw",
+          projectPath: "/work/grokbot",
           isSidechain: false,
         },
       ],
@@ -1136,7 +1136,7 @@ describe("Claude session catalog", () => {
     await writeDesktopMetadata(home, "newest-custom-group", {
       sessionId: localSessionId,
       cliSessionId: sessionId,
-      cwd: "/work/openclaw",
+      cwd: "/work/grokbot",
       title: "Desktop newest custom group",
     });
     await writeDesktopGroupStoreEntries(home, [
@@ -1166,7 +1166,7 @@ describe("Claude session catalog", () => {
         {
           sessionId,
           fullPath: path.join(home, ".claude", "projects", "-workspace", `${sessionId}.jsonl`),
-          projectPath: "/work/openclaw",
+          projectPath: "/work/grokbot",
           isSidechain: false,
         },
       ],
@@ -1175,7 +1175,7 @@ describe("Claude session catalog", () => {
     await writeDesktopMetadata(home, "utf16-group", {
       sessionId: localSessionId,
       cliSessionId: sessionId,
-      cwd: "/work/openclaw",
+      cwd: "/work/grokbot",
       title: "Desktop utf16 group",
     });
     // Chromium switches a whole value to UTF-16 when any character escapes Latin-1,
@@ -1201,7 +1201,7 @@ describe("Claude session catalog", () => {
         {
           sessionId,
           fullPath: path.join(home, ".claude", "projects", "-workspace", `${sessionId}.jsonl`),
-          projectPath: "/work/openclaw",
+          projectPath: "/work/grokbot",
           isSidechain: false,
         },
       ],
@@ -1210,7 +1210,7 @@ describe("Claude session catalog", () => {
     await writeDesktopMetadata(home, "deleted-group", {
       sessionId: localSessionId,
       cliSessionId: sessionId,
-      cwd: "/work/openclaw",
+      cwd: "/work/grokbot",
       title: "Desktop deleted group",
     });
     // Removing the last custom group rewrites the store without any records; the older

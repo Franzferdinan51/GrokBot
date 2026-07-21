@@ -22,7 +22,7 @@ const runtime = vi.hoisted(() => ({
   resolveSessionAgentId: vi.fn(() => "main"),
   loadSessionEntry: vi.fn(() => ({
     cfg: {},
-    storePath: "/tmp/openclaw-sessions.json",
+    storePath: "/tmp/grokbot-sessions.json",
     entry: { sessionId: "sess-main" },
   })),
   resolveSessionModelRef: vi.fn(() => ({ provider: "openai" })),
@@ -51,7 +51,7 @@ const runtime = vi.hoisted(() => ({
   capArrayByJsonBytes: vi.fn((items: unknown[]) => ({ items })),
   enforceChatHistoryFinalBudget: vi.fn(({ messages }: { messages: unknown[] }) => ({ messages })),
   loadCombinedSessionStoreForGateway: vi.fn(() => ({
-    storePath: "/tmp/openclaw-sessions.json",
+    storePath: "/tmp/grokbot-sessions.json",
     store: {},
   })),
   listSessionsFromStoreAsync: vi.fn(async () => ({ sessions: [] })),
@@ -92,7 +92,7 @@ describe("embedded gateway stub", () => {
     );
     expect(runtime.listSessionsFromStoreAsync).toHaveBeenCalledWith({
       cfg: { agents: { list: [{ id: "main", default: true }] } },
-      storePath: "/tmp/openclaw-sessions.json",
+      storePath: "/tmp/grokbot-sessions.json",
       store: {},
       opts: { agentId: "work", includeGlobal: true, search: "global" },
     });
@@ -211,7 +211,7 @@ describe("embedded gateway stub", () => {
         sessionEntry: { sessionId: "sess-main" },
         sessionId: "sess-main",
         sessionKey: "agent:main:main",
-        storePath: "/tmp/openclaw-sessions.json",
+        storePath: "/tmp/grokbot-sessions.json",
       },
       {
         mode: "recent",
@@ -278,7 +278,7 @@ describe("embedded gateway stub", () => {
         sessionEntry: { sessionId: "sess-main" },
         sessionId: "sess-main",
         sessionKey: "agent:main:main",
-        storePath: "/tmp/openclaw-sessions.json",
+        storePath: "/tmp/grokbot-sessions.json",
       },
       {
         mode: "recent",
@@ -320,7 +320,7 @@ describe("embedded gateway stub", () => {
         sessionEntry: { sessionId: "sess-main" },
         sessionId: "sess-main",
         sessionKey: "agent:main:main",
-        storePath: "/tmp/openclaw-sessions.json",
+        storePath: "/tmp/grokbot-sessions.json",
       },
       {
         offset: 2,
@@ -381,7 +381,7 @@ describe("embedded gateway stub", () => {
     const filteredMessages: unknown[] = [];
     runtime.loadSessionEntry.mockReturnValueOnce({
       cfg: {},
-      storePath: "/tmp/openclaw-sessions.json",
+      storePath: "/tmp/grokbot-sessions.json",
       entry: { sessionId: "sess-main", sessionStartedAt: 1234 } as {
         sessionId: string;
         sessionStartedAt: number;
@@ -455,7 +455,7 @@ describe("embedded gateway stub", () => {
         sessionEntry: { sessionId: "sess-main" },
         sessionId: "sess-main",
         sessionKey: "agent:main:main",
-        storePath: "/tmp/openclaw-sessions.json",
+        storePath: "/tmp/grokbot-sessions.json",
       },
       {
         maxMessages: 61,
@@ -527,7 +527,7 @@ describe("embedded gateway stub", () => {
         sessionEntry: { sessionId: "sess-main" },
         sessionId: "sess-main",
         sessionKey: "agent:main:main",
-        storePath: "/tmp/openclaw-sessions.json",
+        storePath: "/tmp/grokbot-sessions.json",
       },
       {
         mode: "recent",

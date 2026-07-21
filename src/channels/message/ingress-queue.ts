@@ -1,7 +1,7 @@
 /**
  * Durable channel ingress queue.
  *
- * Stores, claims, completes, and tombstones inbound channel events in OpenClaw state.
+ * Stores, claims, completes, and tombstones inbound channel events in GrokBot state.
  */
 import { randomUUID } from "node:crypto";
 import type { DatabaseSync } from "node:sqlite";
@@ -14,11 +14,11 @@ import {
 import type {
   ChannelIngressEvents,
   DB as OpenClawStateKyselyDatabase,
-} from "../../state/openclaw-state-db.generated.js";
+} from "../../state/grokbot-state-db.generated.js";
 import {
   openOpenClawStateDatabase,
   runOpenClawStateWriteTransaction,
-} from "../../state/openclaw-state-db.js";
+} from "../../state/grokbot-state-db.js";
 
 /** Pending or retryable inbound channel event stored in the durable ingress queue. */
 export type ChannelIngressQueueRecord<TPayload, TMetadata = unknown> = {
@@ -557,7 +557,7 @@ export function countFailedChannelIngressQueueEntries(
   }));
 }
 
-/** Creates a durable channel/account-scoped ingress queue backed by the OpenClaw state database. */
+/** Creates a durable channel/account-scoped ingress queue backed by the GrokBot state database. */
 export function createChannelIngressQueue<
   TPayload,
   TMetadata = unknown,

@@ -1,8 +1,8 @@
-// Configured OpenClaw assistant tests cover route-owned, tool-free planning.
+// Configured GrokBot assistant tests cover route-owned, tool-free planning.
 import { describe, expect, it, vi } from "vitest";
 import type { RunCliAgentParams } from "../agents/cli-runner/types.js";
 import { fingerprintResolvedProviderAuth } from "../agents/execution-auth-binding.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { planSystemAgentCommandWithConfiguredModel } from "./assistant.js";
 import { SystemAgentInferenceUnavailableError } from "./inference-error.js";
 import { resolveSystemAgentConfiguredRouteFromConfig } from "./inference-route.js";
@@ -26,7 +26,7 @@ vi.mock("../agents/harness/runtime-plugin.js", async (importOriginal) => ({
 function overview(defaultModel?: string): SystemAgentOverview {
   return {
     config: {
-      path: "/tmp/openclaw.json",
+      path: "/tmp/grokbot.json",
       exists: true,
       valid: true,
       issues: [],
@@ -43,15 +43,15 @@ function overview(defaultModel?: string): SystemAgentOverview {
     },
     gateway: { url: "ws://127.0.0.1:18789", source: "local loopback", reachable: false },
     references: {
-      docsUrl: "https://docs.openclaw.ai",
-      sourceUrl: "https://github.com/openclaw/openclaw",
+      docsUrl: "https://docs.grokbot.ai",
+      sourceUrl: "https://github.com/grokbot/grokbot",
     },
   };
 }
 
 function snapshot(config: OpenClawConfig) {
   return {
-    path: "/tmp/openclaw.json",
+    path: "/tmp/grokbot.json",
     exists: true,
     valid: true,
     hash: "hash",
@@ -62,7 +62,7 @@ function snapshot(config: OpenClawConfig) {
   };
 }
 
-describe("OpenClaw configured-model planner", () => {
+describe("GrokBot configured-model planner", () => {
   it("rejects a low-level missing binding before config lookup or model execution", async () => {
     const readConfigFileSnapshot = vi.fn();
     const runCliAgent = vi.fn();
@@ -87,7 +87,7 @@ describe("OpenClaw configured-model planner", () => {
       agents: {
         defaults: {
           model: "openai/gpt-5.5",
-          models: { "openai/gpt-5.5": { agentRuntime: { id: "openclaw" } } },
+          models: { "openai/gpt-5.5": { agentRuntime: { id: "grokbot" } } },
         },
       },
       auth: {
@@ -139,7 +139,7 @@ describe("OpenClaw configured-model planner", () => {
         ...authDeps,
         readConfigFileSnapshot: vi.fn(async () => snapshot(config)) as never,
         runEmbeddedAgent: runEmbeddedAgent as never,
-        createTempDir: async () => "/tmp/openclaw-planner",
+        createTempDir: async () => "/tmp/grokbot-planner",
         removeTempDir: async () => {},
       },
     });
@@ -207,7 +207,7 @@ describe("OpenClaw configured-model planner", () => {
           ...deps,
           readConfigFileSnapshot: vi.fn(async () => snapshot(currentConfig)) as never,
           runEmbeddedAgent: runEmbeddedAgent as never,
-          createTempDir: async () => "/tmp/openclaw-planner",
+          createTempDir: async () => "/tmp/grokbot-planner",
           removeTempDir: async () => {
             currentConfig = changedConfig;
           },
@@ -249,7 +249,7 @@ describe("OpenClaw configured-model planner", () => {
         readConfigFileSnapshot: vi.fn(async () => snapshot(config)) as never,
         runCliAgent: runCliAgent as never,
         runEmbeddedAgent: vi.fn() as never,
-        createTempDir: async () => "/tmp/openclaw-planner",
+        createTempDir: async () => "/tmp/grokbot-planner",
         removeTempDir,
       },
     });
@@ -267,13 +267,13 @@ describe("OpenClaw configured-model planner", () => {
         authProfileId: "claude-cli:ops",
         executionMode: "side-question",
         disableTools: true,
-        workspaceDir: "/tmp/openclaw-planner",
-        cwd: "/tmp/openclaw-planner",
+        workspaceDir: "/tmp/grokbot-planner",
+        cwd: "/tmp/grokbot-planner",
         cleanupCliLiveSessionOnRunEnd: true,
       }),
     );
     expect(runCliAgent.mock.calls[0]?.[0]?.toolsAllow).toBeUndefined();
-    expect(removeTempDir).toHaveBeenCalledWith("/tmp/openclaw-planner");
+    expect(removeTempDir).toHaveBeenCalledWith("/tmp/grokbot-planner");
   });
 
   it("plans through the configured default agent embedded runtime without tools", async () => {
@@ -304,7 +304,7 @@ describe("OpenClaw configured-model planner", () => {
         readConfigFileSnapshot: vi.fn(async () => snapshot(config)) as never,
         runCliAgent: vi.fn() as never,
         runEmbeddedAgent: runEmbeddedAgent as never,
-        createTempDir: async () => "/tmp/openclaw-planner",
+        createTempDir: async () => "/tmp/grokbot-planner",
         removeTempDir: async () => {},
         resolveAssistantTimeoutMs: () => 120_000,
       },
@@ -362,7 +362,7 @@ describe("OpenClaw configured-model planner", () => {
         ...deps,
         readConfigFileSnapshot: vi.fn(async () => snapshot(config)) as never,
         runEmbeddedAgent: runEmbeddedAgent as never,
-        createTempDir: async () => "/tmp/openclaw-planner",
+        createTempDir: async () => "/tmp/grokbot-planner",
         removeTempDir: async () => {},
       },
     });

@@ -4,7 +4,7 @@ import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import type { OpenClawConfig } from "../config/config.js";
-import { closeOpenClawStateDatabaseForTest } from "../state/openclaw-state-db.js";
+import { closeOpenClawStateDatabaseForTest } from "../state/grokbot-state-db.js";
 import { captureEnv, setTestEnvValue } from "../test-utils/env.js";
 import {
   buildCommitmentExtractionPrompt,
@@ -31,7 +31,7 @@ describe("commitment extraction", () => {
   });
 
   async function createConfig(): Promise<OpenClawConfig> {
-    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-commitments-"));
+    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-commitments-"));
     tmpDirs.push(tmpDir);
     stateDirEnvSnapshot ??= captureEnv(["OPENCLAW_STATE_DIR"]);
     setTestEnvValue("OPENCLAW_STATE_DIR", tmpDir);

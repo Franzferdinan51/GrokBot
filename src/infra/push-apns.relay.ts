@@ -3,11 +3,11 @@ import { URL } from "node:url";
 import {
   parseStrictPositiveInteger,
   resolveTimerTimeoutMs,
-} from "@openclaw/normalization-core/number-coercion";
+} from "@grokbot/normalization-core/number-coercion";
 import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalString,
-} from "@openclaw/normalization-core/string-coerce";
+} from "@grokbot/normalization-core/string-coerce";
 import type { GatewayConfig } from "../config/types.gateway.js";
 import {
   loadOrCreateProcessDeviceIdentity,
@@ -60,16 +60,16 @@ export type ApnsRelayRequestSender = (params: {
 }) => Promise<ApnsRelayPushResponse>;
 
 /** Hosted APNs relay origin used only when registrations prove they were minted there. */
-const DEFAULT_APNS_RELAY_BASE_URL = "https://ios-push-relay.openclaw.ai";
-const DEFAULT_APNS_SANDBOX_RELAY_BASE_URL = "https://ios-push-relay-sandbox.openclaw.ai";
+const DEFAULT_APNS_RELAY_BASE_URL = "https://ios-push-relay.grokbot.ai";
+const DEFAULT_APNS_SANDBOX_RELAY_BASE_URL = "https://ios-push-relay-sandbox.grokbot.ai";
 const DEFAULT_APNS_RELAY_TIMEOUT_MS = 10_000;
 // Hard cap on the relay response body. The hosted relay reply is a tiny JSON status object;
 // without a cap a buggy/hostile/compromised relay could stream an unbounded body and exhaust
 // gateway memory (the existing AbortSignal.timeout only bounds connection latency, not body size).
 const APNS_RELAY_MAX_RESPONSE_BYTES = 16 * 1024 * 1024;
-const GATEWAY_DEVICE_ID_HEADER = "x-openclaw-gateway-device-id";
-const GATEWAY_SIGNATURE_HEADER = "x-openclaw-gateway-signature";
-const GATEWAY_SIGNED_AT_HEADER = "x-openclaw-gateway-signed-at-ms";
+const GATEWAY_DEVICE_ID_HEADER = "x-grokbot-gateway-device-id";
+const GATEWAY_SIGNATURE_HEADER = "x-grokbot-gateway-signature";
+const GATEWAY_SIGNED_AT_HEADER = "x-grokbot-gateway-signed-at-ms";
 
 function normalizeNonEmptyString(value: string | undefined): string | null {
   const trimmed = normalizeOptionalString(value) ?? "";
@@ -181,7 +181,7 @@ function buildRelayGatewaySignaturePayload(params: {
 }): string {
   // Domain-separate relay send signatures from other gateway/device signatures.
   return [
-    "openclaw-relay-send-v1",
+    "grokbot-relay-send-v1",
     params.gatewayDeviceId.trim(),
     String(Math.trunc(params.signedAtMs)),
     params.bodyJson,

@@ -1,15 +1,15 @@
 // Discord tests cover native command.commands allowfrom plugin behavior.
 import { ChannelType } from "discord-api-types/v10";
-import type { NativeCommandSpec } from "openclaw/plugin-sdk/command-auth-native";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import type { DiscordAccountConfig } from "openclaw/plugin-sdk/config-contracts";
-import { matchPluginCommand } from "openclaw/plugin-sdk/plugin-runtime";
-import * as dispatcherModule from "openclaw/plugin-sdk/reply-dispatch-runtime";
+import type { NativeCommandSpec } from "grokbot/plugin-sdk/command-auth-native";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import type { DiscordAccountConfig } from "grokbot/plugin-sdk/config-contracts";
+import { matchPluginCommand } from "grokbot/plugin-sdk/plugin-runtime";
+import * as dispatcherModule from "grokbot/plugin-sdk/reply-dispatch-runtime";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { defineThrowingDiscordChannelGetter } from "../test-support/partial-channel.js";
 import { createDiscordNativeCommand } from "./native-command.js";
 
-vi.mock("openclaw/plugin-sdk/plugin-runtime", { spy: true });
+vi.mock("grokbot/plugin-sdk/plugin-runtime", { spy: true });
 import { nativeCommandRuntime } from "./native-command.runtime.js";
 import {
   createMockCommandInteraction,

@@ -1,7 +1,7 @@
 /** Optional pre-doctor update prompt for source checkouts and package installs. */
 import fs from "node:fs/promises";
 import path from "node:path";
-import { normalizeLowercaseStringOrEmpty } from "@openclaw/normalization-core/string-coerce";
+import { normalizeLowercaseStringOrEmpty } from "@grokbot/normalization-core/string-coerce";
 import { note } from "../../packages/terminal-core/src/note.js";
 import { formatCliCommand } from "../cli/command-format.js";
 import { createUpdateProgress } from "../cli/update-cli/progress.js";
@@ -122,7 +122,7 @@ async function restartRunningGatewayServiceAfterUpdate(
       env: inspection.state.env,
       stdout: process.stdout,
     });
-    note("Restarted the running gateway service after updating OpenClaw.", "Update");
+    note("Restarted the running gateway service after updating GrokBot.", "Update");
     return true;
   } catch (err) {
     runtime.error(`Update completed, but gateway service restart failed: ${String(err)}`);
@@ -130,7 +130,7 @@ async function restartRunningGatewayServiceAfterUpdate(
   }
 }
 
-/** Offers to update OpenClaw before doctor when running interactively from an updatable install. */
+/** Offers to update GrokBot before doctor when running interactively from an updatable install. */
 export async function maybeOfferUpdateBeforeDoctor(params: {
   runtime: RuntimeEnv;
   options: DoctorOptions;
@@ -152,7 +152,7 @@ export async function maybeOfferUpdateBeforeDoctor(params: {
   const git = await detectOpenClawGitCheckout(params.root);
   if (git === "git") {
     const shouldUpdate = await params.confirm({
-      message: "Update OpenClaw from git before running doctor?",
+      message: "Update GrokBot from git before running doctor?",
       initialValue: true,
     });
     if (!shouldUpdate) {
@@ -208,7 +208,7 @@ export async function maybeOfferUpdateBeforeDoctor(params: {
     note(
       [
         "This install is not a git checkout.",
-        `Run \`${formatCliCommand("openclaw update")}\` to update via your package manager (npm/pnpm), then rerun doctor.`,
+        `Run \`${formatCliCommand("grokbot update")}\` to update via your package manager (npm/pnpm), then rerun doctor.`,
       ].join("\n"),
       "Update",
     );

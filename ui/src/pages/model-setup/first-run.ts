@@ -1,4 +1,4 @@
-import type { RouteLocation } from "@openclaw/uirouter";
+import type { RouteLocation } from "@grokbot/uirouter";
 import type { RouteId } from "../../app-routes.ts";
 import type { ApplicationContext } from "../../app/context.ts";
 import { hasOperatorAdminAccess } from "../../app/operator-access.ts";
@@ -58,7 +58,7 @@ export function startModelSetupFirstRunRedirect(params: {
       !snapshot.connected ||
       !snapshot.client ||
       !hasOperatorAdminAccess(snapshot.hello?.auth ?? null) ||
-      isGatewayMethodAdvertised(snapshot, "openclaw.setup.detect") !== true
+      isGatewayMethodAdvertised(snapshot, "grokbot.setup.detect") !== true
     ) {
       return;
     }

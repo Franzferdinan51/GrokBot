@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { createGatewayCronReconciliation } from "./server-cron-reconciled.js";
 
 type RunHook = Parameters<typeof createGatewayCronReconciliation>[0]["runHook"];
@@ -11,7 +11,7 @@ describe("gateway cron reconciliation lifecycle", () => {
     const config = { cron: { enabled: true } } as OpenClawConfig;
     const reconciliation = createGatewayCronReconciliation({
       port: 18789,
-      workspaceDir: "/tmp/openclaw-workspace",
+      workspaceDir: "/tmp/grokbot-workspace",
       isClosing: () => false,
       runHook,
     });
@@ -35,7 +35,7 @@ describe("gateway cron reconciliation lifecycle", () => {
     expect(Object.keys(event ?? {}).toSorted()).toEqual(["enabled", "reason"]);
     expect(ctx).toMatchObject({
       port: 18789,
-      workspaceDir: "/tmp/openclaw-workspace",
+      workspaceDir: "/tmp/grokbot-workspace",
       config,
     });
     expect(ctx?.getCron?.()).toBe(cron);
@@ -47,7 +47,7 @@ describe("gateway cron reconciliation lifecycle", () => {
     const runHook = vi.fn<RunHook>(async () => undefined);
     const reconciliation = createGatewayCronReconciliation({
       port: 18789,
-      workspaceDir: "/tmp/openclaw-workspace",
+      workspaceDir: "/tmp/grokbot-workspace",
       isClosing: () => false,
       runHook,
     });
@@ -74,7 +74,7 @@ describe("gateway cron reconciliation lifecycle", () => {
     const runHook = vi.fn<RunHook>(async () => undefined);
     const reconciliation = createGatewayCronReconciliation({
       port: 18789,
-      workspaceDir: "/tmp/openclaw-workspace",
+      workspaceDir: "/tmp/grokbot-workspace",
       isClosing: () => closing,
       runHook,
     });
@@ -113,7 +113,7 @@ describe("gateway cron reconciliation lifecycle", () => {
     });
     const reconciliation = createGatewayCronReconciliation({
       port: 18789,
-      workspaceDir: "/tmp/openclaw-workspace",
+      workspaceDir: "/tmp/grokbot-workspace",
       isClosing: () => false,
       runHook,
     });
@@ -153,7 +153,7 @@ describe("gateway cron reconciliation lifecycle", () => {
     });
     const reconciliation = createGatewayCronReconciliation({
       port: 18789,
-      workspaceDir: "/tmp/openclaw-workspace",
+      workspaceDir: "/tmp/grokbot-workspace",
       isClosing: () => false,
       runHook,
     });

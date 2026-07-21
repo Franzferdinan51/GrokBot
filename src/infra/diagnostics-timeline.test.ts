@@ -3,7 +3,7 @@ import { mkdtemp, readFile, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import {
   emitDiagnosticsTimelineEvent,
   isDiagnosticsTimelineEnabled,
@@ -14,7 +14,7 @@ import {
 const tempDirs: string[] = [];
 
 async function createTimelineEnv() {
-  const dir = await mkdtemp(join(tmpdir(), "openclaw-diagnostics-timeline-"));
+  const dir = await mkdtemp(join(tmpdir(), "grokbot-diagnostics-timeline-"));
   tempDirs.push(dir);
   return {
     env: {
@@ -141,7 +141,7 @@ describe("diagnostics timeline", () => {
     );
 
     const [event] = await readTimeline(path);
-    expect(event?.schemaVersion).toBe("openclaw.diagnostics.v1");
+    expect(event?.schemaVersion).toBe("grokbot.diagnostics.v1");
     expect(event?.type).toBe("mark");
     expect(event?.name).toBe("gateway.ready");
     expect(event?.runId).toBe("run-1");

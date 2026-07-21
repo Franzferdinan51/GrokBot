@@ -1,5 +1,5 @@
 // Feishu tests cover wiki plugin pagination behavior.
-import { createTestPluginApi } from "openclaw/plugin-sdk/plugin-test-api";
+import { createTestPluginApi } from "grokbot/plugin-sdk/plugin-test-api";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import type { OpenClawPluginApi, PluginRuntime } from "../runtime-api.js";
 

@@ -40,10 +40,10 @@ export function resolvePluginVersionDriftUpdateCommand(entry: PluginVersionDrift
   if (exactNpmPackageName) {
     const exactNpmTarget = `${exactNpmPackageName}@${entry.gatewayVersion}`;
     if (parseRegistryNpmSpec(exactNpmTarget)?.selectorKind === "exact-version") {
-      return `openclaw plugins update ${exactNpmTarget}`;
+      return `grokbot plugins update ${exactNpmTarget}`;
     }
   }
-  return `openclaw plugins update ${entry.pluginId}`;
+  return `grokbot plugins update ${entry.pluginId}`;
 }
 
 /**
@@ -90,7 +90,7 @@ function shouldCompareOfficialInstallToGateway(params: {
  * version and return any mismatches.
  *
  * @param params.gatewayVersion The gateway version string (typically the
- *   `version` field of the installed openclaw package.json).
+ *   `version` field of the installed grokbot package.json).
  * @param params.installRecords The full set of recorded plugin installs (as
  *   produced by `loadInstalledPluginIndexInstallRecords`).
  * @param params.config The merged daemon-side OpenClawConfig (optional).

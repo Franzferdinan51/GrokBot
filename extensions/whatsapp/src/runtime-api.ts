@@ -1,7 +1,7 @@
 // Whatsapp API module exposes the plugin public contract.
-export { getChatChannelMeta, type ChannelPlugin } from "openclaw/plugin-sdk/core";
+export { getChatChannelMeta, type ChannelPlugin } from "grokbot/plugin-sdk/core";
 export { buildChannelConfigSchema, WhatsAppConfigSchema } from "../config-api.js";
-export { DEFAULT_ACCOUNT_ID } from "openclaw/plugin-sdk/account-id";
+export { DEFAULT_ACCOUNT_ID } from "grokbot/plugin-sdk/account-id";
 export {
   formatWhatsAppConfigAllowFromEntries,
   resolveWhatsAppConfigAllowFrom,
@@ -13,13 +13,13 @@ export {
   readReactionParams,
   readStringParam,
   ToolAuthorizationError,
-} from "openclaw/plugin-sdk/channel-actions";
-export { normalizeE164 } from "openclaw/plugin-sdk/account-resolution";
-export type { DmPolicy, GroupPolicy } from "openclaw/plugin-sdk/config-contracts";
-import type { OpenClawConfig as RuntimeOpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+} from "grokbot/plugin-sdk/channel-actions";
+export { normalizeE164 } from "grokbot/plugin-sdk/account-resolution";
+export type { DmPolicy, GroupPolicy } from "grokbot/plugin-sdk/config-contracts";
+import type { OpenClawConfig as RuntimeOpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import { loadWhatsAppChannelRuntime } from "./channel-runtime-loader.js";
 
-export { type ChannelMessageActionName } from "openclaw/plugin-sdk/channel-contract";
+export { type ChannelMessageActionName } from "grokbot/plugin-sdk/channel-contract";
 export {
   resolveWhatsAppGroupRequireMention,
   resolveWhatsAppGroupToolPolicy,

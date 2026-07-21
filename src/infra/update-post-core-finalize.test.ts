@@ -1,5 +1,5 @@
 import fs from "node:fs/promises";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { describe, expect, it, vi } from "vitest";
 import {
   foldPostCoreFinalizeIntoResult,
@@ -11,7 +11,7 @@ function gitOkResult(overrides: Partial<UpdateRunResult> = {}): UpdateRunResult 
   return {
     status: "ok",
     mode: "git",
-    root: "/srv/openclaw",
+    root: "/srv/grokbot",
     before: { sha: "aaa", version: "2026.5.3" },
     after: { sha: "bbb", version: "2026.6.1" },
     steps: [],
@@ -20,7 +20,7 @@ function gitOkResult(overrides: Partial<UpdateRunResult> = {}): UpdateRunResult 
   };
 }
 
-const ENTRYPOINT = "/srv/openclaw/dist/index.mjs";
+const ENTRYPOINT = "/srv/grokbot/dist/index.mjs";
 const resolveEntrypointOk = async () => ENTRYPOINT;
 type PostCoreFinalizeSpawner = NonNullable<
   Parameters<typeof runPostCoreFinalizeAfterGatewayUpdate>[0]["spawnFinalize"]
@@ -117,7 +117,7 @@ describe("runPostCoreFinalizeAfterGatewayUpdate", () => {
       spawnFinalize,
       env: {
         PATH: "/usr/bin",
-        OPENCLAW_SERVICE_MARKER: "openclaw",
+        OPENCLAW_SERVICE_MARKER: "grokbot",
         OPENCLAW_SERVICE_KIND: "gateway",
         OPENCLAW_GATEWAY_SERVICE_PID: "4242",
       },
@@ -160,7 +160,7 @@ describe("runPostCoreFinalizeAfterGatewayUpdate", () => {
     )[0];
     // No configured channel → effective channel defaults to the git/dev channel
     // the core update ran on, carried via env (convergence-only, not persisted),
-    // never as `--channel` (which `update finalize` would persist to openclaw.json).
+    // never as `--channel` (which `update finalize` would persist to grokbot.json).
     expect(call.env.OPENCLAW_UPDATE_EFFECTIVE_CHANNEL).toBe("dev");
     expect(call.argv).not.toContain("--channel");
     expect(call.argv).not.toContain("--timeout");

@@ -14,18 +14,18 @@ import path from "node:path";
 import {
   asDateTimestampMs,
   resolveExpiresAtMsFromDurationMs,
-} from "@openclaw/normalization-core/number-coercion";
-import { truncateUtf16Safe } from "@openclaw/normalization-core/utf16-slice";
+} from "@grokbot/normalization-core/number-coercion";
+import { truncateUtf16Safe } from "@grokbot/normalization-core/utf16-slice";
 import { stripAnsi } from "../../../packages/terminal-core/src/ansi.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import { toErrorObject } from "../../infra/errors.js";
-import { resolveOpenClawPackageRootSync } from "../../infra/openclaw-root.js";
+import { resolveOpenClawPackageRootSync } from "../../infra/grokbot-root.js";
 import { createSubsystemLogger } from "../../logging/subsystem.js";
 import { listAgentToolResultMiddlewares } from "../../plugins/agent-tool-result-middleware.js";
 import { hasGlobalHooks } from "../../plugins/hook-runner-global.js";
 import type { PluginHookToolRequesterContext } from "../../plugins/hook-types.js";
 import { PluginApprovalResolutions } from "../../plugins/types.js";
-import { resolveOpenClawStateSqlitePath } from "../../state/openclaw-state-db.paths.js";
+import { resolveOpenClawStateSqlitePath } from "../../state/grokbot-state-db.paths.js";
 import {
   cancelDeferredPluginToolApproval,
   hasBeforeToolCallPolicy,
@@ -142,7 +142,7 @@ type RegisterNativeHookRelayParams = {
   channelId?: string;
   requester?: PluginHookToolRequesterContext;
   allowedEvents?: readonly NativeHookRelayEvent[];
-  /** Whether this relay should run OpenClaw loop detection from native PreToolUse hooks. */
+  /** Whether this relay should run GrokBot loop detection from native PreToolUse hooks. */
   preToolUseLoopDetection?: boolean;
   ttlMs?: number;
   command?: NativeHookRelayCommandOptions;
@@ -269,7 +269,7 @@ type ActiveNativeHookRelayRegistrationHandle = NativeHookRelayRegistrationHandle
   generation: string;
 };
 
-const NATIVE_HOOK_RELAY_STATE_SYMBOL = Symbol.for("openclaw.nativeHookRelay.state");
+const NATIVE_HOOK_RELAY_STATE_SYMBOL = Symbol.for("grokbot.nativeHookRelay.state");
 
 function getNativeHookRelaySharedState(): NativeHookRelaySharedState {
   const globalRecord = globalThis as typeof globalThis & {
@@ -407,7 +407,7 @@ const nativeHookRelayProviderAdapters: Record<
               ? { behavior: "allow" }
               : {
                   behavior: "deny",
-                  message: message?.trim() || "Denied by OpenClaw",
+                  message: message?.trim() || "Denied by GrokBot",
                 },
         },
       })}\n`,
@@ -611,8 +611,8 @@ function buildNativeHookRelayCommandWithStateDatabase(params: {
   const timeoutMs = normalizePositiveInteger(params.timeoutMs, DEFAULT_RELAY_TIMEOUT_MS);
   const executable = params.executable ?? resolveOpenClawCliExecutable();
   const argv =
-    executable === "openclaw"
-      ? ["openclaw"]
+    executable === "grokbot"
+      ? ["grokbot"]
       : [params.nodeExecutable ?? process.execPath, executable];
   const nicePrefix = resolveNativeHookRelayNicePrefix(params.nice);
   return shellQuoteArgs([
@@ -848,7 +848,7 @@ async function resolveNativeHookRelayPreToolUseApproval(
       handled: true,
       outcome: "denied",
       reason:
-        "OpenClaw tool policy rewrote Codex app-server approval params; refusing original request.",
+        "GrokBot tool policy rewrote Codex app-server approval params; refusing original request.",
     };
   }
   return {
@@ -1475,7 +1475,7 @@ async function runNativeHookRelayPreToolUse(params: {
     // Codex app-server may continue with the original params when updatedInput
     // is unsupported, so rewrites must fail closed here.
     return params.adapter.renderPreToolUseBlockResponse(
-      "OpenClaw tool policy rewrote Codex app-server approval params; refusing original request.",
+      "GrokBot tool policy rewrote Codex app-server approval params; refusing original request.",
     );
   }
   return params.adapter.renderNoopResponse(params.invocation.event);
@@ -1663,7 +1663,7 @@ function nativeHookRelayPermissionAllowAlwaysKey(params: {
   request: NativeHookRelayPermissionApprovalRequest;
 }): string {
   const hash = createHash("sha256");
-  hash.update("openclaw:native-hook-relay:permission-allow-always:v2");
+  hash.update("grokbot:native-hook-relay:permission-allow-always:v2");
   hash.update("\0");
   hash.update(params.registration.relayId);
   hash.update("\0");
@@ -2072,7 +2072,7 @@ async function requestNativeHookRelayPermissionApproval(
     "plugin.approval.request",
     { timeoutMs: timeoutMs + 10_000 },
     {
-      pluginId: `openclaw-native-hook-relay-${request.provider}`,
+      pluginId: `grokbot-native-hook-relay-${request.provider}`,
       title: truncateText(
         `${nativeHookRelayProviderDisplayName(request.provider)} permission request`,
         MAX_APPROVAL_TITLE_LENGTH,
@@ -2230,7 +2230,7 @@ function resolveOpenClawCliExecutable(): string {
   });
   if (packageRoot) {
     for (const candidate of [
-      path.join(packageRoot, "openclaw.mjs"),
+      path.join(packageRoot, "grokbot.mjs"),
       path.join(packageRoot, "dist", "entry.js"),
       path.join(packageRoot, "scripts", "run-node.mjs"),
     ]) {
@@ -2246,7 +2246,7 @@ function resolveOpenClawCliExecutable(): string {
       return resolved;
     }
   }
-  throw new Error("Cannot resolve OpenClaw CLI executable path for native hook relay");
+  throw new Error("Cannot resolve GrokBot CLI executable path for native hook relay");
 }
 
 function normalizeAllowedEvents(

@@ -1,6 +1,6 @@
-// OpenClaw tests cover main rescue and audit command behavior.
+// GrokBot tests cover main rescue and audit command behavior.
 import { describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { SystemAgentInferenceUnavailableError } from "./inference-error.js";
 import type { SystemAgentCommandDeps } from "./operations.js";
 import type { SystemAgentOverview } from "./overview.js";
@@ -20,7 +20,7 @@ const overview: SystemAgentOverview = {
   defaultAgentId: "main",
   defaultModel: "openai/gpt-5.5",
   agents: [{ id: "main", isDefault: true, model: "openai/gpt-5.5" }],
-  config: { path: "/tmp/openclaw.json", exists: true, valid: true, issues: [], hash: null },
+  config: { path: "/tmp/grokbot.json", exists: true, valid: true, issues: [], hash: null },
   tools: {
     codex: { command: "codex", found: false, error: "not found" },
     claude: { command: "claude", found: false, error: "not found" },
@@ -34,8 +34,8 @@ const overview: SystemAgentOverview = {
     error: "offline",
   },
   references: {
-    docsUrl: "https://docs.openclaw.ai",
-    sourceUrl: "https://github.com/openclaw/openclaw",
+    docsUrl: "https://docs.grokbot.ai",
+    sourceUrl: "https://github.com/grokbot/grokbot",
   },
 };
 
@@ -62,7 +62,7 @@ function configSnapshot(config: OpenClawConfig) {
   return {
     exists: true,
     valid: true,
-    path: "/tmp/openclaw.json",
+    path: "/tmp/grokbot.json",
     hash: "h",
     config,
     runtimeConfig: config,
@@ -148,11 +148,11 @@ describe("runSystemAgent", () => {
 
     expect(runGatewayRestartCalls).toBe(0);
     expect(onReadyCalls).toBe(0);
-    expect(lines.join("\n")).toContain("[openclaw] planner: openai/gpt-5.5");
-    expect(lines.join("\n")).toContain("[openclaw] interpreted: restart gateway");
+    expect(lines.join("\n")).toContain("[grokbot] planner: openai/gpt-5.5");
+    expect(lines.join("\n")).toContain("[grokbot] interpreted: restart gateway");
     expect(lines.join("\n")).toContain("Plan: restart the Gateway. Say yes to apply.");
     expect(lines.indexOf("Default model: openai/gpt-5.5")).toBeLessThan(
-      lines.findIndex((line) => line.includes("[openclaw] planner:")),
+      lines.findIndex((line) => line.includes("[grokbot] planner:")),
     );
   });
 
@@ -327,7 +327,7 @@ describe("runSystemAgent", () => {
     expect(lines).not.toContain("stale reply");
   });
 
-  it("starts interactive OpenClaw in the TUI shell", async () => {
+  it("starts interactive GrokBot in the TUI shell", async () => {
     const { runtime, lines } = createSystemAgentTestRuntime();
     let runInteractiveTuiCalls = 0;
     let onReadyCalls = 0;
@@ -415,7 +415,7 @@ describe("runSystemAgent", () => {
 
     expect(runInteractiveTuiCalls).toBe(0);
     expect(lines.join("\n")).toContain(
-      "OpenClaw needs an interactive TTY. Use --message for one command.",
+      "GrokBot needs an interactive TTY. Use --message for one command.",
     );
   });
 });

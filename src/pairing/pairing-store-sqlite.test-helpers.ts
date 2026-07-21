@@ -1,4 +1,4 @@
-import { runOpenClawStateWriteTransaction } from "../state/openclaw-state-db.js";
+import { runOpenClawStateWriteTransaction } from "../state/grokbot-state-db.js";
 import {
   readChannelPairingState,
   sqliteOptionsForEnv,

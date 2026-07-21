@@ -1,9 +1,9 @@
 ---
-name: openclaw-test-heap-leaks
-description: Investigate OpenClaw pnpm test memory growth, Vitest OOMs, RSS spikes, and heap snapshot deltas.
+name: grokbot-test-heap-leaks
+description: Investigate GrokBot pnpm test memory growth, Vitest OOMs, RSS spikes, and heap snapshot deltas.
 ---
 
-# OpenClaw Test Heap Leaks
+# GrokBot Test Heap Leaks
 
 Use this skill for test-memory investigations. Do not guess from RSS alone when heap snapshots are available. Treat snapshot-name deltas as triage evidence, not proof, until retainers or dominators support the call.
 
@@ -21,7 +21,7 @@ For **runtime fixes** (e.g., closure leaks in long-running services like the gat
 2. Wait for repeated snapshots before concluding anything.
    - Take at least two intervals from the same lane.
    - Compare snapshots from the same PID inside the real lane directory such as `.tmp/heapsnap/unit-fast-batch-2/`.
-   - Use `.agents/skills/openclaw-test-heap-leaks/scripts/heapsnapshot-delta.mjs` to compare either two files directly or the earliest/latest pair per PID in one lane directory.
+   - Use `.agents/skills/grokbot-test-heap-leaks/scripts/heapsnapshot-delta.mjs` to compare either two files directly or the earliest/latest pair per PID in one lane directory.
    - If the helper suggests transformed-module retention, confirm the top entries in DevTools retainers/dominators before calling it solved.
 
 3. Classify the growth before choosing a fix.
@@ -55,9 +55,9 @@ For **runtime fixes** (e.g., closure leaks in long-running services like the gat
 ## Snapshot Comparison
 
 - Direct comparison:
-  - `node .agents/skills/openclaw-test-heap-leaks/scripts/heapsnapshot-delta.mjs before.heapsnapshot after.heapsnapshot`
+  - `node .agents/skills/grokbot-test-heap-leaks/scripts/heapsnapshot-delta.mjs before.heapsnapshot after.heapsnapshot`
 - Auto-select earliest/latest snapshots per PID within one lane:
-  - `node .agents/skills/openclaw-test-heap-leaks/scripts/heapsnapshot-delta.mjs --lane-dir .tmp/heapsnap/unit-fast-batch-2`
+  - `node .agents/skills/grokbot-test-heap-leaks/scripts/heapsnapshot-delta.mjs --lane-dir .tmp/heapsnap/unit-fast-batch-2`
 - Useful flags:
   - `--top 40`
   - `--min-kb 32`
@@ -88,7 +88,7 @@ Snapshots land in `.tmp/embedded-run-abort-leak/`. Diff with the same script
 as above:
 
 ```
-node .agents/skills/openclaw-test-heap-leaks/scripts/heapsnapshot-delta.mjs \
+node .agents/skills/grokbot-test-heap-leaks/scripts/heapsnapshot-delta.mjs \
   .tmp/embedded-run-abort-leak/baseline-*.heapsnapshot \
   .tmp/embedded-run-abort-leak/batch-N-*.heapsnapshot --top 30
 ```

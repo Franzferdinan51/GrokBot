@@ -1,5 +1,5 @@
-import type { RouteLocation } from "@openclaw/uirouter";
-import { definePage } from "@openclaw/uirouter";
+import type { RouteLocation } from "@grokbot/uirouter";
+import { definePage } from "@grokbot/uirouter";
 import { html } from "lit";
 import type { ApplicationContext } from "../../app/context.ts";
 import type { ConfigPageId } from "./config-sections.ts";
@@ -23,7 +23,7 @@ function configPage(id: ConfigPageId, path: string, aliases: readonly string[]) 
       import("./config-page.ts").then(() => ({
         header: true,
         render: (data: ConfigRouteData | undefined) => html`
-          <openclaw-config-page .pageId=${id} .routeData=${data ?? null}></openclaw-config-page>
+          <grokbot-config-page .pageId=${id} .routeData=${data ?? null}></grokbot-config-page>
         `,
       })),
   });

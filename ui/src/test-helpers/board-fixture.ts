@@ -1,7 +1,7 @@
 import { html } from "lit";
 import { state } from "lit/decorators.js";
 import type { BoardOp, BoardSnapshot } from "../lib/board/types.ts";
-import { OpenClawLightDomElement } from "../lit/openclaw-element.ts";
+import { OpenClawLightDomElement } from "../lit/grokbot-element.ts";
 import "../components/board/board-view.ts";
 
 const initialSnapshot: BoardSnapshot = {
@@ -202,7 +202,7 @@ class BoardFixture extends OpenClawLightDomElement {
           </div>
           <div class="board-fixture-status"><i></i> fixture online</div>
         </header>
-        <openclaw-board-view
+        <grokbot-board-view
           .snapshot=${this.snapshot}
           .activeTabId=${this.activeTabId}
           .widgetFrameUrl=${frameUrl}
@@ -213,14 +213,14 @@ class BoardFixture extends OpenClawLightDomElement {
               this.activeTabId = tabId;
             },
           }}
-        ></openclaw-board-view>
+        ></grokbot-board-view>
       </main>
     `;
   }
 }
 
-if (!customElements.get("openclaw-board-fixture")) {
-  customElements.define("openclaw-board-fixture", BoardFixture);
+if (!customElements.get("grokbot-board-fixture")) {
+  customElements.define("grokbot-board-fixture", BoardFixture);
 }
 
-document.querySelector("#app")?.append(document.createElement("openclaw-board-fixture"));
+document.querySelector("#app")?.append(document.createElement("grokbot-board-fixture"));

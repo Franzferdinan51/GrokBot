@@ -1,5 +1,5 @@
 // Slack provider module implements model/runtime integration.
-import { asOptionalRecord as asRecord } from "openclaw/plugin-sdk/string-coerce-runtime";
+import { asOptionalRecord as asRecord } from "grokbot/plugin-sdk/string-coerce-runtime";
 import type { SlackChannelResolution } from "../resolve-channels.js";
 import type { SlackUserResolution } from "../resolve-users.js";
 import type { SlackIdentityHealth } from "./enterprise-install.js";
@@ -359,7 +359,7 @@ export function createSlackBoltApp(params: {
     ignoreSelf: false,
     // Bolt eagerly starts an auth.test promise in the constructor when token
     // verification is enabled. Invalid tokens can reject before any listener
-    // consumes that promise, tripping OpenClaw's fatal unhandled-rejection path.
+    // consumes that promise, tripping GrokBot's fatal unhandled-rejection path.
     tokenVerificationEnabled: false,
     ...(appReceiver ? { receiver: appReceiver } : {}),
   });

@@ -1,11 +1,11 @@
-import type { ApiRegistry } from "@openclaw/ai";
+import type { ApiRegistry } from "@grokbot/ai";
 /**
  * Google simple-completion stream adapter.
  *
  * This registers a patched Google stream API that keeps the normal Google
  * backend but sanitizes unsupported thinking payload options for simple models.
  */
-import { clampThinkingLevel } from "@openclaw/ai/internal/runtime";
+import { clampThinkingLevel } from "@grokbot/ai/internal/runtime";
 import type { Api, Model, ModelThinkingLevel } from "../llm/types.js";
 import {
   sanitizeGoogleThinkingPayload,
@@ -16,7 +16,7 @@ import { ensureCustomApiRegistered } from "./custom-api-registry.js";
 import type { StreamFn } from "./runtime/index.js";
 
 /** Custom API id for the Google simple-completion stream adapter. */
-const GOOGLE_SIMPLE_COMPLETION_API: Api = "openclaw-google-generative-ai-simple";
+const GOOGLE_SIMPLE_COMPLETION_API: Api = "grokbot-google-generative-ai-simple";
 
 const SOURCE_API: Api = "google-generative-ai";
 

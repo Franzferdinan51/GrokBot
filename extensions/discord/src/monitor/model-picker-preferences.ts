@@ -1,13 +1,13 @@
 // Discord plugin module implements model picker preferences behavior.
 import { createHash } from "node:crypto";
-import { normalizeAccountId as normalizeSharedAccountId } from "openclaw/plugin-sdk/account-id";
+import { normalizeAccountId as normalizeSharedAccountId } from "grokbot/plugin-sdk/account-id";
 import {
   MAX_DATE_TIMESTAMP_MS,
   resolveDateTimestampMs,
   resolveTimestampMsToIsoString,
-} from "openclaw/plugin-sdk/number-runtime";
-import { normalizeProviderId } from "openclaw/plugin-sdk/provider-model-shared";
-import { normalizeOptionalString } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/number-runtime";
+import { normalizeProviderId } from "grokbot/plugin-sdk/provider-model-shared";
+import { normalizeOptionalString } from "grokbot/plugin-sdk/string-coerce-runtime";
 import { getDiscordRuntime } from "../runtime.js";
 
 const DEFAULT_RECENT_LIMIT = 5;

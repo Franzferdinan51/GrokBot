@@ -1,6 +1,6 @@
 // Stores durable delivery queue entries in SQLite.
-import type { DB as OpenClawStateKyselyDatabase } from "../state/openclaw-state-db.generated.js";
-import { openOpenClawStateDatabase } from "../state/openclaw-state-db.js";
+import type { DB as OpenClawStateKyselyDatabase } from "../state/grokbot-state-db.generated.js";
+import { openOpenClawStateDatabase } from "../state/grokbot-state-db.js";
 import {
   executeSqliteQuerySync,
   executeSqliteQueryTakeFirstSync,
@@ -254,7 +254,7 @@ function commitStagedDeliveryQueueEntryInternal(
       return "created";
     },
     {
-      databaseLabel: "openclaw-state",
+      databaseLabel: "grokbot-state",
       operationLabel: "commit staged delivery queue entry",
     },
   );
@@ -331,7 +331,7 @@ export function expireStagingAndLoadDeliveryQueueEntries(params: {
       };
     },
     {
-      databaseLabel: "openclaw-state",
+      databaseLabel: "grokbot-state",
       operationLabel: "expire delivery queue staging entries",
     },
   );
@@ -548,7 +548,7 @@ export function reserveDeliveryQueueEntryAttempt(params: {
       return { status: "reserved", attemptCount: reservedAttemptCount };
     },
     {
-      databaseLabel: "openclaw-state",
+      databaseLabel: "grokbot-state",
       operationLabel: `reserve ${params.queueName} delivery attempt`,
     },
   );

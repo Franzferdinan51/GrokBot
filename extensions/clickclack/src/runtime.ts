@@ -1,9 +1,9 @@
 /**
- * Runtime store for host-provided OpenClaw services used by the ClickClack
+ * Runtime store for host-provided GrokBot services used by the ClickClack
  * bundled plugin.
  */
-import { createPluginRuntimeStore } from "openclaw/plugin-sdk/runtime-store";
-import type { PluginRuntime } from "openclaw/plugin-sdk/runtime-store";
+import { createPluginRuntimeStore } from "grokbot/plugin-sdk/runtime-store";
+import type { PluginRuntime } from "grokbot/plugin-sdk/runtime-store";
 
 const { setRuntime: setClickClackRuntime, getRuntime: getClickClackRuntime } =
   createPluginRuntimeStore<PluginRuntime>({

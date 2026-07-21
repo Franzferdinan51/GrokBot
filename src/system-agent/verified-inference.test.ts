@@ -9,7 +9,7 @@ import {
   fingerprintResolvedAuthProfileCredential,
   fingerprintResolvedProviderAuth,
 } from "../agents/execution-auth-binding.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import type { PluginOrigin } from "../plugins/types.js";
 import { resolveSystemAgentConfiguredRouteFromConfig } from "./inference-route.js";
 import { resolvePersistentApplyInference } from "./setup-inference.js";
@@ -99,10 +99,10 @@ function pluginRecord(
     pluginId,
     origin: "global",
     rootDir,
-    manifestPath: `${rootDir}/openclaw.plugin.json`,
+    manifestPath: `${rootDir}/grokbot.plugin.json`,
     manifestHash: `${pluginId}-manifest-v1`,
     source: `${rootDir}/index.js`,
-    packageName: `@openclaw/${pluginId}`,
+    packageName: `@grokbot/${pluginId}`,
     packageVersion: "1.0.0",
     installRecordHash: `${pluginId}-install-v1`,
     packageJson: { path: `${rootDir}/package.json`, hash: `${pluginId}-package-v1` },
@@ -207,7 +207,7 @@ async function bindingFor(
   const agentHarnessId =
     route.runner === "embedded"
       ? route.agentHarnessRuntimeOverride === "auto"
-        ? "openclaw"
+        ? "grokbot"
         : route.agentHarnessRuntimeOverride
       : undefined;
   return await createSystemAgentVerifiedInferenceBinding({
@@ -219,7 +219,7 @@ async function bindingFor(
       ...(agentHarnessId
         ? {
             agentHarnessId,
-            ...(agentHarnessId === "openclaw"
+            ...(agentHarnessId === "grokbot"
               ? {}
               : {
                   runtimeOwnerKind: "plugin-harness" as const,
@@ -233,7 +233,7 @@ async function bindingFor(
   });
 }
 
-describe("verified OpenClaw inference binding", () => {
+describe("verified GrokBot inference binding", () => {
   it("invalidates an identity-less OAuth binding when its grant changes", async () => {
     const oauthConfig = {
       agents: { defaults: { model: "anthropic/claude-opus-4-8@anthropic:oauth" } },
@@ -263,7 +263,7 @@ describe("verified OpenClaw inference binding", () => {
       auth: {
         authProfileId: "anthropic:oauth",
         authFingerprint,
-        agentHarnessId: "openclaw",
+        agentHarnessId: "grokbot",
       },
       deps: {
         ...pluginArtifactDeps(),
@@ -797,7 +797,7 @@ describe("verified OpenClaw inference binding", () => {
       agents: {
         defaults: {
           model: "openai/gpt-5.5@openai:verified",
-          models: { "openai/gpt-5.5": { agentRuntime: { id: "openclaw" } } },
+          models: { "openai/gpt-5.5": { agentRuntime: { id: "grokbot" } } },
         },
       },
       auth: {
@@ -837,13 +837,13 @@ describe("verified OpenClaw inference binding", () => {
       auth: {
         authProfileId: "openai:verified",
         authFingerprint,
-        agentHarnessId: "openclaw",
+        agentHarnessId: "grokbot",
       },
       deps: { ...authDeps(), ...pluginArtifactDeps() },
     });
 
-    expect(binding.execution).toMatchObject({ agentHarnessRuntimeOverride: "openclaw" });
-    expect(binding.auth.agentHarnessId).toBe("openclaw");
+    expect(binding.execution).toMatchObject({ agentHarnessRuntimeOverride: "grokbot" });
+    expect(binding.auth.agentHarnessId).toBe("grokbot");
   });
 
   it("rejects an opaque harness with no trusted manifest owner", async () => {
@@ -1257,7 +1257,7 @@ describe("verified OpenClaw inference binding", () => {
       replacement: {
         rootDir: "/replacement/provider-owner",
         source: "/replacement/provider-owner/index.js",
-        manifestPath: "/replacement/provider-owner/openclaw.plugin.json",
+        manifestPath: "/replacement/provider-owner/grokbot.plugin.json",
       },
     },
     {
@@ -1303,11 +1303,11 @@ describe("verified OpenClaw inference binding", () => {
   ])(
     "invalidates a strict credential after an in-place $name change with stable registry identity",
     async ({ origin, sourcePath, runtimePath, installRecordHash }) => {
-      const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-openclaw-plugin-"));
+      const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-grokbot-plugin-"));
       try {
         const rootDir = path.join(tempDir, "provider-owner");
         const source = path.join(rootDir, sourcePath);
-        const manifestPath = path.join(rootDir, "openclaw.plugin.json");
+        const manifestPath = path.join(rootDir, "grokbot.plugin.json");
         const packageJsonPath = path.join(rootDir, "package.json");
         fs.mkdirSync(path.dirname(source), { recursive: true });
         fs.writeFileSync(source, "export const sourceRevision = 1;\n", "utf8");
@@ -1315,7 +1315,7 @@ describe("verified OpenClaw inference binding", () => {
         fs.mkdirSync(path.dirname(runtimeSource), { recursive: true });
         fs.writeFileSync(runtimeSource, "export const runtimeRevision = 1;\n", "utf8");
         fs.writeFileSync(manifestPath, '{"id":"provider-owner"}\n', "utf8");
-        fs.writeFileSync(packageJsonPath, '{"name":"@openclaw/provider-owner"}\n', "utf8");
+        fs.writeFileSync(packageJsonPath, '{"name":"@grokbot/provider-owner"}\n', "utf8");
 
         const record = pluginRecord("provider-owner", {
           origin,
@@ -1327,12 +1327,12 @@ describe("verified OpenClaw inference binding", () => {
         });
         const codexRootDir = path.join(tempDir, "codex");
         const codexSource = path.join(codexRootDir, "index.js");
-        const codexManifestPath = path.join(codexRootDir, "openclaw.plugin.json");
+        const codexManifestPath = path.join(codexRootDir, "grokbot.plugin.json");
         const codexPackageJsonPath = path.join(codexRootDir, "package.json");
         fs.mkdirSync(codexRootDir, { recursive: true });
         fs.writeFileSync(codexSource, "export const runtime = 'codex';\n", "utf8");
         fs.writeFileSync(codexManifestPath, '{"id":"codex"}\n', "utf8");
-        fs.writeFileSync(codexPackageJsonPath, '{"name":"@openclaw/codex"}\n', "utf8");
+        fs.writeFileSync(codexPackageJsonPath, '{"name":"@grokbot/codex"}\n', "utf8");
         const codexRecord = pluginRecord("codex", {
           rootDir: codexRootDir,
           manifestPath: codexManifestPath,

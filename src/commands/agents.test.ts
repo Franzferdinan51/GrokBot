@@ -64,7 +64,7 @@ describe("agents helpers", () => {
   });
 
   it("buildAgentSummaries renders local avatars and omits absent avatars", () => {
-    const workspace = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-agent-avatar-"));
+    const workspace = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-agent-avatar-"));
     try {
       fs.writeFileSync(path.join(workspace, "avatar.png"), Buffer.from([0x89, 0x50, 0x4e, 0x47]));
       const cfg: OpenClawConfig = {

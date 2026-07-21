@@ -1,4 +1,4 @@
-import type { AgentMessage } from "openclaw/plugin-sdk/agent-harness-runtime";
+import type { AgentMessage } from "grokbot/plugin-sdk/agent-harness-runtime";
 
 const UPSTREAM_USER_TEXT_META_KEY = "upstreamUserText" as const;
 const MIRROR_IDENTITY_META_KEY = "mirrorIdentity" as const;

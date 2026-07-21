@@ -1,12 +1,12 @@
 // Vllm plugin module implements stream behavior.
-import type { StreamFn } from "openclaw/plugin-sdk/agent-core";
-import type { ProviderWrapStreamFnContext } from "openclaw/plugin-sdk/plugin-entry";
-import { normalizeProviderId } from "openclaw/plugin-sdk/provider-model-shared";
+import type { StreamFn } from "grokbot/plugin-sdk/agent-core";
+import type { ProviderWrapStreamFnContext } from "grokbot/plugin-sdk/plugin-entry";
+import { normalizeProviderId } from "grokbot/plugin-sdk/provider-model-shared";
 import {
   createPayloadPatchStreamWrapper,
   isOpenAICompatibleThinkingEnabled,
   setQwenChatTemplateThinking,
-} from "openclaw/plugin-sdk/provider-stream-shared";
+} from "grokbot/plugin-sdk/provider-stream-shared";
 import {
   resolveVllmQwenThinkingFormatFromCompat,
   type VllmQwenThinkingFormat,

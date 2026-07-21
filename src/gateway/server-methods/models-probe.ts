@@ -1,5 +1,5 @@
 // Model probe gateway method reuses the CLI auth-probe engine behind an admin-scoped RPC.
-import { normalizeProviderId } from "@openclaw/model-catalog-core/provider-id";
+import { normalizeProviderId } from "@grokbot/model-catalog-core/provider-id";
 import {
   ErrorCodes,
   errorShape,
@@ -13,7 +13,7 @@ import {
   type AuthProbeStatus,
   runAuthProbes,
 } from "../../commands/models/list.probe.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import type { GatewayRequestHandlers } from "./types.js";
 
 const DEFAULT_TIMEOUT_MS = 20_000;

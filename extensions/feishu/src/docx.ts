@@ -1,9 +1,9 @@
 // Feishu plugin module implements docx behavior.
 import { resolve } from "node:path";
 import type * as Lark from "@larksuiteoapi/node-sdk";
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
-import { normalizeOptionalString, uniqueStrings } from "openclaw/plugin-sdk/string-coerce-runtime";
-import { jsonResult as json } from "openclaw/plugin-sdk/tool-results";
+import { formatErrorMessage } from "grokbot/plugin-sdk/error-runtime";
+import { normalizeOptionalString, uniqueStrings } from "grokbot/plugin-sdk/string-coerce-runtime";
+import { jsonResult as json } from "grokbot/plugin-sdk/tool-results";
 import { Type } from "typebox";
 import type { OpenClawPluginApi } from "../runtime-api.js";
 import { listEnabledFeishuAccounts } from "./accounts.js";

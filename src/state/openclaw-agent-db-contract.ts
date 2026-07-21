@@ -1,6 +1,6 @@
 import type { DatabaseSync } from "node:sqlite";
 import type { SqliteWalMaintenance } from "../infra/sqlite-wal.js";
-import type { OpenClawStateDatabaseOptions } from "./openclaw-state-db.js";
+import type { OpenClawStateDatabaseOptions } from "./grokbot-state-db.js";
 
 // v13 = one durable generation token per raw session transcript.
 // v12 = session-owned ACP parent-stream events.

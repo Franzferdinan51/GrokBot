@@ -3,7 +3,7 @@
 import { promises as fs } from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import type { SessionEntry } from "../config/sessions.js";
 import type {
@@ -11,7 +11,7 @@ import type {
   SessionEntryPatchContext,
   SessionEntryPatchOptions,
 } from "../config/sessions/session-accessor.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import type { AgentEventPayload } from "../infra/agent-events.js";
 import {
   getActiveGatewayRootWorkCount,
@@ -474,7 +474,7 @@ describe("subagent registry seam flow", () => {
   });
 
   it("keeps collector records when attachment cleanup cannot prove a safe path", async () => {
-    const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-swarm-archive-"));
+    const tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-swarm-archive-"));
     const attachmentsRootDir = path.join(tempRoot, "root");
     const attachmentsDir = path.join(tempRoot, "outside");
     await fs.mkdir(attachmentsRootDir);
@@ -4526,7 +4526,7 @@ describe("subagent registry seam flow", () => {
       runSubagentEnded: mocks.runSubagentEnded,
     } as never);
     const attachmentsRootDir = await fs.mkdtemp(
-      path.join(os.tmpdir(), "openclaw-old-tombstone-attachments-"),
+      path.join(os.tmpdir(), "grokbot-old-tombstone-attachments-"),
     );
     const attachmentsDir = path.join(attachmentsRootDir, "child");
     await fs.mkdir(attachmentsDir, { recursive: true });
@@ -6289,7 +6289,7 @@ describe("subagent registry seam flow", () => {
 
   it("removes attachments for killed delete-mode runs", async () => {
     const attachmentsRootDir = await fs.mkdtemp(
-      path.join(os.tmpdir(), "openclaw-kill-attachments-"),
+      path.join(os.tmpdir(), "grokbot-kill-attachments-"),
     );
     const attachmentsDir = path.join(attachmentsRootDir, "child");
     await fs.mkdir(attachmentsDir, { recursive: true });
@@ -6508,7 +6508,7 @@ describe("subagent registry seam flow", () => {
 
   it("removes attachments for released delete-mode runs", async () => {
     const attachmentsRootDir = await fs.mkdtemp(
-      path.join(os.tmpdir(), "openclaw-release-attachments-"),
+      path.join(os.tmpdir(), "grokbot-release-attachments-"),
     );
     const attachmentsDir = path.join(attachmentsRootDir, "child");
     await fs.mkdir(attachmentsDir, { recursive: true });

@@ -1,13 +1,13 @@
 {
   "entries": [
     {
-      "name": "@wecom/wecom-openclaw-plugin",
-      "description": "OpenClaw WeCom channel plugin by the Tencent WeCom team.",
+      "name": "@wecom/wecom-grokbot-plugin",
+      "description": "GrokBot WeCom channel plugin by the Tencent WeCom team.",
       "source": "external",
       "kind": "channel",
-      "openclaw": {
+      "grokbot": {
         "plugin": {
-          "id": "wecom-openclaw-plugin",
+          "id": "wecom-grokbot-plugin",
           "label": "WeCom"
         },
         "contracts": {
@@ -35,20 +35,20 @@
           }
         },
         "install": {
-          "npmSpec": "@wecom/wecom-openclaw-plugin@2026.5.7",
+          "npmSpec": "@wecom/wecom-grokbot-plugin@2026.5.7",
           "defaultChoice": "npm",
           "expectedIntegrity": "sha512-TCkP9as00WfEhgFWG8YL/rcmaWGIshAki2HQh83nTRccGfVBCoGjrEboTTqq3yDmK9koWTV11zi8u8A4dNtvug=="
         }
       }
     },
     {
-      "name": "openclaw-plugin-yuanbao",
-      "description": "OpenClaw Yuanbao channel plugin by the Tencent Yuanbao team.",
+      "name": "grokbot-plugin-yuanbao",
+      "description": "GrokBot Yuanbao channel plugin by the Tencent Yuanbao team.",
       "source": "external",
       "kind": "channel",
-      "openclaw": {
+      "grokbot": {
         "plugin": {
-          "id": "openclaw-plugin-yuanbao",
+          "id": "grokbot-plugin-yuanbao",
           "label": "Yuanbao"
         },
         "contracts": {
@@ -76,24 +76,24 @@
           }
         },
         "install": {
-          "npmSpec": "openclaw-plugin-yuanbao@2.15.0",
+          "npmSpec": "grokbot-plugin-yuanbao@2.15.0",
           "defaultChoice": "npm",
           "expectedIntegrity": "sha512-3GD+mf3EjTSUTOAREjTHAyp/deXdpgqB+q+xE0b19Qtat4ADhUV1mHDwFkVCRqTCBY5ATFKtKcipoDejqFj/+w=="
         }
       }
     },
     {
-      "name": "@tencent-weixin/openclaw-weixin",
-      "description": "OpenClaw Weixin channel plugin by the Tencent Weixin team.",
+      "name": "@tencent-weixin/grokbot-weixin",
+      "description": "GrokBot Weixin channel plugin by the Tencent Weixin team.",
       "source": "external",
       "kind": "channel",
-      "openclaw": {
+      "grokbot": {
         "plugin": {
-          "id": "openclaw-weixin",
+          "id": "grokbot-weixin",
           "label": "Weixin"
         },
         "channel": {
-          "id": "openclaw-weixin",
+          "id": "grokbot-weixin",
           "label": "Weixin",
           "selectionLabel": "Weixin（微信）",
           "detailLabel": "Weixin",
@@ -104,7 +104,7 @@
           "order": 75
         },
         "channelConfigs": {
-          "openclaw-weixin": {
+          "grokbot-weixin": {
             "label": "Weixin",
             "description": "Personal WeChat conversation channel.",
             "schema": {
@@ -114,7 +114,7 @@
           }
         },
         "install": {
-          "npmSpec": "@tencent-weixin/openclaw-weixin@2.4.6",
+          "npmSpec": "@tencent-weixin/grokbot-weixin@2.4.6",
           "defaultChoice": "npm",
           "expectedIntegrity": "sha512-qw9k3PLTiMWGNjjsknHgcTManH1w4j+Ji1ArWIaYLKCq3aFRsVwcqnPi127bvOoVMJGW4dbyJ8NECEMgoO+iRw==",
           "minHostVersion": ">=2026.5.12"
@@ -122,17 +122,17 @@
       }
     },
     {
-      "name": "@zalo-platforms/openclaw-zaloclawbot",
-      "description": "OpenClaw Zalo ClawBot channel plugin by the Zalo Platforms team.",
+      "name": "@zalo-platforms/grokbot-zaloclawbot",
+      "description": "GrokBot Zalo ClawBot channel plugin by the Zalo Platforms team.",
       "source": "external",
       "kind": "channel",
-      "openclaw": {
+      "grokbot": {
         "plugin": {
-          "id": "openclaw-zaloclawbot",
+          "id": "grokbot-zaloclawbot",
           "label": "Zalo ClawBot"
         },
         "channel": {
-          "id": "openclaw-zaloclawbot",
+          "id": "grokbot-zaloclawbot",
           "label": "Zalo ClawBot",
           "selectionLabel": "Zalo ClawBot (QR)",
           "detailLabel": "Zalo ClawBot",
@@ -143,7 +143,7 @@
           "order": 82
         },
         "channelConfigs": {
-          "openclaw-zaloclawbot": {
+          "grokbot-zaloclawbot": {
             "label": "Zalo ClawBot",
             "description": "Personal Zalo assistant — QR-onboarded, owner-bound.",
             "schema": {
@@ -153,7 +153,7 @@
           }
         },
         "install": {
-          "npmSpec": "@zalo-platforms/openclaw-zaloclawbot@0.1.4",
+          "npmSpec": "@zalo-platforms/grokbot-zaloclawbot@0.1.4",
           "defaultChoice": "npm",
           "expectedIntegrity": "sha512-5IxZriHJYACLLGqkCPPsTP9tas62kXEOFqTFAFMdunAM3SPhIJwVFRp0WvoP/m7L2PX85weD0g8LOtxM93VDYg==",
           "minHostVersion": ">=2026.4.10"
@@ -161,11 +161,11 @@
       }
     },
     {
-      "name": "@openclaw/clickclack",
-      "description": "OpenClaw ClickClack channel plugin",
+      "name": "@grokbot/clickclack",
+      "description": "GrokBot ClickClack channel plugin",
       "source": "official",
       "kind": "channel",
-      "openclaw": {
+      "grokbot": {
         "channel": {
           "id": "clickclack",
           "label": "ClickClack",
@@ -187,8 +187,8 @@
           }
         },
         "install": {
-          "clawhubSpec": "clawhub:@openclaw/clickclack",
-          "npmSpec": "@openclaw/clickclack",
+          "clawhubSpec": "clawhub:@grokbot/clickclack",
+          "npmSpec": "@grokbot/clickclack",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.6.9",
           "allowInvalidConfigRecovery": true
@@ -196,11 +196,11 @@
       }
     },
     {
-      "name": "@openclaw/discord",
-      "description": "OpenClaw Discord channel plugin",
+      "name": "@grokbot/discord",
+      "description": "GrokBot Discord channel plugin",
       "source": "official",
       "kind": "channel",
-      "openclaw": {
+      "grokbot": {
         "channel": {
           "id": "discord",
           "label": "Discord",
@@ -214,7 +214,7 @@
           "preferSessionLookupForAnnounceTarget": true
         },
         "install": {
-          "npmSpec": "@openclaw/discord",
+          "npmSpec": "@grokbot/discord",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.4.10",
           "allowInvalidConfigRecovery": true
@@ -222,11 +222,11 @@
       }
     },
     {
-      "name": "@openclaw/feishu",
-      "description": "OpenClaw Feishu/Lark channel plugin",
+      "name": "@grokbot/feishu",
+      "description": "GrokBot Feishu/Lark channel plugin",
       "source": "official",
       "kind": "channel",
-      "openclaw": {
+      "grokbot": {
         "channel": {
           "id": "feishu",
           "label": "Feishu",
@@ -239,18 +239,18 @@
           "quickstartAllowFrom": true
         },
         "install": {
-          "npmSpec": "@openclaw/feishu",
+          "npmSpec": "@grokbot/feishu",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.5.29"
         }
       }
     },
     {
-      "name": "@openclaw/googlechat",
-      "description": "OpenClaw Google Chat channel plugin",
+      "name": "@grokbot/googlechat",
+      "description": "GrokBot Google Chat channel plugin",
       "source": "official",
       "kind": "channel",
-      "openclaw": {
+      "grokbot": {
         "channel": {
           "id": "googlechat",
           "label": "Google Chat",
@@ -289,18 +289,18 @@
           ]
         },
         "install": {
-          "npmSpec": "@openclaw/googlechat",
+          "npmSpec": "@grokbot/googlechat",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.4.10"
         }
       }
     },
     {
-      "name": "@openclaw/irc",
-      "description": "OpenClaw IRC channel plugin",
+      "name": "@grokbot/irc",
+      "description": "GrokBot IRC channel plugin",
       "source": "official",
       "kind": "channel",
-      "openclaw": {
+      "grokbot": {
         "channel": {
           "id": "irc",
           "label": "IRC",
@@ -327,8 +327,8 @@
           "systemImage": "network"
         },
         "install": {
-          "clawhubSpec": "clawhub:@openclaw/irc",
-          "npmSpec": "@openclaw/irc",
+          "clawhubSpec": "clawhub:@grokbot/irc",
+          "npmSpec": "@grokbot/irc",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.6.9",
           "allowInvalidConfigRecovery": true
@@ -336,11 +336,11 @@
       }
     },
     {
-      "name": "@openclaw/line",
-      "description": "OpenClaw LINE channel plugin",
+      "name": "@grokbot/line",
+      "description": "GrokBot LINE channel plugin",
       "source": "official",
       "kind": "channel",
-      "openclaw": {
+      "grokbot": {
         "channel": {
           "id": "line",
           "label": "LINE",
@@ -354,18 +354,18 @@
           "quickstartAllowFrom": true
         },
         "install": {
-          "npmSpec": "@openclaw/line",
+          "npmSpec": "@grokbot/line",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.4.10"
         }
       }
     },
     {
-      "name": "@openclaw/mattermost",
-      "description": "OpenClaw Mattermost channel plugin",
+      "name": "@grokbot/mattermost",
+      "description": "GrokBot Mattermost channel plugin",
       "source": "official",
       "kind": "channel",
-      "openclaw": {
+      "grokbot": {
         "channel": {
           "id": "mattermost",
           "label": "Mattermost",
@@ -380,8 +380,8 @@
           "order": 65
         },
         "install": {
-          "clawhubSpec": "clawhub:@openclaw/mattermost",
-          "npmSpec": "@openclaw/mattermost",
+          "clawhubSpec": "clawhub:@grokbot/mattermost",
+          "npmSpec": "@grokbot/mattermost",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.6.9",
           "allowInvalidConfigRecovery": true
@@ -389,11 +389,11 @@
       }
     },
     {
-      "name": "@openclaw/matrix",
-      "description": "OpenClaw Matrix channel plugin",
+      "name": "@grokbot/matrix",
+      "description": "GrokBot Matrix channel plugin",
       "source": "official",
       "kind": "channel",
-      "openclaw": {
+      "grokbot": {
         "channel": {
           "id": "matrix",
           "label": "Matrix",
@@ -434,8 +434,8 @@
           ]
         },
         "install": {
-          "clawhubSpec": "clawhub:@openclaw/matrix",
-          "npmSpec": "@openclaw/matrix",
+          "clawhubSpec": "clawhub:@grokbot/matrix",
+          "npmSpec": "@grokbot/matrix",
           "defaultChoice": "clawhub",
           "minHostVersion": ">=2026.4.10",
           "allowInvalidConfigRecovery": true
@@ -443,11 +443,11 @@
       }
     },
     {
-      "name": "@openclaw/msteams",
-      "description": "OpenClaw Microsoft Teams channel plugin",
+      "name": "@grokbot/msteams",
+      "description": "GrokBot Microsoft Teams channel plugin",
       "source": "official",
       "kind": "channel",
-      "openclaw": {
+      "grokbot": {
         "channel": {
           "id": "msteams",
           "label": "Microsoft Teams",
@@ -459,18 +459,18 @@
           "order": 60
         },
         "install": {
-          "npmSpec": "@openclaw/msteams",
+          "npmSpec": "@grokbot/msteams",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.4.10"
         }
       }
     },
     {
-      "name": "@openclaw/nextcloud-talk",
-      "description": "OpenClaw Nextcloud Talk channel plugin",
+      "name": "@grokbot/nextcloud-talk",
+      "description": "GrokBot Nextcloud Talk channel plugin",
       "source": "official",
       "kind": "channel",
-      "openclaw": {
+      "grokbot": {
         "channel": {
           "id": "nextcloud-talk",
           "label": "Nextcloud Talk",
@@ -483,18 +483,18 @@
           "quickstartAllowFrom": true
         },
         "install": {
-          "npmSpec": "@openclaw/nextcloud-talk",
+          "npmSpec": "@grokbot/nextcloud-talk",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.4.10"
         }
       }
     },
     {
-      "name": "@openclaw/nostr",
-      "description": "OpenClaw Nostr channel plugin for NIP-04 encrypted DMs",
+      "name": "@grokbot/nostr",
+      "description": "GrokBot Nostr channel plugin for NIP-04 encrypted DMs",
       "source": "official",
       "kind": "channel",
-      "openclaw": {
+      "grokbot": {
         "channel": {
           "id": "nostr",
           "label": "Nostr",
@@ -506,18 +506,18 @@
           "quickstartAllowFrom": true
         },
         "install": {
-          "npmSpec": "@openclaw/nostr",
+          "npmSpec": "@grokbot/nostr",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.4.10"
         }
       }
     },
     {
-      "name": "@openclaw/qqbot",
-      "description": "OpenClaw QQ Bot channel plugin",
+      "name": "@grokbot/qqbot",
+      "description": "GrokBot QQ Bot channel plugin",
       "source": "official",
       "kind": "channel",
-      "openclaw": {
+      "grokbot": {
         "channel": {
           "id": "qqbot",
           "label": "QQ Bot",
@@ -529,18 +529,18 @@
           "systemImage": "bubble.left.and.bubble.right"
         },
         "install": {
-          "npmSpec": "@openclaw/qqbot",
+          "npmSpec": "@grokbot/qqbot",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.4.10"
         }
       }
     },
     {
-      "name": "@openclaw/signal",
-      "description": "OpenClaw Signal channel plugin",
+      "name": "@grokbot/signal",
+      "description": "GrokBot Signal channel plugin",
       "source": "official",
       "kind": "channel",
-      "openclaw": {
+      "grokbot": {
         "channel": {
           "id": "signal",
           "label": "Signal",
@@ -567,8 +567,8 @@
           ]
         },
         "install": {
-          "clawhubSpec": "clawhub:@openclaw/signal",
-          "npmSpec": "@openclaw/signal",
+          "clawhubSpec": "clawhub:@grokbot/signal",
+          "npmSpec": "@grokbot/signal",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.6.9",
           "allowInvalidConfigRecovery": true
@@ -576,11 +576,11 @@
       }
     },
     {
-      "name": "@openclaw/slack",
-      "description": "OpenClaw Slack channel plugin",
+      "name": "@grokbot/slack",
+      "description": "GrokBot Slack channel plugin",
       "source": "official",
       "kind": "channel",
-      "openclaw": {
+      "grokbot": {
         "channel": {
           "id": "slack",
           "label": "Slack",
@@ -603,7 +603,7 @@
           }
         },
         "install": {
-          "npmSpec": "@openclaw/slack",
+          "npmSpec": "@grokbot/slack",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.5.12-beta.1",
           "allowInvalidConfigRecovery": true
@@ -611,11 +611,11 @@
       }
     },
     {
-      "name": "@openclaw/sms",
-      "description": "OpenClaw SMS channel plugin for Twilio text messages.",
+      "name": "@grokbot/sms",
+      "description": "GrokBot SMS channel plugin for Twilio text messages.",
       "source": "official",
       "kind": "channel",
-      "openclaw": {
+      "grokbot": {
         "channel": {
           "id": "sms",
           "label": "SMS",
@@ -638,8 +638,8 @@
           "quickstartAllowFrom": true
         },
         "install": {
-          "clawhubSpec": "clawhub:@openclaw/sms",
-          "npmSpec": "@openclaw/sms",
+          "clawhubSpec": "clawhub:@grokbot/sms",
+          "npmSpec": "@grokbot/sms",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.6.9",
           "allowInvalidConfigRecovery": true
@@ -647,33 +647,33 @@
       }
     },
     {
-      "name": "@openclaw/synology-chat",
-      "description": "Synology Chat channel plugin for OpenClaw",
+      "name": "@grokbot/synology-chat",
+      "description": "Synology Chat channel plugin for GrokBot",
       "source": "official",
       "kind": "channel",
-      "openclaw": {
+      "grokbot": {
         "channel": {
           "id": "synology-chat",
           "label": "Synology Chat",
           "selectionLabel": "Synology Chat (Webhook)",
           "docsPath": "/channels/synology-chat",
           "docsLabel": "synology-chat",
-          "blurb": "Connect your Synology NAS Chat to OpenClaw with full agent capabilities.",
+          "blurb": "Connect your Synology NAS Chat to GrokBot with full agent capabilities.",
           "order": 90
         },
         "install": {
-          "npmSpec": "@openclaw/synology-chat",
+          "npmSpec": "@grokbot/synology-chat",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.4.10"
         }
       }
     },
     {
-      "name": "@openclaw/raft",
-      "description": "OpenClaw Raft channel plugin",
+      "name": "@grokbot/raft",
+      "description": "GrokBot Raft channel plugin",
       "source": "official",
       "kind": "channel",
-      "openclaw": {
+      "grokbot": {
         "channel": {
           "id": "raft",
           "label": "Raft",
@@ -712,18 +712,18 @@
           }
         },
         "install": {
-          "npmSpec": "@openclaw/raft",
+          "npmSpec": "@grokbot/raft",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.6.8"
         }
       }
     },
     {
-      "name": "@openclaw/tlon",
-      "description": "OpenClaw Tlon/Urbit channel plugin",
+      "name": "@grokbot/tlon",
+      "description": "GrokBot Tlon/Urbit channel plugin",
       "source": "official",
       "kind": "channel",
-      "openclaw": {
+      "grokbot": {
         "channel": {
           "id": "tlon",
           "label": "Tlon",
@@ -735,18 +735,18 @@
           "quickstartAllowFrom": true
         },
         "install": {
-          "npmSpec": "@openclaw/tlon",
+          "npmSpec": "@grokbot/tlon",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.4.10"
         }
       }
     },
     {
-      "name": "@openclaw/twitch",
-      "description": "OpenClaw Twitch channel plugin",
+      "name": "@grokbot/twitch",
+      "description": "GrokBot Twitch channel plugin",
       "source": "official",
       "kind": "channel",
-      "openclaw": {
+      "grokbot": {
         "channel": {
           "id": "twitch",
           "label": "Twitch",
@@ -756,18 +756,18 @@
           "aliases": ["twitch-chat"]
         },
         "install": {
-          "npmSpec": "@openclaw/twitch",
+          "npmSpec": "@grokbot/twitch",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.4.10"
         }
       }
     },
     {
-      "name": "@openclaw/whatsapp",
-      "description": "OpenClaw WhatsApp channel plugin",
+      "name": "@grokbot/whatsapp",
+      "description": "GrokBot WhatsApp channel plugin",
       "source": "official",
       "kind": "channel",
-      "openclaw": {
+      "grokbot": {
         "channel": {
           "id": "whatsapp",
           "label": "WhatsApp",
@@ -779,19 +779,19 @@
           "systemImage": "message"
         },
         "install": {
-          "clawhubSpec": "clawhub:@openclaw/whatsapp",
-          "npmSpec": "@openclaw/whatsapp",
+          "clawhubSpec": "clawhub:@grokbot/whatsapp",
+          "npmSpec": "@grokbot/whatsapp",
           "defaultChoice": "clawhub",
           "minHostVersion": ">=2026.4.25"
         }
       }
     },
     {
-      "name": "@openclaw/zalo",
-      "description": "OpenClaw Zalo channel plugin",
+      "name": "@grokbot/zalo",
+      "description": "GrokBot Zalo channel plugin",
       "source": "official",
       "kind": "channel",
-      "openclaw": {
+      "grokbot": {
         "channel": {
           "id": "zalo",
           "label": "Zalo",
@@ -804,18 +804,18 @@
           "quickstartAllowFrom": true
         },
         "install": {
-          "npmSpec": "@openclaw/zalo",
+          "npmSpec": "@grokbot/zalo",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.4.10"
         }
       }
     },
     {
-      "name": "@openclaw/zalouser",
-      "description": "OpenClaw Zalo Personal Account plugin via native zca-js integration",
+      "name": "@grokbot/zalouser",
+      "description": "GrokBot Zalo Personal Account plugin via native zca-js integration",
       "source": "official",
       "kind": "channel",
-      "openclaw": {
+      "grokbot": {
         "channel": {
           "id": "zalouser",
           "label": "Zalo Personal",
@@ -828,7 +828,7 @@
           "quickstartAllowFrom": false
         },
         "install": {
-          "npmSpec": "@openclaw/zalouser",
+          "npmSpec": "@grokbot/zalouser",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.4.10"
         }

@@ -1,8 +1,8 @@
 // Feishu plugin module implements drive behavior.
 import type * as Lark from "@larksuiteoapi/node-sdk";
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
-import { readPositiveIntegerParam } from "openclaw/plugin-sdk/param-readers";
-import { jsonResult } from "openclaw/plugin-sdk/tool-results";
+import { formatErrorMessage } from "grokbot/plugin-sdk/error-runtime";
+import { readPositiveIntegerParam } from "grokbot/plugin-sdk/param-readers";
+import { jsonResult } from "grokbot/plugin-sdk/tool-results";
 import type { OpenClawPluginApi } from "../runtime-api.js";
 import { listEnabledFeishuAccounts } from "./accounts.js";
 import { cleanupAmbientCommentTypingReaction } from "./comment-reaction.js";

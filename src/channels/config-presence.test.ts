@@ -23,7 +23,7 @@ const matrixPresenceOptions = {
 };
 
 function makeTempStateDir() {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-channel-config-presence-"));
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-channel-config-presence-"));
   tempDirs.push(dir);
   return dir;
 }
@@ -121,7 +121,7 @@ describe("config presence", () => {
 
   it("detects persisted Matrix credentials without config or env", () => {
     const stateDir = makeTempStateDir().replace(
-      "openclaw-channel-config-presence-",
+      "grokbot-channel-config-presence-",
       "persisted-matrix-",
     );
     fs.mkdirSync(stateDir, { recursive: true });

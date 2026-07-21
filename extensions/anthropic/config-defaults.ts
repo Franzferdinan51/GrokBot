@@ -2,11 +2,11 @@
  * Anthropic config defaulting helpers. They seed default Anthropic/Claude CLI
  * model refs and cache-retention params based on configured auth mode.
  */
-import type { OpenClawConfig } from "openclaw/plugin-sdk/plugin-entry";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/plugin-entry";
 import {
   isRecord,
   normalizeLowercaseStringOrEmpty,
-} from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/string-coerce-runtime";
 import {
   resolveClaudeCliAnthropicModelRefs,
   resolveKnownAnthropicModelRef,
@@ -292,7 +292,7 @@ export function normalizeAnthropicProviderConfigForProvider<
   return normalizeAnthropicProviderConfig(params.providerConfig);
 }
 
-/** Apply Anthropic and Claude CLI defaults to an OpenClaw config object. */
+/** Apply Anthropic and Claude CLI defaults to an GrokBot config object. */
 export function applyAnthropicConfigDefaults(params: {
   config: OpenClawConfig;
   env: NodeJS.ProcessEnv;

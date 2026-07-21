@@ -1,6 +1,6 @@
 // Openai tests cover realtime voice provider plugin behavior.
-import { REALTIME_VOICE_AUDIO_FORMAT_PCM16_24KHZ } from "openclaw/plugin-sdk/realtime-voice";
-import type { RealtimeVoiceBridge, RealtimeVoiceTool } from "openclaw/plugin-sdk/realtime-voice";
+import { REALTIME_VOICE_AUDIO_FORMAT_PCM16_24KHZ } from "grokbot/plugin-sdk/realtime-voice";
+import type { RealtimeVoiceBridge, RealtimeVoiceTool } from "grokbot/plugin-sdk/realtime-voice";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { buildOpenAIRealtimeVoiceProvider } from "./realtime-voice-provider.js";
 
@@ -93,11 +93,11 @@ vi.mock("ws", () => ({
   default: FakeWebSocket,
 }));
 
-vi.mock("openclaw/plugin-sdk/ssrf-runtime", () => ({
+vi.mock("grokbot/plugin-sdk/ssrf-runtime", () => ({
   fetchWithSsrFGuard: fetchWithSsrFGuardMock,
 }));
 
-vi.mock("openclaw/plugin-sdk/provider-auth", () => ({
+vi.mock("grokbot/plugin-sdk/provider-auth", () => ({
   isProviderAuthProfileConfigured: isProviderAuthProfileConfiguredMock,
   resolveProviderAuthProfileApiKey: resolveProviderAuthProfileApiKeyMock,
 }));
@@ -150,14 +150,14 @@ function parseSent(socket: FakeWebSocketInstance): SentRealtimeEvent[] {
 function expectedResponseCreateEvent() {
   return expect.objectContaining({
     type: "response.create",
-    event_id: expect.stringMatching(/^openclaw-response-create-/),
+    event_id: expect.stringMatching(/^grokbot-response-create-/),
   });
 }
 
 function expectedResponseCancelEvent() {
   return expect.objectContaining({
     type: "response.cancel",
-    event_id: expect.stringMatching(/^openclaw-response-cancel-/),
+    event_id: expect.stringMatching(/^grokbot-response-cancel-/),
   });
 }
 
@@ -320,7 +320,7 @@ describe("buildOpenAIRealtimeVoiceProvider", () => {
     expect(bridge.supportsToolResultSuppression).toBe(true);
   });
 
-  it("adds OpenClaw attribution headers to native realtime websocket requests", () => {
+  it("adds GrokBot attribution headers to native realtime websocket requests", () => {
     vi.stubEnv("OPENCLAW_VERSION", "2026.3.22");
     const provider = buildOpenAIRealtimeVoiceProvider();
     const bridge = provider.createBridge({
@@ -337,9 +337,9 @@ describe("buildOpenAIRealtimeVoiceProvider", () => {
       | { headers?: Record<string, string>; maxPayload?: number }
       | undefined;
     expectRecordFields(options?.headers, "websocket headers", {
-      originator: "openclaw",
+      originator: "grokbot",
       version: "2026.3.22",
-      "User-Agent": "openclaw/2026.3.22",
+      "User-Agent": "grokbot/2026.3.22",
     });
     expect(options?.headers).not.toHaveProperty("OpenAI-Beta");
     expect(options?.maxPayload).toBe(16 * 1024 * 1024);
@@ -490,7 +490,7 @@ describe("buildOpenAIRealtimeVoiceProvider", () => {
     expect(FakeWebSocket.instances).toHaveLength(0);
   });
 
-  it("returns browser-safe OpenClaw attribution headers for native WebRTC offers", async () => {
+  it("returns browser-safe GrokBot attribution headers for native WebRTC offers", async () => {
     vi.stubEnv("OPENCLAW_VERSION", "2026.3.22");
     fetchWithSsrFGuardMock.mockResolvedValueOnce({
       response: createJsonResponse({
@@ -522,9 +522,9 @@ describe("buildOpenAIRealtimeVoiceProvider", () => {
     expectRecordFields(requireFetchHeaders(), "fetch headers", {
       Authorization: "Bearer sk-test", // pragma: allowlist secret
       "Content-Type": "application/json",
-      originator: "openclaw",
+      originator: "grokbot",
       version: "2026.3.22",
-      "User-Agent": "openclaw/2026.3.22",
+      "User-Agent": "grokbot/2026.3.22",
     });
     const body = requireFetchJsonBody();
     const bodySession = requireRecord(body.session, "fetch session");
@@ -614,7 +614,7 @@ describe("buildOpenAIRealtimeVoiceProvider", () => {
   });
 
   it("resolves keychain OPENAI_API_KEY refs before creating browser sessions", async () => {
-    vi.stubEnv("OPENAI_API_KEY", "keychain:openclaw:OPENAI_REALTIME_BROWSER_TEST");
+    vi.stubEnv("OPENAI_API_KEY", "keychain:grokbot:OPENAI_REALTIME_BROWSER_TEST");
     execFileSyncMock.mockReturnValueOnce("sk-browser-env\n"); // pragma: allowlist secret
     fetchWithSsrFGuardMock.mockResolvedValueOnce({
       response: createJsonResponse({
@@ -640,7 +640,7 @@ describe("buildOpenAIRealtimeVoiceProvider", () => {
     expect(securityArgs).toEqual([
       "find-generic-password",
       "-s",
-      "openclaw",
+      "grokbot",
       "-a",
       "OPENAI_REALTIME_BROWSER_TEST",
       "-w",
@@ -655,7 +655,7 @@ describe("buildOpenAIRealtimeVoiceProvider", () => {
   });
 
   it("resolves and caches keychain OPENAI_API_KEY refs before creating bridges", async () => {
-    vi.stubEnv("OPENAI_API_KEY", "keychain:openclaw:OPENAI_REALTIME_BRIDGE_TEST");
+    vi.stubEnv("OPENAI_API_KEY", "keychain:grokbot:OPENAI_REALTIME_BRIDGE_TEST");
     execFileSyncMock.mockReturnValue("sk-bridge-env\n"); // pragma: allowlist secret
     const provider = buildOpenAIRealtimeVoiceProvider();
 
@@ -685,7 +685,7 @@ describe("buildOpenAIRealtimeVoiceProvider", () => {
   });
 
   it("does not resolve keychain refs during configured checks", () => {
-    vi.stubEnv("OPENAI_API_KEY", "keychain:openclaw:OPENAI_REALTIME_CONFIGURED_TEST");
+    vi.stubEnv("OPENAI_API_KEY", "keychain:grokbot:OPENAI_REALTIME_CONFIGURED_TEST");
     const provider = buildOpenAIRealtimeVoiceProvider();
 
     expect(provider.isConfigured({ providerConfig: {} })).toBe(true);
@@ -776,7 +776,7 @@ describe("buildOpenAIRealtimeVoiceProvider", () => {
   });
 
   it("fails closed when keychain refs cannot be resolved", async () => {
-    vi.stubEnv("OPENAI_API_KEY", "keychain:openclaw:OPENAI_REALTIME_MISSING_TEST");
+    vi.stubEnv("OPENAI_API_KEY", "keychain:grokbot:OPENAI_REALTIME_MISSING_TEST");
     resolveProviderAuthProfileApiKeyMock.mockResolvedValueOnce(undefined);
     execFileSyncMock.mockImplementationOnce(() => {
       throw new Error("keychain unavailable");

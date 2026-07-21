@@ -1,4 +1,4 @@
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+import { normalizeOptionalString } from "@grokbot/normalization-core/string-coerce";
 
 function normalizeBrowserProxyPath(value: string): string {
   const trimmed = value.trim();

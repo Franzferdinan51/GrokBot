@@ -1,4 +1,4 @@
-import { definePage } from "@openclaw/uirouter";
+import { definePage } from "@grokbot/uirouter";
 import { html } from "lit";
 
 export const page = definePage({
@@ -7,6 +7,6 @@ export const page = definePage({
   component: () =>
     import("./activity-page.ts").then(() => ({
       header: true,
-      render: () => html`<openclaw-activity-page></openclaw-activity-page>`,
+      render: () => html`<grokbot-activity-page></grokbot-activity-page>`,
     })),
 });

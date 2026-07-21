@@ -1,19 +1,19 @@
 // Discord plugin module implements native command model picker ui behavior.
-import { resolveDefaultModelForAgent } from "openclaw/plugin-sdk/agent-runtime";
+import { resolveDefaultModelForAgent } from "grokbot/plugin-sdk/agent-runtime";
 import {
   resolveEffectiveAgentRuntime,
   resolveStoredModelOverride,
   serializeCommandArgs,
   type ChatCommandDefinition,
   type CommandArgs,
-} from "openclaw/plugin-sdk/command-auth-native";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import type { ResolvedAgentRoute } from "openclaw/plugin-sdk/routing";
-import { getSessionEntry, resolveStorePath } from "openclaw/plugin-sdk/session-store-runtime";
+} from "grokbot/plugin-sdk/command-auth-native";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import type { ResolvedAgentRoute } from "grokbot/plugin-sdk/routing";
+import { getSessionEntry, resolveStorePath } from "grokbot/plugin-sdk/session-store-runtime";
 import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalString,
-} from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/string-coerce-runtime";
 import {
   Container,
   TextDisplay,

@@ -42,14 +42,14 @@ describe("getResolvedLoggerSettings", () => {
     process.env.OPENCLAW_TEST_FILE_LOG = "1";
     logging.setLoggerConfigLoaderForTests(() => ({
       level: "debug",
-      file: "/tmp/openclaw-configured.log",
+      file: "/tmp/grokbot-configured.log",
       maxFileBytes: 2048,
     }));
 
     const settings = logging.getResolvedLoggerSettings();
 
     expect(settings.level).toBe("debug");
-    expect(settings.file).toBe("/tmp/openclaw-configured.log");
+    expect(settings.file).toBe("/tmp/grokbot-configured.log");
     expect(settings.maxFileBytes).toBe(2048);
   });
 
@@ -61,9 +61,9 @@ describe("getResolvedLoggerSettings", () => {
 
     expect(settings.level).toBe("info");
     expect(settings.file).toContain(path.join(".artifacts", "test-logs"));
-    expect(path.basename(settings.file)).toMatch(/^openclaw-vitest-\d+-\d{4}-\d{2}-\d{2}\.log$/);
+    expect(path.basename(settings.file)).toMatch(/^grokbot-vitest-\d+-\d{4}-\d{2}-\d{2}\.log$/);
     expect(settings.file).not.toBe(
-      `/tmp/openclaw/openclaw-${new Date().toISOString().slice(0, 10)}.log`,
+      `/tmp/grokbot/grokbot-${new Date().toISOString().slice(0, 10)}.log`,
     );
   });
 });

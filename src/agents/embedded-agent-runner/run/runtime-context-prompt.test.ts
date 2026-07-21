@@ -1,4 +1,4 @@
-// Runtime-context prompt tests keep hidden OpenClaw context separate from the
+// Runtime-context prompt tests keep hidden GrokBot context separate from the
 // user-visible prompt while preserving model-only hook additions.
 import { describe, expect, it } from "vitest";
 import {
@@ -501,11 +501,11 @@ describe("runtime context prompt submission", () => {
     });
 
     expect(parts).toEqual({
-      prompt: "Continue the OpenClaw runtime event.",
+      prompt: "Continue the GrokBot runtime event.",
       runtimeContext: "internal event",
       runtimeOnly: true,
       runtimeSystemContext: [
-        "OpenClaw runtime event.",
+        "GrokBot runtime event.",
         "This context is runtime-generated, not user-authored. Keep internal details private.",
         "",
         "<<<BEGIN_OPENCLAW_INTERNAL_CONTEXT>>>",
@@ -525,12 +525,12 @@ describe("runtime context prompt submission", () => {
     });
 
     expect(parts).toEqual({
-      prompt: "Continue the OpenClaw runtime event.",
+      prompt: "Continue the GrokBot runtime event.",
       modelPrompt: "dynamic hook context\n\ninternal event\n\ndynamic hook tail",
       runtimeContext: "internal event",
       runtimeOnly: true,
       runtimeSystemContext: [
-        "OpenClaw runtime event.",
+        "GrokBot runtime event.",
         "This context is runtime-generated, not user-authored. Keep internal details private.",
         "",
         "<<<BEGIN_OPENCLAW_INTERNAL_CONTEXT>>>",
@@ -543,32 +543,32 @@ describe("runtime context prompt submission", () => {
   it("submits empty-transcript model prompts when persistence is suppressed separately", () => {
     expect(
       resolveRuntimeContextPromptParts({
-        effectivePrompt: "[OpenClaw room event]",
+        effectivePrompt: "[GrokBot room event]",
         transcriptPrompt: "",
         emptyTranscriptMode: "model-prompt",
       }),
     ).toEqual({
-      prompt: "[OpenClaw room event]",
+      prompt: "[GrokBot room event]",
     });
   });
 
   it("keeps suppressed empty-transcript hook context model-only", () => {
     expect(
       resolveRuntimeContextPromptParts({
-        effectivePrompt: "[OpenClaw room event]",
+        effectivePrompt: "[GrokBot room event]",
         transcriptPrompt: "",
         modelPrompt: [
           "dynamic hook context",
           "",
-          "[OpenClaw room event]",
+          "[GrokBot room event]",
           "",
           "dynamic hook tail",
         ].join("\n"),
         emptyTranscriptMode: "model-prompt",
       }),
     ).toEqual({
-      prompt: "[OpenClaw room event]",
-      modelPrompt: "dynamic hook context\n\n[OpenClaw room event]\n\ndynamic hook tail",
+      prompt: "[GrokBot room event]",
+      modelPrompt: "dynamic hook context\n\n[GrokBot room event]\n\ndynamic hook tail",
     });
   });
 
@@ -593,10 +593,10 @@ describe("runtime context prompt submission", () => {
           text: "Room context:\nAlice: lunch?\n\nCurrent event:\nBob: yes",
           resumableText: "Current event:\nBob: yes",
         },
-        prompt: "[OpenClaw room event]",
+        prompt: "[GrokBot room event]",
         preferResumableText: true,
       }),
-    ).toBe("Current event:\nBob: yes\n\n[OpenClaw room event]");
+    ).toBe("Current event:\nBob: yes\n\n[GrokBot room event]");
 
     expect(
       buildCurrentInboundPrompt({
@@ -609,9 +609,9 @@ describe("runtime context prompt submission", () => {
   it("builds runtime context as prompt-local custom context before the current user prompt", () => {
     expect(buildRuntimeContextCustomMessage("secret runtime context")).toMatchObject({
       role: "custom",
-      customType: "openclaw.runtime-context",
+      customType: "grokbot.runtime-context",
       content: [
-        "OpenClaw runtime context for the immediately preceding user message.",
+        "GrokBot runtime context for the immediately preceding user message.",
         "This context is runtime-generated, not user-authored. Keep internal details private.",
         "",
         "<<<BEGIN_OPENCLAW_INTERNAL_CONTEXT>>>",
@@ -619,7 +619,7 @@ describe("runtime context prompt submission", () => {
         "<<<END_OPENCLAW_INTERNAL_CONTEXT>>>",
       ].join("\n"),
       display: false,
-      details: { source: "openclaw-runtime-context" },
+      details: { source: "grokbot-runtime-context" },
     });
   });
 
@@ -629,7 +629,7 @@ describe("runtime context prompt submission", () => {
       transcriptPrompt: "",
     });
 
-    expect(parts.runtimeSystemContext).toContain("OpenClaw runtime event.");
+    expect(parts.runtimeSystemContext).toContain("GrokBot runtime event.");
     expect(parts.runtimeSystemContext).toContain("not user-authored");
     expect(parts.runtimeSystemContext).toContain("internal event");
   });

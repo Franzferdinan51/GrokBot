@@ -1,5 +1,5 @@
 /**
- * Fast OpenClaw tool-bundle mock.
+ * Fast GrokBot tool-bundle mock.
  *
  * Provides lightweight built-in tool stubs for inventory-heavy tests.
  */
@@ -29,7 +29,7 @@ const coreTools = [
   stubActionTool("message", ["send", "reply"]),
   stubTool("heartbeat_respond"),
   stubActionTool("gateway", ["config.get", "config.schema.lookup"]),
-  stubTool("openclaw"),
+  stubTool("grokbot"),
   stubActionTool("agents_list", ["list", "show"]),
   stubActionTool("sessions_list", ["list", "show"]),
   stubActionTool("sessions_history", ["read", "tail"]),
@@ -53,7 +53,7 @@ const coreTools = [
 
 const createOpenClawToolsMock = vi.fn(
   (options?: { enableHeartbeatTool?: boolean; recordToolPrepStage?: (name: string) => void }) => {
-    options?.recordToolPrepStage?.("openclaw-tools:test-helper");
+    options?.recordToolPrepStage?.("grokbot-tools:test-helper");
     return coreTools
       .filter((tool) => tool.name !== "heartbeat_respond" || options?.enableHeartbeatTool === true)
       .map((tool) => Object.assign({}, tool));
@@ -63,8 +63,8 @@ const createOpenClawToolsMock = vi.fn(
 // Preserve action enums for tools whose tests assert schema/inventory behavior without paying the
 // cost of constructing the real tool bundle. The real capability filter stays
 // in place so client-caps gating behaves like production in these suites.
-vi.mock("../openclaw-tools.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("../openclaw-tools.js")>();
+vi.mock("../grokbot-tools.js", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("../grokbot-tools.js")>();
   return {
     createOpenClawTools: createOpenClawToolsMock,
     filterToolsByClientCaps: actual.filterToolsByClientCaps,

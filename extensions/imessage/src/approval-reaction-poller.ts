@@ -1,9 +1,9 @@
 // Imessage plugin module implements approval reaction poller behavior.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import {
   asDateTimestampMs,
   resolveExpiresAtMsFromDurationMs,
-} from "openclaw/plugin-sdk/number-runtime";
+} from "grokbot/plugin-sdk/number-runtime";
 import {
   extractIMessageApprovalPromptBinding,
   handleIMessageApprovalReaction,

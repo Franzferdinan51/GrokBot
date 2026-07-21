@@ -98,12 +98,12 @@ describe("resolveAssistantIdentity", () => {
     const cfg: OpenClawConfig = {
       ui: {
         assistant: {
-          avatar: "avatars/openclaw.png",
+          avatar: "avatars/grokbot.png",
         },
       },
     };
 
-    expect(resolveAssistantIdentity({ cfg, workspaceDir: "" }).avatar).toBe("avatars/openclaw.png");
+    expect(resolveAssistantIdentity({ cfg, workspaceDir: "" }).avatar).toBe("avatars/grokbot.png");
   });
 
   it("preserves long image data URLs without truncating past 200 chars", () => {
@@ -120,7 +120,7 @@ describe("resolveAssistantIdentity", () => {
   });
 
   it("preserves an exact shared-cap IDENTITY.md data URL without truncation", async () => {
-    await withTempDir({ prefix: "openclaw-assistant-identity-cap-" }, async (workspace) => {
+    await withTempDir({ prefix: "grokbot-assistant-identity-cap-" }, async (workspace) => {
       const dataUrl = `data:image/svg+xml;base64,${Buffer.alloc(AVATAR_MAX_BYTES).toString("base64")}`;
       expect(dataUrl).toHaveLength(AVATAR_MAX_DATA_URL_CHARS);
       await fs.writeFile(path.join(workspace, "IDENTITY.md"), `- Avatar: ${dataUrl}\n`);
@@ -130,7 +130,7 @@ describe("resolveAssistantIdentity", () => {
   });
 
   it("rejects an oversized IDENTITY.md data URL without truncating it", async () => {
-    await withTempDir({ prefix: "openclaw-assistant-identity-overflow-" }, async (workspace) => {
+    await withTempDir({ prefix: "grokbot-assistant-identity-overflow-" }, async (workspace) => {
       const exact = `data:image/svg+xml;base64,${Buffer.alloc(AVATAR_MAX_BYTES).toString("base64")}`;
       const oversized = `${exact}A`;
       expect(oversized).toHaveLength(AVATAR_MAX_DATA_URL_CHARS + 1);
@@ -144,7 +144,7 @@ describe("resolveAssistantIdentity", () => {
   });
 
   it("rejects a non-image IDENTITY.md data URL and uses its emoji fallback", async () => {
-    await withTempDir({ prefix: "openclaw-assistant-identity-data-type-" }, async (workspace) => {
+    await withTempDir({ prefix: "grokbot-assistant-identity-data-type-" }, async (workspace) => {
       await fs.writeFile(
         path.join(workspace, "IDENTITY.md"),
         "- Avatar: data:text/plain,avatar\n- Emoji: 🦞\n",
@@ -167,7 +167,7 @@ describe("resolveAssistantIdentity", () => {
   );
 
   it("lets a valid IDENTITY.md avatar win when the agent URI scheme is unsupported", async () => {
-    await withTempDir({ prefix: "openclaw-assistant-identity-fallback-" }, async (workspace) => {
+    await withTempDir({ prefix: "grokbot-assistant-identity-fallback-" }, async (workspace) => {
       await fs.writeFile(path.join(workspace, "IDENTITY.md"), "- Avatar: identity.png\n");
       const cfg: OpenClawConfig = {
         agents: {

@@ -1,6 +1,6 @@
 // Mattermost plugin module implements runtime behavior.
-import { createPluginRuntimeStore } from "openclaw/plugin-sdk/runtime-store";
-import type { PluginRuntime } from "openclaw/plugin-sdk/runtime-store";
+import { createPluginRuntimeStore } from "grokbot/plugin-sdk/runtime-store";
+import type { PluginRuntime } from "grokbot/plugin-sdk/runtime-store";
 
 const {
   setRuntime: setMattermostRuntime,

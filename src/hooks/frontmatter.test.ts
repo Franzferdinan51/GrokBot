@@ -1,5 +1,5 @@
 // Hook frontmatter tests cover hook metadata parsing from hook files.
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { describe, expect, it } from "vitest";
 import {
   parseFrontmatter,
@@ -17,7 +17,7 @@ function requireString(value: string | undefined, label: string): string {
 
 function requireOpenClawMetadata(metadata: OpenClawHookMetadata | undefined): OpenClawHookMetadata {
   if (!metadata) {
-    throw new Error("expected openclaw metadata");
+    throw new Error("expected grokbot metadata");
   }
   return metadata;
 }
@@ -58,7 +58,7 @@ name: session-memory
 description: "Save session context"
 metadata:
   {
-    "openclaw": {
+    "grokbot": {
       "emoji": "💾",
       "events": ["command:new"]
     }
@@ -74,8 +74,8 @@ metadata:
 
     // Verify the metadata is valid JSON
     const parsed = JSON.parse(metadata);
-    expect(parsed.openclaw.emoji).toBe("💾");
-    expect(parsed.openclaw.events).toEqual(["command:new"]);
+    expect(parsed.grokbot.emoji).toBe("💾");
+    expect(parsed.grokbot.events).toEqual(["command:new"]);
   });
 
   it("parses multi-line metadata with complex nested structure", () => {
@@ -84,7 +84,7 @@ name: command-logger
 description: "Log all command events"
 metadata:
   {
-    "openclaw":
+    "grokbot":
       {
         "emoji": "📝",
         "events": ["command"],
@@ -98,21 +98,21 @@ metadata:
     expect(result.name).toBe("command-logger");
 
     const parsed = JSON.parse(requireString(result.metadata, "command-logger metadata"));
-    expect(parsed.openclaw.emoji).toBe("📝");
-    expect(parsed.openclaw.events).toEqual(["command"]);
-    expect(parsed.openclaw.requires.config).toEqual(["workspace.dir"]);
-    expect(parsed.openclaw.install[0].kind).toBe("bundled");
+    expect(parsed.grokbot.emoji).toBe("📝");
+    expect(parsed.grokbot.events).toEqual(["command"]);
+    expect(parsed.grokbot.requires.config).toEqual(["workspace.dir"]);
+    expect(parsed.grokbot.install[0].kind).toBe("bundled");
   });
 
   it("handles single-line metadata (inline JSON)", () => {
     const content = `---
 name: simple-hook
-metadata: {"openclaw": {"events": ["test"]}}
+metadata: {"grokbot": {"events": ["test"]}}
 ---
 `;
     const result = parseFrontmatter(content);
     expect(result.name).toBe("simple-hook");
-    expect(result.metadata).toBe('{"openclaw": {"events": ["test"]}}');
+    expect(result.metadata).toBe('{"grokbot": {"events": ["test"]}}');
   });
 
   it("handles mixed single-line and multi-line values", () => {
@@ -122,7 +122,7 @@ description: "A hook with mixed values"
 homepage: https://example.com
 metadata:
   {
-    "openclaw": {
+    "grokbot": {
       "events": ["command:new"]
     }
   }
@@ -164,11 +164,11 @@ description: 'single-quoted'
 });
 
 describe("resolveOpenClawMetadata", () => {
-  it("extracts openclaw metadata from parsed frontmatter", () => {
+  it("extracts grokbot metadata from parsed frontmatter", () => {
     const frontmatter = {
       name: "test-hook",
       metadata: JSON.stringify({
-        openclaw: {
+        grokbot: {
           emoji: "🔥",
           events: ["command:new", "command:reset"],
           requires: {
@@ -180,11 +180,11 @@ describe("resolveOpenClawMetadata", () => {
     };
 
     const result = resolveOpenClawMetadata(frontmatter);
-    const openclaw = requireOpenClawMetadata(result);
-    expect(openclaw.emoji).toBe("🔥");
-    expect(openclaw.events).toEqual(["command:new", "command:reset"]);
-    expect(openclaw.requires?.config).toEqual(["workspace.dir"]);
-    expect(openclaw.requires?.bins).toEqual(["git"]);
+    const grokbot = requireOpenClawMetadata(result);
+    expect(grokbot.emoji).toBe("🔥");
+    expect(grokbot.events).toEqual(["command:new", "command:reset"]);
+    expect(grokbot.requires?.config).toEqual(["workspace.dir"]);
+    expect(grokbot.requires?.bins).toEqual(["git"]);
   });
 
   it("returns undefined when metadata is missing", () => {
@@ -193,7 +193,7 @@ describe("resolveOpenClawMetadata", () => {
     expect(result).toBeUndefined();
   });
 
-  it("returns undefined when openclaw key is missing", () => {
+  it("returns undefined when grokbot key is missing", () => {
     const frontmatter = {
       metadata: JSON.stringify({ other: "data" }),
     };
@@ -212,11 +212,11 @@ describe("resolveOpenClawMetadata", () => {
   it("handles install specs", () => {
     const frontmatter = {
       metadata: JSON.stringify({
-        openclaw: {
+        grokbot: {
           events: ["command"],
           install: [
-            { id: "bundled", kind: "bundled", label: "Bundled with OpenClaw" },
-            { id: "npm", kind: "npm", package: "@openclaw/hook" },
+            { id: "bundled", kind: "bundled", label: "Bundled with GrokBot" },
+            { id: "npm", kind: "npm", package: "@grokbot/hook" },
           ],
         },
       }),
@@ -231,14 +231,14 @@ describe("resolveOpenClawMetadata", () => {
       "npm",
     );
     expect(expectDefined(result?.install?.[1], "result?.install?.[1] test invariant").package).toBe(
-      "@openclaw/hook",
+      "@grokbot/hook",
     );
   });
 
   it("handles os restrictions", () => {
     const frontmatter = {
       metadata: JSON.stringify({
-        openclaw: {
+        grokbot: {
           events: ["command"],
           os: ["darwin", "linux"],
         },
@@ -254,15 +254,15 @@ describe("resolveOpenClawMetadata", () => {
     const content = `---
 name: session-memory
 description: "Save session context to memory when /new or /reset command is issued"
-homepage: https://docs.openclaw.ai/automation/hooks#session-memory
+homepage: https://docs.grokbot.ai/automation/hooks#session-memory
 metadata:
   {
-    "openclaw":
+    "grokbot":
       {
         "emoji": "💾",
         "events": ["command:new", "command:reset"],
         "requires": { "config": ["workspace.dir"] },
-        "install": [{ "id": "bundled", "kind": "bundled", "label": "Bundled with OpenClaw" }],
+        "install": [{ "id": "bundled", "kind": "bundled", "label": "Bundled with GrokBot" }],
       },
   }
 ---
@@ -276,11 +276,11 @@ metadata:
       '"command:reset"',
     );
 
-    const openclaw = requireOpenClawMetadata(resolveOpenClawMetadata(frontmatter));
-    expect(openclaw.emoji).toBe("💾");
-    expect(openclaw.events).toEqual(["command:new", "command:reset"]);
-    expect(openclaw.requires?.config).toEqual(["workspace.dir"]);
-    expect(expectDefined(openclaw.install?.[0], "openclaw.install?.[0] test invariant").kind).toBe(
+    const grokbot = requireOpenClawMetadata(resolveOpenClawMetadata(frontmatter));
+    expect(grokbot.emoji).toBe("💾");
+    expect(grokbot.events).toEqual(["command:new", "command:reset"]);
+    expect(grokbot.requires?.config).toEqual(["workspace.dir"]);
+    expect(expectDefined(grokbot.install?.[0], "grokbot.install?.[0] test invariant").kind).toBe(
       "bundled",
     );
   });
@@ -289,16 +289,16 @@ metadata:
     const content = `---
 name: yaml-metadata
 metadata:
-  openclaw:
+  grokbot:
     emoji: disk
     events:
       - command:new
 ---
 `;
     const frontmatter = parseFrontmatter(content);
-    const openclaw = resolveOpenClawMetadata(frontmatter);
-    expect(openclaw?.emoji).toBe("disk");
-    expect(openclaw?.events).toEqual(["command:new"]);
+    const grokbot = resolveOpenClawMetadata(frontmatter);
+    expect(grokbot?.emoji).toBe("disk");
+    expect(grokbot?.events).toEqual(["command:new"]);
   });
 });
 

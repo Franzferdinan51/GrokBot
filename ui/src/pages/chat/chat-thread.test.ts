@@ -1,5 +1,5 @@
 // Control UI tests cover build chat items behavior.
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { describe, expect, it } from "vitest";
 import type { MessageGroup } from "../../lib/chat/chat-types.ts";
 import { extractToolCardsCached as extractToolCards } from "../../lib/chat/tool-cards.ts";
@@ -34,7 +34,7 @@ type WorkGroupItem = Extract<
 >;
 
 const SENDER_METADATA_BLOCK =
-  'Sender (untrusted metadata):\n```json\n{"label":"openclaw-control-ui","id":"openclaw-control-ui"}\n```';
+  'Sender (untrusted metadata):\n```json\n{"label":"grokbot-control-ui","id":"grokbot-control-ui"}\n```';
 
 function createProps(overrides: Partial<CachedChatItemsProps> = {}): CachedChatItemsProps {
   return {
@@ -1051,7 +1051,7 @@ describe("buildCachedChatItems", () => {
               type: "tool_use",
               id: "call-shell",
               name: "bash",
-              input: { command: "run openclaw doctor" },
+              input: { command: "run grokbot doctor" },
             },
           ],
           timestamp: 1000,
@@ -1482,7 +1482,7 @@ describe("buildCachedChatItems", () => {
     ]);
   });
 
-  it("deduplicates relay-labeled assistant copies by OpenClaw transcript metadata id", () => {
+  it("deduplicates relay-labeled assistant copies by GrokBot transcript metadata id", () => {
     const groups = messageGroups({
       messages: [
         {
@@ -1509,7 +1509,7 @@ describe("buildCachedChatItems", () => {
     ]);
   });
 
-  it("deduplicates relay-labeled assistant copies by OpenClaw metadata before surface ids", () => {
+  it("deduplicates relay-labeled assistant copies by GrokBot metadata before surface ids", () => {
     const groups = messageGroups({
       messages: [
         {
@@ -2002,7 +2002,7 @@ describe("buildCachedChatItems", () => {
         {
           role: "user",
           content: SENDER_METADATA_BLOCK,
-          senderLabel: "openclaw-control-ui",
+          senderLabel: "grokbot-control-ui",
           timestamp: 1,
         },
       ],

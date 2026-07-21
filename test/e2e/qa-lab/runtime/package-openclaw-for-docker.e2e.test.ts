@@ -1,10 +1,10 @@
-// Package OpenClaw For Docker tests cover QA Lab package artifact evidence.
+// Package GrokBot For Docker tests cover QA Lab package artifact evidence.
 import { spawn } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
-import { MAX_TIMER_TIMEOUT_MS } from "@openclaw/normalization-core/number-coercion";
+import { MAX_TIMER_TIMEOUT_MS } from "@grokbot/normalization-core/number-coercion";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { DOCKER_SELECTED_PLUGIN_BUILD_IDS_ENV } from "../../../../scripts/lib/bundled-plugin-build-entries.mjs";
 import {
@@ -14,7 +14,7 @@ import {
   prepareBundledAiRuntimePackage,
   runCommandForTest,
   writePackageInventoryForDocker,
-} from "../../../../scripts/package-openclaw-for-docker.mjs";
+} from "../../../../scripts/package-grokbot-for-docker.mjs";
 import { useAutoCleanupTempDirTracker } from "../../../helpers/temp-dir.js";
 
 const skipBundledAiRuntime = async (): Promise<() => Promise<void>> => async () => {};
@@ -83,13 +83,13 @@ async function waitForExit(
   });
 }
 
-describe("package-openclaw-for-docker", () => {
+describe("package-grokbot-for-docker", () => {
   it("parses package artifact output options", () => {
     expect(
       parseArgs([
         "--output-dir",
         ".artifacts/docker",
-        "--output-name=openclaw-current.tgz",
+        "--output-name=grokbot-current.tgz",
         "--pack-json",
         ".artifacts/docker/pack.json",
         "--source-dir",
@@ -100,7 +100,7 @@ describe("package-openclaw-for-docker", () => {
     ).toEqual({
       allowUnreleasedChangelog: true,
       outputDir: ".artifacts/docker",
-      outputName: "openclaw-current.tgz",
+      outputName: "grokbot-current.tgz",
       packJson: ".artifacts/docker/pack.json",
       pnpmPack: false,
       skipBuild: true,
@@ -138,9 +138,9 @@ describe("package-openclaw-for-docker", () => {
   });
 
   it("loads from a trusted harness checkout without installed dependencies", async () => {
-    const tempRoot = tempDirs.make("openclaw-package-harness-");
+    const tempRoot = tempDirs.make("grokbot-package-harness-");
     const copiedFiles = [
-      "scripts/package-openclaw-for-docker.mjs",
+      "scripts/package-grokbot-for-docker.mjs",
       "scripts/package-changelog.mjs",
       "scripts/lib/bundled-plugin-build-entries.mjs",
       "scripts/lib/bundled-plugin-paths.mjs",
@@ -156,7 +156,7 @@ describe("package-openclaw-for-docker", () => {
         (resolve, reject) => {
           const child = spawn(
             process.execPath,
-            [path.join(tempRoot, "scripts/package-openclaw-for-docker.mjs"), "--invalid"],
+            [path.join(tempRoot, "scripts/package-grokbot-for-docker.mjs"), "--invalid"],
             { cwd: tempRoot, stdio: ["ignore", "ignore", "pipe"] },
           );
           let stderr = "";
@@ -177,11 +177,11 @@ describe("package-openclaw-for-docker", () => {
   });
 
   it("writes inventory for a frozen source checkout without the trusted helper", async () => {
-    const sourceDir = tempDirs.make("openclaw-package-frozen-source-");
+    const sourceDir = tempDirs.make("grokbot-package-frozen-source-");
     fs.mkdirSync(path.join(sourceDir, "dist"), { recursive: true });
     fs.mkdirSync(path.join(sourceDir, "scripts"), { recursive: true });
     fs.mkdirSync(path.join(sourceDir, "node_modules", "tsx"), { recursive: true });
-    fs.writeFileSync(path.join(sourceDir, "package.json"), '{"name":"openclaw"}\n');
+    fs.writeFileSync(path.join(sourceDir, "package.json"), '{"name":"grokbot"}\n');
     fs.writeFileSync(
       path.join(sourceDir, "node_modules", "tsx", "package.json"),
       '{"name":"tsx","exports":"./loader.mjs","type":"module"}\n',
@@ -231,18 +231,18 @@ describe("package-openclaw-for-docker", () => {
 
   it("rejects package artifact output names that escape the output directory", () => {
     for (const outputName of [
-      "../openclaw-current.tgz",
-      "nested/openclaw-current.tgz",
-      "openclaw-current.zip",
-      ".openclaw-current.tgz",
+      "../grokbot-current.tgz",
+      "nested/grokbot-current.tgz",
+      "grokbot-current.zip",
+      ".grokbot-current.tgz",
     ]) {
       expect(() => parseArgs(["--output-name", outputName])).toThrow(
         `--output-name must be a tarball filename, not a path: ${outputName}`,
       );
     }
 
-    expect(parseArgs(["--output-name", "openclaw-current.tar.gz"]).outputName).toBe(
-      "openclaw-current.tar.gz",
+    expect(parseArgs(["--output-name", "grokbot-current.tar.gz"]).outputName).toBe(
+      "grokbot-current.tar.gz",
     );
   });
 
@@ -353,20 +353,20 @@ describe("package-openclaw-for-docker", () => {
   });
 
   it("bundles and restores the separately packed AI runtime", async () => {
-    const sourceDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-docker-ai-source-"));
-    const outputDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-docker-ai-output-"));
+    const sourceDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-docker-ai-source-"));
+    const outputDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-docker-ai-output-"));
     const packageJsonPath = path.join(sourceDir, "package.json");
     const originalPackageJson = `${JSON.stringify(
       {
-        dependencies: { "@openclaw/ai": "workspace:*", "dep-a": "1.2.3" },
+        dependencies: { "@grokbot/ai": "workspace:*", "dep-a": "1.2.3" },
         files: ["dist"],
-        name: "openclaw",
+        name: "grokbot",
         version: "2026.6.17",
       },
       null,
       2,
     )}\n`;
-    const installedAiPath = path.join(sourceDir, "node_modules", "@openclaw", "ai");
+    const installedAiPath = path.join(sourceDir, "node_modules", "@grokbot", "ai");
     fs.mkdirSync(path.join(sourceDir, "packages", "ai"), { recursive: true });
     fs.writeFileSync(path.join(sourceDir, "packages", "ai", "package.json"), "{}\n");
     fs.mkdirSync(installedAiPath, { recursive: true });
@@ -383,7 +383,7 @@ describe("package-openclaw-for-docker", () => {
             command: "pnpm",
             cwd: sourceDir,
           });
-          fs.writeFileSync(path.join(outputDir, "openclaw-ai-2026.6.17.tgz"), "ai package");
+          fs.writeFileSync(path.join(outputDir, "grokbot-ai-2026.6.17.tgz"), "ai package");
           return "";
         },
         {
@@ -392,7 +392,7 @@ describe("package-openclaw-for-docker", () => {
               path.join(destination, "package.json"),
               `${JSON.stringify({
                 dependencies: { "dep-a": "1.2.3" },
-                name: "@openclaw/ai",
+                name: "@grokbot/ai",
                 version: "2026.6.17",
               })}\n`,
             );
@@ -405,8 +405,8 @@ describe("package-openclaw-for-docker", () => {
         bundleDependencies: string[];
         dependencies: Record<string, string>;
       };
-      expect(packageJson.dependencies["@openclaw/ai"]).toBe("2026.6.17");
-      expect(packageJson.bundleDependencies).toContain("@openclaw/ai");
+      expect(packageJson.dependencies["@grokbot/ai"]).toBe("2026.6.17");
+      expect(packageJson.bundleDependencies).toContain("@grokbot/ai");
       expect(fs.existsSync(path.join(installedAiPath, "original-marker"))).toBe(false);
       expect(fs.existsSync(path.join(installedAiPath, "runtime.js"))).toBe(true);
       const stagedAiPackageJson = JSON.parse(
@@ -419,7 +419,7 @@ describe("package-openclaw-for-docker", () => {
       expect(fs.readFileSync(path.join(installedAiPath, "original-marker"), "utf8")).toBe(
         "workspace package",
       );
-      expect(fs.existsSync(path.join(outputDir, "openclaw-ai-2026.6.17.tgz"))).toBe(false);
+      expect(fs.existsSync(path.join(outputDir, "grokbot-ai-2026.6.17.tgz"))).toBe(false);
     } finally {
       fs.rmSync(sourceDir, { recursive: true, force: true });
       fs.rmSync(outputDir, { recursive: true, force: true });
@@ -427,12 +427,12 @@ describe("package-openclaw-for-docker", () => {
   });
 
   it("leaves pre-AI-workspace package sources unchanged", async () => {
-    const sourceDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-docker-legacy-source-"));
-    const outputDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-docker-legacy-output-"));
+    const sourceDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-docker-legacy-source-"));
+    const outputDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-docker-legacy-output-"));
     const packageJsonPath = path.join(sourceDir, "package.json");
     const originalPackageJson = `${JSON.stringify({
       dependencies: { "dep-a": "1.2.3" },
-      name: "openclaw",
+      name: "grokbot",
       version: "2026.7.1",
     })}\n`;
     fs.writeFileSync(packageJsonPath, originalPackageJson);
@@ -453,23 +453,23 @@ describe("package-openclaw-for-docker", () => {
   it("rejects incomplete AI workspace package sources", async () => {
     const cases = [
       {
-        dependencies: { "@openclaw/ai": "workspace:*" },
-        expected: "@openclaw/ai dependency requires the packages/ai workspace",
+        dependencies: { "@grokbot/ai": "workspace:*" },
+        expected: "@grokbot/ai dependency requires the packages/ai workspace",
         withWorkspace: false,
       },
       {
         dependencies: {},
-        expected: "root package.json must declare @openclaw/ai as a dependency",
+        expected: "root package.json must declare @grokbot/ai as a dependency",
         withWorkspace: true,
       },
     ];
 
     for (const testCase of cases) {
-      const sourceDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-docker-invalid-source-"));
-      const outputDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-docker-invalid-output-"));
+      const sourceDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-docker-invalid-source-"));
+      const outputDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-docker-invalid-output-"));
       fs.writeFileSync(
         path.join(sourceDir, "package.json"),
-        `${JSON.stringify({ dependencies: testCase.dependencies, name: "openclaw" })}\n`,
+        `${JSON.stringify({ dependencies: testCase.dependencies, name: "grokbot" })}\n`,
       );
       if (testCase.withWorkspace) {
         fs.mkdirSync(path.join(sourceDir, "packages", "ai"), { recursive: true });
@@ -505,11 +505,11 @@ describe("package-openclaw-for-docker", () => {
       ) => {
         calls.push(`${command}:${args.join(" ")}:${cwd}`);
         expect(options.deferForwardedSignalExit).toBe(true);
-        return "openclaw-2026.5.28.tgz\n";
+        return "grokbot-2026.5.28.tgz\n";
       },
     });
 
-    expect(tarball).toBe(path.join("/out", "openclaw-2026.5.28.tgz"));
+    expect(tarball).toBe(path.join("/out", "grokbot-2026.5.28.tgz"));
     expect(calls).toEqual([
       "prepare:/repo",
       "npm:pack --silent --ignore-scripts --pack-destination /out:/repo",
@@ -518,8 +518,8 @@ describe("package-openclaw-for-docker", () => {
   });
 
   it("packages Unreleased notes for explicitly non-publish stable artifacts", async () => {
-    const sourceDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-unreleased-package-"));
-    const outputDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-unreleased-output-"));
+    const sourceDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-unreleased-package-"));
+    const outputDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-unreleased-output-"));
     const sourceChangelog = [
       "# Changelog",
       "",
@@ -533,7 +533,7 @@ describe("package-openclaw-for-docker", () => {
     ].join("\n");
     fs.writeFileSync(
       path.join(sourceDir, "package.json"),
-      '{"name":"openclaw","version":"2026.5.29"}\n',
+      '{"name":"grokbot","version":"2026.5.29"}\n',
     );
     fs.writeFileSync(path.join(sourceDir, "CHANGELOG.md"), sourceChangelog);
 
@@ -545,13 +545,13 @@ describe("package-openclaw-for-docker", () => {
           const packagedChangelog = fs.readFileSync(path.join(sourceDir, "CHANGELOG.md"), "utf8");
           expect(packagedChangelog).toContain("## Unreleased");
           expect(packagedChangelog).not.toContain("## 2026.5.28");
-          const packedPath = path.join(outputDir, "openclaw-2026.5.29.tgz");
+          const packedPath = path.join(outputDir, "grokbot-2026.5.29.tgz");
           fs.writeFileSync(packedPath, "package");
-          return "openclaw-2026.5.29.tgz\n";
+          return "grokbot-2026.5.29.tgz\n";
         },
       });
 
-      expect(tarball).toBe(path.join(outputDir, "openclaw-2026.5.29.tgz"));
+      expect(tarball).toBe(path.join(outputDir, "grokbot-2026.5.29.tgz"));
       expect(fs.readFileSync(path.join(sourceDir, "CHANGELOG.md"), "utf8")).toBe(sourceChangelog);
     } finally {
       fs.rmSync(sourceDir, { recursive: true, force: true });
@@ -560,9 +560,9 @@ describe("package-openclaw-for-docker", () => {
   });
 
   it("uses pnpm pack when requested", async () => {
-    const outputDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-pnpm-pack-"));
+    const outputDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-pnpm-pack-"));
     const calls: string[] = [];
-    const packedPath = path.join(outputDir, "openclaw-2026.5.28.tgz");
+    const packedPath = path.join(outputDir, "grokbot-2026.5.28.tgz");
 
     try {
       const tarball = await packOpenClawPackageForDocker("/repo", outputDir, {
@@ -587,12 +587,12 @@ describe("package-openclaw-for-docker", () => {
   });
 
   it("writes npm pack metadata for renamed package artifacts", async () => {
-    const outputDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-docker-pack-json-"));
+    const outputDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-docker-pack-json-"));
     const packJsonPath = path.join(outputDir, "pack.json");
 
     try {
       const tarball = await packOpenClawPackageForDocker("/repo", outputDir, {
-        outputName: "openclaw-current.tgz",
+        outputName: "grokbot-current.tgz",
         packJsonPath,
         prepareBundledAiRuntime: skipBundledAiRuntime,
         prepareChangelog: async () => {},
@@ -613,11 +613,11 @@ describe("package-openclaw-for-docker", () => {
             outputDir,
           ]);
           expect(options.deferForwardedSignalExit).toBe(true);
-          fs.writeFileSync(path.join(outputDir, "openclaw-2026.5.28.tgz"), "package");
+          fs.writeFileSync(path.join(outputDir, "grokbot-2026.5.28.tgz"), "package");
           return JSON.stringify([
             {
               entryCount: 1,
-              filename: "openclaw-2026.5.28.tgz",
+              filename: "grokbot-2026.5.28.tgz",
               size: 7,
               unpackedSize: 7,
               version: "2026.5.28",
@@ -626,11 +626,11 @@ describe("package-openclaw-for-docker", () => {
         },
       });
 
-      expect(tarball).toBe(path.join(outputDir, "openclaw-current.tgz"));
+      expect(tarball).toBe(path.join(outputDir, "grokbot-current.tgz"));
       expect(JSON.parse(fs.readFileSync(packJsonPath, "utf8"))).toEqual([
         {
           entryCount: 1,
-          filename: "openclaw-current.tgz",
+          filename: "grokbot-current.tgz",
           size: 7,
           unpackedSize: 7,
           version: "2026.5.28",
@@ -643,12 +643,12 @@ describe("package-openclaw-for-docker", () => {
 
   it("rejects path-like npm pack stdout before resolving Docker package tarballs", async () => {
     for (const filename of [
-      "../openclaw-2026.6.17.tgz",
-      "/tmp/openclaw-2026.6.17.tgz",
-      String.raw`C:\temp\openclaw-2026.6.17.tgz`,
-      "openclaw-nested/evil.tgz",
-      String.raw`openclaw-nested\evil.tgz`,
-      "openclaw-C:evil.tgz",
+      "../grokbot-2026.6.17.tgz",
+      "/tmp/grokbot-2026.6.17.tgz",
+      String.raw`C:\temp\grokbot-2026.6.17.tgz`,
+      "grokbot-nested/evil.tgz",
+      String.raw`grokbot-nested\evil.tgz`,
+      "grokbot-C:evil.tgz",
     ]) {
       await expect(
         packOpenClawPackageForDocker("/repo", "/out", {
@@ -657,15 +657,15 @@ describe("package-openclaw-for-docker", () => {
           restoreChangelog: async () => {},
           runCaptureImpl: async () => `${filename}\n`,
         }),
-      ).rejects.toThrow("npm pack reported unsafe OpenClaw tarball filename");
+      ).rejects.toThrow("npm pack reported unsafe GrokBot tarball filename");
     }
   });
 
   it("ignores unsafe output directory tarball names when npm stdout is not usable", async () => {
-    const outputDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-docker-pack-"));
+    const outputDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-docker-pack-"));
     try {
-      fs.writeFileSync(path.join(outputDir, "openclaw-C:evil.tgz"), "");
-      fs.writeFileSync(path.join(outputDir, String.raw`openclaw-nested\evil.tgz`), "");
+      fs.writeFileSync(path.join(outputDir, "grokbot-C:evil.tgz"), "");
+      fs.writeFileSync(path.join(outputDir, String.raw`grokbot-nested\evil.tgz`), "");
       await expect(
         packOpenClawPackageForDocker("/repo", outputDir, {
           prepareBundledAiRuntime: skipBundledAiRuntime,
@@ -673,7 +673,7 @@ describe("package-openclaw-for-docker", () => {
           restoreChangelog: async () => {},
           runCaptureImpl: async () => "npm notice\n",
         }),
-      ).rejects.toThrow("missing packed OpenClaw tarball");
+      ).rejects.toThrow("missing packed GrokBot tarball");
 
       await expect(
         packOpenClawPackageForDocker("/repo", outputDir, {
@@ -681,20 +681,20 @@ describe("package-openclaw-for-docker", () => {
           prepareChangelog: async () => {},
           restoreChangelog: async () => {},
           runCaptureImpl: async () => {
-            fs.writeFileSync(path.join(outputDir, "openclaw-2026.6.17.tgz"), "");
+            fs.writeFileSync(path.join(outputDir, "grokbot-2026.6.17.tgz"), "");
             return "npm notice\n";
           },
         }),
-      ).resolves.toBe(path.join(outputDir, "openclaw-2026.6.17.tgz"));
+      ).resolves.toBe(path.join(outputDir, "grokbot-2026.6.17.tgz"));
     } finally {
       fs.rmSync(outputDir, { recursive: true, force: true });
     }
   });
 
   it("ignores stale package tarballs before fallback scanning npm output", async () => {
-    const outputDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-docker-pack-stale-"));
+    const outputDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-docker-pack-stale-"));
     try {
-      fs.writeFileSync(path.join(outputDir, "openclaw-9999.1.1.tgz"), "stale");
+      fs.writeFileSync(path.join(outputDir, "grokbot-9999.1.1.tgz"), "stale");
 
       await expect(
         packOpenClawPackageForDocker("/repo", outputDir, {
@@ -702,14 +702,14 @@ describe("package-openclaw-for-docker", () => {
           prepareChangelog: async () => {},
           restoreChangelog: async () => {},
           runCaptureImpl: async () => {
-            fs.writeFileSync(path.join(outputDir, "openclaw-2026.6.17.tgz"), "current");
+            fs.writeFileSync(path.join(outputDir, "grokbot-2026.6.17.tgz"), "current");
             return "npm notice\n";
           },
         }),
-      ).resolves.toBe(path.join(outputDir, "openclaw-2026.6.17.tgz"));
+      ).resolves.toBe(path.join(outputDir, "grokbot-2026.6.17.tgz"));
 
-      expect(fs.existsSync(path.join(outputDir, "openclaw-9999.1.1.tgz"))).toBe(false);
-      expect(fs.readFileSync(path.join(outputDir, "openclaw-2026.6.17.tgz"), "utf8")).toBe(
+      expect(fs.existsSync(path.join(outputDir, "grokbot-9999.1.1.tgz"))).toBe(false);
+      expect(fs.readFileSync(path.join(outputDir, "grokbot-2026.6.17.tgz"), "utf8")).toBe(
         "current",
       );
     } finally {
@@ -763,7 +763,7 @@ describe("package-openclaw-for-docker", () => {
       return;
     }
 
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-package-timeout-"));
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-package-timeout-"));
     const childPidPath = path.join(tempDir, "child.pid");
     let childPid;
     try {
@@ -801,7 +801,7 @@ describe("package-openclaw-for-docker", () => {
       return;
     }
 
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-package-grace-"));
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-package-grace-"));
     const donePath = path.join(tempDir, "done");
     const childPidPath = path.join(tempDir, "child.pid");
     let childPid;
@@ -836,7 +836,7 @@ describe("package-openclaw-for-docker", () => {
       return;
     }
 
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-package-descendant-"));
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-package-descendant-"));
     const childPidPath = path.join(tempDir, "child.pid");
     let childPid;
     try {
@@ -922,9 +922,9 @@ describe("package-openclaw-for-docker", () => {
       return;
     }
 
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-package-signal-"));
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-package-signal-"));
     const childPidPath = path.join(tempDir, "child.pid");
-    const scriptUrl = pathToFileURL(path.resolve("scripts/package-openclaw-for-docker.mjs")).href;
+    const scriptUrl = pathToFileURL(path.resolve("scripts/package-grokbot-for-docker.mjs")).href;
     let childPid = 0;
     let runnerPid;
     try {

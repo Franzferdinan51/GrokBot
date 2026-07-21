@@ -13,7 +13,7 @@ export type SessionDiscussionProvider = {
 };
 
 const log = createSubsystemLogger("plugins/session-discussion");
-const SESSION_DISCUSSION_REGISTRY = Symbol.for("openclaw.sessionDiscussionRegistry");
+const SESSION_DISCUSSION_REGISTRY = Symbol.for("grokbot.sessionDiscussionRegistry");
 
 type SessionDiscussionRegistry = {
   provider?: SessionDiscussionProvider;

@@ -3,11 +3,11 @@ import fs from "node:fs";
 import { request as httpRequest } from "node:http";
 import { request as httpsRequest } from "node:https";
 import { TLSSocket } from "node:tls";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import {
   normalizeOptionalLowercaseString,
   normalizeOptionalString,
-} from "@openclaw/normalization-core/string-coerce";
+} from "@grokbot/normalization-core/string-coerce";
 import type {
   ConfigFileSnapshot,
   GatewayAuthMode,
@@ -22,7 +22,7 @@ import {
   isInvalidConfigError,
 } from "../../config/io.invalid-config.js";
 import { CONFIG_PATH, normalizeStateDirEnv, resolveGatewayPort } from "../../config/paths.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import { hasConfiguredSecretInput } from "../../config/types.secrets.js";
 import { GATEWAY_SERVICE_RUNTIME_PID_ENV } from "../../daemon/constants.js";
 import {
@@ -253,7 +253,7 @@ function getGatewayStartGuardErrors(params: {
   }
   if (!params.configExists) {
     return [
-      `Missing config. Run \`${formatCliCommand("openclaw setup")}\` or set gateway.mode=local (or pass --allow-unconfigured).`,
+      `Missing config. Run \`${formatCliCommand("grokbot setup")}\` or set gateway.mode=local (or pass --allow-unconfigured).`,
     ];
   }
   if (params.mode === undefined) {
@@ -261,7 +261,7 @@ function getGatewayStartGuardErrors(params: {
       [
         "Gateway start blocked: existing config is missing gateway.mode.",
         "Treat this as suspicious or clobbered config.",
-        `Re-run \`${formatCliCommand("openclaw onboard --mode local")}\` or \`${formatCliCommand("openclaw setup")}\`, set gateway.mode=local manually, or pass --allow-unconfigured.`,
+        `Re-run \`${formatCliCommand("grokbot onboard --mode local")}\` or \`${formatCliCommand("grokbot setup")}\`, set gateway.mode=local manually, or pass --allow-unconfigured.`,
       ].join(" "),
       `Config write audit: ${params.configAuditLocation}`,
     ];
@@ -902,7 +902,7 @@ async function runGatewayCommandOnce(opts: GatewayRunOpts, hooks: GatewayRunRunt
       }
     } catch (err) {
       defaultRuntime.error(
-        `Could not free port ${port}: ${formatErrorMessage(err)}. Run ${formatCliCommand("openclaw gateway status --deep")} to inspect the listener.`,
+        `Could not free port ${port}: ${formatErrorMessage(err)}. Run ${formatCliCommand("grokbot gateway status --deep")} to inspect the listener.`,
       );
       defaultRuntime.exit(1);
       return;
@@ -1154,7 +1154,7 @@ async function runGatewayCommandOnce(opts: GatewayRunOpts, hooks: GatewayRunRunt
     if (isGatewayLockError(err)) {
       const errMessage = formatErrorMessage(err);
       defaultRuntime.error(
-        `Gateway failed to start: ${errMessage}\nIf the gateway is supervised, stop it with: ${formatCliCommand("openclaw gateway stop")}`,
+        `Gateway failed to start: ${errMessage}\nIf the gateway is supervised, stop it with: ${formatCliCommand("grokbot gateway stop")}`,
       );
       try {
         const { formatPortDiagnostics, inspectPortUsage } = await import("../../infra/ports.js");
@@ -1170,7 +1170,7 @@ async function runGatewayCommandOnce(opts: GatewayRunOpts, hooks: GatewayRunRunt
       const { maybeExplainGatewayServiceStop } = await import("./shared.js");
       await maybeExplainGatewayServiceStop();
       // An occupied port is only a healthy duplicate when the listener proves
-      // the OpenClaw liveness contract. Arbitrary HTTP listeners must fail.
+      // the GrokBot liveness contract. Arbitrary HTTP listeners must fail.
       const gatewayTls =
         isGatewayAlreadyRunningLockError(err) && cfg.gateway?.tls?.enabled === true
           ? await import("../../infra/tls/gateway.js")
@@ -1199,7 +1199,7 @@ async function runGatewayCommandOnce(opts: GatewayRunOpts, hooks: GatewayRunRunt
     }
     await maybeWriteGatewayStartupFailureBundle(err);
     defaultRuntime.error(
-      `Gateway failed to start: ${formatErrorMessage(err)}. Run ${formatCliCommand("openclaw gateway status --deep")} for diagnostics.`,
+      `Gateway failed to start: ${formatErrorMessage(err)}. Run ${formatCliCommand("grokbot gateway status --deep")} for diagnostics.`,
     );
     defaultRuntime.exit(resolveGatewayStartupFailureExitCode(err));
   }
@@ -1245,6 +1245,6 @@ const testing = {
 };
 
 if (process.env.VITEST || process.env.NODE_ENV === "test") {
-  (globalThis as Record<PropertyKey, unknown>)[Symbol.for("openclaw.gatewayRunTestApi")] = testing;
+  (globalThis as Record<PropertyKey, unknown>)[Symbol.for("grokbot.gatewayRunTestApi")] = testing;
 }
 /* oxlint-disable max-lines -- TODO: split this grandfathered oversized file. */

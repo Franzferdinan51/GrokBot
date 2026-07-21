@@ -5,7 +5,7 @@ import path from "node:path";
 import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalString,
-} from "@openclaw/normalization-core/string-coerce";
+} from "@grokbot/normalization-core/string-coerce";
 import { note } from "../../packages/terminal-core/src/note.js";
 import { replaceConfigFile, type OpenClawConfig } from "../config/config.js";
 import { resolveGatewayPort, resolveIsNixMode } from "../config/paths.js";
@@ -228,7 +228,7 @@ function resolveSystemdScopeFromServicePath(sourcePath: string | undefined): Sys
 
 function resolveSystemdUnitNameFromServicePath(sourcePath: string | undefined): string {
   const base = sourcePath ? path.posix.basename(sourcePath.replaceAll("\\", "/")) : "";
-  return base.endsWith(".service") ? base : "openclaw-gateway.service";
+  return base.endsWith(".service") ? base : "grokbot-gateway.service";
 }
 
 function shouldDeferUpdateModeSystemdServiceRepair(params: {
@@ -319,7 +319,7 @@ export function extraGatewayServiceToHealthFinding(service: ExtraGatewayService)
     target: service.label,
     fixHint:
       service.legacy === true
-        ? "Run openclaw doctor --fix to remove legacy gateway services."
+        ? "Run grokbot doctor --fix to remove legacy gateway services."
         : "Run a single gateway per machine unless this extra gateway is intentional.",
   };
 }
@@ -505,7 +505,7 @@ export async function maybeRepairGatewayServiceConfig(
   const sourceCheckoutWarning = serviceLayout?.entrypointSourceCheckout
     ? [
         `Gateway service entrypoint resolves to a source checkout: ${serviceLayout.packageRootReal ?? serviceLayout.packageRoot ?? serviceLayout.entrypointReal ?? serviceLayout.entrypoint}.`,
-        "Run `openclaw doctor --fix` from the intended package install, or reinstall the gateway service with `openclaw gateway install --force`.",
+        "Run `grokbot doctor --fix` from the intended package install, or reinstall the gateway service with `grokbot gateway install --force`.",
       ].join("\n")
     : null;
 
@@ -651,7 +651,7 @@ export async function maybeRepairGatewayServiceConfig(
 
   if (serviceRewriteBlocked) {
     note(
-      "Gateway service is running; leaving supervisor metadata unchanged. Stop the service first or use `openclaw gateway install --force` when you want to replace the active launcher.",
+      "Gateway service is running; leaving supervisor metadata unchanged. Stop the service first or use `grokbot gateway install --force` when you want to replace the active launcher.",
       "Gateway service config",
     );
     return cfg;
@@ -672,7 +672,7 @@ export async function maybeRepairGatewayServiceConfig(
     })
   ) {
     note(
-      "Update-mode doctor detected gateway service drift but left the live systemd unit unchanged. Review the service file and run `openclaw gateway install --force` when you want OpenClaw to replace operator-owned systemd directives.",
+      "Update-mode doctor detected gateway service drift but left the live systemd unit unchanged. Review the service file and run `grokbot gateway install --force` when you want GrokBot to replace operator-owned systemd directives.",
       "Gateway service config",
     );
     return cfg;
@@ -699,7 +699,7 @@ export async function maybeRepairGatewayServiceConfig(
   if (!repair) {
     if (!emittedSourceCheckoutWarning) {
       note(
-        "Run `openclaw gateway install --force` when you want to replace the gateway service definition.",
+        "Run `grokbot gateway install --force` when you want to replace the gateway service definition.",
         "Gateway service config",
       );
     }
@@ -919,7 +919,7 @@ export async function maybeScanExtraGatewayServices(
         note(failed.map((line) => `- ${line}`).join("\n"), "Legacy gateway cleanup skipped");
       }
       if (removed.length > 0) {
-        runtime.log("Legacy gateway services removed. Installing OpenClaw gateway next.");
+        runtime.log("Legacy gateway services removed. Installing GrokBot gateway next.");
       }
     }
   }

@@ -1,6 +1,6 @@
 // Discord tests cover directory live plugin behavior.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import type { DirectoryConfigParams } from "openclaw/plugin-sdk/directory-runtime";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import type { DirectoryConfigParams } from "grokbot/plugin-sdk/directory-runtime";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { DISCORD_DIRECTORY_LOOKUP_TIMEOUT_MS } from "./api.js";
 import { listDiscordDirectoryGroupsLive, listDiscordDirectoryPeersLive } from "./directory-live.js";

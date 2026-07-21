@@ -45,8 +45,8 @@ jobs:
           github.event_name == 'issue_comment' &&
           github.event.issue.pull_request &&
           (
-            contains(github.event.comment.body, '@openclaw-mantis') ||
-            contains(github.event.comment.body, '/openclaw-mantis')
+            contains(github.event.comment.body, '@grokbot-mantis') ||
+            contains(github.event.comment.body, '/grokbot-mantis')
           )
         )
       }}
@@ -126,7 +126,7 @@ jobs:
 
             const normalized = body.toLowerCase();
             const requested =
-              (normalized.includes("@openclaw-mantis") || normalized.includes("/openclaw-mantis")) &&
+              (normalized.includes("@grokbot-mantis") || normalized.includes("/grokbot-mantis")) &&
               normalized.includes("discord") &&
               normalized.includes("thread") &&
               (normalized.includes("attachment") ||
@@ -261,7 +261,7 @@ jobs:
           set -euo pipefail
           install_dir="${RUNNER_TEMP}/crabbox"
           mkdir -p "$install_dir" "$HOME/.local/bin"
-          timeout --signal=TERM --kill-after=10s 120s git clone --depth 1 https://github.com/openclaw/crabbox.git "$install_dir/src"
+          timeout --signal=TERM --kill-after=10s 120s git clone --depth 1 https://github.com/grokbot/crabbox.git "$install_dir/src"
           go build -C "$install_dir/src" -o "$HOME/.local/bin/crabbox" ./cmd/crabbox
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
           "$HOME/.local/bin/crabbox" --version
@@ -367,7 +367,7 @@ jobs:
                 OPENCLAW_QA_DISCORD_KEEP_THREADS=1
               )
             fi
-            env "${lane_env[@]}" pnpm --dir "$repo_root" openclaw qa discord \
+            env "${lane_env[@]}" pnpm --dir "$repo_root" grokbot qa discord \
               --repo-root "$repo_root" \
               --output-dir "$output_dir" \
               --provider-mode mock-openai \
@@ -416,7 +416,7 @@ jobs:
             if [[ -n "${MANTIS_DISCORD_VIEWER_CHROME_PROFILE_DIR:-}" ]]; then
               profile_args+=(--browser-profile-dir "$MANTIS_DISCORD_VIEWER_CHROME_PROFILE_DIR")
             fi
-            pnpm openclaw qa mantis desktop-browser-smoke \
+            pnpm grokbot qa mantis desktop-browser-smoke \
               --browser-url "$discord_url" \
               "${profile_args[@]}" \
               --video-duration 24 \
@@ -567,9 +567,9 @@ jobs:
           GH_TOKEN: ${{ steps.mantis_app_token.outputs.token }}
           ARTIFACT_URL: ${{ steps.upload_artifact.outputs.artifact-url }}
           MANTIS_ARTIFACT_R2_ACCESS_KEY_ID: ${{ secrets.MANTIS_ARTIFACT_R2_ACCESS_KEY_ID }}
-          MANTIS_ARTIFACT_R2_BUCKET: openclaw-crabbox-artifacts
+          MANTIS_ARTIFACT_R2_BUCKET: grokbot-crabbox-artifacts
           MANTIS_ARTIFACT_R2_ENDPOINT: ${{ vars.MANTIS_ARTIFACT_R2_ENDPOINT }}
-          MANTIS_ARTIFACT_R2_PUBLIC_BASE_URL: https://artifacts.openclaw.ai
+          MANTIS_ARTIFACT_R2_PUBLIC_BASE_URL: https://artifacts.grokbot.ai
           MANTIS_ARTIFACT_R2_REGION: auto
           MANTIS_ARTIFACT_R2_SECRET_ACCESS_KEY: ${{ secrets.MANTIS_ARTIFACT_R2_SECRET_ACCESS_KEY }}
           REQUEST_SOURCE: ${{ needs.resolve_request.outputs.request_source }}

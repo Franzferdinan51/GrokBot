@@ -10,7 +10,7 @@ import {
   registerNativeHookRelay,
   testing as nativeHookRelayTesting,
 } from "../agents/harness/native-hook-relay.js";
-import { resolveOpenClawStateSqlitePath } from "../state/openclaw-state-db.paths.js";
+import { resolveOpenClawStateSqlitePath } from "../state/grokbot-state-db.paths.js";
 
 const tempDirs = useAutoCleanupTempDirTracker(afterEach);
 const activeChildren = new Set<ChildProcessWithoutNullStreams>();
@@ -38,7 +38,7 @@ async function createLingeringPluginFixture(): Promise<{
   markerPath: string;
   stateDir: string;
 }> {
-  const root = tempDirs.make("openclaw-hooks-cli-");
+  const root = tempDirs.make("grokbot-hooks-cli-");
   const stateDir = path.join(root, "state");
   const pluginDir = path.join(root, "linger-plugin");
   const markerPath = path.join(root, "registered");
@@ -50,11 +50,11 @@ async function createLingeringPluginFixture(): Promise<{
       name: "linger-plugin",
       version: "1.0.0",
       type: "module",
-      openclaw: { extensions: ["./index.js"] },
+      grokbot: { extensions: ["./index.js"] },
     }),
   );
   await fs.writeFile(
-    path.join(pluginDir, "openclaw.plugin.json"),
+    path.join(pluginDir, "grokbot.plugin.json"),
     JSON.stringify({
       id: "linger",
       name: "Linger",
@@ -76,7 +76,7 @@ async function createLingeringPluginFixture(): Promise<{
       "",
     ].join("\n"),
   );
-  const configPath = path.join(stateDir, "openclaw.json");
+  const configPath = path.join(stateDir, "grokbot.json");
   await fs.writeFile(
     configPath,
     JSON.stringify({
@@ -94,7 +94,7 @@ async function createLingeringPreloadFixture(): Promise<{
   preloadPath: string;
   stateDir: string;
 }> {
-  const root = tempDirs.make("openclaw-hooks-relay-");
+  const root = tempDirs.make("grokbot-hooks-relay-");
   const markerPath = path.join(root, "loaded");
   const preloadPath = path.join(root, "linger.mjs");
   const stateDir = path.join(root, "state");
@@ -231,7 +231,7 @@ describe("hooks CLI process lifecycle", () => {
       .poll(() => nativeHookRelayTesting.getNativeHookRelayBridgeRecordForTests(relay.relayId))
       .toBeDefined();
 
-    const childStateDir = path.join(tempDirs.make("openclaw-hooks-relay-other-state-"), "state");
+    const childStateDir = path.join(tempDirs.make("grokbot-hooks-relay-other-state-"), "state");
     await fs.mkdir(childStateDir, { recursive: true });
     const result = await runHooksCli({
       args: [

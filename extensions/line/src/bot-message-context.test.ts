@@ -3,13 +3,13 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import type { webhook } from "@line/bot-sdk";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { getSessionBindingService } from "openclaw/plugin-sdk/conversation-runtime";
-import { testing as sessionBindingTesting } from "openclaw/plugin-sdk/conversation-runtime";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { getSessionBindingService } from "grokbot/plugin-sdk/conversation-runtime";
+import { testing as sessionBindingTesting } from "grokbot/plugin-sdk/conversation-runtime";
 import {
   createTestRegistry,
   setActivePluginRegistry,
-} from "openclaw/plugin-sdk/plugin-test-runtime";
+} from "grokbot/plugin-sdk/plugin-test-runtime";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { lineBindingsAdapter } from "./bindings.js";
 import { buildLineMessageContext, buildLinePostbackContext } from "./bot-message-context.js";
@@ -17,9 +17,9 @@ import type { ResolvedLineAccount } from "./types.js";
 
 const logVerboseMock = vi.hoisted(() => vi.fn());
 
-vi.mock("openclaw/plugin-sdk/runtime-env", async () => {
-  const actual = await vi.importActual<typeof import("openclaw/plugin-sdk/runtime-env")>(
-    "openclaw/plugin-sdk/runtime-env",
+vi.mock("grokbot/plugin-sdk/runtime-env", async () => {
+  const actual = await vi.importActual<typeof import("grokbot/plugin-sdk/runtime-env")>(
+    "grokbot/plugin-sdk/runtime-env",
   );
   return {
     ...actual,
@@ -97,7 +97,7 @@ describe("buildLineMessageContext", () => {
       ]),
     );
     sessionBindingTesting.resetSessionBindingAdaptersForTests();
-    tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-line-context-"));
+    tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-line-context-"));
     storePath = path.join(tmpDir, "sessions.json");
     cfg = { session: { store: storePath } };
   });

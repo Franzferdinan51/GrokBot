@@ -1,20 +1,20 @@
 // Memory Core plugin module implements session search visibility behavior.
 import path from "node:path";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/memory-core-host-runtime-core";
-import type { MemorySearchResult } from "openclaw/plugin-sdk/memory-core-host-runtime-files";
-import { resolveSessionAgentId } from "openclaw/plugin-sdk/memory-host-core";
-import type { OpenClawPluginToolContext } from "openclaw/plugin-sdk/plugin-entry";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/memory-core-host-runtime-core";
+import type { MemorySearchResult } from "grokbot/plugin-sdk/memory-core-host-runtime-files";
+import { resolveSessionAgentId } from "grokbot/plugin-sdk/memory-host-core";
+import type { OpenClawPluginToolContext } from "grokbot/plugin-sdk/plugin-entry";
 import {
   extractTranscriptIdentityFromSessionsMemoryHit,
   loadCombinedSessionStoreForGateway,
   resolveSessionTranscriptMemoryHitKeyToSessionKeys,
   resolveTranscriptStemToSessionKeys,
-} from "openclaw/plugin-sdk/session-transcript-hit";
+} from "grokbot/plugin-sdk/session-transcript-hit";
 import {
   createAgentToAgentPolicy,
   createSessionVisibilityGuard,
   resolveEffectiveSessionToolsVisibility,
-} from "openclaw/plugin-sdk/session-visibility";
+} from "grokbot/plugin-sdk/session-visibility";
 import { readQmdSessionArtifactIdentity } from "./qmd-session-artifacts.js";
 
 function normalizeAgentIdForCompare(value: string | undefined): string | undefined {

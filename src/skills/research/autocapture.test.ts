@@ -1,7 +1,7 @@
 // Research autocapture tests cover capture policy, persistence, and config gating.
 import fs from "node:fs/promises";
 import path from "node:path";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { loadSessionEntry, upsertSessionEntry } from "../../config/sessions/session-accessor.js";
 import {
@@ -11,7 +11,7 @@ import {
 import {
   createOpenClawTestState,
   type OpenClawTestState,
-} from "../../test-utils/openclaw-test-state.js";
+} from "../../test-utils/grokbot-test-state.js";
 import { createTrackedTempDirs } from "../../test-utils/tracked-temp-dirs.js";
 import {
   applySkillProposal,
@@ -41,7 +41,7 @@ function readSession(sessionKey = SESSION_KEY) {
 beforeEach(async () => {
   testState = await createOpenClawTestState({
     layout: "state-only",
-    prefix: "openclaw-skill-workshop-state-",
+    prefix: "grokbot-skill-workshop-state-",
   });
   await seedSession();
 });
@@ -52,7 +52,7 @@ afterEach(async () => {
 });
 
 async function makeWorkspace(): Promise<string> {
-  return await tempDirs.make("openclaw-skill-workshop-");
+  return await tempDirs.make("grokbot-skill-workshop-");
 }
 
 describe("skill research auto-capture", () => {

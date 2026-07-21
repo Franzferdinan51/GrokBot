@@ -12,7 +12,7 @@ const mocks = vi.hoisted(() => ({
   buildGatewayProbeConnectionDetails: vi.fn(),
   probeGatewayStatus: vi.fn(),
   readGatewayServiceState: vi.fn(),
-  resolveGatewayService: vi.fn(() => ({ label: "openclaw-gateway" })),
+  resolveGatewayService: vi.fn(() => ({ label: "grokbot-gateway" })),
   resolvePluginProviders: vi.fn((): Array<Record<string, unknown>> => []),
   resolveDefaultModelForAgent: vi.fn(() => ({ provider: "openai", model: "gpt-5.5" })),
 }));
@@ -115,7 +115,7 @@ describe("doctor runtime tool schema checks", () => {
       loaded: true,
       running: true,
       env: {},
-      command: { programArguments: ["openclaw", "gateway"], sourcePath: "/tmp/gateway.service" },
+      command: { programArguments: ["grokbot", "gateway"], sourcePath: "/tmp/gateway.service" },
       runtime: { status: "running" },
     });
     mocks.resolveGatewayService.mockClear();
@@ -566,10 +566,10 @@ describe("doctor gateway runtime checks", () => {
       loaded: true,
       running: true,
       env: {},
-      command: { programArguments: ["openclaw", "gateway"], sourcePath: "/tmp/gateway.service" },
+      command: { programArguments: ["grokbot", "gateway"], sourcePath: "/tmp/gateway.service" },
       runtime: { status: "running" },
     });
-    mocks.resolveGatewayService.mockReset().mockReturnValue({ label: "openclaw-gateway" });
+    mocks.resolveGatewayService.mockReset().mockReturnValue({ label: "grokbot-gateway" });
   });
 
   it("reports unreachable gateway health probes", async () => {
@@ -587,7 +587,7 @@ describe("doctor gateway runtime checks", () => {
       path: "gateway.mode",
       target: "http://127.0.0.1:5829",
       fixHint:
-        "Start the Gateway service or run `openclaw doctor --fix` for service repair prompts.",
+        "Start the Gateway service or run `grokbot doctor --fix` for service repair prompts.",
     });
   });
 
@@ -632,8 +632,8 @@ describe("doctor gateway runtime checks", () => {
       severity: "warning",
       message: "Gateway service is not installed.",
       path: "gateway.mode",
-      target: "openclaw-gateway",
-      fixHint: "Run `openclaw doctor --fix` or `openclaw gateway install` to install it.",
+      target: "grokbot-gateway",
+      fixHint: "Run `grokbot doctor --fix` or `grokbot gateway install` to install it.",
     });
   });
 

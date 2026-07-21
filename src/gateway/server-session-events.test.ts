@@ -11,7 +11,7 @@ const sessionRow = vi.hoisted(() => ({
   thinkingLevels: [{ id: "ultra", label: "ultra" }],
   thinkingOptions: ["ultra"],
   thinkingDefault: "medium",
-  agentRuntime: { id: "openclaw", source: "model" },
+  agentRuntime: { id: "grokbot", source: "model" },
 }));
 const isEmbeddedAgentRunActiveMock = vi.hoisted(() => vi.fn());
 
@@ -100,7 +100,7 @@ describe("createTranscriptUpdateBroadcastHandler", () => {
     expect(payload).toMatchObject({
       session: {
         thinkingLevel: "ultra",
-        agentRuntime: { id: "openclaw" },
+        agentRuntime: { id: "grokbot" },
       },
     });
     expect(payload).not.toHaveProperty("thinkingLevels");

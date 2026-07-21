@@ -10,7 +10,7 @@ import {
   resolveAgentModelTimeoutMsValue,
 } from "../../config/model-input.js";
 import type { AgentToolModelConfig } from "../../config/types.agents-shared.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import {
   externalCliDiscoveryForProviderAuth,
   ensureAuthProfileStore,
@@ -49,7 +49,7 @@ export function hasToolModelConfig(model: ToolModelConfig | undefined): boolean 
   );
 }
 
-/** Resolves the configured default model ref, falling back to OpenClaw defaults. */
+/** Resolves the configured default model ref, falling back to GrokBot defaults. */
 export function resolveDefaultModelRef(cfg?: OpenClawConfig): { provider: string; model: string } {
   if (cfg) {
     const resolved = resolveConfiguredModelRef({
@@ -273,7 +273,7 @@ function hasDirectProviderApiKeyAuthForTool(params: {
 }
 
 if (process.env.VITEST || process.env.NODE_ENV === "test") {
-  (globalThis as Record<PropertyKey, unknown>)[Symbol.for("openclaw.modelConfigHelpersTestApi")] = {
+  (globalThis as Record<PropertyKey, unknown>)[Symbol.for("grokbot.modelConfigHelpersTestApi")] = {
     hasDirectProviderApiKeyAuthForTool,
   };
 }

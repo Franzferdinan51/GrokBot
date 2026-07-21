@@ -3,9 +3,9 @@
  *
  * Caps large tool results, repairs missing results, applies redaction, and emits transcript update events.
  */
-import { resolveIntegerOption } from "@openclaw/normalization-core/number-coercion";
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
-import { sliceUtf16Safe, truncateUtf16Safe } from "@openclaw/normalization-core/utf16-slice";
+import { resolveIntegerOption } from "@grokbot/normalization-core/number-coercion";
+import { normalizeOptionalString } from "@grokbot/normalization-core/string-coerce";
+import { sliceUtf16Safe, truncateUtf16Safe } from "@grokbot/normalization-core/utf16-slice";
 import {
   boundedJsonUtf8Bytes,
   firstEnumerableOwnKeys,
@@ -22,7 +22,7 @@ import type {
   PluginHookBeforeMessageWriteResult,
 } from "../plugins/types.js";
 import { emitSessionTranscriptUpdate } from "../sessions/transcript-events.js";
-import { isTranscriptOnlyOpenClawAssistantModel } from "../shared/transcript-only-openclaw-assistant.js";
+import { isTranscriptOnlyOpenClawAssistantModel } from "../shared/transcript-only-grokbot-assistant.js";
 import { formatContextLimitTruncationNotice } from "./embedded-agent-runner/context-truncation-notice.js";
 import {
   DEFAULT_MAX_LIVE_TOOL_RESULT_CHARS,
@@ -182,7 +182,7 @@ function redactPersistedDetailString(
   const redactedPrefix =
     boundaryIndex >= 0
       ? redactedScan.slice(0, boundaryIndex)
-      : "[OpenClaw persisted detail redacted: boundary marker removed]";
+      : "[GrokBot persisted detail redacted: boundary marker removed]";
   const safePrefixChars = Math.max(
     0,
     maxChars - Math.min(maxChars, MAX_PERSISTED_DETAIL_BOUNDARY_OVERLAP_CHARS),
@@ -191,10 +191,10 @@ function redactPersistedDetailString(
   const persistedPrefix =
     PARTIAL_STRUCTURED_SECRET_VALUE_RE.test(initialPersistedPrefix) ||
     PARTIAL_PRIVATE_KEY_BLOCK_RE.test(initialPersistedPrefix)
-      ? "[OpenClaw persisted detail redacted: partial secret span omitted]"
+      ? "[GrokBot persisted detail redacted: partial secret span omitted]"
       : initialPersistedPrefix;
-  const boundaryNotice = "[OpenClaw persisted detail redacted: boundary overlap omitted]";
-  return `${persistedPrefix}${persistedPrefix ? "\n" : ""}${boundaryNotice}\n\n[OpenClaw persisted detail truncated: ${Math.max(
+  const boundaryNotice = "[GrokBot persisted detail redacted: boundary overlap omitted]";
+  return `${persistedPrefix}${persistedPrefix ? "\n" : ""}${boundaryNotice}\n\n[GrokBot persisted detail truncated: ${Math.max(
     0,
     value.length - maxChars,
   )} original chars omitted]`;
@@ -241,7 +241,7 @@ function redactPersistedDetailValue(
     return value;
   }
   if (depth >= 8) {
-    return "[OpenClaw persisted detail redacted: max depth exceeded]";
+    return "[GrokBot persisted detail redacted: max depth exceeded]";
   }
   if (Array.isArray(value)) {
     let changed = false;

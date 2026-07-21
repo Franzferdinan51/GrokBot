@@ -2,7 +2,7 @@
  * Tests that session abort requests stay scoped to the targeted agent.
  */
 
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { GatewayClient, GatewayRequestContext, RespondFn } from "./types.js";
 
@@ -193,7 +193,7 @@ describe("sessions.abort agent scope", () => {
     listSessionsFromStoreAsyncMock.mockResolvedValue({ sessions: [] });
     loadCombinedSessionStoreForGatewayMock.mockReset();
     loadCombinedSessionStoreForGatewayMock.mockReturnValue({
-      storePath: "/tmp/openclaw-sessions.json",
+      storePath: "/tmp/grokbot-sessions.json",
       store: {},
     });
     loadSessionEntryMock.mockClear();
@@ -226,7 +226,7 @@ describe("sessions.abort agent scope", () => {
       extra: { loadGatewayModelCatalog: vi.fn().mockResolvedValue([]) },
     });
     listSessionsFromStoreAsyncMock.mockResolvedValue({
-      sessions: [{ key: "agent:main:openclaw-weixin:direct:user", sessionId: "sess-weixin" }],
+      sessions: [{ key: "agent:main:grokbot-weixin:direct:user", sessionId: "sess-weixin" }],
     });
     isEmbeddedAgentRunActiveMock.mockImplementation(
       (sessionId: string) => sessionId === "sess-weixin",
@@ -244,7 +244,7 @@ describe("sessions.abort agent scope", () => {
       expect.objectContaining({
         sessions: [
           expect.objectContaining({
-            key: "agent:main:openclaw-weixin:direct:user",
+            key: "agent:main:grokbot-weixin:direct:user",
             sessionId: "sess-weixin",
             hasActiveRun: true,
           }),

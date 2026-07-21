@@ -5,7 +5,7 @@ import { loggingState } from "../../../logging/state.js";
 import {
   createOpenClawTestState,
   type OpenClawTestState,
-} from "../../../test-utils/openclaw-test-state.js";
+} from "../../../test-utils/grokbot-test-state.js";
 import {
   legacyOAuthSidecarTestUtils,
   loadLegacyOAuthSidecarMaterial,
@@ -26,12 +26,12 @@ function setPlatform(value: NodeJS.Platform): () => void {
 
 async function writeLegacySidecarThatNeedsKeychain(): Promise<{
   state: OpenClawTestState;
-  ref: { source: "openclaw-credentials"; provider: "openai-codex"; id: string };
+  ref: { source: "grokbot-credentials"; provider: "openai-codex"; id: string };
   profileId: string;
 }> {
   const state = await createOpenClawTestState({
     layout: "state-only",
-    prefix: "openclaw-legacy-oauth-keychain-warn-",
+    prefix: "grokbot-legacy-oauth-keychain-warn-",
     env: {
       OPENCLAW_AGENT_DIR: undefined,
       OPENCLAW_AUTH_PROFILE_SECRET_KEY: undefined,
@@ -40,7 +40,7 @@ async function writeLegacySidecarThatNeedsKeychain(): Promise<{
   states.push(state);
   const profileId = "openai-codex:default";
   const ref = {
-    source: "openclaw-credentials" as const,
+    source: "grokbot-credentials" as const,
     provider: "openai-codex" as const,
     id: "0123456789abcdef0123456789abcdef",
   };
@@ -110,7 +110,7 @@ describe("loadLegacyOAuthSidecarMaterial keychain-only headless warning", () => 
     expect(firstAttempt).toBeNull();
     expect(warnSpy).toHaveBeenCalledTimes(1);
     const [firstMessage] = warnSpy.mock.calls[0] as [unknown];
-    expect(String(firstMessage)).toContain("openclaw doctor --fix");
+    expect(String(firstMessage)).toContain("grokbot doctor --fix");
     expect(String(firstMessage)).toContain("macOS Keychain");
 
     const secondAttempt = loadLegacyOAuthSidecarMaterial({

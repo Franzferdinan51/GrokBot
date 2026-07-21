@@ -1,7 +1,7 @@
 // Tracks image attachments that belong to the current reply turn.
-import { mimeTypeFromFilePath } from "@openclaw/media-core/mime";
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import { mimeTypeFromFilePath } from "@grokbot/media-core/mime";
+import { normalizeOptionalString } from "@grokbot/normalization-core/string-coerce";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import { logVerbose } from "../../globals.js";
 import { formatErrorMessage } from "../../infra/errors.js";
 import type { ImageContent } from "../../llm/types.js";
@@ -213,7 +213,7 @@ export async function resolveCurrentTurnImages(params: {
     );
     if (images.length < undescribedImageAttachments.length) {
       logVerbose(
-        `agent-runner: native OpenClaw media resolution produced ${images.length}/${undescribedImageAttachments.length} current image attachment(s); falling back to prompt image refs`,
+        `agent-runner: native GrokBot media resolution produced ${images.length}/${undescribedImageAttachments.length} current image attachment(s); falling back to prompt image refs`,
       );
       return resolveMergedTurnImages(entries);
     }

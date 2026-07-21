@@ -8,7 +8,7 @@ import path from "node:path";
 import { DatabaseSync, type SQLInputValue } from "node:sqlite";
 import type { Readable } from "node:stream";
 import { fileURLToPath } from "node:url";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import {
   readSessionArchiveContentSync,
   stripSessionArchiveCompressionSuffix,
@@ -36,7 +36,7 @@ import {
   resolveSessionTranscriptIdentity,
 } from "../../src/plugin-sdk/session-transcript-runtime.js";
 import { sleep } from "../../src/utils.js";
-import { createOpenClawTestInstance } from "./openclaw-test-instance.js";
+import { createOpenClawTestInstance } from "./grokbot-test-instance.js";
 
 type DoctorMode = "import" | "inspect" | "validate" | "restore";
 type ProofChildProcess = ChildProcessByStdio<null, Readable, Readable>;
@@ -294,7 +294,7 @@ export async function runSqliteSessionsTranscriptsFlipProof(
     name: `sqlite-sessions-transcripts-flip-${randomUUID()}`,
     config: buildMockOpenAiConfig(mockOpenAiPort),
     env: {
-      OPENAI_API_KEY: "sk-openclaw-e2e-mock",
+      OPENAI_API_KEY: "sk-grokbot-e2e-mock",
       OPENCLAW_TEST_MINIMAL_GATEWAY: undefined,
       OPENCLAW_SKIP_PROVIDERS: undefined,
     },
@@ -580,7 +580,7 @@ function buildProofContext(stateDir: string): ProofContext {
   const legacySessionsDir = path.join(stateDir, "sessions");
   return {
     activeSessionsDir,
-    agentDbPath: path.join(agentDir, "agent", "openclaw-agent.sqlite"),
+    agentDbPath: path.join(agentDir, "agent", "grokbot-agent.sqlite"),
     agentId: AGENT_ID,
     archiveRoots: [path.join(agentDir, "session-sqlite-import-archive"), activeSessionsDir],
     cleanupPruneSessionKey: CLEANUP_PRUNE_SESSION_KEY,
@@ -630,7 +630,7 @@ function buildMockOpenAiConfig(mockPort: number): Record<string, unknown> {
         model: { primary: modelRef },
         models: {
           [modelRef]: {
-            agentRuntime: { id: "openclaw" },
+            agentRuntime: { id: "grokbot" },
             params: { openaiWsWarmup: false, transport: "sse" },
           },
         },
@@ -640,13 +640,13 @@ function buildMockOpenAiConfig(mockPort: number): Record<string, unknown> {
       mode: "merge",
       providers: {
         openai: {
-          agentRuntime: { id: "openclaw" },
+          agentRuntime: { id: "grokbot" },
           api: "openai-responses",
           apiKey: { source: "env", provider: "default", id: "OPENAI_API_KEY" },
           baseUrl: `http://127.0.0.1:${mockPort}/v1`,
           models: [
             {
-              agentRuntime: { id: "openclaw" },
+              agentRuntime: { id: "grokbot" },
               api: "openai-responses",
               contextTokens: 96_000,
               contextWindow: 128_000,
@@ -987,7 +987,7 @@ async function runRollbackRestoreProof(
   const sessionId = "sqlite-rollback-restore";
   const sessionKey = "agent:main:rollback-restore";
   const sourcePath = path.join(drillDir, `${sessionId}.jsonl`);
-  const sqlitePath = path.join(drillDir, "openclaw-agent.sqlite");
+  const sqlitePath = path.join(drillDir, "grokbot-agent.sqlite");
   await fs.mkdir(drillDir, { recursive: true });
   await fs.writeFile(
     storePath,
@@ -1529,7 +1529,7 @@ async function runDowngradeReupgradeProof(
   await fs.writeFile(
     trajectoryPointerPath,
     `${JSON.stringify({
-      traceSchema: "openclaw-trajectory-pointer",
+      traceSchema: "grokbot-trajectory-pointer",
       schemaVersion: 1,
       sessionId: DOWNGRADE_REUPGRADE_SESSION_ID,
       runtimeFile: trajectoryPath,

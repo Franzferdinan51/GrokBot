@@ -2,7 +2,7 @@
 import { css, html, type PropertyValues } from "lit";
 import { property, query } from "lit/decorators.js";
 import { t } from "../i18n/index.ts";
-import { OpenClawLitElement } from "../lit/openclaw-element.ts";
+import { OpenClawLitElement } from "../lit/grokbot-element.ts";
 import { renderCopyButton } from "./copy-button.ts";
 import { icons } from "./icons.ts";
 import "./modal-dialog.ts";
@@ -477,9 +477,9 @@ export class OpenClawFilePreviewModal extends OpenClawLitElement {
     const searchPlaceholder = this.searchPlaceholder || t("filePreview.searchPlaceholder");
 
     return html`
-      <openclaw-modal-dialog
+      <grokbot-modal-dialog
         label=${label}
-        style="--openclaw-modal-width: min(1100px, 92vw); --openclaw-modal-max-height: 86vh;"
+        style="--grokbot-modal-width: min(1100px, 92vw); --grokbot-modal-max-height: 86vh;"
         @modal-cancel=${this.emitClose}
         @keydown=${this.handleKeydown}
       >
@@ -524,7 +524,7 @@ export class OpenClawFilePreviewModal extends OpenClawLitElement {
             </button>
           </footer>
         </div>
-      </openclaw-modal-dialog>
+      </grokbot-modal-dialog>
     `;
   }
 
@@ -758,6 +758,6 @@ function iconForFile(path: string) {
 
 declare global {
   interface HTMLElementTagNameMap {
-    "openclaw-file-preview-modal": OpenClawFilePreviewModal;
+    "grokbot-file-preview-modal": OpenClawFilePreviewModal;
   }
 }

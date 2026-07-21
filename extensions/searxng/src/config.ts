@@ -1,9 +1,9 @@
 // Searxng helper module supports config behavior.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import {
   normalizeResolvedSecretInputString,
   normalizeSecretInput,
-} from "openclaw/plugin-sdk/secret-input";
+} from "grokbot/plugin-sdk/secret-input";
 
 type SearxngPluginConfig = {
   webSearch?: {

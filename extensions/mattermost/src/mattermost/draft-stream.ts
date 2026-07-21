@@ -1,7 +1,7 @@
 // Mattermost plugin module implements draft stream behavior.
-import { createFinalizableDraftLifecycle } from "openclaw/plugin-sdk/channel-outbound";
-import { chunkMarkdownTextWithMode } from "openclaw/plugin-sdk/reply-chunking";
-import { sliceUtf16Safe } from "openclaw/plugin-sdk/text-utility-runtime";
+import { createFinalizableDraftLifecycle } from "grokbot/plugin-sdk/channel-outbound";
+import { chunkMarkdownTextWithMode } from "grokbot/plugin-sdk/reply-chunking";
+import { sliceUtf16Safe } from "grokbot/plugin-sdk/text-utility-runtime";
 import {
   createMattermostPost,
   deleteMattermostPost,

@@ -2,8 +2,8 @@ import {
   embeddedAgentLog,
   formatErrorMessage,
   isHostScopedAgentToolActive,
-} from "openclaw/plugin-sdk/agent-harness-runtime";
-import { buildCodexUserMcpServersThreadConfigPatchForRuntime } from "openclaw/plugin-sdk/codex-mcp-projection";
+} from "grokbot/plugin-sdk/agent-harness-runtime";
+import { buildCodexUserMcpServersThreadConfigPatchForRuntime } from "grokbot/plugin-sdk/codex-mcp-projection";
 import { closeCodexStartupClientBestEffort } from "./attempt-client-cleanup.js";
 import { getCodexAppServerClientInstanceId } from "./client.js";
 import { isSystemAgentOnlyCodexDynamicToolAllowlist } from "./dynamic-tool-profile.js";
@@ -124,7 +124,7 @@ export async function startOrResumeThread(
       params.environmentSelection,
     );
     const hostSystemAgentActive =
-      params.hostSystemAgentActive ?? isHostScopedAgentToolActive("openclaw");
+      params.hostSystemAgentActive ?? isHostScopedAgentToolActive("grokbot");
     const ringZeroActive =
       hostSystemAgentActive && isSystemAgentOnlyCodexDynamicToolAllowlist(params.params.toolsAllow);
     if (ringZeroActive && params.nativeCodeModeEnabled !== false) {
@@ -185,7 +185,7 @@ export async function startOrResumeThread(
       throw error;
     };
     if (!binding && bindingIdentity.kind === "session" && bindingIdentity.sessionKey) {
-      // Reset may rotate the OpenClaw session while this plugin is unloaded. Only
+      // Reset may rotate the GrokBot session while this plugin is unloaded. Only
       // the authoritative session store may let its successor displace that stale owner.
       const reclaimed = await lifecycleTiming.measure("reclaim-binding-generation", () =>
         reclaimCurrentCodexSessionGeneration({
@@ -244,7 +244,7 @@ export async function startOrResumeThread(
         bindingPatch: {
           cwd: params.cwd,
           // Supervised threads stay on the native user-home connection. Never
-          // persist an outer OpenClaw auth profile onto that private ownership.
+          // persist an outer GrokBot auth profile onto that private ownership.
           authProfileId: undefined,
           preserveNativeModel: true,
           dynamicToolsFingerprint,

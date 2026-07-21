@@ -70,7 +70,7 @@ export async function expectPrivateQaLabRuntimeSurfaceLoad(params: {
   loadBundledPluginPublicSurfaceModuleSync: SurfaceLoaderMock;
   resolveOpenClawPackageRootSync: SurfaceLoaderMock;
 }) {
-  const sourceRoot = makePrivateQaSourceRoot(params.tempDirs, "openclaw-qa-runtime-root-");
+  const sourceRoot = makePrivateQaSourceRoot(params.tempDirs, "grokbot-qa-runtime-root-");
   params.resolveOpenClawPackageRootSync.mockReturnValue(sourceRoot);
 
   const runtimeSurface = makeQaRuntimeSurface();

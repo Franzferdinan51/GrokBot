@@ -31,7 +31,7 @@ and what the automatic resume looks like.
 
 ## Graceful restarts drain first
 
-A requested restart (`openclaw gateway restart`, a config change that requires
+A requested restart (`grokbot gateway restart`, a config change that requires
 a restart, or a gateway update) does not kill in-flight work immediately. The
 gateway stops accepting new work, then waits for active agent turns and
 background tasks to finish, up to a drain budget (5 minutes by default). Most
@@ -81,7 +81,7 @@ so the agent can deliver it instead of redoing the work.
 Startup reconciliation retries transient failures up to three times with
 exponential backoff. Separately, each interrupted main-session cycle has a
 durable budget of three charged automatic dispatch attempts, retained across
-gateway restarts. OpenClaw charges an attempt before dispatch, refunds it when
+gateway restarts. GrokBot charges an attempt before dispatch, refunds it when
 the gateway explicitly rejects the request before acceptance, and retains the
 charge when a post-dispatch result is uncertain to avoid replaying work.
 Foreground work that already owns the session keeps automatic recovery out
@@ -89,7 +89,7 @@ until that work settles.
 
 After the durable budget is exhausted, the session is tombstoned instead of
 looping forever. Inspect the failed session and use `/new` or `/reset` to start a
-replacement. `openclaw doctor --fix` can repair a stale aborted flag that
+replacement. `grokbot doctor --fix` can repair a stale aborted flag that
 conflicts with a tombstone, but it does not re-enable that recovery cycle.
 
 Every retry reuses one durable dispatch identifier, so an ambiguous connection
@@ -122,7 +122,7 @@ approval), the session is not blindly re-run; the agent instead posts a short
 notice asking the user to resend the last request. For WebChat, that notice is
 written directly to the session history so it remains visible after reconnect.
 
-OpenClaw can also reconstruct interrupted read-only [Code Mode](/tools/code-mode)
+GrokBot can also reconstruct interrupted read-only [Code Mode](/tools/code-mode)
 work. Code Mode marks these runs as restart-safe and rejects side-effecting
 catalog tools or plugin namespaces before they execute. If a restart lands on
 the `wait` control, the new gateway reconstructs the turn from its transcript

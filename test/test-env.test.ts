@@ -1,7 +1,7 @@
 // Test environment tests validate shared env setup helpers.
 import fs from "node:fs";
 import path from "node:path";
-import { importFreshModule } from "openclaw/plugin-sdk/test-fixtures";
+import { importFreshModule } from "grokbot/plugin-sdk/test-fixtures";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { deleteTestEnvValue, setTestEnvValue } from "../src/test-utils/env.js";
 import { cleanupTempDirs, makeTempDir } from "./helpers/temp-dir.js";
@@ -33,7 +33,7 @@ function writeFile(targetPath: string, content: string): void {
 }
 
 function createTempHome(): string {
-  return makeTempDir(tempDirs, "openclaw-test-env-real-home-");
+  return makeTempDir(tempDirs, "grokbot-test-env-real-home-");
 }
 
 function requireRecord(
@@ -76,19 +76,19 @@ describe("installTestEnv", () => {
     const priorIsolatedHome = createTempHome();
     writeFile(path.join(realHome, ".profile"), "export TEST_PROFILE_ONLY=from-profile\n");
     writeFile(
-      path.join(realHome, "custom-openclaw.json5"),
+      path.join(realHome, "custom-grokbot.json5"),
       `{
         // Preserve provider config, strip host-bound paths.
         agents: {
           defaults: {
             workspace: "/Users/peter/Projects",
-            agentDir: "/Users/peter/.openclaw/agents/main/agent",
+            agentDir: "/Users/peter/.grokbot/agents/main/agent",
           },
           list: [
             {
               id: "dev",
               workspace: "/Users/peter/dev-workspace",
-              agentDir: "/Users/peter/.openclaw/agents/dev/agent",
+              agentDir: "/Users/peter/.grokbot/agents/dev/agent",
             },
           ],
         },
@@ -115,13 +115,13 @@ describe("installTestEnv", () => {
         },
       }`,
     );
-    writeFile(path.join(realHome, ".openclaw", "credentials", "token.txt"), "secret\n");
+    writeFile(path.join(realHome, ".grokbot", "credentials", "token.txt"), "secret\n");
     writeFile(
-      path.join(realHome, ".openclaw", "external-plugins", "glueclaw", "openclaw.plugin.json"),
+      path.join(realHome, ".grokbot", "external-plugins", "glueclaw", "grokbot.plugin.json"),
       '{"id":"glueclaw"}\n',
     );
     writeFile(
-      path.join(realHome, ".openclaw", "agents", "main", "agent", "auth-profiles.json"),
+      path.join(realHome, ".grokbot", "agents", "main", "agent", "auth-profiles.json"),
       JSON.stringify({ version: 1, profiles: { default: { provider: "openai" } } }, null, 2),
     );
     writeFile(path.join(realHome, ".claude", ".credentials.json"), '{"accessToken":"token"}\n');
@@ -167,9 +167,9 @@ describe("installTestEnv", () => {
     setTestEnvValue("USERPROFILE", realHome);
     setTestEnvValue("OPENCLAW_LIVE_TEST", "1");
     setTestEnvValue("OPENCLAW_LIVE_TEST_QUIET", "1");
-    setTestEnvValue("OPENCLAW_CONFIG_PATH", "~/custom-openclaw.json5");
+    setTestEnvValue("OPENCLAW_CONFIG_PATH", "~/custom-grokbot.json5");
     setTestEnvValue("OPENCLAW_TEST_HOME", priorIsolatedHome);
-    setTestEnvValue("OPENCLAW_STATE_DIR", path.join(priorIsolatedHome, ".openclaw"));
+    setTestEnvValue("OPENCLAW_STATE_DIR", path.join(priorIsolatedHome, ".grokbot"));
 
     const testEnv = installTestEnv();
     cleanupFns.push(testEnv.cleanup);
@@ -179,7 +179,7 @@ describe("installTestEnv", () => {
     expect(process.env.OPENCLAW_TEST_HOME).toBe(testEnv.tempHome);
     expect(process.env.TEST_PROFILE_ONLY).toBe("from-profile");
 
-    const copiedConfigPath = path.join(testEnv.tempHome, ".openclaw", "openclaw.json");
+    const copiedConfigPath = path.join(testEnv.tempHome, ".grokbot", "grokbot.json");
     const copiedConfig = JSON.parse(fs.readFileSync(copiedConfigPath, "utf8")) as {
       agents?: {
         defaults?: Record<string, unknown>;
@@ -216,22 +216,22 @@ describe("installTestEnv", () => {
     });
 
     expect(
-      fs.existsSync(path.join(testEnv.tempHome, ".openclaw", "credentials", "token.txt")),
+      fs.existsSync(path.join(testEnv.tempHome, ".grokbot", "credentials", "token.txt")),
     ).toBe(true);
     expect(
       fs.existsSync(
         path.join(
           testEnv.tempHome,
-          ".openclaw",
+          ".grokbot",
           "external-plugins",
           "glueclaw",
-          "openclaw.plugin.json",
+          "grokbot.plugin.json",
         ),
       ),
     ).toBe(true);
     expect(
       fs.existsSync(
-        path.join(testEnv.tempHome, ".openclaw", "agents", "main", "agent", "auth-profiles.json"),
+        path.join(testEnv.tempHome, ".grokbot", "agents", "main", "agent", "auth-profiles.json"),
       ),
     ).toBe(true);
     expect(fs.existsSync(path.join(testEnv.tempHome, ".claude", ".credentials.json"))).toBe(true);
@@ -285,8 +285,8 @@ describe("installTestEnv", () => {
   it("keeps hermetic mode isolated when live flags request the real HOME", () => {
     const realHome = createTempHome();
     writeFile(path.join(realHome, ".profile"), "export TEST_PROFILE_ONLY=from-profile\n");
-    writeFile(path.join(realHome, ".openclaw", "openclaw.json"), '{"live":true}\n');
-    writeFile(path.join(realHome, ".openclaw", "credentials", "token.txt"), "secret\n");
+    writeFile(path.join(realHome, ".grokbot", "grokbot.json"), '{"live":true}\n');
+    writeFile(path.join(realHome, ".grokbot", "credentials", "token.txt"), "secret\n");
 
     setTestEnvValue("HOME", realHome);
     setTestEnvValue("USERPROFILE", realHome);
@@ -315,9 +315,9 @@ describe("installTestEnv", () => {
     expect(process.env.OPENCLAW_TEST_TRUST_BUNDLED_PLUGINS_DIR).toBe("1");
     expect(process.env.OPENCLAW_DISABLE_BUNDLED_PLUGINS).toBeUndefined();
     expect(process.env.OPENCLAW_HOME).toBeUndefined();
-    expect(fs.existsSync(path.join(testEnv.tempHome, ".openclaw", "openclaw.json"))).toBe(false);
+    expect(fs.existsSync(path.join(testEnv.tempHome, ".grokbot", "grokbot.json"))).toBe(false);
     expect(
-      fs.existsSync(path.join(testEnv.tempHome, ".openclaw", "credentials", "token.txt")),
+      fs.existsSync(path.join(testEnv.tempHome, ".grokbot", "credentials", "token.txt")),
     ).toBe(false);
   });
 

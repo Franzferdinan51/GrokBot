@@ -1,12 +1,12 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import type { ChannelDoctorLegacyConfigRule } from "openclaw/plugin-sdk/channel-contract";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { ChannelDoctorLegacyConfigRule } from "grokbot/plugin-sdk/channel-contract";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import {
   archiveLegacyStateSource,
   type PluginDoctorStateMigration,
-} from "openclaw/plugin-sdk/runtime-doctor";
-import { isRecord } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/runtime-doctor";
+import { isRecord } from "grokbot/plugin-sdk/string-coerce-runtime";
 import { z } from "zod";
 import {
   parseReefRelayUrl,
@@ -155,7 +155,7 @@ export const legacyConfigRules: ChannelDoctorLegacyConfigRule[] = [
   {
     path: ["channels", "reef"],
     message:
-      'channels.reef dmPolicy/allowFrom are legacy; run "openclaw doctor --fix" to remove them. Peer trust is SQLite-backed.',
+      'channels.reef dmPolicy/allowFrom are legacy; run "grokbot doctor --fix" to remove them. Peer trust is SQLite-backed.',
     match: hasRetiredReefPolicyConfig,
   },
 ];

@@ -1,6 +1,6 @@
 // Control UI view renders workboard screen content.
 
-import { truncateUtf16Safe } from "@openclaw/normalization-core/utf16-slice";
+import { truncateUtf16Safe } from "@grokbot/normalization-core/utf16-slice";
 import { html, nothing, type TemplateResult } from "lit";
 import type { GatewayBrowserClient } from "../../api/gateway.ts";
 import type { AgentsListResult, GatewaySessionRow } from "../../api/types.ts";
@@ -460,7 +460,7 @@ function engineBlockedByRuntime(
     return null;
   }
   const normalized = runtime.toLowerCase();
-  if (normalized === "openclaw" || normalized === "pi") {
+  if (normalized === "grokbot" || normalized === "pi") {
     return null;
   }
   return t("workboard.engineDisabledRuntime", {
@@ -632,7 +632,7 @@ function renderCardActionButton(params: {
     </button>
   `;
   return params.iconOnly
-    ? html`<openclaw-tooltip .content=${params.label}>${button}</openclaw-tooltip>`
+    ? html`<grokbot-tooltip .content=${params.label}>${button}</grokbot-tooltip>`
     : button;
 }
 
@@ -861,10 +861,10 @@ function renderCardModal(props: WorkboardProps) {
     return true;
   };
   return html`
-    <openclaw-modal-dialog
+    <grokbot-modal-dialog
       label=${editing ? t("workboard.editCard") : t("workboard.newCard")}
       description=${editing ? t("workboard.editCardHelp") : t("workboard.newCardHelp")}
-      style="--openclaw-modal-width: min(1120px, calc(100vw - 56px)); --openclaw-modal-max-height: calc(100dvh - 56px);"
+      style="--grokbot-modal-width: min(1120px, calc(100vw - 56px)); --grokbot-modal-max-height: calc(100dvh - 56px);"
       @modal-cancel=${(event: Event) => {
         if (!dismissDraft()) {
           event.preventDefault();
@@ -898,7 +898,7 @@ function renderCardModal(props: WorkboardProps) {
               ${editing ? t("workboard.editCardHelp") : t("workboard.newCardHelp")}
             </p>
           </div>
-          <openclaw-tooltip .content=${t("common.cancel")}>
+          <grokbot-tooltip .content=${t("common.cancel")}>
             <button
               class="btn btn--icon workboard-card__icon"
               type="button"
@@ -912,7 +912,7 @@ function renderCardModal(props: WorkboardProps) {
             >
               ${icons.x}
             </button>
-          </openclaw-tooltip>
+          </grokbot-tooltip>
         </div>
         <div class="workboard-draft__body">
           ${!editing
@@ -1087,7 +1087,7 @@ function renderCardModal(props: WorkboardProps) {
           </button>
         </div>
       </form>
-    </openclaw-modal-dialog>
+    </grokbot-modal-dialog>
   `;
 }
 
@@ -1367,7 +1367,7 @@ function renderStartExecutionButton(
     </button>
   `;
   return options.iconOnly
-    ? html`<openclaw-tooltip .content=${title}>${button}</openclaw-tooltip>`
+    ? html`<grokbot-tooltip .content=${title}>${button}</grokbot-tooltip>`
     : button;
 }
 
@@ -1449,13 +1449,13 @@ function renderCardDetailsPanel(props: WorkboardProps) {
   const events = (card.events ?? []).slice(-6).toReversed();
   const dependencies = getWorkboardDependencyState(card, state.cards);
   return html`
-    <openclaw-modal-dialog
+    <grokbot-modal-dialog
       class="drawer"
       label=${card.title}
       description=${task && taskIsAuthoritative
         ? taskDetail(task)
         : (lifecycle.session?.displayName ?? formatted.detail)}
-      style="--openclaw-modal-width: min(460px, 100vw); --openclaw-modal-max-height: 100dvh;"
+      style="--grokbot-modal-width: min(460px, 100vw); --grokbot-modal-max-height: 100dvh;"
       @modal-cancel=${() => {
         closeCardDetails(state);
         props.onRequestUpdate?.();
@@ -1470,7 +1470,7 @@ function renderCardDetailsPanel(props: WorkboardProps) {
                 <span class="workboard-sr-only">${t("workboard.detailTitle")}: </span>${card.title}
               </h2>
             </div>
-            <openclaw-tooltip .content=${t("common.cancel")}>
+            <grokbot-tooltip .content=${t("common.cancel")}>
               <button
                 class="btn btn--icon workboard-card__icon"
                 type="button"
@@ -1482,7 +1482,7 @@ function renderCardDetailsPanel(props: WorkboardProps) {
               >
                 ${icons.x}
               </button>
-            </openclaw-tooltip>
+            </grokbot-tooltip>
           </header>
 
           <section class="workboard-detail__section">
@@ -1665,7 +1665,7 @@ function renderCardDetailsPanel(props: WorkboardProps) {
           </div>
         </div>
       </aside>
-    </openclaw-modal-dialog>
+    </grokbot-modal-dialog>
   `;
 }
 
@@ -1801,7 +1801,7 @@ function renderCard(props: WorkboardProps, card: WorkboardCard) {
     ? renderArchiveCardAction(props, card, busy, archived, { iconOnly: true })
     : nothing;
   const detailAction = html`
-    <openclaw-tooltip .content=${t("workboard.viewDetails")}>
+    <grokbot-tooltip .content=${t("workboard.viewDetails")}>
       <button
         class="btn btn--icon workboard-card__icon"
         aria-label=${t("workboard.viewDetails")}
@@ -1815,7 +1815,7 @@ function renderCard(props: WorkboardProps, card: WorkboardCard) {
       >
         ${icons.panelRightOpen}
       </button>
-    </openclaw-tooltip>
+    </grokbot-tooltip>
   `;
   const sessionAction = renderOpenSessionCardAction(props, linkedSessionKey, { iconOnly: true });
   const stopAction =
@@ -2165,7 +2165,7 @@ export function renderWorkboard(props: WorkboardProps) {
             </button>
             <div class="workboard-layout-controls">
               <div class="workboard-layout-toggle" role="group" aria-label=${t("workboard.layout")}>
-                <openclaw-tooltip .content=${t("workboard.layoutCompact")}>
+                <grokbot-tooltip .content=${t("workboard.layoutCompact")}>
                   <button
                     class="btn btn--icon ${state.layout === "compact" ? "active" : ""}"
                     type="button"
@@ -2178,8 +2178,8 @@ export function renderWorkboard(props: WorkboardProps) {
                   >
                     ${icons.layoutCompact}
                   </button>
-                </openclaw-tooltip>
-                <openclaw-tooltip .content=${t("workboard.layoutComfortable")}>
+                </grokbot-tooltip>
+                <grokbot-tooltip .content=${t("workboard.layoutComfortable")}>
                   <button
                     class="btn btn--icon ${state.layout === "comfortable" ? "active" : ""}"
                     type="button"
@@ -2192,7 +2192,7 @@ export function renderWorkboard(props: WorkboardProps) {
                   >
                     ${icons.layoutComfortable}
                   </button>
-                </openclaw-tooltip>
+                </grokbot-tooltip>
               </div>
               ${renderRefreshStatus(state)}
             </div>

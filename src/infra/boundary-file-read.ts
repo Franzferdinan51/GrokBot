@@ -3,8 +3,8 @@ import "./fs-safe-defaults.js";
 import {
   readFileDescriptorBounded as readFileDescriptorBoundedFsSafe,
   readFileDescriptorBoundedSync as readFileDescriptorBoundedSyncFsSafe,
-} from "@openclaw/fs-safe/advanced";
-import { FsSafeError } from "@openclaw/fs-safe/errors";
+} from "@grokbot/fs-safe/advanced";
+import { FsSafeError } from "@grokbot/fs-safe/errors";
 
 // Root-scoped file open helpers. Use these for user paths that must stay under
 // an already trusted boundary.
@@ -15,7 +15,7 @@ export {
   openRootFileSync,
   type RootFileOpenFailure,
   type RootFileOpenResult,
-} from "@openclaw/fs-safe/advanced";
+} from "@grokbot/fs-safe/advanced";
 
 function preserveOpenClawOverflowError(error: unknown, maxBytes: number): never {
   if (error instanceof FsSafeError && error.code === "too-large") {
@@ -24,7 +24,7 @@ function preserveOpenClawOverflowError(error: unknown, maxBytes: number): never 
   throw error;
 }
 
-/** Read a pinned descriptor without changing OpenClaw's user-facing overflow error. */
+/** Read a pinned descriptor without changing GrokBot's user-facing overflow error. */
 export async function readFileDescriptorBounded(fd: number, maxBytes: number): Promise<Buffer> {
   try {
     return await readFileDescriptorBoundedFsSafe(fd, maxBytes);

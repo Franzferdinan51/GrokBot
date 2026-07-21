@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-source scripts/lib/openclaw-e2e-instance.sh
+source scripts/lib/grokbot-e2e-instance.sh
 source scripts/lib/docker-e2e-logs.sh
 OPENCLAW_PLUGINS_SWEEP_SOURCE_ONLY="${OPENCLAW_PLUGINS_SWEEP_SOURCE_ONLY:-0}"
 if [[ -z "${OPENCLAW_ENTRY:-}" && "$OPENCLAW_PLUGINS_SWEEP_SOURCE_ONLY" != "1" ]]; then
@@ -10,7 +10,7 @@ fi
 export OPENCLAW_ENTRY
 OPENCLAW_PLUGINS_CREATED_TMP_DIR=0
 if [[ -z "${OPENCLAW_PLUGINS_TMP_DIR:-}" ]]; then
-  OPENCLAW_PLUGINS_TMP_DIR="$(mktemp -d "/tmp/openclaw-plugins.XXXXXX")"
+  OPENCLAW_PLUGINS_TMP_DIR="$(mktemp -d "/tmp/grokbot-plugins.XXXXXX")"
   OPENCLAW_PLUGINS_CREATED_TMP_DIR=1
 fi
 export OPENCLAW_PLUGINS_TMP_DIR
@@ -58,7 +58,7 @@ PACKAGE_VERSION="$(node -p 'require("./package.json").version')"
 OPENCLAW_PACKAGE_ACCEPTANCE_LEGACY_COMPAT="$(node scripts/e2e/lib/package-compat.mjs "$PACKAGE_VERSION")"
 export OPENCLAW_PACKAGE_ACCEPTANCE_LEGACY_COMPAT
 BUNDLED_PLUGIN_ROOT_DIR="extensions"
-OPENCLAW_PLUGIN_HOME="$HOME/.openclaw/$BUNDLED_PLUGIN_ROOT_DIR"
+OPENCLAW_PLUGIN_HOME="$HOME/.grokbot/$BUNDLED_PLUGIN_ROOT_DIR"
 
 demo_plugin_id="demo-plugin"
 demo_plugin_root="$OPENCLAW_PLUGIN_HOME/$demo_plugin_id"
@@ -71,7 +71,7 @@ run_plugins_openclaw_capture "$OPENCLAW_PLUGINS_TMP_DIR/plugins-inspect.json" pl
 node scripts/e2e/lib/plugins/assertions.mjs demo-plugin
 
 echo "Testing tgz install flow..."
-pack_dir="$(mktemp -d "$OPENCLAW_PLUGINS_TMP_DIR/openclaw-plugin-pack.XXXXXX")"
+pack_dir="$(mktemp -d "$OPENCLAW_PLUGINS_TMP_DIR/grokbot-plugin-pack.XXXXXX")"
 pack_fixture_plugin "$pack_dir" "$OPENCLAW_PLUGINS_TMP_DIR/demo-plugin-tgz.tgz" demo-plugin-tgz 0.0.1 demo.tgz "Demo Plugin TGZ"
 
 run_plugins_openclaw_logged install-tgz plugins install "$OPENCLAW_PLUGINS_TMP_DIR/demo-plugin-tgz.tgz" --force
@@ -85,7 +85,7 @@ run_plugins_openclaw_capture "$OPENCLAW_PLUGINS_TMP_DIR/plugins2-uninstalled.jso
 node scripts/e2e/lib/plugins/assertions.mjs plugin-tgz-removed
 
 echo "Testing install from local folder (plugins.load.paths)..."
-dir_plugin="$(mktemp -d "$OPENCLAW_PLUGINS_TMP_DIR/openclaw-plugin-dir.XXXXXX")"
+dir_plugin="$(mktemp -d "$OPENCLAW_PLUGINS_TMP_DIR/grokbot-plugin-dir.XXXXXX")"
 write_fixture_plugin "$dir_plugin" demo-plugin-dir 0.0.1 demo.dir "Demo Plugin DIR"
 
 run_plugins_openclaw_logged install-dir plugins install "$dir_plugin" --force
@@ -102,7 +102,7 @@ run_plugins_openclaw_capture "$OPENCLAW_PLUGINS_TMP_DIR/plugins3-uninstalled.jso
 node scripts/e2e/lib/plugins/assertions.mjs plugin-dir-removed
 
 echo "Testing install from local folder with preinstalled dependencies..."
-dir_deps_plugin="$(mktemp -d "$OPENCLAW_PLUGINS_TMP_DIR/openclaw-plugin-dir-deps.XXXXXX")"
+dir_deps_plugin="$(mktemp -d "$OPENCLAW_PLUGINS_TMP_DIR/grokbot-plugin-dir-deps.XXXXXX")"
 write_fixture_plugin_with_vendored_dependency "$dir_deps_plugin" demo-plugin-dir-deps 0.0.1 demo.dir.deps "Demo Plugin DIR Deps"
 
 run_plugins_openclaw_logged install-dir-deps plugins install "$dir_deps_plugin" --force
@@ -116,7 +116,7 @@ run_plugins_openclaw_capture "$OPENCLAW_PLUGINS_TMP_DIR/plugins-dir-deps-uninsta
 node scripts/e2e/lib/plugins/assertions.mjs plugin-dir-deps-removed
 
 echo "Testing install from npm spec (file:)..."
-file_pack_dir="$(mktemp -d "$OPENCLAW_PLUGINS_TMP_DIR/openclaw-plugin-filepack.XXXXXX")"
+file_pack_dir="$(mktemp -d "$OPENCLAW_PLUGINS_TMP_DIR/grokbot-plugin-filepack.XXXXXX")"
 write_fixture_plugin "$file_pack_dir/package" demo-plugin-file 0.0.1 demo.file "Demo Plugin FILE"
 
 run_plugins_openclaw_logged install-file plugins install "file:$file_pack_dir/package" --force
@@ -130,16 +130,16 @@ run_plugins_openclaw_capture "$OPENCLAW_PLUGINS_TMP_DIR/plugins4-uninstalled.jso
 node scripts/e2e/lib/plugins/assertions.mjs plugin-file-removed
 
 echo "Testing install and update from npm registry..."
-npm_pack_dir="$(mktemp -d "$OPENCLAW_PLUGINS_TMP_DIR/openclaw-plugin-npm-pack.XXXXXX")"
-npm_dep_pack_dir="$(mktemp -d "$OPENCLAW_PLUGINS_TMP_DIR/openclaw-plugin-npm-dep-pack.XXXXXX")"
-invalid_npm_pack_dir="$(mktemp -d "$OPENCLAW_PLUGINS_TMP_DIR/openclaw-plugin-invalid-metadata-pack.XXXXXX")"
-npm_registry_dir="$(mktemp -d "$OPENCLAW_PLUGINS_TMP_DIR/openclaw-plugin-npm-registry.XXXXXX")"
+npm_pack_dir="$(mktemp -d "$OPENCLAW_PLUGINS_TMP_DIR/grokbot-plugin-npm-pack.XXXXXX")"
+npm_dep_pack_dir="$(mktemp -d "$OPENCLAW_PLUGINS_TMP_DIR/grokbot-plugin-npm-dep-pack.XXXXXX")"
+invalid_npm_pack_dir="$(mktemp -d "$OPENCLAW_PLUGINS_TMP_DIR/grokbot-plugin-invalid-metadata-pack.XXXXXX")"
+npm_registry_dir="$(mktemp -d "$OPENCLAW_PLUGINS_TMP_DIR/grokbot-plugin-npm-registry.XXXXXX")"
 pack_fixture_plugin_with_cli_registry_dependency "$npm_pack_dir" "$OPENCLAW_PLUGINS_TMP_DIR/demo-plugin-npm.tgz" demo-plugin-npm 0.0.1 demo.npm "Demo Plugin NPM" demo-npm "demo-plugin-npm:pong"
 pack_fake_is_number_package "$npm_dep_pack_dir" "$OPENCLAW_PLUGINS_TMP_DIR/is-number-7.0.0.tgz"
 pack_fixture_plugin_with_invalid_extension_entry "$invalid_npm_pack_dir" "$OPENCLAW_PLUGINS_TMP_DIR/demo-plugin-invalid-metadata.tgz" demo-plugin-invalid-metadata 0.0.1 demo.invalid.metadata "Demo Plugin Invalid Metadata"
-start_npm_fixture_registry "@openclaw/demo-plugin-npm" "0.0.1" "$OPENCLAW_PLUGINS_TMP_DIR/demo-plugin-npm.tgz" "$npm_registry_dir" "is-number" "7.0.0" "$OPENCLAW_PLUGINS_TMP_DIR/is-number-7.0.0.tgz" "@openclaw/demo-plugin-invalid-metadata" "0.0.1" "$OPENCLAW_PLUGINS_TMP_DIR/demo-plugin-invalid-metadata.tgz"
+start_npm_fixture_registry "@grokbot/demo-plugin-npm" "0.0.1" "$OPENCLAW_PLUGINS_TMP_DIR/demo-plugin-npm.tgz" "$npm_registry_dir" "is-number" "7.0.0" "$OPENCLAW_PLUGINS_TMP_DIR/is-number-7.0.0.tgz" "@grokbot/demo-plugin-invalid-metadata" "0.0.1" "$OPENCLAW_PLUGINS_TMP_DIR/demo-plugin-invalid-metadata.tgz"
 
-run_plugins_openclaw_logged install-npm plugins install "npm:@openclaw/demo-plugin-npm@0.0.1" --force
+run_plugins_openclaw_logged install-npm plugins install "npm:@grokbot/demo-plugin-npm@0.0.1" --force
 run_plugins_openclaw_capture "$OPENCLAW_PLUGINS_TMP_DIR/plugins-npm.json" plugins list --json
 run_plugins_openclaw_capture "$OPENCLAW_PLUGINS_TMP_DIR/plugins-npm-inspect.json" plugins inspect demo-plugin-npm --runtime --json
 run_plugins_shell_logged exec-npm-plugin-cli 'node "$OPENCLAW_ENTRY" demo-npm ping >"$OPENCLAW_PLUGINS_TMP_DIR/plugins-npm-cli.txt"'
@@ -154,22 +154,22 @@ run_plugins_openclaw_capture "$OPENCLAW_PLUGINS_TMP_DIR/plugins-npm-uninstalled.
 node scripts/e2e/lib/plugins/assertions.mjs plugin-npm-removed
 
 echo "Testing npm install rejects malformed package metadata..."
-if openclaw_e2e_maybe_timeout "$OPENCLAW_PLUGINS_CLI_TIMEOUT" node "$OPENCLAW_ENTRY" plugins install "npm:@openclaw/demo-plugin-invalid-metadata@0.0.1" --force >"$OPENCLAW_PLUGINS_TMP_DIR/plugins-invalid-openclaw-extensions.log" 2>&1; then
-  cat "$OPENCLAW_PLUGINS_TMP_DIR/plugins-invalid-openclaw-extensions.log"
+if openclaw_e2e_maybe_timeout "$OPENCLAW_PLUGINS_CLI_TIMEOUT" node "$OPENCLAW_ENTRY" plugins install "npm:@grokbot/demo-plugin-invalid-metadata@0.0.1" --force >"$OPENCLAW_PLUGINS_TMP_DIR/plugins-invalid-grokbot-extensions.log" 2>&1; then
+  cat "$OPENCLAW_PLUGINS_TMP_DIR/plugins-invalid-grokbot-extensions.log"
   echo "Expected malformed package metadata install to fail." >&2
   exit 1
 fi
-run_plugins_openclaw_capture "$OPENCLAW_PLUGINS_TMP_DIR/plugins-invalid-openclaw-extensions-list.json" plugins list --json
-node scripts/e2e/lib/plugins/assertions.mjs invalid-openclaw-extensions
+run_plugins_openclaw_capture "$OPENCLAW_PLUGINS_TMP_DIR/plugins-invalid-grokbot-extensions-list.json" plugins list --json
+node scripts/e2e/lib/plugins/assertions.mjs invalid-grokbot-extensions
 
 echo "Testing install from git repo and plugin CLI execution..."
-git_fixture_root="$(mktemp -d "$OPENCLAW_PLUGINS_TMP_DIR/openclaw-plugin-git.XXXXXX")"
+git_fixture_root="$(mktemp -d "$OPENCLAW_PLUGINS_TMP_DIR/grokbot-plugin-git.XXXXXX")"
 git_repo="$git_fixture_root/repo"
 git_repo_url="file://$git_repo"
 write_fixture_plugin_with_cli "$git_repo" demo-plugin-git 0.0.1 demo.git "Demo Plugin Git" demo-git "demo-plugin-git:pong"
 git -C "$git_repo" init -q
-git -C "$git_repo" config user.email "docker-e2e@openclaw.local"
-git -C "$git_repo" config user.name "OpenClaw Docker E2E"
+git -C "$git_repo" config user.email "docker-e2e@grokbot.local"
+git -C "$git_repo" config user.name "GrokBot Docker E2E"
 git -C "$git_repo" add -A
 git -C "$git_repo" commit -qm "test fixture"
 git_ref="$(git -C "$git_repo" rev-parse HEAD)"
@@ -186,13 +186,13 @@ run_plugins_openclaw_capture "$OPENCLAW_PLUGINS_TMP_DIR/plugins-git-uninstalled.
 node scripts/e2e/lib/plugins/assertions.mjs plugin-git-removed
 
 echo "Testing git plugin update from moving ref..."
-git_update_fixture_root="$(mktemp -d "$OPENCLAW_PLUGINS_TMP_DIR/openclaw-plugin-git-update.XXXXXX")"
+git_update_fixture_root="$(mktemp -d "$OPENCLAW_PLUGINS_TMP_DIR/grokbot-plugin-git-update.XXXXXX")"
 git_update_repo="$git_update_fixture_root/repo"
 git_update_repo_url="file://$git_update_repo"
 write_fixture_plugin_with_cli "$git_update_repo" demo-plugin-git-update 0.0.1 demo.git.update.v1 "Demo Plugin Git Update" demo-git-update "demo-plugin-git-update:pong-v1"
 git -C "$git_update_repo" init -q
-git -C "$git_update_repo" config user.email "docker-e2e@openclaw.local"
-git -C "$git_update_repo" config user.name "OpenClaw Docker E2E"
+git -C "$git_update_repo" config user.email "docker-e2e@grokbot.local"
+git -C "$git_update_repo" config user.name "GrokBot Docker E2E"
 git -C "$git_update_repo" checkout -qb main
 git -C "$git_update_repo" add -A
 git -C "$git_update_repo" commit -qm "test fixture v1"
@@ -224,7 +224,7 @@ run_plugins_openclaw_capture "$OPENCLAW_PLUGINS_TMP_DIR/plugins-bundle-inspect.j
 node scripts/e2e/lib/plugins/assertions.mjs bundle-inspect
 
 echo "Testing plugin install visible after explicit restart..."
-slash_install_dir="$(mktemp -d "$OPENCLAW_PLUGINS_TMP_DIR/openclaw-plugin-slash-install.XXXXXX")"
+slash_install_dir="$(mktemp -d "$OPENCLAW_PLUGINS_TMP_DIR/grokbot-plugin-slash-install.XXXXXX")"
 write_fixture_plugin "$slash_install_dir" slash-install-plugin 0.0.1 demo.slash.install "Slash Install Plugin"
 
 run_plugins_openclaw_logged install-slash-plugin plugins install "$slash_install_dir" --force

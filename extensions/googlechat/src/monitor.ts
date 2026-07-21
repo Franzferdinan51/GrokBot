@@ -5,9 +5,9 @@ import {
   toInboundMediaFacts,
   type ChannelBotLoopProtectionFacts,
   type ChannelInboundMediaInput,
-} from "openclaw/plugin-sdk/channel-inbound";
-import { mergePairLoopGuardConfig } from "openclaw/plugin-sdk/pair-loop-guard-runtime";
-import { normalizeOptionalLowercaseString } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/channel-inbound";
+import { mergePairLoopGuardConfig } from "grokbot/plugin-sdk/pair-loop-guard-runtime";
+import { normalizeOptionalLowercaseString } from "grokbot/plugin-sdk/string-coerce-runtime";
 import type { OpenClawConfig } from "../runtime-api.js";
 import { resolveWebhookPath } from "../runtime-api.js";
 import type { ResolvedGoogleChatAccount } from "./accounts.js";
@@ -158,7 +158,7 @@ async function processGoogleChatEvent(
  * Resolve bot display name with fallback chain:
  * 1. Account config name
  * 2. Agent name from config
- * 3. "OpenClaw" as generic fallback
+ * 3. "GrokBot" as generic fallback
  */
 function resolveBotDisplayName(params: {
   accountName?: string;
@@ -173,7 +173,7 @@ function resolveBotDisplayName(params: {
   if (agent?.name?.trim()) {
     return agent.name.trim();
   }
-  return "OpenClaw";
+  return "GrokBot";
 }
 
 async function processMessageWithPipeline(params: {

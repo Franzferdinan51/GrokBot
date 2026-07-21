@@ -1,5 +1,5 @@
 /**
- * OpenClaw-managed Chrome lifecycle and CDP helpers.
+ * GrokBot-managed Chrome lifecycle and CDP helpers.
  *
  * Builds launch args, starts/stops managed Chrome, probes CDP readiness, and
  * resolves WebSocket endpoints for browser control.
@@ -15,12 +15,12 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { setTimeout as delay } from "node:timers/promises";
-import { prepareOomScoreAdjustedSpawn } from "openclaw/plugin-sdk/process-runtime";
-import { normalizeOptionalString } from "openclaw/plugin-sdk/string-coerce-runtime";
-import { sliceUtf16Safe } from "openclaw/plugin-sdk/text-utility-runtime";
+import { prepareOomScoreAdjustedSpawn } from "grokbot/plugin-sdk/process-runtime";
+import { normalizeOptionalString } from "grokbot/plugin-sdk/string-coerce-runtime";
+import { sliceUtf16Safe } from "grokbot/plugin-sdk/text-utility-runtime";
 import type { SsrFPolicy } from "../infra/net/ssrf.js";
 import { ensurePortAvailable } from "../infra/ports.js";
-import { resolvePreferredOpenClawTmpDir } from "../infra/tmp-openclaw-dir.js";
+import { resolvePreferredOpenClawTmpDir } from "../infra/tmp-grokbot-dir.js";
 import { redactToolPayloadText } from "../logging/redact.js";
 import { createSubsystemLogger } from "../logging/subsystem.js";
 import { CONFIG_DIR } from "../utils.js";
@@ -698,7 +698,7 @@ async function ensureManagedChromePortAvailable(
     }
   };
 
-  // Chromium tries IPv4 loopback first, while OpenClaw polls the configured endpoint.
+  // Chromium tries IPv4 loopback first, while GrokBot polls the configured endpoint.
   // Probe both so neither Chrome's bind nor the later readiness check can be captured.
   try {
     await ensureProbeHostsAvailable();
@@ -744,7 +744,7 @@ function chromeLaunchHints(params: {
     CHROME_SINGLETON_IN_USE_PATTERN.test(params.stderrOutput);
   if (singletonInUse) {
     hints.push(
-      `The Chromium profile "${params.profile.name}" is locked. Stop the existing browser or remove stale Singleton* lock files under ~/.openclaw/browser/${params.profile.name}/user-data.`,
+      `The Chromium profile "${params.profile.name}" is locked. Stop the existing browser or remove stale Singleton* lock files under ~/.grokbot/browser/${params.profile.name}/user-data.`,
     );
   }
   return hints.length > 0 ? `\nHint: ${hints.join("\nHint: ")}` : "";
@@ -789,7 +789,7 @@ function resolveBrowserExecutable(
   );
 }
 
-/** Resolve the user-data-dir path for a managed OpenClaw Chrome profile. */
+/** Resolve the user-data-dir path for a managed GrokBot Chrome profile. */
 export function resolveOpenClawUserDataDir(profileName = DEFAULT_OPENCLAW_BROWSER_PROFILE_NAME) {
   return path.join(CONFIG_DIR, "browser", profileName, "user-data");
 }
@@ -798,7 +798,7 @@ function cdpUrlForPort(cdpPort: number) {
   return `http://127.0.0.1:${cdpPort}`;
 }
 
-/** Build Chrome launch arguments for the managed OpenClaw browser. */
+/** Build Chrome launch arguments for the managed GrokBot browser. */
 function buildOpenClawChromeLaunchArgs(params: {
   resolved: ResolvedBrowserConfig;
   profile: ResolvedBrowserProfile;
@@ -826,7 +826,7 @@ function buildOpenClawChromeLaunchArgs(params: {
   ];
 
   if (platform === "darwin" && params.useMockKeychain) {
-    // This is an isolated OpenClaw-owned profile, not the user's Chrome profile.
+    // This is an isolated GrokBot-owned profile, not the user's Chrome profile.
     // Keep its basic password store non-interactive so headless Chrome can
     // encrypt and persist cookies without login-keychain prompts.
     args.push("--use-mock-keychain");
@@ -974,7 +974,7 @@ async function waitForManagedLaunchPoll(delayMs: number, signal?: AbortSignal): 
   }
 }
 
-/** Launch or attach to the managed OpenClaw Chrome profile. */
+/** Launch or attach to the managed GrokBot Chrome profile. */
 export async function launchOpenClawChrome(
   resolved: ResolvedBrowserConfig,
   profile: ResolvedBrowserProfile,
@@ -1181,22 +1181,22 @@ export async function launchOpenClawChrome(
         downloadDir: DEFAULT_DOWNLOAD_DIR,
         mockKeychain: useMockKeychain,
       });
-      log.info(`🦞 openclaw browser profile decorated (${profile.color})`);
+      log.info(`🦞 grokbot browser profile decorated (${profile.color})`);
     } catch (err) {
-      log.warn(`openclaw browser profile decoration failed: ${String(err)}`);
+      log.warn(`grokbot browser profile decoration failed: ${String(err)}`);
     }
   }
 
   try {
     ensureProfileNetworkPredictionDisabled(userDataDir);
   } catch (err) {
-    log.warn(`openclaw browser network-prediction prefs failed: ${String(err)}`);
+    log.warn(`grokbot browser network-prediction prefs failed: ${String(err)}`);
   }
 
   try {
     ensureProfileCleanExit(userDataDir);
   } catch (err) {
-    log.warn(`openclaw browser clean-exit prefs failed: ${String(err)}`);
+    log.warn(`grokbot browser clean-exit prefs failed: ${String(err)}`);
   }
   signal?.throwIfAborted();
 
@@ -1298,7 +1298,7 @@ export async function launchOpenClawChrome(
       signal?.throwIfAborted();
       const pid = spawned.pid;
       log.info(
-        `🦞 openclaw browser started (${exe.kind}) profile "${profile.name}" on 127.0.0.1:${profile.cdpPort} (pid ${pid})`,
+        `🦞 grokbot browser started (${exe.kind}) profile "${profile.name}" on 127.0.0.1:${profile.cdpPort} (pid ${pid})`,
       );
 
       return runningForProcess(proc, pid);

@@ -1,8 +1,8 @@
 // Usage gateway methods aggregate provider and session cost/token metrics from
 // caches, logs, session stores, and discovered transcript files.
 import fs from "node:fs";
-import { expectDefined } from "@openclaw/normalization-core";
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+import { expectDefined } from "@grokbot/normalization-core";
+import { normalizeOptionalString } from "@grokbot/normalization-core/string-coerce";
 import {
   ErrorCodes,
   errorShape,
@@ -15,7 +15,7 @@ import {
   resolveSessionFilePathOptions,
 } from "../../config/sessions/paths.js";
 import type { SessionEntry } from "../../config/sessions/types.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import {
   createTimeZoneDayKeyFormatter,
   resolveTimezone,

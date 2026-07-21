@@ -1,4 +1,4 @@
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   approveDevicePairing,
@@ -17,7 +17,7 @@ import { resetRemoteNodeSkillsForTests } from "../../skills/runtime/remote-skill
 import {
   createOpenClawTestState,
   type OpenClawTestState,
-} from "../../test-utils/openclaw-test-state.js";
+} from "../../test-utils/grokbot-test-state.js";
 import { nodeHandlers } from "./nodes.js";
 import type { GatewayRequestHandlerOptions } from "./types.js";
 
@@ -144,7 +144,7 @@ async function pairAndroidNodeDevice(stateDir: string, nodeId: string): Promise<
       displayName: "Galaxy A54 5G",
       platform: "android",
       deviceFamily: "Android",
-      clientId: "openclaw-android",
+      clientId: "grokbot-android",
       clientMode: "node",
       role: "node",
       roles: ["node"],
@@ -168,7 +168,7 @@ async function pairMixedRoleAndroidDevice(stateDir: string, nodeId: string): Pro
       displayName: "Galaxy A54 5G",
       platform: "android",
       deviceFamily: "Android",
-      clientId: "openclaw-android",
+      clientId: "grokbot-android",
       clientMode: "node",
       role: "operator",
       roles: ["operator", "node"],
@@ -190,7 +190,7 @@ async function approveNodeSurface(stateDir: string, nodeId: string): Promise<voi
       nodeId,
       platform: "android",
       deviceFamily: "Android",
-      clientId: "openclaw-android",
+      clientId: "grokbot-android",
       clientMode: "node",
       displayName: "Galaxy A54 5G",
     },

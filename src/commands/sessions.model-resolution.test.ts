@@ -5,8 +5,8 @@ import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { replaceSessionEntry } from "../config/sessions/session-accessor.js";
 import type { SessionEntry } from "../config/sessions/types.js";
-import { closeOpenClawAgentDatabasesForTest } from "../state/openclaw-agent-db.js";
-import { closeOpenClawStateDatabaseForTest } from "../state/openclaw-state-db.js";
+import { closeOpenClawAgentDatabasesForTest } from "../state/grokbot-agent-db.js";
+import { closeOpenClawStateDatabaseForTest } from "../state/grokbot-state-db.js";
 import {
   mockSessionsConfig,
   resetMockSessionsConfig,
@@ -166,13 +166,13 @@ describe("sessionsCommand model resolution", () => {
     );
   });
 
-  it("reports the owning Codex harness for locked sessions despite a stale OpenClaw override", async () => {
+  it("reports the owning Codex harness for locked sessions despite a stale GrokBot override", async () => {
     setMockSessionsConfig(() => ({
       agents: {
         defaults: {
           model: { primary: "openai/gpt-5.5" },
           models: {
-            "openai/gpt-5.5": { agentRuntime: { id: "openclaw" } },
+            "openai/gpt-5.5": { agentRuntime: { id: "grokbot" } },
           },
           contextTokens: 200_000,
         },
@@ -187,7 +187,7 @@ describe("sessionsCommand model resolution", () => {
           modelProvider: "openai",
           model: "gpt-5.5",
           agentHarnessId: "codex",
-          agentRuntimeOverride: "openclaw",
+          agentRuntimeOverride: "grokbot",
           modelSelectionLocked: true,
         },
       },

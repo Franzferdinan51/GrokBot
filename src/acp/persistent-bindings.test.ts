@@ -1,5 +1,5 @@
 /** Tests configured channel-to-ACP binding resolution and generated session keys. */
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { beforeAll, beforeEach, describe, expect, it } from "vitest";
 import { resolveAgentWorkspaceDir } from "../agents/agent-scope.js";
 import type { ChannelConfiguredBindingProvider } from "../channels/plugins/types.adapters.js";
@@ -395,7 +395,7 @@ describe("resolveConfiguredAcpBindingRecord", () => {
       createDiscordBinding({
         agentId: "codex",
         conversationId: defaultDiscordConversationId,
-        acp: { cwd: "/repo/openclaw" },
+        acp: { cwd: "/repo/grokbot" },
       }),
     ]);
     const resolved = resolveBindingRecord(cfg);
@@ -719,7 +719,7 @@ describe("resolveConfiguredAcpBindingRecord", () => {
       ],
       {
         agents: {
-          list: [{ id: "codex", workspace: "/workspace/openclaw" }, { id: "claude" }],
+          list: [{ id: "codex", workspace: "/workspace/grokbot" }, { id: "claude" }],
         },
       },
     );

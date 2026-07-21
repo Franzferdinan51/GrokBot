@@ -47,7 +47,7 @@ function clearGatewayModelPricingState(): void {
 }
 
 describe("session cost usage", () => {
-  const suiteRootTracker = createSuiteTempRootTracker({ prefix: "openclaw-session-cost-" });
+  const suiteRootTracker = createSuiteTempRootTracker({ prefix: "grokbot-session-cost-" });
   const withStateDir = async <T>(stateDir: string, fn: () => Promise<T>): Promise<T> =>
     await withEnvAsync({ OPENCLAW_STATE_DIR: stateDir }, fn);
   const makeSessionCostRoot = async (prefix: string): Promise<string> =>
@@ -407,7 +407,7 @@ describe("session cost usage", () => {
       );
       expect(sqliteRows).toHaveLength(1);
       expect(sqliteRows[0]?.key).toContain(
-        path.join("agents", "main", "agent", "openclaw-agent.sqlite"),
+        path.join("agents", "main", "agent", "grokbot-agent.sqlite"),
       );
     });
   });

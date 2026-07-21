@@ -18,23 +18,23 @@ describe("native route memory", () => {
   });
 
   it("drops corrupt and invalid entries", () => {
-    storage.setItem("openclaw.native.lastRoute", "{");
+    storage.setItem("grokbot.native.lastRoute", "{");
     expect(considerRouteRestore("chat", "", storage, true)).toBeNull();
-    expect(storage.getItem("openclaw.native.lastRoute")).toBeNull();
+    expect(storage.getItem("grokbot.native.lastRoute")).toBeNull();
 
     storage.setItem(
-      "openclaw.native.lastRoute",
+      "grokbot.native.lastRoute",
       JSON.stringify({ routeId: "retired", search: "" }),
     );
     expect(considerRouteRestore("chat", "", storage, true)).toBeNull();
-    expect(storage.getItem("openclaw.native.lastRoute")).toBeNull();
+    expect(storage.getItem("grokbot.native.lastRoute")).toBeNull();
   });
 
   it("does nothing outside the native host", () => {
-    storage.setItem("openclaw.native.lastRoute", JSON.stringify({ routeId: "usage", search: "" }));
+    storage.setItem("grokbot.native.lastRoute", JSON.stringify({ routeId: "usage", search: "" }));
     persistRoute("chat", "", storage, false);
     expect(considerRouteRestore("chat", "", storage, false)).toBeNull();
-    expect(JSON.parse(storage.getItem("openclaw.native.lastRoute") ?? "{}")).toEqual({
+    expect(JSON.parse(storage.getItem("grokbot.native.lastRoute") ?? "{}")).toEqual({
       routeId: "usage",
       search: "",
     });

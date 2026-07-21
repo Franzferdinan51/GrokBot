@@ -1,4 +1,4 @@
-// Bench Cli Startup script supports OpenClaw repository automation.
+// Bench Cli Startup script supports GrokBot repository automation.
 import { spawn } from "node:child_process";
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import os from "node:os";
@@ -109,7 +109,7 @@ const DEFAULT_TIMEOUT_MS = 30_000;
 const DEFAULT_TIMEOUT_KILL_GRACE_MS = 1_000;
 const TIMEOUT_KILL_GRACE_MS = resolveTimeoutKillGraceMs(process.env);
 const PROCESS_GROUP_EXIT_POLL_MS = 25;
-const DEFAULT_ENTRY = "openclaw.mjs";
+const DEFAULT_ENTRY = "grokbot.mjs";
 const MAX_RSS_MARKER = "__OPENCLAW_MAX_RSS_KB__=";
 
 function resolveTimeoutKillGraceMs(env: NodeJS.ProcessEnv): number {
@@ -718,9 +718,9 @@ async function runSample(params: {
   heapProfDir?: string;
   rssHookPath: string;
 }): Promise<Sample> {
-  const runRoot = mkdtempSync(path.join(os.tmpdir(), "openclaw-cli-bench-home-"));
-  const stateDir = path.join(runRoot, ".openclaw");
-  const configPath = path.join(stateDir, "openclaw.json");
+  const runRoot = mkdtempSync(path.join(os.tmpdir(), "grokbot-cli-bench-home-"));
+  const stateDir = path.join(runRoot, ".grokbot");
+  const configPath = path.join(stateDir, "grokbot.json");
   const configFixture = buildConfigFixture(params.commandCase);
   if (configFixture) {
     mkdirSync(stateDir, { recursive: true });
@@ -1132,7 +1132,7 @@ function parseOptions(): CliOptions {
 }
 
 function printUsage(): void {
-  console.log(`OpenClaw CLI benchmark
+  console.log(`GrokBot CLI benchmark
 
 Usage:
   pnpm tsx scripts/bench-cli-startup.ts [options]
@@ -1141,7 +1141,7 @@ Options:
   --preset <startup|real|response|all>
                                Command preset to run (default: startup)
   --case <id>                  Specific case id to run; repeatable
-  --entry <path>               Primary entry file (default: openclaw.mjs)
+  --entry <path>               Primary entry file (default: grokbot.mjs)
   --entry-secondary <path>     Secondary entry file for avg delta comparison
   --runs <n>                   Measured runs per case (default: ${DEFAULT_RUNS})
   --warmup <n>                 Warmup runs per case (default: ${DEFAULT_WARMUP})
@@ -1218,7 +1218,7 @@ async function main(): Promise<void> {
     printDelta(baseline, candidate);
     return;
   }
-  const tmpDir = mkdtempSync(path.join(os.tmpdir(), "openclaw-cli-bench-"));
+  const tmpDir = mkdtempSync(path.join(os.tmpdir(), "grokbot-cli-bench-"));
   const rssHookPath = buildRssHook(tmpDir);
   try {
     const primary = await buildSuiteResult({

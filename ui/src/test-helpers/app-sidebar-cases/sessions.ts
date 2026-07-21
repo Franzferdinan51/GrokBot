@@ -52,8 +52,8 @@ describe("AppSidebar session indicators", () => {
         pullRequests: [
           {
             number: 1,
-            owner: "openclaw",
-            repo: "openclaw",
+            owner: "grokbot",
+            repo: "grokbot",
             branch: "feature/test",
             title: "Test",
             url: "https://example.test/pr/1",
@@ -200,7 +200,7 @@ describe("AppSidebar lobster outcome wiring", () => {
       });
       await sidebar.updateComplete;
 
-      const pet = sidebar.querySelector<LobsterPetElement>("openclaw-lobster-pet");
+      const pet = sidebar.querySelector<LobsterPetElement>("grokbot-lobster-pet");
       expect(pet?.runOutcome).toBe(expectedOutcome);
     },
   );
@@ -210,7 +210,7 @@ describe("AppSidebar logo stand-in wiring", () => {
   it("swaps the brand mark while the pet's logo visit is in, leaving, then out", async () => {
     const gateway = createGateway({} as GatewayBrowserClient);
     const { sidebar } = await mountSidebar(gateway, createSessions("main", ["agent:main:main"]));
-    const pet = sidebar.querySelector("openclaw-lobster-pet");
+    const pet = sidebar.querySelector("grokbot-lobster-pet");
     if (!pet) {
       throw new Error("Expected sidebar lobster pet");
     }
@@ -221,7 +221,7 @@ describe("AppSidebar logo stand-in wiring", () => {
     const logo = () => sidebar.querySelector(".sidebar-brand__logo");
     const standIn = () => sidebar.querySelector(".sidebar-brand__pet");
     const standInHost = sidebar.querySelector<HTMLElement & { updateComplete: Promise<boolean> }>(
-      "openclaw-lobster-logo-standin",
+      "grokbot-lobster-logo-standin",
     );
     const settleStandIn = async () => {
       await sidebar.updateComplete;
@@ -289,7 +289,7 @@ describe("AppSidebar session source lifecycle", () => {
     menuButton.click();
     await sidebar.updateComplete;
 
-    const menu = sidebar.querySelector<TestSessionMenu>("openclaw-session-menu");
+    const menu = sidebar.querySelector<TestSessionMenu>("grokbot-session-menu");
     if (!menu) {
       throw new Error("Expected sidebar session menu");
     }
@@ -453,7 +453,7 @@ describe("AppSidebar session accessibility", () => {
 
     // The identity card is the main-session entry; the list stays empty.
     expect(sidebar.querySelectorAll(".sidebar-recent-session")).toHaveLength(0);
-    expect(sidebar.querySelector("openclaw-sidebar-agent-card")).not.toBeNull();
+    expect(sidebar.querySelector("grokbot-sidebar-agent-card")).not.toBeNull();
   });
 });
 
@@ -480,7 +480,7 @@ describe("AppSidebar session mutation feedback", () => {
     }
     button.click();
     await sidebar.updateComplete;
-    const menu = sidebar.querySelector<TestSessionMenu>("openclaw-session-menu");
+    const menu = sidebar.querySelector<TestSessionMenu>("grokbot-session-menu");
     if (!menu) {
       throw new Error("expected session menu");
     }
@@ -499,7 +499,7 @@ describe("AppSidebar session mutation feedback", () => {
   }
 
   async function mountToastHost() {
-    const host = document.createElement("openclaw-toast-host");
+    const host = document.createElement("grokbot-toast-host");
     document.body.append(host);
     await host.updateComplete;
     return host;
@@ -650,7 +650,7 @@ describe("AppSidebar session mutation feedback", () => {
       const row = sidebar.querySelector('[data-session-key="agent:main:b"]');
       row?.dispatchEvent(new MouseEvent("contextmenu", { bubbles: true, cancelable: true }));
       await sidebar.updateComplete;
-      const menu = sidebar.querySelector<TestSessionMenu>("openclaw-session-menu");
+      const menu = sidebar.querySelector<TestSessionMenu>("grokbot-session-menu");
       await menu?.updateComplete;
       menu?.querySelector<HTMLButtonElement>('[data-shortcut="d"]')?.click();
 
@@ -692,7 +692,7 @@ describe("AppSidebar session mutation feedback", () => {
     const row = sidebar.querySelector('[data-session-key="agent:main:b"]');
     row?.dispatchEvent(new MouseEvent("contextmenu", { bubbles: true, cancelable: true }));
     await sidebar.updateComplete;
-    const menu = sidebar.querySelector<TestSessionMenu>("openclaw-session-menu");
+    const menu = sidebar.querySelector<TestSessionMenu>("grokbot-session-menu");
     await menu?.updateComplete;
     menu?.querySelector<HTMLButtonElement>('[data-shortcut="a"]')?.click();
     await waitForFast(() => expect(harness.patch).toHaveBeenCalledOnce());
@@ -719,14 +719,14 @@ describe("AppSidebar session mutation feedback", () => {
 
     row?.dispatchEvent(new MouseEvent("contextmenu", { bubbles: true, cancelable: true }));
     await sidebar.updateComplete;
-    let menu = sidebar.querySelector<TestSessionMenu>("openclaw-session-menu");
+    let menu = sidebar.querySelector<TestSessionMenu>("grokbot-session-menu");
     await menu?.updateComplete;
     menu?.querySelector<HTMLButtonElement>('[data-shortcut="a"]')?.click();
     await waitForFast(() => expect(harness.patch).toHaveBeenCalledOnce());
 
     row?.dispatchEvent(new MouseEvent("contextmenu", { bubbles: true, cancelable: true }));
     await sidebar.updateComplete;
-    menu = sidebar.querySelector<TestSessionMenu>("openclaw-session-menu");
+    menu = sidebar.querySelector<TestSessionMenu>("grokbot-session-menu");
     await menu?.updateComplete;
     menu?.querySelector<HTMLButtonElement>('[data-shortcut="u"]')?.click();
     await waitForFast(() => expect(harness.patch).toHaveBeenCalledTimes(3));

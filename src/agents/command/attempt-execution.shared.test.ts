@@ -21,7 +21,7 @@ const tempDirs = useAutoCleanupTempDirTracker(afterEach);
 
 function makeTaskCompletionEvents(): NonNullable<AgentCommandOpts["internalEvents"]> {
   // The result deliberately contains internal markers to prove child output
-  // cannot spoof OpenClaw runtime-context envelopes.
+  // cannot spoof GrokBot runtime-context envelopes.
   return [
     {
       type: "task_completion",
@@ -45,11 +45,11 @@ function makeTaskCompletionEvents(): NonNullable<AgentCommandOpts["internalEvent
 }
 
 describe("attempt execution prompt materialization", () => {
-  it("materializes ACP internal events without OpenClaw internal runtime markers", () => {
+  it("materializes ACP internal events without GrokBot internal runtime markers", () => {
     const events = makeTaskCompletionEvents();
     const body = [
       INTERNAL_RUNTIME_CONTEXT_BEGIN,
-      "OpenClaw runtime context (internal):",
+      "GrokBot runtime context (internal):",
       "hidden completion event",
       INTERNAL_RUNTIME_CONTEXT_END,
       "",
@@ -76,7 +76,7 @@ describe("attempt execution prompt materialization", () => {
     const transcriptBody = resolveInternalEventTranscriptBody(
       [
         INTERNAL_RUNTIME_CONTEXT_BEGIN,
-        "OpenClaw runtime context (internal):",
+        "GrokBot runtime context (internal):",
         "hidden completion event",
         INTERNAL_RUNTIME_CONTEXT_END,
       ].join("\n"),
@@ -92,7 +92,7 @@ describe("attempt execution prompt materialization", () => {
 
 describe("persistSessionEntry", () => {
   it("clears stale local entries when guarded persistence sees no persisted entry", async () => {
-    const dir = tempDirs.make("openclaw-session-store-");
+    const dir = tempDirs.make("grokbot-session-store-");
     try {
       const storePath = path.join(dir, "sessions.json");
       const sessionStore = {
@@ -135,7 +135,7 @@ describe("persistSessionEntry", () => {
       expected: { label: undefined, pinnedAt: 300 },
     },
   ])("preserves a concurrent $name", async ({ current, expected }) => {
-    const dir = tempDirs.make("openclaw-session-store-");
+    const dir = tempDirs.make("grokbot-session-store-");
     try {
       const storePath = path.join(dir, "sessions.json");
       const staleEntry: SessionEntry = {
@@ -184,7 +184,7 @@ describe("persistSessionEntry", () => {
   });
 
   it("does not restore policy fields revoked during an active turn", async () => {
-    const dir = tempDirs.make("openclaw-session-store-");
+    const dir = tempDirs.make("grokbot-session-store-");
     try {
       const storePath = path.join(dir, "sessions.json");
       const initialEntry: SessionEntry = {
@@ -233,7 +233,7 @@ describe("persistSessionEntry", () => {
   });
 
   it("does not recreate a deleted persisted entry from stale local memory", async () => {
-    const dir = tempDirs.make("openclaw-session-store-");
+    const dir = tempDirs.make("grokbot-session-store-");
     try {
       const storePath = path.join(dir, "sessions.json");
       const staleEntry: SessionEntry = {
@@ -264,7 +264,7 @@ describe("persistSessionEntry", () => {
   });
 
   it("keeps rejecting repeated stale writes after clearing local memory", async () => {
-    const dir = tempDirs.make("openclaw-session-store-");
+    const dir = tempDirs.make("grokbot-session-store-");
     try {
       const storePath = path.join(dir, "sessions.json");
       const staleEntry: SessionEntry = {
@@ -305,7 +305,7 @@ describe("persistSessionEntry", () => {
   });
 
   it("allows an explicit create-on-missing persistence predicate", async () => {
-    const dir = tempDirs.make("openclaw-session-store-");
+    const dir = tempDirs.make("grokbot-session-store-");
     try {
       const storePath = path.join(dir, "sessions.json");
       const sessionStore: Record<string, SessionEntry> = {};

@@ -3,7 +3,7 @@ import { executeSqliteQuerySync } from "../../infra/kysely-sync.js";
 import {
   openOpenClawAgentDatabase,
   runOpenClawAgentWriteTransaction,
-} from "../../state/openclaw-agent-db.js";
+} from "../../state/grokbot-agent-db.js";
 import {
   getSessionKysely,
   resolveSqliteReadScope,

@@ -6,7 +6,7 @@ OPENCLAW_PARALLELS_WINDOWS_API=1
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 TODAY="$(date +%F)"
 CLEAN_SNAPSHOT="windows-11-clean-os-${TODAY}"
-BASELINE_SNAPSHOT="pre-openclaw-native-e2e-${TODAY}"
+BASELINE_SNAPSHOT="pre-grokbot-native-e2e-${TODAY}"
 GUEST_PROFILE=""
 GUEST_PROFILE_PS=""
 GUEST_ARCH=""
@@ -38,8 +38,8 @@ Usage: scripts/e2e/parallels-windows-prepare.sh <command> [options]
 
 Commands:
   inventory   List the VM, hardware facts, and snapshots.
-  prepare     Create a clean snapshot, provision the reusable OpenClaw baseline, and snapshot it.
-  verify      Verify base prerequisites and prove the guest contains no OpenClaw product state.
+  prepare     Create a clean snapshot, provision the reusable GrokBot baseline, and snapshot it.
+  verify      Verify base prerequisites and prove the guest contains no GrokBot product state.
   restore     Restore a snapshot by exact name or id.
 
 Options:
@@ -50,8 +50,8 @@ Options:
   -h, --help                  Show this help.
 
 prepare assumes Parallels Desktop is installed/activated and a Windows 11 VM already exists.
-It installs only reusable OpenClaw prerequisites: WSL platform/package, Git, and Node/npm.
-It refuses to create the baseline when the guest contains an OpenClaw CLI, app package, process,
+It installs only reusable GrokBot prerequisites: WSL platform/package, Git, and Node/npm.
+It refuses to create the baseline when the guest contains an GrokBot CLI, app package, process,
 tray state, or WSL distro.
 EOF
 }
@@ -272,7 +272,7 @@ for snapshot_id, item in data.items():
         raise SystemExit(0)
 prefixes = {
     "clean": "windows-11-clean-os-",
-    "e2e": "pre-openclaw-native-e2e-",
+    "e2e": "pre-grokbot-native-e2e-",
 }
 prefix = prefixes.get(requested.lower())
 if prefix:
@@ -328,7 +328,7 @@ create_clean_snapshot_if_raw() {
     say "Skipping clean-OS snapshot because reusable prerequisites are already installed"
     return
   fi
-  create_snapshot "$CLEAN_SNAPSHOT" "Clean Windows baseline before OpenClaw development prerequisites."
+  create_snapshot "$CLEAN_SNAPSHOT" "Clean Windows baseline before GrokBot development prerequisites."
 }
 
 restore_snapshot() {
@@ -354,21 +354,21 @@ inventory() {
 clean_state_script() {
   cat <<'PS'
 $dirty = [System.Collections.Generic.List[string]]::new()
-if (Get-Command openclaw.cmd -ErrorAction SilentlyContinue) { $dirty.Add('openclaw.cmd on PATH') }
-if (Test-Path (Join-Path $env:USERPROFILE '.openclaw')) { $dirty.Add('OpenClaw CLI state directory exists') }
+if (Get-Command grokbot.cmd -ErrorAction SilentlyContinue) { $dirty.Add('grokbot.cmd on PATH') }
+if (Test-Path (Join-Path $env:USERPROFILE '.grokbot')) { $dirty.Add('GrokBot CLI state directory exists') }
 if (Test-Path (Join-Path $env:APPDATA 'OpenClawTray')) { $dirty.Add('OpenClawTray AppData exists') }
 if (Test-Path (Join-Path $env:APPDATA 'OpenClawTray-Dev')) { $dirty.Add('OpenClawTray-Dev AppData exists') }
-if (Test-Path (Join-Path $env:LOCALAPPDATA 'OpenClawTray')) { $dirty.Add('OpenClaw Companion install/state directory exists') }
-if (Test-Path (Join-Path $env:LOCALAPPDATA 'OpenClawTray-Dev')) { $dirty.Add('OpenClaw Companion dev install/state directory exists') }
-if (Get-AppxPackage -Name '*OpenClaw*' -ErrorAction SilentlyContinue) { $dirty.Add('OpenClaw app package installed') }
-if (Get-Process -Name '*OpenClaw*' -ErrorAction SilentlyContinue) { $dirty.Add('OpenClaw process running') }
+if (Test-Path (Join-Path $env:LOCALAPPDATA 'OpenClawTray')) { $dirty.Add('GrokBot Companion install/state directory exists') }
+if (Test-Path (Join-Path $env:LOCALAPPDATA 'OpenClawTray-Dev')) { $dirty.Add('GrokBot Companion dev install/state directory exists') }
+if (Get-AppxPackage -Name '*GrokBot*' -ErrorAction SilentlyContinue) { $dirty.Add('GrokBot app package installed') }
+if (Get-Process -Name '*GrokBot*' -ErrorAction SilentlyContinue) { $dirty.Add('GrokBot process running') }
 $uninstallRoots = @(
   'HKCU:/Software/Microsoft/Windows/CurrentVersion/Uninstall/*',
   'HKLM:/Software/Microsoft/Windows/CurrentVersion/Uninstall/*',
   'HKLM:/Software/WOW6432Node/Microsoft/Windows/CurrentVersion/Uninstall/*'
 )
-if (Get-ItemProperty $uninstallRoots -ErrorAction SilentlyContinue | Where-Object { $_.DisplayName -like 'OpenClaw Companion*' }) {
-  $dirty.Add('OpenClaw Companion uninstall registration exists')
+if (Get-ItemProperty $uninstallRoots -ErrorAction SilentlyContinue | Where-Object { $_.DisplayName -like 'GrokBot Companion*' }) {
+  $dirty.Add('GrokBot Companion uninstall registration exists')
 }
 $distros = @(wsl.exe -l -q 2>$null | Where-Object { $_.Trim() })
 if ($distros.Count -gt 0) { $dirty.Add('WSL distro exists: ' + ($distros -join ', ')) }
@@ -457,14 +457,14 @@ ensure_wsl_package() {
   run_bounded 720 prlctl exec "$VM_NAME" curl.exe -fL --connect-timeout 20 --max-time 600 "$url" -o "$wsl_msi" || die "WSL download transport exceeded 12 minutes"
   signature="$(guest_system_ps "\$signature = Get-AuthenticodeSignature '${wsl_msi}'; if (\$signature.Status -eq 'Valid' -and \$signature.SignerCertificate.Subject -match 'Microsoft Corporation') { 'Valid' } else { \$signature.Status.ToString() + ': ' + \$signature.SignerCertificate.Subject }" | tr -d '\r' | tail -n 1)"
   [[ "$signature" == "Valid" ]] || die "WSL MSI signature was not valid Microsoft code: $signature"
-  run_windows_installer prlctl exec "$VM_NAME" msiexec.exe /i 'C:\ProgramData\OpenClawPrerequisiteInstallers\WSL.msi' /qn /norestart '/L*v' 'C:\Windows\Temp\openclaw-wsl-install.log'
+  run_windows_installer prlctl exec "$VM_NAME" msiexec.exe /i 'C:\ProgramData\OpenClawPrerequisiteInstallers\WSL.msi' /qn /norestart '/L*v' 'C:\Windows\Temp\grokbot-wsl-install.log'
   finish_installer_reboot
   guest_user_cmd 'wsl.exe --version' >/dev/null || {
-    guest_system_ps "Get-Content 'C:/Windows/Temp/openclaw-wsl-install.log' -Tail 80" >&2 || true
+    guest_system_ps "Get-Content 'C:/Windows/Temp/grokbot-wsl-install.log' -Tail 80" >&2 || true
     die "WSL package install did not produce a working wsl.exe"
   }
   guest_user_cmd 'wsl.exe --set-default-version 2' >/dev/null
-  guest_system_ps "Remove-Item -LiteralPath '${wsl_msi}','C:/Windows/Temp/openclaw-wsl-install.log' -Force -ErrorAction SilentlyContinue"
+  guest_system_ps "Remove-Item -LiteralPath '${wsl_msi}','C:/Windows/Temp/grokbot-wsl-install.log' -Force -ErrorAction SilentlyContinue"
 }
 
 resolve_winget_manifest() {
@@ -633,7 +633,7 @@ prepare() {
   restart_guest
   guest_user_cmd 'wsl.exe --set-default-version 2' >/dev/null
   verify_baseline
-  create_snapshot "$BASELINE_SNAPSHOT" "E2E-ready OpenClaw Windows baseline with WSL 2, Git, Node/npm, and no OpenClaw product state."
+  create_snapshot "$BASELINE_SNAPSHOT" "E2E-ready GrokBot Windows baseline with WSL 2, Git, Node/npm, and no GrokBot product state."
   say "Baseline ready: $BASELINE_SNAPSHOT"
 }
 

@@ -1,4 +1,4 @@
-// OpenClaw chat engine: transport-agnostic conversation over typed operations.
+// GrokBot chat engine: transport-agnostic conversation over typed operations.
 import type { SystemAgentChatQuestion } from "../../packages/gateway-protocol/src/index.js";
 import { isSensitiveConfigPath } from "../config/sensitive-paths.js";
 import { formatErrorMessage } from "../infra/errors.js";
@@ -49,8 +49,8 @@ import {
   type SystemAgentVerifiedInferenceBinding,
 } from "./verified-inference.js";
 /**
- * One conversation with OpenClaw, independent of transport. The TUI backend
- * and the gateway `openclaw.chat` RPC both drive this engine, so onboarding
+ * One conversation with GrokBot, independent of transport. The TUI backend
+ * and the gateway `grokbot.chat` RPC both drive this engine, so onboarding
  * behaves the same in a terminal and in the macOS app.
  *
  * The conversation is AI-backed: free-form messages run through the agent loop
@@ -135,7 +135,7 @@ function createCaptureRuntime(): CaptureRuntime {
     log: (...args) => lines.push(args.join(" ")),
     error: (...args) => lines.push(args.join(" ")),
     exit: (code) => {
-      throw new Error(`OpenClaw operation exited with code ${String(code)}`);
+      throw new Error(`GrokBot operation exited with code ${String(code)}`);
     },
     read: () => lines.join("\n").trim(),
   };
@@ -160,7 +160,7 @@ function defaultChannelSetupWizardRunner(
     const snapshot = await readSetupConfigFileSnapshot();
     if (!snapshot.exists || !snapshot.valid || !snapshot.hash) {
       throw new Error(
-        "Channel setup requires a valid saved config snapshot. Run `openclaw doctor --fix`, then retry.",
+        "Channel setup requires a valid saved config snapshot. Run `grokbot doctor --fix`, then retry.",
       );
     }
     const baseConfig = snapshot.sourceConfig ?? snapshot.config;
@@ -356,7 +356,7 @@ function redactSensitiveCommandText(text: string): string {
 function formatPendingOperationForAssistant(operation: SystemAgentOperation): string {
   const description = describeSystemAgentPersistentOperation(operation);
   return operation.kind === "setup"
-    ? `${description}. Exact setup JSON: ${JSON.stringify(operation)}. Keep the verified model unless the user explicitly asks to leave OpenClaw and reconfigure inference.`
+    ? `${description}. Exact setup JSON: ${JSON.stringify(operation)}. Keep the verified model unless the user explicitly asks to leave GrokBot and reconfigure inference.`
     : description;
 }
 
@@ -510,7 +510,7 @@ export class SystemAgentChatEngine {
     }
     if (/^(quit|exit)$/i.test(trimmed)) {
       // Leaving the process is a host action, not a conversation the AI owns.
-      return { text: "OpenClaw retracts into shell. Bye.", action: "exit" };
+      return { text: "GrokBot retracts into shell. Bye.", action: "exit" };
     }
     if (this.awaitingSetupChannel) {
       if (/^(cancel|abort|stop)$/i.test(trimmed)) {
@@ -530,7 +530,7 @@ export class SystemAgentChatEngine {
       );
     }
     if (this.opts.operatorApprovalOnly && this.getPendingOperatorProposal()) {
-      return { text: "Approval pending. Human must decide in OpenClaw UI.", action: "none" };
+      return { text: "Approval pending. Human must decide in GrokBot UI.", action: "none" };
     }
     // Secret hygiene: an exact `config set` on a sensitive path carries a raw
     // token and must never reach a model. The host handles its redacted
@@ -636,7 +636,7 @@ export class SystemAgentChatEngine {
     operation: SystemAgentOperation,
   ): Promise<SystemAgentChatReply> {
     if (!isPersistentSystemAgentOperation(operation)) {
-      throw new Error(`OpenClaw host received a non-persistent approved operation.`);
+      throw new Error(`GrokBot host received a non-persistent approved operation.`);
     }
     const capture = createCaptureRuntime();
     let result: SystemAgentOperationResult | undefined;
@@ -678,7 +678,7 @@ export class SystemAgentChatEngine {
       return {
         text: [
           baseText,
-          "Your agent is hatching — handing you over now. You can always find me in Settings → Ask OpenClaw.",
+          "Your agent is hatching — handing you over now. You can always find me in Settings → Ask GrokBot.",
         ].join("\n\n"),
         action: "open-tui",
         agentDraft: "hatch",
@@ -697,7 +697,7 @@ export class SystemAgentChatEngine {
   }
 
   /**
-   * AI turn: the OpenClaw persona answers and acts through the ring-zero
+   * AI turn: the GrokBot persona answers and acts through the ring-zero
    * tool. The single-turn planner is a second inference path; if neither path
    * answers, the turn fails closed instead of executing model-free guesses.
    */
@@ -722,7 +722,7 @@ export class SystemAgentChatEngine {
           this.pending
             ? // Hand a host-seeded proposal (onboarding welcome) to the loop so
               // the conversation can reshape it through the tool handshake.
-              `[pending-proposal] Awaiting the user's approval: ${formatPendingOperationForAssistant(this.pending)}. It is already host-seeded; if they want it (or a variant), drive it through the openclaw tool yourself.\n${text}`
+              `[pending-proposal] Awaiting the user's approval: ${formatPendingOperationForAssistant(this.pending)}. It is already host-seeded; if they want it (or a variant), drive it through the grokbot tool yourself.\n${text}`
             : text
         }`,
         overview,
@@ -879,7 +879,7 @@ export class SystemAgentChatEngine {
       kind === "open-setup" ||
       kind === "open-tui"
     ) {
-      return "Channel, model, and setup flows need a human operator in the OpenClaw app; they cannot run from a delegated agent request.";
+      return "Channel, model, and setup flows need a human operator in the GrokBot app; they cannot run from a delegated agent request.";
     }
     return undefined;
   }
@@ -894,7 +894,7 @@ export class SystemAgentChatEngine {
     if (operation.kind === "open-tui") {
       this.clearPendingProposals();
       return {
-        text: "Opening your normal agent TUI. Use /openclaw there to come back.",
+        text: "Opening your normal agent TUI. Use /grokbot there to come back.",
         action: "open-tui",
         handoff: operation,
       };
@@ -907,13 +907,13 @@ export class SystemAgentChatEngine {
       this.clearPendingProposals();
       if (this.opts.surface === "gateway") {
         return {
-          text: "The app owns the setup screens here — use Settings, or run `openclaw onboard` in a terminal.",
+          text: "The app owns the setup screens here — use Settings, or run `grokbot onboard` in a terminal.",
           action: "none",
         };
       }
       if (operation.target !== "channels") {
         return {
-          text: "Setup can replace the inference route powering this session. Exit OpenClaw and run `openclaw onboard`; it saves only a route that passes a live test. Then start OpenClaw again.",
+          text: "Setup can replace the inference route powering this session. Exit GrokBot and run `grokbot onboard`; it saves only a route that passes a live test. Then start GrokBot again.",
           action: "none",
         };
       }
@@ -1092,7 +1092,7 @@ export class SystemAgentChatEngine {
   }
 
   /**
-   * Post-write hook: re-validate openclaw.json after every applied operation.
+   * Post-write hook: re-validate grokbot.json after every applied operation.
    * On failure the exact schema issues go straight back into the conversation
    * (and to the AI, which proposes one corrective command) so a bad write is
    * caught and fixed in the same chat instead of surfacing at gateway start.
@@ -1124,8 +1124,8 @@ export class SystemAgentChatEngine {
       return null;
     }
     return [
-      "No usable inference route is configured, so OpenClaw cannot continue.",
-      "Exit and run `openclaw onboard`; it saves only a route that passes a live test.",
+      "No usable inference route is configured, so GrokBot cannot continue.",
+      "Exit and run `grokbot onboard`; it saves only a route that passes a live test.",
     ].join("\n");
   }
 
@@ -1156,7 +1156,7 @@ export class SystemAgentChatEngine {
     return {
       text: [
         "Changing provider credentials would replace the inference route powering this session.",
-        "Exit OpenClaw and run `openclaw onboard`; it stages credentials, live-tests the new route, and saves only a passing setup. Then start OpenClaw again.",
+        "Exit GrokBot and run `grokbot onboard`; it stages credentials, live-tests the new route, and saves only a passing setup. Then start GrokBot again.",
       ].join("\n"),
       action: "none",
     };
@@ -1237,8 +1237,8 @@ export class SystemAgentChatEngine {
         this.wizardBridge = null;
         this.lastSensitiveChannel = bridge.label;
         return [
-          "Sensitive input is not accepted in the OpenClaw chat because terminal input is visible.",
-          `Say \`open channel wizard\` and I'll hand you to the masked terminal wizard for ${bridge.label}, or run \`openclaw channels add --channel ${bridge.label}\` yourself later.`,
+          "Sensitive input is not accepted in the GrokBot chat because terminal input is visible.",
+          `Say \`open channel wizard\` and I'll hand you to the masked terminal wizard for ${bridge.label}, or run \`grokbot channels add --channel ${bridge.label}\` yourself later.`,
         ].join("\n");
       }
       if (bridge.step.type === "note" || bridge.step.type === "progress") {

@@ -1,9 +1,9 @@
-import { uniqueStrings } from "@openclaw/normalization-core/string-normalization";
+import { uniqueStrings } from "@grokbot/normalization-core/string-normalization";
 import {
   executeSqliteQuerySync,
   executeSqliteQueryTakeFirstSync,
 } from "../../infra/kysely-sync.js";
-import type { OpenClawAgentDatabase } from "../../state/openclaw-agent-db.js";
+import type { OpenClawAgentDatabase } from "../../state/grokbot-agent-db.js";
 import type {
   MaterializedSqliteSessionStateDeletePlan,
   SqliteSessionStateDeletePlan,

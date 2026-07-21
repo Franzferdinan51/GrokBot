@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // Verifies published plugin npm packages include built runtime entries and
-// metadata expected by OpenClaw.
+// metadata expected by GrokBot.
 
 import { execFileSync } from "node:child_process";
 import fs from "node:fs";
@@ -102,23 +102,23 @@ export function collectPluginNpmPublishedRuntimeErrors(params) {
   const errors = [];
   const extensionsResult = readPackageStringList(
     packageLabel,
-    "openclaw.extensions",
-    packageJson.openclaw?.extensions,
+    "grokbot.extensions",
+    packageJson.grokbot?.extensions,
   );
   const runtimeExtensionsResult = readPackageStringList(
     packageLabel,
-    "openclaw.runtimeExtensions",
-    packageJson.openclaw?.runtimeExtensions,
+    "grokbot.runtimeExtensions",
+    packageJson.grokbot?.runtimeExtensions,
   );
   const setupEntryResult = readOptionalPackageString(
     packageLabel,
-    "openclaw.setupEntry",
-    packageJson.openclaw?.setupEntry,
+    "grokbot.setupEntry",
+    packageJson.grokbot?.setupEntry,
   );
   const runtimeSetupEntryResult = readOptionalPackageString(
     packageLabel,
-    "openclaw.runtimeSetupEntry",
-    packageJson.openclaw?.runtimeSetupEntry,
+    "grokbot.runtimeSetupEntry",
+    packageJson.grokbot?.runtimeSetupEntry,
   );
   errors.push(
     ...extensionsResult.errors,
@@ -129,8 +129,8 @@ export function collectPluginNpmPublishedRuntimeErrors(params) {
   if (errors.length > 0) {
     return errors;
   }
-  if (!hasPackedFile(packageFiles, "openclaw.plugin.json")) {
-    errors.push(`${packageLabel} plugin npm package must include openclaw.plugin.json`);
+  if (!hasPackedFile(packageFiles, "grokbot.plugin.json")) {
+    errors.push(`${packageLabel} plugin npm package must include grokbot.plugin.json`);
     return errors;
   }
   const extensions = extensionsResult.entries;
@@ -140,7 +140,7 @@ export function collectPluginNpmPublishedRuntimeErrors(params) {
 
   if (runtimeExtensions.length > 0 && runtimeExtensions.length !== extensions.length) {
     errors.push(
-      `${packageLabel} package.json openclaw.runtimeExtensions length (${runtimeExtensions.length}) must match openclaw.extensions length (${extensions.length})`,
+      `${packageLabel} package.json grokbot.runtimeExtensions length (${runtimeExtensions.length}) must match grokbot.extensions length (${extensions.length})`,
     );
     return errors;
   }
@@ -168,7 +168,7 @@ export function collectPluginNpmPublishedRuntimeErrors(params) {
 
   if (runtimeSetupEntry && !setupEntry) {
     errors.push(
-      `${packageLabel} package.json openclaw.runtimeSetupEntry requires openclaw.setupEntry`,
+      `${packageLabel} package.json grokbot.runtimeSetupEntry requires grokbot.setupEntry`,
     );
     return errors;
   }
@@ -380,7 +380,7 @@ export function parseVerifyPublishedPluginRuntimeArgs(argv) {
 }
 
 async function verifyPublishedPluginRuntime(spec) {
-  const workingDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-plugin-npm-runtime."));
+  const workingDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-plugin-npm-runtime."));
   try {
     const tarballPath = await packPublishedPackage(spec, workingDir);
     const extractDir = path.join(workingDir, "extract");

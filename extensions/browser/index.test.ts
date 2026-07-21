@@ -1,7 +1,7 @@
 // Browser tests cover index plugin behavior.
 import fs from "node:fs";
 import path from "node:path";
-import { createTestPluginApi } from "openclaw/plugin-sdk/plugin-test-api";
+import { createTestPluginApi } from "grokbot/plugin-sdk/plugin-test-api";
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   browserPluginNodeHostCommands,
@@ -184,7 +184,7 @@ describe("browser plugin", () => {
 
   it("bundles the browser automation skill with the plugin", () => {
     const manifest = JSON.parse(
-      fs.readFileSync(path.join(__dirname, "openclaw.plugin.json"), "utf8"),
+      fs.readFileSync(path.join(__dirname, "grokbot.plugin.json"), "utf8"),
     ) as { skills?: string[] };
     const skillPath = path.join(__dirname, "skills", "browser-automation", "SKILL.md");
 
@@ -338,7 +338,7 @@ describe("browser plugin", () => {
       descriptors: [
         {
           name: "browser",
-          description: "Manage OpenClaw's dedicated browser (Chrome/Chromium)",
+          description: "Manage GrokBot's dedicated browser (Chrome/Chromium)",
           hasSubcommands: true,
         },
       ],
@@ -392,10 +392,10 @@ describe("browser plugin", () => {
     expect(typeof service?.stop).toBe("function");
     expect(runtimeApiMocks.createBrowserPluginService).not.toHaveBeenCalled();
 
-    await service.start({ config: {}, stateDir: "/tmp/openclaw", logger: { warn: vi.fn() } });
+    await service.start({ config: {}, stateDir: "/tmp/grokbot", logger: { warn: vi.fn() } });
     expect(runtimeApiMocks.createBrowserPluginService).not.toHaveBeenCalled();
 
-    await service.stop({ config: {}, stateDir: "/tmp/openclaw", logger: { warn: vi.fn() } });
+    await service.stop({ config: {}, stateDir: "/tmp/grokbot", logger: { warn: vi.fn() } });
     expect(runtimeApiMocks.stopBrowserControlService).toHaveBeenCalledOnce();
   });
 
@@ -409,7 +409,7 @@ describe("browser plugin", () => {
       start: (...args: unknown[]) => unknown;
     };
 
-    await service.start({ config: {}, stateDir: "/tmp/openclaw", logger: { warn: vi.fn() } });
+    await service.start({ config: {}, stateDir: "/tmp/grokbot", logger: { warn: vi.fn() } });
     expect(runtimeApiMocks.createBrowserPluginService).toHaveBeenCalledOnce();
   });
 
@@ -424,7 +424,7 @@ describe("browser plugin", () => {
         start: (...args: unknown[]) => unknown;
       };
 
-      await service.start({ config: {}, stateDir: "/tmp/openclaw", logger: { warn: vi.fn() } });
+      await service.start({ config: {}, stateDir: "/tmp/grokbot", logger: { warn: vi.fn() } });
       expect(runtimeApiMocks.createBrowserPluginService).not.toHaveBeenCalled();
     });
   }
@@ -432,14 +432,14 @@ describe("browser plugin", () => {
   it("declares setup auto-enable reasons for browser config surfaces", () => {
     const probe = registerBrowserAutoEnableProbe();
 
-    expect(probe({ config: { browser: { defaultProfile: "openclaw" } }, env: {} })).toBe(
+    expect(probe({ config: { browser: { defaultProfile: "grokbot" } }, env: {} })).toBe(
       "browser configured",
     );
     expect(probe({ config: { tools: { alsoAllow: ["browser"] } }, env: {} })).toBe(
       "browser tool referenced",
     );
     expect(
-      probe({ config: { browser: { defaultProfile: "openclaw", enabled: false } }, env: {} }),
+      probe({ config: { browser: { defaultProfile: "grokbot", enabled: false } }, env: {} }),
     ).toBeNull();
   });
 });

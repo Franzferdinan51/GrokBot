@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { reconcileNodePairingOnConnect } from "../gateway/node-connect-reconcile.js";
 import { resetPluginLoaderTestStateForTest } from "../plugins/loader.test-fixtures.js";
 import { testing as runtimeRegistryLoaderTesting } from "../plugins/runtime/runtime-registry-loader.js";

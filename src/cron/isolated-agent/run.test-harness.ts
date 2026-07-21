@@ -1,5 +1,5 @@
 // Isolated run test harness builds cron run inputs, mocks, and assertions.
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+import { normalizeOptionalString } from "@grokbot/normalization-core/string-coerce";
 import { vi, type Mock } from "vitest";
 import { resolveFastModeState as resolveFastModeStateImpl } from "../../agents/fast-mode.js";
 import { LiveSessionModelSwitchError } from "../../agents/live-model-switch-error.js";
@@ -527,7 +527,7 @@ function resetRunConfigMocks(): void {
   resolveAllowedModelRefMock.mockReturnValue({ ref: { provider: "openai", model: "gpt-5.4" } });
   resolveHooksGmailModelMock.mockReturnValue(null);
   resolveThinkingDefaultMock.mockReturnValue("off");
-  resolveEffectiveAgentRuntimeMock.mockReturnValue("openclaw");
+  resolveEffectiveAgentRuntimeMock.mockReturnValue("grokbot");
   getModelRefStatusMock.mockReturnValue({ allowed: false });
   resolveCronStyleNowMock.mockReturnValue({
     formattedTime: "2026-02-10 12:00",

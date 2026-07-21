@@ -10,7 +10,7 @@ import {
   buildCurrentOpenClawCliArgv,
   buildCurrentOpenClawCliCommand,
   buildCurrentOpenClawCliExecEnv,
-} from "./commands-openclaw-cli.js";
+} from "./commands-grokbot-cli.js";
 import {
   deliverPrivateCommandReply,
   readCommandDeliveryTarget,
@@ -22,7 +22,7 @@ import {
 } from "./commands-private-route.js";
 import type { HandleCommandsParams } from "./commands-types.js";
 
-const EXPORT_TRAJECTORY_DOCS_URL = "https://docs.openclaw.ai/tools/trajectory";
+const EXPORT_TRAJECTORY_DOCS_URL = "https://docs.grokbot.ai/tools/trajectory";
 const EXPORT_TRAJECTORY_EXEC_SCOPE_KEY = "chat:export-trajectory";
 const MAX_TRAJECTORY_EXPORT_ENCODED_REQUEST_CHARS = 8192;
 const EXPORT_TRAJECTORY_PRIVATE_ROUTE_UNAVAILABLE =
@@ -296,7 +296,7 @@ function buildTrajectoryExportExecRequest(
   return {
     argv: buildCurrentOpenClawCliArgv(args),
     command: buildCurrentOpenClawCliCommand(args),
-    displayCommand: ["openclaw", ...args].join(" "),
+    displayCommand: ["grokbot", ...args].join(" "),
     encodedRequest,
     request,
   };

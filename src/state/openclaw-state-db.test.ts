@@ -1,4 +1,4 @@
-// OpenClaw state database tests cover state DB migrations and persistence.
+// GrokBot state database tests cover state DB migrations and persistence.
 import { execFileSync } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
@@ -16,9 +16,9 @@ import { requireNodeSqlite } from "../infra/node-sqlite.js";
 import { listOpenFileDescriptorsForPath } from "../infra/open-file-descriptors.test-support.js";
 import { readSqliteNumberPragma } from "../infra/sqlite-pragma.test-support.js";
 import { loadTaskRegistryStateFromSqlite } from "../tasks/task-registry.store.sqlite.js";
-import { withOpenClawTestState } from "../test-utils/openclaw-test-state.js";
+import { withOpenClawTestState } from "../test-utils/grokbot-test-state.js";
 import { VERSION } from "../version.js";
-import type { DB as OpenClawStateKyselyDatabase } from "./openclaw-state-db.generated.js";
+import type { DB as OpenClawStateKyselyDatabase } from "./grokbot-state-db.generated.js";
 import {
   assertOpenClawStateDatabaseForMaintenance,
   clearOpenClawStateDatabaseOpenFailure,
@@ -30,8 +30,8 @@ import {
   repairOpenClawStateDatabaseSchema,
   runOpenClawStateWriteTransaction,
   withOpenClawStateStartupMigrationCheckpointDatabase,
-} from "./openclaw-state-db.js";
-import { resolveOpenClawStateSqlitePath } from "./openclaw-state-db.paths.js";
+} from "./grokbot-state-db.js";
+import { resolveOpenClawStateSqlitePath } from "./grokbot-state-db.paths.js";
 import {
   collectSqliteSchemaShape,
   createSqliteSchemaShapeFromSql,
@@ -45,7 +45,7 @@ type StateDbTestDatabase = Pick<
 const stateDbTempDirs: string[] = [];
 
 function createTempStateDir(): string {
-  return makeTempDir(stateDbTempDirs, "openclaw-state-db-");
+  return makeTempDir(stateDbTempDirs, "grokbot-state-db-");
 }
 
 function replaceManagedImageRecordsWithLegacyTable(
@@ -273,7 +273,7 @@ function statfsFixture(type: number): ReturnType<typeof fs.statfsSync> {
 }
 
 function createLegacyAuditStateDatabase(stateDir: string): string {
-  const databasePath = path.join(stateDir, "state", "openclaw.sqlite");
+  const databasePath = path.join(stateDir, "state", "grokbot.sqlite");
   fs.mkdirSync(path.dirname(databasePath), { recursive: true });
   const { DatabaseSync } = requireNodeSqlite();
   const db = new DatabaseSync(databasePath);
@@ -858,12 +858,12 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-describe("openclaw state database", () => {
+describe("grokbot state database", () => {
   it("resolves under the shared state database directory", () => {
     const stateDir = createTempStateDir();
 
     expect(resolveOpenClawStateSqlitePath({ OPENCLAW_STATE_DIR: stateDir })).toBe(
-      path.join(stateDir, "state", "openclaw.sqlite"),
+      path.join(stateDir, "state", "grokbot.sqlite"),
     );
   });
 
@@ -874,7 +874,7 @@ describe("openclaw state database", () => {
         VITEST_WORKER_ID: "7",
       } as NodeJS.ProcessEnv),
     ).toBe(
-      path.join(os.tmpdir(), "openclaw-test-state", `${process.pid}-7`, "state", "openclaw.sqlite"),
+      path.join(os.tmpdir(), "grokbot-test-state", `${process.pid}-7`, "state", "grokbot.sqlite"),
     );
   });
 
@@ -885,9 +885,9 @@ describe("openclaw state database", () => {
     });
 
     expect(collectSqliteSchemaShape(database.db)).toEqual(
-      createSqliteSchemaShapeFromSql(new URL("./openclaw-state-schema.sql", import.meta.url)),
+      createSqliteSchemaShapeFromSql(new URL("./grokbot-state-schema.sql", import.meta.url)),
     );
-    expect(database.path).toBe(path.join(stateDir, "state", "openclaw.sqlite"));
+    expect(database.path).toBe(path.join(stateDir, "state", "grokbot.sqlite"));
     expect(
       database.db
         .prepare(
@@ -933,7 +933,7 @@ describe("openclaw state database", () => {
 
   it("adopts a canonical device identity seed database without losing the identity", () => {
     const stateDir = createTempStateDir();
-    const databasePath = path.join(stateDir, "state", "openclaw.sqlite");
+    const databasePath = path.join(stateDir, "state", "grokbot.sqlite");
     fs.mkdirSync(path.dirname(databasePath), { recursive: true });
     const { DatabaseSync } = requireNodeSqlite();
     const seed = new DatabaseSync(databasePath);
@@ -970,13 +970,13 @@ INSERT INTO device_identities VALUES (
     });
     expect(readSqliteNumberPragma(database.db, "user_version")).toBe(OPENCLAW_STATE_SCHEMA_VERSION);
     expect(collectSqliteSchemaShape(database.db)).toEqual(
-      createSqliteSchemaShapeFromSql(new URL("./openclaw-state-schema.sql", import.meta.url)),
+      createSqliteSchemaShapeFromSql(new URL("./grokbot-state-schema.sql", import.meta.url)),
     );
   });
 
   it("adopts a canonical native PortGuardian seed without losing records", () => {
     const stateDir = createTempStateDir();
-    const databasePath = path.join(stateDir, "state", "openclaw.sqlite");
+    const databasePath = path.join(stateDir, "state", "grokbot.sqlite");
     fs.mkdirSync(path.dirname(databasePath), { recursive: true });
     const { DatabaseSync } = requireNodeSqlite();
     const seed = new DatabaseSync(databasePath);
@@ -1009,7 +1009,7 @@ INSERT INTO macos_port_guardian_records VALUES (4242, 18789, '/usr/bin/ssh', 're
     });
     expect(readSqliteNumberPragma(database.db, "user_version")).toBe(OPENCLAW_STATE_SCHEMA_VERSION);
     expect(collectSqliteSchemaShape(database.db)).toEqual(
-      createSqliteSchemaShapeFromSql(new URL("./openclaw-state-schema.sql", import.meta.url)),
+      createSqliteSchemaShapeFromSql(new URL("./grokbot-state-schema.sql", import.meta.url)),
     );
   });
 
@@ -2091,7 +2091,7 @@ INSERT INTO macos_port_guardian_records VALUES (4242, 18789, '/usr/bin/ssh', 're
   });
 
   it.runIf(process.platform === "linux")("closes the database when initialization fails", () => {
-    const databasePath = path.join(createTempStateDir(), "openclaw.sqlite");
+    const databasePath = path.join(createTempStateDir(), "grokbot.sqlite");
     fs.writeFileSync(databasePath, "not a sqlite database");
 
     expect(() => openOpenClawStateDatabase({ path: databasePath })).toThrow(
@@ -2215,7 +2215,7 @@ INSERT INTO macos_port_guardian_records VALUES (4242, 18789, '/usr/bin/ssh', 're
     () => {
       expect(
         runHotRollbackJournalRecoveryProbe({
-          moduleUrl: new URL("./openclaw-state-db.ts", import.meta.url).href,
+          moduleUrl: new URL("./grokbot-state-db.ts", import.meta.url).href,
           rootDir: createTempStateDir(),
         }),
       ).toEqual({
@@ -2446,7 +2446,7 @@ INSERT INTO macos_port_guardian_records VALUES (4242, 18789, '/usr/bin/ssh', 're
       path: databasePath,
     });
     expect(repairOpenClawStateDatabaseSchema(options)).toEqual({
-      changes: ["Migrated shared state operator approvals → OpenClaw system changes"],
+      changes: ["Migrated shared state operator approvals → GrokBot system changes"],
       warnings: [],
     });
 
@@ -2485,7 +2485,7 @@ INSERT INTO macos_port_guardian_records VALUES (4242, 18789, '/usr/bin/ssh', 're
     expect(result.warnings).toEqual([
       expect.stringContaining("automatic repair refused the unrecognized schema shape"),
     ]);
-    expect(result.warnings[0]).not.toContain("run openclaw doctor --fix");
+    expect(result.warnings[0]).not.toContain("run grokbot doctor --fix");
   });
 
   it.each([
@@ -2629,10 +2629,10 @@ INSERT INTO macos_port_guardian_records VALUES (4242, 18789, '/usr/bin/ssh', 're
 
   it("serializes concurrent additive schema upgrades across processes", () => {
     const rootDir = createTempStateDir();
-    const moduleUrl = new URL("./openclaw-state-db.ts", import.meta.url).href;
+    const moduleUrl = new URL("./grokbot-state-db.ts", import.meta.url).href;
     const databasePaths = runConcurrentSchemaProbe({ mode: "upgrade", moduleUrl, rootDir });
     const expectedShape = createSqliteSchemaShapeFromSql(
-      new URL("./openclaw-state-schema.sql", import.meta.url),
+      new URL("./grokbot-state-schema.sql", import.meta.url),
     );
     const { DatabaseSync } = requireNodeSqlite();
 
@@ -2663,10 +2663,10 @@ INSERT INTO macos_port_guardian_records VALUES (4242, 18789, '/usr/bin/ssh', 're
 
   it("serializes concurrent fresh database initialization across processes", () => {
     const rootDir = createTempStateDir();
-    const moduleUrl = new URL("./openclaw-state-db.ts", import.meta.url).href;
+    const moduleUrl = new URL("./grokbot-state-db.ts", import.meta.url).href;
     const databasePaths = runConcurrentSchemaProbe({ mode: "fresh", moduleUrl, rootDir });
     const expectedShape = createSqliteSchemaShapeFromSql(
-      new URL("./openclaw-state-schema.sql", import.meta.url),
+      new URL("./grokbot-state-schema.sql", import.meta.url),
     );
     const { DatabaseSync } = requireNodeSqlite();
 
@@ -2855,7 +2855,7 @@ INSERT INTO macos_port_guardian_records VALUES (4242, 18789, '/usr/bin/ssh', 're
 
   it("normalizes obsolete task delivery statuses in existing state databases", async () => {
     await withOpenClawTestState(
-      { layout: "state-only", prefix: "openclaw-state-task-delivery-status-" },
+      { layout: "state-only", prefix: "grokbot-state-task-delivery-status-" },
       async ({ stateDir }) => {
         const database = openOpenClawStateDatabase({
           env: { OPENCLAW_STATE_DIR: stateDir },
@@ -3063,7 +3063,7 @@ INSERT INTO macos_port_guardian_records VALUES (4242, 18789, '/usr/bin/ssh', 're
 
   it("opens databases with early cron tables before creating cron indexes", () => {
     const stateDir = createTempStateDir();
-    const databasePath = path.join(stateDir, "state", "openclaw.sqlite");
+    const databasePath = path.join(stateDir, "state", "grokbot.sqlite");
     fs.mkdirSync(path.dirname(databasePath), { recursive: true });
     const { DatabaseSync } = requireNodeSqlite();
     const db = new DatabaseSync(databasePath);
@@ -3182,7 +3182,7 @@ INSERT INTO macos_port_guardian_records VALUES (4242, 18789, '/usr/bin/ssh', 're
 
   it("imports early cron run-log tables before dropping them", () => {
     const stateDir = createTempStateDir();
-    const databasePath = path.join(stateDir, "state", "openclaw.sqlite");
+    const databasePath = path.join(stateDir, "state", "grokbot.sqlite");
     fs.mkdirSync(path.dirname(databasePath), { recursive: true });
     const { DatabaseSync } = requireNodeSqlite();
     const db = new DatabaseSync(databasePath);
@@ -3219,7 +3219,7 @@ INSERT INTO macos_port_guardian_records VALUES (4242, 18789, '/usr/bin/ssh', 're
 
   it("opens databases with early queue and commitment tables before creating newer indexes", () => {
     const stateDir = createTempStateDir();
-    const databasePath = path.join(stateDir, "state", "openclaw.sqlite");
+    const databasePath = path.join(stateDir, "state", "grokbot.sqlite");
     fs.mkdirSync(path.dirname(databasePath), { recursive: true });
     const { DatabaseSync } = requireNodeSqlite();
     const db = new DatabaseSync(databasePath);
@@ -3384,7 +3384,7 @@ INSERT INTO macos_port_guardian_records VALUES (4242, 18789, '/usr/bin/ssh', 're
     }
     expect(firstFailure).toMatchObject({
       name: "SqliteSchemaVersionError",
-      message: expect.stringContaining("https://docs.openclaw.ai/reference/database-schemas"),
+      message: expect.stringContaining("https://docs.grokbot.ai/reference/database-schemas"),
     });
 
     for (const candidate of [databasePath, `${databasePath}-wal`, `${databasePath}-shm`]) {
@@ -3405,7 +3405,7 @@ INSERT INTO macos_port_guardian_records VALUES (4242, 18789, '/usr/bin/ssh', 're
   it("does not chmod shared parent directories for explicit database paths", () => {
     const databasePath = path.join(
       os.tmpdir(),
-      `openclaw-explicit-state-${process.pid}-${Date.now()}.sqlite`,
+      `grokbot-explicit-state-${process.pid}-${Date.now()}.sqlite`,
     );
 
     expect(() => openOpenClawStateDatabase({ path: databasePath })).not.toThrow();
@@ -3434,7 +3434,7 @@ INSERT INTO macos_port_guardian_records VALUES (4242, 18789, '/usr/bin/ssh', 're
   });
 
   it("keys explicit relative paths by resolved database pathname", () => {
-    const moduleUrl = new URL("./openclaw-state-db.ts", import.meta.url).href;
+    const moduleUrl = new URL("./grokbot-state-db.ts", import.meta.url).href;
     const output = execFileSync(
       process.execPath,
       [
@@ -3451,7 +3451,7 @@ INSERT INTO macos_port_guardian_records VALUES (4242, 18789, '/usr/bin/ssh', 're
             openOpenClawStateDatabase,
           } from ${JSON.stringify(moduleUrl)};
 
-          const root = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-state-db-relative-"));
+          const root = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-state-db-relative-"));
           const firstDir = path.join(root, "first");
           const secondDir = path.join(root, "second");
           fs.mkdirSync(firstDir);

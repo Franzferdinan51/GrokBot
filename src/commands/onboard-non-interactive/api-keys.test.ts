@@ -71,7 +71,7 @@ describe("resolveNonInteractiveApiKey", () => {
       provider: "zai",
       cfg: {},
       flagValue:
-        "openclaw onboard --non-interactive --auth-choice=zai-coding-global --zai-api-key $ZAI_API_KEY",
+        "grokbot onboard --non-interactive --auth-choice=zai-coding-global --zai-api-key $ZAI_API_KEY",
       flagName: "--zai-api-key",
       envVar: "ZAI_API_KEY",
       runtime: runtime as never,
@@ -80,7 +80,7 @@ describe("resolveNonInteractiveApiKey", () => {
     expect(result).toBeNull();
     expect(resolveEnvApiKey).not.toHaveBeenCalled();
     expect(runtime.error).toHaveBeenCalledWith(
-      "Paste the API key value, not an OpenClaw onboarding command.",
+      "Paste the API key value, not an GrokBot onboarding command.",
     );
     expect(runtime.exit).toHaveBeenCalledWith(1);
   });

@@ -3,11 +3,11 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { Value } from "typebox/value";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { clearSessionStoreCacheForTest } from "../../config/sessions.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import type { callGateway as gatewayCall } from "../../gateway/call.js";
 import { createSessionVisibilityChecker } from "../../plugin-sdk/session-visibility.js";
 import { deleteTestEnvValue, setTestEnvValue } from "../../test-utils/env.js";
@@ -96,7 +96,7 @@ function readMessageId(message: unknown): string | undefined {
 describe("sessions_history redaction", () => {
   beforeAll(async () => {
     previousConfigPath = process.env.OPENCLAW_CONFIG_PATH;
-    tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-sessions-history-redact-"));
+    tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-sessions-history-redact-"));
     useLoggingConfig("redaction-off.json", { redactSensitive: "off" });
     ({ createSessionsHistoryTool } = await import("./sessions-history-tool.js"));
   });

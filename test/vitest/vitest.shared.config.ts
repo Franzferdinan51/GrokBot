@@ -86,7 +86,7 @@ function hasWorkerOverride(env: Record<string, string | undefined>): boolean {
 
 function sourcePackageAlias(packageId: string, subpath?: string) {
   return {
-    find: `@openclaw/${packageId}${subpath ? `/${subpath}` : ""}`,
+    find: `@grokbot/${packageId}${subpath ? `/${subpath}` : ""}`,
     replacement: path.join(
       repoRoot,
       "packages",
@@ -139,9 +139,9 @@ const workerConfig = resolveSharedVitestWorkerConfig({
   isWindows,
   localScheduling,
 });
-const dependencyModuleDirectories = ["/node_modules/", "/openclaw-pnpm-node-modules/"];
+const dependencyModuleDirectories = ["/node_modules/", "/grokbot-pnpm-node-modules/"];
 const dependencyExternalPatterns = [
-  /\/openclaw-pnpm-node-modules\/(?!.*\/?vite\w*\/dist\/client\/env\.mjs$).*\.(?:cjs\.js|mjs)$/u,
+  /\/grokbot-pnpm-node-modules\/(?!.*\/?vite\w*\/dist\/client\/env\.mjs$).*\.(?:cjs\.js|mjs)$/u,
 ];
 const sourcePluginSdkSubpaths = [
   ...new Set([...pluginSdkSubpaths, ...privateLocalOnlyPluginSdkSubpaths]),
@@ -174,47 +174,47 @@ export const sharedVitestConfig = {
         ),
       },
       {
-        find: "@openclaw/qa-channel/api.js",
+        find: "@grokbot/qa-channel/api.js",
         replacement: path.join(repoRoot, "extensions", "qa-channel", "api.ts"),
       },
       {
-        find: "@openclaw/discord/api.js",
+        find: "@grokbot/discord/api.js",
         replacement: path.join(repoRoot, "extensions", "discord", "api.ts"),
       },
       {
-        find: "@openclaw/matrix/test-api.js",
+        find: "@grokbot/matrix/test-api.js",
         replacement: path.join(repoRoot, "extensions", "matrix", "test-api.ts"),
       },
       {
-        find: "@openclaw/slack/api.js",
+        find: "@grokbot/slack/api.js",
         replacement: path.join(repoRoot, "extensions", "slack", "api.ts"),
       },
       {
-        find: "@openclaw/whatsapp/api.js",
+        find: "@grokbot/whatsapp/api.js",
         replacement: path.join(repoRoot, "extensions", "whatsapp", "api.ts"),
       },
       {
-        find: "@openclaw/gateway-client/browser",
+        find: "@grokbot/gateway-client/browser",
         replacement: path.join(repoRoot, "packages", "gateway-client", "src", "browser.ts"),
       },
       {
-        find: "@openclaw/gateway-client/readiness",
+        find: "@grokbot/gateway-client/readiness",
         replacement: path.join(repoRoot, "packages", "gateway-client", "src", "readiness.ts"),
       },
       {
-        find: "@openclaw/gateway-client/timeouts",
+        find: "@grokbot/gateway-client/timeouts",
         replacement: path.join(repoRoot, "packages", "gateway-client", "src", "timeouts.ts"),
       },
       {
-        find: "@openclaw/gateway-client",
+        find: "@grokbot/gateway-client",
         replacement: path.join(repoRoot, "packages", "gateway-client", "src", "index.ts"),
       },
       {
-        find: "@openclaw/gateway-protocol/client-info",
+        find: "@grokbot/gateway-protocol/client-info",
         replacement: path.join(repoRoot, "packages", "gateway-protocol", "src", "client-info.ts"),
       },
       {
-        find: "@openclaw/gateway-protocol/connect-error-details",
+        find: "@grokbot/gateway-protocol/connect-error-details",
         replacement: path.join(
           repoRoot,
           "packages",
@@ -224,11 +224,11 @@ export const sharedVitestConfig = {
         ),
       },
       {
-        find: "@openclaw/gateway-protocol/frame-guards",
+        find: "@grokbot/gateway-protocol/frame-guards",
         replacement: path.join(repoRoot, "packages", "gateway-protocol", "src", "frame-guards.ts"),
       },
       {
-        find: "@openclaw/gateway-protocol/gateway-error-details",
+        find: "@grokbot/gateway-protocol/gateway-error-details",
         replacement: path.join(
           repoRoot,
           "packages",
@@ -238,11 +238,11 @@ export const sharedVitestConfig = {
         ),
       },
       {
-        find: "@openclaw/gateway-protocol/schema",
+        find: "@grokbot/gateway-protocol/schema",
         replacement: path.join(repoRoot, "packages", "gateway-protocol", "src", "schema.ts"),
       },
       {
-        find: "@openclaw/gateway-protocol/startup-unavailable",
+        find: "@grokbot/gateway-protocol/startup-unavailable",
         replacement: path.join(
           repoRoot,
           "packages",
@@ -252,63 +252,63 @@ export const sharedVitestConfig = {
         ),
       },
       {
-        find: "@openclaw/gateway-protocol/version",
+        find: "@grokbot/gateway-protocol/version",
         replacement: path.join(repoRoot, "packages", "gateway-protocol", "src", "version.ts"),
       },
       {
-        find: "@openclaw/gateway-protocol",
+        find: "@grokbot/gateway-protocol",
         replacement: path.join(repoRoot, "packages", "gateway-protocol", "src", "index.ts"),
       },
       {
-        find: /^@openclaw\/ai\/internal\/(.+)$/,
+        find: /^@grokbot\/ai\/internal\/(.+)$/,
         replacement: path.join(repoRoot, "packages", "ai", "src", "internal", "$1.ts"),
       },
       {
-        find: "@openclaw/ai/diagnostics",
+        find: "@grokbot/ai/diagnostics",
         replacement: path.join(repoRoot, "packages", "ai", "src", "utils", "diagnostics.ts"),
       },
       {
-        find: "@openclaw/ai/event-stream",
+        find: "@grokbot/ai/event-stream",
         replacement: path.join(repoRoot, "packages", "ai", "src", "utils", "event-stream.ts"),
       },
       {
-        find: "@openclaw/ai/providers",
+        find: "@grokbot/ai/providers",
         replacement: path.join(repoRoot, "packages", "ai", "src", "providers.ts"),
       },
       {
-        find: "@openclaw/ai/types",
+        find: "@grokbot/ai/types",
         replacement: path.join(repoRoot, "packages", "ai", "src", "types.ts"),
       },
       {
-        find: "@openclaw/ai/validation",
+        find: "@grokbot/ai/validation",
         replacement: path.join(repoRoot, "packages", "ai", "src", "validation.ts"),
       },
       {
-        find: /^@openclaw\/ai\/(.+)$/,
+        find: /^@grokbot\/ai\/(.+)$/,
         replacement: path.join(repoRoot, "packages", "ai", "src", "$1.ts"),
       },
       {
-        find: "@openclaw/ai",
+        find: "@grokbot/ai",
         replacement: path.join(repoRoot, "packages", "ai", "src", "index.ts"),
       },
       {
-        find: "@openclaw/llm-core/diagnostics",
+        find: "@grokbot/llm-core/diagnostics",
         replacement: path.join(repoRoot, "packages", "llm-core", "src", "utils", "diagnostics.ts"),
       },
       {
-        find: "@openclaw/llm-core/event-stream",
+        find: "@grokbot/llm-core/event-stream",
         replacement: path.join(repoRoot, "packages", "llm-core", "src", "utils", "event-stream.ts"),
       },
       {
-        find: "@openclaw/llm-core/validation",
+        find: "@grokbot/llm-core/validation",
         replacement: path.join(repoRoot, "packages", "llm-core", "src", "validation.ts"),
       },
       {
-        find: "@openclaw/llm-core",
+        find: "@grokbot/llm-core",
         replacement: path.join(repoRoot, "packages", "llm-core", "src", "index.ts"),
       },
       {
-        find: "@openclaw/model-catalog-core/configured-model-refs",
+        find: "@grokbot/model-catalog-core/configured-model-refs",
         replacement: path.join(
           repoRoot,
           "packages",
@@ -318,7 +318,7 @@ export const sharedVitestConfig = {
         ),
       },
       {
-        find: "@openclaw/model-catalog-core/model-catalog-refs",
+        find: "@grokbot/model-catalog-core/model-catalog-refs",
         replacement: path.join(
           repoRoot,
           "packages",
@@ -328,7 +328,7 @@ export const sharedVitestConfig = {
         ),
       },
       {
-        find: "@openclaw/model-catalog-core/model-catalog-normalize",
+        find: "@grokbot/model-catalog-core/model-catalog-normalize",
         replacement: path.join(
           repoRoot,
           "packages",
@@ -338,7 +338,7 @@ export const sharedVitestConfig = {
         ),
       },
       {
-        find: "@openclaw/model-catalog-core/model-catalog-types",
+        find: "@grokbot/model-catalog-core/model-catalog-types",
         replacement: path.join(
           repoRoot,
           "packages",
@@ -348,11 +348,11 @@ export const sharedVitestConfig = {
         ),
       },
       {
-        find: "@openclaw/model-catalog-core/provider-id",
+        find: "@grokbot/model-catalog-core/provider-id",
         replacement: path.join(repoRoot, "packages", "model-catalog-core", "src", "provider-id.ts"),
       },
       {
-        find: "@openclaw/model-catalog-core/provider-model-id-normalization",
+        find: "@grokbot/model-catalog-core/provider-model-id-normalization",
         replacement: path.join(
           repoRoot,
           "packages",
@@ -362,7 +362,7 @@ export const sharedVitestConfig = {
         ),
       },
       {
-        find: "@openclaw/model-catalog-core/provider-model-id-normalize",
+        find: "@grokbot/model-catalog-core/provider-model-id-normalize",
         replacement: path.join(
           repoRoot,
           "packages",
@@ -372,19 +372,19 @@ export const sharedVitestConfig = {
         ),
       },
       {
-        find: "@openclaw/model-catalog-core",
+        find: "@grokbot/model-catalog-core",
         replacement: path.join(repoRoot, "packages", "model-catalog-core", "src", "index.ts"),
       },
       {
-        find: "@openclaw/net-policy/ip",
+        find: "@grokbot/net-policy/ip",
         replacement: path.join(repoRoot, "packages", "net-policy", "src", "ip.ts"),
       },
       {
-        find: "@openclaw/net-policy/ipv4",
+        find: "@grokbot/net-policy/ipv4",
         replacement: path.join(repoRoot, "packages", "net-policy", "src", "ipv4.ts"),
       },
       {
-        find: "@openclaw/net-policy/redact-sensitive-url",
+        find: "@grokbot/net-policy/redact-sensitive-url",
         replacement: path.join(
           repoRoot,
           "packages",
@@ -394,23 +394,23 @@ export const sharedVitestConfig = {
         ),
       },
       {
-        find: "@openclaw/net-policy/url-protocol",
+        find: "@grokbot/net-policy/url-protocol",
         replacement: path.join(repoRoot, "packages", "net-policy", "src", "url-protocol.ts"),
       },
       {
-        find: "@openclaw/net-policy/url-userinfo",
+        find: "@grokbot/net-policy/url-userinfo",
         replacement: path.join(repoRoot, "packages", "net-policy", "src", "url-userinfo.ts"),
       },
       {
-        find: "@openclaw/net-policy",
+        find: "@grokbot/net-policy",
         replacement: path.join(repoRoot, "packages", "net-policy", "src", "index.ts"),
       },
       {
-        find: "@openclaw/normalization-core/agent-id",
+        find: "@grokbot/normalization-core/agent-id",
         replacement: path.join(repoRoot, "packages", "normalization-core", "src", "agent-id.ts"),
       },
       {
-        find: "@openclaw/normalization-core/boolean-coercion",
+        find: "@grokbot/normalization-core/boolean-coercion",
         replacement: path.join(
           repoRoot,
           "packages",
@@ -420,7 +420,7 @@ export const sharedVitestConfig = {
         ),
       },
       {
-        find: "@openclaw/normalization-core/error-coercion",
+        find: "@grokbot/normalization-core/error-coercion",
         replacement: path.join(
           repoRoot,
           "packages",
@@ -430,7 +430,7 @@ export const sharedVitestConfig = {
         ),
       },
       {
-        find: "@openclaw/normalization-core/number-coercion",
+        find: "@grokbot/normalization-core/number-coercion",
         replacement: path.join(
           repoRoot,
           "packages",
@@ -440,7 +440,7 @@ export const sharedVitestConfig = {
         ),
       },
       {
-        find: "@openclaw/normalization-core/record-coerce",
+        find: "@grokbot/normalization-core/record-coerce",
         replacement: path.join(
           repoRoot,
           "packages",
@@ -450,11 +450,11 @@ export const sharedVitestConfig = {
         ),
       },
       {
-        find: "@openclaw/normalization-core/result",
+        find: "@grokbot/normalization-core/result",
         replacement: path.join(repoRoot, "packages", "normalization-core", "src", "result.ts"),
       },
       {
-        find: "@openclaw/normalization-core/string-coerce",
+        find: "@grokbot/normalization-core/string-coerce",
         replacement: path.join(
           repoRoot,
           "packages",
@@ -464,7 +464,7 @@ export const sharedVitestConfig = {
         ),
       },
       {
-        find: "@openclaw/normalization-core/string-normalization",
+        find: "@grokbot/normalization-core/string-normalization",
         replacement: path.join(
           repoRoot,
           "packages",
@@ -474,11 +474,11 @@ export const sharedVitestConfig = {
         ),
       },
       {
-        find: "@openclaw/normalization-core/utf16-slice",
+        find: "@grokbot/normalization-core/utf16-slice",
         replacement: path.join(repoRoot, "packages", "normalization-core", "src", "utf16-slice.ts"),
       },
       {
-        find: /^@openclaw\/normalization-core$/u,
+        find: /^@grokbot\/normalization-core$/u,
         replacement: path.join(repoRoot, "packages", "normalization-core", "src", "index.ts"),
       },
       sourcePackageAlias("markdown-core", "code-spans"),
@@ -497,11 +497,11 @@ export const sharedVitestConfig = {
       sourcePackageAlias("workboard-contract"),
       ...sourcePackageAliasesFromExports("acp-core", acpCorePackageJson.exports),
       ...sourcePluginSdkSubpaths.map((subpath) => ({
-        find: `openclaw/plugin-sdk/${subpath}`,
+        find: `grokbot/plugin-sdk/${subpath}`,
         replacement: path.join(repoRoot, "src", "plugin-sdk", `${subpath}.ts`),
       })),
       ...pluginSdkSubpaths.map((subpath) => ({
-        find: `@openclaw/plugin-sdk/${subpath}`,
+        find: `@grokbot/plugin-sdk/${subpath}`,
         replacement: path.join(repoRoot, "packages", "plugin-sdk", "src", `${subpath}.ts`),
       })),
     ],
@@ -537,7 +537,7 @@ export const sharedVitestConfig = {
       "test/setup.env.ts",
       "test/setup.shared.ts",
       "test/setup.extensions.ts",
-      "test/setup-openclaw-runtime.ts",
+      "test/setup-grokbot-runtime.ts",
       ...vitestConfigFiles,
       "test/vitest/**/*.{ts,mjs}",
     ].map(resolveRepoRootPath),
@@ -556,7 +556,7 @@ export const sharedVitestConfig = {
       "apps/macos/.build/**",
       "**/node_modules/**",
       "**/vendor/**",
-      "dist/OpenClaw.app/**",
+      "dist/GrokBot.app/**",
       "**/._*",
       "**/*.live.test.ts",
       "**/*.e2e.test.ts",

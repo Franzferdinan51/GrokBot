@@ -1,5 +1,5 @@
-// Xiaomi plugin entrypoint registers its OpenClaw integration.
-import { definePluginEntry } from "openclaw/plugin-sdk/plugin-entry";
+// Xiaomi plugin entrypoint registers its GrokBot integration.
+import { definePluginEntry } from "grokbot/plugin-sdk/plugin-entry";
 import type {
   OpenClawConfig,
   ProviderAuthContext,
@@ -8,7 +8,7 @@ import type {
   ProviderCatalogContext,
   ProviderAuthResult,
   ProviderRuntimeModel,
-} from "openclaw/plugin-sdk/plugin-entry";
+} from "grokbot/plugin-sdk/plugin-entry";
 import {
   applyAuthProfileConfig,
   buildApiKeyCredential,
@@ -18,12 +18,12 @@ import {
   type SecretInput,
   upsertAuthProfileWithLock,
   validateApiKeyInput,
-} from "openclaw/plugin-sdk/provider-auth-api-key";
+} from "grokbot/plugin-sdk/provider-auth-api-key";
 import {
   applyModelCompatPatch,
   buildProviderReplayFamilyHooks,
-} from "openclaw/plugin-sdk/provider-model-shared";
-import { PROVIDER_LABELS } from "openclaw/plugin-sdk/provider-usage";
+} from "grokbot/plugin-sdk/provider-model-shared";
+import { PROVIDER_LABELS } from "grokbot/plugin-sdk/provider-usage";
 import {
   applyXiaomiConfig,
   applyXiaomiTokenPlanConfig,

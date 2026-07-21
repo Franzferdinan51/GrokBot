@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Development runner that rebuilds OpenClaw, runs runtime postbuild steps, and
+// Development runner that rebuilds GrokBot, runs runtime postbuild steps, and
 // restarts the CLI when watched source or metadata changes.
 import { spawn, spawnSync } from "node:child_process";
 import fs from "node:fs";
@@ -363,7 +363,7 @@ const listRequiredBundledPluginMetadataOutputs = (pluginEntries, deps) =>
       requiredPaths.push(path.join(builtPluginDir, "package.json"));
     }
     if (hasManifest) {
-      requiredPaths.push(path.join(builtPluginDir, "openclaw.plugin.json"));
+      requiredPaths.push(path.join(builtPluginDir, "grokbot.plugin.json"));
     }
     return requiredPaths;
   });
@@ -455,7 +455,7 @@ const listRequiredOpenClawExtensionAliasOutputs = (deps) => {
   }
 
   const exportedPluginSdkFileNames = readPackageJsonPluginSdkAliasFileNames(deps);
-  const aliasDir = path.join(distRoot, "extensions", "node_modules", "openclaw");
+  const aliasDir = path.join(distRoot, "extensions", "node_modules", "grokbot");
   return [
     path.join(aliasDir, "package.json"),
     ...dirents
@@ -749,7 +749,7 @@ const logRunner = (message, deps) => {
   if (deps.env.OPENCLAW_RUNNER_LOG === "0") {
     return;
   }
-  const line = `[openclaw] ${message}\n`;
+  const line = `[grokbot] ${message}\n`;
   deps.runNodeProgress?.clearLine();
   deps.stderr.write(line);
   deps.runNodeProgress?.render();
@@ -787,7 +787,7 @@ const createRunNodeProgress = (label, deps) => {
     const elapsedSeconds = Math.max(0, Math.round((Date.now() - startedAt) / 1000));
     const frame = RUN_NODE_PROGRESS_FRAMES[frameIndex % RUN_NODE_PROGRESS_FRAMES.length];
     frameIndex += 1;
-    deps.stderr.write(`\r[openclaw] ${frame} ${label} (${elapsedSeconds}s)`);
+    deps.stderr.write(`\r[grokbot] ${frame} ${label} (${elapsedSeconds}s)`);
     visible = true;
   };
   const timer = setInterval(render, 120);
@@ -853,7 +853,7 @@ const listRunNodeCpuProfiles = (deps, absoluteProfileDir, commandName) => {
   } catch {
     return [];
   }
-  const prefix = `openclaw-${commandName}-`;
+  const prefix = `grokbot-${commandName}-`;
   return entries
     .filter(
       (entry) =>
@@ -901,7 +901,7 @@ const resolveRunNodeCpuProfileArgs = (deps) => {
   pruneRunNodeCpuProfiles(deps, absoluteProfileDir, commandName);
   const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
   const pid = Number.isInteger(deps.process.pid) && deps.process.pid > 0 ? deps.process.pid : "pid";
-  const profileName = `openclaw-${commandName}-${pid}-${timestamp}.cpuprofile`;
+  const profileName = `grokbot-${commandName}-${pid}-${timestamp}.cpuprofile`;
   const profilePath = path.join(absoluteProfileDir, profileName);
   const relativeProfilePath = path.relative(deps.cwd, profilePath) || profilePath;
   logRunner(`Writing Node CPU profile to ${relativeProfilePath}.`, deps);
@@ -1018,7 +1018,7 @@ const getInterruptedSpawnExitCode = (res) => {
 const runOpenClaw = async (deps) => {
   const diagnosticArgs = resolveRunNodeDiagnosticArgs(deps);
   const useProcessGroup = shouldUseRunNodeChildProcessGroup(deps);
-  const nodeProcess = deps.spawn(deps.execPath, [...diagnosticArgs, "openclaw.mjs", ...deps.args], {
+  const nodeProcess = deps.spawn(deps.execPath, [...diagnosticArgs, "grokbot.mjs", ...deps.args], {
     cwd: deps.cwd,
     detached: useProcessGroup,
     env: deps.env,
@@ -1123,7 +1123,7 @@ const closeRunNodeOutputTee = async (deps, exitCode) => {
     await deps.outputTee.close();
   } catch (error) {
     deps.stderr.write(
-      `[openclaw] Failed to write output log: ${error?.message ?? "unknown error"}\n`,
+      `[grokbot] Failed to write output log: ${error?.message ?? "unknown error"}\n`,
     );
     return exitCode === 0 ? 1 : exitCode;
   }

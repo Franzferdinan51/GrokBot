@@ -476,7 +476,7 @@ describe("workboard gateway methods", () => {
     const createWorktree = vi.fn().mockResolvedValue({
       id: "managed-id",
       path: "/state/worktrees/fingerprint/wb-card",
-      branch: "openclaw/wb-card",
+      branch: "grokbot/wb-card",
     });
     const api = {
       runtime: {

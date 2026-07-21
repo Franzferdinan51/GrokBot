@@ -1,6 +1,6 @@
-# OpenClaw for Linux
+# GrokBot for Linux
 
-The Linux companion is a Tauri v2 desktop shell for OpenClaw Gateways. It discovers nearby Gateways over Bonjour, installs the CLI when needed, delegates local Gateway service management to `openclaw gateway`, opens the selected Gateway's Control UI, and stays available in the system tray.
+The Linux companion is a Tauri v2 desktop shell for GrokBot Gateways. It discovers nearby Gateways over Bonjour, installs the CLI when needed, delegates local Gateway service management to `grokbot gateway`, opens the selected Gateway's Control UI, and stays available in the system tray.
 
 ## Linux prerequisites
 
@@ -24,7 +24,7 @@ cargo run
 cargo build
 ```
 
-The app uses `OPENCLAW_DESKTOP_CLI` when set. Otherwise it checks `~/.openclaw/bin/openclaw`, then `openclaw` on `PATH`.
+The app uses `OPENCLAW_DESKTOP_CLI` when set. Otherwise it checks `~/.grokbot/bin/grokbot`, then `grokbot` on `PATH`.
 
 Desktop notifications use each platform's system notification service. macOS 13+ uses Apple's User Notifications framework; Windows uses native system toasts and Linux uses the desktop notification service through `notify-rust`. On macOS, test notifications from a signed `.app` bundle: a direct `cargo run` stays unbundled, so the app disables notifications instead of initializing Apple's framework with no bundle identity.
 
@@ -36,7 +36,7 @@ The companion checks the latest GitHub release shortly after launch and from **C
 
 ## Canvas bridge
 
-The running app gives the headless `openclaw node run` host a single Canvas WebView. The bundled `linux-canvas` plugin advertises `canvas.*` only while the app socket exists. The app listens at `$XDG_RUNTIME_DIR/openclaw-canvas.sock` (or `/tmp/openclaw-canvas-$UID.sock`) with mode `0600`; a headless Linux node without the app does not advertise Canvas.
+The running app gives the headless `grokbot node run` host a single Canvas WebView. The bundled `linux-canvas` plugin advertises `canvas.*` only while the app socket exists. The app listens at `$XDG_RUNTIME_DIR/grokbot-canvas.sock` (or `/tmp/grokbot-canvas-$UID.sock`) with mode `0600`; a headless Linux node without the app does not advertise Canvas.
 
 The plugin-generated A2UI renderer in `extensions/canvas/src/host/a2ui/` remains the source of truth. The app embeds its committed, synced OpenClawKit mirror from `apps/shared/OpenClawKit/Sources/OpenClawKit/Resources/CanvasA2UI/`. Run `node scripts/sync-native-a2ui.mjs --check` from the repository root after changing those assets.
 
@@ -46,7 +46,7 @@ Quick Chat advertises the Gateway `inline-widgets` capability and renders hosted
 
 ## Installer resource
 
-`tauri.conf.json` bundles the repository's canonical `scripts/install-cli.sh` directly as `install-cli.sh`. The app never keeps a forked copy. Stable, beta, and dev installs select `latest`, `beta`, and a managed Git `main` checkout respectively, always under `~/.openclaw`.
+`tauri.conf.json` bundles the repository's canonical `scripts/install-cli.sh` directly as `install-cli.sh`. The app never keeps a forked copy. Stable, beta, and dev installs select `latest`, `beta`, and a managed Git `main` checkout respectively, always under `~/.grokbot`.
 
 ## Icons
 
@@ -75,7 +75,7 @@ pnpm dlx @tauri-apps/cli@2.11.4 build --bundles deb,appimage
 ```
 
 Bundles land in `target/release/bundle/{deb,appimage}/`. The `Linux App` CI
-workflow uploads them as the `openclaw-linux-companion` artifact on pull
+workflow uploads them as the `grokbot-linux-companion` artifact on pull
 requests touching `apps/linux/**` and on manual dispatch.
 
 ## Releases

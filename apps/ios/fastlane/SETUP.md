@@ -1,4 +1,4 @@
-# fastlane setup (OpenClaw iOS)
+# fastlane setup (GrokBot iOS)
 
 Install:
 
@@ -25,7 +25,7 @@ This writes these auth variables in `apps/ios/fastlane/.env`:
 ```bash
 APP_STORE_CONNECT_KEY_ID=YOUR_KEY_ID
 APP_STORE_CONNECT_ISSUER_ID=YOUR_ISSUER_ID
-APP_STORE_CONNECT_KEYCHAIN_SERVICE=openclaw-app-store-connect-key
+APP_STORE_CONNECT_KEYCHAIN_SERVICE=grokbot-app-store-connect-key
 APP_STORE_CONNECT_KEYCHAIN_ACCOUNT=YOUR_MAC_USERNAME
 ```
 
@@ -53,7 +53,7 @@ Code signing variable (optional in `.env`):
 IOS_DEVELOPMENT_TEAM=YOUR_TEAM_ID
 ```
 
-Tip: run `scripts/ios-team-id.sh --require-canonical` from repo root to verify the canonical OpenClaw iOS team (`FWJYW4S8P8`) is available locally. Fastlane uses the same canonical-only path when `IOS_DEVELOPMENT_TEAM` is missing, and rejects non-canonical teams for release archives.
+Tip: run `scripts/ios-team-id.sh --require-canonical` from repo root to verify the canonical GrokBot iOS team (`FWJYW4S8P8`) is available locally. Fastlane uses the same canonical-only path when `IOS_DEVELOPMENT_TEAM` is missing, and rejects non-canonical teams for release archives.
 
 App Store release signing is manual and profile-pinned. The canonical manifest is `apps/ios/Config/AppStoreSigning.json`, and Fastlane `match` owns the encrypted signing repo and branch named there.
 
@@ -104,7 +104,7 @@ Generate deterministic App Store screenshots:
 pnpm ios:screenshots
 ```
 
-The screenshot lane runs the app with `--openclaw-screenshot-mode`, which enters the built-in connected screenshot fixture instead of pairing with a live gateway. By default it chooses one available large iPhone simulator and one available 13-inch iPad simulator from the installed Xcode runtime; override devices with a comma-separated `OPENCLAW_SNAPSHOT_DEVICES` value when the requested simulators exist locally.
+The screenshot lane runs the app with `--grokbot-screenshot-mode`, which enters the built-in connected screenshot fixture instead of pairing with a live gateway. By default it chooses one available large iPhone simulator and one available 13-inch iPad simulator from the installed Xcode runtime; override devices with a comma-separated `OPENCLAW_SNAPSHOT_DEVICES` value when the requested simulators exist locally.
 
 Upload to App Store Connect:
 
@@ -124,7 +124,7 @@ Maintainer recovery path for a fresh clone on the same Mac:
 ```bash
 APP_STORE_CONNECT_KEY_ID=YOUR_KEY_ID
 APP_STORE_CONNECT_ISSUER_ID=YOUR_ISSUER_ID
-APP_STORE_CONNECT_KEYCHAIN_SERVICE=openclaw-app-store-connect-key
+APP_STORE_CONNECT_KEYCHAIN_SERVICE=grokbot-app-store-connect-key
 APP_STORE_CONNECT_KEYCHAIN_ACCOUNT=YOUR_MAC_USERNAME
 ```
 
@@ -149,7 +149,7 @@ pnpm ios:release:upload -- --version 2026.6.11 --build-number 3
 
 Quick verification after upload:
 
-- confirm `apps/ios/build/app-store/OpenClaw-<version>.ipa` exists
+- confirm `apps/ios/build/app-store/GrokBot-<version>.ipa` exists
 - confirm Fastlane validates the exported IPA before upload
 - confirm Fastlane prints `Uploaded iOS App Store build: version=<version> short=<short> build=<build>`
 - remember that App Store Connect processing can take a few minutes after the upload succeeds
@@ -165,7 +165,7 @@ Versioning rules:
 - Fastlane resolves `CFBundleVersion` as the next integer App Store Connect build number for that short version
 - Run `pnpm ios:version:check -- --version <release-version>` after changing `apps/ios/CHANGELOG.md`
 - `pnpm ios:version:check` validates that release notes can be generated from the iOS changelog
-- The release flow regenerates `apps/ios/OpenClaw.xcodeproj` from `apps/ios/project.yml` before archiving
+- The release flow regenerates `apps/ios/GrokBot.xcodeproj` from `apps/ios/project.yml` before archiving
 - Local App Store signing uses a temporary generated xcconfig with profile names from `apps/ios/Config/AppStoreSigning.json` and leaves local development signing overrides untouched
 - App Store release uses `OpenClawPushMode=appStore`, which derives the canonical production hosted relay, production APNs, production relay profile, and `appleStrict` proof. The release lane rejects custom production relay URL overrides.
 - The exported IPA is validated before upload by inspecting its push mode, signed entitlements, and embedded App Store profile.

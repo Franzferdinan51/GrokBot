@@ -1,14 +1,14 @@
-// Verifies update_plan registration gates and base OpenClaw tool inclusion policy.
+// Verifies update_plan registration gates and base GrokBot tool inclusion policy.
 import { afterEach, describe, expect, it } from "vitest";
 import type { OpenClawConfig } from "../config/config.js";
 import { setEmbeddedMode } from "../infra/embedded-mode.js";
 import { isToolWrappedWithBeforeToolCallHook } from "./agent-tools.before-tool-call.js";
 import { resolveCoreToolFactoryFamily } from "./core-tool-factory-descriptors.js";
-import { createOpenClawTools } from "./openclaw-tools.js";
+import { createOpenClawTools } from "./grokbot-tools.js";
 import {
   shouldIncludeAskUserToolForOpenClawTools,
   shouldIncludeUpdatePlanToolForOpenClawTools,
-} from "./openclaw-tools.registration.js";
+} from "./grokbot-tools.registration.js";
 import { createUpdatePlanTool } from "./tools/update-plan-tool.js";
 
 type UpdatePlanGatingParams = Parameters<typeof shouldIncludeUpdatePlanToolForOpenClawTools>[0];
@@ -45,12 +45,12 @@ function expectToolNamed(
   return tool;
 }
 
-describe("openclaw-tools update_plan gating", () => {
+describe("grokbot-tools update_plan gating", () => {
   afterEach(() => {
     setEmbeddedMode(false);
   });
 
-  it("keeps concrete OpenClaw tool names in the factory descriptor catalog", () => {
+  it("keeps concrete GrokBot tool names in the factory descriptor catalog", () => {
     const emittedNames = createFastToolNames({
       agentSessionKey: "agent:main:main",
       config: {
@@ -63,7 +63,7 @@ describe("openclaw-tools update_plan gating", () => {
     });
 
     expect(
-      emittedNames.filter((name) => resolveCoreToolFactoryFamily(name) !== "openclaw"),
+      emittedNames.filter((name) => resolveCoreToolFactoryFamily(name) !== "grokbot"),
     ).toEqual([]);
   });
 
@@ -167,7 +167,7 @@ describe("openclaw-tools update_plan gating", () => {
     });
     const system = createFastToolNames({
       config: {} as OpenClawConfig,
-      agentSessionKey: "agent:openclaw:main",
+      agentSessionKey: "agent:grokbot:main",
     });
     setEmbeddedMode(true);
     const embedded = createFastToolNames({
@@ -175,10 +175,10 @@ describe("openclaw-tools update_plan gating", () => {
       agentSessionKey: "agent:main:main",
     });
 
-    expect(regular).toContain("openclaw");
-    expect(sandboxed).not.toContain("openclaw");
-    expect(system).not.toContain("openclaw");
-    expect(embedded).not.toContain("openclaw");
+    expect(regular).toContain("grokbot");
+    expect(sandboxed).not.toContain("grokbot");
+    expect(system).not.toContain("grokbot");
+    expect(embedded).not.toContain("grokbot");
   });
 
   it("requires explicit transcripts enablement before registering the transcripts tool", () => {

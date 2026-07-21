@@ -122,7 +122,7 @@ describe("ExtensionRelayBridge", () => {
       sessionId?: string;
     };
     expect(params.targetInfo?.targetId).toBe("target-1");
-    expect(params.targetInfo?.browserContextId).toBe("openclaw-extension-context");
+    expect(params.targetInfo?.browserContextId).toBe("grokbot-extension-context");
     expect(typeof params.sessionId).toBe("string");
   });
 
@@ -317,7 +317,7 @@ describe("ExtensionRelayBridge", () => {
 
     handlers.onClose();
     // A subsequent session command should surface a clean error, not hang.
-    cdp.onMessage(JSON.stringify({ id: 2, sessionId: "openclaw-tab-1-1", method: "Page.reload" }));
+    cdp.onMessage(JSON.stringify({ id: 2, sessionId: "grokbot-tab-1-1", method: "Page.reload" }));
     await flush();
     const response = client.frames().find((frame) => frame.id === 2);
     expect(response?.error).toBeTruthy();
@@ -376,7 +376,7 @@ describe("ExtensionRelayBridge", () => {
     );
     await flush();
 
-    // Tab 1 leaves the OpenClaw group.
+    // Tab 1 leaves the GrokBot group.
     handlers.onMessage(JSON.stringify({ type: "tabs", tabs: [] }));
     await flush();
 
@@ -455,7 +455,7 @@ describe("ExtensionRelayBridge", () => {
       requestId: 43,
       ok: false,
       error:
-        "Send to OpenClaw needs the extension relay hosted by the Gateway (pair on the Gateway host or use direct Gateway pairing). Node-hosted relays are not supported yet.",
+        "Send to GrokBot needs the extension relay hosted by the Gateway (pair on the Gateway host or use direct Gateway pairing). Node-hosted relays are not supported yet.",
     });
   });
 

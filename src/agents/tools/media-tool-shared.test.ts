@@ -70,7 +70,7 @@ describe("readBooleanToolParam", () => {
 
 describe("resolveMediaToolLocalRoots", () => {
   it("does not widen default local roots from media sources", () => {
-    const stateDir = path.join("/tmp", "openclaw-media-tool-roots-state");
+    const stateDir = path.join("/tmp", "grokbot-media-tool-roots-state");
     const picturesDir =
       process.platform === "win32" ? "C:\\Users\\peter\\Pictures" : "/Users/peter/Pictures";
     const moviesDir =
@@ -95,8 +95,8 @@ describe("resolveMediaToolLocalRoots", () => {
   it("keeps channel inbound attachment roots separate from local roots", () => {
     // Inbound channel roots may include broad chat attachment folders; keep them
     // out of local filesystem allowlists unless the channel context asks.
-    const accountRoot = path.join("/tmp", "openclaw-imessage-work");
-    const sharedRoot = path.join("/tmp", "openclaw-imessage-shared");
+    const accountRoot = path.join("/tmp", "grokbot-imessage-work");
+    const sharedRoot = path.join("/tmp", "grokbot-imessage-shared");
     const cfg = {
       channels: {
         imessage: {

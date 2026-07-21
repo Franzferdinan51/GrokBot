@@ -3,7 +3,7 @@ import type {
   OpenClawCrablineInbound,
   OpenClawCrablineInboundInput,
   StartedOpenClawCrablineAdapter,
-} from "@openclaw/crabline";
+} from "@grokbot/crabline";
 import type { QaBusInboundMessageInput } from "./runtime-api.js";
 
 const TELEGRAM_QA_DRIVER_ID = "100001";
@@ -98,7 +98,7 @@ function resolveMatrixQaTarget(target: string) {
 
 function resolveMatrixQaText(text: string, botUserId: string) {
   return text.replace(
-    /(^|[\s([{])@openclaw(?=$|[\s.,!?;)\]}])/gu,
+    /(^|[\s([{])@grokbot(?=$|[\s.,!?;)\]}])/gu,
     (_match, prefix: string) => `${prefix}${botUserId}`,
   );
 }

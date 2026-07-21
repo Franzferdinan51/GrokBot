@@ -79,13 +79,13 @@ importers:
       '@mozilla/readability':
         specifier: 0.6.0
         version: 0.6.0
-      '@openclaw/ai':
+      '@grokbot/ai':
         specifier: workspace:*
         version: link:packages/ai
-      '@openclaw/fs-safe':
+      '@grokbot/fs-safe':
         specifier: 0.4.4
         version: 0.4.4
-      '@openclaw/proxyline':
+      '@grokbot/proxyline':
         specifier: 0.3.3
         version: 0.3.3(undici@8.5.0)
       '@silvia-odwyer/photon-node':
@@ -351,7 +351,7 @@ importers:
 
   examples/ai-chat:
     dependencies:
-      '@openclaw/ai':
+      '@grokbot/ai':
         specifier: workspace:*
         version: link:../../packages/ai
 
@@ -373,19 +373,19 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/admin-http-rpc:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/alibaba:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -410,7 +410,7 @@ importers:
         specifier: 4.15.1
         version: 4.15.1
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -423,13 +423,13 @@ importers:
         specifier: 1.1.0
         version: 1.1.0
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/anthropic:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -445,25 +445,25 @@ importers:
         specifier: 8.5.0
         version: 8.5.0
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/arcee:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/azure-speech:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/baseten:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -473,13 +473,13 @@ importers:
         specifier: 1.3.9
         version: 1.3.9
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/brave:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -507,10 +507,10 @@ importers:
         specifier: 8.21.0
         version: 8.21.0
     devDependencies:
-      '@openclaw/gateway-client':
+      '@grokbot/gateway-client':
         specifier: workspace:*
         version: link:../../packages/gateway-client
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
       undici:
@@ -519,7 +519,7 @@ importers:
 
   extensions/byteplus:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -544,25 +544,25 @@ importers:
         specifier: 8.21.0
         version: 8.21.0
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/cerebras:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/chutes:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/clawrouter:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -575,16 +575,16 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      grokbot:
         specifier: workspace:*
         version: link:../..
 
   extensions/cloudflare-ai-gateway:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -609,19 +609,19 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/cohere:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/comfy:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -631,37 +631,37 @@ importers:
         specifier: 1.0.5
         version: 1.0.5
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/copilot-proxy:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/crabbox:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/deepgram:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/deepinfra:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/deepseek:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -701,13 +701,13 @@ importers:
         specifier: 1.41.1
         version: 1.41.1
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/diagnostics-prometheus:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -729,13 +729,13 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/diffs-language-pack:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -766,10 +766,10 @@ importers:
         specifier: 8.21.0
         version: 8.21.0
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      grokbot:
         specifier: workspace:*
         version: link:../..
 
@@ -779,37 +779,37 @@ importers:
         specifier: 0.3.0
         version: 0.3.0
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/duckduckgo:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/elevenlabs:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/exa:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/fal:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/featherless:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -834,10 +834,10 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      grokbot:
         specifier: workspace:*
         version: link:../..
 
@@ -850,7 +850,7 @@ importers:
         specifier: 1.3.3
         version: 1.3.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -860,13 +860,13 @@ importers:
         specifier: 1.3.3
         version: 1.3.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/fireworks:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -876,13 +876,13 @@ importers:
         specifier: 1.6.0
         version: 1.6.0
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/gmi:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -895,7 +895,7 @@ importers:
         specifier: 10.9.0
         version: 10.9.0
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -911,10 +911,10 @@ importers:
         specifier: 1.3.3
         version: 1.3.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      grokbot:
         specifier: workspace:*
         version: link:../..
 
@@ -927,34 +927,34 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      grokbot:
         specifier: workspace:*
         version: link:../..
 
   extensions/gradium:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/groq:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/huggingface:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/image-generation-core:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -964,13 +964,13 @@ importers:
         specifier: 1.3.3
         version: 1.3.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/inworld:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -980,19 +980,19 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/kilocode:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/kimi-coding:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -1005,10 +1005,10 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      grokbot:
         specifier: workspace:*
         version: link:../..
 
@@ -1018,7 +1018,7 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -1028,19 +1028,19 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/litellm:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/llama-cpp:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
     optionalDependencies:
@@ -1054,7 +1054,7 @@ importers:
         specifier: 1.3.3
         version: 1.3.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -1069,22 +1069,22 @@ importers:
         specifier: 1.3.3
         version: 1.3.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/logbook:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      grokbot:
         specifier: workspace:*
         version: link:../..
 
   extensions/longcat:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -1115,10 +1115,10 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      grokbot:
         specifier: workspace:*
         version: link:../..
 
@@ -1131,16 +1131,16 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      grokbot:
         specifier: workspace:*
         version: link:../..
 
   extensions/media-understanding-core:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -1159,10 +1159,10 @@ importers:
         specifier: 1.3.3
         version: 1.3.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      grokbot:
         specifier: workspace:*
         version: link:../..
 
@@ -1181,7 +1181,7 @@ importers:
         specifier: 1.3.3
         version: 1.3.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -1203,16 +1203,16 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      grokbot:
         specifier: workspace:*
         version: link:../..
 
   extensions/meta:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -1222,22 +1222,22 @@ importers:
         specifier: 1.2.10
         version: 1.2.10
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/microsoft-foundry:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/migrate-claude:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      grokbot:
         specifier: workspace:*
         version: link:../..
 
@@ -1250,28 +1250,28 @@ importers:
         specifier: 2.9.0
         version: 2.9.0
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      grokbot:
         specifier: workspace:*
         version: link:../..
 
   extensions/minimax:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/mistral:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/moonshot:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -1296,7 +1296,7 @@ importers:
       '@microsoft/teams.common':
         specifier: 2.0.13
         version: 2.0.13
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
       jose:
@@ -1305,7 +1305,7 @@ importers:
       jwks-rsa:
         specifier: 3.2.2
         version: 3.2.2
-      openclaw:
+      grokbot:
         specifier: workspace:*
         version: link:../..
 
@@ -1318,7 +1318,7 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -1328,10 +1328,10 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      grokbot:
         specifier: workspace:*
         version: link:../..
 
@@ -1344,22 +1344,22 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      grokbot:
         specifier: workspace:*
         version: link:../..
 
   extensions/novita:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/nvidia:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -1375,10 +1375,10 @@ importers:
         specifier: 2.9.0
         version: 2.9.0
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      grokbot:
         specifier: workspace:*
         version: link:../..
 
@@ -1388,19 +1388,19 @@ importers:
         specifier: 1.3.3
         version: 1.3.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/onepassword:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/open-prose:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -1410,25 +1410,25 @@ importers:
         specifier: 8.21.0
         version: 8.21.0
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/opencode:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/opencode-go:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/openrouter:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -1441,28 +1441,28 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/parallel:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/perplexity:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/pixverse:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      grokbot:
         specifier: workspace:*
         version: link:../..
 
@@ -1472,10 +1472,10 @@ importers:
         specifier: 2.2.3
         version: 2.2.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      grokbot:
         specifier: workspace:*
         version: link:../..
 
@@ -1488,10 +1488,10 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      grokbot:
         specifier: workspace:*
         version: link:../..
 
@@ -1503,10 +1503,10 @@ importers:
       '@modelcontextprotocol/sdk':
         specifier: 1.29.0
         version: 1.29.0(zod@4.4.3)
-      '@openclaw/crabline':
+      '@grokbot/crabline':
         specifier: 0.1.11
         version: 0.1.11
-      '@openclaw/matrix':
+      '@grokbot/matrix':
         specifier: workspace:*
         version: link:../matrix
       p-limit:
@@ -1531,19 +1531,19 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
     devDependencies:
-      '@openclaw/discord':
+      '@grokbot/discord':
         specifier: workspace:*
         version: link:../discord
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      '@openclaw/slack':
+      '@grokbot/slack':
         specifier: workspace:*
         version: link:../slack
-      '@openclaw/whatsapp':
+      '@grokbot/whatsapp':
         specifier: workspace:*
         version: link:../whatsapp
-      openclaw:
+      grokbot:
         specifier: workspace:*
         version: link:../..
       vite:
@@ -1552,7 +1552,7 @@ importers:
 
   extensions/qianfan:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -1580,19 +1580,19 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
       '@types/ws':
         specifier: 8.18.1
         version: 8.18.1
-      openclaw:
+      grokbot:
         specifier: workspace:*
         version: link:../..
 
   extensions/qwen:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -1602,10 +1602,10 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      grokbot:
         specifier: workspace:*
         version: link:../..
 
@@ -1627,31 +1627,31 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/runway:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/searxng:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/senseaudio:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/sglang:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -1661,7 +1661,7 @@ importers:
         specifier: 8.21.0
         version: 8.21.0
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -1689,10 +1689,10 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      grokbot:
         specifier: workspace:*
         version: link:../..
 
@@ -1702,13 +1702,13 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/stepfun:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -1718,13 +1718,13 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/synthetic:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -1734,7 +1734,7 @@ importers:
         specifier: 1.3.3
         version: 1.3.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -1744,10 +1744,10 @@ importers:
         specifier: 1.3.3
         version: 1.3.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      grokbot:
         specifier: workspace:*
         version: link:../..
 
@@ -1769,13 +1769,13 @@ importers:
         specifier: 8.5.0
         version: 8.5.0
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/tencent:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -1797,16 +1797,16 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      grokbot:
         specifier: workspace:*
         version: link:../..
 
   extensions/together:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -1816,16 +1816,16 @@ importers:
         specifier: 0.8.1
         version: 0.8.1
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      grokbot:
         specifier: workspace:*
         version: link:../..
 
   extensions/tts-local-cli:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -1844,37 +1844,37 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/vault:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/venice:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/vercel-ai-gateway:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/video-generation-core:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/vllm:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -1890,28 +1890,28 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      grokbot:
         specifier: workspace:*
         version: link:../..
 
   extensions/volcengine:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/voyage:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/vydra:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -1924,7 +1924,7 @@ importers:
         specifier: 0.18.12
         version: 0.18.12
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -1934,7 +1934,7 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -1950,10 +1950,10 @@ importers:
         specifier: 1.3.3
         version: 1.3.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      grokbot:
         specifier: workspace:*
         version: link:../..
 
@@ -1963,13 +1963,13 @@ importers:
         specifier: 1.3.3
         version: 1.3.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      '@openclaw/workboard-contract':
+      '@grokbot/workboard-contract':
         specifier: workspace:*
         version: link:../../packages/workboard-contract
-      openclaw:
+      grokbot:
         specifier: workspace:*
         version: link:../..
 
@@ -1982,19 +1982,19 @@ importers:
         specifier: 8.21.0
         version: 8.21.0
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/xiaomi:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
   extensions/zai:
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
 
@@ -2004,10 +2004,10 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      grokbot:
         specifier: workspace:*
         version: link:../..
 
@@ -2023,10 +2023,10 @@ importers:
         specifier: 4.4.3
         version: 4.4.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      grokbot:
         specifier: workspace:*
         version: link:../..
 
@@ -2036,28 +2036,28 @@ importers:
         specifier: 1.3.3
         version: 1.3.3
     devDependencies:
-      '@openclaw/plugin-sdk':
+      '@grokbot/plugin-sdk':
         specifier: workspace:*
         version: link:../../packages/plugin-sdk
-      openclaw:
+      grokbot:
         specifier: workspace:*
         version: link:../..
 
   packages/acp-core:
     dependencies:
-      '@openclaw/normalization-core':
+      '@grokbot/normalization-core':
         specifier: workspace:*
         version: link:../normalization-core
 
   packages/agent-core:
     dependencies:
-      '@openclaw/ai':
+      '@grokbot/ai':
         specifier: workspace:*
         version: link:../ai
-      '@openclaw/llm-core':
+      '@grokbot/llm-core':
         specifier: workspace:*
         version: link:../llm-core
-      '@openclaw/normalization-core':
+      '@grokbot/normalization-core':
         specifier: workspace:*
         version: link:../normalization-core
       typebox:
@@ -2087,7 +2087,7 @@ importers:
 
   packages/gateway-client:
     dependencies:
-      '@openclaw/gateway-protocol':
+      '@grokbot/gateway-protocol':
         specifier: workspace:*
         version: link:../gateway-protocol
       ipaddr.js:
@@ -2111,7 +2111,7 @@ importers:
 
   packages/markdown-core:
     dependencies:
-      '@openclaw/normalization-core':
+      '@grokbot/normalization-core':
         specifier: workspace:*
         version: link:../normalization-core
       markdown-it:
@@ -2126,7 +2126,7 @@ importers:
 
   packages/media-core:
     dependencies:
-      '@openclaw/normalization-core':
+      '@grokbot/normalization-core':
         specifier: workspace:*
         version: link:../normalization-core
       file-type:
@@ -2135,7 +2135,7 @@ importers:
 
   packages/media-generation-core:
     dependencies:
-      '@openclaw/normalization-core':
+      '@grokbot/normalization-core':
         specifier: workspace:*
         version: link:../normalization-core
 
@@ -2143,23 +2143,23 @@ importers:
 
   packages/memory-host-sdk:
     dependencies:
-      '@openclaw/normalization-core':
+      '@grokbot/normalization-core':
         specifier: workspace:*
         version: link:../normalization-core
-      '@openclaw/retry':
+      '@grokbot/retry':
         specifier: workspace:*
         version: link:../retry
       p-map:
         specifier: 7.0.5
         version: 7.0.5
     devDependencies:
-      openclaw:
+      grokbot:
         specifier: workspace:*
         version: link:../..
 
   packages/model-catalog-core:
     dependencies:
-      '@openclaw/normalization-core':
+      '@grokbot/normalization-core':
         specifier: workspace:*
         version: link:../normalization-core
 
@@ -2179,13 +2179,13 @@ importers:
 
   packages/sdk:
     dependencies:
-      '@openclaw/gateway-client':
+      '@grokbot/gateway-client':
         specifier: workspace:*
         version: link:../gateway-client
 
   packages/speech-core:
     dependencies:
-      openclaw:
+      grokbot:
         specifier: workspace:*
         version: link:../..
 
@@ -2194,7 +2194,7 @@ importers:
       '@clack/prompts':
         specifier: 1.6.0
         version: 1.6.0
-      '@openclaw/normalization-core':
+      '@grokbot/normalization-core':
         specifier: workspace:*
         version: link:../normalization-core
       chalk:
@@ -2203,7 +2203,7 @@ importers:
 
   packages/tool-call-repair:
     dependencies:
-      '@openclaw/normalization-core':
+      '@grokbot/normalization-core':
         specifier: workspace:*
         version: link:../normalization-core
 
@@ -2249,22 +2249,22 @@ importers:
       '@noble/ed25519':
         specifier: 3.1.0
         version: 3.1.0
-      '@openclaw/gateway-client':
+      '@grokbot/gateway-client':
         specifier: workspace:*
         version: link:../packages/gateway-client
-      '@openclaw/libterminal':
+      '@grokbot/libterminal':
         specifier: 0.3.2
         version: 0.3.2
-      '@openclaw/media-core':
+      '@grokbot/media-core':
         specifier: workspace:*
         version: link:../packages/media-core
-      '@openclaw/normalization-core':
+      '@grokbot/normalization-core':
         specifier: workspace:*
         version: link:../packages/normalization-core
-      '@openclaw/uirouter':
+      '@grokbot/uirouter':
         specifier: 0.1.0
         version: 0.1.0
-      '@openclaw/workboard-contract':
+      '@grokbot/workboard-contract':
         specifier: workspace:*
         version: link:../packages/workboard-contract
       '@tanstack/lit-virtual':
@@ -2313,7 +2313,7 @@ importers:
       jsdom:
         specifier: 29.1.1
         version: 29.1.1(@noble/hashes@2.2.0)
-      openclaw:
+      grokbot:
         specifier: workspace:*
         version: link:..
       playwright:
@@ -3694,16 +3694,16 @@ packages:
     cpu: [x64]
     os: [win32]
 
-  '@openclaw/crabline@0.1.11':
+  '@grokbot/crabline@0.1.11':
     resolution: {integrity: sha512-A7KH6gi7tXfJmdyeCzhZ65cSrLk4lALbto3lNBOHp1C6uIirAgM4tcF9I7/LhNDX/dq/T+q2QytpVPhhsfwgQQ==}
     engines: {node: '>=22'}
     hasBin: true
 
-  '@openclaw/fs-safe@0.4.4':
+  '@grokbot/fs-safe@0.4.4':
     resolution: {integrity: sha512-QklFGshaQDXl7RFyxPeSN/1moYq/X+SJcmX/nY3oXJO/tzVasL9i1g3m4nJqIfd6qUTJQjeu+41aIqw8+SbUww==}
     engines: {node: '>=22'}
 
-  '@openclaw/libterminal@0.3.2':
+  '@grokbot/libterminal@0.3.2':
     resolution: {integrity: sha512-RbxYPG22kuEgvW2Gx8FK2uApYSgDi+yRahfR0lW7pcdMZvAWL9/iLJRVLEMKc1uAA69mAA/IW5AtwQ9LUdHypA==}
     engines: {node: ^22.18.0 || >=24.11.0}
     peerDependencies:
@@ -3712,13 +3712,13 @@ packages:
       node-pty:
         optional: true
 
-  '@openclaw/proxyline@0.3.3':
+  '@grokbot/proxyline@0.3.3':
     resolution: {integrity: sha512-sftHnW69NHQqLjCxBTvQ8f/eQl+peZ5pHCBQtuTWBbeuYRHZ0/GXVTmw/O/YKsShMbqPWhJB0UYtPPdvCUSS8w==}
     engines: {node: '>=22.19.0'}
     peerDependencies:
       undici: '>=8.3.0 <9'
 
-  '@openclaw/uirouter@0.1.0':
+  '@grokbot/uirouter@0.1.0':
     resolution: {integrity: sha512-w5tNj2FIukVJqJ1wt5wiDbrI6DI4tOkUbtqnnU5Fl4EgnRKFJtfHI3WrWTWTTJlXbbrwGSMptyrSZmQVdRo83Q==}
     engines: {node: ^22.18.0 || >=24.11.0}
 
@@ -10053,7 +10053,7 @@ snapshots:
   '@openai/codex@0.144.6-win32-x64':
     optional: true
 
-  '@openclaw/crabline@0.1.11':
+  '@grokbot/crabline@0.1.11':
     dependencies:
       '@types/node': 22.20.1
       commander: 15.0.0
@@ -10069,20 +10069,20 @@ snapshots:
       - bufferutil
       - utf-8-validate
 
-  '@openclaw/fs-safe@0.4.4':
+  '@grokbot/fs-safe@0.4.4':
     optionalDependencies:
       jszip: 3.10.1
       tar: 7.5.19
 
-  '@openclaw/libterminal@0.3.2':
+  '@grokbot/libterminal@0.3.2':
     dependencies:
       ghostty-web: 0.4.0
 
-  '@openclaw/proxyline@0.3.3(undici@8.5.0)':
+  '@grokbot/proxyline@0.3.3(undici@8.5.0)':
     dependencies:
       undici: 8.5.0
 
-  '@openclaw/uirouter@0.1.0': {}
+  '@grokbot/uirouter@0.1.0': {}
 
   '@opentelemetry/api-logs@0.219.0':
     dependencies:

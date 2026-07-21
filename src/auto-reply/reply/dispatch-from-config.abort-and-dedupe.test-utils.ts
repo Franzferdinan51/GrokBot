@@ -1189,8 +1189,8 @@ describe("dispatchReplyFromConfig", () => {
     replyMediaPathMocks.createReplyMediaPathNormalizer.mockReturnValue(
       async (payload: ReplyPayload) => ({
         ...payload,
-        mediaUrl: "/tmp/openclaw-media/normalized-tts.ogg",
-        mediaUrls: ["/tmp/openclaw-media/normalized-tts.ogg"],
+        mediaUrl: "/tmp/grokbot-media/normalized-tts.ogg",
+        mediaUrls: ["/tmp/grokbot-media/normalized-tts.ogg"],
       }),
     );
     const dispatcher = createDispatcher();
@@ -1213,8 +1213,8 @@ describe("dispatchReplyFromConfig", () => {
       .calls[0]?.[0] as { messageProvider?: unknown } | undefined;
     expect(normalizerOptions?.messageProvider).toBe("feishu");
     const finalPayload = firstFinalReplyPayload(dispatcher);
-    expect(finalPayload?.mediaUrl).toBe("/tmp/openclaw-media/normalized-tts.ogg");
-    expect(finalPayload?.mediaUrls).toStrictEqual(["/tmp/openclaw-media/normalized-tts.ogg"]);
+    expect(finalPayload?.mediaUrl).toBe("/tmp/grokbot-media/normalized-tts.ogg");
+    expect(finalPayload?.mediaUrls).toStrictEqual(["/tmp/grokbot-media/normalized-tts.ogg"]);
     expect(finalPayload?.audioAsVoice).toBe(true);
     expect(finalPayload?.spokenText).toBe("Hello from block streaming.");
     expect(finalPayload?.trustedLocalMedia).toBe(true);

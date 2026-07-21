@@ -1,8 +1,8 @@
 /**
- * Bundled-channel config schemas for OpenClaw-maintained plugins.
+ * Bundled-channel config schemas for GrokBot-maintained plugins.
  *
  * Third-party plugins should define plugin-local schemas and import primitives
- * from openclaw/plugin-sdk/channel-config-schema instead of depending on these
+ * from grokbot/plugin-sdk/channel-config-schema instead of depending on these
  * bundled channel schemas. Internal callers use this subpath only for the
  * bundled provider schemas; generic primitives come from channel-config-schema.
  */

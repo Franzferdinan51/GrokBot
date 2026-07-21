@@ -2,7 +2,7 @@
 import {
   normalizeOptionalLowercaseString,
   normalizeOptionalString as toText,
-} from "@openclaw/normalization-core/string-coerce";
+} from "@grokbot/normalization-core/string-coerce";
 import { z } from "zod";
 
 /**
@@ -147,7 +147,7 @@ export const ClaudePermissionRequestSchema = z.object({
 
 export { toText };
 
-/** Resolve the visible message id, including OpenClaw metadata attached to raw entries. */
+/** Resolve the visible message id, including GrokBot metadata attached to raw entries. */
 export function resolveMessageId(entry: Record<string, unknown>): string | undefined {
   return (
     toText(entry.id) ??

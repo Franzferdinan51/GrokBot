@@ -1,5 +1,5 @@
-// Huggingface plugin entrypoint registers its OpenClaw integration.
-import { defineSingleProviderPluginEntry } from "openclaw/plugin-sdk/provider-entry";
+// Huggingface plugin entrypoint registers its GrokBot integration.
+import { defineSingleProviderPluginEntry } from "grokbot/plugin-sdk/provider-entry";
 import { applyHuggingfaceConfig, HUGGINGFACE_DEFAULT_MODEL_REF } from "./onboard.js";
 import { buildHuggingfaceProvider } from "./provider-catalog.js";
 

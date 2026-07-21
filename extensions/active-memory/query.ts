@@ -3,9 +3,9 @@ import {
   parseModelRef,
   resolveAgentEffectiveModelPrimary,
   resolveDefaultModelForAgent,
-} from "openclaw/plugin-sdk/agent-runtime";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { truncateUtf16Safe } from "openclaw/plugin-sdk/text-utility-runtime";
+} from "grokbot/plugin-sdk/agent-runtime";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { truncateUtf16Safe } from "grokbot/plugin-sdk/text-utility-runtime";
 import {
   ACTIVE_MEMORY_CLOSE_TAG,
   ACTIVE_MEMORY_OPEN_TAG,

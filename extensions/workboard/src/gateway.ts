@@ -1,4 +1,4 @@
-import type { WorkboardCard } from "@openclaw/workboard-contract";
+import type { WorkboardCard } from "@grokbot/workboard-contract";
 // Workboard plugin module implements gateway behavior.
 import type { OpenClawPluginApi } from "../api.js";
 import {

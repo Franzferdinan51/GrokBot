@@ -18,7 +18,7 @@ jobs:
           RELEASE_TAG: ${{ github.event.release.tag_name }}
         run: |
           set -euo pipefail
-          gh api repos/openclaw/docs/dispatches \
+          gh api repos/grokbot/docs/dispatches \
             --method POST \
             -f event_type="translate-all-release" \
             -f client_payload[mode]="incremental" \

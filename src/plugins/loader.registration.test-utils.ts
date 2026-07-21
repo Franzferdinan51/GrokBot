@@ -118,7 +118,7 @@ describe("loadOpenClawPlugins", () => {
     });
     for (const plugin of [first, second]) {
       fs.writeFileSync(
-        path.join(plugin.dir, "openclaw.plugin.json"),
+        path.join(plugin.dir, "grokbot.plugin.json"),
         JSON.stringify(
           {
             id: plugin.id,
@@ -351,8 +351,8 @@ describe("loadOpenClawPlugins", () => {
     fs.writeFileSync(
       path.join(scopedDir, "package.json"),
       JSON.stringify({
-        name: "@openclaw/scoped-provider",
-        openclaw: { extensions: ["./index.cjs"] },
+        name: "@grokbot/scoped-provider",
+        grokbot: { extensions: ["./index.cjs"] },
       }),
       "utf-8",
     );
@@ -378,8 +378,8 @@ describe("loadOpenClawPlugins", () => {
     fs.writeFileSync(
       path.join(unscopedDir, "package.json"),
       JSON.stringify({
-        name: "@openclaw/unscoped-provider",
-        openclaw: { extensions: ["./index.cjs"] },
+        name: "@grokbot/unscoped-provider",
+        grokbot: { extensions: ["./index.cjs"] },
       }),
       "utf-8",
     );
@@ -425,8 +425,8 @@ describe("loadOpenClawPlugins", () => {
     fs.writeFileSync(
       path.join(bundledPluginDir, "package.json"),
       JSON.stringify({
-        name: "@openclaw/notify-host",
-        openclaw: { extensions: ["./index.cjs"] },
+        name: "@grokbot/notify-host",
+        grokbot: { extensions: ["./index.cjs"] },
       }),
       "utf-8",
     );

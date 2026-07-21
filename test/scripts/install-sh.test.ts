@@ -20,7 +20,7 @@ import {
 const SCRIPT_PATH = "scripts/install.sh";
 
 function runInstallShell(script: string, env: NodeJS.ProcessEnv = {}) {
-  const home = mkdtempSync(join(tmpdir(), "openclaw-install-home-"));
+  const home = mkdtempSync(join(tmpdir(), "grokbot-install-home-"));
   try {
     return spawnSync("bash", ["-c", script], {
       encoding: "utf8",
@@ -42,7 +42,7 @@ describe("install.sh", () => {
   const script = readFileSync(SCRIPT_PATH, "utf8");
 
   it("runs installer snippets without inherited shell startup files", () => {
-    const tmp = mkdtempSync(join(tmpdir(), "openclaw-install-shell-env-"));
+    const tmp = mkdtempSync(join(tmpdir(), "grokbot-install-shell-env-"));
     const bashEnvPath = join(tmp, "bash_env");
     writeFileSync(bashEnvPath, "export OPENCLAW_BASH_ENV_LEAKED=1\n");
 
@@ -59,7 +59,7 @@ describe("install.sh", () => {
   });
 
   it("removes a downloaded script temp file when remote execution fails", () => {
-    const tmp = mkdtempSync(join(tmpdir(), "openclaw-install-remote-cleanup-"));
+    const tmp = mkdtempSync(join(tmpdir(), "grokbot-install-remote-cleanup-"));
     const tempFile = join(tmp, "remote-script.sh");
 
     try {
@@ -182,7 +182,7 @@ NODE
       }
 
       install_openclaw_from_git "$repo"
-      wrapper="$HOME/.local/bin/openclaw"
+      wrapper="$HOME/.local/bin/grokbot"
       grep -F "$tmp/$node_dir/node" "$wrapper"
       cd /
       PATH="/usr/bin:/bin" "$wrapper" --version
@@ -466,7 +466,7 @@ NODE
   });
 
   it("installs Git with apk on Alpine", () => {
-    const tmp = mkdtempSync(join(tmpdir(), "openclaw-install-git-apk-"));
+    const tmp = mkdtempSync(join(tmpdir(), "grokbot-install-git-apk-"));
     const bin = join(tmp, "bin");
     const apkLog = join(tmp, "apk-args.txt");
     mkdirSync(bin, { recursive: true });
@@ -510,7 +510,7 @@ NODE
   });
 
   it("does not select apk Git on non-Alpine hosts", () => {
-    const tmp = mkdtempSync(join(tmpdir(), "openclaw-install-git-native-"));
+    const tmp = mkdtempSync(join(tmpdir(), "grokbot-install-git-native-"));
     const bin = join(tmp, "bin");
     const apkLog = join(tmp, "apk-args.txt");
     mkdirSync(bin, { recursive: true });
@@ -570,7 +570,7 @@ NODE
   });
 
   it("does not emit --before when raw user npmrc config contains min-release-age", () => {
-    const tmp = mkdtempSync(join(tmpdir(), "openclaw-install-npmrc-"));
+    const tmp = mkdtempSync(join(tmpdir(), "grokbot-install-npmrc-"));
     const bin = join(tmp, "bin");
     const home = join(tmp, "home");
     const npmrc = join(tmp, "user.npmrc");
@@ -608,7 +608,7 @@ NODE
           "set -euo pipefail",
           `cd ${JSON.stringify(process.cwd())}`,
           `source ${JSON.stringify(SCRIPT_PATH)}`,
-          `run_npm_global_install openclaw@latest ${JSON.stringify(join(tmp, "install.log"))}`,
+          `run_npm_global_install grokbot@latest ${JSON.stringify(join(tmp, "install.log"))}`,
           'printf "cmd=%s\\n" "$LAST_NPM_INSTALL_CMD"',
         ].join("\n"),
         {
@@ -632,7 +632,7 @@ NODE
   });
 
   it("does not emit --before when default global npmrc config contains min-release-age", () => {
-    const tmp = mkdtempSync(join(tmpdir(), "openclaw-install-global-npmrc-"));
+    const tmp = mkdtempSync(join(tmpdir(), "grokbot-install-global-npmrc-"));
     const bin = join(tmp, "bin");
     const home = join(tmp, "home");
     const prefix = join(tmp, "prefix");
@@ -676,7 +676,7 @@ NODE
           "set -euo pipefail",
           `cd ${JSON.stringify(process.cwd())}`,
           `source ${JSON.stringify(SCRIPT_PATH)}`,
-          `run_npm_global_install openclaw@latest ${JSON.stringify(join(tmp, "install.log"))}`,
+          `run_npm_global_install grokbot@latest ${JSON.stringify(join(tmp, "install.log"))}`,
           'printf "cmd=%s\\n" "$LAST_NPM_INSTALL_CMD"',
         ].join("\n"),
         {
@@ -704,7 +704,7 @@ NODE
   });
 
   it("does not emit --before when builtin npmrc config contains min-release-age", () => {
-    const tmp = mkdtempSync(join(tmpdir(), "openclaw-install-builtin-npmrc-"));
+    const tmp = mkdtempSync(join(tmpdir(), "grokbot-install-builtin-npmrc-"));
     const bin = join(tmp, "bin");
     const home = join(tmp, "home");
     const npmrc = join(tmp, "npmrc");
@@ -746,7 +746,7 @@ NODE
           "set -euo pipefail",
           `cd ${JSON.stringify(process.cwd())}`,
           `source ${JSON.stringify(SCRIPT_PATH)}`,
-          `run_npm_global_install openclaw@latest ${JSON.stringify(join(tmp, "install.log"))}`,
+          `run_npm_global_install grokbot@latest ${JSON.stringify(join(tmp, "install.log"))}`,
           'printf "cmd=%s\\n" "$LAST_NPM_INSTALL_CMD"',
         ].join("\n"),
         {
@@ -774,9 +774,9 @@ NODE
   });
 
   it("uses OPENCLAW_HOME for git defaults", () => {
-    const tmp = mkdtempSync(join(tmpdir(), "openclaw-install-home-"));
+    const tmp = mkdtempSync(join(tmpdir(), "grokbot-install-home-"));
     const osHome = join(tmp, "os-home");
-    const openclawHome = join(tmp, "openclaw-home");
+    const openclawHome = join(tmp, "grokbot-home");
     mkdirSync(osHome, { recursive: true });
     mkdirSync(openclawHome, { recursive: true });
 
@@ -801,10 +801,10 @@ NODE
 
     expect(result?.status).toBe(0);
     const output = result?.stdout ?? "";
-    expect(output).toContain(`git=${join(openclawHome, "openclaw")}`);
+    expect(output).toContain(`git=${join(openclawHome, "grokbot")}`);
     const mkdirParentIndex = script.indexOf('mkdir -p "$(dirname "$repo_dir")"');
     const cloneIndex = script.indexOf(
-      'run_quiet_step "Cloning OpenClaw" git clone "$repo_url" "$repo_dir"',
+      'run_quiet_step "Cloning GrokBot" git clone "$repo_url" "$repo_dir"',
     );
     expect(mkdirParentIndex).toBeGreaterThan(-1);
     expect(cloneIndex).toBeGreaterThan(-1);
@@ -812,13 +812,13 @@ NODE
   });
 
   it("does not treat OS HOME config as active when OPENCLAW_HOME is set", () => {
-    const tmp = mkdtempSync(join(tmpdir(), "openclaw-install-legacy-config-"));
+    const tmp = mkdtempSync(join(tmpdir(), "grokbot-install-legacy-config-"));
     const osHome = join(tmp, "os-home");
-    const openclawHome = join(tmp, "openclaw-home");
-    const legacyConfigDir = join(osHome, ".openclaw");
+    const openclawHome = join(tmp, "grokbot-home");
+    const legacyConfigDir = join(osHome, ".grokbot");
     mkdirSync(legacyConfigDir, { recursive: true });
     mkdirSync(openclawHome, { recursive: true });
-    writeFileSync(join(legacyConfigDir, "openclaw.json"), "{}\n");
+    writeFileSync(join(legacyConfigDir, "grokbot.json"), "{}\n");
 
     let result: ReturnType<typeof runInstallShell> | undefined;
     try {
@@ -844,10 +844,10 @@ NODE
     expect(result?.stderr ?? "").toBe("");
   });
 
-  it.each(["openclaw.json", "clawdbot.json"])(
+  it.each(["grokbot.json", "clawdbot.json"])(
     "detects %s under OPENCLAW_STATE_DIR",
     (configName) => {
-      const tmp = mkdtempSync(join(tmpdir(), "openclaw-install-state-config-"));
+      const tmp = mkdtempSync(join(tmpdir(), "grokbot-install-state-config-"));
       const stateDir = join(tmp, "state");
       mkdirSync(stateDir, { recursive: true });
       writeFileSync(join(stateDir, configName), "{}\n");
@@ -877,12 +877,12 @@ NODE
   );
 
   it("does not fall back to home config when OPENCLAW_STATE_DIR is set", () => {
-    const tmp = mkdtempSync(join(tmpdir(), "openclaw-install-state-override-"));
+    const tmp = mkdtempSync(join(tmpdir(), "grokbot-install-state-override-"));
     const home = join(tmp, "home");
     const stateDir = join(tmp, "state");
-    mkdirSync(join(home, ".openclaw"), { recursive: true });
+    mkdirSync(join(home, ".grokbot"), { recursive: true });
     mkdirSync(stateDir, { recursive: true });
-    writeFileSync(join(home, ".openclaw", "openclaw.json"), "{}\n");
+    writeFileSync(join(home, ".grokbot", "grokbot.json"), "{}\n");
 
     let result: ReturnType<typeof runInstallShell> | undefined;
     try {
@@ -911,12 +911,12 @@ NODE
 
   it.each([
     {
-      expected: /No TTY; run .*\/\.local\/bin\/openclaw onboard to finish setup/,
+      expected: /No TTY; run .*\/\.local\/bin\/grokbot onboard to finish setup/,
       name: "starts setup",
       noOnboard: 0,
     },
     {
-      expected: /Skipping onboard .*run .*\/\.local\/bin\/openclaw onboard later/,
+      expected: /Skipping onboard .*run .*\/\.local\/bin\/grokbot onboard later/,
       name: "honors --no-onboard",
       noOnboard: 1,
     },
@@ -927,7 +927,7 @@ NODE
       set -euo pipefail
       source "${SCRIPT_PATH}"
       INSTALL_METHOD=git
-      GIT_DIR="$HOME/openclaw"
+      GIT_DIR="$HOME/grokbot"
       NO_ONBOARD=${noOnboard}
       NO_PROMPT=1
       VERIFY_INSTALL=1
@@ -947,11 +947,11 @@ NODE
       npm() { return 1; }
       install_openclaw_from_git() {
         mkdir -p "$HOME/.local/bin"
-        printf '#!/bin/sh\\nexit 0\\n' > "$HOME/.local/bin/openclaw"
-        chmod +x "$HOME/.local/bin/openclaw"
+        printf '#!/bin/sh\\nexit 0\\n' > "$HOME/.local/bin/grokbot"
+        chmod +x "$HOME/.local/bin/grokbot"
         export PATH="$HOME/.local/bin:$PATH"
       }
-      resolve_openclaw_bin() { printf '%s\\n' "$HOME/.local/bin/openclaw"; }
+      resolve_openclaw_bin() { printf '%s\\n' "$HOME/.local/bin/grokbot"; }
       warn_duplicate_openclaw_global_installs() { :; }
       npm_global_bin_dir() { :; }
       warn_shell_path_missing_dir() { :; }
@@ -975,7 +975,7 @@ NODE
       expect(result.stdout).not.toContain("doctor-called");
       expect(result.stdout).not.toContain("gateway-refresh-called");
       expect(result.stdout).not.toContain("gateway-probe-called");
-      expect(result.stdout).toMatch(/Update command:.*\/\.local\/bin\/openclaw update/);
+      expect(result.stdout).toMatch(/Update command:.*\/\.local\/bin\/grokbot update/);
       expect(result.stdout).toMatch(expected);
     },
   );
@@ -985,7 +985,7 @@ NODE
       set -euo pipefail
       source "${SCRIPT_PATH}"
       INSTALL_METHOD=git
-      GIT_DIR="$HOME/openclaw"
+      GIT_DIR="$HOME/grokbot"
       NO_ONBOARD=0
       NO_PROMPT=1
       VERIFY_INSTALL=1
@@ -1005,11 +1005,11 @@ NODE
       npm() { return 1; }
       install_openclaw_from_git() {
         mkdir -p "$HOME/.local/bin"
-        printf '#!/bin/sh\\nexit 1\\n' > "$HOME/.local/bin/openclaw"
-        chmod +x "$HOME/.local/bin/openclaw"
+        printf '#!/bin/sh\\nexit 1\\n' > "$HOME/.local/bin/grokbot"
+        chmod +x "$HOME/.local/bin/grokbot"
         export PATH="$HOME/.local/bin:$PATH"
       }
-      resolve_openclaw_bin() { printf '%s\\n' "$HOME/.local/bin/openclaw"; }
+      resolve_openclaw_bin() { printf '%s\\n' "$HOME/.local/bin/grokbot"; }
       warn_duplicate_openclaw_global_installs() { :; }
       npm_global_bin_dir() { :; }
       warn_shell_path_missing_dir() { :; }
@@ -1022,7 +1022,7 @@ NODE
     `);
 
     expect(result.status).toBe(1);
-    expect(result.stdout).toMatch(/No TTY; run .*\/\.local\/bin\/openclaw onboard to finish setup/);
+    expect(result.stdout).toMatch(/No TTY; run .*\/\.local\/bin\/grokbot onboard to finish setup/);
   });
 
   it("runs migration doctor for a configured upgrade without a TTY", () => {
@@ -1033,8 +1033,8 @@ NODE
       NO_ONBOARD=0
       NO_PROMPT=0
       OS=linux
-      mkdir -p "$HOME/.openclaw"
-      printf '{}\\n' > "$HOME/.openclaw/openclaw.json"
+      mkdir -p "$HOME/.grokbot"
+      printf '{}\\n' > "$HOME/.grokbot/grokbot.json"
 
       bootstrap_gum_temp() { :; }
       print_installer_banner() { :; }
@@ -1051,11 +1051,11 @@ NODE
       fix_npm_permissions() { :; }
       install_openclaw() {
         mkdir -p "$HOME/.local/bin"
-        printf '#!/bin/sh\\nexit 0\\n' > "$HOME/.local/bin/openclaw"
-        chmod +x "$HOME/.local/bin/openclaw"
+        printf '#!/bin/sh\\nexit 0\\n' > "$HOME/.local/bin/grokbot"
+        chmod +x "$HOME/.local/bin/grokbot"
         export PATH="$HOME/.local/bin:$PATH"
       }
-      resolve_openclaw_bin() { printf '%s\\n' "$HOME/.local/bin/openclaw"; }
+      resolve_openclaw_bin() { printf '%s\\n' "$HOME/.local/bin/grokbot"; }
       warn_duplicate_openclaw_global_installs() { :; }
       npm_global_bin_dir() { :; }
       warn_shell_path_missing_dir() { :; }
@@ -1078,7 +1078,7 @@ NODE
     expect(result.stdout).toContain("dashboard-called");
   });
 
-  it("rejects OpenClaw GitHub source targets for npm installs", () => {
+  it("rejects GrokBot GitHub source targets for npm installs", () => {
     const result = runInstallShell(`
       set -euo pipefail
       source "${SCRIPT_PATH}"
@@ -1092,12 +1092,12 @@ NODE
 
     expect(result.status).toBe(0);
     expect(result.stdout).toContain("status=1");
-    expect(result.stdout).toContain("npm installs do not support OpenClaw GitHub source targets");
+    expect(result.stdout).toContain("npm installs do not support GrokBot GitHub source targets");
     expect(result.stdout).toContain("--install-method git --version main");
   });
 
   it("does not emit before args when npmrc min-release-age computes a before cutoff", () => {
-    const tmp = mkdtempSync(join(tmpdir(), "openclaw-install-npm-freshness-"));
+    const tmp = mkdtempSync(join(tmpdir(), "grokbot-install-npm-freshness-"));
     const bin = join(tmp, "bin");
     const home = join(tmp, "home");
     const argsLog = join(tmp, "npm-args.log");
@@ -1117,7 +1117,7 @@ NODE
           `PATH=${JSON.stringify(`${bin}:/usr/bin:/bin`)}`,
           "NPM_LOGLEVEL=error",
           "NPM_SILENT_FLAG=",
-          `run_npm_global_install openclaw@latest ${JSON.stringify(join(tmp, "install.log"))}`,
+          `run_npm_global_install grokbot@latest ${JSON.stringify(join(tmp, "install.log"))}`,
         ].join("\n"),
       );
       argsOutput = readFileSync(argsLog, "utf8");
@@ -1131,7 +1131,7 @@ NODE
   });
 
   it("ignores project npmrc when choosing global install freshness args", () => {
-    const tmp = mkdtempSync(join(tmpdir(), "openclaw-install-global-freshness-"));
+    const tmp = mkdtempSync(join(tmpdir(), "grokbot-install-global-freshness-"));
     const bin = join(tmp, "bin");
     const home = join(tmp, "home");
     const project = join(tmp, "project");
@@ -1155,7 +1155,7 @@ NODE
           `PATH=${JSON.stringify(`${bin}:/usr/bin:/bin`)}`,
           "NPM_LOGLEVEL=error",
           "NPM_SILENT_FLAG=",
-          `run_npm_global_install openclaw@latest ${JSON.stringify(join(tmp, "install.log"))}`,
+          `run_npm_global_install grokbot@latest ${JSON.stringify(join(tmp, "install.log"))}`,
         ].join("\n"),
       );
       argsOutput = readFileSync(argsLog, "utf8");
@@ -1184,7 +1184,7 @@ NODE
         "parse_args --verify",
         "configure_install_stage_total",
         'ui_stage "Preparing environment"',
-        'ui_stage "Installing OpenClaw"',
+        'ui_stage "Installing GrokBot"',
         'ui_stage "Finalizing setup"',
         'ui_stage "Verifying installation"',
       ].join("\n"),
@@ -1197,7 +1197,7 @@ NODE
   });
 
   it("bounds installer npm prefix probes during finalization helpers", () => {
-    const tmp = mkdtempSync(join(tmpdir(), "openclaw-install-npm-probe-"));
+    const tmp = mkdtempSync(join(tmpdir(), "grokbot-install-npm-probe-"));
     const npm = join(tmp, "npm");
     writeFileSync(
       npm,
@@ -1208,7 +1208,7 @@ NODE
         "  exit 0",
         "fi",
         'if [[ "$1" == "config" && "$2" == "get" && "$3" == "prefix" ]]; then',
-        '  printf "/tmp/openclaw-npm\\n"',
+        '  printf "/tmp/grokbot-npm\\n"',
         "  exit 0",
         "fi",
         "exit 1",
@@ -1227,7 +1227,7 @@ NODE
       );
 
       expect(result.status).toBe(0);
-      expect(result.stdout.trim()).toBe("/tmp/openclaw-npm/bin");
+      expect(result.stdout.trim()).toBe("/tmp/grokbot-npm/bin");
       expect(result.stderr).toContain(
         "timed out during installer finalization probe: npm prefix -g",
       );
@@ -1237,8 +1237,8 @@ NODE
   });
 
   it("bounds daemon status probes during finalization helpers", () => {
-    const tmp = mkdtempSync(join(tmpdir(), "openclaw-install-probe-"));
-    const claw = join(tmp, "openclaw");
+    const tmp = mkdtempSync(join(tmpdir(), "grokbot-install-probe-"));
+    const claw = join(tmp, "grokbot");
     writeFileSync(
       claw,
       [
@@ -1268,7 +1268,7 @@ NODE
       expect(result.status).toBe(0);
       expect(result.stdout.trim()).toBe("not-loaded");
       expect(result.stderr).toContain(
-        "timed out during installer finalization probe: openclaw daemon status --json",
+        "timed out during installer finalization probe: grokbot daemon status --json",
       );
     } finally {
       rmSync(tmp, { force: true, recursive: true });
@@ -1280,7 +1280,7 @@ NODE
       /# Step 1: Node\.js[\s\S]*?load_nvm_for_node_detection\s+if ! check_node; then/,
     );
 
-    const tmp = mkdtempSync(join(tmpdir(), "openclaw-install-nvm-"));
+    const tmp = mkdtempSync(join(tmpdir(), "grokbot-install-nvm-"));
     const home = join(tmp, "home");
     const systemBin = join(tmp, "system-bin");
     const nvmBin = join(home, ".nvm/versions/node/v22.22.3/bin");
@@ -1358,7 +1358,7 @@ NODE
   });
 
   it("promotes a supported Linux Node binary over stale PATH entries", () => {
-    const tmp = mkdtempSync(join(tmpdir(), "openclaw-install-node-promote-"));
+    const tmp = mkdtempSync(join(tmpdir(), "grokbot-install-node-promote-"));
     const staleBin = join(tmp, "usr-local-bin");
     const supportedBin = join(tmp, "usr-bin");
     mkdirSync(staleBin, { recursive: true });
@@ -1416,7 +1416,7 @@ NODE
     };
     expect(pkg.engines?.node).toBe(">=22.22.3 <23 || >=24.15.0 <25 || >=25.9.0");
 
-    const tmp = mkdtempSync(join(tmpdir(), "openclaw-install-node-floor-"));
+    const tmp = mkdtempSync(join(tmpdir(), "grokbot-install-node-floor-"));
     const bin = join(tmp, "bin");
     mkdirSync(bin, { recursive: true });
 
@@ -1490,7 +1490,7 @@ NODE
   });
 
   it("persists a supported Linux Node path before noninteractive shell guards", () => {
-    const tmp = mkdtempSync(join(tmpdir(), "openclaw-install-linux-node-path-"));
+    const tmp = mkdtempSync(join(tmpdir(), "grokbot-install-linux-node-path-"));
     const home = join(tmp, "home");
     const oldBin = join(tmp, "old/bin");
     const installedBin = join(tmp, "usr/bin");
@@ -1555,7 +1555,7 @@ NODE
   });
 
   it("warns before redirecting an unwritable npm prefix", () => {
-    const tmp = mkdtempSync(join(tmpdir(), "openclaw-install-npm-prefix-"));
+    const tmp = mkdtempSync(join(tmpdir(), "grokbot-install-npm-prefix-"));
     const home = join(tmp, "home");
     const events = join(tmp, "events.log");
     mkdirSync(home, { recursive: true });
@@ -1602,13 +1602,13 @@ NODE
     expect(noSudoWarningIndex).toBeGreaterThan(npmSetIndex);
     expect(result?.stdout).toContain("npm global prefix is not writable");
     expect(result?.stdout).toContain("npm normally writes that setting to ~/.npmrc");
-    expect(result?.stdout).toContain("npm i -g openclaw@latest");
+    expect(result?.stdout).toContain("npm i -g grokbot@latest");
     expect(result?.stdout).toContain("using this user prefix");
     expect(result?.stdout).not.toContain("has been saved");
   });
 
   it("persists npm prefix PATH before noninteractive shell guards", () => {
-    const tmp = mkdtempSync(join(tmpdir(), "openclaw-install-npm-prefix-shell-"));
+    const tmp = mkdtempSync(join(tmpdir(), "grokbot-install-npm-prefix-shell-"));
     const home = join(tmp, "home");
     mkdirSync(home, { recursive: true });
     writeFileSync(
@@ -1658,16 +1658,16 @@ NODE
     expect(result?.stdout).toContain(`path=${home}/.npm-global/bin`);
   });
 
-  it("uses a quoted absolute openclaw path in follow-up commands when npm bin is not on the original PATH", () => {
-    const tmp = mkdtempSync(join(tmpdir(), "openclaw-install-command-"));
+  it("uses a quoted absolute grokbot path in follow-up commands when npm bin is not on the original PATH", () => {
+    const tmp = mkdtempSync(join(tmpdir(), "grokbot-install-command-"));
     const npmBin = join(tmp, "npm bin");
     const staleBin = join(tmp, "stale-bin");
     const visibleBin = join(tmp, "visible-bin");
     mkdirSync(npmBin, { recursive: true });
     mkdirSync(staleBin, { recursive: true });
     mkdirSync(visibleBin, { recursive: true });
-    const openclawBin = join(npmBin, "openclaw");
-    const staleOpenclawBin = join(staleBin, "openclaw");
+    const openclawBin = join(npmBin, "grokbot");
+    const staleOpenclawBin = join(staleBin, "grokbot");
     writeFileSync(openclawBin, "#!/bin/sh\nexit 0\n");
     writeFileSync(staleOpenclawBin, "#!/bin/sh\nexit 0\n");
     chmodSync(openclawBin, 0o755);
@@ -1691,12 +1691,12 @@ NODE
 
     expect(result?.status).toBe(0);
     expect(result?.stdout).toContain(`missing=${openclawBin.replace(/ /g, "\\ ")}`);
-    expect(result?.stdout).toContain("present=openclaw");
+    expect(result?.stdout).toContain("present=grokbot");
     expect(result?.stdout).toContain(`shadowed=${openclawBin.replace(/ /g, "\\ ")}`);
   });
 
   it("prefers the binary owned by the completed install method over stale PATH entries", () => {
-    const tmp = mkdtempSync(join(tmpdir(), "openclaw-install-selected-bin-"));
+    const tmp = mkdtempSync(join(tmpdir(), "grokbot-install-selected-bin-"));
     const home = join(tmp, "home");
     const npmBin = join(tmp, "npm-bin");
     const staleBin = join(tmp, "stale-bin");
@@ -1705,9 +1705,9 @@ NODE
     mkdirSync(staleBin, { recursive: true });
     mkdirSync(gitBin, { recursive: true });
     for (const bin of [
-      join(npmBin, "openclaw"),
-      join(staleBin, "openclaw"),
-      join(gitBin, "openclaw"),
+      join(npmBin, "grokbot"),
+      join(staleBin, "grokbot"),
+      join(gitBin, "grokbot"),
     ]) {
       writeFileSync(bin, "#!/bin/sh\nexit 0\n");
       chmodSync(bin, 0o755);
@@ -1735,21 +1735,21 @@ NODE
     }
 
     expect(result?.status).toBe(0);
-    expect(result?.stdout).toContain(`git=${join(gitBin, "openclaw")}`);
-    expect(result?.stdout).toContain(`npm=${join(npmBin, "openclaw")}`);
+    expect(result?.stdout).toContain(`git=${join(gitBin, "grokbot")}`);
+    expect(result?.stdout).toContain(`npm=${join(npmBin, "grokbot")}`);
   });
 
   it("uses the selected binary in gateway recovery guidance", () => {
-    const tmp = mkdtempSync(join(tmpdir(), "openclaw-install-gateway-guidance-"));
+    const tmp = mkdtempSync(join(tmpdir(), "grokbot-install-gateway-guidance-"));
     const currentBin = join(tmp, "current bin");
     const staleBin = join(tmp, "stale-bin");
     mkdirSync(currentBin, { recursive: true });
     mkdirSync(staleBin, { recursive: true });
-    const openclawBin = join(currentBin, "openclaw");
+    const openclawBin = join(currentBin, "grokbot");
     writeFileSync(openclawBin, "#!/bin/sh\nexit 0\n");
-    writeFileSync(join(staleBin, "openclaw"), "#!/bin/sh\nexit 0\n");
+    writeFileSync(join(staleBin, "grokbot"), "#!/bin/sh\nexit 0\n");
     chmodSync(openclawBin, 0o755);
-    chmodSync(join(staleBin, "openclaw"), 0o755);
+    chmodSync(join(staleBin, "grokbot"), 0o755);
 
     let result: ReturnType<typeof runInstallShell> | undefined;
     try {
@@ -1798,7 +1798,7 @@ NODE
       set -euo pipefail
       source "${SCRIPT_PATH}"
       npm() {
-        if [[ "$1" == "view" && "$2" == "openclaw" && "$3" == "dist-tags.beta" ]]; then
+        if [[ "$1" == "view" && "$2" == "grokbot" && "$3" == "dist-tags.beta" ]]; then
           printf '2026.5.12-beta.3\\n'
           return 0
         fi
@@ -1866,7 +1866,7 @@ NODE
   });
 
   it("uses the repo Corepack pnpm when a global pnpm version is already present", () => {
-    const tmp = mkdtempSync(join(tmpdir(), "openclaw-install-pnpm-version-"));
+    const tmp = mkdtempSync(join(tmpdir(), "grokbot-install-pnpm-version-"));
     const bin = join(tmp, "bin");
     const outer = join(tmp, "outer");
     const repo = join(tmp, "repo");
@@ -2036,7 +2036,7 @@ describe("install.sh macOS Homebrew Node behavior", () => {
   });
 
   it("reruns spinner-wrapped commands when gum reports ioctl failure", () => {
-    const dir = mkdtempSync(join(tmpdir(), "openclaw-install-sh-gum-"));
+    const dir = mkdtempSync(join(tmpdir(), "grokbot-install-sh-gum-"));
     try {
       const gumPath = join(dir, "gum");
       const commandPath = join(dir, "command");
@@ -2073,7 +2073,7 @@ describe("install.sh macOS Homebrew Node behavior", () => {
     // When needs_stdin_isolation returns false (direct interactive run),
     // gum spin should NOT redirect stdin from /dev/null so that wrapped
     // commands like Homebrew can still prompt the user via stdin.
-    const dir = mkdtempSync(join(tmpdir(), "openclaw-install-sh-gum-stdin-"));
+    const dir = mkdtempSync(join(tmpdir(), "grokbot-install-sh-gum-stdin-"));
     try {
       const gumPath = join(dir, "gum");
       const commandPath = join(dir, "command");
@@ -2129,47 +2129,47 @@ exit 0
   });
 });
 
-describe("install.sh duplicate OpenClaw install detection", () => {
+describe("install.sh duplicate GrokBot install detection", () => {
   it("warns with concrete package paths and versions for duplicate npm roots", () => {
     const result = runInstallShell(`
       set -euo pipefail
       source "${SCRIPT_PATH}"
       root="$(mktemp -d)"
       trap 'rm -rf "$root"' EXIT
-      mkdir -p "$root/brew/openclaw" "$root/fnm/openclaw"
-      printf '{"version":"2026.3.7"}\\n' > "$root/brew/openclaw/package.json"
-      printf '{"version":"2026.3.1"}\\n' > "$root/fnm/openclaw/package.json"
+      mkdir -p "$root/brew/grokbot" "$root/fnm/grokbot"
+      printf '{"version":"2026.3.7"}\\n' > "$root/brew/grokbot/package.json"
+      printf '{"version":"2026.3.1"}\\n' > "$root/fnm/grokbot/package.json"
       collect_openclaw_npm_root_candidates() { printf '%s\\n' "$root/brew" "$root/fnm"; }
-      OPENCLAW_BIN="$root/fnm/.bin/openclaw"
+      OPENCLAW_BIN="$root/fnm/.bin/grokbot"
       ui_warn() { echo "WARN: $*"; }
       warn_duplicate_openclaw_global_installs
     `);
 
     expect(result.status).toBe(0);
-    expect(result.stdout).toContain("Multiple OpenClaw global installs detected");
+    expect(result.stdout).toContain("Multiple GrokBot global installs detected");
     expect(result.stdout).toContain("2026.3.7");
     expect(result.stdout).toContain("2026.3.1");
-    expect(result.stdout).toContain("/brew/openclaw");
-    expect(result.stdout).toContain("/fnm/openclaw");
-    expect(result.stdout).toContain("Active openclaw:");
-    expect(result.stdout).toContain("npm uninstall -g openclaw");
+    expect(result.stdout).toContain("/brew/grokbot");
+    expect(result.stdout).toContain("/fnm/grokbot");
+    expect(result.stdout).toContain("Active grokbot:");
+    expect(result.stdout).toContain("npm uninstall -g grokbot");
   });
 
-  it("stays quiet when only one OpenClaw npm root exists", () => {
+  it("stays quiet when only one GrokBot npm root exists", () => {
     const result = runInstallShell(`
       set -euo pipefail
       source "${SCRIPT_PATH}"
       root="$(mktemp -d)"
       trap 'rm -rf "$root"' EXIT
-      mkdir -p "$root/only/openclaw"
-      printf '{"version":"2026.3.7"}\\n' > "$root/only/openclaw/package.json"
+      mkdir -p "$root/only/grokbot"
+      printf '{"version":"2026.3.7"}\\n' > "$root/only/grokbot/package.json"
       collect_openclaw_npm_root_candidates() { printf '%s\\n' "$root/only"; }
       ui_warn() { echo "WARN: $*"; }
       warn_duplicate_openclaw_global_installs
     `);
 
     expect(result.status).toBe(0);
-    expect(result.stdout).not.toContain("Multiple OpenClaw global installs detected");
+    expect(result.stdout).not.toContain("Multiple GrokBot global installs detected");
   });
 
   it("needs_stdin_isolation returns true when stdin is piped", () => {
@@ -2263,7 +2263,7 @@ describe("install.sh duplicate OpenClaw install detection", () => {
   });
 
   it("run_quiet_step redirects stdin to /dev/null in piped context", () => {
-    const dir = mkdtempSync(join(tmpdir(), "openclaw-stdin-test-"));
+    const dir = mkdtempSync(join(tmpdir(), "grokbot-stdin-test-"));
     const marker = join(dir, "stdin-state");
     try {
       const result = spawnSync(
@@ -2299,7 +2299,7 @@ describe("install.sh duplicate OpenClaw install detection", () => {
     // pipe data from the installer invocation reaches the child process.
     // If this test ever fails, the isolation in run_quiet_step is no longer
     // the only barrier protecting child processes from pipe consumption.
-    const dir = mkdtempSync(join(tmpdir(), "openclaw-stdin-leak-"));
+    const dir = mkdtempSync(join(tmpdir(), "grokbot-stdin-leak-"));
     const marker = join(dir, "stdin-state");
     try {
       const result = spawnSync(
@@ -2334,7 +2334,7 @@ describe("install.sh duplicate OpenClaw install detection", () => {
   it("run_quiet_step blocks cat from reading pipe data", () => {
     // Stronger version of the isolation test: uses cat to consume all of
     // stdin and verifies it reads nothing (empty output from /dev/null).
-    const dir = mkdtempSync(join(tmpdir(), "openclaw-stdin-cat-"));
+    const dir = mkdtempSync(join(tmpdir(), "grokbot-stdin-cat-"));
     const marker = join(dir, "stdin-state");
     try {
       const result = spawnSync(

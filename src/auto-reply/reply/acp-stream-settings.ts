@@ -1,6 +1,6 @@
 /** ACP streaming and projection settings derived from config. */
-import type { AcpSessionUpdateTag } from "@openclaw/acp-core/runtime/types";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { AcpSessionUpdateTag } from "@grokbot/acp-core/runtime/types";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import { resolveEffectiveBlockStreamingConfig } from "./block-streaming.js";
 
 const DEFAULT_ACP_STREAM_COALESCE_IDLE_MS = 350;

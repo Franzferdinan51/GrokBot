@@ -1,5 +1,5 @@
 /** Query helpers for discovering secret target registry entries. */
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { loadChannelSecretContractApi } from "./channel-contract-api.js";
 import { getPath } from "./path-utils.js";
 import { getCoreSecretTargetRegistry, getSecretTargetRegistry } from "./target-registry-data.js";
@@ -84,7 +84,7 @@ function getCompiledSecretTargetRegistryState() {
   }
   const compiledSecretTargetRegistry = getSecretTargetRegistry().map(compileTargetRegistryEntry);
   const openClawCompiledSecretTargets = compiledSecretTargetRegistry.filter(
-    (entry) => entry.configFile === "openclaw.json",
+    (entry) => entry.configFile === "grokbot.json",
   );
   const authProfilesCompiledSecretTargets = compiledSecretTargetRegistry.filter(
     (entry) => entry.configFile === "auth-profiles.json",
@@ -107,7 +107,7 @@ function getCompiledCoreOpenClawTargetState() {
   }
   const compiledCoreSecretTargets = getCoreSecretTargetRegistry().map(compileTargetRegistryEntry);
   const openClawCompiledSecretTargets = compiledCoreSecretTargets.filter(
-    (entry) => entry.configFile === "openclaw.json",
+    (entry) => entry.configFile === "grokbot.json",
   );
   compiledCoreOpenClawTargetState = {
     knownTargetIds: new Set(compiledCoreSecretTargets.map((entry) => entry.id)),
@@ -153,7 +153,7 @@ function getCompiledChannelOpenClawTargets(
       config: {} as OpenClawConfig,
       env: process.env,
     })
-      ?.secretTargetRegistryEntries?.filter((entry) => entry.configFile === "openclaw.json")
+      ?.secretTargetRegistryEntries?.filter((entry) => entry.configFile === "grokbot.json")
       .map(compileTargetRegistryEntry) ?? null;
   compiledChannelOpenClawTargets.set(normalizedChannelId, compiledEntries);
   return compiledEntries;
@@ -388,7 +388,7 @@ export function resolveSecretPlanTargetByPath(params: {
   configFile: SecretTargetConfigFile;
   pathSegments: string[];
 }): ResolvedPlanTarget | null {
-  if (params.configFile === "openclaw.json") {
+  if (params.configFile === "grokbot.json") {
     return resolveConfigSecretTargetByPath(params.pathSegments);
   }
   for (const entry of getCompiledSecretTargetRegistryState().authProfilesCompiledSecretTargets) {
@@ -408,7 +408,7 @@ export function resolveSecretPlanTargetByPath(params: {
 }
 
 /**
- * Resolves an openclaw.json config path to the matching plan-capable secrets target.
+ * Resolves an grokbot.json config path to the matching plan-capable secrets target.
  */
 export function resolveConfigSecretTargetByPath(pathSegments: string[]): ResolvedPlanTarget | null {
   for (const entry of getCompiledCoreOpenClawTargetState().openClawCompiledSecretTargets) {
@@ -464,7 +464,7 @@ export function resolveConfigSecretTargetByPath(pathSegments: string[]): Resolve
 }
 
 /**
- * Discovers configured secret-bearing values in openclaw.json using the full registry.
+ * Discovers configured secret-bearing values in grokbot.json using the full registry.
  */
 export function discoverConfigSecretTargets(
   config: OpenClawConfig,
@@ -473,7 +473,7 @@ export function discoverConfigSecretTargets(
 }
 
 /**
- * Discovers configured openclaw.json targets, optionally limited to selected registry ids.
+ * Discovers configured grokbot.json targets, optionally limited to selected registry ids.
  */
 export function discoverConfigSecretTargetsByIds(
   config: OpenClawConfig,

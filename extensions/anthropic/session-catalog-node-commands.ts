@@ -5,11 +5,11 @@ import {
   decodeNodePtyResumeParams,
   runNodePtyCommand,
   validateClaudeSessionId,
-} from "openclaw/plugin-sdk/node-host";
+} from "grokbot/plugin-sdk/node-host";
 import type {
   OpenClawPluginNodeHostCommand,
   OpenClawPluginNodeInvokePolicy,
-} from "openclaw/plugin-sdk/plugin-entry";
+} from "grokbot/plugin-sdk/plugin-entry";
 import { isExactClaudeSessionCursor } from "./session-catalog-cursor.js";
 import { resolveClaudeTerminalExecutable } from "./session-catalog-executable.js";
 import {

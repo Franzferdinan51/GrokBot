@@ -1,4 +1,4 @@
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 // Outbound delivery core runs plugin hooks, queue durability, channel adapter
 // sends, commit hooks, diagnostics, transcript mirroring, and payload outcomes.
 import { hasTrustedMessageAuditListeners } from "../../audit/message-audit-events.js";
@@ -24,7 +24,7 @@ import type {
 } from "../../channels/plugins/types.adapters.js";
 import { resolveMirroredTranscriptText } from "../../config/sessions/transcript-mirror.js";
 import type { ReplyToMode } from "../../config/types.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import { fireAndForgetHook } from "../../hooks/fire-and-forget.js";
 import { createInternalHookEvent, triggerInternalHook } from "../../hooks/internal-hooks.js";
 import {

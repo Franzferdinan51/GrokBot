@@ -6,14 +6,14 @@ import {
 } from "../auto-reply/thinking.js";
 /** Resolves the concrete harness runtime that owns the next agent turn. */
 import type { SessionEntry } from "../config/sessions.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { resolveAgentHarnessPolicy } from "./harness/policy.js";
 import { resolveAutoAgentHarnessId } from "./harness/support.js";
 import { resolveSessionRuntimeOverrideForProvider } from "./session-runtime-compat.js";
 
 /** Convert residual auto policy into the built-in fallback when no registry selection is needed. */
 export function concretizeAgentRuntime(runtime: string): string {
-  return runtime === "auto" ? "openclaw" : runtime;
+  return runtime === "auto" ? "grokbot" : runtime;
 }
 
 /** Resolves an explicit session override before configured model/provider policy. */
@@ -47,7 +47,7 @@ export function resolveEffectiveAgentRuntime(params: {
         provider: params.provider,
         modelId: params.modelId,
         config: params.cfg,
-      }) ?? "openclaw"
+      }) ?? "grokbot"
     );
   }
   return concretizeAgentRuntime(runtime);

@@ -1,19 +1,19 @@
-import { buildMeetingSoxAudioCommands } from "openclaw/plugin-sdk/meeting-runtime";
+import { buildMeetingSoxAudioCommands } from "grokbot/plugin-sdk/meeting-runtime";
 import {
   addTimerTimeoutGraceMs,
   resolvePositiveTimerTimeoutMs,
-} from "openclaw/plugin-sdk/number-runtime";
+} from "grokbot/plugin-sdk/number-runtime";
 import {
   REALTIME_VOICE_AGENT_CONSULT_TOOL_NAME,
   resolveRealtimeVoiceAgentConsultToolPolicy,
   type RealtimeVoiceAgentConsultToolPolicy,
-} from "openclaw/plugin-sdk/realtime-voice";
+} from "grokbot/plugin-sdk/realtime-voice";
 import {
   asRecord,
   normalizeOptionalLowercaseString,
   normalizeOptionalString,
   normalizeOptionalTrimmedStringList,
-} from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/string-coerce-runtime";
 
 export type TeamsMeetingsMode = "agent" | "bidi" | "transcribe";
 export type TeamsMeetingsTransport = "chrome" | "chrome-node";
@@ -91,7 +91,7 @@ const DEFAULT_SOX_COMMANDS = buildSoxCommands(DEFAULT_AUDIO_FORMAT, DEFAULT_AUDI
 export const DEFAULT_TEAMS_MEETINGS_AUDIO_INPUT_COMMAND = DEFAULT_SOX_COMMANDS.inputCommand;
 export const DEFAULT_TEAMS_MEETINGS_AUDIO_OUTPUT_COMMAND = DEFAULT_SOX_COMMANDS.outputCommand;
 
-const DEFAULT_REALTIME_INSTRUCTIONS = `You are joining a private Microsoft Teams meeting as an OpenClaw voice transport. Keep spoken replies brief and natural. In agent mode, wait for OpenClaw consult results and speak them exactly. In bidi mode, answer directly and call ${REALTIME_VOICE_AGENT_CONSULT_TOOL_NAME} for deeper reasoning, current information, or tools.`;
+const DEFAULT_REALTIME_INSTRUCTIONS = `You are joining a private Microsoft Teams meeting as an GrokBot voice transport. Keep spoken replies brief and natural. In agent mode, wait for GrokBot consult results and speak them exactly. In bidi mode, answer directly and call ${REALTIME_VOICE_AGENT_CONSULT_TOOL_NAME} for deeper reasoning, current information, or tools.`;
 
 const DEFAULT_CONFIG: TeamsMeetingsConfig = {
   enabled: true,
@@ -101,7 +101,7 @@ const DEFAULT_CONFIG: TeamsMeetingsConfig = {
     audioFormat: DEFAULT_AUDIO_FORMAT,
     audioBufferBytes: DEFAULT_AUDIO_BUFFER_BYTES,
     launch: true,
-    guestName: "OpenClaw Agent",
+    guestName: "GrokBot Agent",
     reuseExistingTab: true,
     autoJoin: true,
     joinTimeoutMs: 30_000,

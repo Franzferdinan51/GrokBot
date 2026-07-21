@@ -57,7 +57,7 @@ vi.mock("../../config/config.js", () => ({
     const afterWrite = params.afterWrite ?? { mode: "auto" };
     await replaceConfigFileMock({ nextConfig: transformed.nextConfig, afterWrite });
     return {
-      path: snapshot.path ?? "/tmp/openclaw.json",
+      path: snapshot.path ?? "/tmp/grokbot.json",
       previousHash,
       persistedHash: "persisted-hash",
       snapshot,
@@ -198,7 +198,7 @@ describe("handlePluginsCommand", () => {
     vi.clearAllMocks();
     readConfigFileSnapshotMock.mockResolvedValue({
       valid: true,
-      path: "/tmp/openclaw.json",
+      path: "/tmp/grokbot.json",
       sourceConfig: buildCfg(),
       resolved: buildCfg(),
       hash: "config-1",
@@ -215,7 +215,7 @@ describe("handlePluginsCommand", () => {
           id: "superpowers",
           name: "superpowers",
           status: "disabled",
-          format: "openclaw",
+          format: "grokbot",
           bundleFormat: "claude",
         },
       ],
@@ -227,7 +227,7 @@ describe("handlePluginsCommand", () => {
           id: "superpowers",
           name: "superpowers",
           status: "disabled",
-          format: "openclaw",
+          format: "grokbot",
           bundleFormat: "claude",
         },
       ],
@@ -359,7 +359,7 @@ describe("handlePluginsCommand", () => {
 
       const result = await handlePluginsCommand(params, true);
       expect(result?.reply?.text).toContain("OPENCLAW_NIX_MODE=1");
-      expect(result?.reply?.text).toContain("nix-openclaw#quick-start");
+      expect(result?.reply?.text).toContain("nix-grokbot#quick-start");
       expect(readConfigFileSnapshotMock).not.toHaveBeenCalled();
       expect(replaceConfigFileMock).not.toHaveBeenCalled();
       expect(refreshPluginRegistryAfterConfigMutationMock).not.toHaveBeenCalled();
@@ -380,7 +380,7 @@ describe("handlePluginsCommand", () => {
           id: "superpowers",
           name: "Super Powers",
           status: "disabled",
-          format: "openclaw",
+          format: "grokbot",
           bundleFormat: "claude",
         },
       ],

@@ -55,7 +55,7 @@ export default {
       },
     });
     api.registerGatewayMethod("qa.voiceCall.streamSession", async ({ params, respond }) => {
-      const runtime = globalThis[Symbol.for("openclaw.voice-call.runtime")];
+      const runtime = globalThis[Symbol.for("grokbot.voice-call.runtime")];
       const callId = typeof params?.callId === "string" ? params.callId : "";
       const call = runtime?.manager?.getCall?.(callId);
       const issue = runtime?.manager?.streamSessionIssuer;

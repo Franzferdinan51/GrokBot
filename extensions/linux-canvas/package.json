@@ -1,15 +1,15 @@
 {
-  "name": "@openclaw/linux-canvas",
+  "name": "@grokbot/linux-canvas",
   "version": "2026.7.2",
-  "description": "OpenClaw Linux desktop canvas bridge",
+  "description": "GrokBot Linux desktop canvas bridge",
   "type": "module",
   "dependencies": {
     "zod": "4.4.3"
   },
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@grokbot/plugin-sdk": "workspace:*"
   },
-  "openclaw": {
+  "grokbot": {
     "extensions": [
       "./index.ts"
     ]

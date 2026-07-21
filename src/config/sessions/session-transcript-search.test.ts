@@ -4,12 +4,12 @@ import os from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { executeSqliteQuerySync, getNodeSqliteKysely } from "../../infra/kysely-sync.js";
-import type { DB as OpenClawAgentKyselyDatabase } from "../../state/openclaw-agent-db.generated.js";
+import type { DB as OpenClawAgentKyselyDatabase } from "../../state/grokbot-agent-db.generated.js";
 import {
   closeOpenClawAgentDatabasesForTest,
   openOpenClawAgentDatabase,
-} from "../../state/openclaw-agent-db.js";
-import { closeOpenClawStateDatabaseForTest } from "../../state/openclaw-state-db.js";
+} from "../../state/grokbot-agent-db.js";
+import { closeOpenClawStateDatabaseForTest } from "../../state/grokbot-state-db.js";
 import type { TranscriptEvent } from "./session-accessor.js";
 import {
   appendSqliteTranscriptEvent,
@@ -29,7 +29,7 @@ type TestPaths = { stateDir: string; tempDir: string };
 let paths: TestPaths;
 
 beforeEach(() => {
-  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-session-search-"));
+  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-session-search-"));
   paths = {
     stateDir: path.join(tempDir, "state"),
     tempDir,

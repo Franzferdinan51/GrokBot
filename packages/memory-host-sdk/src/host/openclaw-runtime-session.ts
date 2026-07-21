@@ -30,7 +30,7 @@ export {
   stripInboundMetadata,
   stripInternalRuntimeContext,
   type SessionEntry,
-} from "./openclaw-runtime.js";
+} from "./grokbot-runtime.js";
 
 /** Extracts the agent id from a canonical `agents/<id>/sessions` directory path. */
 export function extractAgentIdFromSessionsDir(sessionsDir: string): string | null {

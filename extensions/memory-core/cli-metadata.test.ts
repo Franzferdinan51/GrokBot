@@ -1,7 +1,7 @@
 // Memory Core tests cover metadata-only CLI host propagation.
 import { Command } from "commander";
-import type { OpenClawPluginApi } from "openclaw/plugin-sdk/core";
-import { createTestPluginApi } from "openclaw/plugin-sdk/plugin-test-api";
+import type { OpenClawPluginApi } from "grokbot/plugin-sdk/core";
+import { createTestPluginApi } from "grokbot/plugin-sdk/plugin-test-api";
 import { describe, expect, it, vi } from "vitest";
 
 const registerMemoryCliMock = vi.hoisted(() => vi.fn());

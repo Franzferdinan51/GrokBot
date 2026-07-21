@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import { resolveAgentHarnessPolicy } from "./policy.js";
 
 function openAIProviderConfig(overrides: Record<string, unknown>): OpenClawConfig {
@@ -27,7 +27,7 @@ describe("resolveAgentHarnessPolicy", () => {
     {
       name: "HTTP official Responses route",
       params: { config: openAIProviderConfig({ baseUrl: "http://api.openai.com/v1" }) },
-      runtime: "openclaw",
+      runtime: "grokbot",
     },
     {
       name: "HTTP official ChatGPT route",
@@ -37,22 +37,22 @@ describe("resolveAgentHarnessPolicy", () => {
           baseUrl: "http://chatgpt.com/backend-api/codex",
         }),
       },
-      runtime: "openclaw",
+      runtime: "grokbot",
     },
     {
       name: "custom endpoint",
       params: { config: openAIProviderConfig({ baseUrl: "https://relay.example.test/v1" }) },
-      runtime: "openclaw",
+      runtime: "grokbot",
     },
     {
       name: "authored Completions route",
       params: { config: openAIProviderConfig({ api: "openai-completions" }) },
-      runtime: "openclaw",
+      runtime: "grokbot",
     },
     {
       name: "request override",
       params: { config: openAIProviderConfig({ headers: { "x-route": "custom" } }) },
-      runtime: "openclaw",
+      runtime: "grokbot",
     },
   ])("uses the provider-owned runtime for $name", ({ params, runtime }) => {
     expect(
@@ -123,7 +123,7 @@ describe("resolveAgentHarnessPolicy", () => {
           config: customConfig,
           env: {},
         }),
-      ).toEqual({ runtime: "openclaw", runtimeSource: "implicit" });
+      ).toEqual({ runtime: "grokbot", runtimeSource: "implicit" });
     },
   );
 
@@ -156,7 +156,7 @@ describe("resolveAgentHarnessPolicy", () => {
       agentId: undefined,
       sessionKey: "agent:writer:main",
     },
-  ])("keeps $name on OpenClaw", ({ agents, agentId, sessionKey }) => {
+  ])("keeps $name on GrokBot", ({ agents, agentId, sessionKey }) => {
     const config = openAIProviderConfig({});
     config.agents = agents;
     expect(
@@ -168,10 +168,10 @@ describe("resolveAgentHarnessPolicy", () => {
         sessionKey,
         env: {},
       }),
-    ).toEqual({ runtime: "openclaw", runtimeSource: "implicit" });
+    ).toEqual({ runtime: "grokbot", runtimeSource: "implicit" });
   });
 
-  it("keeps prepared request overrides on OpenClaw", () => {
+  it("keeps prepared request overrides on GrokBot", () => {
     expect(
       resolveAgentHarnessPolicy({
         provider: "openai",
@@ -181,14 +181,14 @@ describe("resolveAgentHarnessPolicy", () => {
         requestTransportOverrides: "present",
         env: {},
       }),
-    ).toEqual({ runtime: "openclaw", runtimeSource: "implicit" });
+    ).toEqual({ runtime: "grokbot", runtimeSource: "implicit" });
   });
 
   it("applies global request params before a concrete model is selected", () => {
     const config = openAIProviderConfig({});
     config.agents = { defaults: { params: { temperature: 0.2 } } };
     expect(resolveAgentHarnessPolicy({ provider: "openai", config, env: {} })).toEqual({
-      runtime: "openclaw",
+      runtime: "grokbot",
       runtimeSource: "implicit",
     });
   });
@@ -197,7 +197,7 @@ describe("resolveAgentHarnessPolicy", () => {
     {
       name: "later route facts fill an omitted adapter",
       models: [{ id: "gpt-5.5" }, { id: "gpt-5.5", api: "openai-completions" }],
-      runtime: "openclaw",
+      runtime: "grokbot",
     },
     {
       name: "a provider-looking native id stays distinct",
@@ -205,7 +205,7 @@ describe("resolveAgentHarnessPolicy", () => {
         { id: "openai/gpt-5.5", api: "openai-responses" },
         { id: "gpt-5.5", api: "openai-completions" },
       ],
-      runtime: "openclaw",
+      runtime: "grokbot",
     },
     {
       name: "an authored empty header map stays authoritative",
@@ -218,7 +218,7 @@ describe("resolveAgentHarnessPolicy", () => {
     {
       name: "later headers fill an omitted header map",
       models: [{ id: "gpt-5.5" }, { id: "gpt-5.5", headers: { "x-route": "custom" } }],
-      runtime: "openclaw",
+      runtime: "grokbot",
     },
   ])("keeps duplicate model config aligned: $name", ({ models, runtime }) => {
     expect(

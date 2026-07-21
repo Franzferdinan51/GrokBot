@@ -1,7 +1,7 @@
 /** Tests auto-reply status message formatting. */
 import fs from "node:fs";
 import path from "node:path";
-import { withTempHome } from "openclaw/plugin-sdk/test-env";
+import { withTempHome } from "grokbot/plugin-sdk/test-env";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { normalizeTestText } from "../../test/helpers/normalize-text.js";
 import { testing as cliBackendsTesting } from "../agents/cli-backends.test-support.js";
@@ -121,7 +121,7 @@ describe("buildStatusMessage", () => {
       sessionScope: "per-sender",
       resolvedThink: "medium",
       resolvedVerbose: "off",
-      resolvedHarness: "openclaw",
+      resolvedHarness: "grokbot",
       queue: { mode: "collect", depth: 0 },
       pluginHealthLine: "🔌 Plugins: OK",
       modelAuth: "api-key",
@@ -130,7 +130,7 @@ describe("buildStatusMessage", () => {
     });
     const normalized = normalizeTestText(text);
 
-    expect(normalized).toContain("OpenClaw");
+    expect(normalized).toContain("GrokBot");
     expect(normalized).toContain("Model: anthropic/test:opus");
     expect(normalized).toContain("api-key");
     expect(normalized).toContain("Plugins: OK");
@@ -142,7 +142,7 @@ describe("buildStatusMessage", () => {
     expect(normalized).toContain("duration 2h 14m");
     expect(normalized).toContain("updated 4h ago");
     expect(normalized).toContain("Execution: direct");
-    expect(normalized).toContain("Runtime: OpenClaw Default");
+    expect(normalized).toContain("Runtime: GrokBot Default");
     expect(normalized).not.toContain("Runner:");
     expect(normalized).toContain("Think: medium");
     expect(normalized).not.toContain("verbose");
@@ -720,25 +720,25 @@ describe("buildStatusMessage", () => {
     expect(normalized).not.toContain("· codex");
   });
 
-  it("shows the default OpenClaw harness as the model runtime", () => {
+  it("shows the default GrokBot harness as the model runtime", () => {
     const text = buildStatusMessage({
       agent: {
         model: "openai/gpt-5.4",
       },
       sessionEntry: {
-        sessionId: "openclaw-harness",
+        sessionId: "grokbot-harness",
         updatedAt: 0,
         fastMode: true,
       },
       sessionKey: "agent:main:main",
       queue: { mode: "collect", depth: 0 },
-      resolvedHarness: "openclaw",
+      resolvedHarness: "grokbot",
     });
 
     const normalized = normalizeTestText(text);
     expect(normalized).toContain("Fast");
-    expect(normalized).toContain("Runtime: OpenClaw Default");
-    expect(normalized).not.toContain("· openclaw");
+    expect(normalized).toContain("Runtime: GrokBot Default");
+    expect(normalized).not.toContain("· grokbot");
   });
 
   it("shows fast mode when disabled", () => {
@@ -1822,7 +1822,7 @@ describe("buildStatusMessage", () => {
     expect(normalized).not.toContain("Reason: session override");
     expect(normalized).not.toContain("This session is pinned");
     expect(normalized).not.toContain(
-      "Docs: https://docs.openclaw.ai/concepts/models#selection-source-and-fallback-behavior",
+      "Docs: https://docs.grokbot.ai/concepts/models#selection-source-and-fallback-behavior",
     );
   });
 
@@ -1993,7 +1993,7 @@ describe("buildStatusMessage", () => {
   }) {
     const logPath = path.join(
       params.dir,
-      ".openclaw",
+      ".grokbot",
       "agents",
       params.agentId,
       "sessions",
@@ -2072,7 +2072,7 @@ describe("buildStatusMessage", () => {
 
         expect(normalizeTestText(text)).toContain("Context: 1.0k/32k");
       },
-      { prefix: "openclaw-status-" },
+      { prefix: "grokbot-status-" },
     );
   });
 
@@ -2119,7 +2119,7 @@ describe("buildStatusMessage", () => {
         expect(normalized).not.toContain("Context: 3.8m/1.0m");
         expect(normalized).not.toContain("Context: 3.82m/1.0m");
       },
-      { prefix: "openclaw-status-" },
+      { prefix: "grokbot-status-" },
     );
   });
 
@@ -2167,7 +2167,7 @@ describe("buildStatusMessage", () => {
         expect(normalized).toContain("Context: 36k/1.0m (4%)");
         expect(normalized).not.toContain("Context: 2.3m/1.0m");
       },
-      { prefix: "openclaw-status-" },
+      { prefix: "grokbot-status-" },
     );
   });
 
@@ -2188,7 +2188,7 @@ describe("buildStatusMessage", () => {
 
         expect(normalizeTestText(text)).toContain("Context: 1.0k/32k");
       },
-      { prefix: "openclaw-status-" },
+      { prefix: "grokbot-status-" },
     );
   });
 
@@ -2230,7 +2230,7 @@ describe("buildStatusMessage", () => {
 
         expect(normalizeTestText(text)).toContain("Context: 1.2k/32k");
       },
-      { prefix: "openclaw-status-" },
+      { prefix: "grokbot-status-" },
     );
   });
 
@@ -2251,7 +2251,7 @@ describe("buildStatusMessage", () => {
 
         expect(normalizeTestText(text)).toContain("Cache: 100% hit · 1.0k cached, 0 new");
       },
-      { prefix: "openclaw-status-" },
+      { prefix: "grokbot-status-" },
     );
   });
 
@@ -2261,7 +2261,7 @@ describe("buildStatusMessage", () => {
         const sessionId = "sess-cache-delivery-mirror";
         const logPath = path.join(
           dir,
-          ".openclaw",
+          ".grokbot",
           "agents",
           "main",
           "sessions",
@@ -2291,7 +2291,7 @@ describe("buildStatusMessage", () => {
               type: "message",
               message: {
                 role: "assistant",
-                provider: "openclaw",
+                provider: "grokbot",
                 model: "delivery-mirror",
                 usage: {
                   input: 0,
@@ -2314,7 +2314,7 @@ describe("buildStatusMessage", () => {
         expect(normalizeTestText(text)).toContain("Cache: 100% hit · 1.0k cached, 0 new");
         expect(normalizeTestText(text)).toContain("Context: 1.0k/32k");
       },
-      { prefix: "openclaw-status-" },
+      { prefix: "grokbot-status-" },
     );
   });
 
@@ -2350,7 +2350,7 @@ describe("buildStatusMessage", () => {
 
         expect(normalizeTestText(text)).toContain("Cache: 26% hit · 12 cached, 34 new");
       },
-      { prefix: "openclaw-status-" },
+      { prefix: "grokbot-status-" },
     );
   });
 
@@ -2403,7 +2403,7 @@ describe("buildStatusMessage", () => {
         expect(normalized).toContain("Context: 1.2k/999k");
         expect(normalized).not.toContain("Context: 1.2k/2.0m");
       },
-      { prefix: "openclaw-status-" },
+      { prefix: "grokbot-status-" },
     );
   });
 
@@ -2564,7 +2564,7 @@ describe("buildStatusMessage", () => {
         expect(normalized).toContain("Context: 1.2k/1.0m");
         expect(normalized).not.toContain("Context: 1.2k/128k");
       },
-      { prefix: "openclaw-status-" },
+      { prefix: "grokbot-status-" },
     );
   });
 

@@ -4,7 +4,7 @@ import {
   assertSqliteIntegrity,
   isTerminalSqliteIntegrityError,
 } from "../infra/sqlite-integrity.js";
-import { OPENCLAW_SQLITE_BUSY_TIMEOUT_MS } from "./openclaw-state-db.js";
+import { OPENCLAW_SQLITE_BUSY_TIMEOUT_MS } from "./grokbot-state-db.js";
 
 export type OpenClawDatabaseVerifyTarget = {
   path: string;

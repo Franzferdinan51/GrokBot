@@ -1,5 +1,5 @@
 // Discord tests cover setup surface plugin behavior.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import { describe, expect, it } from "vitest";
 import { createDiscordSetupWizardBase } from "./setup-core.js";
 
@@ -115,7 +115,7 @@ describe("discordSetupWizard.groupAccess", () => {
       accountId: "default",
       resolved: [
         {
-          input: "OpenClaw/#triage",
+          input: "GrokBot/#triage",
           resolved: true,
           guildId: "guild-1",
           channelId: "channel-1",

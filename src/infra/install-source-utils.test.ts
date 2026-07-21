@@ -10,9 +10,9 @@ import {
   withTempDir,
 } from "./install-source-utils.js";
 
-const execFileSyncMock = vi.hoisted(() => vi.fn(() => "/tmp/openclaw-test-global-npmrc\n"));
+const execFileSyncMock = vi.hoisted(() => vi.fn(() => "/tmp/grokbot-test-global-npmrc\n"));
 const runCommandWithTimeoutMock = vi.fn();
-const TEMP_DIR_PREFIX = "openclaw-install-source-utils-";
+const TEMP_DIR_PREFIX = "grokbot-install-source-utils-";
 const tempDirs = createTrackedTempDirs();
 
 vi.mock("node:child_process", async (importOriginal) => {
@@ -88,8 +88,8 @@ async function expectPackFallsBackToDetectedArchive(params: {
   stdout: string;
   expectedMetadata?: Record<string, unknown>;
 }) {
-  const cwd = await createTempDir("openclaw-install-source-utils-");
-  const archivePath = path.join(cwd, "openclaw-plugin-1.2.3.tgz");
+  const cwd = await createTempDir("grokbot-install-source-utils-");
+  const archivePath = path.join(cwd, "grokbot-plugin-1.2.3.tgz");
   await fs.writeFile(archivePath, "", "utf-8");
   runCommandWithTimeoutMock.mockResolvedValue({
     stdout: params.stdout,
@@ -100,7 +100,7 @@ async function expectPackFallsBackToDetectedArchive(params: {
   });
 
   const result = await packNpmSpecToArchive({
-    spec: "openclaw-plugin@1.2.3",
+    spec: "grokbot-plugin@1.2.3",
     timeoutMs: 5000,
     cwd,
   });
@@ -136,7 +136,7 @@ describe("withTempDir", () => {
     let observedDir = "";
     const markerFile = "marker.txt";
 
-    const value = await withTempDir("openclaw-install-source-utils-", async (tmpDir) => {
+    const value = await withTempDir("grokbot-install-source-utils-", async (tmpDir) => {
       observedDir = tmpDir;
       await fs.writeFile(path.join(tmpDir, markerFile), "ok", "utf-8");
       await expect(fs.readFile(path.join(tmpDir, markerFile), "utf8")).resolves.toBe("ok");
@@ -152,7 +152,7 @@ describe("resolveArchiveSourcePath", () => {
   it.each([
     {
       name: "returns not found error for missing archive paths",
-      path: async () => "/tmp/does-not-exist-openclaw-archive.tgz",
+      path: async () => "/tmp/does-not-exist-grokbot-archive.tgz",
       expected: "archive not found",
     },
     {
@@ -186,11 +186,11 @@ describe("resolveArchiveSourcePath", () => {
 
 describe("resolveNpmSpecMetadata", () => {
   const npmViewMetadata = {
-    name: "@openclaw/codex",
+    name: "@grokbot/codex",
     version: "2026.6.11",
     "dist.integrity": "placeholder",
     "dist.shasum": "placeholder",
-    openclaw: {
+    grokbot: {
       extensions: ["./index.ts"],
     },
   };
@@ -201,14 +201,14 @@ describe("resolveNpmSpecMetadata", () => {
   ])("normalizes npm $npmVersion view JSON", async ({ stdout }) => {
     mockPackCommandResult({ stdout });
 
-    const result = await resolveNpmSpecMetadata({ spec: "@openclaw/codex" });
+    const result = await resolveNpmSpecMetadata({ spec: "@grokbot/codex" });
 
     expect(result).toEqual({
       ok: true,
       metadata: {
-        name: "@openclaw/codex",
+        name: "@grokbot/codex",
         version: "2026.6.11",
-        resolvedSpec: "@openclaw/codex@2026.6.11",
+        resolvedSpec: "@grokbot/codex@2026.6.11",
         integrity: "placeholder",
         shasum: "placeholder",
         packageOpenClaw: {
@@ -240,7 +240,7 @@ describe("resolveNpmSpecMetadata", () => {
       ]),
     });
 
-    await expect(resolveNpmSpecMetadata({ spec: "@openclaw/codex@^2026.6.0" })).resolves.toEqual({
+    await expect(resolveNpmSpecMetadata({ spec: "@grokbot/codex@^2026.6.0" })).resolves.toEqual({
       ok: true,
       metadata: expect.objectContaining({
         version: "2026.6.12",
@@ -267,7 +267,7 @@ describe("resolveNpmSpecMetadata", () => {
       ]),
     });
 
-    await expect(resolveNpmSpecMetadata({ spec: "@openclaw/codex@^2026.6.0" })).resolves.toEqual({
+    await expect(resolveNpmSpecMetadata({ spec: "@grokbot/codex@^2026.6.0" })).resolves.toEqual({
       ok: true,
       metadata: expect.objectContaining({
         version: "2026.6.12",
@@ -287,7 +287,7 @@ describe("resolveNpmSpecMetadata", () => {
       ]),
     });
 
-    await expect(resolveNpmSpecMetadata({ spec: "@openclaw/codex@^2026.6.0" })).resolves.toEqual({
+    await expect(resolveNpmSpecMetadata({ spec: "@grokbot/codex@^2026.6.0" })).resolves.toEqual({
       ok: false,
       error: "npm view produced incomplete package metadata (missing: name, version)",
       category: "metadata-env",
@@ -299,7 +299,7 @@ describe("resolveNpmSpecMetadata", () => {
       stdout: JSON.stringify([npmViewMetadata, { ...npmViewMetadata, version: "2026.6.12" }]),
     });
 
-    const result = await resolveNpmSpecMetadata({ spec: "@openclaw/codex@latest" });
+    const result = await resolveNpmSpecMetadata({ spec: "@grokbot/codex@latest" });
 
     expect(result).toEqual({
       ok: true,
@@ -310,38 +310,38 @@ describe("resolveNpmSpecMetadata", () => {
   it("normalizes nested dist metadata", async () => {
     mockPackCommandResult({
       stdout: JSON.stringify({
-        name: "@openclaw/codex",
+        name: "@grokbot/codex",
         version: "2026.6.11",
         dist: { integrity: "nested-placeholder", shasum: "nested-placeholder" },
       }),
     });
 
-    const result = await resolveNpmSpecMetadata({ spec: "@openclaw/codex" });
+    const result = await resolveNpmSpecMetadata({ spec: "@grokbot/codex" });
 
     expect(result).toEqual({
       ok: true,
       metadata: {
-        name: "@openclaw/codex",
+        name: "@grokbot/codex",
         version: "2026.6.11",
-        resolvedSpec: "@openclaw/codex@2026.6.11",
+        resolvedSpec: "@grokbot/codex@2026.6.11",
         integrity: "nested-placeholder",
         shasum: "nested-placeholder",
       },
     });
   });
 
-  it("accepts metadata without an openclaw block", async () => {
-    const { openclaw: _openclaw, ...withoutOpenClaw } = npmViewMetadata;
+  it("accepts metadata without an grokbot block", async () => {
+    const { grokbot: _openclaw, ...withoutOpenClaw } = npmViewMetadata;
     mockPackCommandResult({ stdout: JSON.stringify(withoutOpenClaw) });
 
-    const result = await resolveNpmSpecMetadata({ spec: "@openclaw/codex" });
+    const result = await resolveNpmSpecMetadata({ spec: "@grokbot/codex" });
 
     expect(result).toEqual({
       ok: true,
       metadata: {
-        name: "@openclaw/codex",
+        name: "@grokbot/codex",
         version: "2026.6.11",
-        resolvedSpec: "@openclaw/codex@2026.6.11",
+        resolvedSpec: "@grokbot/codex@2026.6.11",
         integrity: "placeholder",
         shasum: "placeholder",
       },
@@ -351,7 +351,7 @@ describe("resolveNpmSpecMetadata", () => {
   it("reports which required metadata fields are missing", async () => {
     mockPackCommandResult({ stdout: JSON.stringify({ version: "2026.6.11" }) });
 
-    await expect(resolveNpmSpecMetadata({ spec: "@openclaw/codex" })).resolves.toEqual({
+    await expect(resolveNpmSpecMetadata({ spec: "@grokbot/codex" })).resolves.toEqual({
       ok: false,
       error: "npm view produced incomplete package metadata (missing: name)",
       category: "metadata-env",
@@ -362,36 +362,36 @@ describe("resolveNpmSpecMetadata", () => {
 describe("packNpmSpecToArchive", () => {
   it("packs spec and returns archive path using JSON output metadata", async () => {
     const cwd = await createFixtureDir();
-    const archivePath = path.join(cwd, "openclaw-plugin-1.2.3.tgz");
+    const archivePath = path.join(cwd, "grokbot-plugin-1.2.3.tgz");
     await fs.writeFile(archivePath, "", "utf-8");
     mockPackCommandResult({
       stdout: JSON.stringify([
         {
-          id: "openclaw-plugin@1.2.3",
-          name: "openclaw-plugin",
+          id: "grokbot-plugin@1.2.3",
+          name: "grokbot-plugin",
           version: "1.2.3",
-          filename: "openclaw-plugin-1.2.3.tgz",
+          filename: "grokbot-plugin-1.2.3.tgz",
           integrity: "sha512-test-integrity",
           shasum: "abc123",
         },
       ]),
     });
 
-    const result = await runPack("openclaw-plugin@1.2.3", cwd);
+    const result = await runPack("grokbot-plugin@1.2.3", cwd);
 
     expect(result).toEqual({
       ok: true,
       archivePath,
       metadata: {
-        name: "openclaw-plugin",
+        name: "grokbot-plugin",
         version: "1.2.3",
-        resolvedSpec: "openclaw-plugin@1.2.3",
+        resolvedSpec: "grokbot-plugin@1.2.3",
         integrity: "sha512-test-integrity",
         shasum: "abc123",
       },
     });
     expect(runCommandWithTimeoutMock).toHaveBeenCalledWith(
-      ["npm", "pack", "openclaw-plugin@1.2.3", "--ignore-scripts", "--json"],
+      ["npm", "pack", "grokbot-plugin@1.2.3", "--ignore-scripts", "--json"],
       {
         cwd,
         timeoutMs: 300_000,
@@ -411,13 +411,13 @@ describe("packNpmSpecToArchive", () => {
 
   it("falls back to parsing final stdout line when npm json output is unavailable", async () => {
     const cwd = await createFixtureDir();
-    const expectedArchivePath = path.join(cwd, "openclaw-plugin-1.2.3.tgz");
+    const expectedArchivePath = path.join(cwd, "grokbot-plugin-1.2.3.tgz");
     await fs.writeFile(expectedArchivePath, "", "utf-8");
     mockPackCommandResult({
-      stdout: "npm notice created package\nopenclaw-plugin-1.2.3.tgz\n",
+      stdout: "npm notice created package\ngrokbot-plugin-1.2.3.tgz\n",
     });
 
-    const result = await runPack("openclaw-plugin@1.2.3", cwd);
+    const result = await runPack("grokbot-plugin@1.2.3", cwd);
 
     expect(result).toEqual({
       ok: true,
@@ -450,11 +450,11 @@ describe("packNpmSpecToArchive", () => {
     {
       name: "falls back to cwd archive when logged JSON metadata omits filename",
       stdout:
-        'npm notice using cache\n[{"id":"openclaw-plugin@1.2.3","name":"openclaw-plugin","version":"1.2.3","integrity":"sha512-test-integrity","shasum":"abc123"}]\n',
+        'npm notice using cache\n[{"id":"grokbot-plugin@1.2.3","name":"grokbot-plugin","version":"1.2.3","integrity":"sha512-test-integrity","shasum":"abc123"}]\n',
       expectedMetadata: {
-        name: "openclaw-plugin",
+        name: "grokbot-plugin",
         version: "1.2.3",
-        resolvedSpec: "openclaw-plugin@1.2.3",
+        resolvedSpec: "grokbot-plugin@1.2.3",
         integrity: "sha512-test-integrity",
         shasum: "abc123",
       },
@@ -467,15 +467,15 @@ describe("packNpmSpecToArchive", () => {
     const cwd = await createFixtureDir();
     mockPackCommandResult({
       stdout: "",
-      stderr: "npm error code E404\nnpm error 404  '@openclaw/whatsapp@*' is not in this registry.",
+      stderr: "npm error code E404\nnpm error 404  '@grokbot/whatsapp@*' is not in this registry.",
       code: 1,
     });
 
-    const result = await runPack("@openclaw/whatsapp", cwd);
+    const result = await runPack("@grokbot/whatsapp", cwd);
     expectPackError(result, [
       "Package not found on npm",
-      "@openclaw/whatsapp",
-      "docs.openclaw.ai/tools/plugin",
+      "@grokbot/whatsapp",
+      "docs.grokbot.ai/tools/plugin",
     ]);
   });
 
@@ -485,7 +485,7 @@ describe("packNpmSpecToArchive", () => {
       stdout: " \n\n",
     });
 
-    const result = await runPack("openclaw-plugin@1.2.3", cwd, 5000);
+    const result = await runPack("grokbot-plugin@1.2.3", cwd, 5000);
 
     expect(result).toEqual({
       ok: false,
@@ -495,24 +495,24 @@ describe("packNpmSpecToArchive", () => {
 
   it("parses scoped metadata from id-only json output even with npm notice prefix", async () => {
     const cwd = await createFixtureDir();
-    await fs.writeFile(path.join(cwd, "openclaw-plugin-demo-2.0.0.tgz"), "", "utf-8");
+    await fs.writeFile(path.join(cwd, "grokbot-plugin-demo-2.0.0.tgz"), "", "utf-8");
     mockPackCommandResult({
       stdout:
         "npm notice creating package\n" +
         JSON.stringify([
           {
-            id: "@openclaw/plugin-demo@2.0.0",
-            filename: "openclaw-plugin-demo-2.0.0.tgz",
+            id: "@grokbot/plugin-demo@2.0.0",
+            filename: "grokbot-plugin-demo-2.0.0.tgz",
           },
         ]),
     });
 
-    const result = await runPack("@openclaw/plugin-demo@2.0.0", cwd);
+    const result = await runPack("@grokbot/plugin-demo@2.0.0", cwd);
     expect(result).toEqual({
       ok: true,
-      archivePath: path.join(cwd, "openclaw-plugin-demo-2.0.0.tgz"),
+      archivePath: path.join(cwd, "grokbot-plugin-demo-2.0.0.tgz"),
       metadata: {
-        resolvedSpec: "@openclaw/plugin-demo@2.0.0",
+        resolvedSpec: "@grokbot/plugin-demo@2.0.0",
       },
     });
   });

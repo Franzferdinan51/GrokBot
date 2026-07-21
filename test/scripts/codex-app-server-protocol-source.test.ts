@@ -30,8 +30,8 @@ afterEach(() => {
 
 describe("Codex app-server generated artifact staging", () => {
   it("copies JSON bytes and normalizes nested TypeScript files in one pass", async () => {
-    const sourceRoot = createTempDir("openclaw-protocol-artifacts-source-");
-    const targetRoot = createTempDir("openclaw-protocol-artifacts-target-");
+    const sourceRoot = createTempDir("grokbot-protocol-artifacts-source-");
+    const targetRoot = createTempDir("grokbot-protocol-artifacts-target-");
     const typescriptRoot = path.join(targetRoot, "typescript");
     const jsonRoot = path.join(targetRoot, "json");
     const rootTypeScript = [
@@ -91,8 +91,8 @@ version = "9.9.9"
   });
 
   it("rejects a Codex checkout that differs from the pinned package version", async () => {
-    const repoRoot = createTempDir("openclaw-protocol-version-root-");
-    const codexRepo = createTempDir("openclaw-protocol-version-codex-");
+    const repoRoot = createTempDir("grokbot-protocol-version-root-");
+    const codexRepo = createTempDir("grokbot-protocol-version-codex-");
     fs.mkdirSync(path.join(repoRoot, "extensions/codex"), { recursive: true });
     fs.mkdirSync(path.join(codexRepo, "codex-rs"), { recursive: true });
     fs.writeFileSync(
@@ -213,8 +213,8 @@ version = "9.9.9"
   });
 
   it("uses OPENCLAW_CODEX_REPO when provided", async () => {
-    const root = createTempDir("openclaw-protocol-source-root-");
-    const codexRepo = createTempDir("openclaw-protocol-source-codex-");
+    const root = createTempDir("grokbot-protocol-source-root-");
+    const codexRepo = createTempDir("grokbot-protocol-source-codex-");
     createProtocolSchema(codexRepo);
     process.env.OPENCLAW_CODEX_REPO = codexRepo;
 
@@ -225,10 +225,10 @@ version = "9.9.9"
   });
 
   it("finds the primary checkout sibling from a git worktree", async () => {
-    const parentDir = createTempDir("openclaw-protocol-source-parent-");
-    const primaryOpenClaw = path.join(parentDir, "openclaw");
+    const parentDir = createTempDir("grokbot-protocol-source-parent-");
+    const primaryOpenClaw = path.join(parentDir, "grokbot");
     const codexRepo = path.join(parentDir, "codex");
-    const worktreeRoot = createTempDir("openclaw-protocol-source-worktree-");
+    const worktreeRoot = createTempDir("grokbot-protocol-source-worktree-");
     fs.mkdirSync(path.join(primaryOpenClaw, ".git", "worktrees", "codex-harness"), {
       recursive: true,
     });

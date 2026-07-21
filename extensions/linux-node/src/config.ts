@@ -1,5 +1,5 @@
-import type { OpenClawPluginNodeHostCommandAvailabilityContext } from "openclaw/plugin-sdk/plugin-entry";
-import { buildPluginConfigSchema } from "openclaw/plugin-sdk/plugin-entry";
+import type { OpenClawPluginNodeHostCommandAvailabilityContext } from "grokbot/plugin-sdk/plugin-entry";
+import { buildPluginConfigSchema } from "grokbot/plugin-sdk/plugin-entry";
 import { z } from "zod";
 
 const CapabilityConfigSchema = z.strictObject({

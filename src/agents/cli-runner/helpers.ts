@@ -6,24 +6,24 @@ import crypto from "node:crypto";
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { stripSystemPromptCacheBoundary } from "@openclaw/ai/internal/shared";
-import { MAX_IMAGE_BYTES } from "@openclaw/media-core/constants";
-import { extensionForMime } from "@openclaw/media-core/mime";
+import { stripSystemPromptCacheBoundary } from "@grokbot/ai/internal/shared";
+import { MAX_IMAGE_BYTES } from "@grokbot/media-core/constants";
+import { extensionForMime } from "@grokbot/media-core/mime";
 import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalLowercaseString,
-} from "@openclaw/normalization-core/string-coerce";
-import { KeyedAsyncQueue } from "openclaw/plugin-sdk/keyed-async-queue";
+} from "@grokbot/normalization-core/string-coerce";
+import { KeyedAsyncQueue } from "grokbot/plugin-sdk/keyed-async-queue";
 import { isAcpRuntimeSpawnAvailable } from "../../acp/runtime/availability.js";
 import type { SourceReplyDeliveryMode } from "../../auto-reply/get-reply-options.types.js";
 import type { ThinkLevel } from "../../auto-reply/thinking.js";
 import type { ChatType } from "../../channels/chat-type.js";
 import type { CliBackendConfig } from "../../config/types.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import { resolveRuntimeOsLabel } from "../../infra/os-summary.js";
 import { privateFileStore } from "../../infra/private-file-store.js";
 import { tempWorkspace } from "../../infra/private-temp-workspace.js";
-import { resolvePreferredOpenClawTmpDir } from "../../infra/tmp-openclaw-dir.js";
+import { resolvePreferredOpenClawTmpDir } from "../../infra/tmp-grokbot-dir.js";
 import type { ImageContent } from "../../llm/types.js";
 import type { PromptImageOrderEntry } from "../../media/prompt-image-order.js";
 import { listRegisteredPluginAgentPromptGuidance } from "../../plugins/command-registry-state.js";
@@ -167,7 +167,7 @@ export function buildCliAgentSystemPrompt(params: {
     runtime: {
       sessionKey: params.sessionKey,
       sessionId: params.sessionId,
-      host: "openclaw",
+      host: "grokbot",
       os: resolveRuntimeOsLabel(),
       arch: os.arch(),
       node: process.version,
@@ -296,14 +296,14 @@ function resolveCliImagePath(image: ImageContent): string {
     .update("\0")
     .update(image.data)
     .digest("hex");
-  return path.join(resolvePreferredOpenClawTmpDir(), "openclaw-cli-images", `${digest}${ext}`);
+  return path.join(resolvePreferredOpenClawTmpDir(), "grokbot-cli-images", `${digest}${ext}`);
 }
 
 function resolveCliImageRoot(params: { backend: CliBackendConfig; workspaceDir: string }): string {
   if (params.backend.imagePathScope === "workspace") {
-    return path.join(params.workspaceDir, ".openclaw-cli-images");
+    return path.join(params.workspaceDir, ".grokbot-cli-images");
   }
-  return path.join(resolvePreferredOpenClawTmpDir(), "openclaw-cli-images");
+  return path.join(resolvePreferredOpenClawTmpDir(), "grokbot-cli-images");
 }
 
 function isFileNotFoundError(error: unknown): boolean {
@@ -439,7 +439,7 @@ export async function writeCliSystemPromptFile(params: {
   }
   const workspace = await tempWorkspace({
     rootDir: resolvePreferredOpenClawTmpDir(),
-    prefix: "openclaw-cli-system-prompt-",
+    prefix: "grokbot-cli-system-prompt-",
   });
   const filePath = await workspace.write(
     "system-prompt.md",

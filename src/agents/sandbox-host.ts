@@ -282,7 +282,7 @@ export function buildSandboxHostProxyHtml(csp?: SandboxHostCsp): string {
     }
     if (event.source === inner.contentWindow) {
       if (typeof event.data?.method === "string" && event.data.method.startsWith("ui/notifications/sandbox-")) return;
-      if (event.data?.type === "openclaw:widget-bridge-port-offer") {
+      if (event.data?.type === "grokbot:widget-bridge-port-offer") {
         const port = event.ports[0];
         if (!widgetBridgePortOffered && port) {
           widgetBridgePortOffered = true;

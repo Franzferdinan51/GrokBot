@@ -1,4 +1,4 @@
-// Issue 78851 Model Resolution script supports OpenClaw repository automation.
+// Issue 78851 Model Resolution script supports GrokBot repository automation.
 import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import * as inspector from "node:inspector";
 import { tmpdir } from "node:os";
@@ -7,7 +7,7 @@ import { monitorEventLoopDelay, performance } from "node:perf_hooks";
 import { resolveModelAsync } from "../../src/agents/embedded-agent-runner/model.js";
 import { resetModelsJsonReadyCacheForTest } from "../../src/agents/models-config-state.test-support.js";
 import { ensureOpenClawModelsJson } from "../../src/agents/models-config.js";
-import type { OpenClawConfig } from "../../src/config/types.openclaw.js";
+import type { OpenClawConfig } from "../../src/config/types.grokbot.js";
 import {
   Issue78851CliArgumentError,
   issue78851ModelResolutionHelpRequested,
@@ -333,7 +333,7 @@ async function main(): Promise<void> {
     process.stdout.write(issue78851ModelResolutionUsage());
     return;
   }
-  const tempRoot = await mkdtemp(path.join(tmpdir(), "openclaw-issue-78851-"));
+  const tempRoot = await mkdtemp(path.join(tmpdir(), "grokbot-issue-78851-"));
   const workspaceDir = path.join(tempRoot, "workspace");
   await mkdir(workspaceDir, { recursive: true });
   const config = buildConfig(options, workspaceDir);

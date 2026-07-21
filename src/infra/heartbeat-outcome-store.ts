@@ -1,8 +1,8 @@
-import { truncateUtf16Safe } from "@openclaw/normalization-core/utf16-slice";
+import { truncateUtf16Safe } from "@grokbot/normalization-core/utf16-slice";
 import type { Insertable, Selectable } from "kysely";
 import type { HeartbeatToolResponse } from "../auto-reply/heartbeat-tool-response.js";
-import type { DB as OpenClawAgentKyselyDatabase } from "../state/openclaw-agent-db.generated.js";
-import { runOpenClawAgentWriteTransaction } from "../state/openclaw-agent-db.js";
+import type { DB as OpenClawAgentKyselyDatabase } from "../state/grokbot-agent-db.generated.js";
+import { runOpenClawAgentWriteTransaction } from "../state/grokbot-agent-db.js";
 import type { HeartbeatWakeSource } from "./heartbeat-wake.js";
 import { executeSqliteQuerySync, getNodeSqliteKysely } from "./kysely-sync.js";
 

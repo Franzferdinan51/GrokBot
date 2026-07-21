@@ -1,11 +1,11 @@
-# OpenClaw Nextcloud Talk
+# GrokBot Nextcloud Talk
 
-Official OpenClaw channel plugin for Nextcloud Talk conversations.
+Official GrokBot channel plugin for Nextcloud Talk conversations.
 
-Install from OpenClaw:
+Install from GrokBot:
 
 ```bash
-openclaw plugin add @openclaw/nextcloud-talk
+grokbot plugin add @grokbot/nextcloud-talk
 ```
 
-Configure the Nextcloud server and Talk credentials in OpenClaw, then enable the conversations where agents should receive and send messages.
+Configure the Nextcloud server and Talk credentials in GrokBot, then enable the conversations where agents should receive and send messages.

@@ -6,11 +6,11 @@ import path from "node:path";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { executeSqliteQuerySync, getNodeSqliteKysely } from "../infra/kysely-sync.js";
 import { DEFAULT_ACCOUNT_ID } from "../routing/session-key.js";
-import type { DB as OpenClawStateKyselyDatabase } from "../state/openclaw-state-db.generated.js";
+import type { DB as OpenClawStateKyselyDatabase } from "../state/grokbot-state-db.generated.js";
 import {
   closeOpenClawStateDatabaseForTest,
   openOpenClawStateDatabase,
-} from "../state/openclaw-state-db.js";
+} from "../state/grokbot-state-db.js";
 
 const pairingMocks = vi.hoisted(() => ({
   getPairingAdapter: vi.fn<
@@ -46,7 +46,7 @@ let caseId = 0;
 type RandomIntSync = (minOrMax: number, max?: number) => number;
 
 beforeAll(() => {
-  fixtureRoot = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-pairing-"));
+  fixtureRoot = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-pairing-"));
 });
 
 afterAll(() => {

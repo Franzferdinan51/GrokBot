@@ -26,33 +26,33 @@ type HookResolutionCollision = {
 };
 
 const HOOK_SOURCE_POLICIES: Record<HookSource, HookSourcePolicy> = {
-  "openclaw-bundled": {
+  "grokbot-bundled": {
     precedence: 10,
     trustedLocalCode: true,
     defaultEnableMode: "default-on",
-    canOverride: ["openclaw-bundled"],
-    canBeOverriddenBy: ["openclaw-managed", "openclaw-plugin"],
+    canOverride: ["grokbot-bundled"],
+    canBeOverriddenBy: ["grokbot-managed", "grokbot-plugin"],
   },
-  "openclaw-plugin": {
+  "grokbot-plugin": {
     precedence: 20,
     trustedLocalCode: true,
     defaultEnableMode: "default-on",
-    canOverride: ["openclaw-bundled", "openclaw-plugin"],
-    canBeOverriddenBy: ["openclaw-managed"],
+    canOverride: ["grokbot-bundled", "grokbot-plugin"],
+    canBeOverriddenBy: ["grokbot-managed"],
   },
-  "openclaw-managed": {
+  "grokbot-managed": {
     precedence: 30,
     trustedLocalCode: true,
     defaultEnableMode: "default-on",
-    canOverride: ["openclaw-bundled", "openclaw-managed", "openclaw-plugin"],
-    canBeOverriddenBy: ["openclaw-managed"],
+    canOverride: ["grokbot-bundled", "grokbot-managed", "grokbot-plugin"],
+    canBeOverriddenBy: ["grokbot-managed"],
   },
-  "openclaw-workspace": {
+  "grokbot-workspace": {
     precedence: 40,
     trustedLocalCode: true,
     defaultEnableMode: "explicit-opt-in",
-    canOverride: ["openclaw-workspace"],
-    canBeOverriddenBy: ["openclaw-workspace"],
+    canOverride: ["grokbot-workspace"],
+    canBeOverriddenBy: ["grokbot-workspace"],
   },
 };
 
@@ -87,7 +87,7 @@ export function resolveHookEnableState(params: {
   const hookKey = resolveHookKey(entry.hook.name, entry);
   const hookConfig = params.hookConfig ?? resolveHookConfig(config, hookKey);
 
-  if (entry.hook.source === "openclaw-plugin") {
+  if (entry.hook.source === "grokbot-plugin") {
     return { enabled: true };
   }
   if (hookConfig?.enabled === false) {

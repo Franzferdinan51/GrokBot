@@ -1,6 +1,6 @@
 // Document extractor runtime helpers choose lazy extraction adapters by media type.
-import { normalizeLowercaseStringOrEmpty } from "@openclaw/normalization-core/string-coerce";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import { normalizeLowercaseStringOrEmpty } from "@grokbot/normalization-core/string-coerce";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import type {
   DocumentExtractionRequest,
   DocumentExtractionResult,

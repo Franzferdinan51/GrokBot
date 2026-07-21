@@ -1,14 +1,14 @@
 // Discord plugin module implements channel actions behavior.
-import { createUnionActionGate } from "openclaw/plugin-sdk/channel-actions";
+import { createUnionActionGate } from "grokbot/plugin-sdk/channel-actions";
 import type {
   ChannelMessageActionAdapter,
   ChannelMessageActionName,
   ChannelMessageToolDiscovery,
-} from "openclaw/plugin-sdk/channel-contract";
-import type { DiscordActionConfig, OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { createLazyRuntimeModule } from "openclaw/plugin-sdk/lazy-runtime";
-import { normalizeOptionalString } from "openclaw/plugin-sdk/string-coerce-runtime";
-import { extractToolSend } from "openclaw/plugin-sdk/tool-send";
+} from "grokbot/plugin-sdk/channel-contract";
+import type { DiscordActionConfig, OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { createLazyRuntimeModule } from "grokbot/plugin-sdk/lazy-runtime";
+import { normalizeOptionalString } from "grokbot/plugin-sdk/string-coerce-runtime";
+import { extractToolSend } from "grokbot/plugin-sdk/tool-send";
 import { inspectDiscordAccount } from "./account-inspect.js";
 import { createDiscordActionGate, listDiscordAccountIds } from "./accounts.js";
 import { readDiscordComponentSpec } from "./components.js";

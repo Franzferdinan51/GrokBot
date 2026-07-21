@@ -1,4 +1,4 @@
-// Resolve Openclaw Package Candidate tests cover resolve openclaw package candidate script behavior.
+// Resolve Openclaw Package Candidate tests cover resolve grokbot package candidate script behavior.
 import { execFile, spawn } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
 import { access, mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
@@ -22,7 +22,7 @@ import {
   runCommandForTest,
   signalChildProcessTree,
   validateOpenClawPackageSpec,
-} from "../../scripts/resolve-openclaw-package-candidate.mjs";
+} from "../../scripts/resolve-grokbot-package-candidate.mjs";
 
 function expectedTaskkillPath(): string {
   return resolveWindowsTaskkillPath();
@@ -108,46 +108,46 @@ afterEach(async () => {
   await Promise.all(tempDirs.splice(0).map((dir) => rm(dir, { recursive: true, force: true })));
 });
 
-describe("resolve-openclaw-package-candidate", () => {
+describe("resolve-grokbot-package-candidate", () => {
   it("allows Unreleased notes when packaging an exact ref candidate", () => {
-    const script = readFileSync("scripts/resolve-openclaw-package-candidate.mjs", "utf8");
+    const script = readFileSync("scripts/resolve-grokbot-package-candidate.mjs", "utf8");
     const refPackageBuild = script.slice(
       script.indexOf('if (options.source === "ref")'),
       script.indexOf('} else if (options.source === "npm")'),
     );
 
-    expect(refPackageBuild).toContain('"scripts/package-openclaw-for-docker.mjs"');
+    expect(refPackageBuild).toContain('"scripts/package-grokbot-for-docker.mjs"');
     expect(refPackageBuild).toContain('"--allow-unreleased-changelog"');
   });
 
-  it("accepts only OpenClaw release package specs for npm candidates", () => {
+  it("accepts only GrokBot release package specs for npm candidates", () => {
     for (const spec of [
-      "openclaw@beta",
-      "openclaw@alpha",
-      "openclaw@extended-stable",
-      "openclaw@latest",
-      "openclaw@2026.4.27",
-      "openclaw@2026.4.27-1",
-      "openclaw@2026.4.27-beta.2",
-      "openclaw@2026.4.27-alpha.2",
+      "grokbot@beta",
+      "grokbot@alpha",
+      "grokbot@extended-stable",
+      "grokbot@latest",
+      "grokbot@2026.4.27",
+      "grokbot@2026.4.27-1",
+      "grokbot@2026.4.27-beta.2",
+      "grokbot@2026.4.27-alpha.2",
     ]) {
       expect(validateOpenClawPackageSpec(spec), spec).toBeUndefined();
     }
 
-    expect(() => validateOpenClawPackageSpec("@evil/openclaw@1.0.0")).toThrow(
-      "package_spec must be openclaw@alpha",
+    expect(() => validateOpenClawPackageSpec("@evil/grokbot@1.0.0")).toThrow(
+      "package_spec must be grokbot@alpha",
     );
-    expect(() => validateOpenClawPackageSpec("openclaw@canary")).toThrow(
-      "package_spec must be openclaw@alpha",
+    expect(() => validateOpenClawPackageSpec("grokbot@canary")).toThrow(
+      "package_spec must be grokbot@alpha",
     );
-    expect(() => validateOpenClawPackageSpec("openclaw@2026.04.27")).toThrow(
-      "package_spec must be openclaw@alpha",
+    expect(() => validateOpenClawPackageSpec("grokbot@2026.04.27")).toThrow(
+      "package_spec must be grokbot@alpha",
     );
-    expect(() => validateOpenClawPackageSpec("openclaw@npm:other-package")).toThrow(
-      "package_spec must be openclaw@alpha",
+    expect(() => validateOpenClawPackageSpec("grokbot@npm:other-package")).toThrow(
+      "package_spec must be grokbot@alpha",
     );
-    expect(() => validateOpenClawPackageSpec("openclaw@file:../other-package.tgz")).toThrow(
-      "package_spec must be openclaw@alpha",
+    expect(() => validateOpenClawPackageSpec("grokbot@file:../other-package.tgz")).toThrow(
+      "package_spec must be grokbot@alpha",
     );
   });
 
@@ -159,7 +159,7 @@ describe("resolve-openclaw-package-candidate", () => {
         "--package-ref",
         "release/2026.4.27",
         "--package-spec",
-        "openclaw@beta",
+        "grokbot@beta",
         "--package-url",
         "",
         "--package-sha256",
@@ -174,10 +174,10 @@ describe("resolve-openclaw-package-candidate", () => {
       githubOutput: "",
       metadata: "",
       outputDir: ".artifacts/docker-e2e-package",
-      outputName: "openclaw-current.tgz",
+      outputName: "grokbot-current.tgz",
       packageSha256: "",
       packageRef: "release/2026.4.27",
-      packageSpec: "openclaw@beta",
+      packageSpec: "grokbot@beta",
       packageUrl: "",
       source: "npm",
       trustedSourceId: "",
@@ -221,11 +221,11 @@ describe("resolve-openclaw-package-candidate", () => {
       ["--package-ref", [...requiredArgs, "--package-ref", "one", "--package-ref", "two"]],
       [
         "--package-spec",
-        [...requiredArgs, "--package-spec", "openclaw@beta", "--package-spec", "openclaw@latest"],
+        [...requiredArgs, "--package-spec", "grokbot@beta", "--package-spec", "grokbot@latest"],
       ],
       [
         "--package-url",
-        [...requiredArgs, "--package-url", "", "--package-url", "https://example.com/openclaw.tgz"],
+        [...requiredArgs, "--package-url", "", "--package-url", "https://example.com/grokbot.tgz"],
       ],
       ["--package-sha256", [...requiredArgs, "--package-sha256", "", "--package-sha256", "abc123"]],
       [
@@ -262,18 +262,18 @@ describe("resolve-openclaw-package-candidate", () => {
 
   it("rejects package candidate output names that escape the output directory", () => {
     for (const outputName of [
-      "../openclaw-current.tgz",
-      "nested/openclaw-current.tgz",
-      "openclaw-current.zip",
-      ".openclaw-current.tgz",
+      "../grokbot-current.tgz",
+      "nested/grokbot-current.tgz",
+      "grokbot-current.zip",
+      ".grokbot-current.tgz",
     ]) {
       expect(() => parseArgs(["--output-name", outputName])).toThrow(
         `--output-name must be a tarball filename, not a path: ${outputName}`,
       );
     }
 
-    expect(parseArgs(["--output-name", "openclaw-current.tar.gz"]).outputName).toBe(
-      "openclaw-current.tar.gz",
+    expect(parseArgs(["--output-name", "grokbot-current.tar.gz"]).outputName).toBe(
+      "grokbot-current.tar.gz",
     );
   });
 
@@ -282,8 +282,8 @@ describe("resolve-openclaw-package-candidate", () => {
     const npmCmdPath = path.win32.resolve(path.win32.dirname(execPath), "npm.cmd");
 
     const runner = resolveNpmPackageCandidatePackRunner(
-      "openclaw@2026.5.26-beta.1",
-      "C:\\openclaw\\.artifacts\\docker-e2e-package",
+      "grokbot@2026.5.26-beta.1",
+      "C:\\grokbot\\.artifacts\\docker-e2e-package",
       {
         comSpec: "C:\\Windows\\System32\\cmd.exe",
         env: {},
@@ -299,7 +299,7 @@ describe("resolve-openclaw-package-candidate", () => {
         "/d",
         "/s",
         "/c",
-        `${npmCmdPath} pack openclaw@2026.5.26-beta.1 --ignore-scripts --json --pack-destination C:\\openclaw\\.artifacts\\docker-e2e-package`,
+        `${npmCmdPath} pack grokbot@2026.5.26-beta.1 --ignore-scripts --json --pack-destination C:\\grokbot\\.artifacts\\docker-e2e-package`,
       ],
       shell: false,
       windowsVerbatimArguments: true,
@@ -376,71 +376,71 @@ describe("resolve-openclaw-package-candidate", () => {
   });
 
   it("keeps npm pack filenames inside the package candidate output directory", async () => {
-    const dir = await mkdtemp(path.join(tmpdir(), "openclaw-package-npm-pack-"));
+    const dir = await mkdtemp(path.join(tmpdir(), "grokbot-package-npm-pack-"));
     tempDirs.push(dir);
-    await writeFile(path.join(dir, "openclaw-2026.6.17.tgz"), "package");
+    await writeFile(path.join(dir, "grokbot-2026.6.17.tgz"), "package");
 
     await expect(
       moveNewestPackedTarballForTest(
         dir,
-        JSON.stringify([{ filename: "openclaw-2026.6.17.tgz" }]),
-        "openclaw-current.tgz",
+        JSON.stringify([{ filename: "grokbot-2026.6.17.tgz" }]),
+        "grokbot-current.tgz",
       ),
-    ).resolves.toBe(path.join(dir, "openclaw-current.tgz"));
-    await expect(readFile(path.join(dir, "openclaw-current.tgz"), "utf8")).resolves.toBe("package");
+    ).resolves.toBe(path.join(dir, "grokbot-current.tgz"));
+    await expect(readFile(path.join(dir, "grokbot-current.tgz"), "utf8")).resolves.toBe("package");
   });
 
   it("rejects path-like npm pack filenames instead of renaming outside the output directory", async () => {
-    const dir = await mkdtemp(path.join(tmpdir(), "openclaw-package-npm-pack-"));
+    const dir = await mkdtemp(path.join(tmpdir(), "grokbot-package-npm-pack-"));
     tempDirs.push(dir);
 
     const unsafeFilenames = [
-      "../openclaw-2026.6.17.tgz",
-      "nested/openclaw-2026.6.17.tgz",
-      "nested\\openclaw-2026.6.17.tgz",
-      "/tmp/openclaw-2026.6.17.tgz",
-      "C:\\temp\\openclaw-2026.6.17.tgz",
-      "openclaw-2026.6.17.tar.gz",
+      "../grokbot-2026.6.17.tgz",
+      "nested/grokbot-2026.6.17.tgz",
+      "nested\\grokbot-2026.6.17.tgz",
+      "/tmp/grokbot-2026.6.17.tgz",
+      "C:\\temp\\grokbot-2026.6.17.tgz",
+      "grokbot-2026.6.17.tar.gz",
     ];
 
     for (const filename of unsafeFilenames) {
       await expect(
-        moveNewestPackedTarballForTest(dir, JSON.stringify([{ filename }]), "openclaw-current.tgz"),
-      ).rejects.toThrow("npm pack reported unsafe OpenClaw tarball filename");
+        moveNewestPackedTarballForTest(dir, JSON.stringify([{ filename }]), "grokbot-current.tgz"),
+      ).rejects.toThrow("npm pack reported unsafe GrokBot tarball filename");
     }
   });
 
   it("rejects unsafe text npm pack filenames instead of using loose stdout fallback", async () => {
-    const dir = await mkdtemp(path.join(tmpdir(), "openclaw-package-npm-pack-"));
+    const dir = await mkdtemp(path.join(tmpdir(), "grokbot-package-npm-pack-"));
     tempDirs.push(dir);
-    await writeFile(path.join(dir, "openclaw-2026.6.17.tgz"), "safe fallback");
+    await writeFile(path.join(dir, "grokbot-2026.6.17.tgz"), "safe fallback");
 
-    for (const filename of ["../openclaw-2026.6.17.tgz", "C:openclaw-2026.6.17.tgz"]) {
+    for (const filename of ["../grokbot-2026.6.17.tgz", "C:grokbot-2026.6.17.tgz"]) {
       await expect(
         moveNewestPackedTarballForTest(
           dir,
           ["npm notice", filename].join("\n"),
-          "openclaw-current.tgz",
+          "grokbot-current.tgz",
         ),
-      ).rejects.toThrow("npm pack reported unsafe OpenClaw tarball filename");
+      ).rejects.toThrow("npm pack reported unsafe GrokBot tarball filename");
     }
   });
 
   it("cleans stale package tarballs before npm fallback scanning", async () => {
-    const dir = await mkdtemp(path.join(tmpdir(), "openclaw-package-npm-pack-stale-"));
+    const dir = await mkdtemp(path.join(tmpdir(), "grokbot-package-npm-pack-stale-"));
     tempDirs.push(dir);
-    await writeFile(path.join(dir, "openclaw-9999.1.1.tgz"), "stale");
-    await writeFile(path.join(dir, "openclaw-C:evil.tgz"), "unsafe");
+    await writeFile(path.join(dir, "grokbot-9999.1.1.tgz"), "stale");
+    await writeFile(path.join(dir, "grokbot-C:evil.tgz"), "unsafe");
 
     await cleanPackedOpenClawTarballsForTest(dir);
-    await writeFile(path.join(dir, "openclaw-2026.6.17.tgz"), "current");
+    await writeFile(path.join(dir, "grokbot-2026.6.17.tgz"), "current");
 
     await expect(
-      moveNewestPackedTarballForTest(dir, "npm notice\n", "openclaw-current.tgz"),
-    ).resolves.toBe(path.join(dir, "openclaw-current.tgz"));
-    await expect(missing(path.join(dir, "openclaw-9999.1.1.tgz"))).resolves.toBe(true);
-    await expect(readFile(path.join(dir, "openclaw-C:evil.tgz"), "utf8")).resolves.toBe("unsafe");
-    await expect(readFile(path.join(dir, "openclaw-current.tgz"), "utf8")).resolves.toBe("current");
+      moveNewestPackedTarballForTest(dir, "npm notice\n", "grokbot-current.tgz"),
+    ).resolves.toBe(path.join(dir, "grokbot-current.tgz"));
+    await expect(missing(path.join(dir, "grokbot-9999.1.1.tgz"))).resolves.toBe(true);
+    await expect(readFile(path.join(dir, "grokbot-C:evil.tgz"), "utf8")).resolves.toBe("unsafe");
+    await expect(readFile(path.join(dir, "grokbot-current.tgz"), "utf8")).resolves.toBe("current");
   });
 
   it("bounds captured command stderr tails on failures", async () => {
@@ -487,7 +487,7 @@ describe("resolve-openclaw-package-candidate", () => {
       return;
     }
 
-    const dir = await mkdtemp(path.join(tmpdir(), "openclaw-package-runner-timeout-"));
+    const dir = await mkdtemp(path.join(tmpdir(), "grokbot-package-runner-timeout-"));
     tempDirs.push(dir);
     const childPidPath = path.join(dir, "child.pid");
     let childPid: number | undefined;
@@ -526,7 +526,7 @@ describe("resolve-openclaw-package-candidate", () => {
       return;
     }
 
-    const dir = await mkdtemp(path.join(tmpdir(), "openclaw-package-runner-grace-"));
+    const dir = await mkdtemp(path.join(tmpdir(), "grokbot-package-runner-grace-"));
     tempDirs.push(dir);
     const childPidPath = path.join(dir, "child.pid");
     const cleanupPath = path.join(dir, "child.cleanup");
@@ -565,7 +565,7 @@ describe("resolve-openclaw-package-candidate", () => {
       return;
     }
 
-    const dir = await mkdtemp(path.join(tmpdir(), "openclaw-package-runner-timeout-clean-"));
+    const dir = await mkdtemp(path.join(tmpdir(), "grokbot-package-runner-timeout-clean-"));
     tempDirs.push(dir);
     const childPidPath = path.join(dir, "child.pid");
     const readyPath = path.join(dir, "child.ready");
@@ -622,11 +622,11 @@ describe("resolve-openclaw-package-candidate", () => {
       return;
     }
 
-    const dir = await mkdtemp(path.join(tmpdir(), "openclaw-package-runner-signal-"));
+    const dir = await mkdtemp(path.join(tmpdir(), "grokbot-package-runner-signal-"));
     tempDirs.push(dir);
     const childPidPath = path.join(dir, "child.pid");
     const scriptUrl = pathToFileURL(
-      path.resolve("scripts/resolve-openclaw-package-candidate.mjs"),
+      path.resolve("scripts/resolve-grokbot-package-candidate.mjs"),
     ).href;
     let childPid: number | undefined;
     let runnerPid: number | undefined;
@@ -674,7 +674,7 @@ describe("resolve-openclaw-package-candidate", () => {
 
   it("fails successful ref candidates when package source worktree cleanup fails", async () => {
     await expect(
-      cleanupPackageSourceWorktreeForTest("/tmp/openclaw-package-source-stuck", {
+      cleanupPackageSourceWorktreeForTest("/tmp/grokbot-package-source-stuck", {
         runImpl: async () => {
           throw new Error("worktree remove denied");
         },
@@ -686,7 +686,7 @@ describe("resolve-openclaw-package-candidate", () => {
     const warnings: string[] = [];
 
     await expect(
-      cleanupPackageSourceWorktreeForTest("/tmp/openclaw-package-source-stuck", {
+      cleanupPackageSourceWorktreeForTest("/tmp/grokbot-package-source-stuck", {
         consoleError: (message: string) => warnings.push(message),
         resolveError: new Error("package build failed"),
         runImpl: async () => {
@@ -695,12 +695,12 @@ describe("resolve-openclaw-package-candidate", () => {
       }),
     ).resolves.toBeUndefined();
     expect(warnings).toEqual([
-      "warning: failed to remove temporary package source worktree /tmp/openclaw-package-source-stuck: worktree remove denied",
+      "warning: failed to remove temporary package source worktree /tmp/grokbot-package-source-stuck: worktree remove denied",
     ]);
   });
 
   it("loads named trusted package URL source policies", async () => {
-    const dir = await mkdtemp(path.join(tmpdir(), "openclaw-trusted-package-source-"));
+    const dir = await mkdtemp(path.join(tmpdir(), "grokbot-trusted-package-source-"));
     tempDirs.push(dir);
     const policy = path.join(dir, "trusted-sources.json");
     await writeFile(
@@ -711,7 +711,7 @@ describe("resolve-openclaw-package-candidate", () => {
           "enterprise-artifactory": {
             allowPrivateNetwork: true,
             hosts: ["packages.internal"],
-            pathPrefixes: ["/artifactory/openclaw/"],
+            pathPrefixes: ["/artifactory/grokbot/"],
             ports: [443, 8443],
             redirectHosts: ["packages.internal", "mirror.internal"],
           },
@@ -724,7 +724,7 @@ describe("resolve-openclaw-package-candidate", () => {
       auth: undefined,
       hosts: ["packages.internal"],
       id: "enterprise-artifactory",
-      pathPrefixes: ["/artifactory/openclaw/"],
+      pathPrefixes: ["/artifactory/grokbot/"],
       ports: [443, 8443],
       redirectHosts: ["packages.internal", "mirror.internal"],
     });
@@ -734,7 +734,7 @@ describe("resolve-openclaw-package-candidate", () => {
   });
 
   it("rejects loose trusted package source port values", async () => {
-    const dir = await mkdtemp(path.join(tmpdir(), "openclaw-trusted-package-source-"));
+    const dir = await mkdtemp(path.join(tmpdir(), "grokbot-trusted-package-source-"));
     tempDirs.push(dir);
     const policy = path.join(dir, "trusted-sources.json");
     await writeFile(
@@ -744,17 +744,17 @@ describe("resolve-openclaw-package-candidate", () => {
         sources: {
           exponent: {
             hosts: ["packages.example"],
-            pathPrefixes: ["/openclaw/"],
+            pathPrefixes: ["/grokbot/"],
             ports: ["1e3"],
           },
           fractional: {
             hosts: ["packages.example"],
-            pathPrefixes: ["/openclaw/"],
+            pathPrefixes: ["/grokbot/"],
             ports: [443.5],
           },
           hex: {
             hosts: ["packages.example"],
-            pathPrefixes: ["/openclaw/"],
+            pathPrefixes: ["/grokbot/"],
             ports: ["0x1bb"],
           },
         },
@@ -773,36 +773,36 @@ describe("resolve-openclaw-package-candidate", () => {
   });
 
   it("rejects unsafe package_url downloads before fetching private targets", async () => {
-    const dir = await mkdtemp(path.join(tmpdir(), "openclaw-package-download-"));
+    const dir = await mkdtemp(path.join(tmpdir(), "grokbot-package-download-"));
     tempDirs.push(dir);
-    const target = path.join(dir, "openclaw.tgz");
+    const target = path.join(dir, "grokbot.tgz");
 
     await expect(
-      downloadUrl("http://packages.example/openclaw.tgz", target, {
+      downloadUrl("http://packages.example/grokbot.tgz", target, {
         fetchImpl: unexpectedFetch,
         lookupHost: lookupAddresses([{ address: "93.184.216.34", family: 4 }]),
       }),
     ).rejects.toThrow("package_url must use https");
     await expect(
-      downloadUrl("https://user@packages.example/openclaw.tgz", target, {
+      downloadUrl("https://user@packages.example/grokbot.tgz", target, {
         fetchImpl: unexpectedFetch,
         lookupHost: lookupAddresses([{ address: "93.184.216.34", family: 4 }]),
       }),
     ).rejects.toThrow("package_url must not include credentials");
     await expect(
-      downloadUrl("https://localhost/openclaw.tgz", target, {
+      downloadUrl("https://localhost/grokbot.tgz", target, {
         fetchImpl: unexpectedFetch,
         lookupHost: lookupAddresses([{ address: "127.0.0.1", family: 4 }]),
       }),
     ).rejects.toThrow(/private\/internal\/special-use/iu);
     await expect(
-      downloadUrl("https://packages.example/openclaw.tgz", target, {
+      downloadUrl("https://packages.example/grokbot.tgz", target, {
         fetchImpl: unexpectedFetch,
         lookupHost: lookupAddresses([{ address: "10.0.0.8", family: 4 }]),
       }),
     ).rejects.toThrow(/resolves to private\/internal\/special-use/iu);
     await expect(
-      downloadUrl("https://packages.example/openclaw.tgz", target, {
+      downloadUrl("https://packages.example/grokbot.tgz", target, {
         fetchImpl: unexpectedFetch,
         lookupHost: lookupAddresses([{ address: "64:ff9b::a9fe:a9fe", family: 6 }]),
       }),
@@ -810,20 +810,20 @@ describe("resolve-openclaw-package-candidate", () => {
   });
 
   it("allows private package_url downloads only through an explicit trusted source policy", async () => {
-    const dir = await mkdtemp(path.join(tmpdir(), "openclaw-package-download-"));
+    const dir = await mkdtemp(path.join(tmpdir(), "grokbot-package-download-"));
     tempDirs.push(dir);
-    const target = path.join(dir, "openclaw.tgz");
+    const target = path.join(dir, "grokbot.tgz");
     const trustedSource = {
       allowPrivateNetwork: true,
       hosts: ["packages.internal"],
       id: "enterprise-artifactory",
-      pathPrefixes: ["/artifactory/openclaw/"],
+      pathPrefixes: ["/artifactory/grokbot/"],
       ports: [8443],
       redirectHosts: ["packages.internal"],
     };
     const requestedUrls: string[] = [];
 
-    await downloadUrl("https://packages.internal:8443/artifactory/openclaw/openclaw.tgz", target, {
+    await downloadUrl("https://packages.internal:8443/artifactory/grokbot/grokbot.tgz", target, {
       fetchImpl: async (url: URL) => {
         requestedUrls.push(url.toString());
         return new Response(new Uint8Array([4, 5, 6]), {
@@ -837,19 +837,19 @@ describe("resolve-openclaw-package-candidate", () => {
     });
 
     expect(requestedUrls).toEqual([
-      "https://packages.internal:8443/artifactory/openclaw/openclaw.tgz",
+      "https://packages.internal:8443/artifactory/grokbot/grokbot.tgz",
     ]);
     await expect(readFile(target)).resolves.toEqual(Buffer.from([4, 5, 6]));
 
     await expect(
-      downloadUrl("https://evil.internal:8443/artifactory/openclaw/openclaw.tgz", target, {
+      downloadUrl("https://evil.internal:8443/artifactory/grokbot/grokbot.tgz", target, {
         fetchImpl: unexpectedFetch,
         lookupHost: lookupAddresses([{ address: "10.0.0.9", family: 4 }]),
         trustedSource,
       }),
     ).rejects.toThrow("is not allowed by trusted package source enterprise-artifactory");
     await expect(
-      downloadUrl("https://packages.internal:8443/other/openclaw.tgz", target, {
+      downloadUrl("https://packages.internal:8443/other/grokbot.tgz", target, {
         fetchImpl: unexpectedFetch,
         lookupHost: lookupAddresses([{ address: "203.0.113.8", family: 4 }]),
         trustedSource,
@@ -858,20 +858,20 @@ describe("resolve-openclaw-package-candidate", () => {
   });
 
   it("matches trusted package_url path prefixes on path segment boundaries", async () => {
-    const dir = await mkdtemp(path.join(tmpdir(), "openclaw-package-download-"));
+    const dir = await mkdtemp(path.join(tmpdir(), "grokbot-package-download-"));
     tempDirs.push(dir);
-    const target = path.join(dir, "openclaw.tgz");
+    const target = path.join(dir, "grokbot.tgz");
     const trustedSource = {
       allowPrivateNetwork: true,
       hosts: ["packages.internal"],
       id: "enterprise-artifactory",
-      pathPrefixes: ["/artifactory/openclaw"],
+      pathPrefixes: ["/artifactory/grokbot"],
       ports: [8443],
       redirectHosts: ["packages.internal"],
     };
     const requestedUrls: string[] = [];
 
-    await downloadUrl("https://packages.internal:8443/artifactory/openclaw/pkg.tgz", target, {
+    await downloadUrl("https://packages.internal:8443/artifactory/grokbot/pkg.tgz", target, {
       fetchImpl: async (url: URL) => {
         requestedUrls.push(url.toString());
         return new Response(new Uint8Array([1, 2, 3]), {
@@ -884,9 +884,9 @@ describe("resolve-openclaw-package-candidate", () => {
       trustedSource,
     });
 
-    expect(requestedUrls).toEqual(["https://packages.internal:8443/artifactory/openclaw/pkg.tgz"]);
+    expect(requestedUrls).toEqual(["https://packages.internal:8443/artifactory/grokbot/pkg.tgz"]);
     await expect(
-      downloadUrl("https://packages.internal:8443/artifactory/openclaw-malicious/pkg.tgz", target, {
+      downloadUrl("https://packages.internal:8443/artifactory/grokbot-malicious/pkg.tgz", target, {
         fetchImpl: unexpectedFetch,
         lookupHost: lookupAddresses([{ address: "203.0.113.8", family: 4 }]),
         trustedSource,
@@ -895,23 +895,23 @@ describe("resolve-openclaw-package-candidate", () => {
   });
 
   it("keeps trusted package_url redirects inside the named source policy", async () => {
-    const dir = await mkdtemp(path.join(tmpdir(), "openclaw-package-download-"));
+    const dir = await mkdtemp(path.join(tmpdir(), "grokbot-package-download-"));
     tempDirs.push(dir);
-    const target = path.join(dir, "openclaw.tgz");
+    const target = path.join(dir, "grokbot.tgz");
     const trustedSource = {
       allowPrivateNetwork: true,
       hosts: ["packages.internal"],
       id: "enterprise-artifactory",
-      pathPrefixes: ["/artifactory/openclaw/"],
+      pathPrefixes: ["/artifactory/grokbot/"],
       ports: [8443],
       redirectHosts: ["packages.internal"],
     };
 
     await expect(
-      downloadUrl("https://packages.internal:8443/artifactory/openclaw/openclaw.tgz", target, {
+      downloadUrl("https://packages.internal:8443/artifactory/grokbot/grokbot.tgz", target, {
         fetchImpl: async () =>
           new Response(null, {
-            headers: { location: "https://metadata.internal:8443/artifactory/openclaw/pwn.tgz" },
+            headers: { location: "https://metadata.internal:8443/artifactory/grokbot/pwn.tgz" },
             status: 302,
           }),
         lookupHost: lookupAddresses([{ address: "10.0.0.8", family: 4 }]),
@@ -921,9 +921,9 @@ describe("resolve-openclaw-package-candidate", () => {
   });
 
   it("does not forward trusted package auth headers to redirect hosts", async () => {
-    const dir = await mkdtemp(path.join(tmpdir(), "openclaw-package-download-"));
+    const dir = await mkdtemp(path.join(tmpdir(), "grokbot-package-download-"));
     tempDirs.push(dir);
-    const target = path.join(dir, "openclaw.tgz");
+    const target = path.join(dir, "grokbot.tgz");
     const previousToken = process.env.OPENCLAW_TRUSTED_PACKAGE_TOKEN;
     process.env.OPENCLAW_TRUSTED_PACKAGE_TOKEN = "token-123";
     const trustedSource = {
@@ -931,7 +931,7 @@ describe("resolve-openclaw-package-candidate", () => {
       auth: { type: "bearer" },
       hosts: ["packages.internal"],
       id: "enterprise-artifactory",
-      pathPrefixes: ["/artifactory/openclaw/"],
+      pathPrefixes: ["/artifactory/grokbot/"],
       ports: [8443],
       redirectHosts: ["packages.internal", "mirror.internal"],
     };
@@ -939,7 +939,7 @@ describe("resolve-openclaw-package-candidate", () => {
 
     try {
       await downloadUrl(
-        "https://packages.internal:8443/artifactory/openclaw/openclaw.tgz",
+        "https://packages.internal:8443/artifactory/grokbot/grokbot.tgz",
         target,
         {
           fetchImpl: async (_url: URL, init?: RequestInit) => {
@@ -947,7 +947,7 @@ describe("resolve-openclaw-package-candidate", () => {
             if (requestHeaders.length === 1) {
               return new Response(null, {
                 headers: {
-                  location: "https://mirror.internal:8443/artifactory/openclaw/openclaw.tgz",
+                  location: "https://mirror.internal:8443/artifactory/grokbot/grokbot.tgz",
                 },
                 status: 302,
               });
@@ -975,13 +975,13 @@ describe("resolve-openclaw-package-candidate", () => {
   });
 
   it("validates redirects for package_url downloads", async () => {
-    const dir = await mkdtemp(path.join(tmpdir(), "openclaw-package-download-"));
+    const dir = await mkdtemp(path.join(tmpdir(), "grokbot-package-download-"));
     tempDirs.push(dir);
-    const target = path.join(dir, "openclaw.tgz");
+    const target = path.join(dir, "grokbot.tgz");
     const requestedUrls: string[] = [];
 
     await expect(
-      downloadUrl("https://packages.example/openclaw.tgz", target, {
+      downloadUrl("https://packages.example/grokbot.tgz", target, {
         fetchImpl: async (url: URL) => {
           requestedUrls.push(url.toString());
           return new Response(null, {
@@ -992,17 +992,17 @@ describe("resolve-openclaw-package-candidate", () => {
         lookupHost: lookupAddresses([{ address: "93.184.216.34", family: 4 }]),
       }),
     ).rejects.toThrow(/private\/internal\/special-use/iu);
-    expect(requestedUrls).toEqual(["https://packages.example/openclaw.tgz"]);
+    expect(requestedUrls).toEqual(["https://packages.example/grokbot.tgz"]);
   });
 
   it("cancels redirect response bodies before following the next hop", async () => {
-    const dir = await mkdtemp(path.join(tmpdir(), "openclaw-package-download-"));
+    const dir = await mkdtemp(path.join(tmpdir(), "grokbot-package-download-"));
     tempDirs.push(dir);
-    const target = path.join(dir, "openclaw.tgz");
+    const target = path.join(dir, "grokbot.tgz");
     const bodyCancelled: string[] = [];
 
     await expect(
-      downloadUrl("https://packages.example/openclaw.tgz", target, {
+      downloadUrl("https://packages.example/grokbot.tgz", target, {
         fetchImpl: async (url: URL) => {
           let cancelled = false;
           const body = new ReadableStream({
@@ -1039,13 +1039,13 @@ describe("resolve-openclaw-package-candidate", () => {
   });
 
   it("cancels response body on HTTP error before closing dispatcher", async () => {
-    const dir = await mkdtemp(path.join(tmpdir(), "openclaw-package-download-"));
+    const dir = await mkdtemp(path.join(tmpdir(), "grokbot-package-download-"));
     tempDirs.push(dir);
-    const target = path.join(dir, "openclaw.tgz");
+    const target = path.join(dir, "grokbot.tgz");
     let bodyCancelled = false;
 
     await expect(
-      downloadUrl("https://packages.example/openclaw.tgz", target, {
+      downloadUrl("https://packages.example/grokbot.tgz", target, {
         fetchImpl: async () => {
           const body = new ReadableStream({
             start(controller) {
@@ -1071,13 +1071,13 @@ describe("resolve-openclaw-package-candidate", () => {
   });
 
   it("cancels response body on declared oversize before closing dispatcher", async () => {
-    const dir = await mkdtemp(path.join(tmpdir(), "openclaw-package-download-"));
+    const dir = await mkdtemp(path.join(tmpdir(), "grokbot-package-download-"));
     tempDirs.push(dir);
-    const target = path.join(dir, "openclaw.tgz");
+    const target = path.join(dir, "grokbot.tgz");
     let bodyCancelled = false;
 
     await expect(
-      downloadUrl("https://packages.example/openclaw.tgz", target, {
+      downloadUrl("https://packages.example/grokbot.tgz", target, {
         fetchImpl: async () => {
           const body = new ReadableStream({
             start(controller) {
@@ -1107,14 +1107,14 @@ describe("resolve-openclaw-package-candidate", () => {
   });
 
   it("rejects unsafe decimal package_url content-length values before reading", async () => {
-    const dir = await mkdtemp(path.join(tmpdir(), "openclaw-package-download-"));
+    const dir = await mkdtemp(path.join(tmpdir(), "grokbot-package-download-"));
     tempDirs.push(dir);
-    const target = path.join(dir, "openclaw.tgz");
+    const target = path.join(dir, "grokbot.tgz");
     let readStarted = false;
     let bodyCancelled = false;
 
     await expect(
-      downloadUrl("https://packages.example/openclaw.tgz", target, {
+      downloadUrl("https://packages.example/grokbot.tgz", target, {
         fetchImpl: async () =>
           ({
             body: {
@@ -1151,12 +1151,12 @@ describe("resolve-openclaw-package-candidate", () => {
   });
 
   it("bounds package_url downloads and writes completed files atomically", async () => {
-    const dir = await mkdtemp(path.join(tmpdir(), "openclaw-package-download-"));
+    const dir = await mkdtemp(path.join(tmpdir(), "grokbot-package-download-"));
     tempDirs.push(dir);
-    const target = path.join(dir, "openclaw.tgz");
+    const target = path.join(dir, "grokbot.tgz");
 
     await expect(
-      downloadUrl("https://packages.example/openclaw.tgz", target, {
+      downloadUrl("https://packages.example/grokbot.tgz", target, {
         fetchImpl: async () =>
           new Response(new Uint8Array([1, 2, 3, 4]), {
             headers: { "content-length": "4" },
@@ -1169,7 +1169,7 @@ describe("resolve-openclaw-package-candidate", () => {
     await expect(missing(target)).resolves.toBe(true);
     await expect(missing(`${target}.tmp`)).resolves.toBe(true);
 
-    await downloadUrl("https://packages.example/openclaw.tgz", target, {
+    await downloadUrl("https://packages.example/grokbot.tgz", target, {
       fetchImpl: async () =>
         new Response(new Uint8Array([1, 2, 3]), {
           headers: { "content-length": "3" },
@@ -1183,11 +1183,11 @@ describe("resolve-openclaw-package-candidate", () => {
   });
 
   it("clamps oversized package_url download timers before scheduling", async () => {
-    const dir = await mkdtemp(path.join(tmpdir(), "openclaw-package-download-"));
+    const dir = await mkdtemp(path.join(tmpdir(), "grokbot-package-download-"));
     tempDirs.push(dir);
-    const target = path.join(dir, "openclaw.tgz");
+    const target = path.join(dir, "grokbot.tgz");
 
-    await downloadUrl("https://packages.example/openclaw.tgz", target, {
+    await downloadUrl("https://packages.example/grokbot.tgz", target, {
       fetchImpl: async () =>
         new Response(
           new ReadableStream({
@@ -1213,14 +1213,14 @@ describe("resolve-openclaw-package-candidate", () => {
   });
 
   it("times out stalled package_url response bodies", async () => {
-    const dir = await mkdtemp(path.join(tmpdir(), "openclaw-package-download-timeout-"));
+    const dir = await mkdtemp(path.join(tmpdir(), "grokbot-package-download-timeout-"));
     tempDirs.push(dir);
-    const target = path.join(dir, "openclaw.tgz");
+    const target = path.join(dir, "grokbot.tgz");
     let bodyCancelled = false;
     const startedAt = Date.now();
 
     await expect(
-      downloadUrl("https://packages.example/openclaw.tgz", target, {
+      downloadUrl("https://packages.example/grokbot.tgz", target, {
         fetchImpl: async () =>
           new Response(
             new ReadableStream({
@@ -1237,7 +1237,7 @@ describe("resolve-openclaw-package-candidate", () => {
         timeoutMs: 25,
       }),
     ).rejects.toThrow(
-      "package_url download timed out after 25ms: https://packages.example/openclaw.tgz",
+      "package_url download timed out after 25ms: https://packages.example/grokbot.tgz",
     );
 
     expect(Date.now() - startedAt).toBeLessThan(1_000);
@@ -1247,14 +1247,14 @@ describe("resolve-openclaw-package-candidate", () => {
   });
 
   it("streams non-decimal package_url content-length values through the download cap", async () => {
-    const dir = await mkdtemp(path.join(tmpdir(), "openclaw-package-download-"));
+    const dir = await mkdtemp(path.join(tmpdir(), "grokbot-package-download-"));
     tempDirs.push(dir);
-    const target = path.join(dir, "openclaw.tgz");
+    const target = path.join(dir, "grokbot.tgz");
     let readStarted = false;
     let bodyCancelled = false;
 
     await expect(
-      downloadUrl("https://packages.example/openclaw.tgz", target, {
+      downloadUrl("https://packages.example/grokbot.tgz", target, {
         fetchImpl: async () => {
           const body = new ReadableStream({
             pull(controller) {
@@ -1281,7 +1281,7 @@ describe("resolve-openclaw-package-candidate", () => {
   });
 
   it("reads package source metadata from package artifacts", async () => {
-    const dir = await mkdtemp(path.join(tmpdir(), "openclaw-package-candidate-"));
+    const dir = await mkdtemp(path.join(tmpdir(), "grokbot-package-candidate-"));
     tempDirs.push(dir);
     await writeFile(
       path.join(dir, "package-candidate.json"),
@@ -1306,7 +1306,7 @@ describe("resolve-openclaw-package-candidate", () => {
   });
 
   it("normalizes artifact package source SHAs before workflow output", async () => {
-    const dir = await mkdtemp(path.join(tmpdir(), "openclaw-package-candidate-sha-"));
+    const dir = await mkdtemp(path.join(tmpdir(), "grokbot-package-candidate-sha-"));
     tempDirs.push(dir);
     await writeFile(
       path.join(dir, "package-candidate.json"),
@@ -1321,7 +1321,7 @@ describe("resolve-openclaw-package-candidate", () => {
   });
 
   it("normalizes whitespace-only artifact package source SHAs to absent", async () => {
-    const dir = await mkdtemp(path.join(tmpdir(), "openclaw-package-candidate-empty-sha-"));
+    const dir = await mkdtemp(path.join(tmpdir(), "grokbot-package-candidate-empty-sha-"));
     tempDirs.push(dir);
     await writeFile(
       path.join(dir, "package-candidate.json"),
@@ -1336,7 +1336,7 @@ describe("resolve-openclaw-package-candidate", () => {
   });
 
   it("rejects malformed artifact package source SHAs", async () => {
-    const dir = await mkdtemp(path.join(tmpdir(), "openclaw-package-candidate-bad-sha-"));
+    const dir = await mkdtemp(path.join(tmpdir(), "grokbot-package-candidate-bad-sha-"));
     tempDirs.push(dir);
     await writeFile(
       path.join(dir, "package-candidate.json"),
@@ -1351,17 +1351,17 @@ describe("resolve-openclaw-package-candidate", () => {
   });
 
   it("accepts uppercase package artifact SHA-256 metadata", async () => {
-    const dir = await mkdtemp(path.join(tmpdir(), "openclaw-package-sha-"));
+    const dir = await mkdtemp(path.join(tmpdir(), "grokbot-package-sha-"));
     tempDirs.push(dir);
-    const file = path.join(dir, "openclaw.tgz");
-    await writeFile(file, "openclaw package bytes");
+    const file = path.join(dir, "grokbot.tgz");
+    await writeFile(file, "grokbot package bytes");
     const digest = "ae0b98d18c80dbf9447fa48560a139195595db2d337ad33421ca2183b0dd3e99";
 
     await expect(assertExpectedSha256ForTest(file, digest.toUpperCase())).resolves.toBe(digest);
   });
 
   it("rejects source artifact scans that exceed the filesystem entry limit", async () => {
-    const dir = await mkdtemp(path.join(tmpdir(), "openclaw-package-artifact-scan-"));
+    const dir = await mkdtemp(path.join(tmpdir(), "grokbot-package-artifact-scan-"));
     tempDirs.push(dir);
     const maxEntries = 3;
 
@@ -1375,10 +1375,10 @@ describe("resolve-openclaw-package-candidate", () => {
   });
 
   it("rejects source artifact directories with multiple tarballs", async () => {
-    const dir = await mkdtemp(path.join(tmpdir(), "openclaw-package-artifact-duplicates-"));
+    const dir = await mkdtemp(path.join(tmpdir(), "grokbot-package-artifact-duplicates-"));
     tempDirs.push(dir);
 
-    await writeFile(path.join(dir, "openclaw-a.tgz"), "a");
+    await writeFile(path.join(dir, "grokbot-a.tgz"), "a");
     await writeFile(path.join(dir, "nested.tar.gz"), "b");
 
     const error = await findSingleTarballForTest(dir).catch((caught: unknown) => caught);
@@ -1386,22 +1386,22 @@ describe("resolve-openclaw-package-candidate", () => {
     const message = (error as Error).message;
     expect(message).toContain("source=artifact requires exactly one .tgz");
     expect(message).toContain("nested.tar.gz");
-    expect(message).toContain("openclaw-a.tgz");
+    expect(message).toContain("grokbot-a.tgz");
     expect(message).not.toContain(path.join(dir, "nested.tar.gz"));
-    expect(message).not.toContain(path.join(dir, "openclaw-a.tgz"));
+    expect(message).not.toContain(path.join(dir, "grokbot-a.tgz"));
   });
 
   it("reads the source SHA from packed npm build metadata", async () => {
-    const dir = await mkdtemp(path.join(tmpdir(), "openclaw-package-build-info-"));
+    const dir = await mkdtemp(path.join(tmpdir(), "grokbot-package-build-info-"));
     tempDirs.push(dir);
     const root = path.join(dir, "package");
     await mkdir(path.join(root, "dist"), { recursive: true });
-    await writeFile(path.join(root, "package.json"), JSON.stringify({ name: "openclaw" }));
+    await writeFile(path.join(root, "package.json"), JSON.stringify({ name: "grokbot" }));
     await writeFile(
       path.join(root, "dist", "build-info.json"),
       JSON.stringify({ commit: "66CE632B9B7C5C7FDD3E66C739687D51638AD6E2" }),
     );
-    const tarball = path.join(dir, "openclaw.tgz");
+    const tarball = path.join(dir, "grokbot.tgz");
     await new Promise<void>((resolve, reject) => {
       execFile("tar", ["-czf", tarball, "-C", dir, "package"], (error) => {
         if (error) {

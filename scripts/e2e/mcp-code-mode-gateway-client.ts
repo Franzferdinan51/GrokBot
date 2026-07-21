@@ -1,4 +1,4 @@
-// Mcp Code Mode Gateway Client script supports OpenClaw repository automation.
+// Mcp Code Mode Gateway Client script supports GrokBot repository automation.
 import path from "node:path";
 import { setTimeout as setNodeTimeout, clearTimeout as clearNodeTimeout } from "node:timers";
 import { pathToFileURL } from "node:url";
@@ -116,7 +116,7 @@ async function main() {
   const gatewayUrl = process.env.GW_URL?.trim();
   const gatewayToken = process.env.GW_TOKEN?.trim();
   const stateDir = process.env.OPENCLAW_STATE_DIR?.trim();
-  const model = process.env.OPENCLAW_MCP_CODE_MODE_MODEL?.trim() || "openclaw/main";
+  const model = process.env.OPENCLAW_MCP_CODE_MODE_MODEL?.trim() || "grokbot/main";
   assert(gatewayUrl, "missing GW_URL");
   assert(gatewayToken, "missing GW_TOKEN");
   assert(stateDir, "missing OPENCLAW_STATE_DIR");
@@ -126,8 +126,8 @@ async function main() {
     headers: {
       authorization: `Bearer ${gatewayToken}`,
       "content-type": "application/json",
-      "x-openclaw-agent": "main",
-      "x-openclaw-scopes": "operator.write",
+      "x-grokbot-agent": "main",
+      "x-grokbot-scopes": "operator.write",
     },
     body: JSON.stringify({
       model,

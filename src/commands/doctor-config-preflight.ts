@@ -14,7 +14,7 @@ import {
 import { formatConfigIssueLines } from "../config/issue-format.js";
 import { resolveCanonicalConfigPath } from "../config/paths.js";
 import type { ConfigFileSnapshot, LegacyConfigIssue } from "../config/types.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { isTruthyEnvValue } from "../infra/env.js";
 import type { StartupMigrationLease } from "../infra/startup-migration-checkpoint.js";
 import { normalizePluginsConfig, resolveEffectiveEnableState } from "../plugins/config-state.js";
@@ -225,7 +225,7 @@ function formatStartupPluginSmokeFailure(failure: PluginPayloadSmokeFailure): st
     reason: failure.reason,
     detail: failure.detail,
     ...(failure.installPath ? { installPath: failure.installPath } : {}),
-  })}. Run \`openclaw update repair\` to retry plugin repair.`;
+  })}. Run \`grokbot update repair\` to retry plugin repair.`;
 }
 
 async function runStartupUpgradeConvergence(params: {
@@ -356,9 +356,9 @@ function formatStartupMigrationFailure(params: { warnings: string[]; blockers: s
     ...params.blockers.map((blocker) => `- ${blocker}`),
   ];
   return [
-    "OpenClaw startup migrations did not complete cleanly; refusing to report the gateway ready.",
+    "GrokBot startup migrations did not complete cleanly; refusing to report the gateway ready.",
     ...details,
-    'Run "openclaw doctor --fix" against the mounted state/config, then restart the container.',
+    'Run "grokbot doctor --fix" against the mounted state/config, then restart the container.',
   ].join("\n");
 }
 
@@ -366,7 +366,7 @@ function formatStartupPluginVerificationFailure(
   diagnostic: StartupPluginVerificationDiagnostic,
 ): string {
   return [
-    "OpenClaw plugin verification failed; refusing to report the gateway ready.",
+    "GrokBot plugin verification failed; refusing to report the gateway ready.",
     ...diagnostic.messages.map((message) => `- ${message}`),
     "Resolve the plugin verification errors above, then restart the container.",
   ].join("\n");
@@ -380,7 +380,7 @@ function throwStartupMigrationRefusal(message: string): never {
 
 function throwStartupMigrationGuardRejected(): never {
   throw new Error(
-    "OpenClaw startup migrations were skipped because the selected config changed during startup; refusing to report the gateway ready. Retry startup so the new config can be validated.",
+    "GrokBot startup migrations were skipped because the selected config changed during startup; refusing to report the gateway ready. Retry startup so the new config can be validated.",
   );
 }
 
@@ -510,7 +510,7 @@ export async function runDoctorConfigPreflight(
     if (options.repairPrefixedConfig === true && snapshot.exists && !snapshot.valid) {
       if (await recoverConfigFromJsonRootSuffix(snapshot)) {
         note(
-          "Removed non-JSON prefix from openclaw.json; original saved as .clobbered.*.",
+          "Removed non-JSON prefix from grokbot.json; original saved as .clobbered.*.",
           "Config",
         );
         snapshot = addDoctorLegacyIssues(await readConfigFileSnapshot(readOptions));
@@ -518,7 +518,7 @@ export async function runDoctorConfigPreflight(
         await recoverConfigFromLastKnownGood({ snapshot, reason: "doctor-invalid-config" })
       ) {
         note(
-          "Restored openclaw.json from last-known-good; original saved as .clobbered.*.",
+          "Restored grokbot.json from last-known-good; original saved as .clobbered.*.",
           "Config",
         );
         snapshot = addDoctorLegacyIssues(await readConfigFileSnapshot(readOptions));
@@ -643,7 +643,7 @@ export async function runDoctorConfigPreflight(
         if (startupMigrationHeartbeatError) {
           throw startupMigrationHeartbeatError instanceof Error
             ? startupMigrationHeartbeatError
-            : new Error("OpenClaw startup migration lease heartbeat failed.");
+            : new Error("GrokBot startup migration lease heartbeat failed.");
         }
         if (startupMigrationWarnings.length > 0) {
           throwStartupMigrationRefusal(
@@ -657,7 +657,7 @@ export async function runDoctorConfigPreflight(
           throwStartupMigrationRefusal(
             formatStartupMigrationFailure({
               warnings: [],
-              blockers: ['OpenClaw config is invalid; run "openclaw doctor --fix" before startup.'],
+              blockers: ['GrokBot config is invalid; run "grokbot doctor --fix" before startup.'],
             }),
           );
         }

@@ -1,20 +1,20 @@
 ---
-summary: "CLI reference for `openclaw dashboard` (open the Control UI)"
+summary: "CLI reference for `grokbot dashboard` (open the Control UI)"
 read_when:
   - You want to open the Control UI with your current token
   - You want to print the URL without launching a browser
 title: "Dashboard"
 ---
 
-# `openclaw dashboard`
+# `grokbot dashboard`
 
 Open the Control UI using your current auth.
 
 ```bash
-openclaw dashboard
-openclaw dashboard --no-open
-openclaw dashboard --json
-openclaw dashboard --yes
+grokbot dashboard
+grokbot dashboard --no-open
+grokbot dashboard --json
+grokbot dashboard --yes
 ```
 
 - `--no-open`: print the URL but do not launch a browser.
@@ -26,7 +26,7 @@ openclaw dashboard --yes
 Use `--json` for desktop integrations and scripts that need the resolved Control UI URL:
 
 ```bash
-openclaw dashboard --json
+grokbot dashboard --json
 ```
 
 The response includes `url`, `httpUrl`, `wsUrl`, `port`, and `tokenIncluded`. If the Gateway is not ready, the command returns `{"ok":false,"reason":"..."}` and exits non-zero. SecretRef-managed tokens are never included in `url`.

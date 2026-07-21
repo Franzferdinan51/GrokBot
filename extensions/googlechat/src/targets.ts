@@ -1,7 +1,7 @@
-import { buildChannelOutboundSessionRoute } from "openclaw/plugin-sdk/channel-core";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import { buildChannelOutboundSessionRoute } from "grokbot/plugin-sdk/channel-core";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 // Googlechat plugin module implements targets behavior.
-import { normalizeLowercaseStringOrEmpty } from "openclaw/plugin-sdk/string-coerce-runtime";
+import { normalizeLowercaseStringOrEmpty } from "grokbot/plugin-sdk/string-coerce-runtime";
 import { resolveGoogleChatAccount, type ResolvedGoogleChatAccount } from "./accounts.js";
 import { findGoogleChatDirectMessage, getGoogleChatSpace } from "./api.js";
 import type { GoogleChatSpace } from "./types.js";

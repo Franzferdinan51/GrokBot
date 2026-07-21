@@ -2,7 +2,7 @@
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { useAutoCleanupTempDirTracker } from "../../test/helpers/temp-dir.js";
 import { registerResolvedAgentDir } from "../agents/agent-dir-registry.js";
@@ -24,7 +24,7 @@ import type { AuthProfileStore } from "../agents/auth-profiles/types.js";
 import {
   closeOpenClawAgentDatabasesForTest,
   openOpenClawAgentDatabase,
-} from "../state/openclaw-agent-db.js";
+} from "../state/grokbot-agent-db.js";
 import {
   buildTalkTestProviderConfig,
   TALK_TEST_PROVIDER_API_KEY_PATH,
@@ -81,7 +81,7 @@ function stripVolatileConfigMeta(input: string): Record<string, unknown> {
 }
 
 async function writeJsonFile(filePath: string, value: unknown): Promise<void> {
-  if (path.basename(filePath) === "openclaw-agent.sqlite") {
+  if (path.basename(filePath) === "grokbot-agent.sqlite") {
     saveAuthProfileStore(value as AuthProfileStore, path.dirname(filePath), {
       filterExternalAuthProfiles: false,
       syncExternalCli: false,
@@ -106,12 +106,12 @@ function createOpenAiProviderConfig(apiKey: unknown = "sk-openai-plaintext") {
 }
 
 function buildFixturePaths(rootDir: string) {
-  const stateDir = path.join(rootDir, ".openclaw");
+  const stateDir = path.join(rootDir, ".grokbot");
   const agentDir = path.join(stateDir, "agents", "main", "agent");
   return {
     rootDir,
     stateDir,
-    configPath: path.join(stateDir, "openclaw.json"),
+    configPath: path.join(stateDir, "grokbot.json"),
     agentDir,
     authStorePath: resolveAuthProfileDatabasePath(agentDir),
     authJsonPath: path.join(agentDir, "auth.json"),
@@ -121,7 +121,7 @@ function buildFixturePaths(rootDir: string) {
 
 async function createApplyFixture(): Promise<ApplyFixture> {
   const paths = buildFixturePaths(
-    await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-secrets-apply-")),
+    await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-secrets-apply-")),
   );
   await fs.mkdir(path.dirname(paths.configPath), { recursive: true });
   await fs.mkdir(paths.agentDir, { recursive: true });
@@ -1581,12 +1581,12 @@ describe("secrets apply", () => {
   it("scrubs .env in legacy .clawdbot state directory via automatic fallback", async () => {
     // Do NOT set OPENCLAW_STATE_DIR — rely on resolveStateDir's automatic
     // legacy-directory fallback. A controlled HOME that contains only
-    // .clawdbot (no .openclaw) exercises the scrub path so the old
-    // resolveConfigDir call (which always returns $HOME/.openclaw) would
+    // .clawdbot (no .grokbot) exercises the scrub path so the old
+    // resolveConfigDir call (which always returns $HOME/.grokbot) would
     // miss the .env inside .clawdbot.
-    const homeDir = tempDirs.make("openclaw-secrets-apply-legacy-");
+    const homeDir = tempDirs.make("grokbot-secrets-apply-legacy-");
     const legacyStateDir = path.join(homeDir, ".clawdbot");
-    const configPath = path.join(legacyStateDir, "openclaw.json");
+    const configPath = path.join(legacyStateDir, "grokbot.json");
     const agentDir = path.join(legacyStateDir, "agents", "main", "agent");
     const envPath = path.join(legacyStateDir, ".env");
     const authStorePath = resolveAuthProfileDatabasePath(agentDir);
@@ -1643,13 +1643,13 @@ describe("secrets apply", () => {
     // appearing or disappearing during the operation could direct .env
     // scrubbing at a different file.
     //
-    // Set up a HOME where both .openclaw and .clawdbot exist.
-    // resolveStateDir returns .openclaw when both exist because it checks
-    // .openclaw first. The apply must use that same root for .env.
-    const homeDir = tempDirs.make("openclaw-secrets-apply-root-");
-    const openclawDir = path.join(homeDir, ".openclaw");
+    // Set up a HOME where both .grokbot and .clawdbot exist.
+    // resolveStateDir returns .grokbot when both exist because it checks
+    // .grokbot first. The apply must use that same root for .env.
+    const homeDir = tempDirs.make("grokbot-secrets-apply-root-");
+    const openclawDir = path.join(homeDir, ".grokbot");
     const clawdbotDir = path.join(homeDir, ".clawdbot");
-    const configPath = path.join(openclawDir, "openclaw.json");
+    const configPath = path.join(openclawDir, "grokbot.json");
     const agentDir = path.join(openclawDir, "agents", "main", "agent");
     const openclawEnvPath = path.join(openclawDir, ".env");
     const clawdbotEnvPath = path.join(clawdbotDir, ".env");
@@ -1675,7 +1675,7 @@ describe("secrets apply", () => {
       version: 1,
       profiles: {},
     });
-    // .env in the canonical .openclaw dir — this is the one that should be scrubbed
+    // .env in the canonical .grokbot dir — this is the one that should be scrubbed
     await fs.writeFile(
       openclawEnvPath,
       "OPENAI_API_KEY=sk-openai-plaintext\nUNRELATED=value\n", // pragma: allowlist secret
@@ -1698,7 +1698,7 @@ describe("secrets apply", () => {
       expect(applied.mode).toBe("write");
       expect(applied.changed).toBe(true);
 
-      // Canonical .openclaw/.env was scrubbed
+      // Canonical .grokbot/.env was scrubbed
       const nextOpenclawEnv = await fs.readFile(openclawEnvPath, "utf8");
       expect(nextOpenclawEnv).not.toContain("sk-openai-plaintext");
       expect(nextOpenclawEnv).toContain("UNRELATED=value");
@@ -1749,7 +1749,7 @@ describe("secrets apply", () => {
 
   it("scrubs config and state .env files when the config path is external", async () => {
     const configDir = path.join(fixture.rootDir, "config");
-    const configPath = path.join(configDir, "openclaw.json");
+    const configPath = path.join(configDir, "grokbot.json");
     const configEnvPath = path.join(configDir, ".env");
     await fs.mkdir(configDir, { recursive: true });
     await fs.copyFile(fixture.configPath, configPath);

@@ -1,10 +1,10 @@
 // Discord plugin module owns realtime voice activation policy.
-import type { DiscordAccountConfig, OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { DiscordAccountConfig, OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import {
   normalizeSupportedRealtimeVoiceActivationName,
   sortRealtimeVoiceActivationNames,
-} from "openclaw/plugin-sdk/realtime-voice";
-import { uniqueStrings } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/realtime-voice";
+import { uniqueStrings } from "grokbot/plugin-sdk/string-coerce-runtime";
 
 type DiscordRealtimeVoiceConfig = NonNullable<DiscordAccountConfig["voice"]>["realtime"];
 
@@ -50,7 +50,7 @@ export function resolveDiscordRealtimeWakeNames(params: {
   const configuredAgentNames = [agent?.name, agent?.identity?.name]
     .map((name) => normalizeSupportedRealtimeVoiceActivationName(name))
     .filter((name): name is string => Boolean(name));
-  const productWakeNames = [normalizeSupportedRealtimeVoiceActivationName("OpenClaw")].filter(
+  const productWakeNames = [normalizeSupportedRealtimeVoiceActivationName("GrokBot")].filter(
     (name): name is string => Boolean(name),
   );
   const defaults =

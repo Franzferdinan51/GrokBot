@@ -1,6 +1,6 @@
 // Googlechat tests cover monitor webhook plugin behavior.
 import type { IncomingMessage, ServerResponse } from "node:http";
-import type { FixedWindowRateLimiter } from "openclaw/plugin-sdk/webhook-ingress";
+import type { FixedWindowRateLimiter } from "grokbot/plugin-sdk/webhook-ingress";
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import type { WebhookTarget } from "./monitor-types.js";
 import type { GoogleChatEvent } from "./types.js";
@@ -12,12 +12,12 @@ const withResolvedWebhookRequestPipeline = vi.hoisted(() => vi.fn());
 const verifyGoogleChatRequest = vi.hoisted(() => vi.fn());
 const ingressReceive = vi.hoisted(() => vi.fn());
 
-vi.mock("openclaw/plugin-sdk/webhook-request-guards", () => ({
+vi.mock("grokbot/plugin-sdk/webhook-request-guards", () => ({
   readJsonWebhookBodyOrReject,
   runDetachedWebhookWork,
 }));
 
-vi.mock("openclaw/plugin-sdk/webhook-targets", () => ({
+vi.mock("grokbot/plugin-sdk/webhook-targets", () => ({
   resolveWebhookTargetWithAuthOrReject,
   withResolvedWebhookRequestPipeline,
 }));
@@ -125,8 +125,8 @@ describe("googlechat monitor webhook", () => {
   });
 
   afterAll(() => {
-    vi.doUnmock("openclaw/plugin-sdk/webhook-request-guards");
-    vi.doUnmock("openclaw/plugin-sdk/webhook-targets");
+    vi.doUnmock("grokbot/plugin-sdk/webhook-request-guards");
+    vi.doUnmock("grokbot/plugin-sdk/webhook-targets");
     vi.doUnmock("./auth.js");
     vi.resetModules();
   });

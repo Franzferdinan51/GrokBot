@@ -1,6 +1,6 @@
 // Venice tests cover models plugin behavior.
-import { expectDefined } from "@openclaw/normalization-core";
-import { clearLiveCatalogCacheForTests } from "openclaw/plugin-sdk/provider-catalog-live-runtime";
+import { expectDefined } from "@grokbot/normalization-core";
+import { clearLiveCatalogCacheForTests } from "grokbot/plugin-sdk/provider-catalog-live-runtime";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   buildVeniceModelDefinition,

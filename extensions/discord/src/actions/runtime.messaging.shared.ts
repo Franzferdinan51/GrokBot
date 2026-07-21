@@ -1,8 +1,8 @@
 import { ChannelType } from "discord-api-types/v10";
-import { normalizeAccountId } from "openclaw/plugin-sdk/account-resolution";
-import type { ChannelMessageActionContext } from "openclaw/plugin-sdk/channel-contract";
+import { normalizeAccountId } from "grokbot/plugin-sdk/account-resolution";
+import type { ChannelMessageActionContext } from "grokbot/plugin-sdk/channel-contract";
 // Discord plugin module implements runtime.messaging.shared behavior.
-import { resolveOpenProviderRuntimeGroupPolicy } from "openclaw/plugin-sdk/runtime-group-policy";
+import { resolveOpenProviderRuntimeGroupPolicy } from "grokbot/plugin-sdk/runtime-group-policy";
 import { mergeDiscordAccountConfig, resolveDefaultDiscordAccountId } from "../accounts.js";
 import { createDiscordRuntimeAccountContext } from "../client.js";
 import {

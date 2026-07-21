@@ -1,22 +1,22 @@
 {
-  "name": "@openclaw/gateway-protocol",
+  "name": "@grokbot/gateway-protocol",
   "version": "2026.7.2",
-  "description": "Typed schemas and runtime validators for the OpenClaw Gateway WebSocket protocol",
+  "description": "Typed schemas and runtime validators for the GrokBot Gateway WebSocket protocol",
   "keywords": [
     "gateway",
-    "openclaw",
+    "grokbot",
     "protocol",
     "typebox",
     "websocket"
   ],
-  "homepage": "https://github.com/openclaw/openclaw#readme",
+  "homepage": "https://github.com/grokbot/grokbot#readme",
   "bugs": {
-    "url": "https://github.com/openclaw/openclaw/issues"
+    "url": "https://github.com/grokbot/grokbot/issues"
   },
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/openclaw/openclaw.git",
+    "url": "git+https://github.com/grokbot/grokbot.git",
     "directory": "packages/gateway-protocol"
   },
   "files": [
@@ -86,7 +86,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "openclaw": {
+  "grokbot": {
     "release": {
       "publishToNpm": true
     }

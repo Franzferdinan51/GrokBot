@@ -1,4 +1,4 @@
-// Re-exports fs-safe helpers with OpenClaw defaults and wrappers.
+// Re-exports fs-safe helpers with GrokBot defaults and wrappers.
 import "./fs-safe-defaults.js";
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -6,10 +6,10 @@ import {
   ensureDirectoryWithinRoot,
   findExistingAncestor,
   writeViaSiblingTempPath,
-} from "@openclaw/fs-safe/advanced";
-import { root as fsSafeRoot, type ReadResult } from "@openclaw/fs-safe/root";
+} from "@grokbot/fs-safe/advanced";
+import { root as fsSafeRoot, type ReadResult } from "@grokbot/fs-safe/root";
 
-export { FsSafeError, type FsSafeErrorCode } from "@openclaw/fs-safe/errors";
+export { FsSafeError, type FsSafeErrorCode } from "@grokbot/fs-safe/errors";
 export {
   assertAbsolutePathInput,
   canonicalPathFromExistingAncestor,
@@ -21,11 +21,11 @@ export {
   type EnsureAbsoluteDirectoryResult,
   type ResolvedAbsolutePath,
   type ResolvedWritableAbsolutePath,
-} from "@openclaw/fs-safe/advanced";
-export { isPathInside } from "@openclaw/fs-safe/path";
-export { pathExists, pathExistsSync } from "@openclaw/fs-safe/advanced";
-export { movePathToTrash, type MovePathToTrashOptions } from "@openclaw/fs-safe/advanced";
-export { readLocalFileFromRoots, resolveLocalPathFromRootsSync } from "@openclaw/fs-safe/advanced";
+} from "@grokbot/fs-safe/advanced";
+export { isPathInside } from "@grokbot/fs-safe/path";
+export { pathExists, pathExistsSync } from "@grokbot/fs-safe/advanced";
+export { movePathToTrash, type MovePathToTrashOptions } from "@grokbot/fs-safe/advanced";
+export { readLocalFileFromRoots, resolveLocalPathFromRootsSync } from "@grokbot/fs-safe/advanced";
 export {
   appendRegularFile,
   appendRegularFileSync,
@@ -34,7 +34,7 @@ export {
   resolveRegularFileAppendFlags,
   statRegularFile,
   statRegularFileSync,
-} from "@openclaw/fs-safe/advanced";
+} from "@grokbot/fs-safe/advanced";
 export {
   openLocalFileSafely,
   readLocalFileSafely,
@@ -43,21 +43,21 @@ export {
   type OpenResult,
   type ReadResult,
   type Root,
-} from "@openclaw/fs-safe/root";
-export { sanitizeUntrustedFileName } from "@openclaw/fs-safe/advanced";
+} from "@grokbot/fs-safe/root";
+export { sanitizeUntrustedFileName } from "@grokbot/fs-safe/advanced";
 export {
   readSecureFile,
   type SecureFileReadOptions,
   type SecureFileReadResult,
-} from "@openclaw/fs-safe/secure-file";
+} from "@grokbot/fs-safe/secure-file";
 export {
   walkDirectory,
   walkDirectorySync,
   type WalkDirectoryEntry,
   type WalkDirectoryOptions,
   type WalkDirectoryResult,
-} from "@openclaw/fs-safe/walk";
-export { withTimeout } from "@openclaw/fs-safe/advanced";
+} from "@grokbot/fs-safe/walk";
+export { withTimeout } from "@grokbot/fs-safe/advanced";
 
 export type ExternalFileWriteOptions = {
   rootDir: string;

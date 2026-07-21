@@ -10,7 +10,7 @@ title: "Gateway logging"
 
 For a user-facing overview (CLI + Control UI + config), see [/logging](/logging).
 
-OpenClaw has two log surfaces:
+GrokBot has two log surfaces:
 
 - **Console output** - what you see in the terminal / Debug UI.
 - **File logs** - JSON lines written by the gateway logger.
@@ -25,9 +25,9 @@ agent model: openai/gpt-5.6-sol (thinking=medium, fast=on)
 
 ## File-based logger
 
-- Default rolling log file is under `/tmp/openclaw/` (one file per day): `openclaw-YYYY-MM-DD.log`, dated by the gateway host's local timezone. If that directory is unsafe or unwritable (wrong owner, world-writable, a symlink), OpenClaw falls back to a user-scoped `os.tmpdir()/openclaw-<uid>` path instead; on Windows it always uses that OS-tmpdir fallback.
+- Default rolling log file is under `/tmp/grokbot/` (one file per day): `grokbot-YYYY-MM-DD.log`, dated by the gateway host's local timezone. If that directory is unsafe or unwritable (wrong owner, world-writable, a symlink), GrokBot falls back to a user-scoped `os.tmpdir()/grokbot-<uid>` path instead; on Windows it always uses that OS-tmpdir fallback.
 - Active log files rotate at `logging.maxFileBytes` (default: 100 MB), keeping up to five numbered archives (`.1` through `.5`) and continuing to write a fresh active file.
-- Configure the log file path and level via `~/.openclaw/openclaw.json`: `logging.file`, `logging.level`.
+- Configure the log file path and level via `~/.grokbot/grokbot.json`: `logging.file`, `logging.level`.
 - The file format is one JSON object per line.
 
 Talk, realtime voice, and managed-room code paths use the shared file logger for bounded lifecycle records intended for operational debugging and OTLP log export. Transcript text, audio payloads, turn ids, call ids, and provider item ids are never copied into the log record.
@@ -35,7 +35,7 @@ Talk, realtime voice, and managed-room code paths use the shared file logger for
 The Control UI Logs tab tails this file via the gateway (`logs.tail`). The CLI does the same:
 
 ```bash
-openclaw logs --follow
+grokbot logs --follow
 ```
 
 ### Verbose vs. log levels
@@ -56,7 +56,7 @@ Tune console verbosity independently:
 
 ## Redaction
 
-OpenClaw masks sensitive tokens before log or transcript output leaves the process. This redaction policy applies at console, file-log, OTLP log-record, and session transcript text sinks, so matching secret values are masked before JSONL lines or messages are written to disk.
+GrokBot masks sensitive tokens before log or transcript output leaves the process. This redaction policy applies at console, file-log, OTLP log-record, and session transcript text sinks, so matching secret values are masked before JSONL lines or messages are written to disk.
 
 - `logging.redactSensitive`: `off` | `tools` (default: `tools`)
 - `logging.redactPatterns`: array of regex strings (overrides defaults)
@@ -75,7 +75,7 @@ The gateway prints WebSocket protocol logs in two modes:
 
 ### WS log style
 
-`openclaw gateway` supports a per-gateway style switch:
+`grokbot gateway` supports a per-gateway style switch:
 
 - `--ws-log auto` (default): normal mode is optimized; verbose mode uses compact output.
 - `--ws-log compact`: compact output (paired request/response) when verbose.
@@ -84,13 +84,13 @@ The gateway prints WebSocket protocol logs in two modes:
 
 ```bash
 # optimized (only errors/slow)
-openclaw gateway
+grokbot gateway
 
 # show all WS traffic (paired)
-openclaw gateway --verbose --ws-log compact
+grokbot gateway --verbose --ws-log compact
 
 # show all WS traffic (full meta)
-openclaw gateway --verbose --ws-log full
+grokbot gateway --verbose --ws-log full
 ```
 
 ## Console formatting (subsystem logging)

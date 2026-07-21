@@ -9,8 +9,8 @@ describe("SQLite sessionFile markers", () => {
   const fixture = useTempSessionsFixture("sqlite-session-file-marker-");
 
   it("preserves SQLite markers for transcript target resolution", () => {
-    const marker = "sqlite:main:sess-1:/tmp/openclaw/agents/main/agent/openclaw-agent.sqlite";
-    const sessionsDir = "/tmp/openclaw/agents/main/sessions";
+    const marker = "sqlite:main:sess-1:/tmp/grokbot/agents/main/agent/grokbot-agent.sqlite";
+    const sessionsDir = "/tmp/grokbot/agents/main/sessions";
 
     const resolved = resolveSessionFilePath("sess-1", { sessionFile: marker }, { sessionsDir });
 

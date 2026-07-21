@@ -1,11 +1,11 @@
 // Discord plugin module implements thread session close behavior.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import {
   deleteSessionEntry,
   listSessionEntries,
   resolveStorePath,
-} from "openclaw/plugin-sdk/session-store-runtime";
-import { normalizeOptionalLowercaseString } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/session-store-runtime";
+import { normalizeOptionalLowercaseString } from "grokbot/plugin-sdk/string-coerce-runtime";
 
 /**
  * Closes every session entry in the store whose key contains {@link threadId}.

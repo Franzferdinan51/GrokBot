@@ -8,7 +8,7 @@ import {
   closeOpenClawStateDatabaseForTest,
   openOpenClawStateDatabase,
   type OpenClawStateDatabase,
-} from "../../state/openclaw-state-db.js";
+} from "../../state/grokbot-state-db.js";
 import {
   BUNDLE_HASH,
   MANIFEST_REF,
@@ -26,7 +26,7 @@ describe("worker placement dispatch reclaim", () => {
   let placementStore: PlacementStore;
 
   beforeEach(async () => {
-    root = tempDirs.make("openclaw-dispatch-", await fs.realpath(os.tmpdir()));
+    root = tempDirs.make("grokbot-dispatch-", await fs.realpath(os.tmpdir()));
     database = openOpenClawStateDatabase({ env: { OPENCLAW_STATE_DIR: root } });
     placementStore = createWorkerSessionPlacementStore({ database, now: () => 1_000 });
   });
@@ -113,7 +113,7 @@ describe("worker placement dispatch reclaim", () => {
       state: "reclaimed",
       workspaceResultConflict: {
         paths: ["src/local.ts"],
-        stagedResultRef: expect.stringMatching(/^refs\/openclaw\/worker-results\/reclaim-/u),
+        stagedResultRef: expect.stringMatching(/^refs\/grokbot\/worker-results\/reclaim-/u),
         totalCount: 1,
       },
     });
@@ -123,7 +123,7 @@ describe("worker placement dispatch reclaim", () => {
       sessionKey: REQUEST.sessionKey,
       agentId: REQUEST.agentId,
       paths: ["src/local.ts"],
-      stagedResultRef: expect.stringMatching(/^refs\/openclaw\/worker-results\/reclaim-/u),
+      stagedResultRef: expect.stringMatching(/^refs\/grokbot\/worker-results\/reclaim-/u),
       totalCount: 1,
     });
     expect(placementStore.listPendingWorkspaceResults()).toEqual([]);
@@ -133,7 +133,7 @@ describe("worker placement dispatch reclaim", () => {
   it("reclaims an unchanged worker without clearing a retained keep-local conflict", async () => {
     const priorConflict = {
       paths: ["notes.md"],
-      stagedResultRef: "refs/openclaw/worker-results/prior-conflict",
+      stagedResultRef: "refs/grokbot/worker-results/prior-conflict",
     };
     const harness = createHarness(placementStore, {
       priorWorkspaceResultConflict: priorConflict,
@@ -237,7 +237,7 @@ describe("worker placement dispatch reclaim", () => {
   it("keeps a committed failed stop result fenced for recovery", async () => {
     const priorConflict = {
       paths: ["notes.md"],
-      stagedResultRef: "refs/openclaw/worker-results/prior-conflict",
+      stagedResultRef: "refs/grokbot/worker-results/prior-conflict",
     };
     const harness = createHarness(placementStore, {
       priorWorkspaceResultConflict: priorConflict,

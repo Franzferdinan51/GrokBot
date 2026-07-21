@@ -286,7 +286,7 @@ describe("describeImageWithModel", () => {
     const authStore = { version: 1, profiles: {} };
     const result = await describeImageWithModel({
       cfg: {},
-      agentDir: "/tmp/openclaw-agent",
+      agentDir: "/tmp/grokbot-agent",
       provider: "minimax-portal",
       model: "MiniMax-VL-01",
       buffer: Buffer.from("png-bytes"),
@@ -321,7 +321,7 @@ describe("describeImageWithModel", () => {
     expect(Object.fromEntries(new Headers(fetchOptions.headers as HeadersInit))).toEqual({
       authorization: ["Bearer", "test-api-key"].join(" "),
       "content-type": "application/json",
-      "mm-api-source": "OpenClaw",
+      "mm-api-source": "GrokBot",
     });
     expect(fetchOptions.signal).toBeInstanceOf(AbortSignal);
     expect(timeoutSpy).toHaveBeenCalledWith(1000);
@@ -347,7 +347,7 @@ describe("describeImageWithModel", () => {
 
     await describeImageWithModel({
       cfg: {},
-      agentDir: "/tmp/openclaw-agent",
+      agentDir: "/tmp/grokbot-agent",
       provider: "minimax-portal",
       model: "MiniMax-VL-01",
       buffer: Buffer.from("png-bytes"),
@@ -377,7 +377,7 @@ describe("describeImageWithModel", () => {
 
     await describeImageWithModel({
       cfg: {},
-      agentDir: "/tmp/openclaw-agent",
+      agentDir: "/tmp/grokbot-agent",
       provider: "minimax-portal",
       model: "MiniMax-VL-01",
       buffer: Buffer.from("png-bytes"),
@@ -418,7 +418,7 @@ describe("describeImageWithModel", () => {
 
     const result = await describeImageWithModel({
       cfg: {},
-      agentDir: "/tmp/openclaw-agent",
+      agentDir: "/tmp/grokbot-agent",
       provider: "minimax-portal",
       model: "custom-vision",
       buffer: Buffer.from("png-bytes"),
@@ -444,7 +444,7 @@ describe("describeImageWithModel", () => {
         baseUrl: "https://api.minimax.io/anthropic",
       },
       cfg: {},
-      agentDir: "/tmp/openclaw-agent",
+      agentDir: "/tmp/grokbot-agent",
     });
     expect(completeMock).toHaveBeenCalledOnce();
     expect(fetchMock).not.toHaveBeenCalled();
@@ -488,7 +488,7 @@ describe("describeImageWithModel", () => {
 
     const result = await describeImageWithModel({
       cfg: {},
-      agentDir: "/tmp/openclaw-agent",
+      agentDir: "/tmp/grokbot-agent",
       provider: "amazon-bedrock",
       model: "us.anthropic.claude-sonnet-4-6-v1",
       buffer: Buffer.from("png-bytes"),
@@ -524,8 +524,8 @@ describe("describeImageWithModel", () => {
     await expect(
       describeImageWithModel({
         cfg: {},
-        agentDir: "/tmp/openclaw-agent",
-        workspaceDir: "/tmp/openclaw-workspace",
+        agentDir: "/tmp/grokbot-agent",
+        workspaceDir: "/tmp/grokbot-workspace",
         provider: "minimax-portal",
         model: "MiniMax-VL-01",
         buffer: Buffer.from("png-bytes"),
@@ -542,8 +542,8 @@ describe("describeImageWithModel", () => {
     expect(resolveApiKeyForProviderMock).toHaveBeenCalledWith(
       expect.objectContaining({
         provider: "minimax-portal",
-        agentDir: "/tmp/openclaw-agent",
-        workspaceDir: "/tmp/openclaw-workspace",
+        agentDir: "/tmp/grokbot-agent",
+        workspaceDir: "/tmp/grokbot-workspace",
       }),
     );
     expect(fetchMock).toHaveBeenCalledOnce();
@@ -572,7 +572,7 @@ describe("describeImageWithModel", () => {
             },
           },
         },
-        agentDir: "/tmp/openclaw-agent",
+        agentDir: "/tmp/grokbot-agent",
         provider: "minimax-cn",
         model: "MiniMax-VL-01",
         buffer: Buffer.from("png-bytes"),
@@ -622,7 +622,7 @@ describe("describeImageWithModel", () => {
             },
           },
         },
-        agentDir: "/tmp/openclaw-agent",
+        agentDir: "/tmp/grokbot-agent",
         provider: "minimax-cn",
         model: "MiniMax-VL-01",
         buffer: Buffer.from("png-bytes"),
@@ -664,7 +664,7 @@ describe("describeImageWithModel", () => {
             },
           },
         },
-        agentDir: "/tmp/openclaw-agent",
+        agentDir: "/tmp/grokbot-agent",
         provider: "minimax-cn",
         model: "MiniMax-VL-01",
         buffer: Buffer.from("png-bytes"),
@@ -704,8 +704,8 @@ describe("describeImageWithModel", () => {
     const result = await describeImageWithModel({
       cfg: {},
       agentId: "vision-agent",
-      agentDir: "/tmp/openclaw-agent",
-      workspaceDir: "/tmp/openclaw-workspace",
+      agentDir: "/tmp/grokbot-agent",
+      workspaceDir: "/tmp/grokbot-workspace",
       provider: "google",
       model: "gemini-2.5-flash",
       buffer: Buffer.from("png-bytes"),
@@ -720,15 +720,15 @@ describe("describeImageWithModel", () => {
     expect(acquireAgentRunPreparedModelRuntimeMock).toHaveBeenCalledWith(
       expect.objectContaining({
         agentId: "vision-agent",
-        agentDir: "/tmp/openclaw-agent",
-        workspaceDir: "/tmp/openclaw-workspace",
+        agentDir: "/tmp/grokbot-agent",
+        workspaceDir: "/tmp/grokbot-workspace",
       }),
     );
     expect(releasePreparedModelRuntimeMock).toHaveBeenCalledOnce();
     expect(resolveModelAsyncMock).toHaveBeenCalledWith(
       "google",
       "gemini-2.5-flash",
-      "/tmp/openclaw-agent",
+      "/tmp/grokbot-agent",
       {},
       {
         allowBundledStaticCatalogFallback: true,
@@ -736,7 +736,7 @@ describe("describeImageWithModel", () => {
         modelRegistry: {},
         skipAgentDiscovery: true,
         skipProviderRuntimeHooks: true,
-        workspaceDir: "/tmp/openclaw-workspace",
+        workspaceDir: "/tmp/grokbot-workspace",
       },
     );
     expect(registerProviderStreamForModelMock).toHaveBeenCalledWith({
@@ -747,8 +747,8 @@ describe("describeImageWithModel", () => {
         input: ["text", "image"],
       },
       cfg: {},
-      agentDir: "/tmp/openclaw-agent",
-      workspaceDir: "/tmp/openclaw-workspace",
+      agentDir: "/tmp/grokbot-agent",
+      workspaceDir: "/tmp/grokbot-workspace",
     });
   });
 
@@ -787,7 +787,7 @@ describe("describeImageWithModel", () => {
 
     const result = await describeImageWithModel({
       cfg: {},
-      agentDir: "/tmp/openclaw-agent",
+      agentDir: "/tmp/grokbot-agent",
       provider: "openai",
       model: "gpt-5.4",
       buffer: Buffer.from("png-bytes"),
@@ -806,7 +806,7 @@ describe("describeImageWithModel", () => {
       1,
       "openai",
       "gpt-5.4",
-      "/tmp/openclaw-agent",
+      "/tmp/grokbot-agent",
       {},
       {
         allowBundledStaticCatalogFallback: true,
@@ -820,7 +820,7 @@ describe("describeImageWithModel", () => {
       2,
       "openai",
       "gpt-5.4",
-      "/tmp/openclaw-agent",
+      "/tmp/grokbot-agent",
       {},
       {
         allowBundledStaticCatalogFallback: true,
@@ -858,7 +858,7 @@ describe("describeImageWithModel", () => {
 
     const result = await describeImageWithModel({
       cfg: {},
-      agentDir: "/tmp/openclaw-agent",
+      agentDir: "/tmp/grokbot-agent",
       provider: "ollama",
       model: "llava:latest",
       buffer: Buffer.from("png-bytes"),
@@ -880,7 +880,7 @@ describe("describeImageWithModel", () => {
         input: ["text", "image"],
       },
       cfg: {},
-      agentDir: "/tmp/openclaw-agent",
+      agentDir: "/tmp/grokbot-agent",
     });
     expect(streamFn).toHaveBeenCalledOnce();
     expect(completeMock).not.toHaveBeenCalled();
@@ -930,7 +930,7 @@ describe("describeImageWithModel", () => {
           },
         },
       },
-      agentDir: "/tmp/openclaw-agent",
+      agentDir: "/tmp/grokbot-agent",
       provider: "lmstudio",
       model: "google/gemma-4-e2b",
       buffer: Buffer.from("png-bytes"),
@@ -952,7 +952,7 @@ describe("describeImageWithModel", () => {
     const resolveRequest = requireRecord(resolveRequestValue, "model registry request");
     expect(resolveRequest.provider).toBe("lmstudio");
     expect(resolveRequest.modelId).toBe("google/gemma-4-e2b");
-    expect(resolveRequest.agentDir).toBe("/tmp/openclaw-agent");
+    expect(resolveRequest.agentDir).toBe("/tmp/grokbot-agent");
     expect(
       requireRecord(
         requireRecord(

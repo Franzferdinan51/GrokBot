@@ -1,19 +1,19 @@
 {
-  "name": "@openclaw/tencent-provider",
+  "name": "@grokbot/tencent-provider",
   "version": "2026.7.2",
-  "description": "OpenClaw Tencent Cloud provider plugin (TokenHub + Token Plan)",
+  "description": "GrokBot Tencent Cloud provider plugin (TokenHub + Token Plan)",
   "type": "module",
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@grokbot/plugin-sdk": "workspace:*"
   },
-  "openclaw": {
+  "grokbot": {
     "extensions": [
       "./index.ts"
     ],
     "setupEntry": "./setup-api.ts",
     "install": {
-      "clawhubSpec": "clawhub:@openclaw/tencent-provider",
-      "npmSpec": "@openclaw/tencent-provider",
+      "clawhubSpec": "clawhub:@grokbot/tencent-provider",
+      "npmSpec": "@grokbot/tencent-provider",
       "defaultChoice": "npm",
       "minHostVersion": ">=2026.6.9"
     },
@@ -31,6 +31,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/openclaw/openclaw"
+    "url": "https://github.com/grokbot/grokbot"
   }
 }

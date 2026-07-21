@@ -2,7 +2,7 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { normalizeLowercaseStringOrEmpty } from "@openclaw/normalization-core/string-coerce";
+import { normalizeLowercaseStringOrEmpty } from "@grokbot/normalization-core/string-coerce";
 import { assertGatewayServiceMutationAllowed } from "../infra/gateway-supervision.js";
 import { parseTcpPort, parseTcpPortFromArgs } from "../infra/tcp-port.js";
 import { VERSION } from "../version.js";
@@ -128,7 +128,7 @@ function collectGatewayServiceStartRepairIssues(
     // reinstall/repair before pretending restart succeeded.
     issues.push({
       code: "version-mismatch",
-      message: `service was installed by OpenClaw ${serviceVersion}, current CLI is ${VERSION}`,
+      message: `service was installed by GrokBot ${serviceVersion}, current CLI is ${VERSION}`,
     });
   }
   const servicePort =
@@ -368,7 +368,7 @@ function withGatewayServiceMutationGuards(service: GatewayService): GatewayServi
     ...service,
     stage: async (args) => {
       // Service mutations rewrite durable launchd/systemd/schtasks files, so
-      // block them when config was produced by a newer OpenClaw.
+      // block them when config was produced by a newer GrokBot.
       assertGatewayServiceMutationOwnedByOpenClaw("rewrite the gateway service", args.env);
       await assertFutureConfigActionAllowed("rewrite the gateway service");
       return await service.stage(args);

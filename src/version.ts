@@ -1,10 +1,10 @@
 // Resolves package version metadata for CLI and library callers.
 import { createRequire } from "node:module";
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+import { normalizeOptionalString } from "@grokbot/normalization-core/string-coerce";
 
 // oxlint-disable-next-line eslint/no-underscore-dangle -- Bundled builds replace this compile-time define identifier.
 declare const __OPENCLAW_VERSION__: string | undefined;
-const CORE_PACKAGE_NAME = "openclaw";
+const CORE_PACKAGE_NAME = "grokbot";
 
 const PACKAGE_JSON_CANDIDATES = [
   "../package.json",
@@ -157,7 +157,7 @@ export function resolveCompatibilityHostVersion(
   });
 }
 
-// Single source of truth for the current OpenClaw version.
+// Single source of truth for the current GrokBot version.
 // - Embedded/bundled builds: injected define or env var.
 // - Dev/npm builds: package.json.
 export const VERSION = resolveBinaryVersion({

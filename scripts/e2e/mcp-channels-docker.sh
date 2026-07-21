@@ -5,11 +5,11 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 source "$ROOT_DIR/scripts/lib/docker-e2e-image.sh"
-IMAGE_NAME="$(docker_e2e_resolve_image "openclaw-mcp-channels-e2e" OPENCLAW_IMAGE)"
+IMAGE_NAME="$(docker_e2e_resolve_image "grokbot-mcp-channels-e2e" OPENCLAW_IMAGE)"
 PORT="18789"
 TOKEN="mcp-e2e-$(date +%s)-$$"
-CONTAINER_NAME="openclaw-mcp-e2e-$$"
-CLIENT_LOG="$(mktemp -t openclaw-mcp-client-log.XXXXXX)"
+CONTAINER_NAME="grokbot-mcp-e2e-$$"
+CLIENT_LOG="$(mktemp -t grokbot-mcp-client-log.XXXXXX)"
 
 cleanup() {
   docker_e2e_docker_cmd rm -f "$CONTAINER_NAME" >/dev/null 2>&1 || true
@@ -38,7 +38,7 @@ docker_e2e_run_with_harness \
   -e "OPENCLAW_ALLOW_INSECURE_PRIVATE_WS=1" \
   "$IMAGE_NAME" \
   bash -lc "set -euo pipefail
-    source scripts/lib/openclaw-e2e-instance.sh
+    source scripts/lib/grokbot-e2e-instance.sh
     openclaw_e2e_eval_test_state_from_b64 \"\${OPENCLAW_TEST_STATE_SCRIPT_B64:?missing OPENCLAW_TEST_STATE_SCRIPT_B64}\"
     entry=\"\$(openclaw_e2e_resolve_entrypoint)\"
     mock_port=44081

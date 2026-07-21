@@ -103,7 +103,7 @@ async function configureDiscordSmoke(params: {
       lane: params.lane,
       cliPath: params.cliPath,
       env: gatewayEnv,
-      logPath: join(params.cwd, `.openclaw/logs/${params.lane.name}-discord-gateway.log`),
+      logPath: join(params.cwd, `.grokbot/logs/${params.lane.name}-discord-gateway.log`),
     });
     if (params.gatewayHolder) {
       params.gatewayHolder.current = gateway;
@@ -212,8 +212,8 @@ export function dashboardHtmlMarkerStatus(html: string): {
   ready: boolean;
   title: boolean;
 } {
-  const title = html.includes("<title>OpenClaw Control</title>");
-  const app = html.includes("<openclaw-app></openclaw-app>");
+  const title = html.includes("<title>GrokBot Control</title>");
+  const app = html.includes("<grokbot-app></grokbot-app>");
   return { app, ready: title && app, title };
 }
 

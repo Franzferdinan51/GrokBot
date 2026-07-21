@@ -1,6 +1,6 @@
 import type { DatabaseSync } from "node:sqlite";
-import { isRecord as isPlainRecord } from "@openclaw/normalization-core/record-coerce";
-import type { DB as OpenClawStateKyselyDatabase } from "../state/openclaw-state-db.generated.js";
+import { isRecord as isPlainRecord } from "@grokbot/normalization-core/record-coerce";
+import type { DB as OpenClawStateKyselyDatabase } from "../state/grokbot-state-db.generated.js";
 import {
   executeSqliteQuerySync,
   executeSqliteQueryTakeFirstSync,

@@ -1,5 +1,5 @@
-// Diagnostics Otel plugin entrypoint registers its OpenClaw integration.
-import { definePluginEntry } from "openclaw/plugin-sdk/plugin-entry";
+// Diagnostics Otel plugin entrypoint registers its GrokBot integration.
+import { definePluginEntry } from "grokbot/plugin-sdk/plugin-entry";
 import { createDiagnosticsOtelService } from "./runtime-api.js";
 
 export default definePluginEntry({

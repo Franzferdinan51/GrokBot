@@ -13,7 +13,7 @@ import { isRecord } from "./legacy-config-record-shared.js";
 const MCP_SERVER_TYPE_RULE: LegacyConfigRule = {
   path: ["mcp", "servers"],
   message:
-    'mcp.servers entries use OpenClaw transport names; CLI-native type aliases are legacy here. Run "openclaw doctor --fix".',
+    'mcp.servers entries use GrokBot transport names; CLI-native type aliases are legacy here. Run "grokbot doctor --fix".',
   match: (value) =>
     isRecord(value) &&
     Object.values(value).some((server) => isRecord(server) && isKnownCliMcpTypeAlias(server.type)),
@@ -26,7 +26,7 @@ const MCP_SERVER_DISABLED_RULES: LegacyConfigRule[] = [
   path,
   message:
     `${path.join(".")} entries use the unsupported "disabled" key; use "enabled" with the inverse boolean value. ` +
-    'Run "openclaw doctor --fix" to migrate it.',
+    'Run "grokbot doctor --fix" to migrate it.',
   match: (value) =>
     isRecord(value) &&
     Object.values(value).some((server) => isRecord(server) && typeof server.disabled === "boolean"),
@@ -37,7 +37,7 @@ const MCP_SERVER_TIMEOUT_ALIASES_RULES: LegacyConfigRule[] = [
   ["nodeHost", "mcp", "servers"],
 ].map((path) => ({
   path,
-  message: `${path.join(".")} timeout aliases were retired; use connectionTimeoutMs and requestTimeoutMs. Run "openclaw doctor --fix".`,
+  message: `${path.join(".")} timeout aliases were retired; use connectionTimeoutMs and requestTimeoutMs. Run "grokbot doctor --fix".`,
   match: (value) =>
     isRecord(value) &&
     Object.values(value).some(

@@ -23,23 +23,23 @@ const ROOT_COMMANDS_HINT =
   "Hint: commands suffixed with * have subcommands. Run <command> --help for details.";
 
 const EXAMPLES = [
-  ["openclaw onboard", "Run guided setup for a local Gateway, workspace, auth, and channels."],
-  ["openclaw setup", "Create the baseline config, workspace, and session folders."],
-  ["openclaw configure", "Change models, Gateway, channels, plugins, skills, and health checks."],
-  ["openclaw status", "Check Gateway, channel, model, and recent-session status."],
-  ["openclaw doctor --fix", "Repair common config, service, plugin, and channel problems."],
-  ["openclaw channels add", "Add or update a chat channel account with guided prompts."],
-  ["openclaw channels status", "See connected messaging accounts and login state."],
-  ["openclaw --dev gateway", "Run a dev Gateway (isolated state/config) on ws://127.0.0.1:19001."],
-  ["openclaw gateway run --force", "Start the Gateway and replace anything bound to its port."],
-  ["openclaw models status", "Show model/provider auth health before running agents."],
-  ["openclaw plugins list", "Inspect enabled, disabled, and installed plugins."],
+  ["grokbot onboard", "Run guided setup for a local Gateway, workspace, auth, and channels."],
+  ["grokbot setup", "Create the baseline config, workspace, and session folders."],
+  ["grokbot configure", "Change models, Gateway, channels, plugins, skills, and health checks."],
+  ["grokbot status", "Check Gateway, channel, model, and recent-session status."],
+  ["grokbot doctor --fix", "Repair common config, service, plugin, and channel problems."],
+  ["grokbot channels add", "Add or update a chat channel account with guided prompts."],
+  ["grokbot channels status", "See connected messaging accounts and login state."],
+  ["grokbot --dev gateway", "Run a dev Gateway (isolated state/config) on ws://127.0.0.1:19001."],
+  ["grokbot gateway run --force", "Start the Gateway and replace anything bound to its port."],
+  ["grokbot models status", "Show model/provider auth health before running agents."],
+  ["grokbot plugins list", "Inspect enabled, disabled, and installed plugins."],
   [
-    'openclaw agent --to +15555550123 --message "Run summary" --deliver',
+    'grokbot agent --to +15555550123 --message "Run summary" --deliver',
     "Run one agent turn through the Gateway and optionally deliver the reply.",
   ],
   [
-    'openclaw message send --channel telegram --target @mychat --message "Hi"',
+    'grokbot message send --channel telegram --target @mychat --message "Hi"',
     "Send via your Telegram bot.",
   ],
 ] as const;
@@ -81,11 +81,11 @@ export function configureProgramHelp(
     )
     .option(
       "--dev",
-      "Dev profile: isolate state under ~/.openclaw-dev, default gateway port 19001, and shift derived ports (browser/canvas)",
+      "Dev profile: isolate state under ~/.grokbot-dev, default gateway port 19001, and shift derived ports (browser/canvas)",
     )
     .option(
       "--profile <name>",
-      "Use a named profile (isolates OPENCLAW_STATE_DIR/OPENCLAW_CONFIG_PATH under ~/.openclaw-<name>)",
+      "Use a named profile (isolates OPENCLAW_STATE_DIR/OPENCLAW_CONFIG_PATH under ~/.grokbot-<name>)",
     )
     .option(
       "--log-level <level>",
@@ -122,7 +122,7 @@ export function configureProgramHelp(
   if (isRootVersionInvocation(process.argv)) {
     const commit = resolveCommitHash({ moduleUrl: import.meta.url });
     console.log(
-      commit ? `OpenClaw ${ctx.programVersion} (${commit})` : `OpenClaw ${ctx.programVersion}`,
+      commit ? `GrokBot ${ctx.programVersion} (${commit})` : `GrokBot ${ctx.programVersion}`,
     );
     process.exit(0);
   }
@@ -144,7 +144,7 @@ export function configureProgramHelp(
     if (command !== program) {
       return "";
     }
-    const docs = formatDocsLink("/cli", "docs.openclaw.ai/cli");
+    const docs = formatDocsLink("/cli", "docs.grokbot.ai/cli");
     return `\n${theme.heading("Examples:")}\n${fmtExamples}\n\n${theme.muted("Docs:")} ${docs}\n`;
   });
 }

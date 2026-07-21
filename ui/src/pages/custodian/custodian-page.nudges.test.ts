@@ -531,7 +531,7 @@ describe("custodian page nudges", () => {
       question: {
         id: "access",
         header: "Access",
-        question: "How should OpenClaw work?",
+        question: "How should GrokBot work?",
         options: [{ label: "Full access" }, { label: "Ask first" }],
         isOther: false,
       },
@@ -553,7 +553,7 @@ describe("custodian page nudges", () => {
     await page.updateComplete;
 
     expect(request).toHaveBeenCalledOnce();
-    expect(page.querySelector("openclaw-option-card")).not.toBeNull();
+    expect(page.querySelector("grokbot-option-card")).not.toBeNull();
   });
 
   it("does not send an event nudge while a non-card hosted wizard step awaits input", async () => {
@@ -580,7 +580,7 @@ describe("custodian page nudges", () => {
     await page.updateComplete;
 
     expect(request).toHaveBeenCalledOnce();
-    expect(page.querySelector("openclaw-option-card")).toBeNull();
+    expect(page.querySelector("grokbot-option-card")).toBeNull();
   });
 
   it("keeps nudges blocked after an uncertain question reply and rejected retry", async () => {
@@ -593,7 +593,7 @@ describe("custodian page nudges", () => {
         question: {
           id: "access",
           header: "Access",
-          question: "How should OpenClaw work?",
+          question: "How should GrokBot work?",
           options: [{ label: "Full access" }, { label: "Ask first" }],
           isOther: false,
         },
@@ -618,7 +618,7 @@ describe("custodian page nudges", () => {
     await waitForFast(() => expect(request).toHaveBeenCalledTimes(2));
     await waitForFast(() => expect(page.querySelector('[role="alert"]')).not.toBeNull());
     expect(page.querySelector('[role="alert"] button')).toBeNull();
-    expect(page.querySelector("openclaw-option-card")).toBeNull();
+    expect(page.querySelector("grokbot-option-card")).toBeNull();
     const action = page.querySelector<HTMLButtonElement>(".custodian__nudge-action")!;
     expect(action.disabled).toBe(true);
     action.click();
@@ -649,7 +649,7 @@ describe("custodian page nudges", () => {
         question: {
           id: "access",
           header: "Access",
-          question: "How should OpenClaw work?",
+          question: "How should GrokBot work?",
           options: [{ label: "Full access" }, { label: "Ask first" }],
           isOther: false,
         },
@@ -672,7 +672,7 @@ describe("custodian page nudges", () => {
 
     await waitForFast(() => expect(page.querySelector('[role="alert"]')).not.toBeNull());
     await page.updateComplete;
-    expect(page.querySelector("openclaw-option-card")).not.toBeNull();
+    expect(page.querySelector("grokbot-option-card")).not.toBeNull();
     expect(page.querySelector<HTMLButtonElement>(".custodian__nudge-action")!.disabled).toBe(true);
   });
 
@@ -686,7 +686,7 @@ describe("custodian page nudges", () => {
         question: {
           id: "access",
           header: "Access",
-          question: "How should OpenClaw work?",
+          question: "How should GrokBot work?",
           options: [{ label: "Full access" }, { label: "Ask first" }],
           isOther: true,
         },
@@ -733,7 +733,7 @@ describe("custodian page nudges", () => {
         question: {
           id: "access",
           header: "Access",
-          question: "How should OpenClaw work?",
+          question: "How should GrokBot work?",
           options: [{ label: "Full access" }, { label: "Ask first" }],
           isOther: false,
         },

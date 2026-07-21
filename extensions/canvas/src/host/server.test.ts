@@ -5,7 +5,7 @@ import os from "node:os";
 import path from "node:path";
 import type { Duplex } from "node:stream";
 import vm from "node:vm";
-import { defaultRuntime } from "openclaw/plugin-sdk/runtime-env";
+import { defaultRuntime } from "grokbot/plugin-sdk/runtime-env";
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { A2UI_PATH, CANVAS_HOST_PATH, CANVAS_WS_PATH, injectCanvasRuntime } from "./a2ui-shared.js";
 
@@ -244,7 +244,7 @@ describe("canvas host", () => {
     ({ createCanvasHostHandler, startCanvasHost } = serverModule);
     const wsModule = await vi.importActual<typeof import("ws")>("ws");
     WebSocketServerClass = wsModule.WebSocketServer;
-    fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-canvas-fixtures-"));
+    fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-canvas-fixtures-"));
   });
 
   beforeEach(() => {
@@ -268,8 +268,8 @@ describe("canvas host", () => {
     expect(out).toContain("openclawSendUserAction");
     expect(out).toContain("crypto?.getRandomValues");
     expect(out).not.toContain("String(Date.now())");
-    expect(out.indexOf("globalThis.OpenClaw.postMessage")).toBeGreaterThan(out.indexOf("<head>"));
-    expect(out.indexOf("globalThis.OpenClaw.postMessage")).toBeLessThan(
+    expect(out.indexOf("globalThis.GrokBot.postMessage")).toBeGreaterThan(out.indexOf("<head>"));
+    expect(out.indexOf("globalThis.GrokBot.postMessage")).toBeLessThan(
       out.indexOf(authoredScript),
     );
   });
@@ -290,8 +290,8 @@ describe("canvas host", () => {
       `${comment}\n${head}<script>${authoredScript}</script><body>Hello</body>`,
     );
 
-    expect(out.indexOf("globalThis.OpenClaw.postMessage")).toBeGreaterThan(out.indexOf(head));
-    expect(out.indexOf("globalThis.OpenClaw.postMessage")).toBeLessThan(
+    expect(out.indexOf("globalThis.GrokBot.postMessage")).toBeGreaterThan(out.indexOf(head));
+    expect(out.indexOf("globalThis.GrokBot.postMessage")).toBeLessThan(
       out.indexOf(authoredScript),
     );
     expect(out.slice(0, out.indexOf(head))).toBe(`${comment}\n`);
@@ -304,7 +304,7 @@ describe("canvas host", () => {
     const { consoleError } = runInjectedScript(ThrowingWebSocket);
 
     expect(consoleError).toHaveBeenCalledTimes(1);
-    expect(consoleError).toHaveBeenCalledWith("OpenClaw canvas live reload unavailable");
+    expect(consoleError).toHaveBeenCalledWith("GrokBot canvas live reload unavailable");
   });
 
   it("reports asynchronous websocket connection errors once", () => {
@@ -411,7 +411,7 @@ describe("canvas host", () => {
   });
 
   it("watches Canvas content when the state directory is hidden", async () => {
-    const dir = path.join(fixtureRoot, ".openclaw", `case-${fixtureCount++}`);
+    const dir = path.join(fixtureRoot, ".grokbot", `case-${fixtureCount++}`);
     await fs.mkdir(dir, { recursive: true });
     const handler = await createTestCanvasHostHandler(dir);
 
@@ -649,7 +649,7 @@ describe("canvas host", () => {
       await fs.mkdir(nestedAssetDir, { recursive: true });
       await fs.writeFile(
         path.join(a2uiRoot, "index.html"),
-        `<openclaw-a2ui-host></openclaw-a2ui-host>
+        `<grokbot-a2ui-host></grokbot-a2ui-host>
 <script>openclawCanvasA2UIAction</script>`,
         "utf8",
       );
@@ -661,7 +661,7 @@ describe("canvas host", () => {
       const res = await captureA2uiFixtureResponse(`${A2UI_PATH}/`);
       const html = res.body;
       expect(res.status).toBe(200);
-      expect(html).toContain("openclaw-a2ui-host");
+      expect(html).toContain("grokbot-a2ui-host");
       expect(html).toContain("openclawCanvasA2UIAction");
 
       const noReloadRes = await captureA2uiFixtureResponse(`${A2UI_PATH}/`, "GET", false);

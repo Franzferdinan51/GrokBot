@@ -4,8 +4,8 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { formatErrorMessage } from "grokbot/plugin-sdk/error-runtime";
 import {
   QA_EVIDENCE_FILENAME,
   type QaEvidenceSummaryJson,
@@ -95,7 +95,7 @@ async function createFixturePlugin(root: string) {
   const realtimeCallsPath = path.join(root, "realtime-calls.jsonl");
   await fs.mkdir(pluginDir, { recursive: true });
   await fs.writeFile(
-    path.join(pluginDir, "openclaw.plugin.json"),
+    path.join(pluginDir, "grokbot.plugin.json"),
     `${JSON.stringify(
       {
         id: FIXTURE_PLUGIN_ID,
@@ -306,7 +306,7 @@ async function waitForWebchatAudio(params: {
 }
 
 async function runWebchatAutoTtsProof(options: ProducerOptions): Promise<string> {
-  const fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-webchat-tts-"));
+  const fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-webchat-tts-"));
   const fixture = await createFixturePlugin(fixtureRoot);
   const mock = await startQaMockOpenAiServer();
   let gateway: Awaited<ReturnType<typeof startQaGatewayChild>> | undefined;
@@ -462,7 +462,7 @@ async function waitForQueuedTalkSteer(client: GatewayClient, sessionKey: string)
 }
 
 async function runActiveTalkAgentRunProof(options: ProducerOptions): Promise<string> {
-  const fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-active-talk-"));
+  const fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-active-talk-"));
   const fixture = await createFixturePlugin(fixtureRoot);
   const mock = await startQaMockOpenAiServer({ finalOnlyMarkerPauseMs: 60_000 });
   let gateway: Awaited<ReturnType<typeof startQaGatewayChild>> | undefined;

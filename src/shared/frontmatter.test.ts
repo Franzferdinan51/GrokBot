@@ -44,7 +44,7 @@ describe("shared/frontmatter", () => {
     expect(
       resolveOpenClawManifestBlock({
         frontmatter: {
-          metadata: "{ openclaw: { foo: 1, bar: 'baz' } }",
+          metadata: "{ grokbot: { foo: 1, bar: 'baz' } }",
         },
       }),
     ).toEqual({ foo: 1, bar: "baz" });
@@ -52,7 +52,7 @@ describe("shared/frontmatter", () => {
     expect(
       resolveOpenClawManifestBlock({
         frontmatter: {
-          pluginMeta: "{ openclaw: { foo: 2 } }",
+          pluginMeta: "{ grokbot: { foo: 2 } }",
         },
         key: "pluginMeta",
       }),
@@ -74,7 +74,7 @@ describe("shared/frontmatter", () => {
       resolveOpenClawManifestBlock({
         frontmatter: {
           metadata:
-            "{ openclaw: { requires: { bins: ['current'] } }, clawdbot: { requires: { bins: ['legacy'] } } }",
+            "{ grokbot: { requires: { bins: ['current'] } }, clawdbot: { requires: { bins: ['legacy'] } } }",
         },
       }),
     ).toEqual({ requires: { bins: ["current"] } });

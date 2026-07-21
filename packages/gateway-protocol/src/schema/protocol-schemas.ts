@@ -386,7 +386,7 @@ import {
   SystemAgentSetupDetectResultSchema,
   SystemAgentSetupVerifyParamsSchema,
   SystemAgentSetupVerifyResultSchema,
-} from "./openclaw.js";
+} from "./grokbot.js";
 import {
   PluginApprovalRequestParamsSchema,
   PluginApprovalResolveParamsSchema,

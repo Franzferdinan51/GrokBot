@@ -46,7 +46,7 @@ export async function prepareEmbeddedRunAuthPlan(params: {
   const runParams = params.runParams;
   const usesOpenAIAuthRouting = params.provider === OPENAI_PROVIDER_ID;
   const initialHarness = params.getAgentHarness();
-  const initialPluginHarnessOwnsTransport = initialHarness.id !== "openclaw";
+  const initialPluginHarnessOwnsTransport = initialHarness.id !== "grokbot";
   const openClawNativeCodexResponsesNeedsAuthBootstrap =
     !initialPluginHarnessOwnsTransport &&
     usesOpenAIAuthRouting &&

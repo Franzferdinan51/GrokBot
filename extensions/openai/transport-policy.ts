@@ -4,9 +4,9 @@ import type {
   ProviderResolveWebSocketSessionPolicyContext,
   ProviderTransportTurnState,
   ProviderWebSocketSessionPolicy,
-} from "openclaw/plugin-sdk/plugin-entry";
-import { normalizeProviderId } from "openclaw/plugin-sdk/provider-model-shared";
-import { normalizeLowercaseStringOrEmpty } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/plugin-entry";
+import { normalizeProviderId } from "grokbot/plugin-sdk/provider-model-shared";
+import { normalizeLowercaseStringOrEmpty } from "grokbot/plugin-sdk/string-coerce-runtime";
 import { isOpenAIApiBaseUrl, isOpenAICodexBaseUrl } from "./base-url.js";
 
 const DEFAULT_OPENAI_WS_DEGRADE_COOLDOWN_MS = 60_000;
@@ -57,7 +57,7 @@ function resolveSessionHeaders(params: {
   }
   return {
     "x-client-request-id": sessionId,
-    "x-openclaw-session-id": sessionId,
+    "x-grokbot-session-id": sessionId,
   };
 }
 
@@ -79,11 +79,11 @@ export function resolveOpenAITransportTurnState(
   return {
     headers: {
       ...sessionHeaders,
-      "x-openclaw-turn-id": turnId,
-      "x-openclaw-turn-attempt": attempt,
+      "x-grokbot-turn-id": turnId,
+      "x-grokbot-turn-attempt": attempt,
     },
     metadata: {
-      openclaw_session_id: sessionHeaders["x-openclaw-session-id"] ?? "",
+      openclaw_session_id: sessionHeaders["x-grokbot-session-id"] ?? "",
       openclaw_turn_id: turnId,
       openclaw_turn_attempt: attempt,
       openclaw_transport: ctx.transport,

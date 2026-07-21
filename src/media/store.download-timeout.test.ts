@@ -10,7 +10,7 @@ import { createPinnedLookup } from "../infra/net/ssrf.js";
 import {
   createOpenClawTestState,
   type OpenClawTestState,
-} from "../test-utils/openclaw-test-state.js";
+} from "../test-utils/grokbot-test-state.js";
 import { setMediaStoreDownloadDepsForTest } from "./store.download.js";
 import { saveMediaSource } from "./store.js";
 
@@ -140,7 +140,7 @@ describe("media store download timeouts", () => {
   beforeAll(async () => {
     testState = await createOpenClawTestState({
       layout: "state-only",
-      prefix: "openclaw-media-store-download-timeout-",
+      prefix: "grokbot-media-store-download-timeout-",
     });
     mediaRoot = path.join(testState.stateDir, "media");
     openSockets = new Set();

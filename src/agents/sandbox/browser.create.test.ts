@@ -48,7 +48,7 @@ const runtimeMocks = vi.hoisted(() => ({
 const tmpDirs: string[] = [];
 
 function makeTempDir(): string {
-  const dir = mkdtempSync(path.join(os.tmpdir(), "openclaw-browser-mounts-"));
+  const dir = mkdtempSync(path.join(os.tmpdir(), "grokbot-browser-mounts-"));
   tmpDirs.push(dir);
   return dir;
 }
@@ -83,7 +83,7 @@ vi.mock("../../plugin-sdk/browser-profiles.js", () => ({
   DEFAULT_BROWSER_ACTION_TIMEOUT_MS: 60_000,
   DEFAULT_BROWSER_EVALUATE_ENABLED: true,
   DEFAULT_OPENCLAW_BROWSER_COLOR: "#FF4500",
-  DEFAULT_OPENCLAW_BROWSER_PROFILE_NAME: "openclaw",
+  DEFAULT_OPENCLAW_BROWSER_PROFILE_NAME: "grokbot",
   resolveProfile: (
     resolved: { cdpHost: string; cdpIsLoopback: boolean; profiles?: Record<string, unknown> },
     profileName: string,
@@ -103,7 +103,7 @@ vi.mock("../../plugin-sdk/browser-profiles.js", () => ({
       cdpHost: resolved.cdpHost,
       cdpIsLoopback: resolved.cdpIsLoopback,
       color: profile.color ?? "#FF4500",
-      driver: "openclaw",
+      driver: "grokbot",
       attachOnly: true,
     };
   },
@@ -121,10 +121,10 @@ function buildConfig(enableNoVnc: boolean): SandboxConfig {
     backend: "docker",
     scope: "session",
     workspaceAccess: "none",
-    workspaceRoot: "/tmp/openclaw-sandboxes",
+    workspaceRoot: "/tmp/grokbot-sandboxes",
     docker: {
-      image: "openclaw-sandbox:bookworm-slim",
-      containerPrefix: "openclaw-sbx-",
+      image: "grokbot-sandbox:bookworm-slim",
+      containerPrefix: "grokbot-sbx-",
       workdir: "/workspace",
       readOnlyRoot: true,
       tmpfs: ["/tmp", "/var/tmp", "/run"],
@@ -134,15 +134,15 @@ function buildConfig(enableNoVnc: boolean): SandboxConfig {
     },
     ssh: {
       command: "ssh",
-      workspaceRoot: "/tmp/openclaw-sandboxes",
+      workspaceRoot: "/tmp/grokbot-sandboxes",
       strictHostKeyChecking: true,
       updateHostKeys: true,
     },
     browser: {
       enabled: true,
-      image: "openclaw-sandbox-browser:bookworm-slim",
-      containerPrefix: "openclaw-sbx-browser-",
-      network: "openclaw-sandbox-browser",
+      image: "grokbot-sandbox-browser:bookworm-slim",
+      containerPrefix: "grokbot-sbx-browser-",
+      network: "grokbot-sandbox-browser",
       cdpPort: 9222,
       vncPort: 5900,
       noVncPort: 6080,
@@ -309,7 +309,7 @@ describe("ensureSandboxBrowser create args", () => {
         cfg: buildConfig(false),
       }),
     ).rejects.toThrow(
-      "Sandbox browser image openclaw-sandbox-browser:bookworm-slim is stale or incompatible",
+      "Sandbox browser image grokbot-sandbox-browser:bookworm-slim is stale or incompatible",
     );
 
     expect(findDockerArgsCall(dockerMocks.execDocker.mock.calls, "create")).toBeUndefined();
@@ -321,7 +321,7 @@ describe("ensureSandboxBrowser create args", () => {
       "utf8",
     );
     const label = dockerfile.match(
-      /^LABEL org\.openclaw\.sandbox-browser\.contract="([^"]+)"$/m,
+      /^LABEL org\.grokbot\.sandbox-browser\.contract="([^"]+)"$/m,
     )?.[1];
 
     expect(label).toBe(SANDBOX_BROWSER_IMAGE_CONTRACT_EPOCH);
@@ -360,7 +360,7 @@ describe("ensureSandboxBrowser create args", () => {
 
     const createArgs = requireDockerCreateArgs();
     expect(createArgs.filter((arg) => arg === "--init")).toHaveLength(1);
-    expect(createArgs).toContain(`openclaw.createArgsEpoch=${SANDBOX_DOCKER_CREATE_ARGS_EPOCH}`);
+    expect(createArgs).toContain(`grokbot.createArgsEpoch=${SANDBOX_DOCKER_CREATE_ARGS_EPOCH}`);
   });
 
   it("recreates a cold browser container when the shared args epoch changes", async () => {
@@ -375,7 +375,7 @@ describe("ensureSandboxBrowser create args", () => {
     registryMocks.readBrowserRegistry.mockResolvedValue({
       entries: [
         {
-          containerName: "openclaw-sbx-browser-session-test-0661d10a",
+          containerName: "grokbot-sbx-browser-session-test-0661d10a",
           sessionKey: "session:test",
           createdAtMs: 1,
           lastUsedAtMs: 0,
@@ -386,7 +386,7 @@ describe("ensureSandboxBrowser create args", () => {
       ],
     });
     BROWSER_BRIDGES.set("session:test", {
-      containerName: "openclaw-sbx-browser-session-test-0661d10a",
+      containerName: "grokbot-sbx-browser-session-test-0661d10a",
       bridge: { server: { listening: true } },
     });
 
@@ -398,7 +398,7 @@ describe("ensureSandboxBrowser create args", () => {
     });
 
     expect(dockerMocks.execDocker).toHaveBeenCalledWith(
-      ["rm", "-f", "openclaw-sbx-browser-session-test-0661d10a"],
+      ["rm", "-f", "grokbot-sbx-browser-session-test-0661d10a"],
       { allowFailure: true },
     );
     const rmCallIndex = dockerMocks.execDocker.mock.calls.findIndex(([args]) => args[0] === "rm");
@@ -420,7 +420,7 @@ describe("ensureSandboxBrowser create args", () => {
     registryMocks.readBrowserRegistry.mockResolvedValue({
       entries: [
         {
-          containerName: "openclaw-sbx-browser-session-test-0661d10a",
+          containerName: "grokbot-sbx-browser-session-test-0661d10a",
           sessionKey: "session:test",
           createdAtMs: 1,
           lastUsedAtMs: Date.now(),
@@ -442,7 +442,7 @@ describe("ensureSandboxBrowser create args", () => {
     expect(findDockerArgsCall(dockerMocks.execDocker.mock.calls, "create")).toBeUndefined();
     expect(runtimeMocks.log).toHaveBeenCalledWith(
       expect.stringContaining(
-        "Recreate to apply: openclaw sandbox recreate --browser --session session:test",
+        "Recreate to apply: grokbot sandbox recreate --browser --session session:test",
       ),
     );
     expect(registryMocks.updateBrowserRegistry.mock.calls.at(-1)?.[0]?.configHash).toBe(oldHash);
@@ -520,7 +520,7 @@ describe("ensureSandboxBrowser create args", () => {
     });
 
     const createArgs = requireDockerCreateArgs();
-    expect(createArgs).toContain(`openclaw.configHash=${expectedHash}`);
+    expect(createArgs).toContain(`grokbot.configHash=${expectedHash}`);
     expect(collectDockerFlagValues(createArgs, "--env")).toContain("GEMINI_API_KEY=dummy-gemini");
   });
 
@@ -591,7 +591,7 @@ describe("ensureSandboxBrowser create args", () => {
           headless: false,
           noSandbox: false,
           attachOnly: true,
-          defaultProfile: "openclaw",
+          defaultProfile: "grokbot",
           extraArgs: [],
           tabCleanup: {
             enabled: true,
@@ -600,7 +600,7 @@ describe("ensureSandboxBrowser create args", () => {
             sweepMinutes: 5,
           },
           profiles: {
-            openclaw: {
+            grokbot: {
               cdpPort: 49100,
               color: "#FF4500",
             },
@@ -611,7 +611,7 @@ describe("ensureSandboxBrowser create args", () => {
     };
     BROWSER_BRIDGES.set("session:test", {
       bridge: existingBridge,
-      containerName: "openclaw-sbx-browser-session-test-0661d10a",
+      containerName: "grokbot-sbx-browser-session-test-0661d10a",
       authToken: "test-bridge-token",
     });
     dockerMocks.dockerContainerState.mockResolvedValue({ exists: true, running: true });
@@ -655,7 +655,7 @@ describe("ensureSandboxBrowser create args", () => {
           headless: false,
           noSandbox: false,
           attachOnly: true,
-          defaultProfile: "openclaw",
+          defaultProfile: "grokbot",
           extraArgs: [],
           tabCleanup: {
             enabled: true,
@@ -664,7 +664,7 @@ describe("ensureSandboxBrowser create args", () => {
             sweepMinutes: 5,
           },
           profiles: {
-            openclaw: {
+            grokbot: {
               cdpPort: 49100,
               color: "#FF4500",
             },
@@ -674,7 +674,7 @@ describe("ensureSandboxBrowser create args", () => {
     };
     BROWSER_BRIDGES.set("session:test", {
       bridge: existingBridge,
-      containerName: "openclaw-sbx-browser-session-test-0661d10a",
+      containerName: "grokbot-sbx-browser-session-test-0661d10a",
       authToken: "test-bridge-token",
     });
     dockerMocks.dockerContainerState.mockResolvedValue({ exists: true, running: true });
@@ -734,7 +734,7 @@ describe("ensureSandboxBrowser create args", () => {
 
     const createArgs = findDockerArgsCall(dockerMocks.execDocker.mock.calls, "create");
     const labels = collectDockerFlagValues(createArgs ?? [], "--label");
-    expect(labels).toContain(`openclaw.mountFormatVersion=${SANDBOX_MOUNT_FORMAT_VERSION}`);
+    expect(labels).toContain(`grokbot.mountFormatVersion=${SANDBOX_MOUNT_FORMAT_VERSION}`);
   });
 
   it("force-removes the browser container when CDP never becomes reachable", async () => {
@@ -769,7 +769,7 @@ describe("ensureSandboxBrowser create args", () => {
     ).rejects.toThrow("hung container has been forcefully removed");
 
     expect(dockerMocks.execDocker).toHaveBeenCalledWith(
-      ["rm", "-f", "openclaw-sbx-browser-session-test-0661d10a"],
+      ["rm", "-f", "grokbot-sbx-browser-session-test-0661d10a"],
       { allowFailure: true },
     );
   });
@@ -927,8 +927,8 @@ describe("ensureSandboxBrowser create args", () => {
       string,
       { cdpPort?: number; cdpUrl?: string }
     >;
-    expect(profiles.openclaw?.cdpPort).toBe(49100);
-    expect(profiles.openclaw?.cdpUrl).toBe(`http://openclaw:${token}@127.0.0.1:49100`);
+    expect(profiles.grokbot?.cdpPort).toBe(49100);
+    expect(profiles.grokbot?.cdpUrl).toBe(`http://grokbot:${token}@127.0.0.1:49100`);
   });
 
   it("passes explicit cdpSourceRange as an additional relay filter", async () => {
@@ -959,14 +959,14 @@ describe("ensureSandboxBrowser create args", () => {
     });
 
     expect(dockerMocks.execDocker).toHaveBeenCalledWith(
-      ["rm", "-f", "openclaw-sbx-browser-session-test-0661d10a"],
+      ["rm", "-f", "grokbot-sbx-browser-session-test-0661d10a"],
       { allowFailure: true },
     );
     requireDockerCreateArgs();
   });
 
   it("retains a stale container and cached bridge until bridge cleanup can retry", async () => {
-    const containerName = "openclaw-sbx-browser-session-test-0661d10a";
+    const containerName = "grokbot-sbx-browser-session-test-0661d10a";
     const cached = {
       containerName,
       bridge: { server: { listening: true } },

@@ -1,7 +1,7 @@
 // Slack tests cover prepare thread context plugin behavior.
 import type { App } from "@slack/bolt";
-import { resolveEnvelopeFormatOptions } from "openclaw/plugin-sdk/channel-inbound";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import { resolveEnvelopeFormatOptions } from "grokbot/plugin-sdk/channel-inbound";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import type { SlackMessageEvent } from "../../types.js";
 import * as mediaModule from "../media.js";
@@ -13,7 +13,7 @@ import {
 } from "./prepare.test-helpers.js";
 
 describe("resolveSlackThreadContextData", () => {
-  const storeFixture = createSlackSessionStoreFixture("openclaw-slack-thread-context-");
+  const storeFixture = createSlackSessionStoreFixture("grokbot-slack-thread-context-");
 
   beforeAll(() => {
     storeFixture.setup();

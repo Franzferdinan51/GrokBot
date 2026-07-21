@@ -6,7 +6,7 @@ import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { GATEWAY_CLIENT_IDS } from "../../../packages/gateway-protocol/src/client-info.js";
-import { closeOpenClawStateDatabaseForTest } from "../../state/openclaw-state-db.js";
+import { closeOpenClawStateDatabaseForTest } from "../../state/grokbot-state-db.js";
 import { ExecApprovalManager } from "../exec-approval-manager.js";
 import {
   bindApprovalReviewerDeviceIds,
@@ -1261,7 +1261,7 @@ describe("handlePendingApprovalRequest", () => {
   });
 
   it("releases run-aborted waiters without changing timeout terminal state", async () => {
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-approval-wait-terminal-"));
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-approval-wait-terminal-"));
     const manager = new ExecApprovalManager({
       approvalKind: "exec",
       persistence: {
@@ -1677,7 +1677,7 @@ describe("handlePendingApprovalRequest", () => {
   });
 
   it("sanitizes durable registration failures while retaining server diagnostics", () => {
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-approval-register-failure-"));
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-approval-register-failure-"));
     const databasePath = path.join(tempDir, "state.sqlite");
     fs.mkdirSync(databasePath);
     const manager = new ExecApprovalManager({
@@ -1716,7 +1716,7 @@ describe("handlePendingApprovalRequest", () => {
 
   it("sanitizes a no-route storage failure while failing the waiter closed", async () => {
     hasApprovalTurnSourceRouteMock.mockReturnValueOnce(false);
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-approval-route-failure-"));
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-approval-route-failure-"));
     const databasePath = path.join(tempDir, "state.sqlite");
     const manager = new ExecApprovalManager({
       approvalKind: "exec",
@@ -1770,7 +1770,7 @@ describe("handlePendingApprovalRequest", () => {
   });
 
   it("sanitizes durable resolve failures while failing the waiter closed", async () => {
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-approval-resolve-failure-"));
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-approval-resolve-failure-"));
     const databasePath = path.join(tempDir, "state.sqlite");
     const manager = new ExecApprovalManager({
       approvalKind: "exec",

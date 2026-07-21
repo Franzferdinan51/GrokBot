@@ -1,7 +1,7 @@
 {
   "id": "memory-lancedb",
   "name": "Memory LanceDB",
-  "description": "OpenClaw LanceDB-backed long-term memory plugin with auto-recall, auto-capture, and vector search.",
+  "description": "GrokBot LanceDB-backed long-term memory plugin with auto-recall, auto-capture, and vector search.",
   "catalog": { "featured": true, "order": 70 },
   "commandAliases": [{ "name": "ltm" }],
   "activation": {
@@ -43,7 +43,7 @@
     },
     "dbPath": {
       "label": "Database Path",
-      "placeholder": "~/.openclaw/memory/lancedb",
+      "placeholder": "~/.grokbot/memory/lancedb",
       "advanced": true
     },
     "autoCapture": {

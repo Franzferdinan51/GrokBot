@@ -11,16 +11,16 @@ import {
   runSqliteDeferredTransactionSync,
   runSqliteImmediateTransactionSync,
 } from "../infra/sqlite-transaction.js";
-import { OPENCLAW_AGENT_BOARD_SCHEMA_SQL } from "../state/openclaw-agent-board-schema.js";
-import { withOpenClawAgentDatabaseReadOnly } from "../state/openclaw-agent-db-readonly.js";
-import type { DB as OpenClawAgentKyselyDatabase } from "../state/openclaw-agent-db.generated.js";
+import { OPENCLAW_AGENT_BOARD_SCHEMA_SQL } from "../state/grokbot-agent-board-schema.js";
+import { withOpenClawAgentDatabaseReadOnly } from "../state/grokbot-agent-db-readonly.js";
+import type { DB as OpenClawAgentKyselyDatabase } from "../state/grokbot-agent-db.generated.js";
 import {
   listOpenClawRegisteredAgentDatabases,
   openOpenClawAgentDatabase,
   resolveOpenClawAgentSqlitePath,
   runOpenClawAgentWriteTransaction,
   type OpenClawAgentDatabase,
-} from "../state/openclaw-agent-db.js";
+} from "../state/grokbot-agent-db.js";
 import { normalizeBoardWidgetDeclared } from "./board-capabilities.js";
 import { applyBoardOps, BoardValidationError, normalizeBoardLayout } from "./board-layout.js";
 import {

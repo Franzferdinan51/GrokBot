@@ -2,7 +2,7 @@
 summary: "Volcano Engine setup (Doubao models, coding endpoints, and Seed Speech TTS)"
 title: "Volcengine (Doubao)"
 read_when:
-  - You want to use Volcano Engine or Doubao models with OpenClaw
+  - You want to use Volcano Engine or Doubao models with GrokBot
   - You need the Volcengine API key setup
   - You want to use Volcengine Speech text-to-speech
 ---
@@ -23,7 +23,7 @@ The Volcengine provider gives access to Doubao models and third-party models hos
     Run interactive onboarding:
 
     ```bash
-    openclaw onboard --auth-choice volcengine-api-key
+    grokbot onboard --auth-choice volcengine-api-key
     ```
 
     This registers both the general (`volcengine`) and coding (`volcengine-plan`) providers from a single API key.
@@ -42,8 +42,8 @@ The Volcengine provider gives access to Doubao models and third-party models hos
   </Step>
   <Step title="Verify the model is available">
     ```bash
-    openclaw models list --provider volcengine
-    openclaw models list --provider volcengine-plan
+    grokbot models list --provider volcengine
+    grokbot models list --provider volcengine-plan
     ```
   </Step>
 </Steps>
@@ -52,7 +52,7 @@ The Volcengine provider gives access to Doubao models and third-party models hos
 For non-interactive setup (CI, scripting), pass the key directly:
 
 ```bash
-openclaw onboard --non-interactive \
+grokbot onboard --non-interactive \
   --mode local \
   --auth-choice volcengine-api-key \
   --volcengine-api-key "$VOLCANO_ENGINE_API_KEY"
@@ -102,7 +102,7 @@ export VOLCENGINE_TTS_API_KEY="byteplus_seed_speech_api_key"
 export VOLCENGINE_TTS_RESOURCE_ID="seed-tts-1.0"
 ```
 
-Then enable it in `openclaw.json`:
+Then enable it in `grokbot.json`:
 
 ```json5
 {
@@ -124,7 +124,7 @@ Then enable it in `openclaw.json`:
 
 Available fields under `messages.tts.providers.volcengine`: `apiKey`, `voice`, `speedRatio` (0.2-3.0), `emotion`, `cluster`, `resourceId`, `appKey`, and `baseUrl`. `!emotion=<value>` also works as an inline voice directive when voice-setting overrides are allowed.
 
-For voice-note targets, OpenClaw requests provider-native `ogg_opus`. For normal audio attachments, it requests `mp3`. Provider aliases `bytedance` and `doubao` also resolve to this speech provider.
+For voice-note targets, GrokBot requests provider-native `ogg_opus`. For normal audio attachments, it requests `mp3`. Provider aliases `bytedance` and `doubao` also resolve to this speech provider.
 
 The default resource id is `seed-tts-1.0`, the entitlement BytePlus grants to newly created Seed Speech API keys by default. If your project has TTS 2.0 entitlement, set `VOLCENGINE_TTS_RESOURCE_ID=seed-tts-2.0`.
 
@@ -146,20 +146,20 @@ Other optional TTS env vars: `VOLCENGINE_TTS_VOICE`, `VOLCENGINE_TTS_APP_KEY`, a
 
 <AccordionGroup>
   <Accordion title="Default model after onboarding">
-    `openclaw onboard --auth-choice volcengine-api-key` sets `volcengine-plan/ark-code-latest` as the default model while also registering the general `volcengine` catalog.
+    `grokbot onboard --auth-choice volcengine-api-key` sets `volcengine-plan/ark-code-latest` as the default model while also registering the general `volcengine` catalog.
   </Accordion>
 
   <Accordion title="Model picker fallback behavior">
-    During onboarding/configure model selection, the Volcengine auth choice prefers both `volcengine/*` and `volcengine-plan/*` rows. If those models are not loaded yet, OpenClaw falls back to the unfiltered catalog instead of showing an empty provider-scoped picker.
+    During onboarding/configure model selection, the Volcengine auth choice prefers both `volcengine/*` and `volcengine-plan/*` rows. If those models are not loaded yet, GrokBot falls back to the unfiltered catalog instead of showing an empty provider-scoped picker.
   </Accordion>
 
   <Accordion title="Environment variables for daemon processes">
-    If the Gateway runs as a daemon (launchd/systemd), make sure model and TTS env vars such as `VOLCANO_ENGINE_API_KEY`, `VOLCENGINE_TTS_API_KEY`, `BYTEPLUS_SEED_SPEECH_API_KEY`, `VOLCENGINE_TTS_APPID`, and `VOLCENGINE_TTS_TOKEN` are available to that process (for example, in `~/.openclaw/.env` or via `env.shellEnv`).
+    If the Gateway runs as a daemon (launchd/systemd), make sure model and TTS env vars such as `VOLCANO_ENGINE_API_KEY`, `VOLCENGINE_TTS_API_KEY`, `BYTEPLUS_SEED_SPEECH_API_KEY`, `VOLCENGINE_TTS_APPID`, and `VOLCENGINE_TTS_TOKEN` are available to that process (for example, in `~/.grokbot/.env` or via `env.shellEnv`).
   </Accordion>
 </AccordionGroup>
 
 <Warning>
-When running OpenClaw as a background service, environment variables set in your interactive shell are not automatically inherited. See the daemon note above.
+When running GrokBot as a background service, environment variables set in your interactive shell are not automatically inherited. See the daemon note above.
 </Warning>
 
 ## Related
@@ -175,6 +175,6 @@ When running OpenClaw as a background service, environment variables set in your
     Common issues and debugging steps.
   </Card>
   <Card title="FAQ" href="/help/faq" icon="circle-question">
-    Frequently asked questions about OpenClaw setup.
+    Frequently asked questions about GrokBot setup.
   </Card>
 </CardGroup>

@@ -37,7 +37,7 @@ describe("renderChannelWizard", () => {
           step: {
             id: "copy-command",
             type: "note",
-            message: "openclaw channels add",
+            message: "grokbot channels add",
           },
           stepIndex: 1,
           busy: false,
@@ -63,7 +63,7 @@ describe("renderChannelWizard", () => {
     copy?.click();
 
     await vi.waitFor(() => expect(execCommand).toHaveBeenCalledWith("copy"));
-    expect(copiedText).toBe("openclaw channels add");
+    expect(copiedText).toBe("grokbot channels add");
     expect(document.querySelector("textarea")).toBeNull();
   });
 });

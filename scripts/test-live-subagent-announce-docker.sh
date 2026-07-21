@@ -12,10 +12,10 @@ fi
 TRUSTED_HARNESS_DIR="$(cd "$TRUSTED_HARNESS_DIR" && pwd)"
 source "$TRUSTED_HARNESS_DIR/scripts/lib/live-docker-auth.sh"
 
-IMAGE_NAME="${OPENCLAW_IMAGE:-openclaw:local}"
+IMAGE_NAME="${OPENCLAW_IMAGE:-grokbot:local}"
 LIVE_IMAGE_NAME="${OPENCLAW_LIVE_IMAGE:-${IMAGE_NAME}-live}"
-CONFIG_DIR="${OPENCLAW_CONFIG_DIR:-$HOME/.openclaw}"
-WORKSPACE_DIR="${OPENCLAW_WORKSPACE_DIR:-$HOME/.openclaw/workspace}"
+CONFIG_DIR="${OPENCLAW_CONFIG_DIR:-$HOME/.grokbot}"
+WORKSPACE_DIR="${OPENCLAW_WORKSPACE_DIR:-$HOME/.grokbot/workspace}"
 PROFILE_FILE="$(openclaw_live_default_profile_file)"
 DOCKER_USER="${OPENCLAW_DOCKER_USER:-node}"
 DOCKER_HOME_MOUNT=()
@@ -34,16 +34,16 @@ trap cleanup_temp_dirs EXIT
 if [[ -n "${OPENCLAW_DOCKER_CACHE_HOME_DIR:-}" ]]; then
   CACHE_HOME_DIR="${OPENCLAW_DOCKER_CACHE_HOME_DIR}"
 elif openclaw_live_is_ci; then
-  CACHE_HOME_DIR="$(mktemp -d "${RUNNER_TEMP:-/tmp}/openclaw-docker-cache.XXXXXX")"
+  CACHE_HOME_DIR="$(mktemp -d "${RUNNER_TEMP:-/tmp}/grokbot-docker-cache.XXXXXX")"
   TEMP_DIRS+=("$CACHE_HOME_DIR")
 else
-  CACHE_HOME_DIR="$HOME/.cache/openclaw/docker-cache"
+  CACHE_HOME_DIR="$HOME/.cache/grokbot/docker-cache"
 fi
 openclaw_live_prepare_bind_dir_for_container_user "$CACHE_HOME_DIR"
 
 if openclaw_live_uses_managed_bind_dirs; then
   DOCKER_USER="$(id -u):$(id -g)"
-  DOCKER_HOME_DIR="$(mktemp -d "${RUNNER_TEMP:-/tmp}/openclaw-docker-home.XXXXXX")"
+  DOCKER_HOME_DIR="$(mktemp -d "${RUNNER_TEMP:-/tmp}/grokbot-docker-home.XXXXXX")"
   TEMP_DIRS+=("$DOCKER_HOME_DIR")
   openclaw_live_prepare_bind_dir_for_container_user "$DOCKER_HOME_DIR"
   DOCKER_HOME_MOUNT=(-v "$DOCKER_HOME_DIR":/home/node)
@@ -61,7 +61,7 @@ if [[ -f "$PROFILE_FILE" && -r "$PROFILE_FILE" ]]; then
 fi
 
 if [[ -n "${OPENAI_API_KEY:-}" || -n "${OPENAI_BASE_URL:-}" || -n "${GEMINI_API_KEY:-}" || -n "${GOOGLE_API_KEY:-}" ]]; then
-  docker_env_dir="$(mktemp -d "${RUNNER_TEMP:-/tmp}/openclaw-subagent-live-env.XXXXXX")"
+  docker_env_dir="$(mktemp -d "${RUNNER_TEMP:-/tmp}/grokbot-subagent-live-env.XXXXXX")"
   TEMP_DIRS+=("$docker_env_dir")
   docker_env_file="$docker_env_dir/provider.env"
   {
@@ -114,7 +114,7 @@ source "$trusted_scripts_dir/lib/live-docker-stage.sh"
 openclaw_live_stage_source_tree "$tmp_dir"
 openclaw_live_stage_node_modules "$tmp_dir"
 openclaw_live_link_runtime_tree "$tmp_dir"
-openclaw_live_stage_state_dir "$tmp_dir/.openclaw-state"
+openclaw_live_stage_state_dir "$tmp_dir/.grokbot-state"
 openclaw_live_prepare_staged_config
 cd "$tmp_dir"
 OPENCLAW_LIVE_TEST=1 \
@@ -161,8 +161,8 @@ openclaw_live_append_array DOCKER_RUN_ARGS DOCKER_TRUSTED_HARNESS_MOUNT
 DOCKER_RUN_ARGS+=(\
   -v "$CACHE_HOME_DIR":/home/node/.cache \
   -v "$ROOT_DIR":/src:ro \
-  -v "$CONFIG_DIR":/home/node/.openclaw \
-  -v "$WORKSPACE_DIR":/home/node/.openclaw/workspace)
+  -v "$CONFIG_DIR":/home/node/.grokbot \
+  -v "$WORKSPACE_DIR":/home/node/.grokbot/workspace)
 openclaw_live_append_array DOCKER_RUN_ARGS PROFILE_MOUNT
 DOCKER_RUN_ARGS+=(\
   "$LIVE_IMAGE_NAME" \

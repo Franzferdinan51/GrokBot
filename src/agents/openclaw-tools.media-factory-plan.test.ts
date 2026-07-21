@@ -1,7 +1,7 @@
 // Verifies optional media/PDF tool factory planning from plugin metadata and auth.
 import path from "node:path";
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import {
   clearCurrentPluginMetadataSnapshot,
   getCurrentPluginMetadataSnapshot,
@@ -14,15 +14,15 @@ import type { PluginMetadataSnapshot } from "../plugins/plugin-metadata-snapshot
 import { resetPluginRuntimeStateForTest } from "../plugins/runtime.js";
 import { clearSecretsRuntimeSnapshot } from "../secrets/runtime.js";
 import type { AuthProfileStore } from "./auth-profiles/types.js";
-import { resolveOptionalMediaToolFactoryPlan } from "./openclaw-tools.media-factory-plan.js";
+import { resolveOptionalMediaToolFactoryPlan } from "./grokbot-tools.media-factory-plan.js";
 import { DEFAULT_PLUGIN_TOOLS_ALLOWLIST_ENTRY } from "./tool-policy.js";
 import { loadCapabilityMetadataSnapshot } from "./tools/manifest-capability-availability.js";
 import * as pdfModelConfigModule from "./tools/pdf-tool.model-config.js";
 
 type CreateOpenClawToolsOptions = Parameters<
-  typeof import("./openclaw-tools.js").createOpenClawTools
+  typeof import("./grokbot-tools.js").createOpenClawTools
 >[0];
-let createOpenClawToolsForTestModule: typeof import("./openclaw-tools.js").createOpenClawTools;
+let createOpenClawToolsForTestModule: typeof import("./grokbot-tools.js").createOpenClawTools;
 let legacyComfyToolNames: string[];
 
 async function createOpenClawToolsForTest(options?: CreateOpenClawToolsOptions) {
@@ -60,7 +60,7 @@ function createPlugin(params: {
     origin: params.origin ?? "bundled",
     rootDir: `/plugins/${params.id}`,
     source: `/plugins/${params.id}/index.js`,
-    manifestPath: `/plugins/${params.id}/openclaw.plugin.json`,
+    manifestPath: `/plugins/${params.id}/grokbot.plugin.json`,
     channels: [],
     providers: [],
     cliBackends: [],
@@ -161,7 +161,7 @@ function installSnapshot(
 describe("optional media tool factory planning", () => {
   beforeAll(async () => {
     ({ createOpenClawTools: createOpenClawToolsForTestModule } =
-      await import("./openclaw-tools.js"));
+      await import("./grokbot-tools.js"));
 
     const config = legacyModelProviderConfig({
       workflow: { "1": { inputs: {} } },
@@ -326,7 +326,7 @@ describe("optional media tool factory planning", () => {
     const toolNames = (
       await createOpenClawToolsForTest({
         config,
-        agentDir: "/tmp/openclaw-agent-main",
+        agentDir: "/tmp/grokbot-agent-main",
         authProfileStore: createAuthStore(),
         pluginToolAllowlist: allowlistFromAlsoAllowOnlyPolicy,
       })
@@ -551,7 +551,7 @@ describe("optional media tool factory planning", () => {
 
     const tools = await createOpenClawToolsForTest({
       config,
-      agentDir: "/tmp/openclaw-agent-main",
+      agentDir: "/tmp/grokbot-agent-main",
       authProfileStore: createAuthStore(["anthropic"]),
     });
 
@@ -873,7 +873,7 @@ describe("optional media tool factory planning", () => {
         providers: {
           vault: {
             source: "file",
-            path: "/tmp/openclaw-secrets.json",
+            path: "/tmp/grokbot-secrets.json",
             mode: "json",
           },
         },
@@ -921,7 +921,7 @@ describe("optional media tool factory planning", () => {
 
   it("does not register the image tool without cheap vision availability evidence", async () => {
     const config: OpenClawConfig = {};
-    const workspaceDir = "/tmp/openclaw-workspace";
+    const workspaceDir = "/tmp/grokbot-workspace";
     vi.stubEnv("MEDIA_OWNER_API_KEY", "");
     installSnapshot(
       config,
@@ -940,7 +940,7 @@ describe("optional media tool factory planning", () => {
       (
         await createOpenClawToolsForTest({
           config,
-          agentDir: "/tmp/openclaw-agent",
+          agentDir: "/tmp/grokbot-agent",
           workspaceDir,
           authProfileStore: createAuthStore(),
           disablePluginTools: true,

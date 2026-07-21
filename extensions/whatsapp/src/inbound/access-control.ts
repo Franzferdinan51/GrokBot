@@ -1,9 +1,9 @@
 // Whatsapp plugin module implements access control behavior.
-import { createChannelPairingChallengeIssuer } from "openclaw/plugin-sdk/channel-pairing";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { upsertChannelPairingRequest } from "openclaw/plugin-sdk/conversation-runtime";
-import { defaultRuntime } from "openclaw/plugin-sdk/runtime-env";
-import { warnMissingProviderGroupPolicyFallbackOnce } from "openclaw/plugin-sdk/runtime-group-policy";
+import { createChannelPairingChallengeIssuer } from "grokbot/plugin-sdk/channel-pairing";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { upsertChannelPairingRequest } from "grokbot/plugin-sdk/conversation-runtime";
+import { defaultRuntime } from "grokbot/plugin-sdk/runtime-env";
+import { warnMissingProviderGroupPolicyFallbackOnce } from "grokbot/plugin-sdk/runtime-group-policy";
 import { resolveWhatsAppInboundPolicy, resolveWhatsAppIngressAccess } from "../inbound-policy.js";
 import { buildWhatsAppInboundAdmission, type WhatsAppInboundAdmission } from "./admission.js";
 

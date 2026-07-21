@@ -206,7 +206,7 @@ const explicitNeverBundleDependencies = [
   "@lancedb/lancedb",
   "@larksuiteoapi/node-sdk",
   "@matrix-org/matrix-sdk-crypto-nodejs",
-  "@openclaw/ai",
+  "@grokbot/ai",
   "@vitest/expect",
   "jimp",
   "matrix-js-sdk",
@@ -225,16 +225,16 @@ function shouldNeverBundleDependency(id: string): boolean {
 
 function shouldAlwaysBundleDependency(id: string): boolean {
   return (
-    id === "openclaw/plugin-sdk/ssrf-runtime-internal" ||
-    id === "@openclaw/fs-safe" ||
-    id.startsWith("@openclaw/fs-safe/") ||
-    id === "@openclaw/normalization-core" ||
-    id.startsWith("@openclaw/normalization-core/") ||
-    id === "@openclaw/retry" ||
-    id === "@openclaw/media-core" ||
-    id.startsWith("@openclaw/media-core/") ||
-    ["@openclaw/acp-core", "@openclaw/workboard-contract"].includes(id) ||
-    id.startsWith("@openclaw/acp-core/") ||
+    id === "grokbot/plugin-sdk/ssrf-runtime-internal" ||
+    id === "@grokbot/fs-safe" ||
+    id.startsWith("@grokbot/fs-safe/") ||
+    id === "@grokbot/normalization-core" ||
+    id.startsWith("@grokbot/normalization-core/") ||
+    id === "@grokbot/retry" ||
+    id === "@grokbot/media-core" ||
+    id.startsWith("@grokbot/media-core/") ||
+    ["@grokbot/acp-core", "@grokbot/workboard-contract"].includes(id) ||
+    id.startsWith("@grokbot/acp-core/") ||
     id === "zod" ||
     id.startsWith("zod/")
   );
@@ -277,7 +277,7 @@ function buildCoreDistEntries(): Record<string, string> {
     "audit/audit-event-writer.worker": "src/audit/audit-event-writer.worker.ts",
     "config/sessions/session-transcript-reconcile.worker":
       "src/config/sessions/session-transcript-reconcile.worker.ts",
-    "state/openclaw-database-verify.worker": "src/state/openclaw-database-verify.worker.ts",
+    "state/grokbot-database-verify.worker": "src/state/grokbot-database-verify.worker.ts",
     "system-agent/setup-inference-detection.worker":
       "src/system-agent/setup-inference-detection.worker.ts",
     "acp/control-plane/manager": "src/acp/control-plane/manager.ts",
@@ -314,7 +314,7 @@ function buildCoreDistEntries(): Record<string, string> {
     "plugins/runtime/index": "src/plugins/runtime/index.ts",
     "llm-slug-generator": "src/hooks/llm-slug-generator.ts",
     "mcp/plugin-tools-serve": "src/mcp/plugin-tools-serve.ts",
-    "mcp/openclaw-tools-serve": "src/mcp/openclaw-tools-serve.ts",
+    "mcp/grokbot-tools-serve": "src/mcp/grokbot-tools-serve.ts",
   };
 }
 
@@ -416,13 +416,13 @@ function buildLlmCoreDistEntries(): Record<string, string> {
 
 function shouldExternalizeAgentCoreDependency(id: string): boolean {
   return (
-    id === "@openclaw/ai" ||
-    id.startsWith("@openclaw/ai/") ||
-    id === "@openclaw/llm-core" ||
-    id.startsWith("@openclaw/llm-core/") ||
+    id === "@grokbot/ai" ||
+    id.startsWith("@grokbot/ai/") ||
+    id === "@grokbot/llm-core" ||
+    id.startsWith("@grokbot/llm-core/") ||
     id === "ignore" ||
-    id === "openclaw" ||
-    id.startsWith("openclaw/") ||
+    id === "grokbot" ||
+    id.startsWith("grokbot/") ||
     id === "typebox" ||
     id.startsWith("typebox/") ||
     id === "yaml" ||
@@ -435,7 +435,7 @@ function shouldExternalizeGatewayProtocolDependency(id: string): boolean {
 }
 
 function shouldExternalizeGatewayClientDependency(id: string): boolean {
-  return ["ws", "@openclaw/gateway-protocol"].some(
+  return ["ws", "@grokbot/gateway-protocol"].some(
     (dependency) => id === dependency || id.startsWith(`${dependency}/`),
   );
 }
@@ -445,7 +445,7 @@ function shouldExternalizeNetPolicyDependency(id: string): boolean {
 }
 
 function shouldExternalizeSpeechCoreDependency(id: string): boolean {
-  return id === "openclaw" || id.startsWith("openclaw/");
+  return id === "grokbot" || id.startsWith("grokbot/");
 }
 
 function shouldExternalizeLlmCoreDependency(id: string): boolean {

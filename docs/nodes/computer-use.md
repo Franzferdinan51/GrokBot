@@ -13,16 +13,16 @@ The agent emits one uniform command, `computer.act`; it cannot tell how a node f
 
 ## Requirements
 
-- A paired **macOS** node (the OpenClaw macOS app running in node mode).
+- A paired **macOS** node (the GrokBot macOS app running in node mode).
 - macOS app setting **Allow Computer Control** enabled (default: off).
-- macOS **Accessibility** permission granted to OpenClaw (for pointer/keyboard injection) and **Screen Recording** permission (for `screen.snapshot`).
+- macOS **Accessibility** permission granted to GrokBot (for pointer/keyboard injection) and **Screen Recording** permission (for `screen.snapshot`).
 - The `computer.act` command armed on the gateway (it is dangerous and disarmed by default).
 - A vision-capable agent model.
 - Tool policy that exposes `computer`. The default `coding` profile does not. Add `computer` to `tools.alsoAllow`; sandboxed agents also need it in `tools.sandbox.tools.alsoAllow`.
 
 ## The `computer` agent tool
 
-The built-in `computer` tool takes one action per call. Coordinates are non-negative integer pixels in the most recent screenshot; the node maps them to display points. Coordinate actions must echo the screenshot result's `frameId`, and an explicit `screenIndex` must match that frame. OpenClaw also carries a node-issued display identity from the screenshot into the action, so a display reconnect or geometry change fails closed instead of silently retargeting the same index. These checks reject guessed tokens and tokens from another delivered frame or display. A token is not a freshness guarantee: apps can change pixels on the same display after capture, so take a new screenshot whenever the scene may have changed.
+The built-in `computer` tool takes one action per call. Coordinates are non-negative integer pixels in the most recent screenshot; the node maps them to display points. Coordinate actions must echo the screenshot result's `frameId`, and an explicit `screenIndex` must match that frame. GrokBot also carries a node-issued display identity from the screenshot into the action, so a display reconnect or geometry change fails closed instead of silently retargeting the same index. These checks reject guessed tokens and tokens from another delivered frame or display. A token is not a freshness guarantee: apps can change pixels on the same display after capture, so take a new screenshot whenever the scene may have changed.
 
 - Reads: `screenshot`.
 - Pointer: `left_click`, `right_click`, `middle_click`, `double_click`, `triple_click`, `mouse_move`, `left_click_drag` (with `startCoordinate`), `left_mouse_down`, `left_mouse_up`.
@@ -83,7 +83,7 @@ enable invocation by itself.
 
 - Before authorization, every layer (tool policy, gateway command policy, macOS setting, Accessibility, and Screen Recording) must agree. Once armed, actions execute without a per-action confirmation until expiry or `/phone disarm`.
 - Text input is posted one grapheme at a time. Cancellation, disconnect, pause, disable, or endpoint replacement stops it before the next grapheme instead of letting the stale remainder continue.
-- Screenshots are model-only and never auto-sent to chat (issue [#44759](https://github.com/openclaw/openclaw/issues/44759)).
+- Screenshots are model-only and never auto-sent to chat (issue [#44759](https://github.com/grokbot/grokbot/issues/44759)).
 - Treat screen content as untrusted; it can carry prompt injection.
 
 ## Relationship to other desktop-control paths

@@ -1,7 +1,7 @@
 import { html, nothing } from "lit";
 import { state } from "lit/decorators.js";
 import { t } from "../i18n/index.ts";
-import { OpenClawLightDomContentsElement } from "../lit/openclaw-element.ts";
+import { OpenClawLightDomContentsElement } from "../lit/grokbot-element.ts";
 
 type ToastOptions = {
   message: string;
@@ -78,15 +78,15 @@ class OpenClawToastHost extends OpenClawLightDomContentsElement {
 }
 
 export function showToast(options: ToastOptions): void {
-  document.querySelector<OpenClawToastHost>("openclaw-toast-host")?.show(options);
+  document.querySelector<OpenClawToastHost>("grokbot-toast-host")?.show(options);
 }
 
-if (!customElements.get("openclaw-toast-host")) {
-  customElements.define("openclaw-toast-host", OpenClawToastHost);
+if (!customElements.get("grokbot-toast-host")) {
+  customElements.define("grokbot-toast-host", OpenClawToastHost);
 }
 
 declare global {
   interface HTMLElementTagNameMap {
-    "openclaw-toast-host": OpenClawToastHost;
+    "grokbot-toast-host": OpenClawToastHost;
   }
 }

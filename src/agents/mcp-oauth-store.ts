@@ -17,14 +17,14 @@ import {
   executeSqliteQueryTakeFirstSync,
   getNodeSqliteKysely,
 } from "../infra/kysely-sync.js";
-import { withOpenClawStateDatabaseReadOnly } from "../state/openclaw-state-db-readonly.js";
-import { tableExists } from "../state/openclaw-state-db-schema-helpers.js";
-import type { DB as OpenClawStateKyselyDatabase } from "../state/openclaw-state-db.generated.js";
+import { withOpenClawStateDatabaseReadOnly } from "../state/grokbot-state-db-readonly.js";
+import { tableExists } from "../state/grokbot-state-db-schema-helpers.js";
+import type { DB as OpenClawStateKyselyDatabase } from "../state/grokbot-state-db.generated.js";
 import {
   openOpenClawStateDatabase,
   runOpenClawStateWriteTransaction,
-} from "../state/openclaw-state-db.js";
-import { resolveOpenClawStateSqlitePath } from "../state/openclaw-state-db.paths.js";
+} from "../state/grokbot-state-db.js";
+import { resolveOpenClawStateSqlitePath } from "../state/grokbot-state-db.paths.js";
 import { sanitizeServerName } from "./agent-bundle-mcp-names.js";
 
 type McpOAuthDatabase = Pick<OpenClawStateKyselyDatabase, "mcp_oauth_stores">;

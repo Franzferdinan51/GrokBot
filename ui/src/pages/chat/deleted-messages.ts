@@ -1,7 +1,7 @@
 // Control UI chat module implements deleted messages behavior.
 import { getSafeLocalStorage } from "../../local-storage.ts";
 
-const PREFIX = "openclaw:deleted:";
+const PREFIX = "grokbot:deleted:";
 
 export class DeletedMessages {
   private key: string;

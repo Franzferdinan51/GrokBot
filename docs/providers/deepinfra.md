@@ -1,8 +1,8 @@
 ---
-summary: "Use DeepInfra's unified API to access the most popular open source and frontier models in OpenClaw"
+summary: "Use DeepInfra's unified API to access the most popular open source and frontier models in GrokBot"
 read_when:
   - You want a single API key for the top open source LLMs
-  - You want to run models via DeepInfra's API in OpenClaw
+  - You want to run models via DeepInfra's API in GrokBot
 title: "DeepInfra"
 ---
 
@@ -13,8 +13,8 @@ it by switching the base URL.
 ## Install plugin
 
 ```bash
-openclaw plugins install @openclaw/deepinfra-provider
-openclaw gateway restart
+grokbot plugins install @grokbot/deepinfra-provider
+grokbot gateway restart
 ```
 
 ## Get an API key
@@ -25,7 +25,7 @@ openclaw gateway restart
 ## CLI setup
 
 ```bash
-openclaw onboard --deepinfra-api-key <key>
+grokbot onboard --deepinfra-api-key <key>
 ```
 
 Or set the environment variable:
@@ -50,11 +50,11 @@ export DEEPINFRA_API_KEY="<your-deepinfra-api-key>" # pragma: allowlist secret
 ## Supported surfaces
 
 Chat, image generation, and video generation refresh their model catalogs
-live from `https://api.deepinfra.com/v1/openai/models?sort_by=openclaw&filter=with_meta`
+live from `https://api.deepinfra.com/v1/openai/models?sort_by=grokbot&filter=with_meta`
 once `DEEPINFRA_API_KEY` is configured. Other surfaces use the static
 defaults below until they move onto the same live catalog.
 
-| Surface                  | Default model                                                                                         | OpenClaw config/tool                                     |
+| Surface                  | Default model                                                                                         | GrokBot config/tool                                     |
 | ------------------------ | ----------------------------------------------------------------------------------------------------- | -------------------------------------------------------- |
 | Chat / model provider    | first chat-tagged entry from live catalog (static fallback `deepseek-ai/DeepSeek-V4-Flash`)           | `agents.defaults.model`                                  |
 | Image generation/editing | first `image-gen`-tagged entry from live catalog (static fallback `black-forest-labs/FLUX-1-schnell`) | `image_generate`, `agents.defaults.imageGenerationModel` |
@@ -65,13 +65,13 @@ defaults below until they move onto the same live catalog.
 | Memory embeddings        | `BAAI/bge-m3`                                                                                         | `agents.defaults.memorySearch.provider: "deepinfra"`     |
 
 DeepInfra also exposes reranking, classification, object-detection, and other
-native model types. OpenClaw has no provider contract for those categories
+native model types. GrokBot has no provider contract for those categories
 yet, so this plugin does not register them.
 
 ## Available models
 
-OpenClaw discovers DeepInfra models dynamically once a key is configured. Use
-`/models deepinfra` or `openclaw models list --provider deepinfra` to see the
+GrokBot discovers DeepInfra models dynamically once a key is configured. Use
+`/models deepinfra` or `grokbot models list --provider deepinfra` to see the
 current list.
 
 Any model on [deepinfra.com](https://deepinfra.com/) works with the

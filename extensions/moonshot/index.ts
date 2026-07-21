@@ -1,7 +1,7 @@
-// Moonshot plugin entrypoint registers its OpenClaw integration.
-import { defineSingleProviderPluginEntry } from "openclaw/plugin-sdk/provider-entry";
-import { buildOpenAICompatibleReplayPolicy } from "openclaw/plugin-sdk/provider-model-shared";
-import { buildProviderStreamFamilyHooks } from "openclaw/plugin-sdk/provider-stream-family";
+// Moonshot plugin entrypoint registers its GrokBot integration.
+import { defineSingleProviderPluginEntry } from "grokbot/plugin-sdk/provider-entry";
+import { buildOpenAICompatibleReplayPolicy } from "grokbot/plugin-sdk/provider-model-shared";
+import { buildProviderStreamFamilyHooks } from "grokbot/plugin-sdk/provider-stream-family";
 import { applyMoonshotNativeStreamingUsageCompat } from "./api.js";
 import { moonshotMediaUnderstandingProvider } from "./media-understanding-provider.js";
 import {

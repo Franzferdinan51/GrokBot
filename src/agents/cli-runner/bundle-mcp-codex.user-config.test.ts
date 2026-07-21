@@ -1,6 +1,6 @@
-/** Tests projecting OpenClaw user MCP servers into Codex app-server config. */
+/** Tests projecting GrokBot user MCP servers into Codex app-server config. */
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import {
   buildCodexUserMcpServersThreadConfigPatch,
   buildCodexUserMcpServersThreadConfigPatchForRuntime,
@@ -116,7 +116,7 @@ describe("buildCodexUserMcpServersThreadConfigPatch", () => {
     });
   });
 
-  it("projects exact OpenClaw MCP tool filters into Codex-native tool filters", () => {
+  it("projects exact GrokBot MCP tool filters into Codex-native tool filters", () => {
     const patch = buildCodexUserMcpServersThreadConfigPatch({
       mcp: {
         servers: {
@@ -142,7 +142,7 @@ describe("buildCodexUserMcpServersThreadConfigPatch", () => {
     });
   });
 
-  it("rejects wildcard OpenClaw MCP tool filters that Codex cannot project exactly", () => {
+  it("rejects wildcard GrokBot MCP tool filters that Codex cannot project exactly", () => {
     expect(() =>
       buildCodexUserMcpServersThreadConfigPatch({
         mcp: {
@@ -182,8 +182,8 @@ describe("buildCodexUserMcpServersThreadConfigPatch", () => {
     });
   });
 
-  it("filters Codex-scoped user MCP servers by OpenClaw agent id", () => {
-    // Agent-scoped MCP servers should follow the active OpenClaw agent, while
+  it("filters Codex-scoped user MCP servers by GrokBot agent id", () => {
+    // Agent-scoped MCP servers should follow the active GrokBot agent, while
     // unscoped servers remain global.
     const cfg = {
       mcp: {
@@ -325,7 +325,7 @@ describe("buildCodexUserMcpServersThreadConfigPatch", () => {
     });
   });
 
-  it("omits scoped Codex MCP servers when no OpenClaw agent id is available", () => {
+  it("omits scoped Codex MCP servers when no GrokBot agent id is available", () => {
     const patch = buildCodexUserMcpServersThreadConfigPatch({
       mcp: {
         servers: {

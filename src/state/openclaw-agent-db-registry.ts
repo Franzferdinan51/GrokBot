@@ -16,16 +16,16 @@ import {
 import {
   OPENCLAW_AGENT_SCHEMA_VERSION,
   type OpenClawRegisteredAgentDatabase,
-} from "./openclaw-agent-db-contract.js";
-import type { DB as OpenClawStateKyselyDatabase } from "./openclaw-state-db.generated.js";
+} from "./grokbot-agent-db-contract.js";
+import type { DB as OpenClawStateKyselyDatabase } from "./grokbot-state-db.generated.js";
 import {
   detectOpenClawStateDatabaseSchemaMigrations,
   OPENCLAW_SQLITE_BUSY_TIMEOUT_MS,
   OPENCLAW_STATE_SCHEMA_VERSION,
   runOpenClawStateWriteTransaction,
   type OpenClawStateDatabaseOptions,
-} from "./openclaw-state-db.js";
-import { resolveOpenClawStateSqlitePath } from "./openclaw-state-db.paths.js";
+} from "./grokbot-state-db.js";
+import { resolveOpenClawStateSqlitePath } from "./grokbot-state-db.paths.js";
 
 type OpenClawAgentRegistryDatabase = Pick<OpenClawStateKyselyDatabase, "agent_databases">;
 
@@ -130,7 +130,7 @@ function hasUnavailableMissingSqlitePath(pathname: string): boolean {
   }
 }
 
-/** List agent databases recorded in the shared OpenClaw state registry. */
+/** List agent databases recorded in the shared GrokBot state registry. */
 export function listOpenClawRegisteredAgentDatabases(
   options: OpenClawStateDatabaseOptions = {},
 ): OpenClawRegisteredAgentDatabase[] {
@@ -139,13 +139,13 @@ export function listOpenClawRegisteredAgentDatabases(
   );
   if (!existsSync(pathname)) {
     if (hasUnavailableMissingSqlitePath(pathname)) {
-      throw new Error(`OpenClaw state database ${pathname} is unavailable.`);
+      throw new Error(`GrokBot state database ${pathname} is unavailable.`);
     }
     return [];
   }
   if (detectOpenClawStateDatabaseSchemaMigrations(options).length > 0) {
     throw new Error(
-      `OpenClaw state database ${pathname} has a legacy agent database registry schema; run openclaw doctor --fix to migrate it.`,
+      `GrokBot state database ${pathname} has a legacy agent database registry schema; run grokbot doctor --fix to migrate it.`,
     );
   }
 
@@ -155,7 +155,7 @@ export function listOpenClawRegisteredAgentDatabases(
     database.exec(`PRAGMA busy_timeout = ${OPENCLAW_SQLITE_BUSY_TIMEOUT_MS};`);
     if (readSqliteUserVersion(database) > OPENCLAW_STATE_SCHEMA_VERSION) {
       throw new Error(
-        `OpenClaw state database ${pathname} uses a newer schema than this OpenClaw build.`,
+        `GrokBot state database ${pathname} uses a newer schema than this GrokBot build.`,
       );
     }
     const registryTable = database
@@ -165,7 +165,7 @@ export function listOpenClawRegisteredAgentDatabases(
       return [];
     }
     if (registryTable.type !== "table") {
-      throw new Error(`OpenClaw state database ${pathname} has an invalid agent registry.`);
+      throw new Error(`GrokBot state database ${pathname} has an invalid agent registry.`);
     }
     const db = getNodeSqliteKysely<OpenClawAgentRegistryDatabase>(database);
     const rows = executeSqliteQuerySync(

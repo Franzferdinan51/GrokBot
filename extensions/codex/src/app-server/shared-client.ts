@@ -4,9 +4,9 @@
  */
 import { createHash } from "node:crypto";
 import path from "node:path";
-import type { AgentHarnessRuntimeArtifactBinding } from "openclaw/plugin-sdk/agent-harness-runtime";
-import { resolveDefaultAgentDir, type AuthProfileStore } from "openclaw/plugin-sdk/agent-runtime";
-import { createDeferred } from "openclaw/plugin-sdk/extension-shared";
+import type { AgentHarnessRuntimeArtifactBinding } from "grokbot/plugin-sdk/agent-harness-runtime";
+import { resolveDefaultAgentDir, type AuthProfileStore } from "grokbot/plugin-sdk/agent-runtime";
+import { createDeferred } from "grokbot/plugin-sdk/extension-shared";
 import { CodexAppServerStartupError } from "./attempt-timeouts.js";
 import {
   applyCodexAppServerAuthProfile,
@@ -91,10 +91,10 @@ const suspectClosedClients = new WeakSet<CodexAppServerClient>();
 // Symbol.for shares one client table across duplicate module copies (dist +
 // src bundles in one process). Plugin updates restart the gateway, so every
 // copy writing this state runs the same code and the shape never migrates.
-const SHARED_CODEX_APP_SERVER_CLIENT_STATE = Symbol.for("openclaw.codexAppServerClientState");
-const SHARED_CODEX_APP_SERVER_CLIENT_DISPOSER = Symbol.for("openclaw.codexAppServerClientDisposer");
+const SHARED_CODEX_APP_SERVER_CLIENT_STATE = Symbol.for("grokbot.codexAppServerClientState");
+const SHARED_CODEX_APP_SERVER_CLIENT_DISPOSER = Symbol.for("grokbot.codexAppServerClientDisposer");
 const CODEX_APP_SERVER_CLIENT_START_METADATA = Symbol.for(
-  "openclaw.codexAppServerClientStartMetadata",
+  "grokbot.codexAppServerClientStartMetadata",
 );
 
 function getSharedCodexAppServerClientState(): SharedCodexAppServerClientState {

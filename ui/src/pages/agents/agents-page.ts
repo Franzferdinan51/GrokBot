@@ -38,7 +38,7 @@ import {
 } from "../../lib/cron/index.ts";
 import { parseAgentSessionKey } from "../../lib/sessions/session-key.ts";
 import { normalizeStringEntries } from "../../lib/string-coerce.ts";
-import { OpenClawLightDomElement } from "../../lit/openclaw-element.ts";
+import { OpenClawLightDomElement } from "../../lit/grokbot-element.ts";
 import { SubscriptionsController } from "../../lit/subscriptions-controller.ts";
 import { loadAgentFileContent, saveAgentFile } from "./files.ts";
 import {
@@ -939,7 +939,7 @@ class AgentsPage extends OpenClawLightDomElement implements AgentsState {
   }
 }
 
-if (!customElements.get("openclaw-agents-page")) {
-  customElements.define("openclaw-agents-page", AgentsPage);
+if (!customElements.get("grokbot-agents-page")) {
+  customElements.define("grokbot-agents-page", AgentsPage);
 }
 /* oxlint-disable max-lines -- TODO: split this grandfathered oversized file. */

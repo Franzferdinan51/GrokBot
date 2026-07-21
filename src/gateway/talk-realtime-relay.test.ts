@@ -12,8 +12,8 @@ import {
   replaceSessionEntry,
 } from "../config/sessions/session-accessor.js";
 import type { RealtimeVoiceProviderPlugin } from "../plugins/types.js";
-import { closeOpenClawAgentDatabasesForTest } from "../state/openclaw-agent-db.js";
-import { closeOpenClawStateDatabaseForTest } from "../state/openclaw-state-db.js";
+import { closeOpenClawAgentDatabasesForTest } from "../state/grokbot-agent-db.js";
+import { closeOpenClawStateDatabaseForTest } from "../state/grokbot-state-db.js";
 import { clientVoiceSessionTesting } from "../talk/client-voice-session.test-support.js";
 import type {
   RealtimeVoiceBridge,
@@ -89,7 +89,7 @@ describe("talk realtime gateway relay", () => {
   it("appends finalized relay transcripts to the canonical agent session", async () => {
     const envSnapshot = captureEnv(["OPENCLAW_STATE_DIR"]);
     const tempDir = await fs.realpath(
-      await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-relay-voice-")),
+      await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-relay-voice-")),
     );
     setTestEnvValue("OPENCLAW_STATE_DIR", tempDir);
     let bridgeRequest: RealtimeVoiceBridgeCreateRequest | undefined;
@@ -164,7 +164,7 @@ describe("talk realtime gateway relay", () => {
   it("creates the relay voice record before binding a transcript-free consult", async () => {
     const envSnapshot = captureEnv(["OPENCLAW_STATE_DIR"]);
     const tempDir = await fs.realpath(
-      await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-relay-voice-consult-")),
+      await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-relay-voice-consult-")),
     );
     setTestEnvValue("OPENCLAW_STATE_DIR", tempDir);
     try {
@@ -217,7 +217,7 @@ describe("talk realtime gateway relay", () => {
   it("logs relay transcript append failures", async () => {
     const envSnapshot = captureEnv(["OPENCLAW_STATE_DIR"]);
     const tempDir = await fs.realpath(
-      await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-relay-voice-failure-")),
+      await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-relay-voice-failure-")),
     );
     setTestEnvValue("OPENCLAW_STATE_DIR", tempDir);
     let bridgeRequest: RealtimeVoiceBridgeCreateRequest | undefined;
@@ -734,7 +734,7 @@ describe("talk realtime gateway relay", () => {
         status: "working",
         tool: "openclaw_agent_consult",
         message:
-          "Tell the person briefly that you are checking, then wait for the final OpenClaw result before answering with the actual result.",
+          "Tell the person briefly that you are checking, then wait for the final GrokBot result before answering with the actual result.",
       },
       { willContinue: true },
     );
@@ -1202,7 +1202,7 @@ describe("talk realtime gateway relay", () => {
       options: { willContinue: true },
     });
     expect(bridge.sendUserMessage).toHaveBeenLastCalledWith(
-      "Briefly tell the person that you are checking with OpenClaw. Do not answer the request yet. Wait for the OpenClaw result before giving the actual answer.",
+      "Briefly tell the person that you are checking with GrokBot. Do not answer the request yet. Wait for the GrokBot result before giving the actual answer.",
     );
 
     bridgeRequest?.onToolCall?.({
@@ -1217,7 +1217,7 @@ describe("talk realtime gateway relay", () => {
         status: "working",
         tool: "openclaw_agent_consult",
         message:
-          "Tell the person briefly that you are checking, then wait for the final OpenClaw result before answering with the actual result.",
+          "Tell the person briefly that you are checking, then wait for the final GrokBot result before answering with the actual result.",
       },
       { willContinue: true },
     );
@@ -1239,13 +1239,13 @@ describe("talk realtime gateway relay", () => {
       "native-call",
       {
         status: "already_delivered",
-        message: "OpenClaw already delivered this consult result internally. Do not repeat it.",
+        message: "GrokBot already delivered this consult result internally. Do not repeat it.",
       },
       { suppressResponse: true },
     );
     expect(bridge.sendUserMessage).toHaveBeenLastCalledWith(
       [
-        "OpenClaw finished checking. Speak this result naturally and concisely.",
+        "GrokBot finished checking. Speak this result naturally and concisely.",
         "Do not mention tool calls, JSON, or internal routing.",
         "",
         "Here is the checked answer.",
@@ -1284,7 +1284,7 @@ describe("talk realtime gateway relay", () => {
         status: "working",
         tool: "openclaw_agent_consult",
         message:
-          "Tell the person briefly that you are checking, then wait for the final OpenClaw result before answering with the actual result.",
+          "Tell the person briefly that you are checking, then wait for the final GrokBot result before answering with the actual result.",
       },
       { willContinue: true },
     );
@@ -1520,7 +1520,7 @@ describe("talk realtime gateway relay", () => {
       "late-call",
       {
         status: "already_delivered",
-        message: "OpenClaw already delivered this consult result internally. Do not repeat it.",
+        message: "GrokBot already delivered this consult result internally. Do not repeat it.",
       },
       undefined,
     );
@@ -1849,7 +1849,7 @@ describe("talk realtime gateway relay", () => {
       "call-1",
       {
         status: "cancelled",
-        message: "OpenClaw cancelled this consult before completion. Do not restart it.",
+        message: "GrokBot cancelled this consult before completion. Do not restart it.",
       },
       { suppressResponse: true },
     );
@@ -2128,7 +2128,7 @@ describe("talk realtime gateway relay", () => {
       { phase: "first" },
       {
         status: "cancelled",
-        message: "OpenClaw cancelled this consult before completion. Do not restart it.",
+        message: "GrokBot cancelled this consult before completion. Do not restart it.",
       },
     ]);
     expect(submitToolResult.mock.calls[1]?.[2]).toEqual({ suppressResponse: true });
@@ -2186,7 +2186,7 @@ describe("talk realtime gateway relay", () => {
       { status: "working" },
       {
         status: "cancelled",
-        message: "OpenClaw cancelled this consult before completion. Do not restart it.",
+        message: "GrokBot cancelled this consult before completion. Do not restart it.",
       },
     ]);
     expect(submitToolResult.mock.calls[1]?.[2]).toBeUndefined();
@@ -2253,7 +2253,7 @@ describe("talk realtime gateway relay", () => {
       { answer: "stale" },
       {
         status: "cancelled",
-        message: "OpenClaw cancelled this consult before completion. Do not restart it.",
+        message: "GrokBot cancelled this consult before completion. Do not restart it.",
       },
     ]);
   });
@@ -2544,7 +2544,7 @@ describe("talk realtime gateway relay", () => {
         suppress: expectedSuppress,
         providerResult: {
           status: "cancelled",
-          message: "Cancelled the active OpenClaw run.",
+          message: "Cancelled the active GrokBot run.",
         },
       });
       expect(abortEmbeddedRun).toHaveBeenCalledTimes(1);
@@ -2552,7 +2552,7 @@ describe("talk realtime gateway relay", () => {
         "call-1",
         {
           status: "cancelled",
-          message: "Cancelled the active OpenClaw run.",
+          message: "Cancelled the active GrokBot run.",
         },
         expectedOptions,
       );
@@ -2777,7 +2777,7 @@ describe("talk realtime gateway relay", () => {
       mode: "cancel",
       providerResult: {
         status: "cancelled",
-        message: "Cancelled the active OpenClaw run.",
+        message: "Cancelled the active GrokBot run.",
       },
     });
     expect(abortEmbeddedRun).toHaveBeenCalledTimes(1);
@@ -2829,7 +2829,7 @@ describe("talk realtime gateway relay", () => {
     for (const call of fixture.submitToolResult.mock.calls) {
       expect(call[1]).toEqual({
         status: "cancelled",
-        message: "OpenClaw cancelled this consult before completion. Do not restart it.",
+        message: "GrokBot cancelled this consult before completion. Do not restart it.",
       });
       expect(call[2]).toBeUndefined();
     }
@@ -2850,7 +2850,7 @@ describe("talk realtime gateway relay", () => {
     expectRecordFields((terminal.talkEvent as Record<string, unknown>).payload, {
       result: {
         status: "cancelled",
-        message: "OpenClaw cancelled this consult before completion. Do not restart it.",
+        message: "GrokBot cancelled this consult before completion. Do not restart it.",
       },
       forced: true,
     });
@@ -2881,7 +2881,7 @@ describe("talk realtime gateway relay", () => {
       expect.objectContaining({ status: "working" }),
       {
         status: "cancelled",
-        message: "OpenClaw cancelled this consult before completion. Do not restart it.",
+        message: "GrokBot cancelled this consult before completion. Do not restart it.",
       },
     ]);
     expect(fixture.submitToolResult.mock.calls[1]?.[2]).toBeUndefined();
@@ -2927,7 +2927,7 @@ describe("talk realtime gateway relay", () => {
       { answer: "stale" },
       {
         status: "cancelled",
-        message: "OpenClaw cancelled this consult before completion. Do not restart it.",
+        message: "GrokBot cancelled this consult before completion. Do not restart it.",
       },
     ]);
   });
@@ -3032,7 +3032,7 @@ describe("talk realtime gateway relay", () => {
       "native-call",
       {
         status: "already_delivered",
-        message: "OpenClaw already delivered this consult result internally. Do not repeat it.",
+        message: "GrokBot already delivered this consult result internally. Do not repeat it.",
       },
       { suppressResponse: true },
     );

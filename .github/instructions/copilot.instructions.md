@@ -1,4 +1,4 @@
-# OpenClaw Codebase Patterns
+# GrokBot Codebase Patterns
 
 **Always reuse existing code - no redundancy!**
 
@@ -55,7 +55,7 @@
 ## Stack & Commands
 
 - **Package manager**: pnpm (`pnpm install`)
-- **Dev**: `pnpm openclaw ...` or `pnpm dev`
+- **Dev**: `pnpm grokbot ...` or `pnpm dev`
 - **Type-check**: `pnpm tsgo` (core production), `pnpm tsgo:prod` (core + UI + extension production), `pnpm check:test-types` (tests)
 - **Lint/format**: `pnpm check`
 - **Tests**: `pnpm test`

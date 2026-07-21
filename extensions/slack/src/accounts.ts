@@ -6,14 +6,14 @@ import {
   normalizeAccountId,
   resolveMergedAccountConfig,
   type OpenClawConfig,
-} from "openclaw/plugin-sdk/account-resolution";
+} from "grokbot/plugin-sdk/account-resolution";
 import {
   mapAllowFromEntries,
   normalizeChannelDmPolicy,
   type ChannelDmPolicy,
-} from "openclaw/plugin-sdk/channel-config-helpers";
-import { resolveAccountEntry } from "openclaw/plugin-sdk/routing";
-import { normalizeOptionalString } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/channel-config-helpers";
+import { resolveAccountEntry } from "grokbot/plugin-sdk/routing";
+import { normalizeOptionalString } from "grokbot/plugin-sdk/string-coerce-runtime";
 import type { SlackAccountSurfaceFields } from "./account-surface-fields.js";
 import type { SlackAccountConfig } from "./runtime-api.js";
 import { resolveSlackAppToken, resolveSlackBotToken, resolveSlackUserToken } from "./token.js";

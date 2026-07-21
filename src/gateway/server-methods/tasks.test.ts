@@ -4,7 +4,7 @@
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   INTERNAL_RUNTIME_CONTEXT_BEGIN,
@@ -51,7 +51,7 @@ function createTaskRecord(params: Parameters<typeof createTaskRecordOrNull>[0]):
 }
 
 beforeEach(async () => {
-  stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-gateway-tasks-"));
+  stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-gateway-tasks-"));
   setTestEnvValue("OPENCLAW_STATE_DIR", stateDir);
   resetTaskRegistryForTests();
   cancelSessionMock.mockReset();
@@ -373,7 +373,7 @@ describe("tasks gateway handlers", () => {
     expect(payload?.task?.terminalSummary).toBe("Failed after build");
     expect(payload?.task?.error).toBe("Tool failed");
     expect(payload?.task?.prompt).toBe("Compile artifact");
-    expect(JSON.stringify(calls[0]?.[1])).not.toContain("OpenClaw runtime context");
+    expect(JSON.stringify(calls[0]?.[1])).not.toContain("GrokBot runtime context");
   });
 
   it("exposes tool activity in task summaries", async () => {

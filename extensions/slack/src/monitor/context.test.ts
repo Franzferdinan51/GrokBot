@@ -1,7 +1,7 @@
 // Slack tests cover context plugin behavior.
 import type { App } from "@slack/bolt";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import type { RuntimeEnv } from "openclaw/plugin-sdk/runtime-env";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import type { RuntimeEnv } from "grokbot/plugin-sdk/runtime-env";
 import { describe, expect, it, vi } from "vitest";
 import { createSlackMonitorContext } from "./context.js";
 import type { SlackEventScope } from "./event-scope.js";
@@ -44,7 +44,7 @@ function createTestContext(params?: {
     threadInheritParent: false,
     slashCommand: {
       enabled: true,
-      name: "openclaw",
+      name: "grokbot",
       ephemeral: true,
       sessionPrefix: "slack:slash",
     },

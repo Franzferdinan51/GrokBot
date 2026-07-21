@@ -1,8 +1,8 @@
 import type { DatabaseSync } from "node:sqlite";
 import { buildApprovalResolutionRef } from "../infra/approval-resolution-ref.js";
 import { runSqliteImmediateTransactionSync } from "../infra/sqlite-transaction.js";
-import * as operatorApprovalMigration from "./openclaw-state-db-operator-approval-migration.js";
-import { ensureColumn, tableExists, tableHasColumn } from "./openclaw-state-db-schema-helpers.js";
+import * as operatorApprovalMigration from "./grokbot-state-db-operator-approval-migration.js";
+import { ensureColumn, tableExists, tableHasColumn } from "./grokbot-state-db-schema-helpers.js";
 
 export function ensureOperatorApprovalResolutionRefs(db: DatabaseSync): void {
   if (!tableExists(db, "operator_approvals")) {

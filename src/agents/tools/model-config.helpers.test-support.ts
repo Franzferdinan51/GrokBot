@@ -1,4 +1,4 @@
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import type { AuthProfileStore } from "../auth-profiles/types.js";
 import "./model-config.helpers.js";
 
@@ -15,7 +15,7 @@ type ModelConfigHelpersTestApi = {
 
 function getTestApi(): ModelConfigHelpersTestApi {
   return (globalThis as Record<PropertyKey, unknown>)[
-    Symbol.for("openclaw.modelConfigHelpersTestApi")
+    Symbol.for("grokbot.modelConfigHelpersTestApi")
   ] as ModelConfigHelpersTestApi;
 }
 

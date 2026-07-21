@@ -1,11 +1,11 @@
-// Tests OpenClaw execution environment construction.
+// Tests GrokBot execution environment construction.
 import { describe, expect, it } from "vitest";
 import { deleteTestEnvValue, setTestEnvValue } from "../test-utils/env.js";
 import {
   ensureOpenClawExecMarkerOnProcess,
   markOpenClawExecEnv,
   OPENCLAW_CLI_ENV_VAR,
-} from "./openclaw-exec-env.js";
+} from "./grokbot-exec-env.js";
 
 const OPENCLAW_CLI_ENV_VALUE = "1";
 

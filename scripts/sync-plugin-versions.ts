@@ -1,4 +1,4 @@
-// Sync Plugin Versions script supports OpenClaw repository automation.
+// Sync Plugin Versions script supports GrokBot repository automation.
 import { existsSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 
@@ -7,7 +7,7 @@ type PackageJson = {
   version?: string;
   devDependencies?: Record<string, string>;
   peerDependencies?: Record<string, string>;
-  openclaw?: {
+  grokbot?: {
     install?: {
       minHostVersion?: string;
     };
@@ -35,7 +35,7 @@ function syncOpenClawDependencyRange(
   deps: Record<string, string> | undefined,
   targetVersion: string,
 ): boolean {
-  const current = deps?.openclaw;
+  const current = deps?.grokbot;
   if (!current || current === "workspace:*" || !OPENCLAW_VERSION_RANGE_RE.test(current)) {
     return false;
   }
@@ -43,12 +43,12 @@ function syncOpenClawDependencyRange(
   if (current === next) {
     return false;
   }
-  deps.openclaw = next;
+  deps.grokbot = next;
   return true;
 }
 
 function syncPluginApiVersion(pkg: PackageJson, targetVersion: string): boolean {
-  const compat = pkg.openclaw?.compat;
+  const compat = pkg.grokbot?.compat;
   const current = compat?.pluginApi;
   if (!current || !OPENCLAW_VERSION_RANGE_RE.test(current)) {
     return false;
@@ -62,7 +62,7 @@ function syncPluginApiVersion(pkg: PackageJson, targetVersion: string): boolean 
 }
 
 function syncBuildOpenClawVersion(pkg: PackageJson, targetVersion: string): boolean {
-  const build = pkg.openclaw?.build;
+  const build = pkg.grokbot?.build;
   const current = build?.openclawVersion;
   if (!current) {
     return false;
@@ -86,7 +86,7 @@ function ensureChangelogEntry(changelogPath: string, version: string, write: boo
   if (content.includes(`## ${version}`)) {
     return false;
   }
-  const entry = `## ${version}\n\n### Changes\n- Version alignment with core OpenClaw release numbers.\n\n`;
+  const entry = `## ${version}\n\n### Changes\n- Version alignment with core GrokBot release numbers.\n\n`;
   if (content.startsWith("# Changelog\n\n")) {
     const next = content.replace("# Changelog\n\n", `# Changelog\n\n${entry}`);
     if (write) {

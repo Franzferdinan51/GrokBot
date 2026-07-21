@@ -4,8 +4,8 @@ import {
   type GatewayPresenceUpdate,
   PresenceUpdateStatus,
 } from "discord-api-types/v10";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import type { PluginStateSyncKeyedStore } from "openclaw/plugin-sdk/plugin-state-runtime";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import type { PluginStateSyncKeyedStore } from "grokbot/plugin-sdk/plugin-state-runtime";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { Client } from "../internal/discord.js";
 import { clearPresences } from "./presence-cache.js";
@@ -21,13 +21,13 @@ const mocks = vi.hoisted(() => ({
   })),
 }));
 
-vi.mock("openclaw/plugin-sdk/heartbeat-runtime", () => ({
+vi.mock("grokbot/plugin-sdk/heartbeat-runtime", () => ({
   requestHeartbeat: mocks.requestHeartbeat,
 }));
-vi.mock("openclaw/plugin-sdk/routing", () => ({
+vi.mock("grokbot/plugin-sdk/routing", () => ({
   resolveAgentRoute: mocks.resolveAgentRoute,
 }));
-vi.mock("openclaw/plugin-sdk/system-event-runtime", () => ({
+vi.mock("grokbot/plugin-sdk/system-event-runtime", () => ({
   enqueueSystemEvent: mocks.enqueueSystemEvent,
 }));
 vi.mock("../send.permissions.js", () => ({

@@ -2,11 +2,11 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 // Telegram supersede policy for durable ingress (authorization-gated).
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import {
   addChannelAllowFromStoreEntry,
   closeOpenClawStateDatabaseForTest,
-} from "openclaw/plugin-sdk/plugin-state-test-runtime";
+} from "grokbot/plugin-sdk/plugin-state-test-runtime";
 import { afterEach, describe, expect, it } from "vitest";
 
 let previousStateDir: string | undefined;
@@ -177,7 +177,7 @@ describe("telegram ingress supersede policy", () => {
   });
 
   it("gates command supersede on authorized sender", async () => {
-    // /new is a recognized text alias in OpenClaw command set.
+    // /new is a recognized text alias in GrokBot command set.
     const authorized = await shouldSupersede(
       record("2", messageUpdate({ updateId: 2, text: "/new", senderId: OWNER_ID })),
       claim("1", messageUpdate({ updateId: 1, text: "prior", senderId: OWNER_ID })),
@@ -353,7 +353,7 @@ describe("telegram ingress supersede policy", () => {
 
   it("authorizes paired DM senders via the pairing store under dmPolicy pairing", async () => {
     const pairedId = "424242";
-    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-supersede-store-"));
+    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-supersede-store-"));
     // The shared pairing-store loader reads process.env; scoped set + afterEach restore.
     previousStateDir = process.env.OPENCLAW_STATE_DIR;
     stateDirTouched = true;

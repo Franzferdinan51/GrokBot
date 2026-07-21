@@ -4,8 +4,8 @@ import path from "node:path";
 import {
   closeOpenClawStateDatabaseForTest,
   createChannelIngressQueueForTests,
-} from "openclaw/plugin-sdk/plugin-state-test-runtime";
-import { resolvePreferredOpenClawTmpDir } from "openclaw/plugin-sdk/temp-path";
+} from "grokbot/plugin-sdk/plugin-state-test-runtime";
+import { resolvePreferredOpenClawTmpDir } from "grokbot/plugin-sdk/temp-path";
 import { GatewayEvent, GatewayOp } from "./constants.js";
 
 export type QQBotTestIngressPayload = {
@@ -60,7 +60,7 @@ export async function withQQBotIngressQueue<T>(
   ) => Promise<T>,
 ): Promise<T> {
   const created = await fs.mkdtemp(
-    path.join(resolvePreferredOpenClawTmpDir(), "openclaw-qqbot-ingress-"),
+    path.join(resolvePreferredOpenClawTmpDir(), "grokbot-qqbot-ingress-"),
   );
   const stateDir = await fs.realpath(created);
   const queue = createChannelIngressQueueForTests<QQBotTestIngressPayload>({

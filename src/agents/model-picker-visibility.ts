@@ -1,8 +1,8 @@
 /**
  * Filters provider/model refs for model picker visibility.
  */
-import { normalizeProviderId } from "@openclaw/model-catalog-core/provider-id";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import { normalizeProviderId } from "@grokbot/model-catalog-core/provider-id";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { listCliRuntimeProviderIds } from "./cli-backends.js";
 
 // Retired provider ids and CLI runtime aliases are implementation surfaces, not

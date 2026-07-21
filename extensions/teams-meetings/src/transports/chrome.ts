@@ -1,4 +1,4 @@
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import {
   callMeetingBrowserProxyOnNode,
   createLocalMeetingRealtimeAudioTransport,
@@ -16,9 +16,9 @@ import {
   type MeetingRealtimeAudioEngineHandle,
   type MeetingRealtimeToolCallParams,
   type MeetingRuntimePlatform,
-} from "openclaw/plugin-sdk/meeting-runtime";
-import { addTimerTimeoutGraceMs } from "openclaw/plugin-sdk/number-runtime";
-import type { PluginRuntime, RuntimeLogger } from "openclaw/plugin-sdk/plugin-runtime";
+} from "grokbot/plugin-sdk/meeting-runtime";
+import { addTimerTimeoutGraceMs } from "grokbot/plugin-sdk/number-runtime";
+import type { PluginRuntime, RuntimeLogger } from "grokbot/plugin-sdk/plugin-runtime";
 import {
   consultOpenClawAgentForTeamsMeeting,
   handleTeamsMeetingsRealtimeConsultToolCall,

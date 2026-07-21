@@ -1,9 +1,9 @@
 import fsSync from "node:fs";
 import path from "node:path";
 import type { DatabaseSync } from "node:sqlite";
-import { requireNodeSqlite } from "openclaw/plugin-sdk/memory-core-host-engine-storage";
-import type { MemorySearchResult } from "openclaw/plugin-sdk/memory-core-host-runtime-files";
-import { migrateSqliteSchemaToStrict } from "openclaw/plugin-sdk/plugin-state-runtime";
+import { requireNodeSqlite } from "grokbot/plugin-sdk/memory-core-host-engine-storage";
+import type { MemorySearchResult } from "grokbot/plugin-sdk/memory-core-host-runtime-files";
+import { migrateSqliteSchemaToStrict } from "grokbot/plugin-sdk/plugin-state-runtime";
 
 const QMD_SESSION_ARTIFACT_TABLE = "openclaw_qmd_session_artifacts";
 const QMD_SESSION_ARTIFACT_SCHEMA = `
@@ -21,7 +21,7 @@ const QMD_SESSION_ARTIFACT_SCHEMA = `
   ) STRICT;
 `;
 
-const QMD_SESSION_ARTIFACT_HIT: unique symbol = Symbol("openclaw.qmdSessionArtifactHit");
+const QMD_SESSION_ARTIFACT_HIT: unique symbol = Symbol("grokbot.qmdSessionArtifactHit");
 
 export type QmdSessionArtifactMapping = {
   agentId: string;

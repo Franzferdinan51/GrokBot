@@ -1,5 +1,5 @@
-import type { OpenClawPluginApi } from "openclaw/plugin-sdk/channel-plugin-common";
-import type { OpenKeyedStoreOptions } from "openclaw/plugin-sdk/plugin-state-runtime";
+import type { OpenClawPluginApi } from "grokbot/plugin-sdk/channel-plugin-common";
+import type { OpenKeyedStoreOptions } from "grokbot/plugin-sdk/plugin-state-runtime";
 import {
   isDiscordAccountEnabledForRuntime,
   listDiscordAccountIds,

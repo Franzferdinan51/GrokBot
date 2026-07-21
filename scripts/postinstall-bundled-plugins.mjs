@@ -349,7 +349,7 @@ function pruneEmptyDistDirectories(params = {}) {
 }
 
 function isLegacyInstalledPluginDependencyDirName(name) {
-  return name === "node_modules" || /^\.openclaw-install-stage(?:-[^/]+)?$/iu.test(name);
+  return name === "node_modules" || /^\.grokbot-install-stage(?:-[^/]+)?$/iu.test(name);
 }
 
 function pruneLegacyInstalledPluginDependencyDirs(params) {
@@ -426,7 +426,7 @@ export function collectLegacyPluginRuntimeDepsStateRoots(params = {}) {
   if (configPath) {
     addStateRoot(dirname(resolvePostinstallUserPath(configPath, openClawHome)));
   }
-  addStateRoot(join(openClawHome, ".openclaw"));
+  addStateRoot(join(openClawHome, ".grokbot"));
   addStateRoot(join(openClawHome, ".clawdbot"));
 
   for (const entry of splitPostinstallPathList(env?.STATE_DIRECTORY)) {
@@ -651,7 +651,7 @@ export function applyBaileysEncryptedStreamFinishHotfix(params = {}) {
     ((unsafeTargetPath) =>
       join(
         dirname(unsafeTargetPath),
-        `.${basename(unsafeTargetPath)}.openclaw-hotfix-${randomUUID()}`,
+        `.${basename(unsafeTargetPath)}.grokbot-hotfix-${randomUUID()}`,
       ));
   const writeFile =
     params.writeFileSync ?? ((filePath, value) => writeFileSync(filePath, value, "utf8"));
@@ -940,14 +940,14 @@ export function pruneOpenClawCompileCache(params = {}) {
           if (isCompileCachePrunePermissionDenied(error)) {
             continue;
           }
-          log.warn?.(`[postinstall] could not prune OpenClaw compile cache: ${String(error)}`);
+          log.warn?.(`[postinstall] could not prune GrokBot compile cache: ${String(error)}`);
         }
       }
     } catch (error) {
       if (isCompileCachePrunePermissionDenied(error)) {
         continue;
       }
-      log.warn?.(`[postinstall] could not prune OpenClaw compile cache: ${String(error)}`);
+      log.warn?.(`[postinstall] could not prune GrokBot compile cache: ${String(error)}`);
     }
   }
 }

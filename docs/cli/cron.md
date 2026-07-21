@@ -1,17 +1,17 @@
 ---
-summary: "CLI reference for `openclaw cron` (schedule and run background jobs)"
+summary: "CLI reference for `grokbot cron` (schedule and run background jobs)"
 read_when:
   - You want scheduled jobs and wakeups
   - You are debugging cron execution and logs
 title: "Cron"
 ---
 
-# `openclaw cron`
+# `grokbot cron`
 
 Manage cron jobs for the Gateway scheduler.
 
 <Tip>
-Run `openclaw cron --help` for the full command surface. See [Cron jobs](/automation/cron-jobs) for the conceptual guide.
+Run `grokbot cron --help` for the full command surface. See [Cron jobs](/automation/cron-jobs) for the conceptual guide.
 </Tip>
 
 <Note>
@@ -20,10 +20,10 @@ All cron mutations (`add`/`create`, `update`/`edit`, `remove`, `run`) require `o
 
 ## Create jobs quickly
 
-`openclaw cron create` is an alias for `openclaw cron add`. For new jobs, put the schedule first and the prompt second:
+`grokbot cron create` is an alias for `grokbot cron add`. For new jobs, put the schedule first and the prompt second:
 
 ```bash
-openclaw cron create "0 7 * * *" \
+grokbot cron create "0 7 * * *" \
   "Summarize overnight updates." \
   --name "Morning brief" \
   --agent ops
@@ -32,16 +32,16 @@ openclaw cron create "0 7 * * *" \
 Use `--webhook <url>` when the job should POST the finished payload instead of delivering to a chat target:
 
 ```bash
-openclaw cron create "0 18 * * 1-5" \
+grokbot cron create "0 18 * * 1-5" \
   "Summarize today's deploys as JSON." \
   --name "Deploy digest" \
-  --webhook "https://example.invalid/openclaw/cron"
+  --webhook "https://example.invalid/grokbot/cron"
 ```
 
-Use `--command` for deterministic shell-style jobs that run inside OpenClaw cron without starting an isolated agent/model run:
+Use `--command` for deterministic shell-style jobs that run inside GrokBot cron without starting an isolated agent/model run:
 
 ```bash
-openclaw cron create "*/15 * * * *" \
+grokbot cron create "*/15 * * * *" \
   --name "Queue depth probe" \
   --command "scripts/check-queue.sh" \
   --command-cwd "/srv/app" \
@@ -71,7 +71,7 @@ openclaw cron create "*/15 * * * *" \
 
 ## Delivery
 
-`openclaw cron list` and `openclaw cron show <job-id>` preview the resolved delivery route. For `channel: "last"`, the preview shows whether the route resolved from the main or current session, or will fail closed.
+`grokbot cron list` and `grokbot cron show <job-id>` preview the resolved delivery route. For `channel: "last"`, the preview shows whether the route resolved from the main or current session, or will fail closed.
 
 Provider-prefixed targets can disambiguate unresolved announce channels. For example, `to: "telegram:123"` selects Telegram when `delivery.channel` is omitted or `last`. Only prefixes advertised by the loaded plugin are provider selectors. If `delivery.channel` is explicit, the prefix must match that channel; `channel: "whatsapp"` with `to: "telegram:123"` is rejected. Service prefixes such as `imessage:` and `sms:` remain channel-owned target syntax.
 
@@ -112,7 +112,7 @@ Isolated cron runs treat run-level agent failures as job errors even when no rep
 
 Command cron jobs do not start an isolated agent turn. A zero exit code records `ok`; non-zero exit, signal, timeout, or no-output timeout records `error` and can trigger the same failure notification path.
 
-If an isolated run times out before the first model request, `openclaw cron show` and `openclaw cron runs` include a phase-specific error such as `setup timed out before runner start` or a stall message naming the last-known startup phase (for example `context-engine`). For CLI-backed providers, the pre-model watchdog stays active until the external CLI turn starts, so session lookup, hook, auth, prompt, and CLI setup stalls are reported as pre-model cron failures.
+If an isolated run times out before the first model request, `grokbot cron show` and `grokbot cron runs` include a phase-specific error such as `setup timed out before runner start` or a stall message naming the last-known startup phase (for example `context-engine`). For CLI-backed providers, the pre-model watchdog stays active until the external CLI turn starts, so session lookup, hook, auth, prompt, and CLI setup stalls are reported as pre-model cron failures.
 
 ## Scheduling
 
@@ -128,25 +128,25 @@ One-shot jobs delete after success by default. Use `--keep-after-run` to preserv
 
 Recurring jobs use exponential retry backoff after consecutive errors: 30s, 1m, 5m, 15m, 60m. The schedule returns to normal after the next successful run.
 
-Skipped runs are tracked separately from execution errors. They do not affect retry backoff, but `openclaw cron edit <job-id> --failure-alert-include-skipped` can opt failure alerts into repeated skipped-run notifications.
+Skipped runs are tracked separately from execution errors. They do not affect retry backoff, but `grokbot cron edit <job-id> --failure-alert-include-skipped` can opt failure alerts into repeated skipped-run notifications.
 
 For isolated jobs that target a local configured model provider (base URL on loopback, a private network, or `.local`), cron runs a lightweight provider preflight before starting the agent turn: `api: "ollama"` providers are probed at `/api/tags`; other local OpenAI-compatible providers (`api: "openai-completions"`, e.g. vLLM, SGLang, LM Studio) are probed at `/models`. If the endpoint is unreachable, the run is recorded as `skipped` and retried on a later schedule; the reachability result is cached per endpoint for 5 minutes so many jobs against the same local server do not hammer it with repeated probes.
 
-Cron jobs, pending runtime state, and run history live in the shared SQLite state database. Legacy `jobs.json`, `<name>-state.json`, and `runs/*.jsonl` files are imported once and renamed with a `.migrated` suffix. After import, edit schedules with `openclaw cron add|edit|remove` instead of editing JSON files.
+Cron jobs, pending runtime state, and run history live in the shared SQLite state database. Legacy `jobs.json`, `<name>-state.json`, and `runs/*.jsonl` files are imported once and renamed with a `.migrated` suffix. After import, edit schedules with `grokbot cron add|edit|remove` instead of editing JSON files.
 
 ### Manual runs
 
-`openclaw cron run <job-id>` force-runs by default and returns as soon as the manual run is queued. Successful responses include `{ ok: true, enqueued: true, runId }`. Use the returned `runId` to inspect the later result:
+`grokbot cron run <job-id>` force-runs by default and returns as soon as the manual run is queued. Successful responses include `{ ok: true, enqueued: true, runId }`. Use the returned `runId` to inspect the later result:
 
 ```bash
-openclaw cron run <job-id>
-openclaw cron runs --id <job-id> --run-id <run-id>
+grokbot cron run <job-id>
+grokbot cron runs --id <job-id> --run-id <run-id>
 ```
 
 Add `--wait` when a script should block until that exact queued run records a terminal status:
 
 ```bash
-openclaw cron run <job-id> --wait --wait-timeout 10m --poll-interval 2s
+grokbot cron run <job-id> --wait --wait-timeout 10m --poll-interval 2s
 ```
 
 With `--wait`, the CLI still calls `cron.run` first, then polls `cron.runs` for the returned `runId`. The command exits `0` only when the run finishes with status `ok`. It exits non-zero when the run finishes with `error` or `skipped`, when the Gateway response does not include a `runId`, or when `--wait-timeout` expires (default `10m`, polled every `2s` by default). `--poll-interval` must be greater than zero.
@@ -168,10 +168,10 @@ Cron `--model` is a **job primary**, not a chat-session `/model` override. That 
 - Configured model fallbacks still apply when the selected job model fails.
 - Per-job payload `fallbacks` replaces the configured fallback list when present.
 - An empty per-job fallback list (`--fallbacks ""` or `fallbacks: []` in the job payload/API) makes the cron run strict.
-- When a job has `--model` but no fallback list is configured, OpenClaw passes an explicit empty fallback override so the agent primary is not appended as a hidden retry target.
+- When a job has `--model` but no fallback list is configured, GrokBot passes an explicit empty fallback override so the agent primary is not appended as a hidden retry target.
 - Local-provider preflight checks walk configured fallbacks before marking a cron run `skipped`.
 
-`openclaw doctor` reports jobs that already have `payload.model` set, including provider namespace counts and mismatches against `agents.defaults.model`. Use that check when auth, provider, or billing behavior looks different between live chat and scheduled jobs.
+`grokbot doctor` reports jobs that already have `payload.model` set, including provider namespace counts and mismatches against `agents.defaults.model`. Use that check when auth, provider, or billing behavior looks different between live chat and scheduled jobs.
 
 ### Isolated cron model precedence
 
@@ -218,7 +218,7 @@ Retention behavior:
 ## Migrating older jobs
 
 <Note>
-If you have cron jobs from before the current delivery and store format, run `openclaw doctor --fix`. Doctor normalizes legacy cron fields (`jobId`, `schedule.cron`, top-level delivery fields including legacy `threadId`, payload `provider` delivery aliases) and migrates `notify: true` webhook fallback jobs from the retired raw `cron.webhook` value to explicit webhook delivery before removing that config key. Jobs that already announce to a chat keep that delivery and get a completion webhook destination. Without a legacy webhook, the inert top-level `notify` marker is removed for jobs with no migration target (the existing delivery is preserved unchanged), so `doctor --fix` no longer keeps re-warning about them.
+If you have cron jobs from before the current delivery and store format, run `grokbot doctor --fix`. Doctor normalizes legacy cron fields (`jobId`, `schedule.cron`, top-level delivery fields including legacy `threadId`, payload `provider` delivery aliases) and migrates `notify: true` webhook fallback jobs from the retired raw `cron.webhook` value to explicit webhook delivery before removing that config key. Jobs that already announce to a chat keep that delivery and get a completion webhook destination. Without a legacy webhook, the inert top-level `notify` marker is removed for jobs with no migration target (the existing delivery is preserved unchanged), so `doctor --fix` no longer keeps re-warning about them.
 </Note>
 
 ## Common edits
@@ -226,37 +226,37 @@ If you have cron jobs from before the current delivery and store format, run `op
 Update delivery settings without changing the message:
 
 ```bash
-openclaw cron edit <job-id> --announce --channel telegram --to "123456789"
+grokbot cron edit <job-id> --announce --channel telegram --to "123456789"
 ```
 
 Disable delivery for an isolated job:
 
 ```bash
-openclaw cron edit <job-id> --no-deliver
+grokbot cron edit <job-id> --no-deliver
 ```
 
 Enable lightweight bootstrap context for an isolated job:
 
 ```bash
-openclaw cron edit <job-id> --light-context
+grokbot cron edit <job-id> --light-context
 ```
 
 Announce to a specific channel:
 
 ```bash
-openclaw cron edit <job-id> --announce --channel slack --to "channel:C1234567890"
+grokbot cron edit <job-id> --announce --channel slack --to "channel:C1234567890"
 ```
 
 Announce to a Telegram forum topic:
 
 ```bash
-openclaw cron edit <job-id> --announce --channel telegram --to "-1001234567890" --thread-id 42
+grokbot cron edit <job-id> --announce --channel telegram --to "-1001234567890" --thread-id 42
 ```
 
 Create an isolated job with lightweight bootstrap context:
 
 ```bash
-openclaw cron create "0 7 * * *" \
+grokbot cron create "0 7 * * *" \
   "Summarize overnight updates." \
   --name "Lightweight morning brief" \
   --session isolated \
@@ -269,7 +269,7 @@ openclaw cron create "0 7 * * *" \
 Create a command job with exact argv, cwd, env, stdin, and output limits:
 
 ```bash
-openclaw cron create "*/30 * * * *" \
+grokbot cron create "*/30 * * * *" \
   --name "Position export" \
   --command-argv '["node","scripts/export-position.mjs"]' \
   --command-cwd "/srv/app" \
@@ -278,7 +278,7 @@ openclaw cron create "*/30 * * * *" \
   --timeout-seconds 120 \
   --no-output-timeout-seconds 30 \
   --output-max-bytes 65536 \
-  --webhook "https://example.invalid/openclaw/cron"
+  --webhook "https://example.invalid/grokbot/cron"
 ```
 
 ## Common admin commands
@@ -286,21 +286,21 @@ openclaw cron create "*/30 * * * *" \
 Manual run and inspection:
 
 ```bash
-openclaw cron list
-openclaw cron list --agent ops
-openclaw cron get <job-id>
-openclaw cron show <job-id>
-openclaw cron run <job-id>
-openclaw cron run <job-id> --due
-openclaw cron run <job-id> --wait --wait-timeout 10m
-openclaw cron run <job-id> --wait --wait-timeout 10m --poll-interval 2s
-openclaw cron runs --id <job-id> --limit 50
-openclaw cron runs --id <job-id> --run-id <run-id>
+grokbot cron list
+grokbot cron list --agent ops
+grokbot cron get <job-id>
+grokbot cron show <job-id>
+grokbot cron run <job-id>
+grokbot cron run <job-id> --due
+grokbot cron run <job-id> --wait --wait-timeout 10m
+grokbot cron run <job-id> --wait --wait-timeout 10m --poll-interval 2s
+grokbot cron runs --id <job-id> --limit 50
+grokbot cron runs --id <job-id> --run-id <run-id>
 ```
 
-`openclaw cron list` shows all matching jobs by default. Pass `--agent <id>` to show only jobs whose effective normalized agent id matches; jobs without a stored agent id count as the configured default agent.
+`grokbot cron list` shows all matching jobs by default. Pass `--agent <id>` to show only jobs whose effective normalized agent id matches; jobs without a stored agent id count as the configured default agent.
 
-`openclaw cron get <job-id>` returns the stored job JSON directly. Use `cron show <job-id>` when you want the human-readable view with delivery-route preview.
+`grokbot cron get <job-id>` returns the stored job JSON directly. Use `cron show <job-id>` when you want the human-readable view with delivery-route preview.
 
 `cron list --json` and `cron show <job-id> --json` include a top-level `status` field on each job, computed from `enabled`, `state.runningAtMs`, and `state.lastRunStatus`. Values: `disabled`, `running`, `ok`, `error`, `skipped`, or `idle`. JSON status stays canonical and undecorated so external tooling can read job state without re-deriving it; human output may decorate repeated `error` statuses with a failure count.
 
@@ -309,22 +309,22 @@ openclaw cron runs --id <job-id> --run-id <run-id>
 Agent and session retargeting:
 
 ```bash
-openclaw cron edit <job-id> --agent ops
-openclaw cron edit <job-id> --clear-agent
-openclaw cron edit <job-id> --session current
-openclaw cron edit <job-id> --session "session:daily-brief"
+grokbot cron edit <job-id> --agent ops
+grokbot cron edit <job-id> --clear-agent
+grokbot cron edit <job-id> --session current
+grokbot cron edit <job-id> --session "session:daily-brief"
 ```
 
-`openclaw cron add` warns when `--agent` is omitted on agent-turn jobs and falls back to the default agent (`main`). Pass `--agent <id>` at create time to pin a specific agent.
+`grokbot cron add` warns when `--agent` is omitted on agent-turn jobs and falls back to the default agent (`main`). Pass `--agent <id>` at create time to pin a specific agent.
 
 Delivery tweaks:
 
 ```bash
-openclaw cron edit <job-id> --announce --channel slack --to "channel:C1234567890"
-openclaw cron edit <job-id> --webhook "https://example.invalid/openclaw/cron"
-openclaw cron edit <job-id> --best-effort-deliver
-openclaw cron edit <job-id> --no-best-effort-deliver
-openclaw cron edit <job-id> --no-deliver
+grokbot cron edit <job-id> --announce --channel slack --to "channel:C1234567890"
+grokbot cron edit <job-id> --webhook "https://example.invalid/grokbot/cron"
+grokbot cron edit <job-id> --best-effort-deliver
+grokbot cron edit <job-id> --no-best-effort-deliver
+grokbot cron edit <job-id> --no-deliver
 ```
 
 ## Related

@@ -1,15 +1,15 @@
-import { resolveGlobalDedupeCache } from "openclaw/plugin-sdk/dedupe-runtime";
+import { resolveGlobalDedupeCache } from "grokbot/plugin-sdk/dedupe-runtime";
 // Mattermost tests cover thread participation cache plugin behavior.
-import type { OpenKeyedStoreOptions } from "openclaw/plugin-sdk/plugin-state-runtime";
+import type { OpenKeyedStoreOptions } from "grokbot/plugin-sdk/plugin-state-runtime";
 import {
   createPluginStateKeyedStoreForTests,
   resetPluginStateStoreForTests,
-} from "openclaw/plugin-sdk/plugin-state-test-runtime";
-import type { PluginRuntime } from "openclaw/plugin-sdk/runtime-store";
+} from "grokbot/plugin-sdk/plugin-state-test-runtime";
+import type { PluginRuntime } from "grokbot/plugin-sdk/runtime-store";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const threadParticipationMemory = resolveGlobalDedupeCache(
-  Symbol.for("openclaw.mattermostThreadParticipation"),
+  Symbol.for("grokbot.mattermostThreadParticipation"),
   { ttlMs: 7 * 24 * 60 * 60 * 1000, maxSize: 5000 },
 );
 

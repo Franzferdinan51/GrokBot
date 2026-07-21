@@ -313,17 +313,17 @@ export type AgentDefaultsConfig = {
   contextPruning?: AgentContextPruningConfig;
   /** Compaction tuning and pre-compaction memory flush behavior. */
   compaction?: AgentCompactionConfig;
-  /** Embedded OpenClaw runner hardening and compatibility controls. */
+  /** Embedded GrokBot runner hardening and compatibility controls. */
   embeddedAgent?: {
     /**
-     * How embedded OpenClaw should trust workspace-local `.openclaw/settings.json`.
+     * How embedded GrokBot should trust workspace-local `.grokbot/settings.json`.
      * - sanitize (default): apply project settings except shellPath/shellCommandPrefix
      * - ignore: ignore project settings entirely
      * - trusted: trust project settings as-is
      */
     projectSettingsPolicy?: "trusted" | "sanitize" | "ignore";
     /**
-     * Embedded OpenClaw execution contract:
+     * Embedded GrokBot execution contract:
      * - default: keep the standard runner behavior
      * - strict-agentic: enable structured plan tracking and non-visible turn recovery on supported GPT-5 runs
      */
@@ -490,9 +490,9 @@ export type AgentCompactionMidTurnPrecheckConfig = {
 export type AgentCompactionConfig = {
   /** Compaction summarization mode. */
   mode?: AgentCompactionMode;
-  /** Override the session thinking level for embedded OpenClaw compaction summaries. */
+  /** Override the session thinking level for embedded GrokBot compaction summaries. */
   thinkingLevel?: AgentThinkingLevel;
-  /** Embedded OpenClaw keepRecentTokens budget used for cut-point selection. */
+  /** Embedded GrokBot keepRecentTokens budget used for cut-point selection. */
   keepRecentTokens?: number;
   /** Additional compaction-summary instructions that can preserve language or persona continuity. */
   customInstructions?: string;

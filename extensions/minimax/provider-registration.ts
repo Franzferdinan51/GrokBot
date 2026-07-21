@@ -1,5 +1,5 @@
 // Minimax provider module implements model/runtime integration.
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
+import { formatErrorMessage } from "grokbot/plugin-sdk/error-runtime";
 import type {
   OpenClawPluginApi,
   OpenClawConfig,
@@ -8,22 +8,22 @@ import type {
   ProviderCatalogContext,
   ProviderResolveDynamicModelContext,
   ProviderRuntimeModel,
-} from "openclaw/plugin-sdk/plugin-entry";
+} from "grokbot/plugin-sdk/plugin-entry";
 import {
   MINIMAX_OAUTH_MARKER,
   ensureAuthProfileStore,
   listProfilesForProvider,
-} from "openclaw/plugin-sdk/provider-auth";
-import { buildOauthProviderAuthResult } from "openclaw/plugin-sdk/provider-auth";
-import { createProviderApiKeyAuthMethod } from "openclaw/plugin-sdk/provider-auth-api-key";
-import type { ProviderPlugin } from "openclaw/plugin-sdk/provider-model-shared";
+} from "grokbot/plugin-sdk/provider-auth";
+import { buildOauthProviderAuthResult } from "grokbot/plugin-sdk/provider-auth";
+import { createProviderApiKeyAuthMethod } from "grokbot/plugin-sdk/provider-auth-api-key";
+import type { ProviderPlugin } from "grokbot/plugin-sdk/provider-model-shared";
 import {
   buildProviderReplayFamilyHooks,
   normalizeModelCompat,
-} from "openclaw/plugin-sdk/provider-model-shared";
-import { buildProviderStreamFamilyHooks } from "openclaw/plugin-sdk/provider-stream-family";
-import { fetchMinimaxUsage } from "openclaw/plugin-sdk/provider-usage";
-import { normalizeOptionalString } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/provider-model-shared";
+import { buildProviderStreamFamilyHooks } from "grokbot/plugin-sdk/provider-stream-family";
+import { fetchMinimaxUsage } from "grokbot/plugin-sdk/provider-usage";
+import { normalizeOptionalString } from "grokbot/plugin-sdk/string-coerce-runtime";
 import {
   isMiniMaxModernModelId,
   MINIMAX_DEFAULT_MODEL_ID,

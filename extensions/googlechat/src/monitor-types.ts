@@ -1,5 +1,5 @@
 // Googlechat plugin module implements monitor types behavior.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/core";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/core";
 import type { ResolvedGoogleChatAccount } from "./accounts.js";
 import type { GoogleChatAudienceType } from "./auth.js";
 import type { GoogleChatIngressMonitor } from "./monitor-ingress.js";

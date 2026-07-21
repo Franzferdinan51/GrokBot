@@ -157,7 +157,7 @@ async function writeModelsFileAtomicForModelsJson(
 }
 
 if (process.env.VITEST || process.env.NODE_ENV === "test") {
-  (globalThis as Record<PropertyKey, unknown>)[Symbol.for("openclaw.modelsConfigTestApi")] = {
+  (globalThis as Record<PropertyKey, unknown>)[Symbol.for("grokbot.modelsConfigTestApi")] = {
     ensureModelsFileModeForModelsJson,
     writeModelsFileAtomicForModelsJson,
   };

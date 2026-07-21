@@ -1,21 +1,21 @@
 // Zalouser API module exposes the plugin public contract.
-export { formatAllowFromLowercase } from "openclaw/plugin-sdk/allow-from";
+export { formatAllowFromLowercase } from "grokbot/plugin-sdk/allow-from";
 export type {
   ChannelDirectoryEntry,
   ChannelGroupContext,
   ChannelMessageActionAdapter,
-} from "openclaw/plugin-sdk/channel-contract";
-export { buildChannelConfigSchema } from "openclaw/plugin-sdk/channel-config-schema";
-export type { ChannelPlugin } from "openclaw/plugin-sdk/core";
+} from "grokbot/plugin-sdk/channel-contract";
+export { buildChannelConfigSchema } from "grokbot/plugin-sdk/channel-config-schema";
+export type { ChannelPlugin } from "grokbot/plugin-sdk/core";
 export {
   DEFAULT_ACCOUNT_ID,
   normalizeAccountId,
   type OpenClawConfig,
-} from "openclaw/plugin-sdk/core";
-export { isDangerousNameMatchingEnabled } from "openclaw/plugin-sdk/dangerous-name-runtime";
-export type { GroupToolPolicyConfig } from "openclaw/plugin-sdk/config-contracts";
-export { chunkTextForOutbound } from "openclaw/plugin-sdk/text-chunking";
+} from "grokbot/plugin-sdk/core";
+export { isDangerousNameMatchingEnabled } from "grokbot/plugin-sdk/dangerous-name-runtime";
+export type { GroupToolPolicyConfig } from "grokbot/plugin-sdk/config-contracts";
+export { chunkTextForOutbound } from "grokbot/plugin-sdk/text-chunking";
 export {
   isNumericTargetId,
   sendPayloadWithChunkedTextAndMedia,
-} from "openclaw/plugin-sdk/reply-payload";
+} from "grokbot/plugin-sdk/reply-payload";

@@ -1,40 +1,40 @@
 // Comfy plugin module implements workflow runtime behavior.
 import fs from "node:fs/promises";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { canResolveEnvSecretRefInReadOnlyPath } from "openclaw/plugin-sdk/extension-shared";
-import { extensionForMime } from "openclaw/plugin-sdk/media-mime";
-import { resolvePositiveTimerTimeoutMs } from "openclaw/plugin-sdk/number-runtime";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { canResolveEnvSecretRefInReadOnlyPath } from "grokbot/plugin-sdk/extension-shared";
+import { extensionForMime } from "grokbot/plugin-sdk/media-mime";
+import { resolvePositiveTimerTimeoutMs } from "grokbot/plugin-sdk/number-runtime";
 import {
   isProviderApiKeyConfigured,
   type AuthProfileStore,
-} from "openclaw/plugin-sdk/provider-auth";
-import { resolveApiKeyForProvider } from "openclaw/plugin-sdk/provider-auth-runtime";
+} from "grokbot/plugin-sdk/provider-auth";
+import { resolveApiKeyForProvider } from "grokbot/plugin-sdk/provider-auth-runtime";
 import {
   assertOkOrThrowHttpError,
   normalizeBaseUrl,
   readProviderJsonResponse,
   resolveProviderHttpRequestConfig,
-} from "openclaw/plugin-sdk/provider-http";
-import { readResponseWithLimit } from "openclaw/plugin-sdk/response-limit-runtime";
+} from "grokbot/plugin-sdk/provider-http";
+import { readResponseWithLimit } from "grokbot/plugin-sdk/response-limit-runtime";
 import {
   normalizeSecretInputString,
   resolveSecretInputString,
-} from "openclaw/plugin-sdk/secret-input-runtime";
+} from "grokbot/plugin-sdk/secret-input-runtime";
 import {
   fetchWithSsrFGuard,
   isPrivateOrLoopbackHost,
   mergeSsrFPolicies,
   ssrfPolicyFromHttpBaseUrlAllowedOrigin,
   type SsrFPolicy,
-} from "openclaw/plugin-sdk/ssrf-runtime";
+} from "grokbot/plugin-sdk/ssrf-runtime";
 import {
   asBoolean,
   isRecord,
   normalizeOptionalLowercaseString,
   normalizeOptionalString,
   uniqueStrings,
-} from "openclaw/plugin-sdk/string-coerce-runtime";
-import { resolveUserPath } from "openclaw/plugin-sdk/text-utility-runtime";
+} from "grokbot/plugin-sdk/string-coerce-runtime";
+import { resolveUserPath } from "grokbot/plugin-sdk/text-utility-runtime";
 
 const DEFAULT_COMFY_LOCAL_BASE_URL = "http://127.0.0.1:8188";
 const DEFAULT_COMFY_CLOUD_BASE_URL = "https://cloud.comfy.org";
@@ -119,7 +119,7 @@ function setComfyFetchGuardForTesting(impl: typeof fetchWithSsrFGuard | null): v
 }
 
 if (process.env.VITEST === "true") {
-  Reflect.set(globalThis, Symbol.for("openclaw.comfyTestApi"), {
+  Reflect.set(globalThis, Symbol.for("grokbot.comfyTestApi"), {
     getConfig: getComfyConfig,
     setFetchGuard: setComfyFetchGuardForTesting,
   });

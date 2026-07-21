@@ -1,6 +1,6 @@
 // Qqbot tests cover channel.message adapter plugin behavior.
-import { verifyChannelMessageAdapterCapabilityProofs } from "openclaw/plugin-sdk/channel-outbound";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import { verifyChannelMessageAdapterCapabilityProofs } from "grokbot/plugin-sdk/channel-outbound";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import { describe, expect, it, vi } from "vitest";
 import { qqbotPlugin } from "./channel.js";
 
@@ -130,7 +130,7 @@ describe("qqbot message adapter", () => {
         },
         media: async () => {
           const mediaAccess = {
-            localRoots: ["/tmp/openclaw-sandbox"],
+            localRoots: ["/tmp/grokbot-sandbox"],
             workspaceDir: "/tmp/workspace",
           };
           const result = await qqbotPlugin.message?.send?.media?.({
@@ -139,14 +139,14 @@ describe("qqbot message adapter", () => {
             text: "image",
             mediaUrl: "https://example.com/image.png",
             mediaAccess,
-            mediaLocalRoots: ["/tmp/openclaw-sandbox"],
+            mediaLocalRoots: ["/tmp/grokbot-sandbox"],
           });
           const sent = latestMockArg(sendMediaMock, "sendMedia") as SentMediaParams;
           expect(sent.to).toBe("qqbot:c2c:user-1");
           expect(sent.text).toBe("image");
           expect(sent.mediaUrl).toBe("https://example.com/image.png");
           expect(sent.mediaAccess).toBe(mediaAccess);
-          expect(sent.mediaLocalRoots).toEqual(["/tmp/openclaw-sandbox"]);
+          expect(sent.mediaLocalRoots).toEqual(["/tmp/grokbot-sandbox"]);
           expect(result?.receipt.platformMessageIds).toEqual(["qq-media-1"]);
         },
         replyTo: async () => {
@@ -223,17 +223,17 @@ describe("qqbot message adapter", () => {
   it("forwards scoped media access through outbound text and media sends", async () => {
     const mediaReadFile = vi.fn(async () => Buffer.from("report"));
     const mediaAccess = {
-      localRoots: ["/tmp/openclaw-sandbox"],
+      localRoots: ["/tmp/grokbot-sandbox"],
       workspaceDir: "/tmp/workspace",
       readFile: mediaReadFile,
     };
-    const mediaLocalRoots = ["/tmp/openclaw-sandbox"];
+    const mediaLocalRoots = ["/tmp/grokbot-sandbox"];
 
     sendTextMock.mockResolvedValueOnce({ messageId: "qq-text-media-1" });
     await qqbotPlugin.outbound?.sendText?.({
       cfg,
       to: "qqbot:c2c:user-1",
-      text: "<qqmedia>/tmp/openclaw-sandbox/report.docx</qqmedia>",
+      text: "<qqmedia>/tmp/grokbot-sandbox/report.docx</qqmedia>",
       mediaAccess,
       mediaLocalRoots,
       mediaReadFile,
@@ -248,13 +248,13 @@ describe("qqbot message adapter", () => {
       cfg,
       to: "qqbot:c2c:user-1",
       text: "report",
-      mediaUrl: "/tmp/openclaw-sandbox/report.docx",
+      mediaUrl: "/tmp/grokbot-sandbox/report.docx",
       mediaAccess,
       mediaLocalRoots,
       mediaReadFile,
     });
     const sentMedia = latestMockArg(sendMediaMock, "sendMedia") as SentMediaParams;
-    expect(sentMedia.mediaUrl).toBe("/tmp/openclaw-sandbox/report.docx");
+    expect(sentMedia.mediaUrl).toBe("/tmp/grokbot-sandbox/report.docx");
     expect(sentMedia.mediaAccess).toBe(mediaAccess);
     expect(sentMedia.mediaLocalRoots).toBe(mediaLocalRoots);
     expect(sentMedia.mediaReadFile).toBe(mediaReadFile);

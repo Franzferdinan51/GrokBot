@@ -1,23 +1,23 @@
 // Zalouser plugin module implements channel.adapters behavior.
-import { createScopedDmSecurityResolver } from "openclaw/plugin-sdk/channel-config-helpers";
+import { createScopedDmSecurityResolver } from "grokbot/plugin-sdk/channel-config-helpers";
 import {
   defineChannelMessageAdapter,
   type ChannelMessageSendResult,
-} from "openclaw/plugin-sdk/channel-outbound";
-import { createPairingPrefixStripper } from "openclaw/plugin-sdk/channel-pairing";
+} from "grokbot/plugin-sdk/channel-outbound";
+import { createPairingPrefixStripper } from "grokbot/plugin-sdk/channel-pairing";
 import {
   resolveScopeRequireMention,
   resolveScopeToolsPolicy,
-} from "openclaw/plugin-sdk/channel-policy";
+} from "grokbot/plugin-sdk/channel-policy";
 import {
   createEmptyChannelResult,
   type ChannelOutboundAdapter,
   type OutboundDeliveryResult,
-} from "openclaw/plugin-sdk/channel-send-result";
-import { createStaticReplyToModeResolver } from "openclaw/plugin-sdk/conversation-runtime";
-import { createLazyRuntimeModule } from "openclaw/plugin-sdk/lazy-runtime";
-import type { RuntimeEnv } from "openclaw/plugin-sdk/runtime-env";
-import { normalizeLowercaseStringOrEmpty } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/channel-send-result";
+import { createStaticReplyToModeResolver } from "grokbot/plugin-sdk/conversation-runtime";
+import { createLazyRuntimeModule } from "grokbot/plugin-sdk/lazy-runtime";
+import type { RuntimeEnv } from "grokbot/plugin-sdk/runtime-env";
+import { normalizeLowercaseStringOrEmpty } from "grokbot/plugin-sdk/string-coerce-runtime";
 import {
   checkZcaAuthenticated,
   listZalouserAccountIds,

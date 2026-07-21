@@ -1,17 +1,17 @@
 ---
-summary: "CLI reference for `openclaw policy` conformance checks"
+summary: "CLI reference for `grokbot policy` conformance checks"
 read_when:
-  - You want to check OpenClaw settings against an authored policy.jsonc
+  - You want to check GrokBot settings against an authored policy.jsonc
   - You want policy findings in doctor lint
   - You need a policy attestation hash for audit evidence
 title: "Policy"
 ---
 
-# `openclaw policy`
+# `grokbot policy`
 
-`openclaw policy` is provided by the bundled Policy plugin. It is an enterprise
-conformance layer over existing OpenClaw settings, not a second configuration
-system. You author requirements in `policy.jsonc`; OpenClaw observes the active
+`grokbot policy` is provided by the bundled Policy plugin. It is an enterprise
+conformance layer over existing GrokBot settings, not a second configuration
+system. You author requirements in `policy.jsonc`; GrokBot observes the active
 workspace as evidence; policy reports drift through `doctor --lint`. Policy
 does not enforce tool calls or rewrite runtime behavior at request time, and it
 does not attest per-agent credential stores such as `auth-profiles.json`.
@@ -28,7 +28,7 @@ config is enough.
 ## Quick start
 
 ```bash
-openclaw plugins enable policy
+grokbot plugins enable policy
 ```
 
 The plugin stays enabled even when `policy.jsonc` is missing, so doctor can
@@ -187,7 +187,7 @@ Cross-cutting notes not obvious from the rule tables below:
 ### Policy rule reference
 
 Every rule below is optional; a check runs only when the rule is present. The
-observed state is existing OpenClaw config or workspace metadata.
+observed state is existing GrokBot config or workspace metadata.
 
 #### Scoped overlays
 
@@ -201,7 +201,7 @@ and the scoped rule can add its own finding against the same evidence.
 | `agentIds`   | `tools`, `agents.workspace`, `sandbox`, `dataHandling.memory`, `execApprovals` | One or more runtime agents need stricter rules.   |
 | `channelIds` | `ingress.channels`                                                             | One or more channels need stricter ingress rules. |
 
-If an `agentIds` entry is not present in `agents.list[]`, OpenClaw evaluates
+If an `agentIds` entry is not present in `agents.list[]`, GrokBot evaluates
 the scoped rule against inherited global/default posture for that runtime
 agent id instead of skipping it.
 
@@ -331,11 +331,11 @@ Every scope present in `policy.jsonc` must be valid and enforceable.
 | `gateway.remote.allow`                  | Remote Gateway mode/config                     | Set to `false` to deny remote Gateway mode.                                          |
 | `gateway.http.denyEndpoints`            | Gateway HTTP API endpoints                     | Deny endpoint ids such as `chatCompletions` or `responses`.                          |
 | `gateway.http.requireUrlAllowlists`     | Gateway HTTP URL-fetch inputs                  | Set to `true` to require URL allowlists on URL-fetch inputs.                         |
-| `gateway.nodes.denyCommands`            | `gateway.nodes.denyCommands`                   | Require exact node command ids such as `system.run` to be denied in OpenClaw config. |
+| `gateway.nodes.denyCommands`            | `gateway.nodes.denyCommands`                   | Require exact node command ids such as `system.run` to be denied in GrokBot config. |
 
 `gateway.nodes.denyCommands` is an exact, case-sensitive deny-superset rule.
 Use it when policy must prove that privileged node commands are explicitly
-denied by OpenClaw config. A deployment that intentionally allows a privileged
+denied by GrokBot config. A deployment that intentionally allows a privileged
 node command should update `policy.jsonc` after review instead of relying on
 `gateway.nodes.allowCommands` alone.
 
@@ -383,7 +383,7 @@ allowlist such as `["all"]`.
 #### Exec approvals
 
 Exec-approvals checks read the runtime `exec-approvals.json` artifact:
-`~/.openclaw/exec-approvals.json` by default, or
+`~/.grokbot/exec-approvals.json` by default, or
 `$OPENCLAW_STATE_DIR/exec-approvals.json` when `OPENCLAW_STATE_DIR` is set.
 Posture rules under `execApprovals.defaults.*` or `execApprovals.agents.*`
 require readable artifact evidence; a missing or invalid artifact reports as
@@ -472,20 +472,20 @@ only reviewed exec approval posture for selected agents.
 Run policy-only checks during authoring:
 
 ```bash
-openclaw policy check
-openclaw policy check --json
-openclaw policy check --severity-min error
+grokbot policy check
+grokbot policy check --json
+grokbot policy check --severity-min error
 ```
 
 `policy check` runs only the policy check set and emits evidence, findings,
 and attestation hashes. The same findings also appear in
-`openclaw doctor --lint` when the Policy plugin is enabled.
+`grokbot doctor --lint` when the Policy plugin is enabled.
 
 Compare an operator policy file against an authored baseline:
 
 ```bash
-openclaw policy compare --baseline official.policy.jsonc
-openclaw policy compare --baseline official.policy.jsonc --policy policy.jsonc --json
+grokbot policy compare --baseline official.policy.jsonc
+grokbot policy compare --baseline official.policy.jsonc --policy policy.jsonc --json
 ```
 
 `policy compare` checks policy-file syntax against policy-file syntax; it does
@@ -594,7 +594,7 @@ Example JSON output:
       {
         "id": "telegram",
         "provider": "telegram",
-        "source": "oc://openclaw.config/channels/telegram",
+        "source": "oc://grokbot.config/channels/telegram",
         "enabled": false
       }
     ],
@@ -602,14 +602,14 @@ Example JSON output:
       {
         "id": "docs",
         "transport": "stdio",
-        "source": "oc://openclaw.config/mcp/servers/docs",
+        "source": "oc://grokbot.config/mcp/servers/docs",
         "command": "npx"
       }
     ],
     "modelProviders": [
       {
         "id": "openai",
-        "source": "oc://openclaw.config/models/providers/openai"
+        "source": "oc://grokbot.config/models/providers/openai"
       }
     ],
     "modelRefs": [
@@ -617,13 +617,13 @@ Example JSON output:
         "ref": "openai/gpt-5.6-sol",
         "provider": "openai",
         "model": "gpt-5.6-sol",
-        "source": "oc://openclaw.config/agents/defaults/model"
+        "source": "oc://grokbot.config/agents/defaults/model"
       }
     ],
     "network": [
       {
         "id": "browser-private-network",
-        "source": "oc://openclaw.config/browser/ssrfPolicy/dangerouslyAllowPrivateNetwork",
+        "source": "oc://grokbot.config/browser/ssrfPolicy/dangerouslyAllowPrivateNetwork",
         "value": false
       }
     ],
@@ -631,7 +631,7 @@ Example JSON output:
       {
         "id": "gateway-bind",
         "kind": "bind",
-        "source": "oc://openclaw.config/gateway/bind",
+        "source": "oc://grokbot.config/gateway/bind",
         "value": "loopback",
         "nonLoopback": false,
         "explicit": true
@@ -641,18 +641,18 @@ Example JSON output:
       {
         "id": "agents-defaults-workspace-access",
         "kind": "workspaceAccess",
-        "source": "oc://openclaw.config/agents/defaults/sandbox/workspaceAccess",
+        "source": "oc://grokbot.config/agents/defaults/sandbox/workspaceAccess",
         "scope": "defaults",
         "value": "ro",
         "sandboxMode": "all",
-        "sandboxModeSource": "oc://openclaw.config/agents/defaults/sandbox/mode",
+        "sandboxModeSource": "oc://grokbot.config/agents/defaults/sandbox/mode",
         "sandboxEnabled": true,
         "explicit": true
       },
       {
         "id": "agents-defaults-tool-exec",
         "kind": "toolDeny",
-        "source": "oc://openclaw.config/tools/deny",
+        "source": "oc://grokbot.config/tools/deny",
         "scope": "defaults",
         "tool": "exec",
         "denied": true,
@@ -663,13 +663,13 @@ Example JSON output:
       {
         "id": "vault",
         "kind": "provider",
-        "source": "oc://openclaw.config/secrets/providers/vault",
+        "source": "oc://grokbot.config/secrets/providers/vault",
         "providerSource": "env"
       },
       {
-        "id": "oc://openclaw.config/models/providers/openai/apiKey",
+        "id": "oc://grokbot.config/models/providers/openai/apiKey",
         "kind": "input",
-        "source": "oc://openclaw.config/models/providers/openai/apiKey",
+        "source": "oc://grokbot.config/models/providers/openai/apiKey",
         "provenance": "secretRef",
         "refSource": "env",
         "refProvider": "vault"
@@ -678,7 +678,7 @@ Example JSON output:
     "authProfiles": [
       {
         "id": "github",
-        "source": "oc://openclaw.config/auth/profiles/github",
+        "source": "oc://grokbot.config/auth/profiles/github",
         "validMetadata": true,
         "provider": "github",
         "mode": "token"
@@ -702,7 +702,7 @@ Example JSON output:
 ```
 
 `attestation.policy.hash` identifies the authored rule artifact. `evidence`
-records the observed OpenClaw state used by the checks, and
+records the observed GrokBot state used by the checks, and
 `workspace.hash` identifies that evidence payload. `findingsHash` identifies
 the exact finding set. `checkedAt` records when the check ran.
 `attestationHash` identifies the stable claim (policy hash, evidence hash,
@@ -718,10 +718,10 @@ stable hash.
 Lifecycle for accepting policy state:
 
 1. Author or review `policy.jsonc`.
-2. Run `openclaw policy check --json`.
+2. Run `grokbot policy check --json`.
 3. If clean, record `attestation.policy.hash` as `expectedHash`.
 4. Record `attestation.attestationHash` as `expectedAttestationHash`.
-5. Re-run `openclaw doctor --lint` in CI or release gates.
+5. Re-run `grokbot doctor --lint` in CI or release gates.
 
 If policy rules change intentionally, update both accepted hashes from a
 clean check. If only workspace settings change (policy stays the same),
@@ -732,11 +732,11 @@ to the workspace hash and attestation hash; review the new evidence and
 refresh accepted attestation hashes after enabling. Enabling or upgrading
 tool posture rules adds `toolPosture` evidence the same way.
 
-`openclaw policy watch` re-runs the check and reports when current evidence no
+`grokbot policy watch` re-runs the check and reports when current evidence no
 longer matches `expectedAttestationHash`:
 
 ```bash
-openclaw policy watch --json
+grokbot policy watch --json
 ```
 
 Use `--once` in CI or scripts that need a single drift evaluation. Without
@@ -772,7 +772,7 @@ the interval.
 | `policy/gateway-remote-enabled`                          | Gateway remote mode is active when policy denies it.                              |
 | `policy/gateway-http-endpoint-enabled`                   | A Gateway HTTP API endpoint is enabled while denied by policy.                    |
 | `policy/gateway-http-url-fetch-unrestricted`             | Gateway HTTP URL-fetch input lacks a required URL allowlist.                      |
-| `policy/gateway-node-command-denied`                     | A node command denied by policy is not denied by OpenClaw config.                 |
+| `policy/gateway-node-command-denied`                     | A node command denied by policy is not denied by GrokBot config.                 |
 | `policy/agents-workspace-access-denied`                  | Agent sandbox mode or workspace access is outside the policy allowlist.           |
 | `policy/agents-tool-not-denied`                          | An agent or default config does not deny a tool required by policy.               |
 | `policy/tools-profile-unapproved`                        | A configured global or per-agent tool profile is outside the allowlist.           |
@@ -828,9 +828,9 @@ Example findings:
   "severity": "error",
   "message": "Channel 'telegram' uses denied provider 'telegram'.",
   "source": "policy",
-  "path": "openclaw config",
-  "ocPath": "oc://openclaw.config/channels/telegram",
-  "target": "oc://openclaw.config/channels/telegram",
+  "path": "grokbot config",
+  "ocPath": "oc://grokbot.config/channels/telegram",
+  "target": "oc://grokbot.config/channels/telegram",
   "requirement": "oc://policy.jsonc/channels/denyRules/#0",
   "fixHint": "Telegram is not approved for this workspace."
 }
@@ -856,9 +856,9 @@ Example findings:
   "severity": "error",
   "message": "MCP server 'remote' is not in the policy allowlist.",
   "source": "policy",
-  "path": "openclaw config",
-  "ocPath": "oc://openclaw.config/mcp/servers/remote",
-  "target": "oc://openclaw.config/mcp/servers/remote",
+  "path": "grokbot config",
+  "ocPath": "oc://grokbot.config/mcp/servers/remote",
+  "target": "oc://grokbot.config/mcp/servers/remote",
   "requirement": "oc://policy.jsonc/mcp/servers/allow"
 }
 ```
@@ -869,9 +869,9 @@ Example findings:
   "severity": "error",
   "message": "Model ref 'anthropic/claude-sonnet-4.7' uses unapproved provider 'anthropic'.",
   "source": "policy",
-  "path": "openclaw config",
-  "ocPath": "oc://openclaw.config/agents/defaults/model/fallbacks/#0",
-  "target": "oc://openclaw.config/agents/defaults/model/fallbacks/#0",
+  "path": "grokbot config",
+  "ocPath": "oc://grokbot.config/agents/defaults/model/fallbacks/#0",
+  "target": "oc://grokbot.config/agents/defaults/model/fallbacks/#0",
   "requirement": "oc://policy.jsonc/models/providers/allow"
 }
 ```
@@ -882,9 +882,9 @@ Example findings:
   "severity": "error",
   "message": "Network setting 'browser-private-network' allows private-network access.",
   "source": "policy",
-  "path": "openclaw config",
-  "ocPath": "oc://openclaw.config/browser/ssrfPolicy/dangerouslyAllowPrivateNetwork",
-  "target": "oc://openclaw.config/browser/ssrfPolicy/dangerouslyAllowPrivateNetwork",
+  "path": "grokbot config",
+  "ocPath": "oc://grokbot.config/browser/ssrfPolicy/dangerouslyAllowPrivateNetwork",
+  "target": "oc://grokbot.config/browser/ssrfPolicy/dangerouslyAllowPrivateNetwork",
   "requirement": "oc://policy.jsonc/network/privateNetwork/allow"
 }
 ```
@@ -895,9 +895,9 @@ Example findings:
   "severity": "error",
   "message": "Gateway bind setting 'gateway-bind' permits non-loopback exposure.",
   "source": "policy",
-  "path": "openclaw config",
-  "ocPath": "oc://openclaw.config/gateway/bind",
-  "target": "oc://openclaw.config/gateway/bind",
+  "path": "grokbot config",
+  "ocPath": "oc://grokbot.config/gateway/bind",
+  "target": "oc://grokbot.config/gateway/bind",
   "requirement": "oc://policy.jsonc/gateway/exposure/allowNonLoopbackBind"
 }
 ```
@@ -906,11 +906,11 @@ Example findings:
 {
   "checkId": "policy/gateway-node-command-denied",
   "severity": "error",
-  "message": "Gateway node command 'system.run' is denied by policy but not denied by OpenClaw config.",
+  "message": "Gateway node command 'system.run' is denied by policy but not denied by GrokBot config.",
   "source": "policy",
-  "path": "openclaw config",
-  "ocPath": "oc://openclaw.config/gateway/nodes/denyCommands",
-  "target": "oc://openclaw.config/gateway/nodes/denyCommands",
+  "path": "grokbot config",
+  "ocPath": "oc://grokbot.config/gateway/nodes/denyCommands",
+  "target": "oc://grokbot.config/gateway/nodes/denyCommands",
   "requirement": "oc://policy.jsonc/gateway/nodes/denyCommands",
   "fixHint": "Add 'system.run' to gateway.nodes.denyCommands or update policy after review."
 }
@@ -922,9 +922,9 @@ Example findings:
   "severity": "error",
   "message": "agents.defaults sandbox workspaceAccess 'rw' is not allowed by policy.",
   "source": "policy",
-  "path": "openclaw config",
-  "ocPath": "oc://openclaw.config/agents/defaults/sandbox/workspaceAccess",
-  "target": "oc://openclaw.config/agents/defaults/sandbox/workspaceAccess",
+  "path": "grokbot config",
+  "ocPath": "oc://grokbot.config/agents/defaults/sandbox/workspaceAccess",
+  "target": "oc://grokbot.config/agents/defaults/sandbox/workspaceAccess",
   "requirement": "oc://policy.jsonc/agents/workspace/allowedAccess"
 }
 ```

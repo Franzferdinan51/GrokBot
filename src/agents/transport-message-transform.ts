@@ -1,4 +1,4 @@
-import { resolveModelBoundThinkingReplayMode } from "@openclaw/ai/internal/anthropic";
+import { resolveModelBoundThinkingReplayMode } from "@grokbot/ai/internal/anthropic";
 /**
  * Normalizes transcript messages before provider transport replay. It drops
  * unsafe failed turns, maps tool-call ids across model boundaries, and fills
@@ -10,15 +10,15 @@ import { repairToolUseResultPairing } from "./session-transcript-repair.js";
 
 const SYNTHETIC_TOOL_RESULT_APIS = new Set<string>([
   "anthropic-messages",
-  "openclaw-anthropic-messages-transport",
+  "grokbot-anthropic-messages-transport",
   "bedrock-converse-stream",
   "google-generative-ai",
-  "openclaw-google-generative-ai-transport",
+  "grokbot-google-generative-ai-transport",
   "openai-responses",
   "openai-chatgpt-responses",
   "azure-openai-responses",
-  "openclaw-openai-responses-transport",
-  "openclaw-azure-openai-responses-transport",
+  "grokbot-openai-responses-transport",
+  "grokbot-azure-openai-responses-transport",
 ]);
 
 // "aborted" is an OpenAI Responses-family convention from upstream Codex
@@ -29,8 +29,8 @@ const CODEX_STYLE_ABORTED_OUTPUT_APIS = new Set<string>([
   "openai-responses",
   "openai-chatgpt-responses",
   "azure-openai-responses",
-  "openclaw-openai-responses-transport",
-  "openclaw-azure-openai-responses-transport",
+  "grokbot-openai-responses-transport",
+  "grokbot-azure-openai-responses-transport",
 ]);
 
 function defaultAllowSyntheticToolResults(modelApi: Api): boolean {

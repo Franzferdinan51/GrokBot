@@ -1,6 +1,6 @@
-import { resolveDefaultAgentDir } from "openclaw/plugin-sdk/agent-runtime";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { jsonResult, readStringParam, type AnyAgentTool } from "openclaw/plugin-sdk/core";
+import { resolveDefaultAgentDir } from "grokbot/plugin-sdk/agent-runtime";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { jsonResult, readStringParam, type AnyAgentTool } from "grokbot/plugin-sdk/core";
 /**
  * Compatibility tools for the retired Codex Supervisor plugin.
  *
@@ -9,8 +9,8 @@ import { jsonResult, readStringParam, type AnyAgentTool } from "openclaw/plugin-
  * continuation belongs to the Codex harness, which installs approval and tool
  * handlers before it starts or resumes the harness-owned Codex thread.
  */
-import { expectDefined } from "openclaw/plugin-sdk/expect-runtime";
-import { isRecord } from "openclaw/plugin-sdk/string-coerce-runtime";
+import { expectDefined } from "grokbot/plugin-sdk/expect-runtime";
+import { isRecord } from "grokbot/plugin-sdk/string-coerce-runtime";
 import { Type } from "typebox";
 import {
   resolveCodexAppServerAuthProfileIdForAgent,
@@ -1029,7 +1029,7 @@ function createPolicyGuardedRequest(
 
 function idleContinuationError(threadId: string): Error {
   return new Error(
-    `Codex thread ${threadId} is idle. Continue it from Codex Sessions so OpenClaw can install the Codex harness approval and tool handlers before resume.`,
+    `Codex thread ${threadId} is idle. Continue it from Codex Sessions so GrokBot can install the Codex harness approval and tool handlers before resume.`,
   );
 }
 
@@ -1078,7 +1078,7 @@ export function createCodexSupervisionTools(options: CodexSupervisionToolsOption
     {
       name: "codex_sessions_list",
       label: "Codex Sessions List",
-      description: "List Codex sessions visible to the OpenClaw supervisor.",
+      description: "List Codex sessions visible to the GrokBot supervisor.",
       parameters: SessionsListParamsSchema,
       execute: async (_toolCallId, rawParams) => {
         const params = asRecord(rawParams);

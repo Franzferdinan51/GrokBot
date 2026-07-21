@@ -1,5 +1,5 @@
 // Slack tests cover outbound delivery plugin behavior.
-import { sendDurableMessageBatch } from "openclaw/plugin-sdk/channel-outbound";
+import { sendDurableMessageBatch } from "grokbot/plugin-sdk/channel-outbound";
 import {
   addTestHook,
   createEmptyPluginRegistry,
@@ -10,7 +10,7 @@ import {
   resetGlobalHookRunner,
   setActivePluginRegistry,
   type PluginHookRegistration,
-} from "openclaw/plugin-sdk/channel-test-helpers";
+} from "grokbot/plugin-sdk/channel-test-helpers";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { slackOutbound } from "./outbound-adapter.js";
 import type { OpenClawConfig } from "./runtime-api.js";

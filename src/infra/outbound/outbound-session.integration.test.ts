@@ -8,7 +8,7 @@ import {
   resolveConversation,
 } from "../../config/sessions/conversation-registry.js";
 import { upsertSessionEntry } from "../../config/sessions/session-accessor.js";
-import { closeOpenClawAgentDatabasesForTest } from "../../state/openclaw-agent-db.js";
+import { closeOpenClawAgentDatabasesForTest } from "../../state/grokbot-agent-db.js";
 import { bindOutboundSessionEntry } from "./outbound-session.js";
 
 describe("outbound session persistence", () => {
@@ -17,7 +17,7 @@ describe("outbound session persistence", () => {
   const tempDirs = useAutoCleanupTempDirTracker(afterEach);
 
   beforeEach(() => {
-    storePath = path.join(tempDirs.make("openclaw-outbound-session-"), "sessions.json");
+    storePath = path.join(tempDirs.make("grokbot-outbound-session-"), "sessions.json");
   });
 
   afterEach(() => {

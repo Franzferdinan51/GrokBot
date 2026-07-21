@@ -7,7 +7,7 @@ import { resolveDefaultAgentWorkspaceDir } from "./workspace.js";
 
 describe("DEFAULT_AGENT_WORKSPACE_DIR", () => {
   it("uses OPENCLAW_HOME when resolving the default workspace dir", () => {
-    const home = path.join(path.sep, "srv", "openclaw-home");
+    const home = path.join(path.sep, "srv", "grokbot-home");
 
     const resolved = withEnv(
       {
@@ -19,16 +19,16 @@ describe("DEFAULT_AGENT_WORKSPACE_DIR", () => {
       () => resolveDefaultAgentWorkspaceDir(),
     );
 
-    expect(resolved).toBe(path.join(path.resolve(home), ".openclaw", "workspace"));
+    expect(resolved).toBe(path.join(path.resolve(home), ".grokbot", "workspace"));
   });
 
   it("uses OPENCLAW_WORKSPACE_DIR before OPENCLAW_HOME", () => {
-    const workspaceDir = path.join(path.sep, "srv", "openclaw-workspace");
+    const workspaceDir = path.join(path.sep, "srv", "grokbot-workspace");
 
     const resolved = withEnv(
       {
         OPENCLAW_WORKSPACE_DIR: workspaceDir,
-        OPENCLAW_HOME: path.join(path.sep, "srv", "openclaw-home"),
+        OPENCLAW_HOME: path.join(path.sep, "srv", "grokbot-home"),
       },
       () => resolveDefaultAgentWorkspaceDir(),
     );

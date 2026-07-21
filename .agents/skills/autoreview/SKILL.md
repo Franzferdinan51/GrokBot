@@ -103,7 +103,7 @@ export AUTOREVIEW_HARNESS=".claude/skills/autoreview/scripts/test-review-harness
 ```
 
 ```bash
-# Source checkout of openclaw/agent-skills:
+# Source checkout of grokbot/agent-skills:
 export AUTOREVIEW="skills/autoreview/scripts/autoreview"
 export AUTOREVIEW_HARNESS="skills/autoreview/scripts/test-review-harness"
 ```
@@ -132,7 +132,7 @@ $AUTOREVIEW_HARNESS = ".claude\skills\autoreview\scripts\test-review-harness.ps1
 ```
 
 ```powershell
-# Source checkout of openclaw/agent-skills:
+# Source checkout of grokbot/agent-skills:
 $AUTOREVIEW = "skills\autoreview\scripts\autoreview"
 $AUTOREVIEW_HARNESS = "skills\autoreview\scripts\test-review-harness.ps1"
 ```
@@ -292,7 +292,7 @@ Recommended model defaults:
 
 | Engine              | Default model                                      | Source note                                           |
 | ------------------- | -------------------------------------------------- | ----------------------------------------------------- |
-| **codex** (default) | `gpt-5.6-sol` -> `gpt-5.6-terra` on access failure | OpenClaw org review default                           |
+| **codex** (default) | `gpt-5.6-sol` -> `gpt-5.6-terra` on access failure | GrokBot org review default                           |
 | **claude**          | `claude-fable-5`                                   | Anthropic's most capable widely released Claude model |
 
 CLI flags and environment variables override these defaults. Pi does not get a built-in model default because its provider catalog may vary by installation. Droid, Copilot, Cursor, and OpenCode are currently refused.

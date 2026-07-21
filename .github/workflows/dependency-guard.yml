@@ -35,7 +35,7 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
           OPENCLAW_DEPENDENCY_GUARD_MODE: detect
           OPENCLAW_SECURITY_APPROVERS: vincentkoc,steipete,joshavant
-          OPENCLAW_SECURITY_TEAM_SLUG: openclaw-secops
+          OPENCLAW_SECURITY_TEAM_SLUG: grokbot-secops
         run: node scripts/github/dependency-guard.mjs
 
   dependency-guard-autoscrub:
@@ -83,7 +83,7 @@ jobs:
           OPENCLAW_DEPENDENCY_GUARD_AUTOSCRUB_TOKEN: ${{ steps.app-token.outputs.token || steps.app-token-fallback.outputs.token }}
           OPENCLAW_DEPENDENCY_GUARD_MODE: autoscrub
           OPENCLAW_SECURITY_APPROVERS: vincentkoc,steipete,joshavant
-          OPENCLAW_SECURITY_TEAM_SLUG: openclaw-secops
+          OPENCLAW_SECURITY_TEAM_SLUG: grokbot-secops
         run: node scripts/github/dependency-guard.mjs
 
   dependency-guard:
@@ -105,5 +105,5 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
           OPENCLAW_DEPENDENCY_GUARD_MODE: enforce
           OPENCLAW_SECURITY_APPROVERS: vincentkoc,steipete,joshavant
-          OPENCLAW_SECURITY_TEAM_SLUG: openclaw-secops
+          OPENCLAW_SECURITY_TEAM_SLUG: grokbot-secops
         run: node scripts/github/dependency-guard.mjs

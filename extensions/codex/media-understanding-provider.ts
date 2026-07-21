@@ -5,14 +5,14 @@
 import {
   type JsonSchemaObject,
   validateJsonSchemaValue,
-} from "openclaw/plugin-sdk/json-schema-runtime";
+} from "grokbot/plugin-sdk/json-schema-runtime";
 import type {
   ImagesDescriptionRequest,
   ImagesDescriptionResult,
   MediaUnderstandingProvider,
   StructuredExtractionRequest,
   StructuredExtractionResult,
-} from "openclaw/plugin-sdk/media-understanding";
+} from "grokbot/plugin-sdk/media-understanding";
 import {
   runBoundedCodexAppServerTurn,
   type CodexBoundedTurnOptions,
@@ -83,7 +83,7 @@ async function describeCodexImages(
     options,
     taskLabel: "image understanding",
     developerInstructions:
-      "You are OpenClaw's bounded image-understanding worker. Describe only the provided image content. Do not call tools, edit files, or ask follow-up questions.",
+      "You are GrokBot's bounded image-understanding worker. Describe only the provided image content. Do not call tools, edit files, or ask follow-up questions.",
     input: [
       { type: "text", text: buildCodexImagePrompt(req), text_elements: [] },
       ...req.images.map((image) => ({
@@ -126,7 +126,7 @@ async function extractCodexStructured(
     options,
     taskLabel: "structured extraction",
     developerInstructions:
-      "You are OpenClaw's bounded structured-extraction worker. Return only the requested extraction. Do not call tools, edit files, ask follow-up questions, or include secrets.",
+      "You are GrokBot's bounded structured-extraction worker. Return only the requested extraction. Do not call tools, edit files, ask follow-up questions, or include secrets.",
     input: buildCodexStructuredInput(req),
     requiredModalities: requiredStructuredModalities(),
     isolation: "configured-transport",

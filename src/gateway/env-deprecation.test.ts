@@ -37,7 +37,7 @@ describe("warnLegacyOpenClawEnvVars", () => {
     ];
     expect(message).toContain("Legacy CLAWDBOT_*, MOLTBOT_* environment variables");
     expect(message).toContain("3 total");
-    expect(message).toContain("replacing the legacy prefix with OPENCLAW_");
+    expect(message).toContain("replacing the legacy prefix with GROKBOT_");
     expect(message).not.toContain("GATEWAY_TOKEN");
     expect(message).not.toContain("GATEWAY_PASSWORD");
     expect(message).not.toContain("forged");

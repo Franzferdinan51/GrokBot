@@ -3,7 +3,7 @@ import { isLiveTestEnabled } from "../../agents/live-test-helpers.js";
 import {
   createOpenClawTestState,
   type OpenClawTestState,
-} from "../../test-utils/openclaw-test-state.js";
+} from "../../test-utils/grokbot-test-state.js";
 import { createTrackedTempDirs } from "../../test-utils/tracked-temp-dirs.js";
 import { formatSkillExperienceReviewTranscript } from "./experience-review-prompt.js";
 import { runSkillExperienceReview, type ExperienceReviewCandidate } from "./experience-review.js";
@@ -34,7 +34,7 @@ function candidate(runId: string, messages: unknown[]): ExperienceReviewCandidat
         providers: {
           openai: {
             api: "openai-responses",
-            agentRuntime: { id: "openclaw" },
+            agentRuntime: { id: "grokbot" },
             apiKey: { source: "env", provider: "default", id: "OPENAI_API_KEY" },
             baseUrl: "https://api.openai.com/v1",
             models: [
@@ -42,7 +42,7 @@ function candidate(runId: string, messages: unknown[]): ExperienceReviewCandidat
                 id: modelId,
                 name: modelId,
                 api: "openai-responses",
-                agentRuntime: { id: "openclaw" },
+                agentRuntime: { id: "grokbot" },
                 input: ["text"],
                 reasoning: true,
                 contextWindow: 1_047_576,
@@ -58,7 +58,7 @@ function candidate(runId: string, messages: unknown[]): ExperienceReviewCandidat
           model: { primary: `openai/${modelId}` },
           models: {
             [`openai/${modelId}`]: {
-              agentRuntime: { id: "openclaw" },
+              agentRuntime: { id: "grokbot" },
               params: { maxTokens: 2_048 },
             },
           },
@@ -75,9 +75,9 @@ describeLive("skill experience review live OpenAI eval", () => {
   beforeAll(async () => {
     testState = await createOpenClawTestState({
       layout: "state-only",
-      prefix: "openclaw-live-skill-review-state-",
+      prefix: "grokbot-live-skill-review-state-",
     });
-    workspaceDir = await tempDirs.make("openclaw-live-skill-review-workspace-");
+    workspaceDir = await tempDirs.make("grokbot-live-skill-review-workspace-");
   });
 
   afterAll(async () => {

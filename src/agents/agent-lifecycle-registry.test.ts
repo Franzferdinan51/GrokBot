@@ -6,7 +6,7 @@ import {
   claimCompletedAgentDeletionJournal,
   readAgentDeletionJournal,
 } from "../state/agent-deletion-journal.js";
-import { closeOpenClawStateDatabaseForTest } from "../state/openclaw-state-db.js";
+import { closeOpenClawStateDatabaseForTest } from "../state/grokbot-state-db.js";
 import {
   beginAgentDeletion,
   claimCompletedAgentDeletion,
@@ -17,7 +17,7 @@ const tempDirs: string[] = [];
 
 function createOptions() {
   const stateDir = fs.realpathSync(
-    fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-agent-delete-")),
+    fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-agent-delete-")),
   );
   tempDirs.push(stateDir);
   return { env: { ...process.env, OPENCLAW_STATE_DIR: stateDir } };

@@ -1,7 +1,7 @@
 // Fetches Claude provider usage windows.
-import { asFiniteNumber } from "@openclaw/normalization-core/number-coercion";
-import { isRecord } from "@openclaw/normalization-core/record-coerce";
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+import { asFiniteNumber } from "@grokbot/normalization-core/number-coercion";
+import { isRecord } from "@grokbot/normalization-core/record-coerce";
+import { normalizeOptionalString } from "@grokbot/normalization-core/string-coerce";
 import { readProviderJsonResponse } from "../agents/provider-http-errors.js";
 import {
   buildUsageHttpErrorSnapshot,
@@ -211,7 +211,7 @@ export async function fetchClaudeUsage(
     {
       headers: {
         Authorization: `Bearer ${token}`,
-        "User-Agent": "openclaw",
+        "User-Agent": "grokbot",
         Accept: "application/json",
         "anthropic-version": "2023-06-01",
         "anthropic-beta": "oauth-2025-04-20",

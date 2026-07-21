@@ -3,7 +3,7 @@ import { isPidDefinitelyDead } from "../../shared/pid-alive.js";
 import { commandError, listGitWorktrees, runGit } from "./git.js";
 import type { ManagedWorktreeRecord } from "./types.js";
 
-const OPENCLAW_LOCK_PATTERN = /^openclaw pid=(\d+)$/;
+const OPENCLAW_LOCK_PATTERN = /^grokbot pid=(\d+)$/;
 
 type LockState =
   | { kind: "none" }
@@ -23,7 +23,7 @@ export async function lockState(record: ManagedWorktreeRecord): Promise<LockStat
     return { kind: "foreign", reason: entry.lockedReason };
   }
   const pid = Number(match[1]);
-  // A cross-user (EPERM) OpenClaw lock is treated as live so a run's checkout is
+  // A cross-user (EPERM) GrokBot lock is treated as live so a run's checkout is
   // never removed under it; only an ESRCH/zombie owner counts as dead.
   return isPidDefinitelyDead(pid) ? { kind: "dead", pid } : { kind: "live", pid };
 }
@@ -33,7 +33,7 @@ export async function lockWorktreeForProcess(record: ManagedWorktreeRecord): Pro
     "worktree",
     "lock",
     "--reason",
-    `openclaw pid=${process.pid}`,
+    `grokbot pid=${process.pid}`,
     record.path,
   ]);
   if (result.code !== 0) {

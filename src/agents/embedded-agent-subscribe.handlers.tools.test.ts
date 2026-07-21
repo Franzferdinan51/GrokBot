@@ -1,6 +1,6 @@
 // Tool handler tests cover tool lifecycle events, read-path diagnostics,
 // messaging tool capture, approvals, and emitted summaries.
-import type { AgentEvent } from "openclaw/plugin-sdk/agent-core";
+import type { AgentEvent } from "grokbot/plugin-sdk/agent-core";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   onAgentEvent as registerAgentEventListener,
@@ -234,7 +234,7 @@ describe("update_plan progress events", () => {
         data: {
           phase: "update",
           title: "Plan updated",
-          source: "openclaw",
+          source: "grokbot",
           explanation: "Implementation underway",
           steps: [
             { step: "Inspect", status: "completed" },
@@ -1012,26 +1012,26 @@ describe("handleToolExecutionEnd cron mutation tracking", () => {
   });
 
   it.each([
-    ["exec", "openclaw cron add --at +1h --message 'follow up' --name reminder"],
-    ["exec", "npx openclaw cron add --at=+1h --message 'follow up'"],
-    ["exec", "bunx openclaw cron add --at +1h --message 'follow up'"],
-    ["exec", "pnpm exec openclaw cron add --at +1h --message 'follow up'"],
-    ["exec", "pnpm dlx openclaw cron add --at +1h --message 'follow up'"],
-    ["exec", "npx -y openclaw cron add --at +1h --message 'follow up'"],
-    ["exec", "bunx --bun openclaw cron add --at +1h --message 'follow up'"],
-    ["exec", "pnpm dlx openclaw@latest cron add --at +1h --message 'follow up'"],
-    ["exec", "npx openclaw@latest cron add --at +1h --message 'follow up'"],
-    ["exec", "bunx openclaw@latest cron add --at +1h --message 'follow up'"],
-    ["exec", "/usr/local/bin/openclaw cron add --at +1h --message 'follow up'"],
-    ["bash", "corepack pnpm exec openclaw cron add --at +1h --message 'follow up'"],
-    ["exec", "env OPENCLAW_PROFILE=test openclaw cron add --at +1h --message 'follow up'"],
-    ["exec", "openclaw cron create --at +1h --message 'follow up'"],
-    ["exec", "openclaw --profile work cron create --at +1h --message 'follow up'"],
-    ["exec", "openclaw --dev cron add --at +1h --message 'follow up'"],
-    ["exec", "openclaw --log-level debug --no-color cron add --at +1h --message 'follow up'"],
-    ["exec", "openclaw --container helper cron add --at +1h --message 'follow up'"],
-    ["exec", "openclaw cron add --at +1h --message 'follow up || wait'"],
-    ["exec", "openclaw cron add --at +1h --message 'follow up' 2>&1"],
+    ["exec", "grokbot cron add --at +1h --message 'follow up' --name reminder"],
+    ["exec", "npx grokbot cron add --at=+1h --message 'follow up'"],
+    ["exec", "bunx grokbot cron add --at +1h --message 'follow up'"],
+    ["exec", "pnpm exec grokbot cron add --at +1h --message 'follow up'"],
+    ["exec", "pnpm dlx grokbot cron add --at +1h --message 'follow up'"],
+    ["exec", "npx -y grokbot cron add --at +1h --message 'follow up'"],
+    ["exec", "bunx --bun grokbot cron add --at +1h --message 'follow up'"],
+    ["exec", "pnpm dlx grokbot@latest cron add --at +1h --message 'follow up'"],
+    ["exec", "npx grokbot@latest cron add --at +1h --message 'follow up'"],
+    ["exec", "bunx grokbot@latest cron add --at +1h --message 'follow up'"],
+    ["exec", "/usr/local/bin/grokbot cron add --at +1h --message 'follow up'"],
+    ["bash", "corepack pnpm exec grokbot cron add --at +1h --message 'follow up'"],
+    ["exec", "env OPENCLAW_PROFILE=test grokbot cron add --at +1h --message 'follow up'"],
+    ["exec", "grokbot cron create --at +1h --message 'follow up'"],
+    ["exec", "grokbot --profile work cron create --at +1h --message 'follow up'"],
+    ["exec", "grokbot --dev cron add --at +1h --message 'follow up'"],
+    ["exec", "grokbot --log-level debug --no-color cron add --at +1h --message 'follow up'"],
+    ["exec", "grokbot --container helper cron add --at +1h --message 'follow up'"],
+    ["exec", "grokbot cron add --at +1h --message 'follow up || wait'"],
+    ["exec", "grokbot cron add --at +1h --message 'follow up' 2>&1"],
   ] as const)("increments successfulCronAdds when %s runs %s", async (toolName, command) => {
     const { ctx } = createTestContext();
     await handleToolExecutionStart(
@@ -1074,7 +1074,7 @@ describe("handleToolExecutionEnd cron mutation tracking", () => {
         toolName: "exec",
         toolCallId: "tool-exec-cron-add-failed",
         args: {
-          command: "openclaw cron add --at +1h --message 'follow up' --name reminder",
+          command: "grokbot cron add --at +1h --message 'follow up' --name reminder",
         },
       } as never,
     );
@@ -1100,25 +1100,25 @@ describe("handleToolExecutionEnd cron mutation tracking", () => {
   });
 
   it.each([
-    ["openclaw cron list --json", "a different cron action"],
-    ["echo openclaw cron add --at +1h", "a command that only mentions cron add"],
-    ["openclaw cron add --at '+1h", "an unterminated shell argument"],
-    ["cd /tmp && openclaw cron add --at +1h", "a compound command"],
-    ["openclaw cron add --help", "the add command help"],
-    ["openclaw cron create -h", "the create alias help"],
-    ["openclaw cron add --bad||true", "a masked cron failure"],
-    ["openclaw cron add --at +1h; true", "a semicolon suffix"],
-    ["openclaw cron add --at +1h | cat", "a pipeline suffix"],
-    ["openclaw cron add --at +1h & true", "a background suffix"],
-    ["openclaw cron add --at +1h\ntrue", "a newline-separated suffix"],
-    ["openclaw cron add --bad # ignored\ntrue", "a comment-masked cron failure"],
-    ["npx -y echo openclaw cron add --at +1h", "a package runner for another executable"],
-    ["pnpm openclaw cron add --at +1h", "a bare pnpm package script"],
-    ["corepack pnpm openclaw cron add --at +1h", "a corepack pnpm package script"],
-    ["openclaw@latest cron add --at +1h", "a package spec without a package runner"],
-    ["pnpm exec openclaw@latest cron add --at +1h", "a package spec passed to pnpm exec"],
-    ["openclaw cron add --bad &>/tmp/cron.log", "a bash-only combined redirection"],
-    ["openclaw cron add --bad &>>/tmp/cron.log", "a bash-only append redirection"],
+    ["grokbot cron list --json", "a different cron action"],
+    ["echo grokbot cron add --at +1h", "a command that only mentions cron add"],
+    ["grokbot cron add --at '+1h", "an unterminated shell argument"],
+    ["cd /tmp && grokbot cron add --at +1h", "a compound command"],
+    ["grokbot cron add --help", "the add command help"],
+    ["grokbot cron create -h", "the create alias help"],
+    ["grokbot cron add --bad||true", "a masked cron failure"],
+    ["grokbot cron add --at +1h; true", "a semicolon suffix"],
+    ["grokbot cron add --at +1h | cat", "a pipeline suffix"],
+    ["grokbot cron add --at +1h & true", "a background suffix"],
+    ["grokbot cron add --at +1h\ntrue", "a newline-separated suffix"],
+    ["grokbot cron add --bad # ignored\ntrue", "a comment-masked cron failure"],
+    ["npx -y echo grokbot cron add --at +1h", "a package runner for another executable"],
+    ["pnpm grokbot cron add --at +1h", "a bare pnpm package script"],
+    ["corepack pnpm grokbot cron add --at +1h", "a corepack pnpm package script"],
+    ["grokbot@latest cron add --at +1h", "a package spec without a package runner"],
+    ["pnpm exec grokbot@latest cron add --at +1h", "a package spec passed to pnpm exec"],
+    ["grokbot cron add --bad &>/tmp/cron.log", "a bash-only combined redirection"],
+    ["grokbot cron add --bad &>>/tmp/cron.log", "a bash-only append redirection"],
   ])("does not count %s (%s)", async (command) => {
     const { ctx } = createTestContext();
     await handleToolExecutionStart(
@@ -2607,7 +2607,7 @@ describe("handleToolExecutionEnd timeout metadata", () => {
         type: "tool_execution_start",
         toolName: "exec",
         toolCallId: "tool-exec-repo-raw-command",
-        args: { command: "git status", workdir: "/Users/agent/Projects/OpenClaw" },
+        args: { command: "git status", workdir: "/Users/agent/Projects/GrokBot" },
       } as never,
     );
 
@@ -2854,10 +2854,10 @@ describe("handleToolExecutionEnd exec approval prompts", () => {
     );
     expect(text).toContain("no interactive approval client is currently available");
     expect(text).toContain(
-      "Print the Control UI URL with `openclaw dashboard --no-open`, open it in a browser, then use the approval inbox.",
+      "Print the Control UI URL with `grokbot dashboard --no-open`, open it in a browser, then use the approval inbox.",
     );
     expect(text).toContain(
-      "Inspect the node's effective exec policy with `openclaw approvals get --node node-mac-1`.",
+      "Inspect the node's effective exec policy with `grokbot approvals get --node node-mac-1`.",
     );
     expect(text).not.toContain("/approve");
     expect(text).not.toContain("Pending command:");
@@ -3995,7 +3995,7 @@ describe("control UI credential redaction (issue #72283)", () => {
         type: "tool_execution_start",
         toolName: "exec",
         toolCallId: "tool-exec-secret",
-        args: { command: "cat ~/.openclaw/openclaw.json" },
+        args: { command: "cat ~/.grokbot/grokbot.json" },
       } as never,
     );
 

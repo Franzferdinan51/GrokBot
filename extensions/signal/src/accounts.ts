@@ -5,9 +5,9 @@ import {
   resolveAccountEntry,
   resolveMergedAccountConfig,
   type OpenClawConfig,
-} from "openclaw/plugin-sdk/account-resolution";
-import type { ReplyToMode } from "openclaw/plugin-sdk/config-contracts";
-import { normalizeOptionalString } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/account-resolution";
+import type { ReplyToMode } from "grokbot/plugin-sdk/config-contracts";
+import { normalizeOptionalString } from "grokbot/plugin-sdk/string-coerce-runtime";
 import type { SignalAccountConfig } from "./account-types.js";
 
 export type ResolvedSignalAccount = {

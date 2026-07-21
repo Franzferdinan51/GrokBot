@@ -1,6 +1,6 @@
-import { ToolAuthorizationError } from "openclaw/plugin-sdk/channel-actions";
-import type { ChannelMessageActionContext } from "openclaw/plugin-sdk/channel-contract";
-import { normalizeOptionalString } from "openclaw/plugin-sdk/string-coerce-runtime";
+import { ToolAuthorizationError } from "grokbot/plugin-sdk/channel-actions";
+import type { ChannelMessageActionContext } from "grokbot/plugin-sdk/channel-contract";
+import { normalizeOptionalString } from "grokbot/plugin-sdk/string-coerce-runtime";
 import type { OpenClawConfig } from "../runtime-api.js";
 import { isDangerousNameMatchingEnabled, resolveDefaultGroupPolicy } from "../runtime-api.js";
 import { listChannelsForTeamWithPageInfo, resolveGraphToken } from "./graph.js";

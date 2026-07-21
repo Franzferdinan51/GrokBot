@@ -1,15 +1,15 @@
 // Resolves plugin auto-enable preference ordering across candidate plugins.
 import fs from "node:fs";
 import path from "node:path";
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
-import { normalizeStringEntries } from "@openclaw/normalization-core/string-normalization";
+import { normalizeOptionalString } from "@grokbot/normalization-core/string-coerce";
+import { normalizeStringEntries } from "@grokbot/normalization-core/string-normalization";
 import { findChatChannelMeta, normalizeChatChannelId } from "../channels/registry.js";
 import { readRegularFileSync } from "../infra/regular-file.js";
 import { createSubsystemLogger } from "../logging/subsystem.js";
 import type { PluginManifestRegistry } from "../plugins/manifest-registry.js";
 import { isRecord, resolveConfigDir, resolveUserPath } from "../utils.js";
 import type { PluginAutoEnableCandidate } from "./plugin-auto-enable.types.js";
-import type { OpenClawConfig } from "./types.openclaw.js";
+import type { OpenClawConfig } from "./types.grokbot.js";
 
 /** Maximum bytes to read from an external catalog file before rejecting it. */
 const MAX_EXTERNAL_CATALOG_BYTES = 16 * 1024 * 1024;
@@ -61,10 +61,10 @@ function parseExternalCatalogChannelEntries(raw: unknown): ExternalCatalogChanne
 
   const channels: ExternalCatalogChannelEntry[] = [];
   for (const entry of list) {
-    if (!isRecord(entry) || !isRecord(entry.openclaw) || !isRecord(entry.openclaw.channel)) {
+    if (!isRecord(entry) || !isRecord(entry.grokbot) || !isRecord(entry.grokbot.channel)) {
       continue;
     }
-    const channel = entry.openclaw.channel;
+    const channel = entry.grokbot.channel;
     const id = normalizeOptionalString(channel.id) ?? "";
     if (!id) {
       continue;

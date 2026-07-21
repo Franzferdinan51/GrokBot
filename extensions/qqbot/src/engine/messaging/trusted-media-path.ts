@@ -1,5 +1,5 @@
-import { resolvePreferredOpenClawTmpDir } from "openclaw/plugin-sdk/sandbox";
-import { resolveLocalPathFromRootsSync } from "openclaw/plugin-sdk/security-runtime";
+import { resolvePreferredOpenClawTmpDir } from "grokbot/plugin-sdk/sandbox";
+import { resolveLocalPathFromRootsSync } from "grokbot/plugin-sdk/security-runtime";
 import { resolveQQBotPayloadLocalFilePath } from "../utils/platform.js";
 
 // The temp root is process-stable, so resolve it once. Only the success value is
@@ -25,7 +25,7 @@ function trustedOpenClawTmpRoot(): string | null {
  * same check runs at three sites (`resolveOutboundMediaPath`, the voice send
  * re-check, and structured-payload validation), so they must all agree or a file
  * accepted at one gate is rejected at the next. Beyond the QQ Bot media storage
- * roots, this also trusts OpenClaw's permission-hardened temp root, where
+ * roots, this also trusts GrokBot's permission-hardened temp root, where
  * framework scratch media is written (e.g. cron auto-TTS voice files). Core
  * already treats that temp root as a sanctioned media root (`buildMediaLocalRoots`);
  * without it here, auto-routed sends are dropped and cron delivery silently loses
@@ -52,7 +52,7 @@ export function resolveTrustedOutboundMediaPath(
     resolveLocalPathFromRootsSync({
       filePath: p,
       roots: [tmpRoot],
-      label: "OpenClaw temp media root",
+      label: "GrokBot temp media root",
       allowMissing: options.allowMissing === true,
     })?.path ?? null
   );

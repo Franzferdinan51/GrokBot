@@ -6,11 +6,11 @@ import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import { useAutoCleanupTempDirTracker } from "../../test/helpers/temp-dir.js";
 import type { SubagentRunRecord } from "../agents/subagent-registry.types.js";
-import type { DB as OpenClawStateKyselyDatabase } from "../state/openclaw-state-db.generated.js";
+import type { DB as OpenClawStateKyselyDatabase } from "../state/grokbot-state-db.generated.js";
 import {
   closeOpenClawStateDatabaseForTest,
   openOpenClawStateDatabase,
-} from "../state/openclaw-state-db.js";
+} from "../state/grokbot-state-db.js";
 import { acquireGatewayLock } from "./gateway-lock.js";
 import {
   executeSqliteQuerySync,
@@ -33,7 +33,7 @@ describe("legacy subagent registry Doctor migration", () => {
   });
 
   function useStateDir(): { env: NodeJS.ProcessEnv; stateDir: string } {
-    const stateDir = tempDirs.make("openclaw-subagent-migration-");
+    const stateDir = tempDirs.make("grokbot-subagent-migration-");
     return { env: { ...process.env, OPENCLAW_STATE_DIR: stateDir }, stateDir };
   }
 

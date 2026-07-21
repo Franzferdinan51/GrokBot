@@ -9,14 +9,14 @@ describe("package git fixture", () => {
   const tempDirs = useAutoCleanupTempDirTracker(afterEach);
 
   it("stages bundled ai runtime as a local file dependency", async () => {
-    const root = tempDirs.make("openclaw-package-git-fixture-");
-    mkdirSync(path.join(root, "node_modules", "@openclaw", "ai"), { recursive: true });
+    const root = tempDirs.make("grokbot-package-git-fixture-");
+    mkdirSync(path.join(root, "node_modules", "@grokbot", "ai"), { recursive: true });
     writeFileSync(
       path.join(root, "package.json"),
       `${JSON.stringify(
         {
-          dependencies: { "@openclaw/ai": "2026.6.11", chalk: "5.6.2" },
-          bundleDependencies: ["@openclaw/ai", "chalk"],
+          dependencies: { "@grokbot/ai": "2026.6.11", chalk: "5.6.2" },
+          bundleDependencies: ["@grokbot/ai", "chalk"],
         },
         null,
         2,
@@ -24,8 +24,8 @@ describe("package git fixture", () => {
     );
     writeFileSync(path.join(root, "npm-shrinkwrap.json"), "{}\n");
     writeFileSync(
-      path.join(root, "node_modules", "@openclaw", "ai", "package.json"),
-      `${JSON.stringify({ name: "@openclaw/ai", version: "2026.6.11" })}\n`,
+      path.join(root, "node_modules", "@grokbot", "ai", "package.json"),
+      `${JSON.stringify({ name: "@grokbot/ai", version: "2026.6.11" })}\n`,
     );
 
     const result = spawnSync(
@@ -36,16 +36,16 @@ describe("package git fixture", () => {
 
     expect(result.status, `${result.stdout}\n${result.stderr}`).toBe(0);
     const packageJson = JSON.parse(readFileSync(path.join(root, "package.json"), "utf8"));
-    expect(packageJson.dependencies["@openclaw/ai"]).toBe("file:.openclaw-fixture/packages/ai");
+    expect(packageJson.dependencies["@grokbot/ai"]).toBe("file:.grokbot-fixture/packages/ai");
     expect(packageJson.bundleDependencies).toEqual(["chalk"]);
     expect(() => readFileSync(path.join(root, "npm-shrinkwrap.json"), "utf8")).toThrow();
     expect(
       JSON.parse(
         readFileSync(
-          path.join(root, ".openclaw-fixture", "packages", "ai", "package.json"),
+          path.join(root, ".grokbot-fixture", "packages", "ai", "package.json"),
           "utf8",
         ),
       ).name,
-    ).toBe("@openclaw/ai");
+    ).toBe("@grokbot/ai");
   });
 });

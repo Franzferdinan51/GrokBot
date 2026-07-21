@@ -3,7 +3,7 @@ import { executeSqliteQuerySync, getNodeSqliteKysely } from "../infra/kysely-syn
 import {
   openOpenClawStateDatabase,
   runOpenClawStateWriteTransaction,
-} from "../state/openclaw-state-db.js";
+} from "../state/grokbot-state-db.js";
 import {
   commitmentRecordFromRow,
   commitmentRecordToRow,

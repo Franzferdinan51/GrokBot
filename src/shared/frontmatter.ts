@@ -2,8 +2,8 @@
 import {
   normalizeOptionalLowercaseString,
   readStringValue,
-} from "@openclaw/normalization-core/string-coerce";
-import { normalizeCsvOrLooseStringList } from "@openclaw/normalization-core/string-normalization";
+} from "@grokbot/normalization-core/string-coerce";
+import { normalizeCsvOrLooseStringList } from "@grokbot/normalization-core/string-normalization";
 import JSON5 from "json5";
 import { LEGACY_MANIFEST_KEYS, MANIFEST_KEY } from "../compat/legacy-names.js";
 import { parseBooleanValue } from "../utils/boolean.js";
@@ -27,7 +27,7 @@ export function parseFrontmatterBool(value: string | undefined, fallback: boolea
   return parsed === undefined ? fallback : parsed;
 }
 
-/** Parses the JSON5 OpenClaw manifest block embedded inside a string frontmatter field. */
+/** Parses the JSON5 GrokBot manifest block embedded inside a string frontmatter field. */
 export function resolveOpenClawManifestBlock(params: {
   frontmatter: Record<string, unknown>;
   key?: string;
@@ -68,7 +68,7 @@ type OpenClawManifestRequires = {
   config: string[];
 };
 
-/** Extracts normalized runtime requirement lists from an OpenClaw manifest block. */
+/** Extracts normalized runtime requirement lists from an GrokBot manifest block. */
 export function resolveOpenClawManifestRequires(
   metadataObj: Record<string, unknown>,
 ): OpenClawManifestRequires | undefined {
@@ -98,7 +98,7 @@ export function resolveOpenClawManifestInstall<T>(
     .filter((entry): entry is T => Boolean(entry));
 }
 
-/** Extracts normalized OS allowlist entries from an OpenClaw manifest block. */
+/** Extracts normalized OS allowlist entries from an GrokBot manifest block. */
 export function resolveOpenClawManifestOs(metadataObj: Record<string, unknown>): string[] {
   return normalizeStringList(metadataObj.os);
 }

@@ -1,6 +1,6 @@
 // Cloudflare Ai Gateway tests cover index plugin behavior.
-import type { StreamFn } from "openclaw/plugin-sdk/agent-core";
-import { capturePluginRegistration } from "openclaw/plugin-sdk/plugin-test-runtime";
+import type { StreamFn } from "grokbot/plugin-sdk/agent-core";
+import { capturePluginRegistration } from "grokbot/plugin-sdk/plugin-test-runtime";
 import { describe, expect, it } from "vitest";
 import plugin from "./index.js";
 

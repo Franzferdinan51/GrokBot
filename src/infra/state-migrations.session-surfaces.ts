@@ -1,4 +1,4 @@
-import { normalizeLowercaseStringOrEmpty } from "@openclaw/normalization-core/string-coerce";
+import { normalizeLowercaseStringOrEmpty } from "@grokbot/normalization-core/string-coerce";
 import { listBundledChannelLegacySessionSurfaces } from "../channels/plugins/bundled.js";
 
 type LegacySessionSurface = {

@@ -1,4 +1,4 @@
-// Tests OpenClaw home directory resolution.
+// Tests GrokBot home directory resolution.
 import path from "node:path";
 import { describe, expect, it, vi } from "vitest";
 import {
@@ -17,12 +17,12 @@ describe("resolveEffectiveHomeDir", () => {
     {
       name: "prefers OPENCLAW_HOME over HOME and USERPROFILE",
       env: {
-        OPENCLAW_HOME: " /srv/openclaw-home ",
+        OPENCLAW_HOME: " /srv/grokbot-home ",
         HOME: "/home/other",
         USERPROFILE: "C:/Users/other",
       } as NodeJS.ProcessEnv,
       homedir: () => "/fallback",
-      expected: "/srv/openclaw-home",
+      expected: "/srv/grokbot-home",
     },
     {
       name: "falls back to HOME",
@@ -191,7 +191,7 @@ describe("resolveOsHomeDir", () => {
     expect(
       resolveOsHomeDir(
         {
-          OPENCLAW_HOME: "/srv/openclaw-home",
+          OPENCLAW_HOME: "/srv/grokbot-home",
           HOME: "/home/alice",
           USERPROFILE: "C:/Users/alice",
         } as NodeJS.ProcessEnv,
@@ -207,15 +207,15 @@ describe("expandHomePrefix", () => {
       name: "expands ~/ using effective home",
       input: "~/x",
       opts: {
-        env: { OPENCLAW_HOME: "/srv/openclaw-home" } as NodeJS.ProcessEnv,
+        env: { OPENCLAW_HOME: "/srv/grokbot-home" } as NodeJS.ProcessEnv,
       },
-      expected: `${path.resolve("/srv/openclaw-home")}/x`,
+      expected: `${path.resolve("/srv/grokbot-home")}/x`,
     },
     {
       name: "expands exact ~ using explicit home",
       input: "~",
-      opts: { home: " /srv/openclaw-home " },
-      expected: "/srv/openclaw-home",
+      opts: { home: " /srv/grokbot-home " },
+      expected: "/srv/grokbot-home",
     },
     {
       name: "expands ~\\\\ using resolved env home",
@@ -256,9 +256,9 @@ describe("resolveHomeRelativePath", () => {
       name: "expands tilde paths using the resolved home directory",
       input: "~/docs",
       opts: {
-        env: { OPENCLAW_HOME: "/srv/openclaw-home" } as NodeJS.ProcessEnv,
+        env: { OPENCLAW_HOME: "/srv/grokbot-home" } as NodeJS.ProcessEnv,
       },
-      expected: path.resolve("/srv/openclaw-home/docs"),
+      expected: path.resolve("/srv/grokbot-home/docs"),
     },
     {
       name: "falls back to cwd when tilde paths have no home source",
@@ -288,7 +288,7 @@ describe("resolveOsHomeRelativePath", () => {
     expect(
       resolveOsHomeRelativePath("~/docs", {
         env: {
-          OPENCLAW_HOME: "/srv/openclaw-home",
+          OPENCLAW_HOME: "/srv/grokbot-home",
           HOME: "/home/alice",
         } as NodeJS.ProcessEnv,
       }),

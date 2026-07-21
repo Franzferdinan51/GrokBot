@@ -2,12 +2,12 @@
 import { randomUUID } from "node:crypto";
 import http from "node:http";
 import type { Duplex } from "node:stream";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { formatErrorMessage } from "grokbot/plugin-sdk/error-runtime";
 import {
   isFutureDateTimestampMs,
   resolveExpiresAtMsFromDurationMs,
-} from "openclaw/plugin-sdk/number-runtime";
+} from "grokbot/plugin-sdk/number-runtime";
 import {
   buildRealtimeVoiceAgentConsultWorkingResponse,
   calculateMulawRms,
@@ -22,10 +22,10 @@ import {
   type RealtimeVoiceProviderPlugin,
   type RealtimeVoiceSessionHarness,
   type TalkEvent,
-} from "openclaw/plugin-sdk/realtime-voice";
-import { createSubsystemLogger } from "openclaw/plugin-sdk/runtime-env";
-import { sliceUtf16Safe, truncateUtf16Safe } from "openclaw/plugin-sdk/text-utility-runtime";
-import { normalizeWebhookPath } from "openclaw/plugin-sdk/webhook-ingress";
+} from "grokbot/plugin-sdk/realtime-voice";
+import { createSubsystemLogger } from "grokbot/plugin-sdk/runtime-env";
+import { sliceUtf16Safe, truncateUtf16Safe } from "grokbot/plugin-sdk/text-utility-runtime";
+import { normalizeWebhookPath } from "grokbot/plugin-sdk/webhook-ingress";
 import WebSocket, { WebSocketServer } from "ws";
 import type { VoiceCallRealtimeConfig } from "../config.js";
 import type { CallManager } from "../manager.js";
@@ -224,7 +224,7 @@ function buildForcedConsultSpeechPrompt(result: string): string {
       ? trimmed
       : `${truncateUtf16Safe(trimmed, FORCED_CONSULT_RESULT_MAX_CHARS - 16).trimEnd()} [truncated]`;
   return [
-    "Internal OpenClaw consult result is ready.",
+    "Internal GrokBot consult result is ready.",
     "Do not call tools for this internal result.",
     "Speak the following answer to the caller now, briefly and naturally:",
     bounded,
@@ -1331,7 +1331,7 @@ export class RealtimeCallHandler {
         }
         await submitFinalToolResult({
           status: "cancelled",
-          message: "OpenClaw cancelled this consult before completion. Do not restart it.",
+          message: "GrokBot cancelled this consult before completion. Do not restart it.",
         });
         return;
       }
@@ -1339,7 +1339,7 @@ export class RealtimeCallHandler {
         if (forcedConsult.completedAt || forcedMatch.kind === "already_delivered") {
           await submitFinalToolResult({
             status: "already_delivered",
-            message: "OpenClaw already delivered this consult result internally. Do not repeat it.",
+            message: "GrokBot already delivered this consult result internally. Do not repeat it.",
           });
           return;
         }

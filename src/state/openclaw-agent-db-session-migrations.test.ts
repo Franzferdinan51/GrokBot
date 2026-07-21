@@ -4,7 +4,7 @@ import { buildConversationRef } from "../routing/conversation-ref.js";
 import {
   backfillSessionConversations,
   migrateConversationDeliveryTargetColumn,
-} from "./openclaw-agent-db-session-migrations.js";
+} from "./grokbot-agent-db-session-migrations.js";
 
 describe("agent DB conversation migration", () => {
   const databases: Array<{ close: () => void }> = [];

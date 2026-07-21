@@ -10,9 +10,9 @@
 import {
   formatInboundEnvelope,
   resolveEnvelopeFormatOptions,
-} from "openclaw/plugin-sdk/channel-inbound";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { uniqueStrings } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/channel-inbound";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { uniqueStrings } from "grokbot/plugin-sdk/string-coerce-runtime";
 import type { ProcessedAttachments } from "../inbound-attachments.js";
 import type { InboundGroupInfo, InboundPipelineDeps, ReplyToInfo } from "../inbound-context.js";
 import type { QueuedMessage } from "../message-queue.js";

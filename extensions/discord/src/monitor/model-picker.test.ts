@@ -36,7 +36,7 @@ function parseDiscordModelPickerCustomId(customId: string) {
 
 const buildModelsProviderDataMock = vi.hoisted(() => vi.fn());
 
-vi.mock("openclaw/plugin-sdk/models-provider-runtime", () => ({
+vi.mock("grokbot/plugin-sdk/models-provider-runtime", () => ({
   buildModelsProviderData: buildModelsProviderDataMock,
 }));
 
@@ -596,9 +596,9 @@ describe("Discord model picker rendering", () => {
               "Use the Google Gemini CLI runtime selected by the effective harness policy.",
           },
           {
-            id: "openclaw",
-            label: "OpenClaw Default",
-            description: "Use the built-in OpenClaw runtime.",
+            id: "grokbot",
+            label: "GrokBot Default",
+            description: "Use the built-in GrokBot runtime.",
           },
         ],
       ],
@@ -649,9 +649,9 @@ describe("Discord model picker rendering", () => {
               "Use the Google Gemini CLI runtime selected by the effective harness policy.",
           },
           {
-            id: "openclaw",
-            label: "OpenClaw Default",
-            description: "Use the built-in OpenClaw runtime.",
+            id: "grokbot",
+            label: "GrokBot Default",
+            description: "Use the built-in GrokBot runtime.",
           },
         ],
       ],
@@ -985,9 +985,9 @@ describe("Discord model picker rendering", () => {
             description: "Use the OpenAI Codex runtime selected by the effective harness policy.",
           },
           {
-            id: "openclaw",
-            label: "OpenClaw Default",
-            description: "Use the built-in OpenClaw runtime.",
+            id: "grokbot",
+            label: "GrokBot Default",
+            description: "Use the built-in GrokBot runtime.",
           },
         ],
       ],
@@ -1013,7 +1013,7 @@ describe("Discord model picker rendering", () => {
       throw new Error("models view did not render a runtime select");
     }
     expect(runtimeSelect.options?.find((option) => option.value === "codex")?.default).toBe(true);
-    expect(runtimeSelect.options?.find((option) => option.value === "openclaw")?.default).toBe(
+    expect(runtimeSelect.options?.find((option) => option.value === "grokbot")?.default).toBe(
       false,
     );
 
@@ -1045,9 +1045,9 @@ describe("Discord model picker rendering", () => {
             description: "Use the OpenAI Codex runtime selected by the effective harness policy.",
           },
           {
-            id: "openclaw",
-            label: "OpenClaw Default",
-            description: "Use the built-in OpenClaw runtime.",
+            id: "grokbot",
+            label: "GrokBot Default",
+            description: "Use the built-in GrokBot runtime.",
           },
         ],
       ],
@@ -1061,7 +1061,7 @@ describe("Discord model picker rendering", () => {
       currentModel: "openai/gpt-4.1",
       pendingModel: "openai/gpt-4o",
       pendingModelIndex: 2,
-      pendingRuntime: "openclaw",
+      pendingRuntime: "grokbot",
     });
 
     const modelSelect = rows[2]?.components?.find(

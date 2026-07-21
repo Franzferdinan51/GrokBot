@@ -29,7 +29,7 @@ const {
   })),
 }));
 
-vi.mock("openclaw/plugin-sdk/provider-http", () => ({
+vi.mock("grokbot/plugin-sdk/provider-http", () => ({
   assertOkOrThrowHttpError: assertOkOrThrowHttpErrorMock,
   postJsonRequest: postJsonRequestMock,
   readProviderBinaryResponse: readProviderBinaryResponseMock,

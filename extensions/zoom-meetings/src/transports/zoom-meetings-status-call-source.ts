@@ -10,7 +10,7 @@ export function zoomMeetingStatusCallSource(): string {
     const media = [...document.querySelectorAll("audio, video")].filter(
       (element) =>
         typeof element.setSinkId === "function" &&
-        !String(element.id || "").startsWith("openclaw-zoom-audio-output-"),
+        !String(element.id || "").startsWith("grokbot-zoom-audio-output-"),
     );
     if (media.length > 0) {
       try {
@@ -157,7 +157,7 @@ export function zoomMeetingStatusCallSource(): string {
             if (!elementRouted && stream) {
               if (!entry && canMutateSession) {
                 const bridge = document.createElement("audio");
-                bridge.id = "openclaw-zoom-audio-output-" + bridgeEntries.length;
+                bridge.id = "grokbot-zoom-audio-output-" + bridgeEntries.length;
                 bridge.autoplay = false;
                 bridge.hidden = true;
                 bridge.srcObject = stream;

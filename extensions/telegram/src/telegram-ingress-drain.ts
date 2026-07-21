@@ -4,9 +4,9 @@ import {
   DEFAULT_INGRESS_ADOPTION_STALL_MS,
   type ChannelIngressMonitorLifecycle,
   type ChannelIngressQueue,
-} from "openclaw/plugin-sdk/channel-outbound";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { clampPositiveTimerTimeoutMs } from "openclaw/plugin-sdk/number-runtime";
+} from "grokbot/plugin-sdk/channel-outbound";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { clampPositiveTimerTimeoutMs } from "grokbot/plugin-sdk/number-runtime";
 import type { TelegramBotInfo } from "./bot-info.js";
 import {
   runWithTelegramSpooledReplayUpdate,

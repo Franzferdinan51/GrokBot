@@ -30,7 +30,7 @@ vi.mock("./scopes.js", () => ({
   fetchSlackScopes: fetchSlackScopesMock,
 }));
 
-vi.mock("openclaw/plugin-sdk/target-resolver-runtime", async (orig) => {
+vi.mock("grokbot/plugin-sdk/target-resolver-runtime", async (orig) => {
   // Preserve any sibling exports so importers that touch unrelated helpers
   // do not break; only override the function the channel actually calls.
   const original = (await orig()) as Record<string, unknown>;
@@ -40,7 +40,7 @@ vi.mock("openclaw/plugin-sdk/target-resolver-runtime", async (orig) => {
   };
 });
 
-vi.mock("openclaw/plugin-sdk/extension-shared", async (orig) => {
+vi.mock("grokbot/plugin-sdk/extension-shared", async (orig) => {
   const original = (await orig()) as Record<string, unknown>;
   return {
     ...original,

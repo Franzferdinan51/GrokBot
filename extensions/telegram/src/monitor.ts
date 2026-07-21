@@ -1,18 +1,18 @@
 // Telegram plugin module implements monitor behavior.
 import type { RunOptions } from "@grammyjs/runner";
-import { CHANNEL_APPROVAL_NATIVE_RUNTIME_CONTEXT_CAPABILITY } from "openclaw/plugin-sdk/approval-handler-adapter-runtime";
-import { registerChannelRuntimeContext } from "openclaw/plugin-sdk/channel-runtime-context";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { createLazyRuntimeModule } from "openclaw/plugin-sdk/lazy-runtime";
-import { resolveAgentMaxConcurrent } from "openclaw/plugin-sdk/model-session-runtime";
-import { getRuntimeConfig } from "openclaw/plugin-sdk/runtime-config-snapshot";
+import { CHANNEL_APPROVAL_NATIVE_RUNTIME_CONTEXT_CAPABILITY } from "grokbot/plugin-sdk/approval-handler-adapter-runtime";
+import { registerChannelRuntimeContext } from "grokbot/plugin-sdk/channel-runtime-context";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { createLazyRuntimeModule } from "grokbot/plugin-sdk/lazy-runtime";
+import { resolveAgentMaxConcurrent } from "grokbot/plugin-sdk/model-session-runtime";
+import { getRuntimeConfig } from "grokbot/plugin-sdk/runtime-config-snapshot";
 import {
   registerUncaughtExceptionHandler,
   registerUnhandledRejectionHandler,
   waitForAbortSignal,
-} from "openclaw/plugin-sdk/runtime-env";
-import type { RuntimeEnv } from "openclaw/plugin-sdk/runtime-env";
-import { formatErrorMessage } from "openclaw/plugin-sdk/ssrf-runtime";
+} from "grokbot/plugin-sdk/runtime-env";
+import type { RuntimeEnv } from "grokbot/plugin-sdk/runtime-env";
+import { formatErrorMessage } from "grokbot/plugin-sdk/ssrf-runtime";
 import { resolveTelegramAccount } from "./accounts.js";
 import { resolveTelegramAllowedUpdates } from "./allowed-updates.js";
 import { isTelegramExecApprovalHandlerConfigured } from "./exec-approvals.js";

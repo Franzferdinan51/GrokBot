@@ -2,7 +2,7 @@
  * MCP client transport factory.
  *
  * This module turns normalized MCP server config into stdio, SSE, or
- * streamable-HTTP SDK transports with OpenClaw auth, redirect, and logging rules.
+ * streamable-HTTP SDK transports with GrokBot auth, redirect, and logging rules.
  */
 import {
   SSEClientTransport,
@@ -10,8 +10,8 @@ import {
 } from "@modelcontextprotocol/sdk/client/sse.js";
 import { StreamableHTTPClientTransport } from "@modelcontextprotocol/sdk/client/streamableHttp.js";
 import type { FetchLike, Transport } from "@modelcontextprotocol/sdk/shared/transport.js";
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import { normalizeOptionalString } from "@grokbot/normalization-core/string-coerce";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { logDebug } from "../logger.js";
 import { resolveMcpAuthProfileId, withMcpAuthProfileBearer } from "./mcp-auth-profile.js";
 import {

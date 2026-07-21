@@ -9,12 +9,12 @@ import {
   getNodeSqliteKysely,
 } from "../../infra/kysely-sync.js";
 import { createSubsystemLogger } from "../../logging/subsystem.js";
-import type { DB as OpenClawStateDatabase } from "../../state/openclaw-state-db.generated.js";
+import type { DB as OpenClawStateDatabase } from "../../state/grokbot-state-db.generated.js";
 import {
   openOpenClawStateDatabase,
   runOpenClawStateWriteTransaction,
   type OpenClawStateDatabaseOptions,
-} from "../../state/openclaw-state-db.js";
+} from "../../state/grokbot-state-db.js";
 import { normalizeSkillIndexName } from "../discovery/skill-index.js";
 import { readSkillProposalManifest, readSkillProposalRecord } from "./store.js";
 import type { SkillProposalRecord } from "./types.js";

@@ -1,5 +1,5 @@
 import crypto from "node:crypto";
-import { isRecord } from "@openclaw/normalization-core/record-coerce";
+import { isRecord } from "@grokbot/normalization-core/record-coerce";
 import {
   resolveAgentConfig,
   resolveAgentDir,
@@ -33,7 +33,7 @@ import {
 import type { AnyAgentTool } from "../agents/tools/common.js";
 import { ensureAgentWorkspace } from "../agents/workspace.js";
 import { parseDurationMs } from "../cli/parse-duration.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { getPluginToolMeta } from "../plugins/tools.js";
 import { normalizeAgentId } from "../routing/session-key.js";
 import {

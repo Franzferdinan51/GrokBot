@@ -1,12 +1,12 @@
-# OpenClaw Baseten Provider
+# GrokBot Baseten Provider
 
-Official OpenClaw provider plugin for Baseten Model APIs, including Thinking Machines Lab's Inkling.
+Official GrokBot provider plugin for Baseten Model APIs, including Thinking Machines Lab's Inkling.
 
-Install from OpenClaw:
+Install from GrokBot:
 
 ```bash
-openclaw plugins install @openclaw/baseten-provider
-openclaw gateway restart
+grokbot plugins install @grokbot/baseten-provider
+grokbot gateway restart
 ```
 
-See <https://docs.openclaw.ai/providers/baseten> for setup and configuration.
+See <https://docs.grokbot.ai/providers/baseten> for setup and configuration.

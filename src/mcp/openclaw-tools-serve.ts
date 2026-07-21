@@ -1,8 +1,8 @@
 /**
- * Standalone MCP server for selected built-in OpenClaw tools.
+ * Standalone MCP server for selected built-in GrokBot tools.
  *
- * Run via: node --import tsx src/mcp/openclaw-tools-serve.ts
- * Or: bun src/mcp/openclaw-tools-serve.ts
+ * Run via: node --import tsx src/mcp/grokbot-tools-serve.ts
+ * Or: bun src/mcp/grokbot-tools-serve.ts
  */
 import { pathToFileURL } from "node:url";
 import { Server } from "@modelcontextprotocol/sdk/server/index.js";
@@ -20,13 +20,13 @@ import {
   resolveOpenClawToolsMcpSystemAgentSurface,
   resolveOpenClawToolsMcpToolSelection,
   type OpenClawToolsMcpToolId,
-} from "./openclaw-tools-serve-config.js";
+} from "./grokbot-tools-serve-config.js";
 import { connectToolsMcpServerToStdio, createToolsMcpServer } from "./tools-stdio-server.js";
 
 export {
   OPENCLAW_TOOLS_MCP_SYSTEM_AGENT_SURFACE_ENV,
   OPENCLAW_TOOLS_MCP_TOOLS_ENV,
-} from "./openclaw-tools-serve-config.js";
+} from "./grokbot-tools-serve-config.js";
 
 export { OPENCLAW_TOOLS_MCP_AGENT_SESSION_KEY_ENV } from "./agent-session-env.js";
 
@@ -45,7 +45,7 @@ export function resolveOpenClawToolsForMcp(
 ): AnyAgentTool[] {
   const selection = params.tools ?? resolveOpenClawToolsMcpToolSelection();
   return selection.map((tool) => {
-    if (tool === "openclaw") {
+    if (tool === "grokbot") {
       return createSystemAgentTool({
         surface: params.systemAgentSurface ?? resolveOpenClawToolsMcpSystemAgentSurface(),
         ...resolveOpenClawToolsMcpSystemAgentApproval(),
@@ -67,7 +67,7 @@ function createOpenClawToolsMcpServer(
   } = {},
 ): Server {
   const tools = params.tools ?? resolveOpenClawToolsForMcp();
-  return createToolsMcpServer({ name: "openclaw-tools", tools });
+  return createToolsMcpServer({ name: "grokbot-tools", tools });
 }
 
 async function serveOpenClawToolsMcp(): Promise<void> {
@@ -77,7 +77,7 @@ async function serveOpenClawToolsMcp(): Promise<void> {
 
 if (import.meta.url === pathToFileURL(process.argv[1] ?? "").href) {
   serveOpenClawToolsMcp().catch((err: unknown) => {
-    process.stderr.write(`openclaw-tools-serve: ${formatErrorMessage(err)}\n`);
+    process.stderr.write(`grokbot-tools-serve: ${formatErrorMessage(err)}\n`);
     process.exit(1);
   });
 }

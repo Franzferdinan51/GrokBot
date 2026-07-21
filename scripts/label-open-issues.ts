@@ -1,10 +1,10 @@
-// Label Open Issues script supports OpenClaw repository automation.
+// Label Open Issues script supports GrokBot repository automation.
 import { execFileSync } from "node:child_process";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { homedir } from "node:os";
 import { dirname, join } from "node:path";
 import { pathToFileURL } from "node:url";
-import { truncateUtf16Safe } from "@openclaw/normalization-core/utf16-slice";
+import { truncateUtf16Safe } from "@grokbot/normalization-core/utf16-slice";
 import { isRecord } from "../src/utils.js";
 import { readBoundedResponseText as readBoundedBodyText } from "./lib/bounded-response.ts";
 import { parseStrictIntegerOption } from "./lib/dev-tooling-safety.ts";
@@ -29,7 +29,7 @@ const OPENAI_ERROR_BODY_MAX_CHARS = 4096;
 const OPENAI_RESPONSE_BODY_MAX_BYTES = 256 * 1024;
 const STATE_FILE_NAME = "issue-labeler-state.json";
 const CONFIG_BASE_DIR = process.env.XDG_CONFIG_HOME ?? join(homedir(), ".config");
-const STATE_FILE_PATH = join(CONFIG_BASE_DIR, "openclaw", STATE_FILE_NAME);
+const STATE_FILE_PATH = join(CONFIG_BASE_DIR, "grokbot", STATE_FILE_NAME);
 
 const ISSUE_QUERY = `
   query($owner: String!, $name: String!, $after: String, $pageSize: Int!) {
@@ -745,7 +745,7 @@ async function classifyItem(
             {
               role: "system",
               content:
-                "You classify GitHub issues and pull requests for OpenClaw. Respond with JSON only, no extra text.",
+                "You classify GitHub issues and pull requests for GrokBot. Respond with JSON only, no extra text.",
             },
             {
               role: "user",
@@ -828,7 +828,7 @@ async function main() {
   }
   const openAITimeoutMs = resolveOpenAITimeoutMs();
 
-  logHeader("OpenClaw Issue Label Audit");
+  logHeader("GrokBot Issue Label Audit");
   logStep(`Mode: ${dryRun ? "dry-run" : "apply labels"}`);
   logStep(`Model: ${model}`);
   logStep(`OpenAI timeout: ${openAITimeoutMs}ms`);

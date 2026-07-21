@@ -1,4 +1,4 @@
-// Gateway Smoke script supports OpenClaw repository automation.
+// Gateway Smoke script supports GrokBot repository automation.
 import { fileURLToPath } from "node:url";
 import {
   MIN_CLIENT_PROTOCOL_VERSION,
@@ -171,12 +171,12 @@ export async function runGatewaySmoke(
       minProtocol: MIN_CLIENT_PROTOCOL_VERSION,
       maxProtocol: PROTOCOL_VERSION,
       client: {
-        id: "openclaw-ios",
-        displayName: "openclaw gateway smoke test",
+        id: "grokbot-ios",
+        displayName: "grokbot gateway smoke test",
         version: "dev",
         platform: "dev",
         mode: "ui",
-        instanceId: "openclaw-dev-smoke",
+        instanceId: "grokbot-dev-smoke",
       },
       locale: "en-US",
       userAgent: "gateway-smoke",

@@ -1,7 +1,7 @@
 import { html, nothing } from "lit";
 import { property } from "lit/decorators.js";
 import { t } from "../i18n/index.ts";
-import { OpenClawLightDomContentsElement } from "../lit/openclaw-element.ts";
+import { OpenClawLightDomContentsElement } from "../lit/grokbot-element.ts";
 import { icons } from "./icons.ts";
 import "./tooltip.ts";
 
@@ -96,6 +96,6 @@ class SidebarAgentCard extends OpenClawLightDomContentsElement {
   }
 }
 
-if (!customElements.get("openclaw-sidebar-agent-card")) {
-  customElements.define("openclaw-sidebar-agent-card", SidebarAgentCard);
+if (!customElements.get("grokbot-sidebar-agent-card")) {
+  customElements.define("grokbot-sidebar-agent-card", SidebarAgentCard);
 }

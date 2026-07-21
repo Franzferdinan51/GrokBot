@@ -2,7 +2,7 @@
  * Tests for talk gateway methods that coordinate speech and audio providers.
  */
 
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ErrorCodes } from "../../../packages/gateway-protocol/src/index.js";
 import type { OpenClawConfig } from "../../config/config.js";
@@ -774,7 +774,7 @@ describe("talk.speak handler", () => {
 
     mocks.getRuntimeConfig.mockReturnValue(runtimeConfig);
     mocks.readConfigFileSnapshot.mockResolvedValue({
-      path: "/tmp/openclaw.json",
+      path: "/tmp/grokbot.json",
       hash: "test-hash",
       valid: true,
       config: diskConfig,
@@ -857,7 +857,7 @@ describe("talk.config handler", () => {
 
   it("projects the runtime realtime transport when source config is invalid", async () => {
     mocks.readConfigFileSnapshot.mockResolvedValue({
-      path: "/tmp/openclaw.json",
+      path: "/tmp/grokbot.json",
       hash: "test-hash",
       valid: false,
       config: {},
@@ -964,7 +964,7 @@ describe("talk.config handler", () => {
       },
     } as OpenClawConfig;
     mocks.readConfigFileSnapshot.mockResolvedValue({
-      path: "/tmp/openclaw.json",
+      path: "/tmp/grokbot.json",
       hash: "test-hash",
       valid: true,
       config: sourceConfig,
@@ -1046,7 +1046,7 @@ describe("talk.config handler", () => {
     } as OpenClawConfig;
 
     mocks.readConfigFileSnapshot.mockResolvedValue({
-      path: "/tmp/openclaw.json",
+      path: "/tmp/grokbot.json",
       hash: "test-hash",
       valid: true,
       config: sourceConfig,
@@ -1116,7 +1116,7 @@ describe("talk.config handler", () => {
 
     mocks.getSpeechProvider.mockReturnValue(undefined);
     mocks.readConfigFileSnapshot.mockResolvedValue({
-      path: "/tmp/openclaw.json",
+      path: "/tmp/grokbot.json",
       hash: "test-hash",
       valid: true,
       config: sourceConfig,
@@ -1202,7 +1202,7 @@ describe("talk.config handler", () => {
 
     mocks.getSpeechProvider.mockReturnValue(undefined);
     mocks.readConfigFileSnapshot.mockResolvedValue({
-      path: "/tmp/openclaw.json",
+      path: "/tmp/grokbot.json",
       hash: "test-hash",
       valid: true,
       config: sourceConfig,
@@ -1274,7 +1274,7 @@ describe("talk.config handler", () => {
       }),
     });
     mocks.readConfigFileSnapshot.mockResolvedValue({
-      path: "/tmp/openclaw.json",
+      path: "/tmp/grokbot.json",
       hash: "test-hash",
       valid: true,
       config: sourceConfig,
@@ -1360,7 +1360,7 @@ describe("talk.config handler", () => {
 
     mocks.getSpeechProvider.mockReturnValue(undefined);
     mocks.readConfigFileSnapshot.mockResolvedValue({
-      path: "/tmp/openclaw.json",
+      path: "/tmp/grokbot.json",
       hash: "test-hash",
       valid: true,
       config: sourceConfig,
@@ -1408,7 +1408,7 @@ describe("talk.config handler", () => {
 
     mocks.getSpeechProvider.mockReturnValue(undefined);
     mocks.readConfigFileSnapshot.mockResolvedValue({
-      path: "/tmp/openclaw.json",
+      path: "/tmp/grokbot.json",
       hash: "test-hash",
       valid: true,
       config: sourceConfig,
@@ -1459,7 +1459,7 @@ describe("talk.session unified handlers", () => {
       sessionId: "session-active",
       active: true,
       queued: true,
-      message: "Steered the active OpenClaw run.",
+      message: "Steered the active GrokBot run.",
       speak: false,
       show: true,
       suppress: true,
@@ -1471,7 +1471,7 @@ describe("talk.session unified handlers", () => {
       sessionId: "session-active",
       active: true,
       queued: true,
-      message: "Steered the active OpenClaw run.",
+      message: "Steered the active GrokBot run.",
       speak: false,
       show: true,
       suppress: true,
@@ -2789,7 +2789,7 @@ describe("talk.client.steer handler", () => {
       sessionId: "session-active",
       active: true,
       queued: true,
-      message: "Steered the active OpenClaw run.",
+      message: "Steered the active GrokBot run.",
       speak: false,
       show: true,
       suppress: true,

@@ -8,9 +8,9 @@ import { afterAll, beforeAll, describe, expect, it, type TestFunction } from "vi
 import {
   createOpenClawTestInstance,
   type OpenClawTestInstance,
-} from "../../test/helpers/openclaw-test-instance.js";
+} from "../../test/helpers/grokbot-test-instance.js";
 import type { ModelProviderConfig } from "../config/types.models.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { createDeferred } from "../test-utils/deferred.js";
 import { GatewayChatClient } from "./gateway-chat.js";
 import { sleep, startPty, waitFor, type PtyRun } from "./tui-pty-test-support.js";
@@ -397,7 +397,7 @@ function buildTuiCliScript(args: string[]) {
     `const program = new Command();`,
     `program.exitOverride();`,
     `registerTuiCli(program);`,
-    `program.parseAsync([process.execPath, "openclaw", ...${JSON.stringify(args)}], { from: "node" }).catch((error) => {`,
+    `program.parseAsync([process.execPath, "grokbot", ...${JSON.stringify(args)}], { from: "node" }).catch((error) => {`,
     `  console.error(error);`,
     `  process.exit(1);`,
     `});`,
@@ -481,7 +481,7 @@ function buildLocalModeConfig(params: {
         workspace: params.workspaceDir,
         model: { primary: "tui-pty-mock/gpt-5.5" },
         models: {
-          "tui-pty-mock/gpt-5.5": { agentRuntime: { id: "openclaw" } },
+          "tui-pty-mock/gpt-5.5": { agentRuntime: { id: "grokbot" } },
         },
         skills: [],
         skipBootstrap: true,
@@ -521,14 +521,14 @@ async function startLocalModeTui(
   } = {},
 ) {
   const replyText = "LOCAL_PTY_RESPONSE";
-  const tempDir = await mkdtemp(path.join(tmpdir(), "openclaw-tui-pty-local-"));
+  const tempDir = await mkdtemp(path.join(tmpdir(), "grokbot-tui-pty-local-"));
   const workspaceDir = path.join(tempDir, "workspace");
   const homeDir = path.join(tempDir, "home");
   const stateDir = path.join(tempDir, "state");
   const xdgConfigHome = path.join(tempDir, "xdg-config");
   const xdgDataHome = path.join(tempDir, "xdg-data");
   const xdgCacheHome = path.join(tempDir, "xdg-cache");
-  const configPath = path.join(tempDir, "openclaw.json");
+  const configPath = path.join(tempDir, "grokbot.json");
   const mockModel = await startMockModelServer(replyText, {
     invalidEditLoop: opts.invalidEditLoop,
     holdFirstResponse: opts.holdFirstResponse,
@@ -615,7 +615,7 @@ function buildGatewayModeConfig(params: { tempDir: string; providerBaseUrl: stri
         workspace: path.join(params.tempDir, defaultScenario.agentId),
         model: { primary: defaultModelRef },
         models: Object.fromEntries(
-          modelRefs.map((modelRef) => [modelRef, { agentRuntime: { id: "openclaw" } }]),
+          modelRefs.map((modelRef) => [modelRef, { agentRuntime: { id: "grokbot" } }]),
         ),
         skills: [],
         skipBootstrap: true,
@@ -647,7 +647,7 @@ function buildGatewayModeConfig(params: { tempDir: string; providerBaseUrl: stri
 }
 
 async function startSharedGatewayFixture(): Promise<SharedGatewayFixture> {
-  const tempDir = await mkdtemp(path.join(tmpdir(), "openclaw-tui-pty-gateway-"));
+  const tempDir = await mkdtemp(path.join(tmpdir(), "grokbot-tui-pty-gateway-"));
   let mockModel: MockModelServer | undefined;
   let gateway: OpenClawTestInstance | undefined;
   let controlClient: GatewayChatClient | undefined;

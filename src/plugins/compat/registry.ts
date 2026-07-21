@@ -1,7 +1,7 @@
 // Plugin compatibility registry exposes known plugin compatibility metadata to doctor/update flows.
 import type { PluginCompatRecord } from "./types.js";
 
-const CHANNEL_RUNTIME_SDK_SURFACE = ["openclaw/plugin-sdk/channel", "runtime"].join("-");
+const CHANNEL_RUNTIME_SDK_SURFACE = ["grokbot/plugin-sdk/channel", "runtime"].join("-");
 
 type DeprecatedPluginSdkSubpathSeed = Pick<
   PluginCompatRecord,
@@ -16,35 +16,35 @@ const DEPRECATED_PLUGIN_SDK_SUBPATH_SEEDS = [
     subpath: "self-hosted-provider-setup",
     owner: "provider",
     removeAfter: "2026-07-30",
-    replacement: "`openclaw/plugin-sdk/provider-setup`",
+    replacement: "`grokbot/plugin-sdk/provider-setup`",
   },
   {
     code: "plugin-sdk-runtime-logger-subpath",
     subpath: "runtime-logger",
     owner: "sdk",
     removeAfter: "2026-07-30",
-    replacement: "`openclaw/plugin-sdk/runtime`",
+    replacement: "`grokbot/plugin-sdk/runtime`",
   },
   {
     code: "plugin-sdk-runtime-secret-resolution-subpath",
     subpath: "runtime-secret-resolution",
     owner: "sdk",
     removeAfter: "2026-07-30",
-    replacement: "`openclaw/plugin-sdk/runtime` and `openclaw/plugin-sdk/secret-ref-runtime`",
+    replacement: "`grokbot/plugin-sdk/runtime` and `grokbot/plugin-sdk/secret-ref-runtime`",
   },
   {
     code: "plugin-sdk-setup-adapter-runtime-subpath",
     subpath: "setup-adapter-runtime",
     owner: "setup",
     removeAfter: "2026-07-30",
-    replacement: "`openclaw/plugin-sdk/setup-runtime`",
+    replacement: "`grokbot/plugin-sdk/setup-runtime`",
   },
   {
     code: "plugin-sdk-channel-streaming-subpath",
     subpath: "channel-streaming",
     owner: "channel",
     removeAfter: "2026-08-15",
-    replacement: "`openclaw/plugin-sdk/channel-outbound`",
+    replacement: "`grokbot/plugin-sdk/channel-outbound`",
   },
   {
     code: "plugin-sdk-config-runtime-subpath",
@@ -52,14 +52,14 @@ const DEPRECATED_PLUGIN_SDK_SUBPATH_SEEDS = [
     owner: "config",
     removeAfter: "2026-09-01",
     replacement:
-      "`api.pluginConfig`, `openclaw/plugin-sdk/config-mutation`, `openclaw/plugin-sdk/runtime-config-snapshot`, and `openclaw/plugin-sdk/config-contracts`",
+      "`api.pluginConfig`, `grokbot/plugin-sdk/config-mutation`, `grokbot/plugin-sdk/runtime-config-snapshot`, and `grokbot/plugin-sdk/config-contracts`",
   },
   {
     code: "plugin-sdk-config-types-subpath",
     subpath: "config-types",
     owner: "config",
     removeAfter: "2026-07-30",
-    replacement: "`openclaw/plugin-sdk/config-contracts`",
+    replacement: "`grokbot/plugin-sdk/config-contracts`",
   },
   {
     code: "plugin-sdk-config-schema-subpath",
@@ -67,49 +67,49 @@ const DEPRECATED_PLUGIN_SDK_SUBPATH_SEEDS = [
     owner: "config",
     removeAfter: "2026-07-30",
     replacement:
-      "plugin-local schemas with `openclaw/plugin-sdk/json-schema-runtime` for JSON Schema validation",
+      "plugin-local schemas with `grokbot/plugin-sdk/json-schema-runtime` for JSON Schema validation",
   },
   {
     code: "plugin-sdk-reply-dedupe-subpath",
     subpath: "reply-dedupe",
     owner: "channel",
     removeAfter: "2026-07-30",
-    replacement: "`openclaw/plugin-sdk/reply-runtime`",
+    replacement: "`grokbot/plugin-sdk/reply-runtime`",
   },
   {
     code: "plugin-sdk-inbound-reply-dispatch-subpath",
     subpath: "inbound-reply-dispatch",
     owner: "channel",
     removeAfter: "2026-08-15",
-    replacement: "`openclaw/plugin-sdk/channel-inbound` and `openclaw/plugin-sdk/channel-outbound`",
+    replacement: "`grokbot/plugin-sdk/channel-inbound` and `grokbot/plugin-sdk/channel-outbound`",
   },
   {
     code: "plugin-sdk-channel-reply-pipeline-subpath",
     subpath: "channel-reply-pipeline",
     owner: "channel",
     removeAfter: "2026-09-01",
-    replacement: "`openclaw/plugin-sdk/channel-outbound`",
+    replacement: "`grokbot/plugin-sdk/channel-outbound`",
   },
   {
     code: "plugin-sdk-channel-reply-options-runtime-subpath",
     subpath: "channel-reply-options-runtime",
     owner: "channel",
     removeAfter: "2026-07-30",
-    replacement: "`openclaw/plugin-sdk/channel-outbound`",
+    replacement: "`grokbot/plugin-sdk/channel-outbound`",
   },
   {
     code: "plugin-sdk-outbound-send-deps-subpath",
     subpath: "outbound-send-deps",
     owner: "channel",
     removeAfter: "2026-07-30",
-    replacement: "`openclaw/plugin-sdk/channel-outbound`",
+    replacement: "`grokbot/plugin-sdk/channel-outbound`",
   },
   {
     code: "plugin-sdk-outbound-runtime-subpath",
     subpath: "outbound-runtime",
     owner: "channel",
     removeAfter: "2026-07-30",
-    replacement: "`openclaw/plugin-sdk/channel-outbound`",
+    replacement: "`grokbot/plugin-sdk/channel-outbound`",
   },
   {
     code: "plugin-sdk-infra-runtime-subpath",
@@ -117,7 +117,7 @@ const DEPRECATED_PLUGIN_SDK_SUBPATH_SEEDS = [
     owner: "sdk",
     removeAfter: "2026-09-01",
     replacement:
-      "focused subpaths including `openclaw/plugin-sdk/delivery-queue-runtime`, `openclaw/plugin-sdk/diagnostic-runtime`, `openclaw/plugin-sdk/error-runtime`, `openclaw/plugin-sdk/exec-approvals-runtime`, `openclaw/plugin-sdk/fetch-runtime`, and `openclaw/plugin-sdk/ssrf-runtime`",
+      "focused subpaths including `grokbot/plugin-sdk/delivery-queue-runtime`, `grokbot/plugin-sdk/diagnostic-runtime`, `grokbot/plugin-sdk/error-runtime`, `grokbot/plugin-sdk/exec-approvals-runtime`, `grokbot/plugin-sdk/fetch-runtime`, and `grokbot/plugin-sdk/ssrf-runtime`",
   },
   {
     code: "plugin-sdk-text-runtime-subpath",
@@ -125,7 +125,7 @@ const DEPRECATED_PLUGIN_SDK_SUBPATH_SEEDS = [
     owner: "sdk",
     removeAfter: "2026-08-15",
     replacement:
-      "`openclaw/plugin-sdk/logging-core`, `openclaw/plugin-sdk/text-chunking`, `openclaw/plugin-sdk/text-utility-runtime`, and `openclaw/plugin-sdk/string-coerce-runtime`",
+      "`grokbot/plugin-sdk/logging-core`, `grokbot/plugin-sdk/text-chunking`, `grokbot/plugin-sdk/text-utility-runtime`, and `grokbot/plugin-sdk/string-coerce-runtime`",
   },
   {
     code: "plugin-sdk-channel-secret-runtime-subpath",
@@ -133,28 +133,28 @@ const DEPRECATED_PLUGIN_SDK_SUBPATH_SEEDS = [
     owner: "channel",
     removeAfter: "2026-08-15",
     replacement:
-      "`openclaw/plugin-sdk/channel-secret-basic-runtime` and `openclaw/plugin-sdk/channel-secret-tts-runtime`",
+      "`grokbot/plugin-sdk/channel-secret-basic-runtime` and `grokbot/plugin-sdk/channel-secret-tts-runtime`",
   },
   {
     code: "plugin-sdk-agent-config-primitives-subpath",
     subpath: "agent-config-primitives",
     owner: "config",
     removeAfter: "2026-08-15",
-    replacement: "`openclaw/plugin-sdk/channel-config-schema`",
+    replacement: "`grokbot/plugin-sdk/channel-config-schema`",
   },
   {
     code: "plugin-sdk-direct-dm-subpath",
     subpath: "direct-dm",
     owner: "channel",
     removeAfter: "2026-07-30",
-    replacement: "`openclaw/plugin-sdk/channel-inbound`",
+    replacement: "`grokbot/plugin-sdk/channel-inbound`",
   },
   {
     code: "plugin-sdk-direct-dm-access-subpath",
     subpath: "direct-dm-access",
     owner: "channel",
     removeAfter: "2026-07-30",
-    replacement: "`openclaw/plugin-sdk/channel-inbound`",
+    replacement: "`grokbot/plugin-sdk/channel-inbound`",
   },
   {
     code: "plugin-sdk-mattermost-subpath",
@@ -162,84 +162,84 @@ const DEPRECATED_PLUGIN_SDK_SUBPATH_SEEDS = [
     owner: "channel",
     removeAfter: "2026-07-30",
     replacement:
-      "`openclaw/plugin-sdk/command-auth`, `openclaw/plugin-sdk/channel-plugin-common`, and `openclaw/plugin-sdk/reply-history`",
+      "`grokbot/plugin-sdk/command-auth`, `grokbot/plugin-sdk/channel-plugin-common`, and `grokbot/plugin-sdk/reply-history`",
   },
   {
     code: "plugin-sdk-matrix-subpath",
     subpath: "matrix",
     owner: "channel",
     removeAfter: "2026-08-15",
-    replacement: "`openclaw/plugin-sdk/run-command`",
+    replacement: "`grokbot/plugin-sdk/run-command`",
   },
   {
     code: "plugin-sdk-channel-envelope-subpath",
     subpath: "channel-envelope",
     owner: "channel",
     removeAfter: "2026-07-30",
-    replacement: "`openclaw/plugin-sdk/channel-inbound`",
+    replacement: "`grokbot/plugin-sdk/channel-inbound`",
   },
   {
     code: "plugin-sdk-channel-inbound-roots-subpath",
     subpath: "channel-inbound-roots",
     owner: "channel",
     removeAfter: "2026-07-30",
-    replacement: "`openclaw/plugin-sdk/channel-inbound`",
+    replacement: "`grokbot/plugin-sdk/channel-inbound`",
   },
   {
     code: "plugin-sdk-channel-logging-subpath",
     subpath: "channel-logging",
     owner: "channel",
     removeAfter: "2026-08-15",
-    replacement: "`openclaw/plugin-sdk/channel-inbound` and `openclaw/plugin-sdk/channel-outbound`",
+    replacement: "`grokbot/plugin-sdk/channel-inbound` and `grokbot/plugin-sdk/channel-outbound`",
   },
   {
     code: "plugin-sdk-channel-location-subpath",
     subpath: "channel-location",
     owner: "channel",
     removeAfter: "2026-07-30",
-    replacement: "`openclaw/plugin-sdk/channel-inbound`",
+    replacement: "`grokbot/plugin-sdk/channel-inbound`",
   },
   {
     code: "plugin-sdk-channel-lifecycle-subpath",
     subpath: "channel-lifecycle",
     owner: "channel",
     removeAfter: "2026-09-01",
-    replacement: "`openclaw/plugin-sdk/channel-outbound`",
+    replacement: "`grokbot/plugin-sdk/channel-outbound`",
   },
   {
     code: "plugin-sdk-channel-message-subpath",
     subpath: "channel-message",
     owner: "channel",
     removeAfter: "2026-09-01",
-    replacement: "`openclaw/plugin-sdk/channel-outbound` and `openclaw/plugin-sdk/channel-inbound`",
+    replacement: "`grokbot/plugin-sdk/channel-outbound` and `grokbot/plugin-sdk/channel-inbound`",
   },
   {
     code: "plugin-sdk-channel-message-runtime-subpath",
     subpath: "channel-message-runtime",
     owner: "channel",
     removeAfter: "2026-07-30",
-    replacement: "`openclaw/plugin-sdk/channel-outbound`",
+    replacement: "`grokbot/plugin-sdk/channel-outbound`",
   },
   {
     code: "plugin-sdk-channel-pairing-paths-subpath",
     subpath: "channel-pairing-paths",
     owner: "channel",
     removeAfter: "2026-07-30",
-    replacement: "`openclaw/plugin-sdk/channel-pairing`",
+    replacement: "`grokbot/plugin-sdk/channel-pairing`",
   },
   {
     code: "plugin-sdk-group-access-subpath",
     subpath: "group-access",
     owner: "channel",
     removeAfter: "2026-08-15",
-    replacement: "`openclaw/plugin-sdk/channel-ingress-runtime`",
+    replacement: "`grokbot/plugin-sdk/channel-ingress-runtime`",
   },
   {
     code: "plugin-sdk-media-generation-runtime-shared-subpath",
     subpath: "media-generation-runtime-shared",
     owner: "provider",
     removeAfter: "2026-07-30",
-    replacement: "`openclaw/plugin-sdk/media-generation-runtime`",
+    replacement: "`grokbot/plugin-sdk/media-generation-runtime`",
   },
   {
     code: "plugin-sdk-music-generation-core-subpath",
@@ -247,7 +247,7 @@ const DEPRECATED_PLUGIN_SDK_SUBPATH_SEEDS = [
     owner: "provider",
     removeAfter: "2026-07-30",
     replacement:
-      "`openclaw/plugin-sdk/music-generation` for public types and assets; plugin-owned provider runtime helpers for provider registration",
+      "`grokbot/plugin-sdk/music-generation` for public types and assets; plugin-owned provider runtime helpers for provider registration",
   },
   {
     code: "plugin-sdk-memory-core-subpath",
@@ -255,7 +255,7 @@ const DEPRECATED_PLUGIN_SDK_SUBPATH_SEEDS = [
     owner: "sdk",
     removeAfter: "2026-07-30",
     replacement:
-      "memory capability registration through the injected plugin API and host-prepared prompts from `openclaw/plugin-sdk/core`",
+      "memory capability registration through the injected plugin API and host-prepared prompts from `grokbot/plugin-sdk/core`",
   },
   {
     code: "plugin-sdk-memory-core-engine-runtime-subpath",
@@ -263,49 +263,49 @@ const DEPRECATED_PLUGIN_SDK_SUBPATH_SEEDS = [
     owner: "sdk",
     removeAfter: "2026-07-30",
     replacement:
-      "`openclaw/plugin-sdk/memory-host-search` for active search-manager lifecycle operations",
+      "`grokbot/plugin-sdk/memory-host-search` for active search-manager lifecycle operations",
   },
   {
     code: "plugin-sdk-memory-core-host-multimodal-subpath",
     subpath: "memory-core-host-multimodal",
     owner: "sdk",
     removeAfter: "2026-07-30",
-    replacement: "`openclaw/plugin-sdk/memory-core-host-engine-embeddings`",
+    replacement: "`grokbot/plugin-sdk/memory-core-host-engine-embeddings`",
   },
   {
     code: "plugin-sdk-memory-core-host-query-subpath",
     subpath: "memory-core-host-query",
     owner: "sdk",
     removeAfter: "2026-07-30",
-    replacement: "`openclaw/plugin-sdk/memory-core-host-engine-qmd`",
+    replacement: "`grokbot/plugin-sdk/memory-core-host-engine-qmd`",
   },
   {
     code: "plugin-sdk-memory-core-host-events-subpath",
     subpath: "memory-core-host-events",
     owner: "sdk",
     removeAfter: "2026-07-30",
-    replacement: "`openclaw/plugin-sdk/memory-host-events`",
+    replacement: "`grokbot/plugin-sdk/memory-host-events`",
   },
   {
     code: "plugin-sdk-memory-host-files-subpath",
     subpath: "memory-host-files",
     owner: "sdk",
     removeAfter: "2026-07-30",
-    replacement: "`openclaw/plugin-sdk/memory-core-host-runtime-files`",
+    replacement: "`grokbot/plugin-sdk/memory-core-host-runtime-files`",
   },
   {
     code: "plugin-sdk-memory-host-status-subpath",
     subpath: "memory-host-status",
     owner: "sdk",
     removeAfter: "2026-07-30",
-    replacement: "`openclaw/plugin-sdk/memory-core-host-status`",
+    replacement: "`grokbot/plugin-sdk/memory-core-host-status`",
   },
   {
     code: "plugin-sdk-provider-auth-login-subpath",
     subpath: "provider-auth-login",
     owner: "provider",
     removeAfter: "2026-07-30",
-    replacement: "provider auth hooks built with `openclaw/plugin-sdk/provider-auth`",
+    replacement: "provider auth hooks built with `grokbot/plugin-sdk/provider-auth`",
   },
   {
     code: "plugin-sdk-provider-zai-endpoint-subpath",
@@ -313,7 +313,7 @@ const DEPRECATED_PLUGIN_SDK_SUBPATH_SEEDS = [
     owner: "provider",
     removeAfter: "2026-07-30",
     replacement:
-      "plugin-owned endpoint detection using `openclaw/plugin-sdk/provider-http` for generic transport helpers",
+      "plugin-owned endpoint detection using `grokbot/plugin-sdk/provider-http` for generic transport helpers",
   },
   {
     code: "plugin-sdk-telegram-command-config-subpath",
@@ -327,14 +327,14 @@ const DEPRECATED_PLUGIN_SDK_SUBPATH_SEEDS = [
     subpath: "webhook-path",
     owner: "channel",
     removeAfter: "2026-07-30",
-    replacement: "`openclaw/plugin-sdk/webhook-ingress`",
+    replacement: "`grokbot/plugin-sdk/webhook-ingress`",
   },
   {
     code: "plugin-sdk-zalouser-subpath",
     subpath: "zalouser",
     owner: "channel",
     removeAfter: "2026-07-30",
-    replacement: "`openclaw/plugin-sdk/command-auth`",
+    replacement: "`grokbot/plugin-sdk/command-auth`",
   },
   {
     code: "plugin-sdk-zod-subpath",
@@ -349,7 +349,7 @@ const DEPRECATED_PLUGIN_SDK_SUBPATH_SEEDS = [
     owner: "agent-runtime",
     removeAfter: "2026-07-30",
     replacement:
-      "`resolveAgentDir` or `resolveDefaultAgentDir` from `openclaw/plugin-sdk/agent-harness-runtime`",
+      "`resolveAgentDir` or `resolveDefaultAgentDir` from `grokbot/plugin-sdk/agent-harness-runtime`",
   },
 ] as const satisfies readonly DeprecatedPluginSdkSubpathSeed[];
 
@@ -365,7 +365,7 @@ const DEPRECATED_PLUGIN_SDK_SUBPATH_RECORDS = DEPRECATED_PLUGIN_SDK_SUBPATH_SEED
       removeAfter,
       replacement,
       docsPath: "/plugins/sdk-migration",
-      surfaces: [`openclaw/plugin-sdk/${subpath}`],
+      surfaces: [`grokbot/plugin-sdk/${subpath}`],
       diagnostics: [
         "repository deprecated API usage guard for core and bundled plugins; no external runtime import warning",
       ],
@@ -373,7 +373,7 @@ const DEPRECATED_PLUGIN_SDK_SUBPATH_RECORDS = DEPRECATED_PLUGIN_SDK_SUBPATH_SEED
     } satisfies PluginCompatRecord;
     if (removeAfter <= "2026-07-30") {
       return Object.assign(record, {
-        releaseNote: `The deprecated public \`openclaw/plugin-sdk/${subpath}\` subpath was removed in the July 2026 compatibility sweep.`,
+        releaseNote: `The deprecated public \`grokbot/plugin-sdk/${subpath}\` subpath was removed in the July 2026 compatibility sweep.`,
       });
     }
     return record;
@@ -554,17 +554,17 @@ const DOCUMENTED_PUBLIC_PLUGIN_SDK_REPLACEMENTS: Record<
 > = {
   "agent-media-payload": {
     replacement:
-      "typed outbound payload planning via `openclaw/plugin-sdk/channel-outbound`; retain the facade for operator-supplied local-media root resolution until a focused public seam exists",
+      "typed outbound payload planning via `grokbot/plugin-sdk/channel-outbound`; retain the facade for operator-supplied local-media root resolution until a focused public seam exists",
     docsPath: "/plugins/sdk-channel-plugins",
   },
   "media-understanding": {
     replacement:
-      "`api.registerMediaUnderstandingProvider(...)` with provider-owned request helpers and types from `openclaw/plugin-sdk/plugin-entry`",
+      "`api.registerMediaUnderstandingProvider(...)` with provider-owned request helpers and types from `grokbot/plugin-sdk/plugin-entry`",
     docsPath: "/plugins/architecture",
   },
   "memory-host-core": {
     replacement:
-      "host-prepared memory prompts via `openclaw/plugin-sdk/core` and memory capability registration through the injected plugin API; retain the facade for companion-plugin public-artifact discovery until a focused read seam exists",
+      "host-prepared memory prompts via `grokbot/plugin-sdk/core` and memory capability registration through the injected plugin API; retain the facade for companion-plugin public-artifact discovery until a focused read seam exists",
     docsPath: "/plugins/architecture-internals#context-engine-plugins",
   },
   "plugin-config-runtime": {
@@ -593,12 +593,12 @@ const UNUSED_PUBLIC_PLUGIN_SDK_SUBPATH_RECORDS = UNUSED_PUBLIC_PLUGIN_SDK_SUBPAT
     removeAfter: "2026-07-30",
     replacement: "none needed — no known consumers; the subpath is removed without successor",
     docsPath: "/plugins/sdk-migration",
-    surfaces: [`openclaw/plugin-sdk/${subpath}`],
+    surfaces: [`grokbot/plugin-sdk/${subpath}`],
     diagnostics: [
       "repository deprecated API usage guard for core and bundled plugins; no external runtime import warning",
     ],
     tests: ["src/plugins/compat/registry.test.ts"],
-    releaseNote: `The unused public \`openclaw/plugin-sdk/${subpath}\` subpath was removed without a successor after the external-use corpus found no consumers.`,
+    releaseNote: `The unused public \`grokbot/plugin-sdk/${subpath}\` subpath was removed without a successor after the external-use corpus found no consumers.`,
   }),
 ) satisfies readonly PluginCompatRecord[];
 
@@ -624,7 +624,7 @@ const BUNDLED_ONLY_PUBLIC_PLUGIN_SDK_SUBPATH_RECORDS = BUNDLED_ONLY_PUBLIC_PLUGI
           ? "/plugins/tool-plugins"
           : (documented?.docsPath ?? "/plugins/sdk-migration")
         : "/plugins/sdk-migration",
-      surfaces: [`openclaw/plugin-sdk/${subpath}`],
+      surfaces: [`grokbot/plugin-sdk/${subpath}`],
       diagnostics: [
         "registry-backed public SDK demotion window; no external runtime import warning",
       ],
@@ -632,7 +632,7 @@ const BUNDLED_ONLY_PUBLIC_PLUGIN_SDK_SUBPATH_RECORDS = BUNDLED_ONLY_PUBLIC_PLUGI
     } satisfies PluginCompatRecord;
     if (!removalBlocked) {
       return Object.assign(record, {
-        releaseNote: `The public export for \`openclaw/plugin-sdk/${subpath}\` was removed; the module remains available to bundled plugins as a private-local-only subpath.`,
+        releaseNote: `The public export for \`grokbot/plugin-sdk/${subpath}\` was removed; the module remains available to bundled plugins as a private-local-only subpath.`,
       });
     }
     return record;
@@ -652,8 +652,8 @@ const PLUGIN_COMPAT_RECORDS = [
       "provider plugins via `api.registerProvider(...)`; host/runtime code registers against its lifecycle-owned `ApiRegistry`",
     docsPath: "/plugins/sdk-migration#process-global-api-provider-publication",
     surfaces: [
-      "openclaw/plugin-sdk/llm registerApiProvider",
-      "openclaw/plugin-sdk/llm unregisterApiProviders",
+      "grokbot/plugin-sdk/llm registerApiProvider",
+      "grokbot/plugin-sdk/llm unregisterApiProviders",
     ],
     diagnostics: ["plugin SDK compatibility registry and migration guide"],
     tests: ["src/plugins/compat/registry.test.ts"],
@@ -738,7 +738,7 @@ const PLUGIN_COMPAT_RECORDS = [
     surfaces: [
       "api.registerMemoryEmbeddingProvider(...)",
       "contracts.memoryEmbeddingProviders",
-      "openclaw/plugin-sdk/memory-core-host-engine-embeddings registerMemoryEmbeddingProvider",
+      "grokbot/plugin-sdk/memory-core-host-engine-embeddings registerMemoryEmbeddingProvider",
       "plugins inspect compatibility notices",
     ],
     diagnostics: ["plugin compatibility notice", "plugin SDK package guardrail"],
@@ -762,10 +762,10 @@ const PLUGIN_COMPAT_RECORDS = [
       "`getSessionEntry(...)`, `listSessionEntries(...)`, and row-level session mutations",
     docsPath: "/plugins/sdk-migration#removed-session-and-transcript-file-apis",
     surfaces: [
-      "openclaw/plugin-sdk/session-store-runtime loadSessionStore",
-      "openclaw/plugin-sdk/session-store-runtime updateSessionStore",
-      "openclaw/plugin-sdk/session-store-runtime resolveSessionFilePath",
-      "openclaw/plugin-sdk/session-store-runtime resolveSessionStoreEntry",
+      "grokbot/plugin-sdk/session-store-runtime loadSessionStore",
+      "grokbot/plugin-sdk/session-store-runtime updateSessionStore",
+      "grokbot/plugin-sdk/session-store-runtime resolveSessionFilePath",
+      "grokbot/plugin-sdk/session-store-runtime resolveSessionStoreEntry",
     ],
     diagnostics: ["plugin SDK deprecation"],
     tests: ["src/plugin-sdk/session-store-runtime.test.ts", "src/plugins/compat/registry.test.ts"],
@@ -804,9 +804,9 @@ const PLUGIN_COMPAT_RECORDS = [
     deprecated: "2026-04-24",
     warningStarts: "2026-04-24",
     removeAfter: "2026-07-24",
-    replacement: "focused `openclaw/plugin-sdk/<subpath>` imports",
+    replacement: "focused `grokbot/plugin-sdk/<subpath>` imports",
     docsPath: "/plugins/sdk-migration",
-    surfaces: ["openclaw/plugin-sdk", "openclaw/plugin-sdk/compat"],
+    surfaces: ["grokbot/plugin-sdk", "grokbot/plugin-sdk/compat"],
     diagnostics: ["OPENCLAW_PLUGIN_SDK_COMPAT_DEPRECATED"],
     tests: ["src/plugins/compat/registry.test.ts"],
     releaseNote:
@@ -874,7 +874,7 @@ const PLUGIN_COMPAT_RECORDS = [
       "WhatsApp `WebInboundCallbackMessage` nested contexts: `event`, `payload`, `quote`, `group`, and `platform`",
     docsPath: "/plugins/compatibility",
     surfaces: [
-      "@openclaw/whatsapp WebInboundMessage flat fields",
+      "@grokbot/whatsapp WebInboundMessage flat fields",
       "WhatsApp monitorWebInbox onMessage callback",
       "WhatsApp monitorWebChannel listenerFactory injected messages",
     ],
@@ -895,7 +895,7 @@ const PLUGIN_COMPAT_RECORDS = [
       "WhatsApp `WebInboundMessage.admission` fields: `conversation.id`, `accountId`, `ingress.decision`, and `conversation.kind`",
     docsPath: "/plugins/compatibility",
     surfaces: [
-      "@openclaw/whatsapp WebInboundMessage top-level admission fields",
+      "@grokbot/whatsapp WebInboundMessage top-level admission fields",
       "WhatsApp monitorWebInbox onMessage callback",
       "WhatsApp monitorWebChannel listenerFactory injected messages",
     ],
@@ -913,8 +913,8 @@ const PLUGIN_COMPAT_RECORDS = [
       "generic channel SDK subpaths or plugin-local `api.ts` / `runtime-api.ts` barrels for new plugins",
     docsPath: "/plugins/sdk-overview",
     surfaces: [
-      "openclaw/plugin-sdk/discord component message helpers",
-      "openclaw/plugin-sdk/telegram-account resolveTelegramAccount",
+      "grokbot/plugin-sdk/discord component message helpers",
+      "grokbot/plugin-sdk/telegram-account resolveTelegramAccount",
     ],
     diagnostics: ["plugin SDK compatibility registry"],
     tests: [
@@ -932,9 +932,9 @@ const PLUGIN_COMPAT_RECORDS = [
     warningStarts: "2026-04-28",
     removeAfter: "2026-07-28",
     replacement:
-      "`openclaw/plugin-sdk/bundled-channel-config-schema` for maintained bundled plugins; plugin-local schemas for third-party plugins",
+      "`grokbot/plugin-sdk/bundled-channel-config-schema` for maintained bundled plugins; plugin-local schemas for third-party plugins",
     docsPath: "/plugins/sdk-migration",
-    surfaces: ["openclaw/plugin-sdk/channel-config-schema-legacy"],
+    surfaces: ["grokbot/plugin-sdk/channel-config-schema-legacy"],
     diagnostics: ["plugin SDK compatibility warning"],
     tests: ["src/plugins/compat/registry.test.ts"],
     releaseNote:
@@ -949,9 +949,9 @@ const PLUGIN_COMPAT_RECORDS = [
     warningStarts: "2026-04-28",
     removeAfter: "2026-07-28",
     replacement:
-      "focused `openclaw/plugin-sdk/*` test subpaths such as `plugin-test-runtime`, `channel-test-helpers`, `test-env`, and `test-fixtures`",
+      "focused `grokbot/plugin-sdk/*` test subpaths such as `plugin-test-runtime`, `channel-test-helpers`, `test-env`, and `test-fixtures`",
     docsPath: "/plugins/sdk-migration#private-testing-barrel",
-    surfaces: ["openclaw/plugin-sdk/testing"],
+    surfaces: ["grokbot/plugin-sdk/testing"],
     diagnostics: ["plugin SDK compatibility warning"],
     tests: ["src/plugins/compat/registry.test.ts"],
     releaseNote:
@@ -968,8 +968,8 @@ const PLUGIN_COMPAT_RECORDS = [
     replacement: "`channelRouteDedupeKey` and `channelRouteCompactKey`",
     docsPath: "/plugins/sdk-migration",
     surfaces: [
-      "openclaw/plugin-sdk/channel-route channelRouteIdentityKey",
-      "openclaw/plugin-sdk/channel-route channelRouteKey",
+      "grokbot/plugin-sdk/channel-route channelRouteIdentityKey",
+      "grokbot/plugin-sdk/channel-route channelRouteKey",
     ],
     diagnostics: ["plugin SDK compatibility warning"],
     tests: ["src/plugins/compat/registry.test.ts"],
@@ -989,9 +989,9 @@ const PLUGIN_COMPAT_RECORDS = [
     docsPath: "/plugins/sdk-migration",
     surfaces: [
       "ChannelMessagingAdapter.parseExplicitTarget",
-      "openclaw/plugin-sdk/channel-route ChannelRouteExplicitTarget",
-      "openclaw/plugin-sdk/channel-route ChannelRouteExplicitTargetParser",
-      "openclaw/plugin-sdk/channel-route resolveChannelRouteTargetWithParser",
+      "grokbot/plugin-sdk/channel-route ChannelRouteExplicitTarget",
+      "grokbot/plugin-sdk/channel-route ChannelRouteExplicitTargetParser",
+      "grokbot/plugin-sdk/channel-route resolveChannelRouteTargetWithParser",
     ],
     diagnostics: ["plugin SDK compatibility warning"],
     tests: [
@@ -1007,9 +1007,9 @@ const PLUGIN_COMPAT_RECORDS = [
     deprecated: "2026-05-23",
     warningStarts: "2026-05-23",
     removeAfter: "2026-08-23",
-    replacement: "`openclaw/plugin-sdk/channel-targets`",
+    replacement: "`grokbot/plugin-sdk/channel-targets`",
     docsPath: "/plugins/sdk-migration",
-    surfaces: ["openclaw/plugin-sdk/messaging-targets"],
+    surfaces: ["grokbot/plugin-sdk/messaging-targets"],
     diagnostics: ["plugin SDK compatibility warning"],
     tests: [
       "src/plugins/compat/registry.test.ts",
@@ -1059,7 +1059,7 @@ const PLUGIN_COMPAT_RECORDS = [
     removeAfter: "2026-07-24",
     replacement: "`setup.providers[].envVars` and `providerAuthChoices`",
     docsPath: "/plugins/manifest",
-    surfaces: ["openclaw.plugin.json providerAuthEnvVars", "provider setup"],
+    surfaces: ["grokbot.plugin.json providerAuthEnvVars", "provider setup"],
     diagnostics: ["manifest compatibility diagnostic"],
     tests: ["src/plugins/compat/registry.test.ts"],
     releaseNote:
@@ -1075,7 +1075,7 @@ const PLUGIN_COMPAT_RECORDS = [
     removeAfter: "2026-07-24",
     replacement: "`channelConfigs.<id>.schema` and setup descriptors",
     docsPath: "/plugins/manifest",
-    surfaces: ["openclaw.plugin.json channelEnvVars", "channel setup"],
+    surfaces: ["grokbot.plugin.json channelEnvVars", "channel setup"],
     diagnostics: ["manifest compatibility diagnostic"],
     tests: ["src/plugins/compat/registry.test.ts"],
     releaseNote:
@@ -1184,9 +1184,9 @@ const PLUGIN_COMPAT_RECORDS = [
     warningStarts: "2026-04-25",
     removeAfter: "2026-07-25",
     replacement:
-      "`openclaw/plugin-sdk/agent-runtime`; retain the public aliases until the shipped SDK contract has a replacement window backed by external-usage proof",
+      "`grokbot/plugin-sdk/agent-runtime`; retain the public aliases until the shipped SDK contract has a replacement window backed by external-usage proof",
     docsPath: "/plugins/sdk-agent-harness",
-    surfaces: ["openclaw/plugin-sdk/agent-harness", "openclaw/plugin-sdk/agent-harness-runtime"],
+    surfaces: ["grokbot/plugin-sdk/agent-harness", "grokbot/plugin-sdk/agent-harness-runtime"],
     diagnostics: ["plugin SDK compatibility warning"],
     tests: ["src/plugins/contracts/plugin-sdk-subpaths.test.ts"],
   },
@@ -1202,8 +1202,8 @@ const PLUGIN_COMPAT_RECORDS = [
     docsPath: "/plugins/sdk-runtime",
     surfaces: [
       "api.runtime.agent.runEmbeddedPiAgent",
-      "openclaw/extension-api runEmbeddedPiAgent",
-      "openclaw/plugin-sdk/agent-harness-runtime EmbeddedPi* aliases",
+      "grokbot/extension-api runEmbeddedPiAgent",
+      "grokbot/plugin-sdk/agent-harness-runtime EmbeddedPi* aliases",
     ],
     diagnostics: ["plugin SDK compatibility registry"],
     tests: [
@@ -1248,7 +1248,7 @@ const PLUGIN_COMPAT_RECORDS = [
     deprecated: "2026-04-25",
     warningStarts: "2026-04-25",
     removeAfter: "2026-07-25",
-    replacement: "`openclaw plugins registry --refresh` and `openclaw doctor --fix`",
+    replacement: "`grokbot plugins registry --refresh` and `grokbot doctor --fix`",
     docsPath: "/cli/plugins#registry",
     surfaces: ["OPENCLAW_DISABLE_PERSISTED_PLUGIN_REGISTRY", "plugin registry reads"],
     diagnostics: ["persisted-registry-disabled"],
@@ -1264,7 +1264,7 @@ const PLUGIN_COMPAT_RECORDS = [
     deprecated: "2026-04-25",
     warningStarts: "2026-04-25",
     removeAfter: "2026-07-25",
-    replacement: "`openclaw plugins registry --refresh` and `openclaw doctor --fix`",
+    replacement: "`grokbot plugins registry --refresh` and `grokbot doctor --fix`",
     docsPath: "/cli/plugins#registry",
     surfaces: [
       "OPENCLAW_DISABLE_PLUGIN_REGISTRY_MIGRATION",
@@ -1407,9 +1407,9 @@ const PLUGIN_COMPAT_RECORDS = [
     deprecated: "2026-04-26",
     warningStarts: "2026-04-26",
     removeAfter: "2026-07-26",
-    replacement: "`openclaw.channel.exposure` metadata",
+    replacement: "`grokbot.channel.exposure` metadata",
     docsPath: "/plugins/sdk-setup",
-    surfaces: ["openclaw.channel.showConfigured", "openclaw.channel.showInSetup"],
+    surfaces: ["grokbot.channel.showConfigured", "grokbot.channel.showInSetup"],
     diagnostics: ["channel exposure compatibility path"],
     tests: ["src/plugins/compat/registry.test.ts"],
     releaseNote:
@@ -1424,7 +1424,7 @@ const PLUGIN_COMPAT_RECORDS = [
     warningStarts: "2026-04-26",
     removeAfter: "2026-07-26",
     replacement:
-      "focused channel SDK subpaths, especially `openclaw/plugin-sdk/channel-runtime-context`",
+      "focused channel SDK subpaths, especially `grokbot/plugin-sdk/channel-runtime-context`",
     docsPath: "/plugins/sdk-migration",
     surfaces: [CHANNEL_RUNTIME_SDK_SURFACE],
     diagnostics: ["plugin SDK compatibility warning"],
@@ -1440,12 +1440,12 @@ const PLUGIN_COMPAT_RECORDS = [
     deprecated: "2026-04-26",
     warningStarts: "2026-04-26",
     removeAfter: "2026-07-26",
-    replacement: "`openclaw/plugin-sdk/command-status`",
+    replacement: "`grokbot/plugin-sdk/command-status`",
     docsPath: "/plugins/sdk-migration",
     surfaces: [
-      "openclaw/plugin-sdk/command-auth buildCommandsMessage",
-      "openclaw/plugin-sdk/command-auth buildCommandsMessagePaginated",
-      "openclaw/plugin-sdk/command-auth buildHelpMessage",
+      "grokbot/plugin-sdk/command-auth buildCommandsMessage",
+      "grokbot/plugin-sdk/command-auth buildCommandsMessagePaginated",
+      "grokbot/plugin-sdk/command-auth buildHelpMessage",
     ],
     diagnostics: ["plugin SDK compatibility warning"],
     tests: ["src/plugins/compat/registry.test.ts"],
@@ -1462,27 +1462,27 @@ const PLUGIN_COMPAT_RECORDS = [
     removeAfter: "2026-07-26",
     replacement: "`OpenClawConfig`",
     docsPath: "/plugins/sdk-migration",
-    surfaces: ["openclaw/plugin-sdk `ClawdbotConfig` type export"],
+    surfaces: ["grokbot/plugin-sdk `ClawdbotConfig` type export"],
     diagnostics: ["plugin SDK compatibility warning"],
     tests: ["src/plugins/compat/registry.test.ts"],
     releaseNote:
       "The deprecated compatibility surfaces tracked by clawdbot-config-type-alias were removed in the July 2026 sweep.",
   },
   {
-    code: "openclaw-schema-type-alias",
+    code: "grokbot-schema-type-alias",
     status: "removed",
     owner: "sdk",
     introduced: "2026-04-26",
     deprecated: "2026-04-26",
     warningStarts: "2026-04-26",
     removeAfter: "2026-07-26",
-    replacement: "`OpenClawConfig` from `openclaw/plugin-sdk/config-schema`",
+    replacement: "`OpenClawConfig` from `grokbot/plugin-sdk/config-schema`",
     docsPath: "/plugins/sdk-migration",
-    surfaces: ["openclaw/plugin-sdk `OpenClawSchemaType` type export"],
+    surfaces: ["grokbot/plugin-sdk `OpenClawSchemaType` type export"],
     diagnostics: ["plugin SDK compatibility warning"],
     tests: ["src/plugins/compat/registry.test.ts"],
     releaseNote:
-      "The deprecated compatibility surfaces tracked by openclaw-schema-type-alias were removed in the July 2026 sweep.",
+      "The deprecated compatibility surfaces tracked by grokbot-schema-type-alias were removed in the July 2026 sweep.",
   },
   {
     code: "legacy-extension-api-import",
@@ -1493,9 +1493,9 @@ const PLUGIN_COMPAT_RECORDS = [
     warningStarts: "2026-04-26",
     removeAfter: "2026-07-26",
     replacement:
-      "injected `api.runtime.*` helpers or focused `openclaw/plugin-sdk/<subpath>` imports",
+      "injected `api.runtime.*` helpers or focused `grokbot/plugin-sdk/<subpath>` imports",
     docsPath: "/plugins/sdk-migration",
-    surfaces: ["openclaw/extension-api"],
+    surfaces: ["grokbot/extension-api"],
     diagnostics: ["OPENCLAW_EXTENSION_API_DEPRECATED"],
     tests: ["src/plugins/compat/registry.test.ts"],
     releaseNote:
@@ -1715,8 +1715,8 @@ const PLUGIN_COMPAT_RECORDS = [
     replacement: "semantic `presentation` capabilities",
     docsPath: "/plugins/sdk-migration",
     surfaces: [
-      "openclaw/plugin-sdk/channel-actions createMessageToolButtonsSchema",
-      "openclaw/plugin-sdk/channel-actions createMessageToolCardSchema",
+      "grokbot/plugin-sdk/channel-actions createMessageToolButtonsSchema",
+      "grokbot/plugin-sdk/channel-actions createMessageToolCardSchema",
     ],
     diagnostics: ["plugin SDK compatibility warning"],
     tests: ["src/plugins/compat/registry.test.ts"],
@@ -1734,10 +1734,10 @@ const PLUGIN_COMPAT_RECORDS = [
     replacement: "`resolveInboundMentionDecision({ facts, policy })`",
     docsPath: "/plugins/sdk-migration",
     surfaces: [
-      "openclaw/plugin-sdk/channel-inbound resolveMentionGating",
-      "openclaw/plugin-sdk/channel-inbound resolveMentionGatingWithBypass",
-      "openclaw/plugin-sdk/channel-mention-gating resolveMentionGating",
-      "openclaw/plugin-sdk/channel-mention-gating resolveMentionGatingWithBypass",
+      "grokbot/plugin-sdk/channel-inbound resolveMentionGating",
+      "grokbot/plugin-sdk/channel-inbound resolveMentionGatingWithBypass",
+      "grokbot/plugin-sdk/channel-mention-gating resolveMentionGating",
+      "grokbot/plugin-sdk/channel-mention-gating resolveMentionGatingWithBypass",
     ],
     diagnostics: ["plugin SDK compatibility warning"],
     tests: ["src/plugins/compat/registry.test.ts"],
@@ -1754,7 +1754,7 @@ const PLUGIN_COMPAT_RECORDS = [
     removeAfter: "2026-07-26",
     replacement: "provider-owned `createTool(...)` on the returned `WebSearchProviderPlugin`",
     docsPath: "/plugins/sdk-provider-plugins",
-    surfaces: ["openclaw/plugin-sdk/provider-web-search createPluginBackedWebSearchProvider"],
+    surfaces: ["grokbot/plugin-sdk/provider-web-search createPluginBackedWebSearchProvider"],
     diagnostics: ["plugin SDK compatibility warning"],
     tests: ["src/plugins/compat/registry.test.ts"],
     releaseNote:
@@ -1785,9 +1785,9 @@ const PLUGIN_COMPAT_RECORDS = [
     deprecated: "2026-04-26",
     warningStarts: "2026-04-26",
     removeAfter: "2026-07-26",
-    replacement: "focused `openclaw/plugin-sdk/*` test subpaths",
+    replacement: "focused `grokbot/plugin-sdk/*` test subpaths",
     docsPath: "/plugins/sdk-migration",
-    surfaces: ["openclaw/plugin-sdk/test-utils"],
+    surfaces: ["grokbot/plugin-sdk/test-utils"],
     diagnostics: ["plugin SDK compatibility warning"],
     tests: ["src/plugins/compat/registry.test.ts"],
     releaseNote:

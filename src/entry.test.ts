@@ -6,7 +6,7 @@ describe("entry root help fast path", () => {
   it("prefers precomputed root help text when available", async () => {
     let outputPrecomputedRootHelpTextCalls = 0;
 
-    const handled = await tryHandleRootHelpFastPath(["node", "openclaw", "--help"], {
+    const handled = await tryHandleRootHelpFastPath(["node", "grokbot", "--help"], {
       env: {},
       outputPrecomputedRootHelpText: () => {
         outputPrecomputedRootHelpTextCalls += 1;
@@ -22,7 +22,7 @@ describe("entry root help fast path", () => {
   it("renders root help without importing the full program", async () => {
     let outputRootHelpCalls = 0;
 
-    const handled = await tryHandleRootHelpFastPath(["node", "openclaw", "--help"], {
+    const handled = await tryHandleRootHelpFastPath(["node", "grokbot", "--help"], {
       outputRootHelp: () => {
         outputRootHelpCalls += 1;
       },
@@ -48,7 +48,7 @@ describe("entry root help fast path", () => {
       env: {},
     };
 
-    const handled = await tryHandleRootHelpFastPath(["node", "openclaw", "--help"], {
+    const handled = await tryHandleRootHelpFastPath(["node", "grokbot", "--help"], {
       env: {},
       outputPrecomputedRootHelpText: () => {
         outputPrecomputedRootHelpTextCalls += 1;
@@ -68,7 +68,7 @@ describe("entry root help fast path", () => {
   it("ignores non-root help invocations", async () => {
     let outputRootHelpCalls = 0;
 
-    const handled = await tryHandleRootHelpFastPath(["node", "openclaw", "status", "--help"], {
+    const handled = await tryHandleRootHelpFastPath(["node", "grokbot", "status", "--help"], {
       outputRootHelp: () => {
         outputRootHelpCalls += 1;
       },
@@ -84,7 +84,7 @@ describe("entry root help fast path", () => {
     let outputRootHelpCalls = 0;
 
     const handled = await tryHandleRootHelpFastPath(
-      ["node", "openclaw", "--container", "demo", "--help"],
+      ["node", "grokbot", "--container", "demo", "--help"],
       {
         outputRootHelp: () => {
           outputRootHelpCalls += 1;
@@ -104,7 +104,7 @@ describe("entry precomputed command help fast path", () => {
     let outputPrecomputedBrowserHelpTextCalls = 0;
 
     const handled = await tryHandlePrecomputedCommandHelpFastPath(
-      ["node", "openclaw", "browser", "--help"],
+      ["node", "grokbot", "browser", "--help"],
       {
         env: {},
         outputPrecomputedBrowserHelpText: () => {
@@ -122,7 +122,7 @@ describe("entry precomputed command help fast path", () => {
     let outputPrecomputedSecretsHelpTextCalls = 0;
 
     const handled = await tryHandlePrecomputedCommandHelpFastPath(
-      ["node", "openclaw", "secrets", "--help"],
+      ["node", "grokbot", "secrets", "--help"],
       {
         env: {},
         outputPrecomputedSecretsHelpText: () => {
@@ -140,7 +140,7 @@ describe("entry precomputed command help fast path", () => {
     let outputPrecomputedNodesHelpTextCalls = 0;
 
     const handled = await tryHandlePrecomputedCommandHelpFastPath(
-      ["node", "openclaw", "nodes", "--help"],
+      ["node", "grokbot", "nodes", "--help"],
       {
         env: {},
         loadRootHelpRenderOptionsForConfigSensitivePlugins: async () => null,
@@ -161,7 +161,7 @@ describe("entry precomputed command help fast path", () => {
       const outputPrecomputedSubcommandHelpTextCalls: string[] = [];
 
       const handled = await tryHandlePrecomputedCommandHelpFastPath(
-        ["node", "openclaw", commandName, "--help"],
+        ["node", "grokbot", commandName, "--help"],
         {
           env: {},
           outputPrecomputedSubcommandHelpText: (requestedCommandName) => {
@@ -180,7 +180,7 @@ describe("entry precomputed command help fast path", () => {
     const outputPrecomputedSubcommandHelpTextCalls: string[] = [];
 
     const handled = await tryHandlePrecomputedCommandHelpFastPath(
-      ["node", "openclaw", "--profile", "work", "--no-color", "models", "-h"],
+      ["node", "grokbot", "--profile", "work", "--no-color", "models", "-h"],
       {
         env: {},
         outputPrecomputedSubcommandHelpText: (commandName) => {
@@ -196,15 +196,15 @@ describe("entry precomputed command help fast path", () => {
 
   it("keeps subcommand help fast path strict for extra or mixed flags", async () => {
     const invocations = [
-      ["node", "openclaw", "doctor", "--version"],
-      ["node", "openclaw", "gateway", "-V"],
-      ["node", "openclaw", "doctor", "--help", "--version"],
-      ["node", "openclaw", "doctor", "--help", "--bogus"],
-      ["node", "openclaw", "doctor", "--help", "extra"],
-      ["node", "openclaw", "doctor", "--version", "-h"],
-      ["node", "openclaw", "--bogus", "doctor", "--help"],
-      ["node", "openclaw", "gateway", "status", "--help"],
-      ["node", "openclaw", "status", "--help"],
+      ["node", "grokbot", "doctor", "--version"],
+      ["node", "grokbot", "gateway", "-V"],
+      ["node", "grokbot", "doctor", "--help", "--version"],
+      ["node", "grokbot", "doctor", "--help", "--bogus"],
+      ["node", "grokbot", "doctor", "--help", "extra"],
+      ["node", "grokbot", "doctor", "--version", "-h"],
+      ["node", "grokbot", "--bogus", "doctor", "--help"],
+      ["node", "grokbot", "gateway", "status", "--help"],
+      ["node", "grokbot", "status", "--help"],
     ];
     let outputPrecomputedSubcommandHelpTextCalls = 0;
 
@@ -227,7 +227,7 @@ describe("entry precomputed command help fast path", () => {
     let liveConfigChecks = 0;
 
     const handled = await tryHandlePrecomputedCommandHelpFastPath(
-      ["node", "openclaw", "nodes", "--help"],
+      ["node", "grokbot", "nodes", "--help"],
       {
         env: {},
         loadRootHelpRenderOptionsForConfigSensitivePlugins: async () => {
@@ -248,7 +248,7 @@ describe("entry precomputed command help fast path", () => {
 
   it("falls through when startup metadata is unavailable", async () => {
     const handled = await tryHandlePrecomputedCommandHelpFastPath(
-      ["node", "openclaw", "secrets", "--help"],
+      ["node", "grokbot", "secrets", "--help"],
       {
         env: {},
         outputPrecomputedSecretsHelpText: () => false,
@@ -260,7 +260,7 @@ describe("entry precomputed command help fast path", () => {
 
   it("falls through when startup metadata loading fails", async () => {
     const handled = await tryHandlePrecomputedCommandHelpFastPath(
-      ["node", "openclaw", "secrets", "--help"],
+      ["node", "grokbot", "secrets", "--help"],
       {
         env: {},
         outputPrecomputedSecretsHelpText: () => {
@@ -274,7 +274,7 @@ describe("entry precomputed command help fast path", () => {
 
   it("falls through when the nodes live-config probe fails", async () => {
     const handled = await tryHandlePrecomputedCommandHelpFastPath(
-      ["node", "openclaw", "nodes", "--help"],
+      ["node", "grokbot", "nodes", "--help"],
       {
         env: {},
         loadRootHelpRenderOptionsForConfigSensitivePlugins: async () => {
@@ -290,7 +290,7 @@ describe("entry precomputed command help fast path", () => {
     let outputPrecomputedNodesHelpTextCalls = 0;
 
     const handled = await tryHandlePrecomputedCommandHelpFastPath(
-      ["node", "openclaw", "nodes", "invoke", "--help"],
+      ["node", "grokbot", "nodes", "invoke", "--help"],
       {
         env: {},
         outputPrecomputedNodesHelpText: () => {
@@ -308,7 +308,7 @@ describe("entry precomputed command help fast path", () => {
     let outputPrecomputedNodesHelpTextCalls = 0;
 
     const handled = await tryHandlePrecomputedCommandHelpFastPath(
-      ["node", "openclaw", "nodes", "--version"],
+      ["node", "grokbot", "nodes", "--version"],
       {
         env: {},
         outputPrecomputedNodesHelpText: () => {
@@ -326,7 +326,7 @@ describe("entry precomputed command help fast path", () => {
     let outputPrecomputedSecretsHelpTextCalls = 0;
 
     const handled = await tryHandlePrecomputedCommandHelpFastPath(
-      ["node", "openclaw", "secrets", "--help"],
+      ["node", "grokbot", "secrets", "--help"],
       {
         env: { OPENCLAW_DISABLE_CLI_STARTUP_HELP_FAST_PATH: "1" },
         outputPrecomputedSecretsHelpText: () => {
@@ -346,7 +346,7 @@ describe("entry precomputed command help fast path", () => {
     process.env.OPENCLAW_DISABLE_CLI_STARTUP_HELP_FAST_PATH = "1";
     try {
       const handled = await tryHandlePrecomputedCommandHelpFastPath(
-        ["node", "openclaw", "secrets", "--help"],
+        ["node", "grokbot", "secrets", "--help"],
         {
           outputPrecomputedSecretsHelpText: () => {
             outputPrecomputedSecretsHelpTextCalls += 1;
@@ -370,7 +370,7 @@ describe("entry precomputed command help fast path", () => {
     let outputPrecomputedSecretsHelpTextCalls = 0;
 
     const handled = await tryHandlePrecomputedCommandHelpFastPath(
-      ["node", "openclaw", "--container", "demo", "secrets", "--help"],
+      ["node", "grokbot", "--container", "demo", "secrets", "--help"],
       {
         env: {},
         outputPrecomputedSecretsHelpText: () => {
@@ -388,7 +388,7 @@ describe("entry precomputed command help fast path", () => {
     let outputPrecomputedBrowserHelpTextCalls = 0;
 
     const handled = await tryHandlePrecomputedCommandHelpFastPath(
-      ["node", "openclaw", "browser", "--help"],
+      ["node", "grokbot", "browser", "--help"],
       {
         env: { OPENCLAW_CONTAINER: "demo" },
         outputPrecomputedBrowserHelpText: () => {

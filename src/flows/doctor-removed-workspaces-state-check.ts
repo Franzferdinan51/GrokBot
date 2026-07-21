@@ -2,7 +2,7 @@
 import { lstat, realpath, rm } from "node:fs/promises";
 import path from "node:path";
 import { resolveStateDir } from "../config/paths.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { resolveUserPath } from "../utils.js";
 import type { HealthCheck, HealthRepairEffect } from "./health-checks.js";
 
@@ -140,7 +140,7 @@ export const removedWorkspacesStateCheck: HealthCheck = {
         severity: "warning",
         message: `Retired Workspaces plugin state remains at ${target}.`,
         path: target,
-        fixHint: "Run `openclaw doctor --fix` to remove the stale plugin state.",
+        fixHint: "Run `grokbot doctor --fix` to remove the stale plugin state.",
       },
     ];
   },

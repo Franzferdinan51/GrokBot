@@ -2,13 +2,13 @@
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import {
   embeddedAgentLog,
   isToolWrappedWithBeforeToolCallHook,
   type EmbeddedRunAttemptParams,
   wrapToolWithBeforeToolCallHook,
-} from "openclaw/plugin-sdk/agent-harness-runtime";
+} from "grokbot/plugin-sdk/agent-harness-runtime";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { dynamicToolBuildState } from "./dynamic-tool-build-state.js";
 import {
@@ -149,7 +149,7 @@ describe("Codex app-server dynamic tool build", () => {
   });
 
   beforeEach(async () => {
-    tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-codex-tools-"));
+    tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-codex-tools-"));
   });
 
   afterEach(async () => {
@@ -171,16 +171,16 @@ describe("Codex app-server dynamic tool build", () => {
   it("maps sandbox exec-server cwd through the remote workspace mapping", () => {
     expect(
       resolveCodexAppServerExecutionCwd({
-        effectiveCwd: "/Users/kevinlin/code/openclaw",
+        effectiveCwd: "/Users/kevinlin/code/grokbot",
         environment: {
           id: "sandbox-1",
-          cwd: "/Users/kevinlin/code/openclaw/sandbox",
+          cwd: "/Users/kevinlin/code/grokbot/sandbox",
         } as never,
         nativeToolSurfaceEnabled: true,
-        localWorkspaceRoot: "/Users/kevinlin/code/openclaw",
-        remoteWorkspaceRoot: "/home/oai/openclaw-workspaces",
+        localWorkspaceRoot: "/Users/kevinlin/code/grokbot",
+        remoteWorkspaceRoot: "/home/oai/grokbot-workspaces",
       }),
-    ).toBe("/home/oai/openclaw-workspaces/sandbox");
+    ).toBe("/home/oai/grokbot-workspaces/sandbox");
   });
 
   it("filters Codex-native dynamic tools from app-server tool exposure", () => {
@@ -269,30 +269,30 @@ describe("Codex app-server dynamic tool build", () => {
     });
   });
 
-  it("preserves the host-provided OpenClaw tool through the Codex allowlist", async () => {
+  it("preserves the host-provided GrokBot tool through the Codex allowlist", async () => {
     const workspaceDir = path.join(tempDir, "workspace");
     const params = createParams(path.join(tempDir, "session.jsonl"), workspaceDir);
     params.disableTools = false;
     params.runtimePlan = createCodexRuntimePlanFixture();
-    params.toolsAllow = ["openclaw"];
+    params.toolsAllow = ["grokbot"];
     setOpenClawCodingToolsFactoryForTests(() => [
-      { ...createRuntimeDynamicTool("openclaw"), catalogMode: "direct-only" },
+      { ...createRuntimeDynamicTool("grokbot"), catalogMode: "direct-only" },
     ]);
 
     const tools = await buildDynamicToolsForTest(params, workspaceDir, {
-      isHostScopedToolActive: (toolName) => toolName === "openclaw",
-      pluginConfig: { codexDynamicToolsExclude: ["openclaw"] },
+      isHostScopedToolActive: (toolName) => toolName === "grokbot",
+      pluginConfig: { codexDynamicToolsExclude: ["grokbot"] },
     });
 
-    expect(tools.map((tool) => tool.name)).toEqual(["openclaw"]);
+    expect(tools.map((tool) => tool.name)).toEqual(["grokbot"]);
   });
 
   it.each([
-    { label: "host scope is inactive", hostActive: false, toolsAllow: ["openclaw"] },
+    { label: "host scope is inactive", hostActive: false, toolsAllow: ["grokbot"] },
     {
       label: "the public allowlist is not exact",
       hostActive: true,
-      toolsAllow: ["openclaw", "read"],
+      toolsAllow: ["grokbot", "read"],
     },
   ])("does not bypass Codex excludes when $label", async ({ hostActive, toolsAllow }) => {
     const workspaceDir = path.join(tempDir, "workspace");
@@ -301,12 +301,12 @@ describe("Codex app-server dynamic tool build", () => {
     params.runtimePlan = createCodexRuntimePlanFixture();
     params.toolsAllow = toolsAllow;
     setOpenClawCodingToolsFactoryForTests(() => [
-      { ...createRuntimeDynamicTool("openclaw"), catalogMode: "direct-only" },
+      { ...createRuntimeDynamicTool("grokbot"), catalogMode: "direct-only" },
     ]);
 
     const tools = await buildDynamicToolsForTest(params, workspaceDir, {
       isHostScopedToolActive: () => hostActive,
-      pluginConfig: { codexDynamicToolsExclude: ["openclaw"] },
+      pluginConfig: { codexDynamicToolsExclude: ["grokbot"] },
     });
 
     expect(tools).toEqual([]);
@@ -692,7 +692,7 @@ describe("Codex app-server dynamic tool build", () => {
     expect(persistentWebSearchAllowed).toBe(false);
   });
 
-  it("exposes OpenClaw sandbox shell tools under distinct names for non-Docker sandbox backends", async () => {
+  it("exposes GrokBot sandbox shell tools under distinct names for non-Docker sandbox backends", async () => {
     setOpenClawCodingToolsFactoryForTests(() => [
       createRuntimeDynamicTool("read"),
       createRuntimeDynamicTool("write"),
@@ -722,7 +722,7 @@ describe("Codex app-server dynamic tool build", () => {
     );
   });
 
-  it("exposes Docker sandbox shell tools when OpenClaw sandboxing disables native Code Mode", async () => {
+  it("exposes Docker sandbox shell tools when GrokBot sandboxing disables native Code Mode", async () => {
     setOpenClawCodingToolsFactoryForTests(() => [
       createRuntimeDynamicTool("exec"),
       createRuntimeDynamicTool("process"),
@@ -997,7 +997,7 @@ describe("Codex app-server dynamic tool build", () => {
     expect(allowlistedTools.map((tool) => tool.name)).toEqual(["message"]);
   });
 
-  it("restores the policy-filtered OpenClaw shell when a finite allowlist disables native Code Mode", async () => {
+  it("restores the policy-filtered GrokBot shell when a finite allowlist disables native Code Mode", async () => {
     const execTool = createRuntimeDynamicTool("exec");
     const processTool = createRuntimeDynamicTool("process");
     const messageTool = createRuntimeDynamicTool("message");
@@ -1071,7 +1071,7 @@ describe("Codex app-server dynamic tool build", () => {
       sandbox: {
         enabled: true,
         backendId: "docker",
-        docker: { binds: ["/tmp/openclaw-data:/data:rw"] },
+        docker: { binds: ["/tmp/grokbot-data:/data:rw"] },
       } as never,
       nativeToolSurfaceEnabled: false,
     });
@@ -1330,7 +1330,7 @@ describe("Codex app-server dynamic tool build", () => {
     expect(toolOptions.exec?.mode).toBeUndefined();
   });
 
-  it("passes the delegation capability into shared OpenClaw tool construction", async () => {
+  it("passes the delegation capability into shared GrokBot tool construction", async () => {
     const sessionFile = path.join(tempDir, "session.jsonl");
     const workspaceDir = path.join(tempDir, "workspace");
     const params = createParams(sessionFile, workspaceDir);
@@ -1541,7 +1541,7 @@ describe("Codex app-server dynamic tool build", () => {
     expect(shouldEnableCodexAppServerNativeToolSurface(runtimePolicyParams)).toBe(true);
   });
 
-  it("disables Codex native tool surfaces whenever an OpenClaw sandbox is active", () => {
+  it("disables Codex native tool surfaces whenever an GrokBot sandbox is active", () => {
     const workspaceDir = path.join(tempDir, "workspace");
     const params = createParams(path.join(tempDir, "session.jsonl"), workspaceDir);
     params.disableTools = false;
@@ -1558,7 +1558,7 @@ describe("Codex app-server dynamic tool build", () => {
       shouldEnableCodexAppServerNativeToolSurface(params, {
         enabled: true,
         backendId: "docker",
-        docker: { binds: ["/tmp/openclaw-data:/data:rw"] },
+        docker: { binds: ["/tmp/grokbot-data:/data:rw"] },
       } as never),
     ).toBe(false);
 
@@ -1566,7 +1566,7 @@ describe("Codex app-server dynamic tool build", () => {
       shouldEnableCodexAppServerNativeToolSurface(params, {
         enabled: true,
         backendId: "docker",
-        docker: { binds: ["/tmp/openclaw-data:/tmp/openclaw-data:rw"] },
+        docker: { binds: ["/tmp/grokbot-data:/tmp/grokbot-data:rw"] },
       } as never),
     ).toBe(false);
 
@@ -1576,8 +1576,8 @@ describe("Codex app-server dynamic tool build", () => {
         backendId: "docker",
         docker: {
           binds: [
-            "/tmp/openclaw-data:/tmp/openclaw-data:rw",
-            "/tmp/openclaw-data/secrets:/tmp/openclaw-data/secrets:ro",
+            "/tmp/grokbot-data:/tmp/grokbot-data:rw",
+            "/tmp/grokbot-data/secrets:/tmp/grokbot-data/secrets:ro",
           ],
         },
       } as never),

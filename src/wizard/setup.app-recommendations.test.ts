@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { refreshOnboardRecommendationsCommand } from "../commands/onboard-recommendations.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import type { RuntimeEnv } from "../runtime.js";
 import type {
   OnboardingRecommendationMatch,
@@ -393,7 +393,7 @@ describe("setupAppRecommendations", () => {
         resolveOfficialEntry: (pluginId) => ({
           pluginId,
           label: "Chat plugin",
-          install: { npmSpec: "@openclaw/chat-plugin" },
+          install: { npmSpec: "@grokbot/chat-plugin" },
         }),
       },
     });

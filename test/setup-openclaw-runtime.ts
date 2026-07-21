@@ -1,4 +1,4 @@
-// OpenClaw runtime test setup installs runtime mocks and cleanup.
+// GrokBot runtime test setup installs runtime mocks and cleanup.
 import { afterAll, afterEach, beforeAll, vi } from "vitest";
 import type {
   ChannelId,
@@ -13,9 +13,9 @@ import { installSharedTestSetup } from "./setup.shared.js";
 
 installSharedTestSetup();
 
-const WORKER_RUNTIME_STATE = Symbol.for("openclaw.testSetupRuntimeState");
-const WORKER_PLUGIN_RUNTIME_HELPERS = Symbol.for("openclaw.testSetupPluginRuntimeHelpers");
-const WORKER_CLEANUP_HELPERS = Symbol.for("openclaw.testSetupCleanupHelpers");
+const WORKER_RUNTIME_STATE = Symbol.for("grokbot.testSetupRuntimeState");
+const WORKER_PLUGIN_RUNTIME_HELPERS = Symbol.for("grokbot.testSetupPluginRuntimeHelpers");
+const WORKER_CLEANUP_HELPERS = Symbol.for("grokbot.testSetupCleanupHelpers");
 type WorkerRuntimeState = {
   defaultPluginRegistry: PluginRegistry | null;
   materializedDefaultPluginRegistry: PluginRegistry | null;

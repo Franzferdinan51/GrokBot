@@ -1,10 +1,10 @@
 /**
  * Gateway loop for polling ClickClack backlog events, opening the realtime
- * websocket, and dispatching user messages into OpenClaw.
+ * websocket, and dispatching user messages into GrokBot.
  */
-import type { ChannelGatewayContext } from "openclaw/plugin-sdk/channel-contract";
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
-import { sleepWithAbort } from "openclaw/plugin-sdk/runtime-env";
+import type { ChannelGatewayContext } from "grokbot/plugin-sdk/channel-contract";
+import { formatErrorMessage } from "grokbot/plugin-sdk/error-runtime";
+import { sleepWithAbort } from "grokbot/plugin-sdk/runtime-env";
 import type { RawData } from "ws";
 import { resolveClickClackInboundAccess } from "./access.js";
 import { resolveClickClackAccount } from "./accounts.js";

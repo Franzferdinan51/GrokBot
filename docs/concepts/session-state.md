@@ -18,7 +18,7 @@ Three pieces work together:
 
 ## The signal log
 
-OpenClaw appends a typed event to the shared state database (`session_state_events`) when a watched session materially changes. Events carry metadata and a one-line summary — never message content.
+GrokBot appends a typed event to the shared state database (`session_state_events`) when a watched session materially changes. Events carry metadata and a one-line summary — never message content.
 
 | Kind                   | Recorded when                                            | Notifies watchers |
 | ---------------------- | -------------------------------------------------------- | ----------------- |
@@ -29,7 +29,7 @@ OpenClaw appends a typed event to the shared state database (`session_state_even
 | `run_completed`        | A child run ends successfully                            | No (log only)     |
 | `run_failed`           | A child run fails, times out, or is cancelled            | No (log only)     |
 | `compacted`            | The session's history is compacted                       | No (log only)     |
-| `adopted`              | A catalog session is adopted into OpenClaw               | No (log only)     |
+| `adopted`              | A catalog session is adopted into GrokBot               | No (log only)     |
 
 Each event names its actor (`human`, `agent`, or `system`). Cancelled and timed-out child runs are recorded as failures with the precise outcome (`cancelled`, `timeout`, or `error`) preserved in the event payload.
 
@@ -103,7 +103,7 @@ Current limits:
 - Notice delivery assumes one gateway process owns the shared state database. Multiple gateways share the durable log and `changesSince`, but v1 does not push notices across processes.
 - Compaction events cover the embedded runtime's compaction owners; native-harness-only compaction is not fully logged.
 - Cancelled-outcome payload detail is currently produced by ACP child runs; native sub-agent cancellations surface as generic failures.
-- Upstream self-echo detection compares normalized user text. An external prompt matching one of the session's 10 most recent OpenClaw-side user messages is treated as self-echo.
+- Upstream self-echo detection compares normalized user text. An external prompt matching one of the session's 10 most recent GrokBot-side user messages is treated as self-echo.
 - A single local Claude JSONL row larger than the 1 MiB per-cadence scan cap blocks that session's cursor in v1; unclassified bytes are never skipped.
 - Paired-node Claude checks classify the latest 50 transcript items per cadence. Larger bursts can fall outside the v1 scan window.
 - Paired-node Claude history reads do not expose a definitive thread-not-found result, so remote Claude deletions are not classified as `upstream_missing` in v1.

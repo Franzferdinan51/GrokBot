@@ -1,14 +1,14 @@
 import {
   listSessionEntries,
   loadTranscriptEventsSync,
-} from "openclaw/plugin-sdk/session-store-runtime";
+} from "grokbot/plugin-sdk/session-store-runtime";
 // Qa Lab plugin module implements runtime parity behavior.
-import { fetchWithSsrFGuard } from "openclaw/plugin-sdk/ssrf-runtime";
+import { fetchWithSsrFGuard } from "grokbot/plugin-sdk/ssrf-runtime";
 import {
   asFiniteNumber as readFiniteNumber,
   isRecord as isMessageRecord,
   normalizeOptionalString as readNonEmptyString,
-} from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/string-coerce-runtime";
 import {
   scanDirectReplyTranscriptSentinels,
   scanGatewayLogSentinels,
@@ -17,7 +17,7 @@ import {
 import { discardIgnoredResponseBody } from "./ignored-response-body.js";
 import * as parity from "./parity-shared.js";
 
-export type RuntimeId = "openclaw" | "codex";
+export type RuntimeId = "grokbot" | "codex";
 
 export type RuntimeParityToolCall = {
   tool: string;
@@ -63,7 +63,7 @@ export type RuntimeParityResult = {
   scenarioId: string;
   runtimeParityUsage?: RuntimeParityUsagePolicy;
   cells: {
-    openclaw: RuntimeParityCell;
+    grokbot: RuntimeParityCell;
     codex: RuntimeParityCell;
   };
   drift: RuntimeParityDrift;
@@ -104,7 +104,7 @@ export function runtimeParityCellStatus(
 export function isRuntimeParityResultPass(result: RuntimeParityResult) {
   return (
     result.drift !== "failure-mode" &&
-    isRuntimeParityCellPassable(result.cells.openclaw) &&
+    isRuntimeParityCellPassable(result.cells.grokbot) &&
     isRuntimeParityCellPassable(result.cells.codex)
   );
 }
@@ -163,7 +163,7 @@ type RuntimeParityPendingToolCall = RuntimeParityToolCall & {
 
 const DEFAULT_AGENT_ID = "qa";
 const HEARTBEAT_RESPONSE_TOOL_NAME = "heartbeat_respond";
-const HEARTBEAT_TRANSCRIPT_PROMPT = "[OpenClaw heartbeat poll]";
+const HEARTBEAT_TRANSCRIPT_PROMPT = "[GrokBot heartbeat poll]";
 const HEARTBEAT_TASK_PROMPT_PREFIX =
   "Run the following periodic tasks (only those due based on their intervals):";
 const TOOL_RESULT_MISSING_ERROR_CLASS = "tool-result-missing";
@@ -872,28 +872,28 @@ function summarizeSentinelErrorClass(findings: readonly GatewayLogSentinelFindin
 }
 
 function classifyRuntimeParityCells(params: {
-  openclaw: RuntimeParityCell;
+  grokbot: RuntimeParityCell;
   codex: RuntimeParityCell;
   openclawScenarioStatus: "pass" | "fail";
   codexScenarioStatus: "pass" | "fail";
 }): Pick<RuntimeParityResult, "drift" | "driftDetails"> {
   if (
-    isHardFailureRuntimeError(params.openclaw.runtimeErrorClass) ||
+    isHardFailureRuntimeError(params.grokbot.runtimeErrorClass) ||
     isHardFailureRuntimeError(params.codex.runtimeErrorClass) ||
-    params.openclaw.transportErrorClass ||
+    params.grokbot.transportErrorClass ||
     params.codex.transportErrorClass
   ) {
     return {
       drift: "failure-mode",
       driftDetails:
-        params.openclaw.transportErrorClass || params.codex.transportErrorClass
+        params.grokbot.transportErrorClass || params.codex.transportErrorClass
           ? "at least one runtime hit a transport failure"
           : "at least one runtime hit a hard runtime failure",
     };
   }
 
   if (
-    hasMissingToolResult(params.openclaw.toolCalls) ||
+    hasMissingToolResult(params.grokbot.toolCalls) ||
     hasMissingToolResult(params.codex.toolCalls)
   ) {
     return {
@@ -905,7 +905,7 @@ function classifyRuntimeParityCells(params: {
   if (
     params.openclawScenarioStatus === "fail" ||
     params.codexScenarioStatus === "fail" ||
-    !isRuntimeParityCellPassable(params.openclaw) ||
+    !isRuntimeParityCellPassable(params.grokbot) ||
     !isRuntimeParityCellPassable(params.codex)
   ) {
     return {
@@ -918,7 +918,7 @@ function classifyRuntimeParityCells(params: {
   }
 
   const toolCallShapeDetails = parity.compareToolCallShape(
-    params.openclaw.toolCalls,
+    params.grokbot.toolCalls,
     params.codex.toolCalls,
   );
   if (toolCallShapeDetails) {
@@ -926,23 +926,23 @@ function classifyRuntimeParityCells(params: {
   }
 
   const toolResultShapeDetails = compareToolResultShape(
-    params.openclaw.toolCalls,
+    params.grokbot.toolCalls,
     params.codex.toolCalls,
   );
   if (toolResultShapeDetails) {
     return { drift: "tool-result-shape", driftDetails: toolResultShapeDetails };
   }
 
-  const openclawTranscriptLines = params.openclaw.transcriptBytes.trim().length
-    ? params.openclaw.transcriptBytes.trim().split(/\r?\n/u).length
+  const openclawTranscriptLines = params.grokbot.transcriptBytes.trim().length
+    ? params.grokbot.transcriptBytes.trim().split(/\r?\n/u).length
     : 0;
   const codexTranscriptLines = params.codex.transcriptBytes.trim().length
     ? params.codex.transcriptBytes.trim().split(/\r?\n/u).length
     : 0;
   if (
     openclawTranscriptLines !== codexTranscriptLines ||
-    (!params.openclaw.finalText && Boolean(params.codex.finalText)) ||
-    (Boolean(params.openclaw.finalText) && !params.codex.finalText)
+    (!params.grokbot.finalText && Boolean(params.codex.finalText)) ||
+    (Boolean(params.grokbot.finalText) && !params.codex.finalText)
   ) {
     return {
       drift: "structural",
@@ -951,7 +951,7 @@ function classifyRuntimeParityCells(params: {
   }
 
   if (
-    normalizeTextForParity(params.openclaw.finalText) ===
+    normalizeTextForParity(params.grokbot.finalText) ===
     normalizeTextForParity(params.codex.finalText)
   ) {
     return { drift: "none" };
@@ -1137,19 +1137,19 @@ export async function runRuntimeParityScenario(params: {
   runtimeParityUsage?: RuntimeParityUsagePolicy;
   runCell: (runtime: RuntimeId) => Promise<RuntimeParityScenarioExecution>;
 }): Promise<RuntimeParityResult> {
-  const openclaw = await params.runCell("openclaw");
+  const grokbot = await params.runCell("grokbot");
   const codex = await params.runCell("codex");
   const drift = classifyRuntimeParityCells({
-    openclaw: openclaw.cell,
+    grokbot: grokbot.cell,
     codex: codex.cell,
-    openclawScenarioStatus: openclaw.scenarioStatus,
+    openclawScenarioStatus: grokbot.scenarioStatus,
     codexScenarioStatus: codex.scenarioStatus,
   });
   return {
     scenarioId: params.scenarioId,
     runtimeParityUsage: resolveRuntimeParityUsagePolicy(params.runtimeParityUsage),
     cells: {
-      openclaw: openclaw.cell,
+      grokbot: grokbot.cell,
       codex: codex.cell,
     },
     drift: drift.drift,

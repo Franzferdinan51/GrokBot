@@ -1,8 +1,8 @@
-// OpenClaw release ClawHub runtime-state script tests cover its CLI-only parser.
+// GrokBot release ClawHub runtime-state script tests cover its CLI-only parser.
 import { spawnSync } from "node:child_process";
 import { describe, expect, it } from "vitest";
 
-const SCRIPT_PATH = "scripts/openclaw-release-clawhub-runtime-state.ts";
+const SCRIPT_PATH = "scripts/grokbot-release-clawhub-runtime-state.ts";
 
 function runRuntimeStateScript(args: string[]) {
   return spawnSync(process.execPath, ["--import", "tsx", SCRIPT_PATH, ...args], {
@@ -11,11 +11,11 @@ function runRuntimeStateScript(args: string[]) {
   });
 }
 
-describe("scripts/openclaw-release-clawhub-runtime-state.ts", () => {
+describe("scripts/grokbot-release-clawhub-runtime-state.ts", () => {
   it("emits verifier args and proof lines for awaited ClawHub runs", () => {
     const result = runRuntimeStateScript([
       "--repository",
-      "openclaw/openclaw",
+      "grokbot/grokbot",
       "--wait-for-clawhub",
       "true",
       "--force-skip-clawhub",
@@ -32,9 +32,9 @@ describe("scripts/openclaw-release-clawhub-runtime-state.ts", () => {
     expect(JSON.parse(result.stdout)).toEqual({
       verifierArgs: ["--plugin-clawhub-run", "123", "--plugin-clawhub-bootstrap-run", "456"],
       proofLines: {
-        normal: "- plugin ClawHub publish: https://github.com/openclaw/openclaw/actions/runs/123",
+        normal: "- plugin ClawHub publish: https://github.com/grokbot/grokbot/actions/runs/123",
         bootstrap:
-          "- plugin ClawHub bootstrap: https://github.com/openclaw/openclaw/actions/runs/456",
+          "- plugin ClawHub bootstrap: https://github.com/grokbot/grokbot/actions/runs/456",
       },
     });
     expect(result.stderr).toBe("");
@@ -43,7 +43,7 @@ describe("scripts/openclaw-release-clawhub-runtime-state.ts", () => {
   it("rejects invalid boolean flag values before emitting runtime state", () => {
     const result = runRuntimeStateScript([
       "--repository",
-      "openclaw/openclaw",
+      "grokbot/grokbot",
       "--wait-for-clawhub",
       "yes",
       "--force-skip-clawhub",

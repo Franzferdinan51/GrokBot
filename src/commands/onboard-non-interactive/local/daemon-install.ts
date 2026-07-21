@@ -4,7 +4,7 @@
  * It validates daemon runtime options, resolves gateway auth inputs, and then
  * delegates the platform-specific service install.
  */
-import type { OpenClawConfig } from "../../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../../config/types.grokbot.js";
 import { resolveGatewayService } from "../../../daemon/service.js";
 import { isSystemdUserServiceAvailable } from "../../../daemon/systemd.js";
 import { formatErrorMessage } from "../../../infra/errors.js";
@@ -42,7 +42,7 @@ export async function installGatewayDaemonNonInteractive(params: {
     // Container and CI sessions often lack a user systemd manager; setup can
     // still succeed with a direct gateway run, so this is a skip not a fatal.
     runtime.log(
-      "Systemd user services are unavailable; skipping service install. Use a direct shell run (`openclaw gateway run`) or rerun without --install-daemon on this session.",
+      "Systemd user services are unavailable; skipping service install. Use a direct shell run (`grokbot gateway run`) or rerun without --install-daemon on this session.",
     );
     return { installed: false, skippedReason: "systemd-user-unavailable" };
   }

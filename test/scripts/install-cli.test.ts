@@ -186,14 +186,14 @@ describe("install-cli.sh", () => {
   });
 
   it("does not restart a gateway again after force-install activates it", () => {
-    const tmp = mkdtempSync(join(tmpdir(), "openclaw-install-cli-gateway-refresh-"));
+    const tmp = mkdtempSync(join(tmpdir(), "grokbot-install-cli-gateway-refresh-"));
     const prefix = join(tmp, "prefix");
     const bin = join(prefix, "bin");
     const commandLog = join(tmp, "commands.log");
-    const openclaw = join(bin, "openclaw");
+    const grokbot = join(bin, "grokbot");
     mkdirSync(bin, { recursive: true });
-    writeFileSync(openclaw, '#!/bin/bash\nprintf "%s\\n" "$*" >> "$COMMAND_LOG"\n');
-    chmodSync(openclaw, 0o755);
+    writeFileSync(grokbot, '#!/bin/bash\nprintf "%s\\n" "$*" >> "$COMMAND_LOG"\n');
+    chmodSync(grokbot, 0o755);
 
     try {
       const result = runInstallCliShell(
@@ -219,9 +219,9 @@ describe("install-cli.sh", () => {
   });
 
   it("keeps HOME for default prefix while OPENCLAW_HOME controls git checkout paths", () => {
-    const tmp = mkdtempSync(join(tmpdir(), "openclaw-install-cli-home-"));
+    const tmp = mkdtempSync(join(tmpdir(), "grokbot-install-cli-home-"));
     const osHome = join(tmp, "os-home");
-    const openclawHome = join(tmp, "openclaw-home");
+    const openclawHome = join(tmp, "grokbot-home");
     mkdirSync(osHome, { recursive: true });
     mkdirSync(openclawHome, { recursive: true });
 
@@ -246,8 +246,8 @@ describe("install-cli.sh", () => {
 
     expect(result?.status).toBe(0);
     const output = result?.stdout ?? "";
-    expect(output).toContain(`prefix=${join(osHome, ".openclaw")}`);
-    expect(output).toContain(`git=${join(openclawHome, "openclaw")}`);
+    expect(output).toContain(`prefix=${join(osHome, ".grokbot")}`);
+    expect(output).toContain(`git=${join(openclawHome, "grokbot")}`);
   });
 
   it("resolves requested git install versions to checkout refs", () => {
@@ -256,7 +256,7 @@ describe("install-cli.sh", () => {
       source "${SCRIPT_PATH}"
       npm_bin() { echo npm; }
       npm() {
-        if [[ "$1" == "view" && "$2" == "openclaw" && "$3" == "dist-tags.beta" ]]; then
+        if [[ "$1" == "view" && "$2" == "grokbot" && "$3" == "dist-tags.beta" ]]; then
           printf '2026.5.12-beta.3\\n'
           return 0
         fi
@@ -324,7 +324,7 @@ describe("install-cli.sh", () => {
   });
 
   it("uses the repo Corepack pnpm when a global pnpm version is already present", () => {
-    const tmp = mkdtempSync(join(tmpdir(), "openclaw-install-cli-pnpm-version-"));
+    const tmp = mkdtempSync(join(tmpdir(), "grokbot-install-cli-pnpm-version-"));
     const bin = join(tmp, "bin");
     const outer = join(tmp, "outer");
     const repo = join(tmp, "repo");
@@ -378,7 +378,7 @@ describe("install-cli.sh", () => {
   });
 
   it("links an existing usable Alpine/musl Node runtime without sudo", () => {
-    const tmp = mkdtempSync(join(tmpdir(), "openclaw-install-cli-alpine-"));
+    const tmp = mkdtempSync(join(tmpdir(), "grokbot-install-cli-alpine-"));
     const bin = join(tmp, "bin");
     const prefix = join(tmp, "prefix");
     const apkLog = join(tmp, "apk.log");
@@ -448,7 +448,7 @@ describe("install-cli.sh", () => {
   });
 
   it("replaces a stale Alpine/musl prefix Node before the generic skip", () => {
-    const tmp = mkdtempSync(join(tmpdir(), "openclaw-install-cli-alpine-stale-"));
+    const tmp = mkdtempSync(join(tmpdir(), "grokbot-install-cli-alpine-stale-"));
     const bin = join(tmp, "bin");
     const oldBin = join(tmp, "old-bin");
     const prefix = join(tmp, "prefix");
@@ -558,7 +558,7 @@ describe("install-cli.sh", () => {
   });
 
   it("uses apk-managed Node and Git on Alpine/musl when the existing Node is unusable", () => {
-    const tmp = mkdtempSync(join(tmpdir(), "openclaw-install-cli-alpine-apk-"));
+    const tmp = mkdtempSync(join(tmpdir(), "grokbot-install-cli-alpine-apk-"));
     const bin = join(tmp, "bin");
     const prefix = join(tmp, "prefix");
     const apkLog = join(tmp, "apk.log");
@@ -642,7 +642,7 @@ describe("install-cli.sh", () => {
   });
 
   it("skips PATH Node runtimes whose npm command cannot start", () => {
-    const tmp = mkdtempSync(join(tmpdir(), "openclaw-install-cli-broken-npm-"));
+    const tmp = mkdtempSync(join(tmpdir(), "grokbot-install-cli-broken-npm-"));
     const badBin = join(tmp, "bad-bin");
     const goodBin = join(tmp, "good-bin");
     const prefix = join(tmp, "prefix");
@@ -717,7 +717,7 @@ describe("install-cli.sh", () => {
   });
 
   it("rejects Alpine/musl Node packages below the requested runtime floor", () => {
-    const tmp = mkdtempSync(join(tmpdir(), "openclaw-install-cli-alpine-old-node-"));
+    const tmp = mkdtempSync(join(tmpdir(), "grokbot-install-cli-alpine-old-node-"));
     const bin = join(tmp, "bin");
     const prefix = join(tmp, "prefix");
     const apkLog = join(tmp, "apk.log");
@@ -785,7 +785,7 @@ describe("install-cli.sh", () => {
   });
 
   it("replaces cached generic Node runtimes below the runtime floor", () => {
-    const tmp = mkdtempSync(join(tmpdir(), "openclaw-install-cli-generic-stale-node-"));
+    const tmp = mkdtempSync(join(tmpdir(), "grokbot-install-cli-generic-stale-node-"));
     const prefix = join(tmp, "prefix");
     const nodePrefixBin = join(prefix, "tools", "node-v22.22.3", "bin");
     const staleNode = join(nodePrefixBin, "node");
@@ -878,7 +878,7 @@ describe("install-cli.sh", () => {
   });
 
   it("rejects downloaded generic Node runtimes below the runtime floor", () => {
-    const tmp = mkdtempSync(join(tmpdir(), "openclaw-install-cli-generic-old-node-"));
+    const tmp = mkdtempSync(join(tmpdir(), "grokbot-install-cli-generic-old-node-"));
     const prefix = join(tmp, "prefix");
     const newNode = join(tmp, "new-node");
     const newNpm = join(tmp, "new-npm");
@@ -950,7 +950,7 @@ describe("install-cli.sh", () => {
   });
 
   it("removes the Node staging directory when download fails", () => {
-    const tmp = mkdtempSync(join(tmpdir(), "openclaw-install-cli-node-cleanup-"));
+    const tmp = mkdtempSync(join(tmpdir(), "grokbot-install-cli-node-cleanup-"));
     const prefix = join(tmp, "prefix");
     const stagingDir = join(tmp, "node-staging");
 
@@ -982,7 +982,7 @@ describe("install-cli.sh", () => {
   });
 
   it("removes the workspace rewrite temp file when rewriting fails", () => {
-    const tmp = mkdtempSync(join(tmpdir(), "openclaw-install-cli-workspace-cleanup-"));
+    const tmp = mkdtempSync(join(tmpdir(), "grokbot-install-cli-workspace-cleanup-"));
     const repo = join(tmp, "repo");
     const workspaceFile = join(repo, "pnpm-workspace.yaml");
     const rewriteTemp = join(tmp, "workspace-rewrite");
@@ -1018,7 +1018,7 @@ describe("install-cli.sh", () => {
   });
 
   it("does not emit --before when raw user npmrc config contains min-release-age", () => {
-    const tmp = mkdtempSync(join(tmpdir(), "openclaw-install-cli-npmrc-"));
+    const tmp = mkdtempSync(join(tmpdir(), "grokbot-install-cli-npmrc-"));
     const bin = join(tmp, "bin");
     const npmrc = join(tmp, "user.npmrc");
     const installArgs = join(tmp, "npm-install-args.txt");
@@ -1080,7 +1080,7 @@ describe("install-cli.sh", () => {
   });
 
   it("does not emit --before when default global npmrc config contains min-release-age", () => {
-    const tmp = mkdtempSync(join(tmpdir(), "openclaw-install-cli-global-npmrc-"));
+    const tmp = mkdtempSync(join(tmpdir(), "grokbot-install-cli-global-npmrc-"));
     const bin = join(tmp, "bin");
     const home = join(tmp, "home");
     const prefix = join(tmp, "prefix");
@@ -1159,7 +1159,7 @@ describe("install-cli.sh", () => {
   });
 
   it("does not emit --before when builtin npmrc config contains min-release-age", () => {
-    const tmp = mkdtempSync(join(tmpdir(), "openclaw-install-cli-builtin-npmrc-"));
+    const tmp = mkdtempSync(join(tmpdir(), "grokbot-install-cli-builtin-npmrc-"));
     const bin = join(tmp, "bin");
     const home = join(tmp, "home");
     const npmrc = join(tmp, "npmrc");
@@ -1235,7 +1235,7 @@ describe("install-cli.sh", () => {
     }
   });
 
-  it("rejects OpenClaw GitHub source targets for npm installs", () => {
+  it("rejects GrokBot GitHub source targets for npm installs", () => {
     const result = runInstallCliShell(`
       set -euo pipefail
       source "${SCRIPT_PATH}"
@@ -1244,12 +1244,12 @@ describe("install-cli.sh", () => {
     `);
 
     expect(result.status).toBe(1);
-    expect(result.stdout).toContain("npm installs do not support OpenClaw GitHub source targets");
+    expect(result.stdout).toContain("npm installs do not support GrokBot GitHub source targets");
     expect(result.stdout).toContain("--install-method git --version main");
   });
 
   it("does not emit before args when npmrc min-release-age computes a before cutoff", () => {
-    const tmp = mkdtempSync(join(tmpdir(), "openclaw-install-cli-freshness-"));
+    const tmp = mkdtempSync(join(tmpdir(), "grokbot-install-cli-freshness-"));
     const prefix = join(tmp, "prefix");
     const home = join(tmp, "home");
     const nodeBin = join(prefix, "tools/node-v24.15.0/bin");
@@ -1284,7 +1284,7 @@ describe("install-cli.sh", () => {
   });
 
   it("ignores project npmrc when choosing global install freshness args", () => {
-    const tmp = mkdtempSync(join(tmpdir(), "openclaw-install-cli-global-freshness-"));
+    const tmp = mkdtempSync(join(tmpdir(), "grokbot-install-cli-global-freshness-"));
     const prefix = join(tmp, "prefix");
     const home = join(tmp, "home");
     const project = join(tmp, "project");

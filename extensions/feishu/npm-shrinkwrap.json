@@ -1,11 +1,11 @@
 {
-  "name": "@openclaw/feishu",
+  "name": "@grokbot/feishu",
   "version": "2026.7.2",
   "lockfileVersion": 3,
   "requires": true,
   "packages": {
     "": {
-      "name": "@openclaw/feishu",
+      "name": "@grokbot/feishu",
       "version": "2026.7.2",
       "dependencies": {
         "@larksuiteoapi/node-sdk": "1.68.0",
@@ -16,10 +16,10 @@
         "zod": "4.4.3"
       },
       "peerDependencies": {
-        "openclaw": ">=2026.7.2"
+        "grokbot": ">=2026.7.2"
       },
       "peerDependenciesMeta": {
-        "openclaw": {
+        "grokbot": {
           "optional": true
         }
       }

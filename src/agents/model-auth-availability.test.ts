@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import type {
   ProviderModelRouteCandidate,
   ProviderModelRouteResolution,
@@ -16,7 +16,7 @@ const platformRoute = {
   baseUrl: "https://api.openai.com/v1",
   authRequirement: "api-key",
   requestTransportOverrides: "none",
-  runtimePolicy: { compatibleIds: ["openclaw", "codex"] },
+  runtimePolicy: { compatibleIds: ["grokbot", "codex"] },
 } satisfies ProviderModelRouteCandidate;
 
 const subscriptionRoute = {
@@ -24,7 +24,7 @@ const subscriptionRoute = {
   baseUrl: "https://chatgpt.com/backend-api/codex",
   authRequirement: "subscription",
   requestTransportOverrides: "none",
-  runtimePolicy: { compatibleIds: ["openclaw", "codex"] },
+  runtimePolicy: { compatibleIds: ["grokbot", "codex"] },
 } satisfies ProviderModelRouteCandidate;
 
 const dualRoutes = {
@@ -190,7 +190,7 @@ describe("createModelAuthAvailabilityResolver", () => {
       baseUrl: "https://openai-compatible.example/v1",
     } satisfies ProviderModelRouteCandidate;
     const result = evaluate({
-      resolution: { kind: "routes", defaultRuntimeId: "openclaw", routes: [customRoute] },
+      resolution: { kind: "routes", defaultRuntimeId: "grokbot", routes: [customRoute] },
       store: authStore({
         "openai:chatgpt": {
           type: "oauth",
@@ -542,7 +542,7 @@ describe("createModelAuthAvailabilityResolver", () => {
             refresh: "",
             expires: 0,
             oauthRef: {
-              source: "openclaw-credentials",
+              source: "grokbot-credentials",
               provider: "openai-codex",
               id: "00000000000000000000000000000000",
             },
@@ -672,16 +672,16 @@ describe("createModelAuthAvailabilityResolver", () => {
     });
   });
 
-  it("does not let Codex synthetic auth own an OpenClaw-only route", () => {
+  it("does not let Codex synthetic auth own an GrokBot-only route", () => {
     const openClawOnlyRoute = {
       ...platformRoute,
-      runtimePolicy: { compatibleIds: ["openclaw"] },
+      runtimePolicy: { compatibleIds: ["grokbot"] },
     } satisfies ProviderModelRouteCandidate;
     expect(
       evaluate({
         resolution: {
           kind: "routes",
-          defaultRuntimeId: "openclaw",
+          defaultRuntimeId: "grokbot",
           routes: [openClawOnlyRoute],
         },
         syntheticAuthProviderRefs: ["codex"],

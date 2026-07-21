@@ -1,6 +1,6 @@
-import type { HealthFinding } from "openclaw/plugin-sdk/health";
-import { normalizeAgentId } from "openclaw/plugin-sdk/routing";
-import { isRecord } from "openclaw/plugin-sdk/string-coerce-runtime";
+import type { HealthFinding } from "grokbot/plugin-sdk/health";
+import { normalizeAgentId } from "grokbot/plugin-sdk/routing";
+import { isRecord } from "grokbot/plugin-sdk/string-coerce-runtime";
 import type { PolicyExecApprovalEvidence } from "../policy-state.js";
 import { policyShapeFinding, unsupportedPolicyKey } from "./shape-helpers.js";
 import { ocPathSegment } from "./utils.js";

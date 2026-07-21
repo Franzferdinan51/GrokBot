@@ -2,11 +2,11 @@
 import {
   createConnectedChannelStatusPatch,
   createTransportActivityStatusPatch,
-} from "openclaw/plugin-sdk/gateway-runtime";
-import { asDateTimestampMs, parseStrictPositiveInteger } from "openclaw/plugin-sdk/number-runtime";
-import { danger, sleepWithAbort } from "openclaw/plugin-sdk/runtime-env";
-import type { RuntimeEnv } from "openclaw/plugin-sdk/runtime-env";
-import { formatErrorMessage } from "openclaw/plugin-sdk/ssrf-runtime";
+} from "grokbot/plugin-sdk/gateway-runtime";
+import { asDateTimestampMs, parseStrictPositiveInteger } from "grokbot/plugin-sdk/number-runtime";
+import { danger, sleepWithAbort } from "grokbot/plugin-sdk/runtime-env";
+import type { RuntimeEnv } from "grokbot/plugin-sdk/runtime-env";
+import { formatErrorMessage } from "grokbot/plugin-sdk/ssrf-runtime";
 import { attachDiscordGatewayLogging } from "../gateway-logging.js";
 import { getDiscordGatewayEmitter, waitForDiscordGatewayStop } from "../monitor.gateway.js";
 import type { DiscordVoiceManager } from "../voice/manager.js";

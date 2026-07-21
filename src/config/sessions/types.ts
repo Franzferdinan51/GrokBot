@@ -4,8 +4,8 @@ import type {
   AcpSessionRuntimeOptions,
   SessionAcpIdentity,
   SessionAcpMeta,
-} from "@openclaw/acp-core/types";
-import { normalizeOptionalString, type FastMode } from "@openclaw/normalization-core/string-coerce";
+} from "@grokbot/acp-core/types";
+import { normalizeOptionalString, type FastMode } from "@grokbot/normalization-core/string-coerce";
 import type { SessionAgentStatus } from "../../../packages/gateway-protocol/src/session-icon.js";
 import type { ChatType } from "../../channels/chat-type.js";
 import type { ChannelId } from "../../channels/plugins/channel-id.types.js";
@@ -447,7 +447,7 @@ export type SessionEntry = SessionRestartRecoveryState &
     modelProvider?: string;
     model?: string;
     /**
-     * Prevents OpenClaw model changes and automatic maintenance eviction until
+     * Prevents GrokBot model changes and automatic maintenance eviction until
      * the owning harness explicitly retires the session.
      */
     modelSelectionLocked?: boolean;

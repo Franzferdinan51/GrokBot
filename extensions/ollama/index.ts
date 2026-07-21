@@ -1,7 +1,7 @@
-// Ollama plugin entrypoint registers its OpenClaw integration.
-import { collectConfiguredModelRefValues } from "@openclaw/model-catalog-core/configured-model-refs";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { resolvePluginConfigObject } from "openclaw/plugin-sdk/plugin-config-runtime";
+// Ollama plugin entrypoint registers its GrokBot integration.
+import { collectConfiguredModelRefValues } from "@grokbot/model-catalog-core/configured-model-refs";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { resolvePluginConfigObject } from "grokbot/plugin-sdk/plugin-config-runtime";
 import {
   definePluginEntry,
   type OpenClawPluginApi,
@@ -13,23 +13,23 @@ import {
   type ProviderCatalogContext,
   type ProviderReplayPolicy,
   type ProviderRuntimeModel,
-} from "openclaw/plugin-sdk/plugin-entry";
+} from "grokbot/plugin-sdk/plugin-entry";
 import {
   buildApiKeyCredential,
   coerceSecretRef,
   isNonSecretApiKeyMarker,
-} from "openclaw/plugin-sdk/provider-auth";
-import { createProviderApiKeyAuthMethod } from "openclaw/plugin-sdk/provider-auth-api-key";
+} from "grokbot/plugin-sdk/provider-auth";
+import { createProviderApiKeyAuthMethod } from "grokbot/plugin-sdk/provider-auth-api-key";
 import type {
   ModelDefinitionConfig,
   ModelProviderConfig,
-} from "openclaw/plugin-sdk/provider-model-shared";
+} from "grokbot/plugin-sdk/provider-model-shared";
 import {
   buildOpenAICompatibleReplayPolicy,
   buildProviderReplayFamilyHooks,
   selectPreferredLocalModelId,
-} from "openclaw/plugin-sdk/provider-model-shared";
-import { resolveConfiguredSecretInputString } from "openclaw/plugin-sdk/secret-input-runtime";
+} from "grokbot/plugin-sdk/provider-model-shared";
+import { resolveConfiguredSecretInputString } from "grokbot/plugin-sdk/secret-input-runtime";
 import {
   buildOllamaModelDefinition,
   buildOllamaProvider,
@@ -661,8 +661,8 @@ export default definePluginEntry({
       classifyFailoverReason: ({ errorMessage }) => classifyOllamaFailoverReason(errorMessage),
       buildUnknownModelHint: () =>
         "Ollama Cloud requires an API key. " +
-        'Set OLLAMA_API_KEY or run "openclaw onboard --auth-choice ollama-cloud". ' +
-        "See: https://docs.openclaw.ai/providers/ollama",
+        'Set OLLAMA_API_KEY or run "grokbot onboard --auth-choice ollama-cloud". ' +
+        "See: https://docs.grokbot.ai/providers/ollama",
     });
     api.registerProvider({
       id: OLLAMA_PROVIDER_ID,
@@ -909,8 +909,8 @@ export default definePluginEntry({
       },
       buildUnknownModelHint: () =>
         "Ollama requires authentication to be registered as a provider. " +
-        'Set OLLAMA_API_KEY="ollama-local" (any value works) or run "openclaw configure". ' +
-        "See: https://docs.openclaw.ai/providers/ollama",
+        'Set OLLAMA_API_KEY="ollama-local" (any value works) or run "grokbot configure". ' +
+        "See: https://docs.grokbot.ai/providers/ollama",
     });
   },
 });

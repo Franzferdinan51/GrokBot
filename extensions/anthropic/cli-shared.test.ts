@@ -12,7 +12,7 @@ const CLAUDE_CLI_DISALLOWED_TOOLS =
   "ScheduleWakeup,CronCreate,Bash(run_in_background:true),Monitor";
 
 describe("resolveClaudeCliAutoCompactEnv", () => {
-  it("maps the effective OpenClaw context budget into Claude Code compaction", () => {
+  it("maps the effective GrokBot context budget into Claude Code compaction", () => {
     expect(resolveClaudeCliAutoCompactEnv(100_000.9)).toEqual({
       CLAUDE_CODE_AUTO_COMPACT_WINDOW: "100000",
     });
@@ -142,7 +142,7 @@ describe("Claude CLI model aliases", () => {
 });
 
 describe("resolveClaudeCliExecutionArgs", () => {
-  it("isolates OpenClaw from Claude user customizations while preserving exact MCP", () => {
+  it("isolates GrokBot from Claude user customizations while preserving exact MCP", () => {
     expect(
       resolveClaudeCliExecutionArgs({
         workspaceDir: "/tmp",
@@ -184,7 +184,7 @@ describe("resolveClaudeCliExecutionArgs", () => {
           "--ide",
           "--strict-mcp-config",
           "--mcp-config",
-          "/tmp/openclaw-openclaw-mcp.json",
+          "/tmp/grokbot-grokbot-mcp.json",
           "--resume",
           "native-session",
           "--tools",
@@ -204,7 +204,7 @@ describe("resolveClaudeCliExecutionArgs", () => {
       "--output-format",
       "stream-json",
       "--mcp-config",
-      "/tmp/openclaw-openclaw-mcp.json",
+      "/tmp/grokbot-grokbot-mcp.json",
       "--resume",
       "native-session",
       "--setting-sources",
@@ -221,7 +221,7 @@ describe("resolveClaudeCliExecutionArgs", () => {
     ]);
   });
 
-  it("leaves non-OpenClaw customization args intact under generic tool availability", () => {
+  it("leaves non-GrokBot customization args intact under generic tool availability", () => {
     expect(
       resolveClaudeCliExecutionArgs({
         workspaceDir: "/tmp",
@@ -443,7 +443,7 @@ describe("normalizeClaudeBackendConfig", () => {
     expect(normalized.input).toBe("stdin");
   });
 
-  it("derives Claude bypass from OpenClaw YOLO policy and disables it for safer policy", () => {
+  it("derives Claude bypass from GrokBot YOLO policy and disables it for safer policy", () => {
     expect(normalizeClaudeArgs(["-p"], { backendId: "claude-cli" })).toContain("bypassPermissions");
     expect(
       normalizeClaudeArgs(["-p"], {
@@ -453,7 +453,7 @@ describe("normalizeClaudeBackendConfig", () => {
     ).not.toContain("bypassPermissions");
   });
 
-  it("derives Claude bypass from per-agent OpenClaw exec policy", () => {
+  it("derives Claude bypass from per-agent GrokBot exec policy", () => {
     expect(
       normalizeClaudeArgs(["-p"], {
         backendId: "claude-cli",
@@ -543,7 +543,7 @@ describe("normalizeClaudeBackendConfig", () => {
 
   it("passes system prompt on every turn (issue #80374 — systemPromptWhen must be 'always')", () => {
     // Before fix this was hardcoded to "first", which silently dropped updated
-    // OpenClaw system prompt context on resumed / compacted claude-cli sessions.
+    // GrokBot system prompt context on resumed / compacted claude-cli sessions.
     const backend = buildAnthropicCliBackend();
     expect(backend.config.systemPromptWhen).toBe("always");
   });
@@ -585,7 +585,7 @@ describe("normalizeClaudeBackendConfig", () => {
 
     expect(
       backend.prepareExecution?.({
-        workspaceDir: "/tmp/openclaw-claude-cli",
+        workspaceDir: "/tmp/grokbot-claude-cli",
         provider: "claude-cli",
         modelId: "claude-opus-4-7",
         contextTokenBudget: 100_000,

@@ -1,21 +1,21 @@
 {
-  "name": "@openclaw/gateway-client",
+  "name": "@grokbot/gateway-client",
   "version": "2026.7.2",
-  "description": "Reference WebSocket client for the OpenClaw Gateway protocol",
+  "description": "Reference WebSocket client for the GrokBot Gateway protocol",
   "keywords": [
     "client",
     "gateway",
-    "openclaw",
+    "grokbot",
     "websocket"
   ],
-  "homepage": "https://github.com/openclaw/openclaw#readme",
+  "homepage": "https://github.com/grokbot/grokbot#readme",
   "bugs": {
-    "url": "https://github.com/openclaw/openclaw/issues"
+    "url": "https://github.com/grokbot/grokbot/issues"
   },
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/openclaw/openclaw.git",
+    "url": "git+https://github.com/grokbot/grokbot.git",
     "directory": "packages/gateway-client"
   },
   "files": [
@@ -55,7 +55,7 @@
     "build": "tsdown src/index.ts src/browser.ts src/readiness.ts src/timeouts.ts --no-config --platform node --format esm --dts --out-dir dist --clean"
   },
   "dependencies": {
-    "@openclaw/gateway-protocol": "workspace:*",
+    "@grokbot/gateway-protocol": "workspace:*",
     "ipaddr.js": "2.4.0",
     "ws": "8.21.0"
   },
@@ -65,7 +65,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "openclaw": {
+  "grokbot": {
     "release": {
       "publishToNpm": true
     }

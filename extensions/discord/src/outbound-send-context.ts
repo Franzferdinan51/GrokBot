@@ -4,10 +4,10 @@ import {
   resolveOutboundSendDep,
   type OutboundSendDeps,
   type ReplyToResolution,
-} from "openclaw/plugin-sdk/channel-outbound";
-import type { OpenClawConfig, ReplyToMode } from "openclaw/plugin-sdk/config-contracts";
-import { createLazyRuntimeModule } from "openclaw/plugin-sdk/lazy-runtime";
-import { normalizeOptionalStringifiedId } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/channel-outbound";
+import type { OpenClawConfig, ReplyToMode } from "grokbot/plugin-sdk/config-contracts";
+import { createLazyRuntimeModule } from "grokbot/plugin-sdk/lazy-runtime";
+import { normalizeOptionalStringifiedId } from "grokbot/plugin-sdk/string-coerce-runtime";
 import { resolveDiscordReplyReference } from "./reply-reference.js";
 
 type DiscordSendRuntime = typeof import("./send.js");

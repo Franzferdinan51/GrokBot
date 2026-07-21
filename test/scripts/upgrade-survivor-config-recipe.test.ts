@@ -25,7 +25,7 @@ describe("upgrade survivor config recipe command resolution", () => {
     expect(isReleaseBefore("2026.3.9007199254740993", "2026.4.0")).toBe(false);
   });
 
-  it("wraps Windows openclaw npm shims through cmd.exe", () => {
+  it("wraps Windows grokbot npm shims through cmd.exe", () => {
     expect(
       resolveUpgradeSurvivorOpenClawCommand(
         ["config", "set", "models.providers.openai", '{"apiKey":"sk test"}', "--strict-json"],
@@ -39,25 +39,25 @@ describe("upgrade survivor config recipe command resolution", () => {
         "/d",
         "/s",
         "/c",
-        'openclaw.cmd config set models.providers.openai "{""apiKey"":""sk test""}" --strict-json',
+        'grokbot.cmd config set models.providers.openai "{""apiKey"":""sk test""}" --strict-json',
       ],
       command: String.raw`C:\Windows\System32\cmd.exe`,
       commandLabel:
-        'openclaw config set models.providers.openai {"apiKey":"sk test"} --strict-json',
+        'grokbot config set models.providers.openai {"apiKey":"sk test"} --strict-json',
       shell: false,
       windowsVerbatimArguments: true,
     });
   });
 
-  it("keeps POSIX openclaw invocations direct", () => {
+  it("keeps POSIX grokbot invocations direct", () => {
     expect(
       resolveUpgradeSurvivorOpenClawCommand(["config", "validate"], {
         platform: "linux",
       }),
     ).toEqual({
       args: ["config", "validate"],
-      command: "openclaw",
-      commandLabel: "openclaw config validate",
+      command: "grokbot",
+      commandLabel: "grokbot config validate",
       shell: false,
     });
   });
@@ -80,7 +80,7 @@ describe("upgrade survivor config recipe command resolution", () => {
 
   it("bounds baseline config commands and reports spawn errors", () => {
     const calls: unknown[] = [];
-    const timeoutError = Object.assign(new Error("spawnSync openclaw ETIMEDOUT"), {
+    const timeoutError = Object.assign(new Error("spawnSync grokbot ETIMEDOUT"), {
       code: "ETIMEDOUT",
     });
 
@@ -107,7 +107,7 @@ describe("upgrade survivor config recipe command resolution", () => {
     expect(calls).toHaveLength(1);
     expect(calls[0]).toMatchObject({
       args: ["config", "validate"],
-      command: "openclaw",
+      command: "grokbot",
       options: {
         killSignal: "SIGTERM",
         maxBuffer: CONFIG_COMMAND_MAX_BUFFER_BYTES,
@@ -115,9 +115,9 @@ describe("upgrade survivor config recipe command resolution", () => {
       },
     });
     expect(outcome).toMatchObject({
-      command: "openclaw config validate",
+      command: "grokbot config validate",
       errorCode: "ETIMEDOUT",
-      errorMessage: "spawnSync openclaw ETIMEDOUT",
+      errorMessage: "spawnSync grokbot ETIMEDOUT",
       ok: false,
       signal: "SIGTERM",
       status: null,
@@ -127,15 +127,15 @@ describe("upgrade survivor config recipe command resolution", () => {
   });
 
   it("skips ACPX bridge config on baselines before the bridge field existed", () => {
-    const root = mkdtempSync(join(tmpdir(), "openclaw-upgrade-recipe-acpx-"));
+    const root = mkdtempSync(join(tmpdir(), "grokbot-upgrade-recipe-acpx-"));
     try {
       const binDir = join(root, "bin");
-      const logPath = join(root, "openclaw-argv.jsonl");
+      const logPath = join(root, "grokbot-argv.jsonl");
       const summaryPath = join(root, "summary.json");
       mkdirSync(binDir, { recursive: true });
-      const openclawLogPath = join(binDir, "openclaw-log.js");
-      const openclawPath = join(binDir, "openclaw");
-      const openclawCmdPath = join(binDir, "openclaw.cmd");
+      const openclawLogPath = join(binDir, "grokbot-log.js");
+      const openclawPath = join(binDir, "grokbot");
+      const openclawCmdPath = join(binDir, "grokbot.cmd");
       writeFileSync(
         openclawLogPath,
         `
@@ -144,11 +144,11 @@ fs.appendFileSync(${JSON.stringify(logPath)}, JSON.stringify(process.argv.slice(
 process.exit(0);
 `,
       );
-      writeFileSync(openclawPath, `#!/usr/bin/env node\nrequire("./openclaw-log.js");\n`);
+      writeFileSync(openclawPath, `#!/usr/bin/env node\nrequire("./grokbot-log.js");\n`);
       chmodSync(openclawPath, 0o755);
       writeFileSync(
         openclawCmdPath,
-        `@echo off\r\n"${process.execPath}" "%~dp0openclaw-log.js" %*\r\n`,
+        `@echo off\r\n"${process.execPath}" "%~dp0grokbot-log.js" %*\r\n`,
       );
 
       execFileSync(
@@ -157,7 +157,7 @@ process.exit(0);
         {
           env: {
             ...process.env,
-            OPENCLAW_UPGRADE_SURVIVOR_SCENARIO: "acpx-openclaw-tools-bridge",
+            OPENCLAW_UPGRADE_SURVIVOR_SCENARIO: "acpx-grokbot-tools-bridge",
             PATH: `${binDir}${process.platform === "win32" ? ";" : ":"}${process.env.PATH ?? ""}`,
           },
           stdio: "pipe",
@@ -169,7 +169,7 @@ process.exit(0);
         .trim()
         .split("\n")
         .map((line) => JSON.parse(line));
-      expect(summary.skippedIntents).toContain("acpx-openclaw-tools-bridge");
+      expect(summary.skippedIntents).toContain("acpx-grokbot-tools-bridge");
       expect(loggedArgs).not.toContainEqual(
         expect.arrayContaining([
           "set",

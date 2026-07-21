@@ -73,7 +73,7 @@ function deferred<T>() {
 
 import { OpenClawTerminalPanel } from "./terminal-panel.ts";
 
-const TERMINAL_PANEL_ELEMENT_NAME = `test-openclaw-terminal-panel-${crypto.randomUUID()}`;
+const TERMINAL_PANEL_ELEMENT_NAME = `test-grokbot-terminal-panel-${crypto.randomUUID()}`;
 
 // The full non-isolated UI suite can import the production panel before this
 // test. Override its factory instead of relying on a module mock import order.
@@ -128,7 +128,7 @@ describe("OpenClawTerminalPanel", () => {
 
   it("restores persisted open state when a mounted tag upgrades lazily", async () => {
     localStorage.setItem(
-      "openclaw.terminal.panel.v1",
+      "grokbot.terminal.panel.v1",
       JSON.stringify({ open: true, dock: "bottom", height: 320, width: 520 }),
     );
     const tagName = `test-lazy-terminal-panel-${crypto.randomUUID()}`;
@@ -350,7 +350,7 @@ describe("OpenClawTerminalPanel", () => {
   });
 
   it("reattaches persisted sessions before opening a catalog tab", async () => {
-    sessionStorage.setItem("openclaw.terminal.sessions.v1", JSON.stringify(["persisted-1"]));
+    sessionStorage.setItem("grokbot.terminal.sessions.v1", JSON.stringify(["persisted-1"]));
     createGhosttyTerminalMock
       .mockResolvedValueOnce(createTerminalController())
       .mockResolvedValueOnce(createTerminalController());
@@ -393,7 +393,7 @@ describe("OpenClawTerminalPanel", () => {
     document.body.append(panel);
     const catalog = { catalogId: "codex", hostId: "node:mac", threadId: "thread" };
 
-    panel.handleToggleRequest(new CustomEvent("openclaw:terminal-toggle", { detail: { catalog } }));
+    panel.handleToggleRequest(new CustomEvent("grokbot:terminal-toggle", { detail: { catalog } }));
 
     await waitForFast(() => {
       expect(requests.filter((entry) => entry.method === "terminal.attach")).toHaveLength(1);
@@ -402,13 +402,13 @@ describe("OpenClawTerminalPanel", () => {
     expect(requests.findIndex((entry) => entry.method === "terminal.attach")).toBeLessThan(
       requests.findIndex((entry) => entry.method === "terminal.open"),
     );
-    expect(sessionStorage.getItem("openclaw.terminal.sessions.v1")).toBe(
+    expect(sessionStorage.getItem("grokbot.terminal.sessions.v1")).toBe(
       JSON.stringify(["persisted-1"]),
     );
   });
 
   it("restores a vanished persisted session as exited without replaying stale output", async () => {
-    sessionStorage.setItem("openclaw.terminal.sessions.v1", JSON.stringify(["gone-1"]));
+    sessionStorage.setItem("grokbot.terminal.sessions.v1", JSON.stringify(["gone-1"]));
     const controller = createTerminalController();
     createGhosttyTerminalMock.mockResolvedValue(controller);
     const requests: Array<{ method: string; params: unknown }> = [];
@@ -441,11 +441,11 @@ describe("OpenClawTerminalPanel", () => {
     expect(requests.some((entry) => entry.method === "terminal.open")).toBe(false);
     expect(controller.terminal.reset).not.toHaveBeenCalled();
     expect(controller.write).not.toHaveBeenCalled();
-    expect(sessionStorage.getItem("openclaw.terminal.sessions.v1")).toBe("[]");
+    expect(sessionStorage.getItem("grokbot.terminal.sessions.v1")).toBe("[]");
   });
 
   it("keeps a persisted session exited when it disappears during attach", async () => {
-    sessionStorage.setItem("openclaw.terminal.sessions.v1", JSON.stringify(["gone-1"]));
+    sessionStorage.setItem("grokbot.terminal.sessions.v1", JSON.stringify(["gone-1"]));
     const controller = createTerminalController();
     createGhosttyTerminalMock.mockResolvedValue(controller);
     const requests: Array<{ method: string; params: unknown }> = [];
@@ -488,11 +488,11 @@ describe("OpenClawTerminalPanel", () => {
     expect(requests.some((entry) => entry.method === "terminal.open")).toBe(false);
     expect(controller.terminal.reset).not.toHaveBeenCalled();
     expect(controller.write).not.toHaveBeenCalled();
-    expect(sessionStorage.getItem("openclaw.terminal.sessions.v1")).toBe("[]");
+    expect(sessionStorage.getItem("grokbot.terminal.sessions.v1")).toBe("[]");
   });
 
   it("does not mark a live persisted session exited after a transient attach failure", async () => {
-    sessionStorage.setItem("openclaw.terminal.sessions.v1", JSON.stringify(["live-1"]));
+    sessionStorage.setItem("grokbot.terminal.sessions.v1", JSON.stringify(["live-1"]));
     const controllers = [createTerminalController(), createTerminalController()] as const;
     createGhosttyTerminalMock
       .mockResolvedValueOnce(controllers[0])
@@ -531,7 +531,7 @@ describe("OpenClawTerminalPanel", () => {
     expect(requests.filter((entry) => entry.method === "terminal.attach")).toHaveLength(1);
     expect(panel.renderRoot.querySelector(".tabstrip-tab__status")?.textContent).not.toBe("exited");
     expect(controllers[0].write).not.toHaveBeenCalled();
-    expect(sessionStorage.getItem("openclaw.terminal.sessions.v1")).toBe(
+    expect(sessionStorage.getItem("grokbot.terminal.sessions.v1")).toBe(
       JSON.stringify(["replacement-1"]),
     );
   });
@@ -640,7 +640,7 @@ describe("OpenClawTerminalPanel", () => {
     expect(new TextDecoder().decode(controllers[1].write.mock.calls[0]?.[0])).toBe(
       "detached history",
     );
-    expect(sessionStorage.getItem("openclaw.terminal.sessions.v1")).toBe(
+    expect(sessionStorage.getItem("grokbot.terminal.sessions.v1")).toBe(
       JSON.stringify(["current-1", "detached-1"]),
     );
   });
@@ -738,7 +738,7 @@ describe("OpenClawTerminalPanel", () => {
     document.body.append(panel);
     panel.toggle();
     await waitForFast(() => {
-      expect(sessionStorage.getItem("openclaw.terminal.sessions.v1")).toBe(
+      expect(sessionStorage.getItem("grokbot.terminal.sessions.v1")).toBe(
         JSON.stringify(["current-1"]),
       );
     });
@@ -750,7 +750,7 @@ describe("OpenClawTerminalPanel", () => {
     await panel.updateComplete;
 
     expect(panel.renderRoot.textContent).toContain("Could not attach terminal session");
-    expect(sessionStorage.getItem("openclaw.terminal.sessions.v1")).toBe(
+    expect(sessionStorage.getItem("grokbot.terminal.sessions.v1")).toBe(
       JSON.stringify(["current-1"]),
     );
   });
@@ -782,7 +782,7 @@ describe("OpenClawTerminalPanel", () => {
     await waitForFast(() => expect(createGhosttyTerminalMock).toHaveBeenCalledOnce());
     const catalog = { catalogId: "codex", hostId: "node:mac", threadId: "thread" };
 
-    panel.handleToggleRequest(new CustomEvent("openclaw:terminal-toggle", { detail: { catalog } }));
+    panel.handleToggleRequest(new CustomEvent("grokbot:terminal-toggle", { detail: { catalog } }));
     firstBoot.resolve(createTerminalController());
 
     await waitForFast(() => {
@@ -897,7 +897,7 @@ describe("OpenClawTerminalPanel", () => {
       });
     });
     expect(controllers[0].dispose).toHaveBeenCalledOnce();
-    expect(sessionStorage.getItem("openclaw.terminal.sessions.v1")).toBe("[]");
+    expect(sessionStorage.getItem("grokbot.terminal.sessions.v1")).toBe("[]");
 
     panel.toggle();
     await waitForFast(() => {
@@ -943,7 +943,7 @@ describe("OpenClawTerminalPanel", () => {
     panel.toggle();
 
     await waitForFast(() => {
-      expect(sessionStorage.getItem("openclaw.terminal.sessions.v1")).toContain("old-session");
+      expect(sessionStorage.getItem("grokbot.terminal.sessions.v1")).toContain("old-session");
     });
     panel.client = newClient;
     await panel.updateComplete;
@@ -1074,7 +1074,7 @@ describe("OpenClawTerminalPanel", () => {
     document.body.append(panel);
     panel.toggle();
     await waitForFast(() => {
-      expect(sessionStorage.getItem("openclaw.terminal.sessions.v1")).toContain("session-1");
+      expect(sessionStorage.getItem("grokbot.terminal.sessions.v1")).toContain("session-1");
     });
 
     listener?.({

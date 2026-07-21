@@ -5,21 +5,21 @@ import {
   markMigrationItemConflict,
   markMigrationItemError,
   summarizeMigrationItems,
-} from "openclaw/plugin-sdk/migration";
+} from "grokbot/plugin-sdk/migration";
 import {
   archiveMigrationItem,
   copyMemoryMigrationFileItem,
   copyMigrationFileItem,
   withCachedMigrationConfigRuntime,
   writeMigrationReport,
-} from "openclaw/plugin-sdk/migration-runtime";
+} from "grokbot/plugin-sdk/migration-runtime";
 import type {
   MigrationApplyResult,
   MigrationItem,
   MigrationPlan,
   MigrationProviderContext,
-} from "openclaw/plugin-sdk/plugin-entry";
-import { resolvePreferredOpenClawTmpDir, withTempWorkspace } from "openclaw/plugin-sdk/temp-path";
+} from "grokbot/plugin-sdk/plugin-entry";
+import { resolvePreferredOpenClawTmpDir, withTempWorkspace } from "grokbot/plugin-sdk/temp-path";
 import { applyAuthItem } from "./auth.js";
 import { applyConfigItem, applyManualItem } from "./config.js";
 import { appendItem } from "./helpers.js";
@@ -33,7 +33,7 @@ import { buildHermesPlan } from "./plan.js";
 import { applySecretItem } from "./secrets.js";
 import { resolveTargets } from "./targets.js";
 
-const HERMES_SQLITE_SNAPSHOT_PREFIX = "openclaw-migrate-hermes-sqlite-";
+const HERMES_SQLITE_SNAPSHOT_PREFIX = "grokbot-migrate-hermes-sqlite-";
 
 function isHermesMemoryOnlyCopyItem(item: MigrationItem): boolean {
   return (

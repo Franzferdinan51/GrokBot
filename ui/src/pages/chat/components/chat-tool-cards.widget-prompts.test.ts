@@ -38,7 +38,7 @@ function offerPromptPort(frame: HTMLIFrameElement): MessagePort {
   const channel = new MessageChannel();
   window.dispatchEvent(
     new MessageEvent("message", {
-      data: { type: "openclaw:widget-prompt-offer" },
+      data: { type: "grokbot:widget-prompt-offer" },
       origin: "null",
       source: frame.contentWindow,
       ports: [channel.port2],
@@ -48,7 +48,7 @@ function offerPromptPort(frame: HTMLIFrameElement): MessagePort {
 }
 
 function postPrompt(port: MessagePort, prompt: unknown) {
-  port.postMessage({ type: "openclaw:widget-prompt", prompt });
+  port.postMessage({ type: "grokbot:widget-prompt", prompt });
 }
 
 async function flushPorts() {
@@ -91,7 +91,7 @@ describe("widget prompts", () => {
     port.start();
     frame.dispatchEvent(new Event("load"));
     await flushPorts();
-    expect(hostMessages).toContainEqual({ type: "openclaw:widget-prompt-host-ready" });
+    expect(hostMessages).toContainEqual({ type: "grokbot:widget-prompt-host-ready" });
     emulateInteractableFrame(frame);
     const received = collectPromptEvents(container);
     try {

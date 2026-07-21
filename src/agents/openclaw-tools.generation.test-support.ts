@@ -1,6 +1,6 @@
-// Shared registration assertions for optional media-generation OpenClaw tools.
+// Shared registration assertions for optional media-generation GrokBot tools.
 import { describe, expect, it } from "vitest";
-import { collectPresentOpenClawTools } from "./openclaw-tools.registration.js";
+import { collectPresentOpenClawTools } from "./grokbot-tools.registration.js";
 import { textResult, type AnyAgentTool } from "./tools/common.js";
 
 function stubAgentTool(name: string): AnyAgentTool {

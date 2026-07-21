@@ -13,7 +13,7 @@ searches them with embeddings, keywords, or both.
 
 ## Quick start
 
-OpenClaw uses OpenAI embeddings by default. To use another provider, set it
+GrokBot uses OpenAI embeddings by default. To use another provider, set it
 explicitly:
 
 ```json5
@@ -36,7 +36,7 @@ For local embeddings with no API key, install the official llama.cpp provider
 plugin and set `provider: "local"`:
 
 ```bash
-openclaw plugins install @openclaw/llama-cpp-provider
+grokbot plugins install @grokbot/llama-cpp-provider
 ```
 
 Source checkouts still need native build approval: `pnpm approve-builds`, then
@@ -65,7 +65,7 @@ chunks. Set these with `queryInputType` and `documentInputType`; see
 
 ## How search works
 
-OpenClaw runs two retrieval paths in parallel and merges the results:
+GrokBot runs two retrieval paths in parallel and merges the results:
 
 ```mermaid
 flowchart LR
@@ -79,7 +79,7 @@ flowchart LR
 ```
 
 - **Vector search** matches similar meaning ("gateway host" matches "the
-  machine running OpenClaw").
+  machine running GrokBot").
 - **BM25 keyword search** matches exact terms (IDs, error strings, config
   keys).
 - **Filename search** indexes paths separately from note bodies. Exact full
@@ -181,19 +181,19 @@ and `sources` alone do not export transcripts into QMD. See
 
 ## Troubleshooting
 
-**No results?** Run `openclaw memory status` to check the index. If empty, run
-`openclaw memory index --force`.
+**No results?** Run `grokbot memory status` to check the index. If empty, run
+`grokbot memory index --force`.
 
 **Only keyword matches?** Your embedding provider may not be configured. Check
-`openclaw memory status --deep`.
+`grokbot memory status --deep`.
 
 **Local embeddings time out?** `ollama`, `lmstudio`, and `local` use a longer
 inline batch timeout by default. If the host is just slow, set
 `agents.defaults.memorySearch.sync.embeddingBatchTimeoutSeconds` and rerun
-`openclaw memory index --force`.
+`grokbot memory index --force`.
 
 **CJK text not found?** Rebuild the FTS index with
-`openclaw memory index --force`.
+`grokbot memory index --force`.
 
 ## Related
 

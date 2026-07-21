@@ -1,7 +1,7 @@
 // QA Lab mock provider contracts, wire helpers, and scenario constants.
 import type { IncomingMessage, ServerResponse } from "node:http";
 import { setTimeout as sleep } from "node:timers/promises";
-import { readRequestBodyWithLimit } from "openclaw/plugin-sdk/webhook-ingress";
+import { readRequestBodyWithLimit } from "grokbot/plugin-sdk/webhook-ingress";
 import { writeJson } from "../shared/http-json.js";
 
 export type ResponsesInputItem = Record<string, unknown>;

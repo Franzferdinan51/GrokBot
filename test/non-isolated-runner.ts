@@ -25,12 +25,12 @@ type TestRunnerInternals = {
   workerState: { evaluatedModules: unknown };
 };
 
-const SHARED_TEST_SETUP = Symbol.for("openclaw.sharedTestSetup");
-const EMBEDDED_RUN_STATE = Symbol.for("openclaw.embeddedRunState");
-const REPLY_RUN_REGISTRY = Symbol.for("openclaw.replyRunRegistry");
-const DIAGNOSTIC_EVENTS_STATE = Symbol.for("openclaw.diagnosticEvents.state.v1");
+const SHARED_TEST_SETUP = Symbol.for("grokbot.sharedTestSetup");
+const EMBEDDED_RUN_STATE = Symbol.for("grokbot.embeddedRunState");
+const REPLY_RUN_REGISTRY = Symbol.for("grokbot.replyRunRegistry");
+const DIAGNOSTIC_EVENTS_STATE = Symbol.for("grokbot.diagnosticEvents.state.v1");
 const DIAGNOSTIC_EVENT_LISTENER_PRESENCE = Symbol.for(
-  "openclaw.diagnosticEventListenerPresence.v1",
+  "grokbot.diagnosticEventListenerPresence.v1",
 );
 const nativeTimerGlobals = {
   setTimeout: globalThis.setTimeout,
@@ -247,7 +247,7 @@ function resetOpenClawGlobalDiagnosticState(): void {
   }
 }
 
-const SERIALIZED_RESOLVE_MOCKS = Symbol.for("openclaw.serializedResolveMocks");
+const SERIALIZED_RESOLVE_MOCKS = Symbol.for("grokbot.serializedResolveMocks");
 
 // Vitest's BareModuleMocker.resolveMocks has no in-flight guard: pendingIds is
 // cleared only after all parallel resolveId RPCs settle, and every registration

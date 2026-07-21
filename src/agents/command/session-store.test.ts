@@ -11,7 +11,7 @@ import {
   loadSessionEntry,
   replaceSessionEntry,
 } from "../../config/sessions/session-accessor.js";
-import { closeOpenClawAgentDatabasesForTest } from "../../state/openclaw-agent-db.js";
+import { closeOpenClawAgentDatabasesForTest } from "../../state/grokbot-agent-db.js";
 import type { EmbeddedAgentRunResult } from "../embedded-agent.js";
 import {
   clearCliSessionInStore,
@@ -89,7 +89,7 @@ function acpMeta() {
 async function withTempSessionStore<T>(
   run: (params: { dir: string; storePath: string }) => Promise<T>,
 ): Promise<T> {
-  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-session-store-"));
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-session-store-"));
   try {
     return await run({ dir, storePath: path.join(dir, "sessions.json") });
   } finally {
@@ -608,7 +608,7 @@ describe("updateSessionStoreAfterAgentRun", () => {
         },
       } as OpenClawConfig;
       const sessionKey = "agent:main:explicit:test-claude-cli";
-      const sessionId = "test-openclaw-session";
+      const sessionId = "test-grokbot-session";
       const sessionStore: Record<string, SessionEntry> = {
         [sessionKey]: {
           sessionId,
@@ -674,7 +674,7 @@ describe("updateSessionStoreAfterAgentRun", () => {
         },
       } as OpenClawConfig;
       const sessionKey = "agent:main:explicit:test-clear-unflushed-cli";
-      const sessionId = "test-openclaw-session";
+      const sessionId = "test-grokbot-session";
       const sessionStore: Record<string, SessionEntry> = {
         [sessionKey]: {
           sessionId,
@@ -2112,7 +2112,7 @@ describe("updateSessionStoreAfterAgentRun", () => {
           updatedAt: 1,
           modelProvider: "anthropic",
           model: "claude-opus-4-6",
-          agentHarnessId: "openclaw",
+          agentHarnessId: "grokbot",
           contextTokens: 1_000_000,
           cliSessionBindings: {
             "claude-cli": { sessionId: "existing-cli-session" },
@@ -2193,7 +2193,7 @@ describe("updateSessionStoreAfterAgentRun", () => {
       // Runtime model and contextTokens should be preserved from the original entry
       expect(sessionStore[sessionKey]?.model).toBe("claude-opus-4-6");
       expect(sessionStore[sessionKey]?.modelProvider).toBe("anthropic");
-      expect(sessionStore[sessionKey]?.agentHarnessId).toBe("openclaw");
+      expect(sessionStore[sessionKey]?.agentHarnessId).toBe("grokbot");
       expect(sessionStore[sessionKey]?.contextTokens).toBe(1_000_000);
       expect(sessionStore[sessionKey]?.contextBudgetStatus?.provider).toBe("anthropic");
       expect(sessionStore[sessionKey]?.contextBudgetStatus?.estimatedPromptTokens).toBe(640_000);
@@ -2204,7 +2204,7 @@ describe("updateSessionStoreAfterAgentRun", () => {
       const persisted = loadPersistedSessionStore(storePath);
       expect(persisted[sessionKey]?.model).toBe("claude-opus-4-6");
       expect(persisted[sessionKey]?.modelProvider).toBe("anthropic");
-      expect(persisted[sessionKey]?.agentHarnessId).toBe("openclaw");
+      expect(persisted[sessionKey]?.agentHarnessId).toBe("grokbot");
       expect(persisted[sessionKey]?.contextTokens).toBe(1_000_000);
       expect(persisted[sessionKey]?.contextBudgetStatus?.provider).toBe("anthropic");
       expect(persisted[sessionKey]?.contextBudgetStatus?.estimatedPromptTokens).toBe(640_000);
@@ -2940,7 +2940,7 @@ describe("consumeCliSessionForkInStore", () => {
     await withTempSessionStore(async ({ storePath }) => {
       const sessionKey = "agent:main:catalog-adopt:claude:test";
       const entry: SessionEntry = {
-        sessionId: "openclaw-session-1",
+        sessionId: "grokbot-session-1",
         updatedAt: 1,
         cliSessionBindings: {
           "claude-cli": {
@@ -2987,7 +2987,7 @@ describe("consumeCliSessionForkInStore", () => {
     await withTempSessionStore(async ({ storePath }) => {
       const sessionKey = "agent:main:plugin:anthropic:catalog-adopt:claude:test";
       const entry: SessionEntry = {
-        sessionId: "openclaw-session-1",
+        sessionId: "grokbot-session-1",
         updatedAt: 1,
         cliSessionBindings: {
           "claude-cli": { sessionId: "claude-source-session", forceReuse: true },
@@ -3016,7 +3016,7 @@ describe("consumeCliSessionForkInStore", () => {
     await withTempSessionStore(async ({ storePath }) => {
       const sessionKey = "agent:main:plugin:anthropic:catalog-adopt:claude:test";
       const entry: SessionEntry = {
-        sessionId: "openclaw-session-1",
+        sessionId: "grokbot-session-1",
         updatedAt: 1,
         cliSessionBindings: {
           "claude-cli": {
@@ -3065,7 +3065,7 @@ describe("clearCliSessionInStore", () => {
     await withTempSessionStore(async ({ storePath }) => {
       const sessionKey = "agent:main:explicit:test-clear-claude-cli";
       const entry: SessionEntry = {
-        sessionId: "openclaw-session-1",
+        sessionId: "grokbot-session-1",
         updatedAt: 1,
         cliSessionBindings: {
           "claude-cli": {
@@ -3117,7 +3117,7 @@ describe("clearCliSessionInStore", () => {
       const existingKey = "agent:main:explicit:existing";
       const sessionStore: Record<string, SessionEntry> = {
         [existingKey]: {
-          sessionId: "openclaw-session-1",
+          sessionId: "grokbot-session-1",
           updatedAt: 1,
           claudeCliSessionId: "claude-session-1",
         },
@@ -3143,7 +3143,7 @@ describe("clearCliSessionInStore", () => {
     await withTempSessionStore(async ({ storePath }) => {
       const sessionKey = "agent:main:explicit:test-clear-cli-missing-row";
       const entry: SessionEntry = {
-        sessionId: "openclaw-session-1",
+        sessionId: "grokbot-session-1",
         updatedAt: 1,
         modelProvider: "anthropic",
         model: "claude-opus-4-6",
@@ -3172,7 +3172,7 @@ describe("clearCliSessionInStore", () => {
       });
 
       const persisted = loadPersistedSessionEntry(storePath, sessionKey);
-      expect(cleared?.sessionId).toBe("openclaw-session-1");
+      expect(cleared?.sessionId).toBe("grokbot-session-1");
       expect(cleared?.modelProvider).toBe("anthropic");
       expect(cleared?.model).toBe("claude-opus-4-6");
       expect(cleared?.cliSessionBindings?.["claude-cli"]).toBeUndefined();
@@ -3181,7 +3181,7 @@ describe("clearCliSessionInStore", () => {
       });
       expect(cleared?.claudeCliSessionId).toBeUndefined();
       expect(sessionStore[sessionKey]).toEqual(cleared);
-      expect(persisted?.sessionId).toBe("openclaw-session-1");
+      expect(persisted?.sessionId).toBe("grokbot-session-1");
       expect(persisted?.modelProvider).toBe("anthropic");
       expect(persisted?.model).toBe("claude-opus-4-6");
       expect(persisted?.cliSessionBindings?.["claude-cli"]).toBeUndefined();
@@ -3195,7 +3195,7 @@ describe("clearCliSessionInStore", () => {
   it("does not recreate a missing row when a post-run binding clear has an expected session id", async () => {
     await withTempSessionStore(async ({ storePath }) => {
       const sessionKey = "agent:main:explicit:test-clear-cli-deleted-row";
-      const sessionId = "openclaw-session-1";
+      const sessionId = "grokbot-session-1";
       const sessionStore: Record<string, SessionEntry> = {
         [sessionKey]: {
           sessionId,

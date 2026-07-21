@@ -1,7 +1,7 @@
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { makeProxyFetch } from "openclaw/plugin-sdk/fetch-runtime";
-import { danger } from "openclaw/plugin-sdk/runtime-env";
-import type { RuntimeEnv } from "openclaw/plugin-sdk/runtime-env";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { makeProxyFetch } from "grokbot/plugin-sdk/fetch-runtime";
+import { danger } from "grokbot/plugin-sdk/runtime-env";
+import type { RuntimeEnv } from "grokbot/plugin-sdk/runtime-env";
 import type { ResolvedDiscordAccount } from "./accounts.js";
 
 function resolveDiscordProxyUrl(

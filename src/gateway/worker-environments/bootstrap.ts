@@ -1,4 +1,4 @@
-import { truncateUtf16Safe } from "@openclaw/normalization-core/utf16-slice";
+import { truncateUtf16Safe } from "@grokbot/normalization-core/utf16-slice";
 import {
   type WorkerAdmissionHandshake,
   WORKER_PROTOCOL_MAX_FEATURE_LENGTH,
@@ -23,7 +23,7 @@ import {
   workerSshRemoteCommand,
 } from "./ssh.js";
 
-const BOOTSTRAP_ROOT = ".openclaw-worker";
+const BOOTSTRAP_ROOT = ".grokbot-worker";
 const BOOTSTRAP_RECEIPT = "bootstrap-receipt.json";
 const DEFAULT_BOOTSTRAP_TIMEOUT_MS = 10 * 60_000;
 const NODE_MISSING_EXIT_CODE = 42;
@@ -140,7 +140,7 @@ function addFile(relative) {
     fail("unsafe worker file: " + relative);
   }
   const contents = fs.readFileSync(absolute);
-  const mode = relative === "openclaw.mjs" || (stats.mode & 0o111) !== 0 ? 0o700 : 0o600;
+  const mode = relative === "grokbot.mjs" || (stats.mode & 0o111) !== 0 ? 0o700 : 0o600;
   fs.chmodSync(absolute, mode);
   entries.push({
     path: relative,
@@ -194,7 +194,7 @@ function readNpmInventory() {
 }
 try {
   assertRoot();
-  addFile("openclaw.mjs");
+  addFile("grokbot.mjs");
   addFile("package.json");
   if (install === "npm") {
     readNpmInventory();
@@ -276,8 +276,8 @@ fi
 incoming=$root/.incoming
 ensure_private_directory "$incoming"
 incoming=$(cd "$incoming" && pwd -P)
-find "$incoming" -type f -name 'openclaw-upload-*.tgz.*' -mmin +60 -exec rm -f -- {} + 2>/dev/null || true
-upload=$(mktemp "$incoming/openclaw-upload-$hash.tgz.XXXXXXXX")
+find "$incoming" -type f -name 'grokbot-upload-*.tgz.*' -mmin +60 -exec rm -f -- {} + 2>/dev/null || true
+upload=$(mktemp "$incoming/grokbot-upload-$hash.tgz.XXXXXXXX")
 printf '%s\t%s\t%s\n' '${BOOTSTRAP_OUTPUT_TAG}' install "$upload"
 `;
 
@@ -455,9 +455,9 @@ case "$install" in
       exit 2
     fi
     npm install --global --prefix "$npm_prefix" --ignore-scripts --omit=dev --no-audit --no-fund "$package_archive"
-    package_dir=$npm_prefix/lib/node_modules/openclaw
-    if [ ! -f "$package_dir/openclaw.mjs" ]; then
-      printf '%s\n' 'npm did not install the OpenClaw package root' >&2
+    package_dir=$npm_prefix/lib/node_modules/grokbot
+    if [ ! -f "$package_dir/grokbot.mjs" ]; then
+      printf '%s\n' 'npm did not install the GrokBot package root' >&2
       exit 2
     fi
     # Match bundle layout so the worker entry always lives under the versioned root.
@@ -522,7 +522,7 @@ function normalizeHandshake(artifact: WorkerInstallationArtifact): WorkerAdmissi
     throw new Error("Worker bundle hash must be a lowercase SHA-256 digest");
   }
   if (!openclawVersion) {
-    throw new Error("Worker OpenClaw version must be non-empty");
+    throw new Error("Worker GrokBot version must be non-empty");
   }
   if (
     protocolFeatures.length > WORKER_PROTOCOL_MAX_FEATURES ||
@@ -535,9 +535,9 @@ function normalizeHandshake(artifact: WorkerInstallationArtifact): WorkerAdmissi
   if (artifact.install === "npm") {
     if (
       !isExactSemverVersion(openclawVersion) ||
-      artifact.packageSpec !== `openclaw@${openclawVersion}`
+      artifact.packageSpec !== `grokbot@${openclawVersion}`
     ) {
-      throw new Error(`Worker npm install must use exact package openclaw@${openclawVersion}`);
+      throw new Error(`Worker npm install must use exact package grokbot@${openclawVersion}`);
     }
     if (!NPM_INTEGRITY_PATTERN.test(artifact.packageIntegrity)) {
       throw new Error("Worker npm install requires a pinned SHA-512 package integrity");
@@ -700,7 +700,7 @@ export async function bootstrapWorker(
     ssh: request.ssh,
     pinnedHostKey: request.pinnedHostKey,
     resolveIdentity: dependencies.resolveIdentity,
-    temporaryDirectoryPrefix: "openclaw-worker-bootstrap-",
+    temporaryDirectoryPrefix: "grokbot-worker-bootstrap-",
   });
   try {
     const preflight = parsePreflight(

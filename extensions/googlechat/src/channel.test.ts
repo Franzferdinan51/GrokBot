@@ -1,9 +1,9 @@
 // Googlechat tests cover channel plugin behavior.
-import { verifyChannelMessageAdapterCapabilityProofs } from "openclaw/plugin-sdk/channel-outbound";
+import { verifyChannelMessageAdapterCapabilityProofs } from "grokbot/plugin-sdk/channel-outbound";
 import {
   createDirectoryTestRuntime,
   expectDirectorySurface,
-} from "openclaw/plugin-sdk/channel-test-helpers";
+} from "grokbot/plugin-sdk/channel-test-helpers";
 import { afterAll, afterEach, describe, expect, it, vi } from "vitest";
 import type { OpenClawConfig } from "../runtime-api.js";
 import {
@@ -574,7 +574,7 @@ describe("googlechatPlugin outbound sanitizeText", () => {
 
   it("strips internal tool-trace failure banners from outbound text (#90684)", () => {
     const text =
-      "Visible answer.\n⚠️ 🛠️ `run openclaw definitely-not-a-real-subcommand (agent)` failed";
+      "Visible answer.\n⚠️ 🛠️ `run grokbot definitely-not-a-real-subcommand (agent)` failed";
     const out = sanitizeText({ text });
     expect(out).toBe("Visible answer.");
     expect(out).not.toContain("failed");

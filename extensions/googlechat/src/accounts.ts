@@ -6,13 +6,13 @@ import {
   type OpenClawConfig,
   resolveAccountEntry,
   resolveMergedAccountConfig,
-} from "openclaw/plugin-sdk/account-resolution";
-import { safeParseJsonWithSchema, safeParseWithSchema } from "openclaw/plugin-sdk/extension-shared";
-import { mergePairLoopGuardConfig } from "openclaw/plugin-sdk/pair-loop-guard-runtime";
-import { tryReadSecretFileSync } from "openclaw/plugin-sdk/secret-file-runtime";
-import { isSecretRef } from "openclaw/plugin-sdk/secret-input";
-import { normalizeOptionalString } from "openclaw/plugin-sdk/string-coerce-runtime";
-import { resolveUserPath } from "openclaw/plugin-sdk/text-utility-runtime";
+} from "grokbot/plugin-sdk/account-resolution";
+import { safeParseJsonWithSchema, safeParseWithSchema } from "grokbot/plugin-sdk/extension-shared";
+import { mergePairLoopGuardConfig } from "grokbot/plugin-sdk/pair-loop-guard-runtime";
+import { tryReadSecretFileSync } from "grokbot/plugin-sdk/secret-file-runtime";
+import { isSecretRef } from "grokbot/plugin-sdk/secret-input";
+import { normalizeOptionalString } from "grokbot/plugin-sdk/string-coerce-runtime";
+import { resolveUserPath } from "grokbot/plugin-sdk/text-utility-runtime";
 import { z } from "zod";
 import { MAX_GOOGLE_CHAT_SERVICE_ACCOUNT_FILE_BYTES } from "./google-auth-limits.js";
 import type { GoogleChatAccountConfig } from "./types.config.js";

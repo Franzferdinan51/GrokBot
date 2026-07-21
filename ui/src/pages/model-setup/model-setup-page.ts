@@ -13,7 +13,7 @@ import { hasOperatorAdminAccess } from "../../app/operator-access.ts";
 import { renderSettingsWorkspace } from "../../components/settings-workspace.ts";
 import { t } from "../../i18n/index.ts";
 import { isGatewayMethodAdvertised } from "../../lib/gateway-methods.ts";
-import { OpenClawLightDomElement } from "../../lit/openclaw-element.ts";
+import { OpenClawLightDomElement } from "../../lit/grokbot-element.ts";
 import { SubscriptionsController } from "../../lit/subscriptions-controller.ts";
 import { fetchCatalogIconBlobUrl } from "../plugins/icon-loader.ts";
 import { detectModelSetup, verifyModelSetup } from "./rpc.ts";
@@ -144,7 +144,7 @@ export class ModelSetupPage extends OpenClawLightDomElement {
       client &&
       snapshot.connected &&
       hasOperatorAdminAccess(snapshot.hello?.auth ?? null) &&
-      isGatewayMethodAdvertised(snapshot, "openclaw.setup.detect") === true,
+      isGatewayMethodAdvertised(snapshot, "grokbot.setup.detect") === true,
     );
   }
 
@@ -331,7 +331,7 @@ export class ModelSetupPage extends OpenClawLightDomElement {
     const snapshot = this.context.gateway.snapshot;
     return (
       this.canUseSetup(client) &&
-      isGatewayMethodAdvertised(snapshot, "openclaw.setup.verify") === true
+      isGatewayMethodAdvertised(snapshot, "grokbot.setup.verify") === true
     );
   }
 
@@ -390,7 +390,7 @@ export class ModelSetupPage extends OpenClawLightDomElement {
     this.activationState = { phase: "testing", targetId, modelRef };
     try {
       const result = await client.request<SystemAgentSetupActivateResult>(
-        "openclaw.setup.activate",
+        "grokbot.setup.activate",
         params,
         { timeoutMs: activationTimeoutForKind(params.kind), signal: abortController.signal },
       );
@@ -477,11 +477,11 @@ export class ModelSetupPage extends OpenClawLightDomElement {
     const snapshot = this.context.gateway.snapshot;
     const canAdmin = hasOperatorAdminAccess(snapshot.hello?.auth ?? null);
     const gatewayTooOld =
-      snapshot.connected && isGatewayMethodAdvertised(snapshot, "openclaw.setup.detect") !== true;
+      snapshot.connected && isGatewayMethodAdvertised(snapshot, "grokbot.setup.detect") !== true;
     const canVerify =
       canAdmin &&
       !gatewayTooOld &&
-      isGatewayMethodAdvertised(snapshot, "openclaw.setup.verify") === true;
+      isGatewayMethodAdvertised(snapshot, "grokbot.setup.verify") === true;
     const body = renderModelSetup({
       page: this.pageState,
       activation: this.activationState,
@@ -533,6 +533,6 @@ export class ModelSetupPage extends OpenClawLightDomElement {
   }
 }
 
-if (!customElements.get("openclaw-model-setup-page")) {
-  customElements.define("openclaw-model-setup-page", ModelSetupPage);
+if (!customElements.get("grokbot-model-setup-page")) {
+  customElements.define("grokbot-model-setup-page", ModelSetupPage);
 }

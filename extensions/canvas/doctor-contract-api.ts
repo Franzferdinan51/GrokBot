@@ -1,13 +1,13 @@
 // Canvas doctor contract migrates documents from configured host roots into core storage.
 import fs from "node:fs/promises";
 import path from "node:path";
-import { resolvePluginConfigObject } from "openclaw/plugin-sdk/plugin-config-runtime";
-import type { PluginDoctorStateMigration } from "openclaw/plugin-sdk/runtime-doctor";
+import { resolvePluginConfigObject } from "grokbot/plugin-sdk/plugin-config-runtime";
+import type { PluginDoctorStateMigration } from "grokbot/plugin-sdk/runtime-doctor";
 import {
   asOptionalRecord as readRecord,
   readStringValue as readString,
-} from "openclaw/plugin-sdk/string-coerce-runtime";
-import { resolveUserPath } from "openclaw/plugin-sdk/text-utility-runtime";
+} from "grokbot/plugin-sdk/string-coerce-runtime";
+import { resolveUserPath } from "grokbot/plugin-sdk/text-utility-runtime";
 
 type StateMigrationParams = Parameters<PluginDoctorStateMigration["detectLegacyState"]>[0];
 

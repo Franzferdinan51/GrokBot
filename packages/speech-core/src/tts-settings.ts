@@ -8,13 +8,13 @@ import type {
   TtsConfig,
   TtsModelOverrideConfig,
   TtsProvider,
-} from "openclaw/plugin-sdk/config-contracts";
+} from "grokbot/plugin-sdk/config-contracts";
 import {
   getRuntimeConfigSnapshot,
   getRuntimeConfigSourceSnapshot,
   selectApplicableRuntimeConfig,
-} from "openclaw/plugin-sdk/runtime-config-snapshot";
-import type { SpeechProviderConfig } from "openclaw/plugin-sdk/speech-core";
+} from "grokbot/plugin-sdk/runtime-config-snapshot";
+import type { SpeechProviderConfig } from "grokbot/plugin-sdk/speech-core";
 import {
   normalizeSpeechProviderId,
   normalizeTtsAutoMode,
@@ -22,12 +22,12 @@ import {
   type ResolvedTtsConfig,
   type ResolvedTtsModelOverrides,
   type TtsConfigResolutionContext,
-} from "openclaw/plugin-sdk/speech-settings";
+} from "grokbot/plugin-sdk/speech-settings";
 import {
   normalizeOptionalLowercaseString,
   normalizeOptionalString,
-} from "openclaw/plugin-sdk/string-coerce-runtime";
-import { resolveConfigDir, resolveUserPath } from "openclaw/plugin-sdk/text-utility-runtime";
+} from "grokbot/plugin-sdk/string-coerce-runtime";
+import { resolveConfigDir, resolveUserPath } from "grokbot/plugin-sdk/text-utility-runtime";
 import { withSpeakerSelectionCompat } from "../speaker.js";
 
 export type { ResolvedTtsConfig, ResolvedTtsModelOverrides };

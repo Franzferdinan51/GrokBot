@@ -1,5 +1,5 @@
 // Discord plugin module implements voice owner resolution.
-import type { DiscordAccountConfig, OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { DiscordAccountConfig, OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import { resolveDiscordAccountAllowFrom } from "../accounts.js";
 import { resolveDiscordCommandOwnerAllowFrom } from "../monitor/allow-list.js";
 

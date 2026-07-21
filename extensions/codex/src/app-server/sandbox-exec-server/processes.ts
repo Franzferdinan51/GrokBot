@@ -3,7 +3,7 @@
  * termination for Codex sandbox exec-server process RPCs.
  */
 import { spawn, type ChildProcessWithoutNullStreams } from "node:child_process";
-import { embeddedAgentLog } from "openclaw/plugin-sdk/agent-harness-runtime";
+import { embeddedAgentLog } from "grokbot/plugin-sdk/agent-harness-runtime";
 import type { WebSocket } from "ws";
 import type { JsonObject, JsonValue } from "../protocol.js";
 import { requireObject, requireString, requireStringArray } from "./json-rpc.js";
@@ -86,7 +86,7 @@ async function runProcess(
 ): Promise<void> {
   const backend = execServer.sandbox.backend;
   if (!backend) {
-    throw new Error("OpenClaw sandbox backend is unavailable.");
+    throw new Error("GrokBot sandbox backend is unavailable.");
   }
   throwIfProcessStartCancelled(managed);
   const execSpec = await backend.buildExecSpec({
@@ -107,7 +107,7 @@ async function runProcess(
     }
     const [command, ...args] = execSpec.argv;
     if (!command) {
-      throw new Error("OpenClaw sandbox exec spec did not provide a command.");
+      throw new Error("GrokBot sandbox exec spec did not provide a command.");
     }
     child = spawn(command, args, {
       env: execSpec.env,

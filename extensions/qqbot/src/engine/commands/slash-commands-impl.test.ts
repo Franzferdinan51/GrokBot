@@ -1,5 +1,5 @@
 // Qqbot tests cover slash commands impl plugin behavior.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import { describe, expect, it } from "vitest";
 import { resolveQQBotCommandsAllowFrom, resolveSlashCommandAuth } from "./slash-command-auth.js";
 import { getWrittenQQBotConfig, installCommandRuntime } from "./slash-command-test-support.js";

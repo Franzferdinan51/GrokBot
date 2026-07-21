@@ -2,7 +2,7 @@
 /* oxlint-disable typescript/no-base-to-string -- fetch mock normalizes standard RequestInfo inputs for URL assertions. */
 import { createHash } from "node:crypto";
 import { resolve } from "node:path";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   downloadClawHubBootstrapReadback,
@@ -85,7 +85,7 @@ describe("parseReleaseVerifyBetaArgs", () => {
       version: "2026.5.10-beta.3",
       tag: "v2026.5.10-beta.3",
       distTag: "beta",
-      repo: "openclaw/openclaw",
+      repo: "grokbot/grokbot",
       registry: "https://clawhub.ai",
       releaseSha: undefined,
       workflowRef: undefined,
@@ -114,10 +114,10 @@ describe("parseReleaseVerifyBetaArgs", () => {
         "--clawhub-workflow-ref",
         "v2026.5.10-beta.3",
         "--plugins",
-        "@openclaw/plugin-a,@openclaw/plugin-b",
+        "@grokbot/plugin-a,@grokbot/plugin-b",
         "--full-release-validation-run",
         "10",
-        "--openclaw-npm-run",
+        "--grokbot-npm-run",
         "11",
         "--plugin-npm-run",
         "22",
@@ -126,7 +126,7 @@ describe("parseReleaseVerifyBetaArgs", () => {
         "--plugin-clawhub-bootstrap-run",
         "34",
         "--clawhub-bootstrap-plugins",
-        "@openclaw/plugin-b",
+        "@grokbot/plugin-b",
         "--npm-telegram-run",
         "44",
         "--evidence-out",
@@ -141,13 +141,13 @@ describe("parseReleaseVerifyBetaArgs", () => {
       version: "2026.5.10-beta.3",
       tag: "v2026.5.10-beta.3",
       distTag: "beta",
-      repo: "openclaw/openclaw",
+      repo: "grokbot/grokbot",
       registry: "https://clawhub.ai",
       releaseSha: "a".repeat(40),
       workflowRef: "release/2026.5.10",
       clawHubWorkflowRef: "v2026.5.10-beta.3",
-      pluginSelection: ["@openclaw/plugin-a", "@openclaw/plugin-b"],
-      clawHubBootstrapPlugins: ["@openclaw/plugin-b"],
+      pluginSelection: ["@grokbot/plugin-a", "@grokbot/plugin-b"],
+      clawHubBootstrapPlugins: ["@grokbot/plugin-b"],
       evidenceOut: ".artifacts/release-evidence.json",
       postpublishVerifier: "/tmp/trusted-postpublish.ts",
       skipPostpublish: false,
@@ -167,9 +167,9 @@ describe("parseReleaseVerifyBetaArgs", () => {
 
   it("only accepts the trusted tooling postpublish verifier override", () => {
     expect(resolveOpenClawNpmPostpublishVerifier("/tmp/release")).toBe(
-      "/tmp/release/scripts/openclaw-npm-postpublish-verify.ts",
+      "/tmp/release/scripts/grokbot-npm-postpublish-verify.ts",
     );
-    const trustedVerifier = resolve("scripts/openclaw-npm-postpublish-verify.ts");
+    const trustedVerifier = resolve("scripts/grokbot-npm-postpublish-verify.ts");
     expect(resolveOpenClawNpmPostpublishVerifier("/tmp/release", trustedVerifier)).toBe(
       trustedVerifier,
     );
@@ -203,7 +203,7 @@ describe("parseReleaseVerifyBetaArgs", () => {
       parseReleaseVerifyBetaArgs([
         "2026.5.10-beta.3",
         "--clawhub-bootstrap-plugins",
-        "@openclaw/plugin-b",
+        "@grokbot/plugin-b",
       ]),
     ).toThrow("--clawhub-bootstrap-plugins requires --plugin-clawhub-bootstrap-run");
   });
@@ -228,7 +228,7 @@ describe("validateClawHubBootstrapEvidence", () => {
     run_attempt: 2,
     status: "completed",
     conclusion: "success",
-    html_url: "https://github.com/openclaw/openclaw/actions/runs/34",
+    html_url: "https://github.com/grokbot/grokbot/actions/runs/34",
     created_at: "2026-07-10T00:00:00Z",
     updated_at: "2026-07-10T00:02:00Z",
   };
@@ -254,7 +254,7 @@ describe("validateClawHubBootstrapEvidence", () => {
   };
   const evidence = {
     schemaVersion: 2,
-    repository: "openclaw/openclaw",
+    repository: "grokbot/grokbot",
     targetSha: releaseSha,
     workflowSha,
     runId: "34",
@@ -266,11 +266,11 @@ describe("validateClawHubBootstrapEvidence", () => {
     clawhubToolchainIntegrity,
     clawhubToolchainSha256,
     clawhubToolchainVersion,
-    requestedPlugins: ["@openclaw/meta"],
+    requestedPlugins: ["@grokbot/meta"],
     verificationMode: "postpublish",
     packages: [
       {
-        packageName: "@openclaw/meta",
+        packageName: "@grokbot/meta",
         version: "2026.7.1-beta.3",
         expectedSha256: packageSha,
         expectedSize: 123,
@@ -284,7 +284,7 @@ describe("validateClawHubBootstrapEvidence", () => {
           size: 123,
           npmIntegrity: "sha512-test",
           npmShasum: "1".repeat(40),
-          packageName: "@openclaw/meta",
+          packageName: "@grokbot/meta",
           version: "2026.7.1-beta.3",
         },
       },
@@ -301,11 +301,11 @@ describe("validateClawHubBootstrapEvidence", () => {
     } = {},
   ) {
     return validateClawHubBootstrapEvidence({
-      repo: "openclaw/openclaw",
+      repo: "grokbot/grokbot",
       runId: "34",
       releaseSha,
       expectedVersion: "2026.7.1-beta.3",
-      expectedPackages: overrides.expectedPackages ?? ["@openclaw/meta"],
+      expectedPackages: overrides.expectedPackages ?? ["@grokbot/meta"],
       run: overrides.run ?? run,
       readbackArtifact: overrides.readbackArtifact ?? readbackArtifact,
       readbackArchiveSha256: readbackSha,
@@ -349,7 +349,7 @@ describe("validateClawHubBootstrapEvidence", () => {
     expect(() => validate({ evidence: { ...evidence, targetSha: "e".repeat(40) } })).toThrow(
       "target SHA mismatch",
     );
-    expect(() => validate({ expectedPackages: ["@openclaw/other"] })).toThrow(
+    expect(() => validate({ expectedPackages: ["@grokbot/other"] })).toThrow(
       "requested package set mismatch",
     );
   });
@@ -443,8 +443,8 @@ describe("downloadClawHubBootstrapReadback", () => {
     path: ".github/workflows/plugin-clawhub-new.yml",
     status: "completed",
     conclusion: "success",
-    repository: { full_name: "openclaw/openclaw" },
-    head_repository: { full_name: "openclaw/openclaw" },
+    repository: { full_name: "grokbot/grokbot" },
+    head_repository: { full_name: "grokbot/grokbot" },
   };
 
   function createFixture(
@@ -501,7 +501,7 @@ describe("downloadClawHubBootstrapReadback", () => {
   }> {
     const fixture = createFixture(archive, overrides);
     const result = await downloadClawHubBootstrapReadback({
-      repo: "openclaw/openclaw",
+      repo: "grokbot/grokbot",
       runId: "34",
       run,
       readbackArtifact: fixture.readbackArtifact,
@@ -575,7 +575,7 @@ describe("parseNpmViewFields", () => {
           version: "2026.5.10-beta.3",
           "dist-tags.beta": "2026.5.10-beta.3",
           "dist.integrity": "sha512-test",
-          "dist.tarball": "https://registry.example/openclaw.tgz",
+          "dist.tarball": "https://registry.example/grokbot.tgz",
         }),
         "beta",
       ),
@@ -583,7 +583,7 @@ describe("parseNpmViewFields", () => {
       version: "2026.5.10-beta.3",
       distTagVersion: "2026.5.10-beta.3",
       integrity: "sha512-test",
-      tarball: "https://registry.example/openclaw.tgz",
+      tarball: "https://registry.example/grokbot.tgz",
     });
   });
 
@@ -595,7 +595,7 @@ describe("parseNpmViewFields", () => {
           "dist-tags": { beta: "2026.5.10-beta.3" },
           dist: {
             integrity: "sha512-test",
-            tarball: "https://registry.example/openclaw.tgz",
+            tarball: "https://registry.example/grokbot.tgz",
           },
         }),
         "beta",
@@ -604,7 +604,7 @@ describe("parseNpmViewFields", () => {
       version: "2026.5.10-beta.3",
       distTagVersion: "2026.5.10-beta.3",
       integrity: "sha512-test",
-      tarball: "https://registry.example/openclaw.tgz",
+      tarball: "https://registry.example/grokbot.tgz",
     });
   });
 });
@@ -615,7 +615,7 @@ describe("runNpmViewWithRetry", () => {
     const delays: number[] = [];
 
     await expect(
-      runNpmViewWithRetry(["view", "openclaw@2026.5.10-beta.3", "version", "--json"], {
+      runNpmViewWithRetry(["view", "grokbot@2026.5.10-beta.3", "version", "--json"], {
         attempts: 3,
         delay: async (delayMs) => {
           delays.push(delayMs);

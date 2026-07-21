@@ -1,15 +1,15 @@
 // Configure wizard Gateway port, bind, auth, and Tailscale prompts.
-import { validateDottedDecimalIPv4Input } from "@openclaw/net-policy/ipv4";
+import { validateDottedDecimalIPv4Input } from "@grokbot/net-policy/ipv4";
 import {
   normalizeOptionalString,
   readStringValue,
-} from "@openclaw/normalization-core/string-coerce";
-import { normalizeStringEntries } from "@openclaw/normalization-core/string-normalization";
+} from "@grokbot/normalization-core/string-coerce";
+import { normalizeStringEntries } from "@grokbot/normalization-core/string-normalization";
 import { note } from "../../packages/terminal-core/src/note.js";
 import { formatPortRangeHint } from "../cli/error-format.js";
 import { parsePort } from "../cli/shared/parse-port.js";
 import { resolveGatewayPort } from "../config/config.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { isValidEnvSecretRefId, type SecretInput } from "../config/types.secrets.js";
 import {
   maybeAddTailnetOriginToControlUiAllowedOrigins,
@@ -230,7 +230,7 @@ export async function promptGatewayConfig(
         }),
         id: envVarName,
       };
-      note(`Validated ${envVarName}. OpenClaw will store a token SecretRef.`, "Gateway token");
+      note(`Validated ${envVarName}. GrokBot will store a token SecretRef.`, "Gateway token");
     } else {
       const tokenInput = guardCancel(
         await password({
@@ -257,12 +257,12 @@ export async function promptGatewayConfig(
   if (authMode === "trusted-proxy") {
     note(
       [
-        "Trusted proxy mode: OpenClaw trusts user identity from a reverse proxy.",
+        "Trusted proxy mode: GrokBot trusts user identity from a reverse proxy.",
         "The proxy must authenticate users and pass identity via headers.",
         "Only requests from specified proxy IPs will be trusted.",
         "",
         "Common use cases: Pomerium, Caddy + OAuth, Traefik + forward auth",
-        "Docs: https://docs.openclaw.ai/gateway/trusted-proxy-auth",
+        "Docs: https://docs.grokbot.ai/gateway/trusted-proxy-auth",
       ].join("\n"),
       "Trusted Proxy Auth",
     );

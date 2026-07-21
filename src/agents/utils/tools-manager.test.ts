@@ -26,7 +26,7 @@ let tempAgentDir: string | undefined;
 
 beforeEach(() => {
   originalAgentDir = process.env.OPENCLAW_AGENT_DIR;
-  tempAgentDir = mkdtempSync(join(tmpdir(), "openclaw-tools-manager-"));
+  tempAgentDir = mkdtempSync(join(tmpdir(), "grokbot-tools-manager-"));
   setTestEnvValue("OPENCLAW_AGENT_DIR", tempAgentDir);
   fetchWithSsrFGuardMock.mockReset();
   extractArchiveMock.mockReset();

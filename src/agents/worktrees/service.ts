@@ -69,7 +69,7 @@ export class WorktreeSnapshotError extends Error {
     this.snapshotError = snapshotError;
   }
 }
-const SNAPSHOT_REF_PREFIX = "refs/openclaw/snapshots";
+const SNAPSHOT_REF_PREFIX = "refs/grokbot/snapshots";
 const log = createSubsystemLogger("agents/worktrees");
 
 type ServiceOptions = {
@@ -204,7 +204,7 @@ async function canResetFailedWorktreeAdd(
 }
 
 async function runSetupScript(repoRoot: string, worktreePath: string): Promise<void> {
-  const setupScript = path.join(repoRoot, ".openclaw", "worktree-setup.sh");
+  const setupScript = path.join(repoRoot, ".grokbot", "worktree-setup.sh");
   const stat = await fs.stat(setupScript).catch(() => undefined);
   if (!stat?.isFile() || (stat.mode & 0o111) === 0) {
     return;
@@ -331,15 +331,15 @@ async function snapshotWorktree(
   reason: string,
   provisionedPaths: readonly string[],
 ): Promise<string> {
-  const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-worktree-index-"));
+  const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-worktree-index-"));
   const indexPath = path.join(tempDir, "index");
   const snapshotRef = `${SNAPSHOT_REF_PREFIX}/${record.id}`;
   const env: NodeJS.ProcessEnv = {
     GIT_INDEX_FILE: indexPath,
-    GIT_AUTHOR_NAME: "OpenClaw",
-    GIT_AUTHOR_EMAIL: "openclaw@localhost",
-    GIT_COMMITTER_NAME: "OpenClaw",
-    GIT_COMMITTER_EMAIL: "openclaw@localhost",
+    GIT_AUTHOR_NAME: "GrokBot",
+    GIT_AUTHOR_EMAIL: "grokbot@localhost",
+    GIT_COMMITTER_NAME: "GrokBot",
+    GIT_COMMITTER_EMAIL: "grokbot@localhost",
     ...(process.platform === "win32"
       ? {}
       : {
@@ -439,7 +439,7 @@ async function snapshotWorktree(
     const parent = await requireGit(record.path, ["rev-parse", "HEAD"]);
     const commit = await requireGit(
       record.path,
-      ["commit-tree", tree, "-p", parent, "-m", `OpenClaw worktree snapshot: ${reason}`],
+      ["commit-tree", tree, "-p", parent, "-m", `GrokBot worktree snapshot: ${reason}`],
       { env },
     );
     await requireGit(record.repoRoot, ["update-ref", snapshotRef, commit]);
@@ -486,7 +486,7 @@ export class ManagedWorktreeService {
       }
       return await this.restore({ id: existing.id });
     }
-    const branch = `openclaw/${name}`;
+    const branch = `grokbot/${name}`;
     const branchExists = await runGit(repository.repoRoot, [
       "show-ref",
       "--quiet",
@@ -712,7 +712,7 @@ export class ManagedWorktreeService {
       if ((state.kind === "live" || state.kind === "foreign") && !force) {
         throw new Error(
           state.kind === "live"
-            ? `worktree is locked by live OpenClaw pid ${state.pid}`
+            ? `worktree is locked by live GrokBot pid ${state.pid}`
             : `worktree has a foreign lock${state.reason ? `: ${state.reason}` : ""}`,
         );
       }

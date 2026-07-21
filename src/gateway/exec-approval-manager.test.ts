@@ -11,7 +11,7 @@ import { MAX_TIMER_TIMEOUT_MS } from "../shared/number-coercion.js";
 import {
   closeOpenClawStateDatabase,
   openOpenClawStateDatabase,
-} from "../state/openclaw-state-db.js";
+} from "../state/grokbot-state-db.js";
 import {
   ExecApprovalManager,
   InvalidApprovalIdError,
@@ -53,7 +53,7 @@ describe("ExecApprovalManager", () => {
       onLifecycle?: ExecApprovalManagerOptions<ExecApprovalRequestPayload>["onLifecycle"];
     } = {},
   ) {
-    const dir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-approval-manager-"));
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-approval-manager-"));
     tempDirs.push(dir);
     const databaseOptions = { path: path.join(dir, "state.sqlite") };
     return {
@@ -364,7 +364,7 @@ describe("ExecApprovalManager", () => {
   });
 
   it("passes the source agent when deriving a global-session stream audience", async () => {
-    const dir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-approval-manager-"));
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-approval-manager-"));
     tempDirs.push(dir);
     const databaseOptions = { path: path.join(dir, "state.sqlite") };
     const resolveAudienceSessionKeys = vi.fn((sessionKey: string, agentId?: string | null) => [
@@ -628,7 +628,7 @@ describe("ExecApprovalManager", () => {
   });
 
   it("rejects unrenderable persistent plugin requests before creating a row or waiter", () => {
-    const dir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-approval-manager-"));
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-approval-manager-"));
     tempDirs.push(dir);
     const databaseOptions = { path: path.join(dir, "state.sqlite") };
     const manager = new ExecApprovalManager<PluginApprovalRequestPayload>({

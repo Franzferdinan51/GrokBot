@@ -1,6 +1,6 @@
 // Memory Host SDK helper module supports error utils behavior.
-import { formatErrorMessage as formatSharedErrorMessage } from "@openclaw/normalization-core/error-coercion";
-import { sliceUtf16Safe } from "@openclaw/normalization-core/utf16-slice";
+import { formatErrorMessage as formatSharedErrorMessage } from "@grokbot/normalization-core/error-coercion";
+import { sliceUtf16Safe } from "@grokbot/normalization-core/utf16-slice";
 
 const SECRET_PATTERNS: RegExp[] = [
   /\b[A-Z0-9_]*(?:KEY|TOKEN|SECRET|PASSWORD|PASSWD)\b\s*[=:]\s*(["']?)([^\s"'\\]+)\1/g,

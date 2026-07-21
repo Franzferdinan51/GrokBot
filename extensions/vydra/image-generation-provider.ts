@@ -1,11 +1,11 @@
 // Vydra provider module implements model/runtime integration.
-import type { ImageGenerationProvider } from "openclaw/plugin-sdk/image-generation";
-import { isProviderApiKeyConfigured } from "openclaw/plugin-sdk/provider-auth";
+import type { ImageGenerationProvider } from "grokbot/plugin-sdk/image-generation";
+import { isProviderApiKeyConfigured } from "grokbot/plugin-sdk/provider-auth";
 import {
   assertOkOrThrowHttpError,
   postJsonRequest,
   readProviderJsonResponse,
-} from "openclaw/plugin-sdk/provider-http";
+} from "grokbot/plugin-sdk/provider-http";
 import {
   DEFAULT_VYDRA_IMAGE_MODEL,
   downloadVydraAsset,

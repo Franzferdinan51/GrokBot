@@ -1,9 +1,9 @@
 // Telegram plugin module implements durable ingress enqueue + update_id mapping.
 import os from "node:os";
 import path from "node:path";
-import type { ChannelIngressQueue } from "openclaw/plugin-sdk/channel-outbound";
-import { computeBackoff, type BackoffPolicy } from "openclaw/plugin-sdk/runtime-env";
-import { resolveStateDir } from "openclaw/plugin-sdk/state-paths";
+import type { ChannelIngressQueue } from "grokbot/plugin-sdk/channel-outbound";
+import { computeBackoff, type BackoffPolicy } from "grokbot/plugin-sdk/runtime-env";
+import { resolveStateDir } from "grokbot/plugin-sdk/state-paths";
 import type { TelegramBotInfo } from "./bot-info.js";
 import { getTelegramRuntime } from "./runtime.js";
 import { getTelegramSequentialKey } from "./sequential-key.js";

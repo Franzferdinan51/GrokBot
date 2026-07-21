@@ -1,7 +1,7 @@
 import { html } from "lit";
 import { property } from "lit/decorators.js";
 import { t } from "../i18n/index.ts";
-import { OpenClawLightDomElement } from "../lit/openclaw-element.ts";
+import { OpenClawLightDomElement } from "../lit/grokbot-element.ts";
 import { icons } from "./icons.ts";
 import { promoteToPopoverTopLayer } from "./menu-surface.ts";
 import "./web-awesome.ts";
@@ -117,6 +117,6 @@ class CatalogSessionMenu extends OpenClawLightDomElement {
   }
 }
 
-if (!customElements.get("openclaw-catalog-session-menu")) {
-  customElements.define("openclaw-catalog-session-menu", CatalogSessionMenu);
+if (!customElements.get("grokbot-catalog-session-menu")) {
+  customElements.define("grokbot-catalog-session-menu", CatalogSessionMenu);
 }

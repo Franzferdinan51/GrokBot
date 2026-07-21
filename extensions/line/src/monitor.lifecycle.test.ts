@@ -2,10 +2,10 @@
 import crypto from "node:crypto";
 import { EventEmitter } from "node:events";
 import type { IncomingMessage, ServerResponse } from "node:http";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import type { RuntimeEnv } from "openclaw/plugin-sdk/runtime-env";
-import { createMockIncomingRequest } from "openclaw/plugin-sdk/test-env";
-import { WEBHOOK_IN_FLIGHT_DEFAULTS } from "openclaw/plugin-sdk/webhook-request-guards";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import type { RuntimeEnv } from "grokbot/plugin-sdk/runtime-env";
+import { createMockIncomingRequest } from "grokbot/plugin-sdk/test-env";
+import { WEBHOOK_IN_FLIGHT_DEFAULTS } from "grokbot/plugin-sdk/webhook-request-guards";
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
 type LineNodeWebhookHandler = (req: IncomingMessage, res: ServerResponse) => Promise<void>;
@@ -75,14 +75,14 @@ vi.mock("./bot.js", () => ({
   createLineBot: createLineBotMock,
 }));
 
-vi.mock("openclaw/plugin-sdk/reply-runtime", () => ({
+vi.mock("grokbot/plugin-sdk/reply-runtime", () => ({
   chunkMarkdownText: vi.fn(),
   dispatchReplyWithBufferedBlockDispatcher: vi.fn(),
 }));
 
-vi.mock("openclaw/plugin-sdk/runtime-env", async () => {
-  const actual = await vi.importActual<typeof import("openclaw/plugin-sdk/runtime-env")>(
-    "openclaw/plugin-sdk/runtime-env",
+vi.mock("grokbot/plugin-sdk/runtime-env", async () => {
+  const actual = await vi.importActual<typeof import("grokbot/plugin-sdk/runtime-env")>(
+    "grokbot/plugin-sdk/runtime-env",
   );
   return {
     ...actual,
@@ -92,9 +92,9 @@ vi.mock("openclaw/plugin-sdk/runtime-env", async () => {
   };
 });
 
-vi.mock("openclaw/plugin-sdk/webhook-ingress", async () => {
-  const actual = await vi.importActual<typeof import("openclaw/plugin-sdk/webhook-ingress")>(
-    "openclaw/plugin-sdk/webhook-ingress",
+vi.mock("grokbot/plugin-sdk/webhook-ingress", async () => {
+  const actual = await vi.importActual<typeof import("grokbot/plugin-sdk/webhook-ingress")>(
+    "grokbot/plugin-sdk/webhook-ingress",
   );
   return {
     ...actual,
@@ -103,9 +103,9 @@ vi.mock("openclaw/plugin-sdk/webhook-ingress", async () => {
   };
 });
 
-vi.mock("openclaw/plugin-sdk/webhook-request-guards", async () => {
-  const actual = await vi.importActual<typeof import("openclaw/plugin-sdk/webhook-request-guards")>(
-    "openclaw/plugin-sdk/webhook-request-guards",
+vi.mock("grokbot/plugin-sdk/webhook-request-guards", async () => {
+  const actual = await vi.importActual<typeof import("grokbot/plugin-sdk/webhook-request-guards")>(
+    "grokbot/plugin-sdk/webhook-request-guards",
   );
   runDetachedWebhookWorkMock.mockImplementation(actual.runDetachedWebhookWork);
   return {
@@ -152,10 +152,10 @@ describe("monitorLineProvider lifecycle", () => {
 
   afterAll(() => {
     vi.doUnmock("./bot.js");
-    vi.doUnmock("openclaw/plugin-sdk/reply-runtime");
-    vi.doUnmock("openclaw/plugin-sdk/runtime-env");
-    vi.doUnmock("openclaw/plugin-sdk/webhook-ingress");
-    vi.doUnmock("openclaw/plugin-sdk/webhook-request-guards");
+    vi.doUnmock("grokbot/plugin-sdk/reply-runtime");
+    vi.doUnmock("grokbot/plugin-sdk/runtime-env");
+    vi.doUnmock("grokbot/plugin-sdk/webhook-ingress");
+    vi.doUnmock("grokbot/plugin-sdk/webhook-request-guards");
     vi.doUnmock("./webhook-node.js");
     vi.doUnmock("./auto-reply-delivery.js");
     vi.doUnmock("./markdown-to-line.js");

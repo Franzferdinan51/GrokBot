@@ -7,7 +7,7 @@ import { getChannelPlugin } from "../channels/plugins/registry.js";
 import type { ChannelLegacyStateMigrationPlan } from "../channels/plugins/types.core.js";
 import type { ChannelId } from "../channels/plugins/types.public.js";
 import { resolveOAuthDir, resolveStateDir } from "../config/paths.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { createSubsystemLogger } from "../logging/subsystem.js";
 import {
   createPluginStateKeyedStore,
@@ -28,7 +28,7 @@ import {
   detectOpenClawStateDatabaseSchemaMigrations,
   repairOpenClawStateDatabaseSchema,
   type OpenClawStateDatabaseSchemaMigration,
-} from "../state/openclaw-state-db.js";
+} from "../state/grokbot-state-db.js";
 import { acquireGatewayLock } from "./gateway-lock.js";
 import {
   detectLegacyAcpReplayLedger,
@@ -161,7 +161,7 @@ function describeStateSchemaMigration(migration: OpenClawStateDatabaseSchemaMigr
     case "audit-events-v2":
       return "audit event ledger → versioned message lifecycle schema";
     case "operator-approvals-system-agent":
-      return "operator approvals → OpenClaw system changes";
+      return "operator approvals → GrokBot system changes";
     case "session-watch-cursor-provenance-v4":
       return "session watch cursors → provenance column";
     case "strict-tables-v3":

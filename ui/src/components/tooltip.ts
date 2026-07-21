@@ -1,10 +1,10 @@
-// Control UI adapter for Web Awesome tooltips. OpenClaw keeps its terse
+// Control UI adapter for Web Awesome tooltips. GrokBot keeps its terse
 // wrapper API; Web Awesome owns popup positioning, rendering, and dismissal.
 import "@awesome.me/webawesome/dist/components/tooltip/tooltip.js";
 import type WaTooltip from "@awesome.me/webawesome/dist/components/tooltip/tooltip.js";
 import { css, html } from "lit";
 import { property, query } from "lit/decorators.js";
-import { OpenClawLitElement } from "../lit/openclaw-element.ts";
+import { OpenClawLitElement } from "../lit/grokbot-element.ts";
 
 const HOVER_DELAY = 150;
 const TOUCH_DELAY = 450;
@@ -16,7 +16,7 @@ let nextTooltipId = 0;
 
 function createTooltipId() {
   nextTooltipId += 1;
-  return `openclaw-tooltip-${nextTooltipId}`;
+  return `grokbot-tooltip-${nextTooltipId}`;
 }
 
 function normalizeTooltipText(text: string) {
@@ -133,7 +133,7 @@ class Tooltip extends OpenClawLitElement {
 
   override connectedCallback() {
     super.connectedCallback();
-    this.tooltipProvider = this.closest<TooltipProvider>("openclaw-tooltip-provider");
+    this.tooltipProvider = this.closest<TooltipProvider>("grokbot-tooltip-provider");
     this.style.display = "contents";
   }
 
@@ -150,7 +150,7 @@ class Tooltip extends OpenClawLitElement {
   }
 
   private get provider() {
-    return this.tooltipProvider ?? this.closest<TooltipProvider>("openclaw-tooltip-provider");
+    return this.tooltipProvider ?? this.closest<TooltipProvider>("grokbot-tooltip-provider");
   }
 
   private get hoverDelay() {
@@ -403,17 +403,17 @@ class Tooltip extends OpenClawLitElement {
   }
 }
 
-if (!customElements.get("openclaw-tooltip-provider")) {
-  customElements.define("openclaw-tooltip-provider", TooltipProvider);
+if (!customElements.get("grokbot-tooltip-provider")) {
+  customElements.define("grokbot-tooltip-provider", TooltipProvider);
 }
 
-if (!customElements.get("openclaw-tooltip")) {
-  customElements.define("openclaw-tooltip", Tooltip);
+if (!customElements.get("grokbot-tooltip")) {
+  customElements.define("grokbot-tooltip", Tooltip);
 }
 
 declare global {
   interface HTMLElementTagNameMap {
-    "openclaw-tooltip-provider": TooltipProvider;
-    "openclaw-tooltip": Tooltip;
+    "grokbot-tooltip-provider": TooltipProvider;
+    "grokbot-tooltip": Tooltip;
   }
 }

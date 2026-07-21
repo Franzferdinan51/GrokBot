@@ -16,13 +16,13 @@ import {
 import { requireNodeSqlite } from "../../infra/node-sqlite.js";
 import { resolveSqliteDatabaseFilePaths } from "../../infra/sqlite-files.js";
 import { readSqliteUserVersion } from "../../infra/sqlite-user-version.js";
-import type { DB as OpenClawAgentKyselyDatabase } from "../../state/openclaw-agent-db.generated.js";
+import type { DB as OpenClawAgentKyselyDatabase } from "../../state/grokbot-agent-db.generated.js";
 import {
   OPENCLAW_AGENT_SCHEMA_VERSION,
   runOpenClawAgentWriteTransaction,
   type OpenClawAgentDatabase,
-} from "../../state/openclaw-agent-db.js";
-import { OPENCLAW_SQLITE_BUSY_TIMEOUT_MS } from "../../state/openclaw-state-db.js";
+} from "../../state/grokbot-agent-db.js";
+import { OPENCLAW_SQLITE_BUSY_TIMEOUT_MS } from "../../state/grokbot-state-db.js";
 import { resolveUserPath } from "../../utils.js";
 import { resolveRegisteredAgentIdForDir } from "../agent-dir-registry.js";
 import { resolveDefaultAgentDir } from "../agent-scope-config.js";
@@ -51,13 +51,13 @@ function inferAgentIdFromDir(agentDir: string): string {
   return `custom-${sha256HexPrefix(normalized, 12)}`;
 }
 
-// The auth database lives in the agent dir and shares the openclaw-agent schema
+// The auth database lives in the agent dir and shares the grokbot-agent schema
 // so auth store/state can move with the rest of agent-local durable state.
 function resolveAuthProfileDatabaseOptions(agentDir?: string) {
   const dir = resolveAgentDir(agentDir);
   return {
     agentId: resolveRegisteredAgentIdForDir(dir) ?? inferAgentIdFromDir(dir),
-    path: path.join(dir, "openclaw-agent.sqlite"),
+    path: path.join(dir, "grokbot-agent.sqlite"),
   };
 }
 

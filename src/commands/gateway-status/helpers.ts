@@ -1,5 +1,5 @@
 /** Shared helpers for gateway status target selection, auth, summaries, and probe rendering. */
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+import { normalizeOptionalString } from "@grokbot/normalization-core/string-coerce";
 import { colorize, theme } from "../../../packages/terminal-core/src/theme.js";
 import { parseTimeoutMsWithFallback } from "../../cli/parse-timeout.js";
 import { resolveGatewayPort } from "../../config/config.js";
@@ -197,7 +197,7 @@ export async function resolveAuthForTarget(
   };
 }
 
-/** Extracts the config fields displayed by `openclaw gateway status --deep`. */
+/** Extracts the config fields displayed by `grokbot gateway status --deep`. */
 export function extractConfigSummary(snapshotUnknown: unknown): GatewayConfigSummary {
   const snap = snapshotUnknown as Partial<ConfigFileSnapshot> | null;
   const path = typeof snap?.path === "string" ? snap.path : null;

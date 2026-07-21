@@ -133,7 +133,7 @@ function resolveCodingToolConstructionPlanForAllowlist(
   }
   const includeBaseCodingTools = coreFamilies.has("base-coding");
   const includeShellTools = coreFamilies.has("shell");
-  const includeOpenClawTools = coreFamilies.has("openclaw");
+  const includeOpenClawTools = coreFamilies.has("grokbot");
   // Channel delivery tools are constructed through plugin-capable runtime setup.
   const includeChannelTools = includePluginTools;
 

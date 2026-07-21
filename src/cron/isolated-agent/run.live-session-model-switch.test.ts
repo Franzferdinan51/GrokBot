@@ -91,7 +91,7 @@ function requireEmbeddedAgentCall(index: number): {
       }
     | undefined;
   if (!call) {
-    throw new Error(`Expected embedded OpenClaw agent call ${index}`);
+    throw new Error(`Expected embedded GrokBot agent call ${index}`);
   }
   return call;
 }
@@ -261,7 +261,7 @@ describe("runCronIsolatedAgentTurn — LiveSessionModelSwitchError retry (#57206
       sessionEntry: makeCronSessionEntry({
         model: "gpt-5.6-luna",
         modelProvider: "openai",
-        agentRuntimeOverride: "openclaw",
+        agentRuntimeOverride: "grokbot",
       }),
       isNewSession: false,
     });
@@ -304,7 +304,7 @@ describe("runCronIsolatedAgentTurn — LiveSessionModelSwitchError retry (#57206
     );
 
     expect(result.status).toBe("ok");
-    expect(requireEmbeddedAgentCall(0).agentHarnessRuntimeOverride).toBe("openclaw");
+    expect(requireEmbeddedAgentCall(0).agentHarnessRuntimeOverride).toBe("grokbot");
     expect(requireEmbeddedAgentCall(1).agentHarnessRuntimeOverride).toBe("codex");
     expect(cronSession.sessionEntry.agentRuntimeOverride).toBe("codex");
   });

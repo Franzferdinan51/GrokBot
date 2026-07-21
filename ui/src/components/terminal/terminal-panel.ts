@@ -1,7 +1,7 @@
 import type {
   createTerminalDefaultColorQueryResponder,
   GhosttyTerminalController,
-} from "@openclaw/libterminal/browser";
+} from "@grokbot/libterminal/browser";
 // Dockable operator terminal panel for the Control UI shell.
 //
 // Renders a VS Code-style shell dock (bottom by default, or right) with session
@@ -11,7 +11,7 @@ import type {
 import { html, nothing } from "lit";
 import { property, state } from "lit/decorators.js";
 import { t } from "../../i18n/index.ts";
-import { OpenClawLitElement } from "../../lit/openclaw-element.ts";
+import { OpenClawLitElement } from "../../lit/grokbot-element.ts";
 import { createDockPanelLayout, type DockPanelSide } from "../dock-panel-layout.ts";
 import { panelTabStripStyles } from "../panel-tab-strip.ts";
 import {
@@ -73,7 +73,7 @@ function shellBasename(shell: string): string {
 }
 
 const panelLayout = createDockPanelLayout({
-  storageKey: "openclaw.terminal.panel.v1",
+  storageKey: "grokbot.terminal.panel.v1",
   minHeight: 140,
   minWidth: 320,
   defaultDock: "bottom",
@@ -94,7 +94,7 @@ function forceTerminalRender(controller: GhosttyTerminalController): void {
   }
 }
 
-/** `<openclaw-terminal-panel>` — the dockable Control UI shell surface. */
+/** `<grokbot-terminal-panel>` — the dockable Control UI shell surface. */
 export class OpenClawTerminalPanel extends OpenClawLitElement {
   /** Gateway client used for terminal.* RPCs; null until connected. */
   @property({ attribute: false }) client: TerminalGatewayClient | null = null;
@@ -563,7 +563,7 @@ export class OpenClawTerminalPanel extends OpenClawLitElement {
       () => tabRef.current?.gatewaySessionId,
     );
     const { createTerminalDefaultColorQueryResponder } =
-      await import("@openclaw/libterminal/browser");
+      await import("@grokbot/libterminal/browser");
     const defaultColorQueries = createTerminalDefaultColorQueryResponder({
       getColors: () => terminalDynamicColors(this.themeMode),
       reply: (data) => startupInput.onData(TERMINAL_OUTPUT_ENCODER.encode(data)),
@@ -1150,7 +1150,7 @@ export class OpenClawTerminalPanel extends OpenClawLitElement {
 
 declare global {
   interface HTMLElementTagNameMap {
-    "openclaw-terminal-panel": OpenClawTerminalPanel;
+    "grokbot-terminal-panel": OpenClawTerminalPanel;
   }
 }
 /* oxlint-disable max-lines -- TODO: split this grandfathered oversized file. */

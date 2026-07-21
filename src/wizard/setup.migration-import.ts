@@ -3,7 +3,7 @@ import {
   ensureOnboardingPluginInstalled,
   type OnboardingPluginInstallEntry,
 } from "../commands/onboarding-plugin-install.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { formatErrorMessage } from "../infra/errors.js";
 import {
   listAvailableManifestContractPlugins,

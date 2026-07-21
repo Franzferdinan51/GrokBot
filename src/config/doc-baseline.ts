@@ -4,8 +4,8 @@ import fsSync from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { sortUniqueStrings } from "@openclaw/normalization-core/string-normalization";
-import { resolveOpenClawPackageRootSync } from "../infra/openclaw-root.js";
+import { sortUniqueStrings } from "@grokbot/normalization-core/string-normalization";
+import { resolveOpenClawPackageRootSync } from "../infra/grokbot-root.js";
 import { replaceFileAtomicSync } from "../infra/replace-file.js";
 import { createLazyRuntimeModule } from "../shared/lazy-runtime.js";
 import type { ConfigSchemaResponse } from "./schema.js";
@@ -368,7 +368,7 @@ async function loadBundledConfigSchemaResponse(): Promise<ConfigSchemaResponse> 
   const env = {
     ...process.env,
     HOME: os.tmpdir(),
-    OPENCLAW_STATE_DIR: path.join(os.tmpdir(), "openclaw-config-doc-baseline-state"),
+    OPENCLAW_STATE_DIR: path.join(os.tmpdir(), "grokbot-config-doc-baseline-state"),
     OPENCLAW_BUNDLED_PLUGINS_DIR: path.join(repoRoot, "extensions"),
   };
 

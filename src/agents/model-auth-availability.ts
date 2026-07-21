@@ -2,10 +2,10 @@
 import {
   findNormalizedProviderValue,
   normalizeProviderIdForAuth,
-} from "@openclaw/model-catalog-core/provider-id";
+} from "@grokbot/model-catalog-core/provider-id";
 import { resolveAgentModelPrimaryValue } from "../config/model-input.js";
 import { resolveMergedModelProviderConfig } from "../config/model-provider-config.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { coerceSecretRef } from "../config/types.secrets.js";
 import type {
   ProviderModelRouteAuthRequirement,

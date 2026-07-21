@@ -82,7 +82,7 @@ async function runRealPicker(options: ProducerOptions, openclawHome: string) {
       "scripts/e2e/lib/run-with-pty.mjs",
       path.join(openclawHome, "picker.raw.log"),
       process.execPath,
-      "openclaw.mjs",
+      "grokbot.mjs",
       "configure",
       "--section",
       "channels",
@@ -217,7 +217,7 @@ function assertPickerConfig(config: unknown) {
   }
   return {
     channelEnabled: true,
-    configPath: ".openclaw/openclaw.json",
+    configPath: ".grokbot/grokbot.json",
     defaultGroupRequiresMention: true,
     pluginEnabled: true,
     selectedChannel: "telegram",
@@ -248,7 +248,7 @@ async function runCliChannelPickerProducer(options: ProducerOptions) {
   const startedAt = Date.now();
   const writer = createEvidenceWriter(options);
   const workDir = path.join(options.artifactBase, ".work");
-  const openclawHome = path.join(workDir, "openclaw-home");
+  const openclawHome = path.join(workDir, "grokbot-home");
 
   try {
     await fs.rm(workDir, { force: true, recursive: true });
@@ -256,7 +256,7 @@ async function runCliChannelPickerProducer(options: ProducerOptions) {
     buildCliStartup(options.repoRoot);
     const result = await runRealPicker(options, openclawHome);
     writer.appendLog(sanitizePickerTranscript(result.transcript));
-    const configPath = path.join(openclawHome, ".openclaw", "openclaw.json");
+    const configPath = path.join(openclawHome, ".grokbot", "grokbot.json");
     const assertion = assertPickerConfig(JSON.parse(await fs.readFile(configPath, "utf8")));
     await fs.writeFile(
       path.join(options.artifactBase, "config-assertion.json"),

@@ -1,7 +1,7 @@
-// Thread Ownership plugin entrypoint registers its OpenClaw integration.
-import { resolveLivePluginConfigObject } from "openclaw/plugin-sdk/plugin-config-runtime";
-import { normalizeOptionalString } from "openclaw/plugin-sdk/string-coerce-runtime";
-import { escapeRegExp } from "openclaw/plugin-sdk/text-utility-runtime";
+// Thread Ownership plugin entrypoint registers its GrokBot integration.
+import { resolveLivePluginConfigObject } from "grokbot/plugin-sdk/plugin-config-runtime";
+import { normalizeOptionalString } from "grokbot/plugin-sdk/string-coerce-runtime";
+import { escapeRegExp } from "grokbot/plugin-sdk/text-utility-runtime";
 import {
   definePluginEntry,
   fetchWithSsrFGuard,

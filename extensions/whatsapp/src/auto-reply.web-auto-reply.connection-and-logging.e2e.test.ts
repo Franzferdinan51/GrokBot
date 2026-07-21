@@ -3,10 +3,10 @@ import "./test-helpers.js";
 import crypto from "node:crypto";
 import fs from "node:fs/promises";
 import path from "node:path";
-import { escapeRegExp, formatEnvelopeTimestamp } from "openclaw/plugin-sdk/channel-test-helpers";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { setLoggerOverride } from "openclaw/plugin-sdk/runtime-env";
-import { withEnvAsync } from "openclaw/plugin-sdk/test-env";
+import { escapeRegExp, formatEnvelopeTimestamp } from "grokbot/plugin-sdk/channel-test-helpers";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { setLoggerOverride } from "grokbot/plugin-sdk/runtime-env";
+import { withEnvAsync } from "grokbot/plugin-sdk/test-env";
 import { beforeAll, describe, expect, it, vi } from "vitest";
 import { getActiveWebListener } from "./active-listener.js";
 import { WhatsAppAuthUnstableError, resolveWebCredsPath } from "./auth-store.js";
@@ -48,7 +48,7 @@ const deliveryQueueMocks = vi.hoisted(() => ({
   drainPendingDeliveries: vi.fn(async (_opts: unknown) => undefined),
 }));
 
-vi.mock("openclaw/plugin-sdk/delivery-queue-runtime", () => ({
+vi.mock("grokbot/plugin-sdk/delivery-queue-runtime", () => ({
   drainPendingDeliveries: deliveryQueueMocks.drainPendingDeliveries,
 }));
 
@@ -473,7 +473,7 @@ describe("web auto-reply connection", () => {
     expect(sleep).not.toHaveBeenCalled();
     expectErrorContaining(runtime.error, "status 440");
     expectErrorContaining(runtime.error, "session conflict");
-    expectErrorContaining(runtime.error, "openclaw channels logout --channel whatsapp");
+    expectErrorContaining(runtime.error, "grokbot channels logout --channel whatsapp");
     expectErrorContaining(runtime.error, "Stopping web monitoring");
   });
 
@@ -1151,13 +1151,13 @@ describe("web auto-reply connection", () => {
         const secondPattern = escapeRegExp(secondTimestamp);
         expect(firstArgs.Body).toMatch(
           new RegExp(
-            `\\[WhatsApp \\+1 (\\+\\d+[smhd] )?${firstPattern}\\] \\+1: \\[openclaw\\] first`,
+            `\\[WhatsApp \\+1 (\\+\\d+[smhd] )?${firstPattern}\\] \\+1: \\[grokbot\\] first`,
           ),
         );
         expect(firstArgs.Body).not.toContain("second");
         expect(secondArgs.Body).toMatch(
           new RegExp(
-            `\\[WhatsApp \\+1 (\\+\\d+[smhd] )?${secondPattern}\\] \\+1: \\[openclaw\\] second`,
+            `\\[WhatsApp \\+1 (\\+\\d+[smhd] )?${secondPattern}\\] \\+1: \\[grokbot\\] second`,
           ),
         );
         expect(secondArgs.Body).not.toContain("first");
@@ -1172,7 +1172,7 @@ describe("web auto-reply connection", () => {
 
   it("emits heartbeat logs with connection metadata", async () => {
     vi.useFakeTimers();
-    const logPath = `/tmp/openclaw-heartbeat-${crypto.randomUUID()}.log`;
+    const logPath = `/tmp/grokbot-heartbeat-${crypto.randomUUID()}.log`;
     setLoggerOverride({ level: "trace", file: logPath });
 
     const runtime = {
@@ -1214,7 +1214,7 @@ describe("web auto-reply connection", () => {
   });
 
   it("logs outbound replies to file", async () => {
-    const logPath = `/tmp/openclaw-log-test-${crypto.randomUUID()}.log`;
+    const logPath = `/tmp/grokbot-log-test-${crypto.randomUUID()}.log`;
     setLoggerOverride({ level: "trace", file: logPath });
 
     const capture = createWebListenerFactoryCapture();

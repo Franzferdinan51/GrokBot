@@ -26,7 +26,7 @@ type CommitmentRuntimeTestApi = {
 
 function getTestApi(): CommitmentRuntimeTestApi {
   const api = (globalThis as Record<PropertyKey, unknown>)[
-    Symbol.for("openclaw.commitmentRuntimeTestApi")
+    Symbol.for("grokbot.commitmentRuntimeTestApi")
   ];
   if (!api) {
     throw new Error("commitment runtime test API is unavailable");

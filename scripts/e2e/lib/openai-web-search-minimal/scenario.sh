@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-source scripts/lib/openclaw-e2e-instance.sh
+source scripts/lib/grokbot-e2e-instance.sh
 openclaw_e2e_eval_test_state_from_b64 "${OPENCLAW_TEST_STATE_SCRIPT_B64:?missing OPENCLAW_TEST_STATE_SCRIPT_B64}"
 export OPENCLAW_SKIP_CHANNELS=1
 export OPENCLAW_SKIP_GMAIL_WATCHER=1
@@ -16,7 +16,7 @@ MOCK_PORT="${MOCK_PORT:?missing MOCK_PORT}"
 TOKEN="${OPENCLAW_GATEWAY_TOKEN:?missing OPENCLAW_GATEWAY_TOKEN}"
 SUCCESS_MARKER="OPENCLAW_SCHEMA_E2E_OK"
 RAW_SCHEMA_ERROR="400 The following tools cannot be used with reasoning.effort 'minimal': web_search."
-scenario_tmp="$(mktemp -d "${TMPDIR:-/tmp}/openclaw-openai-web-search-minimal.XXXXXX")"
+scenario_tmp="$(mktemp -d "${TMPDIR:-/tmp}/grokbot-openai-web-search-minimal.XXXXXX")"
 MOCK_REQUEST_LOG="$scenario_tmp/requests.jsonl"
 GATEWAY_LOG="$scenario_tmp/gateway.log"
 MOCK_LOG="$scenario_tmp/mock.log"
@@ -48,7 +48,7 @@ dump_debug_logs() {
     "$CLIENT_SUCCESS_LOG" \
     "$CLIENT_REJECT_LOG" \
     "$MOCK_REQUEST_LOG" \
-    "$OPENCLAW_STATE_DIR/openclaw.json"; do
+    "$OPENCLAW_STATE_DIR/grokbot.json"; do
     if [ -f "$file" ]; then
       echo "--- $file ---" >&2
       openclaw_e2e_print_log "$file" >&2
@@ -63,7 +63,7 @@ mkdir -p "$OPENCLAW_STATE_DIR" "$TLS_DIR"
 node scripts/e2e/lib/fixture.mjs openai-web-search-minimal-config
 
 openssl req -x509 -newkey rsa:2048 -nodes -sha256 -days 1 \
-  -subj "/CN=OpenClaw E2E CA" \
+  -subj "/CN=GrokBot E2E CA" \
   -addext "basicConstraints=critical,CA:TRUE" \
   -addext "keyUsage=critical,keyCertSign,cRLSign" \
   -keyout "$TLS_CA_KEY" \

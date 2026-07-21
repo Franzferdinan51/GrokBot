@@ -1,10 +1,10 @@
-import type { StreamFn } from "openclaw/plugin-sdk/agent-core";
+import type { StreamFn } from "grokbot/plugin-sdk/agent-core";
 import {
   createAssistantMessageEventStream,
   type SimpleStreamOptions,
-} from "openclaw/plugin-sdk/llm";
+} from "grokbot/plugin-sdk/llm";
 // Groq tests cover index plugin behavior.
-import { capturePluginRegistration } from "openclaw/plugin-sdk/plugin-test-runtime";
+import { capturePluginRegistration } from "grokbot/plugin-sdk/plugin-test-runtime";
 import { describe, expect, it } from "vitest";
 import { resolveGroqReasoningCompatPatch } from "./api.js";
 import plugin from "./index.js";

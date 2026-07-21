@@ -5,11 +5,11 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 source "$ROOT_DIR/scripts/lib/docker-e2e-image.sh"
 
-IMAGE_NAME="$(docker_e2e_resolve_image "openclaw-cron-cli-e2e" OPENCLAW_IMAGE)"
+IMAGE_NAME="$(docker_e2e_resolve_image "grokbot-cron-cli-e2e" OPENCLAW_IMAGE)"
 PORT="18789"
 TOKEN="cron-cli-e2e-$(date +%s)-$$"
-CONTAINER_NAME="openclaw-cron-cli-e2e-$$"
-CLIENT_LOG="$(mktemp -t openclaw-cron-cli-log.XXXXXX)"
+CONTAINER_NAME="grokbot-cron-cli-e2e-$$"
+CLIENT_LOG="$(mktemp -t grokbot-cron-cli-log.XXXXXX)"
 
 cleanup() {
   docker_e2e_docker_cmd rm -f "$CONTAINER_NAME" >/dev/null 2>&1 || true
@@ -38,7 +38,7 @@ docker_e2e_run_with_harness \
   bash -s >"$CLIENT_LOG" 2>&1 <<'INNER'
 set -euo pipefail
 
-source scripts/lib/openclaw-e2e-instance.sh
+source scripts/lib/grokbot-e2e-instance.sh
 openclaw_e2e_eval_test_state_from_b64 "${OPENCLAW_TEST_STATE_SCRIPT_B64:?missing OPENCLAW_TEST_STATE_SCRIPT_B64}"
 
 entry="$(openclaw_e2e_resolve_entrypoint)"
@@ -175,7 +175,7 @@ cron_cli status --json > /tmp/cron-cli-status.json
 cron_add_args=(
   "cli cron smoke"
   --cron "*/5 * * * *"
-  --command "printf openclaw-cli-cron-ok"
+  --command "printf grokbot-cli-cron-ok"
   --no-deliver
   --timeout-seconds 15
   --json
@@ -235,7 +235,7 @@ node --input-type=module -e '
   const fs = await import("node:fs/promises");
   const value = JSON.parse(await fs.readFile("/tmp/cron-cli-runs.json", "utf8"));
   const matching = Array.isArray(value.entries)
-    ? value.entries.find((entry) => entry.status === "ok" && entry.summary === "openclaw-cli-cron-ok")
+    ? value.entries.find((entry) => entry.status === "ok" && entry.summary === "grokbot-cli-cron-ok")
     : undefined;
   if (!matching) {
     throw new Error("cron runs missing successful command summary");

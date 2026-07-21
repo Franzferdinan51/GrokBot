@@ -42,7 +42,7 @@ vi.mock("../../skills/discovery/chat-commands.runtime.js", () => ({
   listSkillCommandsForWorkspace: (...args: unknown[]) => listSkillCommandsForWorkspaceMock(...args),
 }));
 
-vi.mock("../../agents/openclaw-tools.runtime.js", () => ({
+vi.mock("../../agents/grokbot-tools.runtime.js", () => ({
   createOpenClawTools: (...args: unknown[]) => createOpenClawToolsMock(...args),
 }));
 
@@ -1214,7 +1214,7 @@ describe("handleInlineActions", () => {
   });
 
   it("applies subagent policy to ACP envelope inline dispatch sessions", async () => {
-    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-inline-acp-policy-"));
+    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-inline-acp-policy-"));
     try {
       const storeTemplate = path.join(tmpDir, "sessions-{agentId}.json");
       await writeSessionStore(storeTemplate, "main", {

@@ -10,7 +10,7 @@ import {
   validateExtendedStableNpmReleaseRequest,
   validateExtendedStableRunIdentity,
   verifyExtendedStableRegistryReadback,
-} from "../../scripts/openclaw-npm-extended-stable-release.mjs";
+} from "../../scripts/grokbot-npm-extended-stable-release.mjs";
 
 const sha = "a".repeat(40);
 const branch = "extended-stable/2026.6.33";
@@ -61,7 +61,7 @@ describe("npm extended-stable publication boundary", () => {
   it("prints exactly channel then publish tag from the dependency-free CLI", () => {
     const result = spawnSync(
       process.execPath,
-      ["scripts/openclaw-npm-extended-stable-release.mjs", "publish-plan"],
+      ["scripts/grokbot-npm-extended-stable-release.mjs", "publish-plan"],
       {
         encoding: "utf8",
         env: {
@@ -117,7 +117,7 @@ describe("npm extended-stable publication boundary", () => {
   ])("rejects %s in the dependency-free CLI", (_label, distTag, bypass, error) => {
     const result = spawnSync(
       process.execPath,
-      ["scripts/openclaw-npm-extended-stable-release.mjs", "publish-plan"],
+      ["scripts/grokbot-npm-extended-stable-release.mjs", "publish-plan"],
       {
         encoding: "utf8",
         env: {
@@ -290,7 +290,7 @@ describe("extended-stable npm release request", () => {
 
 describe("extended-stable npm run identity", () => {
   const validPreflight = {
-    workflowName: "OpenClaw NPM Release",
+    workflowName: "GrokBot NPM Release",
     event: "workflow_dispatch",
     conclusion: "success",
     headBranch: branch,
@@ -342,7 +342,7 @@ describe("extended-stable npm run identity", () => {
       }),
     ).toBe(pluginRun);
     for (const changes of [
-      { workflowName: "OpenClaw NPM Release" },
+      { workflowName: "GrokBot NPM Release" },
       { displayTitle: `Plugin NPM Release [default] ${sha}` },
       { displayTitle: `Plugin NPM Release [extended-stable] ${"b".repeat(40)}` },
       { status: "in_progress" },
@@ -447,7 +447,7 @@ describe("extended-stable registry readback", () => {
     const result = await verifyExtendedStableRegistryReadback({
       expectedVersion: "2026.6.33",
       query: async (target: string) => {
-        if (target === "openclaw@2026.6.33") {
+        if (target === "grokbot@2026.6.33") {
           attempt += 1;
         }
         return { status: 0, stdout: attempt >= 2 ? "2026.6.33\n" : "2026.6.32\n" };
@@ -478,7 +478,7 @@ describe("extended-stable registry readback", () => {
 describe("extended-stable selector repair", () => {
   it("points the selector at the expected published version", () => {
     expect(extendedStableSelectorRepairCommand("v2026.6.33")).toBe(
-      "npm dist-tag add openclaw@2026.6.33 extended-stable",
+      "npm dist-tag add grokbot@2026.6.33 extended-stable",
     );
   });
 

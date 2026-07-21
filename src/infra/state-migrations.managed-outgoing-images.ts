@@ -2,7 +2,7 @@
 import { createHash, randomUUID } from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
-import { isRecord } from "@openclaw/normalization-core/record-coerce";
+import { isRecord } from "@grokbot/normalization-core/record-coerce";
 import {
   managedImageRecordFromRow,
   managedImageRecordsEqual,
@@ -15,7 +15,7 @@ import { getMediaDir } from "../media/store.js";
 import {
   openOpenClawStateDatabase,
   runOpenClawStateWriteTransaction,
-} from "../state/openclaw-state-db.js";
+} from "../state/grokbot-state-db.js";
 import {
   executeSqliteQuerySync,
   executeSqliteQueryTakeFirstSync,

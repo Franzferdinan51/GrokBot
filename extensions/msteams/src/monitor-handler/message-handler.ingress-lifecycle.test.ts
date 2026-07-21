@@ -1,5 +1,5 @@
 // Microsoft Teams tests cover durable claim ownership through inbound debounce.
-import { createInboundDebouncer } from "openclaw/plugin-sdk/channel-inbound-debounce";
+import { createInboundDebouncer } from "grokbot/plugin-sdk/channel-inbound-debounce";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { OpenClawConfig } from "../../runtime-api.js";
 import type { MSTeamsIngressLifecycle } from "../msteams-ingress.js";

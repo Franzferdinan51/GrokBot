@@ -1,7 +1,7 @@
 /** Runs queued follow-up agent turns and routes their delivery payloads. */
 import crypto from "node:crypto";
-import { readStringValue } from "@openclaw/normalization-core/string-coerce";
-import { hasOutboundReplyContent } from "openclaw/plugin-sdk/reply-payload";
+import { readStringValue } from "@grokbot/normalization-core/string-coerce";
+import { hasOutboundReplyContent } from "grokbot/plugin-sdk/reply-payload";
 import { normalizeOptionalAgentRuntimeId } from "../../agents/agent-runtime-id.js";
 import {
   clearAutoFallbackPrimaryProbeSelection,
@@ -539,7 +539,7 @@ export function createFollowupRunner(params: {
       deliveredAnyPayload =
         (await sendDispatcherPayload({
           text:
-            "Follow-up completed, but OpenClaw could not deliver it to the originating " +
+            "Follow-up completed, but GrokBot could not deliver it to the originating " +
             "channel. The reply content was not forwarded to this channel to avoid " +
             "cross-channel misdelivery.",
           isError: true,

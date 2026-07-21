@@ -3,7 +3,7 @@ import fs from "node:fs";
 import type { DatabaseSync } from "node:sqlite";
 import { requireNodeSqlite } from "../infra/node-sqlite.js";
 import { assertSqliteIntegrity } from "../infra/sqlite-integrity.js";
-import { OPENCLAW_SQLITE_BUSY_TIMEOUT_MS } from "../state/openclaw-state-db.js";
+import { OPENCLAW_SQLITE_BUSY_TIMEOUT_MS } from "../state/grokbot-state-db.js";
 
 export type DoctorSqliteCompactSnapshot = {
   autoVacuum: number;
@@ -100,7 +100,7 @@ function checkpointTruncate(database: DatabaseSync, sqlitePath: string): void {
     throw new Error(`SQLite checkpoint returned an invalid result for ${sqlitePath}.`);
   }
   if (busy !== 0) {
-    throw new Error(`SQLite checkpoint remained busy for ${sqlitePath}. Stop OpenClaw and retry.`);
+    throw new Error(`SQLite checkpoint remained busy for ${sqlitePath}. Stop GrokBot and retry.`);
   }
 }
 

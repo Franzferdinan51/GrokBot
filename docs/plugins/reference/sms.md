@@ -1,5 +1,5 @@
 ---
-summary: "Twilio SMS channel plugin for OpenClaw text messages."
+summary: "Twilio SMS channel plugin for GrokBot text messages."
 read_when:
   - You are installing, configuring, or auditing the sms plugin
 title: "Sms plugin"
@@ -7,12 +7,12 @@ title: "Sms plugin"
 
 # Sms plugin
 
-Twilio SMS channel plugin for OpenClaw text messages.
+Twilio SMS channel plugin for GrokBot text messages.
 
 ## Distribution
 
-- Package: `@openclaw/sms`
-- Install route: npm; ClawHub: `clawhub:@openclaw/sms`
+- Package: `@grokbot/sms`
+- Install route: npm; ClawHub: `clawhub:@grokbot/sms`
 
 ## Surface
 

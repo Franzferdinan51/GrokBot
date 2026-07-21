@@ -2,7 +2,7 @@
 summary: "Migration plan for making SQLite the primary durable state and cache layer while keeping config file-backed"
 title: "Database-first state refactor"
 read_when:
-  - Moving OpenClaw runtime data, cache, transcripts, task state, or scratch files into SQLite
+  - Moving GrokBot runtime data, cache, transcripts, task state, or scratch files into SQLite
   - Designing doctor migrations from legacy JSON or JSONL files
   - Changing backup, restore, VFS, or worker storage behavior
   - Removing session locks, pruning, truncation, or JSON compatibility paths
@@ -14,12 +14,12 @@ read_when:
 
 Use a two-level SQLite layout:
 
-- Global database: `~/.openclaw/state/openclaw.sqlite`
+- Global database: `~/.grokbot/state/grokbot.sqlite`
 - Agent database: one SQLite database per agent for agent-owned workspace,
   transcript, VFS, artifact, and large per-agent runtime state
-- Configuration stays file-backed: `openclaw.json` remains outside the
+- Configuration stays file-backed: `grokbot.json` remains outside the
   database. Runtime auth profiles move to SQLite; external provider or CLI
-  credential files remain owner-managed outside OpenClaw's database.
+  credential files remain owner-managed outside GrokBot's database.
 
 The global database is the control-plane database. It owns agent discovery,
 shared gateway state, pairing, device/node state, task and flow ledgers, plugin
@@ -80,7 +80,7 @@ This migration has one canonical runtime shape:
   artifacts from database rows without feeding file names back into runtime.
 - Raw stream logging uses `OPENCLAW_RAW_STREAM=1` plus SQLite diagnostics rows.
   The old pi-mono `PI_RAW_STREAM`, `PI_RAW_STREAM_PATH`, and
-  `raw-openai-completions.jsonl` file logger contract is not part of OpenClaw
+  `raw-openai-completions.jsonl` file logger contract is not part of GrokBot
   runtime or tests.
 - QMD memory indexing must not export SQLite transcripts to markdown files.
   QMD indexes configured memory files only; session transcript search stays
@@ -101,10 +101,10 @@ without exceptions outside doctor/import/export/debug boundaries.
 ### Hard goal
 
 - One global SQLite database owns control-plane state:
-  `state/openclaw.sqlite`.
+  `state/grokbot.sqlite`.
 - One per-agent SQLite database owns data-plane state:
-  `agents/<agentId>/agent/openclaw-agent.sqlite`.
-- Config remains file-backed. `openclaw.json` is not part of this database
+  `agents/<agentId>/agent/grokbot-agent.sqlite`.
+- Config remains file-backed. `grokbot.json` is not part of this database
   refactor.
 - Legacy files are doctor migration inputs only.
 - Runtime never writes or reads session or transcript JSONL as active state.
@@ -136,7 +136,7 @@ without exceptions outside doctor/import/export/debug boundaries.
   runtime tests use SQLite `storeKey` naming, and file-era cron paths remain in
   doctor legacy migration tests only.
 - Task registry: `clean`. Task and Task Flow runtime rows live in
-  `state/openclaw.sqlite`; unshipped sidecar SQLite importers are deleted.
+  `state/grokbot.sqlite`; unshipped sidecar SQLite importers are deleted.
 - Plugin state: `clean`. Plugin state/blob rows live in the shared global
   database; old plugin-state sidecar SQLite helpers are guarded against.
 - Memory: `sqlite-runtime` for built-in memory and session transcript indexing.
@@ -181,8 +181,8 @@ without exceptions outside doctor/import/export/debug boundaries.
       Proof: `rg -n 'sessions\\.json|sessionFile|\\.jsonl' scripts/e2e/session-runtime-context-docker-client.ts` shows only
       `seedBrokenLegacySessionForDoctorMigration`.
 - [x] Keep Kysely generated types aligned after any schema change.
-      Files: `src/state/openclaw-state-schema.sql`,
-      `src/state/openclaw-agent-schema.sql`,
+      Files: `src/state/grokbot-state-schema.sql`,
+      `src/state/grokbot-agent-schema.sql`,
       `src/state/*generated*`.
       Proof: no schema change in this pass; `pnpm db:kysely:check`;
       `pnpm lint:kysely`.
@@ -215,7 +215,7 @@ proceed with these assumptions:
 - Runtime compatibility files are not required. Legacy JSON and JSONL files are
   migration inputs only. The branch-local SQLite sidecars never shipped and are
   deleted instead of imported.
-- `openclaw doctor --fix` owns legacy file-to-database migration. Runtime
+- `grokbot doctor --fix` owns legacy file-to-database migration. Runtime
   startup owns only bounded upgrades between shipped SQLite schema versions;
   it must not import file-era state.
 - Credential compatibility follows the same rule: runtime credentials live in
@@ -242,7 +242,7 @@ proceed with these assumptions:
 - The old runtime-owned JSONL transcript streaming helper was deleted. Doctor
   import code owns explicit legacy file reads; runtime session history reads
   SQLite rows.
-- Codex app-server bindings use the OpenClaw `sessionId` as the canonical
+- Codex app-server bindings use the GrokBot `sessionId` as the canonical
   key in the Codex plugin-state namespace. `sessionKey` is metadata for
   routing/display and must not replace the durable session id or resurrect
   transcript-file identity.
@@ -261,8 +261,8 @@ proceed with these assumptions:
 
 The current branch is already past the proof-of-concept stage. The shared
 database exists, Node `node:sqlite` is wired through a small runtime helper, and
-former stores now write to `state/openclaw.sqlite` or the owning
-`openclaw-agent.sqlite` database.
+former stores now write to `state/grokbot.sqlite` or the owning
+`grokbot-agent.sqlite` database.
 
 The remaining work is not choosing SQLite; it is keeping the new boundary clean
 and deleting any compatibility-shaped interfaces that still look like the old
@@ -294,10 +294,10 @@ The branch already has a real shared SQLite base:
 - The runtime floor now requires a WAL-reset-safe Node build: 22.22.3+,
   24.15+, or 25.9+. `package.json`, the CLI runtime guard, installer defaults,
   macOS runtime locator, CI, and public install docs all agree.
-- `src/state/openclaw-state-db.ts` opens `openclaw.sqlite`, sets WAL,
+- `src/state/grokbot-state-db.ts` opens `grokbot.sqlite`, sets WAL,
   `synchronous=NORMAL`, `busy_timeout=30000`, `foreign_keys=ON`, and applies
   the generated schema module derived from
-  `src/state/openclaw-state-schema.sql`.
+  `src/state/grokbot-state-schema.sql`.
 - Kysely table types and runtime schema modules are generated from disposable
   SQLite databases created from the committed `.sql` files; runtime code no
   longer keeps copy-pasted schema strings for global, per-agent, or proxy
@@ -335,10 +335,10 @@ The branch already has a real shared SQLite base:
   schema migrations. A plugin can migrate its own versioned state/blob entries
   through a migration provider, and the host records source/run status in the
   normal migration ledger. New plugin installs do not require changing
-  `openclaw-state-schema.sql` unless the host itself is taking ownership of a
+  `grokbot-state-schema.sql` unless the host itself is taking ownership of a
   new cross-plugin contract.
-- `src/state/openclaw-agent-db.ts` opens
-  `agents/<agentId>/agent/openclaw-agent.sqlite`, registers the database in the
+- `src/state/grokbot-agent-db.ts` opens
+  `agents/<agentId>/agent/grokbot-agent.sqlite`, registers the database in the
   global DB, and owns agent-local session, transcript, VFS, artifact, cache,
   and memory-index tables. Shared runtime discovery now reads the generated-typed
   `agent_databases` registry instead of reimplementing that query at each call
@@ -359,13 +359,13 @@ The branch already has a real shared SQLite base:
   schema-level representation of a session.
 - Per-agent external conversation identity is relational too:
   `conversations` stores normalized provider/account/conversation identity, and
-  `session_conversations` links one OpenClaw session to one or more external
+  `session_conversations` links one GrokBot session to one or more external
   conversations. This covers shared-main DM sessions where multiple peers can
   intentionally map to one session without lying in `session_key`. SQLite also
   enforces uniqueness for the natural provider identity so the same
   channel/account/kind/peer/thread tuple cannot fork across conversation ids.
   Shared-main direct peers are linked with a `participant` role, so one
-  OpenClaw session can represent multiple external DM peers without demoting
+  GrokBot session can represent multiple external DM peers without demoting
   older peers into vague related rows. `sessions.primary_conversation_id` still
   points at the current typed delivery target. Closed routing/status columns
   are enforced with SQLite `CHECK` constraints instead of relying only on
@@ -426,7 +426,7 @@ The branch already has a real shared SQLite base:
 - TUI last-session restore pointers now live in typed shared
   `tui_last_sessions` rows keyed by the hashed TUI connection/session scope.
   Runtime reads and writes only SQLite, atomically upserts each scope, and
-  excludes heartbeat sessions. `openclaw doctor --fix` strictly validates the
+  excludes heartbeat sessions. `grokbot doctor --fix` strictly validates the
   old TUI JSON file, keeps newer SQLite rows, verifies the canonical result,
   and removes the unchanged legacy file instead of leaving an archive.
 - Discord command deployment hashes now live in the shared plugin-state SQLite
@@ -438,7 +438,7 @@ The branch already has a real shared SQLite base:
   input only; runtime no longer reads or writes TTS prefs JSON files, and the
   legacy path resolver lives in the doctor migration module.
 - Secret target metadata now talks about stores instead of pretending every
-  credential target is a config file. `openclaw.json` remains the config store;
+  credential target is a config file. `grokbot.json` remains the config store;
   auth-profile targets use typed SQLite `auth_profile_stores` rows with
   provider-shaped credentials kept as JSON payloads.
 - Secret audit no longer scans retired per-agent `auth.json` files. Doctor owns
@@ -467,9 +467,9 @@ The branch already has a real shared SQLite base:
   identity. Persisted lexical and real-path aliases keep vanished-workspace
   protection stable after a configured symlink disappears; repointed aliases
   fail closed. Runtime no longer reads or writes
-  `openclaw-workspace-state.json`, `.openclaw/workspace-state.json`, state-dir
+  `grokbot-workspace-state.json`, `.grokbot/workspace-state.json`, state-dir
   `workspace-attestations/*.attested`, or sibling `<workspace>.attested`
-  sidecars. `openclaw doctor --fix` validates and claims legacy sources,
+  sidecars. `grokbot doctor --fix` validates and claims legacy sources,
   imports them into SQLite with migration receipts, verifies the canonical
   rows, and only then removes the claimed files.
 - The shared schema reserves an `exec_approvals_config` singleton row, but the
@@ -482,12 +482,12 @@ The branch already has a real shared SQLite base:
 - GitHub Copilot token exchange cache uses the shared SQLite plugin-state table
   under `github-copilot/token-cache/default`. It is provider-owned cache state,
   so it intentionally does not add a host schema table.
-- GitHub Copilot compaction no longer writes `openclaw-compaction-*.json`
+- GitHub Copilot compaction no longer writes `grokbot-compaction-*.json`
   workspace sidecars. The harness calls the SDK history compaction RPC for the
-  tracked SDK session, and OpenClaw keeps durable session/transcript state in
+  tracked SDK session, and GrokBot keeps durable session/transcript state in
   SQLite instead of compatibility marker files.
 - The shared Swift runtime (`OpenClawKit`) uses the same
-  `state/openclaw.sqlite#table/device_identities` shape and row keys for device
+  `state/grokbot.sqlite#table/device_identities` shape and row keys for device
   identity. Apple-container legacy files are imported by the Swift migration
   owner because the TypeScript Doctor cannot access those containers. Swift
   device auth remains file-backed for the coordinated auth follow-up.
@@ -516,7 +516,7 @@ The branch already has a real shared SQLite base:
   under
   `src/commands/doctor/legacy/oauth-profile-ids.ts`.
 - Non-doctor commands do not auto-run legacy config repair. For example,
-  `openclaw update --channel` now fails on invalid legacy config and asks the
+  `grokbot update --channel` now fails on invalid legacy config and asks the
   user to run doctor, rather than silently importing doctor migration code.
 - Web push, APNs, Voice Wake, update checks, and config health now use typed shared SQLite
   tables for subscriptions, VAPID keys, node registrations, trigger rows,
@@ -525,7 +525,7 @@ The branch already has a real shared SQLite base:
   primary-key row; config health reconciles by config path. Their runtime
   modules remain separate from Doctor-only legacy JSON import helpers.
 - APNs runtime reads and writes only `apns_registrations`. Explicit
-  `openclaw doctor --fix` strictly imports the retired
+  `grokbot doctor --fix` strictly imports the retired
   `push/apns-registrations.json`, preserves existing canonical rows, verifies
   the transaction, records a receipt, and removes the secret-bearing JSON.
   Receipt-backed retries perform cleanup only, while
@@ -533,7 +533,7 @@ The branch already has a real shared SQLite base:
   stale relay grants or device tokens cannot resurrect.
 - Node-host config now uses a typed singleton row in the shared SQLite database.
   Runtime fails closed while the old `node.json` file or an interrupted claim
-  remains; explicit `openclaw doctor --fix` strictly imports and removes it
+  remains; explicit `grokbot doctor --fix` strictly imports and removes it
   before normal runtime use.
 - Device/node pairing, channel pairing, channel allowlists, and bootstrap state
   now use typed SQLite rows instead of whole opaque JSON blobs. Plugin binding
@@ -585,12 +585,12 @@ The branch already has a real shared SQLite base:
 
 Completed consolidation/deletion highlights:
 
-- Plugin state now uses the shared `state/openclaw.sqlite` database. The old
+- Plugin state now uses the shared `state/grokbot.sqlite` database. The old
   branch-local `plugin-state/state.sqlite` sidecar importer is removed because
   that SQLite layout never shipped. Probe/test helpers report the shared
   `databasePath` instead of exposing a plugin-state-specific SQLite path.
 - Task and Task Flow runtime tables now live in the shared
-  `state/openclaw.sqlite` database instead of `tasks/runs.sqlite` and
+  `state/grokbot.sqlite` database instead of `tasks/runs.sqlite` and
   `tasks/flows/registry.sqlite`; the old sidecar importers are removed for the
   same unshipped-layout reason.
 - `src/config/sessions/store.ts` no longer needs `storePath` for inbound
@@ -600,7 +600,7 @@ Completed consolidation/deletion highlights:
   with optimistic conflict retry.
 - Session target resolution now exposes per-agent database targets, not legacy
   `sessions.json` paths. Shared gateway, ACP metadata, doctor route repair, and
-  `openclaw sessions` enumerate `agent_databases` plus configured agents.
+  `grokbot sessions` enumerate `agent_databases` plus configured agents.
 - Gateway session routing now uses `resolveGatewaySessionDatabaseTarget`; the
   returned target carries `databasePath` and candidate SQLite row keys instead
   of a legacy session-store file path.
@@ -1045,11 +1045,11 @@ sessionId})`; create, branch, continue, list, and fork flows live in their
   credentials are SQLite plugin-state rows; their old JSON files are doctor
   migration inputs only.
 - Memory Wiki activity logs now use SQLite plugin state instead of
-  `.openclaw-wiki/log.jsonl`. The Memory Wiki migration provider imports old
+  `.grokbot-wiki/log.jsonl`. The Memory Wiki migration provider imports old
   JSONL logs; wiki markdown and user vault content stay file-backed as
   workspace content.
-- Memory Wiki no longer creates `.openclaw-wiki/state.json` or the unused
-  `.openclaw-wiki/locks` directory. The migration provider removes those retired
+- Memory Wiki no longer creates `.grokbot-wiki/state.json` or the unused
+  `.grokbot-wiki/locks` directory. The migration provider removes those retired
   plugin metadata files if an older vault still has them.
 - System-agent audit entries now use core SQLite plugin state instead of
   `audit/crestodian.jsonl`. Doctor imports the legacy JSONL audit log and
@@ -1058,11 +1058,11 @@ sessionId})`; create, branch, continue, list, and fork flows live in their
   of `logs/config-audit.jsonl`. Doctor imports the legacy JSONL audit log and
   removes it after successful import.
 - The macOS companion no longer writes app-local `logs/config-audit.jsonl` or
-  `logs/config-health.json` sidecars while editing `openclaw.json`. The config
+  `logs/config-health.json` sidecars while editing `grokbot.json`. The config
   file remains file-backed, recovery snapshots stay next to the config file,
   and durable config audit/health state belongs to the Gateway SQLite store.
 - System-agent rescue pending approvals now use core SQLite plugin state instead
-  of `crestodian/rescue-pending/*.json` or `openclaw/rescue-pending/*.json`.
+  of `crestodian/rescue-pending/*.json` or `grokbot/rescue-pending/*.json`.
   These short-lived security capabilities are never imported; doctor discards
   both retired directories so an upgrade cannot reactivate a stale write.
 - Phone Control temporary arm state now uses SQLite plugin state instead of
@@ -1074,7 +1074,7 @@ sessionId})`; create, branch, continue, list, and fork flows live in their
   SQLite reads. Its helper no longer accepts or derives transcript locators,
   legacy file reads, or file-rewrite options.
 - Codex app-server conversation bindings now key SQLite plugin state by
-  OpenClaw session key or explicit `{agentId, sessionId}` scope. They must not
+  GrokBot session key or explicit `{agentId, sessionId}` scope. They must not
   preserve transcript-path fallback bindings.
 - Codex app-server mirrored-history reads use the SQLite transcript scope only;
   they must not recover identity from transcript file paths.
@@ -1180,7 +1180,7 @@ sessionId})`; create, branch, continue, list, and fork flows live in their
   from these stores. Its legacy JSON import plan lives in the Microsoft Teams
   plugin setup/doctor migration surface.
 - Zalo hosted outbound media now uses shared SQLite `plugin_blob_entries`
-  instead of `openclaw-zalo-outbound-media` JSON/bin temp sidecars.
+  instead of `grokbot-zalo-outbound-media` JSON/bin temp sidecars.
 - Diffs viewer HTML and metadata now use shared SQLite `plugin_blob_entries`
   instead of `meta.json`/`viewer.html` temp files. Viewer HTML is stored as a
   gzip blob and only the URL token hash is persisted. Rendered PNG/PDF outputs
@@ -1199,7 +1199,7 @@ sessionId})`; create, branch, continue, list, and fork flows live in their
   state. Doctor imports the legacy `gateway-instance-id` file into plugin state
   and removes the source.
 - ACPX generated wrapper scripts and the isolated Codex home are temporary
-  materialization under the OpenClaw temp root, not durable OpenClaw state. The
+  materialization under the GrokBot temp root, not durable GrokBot state. The
   durable ACPX runtime records are the SQLite lease and gateway-instance rows;
   the old ACPX `stateDir` config surface is removed because no runtime state is
   written there anymore.
@@ -1220,11 +1220,11 @@ sessionId})`; create, branch, continue, list, and fork flows live in their
   an install is running. Doctor discards the retired one-hour filesystem
   staging tree instead of importing transient uploads.
 - Subagent inline attachments no longer materialize under workspace
-  `.openclaw/attachments/*`. The spawn path prepares SQLite VFS seed entries,
+  `.grokbot/attachments/*`. The spawn path prepares SQLite VFS seed entries,
   inline runs seed those entries into the per-agent runtime scratch namespace,
   and disk-backed tools overlay that SQLite scratch for attachment paths. The
   old subagent-run attachment-dir registry columns and cleanup hooks are gone.
-- CLI image hydration no longer maintains stable `openclaw-cli-images` cache
+- CLI image hydration no longer maintains stable `grokbot-cli-images` cache
   files. External CLI backends still receive file paths, but those paths are
   per-run temp materializations with cleanup.
 - Cache-trace diagnostics, Anthropic payload diagnostics, raw model stream
@@ -1291,18 +1291,18 @@ sessionId})`; create, branch, continue, list, and fork flows live in their
   that are removed after import.
 - Auth profile save/state tests now assert typed SQLite auth tables directly
   and only use legacy auth-profile filenames for doctor migration inputs.
-- `openclaw secrets apply` scrubs the config file, env file, and SQLite
+- `grokbot secrets apply` scrubs the config file, env file, and SQLite
   auth-profile store only. It no longer carries compatibility logic that edits
   retired per-agent `auth.json`; doctor owns importing and deleting that file.
 - Hermes secret migration plans and applies imported API-key profiles directly
   into the SQLite auth-profile store. It no longer writes or verifies
   `auth-profiles.json` as an intermediate target.
 - User-facing auth docs now describe
-  `state/openclaw.sqlite#table/auth_profile_stores/<agentDir>` instead of
+  `state/grokbot.sqlite#table/auth_profile_stores/<agentDir>` instead of
   telling users to inspect or copy `auth-profiles.json`; legacy OAuth/auth JSON
   names remain documented only as doctor-import inputs.
 - MCP OAuth sessions now use versioned `mcp_oauth_stores` rows in shared
-  `state/openclaw.sqlite`. SDK-owned token, client-registration, and discovery
+  `state/grokbot.sqlite`. SDK-owned token, client-registration, and discovery
   objects remain one validated JSON payload so dependency extension fields
   survive, while every read/modify/write commits in one short Kysely
   transaction. One shared SQLite lease serializes refresh, login, and logout;
@@ -1335,15 +1335,15 @@ sessionId})`; create, branch, continue, list, and fork flows live in their
   `bindings/current-conversations.json`; doctor imports the legacy JSON file and
   removes it after a successful migration.
 - Memory Wiki imported-source sync ledgers now store one SQLite plugin-state row
-  per vault/source key instead of rewriting `.openclaw-wiki/source-sync.json`;
+  per vault/source key instead of rewriting `.grokbot-wiki/source-sync.json`;
   the migration provider imports and removes the legacy JSON ledger.
 - Memory Wiki ChatGPT import-run records now store one SQLite plugin-state row
-  per vault/run id instead of writing `.openclaw-wiki/import-runs/*.json`.
+  per vault/run id instead of writing `.grokbot-wiki/import-runs/*.json`.
   Rollback snapshots remain explicit vault files until import-run snapshot
   archival is moved into blob storage.
 - Memory Wiki compiled digests now store compressed SQLite plugin-blob rows
-  instead of writing `.openclaw-wiki/cache/agent-digest.json` and
-  `.openclaw-wiki/cache/claims.jsonl`. The cache is rebuildable, so doctor
+  instead of writing `.grokbot-wiki/cache/agent-digest.json` and
+  `.grokbot-wiki/cache/claims.jsonl`. The cache is rebuildable, so doctor
   deletes old cache files without importing them.
 - ClawHub skill install tracking now stores one SQLite plugin-state row per
   workspace/skill instead of writing or reading `.clawhub/lock.json` and
@@ -1399,7 +1399,7 @@ sessionId})`; create, branch, continue, list, and fork flows live in their
   Each lease is stored as its own row, preserving startup stale-process reaping
   without a runtime JSON rewrite path.
 - ACPX wrapper scripts and the isolated Codex home are generated in the
-  OpenClaw temp root. They are recreated as needed and are not backup or
+  GrokBot temp root. They are recreated as needed and are not backup or
   migration inputs.
 - Subagent run registry persistence uses typed shared `subagent_runs` rows. The
   old `subagents/runs.json` path is now only a Doctor cleanup input. Doctor
@@ -1412,10 +1412,10 @@ sessionId})`; create, branch, continue, list, and fork flows live in their
 - Backup stages the state directory before archiving, copies non-database files,
   snapshots databases with `VACUUM INTO`, omits live WAL/SHM sidecars, records
   snapshot metadata in the archive manifest, and records
-  completed backup runs in SQLite with the archive manifest. `openclaw backup
+  completed backup runs in SQLite with the archive manifest. `grokbot backup
 create` validates the written archive by default; `--no-verify` is the
   explicit fast path.
-- `openclaw backup restore` validates the archive before extraction, reuses the
+- `grokbot backup restore` validates the archive before extraction, reuses the
   verifier's normalized manifest, and restores verified manifest assets to their
   recorded source paths. It requires `--yes` for writes and supports `--dry-run`
   for a restore plan.
@@ -1431,8 +1431,8 @@ create` validates the written archive by default; `--no-verify` is the
   JSONL files.
 - Sandbox registry runtime names now describe SQLite registry kinds directly
   instead of carrying legacy JSON registry terminology through the active store.
-- `openclaw reset --scope config+creds+sessions` removes per-agent
-  `openclaw-agent.sqlite` databases plus WAL/SHM sidecars, not only legacy
+- `grokbot reset --scope config+creds+sessions` removes per-agent
+  `grokbot-agent.sqlite` databases plus WAL/SHM sidecars, not only legacy
   `sessions/` directories.
 - Gateway aggregate session helpers now use entry-oriented names:
   `loadCombinedSessionEntriesForGateway` returns `{ databasePath, entries }`.
@@ -1468,13 +1468,13 @@ create` validates the written archive by default; `--no-verify` is the
   identity mappings therefore remain part of the configured external-tool
   bridge; they are not a second canonical transcript store.
 - QMD's own `index.sqlite`, YAML collection config, and model downloads remain
-  external-tool artifacts under `~/.openclaw/agents/<agentId>/qmd`; they are not
-  mirrored into `plugin_blob_entries`. OpenClaw-owned QMD coordination is
+  external-tool artifacts under `~/.grokbot/agents/<agentId>/qmd`; they are not
+  mirrored into `plugin_blob_entries`. GrokBot-owned QMD coordination is
   database-first: shared `state_leases` serialize embeds globally and per-agent
   `state_leases` serialize collection/update/embed writers. Runtime creates no
   QMD lock sidecars.
 - The optional `memory-lancedb` plugin no longer creates
-  `~/.openclaw/memory/lancedb` as an implicit OpenClaw-managed store. It is an
+  `~/.grokbot/memory/lancedb` as an implicit GrokBot-managed store. It is an
   external LanceDB backend and stays disabled until the operator configures an
   explicit `dbPath`.
 - `check:database-first-legacy-stores` fails new runtime source that pairs
@@ -1592,7 +1592,7 @@ SQLite tooling.
 
 `agent_databases` is the canonical registry for this branch. Do not add an
 `agents` table until a real agent-record owner exists; agent config remains in
-`openclaw.json`.
+`grokbot.json`.
 
 ## Doctor Migration Shape
 
@@ -1600,12 +1600,12 @@ Doctor should call one explicit migration step that is reportable and safe to
 rerun:
 
 ```bash
-openclaw doctor --fix
+grokbot doctor --fix
 ```
 
-`openclaw doctor --fix` invokes the state migration implementation after
+`grokbot doctor --fix` invokes the state migration implementation after
 ordinary config preflight and creates a verified backup before import. Runtime
-startup and `openclaw migrate` must not import legacy OpenClaw state files.
+startup and `grokbot migrate` must not import legacy GrokBot state files.
 
 Migration properties:
 
@@ -1759,7 +1759,7 @@ Move these into agent databases:
 
 Keep these file-backed for now:
 
-- `openclaw.json`
+- `grokbot.json`
 - provider or CLI credential files
 - plugin/package manifests
 - user workspaces and Git repositories when disk mode is selected
@@ -1774,7 +1774,7 @@ Make the durable-state boundary explicit before moving more rows:
 - Add a `migration_runs` table to the global database.
   Done for legacy-state migration execution reports.
 - Add a single doctor-owned state migration service for file-to-database import.
-  Done: `openclaw doctor --fix` uses the legacy-state migration implementation.
+  Done: `grokbot doctor --fix` uses the legacy-state migration implementation.
 - Make `plan` read-only and make `apply` create a backup, import, verify, and
   then delete or quarantine old files.
   Done: doctor creates a verified pre-migration backup, passes the backup path
@@ -1786,7 +1786,7 @@ Make the durable-state boundary explicit before moving more rows:
 
 ### Phase 1: Finish The Global Control Plane
 
-Keep shared coordination state in `state/openclaw.sqlite`:
+Keep shared coordination state in `state/grokbot.sqlite`:
 
 - Agents and agent database registry
 - Task and Task Flow ledgers
@@ -1818,8 +1818,8 @@ setup, filesystem pruning, and compatibility writers from those subsystems.
 Create one database per agent and register it from the global DB:
 
 ```text
-~/.openclaw/state/openclaw.sqlite
-~/.openclaw/agents/<agentId>/agent/openclaw-agent.sqlite
+~/.grokbot/state/grokbot.sqlite
+~/.grokbot/agents/<agentId>/agent/grokbot-agent.sqlite
 ```
 
 The global `agent_databases` row stores the path, schema version, last-seen
@@ -1895,7 +1895,7 @@ Backups remain one archive file:
   workspace exports.
 - Omit raw live `*.sqlite-wal` and `*.sqlite-shm` files.
 - Verify by opening every DB snapshot and running `PRAGMA integrity_check`.
-  `openclaw backup create` does this archive verification by default;
+  `grokbot backup create` does this archive verification by default;
   `--no-verify` skips only the post-write archive pass, not the snapshot
   creation integrity check.
 - Restore copies snapshots back to their target paths. Restored global DBs use
@@ -1938,10 +1938,10 @@ SQLite-native:
    until the owner provides a safe snapshot contract.
 4. Archive the database snapshots, config file, credentials directory, selected
    workspaces, and a manifest.
-5. Verify every SQLite snapshot's file shape, then open canonical OpenClaw
+5. Verify every SQLite snapshot's file shape, then open canonical GrokBot
    databases and run `PRAGMA integrity_check` plus role validation. Dedicated
    plugin schemas remain opaque unless their owner supplies a verifier.
-   `openclaw backup create` does this by default; `--no-verify` is only for
+   `grokbot backup create` does this by default; `--no-verify` is only for
    intentionally skipping the post-write archive pass.
 
 Do not rely on raw live `*.sqlite`, `*.sqlite-wal`, and `*.sqlite-shm` copies as
@@ -2012,7 +2012,7 @@ payload.
   Done: `getSessionEntry`, `upsertSessionEntry`, `deleteSessionEntry`,
   `patchSessionEntry`, and `listSessionEntries` are SQLite-first APIs that do
   not require a session store path. Status summary, local agent status, health,
-  and the `openclaw sessions` listing command now read per-agent rows directly
+  and the `grokbot sessions` listing command now read per-agent rows directly
   and display per-agent SQLite database paths instead of `sessions.json` paths.
 - Replace whole-store delete/insert with `upsertSessionEntry`,
   `deleteSessionEntry`, `listSessionEntries`, and SQL cleanup queries.
@@ -2064,7 +2064,7 @@ payload.
      backup creation and default archive verification.
    - Record backup run metadata in SQLite. Done via the shared `backup_runs`
      table with archive path, status, and manifest JSON.
-   - Add restore from verified archive snapshots. Done: `openclaw backup
+   - Add restore from verified archive snapshots. Done: `grokbot backup
 restore` validates before extraction, uses the verifier's normalized
      manifest, supports `--dry-run`, and requires `--yes` before replacing
      recorded source paths.
@@ -2133,7 +2133,7 @@ restore` validates before extraction, uses the verifier's normalized
   fixtures or parsers; legacy SSO token parsing lives only in the plugin
   migration module. Telegram tests no longer seed fake `/tmp/*.json` store
   paths; they reset the SQLite-backed message cache directly. The generic
-  OpenClaw test-state helper no longer exposes a legacy `auth-profiles.json`
+  GrokBot test-state helper no longer exposes a legacy `auth-profiles.json`
   writer; doctor auth migration tests own that fixture locally.
   Runtime tests for TUI last-session pointers, exec approvals, active-memory
   toggles, Matrix dedupe/startup verification, Memory Wiki source sync,
@@ -2223,7 +2223,7 @@ Add a repo check that fails new runtime writes to legacy state paths:
 - `auth-profiles.json`
 - `auth-state.json`
 - `exec-approvals.json`
-- `openclaw-workspace-state.json`
+- `grokbot-workspace-state.json`
 - `workspace-state.json`
 - `workspace-attestations/*.attested`
 - sibling `<workspace>.attested`
@@ -2286,7 +2286,7 @@ Add a repo check that fails new runtime writes to legacy state paths:
 - Discord `command-deploy-cache.json`
 - sandbox registry shard JSON files
 - `plugin-state/state.sqlite`
-- ad-hoc `openclaw-state.sqlite` runtime sidecars
+- ad-hoc `grokbot-state.sqlite` runtime sidecars
 - `tasks/runs.sqlite`
 - `tasks/flows/registry.sqlite`
 - `bindings/current-conversations.json`
@@ -2306,18 +2306,18 @@ Add a repo check that fails new runtime writes to legacy state paths:
 - `audit/file-transfer.jsonl`
 - `audit/crestodian.jsonl`
 - `crestodian/rescue-pending/*.json`
-- `openclaw/rescue-pending/*.json`
+- `grokbot/rescue-pending/*.json`
 - `plugins/phone-control/armed.json`
-- Memory Wiki `.openclaw-wiki/log.jsonl`
-- Memory Wiki `.openclaw-wiki/state.json`
-- Memory Wiki `.openclaw-wiki/locks/`
-- Memory Wiki `.openclaw-wiki/source-sync.json`
-- Memory Wiki `.openclaw-wiki/import-runs/*.json`
-- Memory Wiki `.openclaw-wiki/cache/agent-digest.json`
-- Memory Wiki `.openclaw-wiki/cache/claims.jsonl`
+- Memory Wiki `.grokbot-wiki/log.jsonl`
+- Memory Wiki `.grokbot-wiki/state.json`
+- Memory Wiki `.grokbot-wiki/locks/`
+- Memory Wiki `.grokbot-wiki/source-sync.json`
+- Memory Wiki `.grokbot-wiki/import-runs/*.json`
+- Memory Wiki `.grokbot-wiki/cache/agent-digest.json`
+- Memory Wiki `.grokbot-wiki/cache/claims.jsonl`
 - ClawHub `.clawhub/lock.json`
 - ClawHub `.clawhub/origin.json`
-- Browser profile decoration `.openclaw-profile-decorated`
+- Browser profile decoration `.grokbot-profile-decorated`
 - `SessionManager.open(...)` file-backed session openers
 - `SessionManager.listAll(...)` and `TranscriptSessionManager.listAll(...)`
   transcript listing facades

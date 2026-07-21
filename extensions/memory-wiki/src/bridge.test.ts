@@ -6,7 +6,7 @@ import {
   clearMemoryPluginState,
   type MemoryPluginPublicArtifact,
   registerMemoryCapability,
-} from "openclaw/plugin-sdk/memory-host-core";
+} from "grokbot/plugin-sdk/memory-host-core";
 import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
 import type { OpenClawConfig } from "../api.js";
 import { syncMemoryWikiBridgeSources } from "./bridge.js";
@@ -140,7 +140,7 @@ describe("syncMemoryWikiBridgeSources", () => {
     expect(second.skippedCount).toBe(3);
     expect(second.removedCount).toBe(0);
 
-    const logLines = (await fs.readFile(path.join(vaultDir, ".openclaw-wiki", "log.jsonl"), "utf8"))
+    const logLines = (await fs.readFile(path.join(vaultDir, ".grokbot-wiki", "log.jsonl"), "utf8"))
       .trim()
       .split("\n");
     expect(logLines).toHaveLength(3);

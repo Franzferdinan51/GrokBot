@@ -3,12 +3,12 @@ import { createHash, randomUUID } from "node:crypto";
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { MAX_DATE_TIMESTAMP_MS } from "@openclaw/normalization-core/number-coercion";
+import { MAX_DATE_TIMESTAMP_MS } from "@grokbot/normalization-core/number-coercion";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   closeOpenClawStateDatabaseForTest,
   openOpenClawStateDatabase,
-} from "../../state/openclaw-state-db.js";
+} from "../../state/grokbot-state-db.js";
 import { SkillUploadRequestError } from "./upload-store.js";
 import {
   deleteExpiredSkillUploadUnlessLeased,
@@ -41,7 +41,7 @@ const ACTIVE_UPLOAD_LIMIT = 32;
 let tempDirs: string[] = [];
 
 async function makeTempDir(): Promise<string> {
-  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-skill-upload-store-"));
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-skill-upload-store-"));
   tempDirs.push(dir);
   return dir;
 }
@@ -53,7 +53,7 @@ async function makeStore(options?: {
   ttlMs?: number;
 }) {
   const root = await makeTempDir();
-  const databasePath = path.join(root, "openclaw.sqlite");
+  const databasePath = path.join(root, "grokbot.sqlite");
   return {
     root,
     databasePath,
@@ -146,9 +146,9 @@ describe("skill upload store", () => {
   let activeLimitRoot: string | undefined;
 
   beforeAll(async () => {
-    activeLimitRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-skill-upload-limit-"));
+    activeLimitRoot = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-skill-upload-limit-"));
     const store = createSkillUploadStore({
-      path: path.join(activeLimitRoot, "openclaw.sqlite"),
+      path: path.join(activeLimitRoot, "grokbot.sqlite"),
       tempRootDir: activeLimitRoot,
     });
     for (let i = 0; i < ACTIVE_UPLOAD_LIMIT; i += 1) {

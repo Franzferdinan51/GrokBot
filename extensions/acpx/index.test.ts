@@ -1,6 +1,6 @@
 // ACPX tests cover index plugin behavior.
-import type { OpenClawPluginApi } from "openclaw/plugin-sdk/plugin-entry";
-import { createTestPluginApi } from "openclaw/plugin-sdk/plugin-test-api";
+import type { OpenClawPluginApi } from "grokbot/plugin-sdk/plugin-entry";
+import { createTestPluginApi } from "grokbot/plugin-sdk/plugin-test-api";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import setupPlugin from "./setup-api.js";
 
@@ -13,7 +13,7 @@ vi.mock("./register.runtime.js", () => ({
   createAcpxRuntimeService: createAcpxRuntimeServiceMock,
 }));
 
-vi.mock("openclaw/plugin-sdk/acp-runtime-backend", () => ({
+vi.mock("grokbot/plugin-sdk/acp-runtime-backend", () => ({
   tryDispatchAcpReplyHook: tryDispatchAcpReplyHookMock,
 }));
 

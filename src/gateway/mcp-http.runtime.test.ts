@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { McpLoopbackToolCache, resolveMcpLoopbackScopedTools } from "./mcp-http.runtime.js";
 
 const resolveGatewayScopedTools = vi.hoisted(() => vi.fn());

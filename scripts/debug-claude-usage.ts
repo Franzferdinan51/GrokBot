@@ -1,4 +1,4 @@
-// Debug Claude Usage script supports OpenClaw repository automation.
+// Debug Claude Usage script supports GrokBot repository automation.
 import { execFileSync } from "node:child_process";
 import crypto from "node:crypto";
 import fs from "node:fs";
@@ -112,14 +112,14 @@ function printUsage(): void {
   console.log(`Usage: node --import tsx scripts/debug-claude-usage.ts [options]
 
 Options:
-  --agent <id>          OpenClaw agent id to inspect (default: main)
+  --agent <id>          GrokBot agent id to inspect (default: main)
   --session-key <key>   Claude web session key override
   --reveal              Print token/session values instead of masked identifiers
   --help, -h            Show this help message`);
 }
 
 const loadAuthProfiles = (agentId: string) => {
-  const stateRoot = process.env.OPENCLAW_STATE_DIR?.trim() || path.join(os.homedir(), ".openclaw");
+  const stateRoot = process.env.OPENCLAW_STATE_DIR?.trim() || path.join(os.homedir(), ".grokbot");
   const authPath = path.join(stateRoot, "agents", agentId, "agent", "auth-profiles.json");
   if (!fs.existsSync(authPath)) {
     throw new Error(`Missing: ${authPath}`);
@@ -220,7 +220,7 @@ const fetchAnthropicOAuthUsage = async (token: string, options: FetchOptions = {
         Accept: "application/json",
         "anthropic-version": "2023-06-01",
         "anthropic-beta": "oauth-2025-04-20",
-        "User-Agent": "openclaw-debug",
+        "User-Agent": "grokbot-debug",
       },
     },
     options,

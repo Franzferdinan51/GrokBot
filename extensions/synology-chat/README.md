@@ -1,11 +1,11 @@
-# OpenClaw Synology Chat
+# GrokBot Synology Chat
 
-Official OpenClaw channel plugin for Synology Chat conversations and direct messages.
+Official GrokBot channel plugin for Synology Chat conversations and direct messages.
 
-Install from OpenClaw:
+Install from GrokBot:
 
 ```bash
-openclaw plugin add @openclaw/synology-chat
+grokbot plugin add @grokbot/synology-chat
 ```
 
-Configure Synology Chat credentials and allowed conversations in OpenClaw, then use the plugin to route messages between Synology Chat and OpenClaw agents.
+Configure Synology Chat credentials and allowed conversations in GrokBot, then use the plugin to route messages between Synology Chat and GrokBot agents.

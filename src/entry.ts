@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-// Boots the OpenClaw CLI entry point under Node.
-// CLI process entrypoint for OpenClaw command execution.
+// Boots the GrokBot CLI entry point under Node.
+// CLI process entrypoint for GrokBot command execution.
 import process from "node:process";
 import { fileURLToPath } from "node:url";
 import { isRootHelpInvocation } from "./cli/argv.js";
@@ -22,12 +22,12 @@ import { buildCliRespawnPlan, runCliRespawnPlan } from "./entry.respawn.js";
 import { tryHandleRootVersionFastPath } from "./entry.version-fast-path.js";
 import { normalizeEnv } from "./infra/env.js";
 import { isMainModule } from "./infra/is-main.js";
-import { ensureOpenClawExecMarkerOnProcess } from "./infra/openclaw-exec-env.js";
+import { ensureOpenClawExecMarkerOnProcess } from "./infra/grokbot-exec-env.js";
 import { installProcessWarningFilter } from "./infra/warning-filter.js";
 
 const ENTRY_WRAPPER_PAIRS = [
-  { wrapperBasename: "openclaw.mjs", entryBasename: "entry.js" },
-  { wrapperBasename: "openclaw.js", entryBasename: "entry.js" },
+  { wrapperBasename: "grokbot.mjs", entryBasename: "entry.js" },
+  { wrapperBasename: "grokbot.js", entryBasename: "entry.js" },
 ] as const;
 
 const loadRootHelpLiveConfigModule = async () => await import("./cli/root-help-live-config.js");
@@ -65,7 +65,7 @@ if (
     installRoot,
   });
   if (!waitingForCompileCacheRespawn) {
-    process.title = "openclaw";
+    process.title = "grokbot";
     ensureOpenClawExecMarkerOnProcess();
     installProcessWarningFilter();
     normalizeEnv();
@@ -102,20 +102,20 @@ if (
     if (!ensureCliRespawnReady()) {
       const parsedContainer = parseCliContainerArgs(process.argv);
       if (!parsedContainer.ok) {
-        console.error(`[openclaw] ${parsedContainer.error}`);
+        console.error(`[grokbot] ${parsedContainer.error}`);
         process.exit(2);
       }
 
       const parsed = parseCliProfileArgs(parsedContainer.argv);
       if (!parsed.ok) {
         // Keep it simple; Commander will handle rich help/errors after we strip flags.
-        console.error(`[openclaw] ${parsed.error}`);
+        console.error(`[grokbot] ${parsed.error}`);
         process.exit(2);
       }
 
       const containerTargetName = resolveCliContainerTarget(process.argv);
       if (containerTargetName && parsed.profile) {
-        console.error("[openclaw] --container cannot be combined with --profile/--dev");
+        console.error("[grokbot] --container cannot be combined with --profile/--dev");
         process.exit(2);
       }
 
@@ -155,7 +155,7 @@ export async function tryHandleRootHelpFastPath(
     deps.onError ??
     ((error: unknown) => {
       console.error(
-        "[openclaw] Failed to display help:",
+        "[grokbot] Failed to display help:",
         error instanceof Error ? (error.stack ?? error.message) : error,
       );
       process.exit(1);

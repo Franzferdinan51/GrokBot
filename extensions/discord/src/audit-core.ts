@@ -4,9 +4,9 @@ import type {
   DiscordGuildChannelConfig,
   DiscordGuildEntry,
   OpenClawConfig,
-} from "openclaw/plugin-sdk/config-contracts";
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
-import { isRecord, normalizeOptionalString } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/config-contracts";
+import { formatErrorMessage } from "grokbot/plugin-sdk/error-runtime";
+import { isRecord, normalizeOptionalString } from "grokbot/plugin-sdk/string-coerce-runtime";
 
 type DiscordChannelPermissionsAuditEntry = {
   channelId: string;

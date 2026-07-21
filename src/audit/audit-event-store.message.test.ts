@@ -3,7 +3,7 @@ import { cleanupTempDirs, makeTempDir } from "../../test/helpers/temp-dir.js";
 import {
   closeOpenClawStateDatabaseForTest,
   openOpenClawStateDatabase,
-} from "../state/openclaw-state-db.js";
+} from "../state/grokbot-state-db.js";
 import { listAuditEvents, recordAuditEvent } from "./audit-event-store.js";
 import type { AuditEventInput, MessageAuditEventInput } from "./audit-event-types.js";
 
@@ -28,7 +28,7 @@ type OutboundMessageAuditTerminal = {
 }[OutboundMessageAuditEventInput["status"]];
 
 function createDatabaseOptions() {
-  return { env: { OPENCLAW_STATE_DIR: makeTempDir(tempDirs, "openclaw-message-audit-") } };
+  return { env: { OPENCLAW_STATE_DIR: makeTempDir(tempDirs, "grokbot-message-audit-") } };
 }
 
 type InboundMessageOverrides = Partial<

@@ -1,7 +1,7 @@
 // Verifies generated models.json preserves source secret markers from runtime snapshots.
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { createFixtureSuite } from "../test-utils/fixture-suite.js";
 import { NON_ENV_SECRETREF_MARKER } from "./model-auth-markers.js";
 import {
@@ -52,7 +52,7 @@ let ensureOpenClawModelsJson: typeof import("./models-config.js").ensureOpenClaw
 let resetModelsJsonReadyCacheForTest: typeof import("./models-config-state.test-support.js").resetModelsJsonReadyCacheForTest;
 let planOpenClawModelsJsonWithDeps: typeof import("./models-config.plan.test-support.js").planOpenClawModelsJsonWithDeps;
 let readGeneratedModelsJson: typeof import("./models-config.test-utils.js").readGeneratedModelsJson;
-const fixtureSuite = createFixtureSuite("openclaw-models-runtime-source-");
+const fixtureSuite = createFixtureSuite("grokbot-models-runtime-source-");
 
 beforeAll(async () => {
   await fixtureSuite.setup();
@@ -234,7 +234,7 @@ async function planGeneratedProviders(params: {
     {
       cfg: params.config,
       sourceConfigForSecrets: params.sourceConfigForSecrets,
-      agentDir: "/tmp/openclaw-models-plan",
+      agentDir: "/tmp/grokbot-models-plan",
       env: {},
       existingRaw: "",
       existingParsed: null,
@@ -357,7 +357,7 @@ describe("models-config runtime source snapshot", () => {
               ...getOpenAiProvider(runtimeConfig),
               baseUrl: "https://api.openai.com/v1",
               headers: {
-                "X-OpenClaw-Test": "one",
+                "X-GrokBot-Test": "one",
               },
             },
           },
@@ -371,7 +371,7 @@ describe("models-config runtime source snapshot", () => {
               ...getOpenAiProvider(runtimeConfig),
               baseUrl: "https://mirror.example/v1",
               headers: {
-                "X-OpenClaw-Test": "two",
+                "X-GrokBot-Test": "two",
               },
             },
           },
@@ -389,7 +389,7 @@ describe("models-config runtime source snapshot", () => {
         }>(agentDir);
         expect(parsed.providers.openai?.baseUrl).toBe("https://api.openai.com/v1");
         expect(parsed.providers.openai?.apiKey).toBe("OPENAI_API_KEY"); // pragma: allowlist secret
-        expect(parsed.providers.openai?.headers?.["X-OpenClaw-Test"]).toBe("one");
+        expect(parsed.providers.openai?.headers?.["X-GrokBot-Test"]).toBe("one");
 
         // Header changes still rewrite models.json, but merge mode preserves the existing baseUrl.
         await ensureOpenClawModelsJson(secondCandidate, agentDir);
@@ -401,7 +401,7 @@ describe("models-config runtime source snapshot", () => {
         }>(agentDir);
         expect(parsed.providers.openai?.baseUrl).toBe("https://api.openai.com/v1");
         expect(parsed.providers.openai?.apiKey).toBe("OPENAI_API_KEY"); // pragma: allowlist secret
-        expect(parsed.providers.openai?.headers?.["X-OpenClaw-Test"]).toBe("two");
+        expect(parsed.providers.openai?.headers?.["X-GrokBot-Test"]).toBe("two");
       } finally {
         clearRuntimeConfigSnapshot();
         clearConfigCache();

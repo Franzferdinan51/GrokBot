@@ -254,7 +254,7 @@ function releaseArtifacts(versionName: string): ReleaseArtifact[] {
         "apk",
         "thirdParty",
         "release",
-        `openclaw-${versionName}-thirdParty-release.apk`,
+        `grokbot-${versionName}-thirdParty-release.apk`,
       ),
     },
   ];
@@ -429,7 +429,7 @@ function main() {
   for (const artifact of artifacts) {
     const outputPath = join(
       releaseOutputDir,
-      `openclaw-${version.canonicalVersion}-${artifact.flavorName}-release.${artifact.kind}`,
+      `grokbot-${version.canonicalVersion}-${artifact.flavorName}-release.${artifact.kind}`,
     );
 
     copyArtifact(artifact.sourcePath, outputPath);

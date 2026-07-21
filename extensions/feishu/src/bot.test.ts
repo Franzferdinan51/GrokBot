@@ -3,10 +3,10 @@ import type {
   ensureConfiguredBindingRouteReady,
   getSessionBindingService,
   resolveConfiguredBindingRoute,
-} from "openclaw/plugin-sdk/conversation-runtime";
-import { createRuntimeEnv } from "openclaw/plugin-sdk/plugin-test-runtime";
-import type { ResolvedAgentRoute } from "openclaw/plugin-sdk/routing";
-import { resolveGroupSessionKey } from "openclaw/plugin-sdk/session-store-runtime";
+} from "grokbot/plugin-sdk/conversation-runtime";
+import { createRuntimeEnv } from "grokbot/plugin-sdk/plugin-test-runtime";
+import type { ResolvedAgentRoute } from "grokbot/plugin-sdk/routing";
+import { resolveGroupSessionKey } from "grokbot/plugin-sdk/session-store-runtime";
 import { afterAll, beforeEach, describe, expect, it, vi } from "vitest";
 import type { ClawdbotConfig, PluginRuntime } from "../runtime-api.js";
 import { parseMergeForwardContent } from "./bot-content.js";
@@ -356,9 +356,9 @@ const {
 
 const finalizeInboundContextMock = mockBuildChannelInboundEventContext;
 
-vi.mock("openclaw/plugin-sdk/channel-inbound", async () => {
-  const actual = await vi.importActual<typeof import("openclaw/plugin-sdk/channel-inbound")>(
-    "openclaw/plugin-sdk/channel-inbound",
+vi.mock("grokbot/plugin-sdk/channel-inbound", async () => {
+  const actual = await vi.importActual<typeof import("grokbot/plugin-sdk/channel-inbound")>(
+    "grokbot/plugin-sdk/channel-inbound",
   );
   return {
     ...actual,
@@ -377,16 +377,16 @@ vi.mock("openclaw/plugin-sdk/channel-inbound", async () => {
   };
 });
 
-vi.mock("openclaw/plugin-sdk/reply-runtime", async () => {
-  const actual = await vi.importActual<typeof import("openclaw/plugin-sdk/reply-runtime")>(
-    "openclaw/plugin-sdk/reply-runtime",
+vi.mock("grokbot/plugin-sdk/reply-runtime", async () => {
+  const actual = await vi.importActual<typeof import("grokbot/plugin-sdk/reply-runtime")>(
+    "grokbot/plugin-sdk/reply-runtime",
   );
   return { ...actual, dispatchInboundMessage: mockDispatchInboundMessage };
 });
 
-vi.mock("openclaw/plugin-sdk/session-store-runtime", async () => {
-  const actual = await vi.importActual<typeof import("openclaw/plugin-sdk/session-store-runtime")>(
-    "openclaw/plugin-sdk/session-store-runtime",
+vi.mock("grokbot/plugin-sdk/session-store-runtime", async () => {
+  const actual = await vi.importActual<typeof import("grokbot/plugin-sdk/session-store-runtime")>(
+    "grokbot/plugin-sdk/session-store-runtime",
   );
   return { ...actual, resolveStorePath: mockResolveStorePath };
 });
@@ -425,9 +425,9 @@ vi.mock("./bot-name.js", () => ({
   resolveFeishuBotName: mockResolveFeishuBotName,
 }));
 
-vi.mock("openclaw/plugin-sdk/conversation-runtime", async () => {
-  const actual = await vi.importActual<typeof import("openclaw/plugin-sdk/conversation-runtime")>(
-    "openclaw/plugin-sdk/conversation-runtime",
+vi.mock("grokbot/plugin-sdk/conversation-runtime", async () => {
+  const actual = await vi.importActual<typeof import("grokbot/plugin-sdk/conversation-runtime")>(
+    "grokbot/plugin-sdk/conversation-runtime",
   );
   return {
     ...actual,
@@ -474,7 +474,7 @@ afterAll(() => {
   vi.doUnmock("./audio-preflight.runtime.js");
   vi.doUnmock("./client.js");
   vi.doUnmock("./bot-name.js");
-  vi.doUnmock("openclaw/plugin-sdk/conversation-runtime");
+  vi.doUnmock("grokbot/plugin-sdk/conversation-runtime");
   vi.resetModules();
 });
 
@@ -2087,7 +2087,7 @@ describe("handleFeishuMessage command authorization", () => {
               {
                 key: "@_openclaw",
                 id: { open_id: mentionedOpenId },
-                name: "OpenClaw",
+                name: "GrokBot",
               },
             ]
           : undefined,
@@ -2096,8 +2096,8 @@ describe("handleFeishuMessage command authorization", () => {
 
     await dispatchMessage({
       cfg: { channels: { feishu: baseFeishuConfig } } as ClawdbotConfig,
-      event: createEvent("msg-bot-off", "ou-other-app-openclaw"),
-      botOpenId: "ou-openclaw",
+      event: createEvent("msg-bot-off", "ou-other-app-grokbot"),
+      botOpenId: "ou-grokbot",
     });
     expect(mockDispatchReplyFromConfig).not.toHaveBeenCalled();
 
@@ -2112,9 +2112,9 @@ describe("handleFeishuMessage command authorization", () => {
                   ? [
                       {
                         key: "@_openclaw",
-                        id: "ou-openclaw",
+                        id: "ou-grokbot",
                         id_type: "open_id",
-                        name: "OpenClaw",
+                        name: "GrokBot",
                       },
                     ]
                   : [],
@@ -2130,7 +2130,7 @@ describe("handleFeishuMessage command authorization", () => {
         channels: { feishu: { ...baseFeishuConfig, allowBots: true } },
       } as ClawdbotConfig,
       event: createEvent("msg-bot-unmentioned"),
-      botOpenId: "ou-openclaw",
+      botOpenId: "ou-grokbot",
     });
     expect(mockDispatchReplyFromConfig).not.toHaveBeenCalled();
 
@@ -2141,11 +2141,11 @@ describe("handleFeishuMessage command authorization", () => {
         channels: { feishu: { ...baseFeishuConfig, allowBots: true } },
       } as ClawdbotConfig,
       event: unrelatedMentionEvent,
-      botOpenId: "ou-openclaw",
+      botOpenId: "ou-grokbot",
     });
     expect(mockDispatchReplyFromConfig).not.toHaveBeenCalled();
 
-    const admittedEvent = createEvent("msg-bot-mentioned", "ou-other-app-openclaw");
+    const admittedEvent = createEvent("msg-bot-mentioned", "ou-other-app-grokbot");
     admittedEvent.message.content = JSON.stringify({ text: "@_openclaw @_alice /status" });
     admittedEvent.message.mentions?.push({
       key: "@_alice",
@@ -2157,7 +2157,7 @@ describe("handleFeishuMessage command authorization", () => {
         channels: { feishu: { ...baseFeishuConfig, allowBots: true } },
       } as ClawdbotConfig,
       event: admittedEvent,
-      botOpenId: "ou-openclaw",
+      botOpenId: "ou-grokbot",
     });
 
     expect(mockResolveFeishuBotName).toHaveBeenCalledWith(
@@ -2174,7 +2174,7 @@ describe("handleFeishuMessage command authorization", () => {
       0,
     );
     expect(inbound.CommandBody).toBe("/status");
-    expect(inbound.BodyForAgent).not.toContain("ou-other-app-openclaw");
+    expect(inbound.BodyForAgent).not.toContain("ou-other-app-grokbot");
     expect(inbound.BodyForAgent).not.toContain("ou-alice");
     expect(getMessage).toHaveBeenCalledTimes(3);
     expect(mockDispatchReplyFromConfig).toHaveBeenCalledTimes(1);
@@ -2236,7 +2236,7 @@ describe("handleFeishuMessage command authorization", () => {
           {
             key: "@_openclaw",
             id: { open_id: "ou-loop-self" },
-            name: "OpenClaw",
+            name: "GrokBot",
           },
         ],
       },

@@ -11,8 +11,8 @@ import { resolveOAuthDir } from "../../config/paths.js";
 import {
   closeOpenClawAgentDatabasesForTest,
   openOpenClawAgentDatabase,
-} from "../../state/openclaw-agent-db.js";
-import { closeOpenClawStateDatabaseForTest } from "../../state/openclaw-state-db.js";
+} from "../../state/grokbot-agent-db.js";
+import { closeOpenClawStateDatabaseForTest } from "../../state/grokbot-state-db.js";
 import { withEnvAsync } from "../../test-utils/env.js";
 import { AUTH_STORE_VERSION } from "./constants.js";
 import { testing as externalAuthTesting } from "./external-auth.test-support.js";
@@ -123,7 +123,7 @@ function expectOAuthCredentialFields(
 describe("promoteAuthProfileInOrder", () => {
   it("refreshes inherited main selection state without advancing credential ownership", async () => {
     await withAuthProfileTestState(
-      "openclaw-auth-profile-main-selection-",
+      "grokbot-auth-profile-main-selection-",
       async ({ agentDirFor }) => {
         const customAgentDir = agentDirFor("custom");
         fs.mkdirSync(customAgentDir, { recursive: true });
@@ -165,7 +165,7 @@ describe("promoteAuthProfileInOrder", () => {
 
   it("rebuilds a derived custom-agent snapshot after locked main OAuth rotation", async () => {
     await withAuthProfileTestState(
-      "openclaw-auth-profile-main-inheritance-",
+      "grokbot-auth-profile-main-inheritance-",
       async ({ agentDirFor }) => {
         const customAgentDir = agentDirFor("custom");
         fs.mkdirSync(customAgentDir, { recursive: true });
@@ -241,7 +241,7 @@ describe("promoteAuthProfileInOrder", () => {
 
   it("keeps inherited resolved credentials when publishing a locked custom-agent save", async () => {
     await withAuthProfileTestState(
-      "openclaw-auth-profile-custom-publication-",
+      "grokbot-auth-profile-custom-publication-",
       async ({ agentDirFor }) => {
         const customAgentDir = agentDirFor("custom");
         fs.mkdirSync(customAgentDir, { recursive: true });
@@ -334,7 +334,7 @@ describe("promoteAuthProfileInOrder", () => {
   });
 
   it("keeps a direct save committed when postcommit publication throws", async () => {
-    await withAuthProfileTestState("openclaw-auth-direct-publication-", async ({ agentDir }) => {
+    await withAuthProfileTestState("grokbot-auth-direct-publication-", async ({ agentDir }) => {
       const store = (key: string): AuthProfileStore => ({
         version: AUTH_STORE_VERSION,
         profiles: {
@@ -367,7 +367,7 @@ describe("promoteAuthProfileInOrder", () => {
   });
 
   it("publishes a caller-owned database transaction from the supplied store", async () => {
-    await withAuthProfileTestState("openclaw-auth-caller-transaction-", async ({ agentDir }) => {
+    await withAuthProfileTestState("grokbot-auth-caller-transaction-", async ({ agentDir }) => {
       const store = (key: string): AuthProfileStore => ({
         version: AUTH_STORE_VERSION,
         profiles: {
@@ -414,7 +414,7 @@ describe("promoteAuthProfileInOrder", () => {
 
   it("preserves derived runtime snapshots on a caller-owned main-store no-op", async () => {
     await withAuthProfileTestState(
-      "openclaw-auth-caller-noop-",
+      "grokbot-auth-caller-noop-",
       async ({ agentDir, agentDirFor }) => {
         const derivedAgentDir = agentDirFor("worker");
         const mainStore: AuthProfileStore = {
@@ -440,7 +440,7 @@ describe("promoteAuthProfileInOrder", () => {
   });
 
   it("drops caller-owned publication when a nested savepoint rolls back", async () => {
-    await withAuthProfileTestState("openclaw-auth-caller-savepoint-", async ({ agentDir }) => {
+    await withAuthProfileTestState("grokbot-auth-caller-savepoint-", async ({ agentDir }) => {
       const initial: AuthProfileStore = {
         version: AUTH_STORE_VERSION,
         profiles: {
@@ -471,7 +471,7 @@ describe("promoteAuthProfileInOrder", () => {
   });
 
   it("rolls back credentials when the state write fails", async () => {
-    await withAuthProfileTestState("openclaw-auth-atomic-save-", async ({ agentDir }) => {
+    await withAuthProfileTestState("grokbot-auth-atomic-save-", async ({ agentDir }) => {
       const oldStore: AuthProfileStore = {
         version: AUTH_STORE_VERSION,
         profiles: {
@@ -518,7 +518,7 @@ describe("promoteAuthProfileInOrder", () => {
   });
 
   it("restores materialized and runtime-external snapshot credentials after a temporary write", async () => {
-    await withAuthProfileTestState("openclaw-auth-runtime-restore-", async ({ agentDir }) => {
+    await withAuthProfileTestState("grokbot-auth-runtime-restore-", async ({ agentDir }) => {
       const keyRef = { source: "env", provider: "default", id: "OPENAI_API_KEY" } as const;
       saveAuthProfileStore(
         {
@@ -585,7 +585,7 @@ describe("promoteAuthProfileInOrder", () => {
     "preserves a runtime-only OAuth mutation %s",
     async (mutationTiming) => {
       await withAuthProfileTestState(
-        "openclaw-auth-runtime-edge-ownership-",
+        "grokbot-auth-runtime-edge-ownership-",
         async ({ agentDir }) => {
           const baselineStore: AuthProfileStore = {
             version: AUTH_STORE_VERSION,
@@ -676,7 +676,7 @@ describe("promoteAuthProfileInOrder", () => {
 
   it("restores captured and rebuilds newer derived snapshots after main rollback", async () => {
     await withAuthProfileTestState(
-      "openclaw-auth-main-derived-rollback-",
+      "grokbot-auth-main-derived-rollback-",
       async ({ agentDirFor }) => {
         const capturedAgentDir = agentDirFor("captured");
         const newerAgentDir = agentDirFor("newer");
@@ -783,7 +783,7 @@ describe("promoteAuthProfileInOrder", () => {
   });
 
   it("tracks state-only saves without advancing credential ownership", async () => {
-    await withAuthProfileTestState("openclaw-auth-state-lineage-", async ({ agentDir }) => {
+    await withAuthProfileTestState("grokbot-auth-state-lineage-", async ({ agentDir }) => {
       const store: AuthProfileStore = {
         version: AUTH_STORE_VERSION,
         profiles: {
@@ -808,7 +808,7 @@ describe("promoteAuthProfileInOrder", () => {
 
   it("marks newly saved runtime snapshot profiles as persisted", async () => {
     await withAuthProfileTestState(
-      "openclaw-auth-profile-runtime-persisted-",
+      "grokbot-auth-profile-runtime-persisted-",
       async ({ agentDir }) => {
         fs.mkdirSync(agentDir, { recursive: true });
         replaceRuntimeAuthProfileStoreSnapshots([
@@ -854,7 +854,7 @@ describe("promoteAuthProfileInOrder", () => {
 
   it("normalizes copied secrets when using the locked upsert path", async () => {
     await withAuthProfileTestState(
-      "openclaw-auth-profile-upsert-",
+      "grokbot-auth-profile-upsert-",
       async ({ agentDir }) => {
         fs.mkdirSync(agentDir, { recursive: true });
 
@@ -901,7 +901,7 @@ describe("promoteAuthProfileInOrder", () => {
   });
 
   it("persists openai oauth credentials inline", async () => {
-    await withAuthProfileTestState("openclaw-auth-profile-metadata-", ({ agentDir }) => {
+    await withAuthProfileTestState("grokbot-auth-profile-metadata-", ({ agentDir }) => {
       fs.mkdirSync(agentDir, { recursive: true });
       const profileId = "openai:default";
       const expires = Date.now() + 60 * 60 * 1000;
@@ -955,7 +955,7 @@ describe("promoteAuthProfileInOrder", () => {
   });
 
   it("preserves access-only openai oauth credentials inline", async () => {
-    await withAuthProfileTestState("openclaw-auth-profile-access-only-", ({ agentDir }) => {
+    await withAuthProfileTestState("grokbot-auth-profile-access-only-", ({ agentDir }) => {
       fs.mkdirSync(agentDir, { recursive: true });
       const profileId = "openai:default";
       const expires = Date.now() + 60 * 60 * 1000;
@@ -995,7 +995,7 @@ describe("promoteAuthProfileInOrder", () => {
   });
 
   it("keeps copied openai oauth profiles inline", async () => {
-    await withAuthProfileTestState("openclaw-auth-profile-copy-ref-", ({ agentDirFor }) => {
+    await withAuthProfileTestState("grokbot-auth-profile-copy-ref-", ({ agentDirFor }) => {
       const mainAgentDir = agentDirFor("main");
       const copiedAgentDir = agentDirFor("copied");
       fs.mkdirSync(mainAgentDir, { recursive: true });
@@ -1065,7 +1065,7 @@ describe("promoteAuthProfileInOrder", () => {
   });
 
   it("moves a relogin profile to the front of an existing per-agent provider order", async () => {
-    await withAuthProfileTestState("openclaw-auth-order-promote-", async ({ agentDir }) => {
+    await withAuthProfileTestState("grokbot-auth-order-promote-", async ({ agentDir }) => {
       fs.mkdirSync(agentDir, { recursive: true });
       const newProfileId = "openai:bunsthedev@gmail.com";
       const staleProfileId = "openai:val@viewdue.ai";
@@ -1111,7 +1111,7 @@ describe("promoteAuthProfileInOrder", () => {
   });
 
   it("creates a per-agent provider order when relogin has no existing order", async () => {
-    await withAuthProfileTestState("openclaw-auth-order-create-", async ({ agentDir }) => {
+    await withAuthProfileTestState("grokbot-auth-order-create-", async ({ agentDir }) => {
       fs.mkdirSync(agentDir, { recursive: true });
       const newProfileId = "openai:new-login";
       const primaryProfileId = "openai:primary-login";
@@ -1172,7 +1172,7 @@ describe("promoteAuthProfileInOrder", () => {
   });
 
   it("preserves config-only fallback ids when creating a relogin order", async () => {
-    await withAuthProfileTestState("openclaw-auth-order-config-only-", async ({ agentDir }) => {
+    await withAuthProfileTestState("grokbot-auth-order-config-only-", async ({ agentDir }) => {
       fs.mkdirSync(agentDir, { recursive: true });
       const newProfileId = "openai:new-login";
       const existingProfileId = "openai:old-login";
@@ -1223,7 +1223,7 @@ describe("promoteAuthProfileInOrder", () => {
   });
 
   it("keeps implicit round-robin when relogin has no existing order by default", async () => {
-    await withAuthProfileTestState("openclaw-auth-order-implicit-", async ({ agentDir }) => {
+    await withAuthProfileTestState("grokbot-auth-order-implicit-", async ({ agentDir }) => {
       fs.mkdirSync(agentDir, { recursive: true });
       const newProfileId = "openai:new-login";
       saveAuthProfileStore(
@@ -1254,7 +1254,7 @@ describe("promoteAuthProfileInOrder", () => {
   });
 
   it("clears matching lastGood after a stale refresh_token_reused profile", async () => {
-    await withAuthProfileTestState("openclaw-auth-clear-lastgood-", async ({ agentDir }) => {
+    await withAuthProfileTestState("grokbot-auth-clear-lastgood-", async ({ agentDir }) => {
       fs.mkdirSync(agentDir, { recursive: true });
       const staleProfileId = "openai:default";
       saveAuthProfileStore(
@@ -1285,7 +1285,7 @@ describe("promoteAuthProfileInOrder", () => {
   });
 
   it("removes selected profiles while preserving unrelated provider credentials", async () => {
-    await withAuthProfileTestState("openclaw-auth-remove-selected-", async ({ agentDir }) => {
+    await withAuthProfileTestState("grokbot-auth-remove-selected-", async ({ agentDir }) => {
       fs.mkdirSync(agentDir, { recursive: true });
       saveAuthProfileStore(
         {
@@ -1330,7 +1330,7 @@ describe("promoteAuthProfileInOrder", () => {
   });
 
   it("does not clear lastGood when the failed profile is not the stored profile", async () => {
-    await withAuthProfileTestState("openclaw-auth-clear-lastgood-keep-", async ({ agentDir }) => {
+    await withAuthProfileTestState("grokbot-auth-clear-lastgood-keep-", async ({ agentDir }) => {
       fs.mkdirSync(agentDir, { recursive: true });
       const goodProfileId = "openai:user@example.test";
       saveAuthProfileStore(

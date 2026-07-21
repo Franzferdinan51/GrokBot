@@ -42,7 +42,7 @@ function requireCapabilityOutput(result: CapabilityResult, index: number) {
 
 describe("runCapability video provider wiring", () => {
   it("truncates provider output without splitting a boundary emoji", async () => {
-    await withVideoFixture("openclaw-video-utf16-output", async ({ ctx, media, cache }) => {
+    await withVideoFixture("grokbot-video-utf16-output", async ({ ctx, media, cache }) => {
       const prefix = "v".repeat(79);
       const result = await runCapability({
         capability: "video",
@@ -92,8 +92,8 @@ describe("runCapability video provider wiring", () => {
     let seenBaseUrl: string | undefined;
     let seenHeaders: Record<string, string> | undefined;
 
-    await withTempDir({ prefix: "openclaw-video-auth-" }, async (isolatedAgentDir) => {
-      await withVideoFixture("openclaw-video-merge", async ({ ctx, media, cache }) => {
+    await withTempDir({ prefix: "grokbot-video-auth-" }, async (isolatedAgentDir) => {
+      await withVideoFixture("grokbot-video-merge", async ({ ctx, media, cache }) => {
         const cfg = {
           models: {
             providers: {
@@ -162,7 +162,7 @@ describe("runCapability video provider wiring", () => {
   });
 
   it("auto-selects moonshot for video when google is unavailable", async () => {
-    await withTempDir({ prefix: "openclaw-video-agent-" }, async (isolatedAgentDir) => {
+    await withTempDir({ prefix: "grokbot-video-agent-" }, async (isolatedAgentDir) => {
       await withEnvAsync(
         {
           GEMINI_API_KEY: undefined,
@@ -171,7 +171,7 @@ describe("runCapability video provider wiring", () => {
           OPENCLAW_AGENT_DIR: isolatedAgentDir,
         },
         async () => {
-          await withVideoFixture("openclaw-video-auto-moonshot", async ({ ctx, media, cache }) => {
+          await withVideoFixture("grokbot-video-auto-moonshot", async ({ ctx, media, cache }) => {
             const cfg = {
               models: {
                 providers: {
@@ -232,8 +232,8 @@ describe("runCapability video provider wiring", () => {
   it("uses the provider video default when the active provider has no model", async () => {
     let seenModel: string | undefined;
 
-    await withTempDir({ prefix: "openclaw-video-active-provider-" }, async (isolatedAgentDir) => {
-      await withVideoFixture("openclaw-video-active-default", async ({ ctx, media, cache }) => {
+    await withTempDir({ prefix: "grokbot-video-active-provider-" }, async (isolatedAgentDir) => {
+      await withVideoFixture("grokbot-video-active-default", async ({ ctx, media, cache }) => {
         const cfg = {
           models: {
             providers: {
@@ -290,9 +290,9 @@ describe("runCapability video provider wiring", () => {
     let seenModel: string | undefined;
 
     await withTempDir(
-      { prefix: "openclaw-video-no-default-provider-" },
+      { prefix: "grokbot-video-no-default-provider-" },
       async (isolatedAgentDir) => {
-        await withVideoFixture("openclaw-video-no-default", async ({ ctx, media, cache }) => {
+        await withVideoFixture("grokbot-video-no-default", async ({ ctx, media, cache }) => {
           const cfg = {
             models: {
               providers: {
@@ -348,8 +348,8 @@ describe("runCapability video provider wiring", () => {
   it("resolves provider registry defaultModels.video when a config entry has no explicit model", async () => {
     let seenModel: string | undefined;
 
-    await withTempDir({ prefix: "openclaw-video-entry-default-" }, async (isolatedAgentDir) => {
-      await withVideoFixture("openclaw-video-entry-default", async ({ ctx, media, cache }) => {
+    await withTempDir({ prefix: "grokbot-video-entry-default-" }, async (isolatedAgentDir) => {
+      await withVideoFixture("grokbot-video-entry-default", async ({ ctx, media, cache }) => {
         const cfg = {
           models: {
             providers: {
@@ -405,8 +405,8 @@ describe("runCapability video provider wiring", () => {
     const resolveApiKeyForProvider = vi.mocked(modelAuth.resolveApiKeyForProvider);
     resolveApiKeyForProvider.mockClear();
 
-    await withTempDir({ prefix: "openclaw-video-provider-api-" }, async (isolatedAgentDir) => {
-      await withVideoFixture("openclaw-video-provider-api", async ({ ctx, media, cache }) => {
+    await withTempDir({ prefix: "grokbot-video-provider-api-" }, async (isolatedAgentDir) => {
+      await withVideoFixture("grokbot-video-provider-api", async ({ ctx, media, cache }) => {
         let seenApiKey: string | undefined;
         const cfg = {
           models: {

@@ -26,7 +26,7 @@ const { registerManagedProxyBrowserCdpBypassMock } = vi.hoisted(() => ({
   ),
 }));
 
-vi.mock("openclaw/plugin-sdk/ssrf-runtime-internal", () => ({
+vi.mock("grokbot/plugin-sdk/ssrf-runtime-internal", () => ({
   registerManagedProxyBrowserCdpBypass: registerManagedProxyBrowserCdpBypassMock,
 }));
 
@@ -38,8 +38,8 @@ vi.mock("../infra/ports.js", () => ({
   ensurePortAvailable: ensurePortAvailableMock,
 }));
 
-vi.mock("../infra/tmp-openclaw-dir.js", () => ({
-  resolvePreferredOpenClawTmpDir: () => "/tmp/openclaw-browser-test",
+vi.mock("../infra/tmp-grokbot-dir.js", () => ({
+  resolvePreferredOpenClawTmpDir: () => "/tmp/grokbot-browser-test",
 }));
 
 // Shrink long launch/bootstrap timeouts so tests don't wait 15s for
@@ -348,7 +348,7 @@ describe("chrome.ts internal", () => {
   describe("resolveOpenClawUserDataDir", () => {
     it("falls back to the default profile name when none is supplied", () => {
       const dir = resolveOpenClawUserDataDir();
-      expect(dir.endsWith(path.join("openclaw", "user-data"))).toBe(true);
+      expect(dir.endsWith(path.join("grokbot", "user-data"))).toBe(true);
     });
 
     it("respects an explicit profile name", () => {
@@ -389,7 +389,7 @@ describe("chrome.ts internal", () => {
         run: async (baseUrl) => {
           const port = Number(new URL(baseUrl).port);
           const profile = {
-            name: "openclaw",
+            name: "grokbot",
             color: "#FF4500",
             cdpPort: port,
             cdpUrl: baseUrl,
@@ -413,7 +413,7 @@ describe("chrome.ts internal", () => {
     let tmpDir = "";
 
     beforeEach(async () => {
-      tmpDir = await fsp.mkdtemp(path.join(os.tmpdir(), "openclaw-launch-"));
+      tmpDir = await fsp.mkdtemp(path.join(os.tmpdir(), "grokbot-launch-"));
     });
 
     afterEach(async () => {
@@ -475,7 +475,7 @@ describe("chrome.ts internal", () => {
 
     it("rejects a remote profile before attempting to spawn", async () => {
       const profile = {
-        name: "openclaw",
+        name: "grokbot",
         color: "#FF4500",
         cdpPort: 19222,
         cdpUrl: "http://example.com:19222",
@@ -490,7 +490,7 @@ describe("chrome.ts internal", () => {
     it("returns structured no-display details before spawning headed Chrome", async () => {
       const profile = {
         ...makeProfile(51110),
-        driver: "openclaw",
+        driver: "grokbot",
         attachOnly: false,
         headless: false,
         headlessSource: "profile",
@@ -888,7 +888,7 @@ describe("chrome.ts internal", () => {
     });
 
     it("clears stale singleton locks even when the profile-in-use marker rolls out of the stderr tail", async () => {
-      const configPath = path.join(tmpDir, "openclaw.json");
+      const configPath = path.join(tmpDir, "grokbot.json");
       await fsp.writeFile(
         configPath,
         JSON.stringify({
@@ -1627,7 +1627,7 @@ describe("chrome.ts internal", () => {
       // properly-shaped Local State + Preferences pair that matches
       // the desired name and color seed so isProfileDecorated returns
       // true on the first check.
-      const stageDir = await fsp.mkdtemp(path.join(os.tmpdir(), "openclaw-decorated-"));
+      const stageDir = await fsp.mkdtemp(path.join(os.tmpdir(), "grokbot-decorated-"));
       try {
         const profileName = path.basename(stageDir);
         const colorHex = "#FF4500";
@@ -1717,7 +1717,7 @@ describe("chrome.ts internal", () => {
         run: async (baseUrl) => {
           const port = Number(new URL(baseUrl).port);
           const profile = {
-            name: "openclaw",
+            name: "grokbot",
             color: undefined,
             cdpPort: port,
             cdpUrl: baseUrl,
@@ -1738,8 +1738,8 @@ describe("chrome.ts internal", () => {
     it("buffers stderr chunks when Chrome emits diagnostics while CDP comes up", async () => {
       // Covers onStderr (appending chunks to the bounded stderr tail) plus the
       // stderrHint truthy branch on failure.
-      const configDir = await fsp.mkdtemp(path.join(os.tmpdir(), "openclaw-redact-off-"));
-      const configPath = path.join(configDir, "openclaw.json");
+      const configDir = await fsp.mkdtemp(path.join(os.tmpdir(), "grokbot-redact-off-"));
+      const configPath = path.join(configDir, "grokbot.json");
       await fsp.writeFile(configPath, JSON.stringify({ logging: { redactSensitive: "off" } }));
       vi.stubEnv("OPENCLAW_CONFIG_PATH", configPath);
       const executablePath = path.join(configDir, "chrome-stderr-existing");
@@ -1766,7 +1766,7 @@ describe("chrome.ts internal", () => {
       mockExpiredLaunchPollingClock();
       vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new Error("ECONNREFUSED")));
       const profile = {
-        name: "openclaw-stderr",
+        name: "grokbot-stderr",
         color: "#FF4500",
         cdpPort: 54321,
         cdpUrl: "http://127.0.0.1:54321",
@@ -1813,7 +1813,7 @@ describe("chrome.ts internal", () => {
         mockExpiredLaunchPollingClock();
         vi.stubGlobal("fetch", vi.fn().mockRejectedValue(new Error("ECONNREFUSED")));
         const profile = {
-          name: "openclaw-mac",
+          name: "grokbot-mac",
           color: "#FF4500",
           cdpPort: 54322,
           cdpUrl: "http://127.0.0.1:54322",
@@ -1869,7 +1869,7 @@ describe("chrome.ts internal", () => {
         run: async (baseUrl) => {
           const port = Number(new URL(baseUrl).port);
           const profile = {
-            name: "openclaw",
+            name: "grokbot",
             color: "#FF4500",
             cdpPort: port,
             cdpUrl: baseUrl,
@@ -1923,7 +1923,7 @@ describe("chrome.ts internal", () => {
         run: async (baseUrl) => {
           const port = Number(new URL(baseUrl).port);
           const profile = {
-            name: "openclaw",
+            name: "grokbot",
             color: "#FF4500",
             cdpPort: port,
             cdpUrl: baseUrl,
@@ -1968,7 +1968,7 @@ describe("chrome.ts internal", () => {
       // fs.writeFileSync to throw for the marker file.
       const writeSpy = vi.spyOn(fs, "writeFileSync").mockImplementation((p) => {
         const s = String(p);
-        if (s.endsWith(".openclaw-profile-decorated") || s.endsWith("Preferences")) {
+        if (s.endsWith(".grokbot-profile-decorated") || s.endsWith("Preferences")) {
           throw new Error("write blew up");
         }
       });
@@ -1978,7 +1978,7 @@ describe("chrome.ts internal", () => {
         run: async (baseUrl) => {
           const port = Number(new URL(baseUrl).port);
           const profile = {
-            name: "openclaw-warn",
+            name: "grokbot-warn",
             color: "#FF4500",
             cdpPort: port,
             cdpUrl: baseUrl,
@@ -2011,7 +2011,7 @@ describe("chrome.ts internal", () => {
         run: async (baseUrl) => {
           const port = Number(new URL(baseUrl).port);
           const profile = {
-            name: "openclaw-nopid",
+            name: "grokbot-nopid",
             color: "#FF4500",
             cdpPort: port,
             cdpUrl: baseUrl,
@@ -2033,7 +2033,7 @@ describe("chrome.ts internal", () => {
   describe("launchOpenClawChrome managed-proxy CDP bypass", () => {
     const makeLoopbackProfile = (cdpPort: number): ResolvedBrowserProfile =>
       ({
-        name: "openclaw-bypass",
+        name: "grokbot-bypass",
         color: "#FF4500",
         cdpPort,
         cdpUrl: `http://127.0.0.1:${cdpPort}`,
@@ -2133,7 +2133,7 @@ describe("chrome.ts internal", () => {
       // which fires before the bypass registration. Verify that the guard
       // path never reaches registerManagedProxyBrowserCdpBypass.
       const remoteProfile = {
-        name: "openclaw-remote",
+        name: "grokbot-remote",
         color: "#FF4500",
         cdpPort: 19222,
         cdpUrl: "http://browserless.example.com:19222",

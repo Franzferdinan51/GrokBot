@@ -1,7 +1,7 @@
 import { html } from "lit";
 import { property } from "lit/decorators.js";
 import { t } from "../i18n/index.ts";
-import { OpenClawLightDomElement } from "../lit/openclaw-element.ts";
+import { OpenClawLightDomElement } from "../lit/grokbot-element.ts";
 import { icons } from "./icons.ts";
 import { activateMenuShortcut, menuShortcutHint } from "./menu-shortcuts.ts";
 import "./web-awesome.ts";
@@ -122,6 +122,6 @@ export class NativeLinkMenu extends OpenClawLightDomElement {
   }
 }
 
-if (!customElements.get("openclaw-native-link-menu")) {
-  customElements.define("openclaw-native-link-menu", NativeLinkMenu);
+if (!customElements.get("grokbot-native-link-menu")) {
+  customElements.define("grokbot-native-link-menu", NativeLinkMenu);
 }

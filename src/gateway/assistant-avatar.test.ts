@@ -3,7 +3,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import { useAutoCleanupTempDirTracker } from "../../test/helpers/temp-dir.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { openGatewayAssistantAvatar, resolveGatewayAssistantAvatar } from "./assistant-avatar.js";
 import { resolveAssistantIdentity } from "./assistant-identity.js";
 
@@ -16,7 +16,7 @@ const tempRoots = useAutoCleanupTempDirTracker(afterEach);
 type GatewayAssistantAvatarProjection = ReturnType<typeof resolveGatewayAssistantAvatar>;
 
 function createWorkspace(): { workspace: string; cfg: OpenClawConfig } {
-  const root = tempRoots.make("openclaw-gateway-avatar-");
+  const root = tempRoots.make("grokbot-gateway-avatar-");
   const workspace = path.join(root, "workspace");
   fs.mkdirSync(workspace);
   return {
@@ -140,19 +140,19 @@ describe("resolveGatewayAssistantAvatar", () => {
 
   it("preserves same-origin avatar routes and applies the configured base path", () => {
     const { cfg } = createWorkspace();
-    cfg.gateway = { controlUi: { basePath: "/openclaw" } };
+    cfg.gateway = { controlUi: { basePath: "/grokbot" } };
 
     expect(
       resolveGatewayAssistantAvatar({
         cfg,
         identity: { agentId: "main", avatar: "/avatar/main" },
       }),
-    ).toEqual({ avatar: "/openclaw/avatar/main", resolution: null });
+    ).toEqual({ avatar: "/grokbot/avatar/main", resolution: null });
     expect(
       resolveGatewayAssistantAvatar({
         cfg,
-        identity: { agentId: "main", avatar: "/openclaw/avatar/main" },
+        identity: { agentId: "main", avatar: "/grokbot/avatar/main" },
       }),
-    ).toEqual({ avatar: "/openclaw/avatar/main", resolution: null });
+    ).toEqual({ avatar: "/grokbot/avatar/main", resolution: null });
   });
 });

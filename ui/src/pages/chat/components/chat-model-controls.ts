@@ -318,7 +318,7 @@ function renderModelProvenanceRow(params: {
         </span>
         ${params.hasModelOverride
           ? html`
-              <openclaw-tooltip
+              <grokbot-tooltip
                 .content=${t("chat.modelControls.resetToDefault", {
                   model: params.defaultModelLabel,
                 })}
@@ -342,7 +342,7 @@ function renderModelProvenanceRow(params: {
                 >
                   ${icons.x}
                 </button>
-              </openclaw-tooltip>
+              </grokbot-tooltip>
             `
           : ""}
       </span>
@@ -516,7 +516,7 @@ function renderChatModelReasoningSelect(params: {
     const modelLabel = formatCombinedPickerModelOptionLabel(entry);
     return html`
       <div class="chat-controls__combined-model">
-        <openclaw-tooltip .content=${entry.label}>
+        <grokbot-tooltip .content=${entry.label}>
           <button
             class="chat-controls__inline-select-option chat-controls__combined-model-option ${selected
               ? "chat-controls__inline-select-option--selected"
@@ -557,7 +557,7 @@ function renderChatModelReasoningSelect(params: {
                 `
               : ""}
           </button>
-        </openclaw-tooltip>
+        </grokbot-tooltip>
       </div>
     `;
   };
@@ -684,7 +684,7 @@ function renderChatModelReasoningSelect(params: {
                           </span>
                           ${hasThinkingOverride
                             ? html`
-                                <openclaw-tooltip
+                                <grokbot-tooltip
                                   .content=${`Reset to default (${defaultLevelLabel})`}
                                 >
                                   <button
@@ -704,7 +704,7 @@ function renderChatModelReasoningSelect(params: {
                                   >
                                     ${icons.x}
                                   </button>
-                                </openclaw-tooltip>
+                                </grokbot-tooltip>
                               `
                             : ""}
                         </span>
@@ -791,7 +791,7 @@ function renderChatModelReasoningSelect(params: {
                         <span class="chat-controls__inline-select-section-label"
                           >${t("chat.modelControls.speed")}</span
                         >
-                        <openclaw-tooltip .content=${speedTooltip}>
+                        <grokbot-tooltip .content=${speedTooltip}>
                           <button
                             class="chat-controls__speed-toggle ${fastMode.active
                               ? "chat-controls__speed-toggle--active"
@@ -816,7 +816,7 @@ function renderChatModelReasoningSelect(params: {
                             </span>
                             <span>${fastMode.label}</span>
                           </button>
-                        </openclaw-tooltip>
+                        </grokbot-tooltip>
                       </div>
                     `
                   : nothing}

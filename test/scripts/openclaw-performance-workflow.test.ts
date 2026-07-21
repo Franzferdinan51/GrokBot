@@ -1,4 +1,4 @@
-// Openclaw Performance Workflow tests cover openclaw performance workflow script behavior.
+// Openclaw Performance Workflow tests cover grokbot performance workflow script behavior.
 import { execFileSync, spawnSync } from "node:child_process";
 import {
   chmodSync,
@@ -12,11 +12,11 @@ import {
 } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { describe, expect, it } from "vitest";
 import { parse } from "yaml";
 
-const WORKFLOW = ".github/workflows/openclaw-performance.yml";
+const WORKFLOW = ".github/workflows/grokbot-performance.yml";
 
 type WorkflowStep = {
   name?: string;
@@ -70,12 +70,12 @@ function kovaMatrixEntries(): Array<Record<string, string>> {
   return readWorkflow().jobs?.kova?.strategy?.matrix?.include ?? [];
 }
 
-describe("OpenClaw performance workflow", () => {
+describe("GrokBot performance workflow", () => {
   it("uses an optional dispatch identifier to name parent-owned runs", () => {
     const workflow = readFileSync(WORKFLOW, "utf8");
 
     expect(workflow).toContain(
-      "run-name: ${{ inputs.dispatch_id != '' && format('OpenClaw Performance {0}', inputs.dispatch_id) || 'OpenClaw Performance' }}",
+      "run-name: ${{ inputs.dispatch_id != '' && format('GrokBot Performance {0}', inputs.dispatch_id) || 'GrokBot Performance' }}",
     );
     expect(workflow).toContain("dispatch_id:");
     expect(workflow).toContain("Optional parent workflow dispatch identifier");
@@ -128,10 +128,10 @@ describe("OpenClaw performance workflow", () => {
 
   it("resolves each target once before benchmark and publication fan out", () => {
     const workflow = readWorkflow();
-    const resolveTarget = findStep("Resolve OpenClaw target ref", "resolve_target");
-    const checkout = findStep("Checkout OpenClaw");
+    const resolveTarget = findStep("Resolve GrokBot target ref", "resolve_target");
+    const checkout = findStep("Checkout GrokBot");
     const record = findStep("Record tested revision");
-    const sourceCheckout = findStep("Checkout OpenClaw source target", "source_performance");
+    const sourceCheckout = findStep("Checkout GrokBot source target", "source_performance");
     const sourceRecord = findStep("Record source performance revision", "source_performance");
 
     expect(workflow.jobs?.kova?.needs).toBe("resolve_target");
@@ -152,7 +152,7 @@ describe("OpenClaw performance workflow", () => {
     expect(
       Object.values(workflow.jobs ?? {})
         .flatMap((job) => job.steps ?? [])
-        .filter((step) => step.name === "Resolve OpenClaw target ref"),
+        .filter((step) => step.name === "Resolve GrokBot target ref"),
     ).toHaveLength(1);
   });
 
@@ -175,7 +175,7 @@ describe("OpenClaw performance workflow", () => {
 
     expect(baseline.if).toBeUndefined();
     expect(baseline.env?.CLAWGRIT_REPORTS_TOKEN).toBeUndefined();
-    expect(run).toContain('remote add origin "https://github.com/openclaw/clawgrit-reports.git"');
+    expect(run).toContain('remote add origin "https://github.com/grokbot/clawgrit-reports.git"');
     expect(run).toContain("fetch --filter=blob:none --depth=1 origin main");
     expect(run).toContain('cat-file -e "FETCH_HEAD:${pointer}"');
     expect(run).toContain('show "FETCH_HEAD:${pointer}"');
@@ -188,7 +188,7 @@ describe("OpenClaw performance workflow", () => {
   });
 
   it("builds only the QA and startup artifacts required by source probes", () => {
-    const run = findStep("Run OpenClaw source performance probes", "source_performance").run ?? "";
+    const run = findStep("Run GrokBot source performance probes", "source_performance").run ?? "";
     const build = "OPENCLAW_BUILD_PRIVATE_QA=1 node scripts/build-all.mjs sourcePerformance";
 
     expect(run).toContain("module.BUILD_ALL_PROFILES?.sourcePerformance");
@@ -199,7 +199,7 @@ describe("OpenClaw performance workflow", () => {
   });
 
   it("keeps source gateway health waits within one startup budget", () => {
-    const run = findStep("Run OpenClaw source performance probes", "source_performance").run ?? "";
+    const run = findStep("Run GrokBot source performance probes", "source_performance").run ?? "";
     const deadline = "gateway_ready_deadline=$((SECONDS + gateway_ready_timeout_seconds))";
     const remaining = "gateway_ready_remaining=$((gateway_ready_deadline - SECONDS))";
     const deadlineFailure = [
@@ -257,12 +257,12 @@ describe("OpenClaw performance workflow", () => {
       "${{ github.event_name == 'schedule' || inputs.profile == 'release' }}",
     );
     expect(kovaSteps.some((step) => step.name === "Upload Kova artifacts")).toBe(true);
-    expect(kovaSteps.some((step) => step.name === "Run OpenClaw source performance probes")).toBe(
+    expect(kovaSteps.some((step) => step.name === "Run GrokBot source performance probes")).toBe(
       false,
     );
     expect(
       workflow.jobs?.source_performance?.steps?.some(
-        (step) => step.name === "Run OpenClaw source performance probes",
+        (step) => step.name === "Run GrokBot source performance probes",
       ),
     ).toBe(true);
     expect(JSON.stringify(kovaSteps)).not.toContain("CLAWSWEEPER_APP_PRIVATE_KEY");
@@ -320,7 +320,7 @@ describe("OpenClaw performance workflow", () => {
     expect(appToken.with).toEqual({
       "client-id": "Iv23liOECG0slfuhz093",
       "private-key": "${{ secrets.CLAWSWEEPER_APP_PRIVATE_KEY }}",
-      owner: "openclaw",
+      owner: "grokbot",
       repositories: "clawgrit-reports",
       "permission-contents": "write",
     });
@@ -390,7 +390,7 @@ describe("OpenClaw performance workflow", () => {
     );
     expect(prepare.run).toContain('find "$input_root" -type d -path "*/reports/${LANE_ID}"');
     expect(prepare.run).toContain(
-      'source_path="${input_root}/openclaw-performance-source-${GITHUB_RUN_ID}-${SOURCE_PRODUCER_ATTEMPT}/${LANE_ID}"',
+      'source_path="${input_root}/grokbot-performance-source-${GITHUB_RUN_ID}-${SOURCE_PRODUCER_ATTEMPT}/${LANE_ID}"',
     );
     expect(prepare.run).toContain('run_slug="${GITHUB_RUN_ID}-${PRODUCER_ATTEMPT}"');
     expect(prepare.run).toContain('cat-file -e "HEAD:${dest_rel}/report.json"');
@@ -401,7 +401,7 @@ describe("OpenClaw performance workflow", () => {
     expect(prepare.run).toContain("contains a symlink or special file");
     expect(prepare.run).toContain("config core.hooksPath /dev/null");
     expect(prepare.run).toContain(
-      'remote add origin "https://github.com/openclaw/clawgrit-reports.git"',
+      'remote add origin "https://github.com/grokbot/clawgrit-reports.git"',
     );
     expect(publish.env?.CLAWGRIT_REPORTS_APP_TOKEN).toBe(
       "${{ steps.clawgrit_app_token.outputs.token }}",
@@ -454,10 +454,10 @@ describe("OpenClaw performance workflow", () => {
       "persist-credentials": false,
     });
     expect(upload.with?.path).toContain(".artifacts/kova/bundles/${{ matrix.lane }}");
-    expect(upload.with?.path).not.toContain(".artifacts/openclaw-performance/source");
+    expect(upload.with?.path).not.toContain(".artifacts/grokbot-performance/source");
     expect(sourceUpload.with).toMatchObject({
-      name: "openclaw-performance-source-${{ github.run_id }}-${{ github.run_attempt }}",
-      path: ".artifacts/openclaw-performance/source",
+      name: "grokbot-performance-source-${{ github.run_id }}-${{ github.run_attempt }}",
+      path: ".artifacts/grokbot-performance/source",
       "if-no-files-found": "error",
     });
     expect(prepare.env?.ARTIFACT_ID).toBe("${{ steps.artifact.outputs.id }}");
@@ -470,7 +470,7 @@ describe("OpenClaw performance workflow", () => {
 
   it("reuses the producing artifact when only publisher jobs rerun", () => {
     const artifact = findStep("Resolve Kova artifact", "publish");
-    const root = mkdtempSync(join(realpathSync(tmpdir()), "openclaw-artifact-resolver-"));
+    const root = mkdtempSync(join(realpathSync(tmpdir()), "grokbot-artifact-resolver-"));
     const bin = join(root, "bin");
     const output = join(root, "output");
     mkdirSync(bin);
@@ -478,9 +478,9 @@ describe("OpenClaw performance workflow", () => {
       join(bin, "gh"),
       `#!/bin/sh
 printf '%s\\n' \
-  '101	openclaw-performance-mock-provider-9001-1' \
-  '202	openclaw-performance-source-9001-2' \
-  '303	openclaw-performance-mock-provider-9001-3'
+  '101	grokbot-performance-mock-provider-9001-1' \
+  '202	grokbot-performance-source-9001-2' \
+  '303	grokbot-performance-mock-provider-9001-3'
 `,
     );
     chmodSync(join(bin, "gh"), 0o755);
@@ -492,7 +492,7 @@ printf '%s\\n' \
           ...process.env,
           PATH: `${bin}:${process.env.PATH ?? ""}`,
           GITHUB_OUTPUT: output,
-          GITHUB_REPOSITORY: "openclaw/openclaw",
+          GITHUB_REPOSITORY: "grokbot/grokbot",
           GITHUB_RUN_ATTEMPT: "2",
           GITHUB_RUN_ID: "9001",
           LANE_ID: "mock-provider",
@@ -510,11 +510,11 @@ printf '%s\\n' \
 
   it("advertises a clawgrit URL only after a direct or remotely verified push", () => {
     const publish = findStep("Publish to clawgrit reports", "publish");
-    const root = mkdtempSync(join(realpathSync(tmpdir()), "openclaw-publish-shell-"));
+    const root = mkdtempSync(join(realpathSync(tmpdir()), "grokbot-publish-shell-"));
     const bin = join(root, "bin");
     const reportsRoot = join(root, "reports");
     const reportUrl =
-      "https://github.com/openclaw/clawgrit-reports/tree/main/openclaw-performance/main/123-1/mock-provider";
+      "https://github.com/grokbot/clawgrit-reports/tree/main/grokbot-performance/main/123-1/mock-provider";
     mkdirSync(bin);
     mkdirSync(reportsRoot);
     writeFileSync(
@@ -522,7 +522,7 @@ printf '%s\\n' \
       `#!/bin/bash
 case "$*" in
   *"config --local --get core.hooksPath"*) echo /dev/null ;;
-  *"remote get-url origin"*) echo https://github.com/openclaw/clawgrit-reports.git ;;
+  *"remote get-url origin"*) echo https://github.com/grokbot/clawgrit-reports.git ;;
   *" push origin HEAD:main"*) printf push > "$STUB_PUSH_MARKER"; exit "\${STUB_PUSH_STATUS:-0}" ;;
   *" fetch --depth=1 origin main"*) exit "\${STUB_FETCH_STATUS:-1}" ;;
   *"cat-file -e FETCH_HEAD:"*) exit "\${STUB_REMOTE_REPORT_STATUS:-1}" ;;
@@ -561,7 +561,7 @@ esac
           ...process.env,
           PATH: `${bin}:${process.env.PATH ?? ""}`,
           ...(appToken === null ? {} : { CLAWGRIT_REPORTS_APP_TOKEN: appToken }),
-          DEST_REL: "openclaw-performance/main/123-1/mock-provider",
+          DEST_REL: "grokbot-performance/main/123-1/mock-provider",
           GITHUB_STEP_SUMMARY: summary,
           REPORT_COMMIT: "a".repeat(40),
           REPORT_PUBLISH_REQUIRED: "true",
@@ -612,15 +612,15 @@ esac
   });
 
   it("preserves both reports when concurrent writers update one latest pointer", () => {
-    const root = mkdtempSync(join(realpathSync(tmpdir()), "openclaw-report-race-"));
+    const root = mkdtempSync(join(realpathSync(tmpdir()), "grokbot-report-race-"));
     const remote = join(root, "reports.git");
     const seed = join(root, "seed");
     const writerA = join(root, "writer-a");
     const writerB = join(root, "writer-b");
     const verify = join(root, "verify");
-    const latest = "openclaw-performance/main/latest-mock-provider.json";
-    const reportA = "openclaw-performance/main/100-1/mock-provider";
-    const reportB = "openclaw-performance/main/200-1/mock-provider";
+    const latest = "grokbot-performance/main/latest-mock-provider.json";
+    const reportA = "grokbot-performance/main/100-1/mock-provider";
+    const reportB = "grokbot-performance/main/200-1/mock-provider";
 
     const configureWriter = (repo: string) => {
       runGit(repo, ["config", "user.name", "publisher-test"]);
@@ -632,7 +632,7 @@ esac
       mkdirSync(join(repo, reportPath), { recursive: true });
       writeFileSync(join(repo, reportPath, "report.json"), JSON.stringify({ marker }));
       writeFileSync(join(repo, latest), JSON.stringify({ path: reportPath }));
-      runGit(repo, ["add", "--", "openclaw-performance"]);
+      runGit(repo, ["add", "--", "grokbot-performance"]);
       runGit(repo, ["commit", "-m", `perf: add ${marker}`]);
     };
 

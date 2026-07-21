@@ -4,8 +4,8 @@
 import {
   clampTimerTimeoutMs,
   resolveTimerTimeoutMs,
-} from "@openclaw/normalization-core/number-coercion";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+} from "@grokbot/normalization-core/number-coercion";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import type { ModelCatalogEntry, ModelCatalogSnapshot } from "./model-catalog.types.js";
 import {
   buildConfiguredModelCatalog,

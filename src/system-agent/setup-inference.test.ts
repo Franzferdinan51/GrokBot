@@ -1,6 +1,6 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { resolveAgentDir } from "../agents/agent-scope-config.js";
 import {
@@ -15,7 +15,7 @@ import {
   type AgentExecutionAuthBinding,
 } from "../agents/execution-auth-binding.js";
 import { detectInferenceBackends } from "../commands/onboard-inference.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import type { PluginInstallRecord } from "../config/types.plugins.js";
 import { withoutPluginInstallRecords } from "../plugins/installed-plugin-index-records.js";
 import { hasRetainedManagedNpmInstallMarker } from "../plugins/managed-npm-retention.js";
@@ -30,7 +30,7 @@ import {
 } from "../plugins/runtime.js";
 import { ensurePluginRegistryLoaded } from "../plugins/runtime/runtime-registry-loader.js";
 import type { ProviderPlugin } from "../plugins/types.js";
-import { disposeOpenClawAgentDatabaseByPath } from "../state/openclaw-agent-db.js";
+import { disposeOpenClawAgentDatabaseByPath } from "../state/grokbot-agent-db.js";
 import { createSuiteTempRootTracker } from "../test-helpers/temp-dir.js";
 import { cleanupSystemAgentSession, createSystemAgentSession } from "./agent-turn.js";
 import { runSystemAgentTurnWithDeps } from "./agent-turn.test-support.js";
@@ -80,7 +80,7 @@ vi.mock("../config/config.js", async (importOriginal) => {
     readConfigFileSnapshot: vi.fn(async () => ({
       exists: false,
       valid: false,
-      path: "/tmp/openclaw.json",
+      path: "/tmp/grokbot.json",
       issues: [],
       config: {},
     })),
@@ -217,7 +217,7 @@ type SuccessfulRunParams = {
 function successfulAgentHarnessBinding(params?: SuccessfulRunParams): AgentExecutionAuthBinding {
   const requestedHarnessId = params?.agentHarnessRuntimeOverride?.trim();
   const agentHarnessId =
-    !requestedHarnessId || requestedHarnessId === "auto" ? "openclaw" : requestedHarnessId;
+    !requestedHarnessId || requestedHarnessId === "auto" ? "grokbot" : requestedHarnessId;
   return {
     agentHarnessId,
     ...(agentHarnessId === "codex"
@@ -290,7 +290,7 @@ function createConfigTransformHarness(
         snapshot: {
           exists: true,
           valid: true,
-          path: "/tmp/openclaw.json",
+          path: "/tmp/grokbot.json",
           config: state.runtimeConfig,
           sourceConfig: state.sourceConfig,
           runtimeConfig: state.runtimeConfig,
@@ -330,7 +330,7 @@ describe("applySystemAgentModelSelection", () => {
             id: "ops",
             default: true,
             models: {
-              "openai/gpt-5.5": { agentRuntime: { id: "openclaw" } },
+              "openai/gpt-5.5": { agentRuntime: { id: "grokbot" } },
             },
           },
         ],
@@ -348,7 +348,7 @@ describe("applySystemAgentModelSelection", () => {
       id: "ops",
       models: { "openai/gpt-5.5": { agentRuntime: { id: "codex" } } },
     });
-    expect(config.agents.list[0]?.models["openai/gpt-5.5"]?.agentRuntime?.id).toBe("openclaw");
+    expect(config.agents.list[0]?.models["openai/gpt-5.5"]?.agentRuntime?.id).toBe("grokbot");
   });
 });
 
@@ -472,13 +472,13 @@ describe("detectSetupInference", () => {
     vi.mocked(readConfigFileSnapshot).mockResolvedValueOnce({
       exists: true,
       valid: false,
-      path: "/tmp/openclaw.json",
+      path: "/tmp/grokbot.json",
       issues: [{ path: "agents.defaults.model", message: "Expected a model reference" }],
       config: {},
     } as never);
 
     await expect(detectSetupInference()).rejects.toThrow(
-      "OpenClaw config /tmp/openclaw.json is invalid (agents.defaults.model: Expected a model reference)",
+      "GrokBot config /tmp/grokbot.json is invalid (agents.defaults.model: Expected a model reference)",
     );
   });
 
@@ -780,7 +780,7 @@ async function runCodexSetupWithFinalConfig(params: {
         snapshot: {
           exists: true,
           valid: true,
-          path: "/tmp/openclaw.json",
+          path: "/tmp/grokbot.json",
           config: runtimeConfig,
           sourceConfig: persistedConfig,
           runtimeConfig,
@@ -799,7 +799,7 @@ async function runCodexSetupWithFinalConfig(params: {
     return {
       exists: true,
       valid: true,
-      path: "/tmp/openclaw.json",
+      path: "/tmp/grokbot.json",
       hash: committed ? "after-setup" : "before-setup",
       issues: [],
       config: runtimeConfig,
@@ -809,7 +809,7 @@ async function runCodexSetupWithFinalConfig(params: {
   });
   const result = await activateSetupInference({
     kind: "codex-cli",
-    workspace: "/tmp/openclaw-workspace",
+    workspace: "/tmp/grokbot-workspace",
     surface: "gateway",
     runtime,
     deps: {
@@ -832,7 +832,7 @@ async function runCodexSetupWithFinalConfig(params: {
 describe("activateSetupInference", () => {
   it("omits the token cap when harness selection is automatic", () => {
     expect(resolveSetupInferenceProbeStreamParams("auto")).toEqual({});
-    expect(resolveSetupInferenceProbeStreamParams("openclaw")).toEqual({
+    expect(resolveSetupInferenceProbeStreamParams("grokbot")).toEqual({
       streamParams: { maxTokens: 32 },
     });
   });
@@ -901,7 +901,7 @@ describe("activateSetupInference", () => {
           readConfigFileSnapshot: vi.fn(async () => ({
             exists: true,
             valid: false,
-            path: "/tmp/openclaw.json",
+            path: "/tmp/grokbot.json",
             issues: [{ path: "gateway.port", message: "Expected a number" }],
             config: {},
           })) as never,
@@ -910,7 +910,7 @@ describe("activateSetupInference", () => {
         },
       }),
     ).rejects.toThrow(
-      "OpenClaw config /tmp/openclaw.json is invalid (gateway.port: Expected a number). Fix it before running setup.",
+      "GrokBot config /tmp/grokbot.json is invalid (gateway.port: Expected a number). Fix it before running setup.",
     );
     expect(runEmbeddedAgent).not.toHaveBeenCalled();
     expect(transformConfig).not.toHaveBeenCalled();
@@ -929,7 +929,7 @@ describe("activateSetupInference", () => {
         readConfigFileSnapshot: vi.fn(async () => ({
           exists: true,
           valid: true,
-          path: "/tmp/openclaw.json",
+          path: "/tmp/grokbot.json",
           hash: "setup-config-hash",
           config: {},
           sourceConfig: {},
@@ -945,11 +945,11 @@ describe("activateSetupInference", () => {
       ok: true,
       lines: [
         "Inference verified: claude-cli/claude-opus-4-8",
-        "Inference setup completed, but OpenClaw could not record its audit entry: audit directory is read-only",
+        "Inference setup completed, but GrokBot could not record its audit entry: audit directory is read-only",
       ],
     });
     expect(error).toHaveBeenCalledWith(
-      "Inference setup completed, but OpenClaw could not record its audit entry: audit directory is read-only",
+      "Inference setup completed, but GrokBot could not record its audit entry: audit directory is read-only",
     );
   });
 
@@ -982,12 +982,12 @@ describe("activateSetupInference", () => {
           {
             id: "ops",
             default: true,
-            agentDir: "/tmp/openclaw-ops-agent",
+            agentDir: "/tmp/grokbot-ops-agent",
             params: { temperature: 0.2 },
             tools: { allow: ["read"], deny: ["exec"] },
           },
           {
-            id: "openclaw",
+            id: "grokbot",
             params: { temperature: 1.7 },
             tools: { allow: ["exec"] },
           },
@@ -1021,21 +1021,21 @@ describe("activateSetupInference", () => {
     expect(runCliAgent).toHaveBeenCalledOnce();
     expect(runCliAgent).toHaveBeenCalledWith(
       expect.objectContaining({
-        agentId: "openclaw",
-        agentDir: "/tmp/openclaw-ops-agent",
+        agentId: "grokbot",
+        agentDir: "/tmp/grokbot-ops-agent",
         executionMode: "side-question",
         disableTools: true,
         cleanupCliLiveSessionOnRunEnd: true,
       }),
     );
     const probeConfig = runCliAgent.mock.calls[0]?.[0].config;
-    expect(probeConfig?.agents?.list?.find((agent) => agent.id === "openclaw")).toEqual({
-      id: "openclaw",
+    expect(probeConfig?.agents?.list?.find((agent) => agent.id === "grokbot")).toEqual({
+      id: "grokbot",
       params: { temperature: 0.2 },
       tools: { allow: ["read"], deny: ["exec"] },
     });
-    expect(configHarness.current().agents?.list?.find((agent) => agent.id === "openclaw")).toEqual({
-      id: "openclaw",
+    expect(configHarness.current().agents?.list?.find((agent) => agent.id === "grokbot")).toEqual({
+      id: "grokbot",
       params: { temperature: 1.7 },
       tools: { allow: ["exec"] },
     });
@@ -1064,7 +1064,7 @@ describe("activateSetupInference", () => {
     expect(configHarness.current()).toEqual({});
   });
 
-  it("rejects an unattested existing route before handing off to OpenClaw", async () => {
+  it("rejects an unattested existing route before handing off to GrokBot", async () => {
     const config = {
       agents: { defaults: { model: "openai/gpt-5.5" } },
     } satisfies OpenClawConfig;
@@ -1099,7 +1099,7 @@ describe("activateSetupInference", () => {
       deps: {
         runCliAgent: vi.fn(successfulRunner("claude-cli", "claude-opus-4-8")) as never,
         transformConfigWithPendingPluginInstalls: configHarness.transform as never,
-        createTempDir: async () => "/tmp/openclaw-setup-cleanup-fixture",
+        createTempDir: async () => "/tmp/grokbot-setup-cleanup-fixture",
         removeTempDir: async () => {
           throw new Error("simulated cleanup failure");
         },
@@ -1112,7 +1112,7 @@ describe("activateSetupInference", () => {
 
   it("disposes the temporary auth database before Windows-style removal", async () => {
     const tempDir = await makeTempDir();
-    const databasePath = path.join(tempDir, "agent", "openclaw-agent.sqlite");
+    const databasePath = path.join(tempDir, "agent", "grokbot-agent.sqlite");
     let disposed = false;
     const disposeDatabase = vi.fn((pathname: string) => {
       expect(pathname).toBe(databasePath);
@@ -1190,7 +1190,7 @@ describe("activateSetupInference", () => {
     expect(committedConfig?.agents?.defaults?.model).toBe("claude-cli/claude-opus-4-8");
   });
 
-  it("persists only the verified model before OpenClaw configures the rest", async () => {
+  it("persists only the verified model before GrokBot configures the rest", async () => {
     const configHarness = createConfigTransformHarness();
 
     const result = await activateSetupInference({
@@ -1286,7 +1286,7 @@ describe("activateSetupInference", () => {
         readConfigFileSnapshot: vi.fn(async () => ({
           exists: true,
           valid: true,
-          path: "/tmp/openclaw.json",
+          path: "/tmp/grokbot.json",
           issues: [],
           config: initialConfig,
           sourceConfig: initialConfig,
@@ -1463,7 +1463,7 @@ describe("activateSetupInference", () => {
           readConfigFileSnapshot: vi.fn(async () => ({
             exists: true,
             valid: true,
-            path: "/tmp/openclaw.json",
+            path: "/tmp/grokbot.json",
             issues: [],
             config: probedConfig,
             runtimeConfig: probedConfig,
@@ -1484,7 +1484,7 @@ describe("activateSetupInference", () => {
         defaults: {
           model: "openai/gpt-5.4",
           models: {
-            "anthropic/claude-opus-4-8": { agentRuntime: { id: "openclaw" } },
+            "anthropic/claude-opus-4-8": { agentRuntime: { id: "grokbot" } },
           },
         },
       },
@@ -1733,7 +1733,7 @@ describe("activateSetupInference", () => {
         readConfigFileSnapshot: vi.fn(async () => ({
           exists: true,
           valid: true,
-          path: "/tmp/openclaw.json",
+          path: "/tmp/grokbot.json",
           issues: [],
           sourceConfig,
           config: sourceConfig,
@@ -1786,7 +1786,7 @@ describe("activateSetupInference", () => {
         readConfigFileSnapshot: vi.fn(async () => ({
           exists: true,
           valid: true,
-          path: "/tmp/openclaw.json",
+          path: "/tmp/grokbot.json",
           issues: [],
           sourceConfig: config,
           config,
@@ -1992,7 +1992,7 @@ describe("activateSetupInference", () => {
         readConfigFileSnapshot: vi.fn(async () => ({
           exists: true,
           valid: true,
-          path: "/tmp/openclaw.json",
+          path: "/tmp/grokbot.json",
           issues: [],
           config: initialConfig,
           runtimeConfig: initialConfig,
@@ -2006,10 +2006,10 @@ describe("activateSetupInference", () => {
     expect(result).toMatchObject({ ok: true, modelRef: "anthropic/claude-opus-4-8" });
     expect(runEmbeddedAgent).toHaveBeenCalledWith(
       expect.objectContaining({
-        agentId: "openclaw",
+        agentId: "grokbot",
         provider: "anthropic",
         model: "claude-opus-4-8",
-        agentHarnessRuntimeOverride: "openclaw",
+        agentHarnessRuntimeOverride: "grokbot",
         config: expect.objectContaining({
           agents: expect.objectContaining({
             list: [
@@ -2018,7 +2018,7 @@ describe("activateSetupInference", () => {
                 model: { primary: "anthropic/claude-opus-4-8" },
                 models: {
                   "anthropic/claude-opus-4-8": {
-                    agentRuntime: { id: "openclaw" },
+                    agentRuntime: { id: "grokbot" },
                   },
                 },
               }),
@@ -2093,7 +2093,7 @@ describe("activateSetupInference", () => {
       const result = await activateSetupInference({
         kind: "provider-auth",
         authChoice: "openai",
-        workspace: "/tmp/openclaw-workspace",
+        workspace: "/tmp/grokbot-workspace",
         surface: "gateway",
         runtime,
         prompter: { note: vi.fn(async () => {}) } as never,
@@ -2101,7 +2101,7 @@ describe("activateSetupInference", () => {
           readConfigFileSnapshot: vi.fn(async () => ({
             exists: true,
             valid: true,
-            path: "/tmp/openclaw.json",
+            path: "/tmp/grokbot.json",
             issues: [],
             config: initialConfig,
             sourceConfig: initialConfig,
@@ -2259,14 +2259,14 @@ describe("activateSetupInference", () => {
           kind: "api-key",
           authChoice: "groq-api-key",
           apiKey: "test-groq-key",
-          workspace: "/tmp/openclaw-workspace",
+          workspace: "/tmp/grokbot-workspace",
           surface: "gateway",
           runtime,
           deps: {
             readConfigFileSnapshot: vi.fn(async () => ({
               exists: true,
               valid: true,
-              path: "/tmp/openclaw.json",
+              path: "/tmp/grokbot.json",
               issues: [],
               config: initialConfig,
               runtimeConfig: initialConfig,
@@ -2294,7 +2294,7 @@ describe("activateSetupInference", () => {
               plugins: { entries: { groq: { enabled: true } } },
             }),
             onlyPluginIds: ["groq"],
-            workspaceDir: "/tmp/openclaw-workspace",
+            workspaceDir: "/tmp/grokbot-workspace",
           }),
         );
         expect(runAuth).toHaveBeenCalledWith(
@@ -2311,7 +2311,7 @@ describe("activateSetupInference", () => {
         expect(activatedProfileId).toMatch(/^groq:setup-/);
         expect(runEmbeddedAgent).toHaveBeenCalledWith(
           expect.objectContaining({
-            agentId: "openclaw",
+            agentId: "grokbot",
             provider: "groq",
             model: "llama-3.3-70b-versatile",
             authProfileId: activatedProfileId,
@@ -2550,7 +2550,7 @@ describe("activateSetupInference", () => {
         },
       });
       expect(probeConfig.agents?.list?.[0]?.models).toMatchObject({
-        "groq/llama-3.3-70b-versatile": { agentRuntime: { id: "openclaw" } },
+        "groq/llama-3.3-70b-versatile": { agentRuntime: { id: "grokbot" } },
       });
       expect(probeConfig.plugins?.entries?.groq).toEqual({
         enabled: true,
@@ -2884,7 +2884,7 @@ describe("activateSetupInference", () => {
           kind: "api-key",
           authChoice: "groq-api-key",
           apiKey: "candidate-key",
-          workspace: "/tmp/openclaw-workspace",
+          workspace: "/tmp/grokbot-workspace",
           surface: "gateway",
           runtime,
           deps: {
@@ -3078,7 +3078,7 @@ describe("activateSetupInference", () => {
         kind: "api-key",
         authChoice: "groq-api-key",
         apiKey: "candidate-key",
-        workspace: "/tmp/openclaw-workspace",
+        workspace: "/tmp/grokbot-workspace",
         surface: "gateway",
         runtime,
         deps: {
@@ -3139,7 +3139,7 @@ describe("activateSetupInference", () => {
           kind: "api-key",
           authChoice: "groq-api-key",
           apiKey: "candidate-key",
-          workspace: "/tmp/openclaw-workspace",
+          workspace: "/tmp/grokbot-workspace",
           surface: "gateway",
           runtime,
           deps: {
@@ -3388,14 +3388,14 @@ describe("activateSetupInference", () => {
         kind: "api-key",
         authChoice: "github-copilot",
         apiKey: "github-token",
-        workspace: "/tmp/openclaw-workspace",
+        workspace: "/tmp/grokbot-workspace",
         surface: "gateway",
         runtime,
         deps: {
           readConfigFileSnapshot: vi.fn(async () => ({
             exists: true,
             valid: true,
-            path: "/tmp/openclaw.json",
+            path: "/tmp/grokbot.json",
             issues: [],
             config: initialConfig,
             runtimeConfig: initialConfig,
@@ -3434,7 +3434,7 @@ describe("activateSetupInference", () => {
       expect(activatedProfileId).toMatch(/^github-copilot:setup-/);
       expect(runEmbeddedAgent).toHaveBeenCalledWith(
         expect.objectContaining({
-          agentId: "openclaw",
+          agentId: "grokbot",
           agentDir: expect.stringContaining("setup-inference-test-"),
           authProfileId: activatedProfileId,
           provider: "github-copilot",
@@ -3487,7 +3487,7 @@ describe("activateSetupInference", () => {
         kind: "api-key",
         authChoice: "groq-api-key",
         apiKey: "bad-groq-key",
-        workspace: "/tmp/openclaw-workspace",
+        workspace: "/tmp/grokbot-workspace",
         surface: "gateway",
         runtime,
         deps: {
@@ -3534,7 +3534,7 @@ describe("activateSetupInference", () => {
               fallbacks: ["google/gemini-3.1-pro-preview"],
             },
             models: {
-              "openai/gpt-5.5": { agentRuntime: { id: "openclaw" } },
+              "openai/gpt-5.5": { agentRuntime: { id: "grokbot" } },
             },
           },
         ],
@@ -3573,7 +3573,7 @@ describe("activateSetupInference", () => {
               ...params.cfg.plugins?.installs,
               codex: {
                 source: "npm" as const,
-                spec: "@openclaw/codex",
+                spec: "@grokbot/codex",
                 installPath: "/tmp/plugins/codex",
               },
             },
@@ -3643,7 +3643,7 @@ describe("activateSetupInference", () => {
     });
     const result = await activateSetupInference({
       kind: "codex-cli",
-      workspace: "/tmp/openclaw-workspace",
+      workspace: "/tmp/grokbot-workspace",
       surface: "gateway",
       runtime: { log: runtimeLog, error: () => {}, exit: () => {} } as never,
       deps: {
@@ -3652,7 +3652,7 @@ describe("activateSetupInference", () => {
           return {
             exists: true,
             valid: true,
-            path: "/tmp/openclaw.json",
+            path: "/tmp/grokbot.json",
             issues: [],
             config,
             sourceConfig: config,
@@ -3684,7 +3684,7 @@ describe("activateSetupInference", () => {
                   fallbacks: ["google/gemini-3.1-pro-preview"],
                 },
                 models: {
-                  "openai/gpt-5.5": { agentRuntime: { id: "openclaw" } },
+                  "openai/gpt-5.5": { agentRuntime: { id: "grokbot" } },
                   "openai/gpt-5.6-sol": { agentRuntime: { id: "codex" } },
                 },
               }),
@@ -3711,8 +3711,8 @@ describe("activateSetupInference", () => {
       expect.objectContaining({
         reason: "source-changed",
         policyPluginIds: ["codex"],
-        traceCommand: "openclaw-setup-probe",
-        workspaceDir: "/tmp/openclaw-workspace",
+        traceCommand: "grokbot-setup-probe",
+        workspaceDir: "/tmp/grokbot-workspace",
       }),
     );
     expect(refreshPluginRegistry).toHaveBeenCalledTimes(2);
@@ -3733,18 +3733,18 @@ describe("activateSetupInference", () => {
     expect(refreshPluginRegistry).toHaveBeenCalledWith({
       config: persistedConfig,
       reason: "source-changed",
-      workspaceDir: "/tmp/openclaw-workspace",
+      workspaceDir: "/tmp/grokbot-workspace",
       logger: expect.objectContaining({ warn: expect.any(Function) }),
     });
     expect(ensureRegistryLoaded).toHaveBeenCalledWith({
       scope: "all",
       config: persistedConfig,
       activationSourceConfig: persistedConfig,
-      workspaceDir: "/tmp/openclaw-workspace",
+      workspaceDir: "/tmp/grokbot-workspace",
     });
     // Harness selection: codex tests run embedded with the codex harness.
     expect(runEmbeddedAgent.mock.calls[0]?.[0]).toMatchObject({
-      agentId: "openclaw",
+      agentId: "grokbot",
       agentDir: resolveAgentDir(initialConfig, "ops"),
       provider: "openai",
       authProfileStateMode: "read-only",
@@ -3761,7 +3761,7 @@ describe("activateSetupInference", () => {
                 fallbacks: ["google/gemini-3.1-pro-preview"],
               },
               models: {
-                "openai/gpt-5.5": { agentRuntime: { id: "openclaw" } },
+                "openai/gpt-5.5": { agentRuntime: { id: "grokbot" } },
                 "openai/gpt-5.6-sol": { agentRuntime: { id: "codex" } },
               },
             }),
@@ -3808,7 +3808,7 @@ describe("activateSetupInference", () => {
               fallbacks: ["google/gemini-3.1-pro-preview"],
             },
             models: {
-              "openai/gpt-5.5": { agentRuntime: { id: "openclaw" } },
+              "openai/gpt-5.5": { agentRuntime: { id: "grokbot" } },
               "openai/gpt-5.6-sol": { agentRuntime: { id: "codex" } },
             },
           }),
@@ -3833,7 +3833,7 @@ describe("activateSetupInference", () => {
     expect(persistedConfig.plugins?.installs).toBeUndefined();
     expect(pendingCodexInstalls[0]).toMatchObject({
       source: "npm",
-      spec: "@openclaw/codex",
+      spec: "@grokbot/codex",
       installPath: "/tmp/plugins/codex",
     });
     expect(pendingCodexInstalls).toHaveLength(1);
@@ -3878,7 +3878,7 @@ describe("activateSetupInference", () => {
         readConfigFileSnapshot: vi.fn(async () => ({
           exists: true,
           valid: true,
-          path: "/tmp/openclaw.json",
+          path: "/tmp/grokbot.json",
           issues: [],
           config: initialConfig,
           sourceConfig: initialConfig,
@@ -3906,7 +3906,7 @@ describe("activateSetupInference", () => {
       expect.objectContaining({
         reason: "source-changed",
         policyPluginIds: ["codex"],
-        traceCommand: "openclaw-setup-probe",
+        traceCommand: "grokbot-setup-probe",
         workspaceDir: "/tmp/work",
       }),
     );
@@ -3970,30 +3970,30 @@ describe("activateSetupInference", () => {
     const staleAuthoredRecords = {
       codex: {
         source: "npm" as const,
-        spec: "@openclaw/codex@1.0.0",
+        spec: "@grokbot/codex@1.0.0",
         installPath: "/tmp/plugins/codex-v1",
       },
       unrelated: {
         source: "npm" as const,
-        spec: "@openclaw/unrelated@1.0.0",
+        spec: "@grokbot/unrelated@1.0.0",
         installPath: "/tmp/plugins/unrelated-v1",
       },
     };
     const canonicalRecords = {
       codex: {
         source: "npm" as const,
-        spec: "@openclaw/codex@2.0.0",
+        spec: "@grokbot/codex@2.0.0",
         installPath: "/tmp/plugins/codex-v2",
       },
       unrelated: {
         source: "npm" as const,
-        spec: "@openclaw/unrelated@2.0.0",
+        spec: "@grokbot/unrelated@2.0.0",
         installPath: "/tmp/plugins/unrelated-v2",
       },
     };
     const refreshedCodexRecord = {
       source: "npm" as const,
-      spec: "@openclaw/codex@3.0.0",
+      spec: "@grokbot/codex@3.0.0",
       installPath: "/tmp/plugins/codex-v3",
     };
     const sourceConfig = {
@@ -4045,14 +4045,14 @@ describe("activateSetupInference", () => {
 
     const result = await activateSetupInference({
       kind: "codex-cli",
-      workspace: "/tmp/openclaw-workspace",
+      workspace: "/tmp/grokbot-workspace",
       surface: "gateway",
       runtime,
       deps: {
         readConfigFileSnapshot: vi.fn(async () => ({
           exists: true,
           valid: true,
-          path: "/tmp/openclaw.json",
+          path: "/tmp/grokbot.json",
           issues: [],
           config: sourceConfig,
           runtimeConfig,
@@ -4113,7 +4113,7 @@ describe("activateSetupInference", () => {
   it("fails closed before inference when the staged Codex package cannot be retained", async () => {
     const installRecord: PluginInstallRecord = {
       source: "npm",
-      spec: "@openclaw/codex",
+      spec: "@grokbot/codex",
       installPath: "/tmp/plugins/codex-unretained",
     };
     const runEmbeddedAgent = vi.fn();
@@ -4125,14 +4125,14 @@ describe("activateSetupInference", () => {
     const refreshPluginRegistry = vi.fn(async () => {});
     const result = await activateSetupInference({
       kind: "codex-cli",
-      workspace: "/tmp/openclaw-workspace",
+      workspace: "/tmp/grokbot-workspace",
       surface: "gateway",
       runtime,
       deps: {
         readConfigFileSnapshot: vi.fn(async () => ({
           exists: true,
           valid: true,
-          path: "/tmp/openclaw.json",
+          path: "/tmp/grokbot.json",
           issues: [],
           config: {},
           runtimeConfig: {},
@@ -4171,7 +4171,7 @@ describe("activateSetupInference", () => {
     expect(refreshPluginRegistry).toHaveBeenCalledWith({
       config: {},
       reason: "source-changed",
-      workspaceDir: "/tmp/openclaw-workspace",
+      workspaceDir: "/tmp/grokbot-workspace",
       logger: expect.objectContaining({ warn: expect.any(Function) }),
     });
   });
@@ -4179,7 +4179,7 @@ describe("activateSetupInference", () => {
   it("reports an indeterminate activation when final Codex retention fails", async () => {
     const installRecord: PluginInstallRecord = {
       source: "npm",
-      spec: "@openclaw/codex",
+      spec: "@grokbot/codex",
       installPath: "/tmp/plugins/codex-final-retention-failure",
     };
     const markRetainedInstall = vi.fn().mockResolvedValueOnce(true).mockResolvedValueOnce(false);
@@ -4187,14 +4187,14 @@ describe("activateSetupInference", () => {
     let tempDir: string | undefined;
     const activation = activateSetupInference({
       kind: "codex-cli",
-      workspace: "/tmp/openclaw-workspace",
+      workspace: "/tmp/grokbot-workspace",
       surface: "gateway",
       runtime,
       deps: {
         readConfigFileSnapshot: vi.fn(async () => ({
           exists: true,
           valid: true,
-          path: "/tmp/openclaw.json",
+          path: "/tmp/grokbot.json",
           issues: [],
           config: {},
           runtimeConfig: {},
@@ -4237,7 +4237,7 @@ describe("activateSetupInference", () => {
     resetPluginRuntimeStateForTest();
     const installRecord: PluginInstallRecord = {
       source: "npm",
-      spec: "@openclaw/codex",
+      spec: "@grokbot/codex",
       installPath: "/tmp/plugins/codex-staged-registry",
     };
     const persistedConfig = { plugins: { enabled: false } } satisfies OpenClawConfig;
@@ -4258,7 +4258,7 @@ describe("activateSetupInference", () => {
     try {
       const result = await activateSetupInference({
         kind: "codex-cli",
-        workspace: "/tmp/openclaw-workspace",
+        workspace: "/tmp/grokbot-workspace",
         surface: "gateway",
         runtime,
         deps: {
@@ -4267,7 +4267,7 @@ describe("activateSetupInference", () => {
             return {
               exists: true,
               valid: true,
-              path: "/tmp/openclaw.json",
+              path: "/tmp/grokbot.json",
               issues: [],
               config,
               sourceConfig: config,
@@ -4308,14 +4308,14 @@ describe("activateSetupInference", () => {
         scope: "all",
         config: persistedConfig,
         activationSourceConfig: persistedConfig,
-        workspaceDir: "/tmp/openclaw-workspace",
+        workspaceDir: "/tmp/grokbot-workspace",
       });
       expect(getActivePluginRegistry()).not.toBe(stagedRegistry);
       expect(getActivePluginRegistry()?.plugins.some((plugin) => plugin.id === "codex")).toBe(
         false,
       );
       expect(getActivePluginRegistryKey()).not.toBe("staged-codex-registry");
-      expect(getActivePluginRegistryWorkspaceDir()).toBe("/tmp/openclaw-workspace");
+      expect(getActivePluginRegistryWorkspaceDir()).toBe("/tmp/grokbot-workspace");
     } finally {
       resetPluginRuntimeStateForTest();
     }
@@ -4335,7 +4335,7 @@ describe("activateSetupInference", () => {
         readConfigFileSnapshot: vi.fn(async () => ({
           exists: true,
           valid: true,
-          path: "/tmp/openclaw.json",
+          path: "/tmp/grokbot.json",
           issues: [],
           config: blockedConfig,
           runtimeConfig: blockedConfig,
@@ -4361,7 +4361,7 @@ describe("activateSetupInference", () => {
 
   it("marks an unowned Codex package generation retained when the live test fails", async () => {
     const installProjectDir = await makeTempDir();
-    const packageDir = path.join(installProjectDir, "node_modules", "@openclaw", "codex");
+    const packageDir = path.join(installProjectDir, "node_modules", "@grokbot", "codex");
     await fs.mkdir(packageDir, { recursive: true });
     const transformConfig = vi.fn();
     const refreshPluginRegistry = vi.fn();
@@ -4383,7 +4383,7 @@ describe("activateSetupInference", () => {
                   ...params.cfg.plugins?.installs,
                   codex: {
                     source: "npm" as const,
-                    spec: "@openclaw/codex",
+                    spec: "@grokbot/codex",
                     installPath: packageDir,
                   },
                 },
@@ -4426,12 +4426,12 @@ describe("activateSetupInference", () => {
     const installRecords = [
       {
         source: "npm" as const,
-        spec: "@openclaw/codex@generation-1",
+        spec: "@grokbot/codex@generation-1",
         installPath: "/tmp/plugins/codex-generation-1",
       },
       {
         source: "npm" as const,
-        spec: "@openclaw/codex@generation-2",
+        spec: "@grokbot/codex@generation-2",
         installPath: "/tmp/plugins/codex-generation-2",
       },
     ];
@@ -4535,17 +4535,17 @@ describe("activateSetupInference", () => {
     expect(markRetained).toHaveBeenNthCalledWith(1, {
       packageDir: expectDefined(installRecords[0], "installRecords[0] test invariant").installPath,
       pluginId: "codex",
-      reason: "openclaw-inference-activation-not-committed",
+      reason: "grokbot-inference-activation-not-committed",
     });
     expect(markRetained).toHaveBeenNthCalledWith(2, {
       packageDir: expectDefined(installRecords[0], "installRecords[0] test invariant").installPath,
       pluginId: "codex",
-      reason: "openclaw-inference-activation-not-committed",
+      reason: "grokbot-inference-activation-not-committed",
     });
     expect(markRetained).toHaveBeenNthCalledWith(3, {
       packageDir: expectDefined(installRecords[1], "installRecords[1] test invariant").installPath,
       pluginId: "codex",
-      reason: "openclaw-inference-activation-not-committed",
+      reason: "grokbot-inference-activation-not-committed",
     });
     expect(clearInstallRecords).toHaveBeenCalledTimes(3);
     expect(clearMetadata).toHaveBeenCalledTimes(3);
@@ -4561,7 +4561,7 @@ describe("activateSetupInference", () => {
       installRecords: {
         codex: {
           source: "npm" as const,
-          spec: "@openclaw/codex@other",
+          spec: "@grokbot/codex@other",
           installPath: "/tmp/plugins/codex-other",
         },
       },
@@ -4575,7 +4575,7 @@ describe("activateSetupInference", () => {
   ])("reconciles a post-write Codex error only with an $name install record", async (testCase) => {
     const installRecord: PluginInstallRecord = {
       source: "npm",
-      spec: "@openclaw/codex",
+      spec: "@grokbot/codex",
       installPath: "/tmp/plugins/codex",
     };
     const installRecords = testCase.installRecords ?? { codex: installRecord };
@@ -4658,7 +4658,7 @@ describe("resolvePersistentApplyInference", () => {
       modelLabel: "openai/gpt-5.5",
       provider: "openai",
       model: "gpt-5.5",
-      agentDir: "/tmp/openclaw-agent",
+      agentDir: "/tmp/grokbot-agent",
       agentId: "main",
       agentHarnessRuntimeOverride: "codex",
     };
@@ -4769,7 +4769,7 @@ describe("resolvePersistentApplyInference", () => {
     if (changedBinding.execution.runner !== "embedded") {
       throw new Error("expected embedded fixture");
     }
-    changedBinding.execution.agentHarnessRuntimeOverride = "openclaw";
+    changedBinding.execution.agentHarnessRuntimeOverride = "grokbot";
     const resolveVerifiedInferenceRoute = vi.fn(async () => binding.execution);
 
     await expect(
@@ -5001,7 +5001,7 @@ describe("verifySetupInference", () => {
         readConfigFileSnapshot: vi.fn(async () => ({
           exists: true,
           valid: false,
-          path: "/tmp/openclaw.json",
+          path: "/tmp/grokbot.json",
           issues: [{ path: "agents.defaults.model", message: "Expected a model reference" }],
           config: {},
         })) as never,
@@ -5032,12 +5032,12 @@ describe("verifySetupInference", () => {
     expect(result).toMatchObject({ ok: true, modelRef: "openai/gpt-5.5" });
   });
 
-  it("locks the exact winning profile into a bound OpenClaw session", async () => {
+  it("locks the exact winning profile into a bound GrokBot session", async () => {
     const config = {
       agents: {
         defaults: {
           model: { primary: "openai/gpt-5.5" },
-          models: { "openai/gpt-5.5": { agentRuntime: { id: "openclaw" } } },
+          models: { "openai/gpt-5.5": { agentRuntime: { id: "grokbot" } } },
         },
       },
       auth: {
@@ -5073,7 +5073,7 @@ describe("verifySetupInference", () => {
       }) => {
         params.onSuccessfulAuthBinding?.({
           authProfileId: "openai:p2",
-          agentHarnessId: "openclaw",
+          agentHarnessId: "grokbot",
           authFingerprint: verifiedAuthFingerprint,
         });
         return successfulRun("openai", "gpt-5.5");
@@ -5175,7 +5175,7 @@ describe("verifySetupInference", () => {
     expect(createChangedVerifiedInferenceBinding).toHaveBeenCalledOnce();
   });
 
-  it("binds a runtime-only Codex profile after activation and runs the first OpenClaw turn", async () => {
+  it("binds a runtime-only Codex profile after activation and runs the first GrokBot turn", async () => {
     const stateDir = await makeTempDir();
     vi.stubEnv("OPENCLAW_STATE_DIR", stateDir);
     const profileId = "openai:default";
@@ -5300,8 +5300,8 @@ describe("verifySetupInference", () => {
         authProfileId: profileId,
         authProfileIdSource: "user",
         agentHarnessRuntimeOverride: "codex",
-        agentId: "openclaw",
-        toolsAllow: ["openclaw"],
+        agentId: "grokbot",
+        toolsAllow: ["grokbot"],
       });
       const systemAgentTurnParams = runEmbeddedAgent.mock.calls[2]?.[0];
       expect(systemAgentTurnParams).toBeDefined();
@@ -5645,7 +5645,7 @@ describe("verifySetupInference", () => {
     expect(result).toMatchObject({ ok: true, modelRef: "openai/gpt-5.5" });
     expect(runEmbeddedAgent).toHaveBeenCalledWith(
       expect.objectContaining({
-        agentId: "openclaw",
+        agentId: "grokbot",
         provider: "openai",
         model: "gpt-5.5",
         agentHarnessRuntimeOverride: "codex",

@@ -1,5 +1,5 @@
-/** Detects whether a daemon was launched by OpenClaw's container-aware service wrapper. */
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+/** Detects whether a daemon was launched by GrokBot's container-aware service wrapper. */
+import { normalizeOptionalString } from "@grokbot/normalization-core/string-coerce";
 
 /** Resolves the daemon container hint exposed by managed service environments. */
 export function resolveDaemonContainerContext(

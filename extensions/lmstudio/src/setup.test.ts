@@ -1,14 +1,14 @@
 // Lmstudio tests cover setup plugin behavior.
-import { CUSTOM_LOCAL_AUTH_MARKER } from "openclaw/plugin-sdk/provider-auth";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/provider-auth";
-import type { ModelDefinitionConfig } from "openclaw/plugin-sdk/provider-model-shared";
-import { resolveAgentModelPrimaryValue } from "openclaw/plugin-sdk/provider-onboard";
+import { CUSTOM_LOCAL_AUTH_MARKER } from "grokbot/plugin-sdk/provider-auth";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/provider-auth";
+import type { ModelDefinitionConfig } from "grokbot/plugin-sdk/provider-model-shared";
+import { resolveAgentModelPrimaryValue } from "grokbot/plugin-sdk/provider-onboard";
 import {
   SELF_HOSTED_DEFAULT_CONTEXT_WINDOW,
   type ProviderAuthMethodNonInteractiveContext,
   type ProviderCatalogContext,
-} from "openclaw/plugin-sdk/provider-setup";
-import type { WizardPrompter } from "openclaw/plugin-sdk/setup";
+} from "grokbot/plugin-sdk/provider-setup";
+import type { WizardPrompter } from "grokbot/plugin-sdk/setup";
 import { afterAll, afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   LMSTUDIO_DEFAULT_API_KEY_ENV_VAR,
@@ -34,8 +34,8 @@ vi.mock("./models.fetch.js", () => ({
   ensureLmstudioModelLoaded: vi.fn(),
 }));
 
-vi.mock("openclaw/plugin-sdk/provider-auth", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("openclaw/plugin-sdk/provider-auth")>();
+vi.mock("grokbot/plugin-sdk/provider-auth", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("grokbot/plugin-sdk/provider-auth")>();
   return {
     ...actual,
     removeProviderAuthProfilesWithLock: (...args: unknown[]) =>
@@ -43,8 +43,8 @@ vi.mock("openclaw/plugin-sdk/provider-auth", async (importOriginal) => {
   };
 });
 
-vi.mock("openclaw/plugin-sdk/provider-setup", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("openclaw/plugin-sdk/provider-setup")>();
+vi.mock("grokbot/plugin-sdk/provider-setup", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("grokbot/plugin-sdk/provider-setup")>();
   return {
     ...actual,
     configureOpenAICompatibleSelfHostedProviderNonInteractive: (...args: unknown[]) =>
@@ -54,8 +54,8 @@ vi.mock("openclaw/plugin-sdk/provider-setup", async (importOriginal) => {
 
 afterAll(() => {
   vi.doUnmock("./models.fetch.js");
-  vi.doUnmock("openclaw/plugin-sdk/provider-auth");
-  vi.doUnmock("openclaw/plugin-sdk/provider-setup");
+  vi.doUnmock("grokbot/plugin-sdk/provider-auth");
+  vi.doUnmock("grokbot/plugin-sdk/provider-setup");
   vi.resetModules();
 });
 

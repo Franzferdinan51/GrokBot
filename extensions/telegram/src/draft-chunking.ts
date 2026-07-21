@@ -2,8 +2,8 @@
 import {
   resolveChannelDraftStreamingChunking,
   type ChannelDraftStreamingChunking,
-} from "openclaw/plugin-sdk/channel-outbound";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+} from "grokbot/plugin-sdk/channel-outbound";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import { TELEGRAM_TEXT_CHUNK_LIMIT } from "./outbound-adapter.js";
 
 export function resolveTelegramDraftStreamingChunking(

@@ -1,7 +1,7 @@
 /**
  * Core tool catalog and profile defaults.
  * Drives built-in profile allowlists, group expansion, and UI section metadata
- * for OpenClaw-owned tools.
+ * for GrokBot-owned tools.
  *
  * This module is bundled into the Control UI via tool-policy-shared. Keep it
  * pure data + tiny pure functions: a value import of server config/runtime
@@ -508,7 +508,7 @@ function buildCoreToolGroupMap() {
     (tool) => tool.id,
   );
   return {
-    "group:openclaw": openclawTools,
+    "group:grokbot": openclawTools,
     ...Object.fromEntries(sectionToolMap.entries()),
   };
 }

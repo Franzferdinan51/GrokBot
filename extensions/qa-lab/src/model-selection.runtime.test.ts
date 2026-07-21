@@ -9,11 +9,11 @@ const { resolveEnvApiKey, loadAuthProfileStoreForRuntime, listProfilesForProvide
   }),
 );
 
-vi.mock("openclaw/plugin-sdk/provider-auth", () => ({
+vi.mock("grokbot/plugin-sdk/provider-auth", () => ({
   resolveEnvApiKey,
 }));
 
-vi.mock("openclaw/plugin-sdk/agent-runtime", () => ({
+vi.mock("grokbot/plugin-sdk/agent-runtime", () => ({
   loadAuthProfileStoreForRuntime,
   listProfilesForProvider,
 }));

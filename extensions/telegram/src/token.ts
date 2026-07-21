@@ -1,20 +1,20 @@
 // Telegram plugin module implements token behavior.
-import { resolveNormalizedAccountEntry } from "openclaw/plugin-sdk/account-core";
-import type { BaseTokenResolution } from "openclaw/plugin-sdk/channel-contract";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import type { TelegramAccountConfig } from "openclaw/plugin-sdk/config-contracts";
-import { parseStrictPositiveInteger } from "openclaw/plugin-sdk/number-runtime";
-import { resolveDefaultSecretProviderAlias } from "openclaw/plugin-sdk/provider-auth";
+import { resolveNormalizedAccountEntry } from "grokbot/plugin-sdk/account-core";
+import type { BaseTokenResolution } from "grokbot/plugin-sdk/channel-contract";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import type { TelegramAccountConfig } from "grokbot/plugin-sdk/config-contracts";
+import { parseStrictPositiveInteger } from "grokbot/plugin-sdk/number-runtime";
+import { resolveDefaultSecretProviderAlias } from "grokbot/plugin-sdk/provider-auth";
 import {
   DEFAULT_ACCOUNT_ID,
   normalizeAccountId,
   normalizeOptionalAccountId,
-} from "openclaw/plugin-sdk/routing";
-import { tryReadSecretFileSync } from "openclaw/plugin-sdk/secret-file-runtime";
+} from "grokbot/plugin-sdk/routing";
+import { tryReadSecretFileSync } from "grokbot/plugin-sdk/secret-file-runtime";
 import {
   normalizeSecretInputString,
   resolveSecretInputString,
-} from "openclaw/plugin-sdk/secret-input";
+} from "grokbot/plugin-sdk/secret-input";
 import { resolveDefaultTelegramAccountId } from "./account-selection.js";
 
 type CredentialUnavailableDiagnostic = Extract<
@@ -151,7 +151,7 @@ export function resolveTelegramToken(
   //
   // Single-bot: no accounts section (or empty) → allow fallthrough so that
   // binding-created accountIds inherit the channel-level token.
-  // See: https://github.com/openclaw/openclaw/issues/53876
+  // See: https://github.com/grokbot/grokbot/issues/53876
   if (accountId !== DEFAULT_ACCOUNT_ID && !accountCfg) {
     const accounts = telegramCfg?.accounts;
     const hasConfiguredAccounts =

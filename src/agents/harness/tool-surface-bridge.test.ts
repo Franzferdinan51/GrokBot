@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import { runWithAgentRingZeroTools } from "../agent-tools.ring-zero-context.js";
 import { createStubTool } from "../test-helpers/agent-tool-stubs.js";
 import {
@@ -25,25 +25,25 @@ function createRuntime(config: OpenClawConfig) {
 
 describe("createAgentHarnessToolSurfaceRuntime", () => {
   it("suppresses catalog controls for a host-scoped ring-zero run", () => {
-    const openclaw = {
-      ...createStubTool("openclaw"),
+    const grokbot = {
+      ...createStubTool("grokbot"),
       catalogMode: "direct-only" as const,
     };
 
-    runWithAgentRingZeroTools([openclaw], () => {
+    runWithAgentRingZeroTools([grokbot], () => {
       const runtime = createAgentHarnessToolSurfaceRuntime({
         config: { tools: { toolSearch: true } },
         executeTool: async () => ({ content: [], details: {} }),
         modelToolsEnabled: true,
-        runtimeToolAllowlist: ["openclaw"],
-        toolsAllow: ["openclaw"],
+        runtimeToolAllowlist: ["grokbot"],
+        toolsAllow: ["grokbot"],
       });
 
       expect(runtime.codeModeControlsEnabled).toBe(false);
       expect(runtime.toolSearchControlsEnabled).toBe(false);
       expect(runtime.includeToolSearchControls).toBe(false);
-      expect(runtime.runtimeToolAllowlist).toEqual(["openclaw"]);
-      expect(runtime.compactTools([openclaw]).tools).toEqual([openclaw]);
+      expect(runtime.runtimeToolAllowlist).toEqual(["grokbot"]);
+      expect(runtime.compactTools([grokbot]).tools).toEqual([grokbot]);
       runtime.cleanup();
     });
   });

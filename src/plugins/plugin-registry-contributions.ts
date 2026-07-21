@@ -1,6 +1,6 @@
 /** Loads manifest and installed-index contributions used to build plugin registry snapshots. */
-import { normalizeSortedUniqueStringEntries } from "@openclaw/normalization-core/string-normalization";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import { normalizeSortedUniqueStringEntries } from "@grokbot/normalization-core/string-normalization";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import {
   normalizePluginsConfigWithResolver,
   type NormalizedPluginsConfig,

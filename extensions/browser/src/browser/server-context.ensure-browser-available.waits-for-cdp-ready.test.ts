@@ -25,7 +25,7 @@ function fakeRunning(pid: number): RunningChrome {
   return {
     pid,
     exe: { kind: "chromium", path: "/usr/bin/chromium" },
-    userDataDir: "/tmp/openclaw-test",
+    userDataDir: "/tmp/grokbot-test",
     cdpPort: 18800,
     startedAt: Date.now(),
     proc: new EventEmitter() as unknown as ChildProcessWithoutNullStreams,
@@ -45,7 +45,7 @@ function setupEnsureBrowserAvailableHarness() {
 
   const state = makeBrowserServerState();
   const ctx = createBrowserRouteContext({ getState: () => state });
-  const profile = ctx.forProfile("openclaw");
+  const profile = ctx.forProfile("grokbot");
 
   return {
     launchOpenClawChrome,
@@ -66,7 +66,7 @@ function createAttachOnlyLoopbackProfile(cdpUrl: string) {
       cdpIsLoopback: true,
       cdpPort: 9222,
       color: "#00AA00",
-      driver: "openclaw",
+      driver: "grokbot",
       headless: false,
       attachOnly: true,
     },
@@ -121,21 +121,21 @@ describe("browser server-context ensureBrowserAvailable", () => {
     await expect(stopping).resolves.toEqual({ stopped: true });
     expect(stopOpenClawChrome).toHaveBeenCalledTimes(1);
     expect(stopOpenClawChrome).toHaveBeenCalledWith(late);
-    expect(state.profiles.get("openclaw")?.running).toBeNull();
-    const runtime = state.profiles.get("openclaw");
+    expect(state.profiles.get("grokbot")?.running).toBeNull();
+    const runtime = state.profiles.get("grokbot");
     expect(runtime ? getProfileLifecycle(runtime).handles.size : 0).toBe(0);
 
     await expect(profile.ensureBrowserAvailable()).resolves.toBeUndefined();
-    expect(state.profiles.get("openclaw")?.running).toBe(replacement);
+    expect(state.profiles.get("grokbot")?.running).toBe(replacement);
   });
 
   it("does not count canceled managed starts toward the launch cooldown", async () => {
     const { launchOpenClawChrome, stopOpenClawChrome, isChromeCdpReady, profile, state } =
       setupEnsureBrowserAvailableHarness();
     isChromeCdpReady.mockResolvedValue(true);
-    const runtime = state.profiles.get("openclaw");
+    const runtime = state.profiles.get("grokbot");
     if (!runtime) {
-      throw new Error("expected openclaw runtime");
+      throw new Error("expected grokbot runtime");
     }
     const previousFailure = {
       consecutiveFailures: 2,
@@ -169,8 +169,8 @@ describe("browser server-context ensureBrowserAvailable", () => {
 
     expect(launchOpenClawChrome).toHaveBeenCalledTimes(2);
     expect(stopOpenClawChrome).toHaveBeenCalledTimes(1);
-    expect(state.profiles.get("openclaw")?.running).toBe(replacement);
-    expect(state.profiles.get("openclaw")?.managedLaunchFailure).toBeUndefined();
+    expect(state.profiles.get("grokbot")?.running).toBe(replacement);
+    expect(state.profiles.get("grokbot")?.managedLaunchFailure).toBeUndefined();
   });
 
   it("waits for CDP readiness after launching to avoid follow-up PortInUseError races (#21149)", async () => {
@@ -230,7 +230,7 @@ describe("browser server-context ensureBrowserAvailable", () => {
       undefined,
     );
     expect(stopOpenClawChrome).toHaveBeenCalledExactlyOnceWith(launched);
-    expect(state.profiles.get("openclaw")?.running).toBeNull();
+    expect(state.profiles.get("grokbot")?.running).toBeNull();
   });
 
   it("does not adopt a managed child that exits during the ownership probe", async () => {
@@ -258,7 +258,7 @@ describe("browser server-context ensureBrowserAvailable", () => {
     ownership.resolve(true);
 
     await expect(start).rejects.toThrow("exited before adoption");
-    const runtime = state.profiles.get("openclaw");
+    const runtime = state.profiles.get("grokbot");
     expect(runtime?.running).toBeNull();
     expect(runtime ? getProfileLifecycle(runtime).handles.size : 0).toBe(0);
     expect(stopOpenClawChrome).toHaveBeenCalledExactlyOnceWith(launched);
@@ -303,8 +303,8 @@ describe("browser server-context ensureBrowserAvailable", () => {
 
     const firstCtx = createBrowserRouteContext({ getState: () => state });
     const secondCtx = createBrowserRouteContext({ getState: () => state });
-    const first = firstCtx.forProfile("openclaw").ensureBrowserAvailable();
-    const second = secondCtx.forProfile("openclaw").ensureBrowserAvailable();
+    const first = firstCtx.forProfile("grokbot").ensureBrowserAvailable();
+    const second = secondCtx.forProfile("grokbot").ensureBrowserAvailable();
     await vi.advanceTimersByTimeAsync(100);
     await expect(Promise.all([first, second])).resolves.toEqual([undefined, undefined]);
 
@@ -334,14 +334,14 @@ describe("browser server-context ensureBrowserAvailable", () => {
       setupEnsureBrowserAvailableHarness();
     const isChromeReachable = vi.mocked(chromeModule.isChromeReachable);
     const existingProc = new EventEmitter() as unknown as ChildProcessWithoutNullStreams;
-    const runtime = state.profiles.get("openclaw");
+    const runtime = state.profiles.get("grokbot");
     if (!runtime) {
-      throw new Error("expected openclaw runtime");
+      throw new Error("expected grokbot runtime");
     }
     runtime.running = {
       pid: 111,
       exe: { kind: "chromium", path: "/usr/bin/chromium" },
-      userDataDir: "/tmp/openclaw-test",
+      userDataDir: "/tmp/grokbot-test",
       cdpPort: 18800,
       startedAt: Date.now(),
       proc: existingProc,
@@ -405,16 +405,16 @@ describe("browser server-context ensureBrowserAvailable", () => {
 
     for (let attempt = 0; attempt < 3; attempt += 1) {
       const ctx = createBrowserRouteContext({ getState: () => state });
-      await expect(ctx.forProfile("openclaw").ensureBrowserAvailable()).rejects.toThrow(
+      await expect(ctx.forProfile("grokbot").ensureBrowserAvailable()).rejects.toThrow(
         "Failed to start Chrome CDP",
       );
     }
 
     const cooledDownCtx = createBrowserRouteContext({ getState: () => state });
-    await expect(cooledDownCtx.forProfile("openclaw").ensureBrowserAvailable()).rejects.toThrow(
-      'Browser launch for profile "openclaw" is cooling down after 3 consecutive managed Chrome launch failures.',
+    await expect(cooledDownCtx.forProfile("grokbot").ensureBrowserAvailable()).rejects.toThrow(
+      'Browser launch for profile "grokbot" is cooling down after 3 consecutive managed Chrome launch failures.',
     );
-    await expect(cooledDownCtx.forProfile("openclaw").ensureBrowserAvailable()).rejects.toThrow(
+    await expect(cooledDownCtx.forProfile("grokbot").ensureBrowserAvailable()).rejects.toThrow(
       "set browser.enabled=false if the browser tool is not needed",
     );
 
@@ -431,7 +431,7 @@ describe("browser server-context ensureBrowserAvailable", () => {
         metadata: {
           reason: BROWSER_ERROR_REASONS.noDisplayForHeadedProfile,
           details: {
-            profile: "openclaw",
+            profile: "grokbot",
             requestedHeadless: false,
             headlessSource: "config",
             displayPresent: false,
@@ -442,14 +442,14 @@ describe("browser server-context ensureBrowserAvailable", () => {
 
     for (let attempt = 0; attempt < 3; attempt += 1) {
       const ctx = createBrowserRouteContext({ getState: () => state });
-      await expect(ctx.forProfile("openclaw").ensureBrowserAvailable()).rejects.toThrow(
+      await expect(ctx.forProfile("grokbot").ensureBrowserAvailable()).rejects.toThrow(
         "display required",
       );
     }
 
     mockLaunchedChrome(launchOpenClawChrome, 987);
     const recoveryCtx = createBrowserRouteContext({ getState: () => state });
-    const recovery = recoveryCtx.forProfile("openclaw").ensureBrowserAvailable({ headless: true });
+    const recovery = recoveryCtx.forProfile("grokbot").ensureBrowserAvailable({ headless: true });
     await vi.advanceTimersByTimeAsync(100);
     await expect(recovery).resolves.toBeUndefined();
 
@@ -457,7 +457,7 @@ describe("browser server-context ensureBrowserAvailable", () => {
     expect(launchOpenClawChrome.mock.calls.at(-1)?.[2]).toEqual(
       expect.objectContaining({ headlessOverride: true, signal: expect.any(AbortSignal) }),
     );
-    expect(state.profiles.get("openclaw")?.managedLaunchFailure).toBeUndefined();
+    expect(state.profiles.get("grokbot")?.managedLaunchFailure).toBeUndefined();
     expect(stopOpenClawChrome).not.toHaveBeenCalled();
   });
 
@@ -468,14 +468,14 @@ describe("browser server-context ensureBrowserAvailable", () => {
 
     for (let attempt = 0; attempt < 3; attempt += 1) {
       const ctx = createBrowserRouteContext({ getState: () => state });
-      await expect(ctx.forProfile("openclaw").ensureBrowserAvailable()).rejects.toThrow(
+      await expect(ctx.forProfile("grokbot").ensureBrowserAvailable()).rejects.toThrow(
         "Failed to start Chrome CDP",
       );
     }
 
     await vi.advanceTimersByTimeAsync(30_000);
     const retryCtx = createBrowserRouteContext({ getState: () => state });
-    await expect(retryCtx.forProfile("openclaw").ensureBrowserAvailable()).rejects.toThrow(
+    await expect(retryCtx.forProfile("grokbot").ensureBrowserAvailable()).rejects.toThrow(
       "Failed to start Chrome CDP",
     );
 
@@ -519,13 +519,13 @@ describe("browser server-context ensureBrowserAvailable", () => {
 
     const promise = profile.ensureBrowserAvailable();
     await expect(promise).rejects.toThrow(
-      'Port 18800 is in use for profile "openclaw" but not by openclaw.',
+      'Port 18800 is in use for profile "grokbot" but not by grokbot.',
     );
     await expect(promise).rejects.toThrow(
-      "set browser.profiles.openclaw.attachOnly=true so OpenClaw attaches without trying to manage the local process",
+      "set browser.profiles.grokbot.attachOnly=true so GrokBot attaches without trying to manage the local process",
     );
     await expect(promise).rejects.toThrow(
-      "For Browserless Docker, set EXTERNAL to the same WebSocket endpoint OpenClaw can reach via browser.profiles.<name>.cdpUrl.",
+      "For Browserless Docker, set EXTERNAL to the same WebSocket endpoint GrokBot can reach via browser.profiles.<name>.cdpUrl.",
     );
 
     expect(launchOpenClawChrome).not.toHaveBeenCalled();
@@ -538,12 +538,12 @@ describe("browser server-context ensureBrowserAvailable", () => {
     const isChromeReachable = vi.mocked(chromeModule.isChromeReachable);
 
     const state = makeBrowserServerState();
-    state.resolved.profiles.openclaw = {
+    state.resolved.profiles.grokbot = {
       cdpUrl: "ws://browserless:3001",
       color: "#00AA00",
     };
     const ctx = createBrowserRouteContext({ getState: () => state });
-    const profile = ctx.forProfile("openclaw");
+    const profile = ctx.forProfile("grokbot");
     const expectedRemoteHttpTimeoutMs = state.resolved.remoteCdpTimeoutMs;
     const expectedRemoteWsTimeoutMs = state.resolved.remoteCdpHandshakeTimeoutMs;
 
@@ -657,7 +657,7 @@ describe("browser server-context ensureBrowserAvailable", () => {
         cdpIsLoopback: false,
         cdpPort: 443,
         color: "#00AA00",
-        driver: "openclaw",
+        driver: "grokbot",
         headless: false,
         attachOnly: false,
       },

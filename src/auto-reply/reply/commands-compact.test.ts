@@ -96,7 +96,7 @@ describe("handleCompactCommand", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     resolveAgentDirMock.mockImplementation(
-      (_cfg: unknown, agentId: string) => `/tmp/workspace/.openclaw/agents/${agentId}/agent`,
+      (_cfg: unknown, agentId: string) => `/tmp/workspace/.grokbot/agents/${agentId}/agent`,
     );
     resolveSessionAgentIdMock.mockReturnValue("main");
   });
@@ -148,7 +148,7 @@ describe("handleCompactCommand", () => {
         ...buildCompactParams("/compact", {
           commands: { text: true },
           channels: { whatsapp: { allowFrom: ["*"] } },
-          session: { store: "/tmp/openclaw-session-store.json" },
+          session: { store: "/tmp/grokbot-session-store.json" },
         } as OpenClawConfig),
         ctx: {
           Provider: "whatsapp",
@@ -161,7 +161,7 @@ describe("handleCompactCommand", () => {
           SenderUsername: "alice_u",
           SenderE164: "+15551234567",
         },
-        agentDir: "/tmp/openclaw-agent-compact",
+        agentDir: "/tmp/grokbot-agent-compact",
         opts: { abortSignal: abortController.signal },
         sessionEntry: {
           sessionId: "session-1",
@@ -195,7 +195,7 @@ describe("handleCompactCommand", () => {
     expect(call.senderName).toBe("Alice");
     expect(call.senderUsername).toBe("alice_u");
     expect(call.senderE164).toBe("+15551234567");
-    expect(call.agentDir).toBe("/tmp/openclaw-agent-compact");
+    expect(call.agentDir).toBe("/tmp/grokbot-agent-compact");
     expect(call.authProfileId).toBe("github-copilot:work");
     expect(call.authProfileIdSource).toBe("user");
     expect(vi.mocked(abortEmbeddedAgentRun)).not.toHaveBeenCalled();
@@ -351,7 +351,7 @@ describe("handleCompactCommand", () => {
     const cfg = {
       commands: { text: true },
       channels: { whatsapp: { allowFrom: ["*"] } },
-      session: { store: "/tmp/openclaw-session-store.json" },
+      session: { store: "/tmp/grokbot-session-store.json" },
     } as OpenClawConfig;
 
     await handleCompactCommand(
@@ -475,7 +475,7 @@ describe("handleCompactCommand", () => {
           sessionId: "locked-session",
           updatedAt: Date.now(),
           agentHarnessId: "codex",
-          agentRuntimeOverride: "openclaw",
+          agentRuntimeOverride: "grokbot",
           modelSelectionLocked: true,
         },
       } as HandleCommandsParams,

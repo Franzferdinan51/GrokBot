@@ -1,4 +1,4 @@
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import type { PluginLogger } from "./logger-types.js";
 import type { PluginRuntime } from "./runtime/types.js";
 
@@ -103,7 +103,7 @@ export type MigrationProviderContext = {
   signal?: AbortSignal;
 };
 
-/** Migration source implemented by a plugin and orchestrated by `openclaw migrate`. */
+/** Migration source implemented by a plugin and orchestrated by `grokbot migrate`. */
 export type MigrationProviderPlugin = {
   id: string;
   label: string;

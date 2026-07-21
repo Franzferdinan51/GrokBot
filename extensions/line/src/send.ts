@@ -1,11 +1,11 @@
 // Line plugin module implements send behavior.
 import { messagingApi } from "@line/bot-sdk";
-import { recordChannelActivity } from "openclaw/plugin-sdk/channel-activity-runtime";
-import { pruneMapToMaxSize } from "openclaw/plugin-sdk/collection-runtime";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { requireRuntimeConfig } from "openclaw/plugin-sdk/plugin-config-runtime";
-import { logVerbose } from "openclaw/plugin-sdk/runtime-env";
-import { truncateUtf16Safe } from "openclaw/plugin-sdk/text-utility-runtime";
+import { recordChannelActivity } from "grokbot/plugin-sdk/channel-activity-runtime";
+import { pruneMapToMaxSize } from "grokbot/plugin-sdk/collection-runtime";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { requireRuntimeConfig } from "grokbot/plugin-sdk/plugin-config-runtime";
+import { logVerbose } from "grokbot/plugin-sdk/runtime-env";
+import { truncateUtf16Safe } from "grokbot/plugin-sdk/text-utility-runtime";
 import { resolveLineAccount } from "./accounts.js";
 import { messageAction } from "./actions.js";
 import { resolveLineChannelAccessToken } from "./channel-access-token.js";
@@ -96,7 +96,7 @@ function normalizeTarget(to: string): string {
   // Reject values that match the LINE id shape but lost their leading capital
   // so the failure is surfaced as a permanent error (recovery moves the entry
   // to failed/ immediately instead of silently retrying 5 times). Short test
-  // fixtures (e.g. "U123") are left alone. openclaw/openclaw#81628
+  // fixtures (e.g. "U123") are left alone. grokbot/grokbot#81628
   if (normalized.length >= 33 && !/^[CUR]/.test(normalized)) {
     throw new Error(
       `Recipient is not a valid LINE id (case-sensitive; expected leading capital C/U/R): ${truncateUtf16Safe(normalized, 4)}…`,

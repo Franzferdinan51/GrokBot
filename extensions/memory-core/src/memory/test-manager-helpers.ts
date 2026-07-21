@@ -1,6 +1,6 @@
-import { createLazyRuntimeModule } from "openclaw/plugin-sdk/lazy-runtime";
+import { createLazyRuntimeModule } from "grokbot/plugin-sdk/lazy-runtime";
 // Memory Core helper module supports test manager helpers behavior.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/memory-core-host-engine-foundation";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/memory-core-host-engine-foundation";
 import type { MemoryIndexManager } from "./index.js";
 
 const ensureEmbeddingMocksLoaded = createLazyRuntimeModule(() =>

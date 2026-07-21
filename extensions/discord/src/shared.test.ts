@@ -1,5 +1,5 @@
 // Discord tests cover shared plugin behavior.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { createDiscordPluginBase, discordConfigAdapter } from "./shared.js";
 
@@ -168,7 +168,7 @@ describe("discordConfigAdapter", () => {
         providers: {
           discord_token: {
             source: "file",
-            path: "/tmp/openclaw-missing-discord-token",
+            path: "/tmp/grokbot-missing-discord-token",
             mode: "singleValue",
           },
         },

@@ -213,10 +213,10 @@ describe("models-config write serialization", () => {
 
       const result = await ensureOpenClawModelsJson(cfg);
 
-      expect(result.agentDir).toBe(path.join(home, ".openclaw", "agents", "ops", "agent"));
+      expect(result.agentDir).toBe(path.join(home, ".grokbot", "agents", "ops", "agent"));
       await expect(fs.access(path.join(result.agentDir, "models.json"))).resolves.toBeUndefined();
       await expectMissingPath(
-        fs.access(path.join(home, ".openclaw", "agents", "main", "agent", "models.json")),
+        fs.access(path.join(home, ".grokbot", "agents", "main", "agent", "models.json")),
       );
     });
   });

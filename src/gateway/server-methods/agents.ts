@@ -2,7 +2,7 @@
 // reads/writes, identity merging, and safe deletion for operator clients.
 import fs from "node:fs/promises";
 import path from "node:path";
-import { normalizeOptionalString as resolveOptionalStringParam } from "@openclaw/normalization-core/string-coerce";
+import { normalizeOptionalString as resolveOptionalStringParam } from "@grokbot/normalization-core/string-coerce";
 import {
   ErrorCodes,
   errorShape,
@@ -70,7 +70,7 @@ import {
 import { purgeAgentSessionStoreEntries } from "../../config/sessions.js";
 import { resolveSessionTranscriptsDirForAgent } from "../../config/sessions/paths.js";
 import type { IdentityConfig } from "../../config/types.base.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import { withAgentExecApprovalsRemoved } from "../../infra/exec-approvals.js";
 import { root, FsSafeError, type ReadResult } from "../../infra/fs-safe.js";
 import { isPathInside } from "../../infra/path-guards.js";
@@ -81,13 +81,13 @@ import {
   readAgentDeletionJournal,
   type AgentDeletionJournalCleanupPath,
 } from "../../state/agent-deletion-journal.js";
-import { assertNoOpenClawAgentDatabaseLeases } from "../../state/openclaw-agent-db-lease.js";
-import { unregisterOpenClawAgentDatabase } from "../../state/openclaw-agent-db-registry.js";
+import { assertNoOpenClawAgentDatabaseLeases } from "../../state/grokbot-agent-db-lease.js";
+import { unregisterOpenClawAgentDatabase } from "../../state/grokbot-agent-db-registry.js";
 import {
   closeOpenClawAgentDatabaseByPath,
   listOpenClawRegisteredAgentDatabases,
   resolveOpenClawAgentSqlitePath,
-} from "../../state/openclaw-agent-db.js";
+} from "../../state/grokbot-agent-db.js";
 import { resolveUserPath } from "../../utils.js";
 import { listAgentsForGateway } from "../session-utils.js";
 import {
@@ -719,7 +719,7 @@ function prepareAgentDeleteDatabases(
   const registeredDatabasePaths = new Set([
     resolveOpenClawAgentSqlitePath({
       agentId,
-      path: path.join(agentDir, "openclaw-agent.sqlite"),
+      path: path.join(agentDir, "grokbot-agent.sqlite"),
     }),
     ...registeredDatabases
       .filter((entry) => normalizeAgentId(entry.agentId) === agentId)

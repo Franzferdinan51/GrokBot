@@ -1,21 +1,21 @@
 import {
   buildChannelInboundEventContext,
   resolveChannelInboundRouteEnvelope,
-} from "openclaw/plugin-sdk/channel-inbound";
+} from "grokbot/plugin-sdk/channel-inbound";
 // Qa Channel plugin module implements inbound behavior.
-import { resolveStableChannelMessageIngress } from "openclaw/plugin-sdk/channel-ingress-runtime";
-import { resolveNativeCommandSessionTargets } from "openclaw/plugin-sdk/command-auth-native";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
+import { resolveStableChannelMessageIngress } from "grokbot/plugin-sdk/channel-ingress-runtime";
+import { resolveNativeCommandSessionTargets } from "grokbot/plugin-sdk/command-auth-native";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { formatErrorMessage } from "grokbot/plugin-sdk/error-runtime";
 import {
   buildAgentMediaPayload,
   saveMediaBuffer,
   saveMediaSource,
-} from "openclaw/plugin-sdk/media-runtime";
+} from "grokbot/plugin-sdk/media-runtime";
 import {
   sanitizeQaBusToolCallArguments,
   type QaBusToolCall,
-} from "openclaw/plugin-sdk/qa-channel-protocol";
+} from "grokbot/plugin-sdk/qa-channel-protocol";
 import {
   buildQaTarget,
   deleteQaBusMessage,

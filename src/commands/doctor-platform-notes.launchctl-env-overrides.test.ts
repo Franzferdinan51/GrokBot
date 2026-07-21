@@ -164,8 +164,8 @@ describe("noteMacLaunchctlGatewayEnvOverrides", () => {
 describe("noteMacStaleOpenClawUpdateLaunchdJobs", () => {
   it("uses service env for gateway platform stale updater warnings", async () => {
     const serviceEnv = {
-      OPENCLAW_STATE_DIR: "/tmp/openclaw-daemon",
-      OPENCLAW_LAUNCHD_LABEL: "ai.openclaw.manual-update.gateway",
+      OPENCLAW_STATE_DIR: "/tmp/grokbot-daemon",
+      OPENCLAW_LAUNCHD_LABEL: "ai.grokbot.manual-update.gateway",
     };
     const service = {
       readCommand: vi.fn(async () => ({
@@ -184,16 +184,16 @@ describe("noteMacStaleOpenClawUpdateLaunchdJobs", () => {
     expect(service.readCommand).toHaveBeenCalledTimes(1);
     expect(findJobs).toHaveBeenCalledWith(
       expect.objectContaining({
-        OPENCLAW_STATE_DIR: "/tmp/openclaw-daemon",
-        OPENCLAW_LAUNCHD_LABEL: "ai.openclaw.manual-update.gateway",
+        OPENCLAW_STATE_DIR: "/tmp/grokbot-daemon",
+        OPENCLAW_LAUNCHD_LABEL: "ai.grokbot.manual-update.gateway",
       }),
     );
   });
 
   it("uses service env for doctor stale updater notes", async () => {
     const serviceEnv = {
-      OPENCLAW_STATE_DIR: "/tmp/openclaw-daemon",
-      OPENCLAW_LAUNCHD_LABEL: "ai.openclaw.manual-update.gateway",
+      OPENCLAW_STATE_DIR: "/tmp/grokbot-daemon",
+      OPENCLAW_LAUNCHD_LABEL: "ai.grokbot.manual-update.gateway",
     };
     const service = {
       readCommand: vi.fn(async () => ({
@@ -212,8 +212,8 @@ describe("noteMacStaleOpenClawUpdateLaunchdJobs", () => {
     expect(service.readCommand).toHaveBeenCalledTimes(1);
     expect(findJobs).toHaveBeenCalledWith(
       expect.objectContaining({
-        OPENCLAW_STATE_DIR: "/tmp/openclaw-daemon",
-        OPENCLAW_LAUNCHD_LABEL: "ai.openclaw.manual-update.gateway",
+        OPENCLAW_STATE_DIR: "/tmp/grokbot-daemon",
+        OPENCLAW_LAUNCHD_LABEL: "ai.grokbot.manual-update.gateway",
       }),
     );
   });
@@ -225,11 +225,11 @@ describe("noteMacStaleOpenClawUpdateLaunchdJobs", () => {
     };
     const findJobs = vi.fn(async () => [
       {
-        label: "ai.openclaw.update.2026.5.12",
+        label: "ai.grokbot.update.2026.5.12",
         lastExitStatus: 127,
       },
       {
-        label: "ai.openclaw.manual-update.1717168800",
+        label: "ai.grokbot.manual-update.1717168800",
         lastExitStatus: 0,
       },
     ]);
@@ -244,11 +244,11 @@ describe("noteMacStaleOpenClawUpdateLaunchdJobs", () => {
     expect(findJobs).toHaveBeenCalledTimes(1);
     const [message, title] = requireNoteCall(noteFn);
     expect(title).toBe("Gateway (macOS)");
-    expect(message).toContain("Stale OpenClaw updater launchd job(s) detected");
-    expect(message).toContain("ai.openclaw.update.2026.5.12");
-    expect(message).toContain("ai.openclaw.manual-update.1717168800");
+    expect(message).toContain("Stale GrokBot updater launchd job(s) detected");
+    expect(message).toContain("ai.grokbot.update.2026.5.12");
+    expect(message).toContain("ai.grokbot.manual-update.1717168800");
     expect(message).toContain("launchctl remove <label>");
-    expect(message).toContain("openclaw gateway restart");
+    expect(message).toContain("grokbot gateway restart");
   });
 
   it("does nothing when no stale updater jobs exist", async () => {

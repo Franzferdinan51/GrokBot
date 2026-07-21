@@ -1,4 +1,4 @@
-import type { Model } from "openclaw/plugin-sdk/llm";
+import type { Model } from "grokbot/plugin-sdk/llm";
 /**
  * Routes compaction through selected native agent harnesses when supported.
  */
@@ -51,7 +51,7 @@ import type {
 /**
  * Delegates session compaction to the selected agent harness when that runtime owns compaction.
  *
- * CLI runtimes and OpenClaw-native compaction stay on the embedded runner path; plugin harnesses
+ * CLI runtimes and GrokBot-native compaction stay on the embedded runner path; plugin harnesses
  * can opt in through their `compact` hook.
  */
 type NativeCompactionRequest = "after_context_engine";
@@ -436,7 +436,7 @@ export async function maybeCompactAgentHarnessSession(
     return undefined;
   }
   if (!options.nativeCompactionRequest && !harness.compact) {
-    if (harness.id !== "openclaw") {
+    if (harness.id !== "grokbot") {
       return {
         ok: false,
         compacted: false,
@@ -478,7 +478,7 @@ export async function maybeCompactAgentHarnessSession(
     return undefined;
   }
   if (!options.nativeCompactionRequest && !harness.compact) {
-    if (harness.id !== "openclaw") {
+    if (harness.id !== "grokbot") {
       return {
         ok: false,
         compacted: false,

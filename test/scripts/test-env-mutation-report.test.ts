@@ -20,7 +20,7 @@ function writeRepoFile(repoRoot: string, relativePath: string, value: string): v
 }
 
 function makeEnvMutationFixture(): string {
-  const repoRoot = createTempDir("openclaw-test-env-mutations-");
+  const repoRoot = createTempDir("grokbot-test-env-mutations-");
   writeRepoFile(
     repoRoot,
     "src/runtime.ts",
@@ -60,7 +60,7 @@ process.env.OPENCLAW_AGENT_DIR = "agent";
   );
   writeRepoFile(
     repoRoot,
-    "src/test-utils/openclaw-test-state.ts",
+    "src/test-utils/grokbot-test-state.ts",
     `
 process.env.HOME = "allowed";
 delete process.env.OPENCLAW_STATE_DIR;
@@ -70,7 +70,7 @@ delete process.env.OPENCLAW_STATE_DIR;
 }
 
 describe("collectTestEnvMutationReport", () => {
-  it("reports active OpenClaw env mutations while ignoring strings and non-test files", () => {
+  it("reports active GrokBot env mutations while ignoring strings and non-test files", () => {
     const report = collectTestEnvMutationReport({ repoRoot: makeEnvMutationFixture() });
 
     expect(
@@ -112,7 +112,7 @@ describe("collectTestEnvMutationReport", () => {
 
     const rendered = renderTestEnvMutationReport(report, { includeAllowed: true });
 
-    expect(rendered).toContain("OpenClaw test env mutation report");
+    expect(rendered).toContain("GrokBot test env mutation report");
     expect(rendered).toContain("Findings: 9 active in 3 file(s), 2 allowed in 1 file(s)");
     expect(rendered).toContain("- src/example.test.ts (7)");
     expect(rendered).toContain("L2 OPENCLAW_STATE_DIR assign process.env");
@@ -195,7 +195,7 @@ describe("collectTestEnvMutationReport", () => {
           "--limit",
           limit,
           "--repo-root",
-          createTempDir("openclaw-env-limit-"),
+          createTempDir("grokbot-env-limit-"),
         ]),
       ).toThrow("--limit expects a non-negative integer");
     }

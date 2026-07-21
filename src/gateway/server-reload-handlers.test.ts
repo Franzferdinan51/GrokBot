@@ -12,7 +12,7 @@ import {
   clearRuntimeConfigSnapshot,
   setRuntimeConfigSnapshot,
 } from "../config/runtime-snapshot.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import {
   consumeGatewaySigusr1RestartIntent,
   isGatewaySigusr1RestartExternallyAllowed,
@@ -603,9 +603,9 @@ function createManagedRestartSequenceHarness(
     initialConfig,
     initialCompareConfig: initialConfig,
     initialInternalWriteHash: null,
-    watchPath: "/tmp/openclaw.json",
+    watchPath: "/tmp/grokbot.json",
     readSnapshot: vi.fn(async () => ({
-      path: "/tmp/openclaw.json",
+      path: "/tmp/grokbot.json",
       exists: true,
       raw: "{}",
       parsed: snapshotConfig,
@@ -690,7 +690,7 @@ function createManagedRestartSequenceHarness(
     snapshotConfig = config;
     snapshotHash = hash;
     listener({
-      configPath: "/tmp/openclaw.json",
+      configPath: "/tmp/grokbot.json",
       sourceConfig: config,
       runtimeConfig,
       persistedHash: hash,
@@ -828,7 +828,7 @@ async function runManagedOwnershipScenario(params: {
     if (params.queueRevert && !queuedB) {
       queuedB = true;
       writeListenerRef.current?.({
-        configPath: "/tmp/openclaw.json",
+        configPath: "/tmp/grokbot.json",
         sourceConfig: configB,
         runtimeConfig: configB,
         persistedHash: "hash-b",
@@ -846,9 +846,9 @@ async function runManagedOwnershipScenario(params: {
     initialConfig,
     initialCompareConfig: initialConfig,
     initialInternalWriteHash: null,
-    watchPath: "/tmp/openclaw.json",
+    watchPath: "/tmp/grokbot.json",
     readSnapshot: vi.fn(async () => ({
-      path: "/tmp/openclaw.json",
+      path: "/tmp/grokbot.json",
       exists: true,
       raw: "{}",
       parsed: {},
@@ -905,7 +905,7 @@ async function runManagedOwnershipScenario(params: {
     requestRecoveryRestart,
   });
   writeListenerRef.current?.({
-    configPath: "/tmp/openclaw.json",
+    configPath: "/tmp/grokbot.json",
     sourceConfig: configA,
     runtimeConfig: configA,
     persistedHash: "hash-a",
@@ -3743,9 +3743,9 @@ describe("gateway Gmail hot reload handlers", () => {
       initialConfig,
       initialCompareConfig: initialConfig,
       initialInternalWriteHash: null,
-      watchPath: "/tmp/openclaw.json",
+      watchPath: "/tmp/grokbot.json",
       readSnapshot: vi.fn(async () => ({
-        path: "/tmp/openclaw.json",
+        path: "/tmp/grokbot.json",
         exists: true,
         raw: "{}",
         parsed: {},
@@ -3809,7 +3809,7 @@ describe("gateway Gmail hot reload handlers", () => {
     }
 
     registeredWriteListener({
-      configPath: "/tmp/openclaw.json",
+      configPath: "/tmp/grokbot.json",
       sourceConfig: nextConfig,
       runtimeConfig: nextConfig,
       persistedHash: "hash-next",
@@ -3840,7 +3840,7 @@ describe("gateway Gmail hot reload handlers", () => {
 
   it("refreshes owner refs when only the resolved source snapshot changes", async () => {
     vi.useFakeTimers();
-    const authAgentDir = "/tmp/openclaw-source-only-auth-owner";
+    const authAgentDir = "/tmp/grokbot-source-only-auth-owner";
     const authProfileId = "openai:source-only";
     const authOwnerId = resolveAuthProfileSecretOwnerId({
       agentDir: authAgentDir,
@@ -3964,9 +3964,9 @@ describe("gateway Gmail hot reload handlers", () => {
       initialConfig: runtimeConfig,
       initialCompareConfig: runtimeConfig,
       initialInternalWriteHash: null,
-      watchPath: "/tmp/openclaw.json",
+      watchPath: "/tmp/grokbot.json",
       readSnapshot: vi.fn(async () => ({
-        path: "/tmp/openclaw.json",
+        path: "/tmp/grokbot.json",
         exists: true,
         raw: "{}",
         parsed: nextSourceConfig,
@@ -4037,7 +4037,7 @@ describe("gateway Gmail hot reload handlers", () => {
         logging: { level: "info" as const },
       };
       listener({
-        configPath: "/tmp/openclaw.json",
+        configPath: "/tmp/grokbot.json",
         sourceConfig: unrelatedSourceConfig,
         runtimeConfig,
         persistedHash: "same-secrets-new-source",
@@ -4066,7 +4066,7 @@ describe("gateway Gmail hot reload handlers", () => {
       ]);
 
       listener({
-        configPath: "/tmp/openclaw.json",
+        configPath: "/tmp/grokbot.json",
         sourceConfig: nextSourceConfig,
         runtimeConfig,
         persistedHash: "same-runtime-next-source",
@@ -4129,7 +4129,7 @@ describe("gateway Gmail hot reload handlers", () => {
         webTools: createEmptyRuntimeWebToolsMetadata(),
       }));
       listener({
-        configPath: "/tmp/openclaw.json",
+        configPath: "/tmp/grokbot.json",
         sourceConfig: sourceConfig(thirdRef),
         runtimeConfig,
         persistedHash: "changed-second-resolution",
@@ -4183,7 +4183,7 @@ describe("gateway Gmail hot reload handlers", () => {
         };
       });
       listener({
-        configPath: "/tmp/openclaw.json",
+        configPath: "/tmp/grokbot.json",
         sourceConfig: sourceConfig(thirdRef),
         runtimeConfig,
         persistedHash: "superseded-source-owner",
@@ -4268,9 +4268,9 @@ describe("gateway Gmail hot reload handlers", () => {
       initialConfig,
       initialCompareConfig: initialConfig,
       initialInternalWriteHash: null,
-      watchPath: "/tmp/openclaw.json",
+      watchPath: "/tmp/grokbot.json",
       readSnapshot: vi.fn(async () => ({
-        path: "/tmp/openclaw.json",
+        path: "/tmp/grokbot.json",
         exists: true,
         raw: "{}",
         parsed: snapshotConfig,
@@ -4336,7 +4336,7 @@ describe("gateway Gmail hot reload handlers", () => {
       snapshotHash = hash;
       revision += 1;
       listener({
-        configPath: "/tmp/openclaw.json",
+        configPath: "/tmp/grokbot.json",
         sourceConfig: config,
         runtimeConfig: config,
         persistedHash: hash,
@@ -4484,9 +4484,9 @@ describe("gateway Gmail hot reload handlers", () => {
       initialConfig,
       initialCompareConfig: initialConfig,
       initialInternalWriteHash: null,
-      watchPath: "/tmp/openclaw.json",
+      watchPath: "/tmp/grokbot.json",
       readSnapshot: vi.fn(async () => ({
-        path: "/tmp/openclaw.json",
+        path: "/tmp/grokbot.json",
         exists: true,
         raw: "{}",
         parsed: initialConfig,
@@ -4555,7 +4555,7 @@ describe("gateway Gmail hot reload handlers", () => {
 
     try {
       registeredWriteListener({
-        configPath: "/tmp/openclaw.json",
+        configPath: "/tmp/grokbot.json",
         sourceConfig: rejectedConfig,
         runtimeConfig: rejectedConfig,
         persistedHash: "rejected-restart",
@@ -4572,7 +4572,7 @@ describe("gateway Gmail hot reload handlers", () => {
       expect(requestRecoveryRestart).not.toHaveBeenCalled();
 
       registeredWriteListener({
-        configPath: "/tmp/openclaw.json",
+        configPath: "/tmp/grokbot.json",
         sourceConfig: initialConfig,
         runtimeConfig: initialConfig,
         persistedHash: "accepted-revert",
@@ -5109,9 +5109,9 @@ describe("gateway Gmail hot reload handlers", () => {
       initialConfig,
       initialCompareConfig: initialConfig,
       initialInternalWriteHash: null,
-      watchPath: "/tmp/openclaw.json",
+      watchPath: "/tmp/grokbot.json",
       readSnapshot: vi.fn(async () => ({
-        path: "/tmp/openclaw.json",
+        path: "/tmp/grokbot.json",
         exists: true,
         raw: "{}",
         parsed: {},
@@ -5175,7 +5175,7 @@ describe("gateway Gmail hot reload handlers", () => {
     }
 
     registeredWriteListener({
-      configPath: "/tmp/openclaw.json",
+      configPath: "/tmp/grokbot.json",
       sourceConfig: nextConfig,
       runtimeConfig: nextConfig,
       persistedHash: "hot-reload-next",
@@ -5229,7 +5229,7 @@ describe("gateway Gmail hot reload handlers", () => {
     const initialConfig = createGmailConfig("old@example.com");
     const nextConfig = createGmailConfig("next@example.com");
     const readSnapshot = vi.fn(async () => ({
-      path: "/tmp/openclaw.json",
+      path: "/tmp/grokbot.json",
       exists: true,
       raw: "{}",
       parsed: {},
@@ -5248,7 +5248,7 @@ describe("gateway Gmail hot reload handlers", () => {
       initialConfig,
       initialCompareConfig: initialConfig,
       initialInternalWriteHash: null,
-      watchPath: "/tmp/openclaw.json",
+      watchPath: "/tmp/grokbot.json",
       readSnapshot: readSnapshot as never,
       promoteSnapshot: vi.fn(async () => true) as never,
       subscribeToWrites: ((listener: (event: ConfigWriteNotification) => void) => {
@@ -5307,7 +5307,7 @@ describe("gateway Gmail hot reload handlers", () => {
     }
 
     registeredWriteListener({
-      configPath: "/tmp/openclaw.json",
+      configPath: "/tmp/grokbot.json",
       sourceConfig: nextConfig,
       runtimeConfig: nextConfig,
       persistedHash: "hash-next",
@@ -5349,9 +5349,9 @@ describe("gateway Gmail hot reload handlers", () => {
       initialConfig,
       initialCompareConfig: initialConfig,
       initialInternalWriteHash: null,
-      watchPath: "/tmp/openclaw.json",
+      watchPath: "/tmp/grokbot.json",
       readSnapshot: vi.fn(async () => ({
-        path: "/tmp/openclaw.json",
+        path: "/tmp/grokbot.json",
         exists: true,
         raw: "{}",
         parsed: {},
@@ -5422,7 +5422,7 @@ describe("gateway Gmail hot reload handlers", () => {
     }
 
     registeredWriteListener({
-      configPath: "/tmp/openclaw.json",
+      configPath: "/tmp/grokbot.json",
       sourceConfig: nextConfig,
       runtimeConfig: nextConfig,
       persistedHash: "hash-next",
@@ -5461,9 +5461,9 @@ describe("gateway Gmail hot reload handlers", () => {
       initialConfig,
       initialCompareConfig: initialConfig,
       initialInternalWriteHash: null,
-      watchPath: "/tmp/openclaw.json",
+      watchPath: "/tmp/grokbot.json",
       readSnapshot: vi.fn(async () => ({
-        path: "/tmp/openclaw.json",
+        path: "/tmp/grokbot.json",
         exists: true,
         raw: "{}",
         parsed: {},
@@ -5538,7 +5538,7 @@ describe("gateway Gmail hot reload handlers", () => {
     }
 
     registeredWriteListener({
-      configPath: "/tmp/openclaw.json",
+      configPath: "/tmp/grokbot.json",
       sourceConfig: nextConfig,
       runtimeConfig: nextConfig,
       persistedHash: "hash-next",
@@ -5785,7 +5785,7 @@ describe("gateway plugin hot reload handlers", () => {
       initialConfig,
       initialCompareConfig: initialConfig,
       initialInternalWriteHash: null,
-      watchPath: "/tmp/openclaw.json",
+      watchPath: "/tmp/grokbot.json",
       readSnapshot: vi.fn() as never,
       promoteSnapshot: vi.fn(async () => true) as never,
       subscribeToWrites: ((listener: (event: ConfigWriteNotification) => void) => {
@@ -5839,7 +5839,7 @@ describe("gateway plugin hot reload handlers", () => {
     }
 
     listener({
-      configPath: "/tmp/openclaw.json",
+      configPath: "/tmp/grokbot.json",
       sourceConfig: nextConfig,
       runtimeConfig: nextConfig,
       preparedCandidate: { runtimeConfig: nextConfig, compareConfig, runtimeEnv },
@@ -6832,7 +6832,7 @@ describe("deferred channel reload abort generation", () => {
       initialConfig,
       initialCompareConfig: initialConfig,
       initialInternalWriteHash: null,
-      watchPath: "/tmp/openclaw.json",
+      watchPath: "/tmp/grokbot.json",
       readSnapshot: vi.fn() as never,
       promoteSnapshot: promoteSnapshot as never,
       subscribeToWrites: ((listener: (event: ConfigWriteNotification) => void) => {
@@ -6899,7 +6899,7 @@ describe("deferred channel reload abort generation", () => {
 
     try {
       registeredWriteListener({
-        configPath: "/tmp/openclaw.json",
+        configPath: "/tmp/grokbot.json",
         sourceConfig: nextConfig,
         runtimeConfig: nextConfig,
         persistedHash: "managed-abort-next",

@@ -2,8 +2,8 @@
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/plugin-entry";
-import { normalizeAgentId } from "openclaw/plugin-sdk/routing";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/plugin-entry";
+import { normalizeAgentId } from "grokbot/plugin-sdk/routing";
 import {
   archiveLegacyStateSource,
   detectOpenClawStateDatabaseSchemaMigrations,
@@ -11,7 +11,7 @@ import {
   type PluginStateKeyedStore,
   repairOpenClawStateDatabaseSchema,
   type OpenClawStateDatabaseSchemaMigration,
-} from "openclaw/plugin-sdk/runtime-doctor";
+} from "grokbot/plugin-sdk/runtime-doctor";
 import {
   buildVoiceCallLegacyJsonlEventKey,
   CALL_RECORD_CHUNK_MAX_ENTRIES,
@@ -71,7 +71,7 @@ function resolveUserPath(input: string, env: NodeJS.ProcessEnv): string {
 
 /** Read the configured voice-call store path from either package id. */
 function getVoiceCallConfigStore(config: PluginDoctorStateMigrationParams["config"]): string {
-  for (const pluginId of ["voice-call", "@openclaw/voice-call"]) {
+  for (const pluginId of ["voice-call", "@grokbot/voice-call"]) {
     const rawConfig = config.plugins?.entries?.[pluginId]?.config;
     if (!rawConfig || typeof rawConfig !== "object" || Array.isArray(rawConfig)) {
       continue;
@@ -97,7 +97,7 @@ function asRecord(value: unknown): Record<string, unknown> | undefined {
 /** Return Voice Call agents whose templated core session stores need migration. */
 export function resolveSessionStoreAgentIds(params: { cfg: OpenClawConfig }): string[] {
   const agentIds = new Set<string>();
-  for (const pluginId of ["voice-call", "@openclaw/voice-call"]) {
+  for (const pluginId of ["voice-call", "@grokbot/voice-call"]) {
     const entry = params.cfg.plugins?.entries?.[pluginId];
     if (!entry) {
       continue;
@@ -146,7 +146,7 @@ function describeVoiceCallSchemaMigration(migration: OpenClawStateDatabaseSchema
     case "audit-events-v2":
       return "audit event ledger -> versioned message lifecycle schema";
     case "operator-approvals-system-agent":
-      return "operator approvals -> OpenClaw system changes";
+      return "operator approvals -> GrokBot system changes";
     case "session-watch-cursor-provenance-v4":
       return "session watch cursors -> provenance column";
     case "strict-tables-v3":

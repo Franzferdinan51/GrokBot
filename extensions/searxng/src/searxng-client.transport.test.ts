@@ -41,9 +41,9 @@ describe("searxng real transport", () => {
         JSON.stringify({
           results: [
             {
-              title: "OpenClaw",
-              url: "https://docs.openclaw.ai/",
-              content: "OpenClaw documentation",
+              title: "GrokBot",
+              url: "https://docs.grokbot.ai/",
+              content: "GrokBot documentation",
             },
           ],
         }),
@@ -54,13 +54,13 @@ describe("searxng real transport", () => {
     await expect(
       runSearxngSearch({
         baseUrl,
-        query: "openclaw",
+        query: "grokbot",
         categories: "general",
       }),
     ).resolves.toMatchObject({
       provider: "searxng",
       count: 1,
-      results: [{ url: "https://docs.openclaw.ai/" }],
+      results: [{ url: "https://docs.grokbot.ai/" }],
     });
   });
 

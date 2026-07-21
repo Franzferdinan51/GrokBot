@@ -1,6 +1,6 @@
-import type { ChannelOutboundPayloadHint } from "openclaw/plugin-sdk/channel-contract";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import type { ReplyPayload } from "openclaw/plugin-sdk/reply-runtime";
+import type { ChannelOutboundPayloadHint } from "grokbot/plugin-sdk/channel-contract";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import type { ReplyPayload } from "grokbot/plugin-sdk/reply-runtime";
 import { describe, expect, it } from "vitest";
 import {
   googleChatApprovalCapability,

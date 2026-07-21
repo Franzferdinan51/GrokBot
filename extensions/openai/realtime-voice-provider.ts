@@ -4,13 +4,13 @@ import { randomUUID } from "node:crypto";
 import {
   isProviderAuthProfileConfigured,
   resolveProviderAuthProfileApiKey,
-} from "openclaw/plugin-sdk/provider-auth";
-import { resolveProviderRequestHeaders } from "openclaw/plugin-sdk/provider-http";
+} from "grokbot/plugin-sdk/provider-auth";
+import { resolveProviderRequestHeaders } from "grokbot/plugin-sdk/provider-http";
 import {
   captureWsEvent,
   createDebugProxyWebSocketAgent,
   resolveDebugProxySettings,
-} from "openclaw/plugin-sdk/proxy-capture";
+} from "grokbot/plugin-sdk/proxy-capture";
 import type {
   RealtimeVoiceAudioFormat,
   RealtimeVoiceBargeInOptions,
@@ -22,16 +22,16 @@ import type {
   RealtimeVoiceProviderPlugin,
   RealtimeVoiceTool,
   RealtimeVoiceToolResultOptions,
-} from "openclaw/plugin-sdk/realtime-voice";
+} from "grokbot/plugin-sdk/realtime-voice";
 import {
   REALTIME_VOICE_AUDIO_FORMAT_G711_ULAW_8KHZ,
   REALTIME_VOICE_AUDIO_FORMAT_PCM16_24KHZ,
-} from "openclaw/plugin-sdk/realtime-voice";
-import { sleepWithAbort, warn } from "openclaw/plugin-sdk/runtime-env";
+} from "grokbot/plugin-sdk/realtime-voice";
+import { sleepWithAbort, warn } from "grokbot/plugin-sdk/runtime-env";
 import {
   normalizeResolvedSecretInputString,
   normalizeSecretInputString,
-} from "openclaw/plugin-sdk/secret-input";
+} from "grokbot/plugin-sdk/secret-input";
 import WebSocket from "ws";
 import {
   asFiniteNumber,
@@ -1286,7 +1286,7 @@ class OpenAIRealtimeVoiceBridge implements RealtimeVoiceBridge {
       this.responseActive &&
       !this.responseCancelInFlight
     ) {
-      const eventId = `openclaw-response-cancel-${randomUUID()}`;
+      const eventId = `grokbot-response-cancel-${randomUUID()}`;
       this.manualResponseCancelEventId = eventId;
       this.sendEvent({ type: "response.cancel", event_id: eventId }, "reason=barge-in");
       this.responseCancelInFlight = true;
@@ -1352,7 +1352,7 @@ class OpenAIRealtimeVoiceBridge implements RealtimeVoiceBridge {
     this.responseCreatePending = false;
     this.responseCreateInFlight = true;
     this.suppressAutoRespondForManualResponse();
-    const eventId = `openclaw-response-create-${randomUUID()}`;
+    const eventId = `grokbot-response-create-${randomUUID()}`;
     // Realtime errors can describe unrelated client events. Keep this id until
     // the manual turn settles so only its rejection may release VAD suppression.
     this.manualResponseCreateEventId = eventId;

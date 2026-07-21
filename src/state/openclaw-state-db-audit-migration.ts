@@ -4,7 +4,7 @@ import {
   tableExists,
   tableHasColumn,
   tablePrimaryKeyColumns,
-} from "./openclaw-state-db-schema-helpers.js";
+} from "./grokbot-state-db-schema-helpers.js";
 
 const AUDIT_EVENT_STATE_SCHEMA_VERSION = 2;
 

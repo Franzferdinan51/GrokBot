@@ -1,21 +1,21 @@
 // Feishu plugin module implements reply dispatcher behavior.
-import { formatReasoningMessage, resolveHumanDelayConfig } from "openclaw/plugin-sdk/agent-runtime";
-import { logTypingFailure } from "openclaw/plugin-sdk/channel-feedback";
-import type { ChannelInboundTurnPlan } from "openclaw/plugin-sdk/channel-inbound";
-import { createChannelMessageReplyPipeline } from "openclaw/plugin-sdk/channel-outbound";
+import { formatReasoningMessage, resolveHumanDelayConfig } from "grokbot/plugin-sdk/agent-runtime";
+import { logTypingFailure } from "grokbot/plugin-sdk/channel-feedback";
+import type { ChannelInboundTurnPlan } from "grokbot/plugin-sdk/channel-inbound";
+import { createChannelMessageReplyPipeline } from "grokbot/plugin-sdk/channel-outbound";
 import {
   formatChannelProgressDraftLineForEntry,
   isChannelProgressDraftWorkToolName,
   resolveChannelPreviewStreamMode,
   resolveChannelStreamingBlockEnabled,
-} from "openclaw/plugin-sdk/channel-outbound";
+} from "grokbot/plugin-sdk/channel-outbound";
 import {
   getReplyPayloadTtsSupplement,
   resolveSendableOutboundReplyParts,
   resolveTextChunksWithFallback,
   sendMediaWithLeadingCaption,
-} from "openclaw/plugin-sdk/reply-payload";
-import { stripReasoningTagsFromText } from "openclaw/plugin-sdk/text-chunking";
+} from "grokbot/plugin-sdk/reply-payload";
+import { stripReasoningTagsFromText } from "grokbot/plugin-sdk/text-chunking";
 import { resolveFeishuRuntimeAccount } from "./accounts.js";
 import { resolveConfiguredHttpTimeoutMs } from "./client-timeout.js";
 import { createFeishuClient } from "./client.js";

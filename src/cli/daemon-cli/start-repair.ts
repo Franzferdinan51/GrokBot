@@ -125,7 +125,7 @@ export async function repairLoadedGatewayServiceForStart(
     message:
       params.action === "restart"
         ? "Gateway service definition repaired and restarted."
-        : "Gateway service definition repaired and started. Reopen the Control UI with `openclaw dashboard` or copy a fresh auth URL with `openclaw dashboard --no-open`.",
+        : "Gateway service definition repaired and started. Reopen the Control UI with `grokbot dashboard` or copy a fresh auth URL with `grokbot dashboard --no-open`.",
     warnings: warnings.length ? warnings : undefined,
     loaded,
   };

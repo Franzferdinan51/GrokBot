@@ -1,7 +1,7 @@
 // Gateway Protocol tests cover native protocol levels.guard behavior.
 import fs from "node:fs/promises";
 import path from "node:path";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { describe, it } from "vitest";
 import { ProtocolSchemas } from "./schema/protocol-schemas.js";
 import {
@@ -159,7 +159,7 @@ describe("native Gateway protocol levels", () => {
       expectedNodeLevels,
     );
 
-    const androidPath = "apps/android/app/src/main/java/ai/openclaw/app/gateway/GatewayProtocol.kt";
+    const androidPath = "apps/android/app/src/main/java/ai/grokbot/app/gateway/GatewayProtocol.kt";
     const android = await readRepoFile(androidPath);
     assertLevelsMatch(
       androidPath,
@@ -233,7 +233,7 @@ describe("native Gateway protocol levels", () => {
       "operator connects must advertise GATEWAY_PROTOCOL_VERSION as maxProtocol.",
     );
 
-    const androidPath = "apps/android/app/src/main/java/ai/openclaw/app/gateway/GatewaySession.kt";
+    const androidPath = "apps/android/app/src/main/java/ai/grokbot/app/gateway/GatewaySession.kt";
     const android = await readRepoFile(androidPath);
     assertPattern(
       android,

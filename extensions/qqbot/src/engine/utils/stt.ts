@@ -7,14 +7,14 @@
 
 import * as fs from "node:fs";
 import path from "node:path";
-import { mimeTypeFromFilePath } from "openclaw/plugin-sdk/media-mime";
-import { finiteSecondsToTimerSafeMilliseconds } from "openclaw/plugin-sdk/number-runtime";
+import { mimeTypeFromFilePath } from "grokbot/plugin-sdk/media-mime";
+import { finiteSecondsToTimerSafeMilliseconds } from "grokbot/plugin-sdk/number-runtime";
 import {
   readProviderJsonResponse,
   readResponseTextLimited,
-} from "openclaw/plugin-sdk/provider-http";
-import { fetchWithSsrFGuard } from "openclaw/plugin-sdk/ssrf-runtime";
-import { truncateUtf16Safe } from "openclaw/plugin-sdk/text-utility-runtime";
+} from "grokbot/plugin-sdk/provider-http";
+import { fetchWithSsrFGuard } from "grokbot/plugin-sdk/ssrf-runtime";
+import { truncateUtf16Safe } from "grokbot/plugin-sdk/text-utility-runtime";
 import {
   normalizeOptionalString,
   asOptionalObjectRecord as asRecord,

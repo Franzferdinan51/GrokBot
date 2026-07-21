@@ -1,6 +1,6 @@
 #!/usr/bin/env -S pnpm tsx
 import { spawn } from "node:child_process";
-// Npm Update Smoke script supports OpenClaw repository automation.
+// Npm Update Smoke script supports GrokBot repository automation.
 import { randomUUID } from "node:crypto";
 import { appendFileSync, existsSync, readFileSync, writeFileSync } from "node:fs";
 import { copyFile, readFile, rm } from "node:fs/promises";
@@ -10,7 +10,7 @@ import {
   addTimerTimeoutGraceMs,
   clampTimerTimeoutMs,
   finiteSecondsToTimerSafeMilliseconds,
-} from "@openclaw/normalization-core/number-coercion";
+} from "@grokbot/normalization-core/number-coercion";
 import { formatDurationCompact } from "../../../src/infra/format-time/format-duration.ts";
 import {
   die,
@@ -375,8 +375,8 @@ function usage(): string {
   return `Usage: bash scripts/e2e/parallels-npm-update-smoke.sh [options]
 
 Options:
-  --package-spec <npm-spec>  Baseline npm package spec. Default: openclaw@latest
-  --update-target <target>    Target passed to guest 'openclaw update --tag'.
+  --package-spec <npm-spec>  Baseline npm package spec. Default: grokbot@latest
+  --update-target <target>    Target passed to guest 'grokbot update --tag'.
                              Default: host-served tgz packed from current checkout.
   --target-tarball <path>     Host-serve this prepared tgz for update and fresh install.
   --dependency-tarball <path> Companion package tgz required by the target. Repeatable.
@@ -614,8 +614,8 @@ export class NpmUpdateSmoke {
 
   async run(): Promise<void> {
     this.startedAt = Date.now();
-    this.runDir = await this.makeRunTempDir("openclaw-parallels-npm-update.");
-    this.tgzDir = await this.makeRunTempDir("openclaw-parallels-npm-update-tgz.");
+    this.runDir = await this.makeRunTempDir("grokbot-parallels-npm-update.");
+    this.tgzDir = await this.makeRunTempDir("grokbot-parallels-npm-update-tgz.");
     try {
       await this.runSteps();
     } finally {
@@ -631,7 +631,7 @@ export class NpmUpdateSmoke {
 
   protected async runSteps(): Promise<void> {
     this.latestVersion = resolveLatestVersion();
-    this.packageSpec = this.options.packageSpec || `openclaw@${this.latestVersion}`;
+    this.packageSpec = this.options.packageSpec || `grokbot@${this.latestVersion}`;
     this.currentHead = run("git", ["rev-parse", "HEAD"], { quiet: true }).stdout.trim();
     this.currentHeadShort = run("git", ["rev-parse", "--short=7", "HEAD"], {
       quiet: true,
@@ -658,7 +658,7 @@ export class NpmUpdateSmoke {
     await this.runFreshBaselines();
 
     await this.prepareUpdateTarget();
-    say(`Run same-guest openclaw update to ${this.updateTargetEffective}`);
+    say(`Run same-guest grokbot update to ${this.updateTargetEffective}`);
     await this.runSameGuestUpdates();
 
     if (this.freshTargetSpec) {
@@ -854,7 +854,7 @@ export class NpmUpdateSmoke {
           hostIp: this.hostIp,
           packages: [
             {
-              name: "openclaw",
+              name: "grokbot",
               version: this.targetTarballVersion,
               tarballPath: hostedTarballPath,
             },
@@ -862,7 +862,7 @@ export class NpmUpdateSmoke {
           ],
         });
         this.targetRegistryUrl = this.registryServer.url;
-        this.updateTargetTarball = `${this.registryServer.url}/openclaw/-/${path.basename(
+        this.updateTargetTarball = `${this.registryServer.url}/grokbot/-/${path.basename(
           hostedTarballPath,
         )}`;
         this.updateTargetEffective = this.targetTarballVersion;
@@ -956,7 +956,7 @@ export class NpmUpdateSmoke {
     if (this.isExplicitPackageTarget(target)) {
       return { gitHead: "", tarball: "", version: "" };
     }
-    const spec = target.startsWith("openclaw@") ? target : `openclaw@${target}`;
+    const spec = target.startsWith("grokbot@") ? target : `grokbot@${target}`;
     const output = run("npm", ["view", spec, "version", "dist.tarball", "gitHead", "--json"], {
       check: false,
       quiet: true,
@@ -1117,7 +1117,7 @@ export class NpmUpdateSmoke {
     const scriptPath = this.writeGuestScript(
       this.macosVm,
       script,
-      "openclaw-parallels-npm-update-macos",
+      "grokbot-parallels-npm-update-macos",
     );
     const macosExecArgs = this.resolveMacosUpdateExecArgs(ctx);
     const sudoUserArgIndex = macosExecArgs.indexOf("-u");
@@ -1253,7 +1253,7 @@ export class NpmUpdateSmoke {
     const scriptPath = this.writeGuestScript(
       this.linuxVm,
       script,
-      "openclaw-parallels-npm-update-linux",
+      "grokbot-parallels-npm-update-linux",
     );
     try {
       const status = await this.runStreamingToJobLog(
@@ -1418,7 +1418,7 @@ export class NpmUpdateSmoke {
     const target = resolveOpenClawRegistryVersion(this.options.updateTarget);
     if (baseline && target && baseline === target) {
       die(
-        `--update-target ${this.options.updateTarget} resolves to openclaw@${target}, same as baseline ${this.packageSpec}; publish or choose a newer --update-target before running VM update coverage`,
+        `--update-target ${this.options.updateTarget} resolves to grokbot@${target}, same as baseline ${this.packageSpec}; publish or choose a newer --update-target before running VM update coverage`,
       );
     }
   }
@@ -1480,7 +1480,7 @@ export class NpmUpdateSmoke {
           }>(tarballPath, "package/package.json");
           const name = dependencyPackage.name ?? "";
           const version = dependencyPackage.version ?? "";
-          if (!name || !version || name === "openclaw") {
+          if (!name || !version || name === "grokbot") {
             throw new Error(`dependency tarball has invalid package metadata: ${tarballPath}`);
           }
           if (targetPackageJson.dependencies?.[name] !== version) {
@@ -1508,8 +1508,8 @@ export class NpmUpdateSmoke {
         die(`could not resolve beta validation target: ${this.options.betaValidation}`);
       }
       this.options.updateTarget = version;
-      this.options.freshTargetSpec = `openclaw@${version}`;
-      say(`Beta validation target: openclaw@${version}`);
+      this.options.freshTargetSpec = `grokbot@${version}`;
+      say(`Beta validation target: grokbot@${version}`);
     } else if (
       this.options.updateTarget &&
       this.options.updateTarget !== "local-main" &&
@@ -1523,7 +1523,7 @@ export class NpmUpdateSmoke {
 
     if (this.options.freshTargetSpec) {
       const version = resolveOpenClawRegistryVersion(this.options.freshTargetSpec);
-      this.freshTargetSpec = version ? `openclaw@${version}` : this.options.freshTargetSpec;
+      this.freshTargetSpec = version ? `grokbot@${version}` : this.options.freshTargetSpec;
     }
   }
 

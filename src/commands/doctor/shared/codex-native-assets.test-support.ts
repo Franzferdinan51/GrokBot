@@ -1,4 +1,4 @@
-import type { OpenClawConfig } from "../../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../../config/types.grokbot.js";
 import "./codex-native-assets.js";
 
 type CodexNativeAssetHit = {
@@ -15,7 +15,7 @@ type TestApi = {
 
 function getTestApi(): TestApi {
   return (globalThis as Record<PropertyKey, unknown>)[
-    Symbol.for("openclaw.codexNativeAssetsTestApi")
+    Symbol.for("grokbot.codexNativeAssetsTestApi")
   ] as TestApi;
 }
 

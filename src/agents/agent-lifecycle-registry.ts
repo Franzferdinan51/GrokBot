@@ -13,10 +13,10 @@ import {
   type AgentDeletionJournalCleanupPath,
   type AgentDeletionJournalEntry,
 } from "../state/agent-deletion-journal.js";
-import type { OpenClawStateDatabaseOptions } from "../state/openclaw-state-db-contract.js";
-import { resolveOpenClawStateSqlitePath } from "../state/openclaw-state-db.paths.js";
+import type { OpenClawStateDatabaseOptions } from "../state/grokbot-state-db-contract.js";
+import { resolveOpenClawStateSqlitePath } from "../state/grokbot-state-db.paths.js";
 
-const AGENT_LIFECYCLE_KEY = Symbol.for("openclaw.agentLifecycle");
+const AGENT_LIFECYCLE_KEY = Symbol.for("grokbot.agentLifecycle");
 const agentLifecycle = resolveGlobalMap<string, "deleting" | "deleted">(AGENT_LIFECYCLE_KEY);
 
 export class AgentDeletionAuthorityRollbackError extends AggregateError {}

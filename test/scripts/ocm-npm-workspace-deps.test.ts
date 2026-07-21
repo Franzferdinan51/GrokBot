@@ -97,7 +97,7 @@ describe("OCM npm workspace dependency adapter", () => {
           "--omit=dev",
           "--no-save",
           "--package-lock=false",
-          "openclaw.tgz",
+          "grokbot.tgz",
         ],
         ["/repo/packages/ai"],
         "/repo",
@@ -112,25 +112,25 @@ describe("OCM npm workspace dependency adapter", () => {
         "--package-lock=false",
       ],
       prefixDir: "/repo/runtime",
-      rootArchive: "/repo/openclaw.tgz",
+      rootArchive: "/repo/grokbot.tgz",
     });
   });
 
   it("keeps normal npm commands unchanged", () => {
     expect(resolveWorkspaceInstallPlan(["pack", "--silent"], ["/repo/packages/ai"])).toBeNull();
-    expect(resolveWorkspaceInstallPlan(["install", "openclaw.tgz"], [])).toBeNull();
+    expect(resolveWorkspaceInstallPlan(["install", "grokbot.tgz"], [])).toBeNull();
   });
 
   it("builds a manifest with the root and local workspace tarballs", () => {
     expect(
-      buildInstallManifest("/tmp/openclaw.tgz", [
-        { name: "@openclaw/ai", tarball: "/tmp/openclaw-ai.tgz" },
+      buildInstallManifest("/tmp/grokbot.tgz", [
+        { name: "@grokbot/ai", tarball: "/tmp/grokbot-ai.tgz" },
       ]),
     ).toEqual({
       private: true,
       dependencies: {
-        "@openclaw/ai": "file:///tmp/openclaw-ai.tgz",
-        openclaw: "file:///tmp/openclaw.tgz",
+        "@grokbot/ai": "file:///tmp/grokbot-ai.tgz",
+        grokbot: "file:///tmp/grokbot.tgz",
       },
     });
   });
@@ -138,7 +138,7 @@ describe("OCM npm workspace dependency adapter", () => {
   it("rewrites packed workspace protocols to the local package version", () => {
     const packageJson = {
       dependencies: {
-        "@openclaw/ai": "workspace:*",
+        "@grokbot/ai": "workspace:*",
         chalk: "5.6.2",
       },
     };
@@ -146,40 +146,40 @@ describe("OCM npm workspace dependency adapter", () => {
     expect(
       rewriteWorkspaceDependencyVersions(packageJson, [
         {
-          name: "@openclaw/ai",
+          name: "@grokbot/ai",
           version: "2026.7.1-beta.3",
-          tarball: "/tmp/openclaw-ai.tgz",
+          tarball: "/tmp/grokbot-ai.tgz",
         },
       ]),
     ).toBe(1);
     expect(packageJson.dependencies).toEqual({
-      "@openclaw/ai": "2026.7.1-beta.3",
+      "@grokbot/ai": "2026.7.1-beta.3",
       chalk: "5.6.2",
     });
   });
 
   it("installs a packed root with a local workspace dependency", () => {
-    const root = mkdtempSync(join(tmpdir(), "openclaw-ocm-adapter-test-"));
+    const root = mkdtempSync(join(tmpdir(), "grokbot-ocm-adapter-test-"));
     try {
       const archiveRoot = join(root, "archive");
       const packagedRoot = join(archiveRoot, "package");
       const workspaceDir = join(root, "ai");
       const installDir = join(root, "install");
-      const rootArchive = join(root, "openclaw.tgz");
+      const rootArchive = join(root, "grokbot.tgz");
       mkdirSync(packagedRoot, { recursive: true });
       mkdirSync(workspaceDir, { recursive: true });
       writeFileSync(
         join(packagedRoot, "package.json"),
         `${JSON.stringify({
-          name: "openclaw",
+          name: "grokbot",
           version: "1.0.0",
-          dependencies: { "@openclaw/ai": "workspace:*" },
+          dependencies: { "@grokbot/ai": "workspace:*" },
         })}\n`,
       );
       writeFileSync(
         join(workspaceDir, "package.json"),
         `${JSON.stringify({
-          name: "@openclaw/ai",
+          name: "@grokbot/ai",
           version: "1.0.0",
           main: "index.js",
         })}\n`,
@@ -213,11 +213,11 @@ describe("OCM npm workspace dependency adapter", () => {
       );
 
       expect(
-        JSON.parse(readFileSync(join(installDir, "node_modules/openclaw/package.json"), "utf8"))
+        JSON.parse(readFileSync(join(installDir, "node_modules/grokbot/package.json"), "utf8"))
           .version,
       ).toBe("1.0.0");
       expect(
-        JSON.parse(readFileSync(join(installDir, "node_modules/@openclaw/ai/package.json"), "utf8"))
+        JSON.parse(readFileSync(join(installDir, "node_modules/@grokbot/ai/package.json"), "utf8"))
           .version,
       ).toBe("1.0.0");
     } finally {

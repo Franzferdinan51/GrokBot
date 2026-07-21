@@ -7,7 +7,7 @@ import os from "node:os";
 import path from "node:path";
 import { describe, expect, it, vi } from "vitest";
 import "./test-helpers/fast-coding-tools.js";
-import "./test-helpers/fast-openclaw-tools.js";
+import "./test-helpers/fast-grokbot-tools.js";
 import type { OpenClawConfig } from "../config/config.js";
 import { createCanonicalFixtureSkill } from "../skills/test-support/test-helpers.js";
 import { createOpenClawCodingTools } from "./agent-tools.js";
@@ -64,8 +64,8 @@ async function expectExecCwdResolvesTo(
 
 describe("workspace path resolution", () => {
   it("uses cwd for coding filesystem tools while workspaceDir remains the agent workspace", async () => {
-    await withTempDir("openclaw-agent-ws-", async (workspaceDir) => {
-      await withTempDir("openclaw-task-cwd-", async (cwd) => {
+    await withTempDir("grokbot-agent-ws-", async (workspaceDir) => {
+      await withTempDir("grokbot-task-cwd-", async (cwd) => {
         const tools = createOpenClawCodingTools({ workspaceDir, cwd });
         const { readTool, writeTool } = expectReadWriteEditTools(tools);
 
@@ -81,8 +81,8 @@ describe("workspace path resolution", () => {
   });
 
   it("resolves relative read/write/edit paths against workspaceDir even after cwd changes", async () => {
-    await withTempDir("openclaw-ws-", async (workspaceDir) => {
-      await withTempDir("openclaw-cwd-", async (otherDir) => {
+    await withTempDir("grokbot-ws-", async (workspaceDir) => {
+      await withTempDir("grokbot-cwd-", async (otherDir) => {
         const cwdSpy = vi.spyOn(process, "cwd").mockReturnValue(otherDir);
         try {
           const tools = createOpenClawCodingTools({ workspaceDir });
@@ -106,10 +106,10 @@ describe("workspace path resolution", () => {
           await fs.writeFile(path.join(workspaceDir, editFile), "hello world", "utf8");
           await editTool.execute("ws-edit", {
             path: editFile,
-            edits: [{ oldText: "world", newText: "openclaw" }],
+            edits: [{ oldText: "world", newText: "grokbot" }],
           });
           expect(await fs.readFile(path.join(workspaceDir, editFile), "utf8")).toBe(
-            "hello openclaw",
+            "hello grokbot",
           );
         } finally {
           cwdSpy.mockRestore();
@@ -121,7 +121,7 @@ describe("workspace path resolution", () => {
   it.runIf(process.platform === "win32")(
     "preserves mixed-case and Unicode names for workspace-only writes on Windows",
     async () => {
-      await withTempDir("openclaw-windows-case-", async (workspaceDir) => {
+      await withTempDir("grokbot-windows-case-", async (workspaceDir) => {
         const cfg: OpenClawConfig = { tools: { fs: { workspaceOnly: true } } };
         const tools = createOpenClawCodingTools({ workspaceDir, config: cfg });
         const { writeTool } = expectReadWriteEditTools(tools);
@@ -141,8 +141,8 @@ describe("workspace path resolution", () => {
   );
 
   it("allows deletion edits with empty newText", async () => {
-    await withTempDir("openclaw-ws-", async (workspaceDir) => {
-      await withTempDir("openclaw-cwd-", async (otherDir) => {
+    await withTempDir("grokbot-ws-", async (workspaceDir) => {
+      await withTempDir("grokbot-cwd-", async (otherDir) => {
         const testFile = "delete.txt";
         await fs.writeFile(path.join(workspaceDir, testFile), "hello world", "utf8");
 
@@ -165,8 +165,8 @@ describe("workspace path resolution", () => {
   });
 
   it("supports multi-edit edits[] payloads", async () => {
-    await withTempDir("openclaw-ws-", async (workspaceDir) => {
-      await withTempDir("openclaw-cwd-", async (otherDir) => {
+    await withTempDir("grokbot-ws-", async (workspaceDir) => {
+      await withTempDir("grokbot-cwd-", async (otherDir) => {
         const testFile = "batch.txt";
         await fs.writeFile(path.join(workspaceDir, testFile), "alpha beta gamma delta", "utf8");
 
@@ -194,15 +194,15 @@ describe("workspace path resolution", () => {
   });
 
   it("defaults exec cwd to workspaceDir when workdir is omitted", async () => {
-    await withTempDir("openclaw-ws-", async (workspaceDir) => {
+    await withTempDir("grokbot-ws-", async (workspaceDir) => {
       const execTool = createExecTool(workspaceDir);
       await expectExecCwdResolvesTo(execTool, "ws-exec", { command: "echo ok" }, workspaceDir);
     });
   });
 
   it("lets exec workdir override the workspace default", async () => {
-    await withTempDir("openclaw-ws-", async (workspaceDir) => {
-      await withTempDir("openclaw-override-", async (overrideDir) => {
+    await withTempDir("grokbot-ws-", async (workspaceDir) => {
+      await withTempDir("grokbot-override-", async (overrideDir) => {
         const execTool = createExecTool(workspaceDir);
         await expectExecCwdResolvesTo(
           execTool,
@@ -215,12 +215,12 @@ describe("workspace path resolution", () => {
   });
 
   it("rejects @-prefixed absolute paths outside workspace when workspaceOnly is enabled", async () => {
-    await withTempDir("openclaw-ws-", async (workspaceDir) => {
+    await withTempDir("grokbot-ws-", async (workspaceDir) => {
       const cfg: OpenClawConfig = { tools: { fs: { workspaceOnly: true } } };
       const tools = createOpenClawCodingTools({ workspaceDir, config: cfg });
       const { readTool } = expectReadWriteEditTools(tools);
 
-      const outsideAbsolute = path.resolve(path.parse(workspaceDir).root, "outside-openclaw.txt");
+      const outsideAbsolute = path.resolve(path.parse(workspaceDir).root, "outside-grokbot.txt");
       await expect(
         readTool.execute("ws-read-at-prefix", { path: `@${outsideAbsolute}` }),
       ).rejects.toThrow(/Path escapes sandbox root/i);
@@ -231,7 +231,7 @@ describe("workspace path resolution", () => {
     if (process.platform === "win32") {
       return;
     }
-    await withTempDir("openclaw-ws-", async (workspaceDir) => {
+    await withTempDir("grokbot-ws-", async (workspaceDir) => {
       const cfg: OpenClawConfig = { tools: { fs: { workspaceOnly: true } } };
       const tools = createOpenClawCodingTools({ workspaceDir, config: cfg });
       const { readTool, writeTool } = expectReadWriteEditTools(tools);
@@ -270,7 +270,7 @@ describe("workspace path resolution", () => {
   it.runIf(process.platform !== "win32")(
     "writes through in-workspace symlink parents when workspaceOnly is enabled",
     async () => {
-      await withTempDir("openclaw-ws-symlink-write-", async (workspaceDir) => {
+      await withTempDir("grokbot-ws-symlink-write-", async (workspaceDir) => {
         const realDir = path.join(workspaceDir, "oc_system", "memory");
         const aliasDir = path.join(workspaceDir, "memory");
         await fs.mkdir(realDir, { recursive: true });
@@ -295,7 +295,7 @@ describe("workspace path resolution", () => {
   it.runIf(process.platform !== "win32")(
     "edits through in-workspace symlink parents when workspaceOnly is enabled",
     async () => {
-      await withTempDir("openclaw-ws-symlink-edit-", async (workspaceDir) => {
+      await withTempDir("grokbot-ws-symlink-edit-", async (workspaceDir) => {
         const realDir = path.join(workspaceDir, "oc_system", "memory");
         const aliasDir = path.join(workspaceDir, "memory");
         const targetPath = path.join(realDir, "2026-05-20.md");
@@ -320,7 +320,7 @@ describe("workspace path resolution", () => {
   it.runIf(process.platform !== "win32")(
     "rejects writes through symlink parents that resolve outside the workspace",
     async () => {
-      await withTempDir("openclaw-ws-symlink-escape-", async (rootDir) => {
+      await withTempDir("grokbot-ws-symlink-escape-", async (rootDir) => {
         const workspaceDir = path.join(rootDir, "workspace");
         const outsideDir = path.join(rootDir, "outside");
         const aliasDir = path.join(workspaceDir, "memory");
@@ -348,7 +348,7 @@ describe("workspace path resolution", () => {
   it.runIf(process.platform !== "win32")(
     "rejects writes to final symlinks when workspaceOnly is enabled",
     async () => {
-      await withTempDir("openclaw-ws-symlink-leaf-", async (workspaceDir) => {
+      await withTempDir("grokbot-ws-symlink-leaf-", async (workspaceDir) => {
         const targetPath = path.join(workspaceDir, "target.md");
         const linkPath = path.join(workspaceDir, "memory.md");
         await fs.writeFile(targetPath, "original\n", "utf8");
@@ -370,7 +370,7 @@ describe("workspace path resolution", () => {
   );
 
   it("allows workspaceOnly reads for resolved skill roots without allowing other filesystem access", async () => {
-    await withTempDir("openclaw-skill-read-", async (rootDir) => {
+    await withTempDir("grokbot-skill-read-", async (rootDir) => {
       const workspaceDir = path.join(rootDir, "workspace");
       const skillDir = path.join(rootDir, "global-skills", "demo");
       const siblingDir = path.join(rootDir, "global-skills", "other");
@@ -435,7 +435,7 @@ describe("workspace path resolution", () => {
     if (process.platform === "win32") {
       return;
     }
-    await withTempDir("openclaw-skill-read-symlink-", async (rootDir) => {
+    await withTempDir("grokbot-skill-read-symlink-", async (rootDir) => {
       const workspaceDir = path.join(rootDir, "workspace");
       const skillDir = path.join(rootDir, "global-skills", "demo");
       await fs.mkdir(workspaceDir, { recursive: true });
@@ -476,8 +476,8 @@ describe("workspace path resolution", () => {
 
 describe("sandboxed workspace paths", () => {
   it("uses sandbox workspace for relative read/write/edit", async () => {
-    await withTempDir("openclaw-sandbox-", async (sandboxDir) => {
-      await withTempDir("openclaw-workspace-", async (workspaceDir) => {
+    await withTempDir("grokbot-sandbox-", async (sandboxDir) => {
+      await withTempDir("grokbot-workspace-", async (workspaceDir) => {
         const sandbox = createAgentToolsSandboxContext({
           workspaceDir: sandboxDir,
           agentWorkspaceDir: workspaceDir,

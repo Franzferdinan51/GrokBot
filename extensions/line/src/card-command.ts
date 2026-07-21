@@ -1,9 +1,9 @@
-import type { OpenClawPluginApi } from "openclaw/plugin-sdk/core";
+import type { OpenClawPluginApi } from "grokbot/plugin-sdk/core";
 // Line plugin module implements card command behavior.
-import { expectDefined } from "openclaw/plugin-sdk/expect-runtime";
-import type { ReplyPayload } from "openclaw/plugin-sdk/reply-runtime";
-import { normalizeLowercaseStringOrEmpty } from "openclaw/plugin-sdk/string-coerce-runtime";
-import { truncateUtf16Safe } from "openclaw/plugin-sdk/text-utility-runtime";
+import { expectDefined } from "grokbot/plugin-sdk/expect-runtime";
+import type { ReplyPayload } from "grokbot/plugin-sdk/reply-runtime";
+import { normalizeLowercaseStringOrEmpty } from "grokbot/plugin-sdk/string-coerce-runtime";
+import { truncateUtf16Safe } from "grokbot/plugin-sdk/text-utility-runtime";
 import { messageAction, postbackAction, uriAction } from "./actions.js";
 import {
   createActionCard,

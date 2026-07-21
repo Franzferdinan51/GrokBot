@@ -2,8 +2,8 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { DEFAULT_ACCOUNT_ID } from "openclaw/plugin-sdk/account-id";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import { DEFAULT_ACCOUNT_ID } from "grokbot/plugin-sdk/account-id";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { resolveLineAccount, resolveDefaultLineAccountId, normalizeAccountId } from "./accounts.js";
 
@@ -11,7 +11,7 @@ describe("LINE accounts", () => {
   const tempDirs: string[] = [];
 
   const createSecretFile = (fileName: string, contents: string) => {
-    const dir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-line-account-"));
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-line-account-"));
     tempDirs.push(dir);
     const filePath = path.join(dir, fileName);
     fs.writeFileSync(filePath, contents, "utf8");
@@ -175,7 +175,7 @@ describe("LINE accounts", () => {
     it.runIf(process.platform !== "win32")(
       "marks symlinked token and secret files configured-unavailable",
       () => {
-        const dir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-line-account-"));
+        const dir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-line-account-"));
         tempDirs.push(dir);
         const tokenFile = path.join(dir, "token.txt");
         const tokenLink = path.join(dir, "token-link.txt");

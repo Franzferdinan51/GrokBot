@@ -1,5 +1,5 @@
-import type { ResolvedChannelMessageIngress } from "openclaw/plugin-sdk/channel-ingress-runtime";
-import type { ReplyToMode } from "openclaw/plugin-sdk/config-contracts";
+import type { ResolvedChannelMessageIngress } from "grokbot/plugin-sdk/channel-ingress-runtime";
+import type { ReplyToMode } from "grokbot/plugin-sdk/config-contracts";
 import type { WhatsAppIdentity } from "../identity.js";
 import type { DeprecatedWebInboundAdmissionTopLevelFields } from "./admission-types.js";
 import { resolveWhatsAppGroupConversationId } from "./group-conversation.js";

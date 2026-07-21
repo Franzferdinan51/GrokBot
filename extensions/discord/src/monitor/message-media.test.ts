@@ -6,9 +6,9 @@ import type { Message } from "../internal/discord.js";
 const readRemoteMediaBuffer = vi.fn();
 const saveMediaBuffer = vi.fn();
 
-vi.mock("openclaw/plugin-sdk/media-runtime", async () => {
-  const actual = await vi.importActual<typeof import("openclaw/plugin-sdk/media-runtime")>(
-    "openclaw/plugin-sdk/media-runtime",
+vi.mock("grokbot/plugin-sdk/media-runtime", async () => {
+  const actual = await vi.importActual<typeof import("grokbot/plugin-sdk/media-runtime")>(
+    "grokbot/plugin-sdk/media-runtime",
   );
   return {
     ...actual,
@@ -31,9 +31,9 @@ vi.mock("openclaw/plugin-sdk/media-runtime", async () => {
   };
 });
 
-vi.mock("openclaw/plugin-sdk/runtime-env", async () => {
-  const actual = await vi.importActual<typeof import("openclaw/plugin-sdk/runtime-env")>(
-    "openclaw/plugin-sdk/runtime-env",
+vi.mock("grokbot/plugin-sdk/runtime-env", async () => {
+  const actual = await vi.importActual<typeof import("grokbot/plugin-sdk/runtime-env")>(
+    "grokbot/plugin-sdk/runtime-env",
   );
   return {
     ...actual,

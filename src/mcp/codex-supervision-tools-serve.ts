@@ -9,7 +9,7 @@ import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { disposeRegisteredAgentHarnesses } from "../agents/harness/registry.js";
 import type { AnyAgentTool } from "../agents/tools/common.js";
 import { getRuntimeConfig } from "../config/config.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { formatErrorMessage } from "../infra/errors.js";
 import { routeLogsToStderr } from "../logging/console.js";
 import { normalizePluginTargetConfig } from "../plugins/config-state.js";
@@ -90,7 +90,7 @@ function requireCompleteCodexSupervisionToolSet(tools: readonly AnyAgentTool[]):
     return;
   }
   throw new Error(
-    `Codex supervision MCP could not load the official @openclaw/codex plugin tools (missing: ${missing.join(", ") || "none"}). Install or update @openclaw/codex, then enable Codex supervision.`,
+    `Codex supervision MCP could not load the official @grokbot/codex plugin tools (missing: ${missing.join(", ") || "none"}). Install or update @grokbot/codex, then enable Codex supervision.`,
   );
 }
 
@@ -100,7 +100,7 @@ export function createCodexSupervisionToolsMcpServer(
   const config = withCodexSupervisionEnabled(params.config ?? getRuntimeConfig());
   const tools = params.tools ?? resolveCodexSupervisionTools(config);
   requireCompleteCodexSupervisionToolSet(tools);
-  return createToolsMcpServer({ name: "openclaw-codex-supervisor", tools });
+  return createToolsMcpServer({ name: "grokbot-codex-supervisor", tools });
 }
 
 export async function serveCodexSupervisionToolsMcp(): Promise<void> {

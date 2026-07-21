@@ -1,6 +1,6 @@
-import type { ChannelDoctorConfigMutation } from "openclaw/plugin-sdk/channel-contract";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { asObjectRecord } from "openclaw/plugin-sdk/runtime-doctor";
+import type { ChannelDoctorConfigMutation } from "grokbot/plugin-sdk/channel-contract";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { asObjectRecord } from "grokbot/plugin-sdk/runtime-doctor";
 
 function stripTimeoutSeconds(value: unknown): { value: unknown; changed: boolean } {
   const record = asObjectRecord(value);

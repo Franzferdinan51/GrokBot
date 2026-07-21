@@ -10,9 +10,9 @@ import { listGatewayAgentsBasic } from "./agent-list.js";
 
 describe("listGatewayAgentsBasic", () => {
   it("omits reserved system-agent state directories from the discovered roster", async () => {
-    await withStateDirEnv("openclaw-agent-list-", async ({ stateDir }) => {
+    await withStateDirEnv("grokbot-agent-list-", async ({ stateDir }) => {
       await Promise.all(
-        ["openclaw", "crestodian", "research"].map((id) =>
+        ["grokbot", "crestodian", "research"].map((id) =>
           fs.mkdir(path.join(stateDir, "agents", id), { recursive: true }),
         ),
       );

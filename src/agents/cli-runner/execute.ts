@@ -377,7 +377,7 @@ function buildCliEnvAuthLog(childEnv: Record<string, string>): string {
 }
 
 if (process.env.VITEST || process.env.NODE_ENV === "test") {
-  (globalThis as Record<PropertyKey, unknown>)[Symbol.for("openclaw.cliRunnerExecuteTestApi")] = {
+  (globalThis as Record<PropertyKey, unknown>)[Symbol.for("grokbot.cliRunnerExecuteTestApi")] = {
     buildCliEnvAuthLog,
     buildCliExecLogLine,
     setCliRunnerExecuteTestDeps: (overrides: Record<string, unknown>) => {

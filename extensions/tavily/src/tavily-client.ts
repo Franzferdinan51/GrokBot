@@ -1,6 +1,6 @@
 // Tavily plugin module implements tavily client behavior.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { readProviderJsonResponse } from "openclaw/plugin-sdk/provider-http";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { readProviderJsonResponse } from "grokbot/plugin-sdk/provider-http";
 import {
   DEFAULT_CACHE_TTL_MINUTES,
   normalizeCacheKey,
@@ -8,8 +8,8 @@ import {
   readCache,
   resolveCacheTtlMs,
   writeCache,
-} from "openclaw/plugin-sdk/provider-web-search";
-import { wrapExternalContent, wrapWebContent } from "openclaw/plugin-sdk/security-runtime";
+} from "grokbot/plugin-sdk/provider-web-search";
+import { wrapExternalContent, wrapWebContent } from "grokbot/plugin-sdk/security-runtime";
 import {
   DEFAULT_TAVILY_BASE_URL,
   resolveTavilyApiKey,
@@ -84,7 +84,7 @@ async function postTavilyJson(params: {
       apiKey: params.apiKey,
       body: params.body,
       errorLabel: params.errorLabel,
-      extraHeaders: { "X-Client-Source": "openclaw" },
+      extraHeaders: { "X-Client-Source": "grokbot" },
     },
     async (response) =>
       readTavilyJsonResponse(response, params.errorLabel, {

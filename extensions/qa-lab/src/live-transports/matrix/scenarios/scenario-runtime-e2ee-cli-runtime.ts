@@ -2,7 +2,7 @@
 import { randomUUID } from "node:crypto";
 import { chmod, mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { resolvePreferredOpenClawTmpDir } from "openclaw/plugin-sdk/temp-path";
+import { resolvePreferredOpenClawTmpDir } from "grokbot/plugin-sdk/temp-path";
 import { runMatrixQaOpenClawCli, startMatrixQaOpenClawCli } from "./scenario-runtime-cli.js";
 import {
   assertMatrixQaPrivatePathMode,
@@ -23,7 +23,7 @@ export async function createMatrixQaCliSelfVerificationRuntime(params: {
 }) {
   const outputDir = requireMatrixQaE2eeOutputDir(params.context);
   const rootDir = await mkdtemp(
-    path.join(resolvePreferredOpenClawTmpDir(), "openclaw-matrix-cli-qa-"),
+    path.join(resolvePreferredOpenClawTmpDir(), "grokbot-matrix-cli-qa-"),
   );
   const artifactDir = path.join(
     outputDir,
@@ -117,7 +117,7 @@ export async function createMatrixQaCliE2eeSetupRuntime(params: {
 }) {
   const outputDir = requireMatrixQaE2eeOutputDir(params.context);
   const rootDir = await mkdtemp(
-    path.join(resolvePreferredOpenClawTmpDir(), "openclaw-matrix-e2ee-setup-qa-"),
+    path.join(resolvePreferredOpenClawTmpDir(), "grokbot-matrix-e2ee-setup-qa-"),
   );
   const artifactDir = path.join(
     outputDir,

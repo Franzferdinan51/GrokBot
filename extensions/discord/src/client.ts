@@ -1,10 +1,10 @@
 // Discord plugin module implements client behavior.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { requireRuntimeConfig } from "openclaw/plugin-sdk/plugin-config-runtime";
-import type { RetryConfig } from "openclaw/plugin-sdk/retry-runtime";
-import { normalizeAccountId } from "openclaw/plugin-sdk/routing";
-import type { RuntimeEnv } from "openclaw/plugin-sdk/runtime-env";
-import { normalizeOptionalString } from "openclaw/plugin-sdk/string-coerce-runtime";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { requireRuntimeConfig } from "grokbot/plugin-sdk/plugin-config-runtime";
+import type { RetryConfig } from "grokbot/plugin-sdk/retry-runtime";
+import { normalizeAccountId } from "grokbot/plugin-sdk/routing";
+import type { RuntimeEnv } from "grokbot/plugin-sdk/runtime-env";
+import { normalizeOptionalString } from "grokbot/plugin-sdk/string-coerce-runtime";
 import {
   mergeDiscordAccountConfig,
   resolveDiscordAccount,

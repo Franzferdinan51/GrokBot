@@ -1,6 +1,6 @@
 // Matrix plugin module implements resolver behavior.
-import type { ChannelPlugin } from "openclaw/plugin-sdk/channel-core";
-import { createLazyRuntimeNamedExport } from "openclaw/plugin-sdk/lazy-runtime";
+import type { ChannelPlugin } from "grokbot/plugin-sdk/channel-core";
+import { createLazyRuntimeNamedExport } from "grokbot/plugin-sdk/lazy-runtime";
 import type { ResolvedMatrixAccount } from "./matrix/accounts.js";
 
 const loadMatrixChannelRuntime = createLazyRuntimeNamedExport(

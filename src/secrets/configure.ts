@@ -6,12 +6,12 @@ import {
   normalizeOptionalLowercaseString,
   normalizeOptionalString,
   normalizeStringifiedOptionalString,
-} from "@openclaw/normalization-core/string-coerce";
+} from "@grokbot/normalization-core/string-coerce";
 import { listAgentIds, resolveAgentDir, resolveDefaultAgentId } from "../agents/agent-scope.js";
 import { AUTH_STORE_VERSION } from "../agents/auth-profiles/constants.js";
 import { loadPersistedAuthProfileStore } from "../agents/auth-profiles/persisted.js";
 import type { AuthProfileStore } from "../agents/auth-profiles/types.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import type {
   ManualExecSecretProviderConfig,
   SecretProviderConfig,
@@ -263,14 +263,14 @@ async function promptOptionalPositiveInt(params: {
 }
 
 function configureCandidateKey(candidate: {
-  configFile: "openclaw.json" | "auth-profiles.json";
+  configFile: "grokbot.json" | "auth-profiles.json";
   path: string;
   agentId?: string;
 }): string {
   if (candidate.configFile === "auth-profiles.json") {
     return `auth-profiles:${normalizeOptionalString(candidate.agentId) ?? ""}:${candidate.path}`;
   }
-  return `openclaw:${candidate.path}`;
+  return `grokbot:${candidate.path}`;
 }
 
 function hasSourceChoice(
@@ -882,7 +882,7 @@ export async function runSecretsConfigureInteractive(
         value: configureCandidateKey(candidate),
         label: candidate.label,
         hint: [
-          candidate.configFile === "auth-profiles.json" ? "auth-profiles.json" : "openclaw.json",
+          candidate.configFile === "auth-profiles.json" ? "auth-profiles.json" : "grokbot.json",
           candidate.isDerived === true ? "derived" : undefined,
         ]
           .filter(Boolean)

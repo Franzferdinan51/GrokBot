@@ -4,7 +4,7 @@ import type {
   SystemAgentChatResult,
   SystemChangeEntry,
   SystemChangesListResult,
-} from "@openclaw/gateway-protocol";
+} from "@grokbot/gateway-protocol";
 import { html, nothing, type PropertyValues } from "lit";
 import { property, state } from "lit/decorators.js";
 import type { GatewayBrowserClient } from "../../api/gateway.ts";
@@ -14,7 +14,7 @@ import { t } from "../../i18n/index.ts";
 import { isGatewayMethodAdvertised } from "../../lib/gateway-methods.ts";
 import { searchForSession } from "../../lib/sessions/navigation.ts";
 import { buildAgentMainSessionKey } from "../../lib/sessions/session-key.ts";
-import { OpenClawLightDomElement } from "../../lit/openclaw-element.ts";
+import { OpenClawLightDomElement } from "../../lit/grokbot-element.ts";
 import { SubscriptionsController } from "../../lit/subscriptions-controller.ts";
 import "../../styles/chat/grouped.css";
 import "../../styles/chat/layout.css";
@@ -189,9 +189,9 @@ export class CustodianPage extends OpenClawLightDomElement {
     const snapshot = this.context.gateway.snapshot;
     const client = snapshot.connected ? snapshot.client : null;
     const chatSupported =
-      client !== null && isGatewayMethodAdvertised(snapshot, "openclaw.chat") === true;
+      client !== null && isGatewayMethodAdvertised(snapshot, "grokbot.chat") === true;
     const historyAvailable =
-      client !== null && isGatewayMethodAdvertised(snapshot, "openclaw.changes.list") === true;
+      client !== null && isGatewayMethodAdvertised(snapshot, "grokbot.changes.list") === true;
     if (this.historyAvailable !== historyAvailable) {
       this.historyAvailable = historyAvailable;
       if (!historyAvailable) {
@@ -304,7 +304,7 @@ export class CustodianPage extends OpenClawLightDomElement {
     epoch: number,
   ): Promise<void> {
     if (
-      isGatewayMethodAdvertised(this.context.gateway.snapshot, "openclaw.chat.history") !== true
+      isGatewayMethodAdvertised(this.context.gateway.snapshot, "grokbot.chat.history") !== true
     ) {
       return;
     }
@@ -371,7 +371,7 @@ export class CustodianPage extends OpenClawLightDomElement {
       this.requestEpoch === epoch &&
       this.historyAvailable;
     try {
-      const result = await client.request<SystemChangesListResult>("openclaw.changes.list", {
+      const result = await client.request<SystemChangesListResult>("grokbot.changes.list", {
         limit: SYSTEM_CHANGE_PAGE_SIZE,
         ...(cursor ? { beforeCursor: cursor } : {}),
       });
@@ -417,7 +417,7 @@ export class CustodianPage extends OpenClawLightDomElement {
     this.error = null;
     this.retryParams = params;
     try {
-      const result = await client.request<SystemAgentChatResult>("openclaw.chat", params, {
+      const result = await client.request<SystemAgentChatResult>("grokbot.chat", params, {
         timeoutMs: SYSTEM_AGENT_CHAT_TIMEOUT_MS,
         onSent: () => (delivery = "sent"),
       });
@@ -766,12 +766,12 @@ export class CustodianPage extends OpenClawLightDomElement {
   }
 }
 
-if (!customElements.get("openclaw-custodian-page")) {
-  customElements.define("openclaw-custodian-page", CustodianPage);
+if (!customElements.get("grokbot-custodian-page")) {
+  customElements.define("grokbot-custodian-page", CustodianPage);
 }
 
 declare global {
   interface HTMLElementTagNameMap {
-    "openclaw-custodian-page": CustodianPage;
+    "grokbot-custodian-page": CustodianPage;
   }
 }

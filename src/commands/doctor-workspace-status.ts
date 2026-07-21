@@ -6,7 +6,7 @@ import {
   resolveDefaultAgentId,
 } from "../agents/agent-scope.js";
 import { formatCliCommand } from "../cli/command-format.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import type { HealthFinding } from "../flows/health-checks.js";
 import {
   resolvePluginVersionDriftUpdateCommand,
@@ -69,8 +69,8 @@ function noteFlowRecoveryHints() {
     [
       ...suspicious.slice(0, 5).map((finding) => finding.message),
       suspicious.length > 5 ? `...and ${suspicious.length - 5} more.` : null,
-      `Inspect: ${formatCliCommand("openclaw tasks flow show <flow-id>")}`,
-      `Cancel: ${formatCliCommand("openclaw tasks flow cancel <flow-id>")}`,
+      `Inspect: ${formatCliCommand("grokbot tasks flow show <flow-id>")}`,
+      `Cancel: ${formatCliCommand("grokbot tasks flow cancel <flow-id>")}`,
     ]
       .filter((line): line is string => Boolean(line))
       .join("\n"),
@@ -93,7 +93,7 @@ function pluginVersionDriftToHealthFindings(
       path: `plugins.entries.${entry.pluginId}`,
       target: entry.pluginId,
       requirement: "plugin-version-drift",
-      fixHint: `${updateCommand} && ${formatCliCommand("openclaw gateway restart")}`,
+      fixHint: `${updateCommand} && ${formatCliCommand("grokbot gateway restart")}`,
     };
   });
 }
@@ -133,8 +133,8 @@ function taskFlowRecoveryToHealthFinding(finding: TaskFlowRecoveryFinding): Heal
     target: finding.flowId,
     requirement: "taskflow-recovery",
     fixHint: [
-      formatCliCommand(`openclaw tasks flow show ${finding.flowId}`),
-      formatCliCommand(`openclaw tasks flow cancel ${finding.flowId}`),
+      formatCliCommand(`grokbot tasks flow show ${finding.flowId}`),
+      formatCliCommand(`grokbot tasks flow cancel ${finding.flowId}`),
     ].join(" or "),
   };
 }
@@ -185,17 +185,17 @@ function notePluginVersionDrift(drift: PluginVersionDriftReport | undefined) {
   const lines = [
     `${drift.drifts.length} active official plugin${
       drift.drifts.length === 1 ? "" : "s"
-    } not on OpenClaw ${drift.gatewayVersion}`,
+    } not on GrokBot ${drift.gatewayVersion}`,
     ...drift.drifts.map((entry) => {
       const sourceLabel = entry.source === "clawhub" ? "clawhub" : "npm";
       return `- ${entry.pluginId}: ${entry.installedVersion} (${sourceLabel}) -> expected ${drift.gatewayVersion}`;
     }),
     singleDrift
-      ? `Fix: ${updateCommands[0]} && ${formatCliCommand("openclaw gateway restart")}.`
+      ? `Fix: ${updateCommands[0]} && ${formatCliCommand("grokbot gateway restart")}.`
       : [
           "Fix each drifted plugin:",
           ...updateCommands.map((command) => `- ${command}`),
-          `Then run ${formatCliCommand("openclaw gateway restart")}.`,
+          `Then run ${formatCliCommand("grokbot gateway restart")}.`,
         ].join("\n"),
   ];
   note(lines.join("\n"), "Plugin version drift");

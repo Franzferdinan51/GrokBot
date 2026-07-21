@@ -5,7 +5,7 @@ import { executeSqliteQuerySync } from "../../infra/kysely-sync.js";
 import {
   closeOpenClawAgentDatabasesForTest,
   openOpenClawAgentDatabase,
-} from "../../state/openclaw-agent-db.js";
+} from "../../state/grokbot-agent-db.js";
 import { buildConversationIdentity } from "./conversation-identity.js";
 import {
   listConversations,
@@ -29,7 +29,7 @@ describe("conversation registry", () => {
   const tempDirs = useAutoCleanupTempDirTracker(afterEach);
 
   beforeEach(() => {
-    tempDir = tempDirs.make("openclaw-conversations-");
+    tempDir = tempDirs.make("grokbot-conversations-");
     storePath = path.join(tempDir, "sessions.json");
   });
 

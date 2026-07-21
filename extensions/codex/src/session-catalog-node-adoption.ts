@@ -1,11 +1,11 @@
 import { createHash } from "node:crypto";
-import { listAgentIds, resolveDefaultAgentId } from "openclaw/plugin-sdk/agent-runtime";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import type { OpenClawPluginApi } from "openclaw/plugin-sdk/plugin-entry";
-import type { PluginRuntime } from "openclaw/plugin-sdk/plugin-runtime";
-import { parseAgentSessionKey } from "openclaw/plugin-sdk/routing";
-import { resolveStorePath } from "openclaw/plugin-sdk/session-store-runtime";
-import { isRecord } from "openclaw/plugin-sdk/string-coerce-runtime";
+import { listAgentIds, resolveDefaultAgentId } from "grokbot/plugin-sdk/agent-runtime";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import type { OpenClawPluginApi } from "grokbot/plugin-sdk/plugin-entry";
+import type { PluginRuntime } from "grokbot/plugin-sdk/plugin-runtime";
+import { parseAgentSessionKey } from "grokbot/plugin-sdk/routing";
+import { resolveStorePath } from "grokbot/plugin-sdk/session-store-runtime";
+import { isRecord } from "grokbot/plugin-sdk/string-coerce-runtime";
 import type { CodexThread } from "./app-server/protocol.js";
 import { importCodexThreadHistoryToTranscript } from "./app-server/transcript-mirror.js";
 import {
@@ -161,7 +161,7 @@ export function listNodeAdoptedSessionEntries(params: {
       const sourceKey = adoptedSourceKey(marker.sourceHostId, marker.sourceThreadId);
       if (adopted.has(sourceKey)) {
         throw new Error(
-          `multiple OpenClaw sessions adopt Codex thread ${marker.sourceThreadId} on ${marker.sourceHostId}`,
+          `multiple GrokBot sessions adopt Codex thread ${marker.sourceThreadId} on ${marker.sourceHostId}`,
         );
       }
       adopted.set(sourceKey, {
@@ -207,7 +207,7 @@ export async function finalizeNodeAdoptedSession(params: {
   marker: CodexNodeSessionMarker;
 }): Promise<void> {
   const changedError = () =>
-    new CatalogParamsError("Codex OpenClaw session changed before it could be bound. Retry.");
+    new CatalogParamsError("Codex GrokBot session changed before it could be bound. Retry.");
   let finalized: CatalogSessionEntry | null;
   try {
     finalized = await params.api.runtime.agent.session.patchSessionEntry({

@@ -1,11 +1,11 @@
 /** Doctor analysis helpers for config schema cleanup and ambiguous model fallback shapes. */
 import path from "node:path";
-import { resolvePrimaryStringValue } from "@openclaw/normalization-core/string-coerce";
+import { resolvePrimaryStringValue } from "@grokbot/normalization-core/string-coerce";
 import type { ZodIssue } from "zod";
 import { note } from "../../packages/terminal-core/src/note.js";
 import { CONFIG_PATH } from "../config/config.js";
 import { resolveAgentModelFallbackValues } from "../config/model-input.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { OpenClawSchema } from "../config/zod-schema.js";
 import { isRecord } from "../utils.js";
 

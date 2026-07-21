@@ -7,8 +7,8 @@ import {
   emitTrustedDiagnosticEvent,
   waitForDiagnosticEventsDrained,
 } from "../infra/diagnostic-events.js";
-import { closeOpenClawAgentDatabasesForTest } from "../state/openclaw-agent-db.js";
-import { closeOpenClawStateDatabaseForTest } from "../state/openclaw-state-db.js";
+import { closeOpenClawAgentDatabasesForTest } from "../state/grokbot-agent-db.js";
+import { closeOpenClawStateDatabaseForTest } from "../state/grokbot-state-db.js";
 import { captureEnv, setTestEnvValue } from "../test-utils/env.js";
 import {
   closeClientVoiceSession,
@@ -80,7 +80,7 @@ async function completeRun(runId: string): Promise<void> {
 describe("client voice session", () => {
   beforeEach(async () => {
     tempDir = await fs.realpath(
-      await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-voice-session-")),
+      await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-voice-session-")),
     );
     setTestEnvValue("OPENCLAW_STATE_DIR", tempDir);
     sendDurableMessageBatch.mockClear();

@@ -1,11 +1,11 @@
-import { uniqueStrings } from "@openclaw/normalization-core/string-normalization";
+import { uniqueStrings } from "@grokbot/normalization-core/string-normalization";
 import {
   resolveSessionStoreAgentId,
   resolveSessionStoreKey,
 } from "../../gateway/session-store-key.js";
 import { resolveAgentIdFromSessionKey } from "../../routing/session-key.js";
 import { getRuntimeConfig } from "../io.js";
-import type { OpenClawConfig } from "../types.openclaw.js";
+import type { OpenClawConfig } from "../types.grokbot.js";
 import { resolveAgentMainSessionKey } from "./main-session.js";
 import { resolveStorePath } from "./paths.js";
 import { clearPluginOwnedSessionState } from "./plugin-host-cleanup.js";

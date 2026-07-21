@@ -3,7 +3,7 @@
  * Resolved url/headers are credentials — never log, fingerprint, or persist them.
  */
 import crypto from "node:crypto";
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+import { normalizeOptionalString } from "@grokbot/normalization-core/string-coerce";
 import { resolveOpenClawMcpTransportAlias } from "../config/mcp-config-normalize.js";
 import { logWarn } from "../logger.js";
 import { registerSecretValueForRedaction } from "../logging/secret-redaction-registry.js";
@@ -30,7 +30,7 @@ const MCP_CONNECTION_RESOLVER_TIMEOUT_MS = 10_000;
 const MCP_CONNECTION_REVALIDATE_MS = 5 * 60 * 1000;
 
 const MCP_CONNECTION_RESOLVER_TEST_STATE_KEY = Symbol.for(
-  "openclaw.mcpServerConnectionResolverTestState",
+  "grokbot.mcpServerConnectionResolverTestState",
 );
 
 type McpConnectionResolverTestState = {

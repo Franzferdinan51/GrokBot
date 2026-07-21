@@ -6,7 +6,7 @@ import type {
   AnyAgentTool,
   OpenClawPluginApi,
   OpenClawPluginToolContext,
-} from "openclaw/plugin-sdk/core";
+} from "grokbot/plugin-sdk/core";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { registerWhatsAppCallTool } from "./agent-tools-call.js";
 
@@ -18,11 +18,11 @@ const defaultDependencyMocks = vi.hoisted(() => ({
   oauthDir: "",
 }));
 
-vi.mock("openclaw/plugin-sdk/setup-tools", () => ({
+vi.mock("grokbot/plugin-sdk/setup-tools", () => ({
   detectBinary: vi.fn(async () => defaultDependencyMocks.binaryFound),
 }));
 
-vi.mock("openclaw/plugin-sdk/state-paths", () => ({
+vi.mock("grokbot/plugin-sdk/state-paths", () => ({
   resolveOAuthDir: () => defaultDependencyMocks.oauthDir,
 }));
 
@@ -102,7 +102,7 @@ describe("WhatsApp call tool", () => {
   beforeEach(async () => {
     runtimeContextMocks.controllers.clear();
     defaultDependencyMocks.binaryFound = true;
-    rootDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-whatsapp-call-test-"));
+    rootDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-whatsapp-call-test-"));
     defaultDependencyMocks.oauthDir = path.join(rootDir, "call dir", "$HOME's");
     stateDir = path.join(defaultDependencyMocks.oauthDir, "whatsapp-calls", "default");
     await fs.mkdir(stateDir, { recursive: true });

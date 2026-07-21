@@ -5,7 +5,7 @@ import path from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { createChannelIngressQueue } from "../../channels/message/ingress-queue.js";
 import type { RuntimeEnv } from "../../runtime.js";
-import { closeOpenClawStateDatabaseForTest } from "../../state/openclaw-state-db.js";
+import { closeOpenClawStateDatabaseForTest } from "../../state/grokbot-state-db.js";
 import {
   channelsDeadLettersListCommand,
   channelsDeadLettersResubmitCommand,
@@ -14,7 +14,7 @@ import {
 const originalStateDir = process.env.OPENCLAW_STATE_DIR;
 
 async function withTempState(run: (stateDir: string) => Promise<void>): Promise<void> {
-  const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-channel-dead-letters-"));
+  const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-channel-dead-letters-"));
   process.env.OPENCLAW_STATE_DIR = stateDir;
   try {
     await run(stateDir);

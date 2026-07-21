@@ -6,7 +6,7 @@ import type { Event } from "nostr-tools";
 import {
   closeOpenClawStateDatabaseForTest,
   createChannelIngressQueueForTests,
-} from "openclaw/plugin-sdk/plugin-state-test-runtime";
+} from "grokbot/plugin-sdk/plugin-state-test-runtime";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { migrateNostrLegacyRecentEventIds } from "./nostr-ingress-state.js";
 import { createNostrIngress } from "./nostr-ingress.js";
@@ -55,7 +55,7 @@ function startIngress(params: {
 }
 
 async function withQueue<T>(fn: (queue: NostrIngressQueue) => Promise<T>): Promise<T> {
-  const created = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-nostr-ingress-"));
+  const created = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-nostr-ingress-"));
   const stateDir = await fs.realpath(created);
   const queue = createChannelIngressQueueForTests<NostrIngressPayload>({
     channelId: "nostr",

@@ -1,5 +1,5 @@
 import type { AuthProfileStore } from "../../../agents/auth-profiles/types.js";
-import type { OpenClawConfig } from "../../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../../config/types.grokbot.js";
 import "./stale-auth-order.js";
 
 type TestApi = {
@@ -13,7 +13,7 @@ type TestApi = {
 
 function getTestApi(): TestApi {
   return (globalThis as Record<PropertyKey, unknown>)[
-    Symbol.for("openclaw.staleAuthOrderTestApi")
+    Symbol.for("grokbot.staleAuthOrderTestApi")
   ] as TestApi;
 }
 

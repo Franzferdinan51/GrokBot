@@ -2,12 +2,12 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { Command } from "commander";
-import { SessionManager } from "openclaw/plugin-sdk/agent-sessions";
+import { SessionManager } from "grokbot/plugin-sdk/agent-sessions";
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { withEnvOverride } from "../config/test-helpers.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { testApi as usageTestApi, usageHandlers } from "../gateway/server-methods/usage.js";
 import { GatewayLockError } from "../infra/gateway-lock.js";
 import { registerGatewayCli } from "./gateway-cli.js";
@@ -299,7 +299,7 @@ describe("gateway-cli coverage", () => {
   });
 
   it("waits for real all-agent usage caches before printing totals", async () => {
-    const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-usage-cost-cli-"));
+    const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-usage-cost-cli-"));
     const config = {
       agents: {
         list: [{ id: "main", default: true }, { id: "dev" }],
@@ -492,12 +492,12 @@ describe("gateway-cli coverage", () => {
 
   it("prints the latest stability bundle without calling Gateway", async () => {
     callGateway.mockClear();
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-gateway-cli-bundle-"));
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-gateway-cli-bundle-"));
     try {
       const bundleDir = path.join(tempDir, "logs", "stability");
       const bundlePath = path.join(
         bundleDir,
-        "openclaw-stability-2026-04-22T12-00-00-000Z-123-test.json",
+        "grokbot-stability-2026-04-22T12-00-00-000Z-123-test.json",
       );
       const bundle = {
         version: 1,
@@ -600,7 +600,7 @@ describe("gateway-cli coverage", () => {
 
   it("writes gateway diagnostics export with a best-effort health snapshot", async () => {
     callGateway.mockClear();
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-gateway-cli-support-"));
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-gateway-cli-support-"));
     try {
       const outputPath = path.join(tempDir, "diagnostics.zip");
       await withEnvOverride(
@@ -647,10 +647,10 @@ describe("gateway-cli coverage", () => {
     discoverGatewayBeacons.mockClear();
     discoverGatewayBeacons.mockResolvedValueOnce([
       {
-        instanceName: "Studio (OpenClaw)",
+        instanceName: "Studio (GrokBot)",
         displayName: "Studio",
-        domain: "openclaw.internal.",
-        host: "studio.openclaw.internal",
+        domain: "grokbot.internal.",
+        host: "studio.grokbot.internal",
         port: 18789,
         lanHost: "studio.local",
         tailnetDns: "studio.tailnet.ts.net",
@@ -784,7 +784,7 @@ describe("gateway-cli coverage", () => {
     runtimeErrors.length = 0;
     serviceIsLoaded.mockResolvedValue(true);
     startGatewayServer.mockRejectedValueOnce(
-      new GatewayLockError("failed to acquire gateway lock at /tmp/openclaw/gateway.lock"),
+      new GatewayLockError("failed to acquire gateway lock at /tmp/grokbot/gateway.lock"),
     );
 
     await expectGatewayExit(["gateway", "--token", "test-token", "--allow-unconfigured"]);

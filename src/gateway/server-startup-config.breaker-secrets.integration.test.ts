@@ -29,7 +29,7 @@ const CHANNEL_TOKEN_ENV = "BREAKER_TELEGRAM_BOT_TOKEN";
 function buildSnapshot(config: OpenClawConfig): ConfigFileSnapshot {
   const raw = `${JSON.stringify(config, null, 2)}\n`;
   return buildTestConfigSnapshot({
-    path: "/tmp/openclaw-breaker-secrets-integration.json",
+    path: "/tmp/grokbot-breaker-secrets-integration.json",
     exists: true,
     raw,
     parsed: config,
@@ -98,7 +98,7 @@ describe("gateway breaker SecretRef integration", () => {
           ) =>
             await prepareSecretsRuntimeSnapshot({
               ...params,
-              agentDirs: ["/tmp/openclaw-agent-main"],
+              agentDirs: ["/tmp/grokbot-agent-main"],
               loadablePluginOrigins: EMPTY_LOADABLE_PLUGIN_ORIGINS,
               loadAuthStore: () => loadAuthStoreWithProfiles({}),
             });

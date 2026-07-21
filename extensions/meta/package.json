@@ -1,22 +1,22 @@
 {
-  "name": "@openclaw/meta-provider",
+  "name": "@grokbot/meta-provider",
   "version": "2026.7.2",
-  "description": "OpenClaw Meta provider plugin.",
+  "description": "GrokBot Meta provider plugin.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/openclaw/openclaw"
+    "url": "https://github.com/grokbot/grokbot"
   },
   "type": "module",
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@grokbot/plugin-sdk": "workspace:*"
   },
-  "openclaw": {
+  "grokbot": {
     "extensions": [
       "./index.ts"
     ],
     "install": {
-      "clawhubSpec": "clawhub:@openclaw/meta-provider",
-      "npmSpec": "@openclaw/meta-provider",
+      "clawhubSpec": "clawhub:@grokbot/meta-provider",
+      "npmSpec": "@grokbot/meta-provider",
       "defaultChoice": "npm",
       "minHostVersion": ">=2026.6.11"
     },

@@ -1,4 +1,4 @@
-import type { OpenClawConfig } from "openclaw/plugin-sdk/core";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/core";
 import { fingerprint } from "../protocol/index.js";
 import {
   parseReefRelayUrl,
@@ -129,7 +129,7 @@ export const reefSetupWizard = {
     const identity = loadReefIdentityBinding(runtime);
     if (identity && (identity.handle !== handle || identity.relayUrl !== relayUrl)) {
       throw new Error(
-        `This OpenClaw state already holds the Reef identity @${identity.handle} on ${identity.relayUrl}. Re-register the same handle and relay.`,
+        `This GrokBot state already holds the Reef identity @${identity.handle} on ${identity.relayUrl}. Re-register the same handle and relay.`,
       );
     }
     const configuredStateDir = (cfg.channels?.reef as { stateDir?: unknown } | undefined)?.stateDir;

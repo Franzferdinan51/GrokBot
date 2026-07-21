@@ -18,7 +18,7 @@ import {
   syncWorkboardLifecycle,
   WORKBOARD_CHANGED_EVENT,
 } from "../../lib/workboard/index.ts";
-import { OpenClawLightDomElement } from "../../lit/openclaw-element.ts";
+import { OpenClawLightDomElement } from "../../lit/grokbot-element.ts";
 import { SubscriptionsController } from "../../lit/subscriptions-controller.ts";
 import { matchesAgentScope } from "./agent-filter.ts";
 import { searchForBoardFilter } from "./board-filter.ts";
@@ -287,6 +287,6 @@ class WorkboardPage extends OpenClawLightDomElement {
   }
 }
 
-if (!customElements.get("openclaw-workboard-page")) {
-  customElements.define("openclaw-workboard-page", WorkboardPage);
+if (!customElements.get("grokbot-workboard-page")) {
+  customElements.define("grokbot-workboard-page", WorkboardPage);
 }

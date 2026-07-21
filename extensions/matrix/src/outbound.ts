@@ -1,14 +1,14 @@
 // Matrix plugin module implements outbound behavior.
-import { createReplyToFanout } from "openclaw/plugin-sdk/channel-outbound";
+import { createReplyToFanout } from "grokbot/plugin-sdk/channel-outbound";
 import {
   renderMessagePresentationFallbackText,
   type MessagePresentation,
-} from "openclaw/plugin-sdk/interactive-runtime";
+} from "grokbot/plugin-sdk/interactive-runtime";
 import {
   resolvePayloadMediaUrls,
   sendPayloadMediaSequence,
-} from "openclaw/plugin-sdk/reply-payload";
-import type { ReplyPayload } from "openclaw/plugin-sdk/reply-runtime";
+} from "grokbot/plugin-sdk/reply-payload";
+import type { ReplyPayload } from "grokbot/plugin-sdk/reply-runtime";
 import { sendMessageMatrix, sendPollMatrix } from "./matrix/send.js";
 import type { MatrixExtraContentFields } from "./matrix/send/types.js";
 import {
@@ -17,7 +17,7 @@ import {
   type ChannelOutboundAdapter,
 } from "./runtime-api.js";
 
-const MATRIX_OPENCLAW_PRESENTATION_KEY = "com.openclaw.presentation" as const;
+const MATRIX_OPENCLAW_PRESENTATION_KEY = "com.grokbot.presentation" as const;
 const MATRIX_OPENCLAW_PRESENTATION_TYPE = "message.presentation" as const;
 const MATRIX_EMPTY_PRESENTATION_FALLBACK_TEXT = "---";
 

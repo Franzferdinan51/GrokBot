@@ -4,9 +4,9 @@ import {
   type MessageReceipt,
   type MessageReceiptPart,
   type MessageReceiptPartKind,
-} from "openclaw/plugin-sdk/channel-outbound";
-import { resolveMarkdownTableMode } from "openclaw/plugin-sdk/markdown-table-runtime";
-import { convertMarkdownTables } from "openclaw/plugin-sdk/text-chunking";
+} from "grokbot/plugin-sdk/channel-outbound";
+import { resolveMarkdownTableMode } from "grokbot/plugin-sdk/markdown-table-runtime";
+import { convertMarkdownTables } from "grokbot/plugin-sdk/text-chunking";
 import { loadOutboundMediaFromUrl, type OpenClawConfig } from "../runtime-api.js";
 import {
   classifyMSTeamsSendError,

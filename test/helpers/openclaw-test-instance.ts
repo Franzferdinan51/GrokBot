@@ -1,4 +1,4 @@
-// OpenClaw test instance helper spawns isolated OpenClaw processes.
+// GrokBot test instance helper spawns isolated GrokBot processes.
 import { type ChildProcessByStdio, spawn } from "node:child_process";
 import { randomUUID } from "node:crypto";
 import fs from "node:fs/promises";
@@ -12,7 +12,7 @@ import {
 import {
   createOpenClawTestState,
   type OpenClawTestState,
-} from "../../src/test-utils/openclaw-test-state.js";
+} from "../../src/test-utils/grokbot-test-state.js";
 import { sleep } from "../../src/utils.js";
 
 type OpenClawTestStateOptions = NonNullable<Parameters<typeof createOpenClawTestState>[0]>;

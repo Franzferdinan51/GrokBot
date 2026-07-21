@@ -1,8 +1,8 @@
 // Line API module exposes the plugin public contract.
-export { clearAccountEntryFields } from "openclaw/plugin-sdk/core";
-import { DEFAULT_ACCOUNT_ID } from "openclaw/plugin-sdk/account-id";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/account-resolution";
-import type { ChannelPlugin } from "openclaw/plugin-sdk/core";
+export { clearAccountEntryFields } from "grokbot/plugin-sdk/core";
+import { DEFAULT_ACCOUNT_ID } from "grokbot/plugin-sdk/account-id";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/account-resolution";
+import type { ChannelPlugin } from "grokbot/plugin-sdk/core";
 import { listLineAccountIds, resolveDefaultLineAccountId, resolveLineAccount } from "./accounts.js";
 import { resolveExactLineGroupConfigKey } from "./group-keys.js";
 import type { LineConfig, ResolvedLineAccount } from "./types.js";

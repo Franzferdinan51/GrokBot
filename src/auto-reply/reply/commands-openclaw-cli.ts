@@ -1,12 +1,12 @@
-// Formats OpenClaw CLI command snippets for chat-facing command responses.
+// Formats GrokBot CLI command snippets for chat-facing command responses.
 import fs from "node:fs";
 import { createRequire } from "node:module";
 import path from "node:path";
 import { isBunRuntime } from "../../daemon/runtime-binary.js";
-import { resolveOpenClawPackageRootSync } from "../../infra/openclaw-root.js";
+import { resolveOpenClawPackageRootSync } from "../../infra/grokbot-root.js";
 
 const requireFromHere = createRequire(import.meta.url);
-const OPENCLAW_CLI_ENTRY_BASENAMES = new Set(["openclaw", "openclaw.mjs"]);
+const OPENCLAW_CLI_ENTRY_BASENAMES = new Set(["grokbot", "grokbot.mjs"]);
 const OPENCLAW_PACKAGE_ENTRY_PATHS = new Set([
   path.join("dist", "entry.js"),
   path.join("dist", "entry.mjs"),
@@ -48,9 +48,9 @@ function buildPackageRootCliArgvPrefix(packageRoot: string): string[] {
       ? [process.execPath, sourceEntry]
       : tsxLoader
         ? [process.execPath, "--import", tsxLoader, sourceEntry]
-        : [process.execPath, path.join(packageRoot, "openclaw.mjs")];
+        : [process.execPath, path.join(packageRoot, "grokbot.mjs")];
   }
-  return [process.execPath, path.join(packageRoot, "openclaw.mjs")];
+  return [process.execPath, path.join(packageRoot, "grokbot.mjs")];
 }
 
 function resolveTrustedTsxLoader(packageRoot: string): string | null {
@@ -81,7 +81,7 @@ function resolveCurrentOpenClawCliArgvPrefix(): string[] {
   return entry && entry !== process.execPath ? [process.execPath, entry] : [process.execPath];
 }
 
-/** Reconstructs the current OpenClaw CLI invocation with extra args. */
+/** Reconstructs the current GrokBot CLI invocation with extra args. */
 export function buildCurrentOpenClawCliArgv(args: string[]): string[] {
   return [...resolveCurrentOpenClawCliArgvPrefix(), ...args];
 }
@@ -99,7 +99,7 @@ export function buildCurrentOpenClawCliExecEnv(
   return Object.keys(overrides).length > 0 ? overrides : undefined;
 }
 
-/** Builds a shell-quoted command string for rerunning the current OpenClaw CLI. */
+/** Builds a shell-quoted command string for rerunning the current GrokBot CLI. */
 export function buildCurrentOpenClawCliCommand(args: string[]): string {
   return buildCurrentOpenClawCliArgv(args).map(quoteShellArg).join(" ");
 }

@@ -1,13 +1,13 @@
 ---
-summary: "macOS IPC architecture for OpenClaw app, gateway node transport, and PeekabooBridge"
+summary: "macOS IPC architecture for GrokBot app, gateway node transport, and PeekabooBridge"
 read_when:
   - Editing IPC contracts or menu bar app IPC
 title: "macOS IPC"
 ---
 
-# OpenClaw macOS IPC architecture
+# GrokBot macOS IPC architecture
 
-A local Unix socket connects the node host service to the macOS app for exec approvals and `system.run`. An `openclaw-mac` debug CLI (`apps/macos/Sources/OpenClawMacCLI`) exists for discovery/connect checks; agent actions still flow through the Gateway WebSocket and `node.invoke`. The node-backed `computer.act` path runs embedded Peekaboo automation in-process; standalone Peekaboo clients use PeekabooBridge.
+A local Unix socket connects the node host service to the macOS app for exec approvals and `system.run`. An `grokbot-mac` debug CLI (`apps/macos/Sources/OpenClawMacCLI`) exists for discovery/connect checks; agent actions still flow through the Gateway WebSocket and `node.invoke`. The node-backed `computer.act` path runs embedded Peekaboo automation in-process; standalone Peekaboo clients use PeekabooBridge.
 
 ## Goals
 
@@ -42,8 +42,8 @@ Agent -> Gateway -> Node Service (WS)
 ### PeekabooBridge (UI automation)
 
 - The built-in agent `computer` tool does **not** use this socket. A paired macOS node fulfills `computer.act` in the app process with embedded Peekaboo services.
-- UI automation uses a separate UNIX socket (`~/Library/Application Support/OpenClaw/<socket>`) and the PeekabooBridge JSON protocol.
-- Host preference order (client-side): Peekaboo.app -> Claude.app -> OpenClaw.app -> local execution.
+- UI automation uses a separate UNIX socket (`~/Library/Application Support/GrokBot/<socket>`) and the PeekabooBridge JSON protocol.
+- Host preference order (client-side): Peekaboo.app -> Claude.app -> GrokBot.app -> local execution.
 - Security: bridge hosts require an allowlisted TeamID (the bundled `PeekabooBridgeHostCoordinator` allowlists a fixed team plus the app's own signing team); a DEBUG-only same-UID escape hatch is guarded by `PEEKABOO_ALLOW_UNSIGNED_SOCKET_CLIENTS=1` (Peekaboo convention).
 - See: [PeekabooBridge usage](/platforms/mac/peekaboo) for details.
 

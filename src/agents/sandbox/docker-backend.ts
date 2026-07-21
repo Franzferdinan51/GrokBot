@@ -107,7 +107,7 @@ export function runDockerSandboxShellCommand(
     "sh",
     "-c",
     params.script,
-    "openclaw-sandbox-fs",
+    "grokbot-sandbox-fs",
   ];
   if (params.args?.length) {
     dockerArgs.push(...params.args);

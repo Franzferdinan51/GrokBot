@@ -3,7 +3,7 @@ set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 source "$ROOT_DIR/scripts/lib/docker-e2e-image.sh"
-IMAGE_NAME="$(docker_e2e_resolve_image "openclaw-bundled-plugin-install-uninstall-e2e" OPENCLAW_BUNDLED_PLUGIN_INSTALL_UNINSTALL_E2E_IMAGE)"
+IMAGE_NAME="$(docker_e2e_resolve_image "grokbot-bundled-plugin-install-uninstall-e2e" OPENCLAW_BUNDLED_PLUGIN_INSTALL_UNINSTALL_E2E_IMAGE)"
 LIST_TIMEOUT_MS="$(
   docker_e2e_read_positive_int_env OPENCLAW_BUNDLED_PLUGIN_LIST_TIMEOUT_MS 30000
 )"
@@ -78,7 +78,7 @@ for env_name in \
 done
 
 echo "Running bundled plugin install/uninstall Docker E2E..."
-RUN_LOG="$(mktemp "${TMPDIR:-/tmp}/openclaw-bundled-plugin-install-uninstall.XXXXXX")"
+RUN_LOG="$(mktemp "${TMPDIR:-/tmp}/grokbot-bundled-plugin-install-uninstall.XXXXXX")"
 cleanup() {
   rm -f "$RUN_LOG"
 }

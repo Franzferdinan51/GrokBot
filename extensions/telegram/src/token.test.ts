@@ -2,7 +2,7 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { resolveTelegramBotUserIdFromToken, resolveTelegramToken } from "./token.js";
 
@@ -23,7 +23,7 @@ describe("resolveTelegramToken", () => {
   const tempDirs: string[] = [];
 
   function createTempDir(): string {
-    const dir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-telegram-token-"));
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-telegram-token-"));
     tempDirs.push(dir);
     return dir;
   }
@@ -481,7 +481,7 @@ describe("resolveTelegramToken", () => {
     );
   });
 
-  // Regression: https://github.com/openclaw/openclaw/issues/53876
+  // Regression: https://github.com/grokbot/grokbot/issues/53876
   // Binding-created accountIds should inherit the channel-level token in
   // single-bot setups (no accounts section).
   it("falls through to channel-level token for binding-created accountId without accounts section", () => {

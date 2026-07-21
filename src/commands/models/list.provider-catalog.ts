@@ -1,8 +1,8 @@
 /** Lifecycle-owned provider catalog projection for model-list output. */
-import { normalizeProviderId } from "@openclaw/model-catalog-core/provider-id";
+import { normalizeProviderId } from "@grokbot/model-catalog-core/provider-id";
 import { resolveAgentDir, resolveDefaultAgentDir } from "../../agents/agent-scope.js";
 import { loadPreparedModelCatalogOwnerSnapshot } from "../../agents/prepared-model-catalog.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import type { Model } from "../../llm/types.js";
 import type { PluginMetadataSnapshot } from "../../plugins/plugin-metadata-snapshot.types.js";
 import { canonicalizeModelCatalogProviderAlias } from "./provider-aliases.js";

@@ -1,6 +1,6 @@
 /** Plugin node-host bridge for loading plugin registry commands and dispatching node capabilities. */
 import type { NodePluginToolDescriptor } from "../../packages/gateway-protocol/src/schema/nodes.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import type { PluginNodeHostCommandRegistration } from "../plugins/registry-types.js";
 import { getActivePluginRegistry } from "../plugins/runtime.js";
 import type {

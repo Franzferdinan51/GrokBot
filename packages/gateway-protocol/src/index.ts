@@ -1961,7 +1961,7 @@ export type SessionsPatchResult = {
 
 type GatewayAgentRuntime = {
   id: string;
-  fallback?: "openclaw" | "none";
+  fallback?: "grokbot" | "none";
   source:
     | "env"
     | "agent"

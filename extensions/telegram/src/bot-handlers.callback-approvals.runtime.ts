@@ -1,7 +1,7 @@
-import type { parseExecApprovalCommandText } from "openclaw/plugin-sdk/approval-reply-runtime";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { isApprovalNotFoundError } from "openclaw/plugin-sdk/error-runtime";
-import { logVerbose } from "openclaw/plugin-sdk/runtime-env";
+import type { parseExecApprovalCommandText } from "grokbot/plugin-sdk/approval-reply-runtime";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { isApprovalNotFoundError } from "grokbot/plugin-sdk/error-runtime";
+import { logVerbose } from "grokbot/plugin-sdk/runtime-env";
 import type { TelegramApprovalCallback } from "./approval-callback-data.js";
 import {
   buildTelegramCanonicalApprovalTerminalText,

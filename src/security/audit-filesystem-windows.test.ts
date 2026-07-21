@@ -1,7 +1,7 @@
 // Covers Windows filesystem security audit behavior.
 import fs from "node:fs/promises";
 import path from "node:path";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { collectSecurityAuditFindings } from "./audit.test-support.js";
 import { AsyncTempCaseFactory } from "./test-temp-cases.js";
@@ -12,7 +12,7 @@ const windowsAuditEnv = {
 };
 
 describe("security audit filesystem Windows findings", () => {
-  const tempCases = new AsyncTempCaseFactory("openclaw-security-audit-win-");
+  const tempCases = new AsyncTempCaseFactory("grokbot-security-audit-win-");
 
   beforeAll(async () => {
     await tempCases.setup();
@@ -28,7 +28,7 @@ describe("security audit filesystem Windows findings", () => {
         const tmp = await tempCases.makeTmpDir("win");
         const stateDir = path.join(tmp, "state");
         await fs.mkdir(stateDir, { recursive: true });
-        const configPath = path.join(stateDir, "openclaw.json");
+        const configPath = path.join(stateDir, "grokbot.json");
         await fs.writeFile(configPath, "{}\n", "utf-8");
         const findings = await collectSecurityAuditFindings(
           {},
@@ -64,7 +64,7 @@ describe("security audit filesystem Windows findings", () => {
         const tmp = await tempCases.makeTmpDir("win-open");
         const stateDir = path.join(tmp, "state");
         await fs.mkdir(stateDir, { recursive: true });
-        const configPath = path.join(stateDir, "openclaw.json");
+        const configPath = path.join(stateDir, "grokbot.json");
         await fs.writeFile(configPath, "{}\n", "utf-8");
         const findings = await collectSecurityAuditFindings(
           {},
@@ -101,7 +101,7 @@ describe("security audit filesystem Windows findings", () => {
         const tmp = await tempCases.makeTmpDir("win-anon-world");
         const stateDir = path.join(tmp, "state");
         await fs.mkdir(stateDir, { recursive: true });
-        const configPath = path.join(stateDir, "openclaw.json");
+        const configPath = path.join(stateDir, "grokbot.json");
         await fs.writeFile(configPath, "{}\n", "utf-8");
         const findings = await collectSecurityAuditFindings(
           {},

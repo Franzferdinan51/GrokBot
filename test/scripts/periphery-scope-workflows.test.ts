@@ -15,7 +15,7 @@ const WORKFLOW_CASES = [
   {
     name: "macOS",
     path: ".github/workflows/macos-periphery.yml",
-    scopedPath: "apps/macos/Sources/OpenClaw/Test.swift",
+    scopedPath: "apps/macos/Sources/GrokBot/Test.swift",
   },
   {
     name: "shared OpenClawKit",
@@ -164,10 +164,10 @@ describe("Periphery scope workflows", () => {
   });
 
   it("ignores scoped files added only by base-branch drift", async () => {
-    const repoRoot = makeTempRepoRoot(tempDirs, "openclaw-periphery-scope-");
+    const repoRoot = makeTempRepoRoot(tempDirs, "grokbot-periphery-scope-");
     git(repoRoot, ["init", "--initial-branch=main"]);
-    git(repoRoot, ["config", "user.name", "OpenClaw Test"]);
-    git(repoRoot, ["config", "user.email", "openclaw-test@example.com"]);
+    git(repoRoot, ["config", "user.name", "GrokBot Test"]);
+    git(repoRoot, ["config", "user.email", "grokbot-test@example.com"]);
 
     writeFixture(repoRoot, "docs/base.md", "base\n");
     git(repoRoot, ["add", "."]);

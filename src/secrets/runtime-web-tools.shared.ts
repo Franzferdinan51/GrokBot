@@ -1,5 +1,5 @@
-import { normalizeOptionalLowercaseString } from "@openclaw/normalization-core/string-coerce";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import { normalizeOptionalLowercaseString } from "@grokbot/normalization-core/string-coerce";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { resolveSecretInputRef, type SecretRef } from "../config/types.secrets.js";
 import { createLazyRuntimeNamedExport } from "../shared/lazy-runtime.js";
 import { setPathExistingStrict } from "./path-utils.js";
@@ -23,7 +23,7 @@ export {
   type RuntimeWebUnavailableProvider,
   type SecretResolutionResult,
 } from "./runtime-web-tools-selection.types.js";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { isRecord } from "./shared.js";
 
 const loadResolveManifestContractOwnerPluginId = createLazyRuntimeNamedExport(

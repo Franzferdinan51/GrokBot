@@ -1,6 +1,6 @@
 // Agent scope tests cover which per-agent fields may flatten into runtime defaults.
 import { describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { resolveAgentConfig } from "./agent-scope-config.js";
 
 describe("resolveAgentConfig model policy", () => {

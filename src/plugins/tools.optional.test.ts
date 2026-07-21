@@ -1,5 +1,5 @@
 // Verifies optional plugin tool registration and absence handling.
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { DEFAULT_PLUGIN_TOOLS_ALLOWLIST_ENTRY } from "../agents/tool-policy.js";
 import { resetLogger, setLoggerOverride } from "../logging/logger.js";
@@ -1387,7 +1387,7 @@ describe("resolvePluginTools optional tools", () => {
         providers: {
           vault: {
             source: "file",
-            path: "/tmp/openclaw-secrets.json",
+            path: "/tmp/grokbot-secrets.json",
             mode: "json",
           },
         },
@@ -2124,11 +2124,11 @@ describe("resolvePluginTools optional tools", () => {
     {
       name: "uses loaded plugin tools with an explicit env",
       params: {
-        env: { OPENCLAW_HOME: "/srv/openclaw-home" } as NodeJS.ProcessEnv,
+        env: { OPENCLAW_HOME: "/srv/grokbot-home" } as NodeJS.ProcessEnv,
         toolAllowlist: ["optional_tool"],
       },
       expectedLoaderCall: {
-        env: { OPENCLAW_HOME: "/srv/openclaw-home" },
+        env: { OPENCLAW_HOME: "/srv/grokbot-home" },
       },
     },
     {

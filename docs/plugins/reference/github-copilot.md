@@ -1,5 +1,5 @@
 ---
-summary: "Adds GitHub Copilot model provider support to OpenClaw."
+summary: "Adds GitHub Copilot model provider support to GrokBot."
 read_when:
   - You are installing, configuring, or auditing the github-copilot plugin
 title: "GitHub Copilot plugin"
@@ -7,12 +7,12 @@ title: "GitHub Copilot plugin"
 
 # GitHub Copilot plugin
 
-Adds GitHub Copilot model provider support to OpenClaw.
+Adds GitHub Copilot model provider support to GrokBot.
 
 ## Distribution
 
-- Package: `@openclaw/github-copilot-provider`
-- Install route: included in OpenClaw
+- Package: `@grokbot/github-copilot-provider`
+- Install route: included in GrokBot
 
 ## Surface
 

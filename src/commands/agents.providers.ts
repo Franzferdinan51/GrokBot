@@ -1,5 +1,5 @@
-// Provider/account summary helpers for `openclaw agents list`.
-import { normalizeOptionalLowercaseString } from "@openclaw/normalization-core/string-coerce";
+// Provider/account summary helpers for `grokbot agents list`.
+import { normalizeOptionalLowercaseString } from "@grokbot/normalization-core/string-coerce";
 import { isChannelVisibleInConfiguredLists } from "../channels/plugins/exposure.js";
 import { resolveChannelDefaultAccountId } from "../channels/plugins/helpers.js";
 import { normalizeChannelId } from "../channels/plugins/index.js";
@@ -7,7 +7,7 @@ import { listReadOnlyChannelPluginsForConfig } from "../channels/plugins/read-on
 import type { ChannelPlugin } from "../channels/plugins/types.plugin.js";
 import type { ChannelId } from "../channels/plugins/types.public.js";
 import type { AgentBinding } from "../config/types.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { listExplicitConfiguredChannelIdsForConfig } from "../plugins/channel-plugin-ids.js";
 import { resolveMissingOfficialExternalChannelPluginRepairHint } from "../plugins/official-external-plugin-repair-hints.js";
 import { DEFAULT_ACCOUNT_ID } from "../routing/session-key.js";

@@ -1,4 +1,4 @@
-import type { OpenClawPluginToolContext } from "openclaw/plugin-sdk/plugin-entry";
+import type { OpenClawPluginToolContext } from "grokbot/plugin-sdk/plugin-entry";
 import { describe, expect, it, vi } from "vitest";
 import {
   buildDiscordActivityCustomId,

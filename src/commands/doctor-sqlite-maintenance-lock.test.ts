@@ -14,9 +14,9 @@ const tempDirs = useAutoCleanupTempDirTracker((cleanup) => {
 });
 
 async function createLockFixture() {
-  const root = tempDirs.make("openclaw-doctor-sqlite-lock-");
+  const root = tempDirs.make("grokbot-doctor-sqlite-lock-");
   const stateDir = path.join(root, "state");
-  const configPath = path.join(stateDir, "openclaw.json");
+  const configPath = path.join(stateDir, "grokbot.json");
   const lockDir = path.join(root, "locks");
   await fs.mkdir(stateDir, { recursive: true });
   await fs.writeFile(configPath, "{}\n", "utf8");
@@ -33,7 +33,7 @@ async function createLockFixture() {
       lockDir,
       platform: "darwin" as const,
       pollIntervalMs: 2,
-      readProcessCmdline: () => ["openclaw-gateway"],
+      readProcessCmdline: () => ["grokbot-gateway"],
       timeoutMs: 15,
     },
   };
@@ -119,7 +119,7 @@ describe("doctor SQLite maintenance lock", () => {
         platform: "darwin",
         port: 18789,
         pollIntervalMs: 2,
-        readProcessCmdline: () => ["openclaw", "doctor", "--session-sqlite", "compact"],
+        readProcessCmdline: () => ["grokbot", "doctor", "--session-sqlite", "compact"],
         timeoutMs: 15,
       }),
     ).rejects.toBeInstanceOf(GatewayLockError);
@@ -221,7 +221,7 @@ describe("doctor SQLite maintenance lock", () => {
   it("refuses explicit destructive targets outside the locked state directory", async () => {
     const fixture = await createLockFixture();
     const externalPath = path.join(
-      tempDirs.make("openclaw-external-session-store-"),
+      tempDirs.make("grokbot-external-session-store-"),
       "sessions.json",
     );
     const run = vi.fn();
@@ -236,7 +236,7 @@ describe("doctor SQLite maintenance lock", () => {
         },
         { lockOptions: fixture.lockOptions },
       ),
-    ).rejects.toThrow(/outside the active OpenClaw state directory/);
+    ).rejects.toThrow(/outside the active GrokBot state directory/);
     expect(run).not.toHaveBeenCalled();
 
     const gatewayLock = await acquireGatewayLock({
@@ -261,7 +261,7 @@ describe("doctor SQLite maintenance lock", () => {
     const sessionsDir = path.join(fixture.env.OPENCLAW_STATE_DIR, "agents", "main", "sessions");
     const storePath = path.join(sessionsDir, "sessions.json");
     const outsideTarget = path.join(
-      tempDirs.make("openclaw-dangling-session-target-"),
+      tempDirs.make("grokbot-dangling-session-target-"),
       "missing.json",
     );
     await fs.mkdir(sessionsDir, { recursive: true });
@@ -278,7 +278,7 @@ describe("doctor SQLite maintenance lock", () => {
         },
         { lockOptions: fixture.lockOptions },
       ),
-    ).rejects.toThrow(/outside the active OpenClaw state directory/);
+    ).rejects.toThrow(/outside the active GrokBot state directory/);
     expect(run).not.toHaveBeenCalled();
   });
 
@@ -305,7 +305,7 @@ describe("doctor SQLite maintenance lock", () => {
         },
         { lockOptions: fixture.lockOptions },
       ),
-    ).rejects.toThrow(/outside the active OpenClaw state directory/);
+    ).rejects.toThrow(/outside the active GrokBot state directory/);
     expect(run).not.toHaveBeenCalled();
   });
 

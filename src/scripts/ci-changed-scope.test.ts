@@ -3,7 +3,7 @@ import { execFileSync } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { bundledPluginFile } from "openclaw/plugin-sdk/test-fixtures";
+import { bundledPluginFile } from "grokbot/plugin-sdk/test-fixtures";
 import { afterEach, describe, expect, it } from "vitest";
 
 const {
@@ -102,9 +102,9 @@ describe("detectChangedScope", () => {
   it("routes only native i18n-owned paths to the native inventory job", () => {
     for (const changedPath of [
       "apps/.i18n/native-source.json",
-      "apps/android/app/src/main/java/ai/openclaw/app/MainActivity.kt",
+      "apps/android/app/src/main/java/ai/grokbot/app/MainActivity.kt",
       "apps/ios/Sources/RootTabs.swift",
-      "apps/macos/Sources/OpenClaw/Settings.swift",
+      "apps/macos/Sources/GrokBot/Settings.swift",
       "apps/shared/OpenClawKit/Sources/OpenClawKit/Client.swift",
       "scripts/native-app-i18n.ts",
       "scripts/android-app-i18n.ts",
@@ -544,11 +544,11 @@ describe("detectChangedScope", () => {
       runUiTests: false,
     });
     for (const releaseCheckPath of [
-      ".github/workflows/openclaw-cross-os-release-checks-reusable.yml",
-      "scripts/github/run-openclaw-cross-os-release-checks.sh",
-      "scripts/openclaw-cross-os-release-checks.ts",
+      ".github/workflows/grokbot-cross-os-release-checks-reusable.yml",
+      "scripts/github/run-grokbot-cross-os-release-checks.sh",
+      "scripts/grokbot-cross-os-release-checks.ts",
       "scripts/lib/cross-os-release-checks/runtime.ts",
-      "test/scripts/openclaw-cross-os-release-workflow.test.ts",
+      "test/scripts/grokbot-cross-os-release-workflow.test.ts",
     ]) {
       expect(detectChangedScope([releaseCheckPath]), releaseCheckPath).toEqual({
         runNode: true,
@@ -942,7 +942,7 @@ describe("detectChangedScope", () => {
   it("treats base and head as literal git args", () => {
     const markerPath = path.join(
       os.tmpdir(),
-      `openclaw-ci-changed-scope-${Date.now()}-${Math.random().toString(16).slice(2)}.tmp`,
+      `grokbot-ci-changed-scope-${Date.now()}-${Math.random().toString(16).slice(2)}.tmp`,
     );
     markerPaths.push(markerPath);
 
@@ -963,7 +963,7 @@ describe("detectChangedScope", () => {
   });
 
   it("uses the merge commit first parent instead of a stale PR payload base", () => {
-    const { repoDir, staleBase } = createSyntheticMergeRepo("openclaw-ci-scope-merge-");
+    const { repoDir, staleBase } = createSyntheticMergeRepo("grokbot-ci-scope-merge-");
 
     expect(
       execFileSync("git", ["diff", "--name-only", staleBase, "HEAD"], {
@@ -979,7 +979,7 @@ describe("detectChangedScope", () => {
   });
 
   it("reports both sides of a rename so deleted paths force safe planning", () => {
-    const repoDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-ci-scope-rename-"));
+    const repoDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-ci-scope-rename-"));
     tempDirs.push(repoDir);
     git(repoDir, ["init", "-b", "main"]);
     git(repoDir, ["config", "user.email", "ci@example.invalid"]);
@@ -996,7 +996,7 @@ describe("detectChangedScope", () => {
   });
 
   it("drops oversized changed-path payloads before workflow environment interpolation", () => {
-    const outputPath = path.join(os.tmpdir(), `openclaw-ci-scope-output-${Date.now()}.txt`);
+    const outputPath = path.join(os.tmpdir(), `grokbot-ci-scope-output-${Date.now()}.txt`);
     markerPaths.push(outputPath);
     const changedPaths = Array.from(
       { length: 1_000 },
@@ -1015,7 +1015,7 @@ describe("detectChangedScope", () => {
   });
 
   it("keeps direct CLI preflight empty diffs as no-op scope", () => {
-    const repoDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-ci-scope-empty-"));
+    const repoDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-ci-scope-empty-"));
     tempDirs.push(repoDir);
     const outputPath = path.join(repoDir, "github-output.txt");
     const scriptPath = path.resolve("scripts/ci-changed-scope.mjs");

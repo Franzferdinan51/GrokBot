@@ -65,7 +65,7 @@ openclaw_live_stage_node_modules() {
 
 openclaw_live_scrub_staged_plugin_index() {
   local dest_dir="${1:?destination directory required}"
-  local db_path="$dest_dir/state/openclaw.sqlite"
+  local db_path="$dest_dir/state/grokbot.sqlite"
 
   if [ ! -f "$db_path" ]; then
     return 0
@@ -95,7 +95,7 @@ NODE
 
 openclaw_live_stage_state_dir() {
   local dest_dir="${1:?destination directory required}"
-  local source_dir="${HOME}/.openclaw"
+  local source_dir="${HOME}/.grokbot"
 
   mkdir -p "$dest_dir"
   if [ -d "$source_dir" ]; then
@@ -128,7 +128,7 @@ openclaw_live_stage_state_dir() {
   fi
 
   export OPENCLAW_STATE_DIR="$dest_dir"
-  export OPENCLAW_CONFIG_PATH="$dest_dir/openclaw.json"
+  export OPENCLAW_CONFIG_PATH="$dest_dir/grokbot.json"
 }
 
 openclaw_live_prepare_staged_config() {

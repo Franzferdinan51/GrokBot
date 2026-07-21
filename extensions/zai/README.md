@@ -1,13 +1,13 @@
-# Z.AI OpenClaw provider
+# Z.AI GrokBot provider
 
-Official OpenClaw provider plugin for Z.AI.
+Official GrokBot provider plugin for Z.AI.
 
 ## Install
 
 ```sh
-openclaw plugins install @openclaw/zai-provider
+grokbot plugins install @grokbot/zai-provider
 ```
 
 ## Docs
 
-See `docs/providers/zai.md` in the OpenClaw repository, or the published docs at `https://docs.openclaw.ai/providers/zai`.
+See `docs/providers/zai.md` in the GrokBot repository, or the published docs at `https://docs.grokbot.ai/providers/zai`.

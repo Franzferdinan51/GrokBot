@@ -102,11 +102,11 @@ describe("spawnSubagentDirect in-process Gateway collector launch", () => {
       ensureRuntimePluginsLoaded: () => {},
     });
 
-    stateDir = await mkdtemp(path.join(os.tmpdir(), "openclaw-swarm-gateway-"));
+    stateDir = await mkdtemp(path.join(os.tmpdir(), "grokbot-swarm-gateway-"));
     setTestEnvValue("OPENCLAW_STATE_DIR", stateDir);
-    setTestEnvValue("OPENCLAW_CONFIG_PATH", path.join(stateDir, "openclaw.json"));
+    setTestEnvValue("OPENCLAW_CONFIG_PATH", path.join(stateDir, "grokbot.json"));
     await writeFile(
-      path.join(stateDir, "openclaw.json"),
+      path.join(stateDir, "grokbot.json"),
       `${JSON.stringify({
         session: { mainKey: "main", scope: "per-sender" },
         tools: { swarm: true },

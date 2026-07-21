@@ -12,11 +12,11 @@ import { normalizeAgentId } from "../routing/session-key.js";
 import type {
   OpenClawStateDatabase,
   OpenClawStateDatabaseOptions,
-} from "./openclaw-state-db-contract.js";
-import { ensureAgentDeletionJournalSchema } from "./openclaw-state-db-schema-additive.js";
-import type { DB as OpenClawStateKyselyDatabase } from "./openclaw-state-db.generated.js";
-import { runOpenClawStateWriteTransaction } from "./openclaw-state-db.js";
-import { resolveOpenClawStateSqlitePath } from "./openclaw-state-db.paths.js";
+} from "./grokbot-state-db-contract.js";
+import { ensureAgentDeletionJournalSchema } from "./grokbot-state-db-schema-additive.js";
+import type { DB as OpenClawStateKyselyDatabase } from "./grokbot-state-db.generated.js";
+import { runOpenClawStateWriteTransaction } from "./grokbot-state-db.js";
+import { resolveOpenClawStateSqlitePath } from "./grokbot-state-db.paths.js";
 
 type AgentDeletionDatabase = Pick<
   OpenClawStateKyselyDatabase,
@@ -59,7 +59,7 @@ export function assertAgentDeletionIdentityClaimAllowed(
 ): void {
   if (deletedAgentId && normalizeAgentId(claimAgentId) === normalizeAgentId(deletedAgentId)) {
     throw new Error(
-      `OpenClaw agent database is unavailable while agent ${normalizeAgentId(deletedAgentId)} is deleted.`,
+      `GrokBot agent database is unavailable while agent ${normalizeAgentId(deletedAgentId)} is deleted.`,
     );
   }
 }
@@ -247,7 +247,7 @@ export function assertAgentDeletionPathFence(
       );
       if (blockedPath) {
         throw new Error(
-          `OpenClaw agent database ${blockedPath} is unavailable while agent ${row.agent_id} deletion owns ${fence.path}.`,
+          `GrokBot agent database ${blockedPath} is unavailable while agent ${row.agent_id} deletion owns ${fence.path}.`,
         );
       }
     }

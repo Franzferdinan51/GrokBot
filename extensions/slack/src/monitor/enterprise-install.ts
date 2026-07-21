@@ -1,6 +1,6 @@
 // Slack plugin module implements explicit Enterprise Grid installation policy.
-import type { OpenClawConfig, SlackAccountConfig } from "openclaw/plugin-sdk/config-contracts";
-import { normalizeOptionalString } from "openclaw/plugin-sdk/string-coerce-runtime";
+import type { OpenClawConfig, SlackAccountConfig } from "grokbot/plugin-sdk/config-contracts";
+import { normalizeOptionalString } from "grokbot/plugin-sdk/string-coerce-runtime";
 import { resolveDefaultSlackAccountId } from "../accounts.js";
 import { formatSlackError } from "../errors.js";
 

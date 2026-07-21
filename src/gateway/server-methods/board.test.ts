@@ -8,8 +8,8 @@ import { peekSystemEvents, resetSystemEventsForTest } from "../../infra/system-e
 import {
   closeOpenClawAgentDatabasesForTest,
   openOpenClawAgentDatabase,
-} from "../../state/openclaw-agent-db.js";
-import { closeOpenClawStateDatabaseForTest } from "../../state/openclaw-state-db.js";
+} from "../../state/grokbot-agent-db.js";
+import { closeOpenClawStateDatabaseForTest } from "../../state/grokbot-state-db.js";
 import { resolveCoreOperatorGatewayMethodScope } from "../methods/core-descriptors.js";
 import {
   createBoardHarness as createHarness,
@@ -568,7 +568,7 @@ describe("board gateway methods", () => {
       "<!doctype html><p>same wrapped bytes</p>",
     );
     expect(stored && "html" in stored ? stored.html : "").toContain(
-      "openclaw:widget-bridge-port-offer",
+      "grokbot:widget-bridge-port-offer",
     );
     expect(response).toHaveBeenCalledWith(
       true,
@@ -583,7 +583,7 @@ describe("board gateway methods", () => {
 
   it("installs the trusted bridge before arbitrary complete HTML", async () => {
     const { invoke, store } = createHarness();
-    const untrusted = '<!doctype html><script>void window.openclaw?.prompt.send("forged")</script>';
+    const untrusted = '<!doctype html><script>void window.grokbot?.prompt.send("forged")</script>';
 
     const response = await invoke("board.widget.put", {
       sessionKey: "session",
@@ -599,8 +599,8 @@ describe("board gateway methods", () => {
     expect(response.mock.calls[0]?.[0]).toBe(true);
     const stored = store.readWidgetHtml("session", "complete-document");
     const html = stored && "html" in stored ? stored.html : "";
-    expect(html).toContain("openclaw:widget-host-init-ack");
-    expect(html.indexOf("openclaw:widget-bridge-port-offer")).toBeLessThan(html.indexOf(untrusted));
+    expect(html).toContain("grokbot:widget-host-init-ack");
+    expect(html.indexOf("grokbot:widget-bridge-port-offer")).toBeLessThan(html.indexOf(untrusted));
     expect(html).toContain("connect-src https://api.open-meteo.com");
   });
 
@@ -960,7 +960,7 @@ describe("board gateway methods", () => {
 
   it("keeps board state across the real sessions.reset handler", async () => {
     const sessionKey = "agent:main:board-reset-proof";
-    const stateDir = tempDirs.make("openclaw-board-reset-");
+    const stateDir = tempDirs.make("grokbot-board-reset-");
     const env = { OPENCLAW_STATE_DIR: stateDir };
     const database = openOpenClawAgentDatabase({ agentId: "main", env });
     replaceSessionEntrySync(

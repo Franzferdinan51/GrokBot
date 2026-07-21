@@ -1,5 +1,5 @@
 import path from "node:path";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import type { PluginInstallRecord } from "../config/types.plugins.js";
 import { isOpenClawOrgNpmSpec } from "../infra/npm-registry-spec.js";
 import {
@@ -410,7 +410,7 @@ export async function repairOpenClawPeerLinksForNpmInstalls(params: {
       );
     } catch (err) {
       params.logger.warn?.(
-        `Could not repair openclaw peer link for "${pluginId}" due to invalid install path: ${String(err)}`,
+        `Could not repair grokbot peer link for "${pluginId}" due to invalid install path: ${String(err)}`,
       );
       continue;
     }
@@ -420,7 +420,7 @@ export async function repairOpenClawPeerLinksForNpmInstalls(params: {
     }
 
     const peerDependencies = readInstalledPackagePeerDependencies(installPath);
-    if (!Object.hasOwn(peerDependencies, "openclaw")) {
+    if (!Object.hasOwn(peerDependencies, "grokbot")) {
       continue;
     }
 
@@ -436,14 +436,14 @@ export async function repairOpenClawPeerLinksForNpmInstalls(params: {
       });
       if (peerLinkRepair.skipped > 0) {
         params.logger.warn?.(
-          `Could not repair openclaw peer link for "${pluginId}" at ${installPath}: ${warnings.join("; ") || "peer link repair was skipped"}`,
+          `Could not repair grokbot peer link for "${pluginId}" at ${installPath}: ${warnings.join("; ") || "peer link repair was skipped"}`,
         );
         continue;
       }
       repaired = !installedPackageNeedsOpenClawPeerLinkRepair(installPath) || repaired;
     } catch (err) {
       params.logger.warn?.(
-        `Could not repair openclaw peer link for "${pluginId}" at ${installPath}: ${String(err)}`,
+        `Could not repair grokbot peer link for "${pluginId}" at ${installPath}: ${String(err)}`,
       );
     }
   }

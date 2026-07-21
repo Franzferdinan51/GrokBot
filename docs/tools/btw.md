@@ -8,7 +8,7 @@ title: "BTW side questions"
 
 `/btw` (alias `/side`) asks a quick side question about the **current
 session** without adding it to conversation history. It is modeled after
-Claude Code's `/btw`, adapted to OpenClaw's Gateway and multi-channel
+Claude Code's `/btw`, adapted to GrokBot's Gateway and multi-channel
 architecture.
 
 ```text

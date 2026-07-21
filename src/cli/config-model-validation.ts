@@ -14,7 +14,7 @@ import {
 import type { loadPreparedModelCatalogOwnerSnapshot } from "../agents/prepared-model-catalog.js";
 import { containsEnvVarReference, resolveConfigEnvVars } from "../config/env-substitution.js";
 import { resolveAgentModelPrimaryValue } from "../config/model-input.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { DEFAULT_AGENT_ID, normalizeAgentId } from "../routing/session-key.js";
 import { formatCliCommand } from "./command-format.js";
 
@@ -490,7 +490,7 @@ function formatModelRefError(
       ? "Unable to resolve authored model reference"
       : error;
   const detail = safeError.endsWith(".") ? safeError : `${safeError}.`;
-  return `Cannot set model reference "${authoredValue}" at ${ref.path}: ${detail} Run ${formatCliCommand("openclaw models list")} to list available models.`;
+  return `Cannot set model reference "${authoredValue}" at ${ref.path}: ${detail} Run ${formatCliCommand("grokbot models list")} to list available models.`;
 }
 
 export async function checkTouchedTextModelRefs(params: {

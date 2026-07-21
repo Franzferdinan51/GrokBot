@@ -47,11 +47,11 @@ vi.mock("../../plugins/official-external-plugin-repair-hints.js", () => ({
           pluginId: channelId,
           channelId,
           label: "Feishu",
-          installSpec: "@openclaw/feishu",
-          installCommand: "openclaw plugins install @openclaw/feishu",
-          doctorFixCommand: "openclaw doctor --fix",
+          installSpec: "@grokbot/feishu",
+          installCommand: "grokbot plugins install @grokbot/feishu",
+          doctorFixCommand: "grokbot doctor --fix",
           repairHint:
-            "Install the official external plugin with: openclaw plugins install @openclaw/feishu, or run: openclaw doctor --fix.",
+            "Install the official external plugin with: grokbot plugins install @grokbot/feishu, or run: grokbot doctor --fix.",
         }
       : null,
 }));
@@ -136,7 +136,7 @@ describe("buildChannelsTable", () => {
           enabled: true,
           state: "warn",
           detail:
-            "plugin not installed - run openclaw plugins install @openclaw/feishu or openclaw doctor --fix",
+            "plugin not installed - run grokbot plugins install @grokbot/feishu or grokbot doctor --fix",
         },
       ],
       details: [],
@@ -163,7 +163,7 @@ describe("buildChannelsTable", () => {
           label: "telegram",
           enabled: true,
           state: "warn",
-          detail: "plugin load failed: dependency tree corrupted; run openclaw doctor --fix",
+          detail: "plugin load failed: dependency tree corrupted; run grokbot doctor --fix",
         },
       ],
       details: [],

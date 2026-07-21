@@ -140,7 +140,7 @@ async function withMockServer(
 }
 
 describe("mock OpenAI response markers", () => {
-  it("echoes dynamic OpenClaw E2E markers", async () => {
+  it("echoes dynamic GrokBot E2E markers", async () => {
     await withMockServer(mockOpenAiPath, {}, async (baseUrl) => {
       for (const marker of ["OPENCLAW_E2E_SEED_0_123", "OPENCLAW_E2E_ANDROID_OK"]) {
         const response = await fetch(`${baseUrl}/v1/responses`, {
@@ -261,7 +261,7 @@ describe("e2e mock and config helper numeric limits", () => {
   });
 
   it("returns a clear error when mock OpenAI cannot append request logs", async () => {
-    const requestLogDirectory = await mkdtemp(join(tmpdir(), "openclaw-mock-request-log-"));
+    const requestLogDirectory = await mkdtemp(join(tmpdir(), "grokbot-mock-request-log-"));
     try {
       await withMockServer(
         mockOpenAiPath,
@@ -287,7 +287,7 @@ describe("e2e mock and config helper numeric limits", () => {
   });
 
   it("returns a clear error when web-search mock cannot append request logs", async () => {
-    const requestLogDirectory = await mkdtemp(join(tmpdir(), "openclaw-web-search-log-"));
+    const requestLogDirectory = await mkdtemp(join(tmpdir(), "grokbot-web-search-log-"));
     try {
       await withMockServer(
         webSearchMockPath,

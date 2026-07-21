@@ -3,10 +3,10 @@ import { spawn, spawnSync, type ChildProcessWithoutNullStreams } from "node:chil
 import { randomUUID } from "node:crypto";
 import path from "node:path";
 import { setTimeout as sleep } from "node:timers/promises";
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
-import { resolveTimerTimeoutMs } from "openclaw/plugin-sdk/number-runtime";
-import { isRecord } from "openclaw/plugin-sdk/string-coerce-runtime";
-import { truncateUtf16Safe } from "openclaw/plugin-sdk/text-utility-runtime";
+import { formatErrorMessage } from "grokbot/plugin-sdk/error-runtime";
+import { resolveTimerTimeoutMs } from "grokbot/plugin-sdk/number-runtime";
+import { isRecord } from "grokbot/plugin-sdk/string-coerce-runtime";
+import { truncateUtf16Safe } from "grokbot/plugin-sdk/text-utility-runtime";
 import {
   appendQaChildOutput,
   appendQaChildOutputTail,
@@ -279,7 +279,7 @@ async function runQaCli(
     const timeout = setTimeout(() => {
       signalQaCliProcessTree(child, "SIGKILL");
       reject(
-        new QaSuiteInfraError("qa_cli_timeout", `qa cli timed out: openclaw ${args.join(" ")}`),
+        new QaSuiteInfraError("qa_cli_timeout", `qa cli timed out: grokbot ${args.join(" ")}`),
       );
     }, timeoutMs);
     child.stdout.on("data", (chunk) => appendQaChildOutput(stdout, chunk));

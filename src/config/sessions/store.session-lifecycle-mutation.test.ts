@@ -10,9 +10,9 @@ import {
 } from "../../infra/kysely-sync.js";
 import { beginSessionWorkAdmission } from "../../sessions/session-lifecycle-admission.js";
 import { onInternalSessionTranscriptUpdate } from "../../sessions/transcript-events.js";
-import type { DB as OpenClawAgentKyselyDatabase } from "../../state/openclaw-agent-db.generated.js";
-import { openOpenClawAgentDatabase } from "../../state/openclaw-agent-db.js";
-import { closeOpenClawAgentDatabasesForTest } from "../../state/openclaw-agent-db.js";
+import type { DB as OpenClawAgentKyselyDatabase } from "../../state/grokbot-agent-db.generated.js";
+import { openOpenClawAgentDatabase } from "../../state/grokbot-agent-db.js";
+import { closeOpenClawAgentDatabasesForTest } from "../../state/grokbot-agent-db.js";
 import { readSessionArchiveContentSync } from "./archive-compression.js";
 import {
   applySessionEntryLifecycleMutation,
@@ -36,7 +36,7 @@ describe("session store lifecycle mutations", () => {
   let storePath: string;
 
   beforeEach(() => {
-    tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-session-lifecycle-mutation-"));
+    tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-session-lifecycle-mutation-"));
     storePath = path.join(tempDir, "agents", "main", "sessions", "sessions.json");
   });
 

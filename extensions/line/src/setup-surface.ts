@@ -5,8 +5,8 @@ import {
   defineTokenCredential,
   mergeAllowFromEntries,
   createSetupTranslator,
-} from "openclaw/plugin-sdk/setup";
-import { normalizeOptionalString } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/setup";
+import { normalizeOptionalString } from "grokbot/plugin-sdk/string-coerce-runtime";
 import { resolveDefaultLineAccountId } from "./accounts.js";
 import {
   isLineConfigured,

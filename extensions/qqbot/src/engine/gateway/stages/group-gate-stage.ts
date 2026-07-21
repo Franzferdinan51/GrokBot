@@ -1,5 +1,5 @@
 // Qqbot plugin module implements group gate stage behavior.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import type { HistoryPort } from "../../adapter/history.port.js";
 import type { QQBotInboundAccess } from "../../adapter/index.js";
 import { classifyCoreCommandForGroup } from "../../commands/command-visibility.js";

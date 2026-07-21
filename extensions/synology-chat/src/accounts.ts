@@ -9,17 +9,17 @@ import {
   listCombinedAccountIds,
   resolveMergedAccountConfig,
   type OpenClawConfig,
-} from "openclaw/plugin-sdk/account-resolution";
-import { resolveDangerousNameMatchingEnabled } from "openclaw/plugin-sdk/dangerous-name-runtime";
-import { parseStrictInteger } from "openclaw/plugin-sdk/number-runtime";
-import { normalizeStringEntries } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/account-resolution";
+import { resolveDangerousNameMatchingEnabled } from "grokbot/plugin-sdk/dangerous-name-runtime";
+import { parseStrictInteger } from "grokbot/plugin-sdk/number-runtime";
+import { normalizeStringEntries } from "grokbot/plugin-sdk/string-coerce-runtime";
 import type {
   SynologyChatChannelConfig,
   ResolvedSynologyChatAccount,
   SynologyWebhookPathSource,
 } from "./types.js";
 
-/** Extract the channel config from the full OpenClaw config object. */
+/** Extract the channel config from the full GrokBot config object. */
 function getChannelConfig(cfg: OpenClawConfig): SynologyChatChannelConfig | undefined {
   return cfg?.channels?.["synology-chat"] as SynologyChatChannelConfig | undefined;
 }
@@ -132,7 +132,7 @@ export function resolveAccount(
   const envNasHost = process.env.SYNOLOGY_NAS_HOST ?? "localhost";
   const envAllowedUserIds = process.env.SYNOLOGY_ALLOWED_USER_IDS ?? "";
   const envRateLimitValue = parseRateLimitPerMinute(process.env.SYNOLOGY_RATE_LIMIT);
-  const envBotName = process.env.OPENCLAW_BOT_NAME ?? "OpenClaw";
+  const envBotName = process.env.OPENCLAW_BOT_NAME ?? "GrokBot";
   const webhookPathSource = resolveWebhookPathSource({ accountId: id, channelCfg, rawAccount });
   const dangerouslyAllowInheritedWebhookPath =
     rawAccount.dangerouslyAllowInheritedWebhookPath ??

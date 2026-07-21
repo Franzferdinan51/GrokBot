@@ -1,5 +1,5 @@
 // Tracks active reply runs so stop, queue, and status commands can coordinate.
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+import { normalizeOptionalString } from "@grokbot/normalization-core/string-coerce";
 import {
   createAgentRunRestartAbortError,
   isAgentRunRestartAbortReason,
@@ -236,7 +236,7 @@ type ReplyRunState = {
   followupAdmissionBarriersByKey: Map<string, ReplyRunFollowupAdmissionBarrier>;
 };
 
-const REPLY_RUN_STATE_KEY = Symbol.for("openclaw.replyRunRegistry");
+const REPLY_RUN_STATE_KEY = Symbol.for("grokbot.replyRunRegistry");
 
 const replyRunState = resolveGlobalSingleton<ReplyRunState>(REPLY_RUN_STATE_KEY, () => ({
   activeRunsByKey: new Map<string, ReplyOperation>(),
@@ -1320,7 +1320,7 @@ const replyRunRegistryTestApi = {
 };
 
 if (process.env.VITEST === "true" || process.env.NODE_ENV === "test") {
-  (globalThis as Record<PropertyKey, unknown>)[Symbol.for("openclaw.replyRunRegistryTestApi")] =
+  (globalThis as Record<PropertyKey, unknown>)[Symbol.for("grokbot.replyRunRegistryTestApi")] =
     replyRunRegistryTestApi;
 }
 /* oxlint-disable max-lines -- TODO: split this grandfathered oversized file. */

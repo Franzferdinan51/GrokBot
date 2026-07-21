@@ -3,7 +3,7 @@ import type { ConversationRecallContext } from "../agents/conversation-recall.ty
 import type { ToolFsPolicy } from "../agents/tool-fs-policy.types.js";
 import type { AnyAgentTool } from "../agents/tools/common.js";
 import type { ConversationReadInvocationOrigin } from "../channels/plugins/conversation-read-origin.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import type { HookEntry } from "../hooks/types.js";
 import type { DeliveryContext } from "../utils/delivery-context.types.js";
 
@@ -35,7 +35,7 @@ export type OpenClawPluginToolContext = {
   /**
    * Runtime-supplied active model metadata for informational use, diagnostics,
    * and plugin-owned policy decisions. This is not a security boundary against
-   * the local operator, installed plugin code, or a modified OpenClaw runtime.
+   * the local operator, installed plugin code, or a modified GrokBot runtime.
    */
   activeModel?: OpenClawPluginActiveModelContext;
   browser?: {

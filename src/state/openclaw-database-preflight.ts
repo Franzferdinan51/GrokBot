@@ -8,15 +8,15 @@ import {
 } from "../infra/kysely-sync.js";
 import { requireNodeSqlite } from "../infra/node-sqlite.js";
 import { readSqliteUserVersion } from "../infra/sqlite-user-version.js";
-import type { OpenClawSchemaVersions } from "./openclaw-schema-versions.js";
-import type { DB as OpenClawStateKyselyDatabase } from "./openclaw-state-db.generated.js";
+import type { OpenClawSchemaVersions } from "./grokbot-schema-versions.js";
+import type { DB as OpenClawStateKyselyDatabase } from "./grokbot-state-db.generated.js";
 import {
   OPENCLAW_DATABASE_SCHEMA_DOCS_URL,
   OPENCLAW_SQLITE_BUSY_TIMEOUT_MS,
-} from "./openclaw-state-db.js";
-import { resolveOpenClawStateSqlitePath } from "./openclaw-state-db.paths.js";
+} from "./grokbot-state-db.js";
+import { resolveOpenClawStateSqlitePath } from "./grokbot-state-db.paths.js";
 
-export { OPENCLAW_DATABASE_SCHEMA_DOCS_URL } from "./openclaw-state-db.js";
+export { OPENCLAW_DATABASE_SCHEMA_DOCS_URL } from "./grokbot-state-db.js";
 
 export type IncompatibleOpenClawDatabase = {
   kind: "agent" | "state";
@@ -44,7 +44,7 @@ type AgentRegistryDatabase = Pick<OpenClawStateKyselyDatabase, "agent_databases"
 export class OpenClawDatabaseSchemaPreflightError extends Error {
   constructor(readonly incompatibleDatabases: readonly IncompatibleOpenClawDatabase[]) {
     super(
-      `Gateway refused startup because ${incompatibleDatabases.length} OpenClaw database schema(s) are newer than this build. See ${OPENCLAW_DATABASE_SCHEMA_DOCS_URL}.`,
+      `Gateway refused startup because ${incompatibleDatabases.length} GrokBot database schema(s) are newer than this build. See ${OPENCLAW_DATABASE_SCHEMA_DOCS_URL}.`,
     );
     this.name = "OpenClawDatabaseSchemaPreflightError";
   }

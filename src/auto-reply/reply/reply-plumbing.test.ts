@@ -1,6 +1,6 @@
 // Tests reply plumbing helpers that connect payloads, routes, and delivery modes.
 
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { afterEach, describe, expect, it } from "vitest";
 import type { SubagentRunRecord } from "../../agents/subagent-registry.js";
 import type { ChannelPlugin } from "../../channels/plugins/types.public.js";
@@ -463,7 +463,7 @@ describe("subagents utils", () => {
     const run = {
       ...baseRun,
       label: [
-        "OpenClaw runtime context (internal):",
+        "GrokBot runtime context (internal):",
         "This context is runtime-generated, not user-authored. Keep internal details private.",
         "",
         "[Internal task completion event]",

@@ -1,4 +1,4 @@
-// OpenClaw npm release check tests validate package release checks.
+// GrokBot npm release check tests validate package release checks.
 import { execFileSync } from "node:child_process";
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -26,7 +26,7 @@ import {
   resolveNpmReleaseCheckCommandTimeoutMs,
   runNpmReleaseCheckCommand,
   shouldSkipPackedTarballValidation,
-} from "../scripts/openclaw-npm-release-check.ts";
+} from "../scripts/grokbot-npm-release-check.ts";
 
 const REQUIRED_PACKED_PATHS = [
   "npm-shrinkwrap.json",
@@ -310,13 +310,13 @@ describe("resolveNpmCommandInvocation", () => {
     expect(
       resolveNpmCommandInvocation({
         npmExecPath: "/usr/local/lib/node_modules/npm/bin/npm-cli.js",
-        npmArgs: ["view", "openclaw", "version"],
+        npmArgs: ["view", "grokbot", "version"],
         nodeExecPath: "/usr/local/bin/node",
         platform: "linux",
       }),
     ).toEqual({
       command: "/usr/local/bin/node",
-      args: ["/usr/local/lib/node_modules/npm/bin/npm-cli.js", "view", "openclaw", "version"],
+      args: ["/usr/local/lib/node_modules/npm/bin/npm-cli.js", "view", "grokbot", "version"],
     });
   });
 
@@ -338,13 +338,13 @@ describe("resolveNpmCommandInvocation", () => {
     expect(
       resolveNpmCommandInvocation({
         comSpec: "C:\\Windows\\System32\\cmd.exe",
-        npmArgs: ["view", "openclaw@beta", "version"],
+        npmArgs: ["view", "grokbot@beta", "version"],
         npmExecPath: "",
         platform: "win32",
       }),
     ).toEqual({
       command: "C:\\Windows\\System32\\cmd.exe",
-      args: ["/d", "/s", "/c", "npm.cmd view openclaw@beta version"],
+      args: ["/d", "/s", "/c", "npm.cmd view grokbot@beta version"],
       windowsVerbatimArguments: true,
     });
   });
@@ -353,13 +353,13 @@ describe("resolveNpmCommandInvocation", () => {
     expect(
       resolveNpmCommandInvocation({
         comSpec: "C:\\Windows\\System32\\cmd.exe",
-        npmArgs: ["view", "openclaw@beta", "version"],
+        npmArgs: ["view", "grokbot@beta", "version"],
         npmExecPath: "npm",
         platform: "win32",
       }),
     ).toEqual({
       command: "C:\\Windows\\System32\\cmd.exe",
-      args: ["/d", "/s", "/c", "npm.cmd view openclaw@beta version"],
+      args: ["/d", "/s", "/c", "npm.cmd view grokbot@beta version"],
       windowsVerbatimArguments: true,
     });
   });
@@ -368,7 +368,7 @@ describe("resolveNpmCommandInvocation", () => {
     expect(
       resolveNpmCommandInvocation({
         comSpec: "C:\\Windows\\System32\\cmd.exe",
-        npmArgs: ["install", "-g", "C:\\tmp\\openclaw package.tgz"],
+        npmArgs: ["install", "-g", "C:\\tmp\\grokbot package.tgz"],
         npmExecPath: "C:\\Program Files\\nodejs\\npm.cmd",
         nodeExecPath: "C:\\Program Files\\nodejs\\node.exe",
         platform: "win32",
@@ -379,7 +379,7 @@ describe("resolveNpmCommandInvocation", () => {
         "/d",
         "/s",
         "/c",
-        '""C:\\Program Files\\nodejs\\npm.cmd" install -g "C:\\tmp\\openclaw package.tgz""',
+        '""C:\\Program Files\\nodejs\\npm.cmd" install -g "C:\\tmp\\grokbot package.tgz""',
       ],
       windowsVerbatimArguments: true,
     });
@@ -400,7 +400,7 @@ describe("resolveNpmCommandInvocation", () => {
 
   if (process.platform === "win32") {
     it("executes fallback npm.cmd through cmd.exe on Windows", () => {
-      const dir = mkdtempSync(join(tmpdir(), "openclaw-fake-npm-cmd-"));
+      const dir = mkdtempSync(join(tmpdir(), "grokbot-fake-npm-cmd-"));
       try {
         const outputPath = join(dir, "args.json");
         writeFileSync(
@@ -417,7 +417,7 @@ describe("resolveNpmCommandInvocation", () => {
 
         const invocation = resolveNpmCommandInvocation({
           comSpec: process.env.ComSpec ?? "cmd.exe",
-          npmArgs: ["view", "openclaw@beta", "version"],
+          npmArgs: ["view", "grokbot@beta", "version"],
           npmExecPath: "",
           platform: "win32",
         });
@@ -433,7 +433,7 @@ describe("resolveNpmCommandInvocation", () => {
 
         expect(JSON.parse(readFileSync(outputPath, "utf8"))).toEqual([
           "view",
-          "openclaw@beta",
+          "grokbot@beta",
           "version",
         ]);
       } finally {
@@ -502,8 +502,8 @@ describe("resolveNpmReleaseCheckCommandTimeoutMs", () => {
 
 describe("parseNpmPackJsonOutput", () => {
   it("parses a plain npm pack JSON array", () => {
-    expect(parseNpmPackJsonOutput('[{"filename":"openclaw.tgz","files":[]}]')).toEqual([
-      { filename: "openclaw.tgz", files: [] },
+    expect(parseNpmPackJsonOutput('[{"filename":"grokbot.tgz","files":[]}]')).toEqual([
+      { filename: "grokbot.tgz", files: [] },
     ]);
   });
 
@@ -511,23 +511,23 @@ describe("parseNpmPackJsonOutput", () => {
     const stdout = [
       'npm warn Unknown project config "node-linker".',
       "",
-      "> openclaw@2026.3.23 prepack",
+      "> grokbot@2026.3.23 prepack",
       "> pnpm build && pnpm ui:build",
       "",
       "[copy-hook-metadata] Copied 4 hook metadata files.",
-      '[{"filename":"openclaw.tgz","files":[{"path":"dist/control-ui/index.html"}]}]',
+      '[{"filename":"grokbot.tgz","files":[{"path":"dist/control-ui/index.html"}]}]',
     ].join("\n");
 
     expect(parseNpmPackJsonOutput(stdout)).toEqual([
       {
-        filename: "openclaw.tgz",
+        filename: "grokbot.tgz",
         files: [{ path: "dist/control-ui/index.html" }],
       },
     ]);
   });
 
   it("returns null when no JSON payload is present", () => {
-    expect(parseNpmPackJsonOutput("> openclaw@2026.3.23 prepack")).toBeNull();
+    expect(parseNpmPackJsonOutput("> grokbot@2026.3.23 prepack")).toBeNull();
   });
 });
 
@@ -620,7 +620,7 @@ describe("collectForbiddenPackedPathErrors", () => {
   });
 
   it("rejects root dist chunks that still reference the private qa lab", () => {
-    const rootDir = mkdtempSync(join(tmpdir(), "openclaw-pack-private-qa-"));
+    const rootDir = mkdtempSync(join(tmpdir(), "grokbot-pack-private-qa-"));
 
     try {
       mkdirSync(join(rootDir, "dist"), { recursive: true });
@@ -640,7 +640,7 @@ describe("collectForbiddenPackedPathErrors", () => {
   });
 
   it("rejects private QA paths in the generated dist inventory", () => {
-    const rootDir = mkdtempSync(join(tmpdir(), "openclaw-pack-inventory-"));
+    const rootDir = mkdtempSync(join(tmpdir(), "grokbot-pack-inventory-"));
 
     try {
       mkdirSync(join(rootDir, "dist"), { recursive: true });
@@ -805,11 +805,11 @@ describe("collectReleasePackageMetadataErrors", () => {
   it("validates the expected npm package metadata", () => {
     expect(
       collectReleasePackageMetadataErrors({
-        name: "openclaw",
+        name: "grokbot",
         description: "Multi-channel AI gateway with extensible messaging integrations",
         license: "MIT",
-        repository: { url: "git+https://github.com/openclaw/openclaw.git" },
-        bin: { openclaw: "openclaw.mjs" },
+        repository: { url: "git+https://github.com/grokbot/grokbot.git" },
+        bin: { grokbot: "grokbot.mjs" },
       }),
     ).toStrictEqual([]);
   });
@@ -817,11 +817,11 @@ describe("collectReleasePackageMetadataErrors", () => {
   it("rejects node-llama-cpp as a peer dependency", () => {
     expect(
       collectReleasePackageMetadataErrors({
-        name: "openclaw",
+        name: "grokbot",
         description: "Multi-channel AI gateway with extensible messaging integrations",
         license: "MIT",
-        repository: { url: "git+https://github.com/openclaw/openclaw.git" },
-        bin: { openclaw: "openclaw.mjs" },
+        repository: { url: "git+https://github.com/grokbot/grokbot.git" },
+        bin: { grokbot: "grokbot.mjs" },
         peerDependencies: { "node-llama-cpp": "3.18.1" },
         peerDependenciesMeta: { "node-llama-cpp": { optional: true } },
       }),
@@ -834,11 +834,11 @@ describe("collectReleasePackageMetadataErrors", () => {
   it("rejects node-llama-cpp as a direct runtime dependency", () => {
     expect(
       collectReleasePackageMetadataErrors({
-        name: "openclaw",
+        name: "grokbot",
         description: "Multi-channel AI gateway with extensible messaging integrations",
         license: "MIT",
-        repository: { url: "git+https://github.com/openclaw/openclaw.git" },
-        bin: { openclaw: "openclaw.mjs" },
+        repository: { url: "git+https://github.com/grokbot/grokbot.git" },
+        bin: { grokbot: "grokbot.mjs" },
         dependencies: { "node-llama-cpp": "3.18.1" },
       }),
     ).toContain('package.json dependencies["node-llama-cpp"] must be omitted; keep it optional.');
@@ -847,26 +847,26 @@ describe("collectReleasePackageMetadataErrors", () => {
   it("rejects local fs-safe dependency specs for npm release", () => {
     expect(
       collectReleasePackageMetadataErrors({
-        name: "openclaw",
+        name: "grokbot",
         description: "Multi-channel AI gateway with extensible messaging integrations",
         license: "MIT",
-        repository: { url: "git+https://github.com/openclaw/openclaw.git" },
-        bin: { openclaw: "openclaw.mjs" },
-        dependencies: { "@openclaw/fs-safe": "link:../fs-safe" },
+        repository: { url: "git+https://github.com/grokbot/grokbot.git" },
+        bin: { grokbot: "grokbot.mjs" },
+        dependencies: { "@grokbot/fs-safe": "link:../fs-safe" },
       }),
     ).toContain(
-      'package.json dependencies["@openclaw/fs-safe"] must use a published semver range before npm release; found "link:../fs-safe".',
+      'package.json dependencies["@grokbot/fs-safe"] must use a published semver range before npm release; found "link:../fs-safe".',
     );
   });
 
   it("rejects node-llama-cpp as an optional dependency", () => {
     expect(
       collectReleasePackageMetadataErrors({
-        name: "openclaw",
+        name: "grokbot",
         description: "Multi-channel AI gateway with extensible messaging integrations",
         license: "MIT",
-        repository: { url: "git+https://github.com/openclaw/openclaw.git" },
-        bin: { openclaw: "openclaw.mjs" },
+        repository: { url: "git+https://github.com/grokbot/grokbot.git" },
+        bin: { grokbot: "grokbot.mjs" },
         optionalDependencies: { "node-llama-cpp": "3.18.1" },
       }),
     ).toContain(

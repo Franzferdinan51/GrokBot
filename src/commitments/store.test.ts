@@ -3,7 +3,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { closeOpenClawStateDatabaseForTest } from "../state/openclaw-state-db.js";
+import { closeOpenClawStateDatabaseForTest } from "../state/grokbot-state-db.js";
 import { captureEnv, setTestEnvValue } from "../test-utils/env.js";
 import {
   listCommitments,
@@ -33,7 +33,7 @@ describe("commitment SQLite store", () => {
   });
 
   async function useTempStateDir(): Promise<string> {
-    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-commitments-store-"));
+    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-commitments-store-"));
     tmpDirs.push(tmpDir);
     stateDirEnvSnapshot ??= captureEnv(["OPENCLAW_STATE_DIR"]);
     setTestEnvValue("OPENCLAW_STATE_DIR", tmpDir);

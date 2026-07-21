@@ -1,18 +1,18 @@
 // Xai plugin module implements tool auth shared behavior.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { canResolveEnvSecretRefInReadOnlyPath } from "openclaw/plugin-sdk/extension-shared";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { canResolveEnvSecretRefInReadOnlyPath } from "grokbot/plugin-sdk/extension-shared";
 import {
   coerceSecretRef,
   resolveNonEnvSecretRefApiKeyMarker,
-} from "openclaw/plugin-sdk/provider-auth";
+} from "grokbot/plugin-sdk/provider-auth";
 import {
   readProviderEnvValue,
   resolveProviderWebSearchPluginConfig,
-} from "openclaw/plugin-sdk/provider-web-search";
+} from "grokbot/plugin-sdk/provider-web-search";
 import {
   normalizeSecretInputString,
   resolveSecretInputString,
-} from "openclaw/plugin-sdk/secret-input";
+} from "grokbot/plugin-sdk/secret-input";
 
 type XaiFallbackAuth = {
   apiKey: string;

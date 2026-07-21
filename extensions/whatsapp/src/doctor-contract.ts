@@ -3,10 +3,10 @@ import { isDeepStrictEqual } from "node:util";
 import type {
   ChannelDoctorConfigMutation,
   ChannelDoctorLegacyConfigRule,
-} from "openclaw/plugin-sdk/channel-contract";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { mergeDeep } from "openclaw/plugin-sdk/plugin-config-runtime";
-import { asObjectRecord, defineChannelAliasMigration } from "openclaw/plugin-sdk/runtime-doctor";
+} from "grokbot/plugin-sdk/channel-contract";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { mergeDeep } from "grokbot/plugin-sdk/plugin-config-runtime";
+import { asObjectRecord, defineChannelAliasMigration } from "grokbot/plugin-sdk/runtime-doctor";
 import { normalizeCompatibilityConfig as normalizeAckReactionConfig } from "./doctor.js";
 
 // WhatsApp's nested streaming schema is delivery-only ({chunkMode, block});
@@ -28,12 +28,12 @@ export const legacyConfigRules: ChannelDoctorLegacyConfigRule[] = [
   {
     path: ["channels", "whatsapp", "exposeErrorText"],
     message:
-      'channels.whatsapp.exposeErrorText is retired and ignored. Run "openclaw doctor --fix".',
+      'channels.whatsapp.exposeErrorText is retired and ignored. Run "grokbot doctor --fix".',
   },
   {
     path: ["channels", "whatsapp", "accounts"],
     message:
-      'channels.whatsapp.accounts.<id>.exposeErrorText is retired and ignored. Run "openclaw doctor --fix".',
+      'channels.whatsapp.accounts.<id>.exposeErrorText is retired and ignored. Run "grokbot doctor --fix".',
     match: (value) => Object.values(asObjectRecord(value) ?? {}).some(hasExposeErrorText),
   },
 ];

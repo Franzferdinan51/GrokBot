@@ -5,7 +5,7 @@ import {
   executeSqliteQueryTakeFirstSync,
 } from "../../infra/kysely-sync.js";
 import { redactSecrets } from "../../logging/redact.js";
-import type { OpenClawAgentDatabase } from "../../state/openclaw-agent-db.js";
+import type { OpenClawAgentDatabase } from "../../state/grokbot-agent-db.js";
 import type {
   TranscriptEvent,
   TranscriptMessageAppendOptions,

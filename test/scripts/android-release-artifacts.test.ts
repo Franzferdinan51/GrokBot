@@ -28,7 +28,7 @@ function run(args: string[], env: NodeJS.ProcessEnv = {}) {
 }
 
 function fakeApkSigner(certificateSha256: string, signerCount = 1) {
-  const tempRoot = tempRoots.make("openclaw-apksigner-");
+  const tempRoot = tempRoots.make("grokbot-apksigner-");
   const buildToolsDir = path.join(tempRoot, "build-tools", "36.0.0");
   fs.mkdirSync(buildToolsDir, { recursive: true });
   const apkSignerPath = path.join(buildToolsDir, "apksigner");
@@ -41,7 +41,7 @@ function fakeApkSigner(certificateSha256: string, signerCount = 1) {
     `#!/bin/sh\nprintf '%s\\n' ${signerLines.map((line) => `'${line}'`).join(" ")}\n`,
   );
   fs.chmodSync(apkSignerPath, 0o755);
-  const apkPath = path.join(tempRoot, "OpenClaw-Android.apk");
+  const apkPath = path.join(tempRoot, "GrokBot-Android.apk");
   fs.writeFileSync(apkPath, "fake apk bytes");
   return { apkPath, sdkRoot: tempRoot };
 }

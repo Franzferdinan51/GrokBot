@@ -1,4 +1,4 @@
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import type { ClawHubTrustErrorCode } from "../infra/clawhub-install-trust.js";
 import type { UpdateChannel } from "../infra/update-channels.js";
 import { CLAWHUB_INSTALL_ERROR_CODE } from "./clawhub-error-codes.js";
@@ -31,7 +31,7 @@ export function formatNewerExactPinnedNpmDefaultLineMessage(params: {
   return (
     `${params.pluginId} is pinned to ${params.effectiveSpec} (installed ${params.currentVersion}); ` +
     `registry ${params.newer.registryLine} resolves to ${params.newer.version}. ` +
-    `Pass \`openclaw plugins update ${params.newer.packageName}@${params.newer.registryLine}\` to follow that registry line.`
+    `Pass \`grokbot plugins update ${params.newer.packageName}@${params.newer.registryLine}\` to follow that registry line.`
   );
 }
 

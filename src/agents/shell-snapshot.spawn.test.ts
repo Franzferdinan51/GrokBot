@@ -12,7 +12,7 @@ const { killProcessTreeMock, spawnMock } = vi.hoisted(() => ({
 }));
 
 vi.mock("node:child_process", async () => {
-  const { mockNodeBuiltinModule } = await import("openclaw/plugin-sdk/test-node-mocks");
+  const { mockNodeBuiltinModule } = await import("grokbot/plugin-sdk/test-node-mocks");
   return mockNodeBuiltinModule(
     () => vi.importActual<typeof import("node:child_process")>("node:child_process"),
     { spawn: spawnMock },
@@ -44,8 +44,8 @@ describe.skipIf(process.platform === "win32")("shell snapshot subprocesses", () 
       return child;
     });
 
-    const home = tempDirs.make("openclaw-snapshot-spawn-home-");
-    const stateDir = tempDirs.make("openclaw-snapshot-spawn-state-");
+    const home = tempDirs.make("grokbot-snapshot-spawn-home-");
+    const stateDir = tempDirs.make("grokbot-snapshot-spawn-state-");
     setTestEnvValue("HOME", home);
     setTestEnvValue("OPENCLAW_STATE_DIR", stateDir);
 

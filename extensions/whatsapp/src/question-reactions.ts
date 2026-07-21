@@ -1,9 +1,9 @@
 // WhatsApp transport binding for numbered ask_user reactions.
 import type { WAMessage } from "baileys";
-import type { OutboundDeliveryResult } from "openclaw/plugin-sdk/channel-send-result";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { questionGatewayRuntime } from "openclaw/plugin-sdk/question-gateway-runtime";
-import type { ReplyPayload } from "openclaw/plugin-sdk/reply-runtime";
+import type { OutboundDeliveryResult } from "grokbot/plugin-sdk/channel-send-result";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { questionGatewayRuntime } from "grokbot/plugin-sdk/question-gateway-runtime";
+import type { ReplyPayload } from "grokbot/plugin-sdk/reply-runtime";
 import { resolveWhatsAppAccount } from "./accounts.js";
 
 const TARGET_TTL_MS = 24 * 60 * 60 * 1_000;

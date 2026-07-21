@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
-import type { PluginRuntime } from "openclaw/plugin-sdk/core";
-import type { PluginStateSyncKeyedStore } from "openclaw/plugin-sdk/plugin-state-runtime";
+import type { PluginRuntime } from "grokbot/plugin-sdk/core";
+import type { PluginStateSyncKeyedStore } from "grokbot/plugin-sdk/plugin-state-runtime";
 
 type DiscussionBindingGeneration = {
   destinationIdentity: string;

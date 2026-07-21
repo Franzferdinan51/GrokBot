@@ -4,8 +4,8 @@ import {
   type ChannelIngressQueue,
   type ChannelIngressMonitorDeliveryResult,
   type ChannelIngressMonitorLifecycle,
-} from "openclaw/plugin-sdk/channel-outbound";
-import { collectErrorGraphCandidates, formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
+} from "grokbot/plugin-sdk/channel-outbound";
+import { collectErrorGraphCandidates, formatErrorMessage } from "grokbot/plugin-sdk/error-runtime";
 import { GoogleChatEventPayloadError, parseGoogleChatInboundPayload } from "./monitor-event.js";
 import { getGoogleChatRuntime } from "./runtime.js";
 import type { GoogleChatEvent } from "./types.js";

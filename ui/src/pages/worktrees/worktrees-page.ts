@@ -18,7 +18,7 @@ import { renderSettingsWorkspace } from "../../components/settings-workspace.ts"
 import { t } from "../../i18n/index.ts";
 import { formatRelativeTimestamp } from "../../lib/format.ts";
 import { searchForSession } from "../../lib/sessions/index.ts";
-import { OpenClawLightDomElement } from "../../lit/openclaw-element.ts";
+import { OpenClawLightDomElement } from "../../lit/grokbot-element.ts";
 import { SubscriptionsController } from "../../lit/subscriptions-controller.ts";
 
 type WorktreesListResult = { worktrees: WorktreeRecord[] };
@@ -490,6 +490,6 @@ class WorktreesPage extends OpenClawLightDomElement {
   }
 }
 
-if (!customElements.get("openclaw-worktrees-page")) {
-  customElements.define("openclaw-worktrees-page", WorktreesPage);
+if (!customElements.get("grokbot-worktrees-page")) {
+  customElements.define("grokbot-worktrees-page", WorktreesPage);
 }

@@ -2,9 +2,9 @@
  * Tests shared gateway auth behavior across config method updates.
  */
 
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import type { RestartSentinelPayload } from "../../infra/restart-sentinel.js";
 import { resetPluginRuntimeStateForTest, setActivePluginRegistry } from "../../plugins/runtime.js";
 import { createTestRegistry } from "../../test-utils/channel-plugins.js";
@@ -33,13 +33,13 @@ vi.mock("../../config/config.js", async () => {
     await vi.importActual<typeof import("../../config/config.js")>("../../config/config.js");
   return {
     ...actual,
-    createConfigIO: () => ({ configPath: "/tmp/openclaw.json" }),
+    createConfigIO: () => ({ configPath: "/tmp/grokbot.json" }),
     writeConfigFile: writeConfigFileMock,
     replaceConfigFile: async (params: { nextConfig: OpenClawConfig; writeOptions?: unknown }) => {
       await writeConfigFileMock(params.nextConfig, params.writeOptions);
       const persistedConfig = persistedConfigResultMock(params.nextConfig);
       return {
-        path: "/tmp/openclaw.json",
+        path: "/tmp/grokbot.json",
         previousHash: "base-hash",
         snapshot: createConfigWriteSnapshot(params.nextConfig),
         nextConfig: persistedConfig,
@@ -55,7 +55,7 @@ vi.mock("../../config/io.js", async () => {
   const actual = await vi.importActual<typeof import("../../config/io.js")>("../../config/io.js");
   return {
     ...actual,
-    createConfigIO: () => ({ configPath: "/tmp/openclaw.json" }),
+    createConfigIO: () => ({ configPath: "/tmp/grokbot.json" }),
     readConfigFileSnapshotForWrite: readConfigFileSnapshotForWriteMock,
   };
 });
@@ -251,7 +251,7 @@ describe("config shared auth disconnects", () => {
       true,
       {
         ok: true,
-        path: "/tmp/openclaw.json",
+        path: "/tmp/grokbot.json",
         // Ack hash from the persisted write; equals what config.get reports.
         hash: "next-hash",
         config: persistedConfig,

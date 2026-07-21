@@ -1,19 +1,19 @@
 // Qa Lab plugin module implements suite runtime agent session behavior.
 import path from "node:path";
 import { setTimeout as sleep } from "node:timers/promises";
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
+import { formatErrorMessage } from "grokbot/plugin-sdk/error-runtime";
 import {
   formatSqliteSessionFileMarker,
   listSessionEntries,
   loadTranscriptEventsSync,
   resolveStorePath,
   upsertSessionEntry,
-} from "openclaw/plugin-sdk/session-store-runtime";
-import { appendSessionTranscriptMessageByIdentity } from "openclaw/plugin-sdk/session-transcript-runtime";
+} from "grokbot/plugin-sdk/session-store-runtime";
+import { appendSessionTranscriptMessageByIdentity } from "grokbot/plugin-sdk/session-transcript-runtime";
 import {
   isRecord,
   normalizeOptionalString as readNonEmptyString,
-} from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/string-coerce-runtime";
 import {
   createDirectReplyTranscriptSentinelScanner,
   extractGatewayMessageText,

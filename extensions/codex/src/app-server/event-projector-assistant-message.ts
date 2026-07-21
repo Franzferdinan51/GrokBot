@@ -1,8 +1,8 @@
 import {
   formatErrorMessage,
   type EmbeddedRunAttemptParams,
-} from "openclaw/plugin-sdk/agent-harness-runtime";
-import type { AssistantMessage, Usage } from "openclaw/plugin-sdk/llm";
+} from "grokbot/plugin-sdk/agent-harness-runtime";
+import type { AssistantMessage, Usage } from "grokbot/plugin-sdk/llm";
 import { resolveCodexLocalRuntimeAttribution } from "./local-runtime-attribution.js";
 
 export type AssistantMessageOptions = {

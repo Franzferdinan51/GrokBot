@@ -9,8 +9,8 @@ import {
   GroupPolicySchema,
   MarkdownConfigSchema,
   MentionPatternsPolicySchema,
-} from "openclaw/plugin-sdk/channel-config-schema";
-import { buildSecretInputSchema } from "openclaw/plugin-sdk/secret-input";
+} from "grokbot/plugin-sdk/channel-config-schema";
+import { buildSecretInputSchema } from "grokbot/plugin-sdk/secret-input";
 import { z } from "zod";
 import { matrixChannelConfigUiHints } from "./config-ui-hints.js";
 

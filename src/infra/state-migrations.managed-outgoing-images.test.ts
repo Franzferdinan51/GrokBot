@@ -14,7 +14,7 @@ import type { ManagedImageRecordDatabase } from "../gateway/managed-image-record
 import {
   closeOpenClawStateDatabaseForTest,
   openOpenClawStateDatabase,
-} from "../state/openclaw-state-db.js";
+} from "../state/grokbot-state-db.js";
 import { executeSqliteQueryTakeFirstSync, getNodeSqliteKysely } from "./kysely-sync.js";
 import {
   detectLegacyManagedOutgoingImages,

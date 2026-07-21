@@ -1,7 +1,7 @@
 // Discord plugin module implements native command dispatch behavior.
-import type { ChatCommandDefinition, CommandArgs } from "openclaw/plugin-sdk/command-auth-native";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import type { ResolvedAgentRoute } from "openclaw/plugin-sdk/routing";
+import type { ChatCommandDefinition, CommandArgs } from "grokbot/plugin-sdk/command-auth-native";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import type { ResolvedAgentRoute } from "grokbot/plugin-sdk/routing";
 import type {
   ButtonInteraction,
   CommandInteraction,

@@ -1,15 +1,15 @@
 // Memory Host SDK helper module supports fs utils behavior.
-import { configureFsSafePython } from "@openclaw/fs-safe/config";
+import { configureFsSafePython } from "@grokbot/fs-safe/config";
 // fs-safe facade with Python validation disabled by default for this package's
 // host-side memory file operations.
-export { root } from "@openclaw/fs-safe/root";
-export { isPathInside, isPathInsideWithRealpath } from "@openclaw/fs-safe/path";
+export { root } from "@grokbot/fs-safe/root";
+export { isPathInside, isPathInsideWithRealpath } from "@grokbot/fs-safe/path";
 export {
   assertNoSymlinkParents,
   readRegularFile,
   statRegularFile,
-} from "@openclaw/fs-safe/advanced";
-export { walkDirectory, type WalkDirectoryEntry } from "@openclaw/fs-safe/walk";
+} from "@grokbot/fs-safe/advanced";
+export { walkDirectory, type WalkDirectoryEntry } from "@grokbot/fs-safe/walk";
 
 const hasPythonModeOverride =
   process.env.FS_SAFE_PYTHON_MODE != null || process.env.OPENCLAW_FS_SAFE_PYTHON_MODE != null;

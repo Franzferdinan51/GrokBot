@@ -4,7 +4,7 @@ import { property, query, state } from "lit/decorators.js";
 import { modalApprovalQueue } from "../app/approval-presentation.ts";
 import type { ExecApprovalDecision, ExecApprovalRequest } from "../app/exec-approval.ts";
 import { t } from "../i18n/index.ts";
-import { OpenClawLightDomContentsElement } from "../lit/openclaw-element.ts";
+import { OpenClawLightDomContentsElement } from "../lit/grokbot-element.ts";
 import {
   approvalRemainingLabel,
   approvalTitle,
@@ -90,7 +90,7 @@ function shortcutDecision(event: KeyboardEvent): ExecApprovalDecision | null {
 
 class ExecApproval extends OpenClawLightDomContentsElement {
   @property({ attribute: false }) props?: ExecApprovalProps;
-  @query("openclaw-modal-dialog") private dialog?: OpenClawModalDialog;
+  @query("grokbot-modal-dialog") private dialog?: OpenClawModalDialog;
   @state() private selectedApprovalId: string | null = null;
   @state() private forceShowAll = false;
 
@@ -157,7 +157,7 @@ class ExecApproval extends OpenClawLightDomContentsElement {
       }
     };
     return html`
-      <openclaw-modal-dialog
+      <grokbot-modal-dialog
         label=${approvalTitle(active)}
         description=${approvalRemainingLabel(active.expiresAtMs, props.nowMs)}
         @keydown=${(event: KeyboardEvent) => this.handleKeydown(event, active)}
@@ -182,11 +182,11 @@ class ExecApproval extends OpenClawLightDomContentsElement {
             },
           })}
         </div>
-      </openclaw-modal-dialog>
+      </grokbot-modal-dialog>
     `;
   }
 }
 
-if (!customElements.get("openclaw-exec-approval")) {
-  customElements.define("openclaw-exec-approval", ExecApproval);
+if (!customElements.get("grokbot-exec-approval")) {
+  customElements.define("grokbot-exec-approval", ExecApproval);
 }

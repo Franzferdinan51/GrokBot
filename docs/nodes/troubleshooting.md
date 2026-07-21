@@ -11,19 +11,19 @@ Use this page when a node is visible in status but node tools fail.
 ## Command ladder
 
 ```bash
-openclaw status
-openclaw gateway status
-openclaw logs --follow
-openclaw doctor
-openclaw channels status --probe
+grokbot status
+grokbot gateway status
+grokbot logs --follow
+grokbot doctor
+grokbot channels status --probe
 ```
 
 Then run node-specific checks:
 
 ```bash
-openclaw nodes status
-openclaw nodes describe --node <idOrNameOrIp>
-openclaw approvals get --node <idOrNameOrIp>
+grokbot nodes status
+grokbot nodes describe --node <idOrNameOrIp>
+grokbot approvals get --node <idOrNameOrIp>
 ```
 
 Healthy signals:
@@ -39,9 +39,9 @@ Healthy signals:
 Quick check and fix:
 
 ```bash
-openclaw nodes describe --node <idOrNameOrIp>
-openclaw nodes canvas snapshot --node <idOrNameOrIp>
-openclaw logs --follow
+grokbot nodes describe --node <idOrNameOrIp>
+grokbot nodes canvas snapshot --node <idOrNameOrIp>
+grokbot logs --follow
 ```
 
 If you see `NODE_BACKGROUND_UNAVAILABLE`, bring the node app to the foreground and retry.
@@ -64,15 +64,15 @@ Three separate gates control whether a node command succeeds:
 2. **Gateway node command policy**: is the RPC command ID allowed by `gateway.nodes.allowCommands` / `denyCommands` and platform defaults?
 3. **Exec approvals**: can this node run a specific shell command locally?
 
-Node pairing is an identity/trust gate, not a per-command approval surface. For `system.run`, the per-node policy lives in that node's exec approvals file (`openclaw approvals get --node ...`), not in the gateway pairing record.
+Node pairing is an identity/trust gate, not a per-command approval surface. For `system.run`, the per-node policy lives in that node's exec approvals file (`grokbot approvals get --node ...`), not in the gateway pairing record.
 
 Quick checks:
 
 ```bash
-openclaw devices list
-openclaw nodes status
-openclaw approvals get --node <idOrNameOrIp>
-openclaw approvals allowlist add --node <idOrNameOrIp> "/usr/bin/uname"
+grokbot devices list
+grokbot nodes status
+grokbot approvals get --node <idOrNameOrIp>
+grokbot approvals allowlist add --node <idOrNameOrIp> "/usr/bin/uname"
 ```
 
 - Pairing missing: approve the node device first.
@@ -92,17 +92,17 @@ For approval-backed `host=node` runs, the gateway also binds execution to the pr
 | `LOCATION_PERMISSION_REQUIRED`         | Requested location mode not granted.                                                                                                                                                    |
 | `LOCATION_BACKGROUND_UNAVAILABLE`      | App is backgrounded but only While Using permission exists.                                                                                                                             |
 | `COMPUTER_DISABLED`                    | Enable **Allow Computer Control** in the macOS app, then approve the pairing update.                                                                                                    |
-| `ACCESSIBILITY_REQUIRED`               | Grant Accessibility to the current OpenClaw app bundle in macOS System Settings.                                                                                                        |
+| `ACCESSIBILITY_REQUIRED`               | Grant Accessibility to the current GrokBot app bundle in macOS System Settings.                                                                                                        |
 | `SYSTEM_RUN_DENIED: approval required` | Exec request needs explicit approval.                                                                                                                                                   |
 | `SYSTEM_RUN_DENIED: allowlist miss`    | Command blocked by allowlist mode. On Windows node hosts, shell-wrapper forms like `cmd.exe /c ...` are treated as allowlist misses in allowlist mode unless approved via the ask flow. |
 
 ## Fast recovery loop
 
 ```bash
-openclaw nodes status
-openclaw nodes describe --node <idOrNameOrIp>
-openclaw approvals get --node <idOrNameOrIp>
-openclaw logs --follow
+grokbot nodes status
+grokbot nodes describe --node <idOrNameOrIp>
+grokbot approvals get --node <idOrNameOrIp>
+grokbot logs --follow
 ```
 
 If still stuck:

@@ -1,11 +1,11 @@
 ---
-name: openclaw-landable-bug-sweep
-description: "Find or repair a requested batch of small high-confidence non-SDK-boundary OpenClaw bugfix PRs until they are landable."
+name: grokbot-landable-bug-sweep
+description: "Find or repair a requested batch of small high-confidence non-SDK-boundary GrokBot bugfix PRs until they are landable."
 ---
 
-# OpenClaw Landable Bug Sweep
+# GrokBot Landable Bug Sweep
 
-Autonomous maintainer workflow for producing a requested batch of landable OpenClaw bugfix PR URLs.
+Autonomous maintainer workflow for producing a requested batch of landable GrokBot bugfix PR URLs.
 Use for broad issue/PR sweeps where the bar is high and the output is PRs, not notes.
 Do not use for plugin SDK/API boundary work; those need separate architecture review.
 
@@ -36,7 +36,7 @@ In `provided-prs` mode, inspect only the supplied PRs plus directly linked dupli
 
 ## Companion Skills
 
-Use `$gitcrawl` for discovery/clustering, `$openclaw-pr-maintainer` for live GitHub mutation rules, `$github-author-context` when contributor trust matters, `$openclaw-testing` for proof choice, `$autoreview` before publishing/landing, and `$crabbox` for broad/E2E/live proof.
+Use `$gitcrawl` for discovery/clustering, `$grokbot-pr-maintainer` for live GitHub mutation rules, `$github-author-context` when contributor trust matters, `$grokbot-testing` for proof choice, `$autoreview` before publishing/landing, and `$crabbox` for broad/E2E/live proof.
 
 ## Candidate Bar
 

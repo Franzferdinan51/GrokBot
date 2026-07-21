@@ -1,5 +1,5 @@
 import type { ChatCompletionChunk } from "openai/resources/chat/completions.js";
-import type { Api, Model } from "openclaw/plugin-sdk/llm";
+import type { Api, Model } from "grokbot/plugin-sdk/llm";
 import { describe, expect, it, vi } from "vitest";
 import {
   resolveAzureOpenAIApiVersion,
@@ -953,7 +953,7 @@ describe("openai transport stream", () => {
     }
   });
 
-  it("enforces the code mode responses tool surface before requests leave OpenClaw", () => {
+  it("enforces the code mode responses tool surface before requests leave GrokBot", () => {
     const payload = {
       tools: [
         { type: "function", name: "exec" },
@@ -1025,36 +1025,36 @@ describe("openai transport stream", () => {
     ).toThrow(/Code mode payload tool surface violation/);
   });
 
-  it("adds OpenClaw attribution to native OpenAI transport headers and protects it from provider overrides", () => {
+  it("adds GrokBot attribution to native OpenAI transport headers and protects it from provider overrides", () => {
     vi.stubEnv("OPENCLAW_VERSION", "2026.3.22");
     const headers = testing.buildOpenAIClientHeaders(
       makeResponsesModel({
         id: "gpt-5.4",
         name: "GPT-5.4",
         headers: {
-          originator: "openclaw",
-          "User-Agent": "openclaw",
+          originator: "grokbot",
+          "User-Agent": "grokbot",
           "X-Provider": "model",
         },
       }),
       { systemPrompt: "", messages: [] } as never,
       {
-        originator: "openclaw",
-        "User-Agent": "openclaw",
+        originator: "grokbot",
+        "User-Agent": "grokbot",
         "X-Caller": "request",
       },
     );
 
     expectRecordFields(headers, {
-      originator: "openclaw",
+      originator: "grokbot",
       version: "2026.3.22",
-      "User-Agent": "openclaw/2026.3.22",
+      "User-Agent": "grokbot/2026.3.22",
       "X-Provider": "model",
       "X-Caller": "request",
     });
   });
 
-  it("adds OpenClaw attribution to native OpenAI Codex transport headers", () => {
+  it("adds GrokBot attribution to native OpenAI Codex transport headers", () => {
     vi.stubEnv("OPENCLAW_VERSION", "2026.3.22");
     const headers = testing.buildOpenAIClientHeaders(
       makeResponsesModel({
@@ -1063,17 +1063,17 @@ describe("openai transport stream", () => {
         api: "openai-chatgpt-responses",
         baseUrl: "https://chatgpt.com/backend-api",
         headers: {
-          originator: "openclaw",
-          "User-Agent": "openclaw",
+          originator: "grokbot",
+          "User-Agent": "grokbot",
         },
       }),
       { systemPrompt: "", messages: [] } as never,
     );
 
     expectRecordFields(headers, {
-      originator: "openclaw",
+      originator: "grokbot",
       version: "2026.3.22",
-      "User-Agent": "openclaw/2026.3.22",
+      "User-Agent": "grokbot/2026.3.22",
     });
     expect(headers.Accept).toBeUndefined();
     expect(headers.accept).toBeUndefined();
@@ -1176,7 +1176,7 @@ describe("openai transport stream", () => {
     });
     const transportAliasModel = {
       ...codexModel,
-      api: "openclaw-openai-responses-transport" as Api,
+      api: "grokbot-openai-responses-transport" as Api,
     } satisfies Model;
     const nonNativeChatGPTModel = makeResponsesModel({
       ...codexModel,
@@ -1326,9 +1326,9 @@ describe("openai transport stream", () => {
 
     const prepared = prepareTransportAwareSimpleModel(model);
 
-    expect(resolveTransportAwareSimpleApi(model.api)).toBe("openclaw-openai-responses-transport");
+    expect(resolveTransportAwareSimpleApi(model.api)).toBe("grokbot-openai-responses-transport");
     expectRecordFields(prepared, {
-      api: "openclaw-openai-responses-transport",
+      api: "grokbot-openai-responses-transport",
       provider: "openai",
       id: "gpt-5.4",
     });
@@ -1352,9 +1352,9 @@ describe("openai transport stream", () => {
 
     const prepared = prepareTransportAwareSimpleModel(model);
 
-    expect(resolveTransportAwareSimpleApi(model.api)).toBe("openclaw-openai-responses-transport");
+    expect(resolveTransportAwareSimpleApi(model.api)).toBe("grokbot-openai-responses-transport");
     expectRecordFields(prepared, {
-      api: "openclaw-openai-responses-transport",
+      api: "grokbot-openai-responses-transport",
       provider: "openai",
       id: "codex-mini-latest",
     });
@@ -1385,9 +1385,9 @@ describe("openai transport stream", () => {
 
     const prepared = prepareTransportAwareSimpleModel(model);
 
-    expect(resolveTransportAwareSimpleApi(model.api)).toBe("openclaw-anthropic-messages-transport");
+    expect(resolveTransportAwareSimpleApi(model.api)).toBe("grokbot-anthropic-messages-transport");
     expectRecordFields(prepared, {
-      api: "openclaw-anthropic-messages-transport",
+      api: "grokbot-anthropic-messages-transport",
       provider: "anthropic",
       id: "claude-sonnet-4-6",
     });
@@ -1417,7 +1417,7 @@ describe("openai transport stream", () => {
     );
 
     expect(resolveTransportAwareSimpleApi(model.api)).toBe(
-      "openclaw-google-generative-ai-transport",
+      "grokbot-google-generative-ai-transport",
     );
   });
 
@@ -1438,9 +1438,9 @@ describe("openai transport stream", () => {
       },
     );
 
-    expect(resolveTransportAwareSimpleApi(model.api)).toBe("openclaw-openai-responses-transport");
+    expect(resolveTransportAwareSimpleApi(model.api)).toBe("grokbot-openai-responses-transport");
     expectRecordFields(prepareTransportAwareSimpleModel(model), {
-      api: "openclaw-openai-responses-transport",
+      api: "grokbot-openai-responses-transport",
       provider: "github-copilot",
       id: "gpt-5.4",
     });
@@ -1469,9 +1469,9 @@ describe("openai transport stream", () => {
       },
     );
 
-    expect(resolveTransportAwareSimpleApi(model.api)).toBe("openclaw-anthropic-messages-transport");
+    expect(resolveTransportAwareSimpleApi(model.api)).toBe("grokbot-anthropic-messages-transport");
     expectRecordFields(prepareTransportAwareSimpleModel(model), {
-      api: "openclaw-anthropic-messages-transport",
+      api: "grokbot-anthropic-messages-transport",
       provider: "github-copilot",
       id: "claude-sonnet-4.6",
     });

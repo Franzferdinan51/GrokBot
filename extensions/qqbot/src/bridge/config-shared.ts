@@ -1,11 +1,11 @@
 // Qqbot helper module supports config shared behavior.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import {
   applyAccountNameToChannelSection,
   deleteAccountFromConfigSection,
   setAccountEnabledInConfigSection,
-} from "openclaw/plugin-sdk/core";
-import type { ChannelSetupInput } from "openclaw/plugin-sdk/setup";
+} from "grokbot/plugin-sdk/core";
+import type { ChannelSetupInput } from "grokbot/plugin-sdk/setup";
 import {
   describeAccount as engineDescribeAccount,
   formatAllowFrom as engineFormatAllowFrom,

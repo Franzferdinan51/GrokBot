@@ -1,12 +1,12 @@
-# OpenClaw Qianfan Provider
+# GrokBot Qianfan Provider
 
-Official OpenClaw provider plugin for Qianfan.
+Official GrokBot provider plugin for Qianfan.
 
-Install from OpenClaw:
+Install from GrokBot:
 
 ```bash
-openclaw plugins install @openclaw/qianfan-provider
-openclaw gateway restart
+grokbot plugins install @grokbot/qianfan-provider
+grokbot gateway restart
 ```
 
-See <https://docs.openclaw.ai/providers/qianfan> for setup and configuration.
+See <https://docs.grokbot.ai/providers/qianfan> for setup and configuration.

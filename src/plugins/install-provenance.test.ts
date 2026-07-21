@@ -7,8 +7,8 @@ const bundledSources = new Map<string, BundledPluginSource>([
     "discord",
     {
       pluginId: "discord",
-      localPath: "/opt/openclaw/extensions/discord",
-      npmSpec: "@openclaw/discord",
+      localPath: "/opt/grokbot/extensions/discord",
+      npmSpec: "@grokbot/discord",
     },
   ],
 ]);
@@ -16,13 +16,13 @@ const bundledSources = new Map<string, BundledPluginSource>([
 describe("plugin install provenance", () => {
   it.each([
     "discord",
-    "@openclaw/discord",
-    "npm:@openclaw/discord",
-    "/opt/openclaw/extensions/discord",
+    "@grokbot/discord",
+    "npm:@grokbot/discord",
+    "/opt/grokbot/extensions/discord",
     "brave",
-    "npm:@openclaw/brave-plugin",
-    "clawhub:openclaw-demo",
-  ])("trusts OpenClaw-owned install source %s", (spec) => {
+    "npm:@grokbot/brave-plugin",
+    "clawhub:grokbot-demo",
+  ])("trusts GrokBot-owned install source %s", (spec) => {
     expect(isOpenClawTrustedPluginInstallSpec(spec, bundledSources)).toBe(true);
   });
 

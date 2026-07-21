@@ -1,12 +1,12 @@
-// Fireworks plugin entrypoint registers its OpenClaw integration.
-import type { ProviderResolveDynamicModelContext } from "openclaw/plugin-sdk/plugin-entry";
-import { defineSingleProviderPluginEntry } from "openclaw/plugin-sdk/provider-entry";
+// Fireworks plugin entrypoint registers its GrokBot integration.
+import type { ProviderResolveDynamicModelContext } from "grokbot/plugin-sdk/plugin-entry";
+import { defineSingleProviderPluginEntry } from "grokbot/plugin-sdk/provider-entry";
 import {
   buildProviderReplayFamilyHooks,
   cloneFirstTemplateModel,
   DEFAULT_CONTEXT_TOKENS,
   normalizeModelCompat,
-} from "openclaw/plugin-sdk/provider-model-shared";
+} from "grokbot/plugin-sdk/provider-model-shared";
 import { isFireworksKimiModelId } from "./model-id.js";
 import { applyFireworksConfig, FIREWORKS_DEFAULT_MODEL_REF } from "./onboard.js";
 import {

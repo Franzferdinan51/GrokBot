@@ -1,6 +1,6 @@
 import path from "node:path";
-import { normalizeStringEntries } from "@openclaw/normalization-core/string-normalization";
-import { truncateUtf16Safe } from "@openclaw/normalization-core/utf16-slice";
+import { normalizeStringEntries } from "@grokbot/normalization-core/string-normalization";
+import { truncateUtf16Safe } from "@grokbot/normalization-core/utf16-slice";
 import { emitDiagnosticEvent } from "../infra/diagnostic-events.js";
 import {
   type EventSessionRoutingPolicy,
@@ -456,7 +456,7 @@ function formatExecFailureReason(params: {
         typeof params.timeoutSec === "number" && params.timeoutSec > 0
           ? `Command timed out after ${params.timeoutSec} seconds.`
           : "Command timed out.";
-      return `${appendExecTimeoutRetryGuidance(timeoutText, params.failureKind)}\n\nIf it should keep running, start it with exec background=true or yieldMs so OpenClaw can register a pollable process session. Do not rely on shell backgrounding with a trailing &.`;
+      return `${appendExecTimeoutRetryGuidance(timeoutText, params.failureKind)}\n\nIf it should keep running, start it with exec background=true or yieldMs so GrokBot can register a pollable process session. Do not rely on shell backgrounding with a trailing &.`;
     }
     case "no-output-timeout":
       return appendExecTimeoutRetryGuidance(

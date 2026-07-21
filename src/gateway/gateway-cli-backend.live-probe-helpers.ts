@@ -1,7 +1,7 @@
 // CLI backend live probe helpers run cron/MCP/image probes through the gateway
 // CLI backend and poll for externally visible live results.
 import { randomUUID } from "node:crypto";
-import { normalizeLowercaseStringOrEmpty } from "@openclaw/normalization-core/string-coerce";
+import { normalizeLowercaseStringOrEmpty } from "@grokbot/normalization-core/string-coerce";
 import { renderCatFacePngBase64 } from "../../test/helpers/live-image-probe.js";
 import { isTruthyEnvValue } from "../infra/env.js";
 import { readResponseWithLimit } from "../infra/http-body.js";
@@ -196,10 +196,10 @@ async function callLoopbackJsonRpc(params: {
     "x-session-key": params.sessionKey,
   };
   if (params.messageProvider) {
-    headers["x-openclaw-message-channel"] = params.messageProvider;
+    headers["x-grokbot-message-channel"] = params.messageProvider;
   }
   if (params.accountId) {
-    headers["x-openclaw-account-id"] = params.accountId;
+    headers["x-grokbot-account-id"] = params.accountId;
   }
   const timeoutMs = parsePositiveInt(
     params.env?.OPENCLAW_MCP_LOOPBACK_PROBE_TIMEOUT_MS,

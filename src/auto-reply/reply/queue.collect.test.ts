@@ -1960,7 +1960,7 @@ describe("followup queue collect routing", () => {
     enqueueFollowupRun(
       key,
       createRun({
-        prompt: "[OpenClaw room event]",
+        prompt: "[GrokBot room event]",
         originatingChannel: "telegram",
         originatingTo: "-100123",
       }),
@@ -1990,7 +1990,7 @@ describe("followup queue collect routing", () => {
     await done.promise;
 
     expect(calls).toHaveLength(2);
-    expect(calls[0]?.prompt).toBe("[OpenClaw room event]");
+    expect(calls[0]?.prompt).toBe("[GrokBot room event]");
     expect(calls[0]?.currentInboundEventKind).toBe("room_event");
     expect(calls[0]?.currentInboundAudio).toBe(true);
     expect(calls[0]?.currentInboundContext?.text).toBe("room event body");
@@ -3082,7 +3082,7 @@ describe("followup queue collect routing", () => {
   });
 
   it("persists overflow summaries to the session selected after queue admission", async () => {
-    const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-overflow-session-"));
+    const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-overflow-session-"));
     const storePath = path.join(tempDir, "sessions.json");
     const oldTranscriptPath = path.join(tempDir, "old-session.jsonl");
     const key = `test-overflow-summary-session-rotation-${Date.now()}`;

@@ -6,8 +6,8 @@ import {
   isChannelProgressDraftWorkToolName,
   resolveChannelStreamingPreviewToolProgress,
   type ChannelProgressDraftLine,
-} from "openclaw/plugin-sdk/channel-outbound";
-import type { TelegramAccountConfig } from "openclaw/plugin-sdk/config-contracts";
+} from "grokbot/plugin-sdk/channel-outbound";
+import type { TelegramAccountConfig } from "grokbot/plugin-sdk/config-contracts";
 import type { TelegramBotDeps } from "./bot-deps.js";
 import type { TelegramMessageContext } from "./bot-message-context.js";
 import type { TelegramDraftController } from "./bot-message-dispatch-draft.js";

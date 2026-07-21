@@ -3,11 +3,11 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
-import type { DB as OpenClawStateKyselyDatabase } from "../state/openclaw-state-db.generated.js";
+import type { DB as OpenClawStateKyselyDatabase } from "../state/grokbot-state-db.generated.js";
 import {
   closeOpenClawStateDatabaseForTest,
   openOpenClawStateDatabase,
-} from "../state/openclaw-state-db.js";
+} from "../state/grokbot-state-db.js";
 import {
   GATEWAY_CRASH_LOOP_BREAKER_REASON,
   GATEWAY_CRASH_LOOP_RECOVERED_REASON,
@@ -29,7 +29,7 @@ afterEach(() => {
 });
 
 function createLifecycleDb() {
-  const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-gateway-boot-"));
+  const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-gateway-boot-"));
   const env = { OPENCLAW_STATE_DIR: stateDir } as NodeJS.ProcessEnv;
   const { db } = openOpenClawStateDatabase({ env });
   const kysely = getNodeSqliteKysely<GatewayBootLifecycleTestDatabase>(db);

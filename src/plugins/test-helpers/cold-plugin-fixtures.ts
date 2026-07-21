@@ -1,7 +1,7 @@
 // Cold plugin fixture helpers create plugin packages for cold import and loader tests.
 import fs from "node:fs";
 import path from "node:path";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 
 type ColdPluginFixture = {
   authChoiceId: string;
@@ -37,10 +37,10 @@ export function createColdPluginFixture(options: ColdPluginFixtureOptions): Cold
     path.join(options.rootDir, "package.json"),
     JSON.stringify(
       {
-        name: options.packageName ?? "@example/openclaw-cold-control-plane",
+        name: options.packageName ?? "@example/grokbot-cold-control-plane",
         version: options.packageVersion ?? "1.0.0",
         ...options.packageJson,
-        openclaw: { extensions: ["./index.cjs"] },
+        grokbot: { extensions: ["./index.cjs"] },
       },
       null,
       2,
@@ -48,7 +48,7 @@ export function createColdPluginFixture(options: ColdPluginFixtureOptions): Cold
     "utf8",
   );
   fs.writeFileSync(
-    path.join(options.rootDir, "openclaw.plugin.json"),
+    path.join(options.rootDir, "grokbot.plugin.json"),
     JSON.stringify(
       {
         id: pluginId,

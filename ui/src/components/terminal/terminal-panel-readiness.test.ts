@@ -77,7 +77,7 @@ describe("terminal panel readiness", () => {
     document.body.append(panel);
 
     panel.handleToggleRequest(
-      new CustomEvent("openclaw:terminal-toggle", { detail: { open: false } }),
+      new CustomEvent("grokbot:terminal-toggle", { detail: { open: false } }),
     );
 
     expect((panel as unknown as { open: boolean }).open).toBe(false);
@@ -106,7 +106,7 @@ describe("terminal panel readiness", () => {
     document.body.append(panel);
 
     panel.handleToggleRequest(
-      new CustomEvent("openclaw:terminal-toggle", {
+      new CustomEvent("grokbot:terminal-toggle", {
         detail: { open: true, terminalSessionId: "agent-terminal-1" },
       }),
     );
@@ -185,7 +185,7 @@ describe("terminal panel readiness", () => {
     document.body.append(panel);
     const catalog = { catalogId: "codex", hostId: "node:mac", threadId: "thread" };
 
-    panel.handleToggleRequest(new CustomEvent("openclaw:terminal-toggle", { detail: { catalog } }));
+    panel.handleToggleRequest(new CustomEvent("grokbot:terminal-toggle", { detail: { catalog } }));
 
     await waitForFast(() => {
       expect(requests).toContainEqual({
@@ -206,7 +206,7 @@ describe("terminal panel readiness", () => {
     });
     await waitForFast(() => expect(panel.renderRoot.querySelector(".tp-connecting")).toBeNull());
     expect(new TextDecoder().decode(controller.write.mock.calls[0]?.[0])).toBe("ready");
-    expect(sessionStorage.getItem("openclaw.terminal.sessions.v1")).toBe(
+    expect(sessionStorage.getItem("grokbot.terminal.sessions.v1")).toBe(
       JSON.stringify(["catalog-terminal-1"]),
     );
   });
@@ -245,7 +245,7 @@ describe("terminal panel readiness", () => {
     document.body.append(panel);
 
     panel.handleToggleRequest(
-      new CustomEvent("openclaw:terminal-toggle", {
+      new CustomEvent("grokbot:terminal-toggle", {
         detail: { catalog: { catalogId: "anthropic", hostId: "node:mac", threadId: "thread" } },
       }),
     );
@@ -288,7 +288,7 @@ describe("terminal panel readiness", () => {
     document.body.append(panel);
 
     panel.handleToggleRequest(
-      new CustomEvent("openclaw:terminal-toggle", {
+      new CustomEvent("grokbot:terminal-toggle", {
         detail: { catalog: { catalogId: "anthropic", hostId: "node:mac", threadId: "thread" } },
       }),
     );

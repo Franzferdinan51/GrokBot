@@ -11,13 +11,13 @@ import os from "node:os";
 import path from "node:path";
 import { Readable } from "node:stream";
 import { pipeline } from "node:stream/promises";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import {
   clampThinkingLevel,
   type Api,
   type Model,
   type ModelThinkingLevel,
-} from "openclaw/plugin-sdk/llm";
+} from "grokbot/plugin-sdk/llm";
 import { afterEach, describe, expect, it } from "vitest";
 import { renderCatNoncePngBase64 } from "../../test/helpers/live-image-probe.js";
 import { discoverAuthStorage, discoverModels } from "../agents/agent-model-discovery.js";
@@ -138,10 +138,10 @@ const GATEWAY_LIVE_STRIP_SCAFFOLDING_MODEL_KEYS = new Set([
   "openai/gpt-5.4-pro",
 ]);
 const GATEWAY_LIVE_AGENT_ID = "dev";
-const GATEWAY_LIVE_CONFIG_TEST_WORKSPACE = path.join(os.tmpdir(), "openclaw-live-config-test");
+const GATEWAY_LIVE_CONFIG_TEST_WORKSPACE = path.join(os.tmpdir(), "grokbot-live-config-test");
 const GATEWAY_LIVE_CONFIG_TEST_AGENT_DIR = path.join(
   os.tmpdir(),
-  "openclaw-live-config-test-agent",
+  "grokbot-live-config-test-agent",
 );
 const GATEWAY_LIVE_EXEC_READ_NONCE_MISS_SKIP_MODEL_KEYS = new Set([
   "fireworks/accounts/fireworks/models/glm-5",
@@ -1698,7 +1698,7 @@ describe("resolveGatewayLiveModelThinkingLevel", () => {
   });
 
   it.each(["gpt-5.6", "gpt-5.6-sol", "gpt-5.6-terra", "gpt-5.6-luna"])(
-    "preserves OpenClaw Ultra for openai/%s",
+    "preserves GrokBot Ultra for openai/%s",
     (id) => {
       expect(
         resolveGatewayLiveModelThinkingLevel({
@@ -1826,7 +1826,7 @@ describe("resolveGatewayLiveModelThinkingLevel", () => {
 });
 
 describe("buildLiveGatewayConfig", () => {
-  it("pins selected live gateway models to the OpenClaw runtime", () => {
+  it("pins selected live gateway models to the GrokBot runtime", () => {
     const cfg = buildLiveGatewayConfig({
       cfg: {},
       candidates: [createGatewayLiveTestModel("openai", "gpt-5.5")],
@@ -1835,7 +1835,7 @@ describe("buildLiveGatewayConfig", () => {
     });
 
     expect(cfg.agents?.defaults?.models?.["openai/gpt-5.5"]).toEqual({
-      agentRuntime: { id: "openclaw" },
+      agentRuntime: { id: "grokbot" },
     });
   });
 
@@ -1973,7 +1973,7 @@ describe("buildLiveGatewayConfig", () => {
       deleteTestEnvValue("AWS_PROFILE");
       deleteTestEnvValue("AWS_CONFIG_FILE");
       deleteTestEnvValue("AWS_SHARED_CREDENTIALS_FILE");
-      setTestEnvValue("HOME", path.join(os.tmpdir(), `openclaw-empty-aws-home-${randomUUID()}`));
+      setTestEnvValue("HOME", path.join(os.tmpdir(), `grokbot-empty-aws-home-${randomUUID()}`));
 
       const cfg = buildLiveGatewayConfig({
         cfg: {},
@@ -2146,7 +2146,7 @@ describe("buildLiveGatewayConfig", () => {
       awsSharedCredentialsFile: process.env.AWS_SHARED_CREDENTIALS_FILE,
       home: process.env.HOME,
     };
-    const tempHome = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-bedrock-aws-home-"));
+    const tempHome = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-bedrock-aws-home-"));
     try {
       const awsDir = path.join(tempHome, ".aws");
       await fs.mkdir(awsDir, { recursive: true });
@@ -2194,7 +2194,7 @@ describe("buildLiveGatewayConfig", () => {
       awsSharedCredentialsFile: process.env.AWS_SHARED_CREDENTIALS_FILE,
       home: process.env.HOME,
     };
-    const tempHome = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-bedrock-aws-home-"));
+    const tempHome = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-bedrock-aws-home-"));
     try {
       const awsDir = path.join(tempHome, ".aws");
       await fs.mkdir(awsDir, { recursive: true });
@@ -2242,7 +2242,7 @@ describe("buildLiveGatewayConfig", () => {
       awsSharedCredentialsFile: process.env.AWS_SHARED_CREDENTIALS_FILE,
       home: process.env.HOME,
     };
-    const tempHome = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-bedrock-aws-home-"));
+    const tempHome = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-bedrock-aws-home-"));
     try {
       const awsDir = path.join(tempHome, ".aws");
       await fs.mkdir(awsDir, { recursive: true });
@@ -4208,7 +4208,7 @@ function resolveGatewayLiveModelThinkingLevel(params: {
     context: {
       provider: model.provider,
       modelId: model.id,
-      agentRuntime: "openclaw",
+      agentRuntime: "grokbot",
       reasoning: model.reasoning,
       compat: getProviderThinkingModelCompat(model),
     },
@@ -4386,7 +4386,7 @@ function buildLiveGatewayConfig(params: {
         models: Object.fromEntries(
           params.candidates.map((m) => [
             `${m.provider}/${m.id}`,
-            { agentRuntime: { id: "openclaw" as const } },
+            { agentRuntime: { id: "grokbot" as const } },
           ]),
         ),
       },
@@ -4536,7 +4536,7 @@ async function runGatewayModelSuite(params: GatewayModelSuiteParams) {
       lastGood: hostStore.lastGood ? { ...hostStore.lastGood } : undefined,
       usageStats: hostStore.usageStats ? { ...hostStore.usageStats } : undefined,
     });
-    const tempStateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-live-state-"));
+    const tempStateDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-live-state-"));
     cleanupTempStateDir = tempStateDir;
     setTestEnvValue("OPENCLAW_STATE_DIR", tempStateDir);
     const tempAgentDir: string | undefined = path.join(
@@ -4555,9 +4555,9 @@ async function runGatewayModelSuite(params: GatewayModelSuiteParams) {
 
     const workspaceDir = path.join(tempStateDir, "workspace-dev");
     await fs.mkdir(workspaceDir, { recursive: true });
-    await fs.mkdir(path.join(workspaceDir, ".openclaw"), { recursive: true });
+    await fs.mkdir(path.join(workspaceDir, ".grokbot"), { recursive: true });
     await fs.writeFile(
-      path.join(workspaceDir, ".openclaw", "workspace-state.json"),
+      path.join(workspaceDir, ".grokbot", "workspace-state.json"),
       `${JSON.stringify(
         {
           version: 1,
@@ -4572,7 +4572,7 @@ async function runGatewayModelSuite(params: GatewayModelSuiteParams) {
     const nonceB = randomUUID();
     // Keep probe values out of the path: weak tool callers may echo the filename
     // instead of reading the file, turning nonceA into a false duplicate answer.
-    const toolProbePath = path.join(workspaceDir, ".openclaw-live-tool-probe.txt");
+    const toolProbePath = path.join(workspaceDir, ".grokbot-live-tool-probe.txt");
     cleanupToolProbePath = toolProbePath;
     await fs.writeFile(toolProbePath, `nonceA=${nonceA}\nnonceB=${nonceB}\n`);
 
@@ -4603,9 +4603,9 @@ async function runGatewayModelSuite(params: GatewayModelSuiteParams) {
       liveAgentWorkspaceDir: workspaceDir,
       providerOverrides,
     });
-    const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-live-"));
+    const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-live-"));
     cleanupTempDir = tempDir;
-    const tempConfigPath = path.join(tempDir, "openclaw.json");
+    const tempConfigPath = path.join(tempDir, "grokbot.json");
     await fs.writeFile(tempConfigPath, `${JSON.stringify(nextCfg, null, 2)}\n`);
     setTestEnvValue("OPENCLAW_CONFIG_PATH", tempConfigPath);
 
@@ -4867,10 +4867,10 @@ async function runGatewayModelSuite(params: GatewayModelSuiteParams) {
                     idempotencyKey: `idem-${runIdTool}-tool-${toolReadAttempt + 1}`,
                     modelKey,
                     message: strictReply
-                      ? "OpenClaw live tool probe (local, safe): " +
+                      ? "GrokBot live tool probe (local, safe): " +
                         `use the tool named \`read\` (or \`Read\`) with JSON arguments {"path":"${toolProbePath}"}. ` +
                         "Then reply with exactly the two nonce values from that file, separated by one space. No extra text."
-                      : "OpenClaw live tool probe (local, safe): " +
+                      : "GrokBot live tool probe (local, safe): " +
                         `use the tool named \`read\` (or \`Read\`) with JSON arguments {"path":"${toolProbePath}"}. ` +
                         "Then reply with the two nonce values you read (include both).",
                     thinkingLevel,
@@ -4962,12 +4962,12 @@ async function runGatewayModelSuite(params: GatewayModelSuiteParams) {
                     idempotencyKey: `idem-${runIdTool}-exec-read-${execReadAttempt + 1}`,
                     modelKey,
                     message: strictReply
-                      ? "OpenClaw live tool probe (local, safe): " +
+                      ? "GrokBot live tool probe (local, safe): " +
                         "use the tool named `exec` (or `Exec`) to run this command: " +
                         `mkdir -p "${tempDir}" && printf '%s' '${nonceC}' > "${toolWritePath}". ` +
                         `Then use the tool named \`read\` (or \`Read\`) with JSON arguments {"path":"${toolWritePath}"}. ` +
                         "Then reply with exactly the nonce text from that file. No extra text."
-                      : "OpenClaw live tool probe (local, safe): " +
+                      : "GrokBot live tool probe (local, safe): " +
                         "use the tool named `exec` (or `Exec`) to run this command: " +
                         `mkdir -p "${tempDir}" && printf '%s' '${nonceC}' > "${toolWritePath}". ` +
                         `Then use the tool named \`read\` (or \`Read\`) with JSON arguments {"path":"${toolWritePath}"}. ` +
@@ -5731,13 +5731,13 @@ describeLive("gateway live (dev agent, profile keys)", () => {
       }
 
       const agentId = GATEWAY_LIVE_AGENT_ID;
-      tempStateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-live-zai-state-"));
+      tempStateDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-live-zai-state-"));
       setTestEnvValue("OPENCLAW_STATE_DIR", tempStateDir);
       const workspaceDir = path.join(tempStateDir, "workspace-dev");
       await fs.mkdir(workspaceDir, { recursive: true });
-      await fs.mkdir(path.join(workspaceDir, ".openclaw"), { recursive: true });
+      await fs.mkdir(path.join(workspaceDir, ".grokbot"), { recursive: true });
       await fs.writeFile(
-        path.join(workspaceDir, ".openclaw", "workspace-state.json"),
+        path.join(workspaceDir, ".grokbot", "workspace-state.json"),
         `${JSON.stringify(
           {
             version: 1,
@@ -5750,7 +5750,7 @@ describeLive("gateway live (dev agent, profile keys)", () => {
       const nonceA = randomUUID();
       const nonceB = randomUUID();
       // Match the broad probe: the filename must not reveal either expected value.
-      toolProbePath = path.join(workspaceDir, ".openclaw-live-zai-fallback.txt");
+      toolProbePath = path.join(workspaceDir, ".grokbot-live-zai-fallback.txt");
       await fs.writeFile(toolProbePath, `nonceA=${nonceA}\nnonceB=${nonceB}\n`);
 
       const sanitizedStore = sanitizeAuthProfileStoreForLiveGateway({
@@ -5774,8 +5774,8 @@ describeLive("gateway live (dev agent, profile keys)", () => {
         liveAgentDir: tempAgentDir,
         liveAgentWorkspaceDir: workspaceDir,
       });
-      tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-live-zai-"));
-      const tempConfigPath = path.join(tempDir, "openclaw.json");
+      tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-live-zai-"));
+      const tempConfigPath = path.join(tempDir, "grokbot.json");
       await fs.writeFile(tempConfigPath, `${JSON.stringify(nextCfg, null, 2)}\n`);
       setTestEnvValue("OPENCLAW_CONFIG_PATH", tempConfigPath);
       clearRuntimeConfigSnapshot();

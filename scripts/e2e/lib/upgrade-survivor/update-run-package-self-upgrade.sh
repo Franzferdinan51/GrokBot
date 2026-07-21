@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 
-source scripts/lib/openclaw-e2e-instance.sh
+source scripts/lib/grokbot-e2e-instance.sh
 source scripts/e2e/lib/upgrade-survivor/update-restart-auth.sh
 
 if [ "${OPENCLAW_QA_ALLOW_UPDATE_RUN_SELF:-0}" != "1" ]; then
@@ -19,16 +19,16 @@ export npm_config_fund=false
 export npm_config_loglevel=error
 
 SOURCE_VERSION="${OPENCLAW_UPDATE_RUN_SELF_UPGRADE_SOURCE_VERSION:-2026.4.26}"
-SOURCE_SPEC="openclaw@$SOURCE_VERSION"
+SOURCE_SPEC="grokbot@$SOURCE_VERSION"
 TARGET_TAG="latest"
 RESTART_NOTE="QA-UPDATE-RUN-PACKAGE-SELF-UPGRADE"
 PORT=18789
 QA_BUS_PORT=43123
-ARTIFACT_DIR="${OPENCLAW_UPDATE_RUN_SELF_UPGRADE_ARTIFACT_DIR:-/tmp/openclaw-update-run-artifacts}"
-RUNTIME_ROOT="${OPENCLAW_UPDATE_RUN_SELF_UPGRADE_RUNTIME_ROOT:-/tmp/openclaw-update-run-runtime}"
+ARTIFACT_DIR="${OPENCLAW_UPDATE_RUN_SELF_UPGRADE_ARTIFACT_DIR:-/tmp/grokbot-update-run-artifacts}"
+RUNTIME_ROOT="${OPENCLAW_UPDATE_RUN_SELF_UPGRADE_RUNTIME_ROOT:-/tmp/grokbot-update-run-runtime}"
 export HOME="$RUNTIME_ROOT/home"
-export OPENCLAW_STATE_DIR="$HOME/.openclaw"
-export OPENCLAW_CONFIG_PATH="$OPENCLAW_STATE_DIR/openclaw.json"
+export OPENCLAW_STATE_DIR="$HOME/.grokbot"
+export OPENCLAW_CONFIG_PATH="$OPENCLAW_STATE_DIR/grokbot.json"
 export OPENCLAW_TEST_WORKSPACE_DIR="$HOME/workspace"
 export npm_config_prefix="$RUNTIME_ROOT/npm-prefix"
 export NPM_CONFIG_PREFIX="$npm_config_prefix"
@@ -65,7 +65,7 @@ SYSTEMCTL_SHIM_DAEMON_LOG="$ARTIFACT_DIR/systemctl-shim-gateway.log"
 SUPERVISOR_MONITOR_LOG="$ARTIFACT_DIR/supervisor-monitor.log"
 SERVICE_INSTALL_JSON="$ARTIFACT_DIR/gateway-service-install.json"
 SERVICE_INSTALL_ERR="$ARTIFACT_DIR/gateway-service-install.err"
-SERVICE_UNIT_ARTIFACT="$ARTIFACT_DIR/openclaw-gateway.service"
+SERVICE_UNIT_ARTIFACT="$ARTIFACT_DIR/grokbot-gateway.service"
 export OPENCLAW_UPGRADE_SURVIVOR_SYSTEMCTL_SHIM_LOG="$SYSTEMCTL_SHIM_LOG"
 export OPENCLAW_UPGRADE_SURVIVOR_SYSTEMCTL_SHIM_PID_FILE="$SYSTEMCTL_SHIM_PID_FILE"
 export OPENCLAW_UPGRADE_SURVIVOR_SYSTEMCTL_SHIM_DAEMON_LOG="$SYSTEMCTL_SHIM_DAEMON_LOG"
@@ -106,7 +106,7 @@ cleanup() {
 trap cleanup EXIT
 
 package_root() {
-  printf '%s/lib/node_modules/openclaw\n' "$npm_config_prefix"
+  printf '%s/lib/node_modules/grokbot\n' "$npm_config_prefix"
 }
 
 read_installed_version() {
@@ -125,13 +125,13 @@ if [ "$installed_source_version" != "$SOURCE_VERSION" ]; then
   echo "source package version mismatch: expected $SOURCE_VERSION, got $installed_source_version" >&2
   exit 1
 fi
-if ! openclaw --version | grep -Fq "$SOURCE_VERSION"; then
-  echo "source openclaw --version did not report $SOURCE_VERSION" >&2
+if ! grokbot --version | grep -Fq "$SOURCE_VERSION"; then
+  echo "source grokbot --version did not report $SOURCE_VERSION" >&2
   exit 1
 fi
 
 target_version="$(
-  npm view "openclaw@$TARGET_TAG" version --json --prefer-online --cache "$npm_config_cache" |
+  npm view "grokbot@$TARGET_TAG" version --json --prefer-online --cache "$npm_config_cache" |
     node -e '
       let raw = "";
       process.stdin.on("data", (chunk) => (raw += chunk));
@@ -154,9 +154,9 @@ TARGET_VERSION="$target_version" TARGET_TAG="$TARGET_TAG" node -e '
   );
 ' "$TARGET_RESOLUTION_JSON"
 
-qa_plugin_source="/tmp/openclaw-update-run-build/dist/extensions/qa-channel"
+qa_plugin_source="/tmp/grokbot-update-run-build/dist/extensions/qa-channel"
 qa_plugin_dir="$qa_plugin_source"
-if [ ! -f "$qa_plugin_source/openclaw.plugin.json" ] || [ ! -f "$qa_plugin_source/index.js" ]; then
+if [ ! -f "$qa_plugin_source/grokbot.plugin.json" ] || [ ! -f "$qa_plugin_source/index.js" ]; then
   echo "compiled tagged QA channel fixture is missing" >&2
   exit 1
 fi
@@ -167,8 +167,8 @@ QA_PLUGIN_SOURCE="$qa_plugin_source" node -e '
     fs.readFileSync(path.join(process.env.QA_PLUGIN_SOURCE, "package.json"), "utf8"),
   );
   const entries = [
-    ...(packageJson.openclaw?.extensions ?? []),
-    packageJson.openclaw?.setupEntry,
+    ...(packageJson.grokbot?.extensions ?? []),
+    packageJson.grokbot?.setupEntry,
   ].filter(Boolean);
   if (entries.length === 0 || entries.some((entry) => /\.[cm]?ts$/u.test(entry))) {
     throw new Error(`compiled QA channel retained TypeScript entrypoints: ${JSON.stringify(entries)}`);
@@ -181,9 +181,9 @@ QA_PLUGIN_SOURCE="$qa_plugin_source" node -e '
   }
 '
 openclaw_e2e_maybe_timeout 300s \
-  openclaw plugins install "$qa_plugin_source" --link \
+  grokbot plugins install "$qa_plugin_source" --link \
   >"$PLUGIN_INSTALL_LOG" 2>&1
-openclaw plugins inspect qa-channel --json >"$SOURCE_PLUGIN_INSPECT_JSON"
+grokbot plugins inspect qa-channel --json >"$SOURCE_PLUGIN_INSPECT_JSON"
 node -e '
   const fs = require("node:fs");
   const inspect = JSON.parse(fs.readFileSync(process.argv[1], "utf8"));
@@ -261,8 +261,8 @@ CONFIG_PATH="$OPENCLAW_CONFIG_PATH" \
         "qa-channel": {
           enabled: true,
           baseUrl: `http://127.0.0.1:${process.env.QA_BUS_PORT}`,
-          botUserId: "openclaw",
-          botDisplayName: "OpenClaw QA",
+          botUserId: "grokbot",
+          botDisplayName: "GrokBot QA",
           allowFrom: ["*"],
           pollTimeoutMs: 250,
         },
@@ -271,17 +271,17 @@ CONFIG_PATH="$OPENCLAW_CONFIG_PATH" \
     fs.writeFileSync(process.env.CONFIG_PATH, `${JSON.stringify(config, null, 2)}\n`);
   '
 
-openclaw config validate >"$ARTIFACT_DIR/config-validate.log" 2>&1
+grokbot config validate >"$ARTIFACT_DIR/config-validate.log" 2>&1
 
 install_update_restart_systemctl_shim
 if ! openclaw_e2e_maybe_timeout 120s \
-  openclaw gateway install --force --json \
+  grokbot gateway install --force --json \
   >"$SERVICE_INSTALL_JSON" 2>"$SERVICE_INSTALL_ERR"; then
   echo "historical Gateway service install failed" >&2
   openclaw_e2e_print_log "$SERVICE_INSTALL_ERR" >&2
   exit 1
 fi
-service_unit="$HOME/.config/systemd/user/openclaw-gateway.service"
+service_unit="$HOME/.config/systemd/user/grokbot-gateway.service"
 if [ ! -f "$service_unit" ] || ! grep -q '^ExecStart=' "$service_unit"; then
   echo "historical Gateway install did not create a service unit" >&2
   exit 1
@@ -290,13 +290,13 @@ if grep -q 'OPENCLAW_SKIP_PROVIDERS' "$service_unit"; then
   echo "service-owned target environment unexpectedly suppresses providers" >&2
   exit 1
 fi
-if ! grep -q 'OPENCLAW_SYSTEMD_UNIT=openclaw-gateway.service' "$service_unit"; then
+if ! grep -q 'OPENCLAW_SYSTEMD_UNIT=grokbot-gateway.service' "$service_unit"; then
   echo "service-owned target environment omitted its systemd marker" >&2
   exit 1
 fi
 cp "$service_unit" "$SERVICE_UNIT_ARTIFACT"
-systemctl --user stop openclaw-gateway.service
-if systemctl --user is-active openclaw-gateway.service >/dev/null 2>&1; then
+systemctl --user stop grokbot-gateway.service
+if systemctl --user is-active grokbot-gateway.service >/dev/null 2>&1; then
   echo "setup service remained active before the update.run proof" >&2
   exit 1
 fi
@@ -308,8 +308,8 @@ cp "$SYSTEMCTL_SHIM_LOG" "$SYSTEMCTL_SHIM_SETUP_LOG"
 : >"$SYSTEMCTL_SHIM_LOG"
 
 env \
-  OPENCLAW_SYSTEMD_UNIT=openclaw-gateway.service \
-  openclaw gateway --port "$PORT" --bind loopback --allow-unconfigured \
+  OPENCLAW_SYSTEMD_UNIT=grokbot-gateway.service \
+  grokbot gateway --port "$PORT" --bind loopback --allow-unconfigured \
   >"$GATEWAY_LOG" 2>&1 &
 gateway_pid="$!"
 printf '%s\n' "$gateway_pid" >"$SYSTEMCTL_SHIM_PID_FILE"
@@ -321,7 +321,7 @@ gateway_call() {
   local output="$3"
   local error_output="$4"
   local timeout_ms="${5:-30000}"
-  openclaw gateway call "$method" \
+  grokbot gateway call "$method" \
     --url "ws://127.0.0.1:$PORT" \
     --token "test-token" \
     --timeout "$timeout_ms" \
@@ -365,7 +365,7 @@ source_gateway_pid="$gateway_pid"
   echo "starting installed service without provider suppression"
   env \
     -u OPENCLAW_SKIP_PROVIDERS \
-    systemctl --user start openclaw-gateway.service
+    systemctl --user start grokbot-gateway.service
   service_pid="$(cat "$SYSTEMCTL_SHIM_PID_FILE" 2>/dev/null || true)"
   [[ "$service_pid" =~ ^[0-9]+$ ]] || exit 1
   echo "service Gateway started pid=$service_pid"
@@ -456,7 +456,7 @@ node scripts/e2e/lib/upgrade-survivor/probe-gateway.mjs \
   --expect ready \
   --out "$READYZ_JSON"
 
-openclaw gateway status \
+grokbot gateway status \
   --url "ws://127.0.0.1:$PORT" \
   --token "test-token" \
   --timeout 30000 \
@@ -473,7 +473,7 @@ TARGET_PLUGIN_INDEX_OUT="$TARGET_PLUGIN_INDEX_JSON" node --input-type=module -e 
   const record = index.installRecords?.["qa-channel"];
   if (
     record?.source !== "path" ||
-    record.installPath !== "/tmp/openclaw-update-run-build/dist/extensions/qa-channel"
+    record.installPath !== "/tmp/grokbot-update-run-build/dist/extensions/qa-channel"
   ) {
     throw new Error(`target SQLite index omitted qa-channel path install: ${JSON.stringify(record)}`);
   }

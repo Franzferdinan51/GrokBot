@@ -1,7 +1,7 @@
 // Section-level value and row builders for the standard status report.
 // These helpers own compact operator text for agents, tasks, memory, health, sessions, and footers.
 
-import { normalizeLowercaseStringOrEmpty } from "@openclaw/normalization-core/string-coerce";
+import { normalizeLowercaseStringOrEmpty } from "@grokbot/normalization-core/string-coerce";
 import {
   buildPairingConnectRecoveryTitle,
   describePairingConnectRequirement,
@@ -256,10 +256,10 @@ export function buildStatusSecurityAuditLines(params: {
     }
   }
   lines.push(
-    params.theme.muted(`Full report: ${params.formatCliCommand("openclaw security audit")}`),
+    params.theme.muted(`Full report: ${params.formatCliCommand("grokbot security audit")}`),
   );
   lines.push(
-    params.theme.muted(`Deep probe: ${params.formatCliCommand("openclaw security audit --deep")}`),
+    params.theme.muted(`Deep probe: ${params.formatCliCommand("grokbot security audit --deep")}`),
   );
   return lines;
 }
@@ -402,7 +402,7 @@ export function buildStatusModelSelectionLines(params: {
       `  Session selected: ${selected}`,
       reasonLine,
       clearLine,
-      "  Docs: https://docs.openclaw.ai/concepts/models#selection-source-and-fallback-behavior",
+      "  Docs: https://docs.grokbot.ai/concepts/models#selection-source-and-fallback-behavior",
     );
   }
   if (mismatches.length > limit) {
@@ -420,17 +420,17 @@ export function buildStatusFooterLines(params: {
   gatewayReachable: boolean;
 }) {
   return [
-    "FAQ: https://docs.openclaw.ai/faq",
-    "Troubleshooting: https://docs.openclaw.ai/troubleshooting",
+    "FAQ: https://docs.grokbot.ai/faq",
+    "Troubleshooting: https://docs.grokbot.ai/troubleshooting",
     ...(params.updateHint ? ["", params.warn(params.updateHint)] : []),
     "Next steps:",
-    `  Need to share?      ${params.formatCliCommand("openclaw status --all")}`,
-    `  Need to debug live? ${params.formatCliCommand("openclaw logs --follow")}`,
+    `  Need to share?      ${params.formatCliCommand("grokbot status --all")}`,
+    `  Need to debug live? ${params.formatCliCommand("grokbot logs --follow")}`,
     params.nodeOnlyGateway
-      ? `  Need node service?  ${params.formatCliCommand("openclaw node status")}`
+      ? `  Need node service?  ${params.formatCliCommand("grokbot node status")}`
       : params.gatewayReachable
-        ? `  Need to test channels? ${params.formatCliCommand("openclaw status --deep")}`
-        : `  Fix reachability first: ${params.formatCliCommand("openclaw gateway probe")}`,
+        ? `  Need to test channels? ${params.formatCliCommand("grokbot status --deep")}`
+        : `  Fix reachability first: ${params.formatCliCommand("grokbot gateway probe")}`,
   ];
 }
 
@@ -484,12 +484,12 @@ export function buildStatusPairingRecoveryLines(params: {
     ...(params.pairingRecovery.requestId
       ? [
           params.muted(
-            `Recovery: ${params.formatCliCommand(`openclaw devices approve ${params.pairingRecovery.requestId}`)}`,
+            `Recovery: ${params.formatCliCommand(`grokbot devices approve ${params.pairingRecovery.requestId}`)}`,
           ),
         ]
       : []),
-    params.muted(`Fallback: ${params.formatCliCommand("openclaw devices approve --latest")}`),
-    params.muted(`Inspect: ${params.formatCliCommand("openclaw devices list")}`),
+    params.muted(`Fallback: ${params.formatCliCommand("grokbot devices approve --latest")}`),
+    params.muted(`Inspect: ${params.formatCliCommand("grokbot devices list")}`),
   ];
 }
 

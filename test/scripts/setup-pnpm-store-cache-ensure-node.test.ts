@@ -127,7 +127,7 @@ function runVersionMatch(actual: string, requested: string) {
 
 describe("setup-pnpm-store-cache ensure-node", () => {
   beforeAll(() => {
-    const root = mkdtempSync(join(tmpdir(), "openclaw-ensure-node-"));
+    const root = mkdtempSync(join(tmpdir(), "grokbot-ensure-node-"));
     try {
       const result = spawnSync(
         "bash",
@@ -160,7 +160,7 @@ describe("setup-pnpm-store-cache ensure-node", () => {
   });
 
   it("uses a matching active node", () => {
-    const root = mkdtempSync(join(tmpdir(), "openclaw-ensure-node-"));
+    const root = mkdtempSync(join(tmpdir(), "grokbot-ensure-node-"));
     try {
       const activeBin = join(root, "active", "bin");
       const activeNode = writeFakeNode(activeBin, "24.15.0");
@@ -178,7 +178,7 @@ describe("setup-pnpm-store-cache ensure-node", () => {
   });
 
   it("repairs PATH from the toolcache when setup-node leaves an old node active", () => {
-    const root = mkdtempSync(join(tmpdir(), "openclaw-ensure-node-"));
+    const root = mkdtempSync(join(tmpdir(), "grokbot-ensure-node-"));
     try {
       const activeBin = join(root, "active", "bin");
       writeFakeNode(activeBin, "20.20.0");
@@ -198,7 +198,7 @@ describe("setup-pnpm-store-cache ensure-node", () => {
   });
 
   it("normalizes Windows toolcache paths for Git Bash before prepending PATH", () => {
-    const root = mkdtempSync(join(tmpdir(), "openclaw-ensure-node-"));
+    const root = mkdtempSync(join(tmpdir(), "grokbot-ensure-node-"));
     try {
       const activeBin = join(root, "active", "bin");
       writeFakeNode(activeBin, "22.22.3");
@@ -250,7 +250,7 @@ exit 1
   });
 
   it("repairs PATH from the container-mounted GitHub Actions toolcache", () => {
-    const root = mkdtempSync(join(tmpdir(), "openclaw-ensure-node-"));
+    const root = mkdtempSync(join(tmpdir(), "grokbot-ensure-node-"));
     try {
       const activeBin = join(root, "active", "bin");
       writeFakeNode(activeBin, "20.20.0");
@@ -271,7 +271,7 @@ exit 1
   });
 
   it("accepts major wildcard requests when selecting a toolcache node", () => {
-    const root = mkdtempSync(join(tmpdir(), "openclaw-ensure-node-"));
+    const root = mkdtempSync(join(tmpdir(), "grokbot-ensure-node-"));
     try {
       const activeBin = join(root, "active", "bin");
       writeFakeNode(activeBin, "20.20.0");
@@ -290,7 +290,7 @@ exit 1
   });
 
   it("keeps the Node 22 wildcard at the supported minimum", () => {
-    const root = mkdtempSync(join(tmpdir(), "openclaw-ensure-node-"));
+    const root = mkdtempSync(join(tmpdir(), "grokbot-ensure-node-"));
     try {
       const activeBin = join(root, "active", "bin");
       writeFakeNode(activeBin, "22.18.0");
@@ -323,7 +323,7 @@ exit 1
   });
 
   it("bounds every Node distribution request", () => {
-    const root = mkdtempSync(join(tmpdir(), "openclaw-ensure-node-"));
+    const root = mkdtempSync(join(tmpdir(), "grokbot-ensure-node-"));
     try {
       const helperBin = join(root, "bin");
       const curlLog = join(root, "curl.log");
@@ -370,7 +370,7 @@ exit 1
   });
 
   it("removes a partial POSIX archive after a timed-out download", () => {
-    const root = mkdtempSync(join(tmpdir(), "openclaw-ensure-node-"));
+    const root = mkdtempSync(join(tmpdir(), "grokbot-ensure-node-"));
     try {
       const helperBin = join(root, "bin");
       writeFakeCurl(helperBin);
@@ -400,7 +400,7 @@ exit 1
   });
 
   it("fails clearly when no matching node is available", () => {
-    const root = mkdtempSync(join(tmpdir(), "openclaw-ensure-node-"));
+    const root = mkdtempSync(join(tmpdir(), "grokbot-ensure-node-"));
     try {
       const activeBin = join(root, "active", "bin");
       writeFakeNode(activeBin, "20.20.0");

@@ -1,5 +1,5 @@
 // Policy plugin evidence types.
-import type { coerceSecretRef } from "openclaw/plugin-sdk/secret-input";
+import type { coerceSecretRef } from "grokbot/plugin-sdk/secret-input";
 
 export type PolicyAttestation = {
   readonly checkedAt: string;

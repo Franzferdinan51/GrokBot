@@ -2,7 +2,7 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { importFreshModule } from "openclaw/plugin-sdk/test-fixtures";
+import { importFreshModule } from "grokbot/plugin-sdk/test-fixtures";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 vi.mock("../../plugins/bundled-dir.js", async (importOriginal) => {
@@ -55,8 +55,8 @@ afterEach(() => {
 
 describe("bundled root-aware plugin lookups", () => {
   it("reads bundled channel ids from the active bundled root without re-importing", async () => {
-    const rootA = makeBundledRoot("openclaw-bundled-ids-a-");
-    const rootB = makeBundledRoot("openclaw-bundled-ids-b-");
+    const rootA = makeBundledRoot("grokbot-bundled-ids-a-");
+    const rootB = makeBundledRoot("grokbot-bundled-ids-b-");
 
     vi.doMock("../../plugins/channel-catalog-registry.js", () => ({
       listChannelCatalogEntries: (params?: { env?: NodeJS.ProcessEnv }) => {
@@ -84,8 +84,8 @@ describe("bundled root-aware plugin lookups", () => {
   });
 
   it("reads bootstrap plugins from the active bundled root without re-importing", async () => {
-    const rootA = makeBundledRoot("openclaw-bootstrap-a-");
-    const rootB = makeBundledRoot("openclaw-bootstrap-b-");
+    const rootA = makeBundledRoot("grokbot-bootstrap-a-");
+    const rootB = makeBundledRoot("grokbot-bootstrap-b-");
 
     vi.doMock("./bundled.js", () => ({
       getBundledChannelPlugin: (id: string) => ({

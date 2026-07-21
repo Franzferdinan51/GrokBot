@@ -1,5 +1,5 @@
-import { normalizeRouteBasePath, normalizeRoutePath } from "@openclaw/uirouter";
-import type { RouteLocation } from "@openclaw/uirouter";
+import { normalizeRouteBasePath, normalizeRoutePath } from "@grokbot/uirouter";
+import type { RouteLocation } from "@grokbot/uirouter";
 
 const APP_ROUTE_DEFINITIONS = {
   chat: { path: "/chat" },

@@ -1,22 +1,22 @@
 {
-  "name": "@openclaw/groq-provider",
+  "name": "@grokbot/groq-provider",
   "version": "2026.7.2",
-  "description": "OpenClaw Groq media-understanding provider.",
+  "description": "GrokBot Groq media-understanding provider.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/openclaw/openclaw"
+    "url": "https://github.com/grokbot/grokbot"
   },
   "type": "module",
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@grokbot/plugin-sdk": "workspace:*"
   },
-  "openclaw": {
+  "grokbot": {
     "extensions": [
       "./index.ts"
     ],
     "install": {
-      "clawhubSpec": "clawhub:@openclaw/groq-provider",
-      "npmSpec": "@openclaw/groq-provider",
+      "clawhubSpec": "clawhub:@grokbot/groq-provider",
+      "npmSpec": "@grokbot/groq-provider",
       "defaultChoice": "npm",
       "minHostVersion": ">=2026.6.8"
     },

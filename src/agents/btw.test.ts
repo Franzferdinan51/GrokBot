@@ -1,7 +1,7 @@
 /** Tests BTW side-question execution, session context, auth, and harness routing. */
 
-import { expectDefined } from "@openclaw/normalization-core";
-import { MAX_TIMER_TIMEOUT_MS } from "@openclaw/normalization-core/number-coercion";
+import { expectDefined } from "@grokbot/normalization-core";
+import { MAX_TIMER_TIMEOUT_MS } from "@grokbot/normalization-core/number-coercion";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { SessionEntry } from "../config/sessions.js";
 import {
@@ -854,7 +854,7 @@ describe("runBtwSideQuestion", () => {
     );
   });
 
-  it("keeps an unprofiled subscription token on the OpenClaw BTW path", async () => {
+  it("keeps an unprofiled subscription token on the GrokBot BTW path", async () => {
     const supports = vi.fn(supportsPreparedOpenAIAuth);
     const codexSideQuestionMock = registerCodexSideQuestionHarness({ supports });
     const subscriptionModel = {
@@ -874,7 +874,7 @@ describe("runBtwSideQuestion", () => {
       source: "models.json",
     });
     requireApiKeyMock.mockReturnValue("subscription-token");
-    mockDoneAnswer("OpenClaw side answer.");
+    mockDoneAnswer("GrokBot side answer.");
 
     await expect(
       runSideQuestion({
@@ -888,7 +888,7 @@ describe("runBtwSideQuestion", () => {
         provider: "openai",
         model: "gpt-5.5",
       }),
-    ).resolves.toEqual({ text: "OpenClaw side answer." });
+    ).resolves.toEqual({ text: "GrokBot side answer." });
 
     expect(codexSideQuestionMock).not.toHaveBeenCalled();
     expect(streamSimpleMock).toHaveBeenCalled();
@@ -999,7 +999,7 @@ describe("runBtwSideQuestion", () => {
       harnessAuthProvider: "openai",
       deferredRouteSupport: {
         requestTransportOverrides: "none",
-        runtimePolicy: { compatibleIds: ["openclaw", "codex"] },
+        runtimePolicy: { compatibleIds: ["grokbot", "codex"] },
       },
     });
     expect(preparedRuntimeAuth?.plan?.modelRoute).toBeUndefined();
@@ -1010,7 +1010,7 @@ describe("runBtwSideQuestion", () => {
       expect.objectContaining({
         modelProvider: expect.objectContaining({
           requestTransportOverrides: "none",
-          runtimePolicy: { compatibleIds: ["openclaw", "codex"] },
+          runtimePolicy: { compatibleIds: ["grokbot", "codex"] },
           preparedAuth: { source: "harness" },
         }),
       }),
@@ -1143,7 +1143,7 @@ describe("runBtwSideQuestion", () => {
         agents: {
           defaults: {
             models: {
-              "anthropic/claude-sonnet-4-6": { agentRuntime: { id: "openclaw" } },
+              "anthropic/claude-sonnet-4-6": { agentRuntime: { id: "grokbot" } },
             },
           },
         },
@@ -1859,7 +1859,7 @@ describe("runBtwSideQuestion", () => {
           agents: {
             defaults: {
               models: {
-                "openai/gpt-5.5": { agentRuntime: { id: "openclaw" } },
+                "openai/gpt-5.5": { agentRuntime: { id: "grokbot" } },
               },
             },
           },
@@ -1940,7 +1940,7 @@ describe("runBtwSideQuestion", () => {
           agents: {
             defaults: {
               models: {
-                "openai/gpt-5.5": { agentRuntime: { id: "openclaw" } },
+                "openai/gpt-5.5": { agentRuntime: { id: "grokbot" } },
               },
             },
           },

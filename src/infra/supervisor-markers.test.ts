@@ -1,4 +1,4 @@
-// Covers supervisor marker files used to identify managed OpenClaw processes.
+// Covers supervisor marker files used to identify managed GrokBot processes.
 import { describe, expect, it } from "vitest";
 import {
   detectGatewayRespawnSupervisor,
@@ -19,29 +19,29 @@ describe("SUPERVISOR_HINT_ENV_VARS", () => {
 });
 
 describe("detectRespawnSupervisor", () => {
-  it("detects launchd from OpenClaw's explicit marker or current gateway launchd job", () => {
+  it("detects launchd from GrokBot's explicit marker or current gateway launchd job", () => {
     expect(
-      detectRespawnSupervisor({ OPENCLAW_LAUNCHD_LABEL: " ai.openclaw.gateway " }, "darwin"),
+      detectRespawnSupervisor({ OPENCLAW_LAUNCHD_LABEL: " ai.grokbot.gateway " }, "darwin"),
     ).toBe("launchd");
     expect(detectRespawnSupervisor({ OPENCLAW_LAUNCHD_LABEL: "   " }, "darwin")).toBeNull();
-    expect(detectRespawnSupervisor({ LAUNCH_JOB_LABEL: "ai.openclaw.gateway" }, "darwin")).toBe(
+    expect(detectRespawnSupervisor({ LAUNCH_JOB_LABEL: "ai.grokbot.gateway" }, "darwin")).toBe(
       "launchd",
     );
     expect(
       detectRespawnSupervisor(
-        { LAUNCH_JOB_NAME: "ai.openclaw.work", OPENCLAW_PROFILE: "work" },
+        { LAUNCH_JOB_NAME: "ai.grokbot.work", OPENCLAW_PROFILE: "work" },
         "darwin",
       ),
     ).toBe("launchd");
-    expect(detectRespawnSupervisor({ LAUNCH_JOB_LABEL: "ai.openclaw.mac" }, "darwin")).toBeNull();
-    expect(detectRespawnSupervisor({ XPC_SERVICE_NAME: "ai.openclaw.mac" }, "darwin")).toBeNull();
+    expect(detectRespawnSupervisor({ LAUNCH_JOB_LABEL: "ai.grokbot.mac" }, "darwin")).toBeNull();
+    expect(detectRespawnSupervisor({ XPC_SERVICE_NAME: "ai.grokbot.mac" }, "darwin")).toBeNull();
     expect(
       detectRespawnSupervisor(
-        { XPC_SERVICE_NAME: "ai.openclaw.mac", OPENCLAW_PROFILE: "mac" },
+        { XPC_SERVICE_NAME: "ai.grokbot.mac", OPENCLAW_PROFILE: "mac" },
         "darwin",
       ),
     ).toBeNull();
-    expect(detectRespawnSupervisor({ XPC_SERVICE_NAME: "ai.openclaw.gateway" }, "darwin")).toBe(
+    expect(detectRespawnSupervisor({ XPC_SERVICE_NAME: "ai.grokbot.gateway" }, "darwin")).toBe(
       "launchd",
     );
   });
@@ -51,9 +51,9 @@ describe("detectRespawnSupervisor", () => {
     expect(detectRespawnSupervisor({ JOURNAL_STREAM: "" }, "linux")).toBeNull();
   });
 
-  it("detects Linux OpenClaw gateway service markers only for opt-in callers", () => {
+  it("detects Linux GrokBot gateway service markers only for opt-in callers", () => {
     const gatewayServiceEnv = {
-      OPENCLAW_SERVICE_MARKER: " openclaw ",
+      OPENCLAW_SERVICE_MARKER: " grokbot ",
       OPENCLAW_SERVICE_KIND: " gateway ",
     };
     expect(detectRespawnSupervisor(gatewayServiceEnv, "linux")).toBeNull();
@@ -65,7 +65,7 @@ describe("detectRespawnSupervisor", () => {
     expect(
       detectRespawnSupervisor(
         {
-          OPENCLAW_SERVICE_MARKER: "openclaw",
+          OPENCLAW_SERVICE_MARKER: "grokbot",
           OPENCLAW_SERVICE_KIND: "worker",
         },
         "linux",
@@ -86,12 +86,12 @@ describe("detectRespawnSupervisor", () => {
 
   it("detects scheduled-task supervision on Windows from either hint family", () => {
     expect(
-      detectRespawnSupervisor({ OPENCLAW_WINDOWS_TASK_NAME: "OpenClaw Gateway" }, "win32"),
+      detectRespawnSupervisor({ OPENCLAW_WINDOWS_TASK_NAME: "GrokBot Gateway" }, "win32"),
     ).toBe("schtasks");
     expect(
       detectRespawnSupervisor(
         {
-          OPENCLAW_SERVICE_MARKER: "openclaw",
+          OPENCLAW_SERVICE_MARKER: "grokbot",
           OPENCLAW_SERVICE_KIND: "gateway",
         },
         "win32",
@@ -100,7 +100,7 @@ describe("detectRespawnSupervisor", () => {
     expect(
       detectRespawnSupervisor(
         {
-          OPENCLAW_SERVICE_MARKER: "openclaw",
+          OPENCLAW_SERVICE_MARKER: "grokbot",
           OPENCLAW_SERVICE_KIND: "worker",
         },
         "win32",
@@ -112,14 +112,14 @@ describe("detectRespawnSupervisor", () => {
     expect(
       detectRespawnSupervisor(
         {
-          OPENCLAW_SERVICE_MARKER: "openclaw",
+          OPENCLAW_SERVICE_MARKER: "grokbot",
           OPENCLAW_SERVICE_KIND: "gateway",
         },
         "linux",
       ),
     ).toBeNull();
     expect(
-      detectRespawnSupervisor({ LAUNCH_JOB_LABEL: "ai.openclaw.gateway" }, "freebsd"),
+      detectRespawnSupervisor({ LAUNCH_JOB_LABEL: "ai.grokbot.gateway" }, "freebsd"),
     ).toBeNull();
   });
 });
@@ -128,7 +128,7 @@ describe("detectGatewayRespawnSupervisor", () => {
   it("keeps external ownership separate from native supervisor detection", () => {
     const env = {
       OPENCLAW_SUPERVISOR_MODE: "external",
-      OPENCLAW_LAUNCHD_LABEL: "ai.openclaw.gateway",
+      OPENCLAW_LAUNCHD_LABEL: "ai.grokbot.gateway",
     };
 
     expect(detectGatewayRespawnSupervisor(env, "darwin")).toBe("external");

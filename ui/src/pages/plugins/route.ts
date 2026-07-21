@@ -1,4 +1,4 @@
-import { definePage, type RouteLoaderOptions, type RouteLocation } from "@openclaw/uirouter";
+import { definePage, type RouteLoaderOptions, type RouteLocation } from "@grokbot/uirouter";
 import { html } from "lit";
 import type { ApplicationContext } from "../../app/context.ts";
 import { loadPluginCatalog } from "../../lib/plugins/index.ts";
@@ -44,6 +44,6 @@ export const page = definePage({
     import("./plugins-page.ts").then(() => ({
       header: true,
       render: (data: PluginsRouteData | undefined) =>
-        html`<openclaw-plugins-page .routeData=${data}></openclaw-plugins-page>`,
+        html`<grokbot-plugins-page .routeData=${data}></grokbot-plugins-page>`,
     })),
 });

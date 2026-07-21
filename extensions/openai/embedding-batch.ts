@@ -21,13 +21,13 @@ import {
   type ProviderBatchOutputLine,
   uploadBatchJsonlFile,
   withRemoteHttpResponse,
-} from "openclaw/plugin-sdk/memory-core-host-engine-embeddings";
+} from "grokbot/plugin-sdk/memory-core-host-engine-embeddings";
 import {
   assertOkOrThrowProviderError,
   readProviderJsonResponse,
   readProviderTextResponse,
-} from "openclaw/plugin-sdk/provider-http";
-import { normalizeStringEntries } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/provider-http";
+import { normalizeStringEntries } from "grokbot/plugin-sdk/string-coerce-runtime";
 import type { OpenAiEmbeddingClient } from "./embedding-provider.js";
 
 type OpenAiBatchRequest = {
@@ -79,7 +79,7 @@ async function submitOpenAiBatch(params: {
       endpoint: OPENAI_BATCH_ENDPOINT,
       completion_window: OPENAI_BATCH_COMPLETION_WINDOW,
       metadata: {
-        source: "openclaw-memory",
+        source: "grokbot-memory",
         agent: params.agentId,
       },
     },

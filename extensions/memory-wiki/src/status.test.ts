@@ -1,7 +1,7 @@
 // Memory Wiki tests cover status plugin behavior.
 import fs from "node:fs/promises";
 import path from "node:path";
-import type { MemoryPluginPublicArtifact } from "openclaw/plugin-sdk/memory-host-core";
+import type { MemoryPluginPublicArtifact } from "grokbot/plugin-sdk/memory-host-core";
 import { describe, expect, it } from "vitest";
 import type { OpenClawConfig } from "../api.js";
 import { resolveMemoryWikiConfig } from "./config.js";
@@ -480,7 +480,7 @@ describe("memory wiki doctor", () => {
     expect(report.warningCount).toBe(2);
     expect(report.fixes.map((fix) => fix.code)).toEqual(["vault-missing", "obsidian-cli-missing"]);
     expect(rendered).toContain("Suggested fixes:");
-    expect(rendered).toContain("openclaw wiki init");
+    expect(rendered).toContain("grokbot wiki init");
   });
 
   it("suggests bridge fixes when no public artifacts are exported", async () => {

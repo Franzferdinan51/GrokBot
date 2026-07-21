@@ -1,5 +1,5 @@
 ---
-summary: "How to contribute to the OpenClaw threat model"
+summary: "How to contribute to the GrokBot threat model"
 title: "Contributing to the threat model"
 read_when:
   - You want to contribute security findings or threat scenarios
@@ -9,12 +9,12 @@ read_when:
 The [threat model](/security/THREAT-MODEL-ATLAS) is a living document. Contributions are welcome from anyone; you do not need security or MITRE ATLAS background.
 
 <Note>
-This is for adding to the threat model, not reporting live vulnerabilities. If you found an exploitable vulnerability, follow the responsible-disclosure instructions on the [Trust page](https://trust.openclaw.ai) instead.
+This is for adding to the threat model, not reporting live vulnerabilities. If you found an exploitable vulnerability, follow the responsible-disclosure instructions on the [Trust page](https://trust.grokbot.ai) instead.
 </Note>
 
 ## Ways to contribute
 
-**Add a threat.** Open an issue on [openclaw/trust](https://github.com/openclaw/trust/issues) describing the attack scenario in your own words. Helpful but not required:
+**Add a threat.** Open an issue on [grokbot/trust](https://github.com/grokbot/trust/issues) describing the attack scenario in your own words. Helpful but not required:
 
 - The attack scenario and how it could be exploited.
 - Which components are affected (CLI, gateway, channels, ClawHub, MCP servers, etc.).
@@ -70,13 +70,13 @@ Threats are mapped to [MITRE ATLAS](https://atlas.mitre.org/) (Adversarial Threa
 
 ## Contact
 
-- **Security vulnerabilities:** [Trust page](https://trust.openclaw.ai) for reporting instructions, or `security@openclaw.ai`.
-- **Threat model questions:** open an issue on [openclaw/trust](https://github.com/openclaw/trust/issues).
+- **Security vulnerabilities:** [Trust page](https://trust.grokbot.ai) for reporting instructions, or `security@grokbot.ai`.
+- **Threat model questions:** open an issue on [grokbot/trust](https://github.com/grokbot/trust/issues).
 - **General chat:** Discord `#security` channel.
 
 ## Recognition
 
-Contributors to the threat model are recognized in the threat model acknowledgments, release notes, and the OpenClaw security hall of fame for significant contributions.
+Contributors to the threat model are recognized in the threat model acknowledgments, release notes, and the GrokBot security hall of fame for significant contributions.
 
 ## Related
 

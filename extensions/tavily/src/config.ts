@@ -1,9 +1,9 @@
 // Tavily helper module supports config behavior.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { canResolveEnvSecretRefInReadOnlyPath } from "openclaw/plugin-sdk/extension-shared";
-import { resolvePositiveTimeoutSeconds } from "openclaw/plugin-sdk/provider-web-search";
-import { resolveSecretInputString, normalizeSecretInput } from "openclaw/plugin-sdk/secret-input";
-import { normalizeOptionalString } from "openclaw/plugin-sdk/string-coerce-runtime";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { canResolveEnvSecretRefInReadOnlyPath } from "grokbot/plugin-sdk/extension-shared";
+import { resolvePositiveTimeoutSeconds } from "grokbot/plugin-sdk/provider-web-search";
+import { resolveSecretInputString, normalizeSecretInput } from "grokbot/plugin-sdk/secret-input";
+import { normalizeOptionalString } from "grokbot/plugin-sdk/string-coerce-runtime";
 
 export const DEFAULT_TAVILY_BASE_URL = "https://api.tavily.com";
 const DEFAULT_TAVILY_SEARCH_TIMEOUT_SECONDS = 30;

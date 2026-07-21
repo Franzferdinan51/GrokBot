@@ -2,7 +2,7 @@
 import {
   buildChannelOutboundSessionRoute,
   type ChannelOutboundSessionRouteParams,
-} from "openclaw/plugin-sdk/core";
+} from "grokbot/plugin-sdk/core";
 import { resolveWhatsAppGroupSessionKey } from "./group-session-key.js";
 import {
   isWhatsAppGroupJid,

@@ -11,7 +11,7 @@
  * single-responsibility helpers in this directory.
  */
 
-import type { OpenClawPluginApi, PluginCommandContext } from "openclaw/plugin-sdk/plugin-entry";
+import type { OpenClawPluginApi, PluginCommandContext } from "grokbot/plugin-sdk/plugin-entry";
 import { PRIVATE_CHAT_ONLY_TEXT } from "../../engine/commands/command-visibility.js";
 import { getFrameworkCommands } from "../../engine/commands/slash-commands-impl.js";
 import { resolveGroupCommandLevelFromAccountConfig } from "../../engine/config/group.js";

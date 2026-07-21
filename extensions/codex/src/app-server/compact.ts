@@ -1,13 +1,13 @@
 /**
- * Native Codex app-server compaction bridge for bound OpenClaw sessions.
+ * Native Codex app-server compaction bridge for bound GrokBot sessions.
  */
 import {
   embeddedAgentLog,
   resolveCompactionTimeoutMs,
   type CompactEmbeddedAgentSessionParams,
   type EmbeddedAgentCompactResult,
-} from "openclaw/plugin-sdk/agent-harness-runtime";
-import { resolveAgentDir, resolveDefaultAgentId } from "openclaw/plugin-sdk/agent-runtime";
+} from "grokbot/plugin-sdk/agent-harness-runtime";
+import { resolveAgentDir, resolveDefaultAgentId } from "grokbot/plugin-sdk/agent-runtime";
 import { readCodexNotificationItem } from "./attempt-notifications.js";
 import { resolveCodexBindingAppServerConnection } from "./binding-connection.js";
 import { CodexAppServerRpcError, type CodexAppServerClient } from "./client.js";
@@ -383,7 +383,7 @@ function warnIfIgnoringOpenClawCompactionOverrides(
   }
   warnedIgnoredCompactionOverrides.add(warningKey);
   embeddedAgentLog.warn(
-    "ignoring OpenClaw compaction overrides for Codex app-server compaction; Codex uses native server-side compaction",
+    "ignoring GrokBot compaction overrides for Codex app-server compaction; Codex uses native server-side compaction",
     {
       sessionId: params.sessionId,
       sessionKey: params.sessionKey,
@@ -603,7 +603,7 @@ async function compactCodexNativeThread(
             }
             if (usesSupervisionConnection) {
               // A supervised thread is native user-home state, not an
-              // OpenClaw-owned remote binding. Keep the lifecycle fence held
+              // GrokBot-owned remote binding. Keep the lifecycle fence held
               // rather than detach and permit a second writer.
               throw new Error("cannot detach an unconfirmed supervised codex thread");
             }

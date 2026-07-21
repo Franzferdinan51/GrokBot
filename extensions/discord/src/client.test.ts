@@ -1,5 +1,5 @@
 // Discord tests cover client plugin behavior.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { createDiscordClient, createDiscordRestClient } from "./client.js";
 import type { RequestClient } from "./internal/discord.js";

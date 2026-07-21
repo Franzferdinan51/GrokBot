@@ -1,12 +1,12 @@
 /**
- * OpenClaw-managed Chrome profile decoration.
+ * GrokBot-managed Chrome profile decoration.
  *
  * Applies managed-browser policy, a stable profile name, color, download
  * directory, and clean-exit markers to Chrome's profile files.
  */
 import fs from "node:fs";
 import path from "node:path";
-import { loadJsonFile, saveJsonFile } from "openclaw/plugin-sdk/json-store";
+import { loadJsonFile, saveJsonFile } from "grokbot/plugin-sdk/json-store";
 import {
   DEFAULT_OPENCLAW_BROWSER_COLOR,
   DEFAULT_OPENCLAW_BROWSER_PROFILE_NAME,
@@ -15,7 +15,7 @@ import {
 const CHROME_NETWORK_PREDICTION_DISABLED = 2;
 
 function decoratedMarkerPath(userDataDir: string) {
-  return path.join(userDataDir, ".openclaw-profile-decorated");
+  return path.join(userDataDir, ".grokbot-profile-decorated");
 }
 
 function safeReadJson(filePath: string): Record<string, unknown> | null {
@@ -125,7 +125,7 @@ export function usesOpenClawMockKeychain(userDataDir: string): boolean {
   return readDefaultProfileInfo(localState)?.openclaw_mock_keychain === true;
 }
 
-/** Disable Chromium network prediction in an OpenClaw-managed Chrome profile. */
+/** Disable Chromium network prediction in an GrokBot-managed Chrome profile. */
 export function ensureProfileNetworkPredictionDisabled(userDataDir: string) {
   const preferencesPath = path.join(userDataDir, "Default", "Preferences");
   const prefs = safeReadJson(preferencesPath) ?? {};

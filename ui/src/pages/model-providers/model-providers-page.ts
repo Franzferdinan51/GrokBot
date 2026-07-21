@@ -9,7 +9,7 @@ import { hasOperatorAdminAccess } from "../../app/operator-access.ts";
 import { renderSettingsWorkspace } from "../../components/settings-workspace.ts";
 import { t } from "../../i18n/index.ts";
 import { isGatewayMethodAdvertised } from "../../lib/gateway-methods.ts";
-import { OpenClawLightDomElement } from "../../lit/openclaw-element.ts";
+import { OpenClawLightDomElement } from "../../lit/grokbot-element.ts";
 import { SubscriptionsController } from "../../lit/subscriptions-controller.ts";
 import {
   buildModelProviderCards,
@@ -596,6 +596,6 @@ export class ModelProvidersPage extends OpenClawLightDomElement {
   }
 }
 
-if (!customElements.get("openclaw-model-providers-page")) {
-  customElements.define("openclaw-model-providers-page", ModelProvidersPage);
+if (!customElements.get("grokbot-model-providers-page")) {
+  customElements.define("grokbot-model-providers-page", ModelProvidersPage);
 }

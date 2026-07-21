@@ -1,9 +1,9 @@
 // Scheduled turn contract tests cover plugin scheduled turn metadata and timestamp bounds.
-import { MAX_DATE_TIMESTAMP_MS } from "@openclaw/normalization-core/number-coercion";
+import { MAX_DATE_TIMESTAMP_MS } from "@grokbot/normalization-core/number-coercion";
 import {
   createPluginRegistryFixture,
   registerTestPlugin,
-} from "openclaw/plugin-sdk/plugin-test-contracts";
+} from "grokbot/plugin-sdk/plugin-test-contracts";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { CronServiceContract } from "../../cron/service-contract.js";
 import type { CronJob, CronJobCreate } from "../../cron/types.js";
@@ -99,9 +99,9 @@ function createMockCronService(): CronServiceContract {
     stop: vi.fn(),
     status: vi.fn(async () => ({
       enabled: true,
-      storePath: "/tmp/openclaw-test-cron.json",
+      storePath: "/tmp/grokbot-test-cron.json",
       storage: "sqlite" as const,
-      sqlitePath: "/tmp/openclaw-test-state/state/openclaw.sqlite",
+      sqlitePath: "/tmp/grokbot-test-state/state/grokbot.sqlite",
       jobs: 0,
       nextWakeAtMs: null,
     })),

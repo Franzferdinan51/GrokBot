@@ -101,7 +101,7 @@ function primeUpdateConfigSnapshot(params: {
   includeFileHashesForWrite?: Record<string, string>;
   includeFileTargetsForWrite?: Record<string, string>;
 }) {
-  const configPath = params.configPath ?? path.join(process.cwd(), "openclaw.json5");
+  const configPath = params.configPath ?? path.join(process.cwd(), "grokbot.json5");
   const parsed = params.parsed ?? (params.config as Record<string, unknown>);
   const sourceConfig = params.sourceConfig ?? params.config;
   const runtimeConfig = params.runtimeConfig ?? params.config;
@@ -137,7 +137,7 @@ function primeUpdateConfigSnapshot(params: {
 function primeBlockedUpdateConfig(section: "hooks" | "plugins", config: OpenClawConfig): void {
   const externalPath = path.join(
     path.parse(process.cwd()).root,
-    "external-openclaw",
+    "external-grokbot",
     `${section}.json5`,
   );
   primeUpdateConfigSnapshot({
@@ -294,7 +294,7 @@ describe("plugins cli update", () => {
             "new-hooks": {
               source: "npm",
               spec: "@acme/new-hooks@1.0.0",
-              installPath: "~/.openclaw/hooks/new-hooks",
+              installPath: "~/.grokbot/hooks/new-hooks",
             },
           },
         },
@@ -308,7 +308,7 @@ describe("plugins cli update", () => {
     const installRecords = {
       alpha: {
         source: "npm",
-        spec: "@openclaw/alpha@1.0.0",
+        spec: "@grokbot/alpha@1.0.0",
         installPath: "/tmp/alpha",
       },
     } as const;
@@ -323,7 +323,7 @@ describe("plugins cli update", () => {
               "new-hooks": {
                 source: "npm",
                 spec: "@acme/new-hooks@1.0.0",
-                installPath: "/home/test/.openclaw/hooks/new-hooks",
+                installPath: "/home/test/.grokbot/hooks/new-hooks",
               },
             },
           },
@@ -357,7 +357,7 @@ describe("plugins cli update", () => {
             "new-hooks": {
               source: "npm",
               spec: "@acme/new-hooks@1.0.0",
-              installPath: "/home/test/.openclaw/hooks/new-hooks",
+              installPath: "/home/test/.grokbot/hooks/new-hooks",
             },
           },
         },
@@ -384,7 +384,7 @@ describe("plugins cli update", () => {
     const persistedRecords = {
       alpha: {
         source: "npm",
-        spec: "@openclaw/alpha@1.0.0",
+        spec: "@grokbot/alpha@1.0.0",
         installPath: "/tmp/alpha",
       },
     } as const;
@@ -430,7 +430,7 @@ describe("plugins cli update", () => {
   it("rejects invalid config snapshots before updater side effects", async () => {
     const cfg = createTrackedPluginConfig({
       pluginId: "alpha",
-      spec: "@openclaw/alpha@1.0.0",
+      spec: "@grokbot/alpha@1.0.0",
     });
     primeUpdateConfigSnapshot({
       config: cfg,
@@ -479,16 +479,16 @@ describe("plugins cli update", () => {
     const cfg = { plugins: {} } as OpenClawConfig;
     const pluginRecords = createTrackedPluginConfig({
       pluginId: "voice-call",
-      spec: "@openclaw/voice-call@1.0.0",
+      spec: "@grokbot/voice-call@1.0.0",
     }).plugins?.installs;
     const nextConfig = {
       ...cfg,
       plugins: {
         ...cfg.plugins,
         installs: {
-          "@openclaw/voice-call": {
+          "@grokbot/voice-call": {
             source: "npm",
-            spec: "@openclaw/voice-call@1.1.0",
+            spec: "@grokbot/voice-call@1.1.0",
           },
         },
       },
@@ -500,9 +500,9 @@ describe("plugins cli update", () => {
       changed: true,
       outcomes: [
         {
-          pluginId: "@openclaw/voice-call",
+          pluginId: "@grokbot/voice-call",
           status: "updated",
-          message: "Updated @openclaw/voice-call.",
+          message: "Updated @grokbot/voice-call.",
         },
       ],
     });
@@ -584,16 +584,16 @@ describe("plugins cli update", () => {
     const previousRecords = {
       brave: {
         source: "npm",
-        spec: "@openclaw/brave-plugin@2026.6.11-beta.2",
+        spec: "@grokbot/brave-plugin@2026.6.11-beta.2",
         installPath: "/tmp/brave-beta",
-        resolvedName: "@openclaw/brave-plugin",
+        resolvedName: "@grokbot/brave-plugin",
         resolvedVersion: "2026.6.11-beta.2",
       },
     } as const;
     const nextRecords = {
       brave: {
         ...previousRecords.brave,
-        spec: "@openclaw/brave-plugin@2026.6.11",
+        spec: "@grokbot/brave-plugin@2026.6.11",
         installPath: "/tmp/brave-stable",
         resolvedVersion: "2026.6.11",
       },
@@ -654,16 +654,16 @@ describe("plugins cli update", () => {
     const previousRecords = {
       brave: {
         source: "npm",
-        spec: "@openclaw/brave-plugin@2026.6.11-beta.2",
+        spec: "@grokbot/brave-plugin@2026.6.11-beta.2",
         installPath: "/tmp/brave-beta",
-        resolvedName: "@openclaw/brave-plugin",
+        resolvedName: "@grokbot/brave-plugin",
         resolvedVersion: "2026.6.11-beta.2",
       },
     } as const;
     const nextRecords = {
       brave: {
         ...previousRecords.brave,
-        spec: "@openclaw/brave-plugin@2026.6.11",
+        spec: "@grokbot/brave-plugin@2026.6.11",
         installPath: "/tmp/brave-stable",
         resolvedVersion: "2026.6.11",
       },
@@ -729,16 +729,16 @@ describe("plugins cli update", () => {
     const previousRecords = {
       brave: {
         source: "npm",
-        spec: "@openclaw/brave-plugin@2026.6.11-beta.2",
+        spec: "@grokbot/brave-plugin@2026.6.11-beta.2",
         installPath: "/tmp/brave-beta",
-        resolvedName: "@openclaw/brave-plugin",
+        resolvedName: "@grokbot/brave-plugin",
         resolvedVersion: "2026.6.11-beta.2",
       },
     } as const;
     const nextRecords = {
       brave: {
         ...previousRecords.brave,
-        spec: "@openclaw/brave-plugin@2026.6.11",
+        spec: "@grokbot/brave-plugin@2026.6.11",
         installPath: "/tmp/brave-stable",
         resolvedVersion: "2026.6.11",
       },
@@ -815,16 +815,16 @@ describe("plugins cli update", () => {
     const previousRecords = {
       brave: {
         source: "npm",
-        spec: "@openclaw/brave-plugin@2026.6.11-beta.2",
+        spec: "@grokbot/brave-plugin@2026.6.11-beta.2",
         installPath: "/tmp/brave-beta",
-        resolvedName: "@openclaw/brave-plugin",
+        resolvedName: "@grokbot/brave-plugin",
         resolvedVersion: "2026.6.11-beta.2",
       },
     } as const;
     const nextRecords = {
       brave: {
         ...previousRecords.brave,
-        spec: "@openclaw/brave-plugin@2026.6.11",
+        spec: "@grokbot/brave-plugin@2026.6.11",
         installPath: "/tmp/brave-stable",
         resolvedVersion: "2026.6.11",
       },
@@ -888,7 +888,7 @@ describe("plugins cli update", () => {
     setInstalledPluginIndexInstallRecords({
       "voice-call": {
         source: "npm",
-        spec: "@openclaw/voice-call",
+        spec: "@grokbot/voice-call",
         installPath: "/tmp/voice-call",
       },
     });
@@ -910,8 +910,8 @@ describe("plugins cli update", () => {
       label: "ClawHub",
       record: {
         source: "clawhub",
-        spec: "clawhub:@openclaw/voice-call",
-        clawhubPackage: "@openclaw/voice-call",
+        spec: "clawhub:@grokbot/voice-call",
+        clawhubPackage: "@grokbot/voice-call",
         installPath: "/tmp/voice-call",
       },
     },
@@ -919,7 +919,7 @@ describe("plugins cli update", () => {
       label: "git",
       record: {
         source: "git",
-        spec: "https://github.com/openclaw/voice-call.git",
+        spec: "https://github.com/grokbot/voice-call.git",
         installPath: "/tmp/voice-call",
       },
     },
@@ -962,7 +962,7 @@ describe("plugins cli update", () => {
   it("blocks possible legacy id migration when an included plugins section is unresolved", async () => {
     const externalPath = path.join(
       path.parse(process.cwd()).root,
-      "external-openclaw",
+      "external-grokbot",
       "plugins.json5",
     );
     const cfg = { plugins: {} } as OpenClawConfig;
@@ -977,7 +977,7 @@ describe("plugins cli update", () => {
     setInstalledPluginIndexInstallRecords({
       "voice-call": {
         source: "npm",
-        spec: "@openclaw/voice-call",
+        spec: "@grokbot/voice-call",
         installPath: "/tmp/voice-call",
       },
     });
@@ -1010,7 +1010,7 @@ describe("plugins cli update", () => {
         installs: {
           legacy: {
             source: "npm",
-            spec: "@openclaw/legacy@1.0.0",
+            spec: "@grokbot/legacy@1.0.0",
             installPath: "/tmp/legacy",
           },
         },
@@ -1094,8 +1094,8 @@ describe("plugins cli update", () => {
   });
 
   it("blocks combined plugin and hook updates when either config section uses an include", async () => {
-    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-plugin-update-"));
-    const configPath = path.join(tempRoot, "openclaw.json5");
+    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-plugin-update-"));
+    const configPath = path.join(tempRoot, "grokbot.json5");
     const pluginsPath = path.join(tempRoot, "plugins.json5");
     const pluginsRaw = "{}\n";
     fs.writeFileSync(pluginsPath, pluginsRaw);
@@ -1136,7 +1136,7 @@ describe("plugins cli update", () => {
     setInstalledPluginIndexInstallRecords({
       "voice-call": {
         source: "npm",
-        spec: "@openclaw/voice-call@1.0.0",
+        spec: "@grokbot/voice-call@1.0.0",
         installPath: "/tmp/voice-call",
       },
     });
@@ -1183,8 +1183,8 @@ describe("plugins cli update", () => {
 
   it("passes dangerous force unsafe install to plugin updates", async () => {
     const config = createTrackedPluginConfig({
-      pluginId: "openclaw-codex-app-server",
-      spec: "openclaw-codex-app-server@beta",
+      pluginId: "grokbot-codex-app-server",
+      spec: "grokbot-codex-app-server@beta",
     });
     loadConfig.mockReturnValue(config);
     setInstalledPluginIndexInstallRecords(config.plugins?.installs ?? {});
@@ -1197,13 +1197,13 @@ describe("plugins cli update", () => {
     await runPluginsCommand([
       "plugins",
       "update",
-      "openclaw-codex-app-server",
+      "grokbot-codex-app-server",
       "--dangerously-force-unsafe-install",
     ]);
 
     const updateParams = expectSingleCallParams(updateNpmInstalledPlugins);
     expect(updateParams.config).toEqual(config);
-    expect(updateParams.pluginIds).toEqual(["openclaw-codex-app-server"]);
+    expect(updateParams.pluginIds).toEqual(["grokbot-codex-app-server"]);
     expect(updateParams.dangerouslyForceUnsafeInstall).toBe(true);
     expect(
       runtimeLogs.some((message) =>
@@ -1217,8 +1217,8 @@ describe("plugins cli update", () => {
   it("does not sync official catalog specs for manual plugin updates", async () => {
     const config = createTrackedPluginConfig({
       pluginId: "codex",
-      spec: "@openclaw/codex@2026.5.28",
-      resolvedName: "@openclaw/codex",
+      spec: "@grokbot/codex@2026.5.28",
+      resolvedName: "@grokbot/codex",
     });
     loadConfig.mockReturnValue(config);
     setInstalledPluginIndexInstallRecords(config.plugins?.installs ?? {});
@@ -1240,8 +1240,8 @@ describe("plugins cli update", () => {
   it("syncs official catalog specs with beta channel context for update --all", async () => {
     const config = createTrackedPluginConfig({
       pluginId: "codex",
-      spec: "@openclaw/codex@2026.6.8-beta.1",
-      resolvedName: "@openclaw/codex",
+      spec: "@grokbot/codex@2026.6.8-beta.1",
+      resolvedName: "@grokbot/codex",
     });
     config.update = { channel: "beta" };
     loadConfig.mockReturnValue(config);
@@ -1264,8 +1264,8 @@ describe("plugins cli update", () => {
   it("passes extended-stable channel and installed core version to update --all", async () => {
     const config = createTrackedPluginConfig({
       pluginId: "codex",
-      spec: "@openclaw/codex",
-      resolvedName: "@openclaw/codex",
+      spec: "@grokbot/codex",
+      resolvedName: "@grokbot/codex",
     });
     config.update = { channel: "extended-stable" };
     loadConfig.mockReturnValue(config);
@@ -1289,8 +1289,8 @@ describe("plugins cli update", () => {
 
   it("passes ClawHub risk acknowledgement to plugin updates", async () => {
     const config = createTrackedPluginConfig({
-      pluginId: "openclaw-codex-app-server",
-      spec: "openclaw-codex-app-server@beta",
+      pluginId: "grokbot-codex-app-server",
+      spec: "grokbot-codex-app-server@beta",
     });
     loadConfig.mockReturnValue(config);
     setInstalledPluginIndexInstallRecords(config.plugins?.installs ?? {});
@@ -1303,14 +1303,14 @@ describe("plugins cli update", () => {
     await runPluginsCommand([
       "plugins",
       "update",
-      "openclaw-codex-app-server",
+      "grokbot-codex-app-server",
       "--acknowledge-clawhub-risk",
     ]);
 
     expect(updateNpmInstalledPlugins).toHaveBeenCalledWith(
       expect.objectContaining({
         config,
-        pluginIds: ["openclaw-codex-app-server"],
+        pluginIds: ["grokbot-codex-app-server"],
         acknowledgeClawHubRisk: true,
       }),
     );
@@ -1319,8 +1319,8 @@ describe("plugins cli update", () => {
   it("does not pass an interactive ClawHub risk prompt to dry-run plugin updates", async () => {
     setTty(true);
     const config = createTrackedPluginConfig({
-      pluginId: "openclaw-codex-app-server",
-      spec: "clawhub:openclaw-codex-app-server",
+      pluginId: "grokbot-codex-app-server",
+      spec: "clawhub:grokbot-codex-app-server",
     });
     loadConfig.mockReturnValue(config);
     setInstalledPluginIndexInstallRecords(config.plugins?.installs ?? {});
@@ -1330,7 +1330,7 @@ describe("plugins cli update", () => {
       outcomes: [],
     });
 
-    await runPluginsCommand(["plugins", "update", "openclaw-codex-app-server", "--dry-run"]);
+    await runPluginsCommand(["plugins", "update", "grokbot-codex-app-server", "--dry-run"]);
 
     const updateParams = expectSingleCallParams(updateNpmInstalledPlugins);
     expect(updateParams.dryRun).toBe(true);
@@ -1344,7 +1344,7 @@ describe("plugins cli update", () => {
         installs: {
           alpha: {
             source: "npm",
-            spec: "@openclaw/alpha@1.0.0",
+            spec: "@grokbot/alpha@1.0.0",
           },
         },
       },
@@ -1354,7 +1354,7 @@ describe("plugins cli update", () => {
         installs: {
           alpha: {
             source: "npm",
-            spec: "@openclaw/alpha@1.1.0",
+            spec: "@grokbot/alpha@1.1.0",
           },
         },
       },
@@ -1422,11 +1422,11 @@ describe("plugins cli update", () => {
         installs: {
           alpha: {
             source: "npm",
-            spec: "@openclaw/alpha@1.0.0",
+            spec: "@grokbot/alpha@1.0.0",
           },
           beta: {
             source: "npm",
-            spec: "@openclaw/beta@1.0.0",
+            spec: "@grokbot/beta@1.0.0",
           },
         },
       },
@@ -1436,11 +1436,11 @@ describe("plugins cli update", () => {
         installs: {
           alpha: {
             source: "npm",
-            spec: "@openclaw/alpha@1.1.0",
+            spec: "@grokbot/alpha@1.1.0",
           },
           beta: {
             source: "npm",
-            spec: "@openclaw/beta@1.0.0",
+            spec: "@grokbot/beta@1.0.0",
           },
         },
       },
@@ -1480,8 +1480,8 @@ describe("plugins cli update", () => {
         installs: {
           demo: {
             source: "clawhub",
-            spec: "clawhub:@openclaw/plugin-demo@1.0.0",
-            clawhubPackage: "@openclaw/plugin-demo",
+            spec: "clawhub:@grokbot/plugin-demo@1.0.0",
+            clawhubPackage: "@grokbot/plugin-demo",
           },
         },
       },
@@ -1519,8 +1519,8 @@ describe("plugins cli update", () => {
         installs: {
           demo: {
             source: "clawhub",
-            spec: "clawhub:@openclaw/plugin-demo",
-            clawhubPackage: "@openclaw/plugin-demo",
+            spec: "clawhub:@grokbot/plugin-demo",
+            clawhubPackage: "@grokbot/plugin-demo",
           },
         },
       },
@@ -1558,8 +1558,8 @@ describe("plugins cli update", () => {
         installs: {
           demo: {
             source: "clawhub",
-            spec: "clawhub:@openclaw/plugin-demo",
-            clawhubPackage: "@openclaw/plugin-demo",
+            spec: "clawhub:@grokbot/plugin-demo",
+            clawhubPackage: "@grokbot/plugin-demo",
           },
         },
       },
@@ -1573,7 +1573,7 @@ describe("plugins cli update", () => {
           status: "skipped",
           code: "clawhub_security_unavailable",
           message:
-            'Skipped demo ClawHub update: ClawHub security data for "@openclaw/plugin-demo@1.1.0" is unavailable, so OpenClaw left the existing installed plugin unchanged. Try again later or choose a different version.',
+            'Skipped demo ClawHub update: ClawHub security data for "@grokbot/plugin-demo@1.1.0" is unavailable, so GrokBot left the existing installed plugin unchanged. Try again later or choose a different version.',
         },
       ],
       changed: false,

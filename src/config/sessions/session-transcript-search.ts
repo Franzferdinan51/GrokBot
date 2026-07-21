@@ -2,7 +2,7 @@
 // inside the accessor's write transactions (session-transcript-index.ts);
 // this module owns the query path and schedules the shared reconcile owner
 // when doctor imports or out-of-band writes leave derived rows behind.
-import { openOpenClawAgentDatabase } from "../../state/openclaw-agent-db.js";
+import { openOpenClawAgentDatabase } from "../../state/grokbot-agent-db.js";
 import { truncateUtf16Safe } from "../../utils.js";
 import { resolveSqliteTargetFromSessionStorePath } from "./session-sqlite-target.js";
 import { listSessionsNeedingTranscriptIndexReconcile } from "./session-transcript-index.js";

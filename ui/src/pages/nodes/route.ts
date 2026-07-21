@@ -1,4 +1,4 @@
-import { definePage } from "@openclaw/uirouter";
+import { definePage } from "@grokbot/uirouter";
 import { html } from "lit";
 import type { ApplicationContext } from "../../app/context.ts";
 import {
@@ -36,6 +36,6 @@ export const page = definePage({
     import("./nodes-page.ts").then(() => ({
       header: true,
       render: (data: NodesRouteData | undefined) =>
-        html`<openclaw-nodes-page .routeData=${data}></openclaw-nodes-page>`,
+        html`<grokbot-nodes-page .routeData=${data}></grokbot-nodes-page>`,
     })),
 });

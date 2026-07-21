@@ -1,4 +1,4 @@
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { resolveNpmSpecMetadata } from "../infra/install-source-utils.js";
 import { parseRegistryNpmSpec } from "../infra/npm-registry-spec.js";
 import {
@@ -128,7 +128,7 @@ export async function updateNpmInstalledPlugins(params: {
       options.installedPayloadRunnable === true;
     if (params.disableOnFailure && !params.dryRun && !preserveInstalledPayload) {
       const disabledMessage =
-        `Disabled "${pluginId}" after plugin update failure; OpenClaw will continue without it. ` +
+        `Disabled "${pluginId}" after plugin update failure; GrokBot will continue without it. ` +
         message;
       logger.warn?.(disabledMessage);
       next = disablePluginAfterUpdateFailure(next, pluginId);

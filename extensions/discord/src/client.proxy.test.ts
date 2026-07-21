@@ -2,15 +2,15 @@
 import http from "node:http";
 import net from "node:net";
 import type { Duplex } from "node:stream";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createDiscordRestClient } from "./client.js";
 import { createDiscordRequestClient } from "./proxy-request-client.js";
 
 const makeProxyFetchMock = vi.hoisted(() => vi.fn());
-vi.mock("openclaw/plugin-sdk/fetch-runtime", async () => {
-  const actual = await vi.importActual<typeof import("openclaw/plugin-sdk/fetch-runtime")>(
-    "openclaw/plugin-sdk/fetch-runtime",
+vi.mock("grokbot/plugin-sdk/fetch-runtime", async () => {
+  const actual = await vi.importActual<typeof import("grokbot/plugin-sdk/fetch-runtime")>(
+    "grokbot/plugin-sdk/fetch-runtime",
   );
   makeProxyFetchMock.mockImplementation((proxyUrl: string) => {
     if (proxyUrl === "bad-proxy") {

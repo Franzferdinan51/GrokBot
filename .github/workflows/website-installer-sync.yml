@@ -17,7 +17,7 @@ on:
   workflow_dispatch:
     inputs:
       sync_website:
-        description: Sync openclaw.ai after verification
+        description: Sync grokbot.ai after verification
         required: false
         default: false
         type: boolean
@@ -76,7 +76,7 @@ jobs:
           timeout --kill-after=30s 20m docker run --rm \
             -v "$PWD/scripts/install.sh:/tmp/install.sh:ro" \
             node:24-bookworm-slim \
-            bash -lc 'bash /tmp/install.sh --version latest && openclaw --version'
+            bash -lc 'bash /tmp/install.sh --version latest && grokbot --version'
 
       - name: install-cli.sh in Docker
         run: |
@@ -85,7 +85,7 @@ jobs:
             -e OPENCLAW_NO_PROMPT=1 \
             -v "$PWD/scripts/install-cli.sh:/tmp/install-cli.sh:ro" \
             node:24-bookworm-slim \
-            bash -lc 'apt-get update -y && apt-get install -y curl && bash /tmp/install-cli.sh --prefix /tmp/openclaw --no-onboard --version latest && /tmp/openclaw/bin/openclaw --version'
+            bash -lc 'apt-get update -y && apt-get install -y curl && bash /tmp/install-cli.sh --prefix /tmp/grokbot --no-onboard --version latest && /tmp/grokbot/bin/grokbot --version'
 
   macos-installer:
     runs-on: macos-15
@@ -106,7 +106,7 @@ jobs:
           OPENCLAW_NO_PROMPT: "1"
         run: |
           bash scripts/install.sh --no-onboard --no-prompt --version latest
-          openclaw --version
+          grokbot --version
 
   windows-installer:
     runs-on: windows-latest
@@ -135,34 +135,34 @@ jobs:
         if: env.OPENCLAW_GH_TOKEN == ''
         run: echo "OPENCLAW_GH_TOKEN is not configured; installer verification passed, skipping website sync."
 
-      - name: Checkout OpenClaw
+      - name: Checkout GrokBot
         if: env.OPENCLAW_GH_TOKEN != ''
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
         with:
-          path: openclaw
+          path: grokbot
 
-      - name: Checkout openclaw.ai
+      - name: Checkout grokbot.ai
         if: env.OPENCLAW_GH_TOKEN != ''
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
         with:
-          repository: openclaw/openclaw.ai
+          repository: grokbot/grokbot.ai
           ref: main
           token: ${{ env.OPENCLAW_GH_TOKEN }}
-          path: openclaw.ai
+          path: grokbot.ai
 
       - name: Sync installer scripts
         if: env.OPENCLAW_GH_TOKEN != ''
         run: |
-          cp openclaw/scripts/install.sh openclaw.ai/public/install.sh
-          cp openclaw/scripts/install-cli.sh openclaw.ai/public/install-cli.sh
-          cp openclaw/scripts/install.ps1 openclaw.ai/public/install.ps1
-          rm -f openclaw.ai/public/install.cmd
-          chmod +x openclaw.ai/public/install.sh openclaw.ai/public/install-cli.sh
+          cp grokbot/scripts/install.sh grokbot.ai/public/install.sh
+          cp grokbot/scripts/install-cli.sh grokbot.ai/public/install-cli.sh
+          cp grokbot/scripts/install.ps1 grokbot.ai/public/install.ps1
+          rm -f grokbot.ai/public/install.cmd
+          chmod +x grokbot.ai/public/install.sh grokbot.ai/public/install-cli.sh
 
       - name: Check for changes
         if: env.OPENCLAW_GH_TOKEN != ''
         id: changes
-        working-directory: openclaw.ai
+        working-directory: grokbot.ai
         run: |
           if git diff --quiet -- public/install.sh public/install-cli.sh public/install.ps1 public/install.cmd; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
@@ -188,7 +188,7 @@ jobs:
 
       - name: Verify website with synced installers
         if: steps.changes.outputs.changed == 'true'
-        working-directory: openclaw.ai
+        working-directory: grokbot.ai
         run: |
           bash -n public/install.sh public/install-cli.sh
           shellcheck -e SC1091 public/install.sh public/install-cli.sh
@@ -197,14 +197,14 @@ jobs:
 
       - name: Commit and push website sync
         if: steps.changes.outputs.changed == 'true'
-        working-directory: openclaw.ai
+        working-directory: grokbot.ai
         run: |
-          git config user.name "openclaw-installer-sync[bot]"
-          git config user.email "openclaw-installer-sync[bot]@users.noreply.github.com"
+          git config user.name "grokbot-installer-sync[bot]"
+          git config user.email "grokbot-installer-sync[bot]@users.noreply.github.com"
           git add public/install.sh public/install-cli.sh public/install.ps1
           if git ls-files --error-unmatch public/install.cmd >/dev/null 2>&1; then
             git add -u -- public/install.cmd
           fi
-          git commit -m "chore: sync installers from openclaw ${GITHUB_SHA::12}"
+          git commit -m "chore: sync installers from grokbot ${GITHUB_SHA::12}"
           git pull --rebase origin main
           git push origin HEAD:main

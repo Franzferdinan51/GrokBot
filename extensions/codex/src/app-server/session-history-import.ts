@@ -1,6 +1,6 @@
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import type { PluginRuntime } from "openclaw/plugin-sdk/plugin-runtime";
-import { resolveStorePath } from "openclaw/plugin-sdk/session-store-runtime";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import type { PluginRuntime } from "grokbot/plugin-sdk/plugin-runtime";
+import { resolveStorePath } from "grokbot/plugin-sdk/session-store-runtime";
 import type { CodexThread } from "./protocol.js";
 import { importCodexThreadHistoryToTranscript } from "./transcript-mirror.js";
 

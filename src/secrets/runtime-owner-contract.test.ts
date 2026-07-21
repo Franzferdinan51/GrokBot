@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { digestRuntimeWebOwnerContract } from "./runtime-owner-contract.js";
 
 function digestWebContract(sourceConfig: OpenClawConfig): string {

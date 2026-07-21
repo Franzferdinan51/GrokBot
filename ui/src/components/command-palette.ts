@@ -10,7 +10,7 @@ import { formatRelativeTimestamp } from "../lib/format.ts";
 import { resolveSessionDisplayName } from "../lib/session-display.ts";
 import { getVisibleSessionRows } from "../lib/sessions/index.ts";
 import { normalizeLowercaseStringOrEmpty, normalizeOptionalString } from "../lib/string-coerce.ts";
-import { OpenClawLightDomContentsElement } from "../lit/openclaw-element.ts";
+import { OpenClawLightDomContentsElement } from "../lit/grokbot-element.ts";
 import { SubscriptionsController } from "../lit/subscriptions-controller.ts";
 import { isCommandPaletteShortcut } from "./command-palette-contract.ts";
 import { icons, type IconName } from "./icons.ts";
@@ -249,10 +249,10 @@ function renderCommandPalette(props: CommandPaletteProps) {
   const paletteLabel = t("palette.placeholder");
 
   return html`
-    <openclaw-modal-dialog
+    <grokbot-modal-dialog
       class="cmd-palette-overlay palette"
       label=${paletteLabel}
-      style="--openclaw-modal-width: min(640px, calc(100vw - 32px));"
+      style="--grokbot-modal-width: min(640px, calc(100vw - 32px));"
       @modal-cancel=${() => closePalette(props)}
     >
       <div
@@ -325,7 +325,7 @@ function renderCommandPalette(props: CommandPaletteProps) {
           <span><kbd>esc</kbd> ${t("palette.footer.close")}</span>
         </div>
       </div>
-    </openclaw-modal-dialog>
+    </grokbot-modal-dialog>
   `;
 }
 
@@ -560,6 +560,6 @@ export class CommandPalette extends OpenClawLightDomContentsElement {
   }
 }
 
-if (!customElements.get("openclaw-command-palette")) {
-  customElements.define("openclaw-command-palette", CommandPalette);
+if (!customElements.get("grokbot-command-palette")) {
+  customElements.define("grokbot-command-palette", CommandPalette);
 }

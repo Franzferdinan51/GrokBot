@@ -1,8 +1,8 @@
 /** Converts auth-profile credentials into agent runtime credential maps. */
-import { normalizeProviderId } from "@openclaw/model-catalog-core/provider-id";
-import { asDateTimestampMs } from "@openclaw/normalization-core/number-coercion";
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import { normalizeProviderId } from "@grokbot/model-catalog-core/provider-id";
+import { asDateTimestampMs } from "@grokbot/normalization-core/number-coercion";
+import { normalizeOptionalString } from "@grokbot/normalization-core/string-coerce";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { coerceSecretRef } from "../config/types.secrets.js";
 import { resolveAuthProfileOrder } from "./auth-profiles/order.js";
 import type { AuthProfileCredential, AuthProfileStore } from "./auth-profiles/types.js";
@@ -27,7 +27,7 @@ type ResolveAgentCredentialMapOptions = {
   config?: OpenClawConfig;
 };
 
-const AGENT_SECRET_REF_CONFIGURED_MARKER = "openclaw-secret-ref-configured";
+const AGENT_SECRET_REF_CONFIGURED_MARKER = "grokbot-secret-ref-configured";
 
 function hasConfiguredSecretRef(value: unknown): boolean {
   return coerceSecretRef(value) !== null;

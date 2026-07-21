@@ -2,7 +2,7 @@
 import {
   openOpenClawAgentDatabase,
   type OpenClawAgentDatabase,
-} from "../state/openclaw-agent-db.js";
+} from "../state/grokbot-agent-db.js";
 
 export const VOICE_SESSION_CACHE_SCOPE = "talk-client-voice-sessions";
 export const VOICE_SESSION_RECORD_VERSION = 1;

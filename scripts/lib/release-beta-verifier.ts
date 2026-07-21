@@ -1,5 +1,5 @@
 import { execFileSync } from "node:child_process";
-// Release Beta Verifier script supports OpenClaw repository automation.
+// Release Beta Verifier script supports GrokBot repository automation.
 import { createHash } from "node:crypto";
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
@@ -75,7 +75,7 @@ type WorkflowRunSummary = {
   };
 };
 
-const DEFAULT_REPO = "openclaw/openclaw";
+const DEFAULT_REPO = "grokbot/grokbot";
 const DEFAULT_CLAWHUB_REGISTRY = "https://clawhub.ai";
 const CLAWHUB_BOOTSTRAP_WORKFLOW_PATH = ".github/workflows/plugin-clawhub-new.yml";
 const CLAWHUB_BOOTSTRAP_READBACK_FILE = "clawhub-bootstrap-readback.json";
@@ -227,7 +227,7 @@ export function parseReleaseVerifyBetaArgs(argv: string[]): ReleaseVerifyBetaArg
   const version = values.shift();
   if (!version || version.startsWith("-")) {
     throw new Error(
-      "Usage: pnpm release:verify-beta -- <version> [--release-sha SHA] [--workflow-ref REF] [--clawhub-workflow-ref REF] [--full-release-validation-run ID] [--openclaw-npm-run ID] [--plugin-npm-run ID] [--plugin-clawhub-run ID] [--plugin-clawhub-bootstrap-run ID --clawhub-bootstrap-plugins NAMES] [--npm-telegram-run ID] [--skip-github-release] [--skip-clawhub]",
+      "Usage: pnpm release:verify-beta -- <version> [--release-sha SHA] [--workflow-ref REF] [--clawhub-workflow-ref REF] [--full-release-validation-run ID] [--grokbot-npm-run ID] [--plugin-npm-run ID] [--plugin-clawhub-run ID] [--plugin-clawhub-bootstrap-run ID --clawhub-bootstrap-plugins NAMES] [--npm-telegram-run ID] [--skip-github-release] [--skip-clawhub]",
     );
   }
 
@@ -308,7 +308,7 @@ export function parseReleaseVerifyBetaArgs(argv: string[]): ReleaseVerifyBetaArg
       case "--full-release-validation-run":
         parsed.workflowRuns.fullReleaseValidation = next();
         break;
-      case "--openclaw-npm-run":
+      case "--grokbot-npm-run":
         parsed.workflowRuns.openclawNpm = next();
         break;
       case "--plugin-npm-run":
@@ -360,10 +360,10 @@ export function parseReleaseVerifyBetaArgs(argv: string[]): ReleaseVerifyBetaArg
 
 export function resolveOpenClawNpmPostpublishVerifier(rootDir: string, override?: string): string {
   if (override === undefined) {
-    return resolve(rootDir, "scripts/openclaw-npm-postpublish-verify.ts");
+    return resolve(rootDir, "scripts/grokbot-npm-postpublish-verify.ts");
   }
   const verifier = resolve(override);
-  if (verifier !== resolve(TRUSTED_TOOLING_ROOT, "scripts/openclaw-npm-postpublish-verify.ts")) {
+  if (verifier !== resolve(TRUSTED_TOOLING_ROOT, "scripts/grokbot-npm-postpublish-verify.ts")) {
     throw new Error("--postpublish-verifier must select the trusted tooling verifier.");
   }
   return verifier;
@@ -1290,8 +1290,8 @@ export async function verifyBetaRelease(
     lines.push(`GitHub release OK: ${releaseUrl}`);
   }
 
-  const openclawNpm = await verifyNpmPackage("openclaw", args.version, args.distTag);
-  lines.push(`openclaw npm OK: ${args.version} (${args.distTag})`);
+  const openclawNpm = await verifyNpmPackage("grokbot", args.version, args.distTag);
+  lines.push(`grokbot npm OK: ${args.version} (${args.distTag})`);
 
   if (!args.skipPostpublish) {
     const postpublishVerifier = resolveOpenClawNpmPostpublishVerifier(
@@ -1299,7 +1299,7 @@ export async function verifyBetaRelease(
       args.postpublishVerifier,
     );
     runCommandInherited("node", ["--import", "tsx", postpublishVerifier, args.version]);
-    lines.push("openclaw postpublish verifier OK");
+    lines.push("grokbot postpublish verifier OK");
   }
 
   const npmPlugins = collectPublishablePluginPackages(rootDir, {
@@ -1395,9 +1395,9 @@ export async function verifyBetaRelease(
     workflowRuns.push(
       verifyWorkflowRun({
         id: args.workflowRuns.openclawNpm,
-        label: "OpenClaw NPM Release",
+        label: "GrokBot NPM Release",
         repo: args.repo,
-        expectedWorkflowName: "OpenClaw NPM Release",
+        expectedWorkflowName: "GrokBot NPM Release",
         expectedHeadBranch: args.workflowRef,
         rerunFailed: false,
       }),

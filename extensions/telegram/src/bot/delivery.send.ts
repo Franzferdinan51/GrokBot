@@ -1,9 +1,9 @@
 // Telegram plugin module implements delivery.send behavior.
 import type { Bot } from "grammy";
-import type { MarkdownTableMode } from "openclaw/plugin-sdk/config-contracts";
-import { createChannelApiRetryRunner } from "openclaw/plugin-sdk/retry-runtime";
-import type { RuntimeEnv } from "openclaw/plugin-sdk/runtime-env";
-import { formatErrorMessage } from "openclaw/plugin-sdk/ssrf-runtime";
+import type { MarkdownTableMode } from "grokbot/plugin-sdk/config-contracts";
+import { createChannelApiRetryRunner } from "grokbot/plugin-sdk/retry-runtime";
+import type { RuntimeEnv } from "grokbot/plugin-sdk/runtime-env";
+import { formatErrorMessage } from "grokbot/plugin-sdk/ssrf-runtime";
 import { withTelegramApiErrorLogging } from "../api-logging.js";
 import { markdownToTelegramHtml } from "../format.js";
 import { isSafeToRetrySendError, isTelegramRateLimitError } from "../network-errors.js";

@@ -5,9 +5,9 @@ import path from "node:path";
 import type {
   ChannelDoctorAdapter,
   ChannelDoctorSequenceResult,
-} from "openclaw/plugin-sdk/channel-contract";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { normalizeAgentId } from "openclaw/plugin-sdk/routing";
+} from "grokbot/plugin-sdk/channel-contract";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { normalizeAgentId } from "grokbot/plugin-sdk/routing";
 import {
   isValidAgentHarnessSessionStoreEntry,
   deleteSessionEntry,
@@ -16,9 +16,9 @@ import {
   parseSqliteSessionFileMarker,
   resolveSessionStoreBackupPaths,
   resolveStorePath,
-} from "openclaw/plugin-sdk/session-store-runtime";
-import { resolveStateDir } from "openclaw/plugin-sdk/state-paths";
-import { isRecord } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/session-store-runtime";
+import { resolveStateDir } from "grokbot/plugin-sdk/state-paths";
+import { isRecord } from "grokbot/plugin-sdk/string-coerce-runtime";
 import { legacyConfigRules, normalizeCompatibilityConfig } from "./doctor-contract.js";
 
 const FEISHU_STATE_DIR = "feishu";
@@ -907,7 +907,7 @@ function formatPreviewWarning(inspection: FeishuDoctorInspection): string {
     ...previewFindings,
     ...(remaining > 0 ? [`- ...and ${remaining} more Feishu state finding(s).`] : []),
     `- Repair will ${repairSummary}, while preserving Feishu App ID/secret config and healthy session entries.`,
-    '- Run "openclaw doctor --fix" to rebuild Feishu local state.',
+    '- Run "grokbot doctor --fix" to rebuild Feishu local state.',
   ].join("\n");
 }
 

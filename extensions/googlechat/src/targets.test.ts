@@ -35,7 +35,7 @@ const mocks = vi.hoisted(() => ({
   getGoogleChatAccessToken: vi.fn().mockResolvedValue("token"),
 }));
 
-vi.mock("openclaw/plugin-sdk/ssrf-runtime", () => {
+vi.mock("grokbot/plugin-sdk/ssrf-runtime", () => {
   return {
     buildHostnameAllowlistPolicyFromSuffixAllowlist:
       mocks.buildHostnameAllowlistPolicyFromSuffixAllowlist,
@@ -96,7 +96,7 @@ function expireGoogleChatCertCache(): void {
 }
 
 afterAll(() => {
-  vi.doUnmock("openclaw/plugin-sdk/ssrf-runtime");
+  vi.doUnmock("grokbot/plugin-sdk/ssrf-runtime");
   vi.doUnmock("google-auth-library");
   vi.doUnmock("./auth.js");
   vi.resetModules();

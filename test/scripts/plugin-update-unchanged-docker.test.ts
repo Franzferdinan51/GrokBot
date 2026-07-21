@@ -4,7 +4,7 @@ import { existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "no
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { setTimeout as delay } from "node:timers/promises";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { describe, expect, it } from "vitest";
 
 const PLUGIN_UPDATE_DOCKER_SCRIPT = "scripts/e2e/plugin-update-unchanged-docker.sh";
@@ -15,7 +15,7 @@ const PLUGIN_UPDATE_REGISTRY_SCRIPT = "scripts/e2e/lib/plugin-update/registry-se
 const CORRUPT_PLUGIN_ID = "demo-corrupt-plugin";
 
 function runProbe(command: string, payload: unknown): void {
-  const root = mkdtempSync(path.join(tmpdir(), "openclaw-plugin-update-probe-"));
+  const root = mkdtempSync(path.join(tmpdir(), "grokbot-plugin-update-probe-"));
   const payloadPath = path.join(root, "payload.json");
   try {
     writeFileSync(payloadPath, `${JSON.stringify(payload, null, 2)}\n`);
@@ -32,7 +32,7 @@ function runProbeStatus(
   command: string,
   payload: unknown,
 ): { status: number | null; stderr: string } {
-  const root = mkdtempSync(path.join(tmpdir(), "openclaw-plugin-update-probe-"));
+  const root = mkdtempSync(path.join(tmpdir(), "grokbot-plugin-update-probe-"));
   const payloadPath = path.join(root, "payload.json");
   try {
     writeFileSync(payloadPath, `${JSON.stringify(payload, null, 2)}\n`);
@@ -94,7 +94,7 @@ describe("plugin update unchanged Docker E2E", () => {
     const script = readFileSync(PLUGIN_UPDATE_SCENARIO_SCRIPT, "utf8");
 
     expect(script).toContain("OPENCLAW_PLUGIN_UPDATE_TIMEOUT_SECONDS");
-    expect(script).toContain("registry_port_file=/tmp/openclaw-e2e-registry.port");
+    expect(script).toContain("registry_port_file=/tmp/grokbot-e2e-registry.port");
     expect(script).toContain(
       'node scripts/e2e/lib/plugin-update/registry-server.mjs "$registry_port_file"',
     );
@@ -117,13 +117,13 @@ describe("plugin update unchanged Docker E2E", () => {
     expect(script).toContain('"--- plugin update output ---"');
     expect(script).toContain('"--- local registry output ---"');
     expect(script).toContain("openclaw_e2e_print_log /tmp/plugin-update-output.log");
-    expect(script).toContain("openclaw_e2e_print_log /tmp/openclaw-e2e-registry.log");
+    expect(script).toContain("openclaw_e2e_print_log /tmp/grokbot-e2e-registry.log");
     expect(script).not.toContain("cat /tmp/plugin-update-output.log");
-    expect(script).not.toContain("cat /tmp/openclaw-e2e-registry.log");
+    expect(script).not.toContain("cat /tmp/grokbot-e2e-registry.log");
   });
 
   it("serves plugin metadata from an ephemeral registry port", async () => {
-    const root = mkdtempSync(path.join(tmpdir(), "openclaw-plugin-update-registry-"));
+    const root = mkdtempSync(path.join(tmpdir(), "grokbot-plugin-update-registry-"));
     const portFile = path.join(root, "registry.port");
     const child = spawn("node", [PLUGIN_UPDATE_REGISTRY_SCRIPT, portFile], {
       stdio: "ignore",
@@ -146,7 +146,7 @@ describe("plugin update unchanged Docker E2E", () => {
   });
 
   it("bounds assert-output diagnostics to the saved command log tail", () => {
-    const root = mkdtempSync(path.join(tmpdir(), "openclaw-plugin-update-probe-"));
+    const root = mkdtempSync(path.join(tmpdir(), "grokbot-plugin-update-probe-"));
     const logPath = path.join(root, "plugin-update-output.log");
     try {
       writeFileSync(
@@ -169,7 +169,7 @@ describe("plugin update unchanged Docker E2E", () => {
   });
 
   it("detects unexpected download output before a large log tail", () => {
-    const root = mkdtempSync(path.join(tmpdir(), "openclaw-plugin-update-probe-"));
+    const root = mkdtempSync(path.join(tmpdir(), "grokbot-plugin-update-probe-"));
     const logPath = path.join(root, "plugin-update-output.log");
     try {
       writeFileSync(
@@ -201,7 +201,7 @@ describe("plugin update unchanged Docker E2E", () => {
   it("bounds corrupt plugin update commands and prints diagnostics on hangs", () => {
     const script = readFileSync(CORRUPT_UPDATE_SCENARIO_SCRIPT, "utf8");
 
-    expect(script).toContain('plugins install "npm:@openclaw/demo-corrupt-plugin@0.0.1" --force');
+    expect(script).toContain('plugins install "npm:@grokbot/demo-corrupt-plugin@0.0.1" --force');
     expect(script).toContain("config set plugins.allow '[\"demo-corrupt-plugin\"]'");
     expect(script).toContain("OPENCLAW_UPDATE_CORRUPT_PLUGIN_TIMEOUT_SECONDS");
     expect(script).toContain(
@@ -224,13 +224,13 @@ describe("plugin update unchanged Docker E2E", () => {
       'node "$entry" update --channel beta --tag "${OPENCLAW_CURRENT_PACKAGE_TGZ',
     );
     expect(script).toContain(
-      "openclaw update failed or timed out after ${update_timeout_seconds}s",
+      "grokbot update failed or timed out after ${update_timeout_seconds}s",
     );
     expect(script).toContain(
-      "updated OpenClaw entry failed or timed out after ${update_timeout_seconds}s",
+      "updated GrokBot entry failed or timed out after ${update_timeout_seconds}s",
     );
-    expect(script.match(/openclaw_e2e_print_log \/tmp\/openclaw-update-corrupt-/g)).toHaveLength(8);
-    expect(script).not.toContain("cat /tmp/openclaw-update-corrupt-");
+    expect(script.match(/openclaw_e2e_print_log \/tmp\/grokbot-update-corrupt-/g)).toHaveLength(8);
+    expect(script).not.toContain("cat /tmp/grokbot-update-corrupt-");
     expect(script.match(/assert-disabled-policy-preserved/g)).toHaveLength(2);
   });
 
@@ -261,7 +261,7 @@ describe("plugin update unchanged Docker E2E", () => {
           {
             pluginId: CORRUPT_PLUGIN_ID,
             status: "skipped",
-            message: `Disabled "${CORRUPT_PLUGIN_ID}" after plugin update failure; OpenClaw will continue without it. Failed to update ${CORRUPT_PLUGIN_ID}: registry timeout`,
+            message: `Disabled "${CORRUPT_PLUGIN_ID}" after plugin update failure; GrokBot will continue without it. Failed to update ${CORRUPT_PLUGIN_ID}: registry timeout`,
           },
         ],
       },
@@ -284,8 +284,8 @@ describe("plugin update unchanged Docker E2E", () => {
                 disabledAfterFailure.npm.outcomes[0],
                 "corrupt plugin update failure outcome",
               ).message +
-              " Run openclaw update repair to retry post-update plugin repair. " +
-              `Run openclaw plugins inspect ${CORRUPT_PLUGIN_ID} --runtime --json for details.`,
+              " Run grokbot update repair to retry post-update plugin repair. " +
+              `Run grokbot plugins inspect ${CORRUPT_PLUGIN_ID} --runtime --json for details.`,
           },
         ],
       }),

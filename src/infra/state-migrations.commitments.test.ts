@@ -11,7 +11,7 @@ import type { CommitmentRecord } from "../commitments/types.js";
 import {
   closeOpenClawStateDatabaseForTest,
   openOpenClawStateDatabase,
-} from "../state/openclaw-state-db.js";
+} from "../state/grokbot-state-db.js";
 import { captureEnv, setTestEnvValue } from "../test-utils/env.js";
 import { executeSqliteQuerySync, getNodeSqliteKysely } from "./kysely-sync.js";
 import {
@@ -34,7 +34,7 @@ describe("legacy commitments doctor migration", () => {
   });
 
   async function useStateDir(): Promise<string> {
-    const stateDir = tempDirs.make("openclaw-commitments-migration-");
+    const stateDir = tempDirs.make("grokbot-commitments-migration-");
     envSnapshot ??= captureEnv(["OPENCLAW_STATE_DIR"]);
     setTestEnvValue("OPENCLAW_STATE_DIR", stateDir);
     return stateDir;

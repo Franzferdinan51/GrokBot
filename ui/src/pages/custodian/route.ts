@@ -1,5 +1,5 @@
-import type { RouteLocation } from "@openclaw/uirouter";
-import { definePage } from "@openclaw/uirouter";
+import type { RouteLocation } from "@grokbot/uirouter";
+import { definePage } from "@grokbot/uirouter";
 import type { ApplicationContext } from "../../app/context.ts";
 import { resolveOnboardingMode } from "../../app/onboarding-mode.ts";
 

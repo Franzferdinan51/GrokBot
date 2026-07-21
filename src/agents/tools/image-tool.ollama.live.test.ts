@@ -3,7 +3,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import { createImageTool } from "./image-tool.js";
 
 const LIVE =
@@ -27,7 +27,7 @@ const VALID_RED_PNG_B64 =
 async function withLiveImageWorkspace<T>(
   run: (ctx: { agentDir: string; workspaceDir: string; imagePath: string }) => Promise<T>,
 ) {
-  const root = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-ollama-image-live-"));
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-ollama-image-live-"));
   try {
     const agentDir = path.join(root, "agent");
     const workspaceDir = path.join(root, "workspace");

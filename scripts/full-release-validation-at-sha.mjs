@@ -164,7 +164,7 @@ export function parseArgs(argv) {
     !RELEASE_BRANCH_PATTERN.test(args.targetRef) &&
     !RELEASE_TAG_PATTERN.test(args.targetRef)
   ) {
-    throw new Error("--target-ref must be a canonical OpenClaw release branch or tag");
+    throw new Error("--target-ref must be a canonical GrokBot release branch or tag");
   }
   return args;
 }
@@ -265,7 +265,7 @@ function readWorkflowRun(parentRunId, workflowSha) {
     throw new Error("parent run ID must be a positive decimal");
   }
   const workflowRun = JSON.parse(
-    run("gh", ["api", `repos/openclaw/openclaw/actions/runs/${parentRunId}`]),
+    run("gh", ["api", `repos/grokbot/grokbot/actions/runs/${parentRunId}`]),
   );
   if (workflowRun.head_sha !== workflowSha) {
     throw new Error(
@@ -302,13 +302,13 @@ function waitForWorkflowRun(parentRunId, workflowSha) {
         return;
       }
       throw new Error(
-        `Full Release Validation concluded ${String(suite.conclusion).toLowerCase()}: https://github.com/openclaw/openclaw/actions/runs/${parentRunId}`,
+        `Full Release Validation concluded ${String(suite.conclusion).toLowerCase()}: https://github.com/grokbot/grokbot/actions/runs/${parentRunId}`,
       );
     }
     Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 45_000);
   }
   throw new Error(
-    `Timed out waiting for Full Release Validation: https://github.com/openclaw/openclaw/actions/runs/${parentRunId}`,
+    `Timed out waiting for Full Release Validation: https://github.com/grokbot/grokbot/actions/runs/${parentRunId}`,
   );
 }
 
@@ -326,7 +326,7 @@ export function releaseEvidenceVerifierPath(worktreeRoot) {
       worktreeRoot,
       ".agents",
       "skills",
-      "release-openclaw-ci",
+      "release-grokbot-ci",
       "scripts",
       "release-ci-summary.mjs",
     ),
@@ -339,7 +339,7 @@ export function releaseEvidenceVerifierPath(worktreeRoot) {
 }
 
 function verifyReleaseEvidence(parentRunId, workflowSha) {
-  const verifierWorktree = mkdtempSync(join(tmpdir(), "openclaw-release-verifier-"));
+  const verifierWorktree = mkdtempSync(join(tmpdir(), "grokbot-release-verifier-"));
   try {
     run("git", ["worktree", "add", "--detach", verifierWorktree, workflowSha], {
       stdio: ["ignore", "ignore", "inherit"],
@@ -415,7 +415,7 @@ function main() {
       throw new Error("Could not determine Full Release Validation run id.");
     }
 
-    console.log(`Parent run: https://github.com/openclaw/openclaw/actions/runs/${parentRunId}`);
+    console.log(`Parent run: https://github.com/grokbot/grokbot/actions/runs/${parentRunId}`);
     waitForWorkflowRun(parentRunId, workflowSha);
     verifyReleaseEvidence(parentRunId, workflowSha);
   } finally {

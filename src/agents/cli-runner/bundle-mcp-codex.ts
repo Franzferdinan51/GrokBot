@@ -2,7 +2,7 @@
  * Codex CLI and app-server bundle MCP projection helpers.
  */
 import { normalizeConfiguredMcpServers } from "../../config/mcp-config-normalize.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import type { BundleMcpConfig, BundleMcpServerConfig } from "../../plugins/bundle-mcp.js";
 import { isValidAgentId, normalizeAgentId } from "../../routing/session-key.js";
 import { buildCodexMcpServersConfig, normalizeCodexMcpServerConfig } from "../codex-mcp-config.js";
@@ -110,7 +110,7 @@ export function buildCodexUserMcpServersThreadConfigPatch(
   return { mcp_servers };
 }
 
-/** Async runtime projection that resolves OpenClaw-managed MCP bearer tokens. */
+/** Async runtime projection that resolves GrokBot-managed MCP bearer tokens. */
 export async function buildCodexUserMcpServersThreadConfigPatchForRuntime(
   cfg: OpenClawConfig | undefined,
   options?: CodexUserMcpServersProjectionOptions,

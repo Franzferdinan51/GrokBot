@@ -11,8 +11,8 @@ Compacts exec and bash tool results with tokenjuice reducers.
 
 ## Distribution
 
-- Package: `@openclaw/tokenjuice`
-- Install route: npm; ClawHub: `clawhub:@openclaw/tokenjuice`
+- Package: `@grokbot/tokenjuice`
+- Install route: npm; ClawHub: `clawhub:@grokbot/tokenjuice`
 
 ## Surface
 

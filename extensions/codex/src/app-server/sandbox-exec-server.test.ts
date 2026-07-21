@@ -43,7 +43,7 @@ function echoFirstInputLineScript(prefix: string): string {
   ].join(" ");
 }
 
-describe("OpenClaw Codex sandbox exec-server", () => {
+describe("GrokBot Codex sandbox exec-server", () => {
   it("reports unavailable app-server remote environment support without exposing an environment", async () => {
     const sandbox = createSandboxContext({});
     const client = {
@@ -126,7 +126,7 @@ describe("OpenClaw Codex sandbox exec-server", () => {
     const addRequest = requests[0];
     expect(addRequest?.method).toBe("environment/add");
     expect(environment).toEqual({
-      environmentId: expect.stringMatching(/^openclaw-sandbox-/),
+      environmentId: expect.stringMatching(/^grokbot-sandbox-/),
       cwd: "/workspace",
     });
     const execServerUrl =
@@ -511,7 +511,7 @@ describe("OpenClaw Codex sandbox exec-server", () => {
       sandbox,
     });
     const unauthorizedUrl = execServerUrlFromClient(client).replace(
-      /\/openclaw-[^/?#]+/u,
+      /\/grokbot-[^/?#]+/u,
       "/wrong",
     );
     const socket = await openSocket(unauthorizedUrl);
@@ -527,7 +527,7 @@ describe("OpenClaw Codex sandbox exec-server", () => {
       sandbox,
     });
     const unauthorizedUrl = execServerUrlFromClient(client).replace(
-      /\/openclaw-[^/?#]+/u,
+      /\/grokbot-[^/?#]+/u,
       "/wrong",
     );
     const socket = await openSocket(unauthorizedUrl);

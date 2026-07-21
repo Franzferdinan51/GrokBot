@@ -1,5 +1,5 @@
 ---
-summary: "Adds OpenAI model provider support to OpenClaw."
+summary: "Adds OpenAI model provider support to GrokBot."
 read_when:
   - You are installing, configuring, or auditing the openai plugin
 title: "OpenAI plugin"
@@ -7,12 +7,12 @@ title: "OpenAI plugin"
 
 # OpenAI plugin
 
-Adds OpenAI model provider support to OpenClaw.
+Adds OpenAI model provider support to GrokBot.
 
 ## Distribution
 
-- Package: `@openclaw/openai-provider`
-- Install route: included in OpenClaw
+- Package: `@grokbot/openai-provider`
+- Install route: included in GrokBot
 
 ## Surface
 

@@ -17,8 +17,8 @@ import {
 } from "../auto-reply/reply/agent-runner-failure-copy.js";
 import type { OpenClawConfig } from "../config/config.js";
 import { patchSessionEntry } from "../config/sessions/session-accessor.js";
-import { closeOpenClawAgentDatabasesForTest } from "../state/openclaw-agent-db.js";
-import { closeOpenClawStateDatabaseForTest } from "../state/openclaw-state-db.js";
+import { closeOpenClawAgentDatabasesForTest } from "../state/grokbot-agent-db.js";
+import { closeOpenClawStateDatabaseForTest } from "../state/grokbot-state-db.js";
 import { stripTrailingHeartbeatNotifyFalse } from "./heartbeat-delivery-normalization.js";
 import { getLastHeartbeatEvent, resetHeartbeatEventsForTest } from "./heartbeat-events.js";
 import { claimHeartbeatOutcomeForRun } from "./heartbeat-outcome-store.js";
@@ -684,7 +684,7 @@ describe("runHeartbeatOnce heartbeat response tool", () => {
     expectHeartbeatToolPrompt(result);
   });
 
-  it("uses the isolated Codex runtime instead of the base OpenClaw runtime", async () => {
+  it("uses the isolated Codex runtime instead of the base GrokBot runtime", async () => {
     // One direction proves prompt recalculation after isolation. Reciprocal
     // runtime precedence is covered directly by thinking-runtime.test.ts.
     const result = await runPromptScenario({
@@ -692,7 +692,7 @@ describe("runHeartbeatOnce heartbeat response tool", () => {
       session: {
         modelProvider: "anthropic",
         model: "claude-sonnet-4-6",
-        agentRuntimeOverride: "openclaw",
+        agentRuntimeOverride: "grokbot",
       },
     });
 

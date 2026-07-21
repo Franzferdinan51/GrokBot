@@ -50,7 +50,7 @@ function boardSnapshot(count: number) {
 
 async function openDashboard(page: Page): Promise<void> {
   await page.addInitScript((key) => {
-    const settingsKey = "openclaw.control.settings.v1:ws://127.0.0.1:18789";
+    const settingsKey = "grokbot.control.settings.v1:ws://127.0.0.1:18789";
     const settings = JSON.parse(localStorage.getItem(settingsKey) ?? "{}") as Record<
       string,
       unknown

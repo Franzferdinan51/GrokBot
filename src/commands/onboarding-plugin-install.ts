@@ -6,13 +6,13 @@
  */
 import fs from "node:fs";
 import path from "node:path";
-import { expectDefined } from "@openclaw/normalization-core";
-import { uniqueStrings } from "@openclaw/normalization-core/string-normalization";
-import { truncateUtf16Safe } from "@openclaw/normalization-core/utf16-slice";
+import { expectDefined } from "@grokbot/normalization-core";
+import { uniqueStrings } from "@grokbot/normalization-core/string-normalization";
+import { truncateUtf16Safe } from "@grokbot/normalization-core/utf16-slice";
 import { sanitizeTerminalText } from "../../packages/terminal-core/src/safe-text.js";
 import { resolveBundledInstallPlanForCatalogEntry } from "../cli/plugin-install-plan.js";
 import { assertConfigWriteAllowedInCurrentMode } from "../config/nix-mode-write-guard.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { parseClawHubPluginSpec } from "../infra/clawhub-spec.js";
 import { isOpenClawOrgNpmSpec, parseRegistryNpmSpec } from "../infra/npm-registry-spec.js";
 import { normalizeUpdateChannel, resolveRegistryUpdateChannel } from "../infra/update-channels.js";
@@ -109,7 +109,7 @@ function shouldFallbackClawHubToNpm(params: {
   if (!isOpenClawOrgNpmSpec(params.npmSpec)) {
     return false;
   }
-  // Only official OpenClaw npm packages are safe fallback targets for ClawHub
+  // Only official GrokBot npm packages are safe fallback targets for ClawHub
   // availability failures; arbitrary npm fallbacks would change trust source.
   return (
     params.result.code === CLAWHUB_INSTALL_ERROR_CODE.PACKAGE_NOT_FOUND ||
@@ -564,7 +564,7 @@ const testing = { formatInstallErrorDetail, summarizeInstallError };
 
 if (process.env.VITEST || process.env.NODE_ENV === "test") {
   (globalThis as Record<PropertyKey, unknown>)[
-    Symbol.for("openclaw.onboardingPluginInstallTestApi")
+    Symbol.for("grokbot.onboardingPluginInstallTestApi")
   ] = testing;
 }
 

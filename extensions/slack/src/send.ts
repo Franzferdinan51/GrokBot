@@ -9,25 +9,25 @@ import {
   type MessageReceipt,
   type MessageReceiptPartKind,
   type MessageReceiptSourceResult,
-} from "openclaw/plugin-sdk/channel-outbound";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { KeyedAsyncQueue } from "openclaw/plugin-sdk/keyed-async-queue";
-import { resolveMarkdownTableMode } from "openclaw/plugin-sdk/markdown-table-runtime";
-import { requireRuntimeConfig } from "openclaw/plugin-sdk/plugin-config-runtime";
+} from "grokbot/plugin-sdk/channel-outbound";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { KeyedAsyncQueue } from "grokbot/plugin-sdk/keyed-async-queue";
+import { resolveMarkdownTableMode } from "grokbot/plugin-sdk/markdown-table-runtime";
+import { requireRuntimeConfig } from "grokbot/plugin-sdk/plugin-config-runtime";
 import {
   chunkMarkdownTextWithMode,
   isSilentReplyText,
   resolveChunkMode,
   resolveTextChunkLimit,
-} from "openclaw/plugin-sdk/reply-chunking";
-import { resolveTextChunksWithFallback } from "openclaw/plugin-sdk/reply-payload";
-import { logVerbose } from "openclaw/plugin-sdk/runtime-env";
-import { safeEqualSecret } from "openclaw/plugin-sdk/security-runtime";
+} from "grokbot/plugin-sdk/reply-chunking";
+import { resolveTextChunksWithFallback } from "grokbot/plugin-sdk/reply-payload";
+import { logVerbose } from "grokbot/plugin-sdk/runtime-env";
+import { safeEqualSecret } from "grokbot/plugin-sdk/security-runtime";
 import {
   normalizeOptionalString,
   normalizeOptionalString as normalizeSlackApiString,
-} from "openclaw/plugin-sdk/string-coerce-runtime";
-import { sliceUtf16Safe } from "openclaw/plugin-sdk/text-utility-runtime";
+} from "grokbot/plugin-sdk/string-coerce-runtime";
+import { sliceUtf16Safe } from "grokbot/plugin-sdk/text-utility-runtime";
 import type { SlackTokenSource } from "./accounts.js";
 import { resolveSlackAccount, resolveSlackOperationToken } from "./accounts.js";
 import type { SlackAuthoredTextPlacement } from "./authored-text.js";
@@ -569,7 +569,7 @@ function createSlackDeliveryMetadataId(queueId?: string): string | undefined {
     return undefined;
   }
   // Slack metadata is visible to workspace apps and members. Keep the durable
-  // store key inside OpenClaw while retaining a stable provider-side marker.
+  // store key inside GrokBot while retaining a stable provider-side marker.
   return createHash("sha256").update(normalized).digest("base64url");
 }
 

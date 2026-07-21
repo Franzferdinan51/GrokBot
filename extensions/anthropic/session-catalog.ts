@@ -1,16 +1,16 @@
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { resolveDefaultAgentId } from "openclaw/plugin-sdk/agent-runtime";
-import type { OpenClawPluginApi } from "openclaw/plugin-sdk/plugin-entry";
-import type { PluginRuntime } from "openclaw/plugin-sdk/plugin-runtime";
-import { withTimeout } from "openclaw/plugin-sdk/security-runtime";
+import { resolveDefaultAgentId } from "grokbot/plugin-sdk/agent-runtime";
+import type { OpenClawPluginApi } from "grokbot/plugin-sdk/plugin-entry";
+import type { PluginRuntime } from "grokbot/plugin-sdk/plugin-runtime";
+import { withTimeout } from "grokbot/plugin-sdk/security-runtime";
 import type {
   SessionCatalogHost,
   SessionCatalogProvider,
   SessionCatalogTranscriptItem,
-} from "openclaw/plugin-sdk/session-catalog";
-import { isRecord } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/session-catalog";
+import { isRecord } from "grokbot/plugin-sdk/string-coerce-runtime";
 import { readClaudeDesktopCustomGroups } from "./claude-desktop-groups.js";
 import { CLAUDE_CLI_BACKEND_ID, CLAUDE_CLI_DEFAULT_MODEL_REF } from "./cli-constants.js";
 import {

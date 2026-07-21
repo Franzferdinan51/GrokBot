@@ -21,7 +21,7 @@ assert.equal(typeof clearPluginCommands, "function", "clearPluginCommands missin
 assert.equal(typeof getPluginCommandSpecs, "function", "getPluginCommandSpecs missing");
 assert.equal(typeof matchPluginCommand, "function", "matchPluginCommand missing");
 
-const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-build-smoke-"));
+const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-build-smoke-"));
 const pluginId = "build-smoke-plugin";
 const distPluginDir = path.join(repoRoot, "dist", "extensions", pluginId);
 const runtimePluginDir = path.join(repoRoot, "dist-runtime", "extensions", pluginId);
@@ -48,9 +48,9 @@ fs.writeFileSync(
   path.join(distPluginDir, "package.json"),
   JSON.stringify(
     {
-      name: "@openclaw/build-smoke-plugin",
+      name: "@grokbot/build-smoke-plugin",
       type: "module",
-      openclaw: {
+      grokbot: {
         extensions: ["./index.js"],
       },
     },
@@ -60,7 +60,7 @@ fs.writeFileSync(
   "utf8",
 );
 fs.writeFileSync(
-  path.join(distPluginDir, "openclaw.plugin.json"),
+  path.join(distPluginDir, "grokbot.plugin.json"),
   JSON.stringify(
     {
       id: pluginId,
@@ -78,7 +78,7 @@ fs.writeFileSync(
 fs.writeFileSync(
   path.join(distPluginDir, "index.js"),
   [
-    "import { emptyPluginConfigSchema } from 'openclaw/plugin-sdk/plugin-entry';",
+    "import { emptyPluginConfigSchema } from 'grokbot/plugin-sdk/plugin-entry';",
     "",
     "export default {",
     `  id: ${JSON.stringify(pluginId)},`,

@@ -2,7 +2,7 @@
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createReplyOperation, replyRunRegistry } from "../auto-reply/reply/reply-run-registry.js";
 import { testing as replyRunTesting } from "../auto-reply/reply/reply-run-registry.test-support.js";
@@ -356,10 +356,10 @@ async function withTempExecApprovalsFile(
   file: Record<string, unknown>,
   run: () => Promise<void>,
 ): Promise<void> {
-  const home = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-cli-exec-approvals-"));
-  await fs.mkdir(path.join(home, ".openclaw"), { recursive: true });
+  const home = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-cli-exec-approvals-"));
+  await fs.mkdir(path.join(home, ".grokbot"), { recursive: true });
   await fs.writeFile(
-    path.join(home, ".openclaw", "exec-approvals.json"),
+    path.join(home, ".grokbot", "exec-approvals.json"),
     `${JSON.stringify(file)}\n`,
     "utf-8",
   );
@@ -371,7 +371,7 @@ async function withTempExecApprovalsFile(
 }
 
 async function withTempOpenClawHome(run: (home: string) => Promise<void>): Promise<void> {
-  const home = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-cli-home-"));
+  const home = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-cli-home-"));
   try {
     await withEnvAsync({ OPENCLAW_HOME: home }, async () => run(home));
   } finally {
@@ -482,7 +482,7 @@ describe("runCliAgent spawn path", () => {
       runId: "run-node-claude",
       prompt: "current turn",
       sessionEntry: {
-        sessionId: "openclaw-session",
+        sessionId: "grokbot-session",
         updatedAt: 1,
         execHost: "node",
         execNode: "node-a",
@@ -581,7 +581,7 @@ describe("runCliAgent spawn path", () => {
       runId: "run-node-claude-truncated",
       prompt: "current turn",
       sessionEntry: {
-        sessionId: "openclaw-session",
+        sessionId: "grokbot-session",
         updatedAt: 1,
         execHost: "node",
         execNode: "node-a",
@@ -622,7 +622,7 @@ describe("runCliAgent spawn path", () => {
       model: "claude-opus-4-8",
       runId: "run-node-abort",
       sessionEntry: {
-        sessionId: "openclaw-session",
+        sessionId: "grokbot-session",
         updatedAt: 1,
         execHost: "node",
         execNode: "node-a",
@@ -703,7 +703,7 @@ describe("runCliAgent spawn path", () => {
       sessionKey: plan.sessionKey,
       agentId: "main",
       sessionEntry: {
-        sessionId: "openclaw-session",
+        sessionId: "grokbot-session",
         updatedAt: 1,
         execHost: "node",
         execNode: "node-a",
@@ -768,7 +768,7 @@ describe("runCliAgent spawn path", () => {
       runId: "run-node-approval-timeout",
       timeoutMs: 25,
       sessionEntry: {
-        sessionId: "openclaw-session",
+        sessionId: "grokbot-session",
         updatedAt: 1,
         execHost: "node",
         execNode: "node-a",
@@ -808,7 +808,7 @@ describe("runCliAgent spawn path", () => {
       runId: "run-node-approval-registration-timeout",
       timeoutMs: 25,
       sessionEntry: {
-        sessionId: "openclaw-session",
+        sessionId: "grokbot-session",
         updatedAt: 1,
         execHost: "node",
         execNode: "node-a",
@@ -830,7 +830,7 @@ describe("runCliAgent spawn path", () => {
       model: "claude-opus-4-8",
       runId: "run-node-image",
       sessionEntry: {
-        sessionId: "openclaw-session",
+        sessionId: "grokbot-session",
         updatedAt: 1,
         execHost: "node",
         execNode: "node-a",
@@ -916,7 +916,7 @@ describe("runCliAgent spawn path", () => {
     expect(allArgs).toContain("You are a helpful assistant.");
   });
 
-  it("includes the OpenClaw skills prompt in CLI system prompts", () => {
+  it("includes the GrokBot skills prompt in CLI system prompts", () => {
     const systemPrompt = buildCliAgentSystemPrompt({
       workspaceDir: "/tmp",
       modelDisplay: "claude-cli/sonnet",
@@ -1277,7 +1277,7 @@ describe("runCliAgent spawn path", () => {
     supervisorSpawnMock.mockImplementationOnce(async (...args: unknown[]) => {
       const input = (args[0] ?? {}) as { argv?: string[] };
       systemPromptPath = requireArgAfter(input.argv, "--append-system-prompt-file");
-      expect(systemPromptPath).toContain("openclaw-cli-system-prompt-");
+      expect(systemPromptPath).toContain("grokbot-cli-system-prompt-");
       await expect(fs.readFile(systemPromptPath, "utf-8")).resolves.toBe(
         "You are a helpful assistant.",
       );
@@ -1307,7 +1307,7 @@ describe("runCliAgent spawn path", () => {
 
   it("resends system prompts through a file for soft-resumed prompt-tool drift", async () => {
     const writeSoftResumeSystemPromptFile = vi.fn(async () => ({
-      filePath: "/tmp/openclaw-soft-resume-system-prompt.md",
+      filePath: "/tmp/grokbot-soft-resume-system-prompt.md",
       cleanup: async () => {},
     }));
     setCliRunnerExecuteTestDeps({
@@ -1317,7 +1317,7 @@ describe("runCliAgent spawn path", () => {
       const input = (args[0] ?? {}) as { argv?: string[] };
       expect(input.argv).toContain("resume");
       expect(input.argv).toContain("soft-cli-session");
-      expect(input.argv?.join(" ")).toContain("/tmp/openclaw-soft-resume-system-prompt.md");
+      expect(input.argv?.join(" ")).toContain("/tmp/grokbot-soft-resume-system-prompt.md");
       return createManagedRun({
         reason: "exit",
         exitCode: 0,
@@ -1495,22 +1495,22 @@ describe("runCliAgent spawn path", () => {
           },
         },
         preparedEnv: {
-          GEMINI_CLI_HOME: "/tmp/openclaw-gemini-profile-home",
-          GEMINI_CLI_SYSTEM_SETTINGS_PATH: "/tmp/openclaw-gemini-system-settings.json",
+          GEMINI_CLI_HOME: "/tmp/grokbot-gemini-profile-home",
+          GEMINI_CLI_SYSTEM_SETTINGS_PATH: "/tmp/grokbot-gemini-system-settings.json",
         },
       }),
     );
 
     const input = mockCallArg(supervisorSpawnMock) as { env?: Record<string, string> };
     expect(input.env?.STATIC_BACKEND_FLAG).toBe("set");
-    expect(input.env?.GEMINI_CLI_HOME).toBe("/tmp/openclaw-gemini-profile-home");
+    expect(input.env?.GEMINI_CLI_HOME).toBe("/tmp/grokbot-gemini-profile-home");
     expect(input.env?.GEMINI_CLI_SYSTEM_SETTINGS_PATH).toBe(
-      "/tmp/openclaw-gemini-system-settings.json",
+      "/tmp/grokbot-gemini-system-settings.json",
     );
   });
 
   it("captures a runtime artifact for a strict CLI credential", async () => {
-    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-cli-strict-artifact-"));
+    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-cli-strict-artifact-"));
     const executable = path.join(dir, "claude-fixture");
     try {
       await fs.copyFile(process.execPath, executable);
@@ -1542,8 +1542,8 @@ describe("runCliAgent spawn path", () => {
     }
   });
 
-  it("passes OpenClaw skills to Claude as a session plugin", async () => {
-    const workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-cli-skills-"));
+  it("passes GrokBot skills to Claude as a session plugin", async () => {
+    const workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-cli-skills-"));
     const skillDir = path.join(workspaceDir, "skills", "weather");
     await fs.mkdir(skillDir, { recursive: true });
     await fs.writeFile(
@@ -1566,7 +1566,7 @@ describe("runCliAgent spawn path", () => {
       const manifest = JSON.parse(
         await fs.readFile(path.join(pluginDir, ".claude-plugin", "plugin.json"), "utf-8"),
       ) as { name?: string; skills?: string };
-      expect(manifest.name).toBe("openclaw-skills");
+      expect(manifest.name).toBe("grokbot-skills");
       expect(manifest.skills).toBe("./skills");
       await expect(
         fs.readFile(path.join(pluginDir, "skills", "weather", "SKILL.md"), "utf-8"),
@@ -2460,12 +2460,12 @@ describe("runCliAgent spawn path", () => {
       reason: "session_expired",
       code: "cli_live_session_changed",
     });
-    missingContext.openClawHistoryPrompt = "bounded OpenClaw history\n\nsecond";
+    missingContext.openClawHistoryPrompt = "bounded GrokBot history\n\nsecond";
     expect((await executePreparedCliRun(missingContext)).text).toBe("one");
     expect(supervisorSpawnMock).toHaveBeenCalledTimes(3);
     expect(
       (JSON.parse(writes.at(-1) ?? "") as { message: { content: string } }).message.content,
-    ).toBe("bounded OpenClaw history\n\nsecond");
+    ).toBe("bounded GrokBot history\n\nsecond");
   });
 
   it("keeps pre-tool commentary out of an empty-result Claude live reply", async () => {
@@ -2695,7 +2695,7 @@ describe("runCliAgent spawn path", () => {
 
   it("keeps captured live prepared backend cleanup with the whole-run owner", async () => {
     const mcpConfigDir = await fs.mkdtemp(
-      path.join(os.tmpdir(), "openclaw-cli-captured-mcp-config-"),
+      path.join(os.tmpdir(), "grokbot-cli-captured-mcp-config-"),
     );
     const mcpConfigPath = path.join(mcpConfigDir, "mcp.json");
     await fs.writeFile(
@@ -2703,7 +2703,7 @@ describe("runCliAgent spawn path", () => {
       `${JSON.stringify(
         {
           mcpServers: {
-            openclaw: {
+            grokbot: {
               type: "http",
               url: "http://127.0.0.1:23119/mcp",
               headers: {},
@@ -3356,7 +3356,7 @@ describe("runCliAgent spawn path", () => {
         "--resume",
         "claude-session",
         "--session-id",
-        "openclaw-session",
+        "grokbot-session",
         "--append-system-prompt",
         "old prompt",
         "--append-system-prompt-file",
@@ -3370,7 +3370,7 @@ describe("runCliAgent spawn path", () => {
     expect(args).toContain("--resume");
     expect(args).toContain("claude-session");
     expect(args).not.toContain("--session-id");
-    expect(args).not.toContain("openclaw-session");
+    expect(args).not.toContain("grokbot-session");
     expect(args).not.toContain("--append-system-prompt-file");
     expect(args).not.toContain("/tmp/system-prompt.md");
     expect(args).not.toContain("--append-system-prompt");
@@ -4174,7 +4174,7 @@ ${JSON.stringify({
 
   it("does not create exec approvals file while resolving Claude live policy", async () => {
     await withTempOpenClawHome(async (home) => {
-      const approvalsPath = path.join(home, ".openclaw", "exec-approvals.json");
+      const approvalsPath = path.join(home, ".grokbot", "exec-approvals.json");
       let stdoutListener: ((chunk: string) => void) | undefined;
       const stdin = {
         write: vi.fn((_data: string, cb?: (err?: Error | null) => void) => {
@@ -4659,7 +4659,7 @@ ${JSON.stringify({
     );
   });
 
-  it("answers Claude live control_request can_use_tool with allow when OpenClaw exec is YOLO despite raw --permission-mode default", async () => {
+  it("answers Claude live control_request can_use_tool with allow when GrokBot exec is YOLO despite raw --permission-mode default", async () => {
     let stdoutListener: ((chunk: string) => void) | undefined;
     const writes: string[] = [];
     const stdin = {
@@ -4708,7 +4708,7 @@ ${JSON.stringify({
     });
 
     // tools.exec resolves to full/off (would normally allow native Bash), and
-    // OpenClaw policy is authoritative over raw Claude permission-mode args.
+    // GrokBot policy is authoritative over raw Claude permission-mode args.
     const result = await executePreparedCliRun(
       buildPreparedCliRunContext({
         provider: "claude-cli",
@@ -5056,7 +5056,7 @@ ${JSON.stringify({
         name: "FailoverError",
         message:
           "Claude CLI stopped after reaching the maximum number of turns (limit: 1). " +
-          "OpenClaw run: run-live-max-turns. OpenClaw session: s1. " +
+          "GrokBot run: run-live-max-turns. GrokBot session: s1. " +
           "Claude session: live-max-turns. Tool actions may already have run; verify their effects before retrying. " +
           "Retry with a higher --max-turns value or a narrower task.",
         sessionId: "s1",
@@ -5431,7 +5431,7 @@ ${JSON.stringify({
   });
 
   it("restarts Claude live sessions when selected skills change", async () => {
-    const workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-live-skills-"));
+    const workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-live-skills-"));
     const weatherDir = path.join(workspaceDir, "skills", "weather");
     const gitDir = path.join(workspaceDir, "skills", "git");
     await fs.mkdir(weatherDir, { recursive: true });
@@ -6008,7 +6008,7 @@ ${JSON.stringify({
 
   it("loads workspace bootstrap files into the Claude CLI system prompt", async () => {
     const workspaceDir = await fs.mkdtemp(
-      path.join(os.tmpdir(), "openclaw-cli-bootstrap-context-"),
+      path.join(os.tmpdir(), "grokbot-cli-bootstrap-context-"),
     );
 
     await fs.writeFile(

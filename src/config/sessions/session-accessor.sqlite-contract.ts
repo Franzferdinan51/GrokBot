@@ -1,5 +1,5 @@
 import type { SessionTranscriptUpdate } from "../../sessions/transcript-events.js";
-import type { OpenClawConfig } from "../types.openclaw.js";
+import type { OpenClawConfig } from "../types.grokbot.js";
 import type { ResolvedSessionMaintenanceConfig } from "./store-maintenance.js";
 import type {
   DeletedAgentSessionEntryPurgeParams,

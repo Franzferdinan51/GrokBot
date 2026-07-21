@@ -1,29 +1,29 @@
 // Fal provider module implements model/runtime integration.
-import { extensionForMime } from "openclaw/plugin-sdk/media-mime";
-import { resolvePositiveTimerTimeoutMs } from "openclaw/plugin-sdk/number-runtime";
-import { isProviderApiKeyConfigured } from "openclaw/plugin-sdk/provider-auth";
+import { extensionForMime } from "grokbot/plugin-sdk/media-mime";
+import { resolvePositiveTimerTimeoutMs } from "grokbot/plugin-sdk/number-runtime";
+import { isProviderApiKeyConfigured } from "grokbot/plugin-sdk/provider-auth";
 import {
   assertOkOrThrowHttpError,
   createProviderOperationDeadline,
   readProviderJsonResponse,
   type ProviderOperationDeadline,
-} from "openclaw/plugin-sdk/provider-http";
-import { readResponseWithLimit } from "openclaw/plugin-sdk/response-limit-runtime";
+} from "grokbot/plugin-sdk/provider-http";
+import { readResponseWithLimit } from "grokbot/plugin-sdk/response-limit-runtime";
 import {
   fetchWithSsrFGuard,
   type SsrFPolicy,
   ssrfPolicyFromDangerouslyAllowPrivateNetwork,
-} from "openclaw/plugin-sdk/ssrf-runtime";
+} from "grokbot/plugin-sdk/ssrf-runtime";
 import {
   isRecord,
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalString,
-} from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/string-coerce-runtime";
 import type {
   GeneratedVideoAsset,
   VideoGenerationProvider,
   VideoGenerationRequest,
-} from "openclaw/plugin-sdk/video-generation";
+} from "grokbot/plugin-sdk/video-generation";
 import { resolveFalHttpRequestConfig } from "./http-config.js";
 
 const DEFAULT_FAL_QUEUE_BASE_URL = "https://queue.fal.run";
@@ -104,7 +104,7 @@ function setFalVideoFetchGuardForTesting(impl: typeof fetchWithSsrFGuard | null)
 }
 
 if (process.env.VITEST === "true") {
-  const key = Symbol.for("openclaw.falTestApi");
+  const key = Symbol.for("grokbot.falTestApi");
   const api = (Reflect.get(globalThis, key) as Record<string, unknown> | undefined) ?? {};
   Reflect.set(globalThis, key, { ...api, setVideoFetchGuard: setFalVideoFetchGuardForTesting });
 }

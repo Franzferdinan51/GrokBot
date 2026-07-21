@@ -1,14 +1,14 @@
 // Memory Wiki plugin module implements cli behavior.
 import fs from "node:fs/promises";
 import type { Command } from "commander";
-import { callGatewayFromCli } from "openclaw/plugin-sdk/gateway-runtime";
-import { parseStrictPositiveInteger } from "openclaw/plugin-sdk/number-runtime";
+import { callGatewayFromCli } from "grokbot/plugin-sdk/gateway-runtime";
+import { parseStrictPositiveInteger } from "grokbot/plugin-sdk/number-runtime";
 import {
   isRecord,
   normalizeStringEntries,
   uniqueStrings,
-} from "openclaw/plugin-sdk/string-coerce-runtime";
-import { truncateUtf16Safe } from "openclaw/plugin-sdk/text-utility-runtime";
+} from "grokbot/plugin-sdk/string-coerce-runtime";
+import { truncateUtf16Safe } from "grokbot/plugin-sdk/text-utility-runtime";
 import type { OpenClawConfig } from "../api.js";
 import { applyMemoryWikiMutation } from "./apply.js";
 import {

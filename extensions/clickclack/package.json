@@ -1,7 +1,7 @@
 {
-  "name": "@openclaw/clickclack",
+  "name": "@grokbot/clickclack",
   "version": "2026.7.2",
-  "description": "OpenClaw ClickClack channel plugin",
+  "description": "GrokBot ClickClack channel plugin",
   "type": "module",
   "exports": {
     ".": "./dist/index.js",
@@ -13,18 +13,18 @@
     "zod": "4.4.3"
   },
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*",
-    "openclaw": "workspace:*"
+    "@grokbot/plugin-sdk": "workspace:*",
+    "grokbot": "workspace:*"
   },
   "peerDependencies": {
-    "openclaw": ">=2026.7.2"
+    "grokbot": ">=2026.7.2"
   },
   "peerDependenciesMeta": {
-    "openclaw": {
+    "grokbot": {
       "optional": true
     }
   },
-  "openclaw": {
+  "grokbot": {
     "extensions": [
       "./index.ts"
     ],
@@ -64,8 +64,8 @@
       ]
     },
     "install": {
-      "clawhubSpec": "clawhub:@openclaw/clickclack",
-      "npmSpec": "@openclaw/clickclack",
+      "clawhubSpec": "clawhub:@grokbot/clickclack",
+      "npmSpec": "@grokbot/clickclack",
       "defaultChoice": "npm",
       "minHostVersion": ">=2026.6.9",
       "allowInvalidConfigRecovery": true
@@ -84,6 +84,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/openclaw/openclaw"
+    "url": "https://github.com/grokbot/grokbot"
   }
 }

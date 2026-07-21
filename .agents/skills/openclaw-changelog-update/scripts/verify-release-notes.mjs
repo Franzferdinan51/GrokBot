@@ -20,11 +20,11 @@ import {
   verifyGithubReleaseNotes,
 } from "../../../../scripts/render-github-release-notes.mjs";
 
-const repo = "openclaw/openclaw";
+const repo = "grokbot/grokbot";
 const githubSnapshotSchemaVersion = 1;
 const githubSnapshotCheckpointInterval = 25;
 const commitAssociationQueryBatchSize = 20;
-const excludedHandles = new Set(["openclaw", "clawsweeper", "claude", "codex", "steipete"]);
+const excludedHandles = new Set(["grokbot", "clawsweeper", "claude", "codex", "steipete"]);
 const nonEditorialTypes = new Set([
   "build",
   "chore",
@@ -67,7 +67,7 @@ function fail(message) {
 
 function printUsage() {
   console.log(`Usage:
-  node .agents/skills/openclaw-changelog-update/scripts/verify-release-notes.mjs \\
+  node .agents/skills/grokbot-changelog-update/scripts/verify-release-notes.mjs \\
     --base <tag-or-sha> --target <tag-or-sha> --version <version> [options]
 
 Required:
@@ -378,7 +378,7 @@ function githubApi(args) {
 
 export function defaultGithubSnapshotPath(base, target, gitCommonDir) {
   const defaultName = `verify-release-notes-${base}-${target}.json`;
-  return path.resolve(gitCommonDir, "openclaw-release-cache", defaultName);
+  return path.resolve(gitCommonDir, "grokbot-release-cache", defaultName);
 }
 
 function initializeGithubSnapshot(options) {
@@ -533,7 +533,7 @@ export function releaseNoteReferences(sectionSource, shippedBaselines) {
 function closingReferencesIn(text) {
   const references = [];
   for (const match of text.matchAll(
-    /\b(?:fix(?:es|ed)?|closes?|closed|resolves?|resolved)\s+(?:(?:openclaw\/openclaw)?#\d+)(?:\s*(?:,|and)\s*(?:(?:openclaw\/openclaw)?#\d+))*/gi,
+    /\b(?:fix(?:es|ed)?|closes?|closed|resolves?|resolved)\s+(?:(?:grokbot\/grokbot)?#\d+)(?:\s*(?:,|and)\s*(?:(?:grokbot\/grokbot)?#\d+))*/gi,
   )) {
     appendReferences(references, referencesIn(match[0]));
   }
@@ -1444,7 +1444,7 @@ function resolveAssociatedPullRequests(commitHashes, targetTimestamp) {
     const fields = chunk
       .map(
         (hash, offset) =>
-          `c${index + offset}: repository(owner: "openclaw", name: "openclaw") {
+          `c${index + offset}: repository(owner: "grokbot", name: "grokbot") {
             object(expression: ${JSON.stringify(hash)}) {
               ... on Commit {
                 associatedPullRequests(first: 100) {
@@ -1470,7 +1470,7 @@ function resolveAssociatedPullRequests(commitHashes, targetTimestamp) {
     const fields = chunk
       .map(
         (item, offset) =>
-          `c${offset}: repository(owner: "openclaw", name: "openclaw") {
+          `c${offset}: repository(owner: "grokbot", name: "grokbot") {
             object(expression: ${JSON.stringify(item.commitHash)}) {
               ... on Commit {
                 associatedPullRequests(first: 100, after: ${JSON.stringify(item.cursor)}) {
@@ -1524,7 +1524,7 @@ function resolveIssueRelationshipPages(nodes) {
           nodes { number }
           pageInfo { hasNextPage endCursor }
         }`;
-        return `n${offset}: repository(owner: "openclaw", name: "openclaw") {
+        return `n${offset}: repository(owner: "grokbot", name: "grokbot") {
           issueOrPullRequest(number: ${item.number}) {
             ... on ${item.type} {
               ${connection}
@@ -1564,7 +1564,7 @@ function resolveReferences(numbers) {
     const chunk = numbers.slice(index, index + 40);
     const fields = chunk
       .map(
-        (number) => `n${number}: repository(owner: "openclaw", name: "openclaw") {
+        (number) => `n${number}: repository(owner: "grokbot", name: "grokbot") {
           issueOrPullRequest(number: ${number}) {
             __typename
             ... on Issue {
@@ -1723,7 +1723,7 @@ function resolveDirectCommitAuthors(commits) {
     const fields = chunk
       .map(
         (commit, offset) =>
-          `c${index + offset}: repository(owner: "openclaw", name: "openclaw") {
+          `c${index + offset}: repository(owner: "grokbot", name: "grokbot") {
             object(expression: ${JSON.stringify(commit.hash)}) {
               ... on Commit {
                 author {
@@ -1755,7 +1755,7 @@ function resolveCommitCoauthors(commits) {
     const fields = chunk
       .map(
         (commit, offset) =>
-          `c${index + offset}: repository(owner: "openclaw", name: "openclaw") {
+          `c${index + offset}: repository(owner: "grokbot", name: "grokbot") {
             object(expression: ${JSON.stringify(commit.hash)}) {
               ... on Commit {
                 authors(first: 20) {

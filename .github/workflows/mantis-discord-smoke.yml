@@ -159,7 +159,7 @@ jobs:
           if [[ "${{ inputs.post_message }}" != "true" ]]; then
             args+=(--skip-post)
           fi
-          pnpm openclaw qa mantis discord-smoke \
+          pnpm grokbot qa mantis discord-smoke \
             --repo-root . \
             --output-dir .artifacts/qa-e2e/mantis/discord-smoke \
             "${args[@]}"

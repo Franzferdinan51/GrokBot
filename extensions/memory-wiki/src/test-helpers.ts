@@ -6,9 +6,9 @@ import type {
   PluginBlobEntryInfo,
   PluginBlobStore,
   PluginStateEntry,
-} from "openclaw/plugin-sdk/plugin-state-runtime";
-import { createTestPluginApi } from "openclaw/plugin-sdk/plugin-test-api";
-import { resolvePreferredOpenClawTmpDir } from "openclaw/plugin-sdk/temp-path";
+} from "grokbot/plugin-sdk/plugin-state-runtime";
+import { createTestPluginApi } from "grokbot/plugin-sdk/plugin-test-api";
+import { resolvePreferredOpenClawTmpDir } from "grokbot/plugin-sdk/temp-path";
 import { afterEach, vi } from "vitest";
 import type { OpenClawPluginApi } from "../api.js";
 import {

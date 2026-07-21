@@ -5,7 +5,7 @@ import { randomUUID } from "node:crypto";
 import { readFile } from "node:fs/promises";
 import { createRequire } from "node:module";
 import { parentPort, workerData } from "node:worker_threads";
-import { isRecord } from "@openclaw/normalization-core/record-coerce";
+import { isRecord } from "@grokbot/normalization-core/record-coerce";
 import { EvalFlags, JSException, QuickJS, type JSValueHandle } from "quickjs-wasi";
 import type { CodeModeApiVirtualFile } from "./code-mode-namespaces.js";
 import { CODE_MODE_SWARM_CONTROLLER_SOURCE } from "./code-mode-swarm-controller-source.js";
@@ -76,7 +76,7 @@ function getQuickJsWasmModule(): Promise<WebAssembly.Module> {
 // QuickJS error stacks are backtrace frames only ("    at file:line:col"), with
 // no leading "Name: message" header like V8. Returning .stack alone therefore
 // dropped the actual cause, surfacing failures to the model as a bare location
-// (e.g. "at openclaw-code-mode:user.js:2:37"). Lead with name+message so the
+// (e.g. "at grokbot-code-mode:user.js:2:37"). Lead with name+message so the
 // model can self-correct, and keep the frames for location.
 function formatQuickJsError(name: string, message: string, stack: string | undefined): string {
   const header = message ? `${name}: ${message}` : name;
@@ -433,7 +433,7 @@ async function createVm(params: {
       config: params.config,
     }),
   ).consume((hostRequest) => vm.global.setProp("__openclawHostRequest", hostRequest));
-  vm.evalCode(CONTROLLER_SOURCE, "openclaw-code-mode:controller.js").dispose();
+  vm.evalCode(CONTROLLER_SOURCE, "grokbot-code-mode:controller.js").dispose();
   return { vm, didTimeout: () => timedOut || deadlineReached() };
 }
 
@@ -622,7 +622,7 @@ async function runExec(input: Extract<CodeModeWorkerInput, { kind: "exec" }>) {
     prepare: () => {
       vm.evalCode(
         buildUserSource(input.source),
-        "openclaw-code-mode:user.js",
+        "grokbot-code-mode:user.js",
         EvalFlags.ASYNC,
       ).dispose();
     },

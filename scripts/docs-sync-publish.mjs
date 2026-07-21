@@ -12,7 +12,7 @@ const ROOT = path.resolve(HERE, "..");
 const SOURCE_DOCS_DIR = path.join(ROOT, "docs");
 const SOURCE_CONFIG_PATH = path.join(SOURCE_DOCS_DIR, "docs.json");
 const INTERNAL_DOCS_DIRS = ["internal"];
-const DEFAULT_CLAWHUB_SOURCE_REPO = "openclaw/clawhub";
+const DEFAULT_CLAWHUB_SOURCE_REPO = "grokbot/clawhub";
 const CLAWHUB_DOCS_TARGET_DIR = "clawhub";
 const CLAWHUB_REPO_ENV = "OPENCLAW_DOCS_SYNC_CLAWHUB_REPO";
 const DEFAULT_CLAWHUB_REPO_CANDIDATES = [
@@ -22,15 +22,15 @@ const DEFAULT_CLAWHUB_REPO_CANDIDATES = [
 const SYNC_SUPPORT_FILES = [
   {
     source: path.join(ROOT, "scripts", "check-docs-mdx.mjs"),
-    target: path.join(".openclaw-sync", "check-docs-mdx.mjs"),
+    target: path.join(".grokbot-sync", "check-docs-mdx.mjs"),
   },
   {
     source: path.join(ROOT, "scripts", "lib", "mintlify-accordion.mjs"),
-    target: path.join(".openclaw-sync", "lib", "mintlify-accordion.mjs"),
+    target: path.join(".grokbot-sync", "lib", "mintlify-accordion.mjs"),
   },
   {
     source: path.join(ROOT, ".github", "codex", "prompts", "docs-mdx-repair.md"),
-    target: path.join(".openclaw-sync", "docs-mdx-repair.md"),
+    target: path.join(".grokbot-sync", "docs-mdx-repair.md"),
   },
 ];
 const GENERATED_LOCALES = [
@@ -723,7 +723,7 @@ function writeSyncMetadata(targetRoot, args, sources) {
     repository: args.sourceRepo || "",
     sha: args.sourceSha || "",
     sources: {
-      openclaw: {
+      grokbot: {
         repository: args.sourceRepo || "",
         sha: args.sourceSha || "",
       },
@@ -735,7 +735,7 @@ function writeSyncMetadata(targetRoot, args, sources) {
     },
     syncedAt: new Date().toISOString(),
   };
-  writeJson(path.join(targetRoot, ".openclaw-sync", "source.json"), metadata);
+  writeJson(path.join(targetRoot, ".grokbot-sync", "source.json"), metadata);
 }
 
 function syncSupportFiles(targetRoot) {

@@ -1,12 +1,12 @@
-# OpenClaw Arcee AI Provider
+# GrokBot Arcee AI Provider
 
-Official OpenClaw provider plugin for Arcee AI.
+Official GrokBot provider plugin for Arcee AI.
 
-Install from OpenClaw:
+Install from GrokBot:
 
 ```bash
-openclaw plugins install @openclaw/arcee-provider
-openclaw gateway restart
+grokbot plugins install @grokbot/arcee-provider
+grokbot gateway restart
 ```
 
-See <https://docs.openclaw.ai/providers/arcee> for setup and configuration.
+See <https://docs.grokbot.ai/providers/arcee> for setup and configuration.

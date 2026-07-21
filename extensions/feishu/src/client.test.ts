@@ -206,7 +206,7 @@ beforeAll(async () => {
     EventDispatcher: vi.fn(),
     defaultHttpInstance: mockBaseHttpInstance,
   }));
-  vi.doMock("@openclaw/proxyline", () => ({
+  vi.doMock("@grokbot/proxyline", () => ({
     createAmbientNodeProxyAgent: proxyAgentCtorMock,
     hasAmbientNodeProxyConfigured: vi.fn(() =>
       Boolean(
@@ -253,7 +253,7 @@ afterAll(() => {
   vi.doUnmock("./runtime.js");
   vi.doUnmock("./subagent-hooks.js");
   vi.doUnmock("@larksuiteoapi/node-sdk");
-  vi.doUnmock("@openclaw/proxyline");
+  vi.doUnmock("@grokbot/proxyline");
   vi.resetModules();
 });
 
@@ -427,7 +427,7 @@ describe("createFeishuClient HTTP timeout", () => {
     });
   });
 
-  it("uses OpenClaw's ambient proxy agent for Feishu HTTP API requests", async () => {
+  it("uses GrokBot's ambient proxy agent for Feishu HTTP API requests", async () => {
     process.env.HTTPS_PROXY = "http://upper-https:8002";
 
     createFeishuClient({

@@ -10,9 +10,9 @@ import {
   defineChannelMessageAdapter,
   type ChannelMessageSendResult,
   type MessageReceiptPartKind,
-} from "openclaw/plugin-sdk/channel-outbound";
-import { normalizeStringEntries } from "openclaw/plugin-sdk/string-coerce-runtime";
-import { sanitizeAssistantVisibleText } from "openclaw/plugin-sdk/text-chunking";
+} from "grokbot/plugin-sdk/channel-outbound";
+import { normalizeStringEntries } from "grokbot/plugin-sdk/string-coerce-runtime";
+import { sanitizeAssistantVisibleText } from "grokbot/plugin-sdk/text-chunking";
 import { resolveTwitchAccountContext } from "./config.js";
 import { TWITCH_CHAT_MESSAGE_LIMIT } from "./constants.js";
 import { sendMessageTwitchInternal } from "./send.js";

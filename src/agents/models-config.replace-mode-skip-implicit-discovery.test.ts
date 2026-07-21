@@ -58,7 +58,7 @@ describe("models-config plan: replace mode skips implicit discovery", () => {
     const result = await resolveProvidersForModelsJsonWithDeps(
       {
         cfg,
-        agentDir: "/tmp/openclaw-models-config-replace-test",
+        agentDir: "/tmp/grokbot-models-config-replace-test",
         env: {},
       },
       { resolveImplicitProviders: resolveImplicitSpy },
@@ -85,7 +85,7 @@ describe("models-config plan: replace mode skips implicit discovery", () => {
     const result = await resolveProvidersForModelsJsonWithDeps(
       {
         cfg,
-        agentDir: "/tmp/openclaw-models-config-replace-test",
+        agentDir: "/tmp/grokbot-models-config-replace-test",
         env: {},
       },
       { resolveImplicitProviders: resolveImplicitSpy },
@@ -110,7 +110,7 @@ describe("models-config plan: replace mode skips implicit discovery", () => {
     await resolveProvidersForModelsJsonWithDeps(
       {
         cfg,
-        agentDir: "/tmp/openclaw-models-config-replace-test",
+        agentDir: "/tmp/grokbot-models-config-replace-test",
         env: {},
       },
       { resolveImplicitProviders: resolveImplicitSpy },

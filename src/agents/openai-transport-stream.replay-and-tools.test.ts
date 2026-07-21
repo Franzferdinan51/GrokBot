@@ -1,7 +1,7 @@
-import { SYSTEM_PROMPT_CACHE_BOUNDARY } from "@openclaw/ai/internal/shared";
-import { expectDefined } from "@openclaw/normalization-core";
+import { SYSTEM_PROMPT_CACHE_BOUNDARY } from "@grokbot/ai/internal/shared";
+import { expectDefined } from "@grokbot/normalization-core";
 import OpenAI from "openai";
-import type { Model } from "openclaw/plugin-sdk/llm";
+import type { Model } from "grokbot/plugin-sdk/llm";
 import { describe, expect, it, vi } from "vitest";
 import { buildOpenAICompletionsParams } from "./openai-transport-stream.js";
 import {

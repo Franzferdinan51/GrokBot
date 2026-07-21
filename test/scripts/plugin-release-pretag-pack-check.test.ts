@@ -35,19 +35,19 @@ afterEach(() => {
 });
 
 function createDualPublishPluginRepo() {
-  const repoDir = makeTempRepoRoot(tempDirs, "openclaw-plugin-pretag-pack-");
+  const repoDir = makeTempRepoRoot(tempDirs, "grokbot-plugin-pretag-pack-");
   const packageDir = join(repoDir, "extensions", "demo-plugin");
   mkdirSync(packageDir, { recursive: true });
-  writeJsonFile(join(repoDir, "package.json"), { name: "openclaw-test-root", type: "module" });
+  writeJsonFile(join(repoDir, "package.json"), { name: "grokbot-test-root", type: "module" });
   writeJsonFile(join(packageDir, "package.json"), {
-    name: "@openclaw/demo-plugin",
+    name: "@grokbot/demo-plugin",
     version: "2026.4.10",
     type: "module",
     repository: {
       type: "git",
       url: OPENCLAW_PLUGIN_NPM_REPOSITORY_URL,
     },
-    openclaw: {
+    grokbot: {
       extensions: ["./index.ts"],
       compat: {
         pluginApi: ">=2026.4.10",
@@ -56,7 +56,7 @@ function createDualPublishPluginRepo() {
         openclawVersion: "2026.4.10",
       },
       install: {
-        npmSpec: "@openclaw/demo-plugin",
+        npmSpec: "@grokbot/demo-plugin",
       },
       release: {
         publishToClawHub: true,
@@ -81,7 +81,7 @@ describe("scripts/plugin-release-pretag-pack-check.ts", () => {
     expect(collectPluginReleasePretagPackTargets(repoDir)).toEqual([
       {
         packageDir: "extensions/demo-plugin",
-        packageName: "@openclaw/demo-plugin",
+        packageName: "@grokbot/demo-plugin",
         packClawHub: true,
         packNpm: true,
       },

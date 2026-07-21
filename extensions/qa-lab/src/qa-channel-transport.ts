@@ -1,7 +1,7 @@
 // Qa Lab plugin module implements qa channel transport behavior.
 import { setTimeout as sleep } from "node:timers/promises";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { formatErrorMessage } from "grokbot/plugin-sdk/error-runtime";
 import type { QaBusState } from "./bus-state.js";
 import { QaSuiteInfraError } from "./errors.js";
 import { getQaProvider } from "./providers/index.js";
@@ -91,8 +91,8 @@ export function createQaChannelGatewayConfig(params: {
       [QA_CHANNEL_ID]: {
         enabled: true,
         baseUrl: params.baseUrl,
-        botUserId: "openclaw",
-        botDisplayName: "OpenClaw QA",
+        botUserId: "grokbot",
+        botDisplayName: "GrokBot QA",
         allowFrom: senderAllowlist ? [...senderAllowlist] : ["*"],
         ...(senderAllowlist
           ? {
@@ -115,7 +115,7 @@ export function createQaChannelGatewayConfig(params: {
     messages: {
       visibleReplies: "automatic",
       groupChat: {
-        mentionPatterns: ["\\b@?openclaw\\b"],
+        mentionPatterns: ["\\b@?grokbot\\b"],
         visibleReplies: "automatic",
       },
     },
@@ -141,7 +141,7 @@ async function handleQaChannelAction(params: {
   cfg: OpenClawConfig;
   accountId?: string | null;
 }) {
-  const { qaChannelPlugin } = await import("openclaw/plugin-sdk/qa-channel");
+  const { qaChannelPlugin } = await import("grokbot/plugin-sdk/qa-channel");
   return await qaChannelPlugin.actions?.handleAction?.({
     channel: QA_CHANNEL_ID,
     action: params.action,

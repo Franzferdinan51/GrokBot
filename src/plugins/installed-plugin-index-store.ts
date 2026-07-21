@@ -2,8 +2,8 @@
 import { existsSync, readFileSync } from "node:fs";
 import { z } from "zod";
 import { isBlockedObjectKey } from "../infra/prototype-keys.js";
-import { withOpenClawStateDatabaseReadOnly } from "../state/openclaw-state-db-readonly.js";
-import { runOpenClawStateWriteTransaction } from "../state/openclaw-state-db.js";
+import { withOpenClawStateDatabaseReadOnly } from "../state/grokbot-state-db-readonly.js";
+import { runOpenClawStateWriteTransaction } from "../state/grokbot-state-db.js";
 import { safeParseWithSchema } from "../utils/zod-parse.js";
 import { resolveCompatibilityHostVersion } from "../version.js";
 import { normalizePluginsConfig, resolveEffectiveEnableState } from "./config-state.js";
@@ -248,7 +248,7 @@ function assertWritableInstalledPluginIndexStoreOptions(
 ): void {
   if (isExplicitLegacyJsonStorePath(options)) {
     throw new Error(
-      "Explicit JSON installed plugin index paths are retired. Use the shared SQLite state DB or run openclaw doctor --fix to migrate legacy plugins/installs.json.",
+      "Explicit JSON installed plugin index paths are retired. Use the shared SQLite state DB or run grokbot doctor --fix to migrate legacy plugins/installs.json.",
     );
   }
 }

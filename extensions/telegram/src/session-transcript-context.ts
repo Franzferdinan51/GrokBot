@@ -1,4 +1,4 @@
-import { readRecentUserAssistantTextForSession } from "openclaw/plugin-sdk/session-store-runtime";
+import { readRecentUserAssistantTextForSession } from "grokbot/plugin-sdk/session-store-runtime";
 
 type BuildTelegramSessionTranscriptPromptMessagesParams = Parameters<
   typeof readRecentUserAssistantTextForSession
@@ -9,7 +9,7 @@ export async function buildTelegramSessionTranscriptPromptEntries(
 ) {
   const entries = await readRecentUserAssistantTextForSession(params);
   return entries.map((entry) => {
-    const sender = entry.role === "assistant" ? "OpenClaw" : "User";
+    const sender = entry.role === "assistant" ? "GrokBot" : "User";
     const message = {
       ...(entry.id ? { message_id: `session:${entry.id}` } : {}),
       sender: entry.sourceChannel ? `${sender} (${entry.sourceChannel})` : sender,

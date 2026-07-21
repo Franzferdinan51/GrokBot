@@ -3,7 +3,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { Command } from "commander";
-import { createTestPluginApi } from "openclaw/plugin-sdk/plugin-test-api";
+import { createTestPluginApi } from "grokbot/plugin-sdk/plugin-test-api";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { OpenClawPluginApi } from "./api.js";
 import type { VoiceCallRuntime } from "./runtime-entry.js";
@@ -16,8 +16,8 @@ vi.mock("./runtime-entry.js", () => ({
   createVoiceCallRuntime: vi.fn(async () => runtimeStub),
 }));
 
-vi.mock("openclaw/plugin-sdk/gateway-runtime", async (importOriginal) => ({
-  ...(await importOriginal<typeof import("openclaw/plugin-sdk/gateway-runtime")>()),
+vi.mock("grokbot/plugin-sdk/gateway-runtime", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("grokbot/plugin-sdk/gateway-runtime")>()),
   callGatewayFromCli: callGatewayFromCliMock,
 }));
 
@@ -253,12 +253,12 @@ describe("voice-call plugin", () => {
   afterEach(() => {
     vi.restoreAllMocks();
     vi.unstubAllEnvs();
-    delete (globalThis as Record<PropertyKey, unknown>)[Symbol.for("openclaw.voice-call.runtime")];
+    delete (globalThis as Record<PropertyKey, unknown>)[Symbol.for("grokbot.voice-call.runtime")];
     delete (globalThis as Record<PropertyKey, unknown>)[
-      Symbol.for("openclaw.voice-call.runtimePromise")
+      Symbol.for("grokbot.voice-call.runtimePromise")
     ];
     delete (globalThis as Record<PropertyKey, unknown>)[
-      Symbol.for("openclaw.voice-call.runtimeStopPromise")
+      Symbol.for("grokbot.voice-call.runtimeStopPromise")
     ];
   });
 
@@ -348,7 +348,7 @@ describe("voice-call plugin", () => {
   it("still starts the webhook runtime for gateway CLI processes", async () => {
     const previousArgv = process.argv;
     vi.stubEnv("OPENCLAW_CLI", "1");
-    process.argv = ["node", "openclaw", "gateway", "run"];
+    process.argv = ["node", "grokbot", "gateway", "run"];
     const { service } = setup({ provider: "mock" });
 
     try {
@@ -1274,7 +1274,7 @@ describe("voice-call plugin", () => {
         from: "user",
       });
       expect(runtimeStub.manager["initiateCall"]).toHaveBeenCalledWith("+15550009999", undefined, {
-        message: "OpenClaw voice call smoke test.",
+        message: "GrokBot voice call smoke test.",
         mode: "notify",
       });
       expect(stdout.output()).toContain("live-call: started call-1");

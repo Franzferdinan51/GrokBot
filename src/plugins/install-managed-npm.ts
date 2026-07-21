@@ -191,14 +191,14 @@ export async function installPluginFromManagedNpmRoot(
     prepared: ManagedNpmRootPreparedDependency,
   ): Promise<InstallPluginResult> => {
     logger.info?.(`Installing ${params.displaySpec} into ${npmRoot}…`);
-    if (params.packageName !== "openclaw") {
+    if (params.packageName !== "grokbot") {
       const repairedOpenClawPeer = await repairManagedNpmRootOpenClawPeer({
         npmRoot,
         timeoutMs,
         logger,
       });
       if (repairedOpenClawPeer) {
-        logger.info?.(`Repaired stale openclaw peer dependency in ${npmRoot}`);
+        logger.info?.(`Repaired stale grokbot peer dependency in ${npmRoot}`);
       }
     }
     const managedOverrides = await readOpenClawManagedNpmRootOverrides();
@@ -233,7 +233,7 @@ export async function installPluginFromManagedNpmRoot(
       } catch (error) {
         return await rollbackFailedManagedNpmInstall({
           ok: false,
-          error: `${cause.error}, but OpenClaw could not quarantine ${npmRoot} for rebuild: ${String(error)}`,
+          error: `${cause.error}, but GrokBot could not quarantine ${npmRoot} for rebuild: ${String(error)}`,
         });
       }
       logger.warn?.(
@@ -415,7 +415,7 @@ export async function installPluginFromManagedNpmRoot(
       );
       let freshCacheDir: string | undefined;
       try {
-        freshCacheDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-npm-cache-"));
+        freshCacheDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-npm-cache-"));
         install = await runCommandWithTimeout(npmInstallArgs, {
           ...npmInstallOptions,
           env: {
@@ -465,14 +465,14 @@ export async function installPluginFromManagedNpmRoot(
         });
       }
     }
-    if (params.packageName !== "openclaw") {
+    if (params.packageName !== "grokbot") {
       const repairedOpenClawPeer = await repairManagedNpmRootOpenClawPeer({
         npmRoot,
         timeoutMs,
         logger,
       });
       if (repairedOpenClawPeer) {
-        logger.info?.(`Repaired stale openclaw peer dependency in ${npmRoot} after npm install`);
+        logger.info?.(`Repaired stale grokbot peer dependency in ${npmRoot} after npm install`);
       }
     }
     try {
@@ -483,7 +483,7 @@ export async function installPluginFromManagedNpmRoot(
     } catch (error) {
       return await rollbackFailedManagedNpmInstall({
         ok: false,
-        error: `Failed to repair openclaw peer links after npm install: ${String(error)}`,
+        error: `Failed to repair grokbot peer links after npm install: ${String(error)}`,
       });
     }
     if (installedPackageNeedsOpenClawPeerLinkRepair(installRoot)) {

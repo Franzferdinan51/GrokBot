@@ -2,10 +2,10 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import type { ExecApprovalRequest } from "openclaw/plugin-sdk/approval-runtime";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { upsertSessionEntry } from "openclaw/plugin-sdk/session-store-runtime";
-import { closeOpenClawAgentDatabasesForTest } from "openclaw/plugin-sdk/sqlite-runtime-testing";
+import type { ExecApprovalRequest } from "grokbot/plugin-sdk/approval-runtime";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { upsertSessionEntry } from "grokbot/plugin-sdk/session-store-runtime";
+import { closeOpenClawAgentDatabasesForTest } from "grokbot/plugin-sdk/sqlite-runtime-testing";
 import { afterEach, describe, expect, it } from "vitest";
 import { normalizeMatrixApproverId } from "./approval-ids.js";
 import {
@@ -41,7 +41,7 @@ afterEach(() => {
 });
 
 function createTempDir(): string {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-matrix-exec-approvals-"));
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-matrix-exec-approvals-"));
   tempDirs.push(dir);
   return dir;
 }

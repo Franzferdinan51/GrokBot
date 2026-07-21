@@ -1,10 +1,10 @@
-// Googlechat plugin entrypoint registers its OpenClaw integration.
-import { defineBundledChannelEntry } from "openclaw/plugin-sdk/channel-entry-contract";
+// Googlechat plugin entrypoint registers its GrokBot integration.
+import { defineBundledChannelEntry } from "grokbot/plugin-sdk/channel-entry-contract";
 
 export default defineBundledChannelEntry({
   id: "googlechat",
   name: "Google Chat",
-  description: "OpenClaw Google Chat channel plugin",
+  description: "GrokBot Google Chat channel plugin",
   importMetaUrl: import.meta.url,
   plugin: {
     specifier: "./channel-plugin-api.js",

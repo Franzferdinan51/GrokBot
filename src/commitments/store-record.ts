@@ -1,8 +1,8 @@
-import { isRecord } from "@openclaw/normalization-core/record-coerce";
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+import { isRecord } from "@grokbot/normalization-core/record-coerce";
+import { normalizeOptionalString } from "@grokbot/normalization-core/string-coerce";
 // Maps commitment records to the canonical shared SQLite table.
 import type { Insertable, Selectable, Updateable } from "kysely";
-import type { DB as OpenClawStateKyselyDatabase } from "../state/openclaw-state-db.generated.js";
+import type { DB as OpenClawStateKyselyDatabase } from "../state/grokbot-state-db.generated.js";
 import type { CommitmentRecord } from "./types.js";
 
 export type CommitmentsDatabase = Pick<OpenClawStateKyselyDatabase, "commitments">;

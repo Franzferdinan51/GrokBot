@@ -55,7 +55,7 @@ export function buildBrowserDoctorReport(params: {
     id: "profile",
     label: "Profile",
     status: "pass",
-    summary: `${status.profile ?? "openclaw"} via ${transport}`,
+    summary: `${status.profile ?? "grokbot"} via ${transport}`,
   });
 
   if (transport === "chrome-mcp") {
@@ -79,13 +79,13 @@ export function buildBrowserDoctorReport(params: {
       label: "Chrome extension relay",
       status: status.running ? "pass" : "fail",
       summary: status.running
-        ? "OpenClaw Chrome extension is connected"
-        : "OpenClaw Chrome extension is not connected",
+        ? "GrokBot Chrome extension is connected"
+        : "GrokBot Chrome extension is not connected",
       ...(status.running
         ? {}
         : {
             fixHint:
-              "Install the OpenClaw Chrome extension (openclaw browser extension path), run openclaw browser extension pair, and paste the pairing string into the extension popup.",
+              "Install the GrokBot Chrome extension (grokbot browser extension path), run grokbot browser extension pair, and paste the pairing string into the extension popup.",
           }),
     });
   } else {
@@ -148,7 +148,7 @@ export function buildBrowserDoctorReport(params: {
       ...(status.cdpHttp || !status.running
         ? {}
         : {
-            fixHint: "Run openclaw browser start or inspect browser.cdpUrl/CDP port reachability.",
+            fixHint: "Run grokbot browser start or inspect browser.cdpUrl/CDP port reachability.",
           }),
     });
 
@@ -184,7 +184,7 @@ export function buildBrowserDoctorReport(params: {
 
   return {
     ok: checks.every((check) => check.status !== "fail"),
-    profile: status.profile ?? "openclaw",
+    profile: status.profile ?? "grokbot",
     transport,
     checks,
     status,

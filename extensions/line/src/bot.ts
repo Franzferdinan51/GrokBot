@@ -1,13 +1,13 @@
 // Line plugin module implements bot behavior.
 import type { webhook } from "@line/bot-sdk";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { DEFAULT_GROUP_HISTORY_LIMIT, type HistoryEntry } from "openclaw/plugin-sdk/reply-history";
-import { getRuntimeConfig } from "openclaw/plugin-sdk/runtime-config-snapshot";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { DEFAULT_GROUP_HISTORY_LIMIT, type HistoryEntry } from "grokbot/plugin-sdk/reply-history";
+import { getRuntimeConfig } from "grokbot/plugin-sdk/runtime-config-snapshot";
 import {
   createNonExitingRuntime,
   logVerbose,
   type RuntimeEnv,
-} from "openclaw/plugin-sdk/runtime-env";
+} from "grokbot/plugin-sdk/runtime-env";
 import { resolveLineAccount } from "./accounts.js";
 import { handleLineWebhookEvents } from "./bot-handlers.js";
 import type { LineInboundContext } from "./bot-message-context.js";

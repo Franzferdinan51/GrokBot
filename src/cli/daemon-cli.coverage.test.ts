@@ -186,7 +186,7 @@ describe("daemon-cli coverage", () => {
 
   beforeEach(() => {
     daemonProgram = createDaemonProgram();
-    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-daemon-cli-"));
+    tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-daemon-cli-"));
     envSnapshot = captureEnv([
       "OPENCLAW_STATE_DIR",
       "OPENCLAW_CONFIG_PATH",
@@ -194,7 +194,7 @@ describe("daemon-cli coverage", () => {
       "OPENCLAW_PROFILE",
     ]);
     setTestEnvValue("OPENCLAW_STATE_DIR", tmpDir);
-    setTestEnvValue("OPENCLAW_CONFIG_PATH", path.join(tmpDir, "openclaw.json"));
+    setTestEnvValue("OPENCLAW_CONFIG_PATH", path.join(tmpDir, "grokbot.json"));
     deleteTestEnvValue("OPENCLAW_GATEWAY_PORT");
     deleteTestEnvValue("OPENCLAW_PROFILE");
     serviceReadCommand.mockResolvedValue(null);
@@ -232,11 +232,11 @@ describe("daemon-cli coverage", () => {
       programArguments: ["/bin/node", "cli", "gateway", "--port", "19001"],
       environment: {
         OPENCLAW_PROFILE: "dev",
-        OPENCLAW_STATE_DIR: "/tmp/openclaw-daemon-state",
-        OPENCLAW_CONFIG_PATH: "/tmp/openclaw-daemon-state/openclaw.json",
+        OPENCLAW_STATE_DIR: "/tmp/grokbot-daemon-state",
+        OPENCLAW_CONFIG_PATH: "/tmp/grokbot-daemon-state/grokbot.json",
         OPENCLAW_GATEWAY_PORT: "19001",
       },
-      sourcePath: "/tmp/ai.openclaw.gateway.plist",
+      sourcePath: "/tmp/ai.grokbot.gateway.plist",
     });
 
     await runDaemonCommand(["daemon", "status", "--json"]);
@@ -305,12 +305,12 @@ describe("daemon-cli coverage", () => {
     serviceReadCommand.mockResolvedValueOnce({
       programArguments: ["/bin/node", "cli", "gateway", "--port", "18789"],
       environment: {
-        OPENCLAW_WRAPPER: "/usr/local/bin/openclaw-doppler",
+        OPENCLAW_WRAPPER: "/usr/local/bin/grokbot-doppler",
         PATH: "/custom/go/bin:/usr/bin",
         GOPATH: "/Users/test/.local/gopath",
         GOBIN: "/Users/test/.local/gopath/bin",
       },
-      sourcePath: "/tmp/ai.openclaw.gateway.plist",
+      sourcePath: "/tmp/ai.grokbot.gateway.plist",
     });
 
     await runDaemonCommand(["daemon", "install", "--force", "--json"]);
@@ -321,12 +321,12 @@ describe("daemon-cli coverage", () => {
     );
     expect(installPlanParams.existingEnvironment).toEqual({
       PATH: "/custom/go/bin:/usr/bin",
-      OPENCLAW_WRAPPER: "/usr/local/bin/openclaw-doppler",
+      OPENCLAW_WRAPPER: "/usr/local/bin/grokbot-doppler",
       GOPATH: "/Users/test/.local/gopath",
       GOBIN: "/Users/test/.local/gopath/bin",
     });
     expect((installPlanParams.env as NodeJS.ProcessEnv).OPENCLAW_WRAPPER).toBe(
-      "/usr/local/bin/openclaw-doppler",
+      "/usr/local/bin/grokbot-doppler",
     );
   });
 
@@ -338,12 +338,12 @@ describe("daemon-cli coverage", () => {
       "daemon",
       "install",
       "--wrapper",
-      "/usr/local/bin/openclaw-doppler",
+      "/usr/local/bin/grokbot-doppler",
       "--json",
     ]);
 
     expect(requireMockCallArg(buildGatewayInstallPlan, "buildGatewayInstallPlan").wrapperPath).toBe(
-      "/usr/local/bin/openclaw-doppler",
+      "/usr/local/bin/grokbot-doppler",
     );
   });
 

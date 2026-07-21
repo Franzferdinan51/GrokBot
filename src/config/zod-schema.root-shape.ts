@@ -1,4 +1,4 @@
-import { normalizeStringifiedOptionalString } from "@openclaw/normalization-core/string-coerce";
+import { normalizeStringifiedOptionalString } from "@grokbot/normalization-core/string-coerce";
 import { z } from "zod";
 import { parseDurationMs } from "../cli/parse-duration.js";
 import { SilentReplyPolicyConfigSchema } from "./zod-schema.agent-defaults.js";
@@ -219,7 +219,7 @@ export const OpenClawSchemaShape = {
               mcpArgs: z.array(z.string()).optional(),
               driver: z
                 .union([
-                  z.literal("openclaw"),
+                  z.literal("grokbot"),
                   z.literal("clawd"),
                   z.literal("existing-session"),
                   z.literal("extension"),

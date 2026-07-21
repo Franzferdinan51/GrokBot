@@ -100,7 +100,7 @@ describe("security-sensitive guard workflow", () => {
     expect(finalJob?.if).toContain("always()");
     expect(detectSteps.at(-1)?.env?.OPENCLAW_SECURITY_SENSITIVE_GUARD_MODE).toBe("detect");
     expect(finalSteps.at(-1)?.env?.OPENCLAW_SECURITY_SENSITIVE_GUARD_MODE).toBe("enforce");
-    expect(finalSteps.at(-1)?.env?.OPENCLAW_SECURITY_TEAM_SLUG).toBe("openclaw-secops");
+    expect(finalSteps.at(-1)?.env?.OPENCLAW_SECURITY_TEAM_SLUG).toBe("grokbot-secops");
     expect(finalSteps.at(-1)?.env?.OPENCLAW_SECURITY_APPROVERS).toBe(
       "vincentkoc,steipete,joshavant",
     );
@@ -117,7 +117,7 @@ describe("security-sensitive guard workflow", () => {
     expect(script).toContain('path: ".gitignore"');
     expect(script).toContain(".env");
     expect(script).toContain("/allow-security-sensitive-change");
-    expect(script).toContain("openclaw-secops");
+    expect(script).toContain("grokbot-secops");
     expect(guardSources).toContain("/memberships/");
     expect(script).toContain("A later push requires a fresh approval.");
     expect(script).toContain("process.exitCode = 1");
@@ -126,17 +126,17 @@ describe("security-sensitive guard workflow", () => {
   it("requires secops review for future workflow or guard changes", () => {
     const codeowners = readFileSync(CODEOWNERS, "utf8");
     expect(codeowners).toContain(
-      "/.github/workflows/security-sensitive-guard.yml @openclaw/openclaw-secops",
+      "/.github/workflows/security-sensitive-guard.yml @grokbot/grokbot-secops",
     );
     expect(codeowners).toContain(
-      "/test/scripts/security-sensitive-guard-workflow.test.ts @openclaw/openclaw-secops",
+      "/test/scripts/security-sensitive-guard-workflow.test.ts @grokbot/grokbot-secops",
     );
     expect(codeowners).toContain(
-      "/test/scripts/security-sensitive-guard-script.test.ts @openclaw/openclaw-secops",
+      "/test/scripts/security-sensitive-guard-script.test.ts @grokbot/grokbot-secops",
     );
     expect(codeowners).toContain(
-      "/scripts/github/security-sensitive-guard.mjs @openclaw/openclaw-secops",
+      "/scripts/github/security-sensitive-guard.mjs @grokbot/grokbot-secops",
     );
-    expect(codeowners).toContain("/.gitignore @openclaw/openclaw-secops");
+    expect(codeowners).toContain("/.gitignore @grokbot/grokbot-secops");
   });
 });

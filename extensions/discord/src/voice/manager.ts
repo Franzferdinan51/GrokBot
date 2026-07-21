@@ -1,11 +1,11 @@
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import type { DiscordAccountConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import type { DiscordAccountConfig } from "grokbot/plugin-sdk/config-contracts";
 // Discord plugin module implements manager behavior.
-import { expectDefined } from "openclaw/plugin-sdk/expect-runtime";
-import { resolveAgentRoute } from "openclaw/plugin-sdk/routing";
-import { createSubsystemLogger } from "openclaw/plugin-sdk/runtime-env";
-import type { RuntimeEnv } from "openclaw/plugin-sdk/runtime-env";
-import { formatErrorMessage } from "openclaw/plugin-sdk/ssrf-runtime";
+import { expectDefined } from "grokbot/plugin-sdk/expect-runtime";
+import { resolveAgentRoute } from "grokbot/plugin-sdk/routing";
+import { createSubsystemLogger } from "grokbot/plugin-sdk/runtime-env";
+import type { RuntimeEnv } from "grokbot/plugin-sdk/runtime-env";
+import { formatErrorMessage } from "grokbot/plugin-sdk/ssrf-runtime";
 import {
   type APIVoiceState,
   type Client,
@@ -203,7 +203,7 @@ function isFatalAutoJoinFailure(message: string): boolean {
 }
 
 function resolveVoiceConnectionGroup(accountId: string): string {
-  return `openclaw:${accountId}`;
+  return `grokbot:${accountId}`;
 }
 
 function resolveDiscordVoiceAgentRoute(params: {

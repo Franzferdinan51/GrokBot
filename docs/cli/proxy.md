@@ -1,25 +1,25 @@
 ---
-summary: "CLI reference for `openclaw proxy`, including operator-managed proxy validation and the local debug proxy capture inspector"
+summary: "CLI reference for `grokbot proxy`, including operator-managed proxy validation and the local debug proxy capture inspector"
 read_when:
   - You need to validate operator-managed proxy routing before deployment
-  - You need to capture OpenClaw transport traffic locally for debugging
+  - You need to capture GrokBot transport traffic locally for debugging
   - You want to inspect debug proxy sessions, blobs, or built-in query presets
 title: "Proxy"
 ---
 
-# `openclaw proxy`
+# `grokbot proxy`
 
 Validate operator-managed proxy routing, or run the local explicit debug proxy and inspect captured traffic.
 
 ```bash
-openclaw proxy validate [--json] [--proxy-url <url>] [--proxy-ca-file <path>] [--allowed-url <url>] [--denied-url <url>] [--apns-reachable] [--apns-authority <url>] [--timeout-ms <ms>]
-openclaw proxy start [--host <host>] [--port <port>]
-openclaw proxy run [--host <host>] [--port <port>] -- <cmd...>
-openclaw proxy coverage
-openclaw proxy sessions [--limit <count>]
-openclaw proxy query --preset <name> [--session <id>]
-openclaw proxy blob --id <blobId>
-openclaw proxy purge
+grokbot proxy validate [--json] [--proxy-url <url>] [--proxy-ca-file <path>] [--allowed-url <url>] [--denied-url <url>] [--apns-reachable] [--apns-authority <url>] [--timeout-ms <ms>]
+grokbot proxy start [--host <host>] [--port <port>]
+grokbot proxy run [--host <host>] [--port <port>] -- <cmd...>
+grokbot proxy coverage
+grokbot proxy sessions [--limit <count>]
+grokbot proxy query --preset <name> [--session <id>]
+grokbot proxy blob --id <blobId>
+grokbot proxy purge
 ```
 
 `validate` preflights an operator-managed forward proxy. The rest are debugging tools for transport-level investigation: start a local capturing proxy, run a child command through it, list capture sessions, query traffic patterns, read captured blobs, and purge local capture data.
@@ -28,7 +28,7 @@ openclaw proxy purge
 
 Checks the effective operator-managed proxy URL from `--proxy-url`, config (`proxy.proxyUrl`), or `OPENCLAW_PROXY_URL`, in that precedence order. Reports a config problem if no proxy is enabled and configured; pass `--proxy-url` for a one-off preflight without touching config.
 
-Managed proxy URLs use `http://` for a plain forward-proxy listener, or `https://` when OpenClaw must open TLS to the proxy endpoint itself before sending proxy requests. Use `--proxy-ca-file` to trust a private CA for that TLS connection.
+Managed proxy URLs use `http://` for a plain forward-proxy listener, or `https://` when GrokBot must open TLS to the proxy endpoint itself before sending proxy requests. Use `--proxy-ca-file` to trust a private CA for that TLS connection.
 
 By default it runs:
 
@@ -62,7 +62,7 @@ See [Network Proxy](/security/network-proxy) for deployment guidance and denial 
 
 `run` starts a local debug proxy, then runs `<cmd...>` (after `--`) with the proxy env applied, under its own capture session.
 
-The debug proxy's direct upstream forwarding opens upstream sockets for diagnostics. When OpenClaw managed proxy mode is active, direct forwarding for proxy requests and CONNECT tunnels is disabled by default; set `OPENCLAW_DEBUG_PROXY_ALLOW_DIRECT_CONNECT_WITH_MANAGED_PROXY=1` only for approved local diagnostics.
+The debug proxy's direct upstream forwarding opens upstream sockets for diagnostics. When GrokBot managed proxy mode is active, direct forwarding for proxy requests and CONNECT tunnels is disabled by default; set `OPENCLAW_DEBUG_PROXY_ALLOW_DIRECT_CONNECT_WITH_MANAGED_PROXY=1` only for approved local diagnostics.
 
 `coverage` prints a JSON report (`summary` + per-transport `entries`) of which transports are captured, proxy-only, or uncovered.
 

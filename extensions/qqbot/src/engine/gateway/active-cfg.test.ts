@@ -1,12 +1,12 @@
 // Qqbot tests cover active cfg plugin behavior.
-import { expectDefined } from "@openclaw/normalization-core";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import { expectDefined } from "@grokbot/normalization-core";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import { describe, expect, it, vi } from "vitest";
 import { createActiveCfgProvider } from "./active-cfg.js";
 
 const getRuntimeConfigMock = vi.hoisted(() => vi.fn<() => OpenClawConfig>());
 
-vi.mock("openclaw/plugin-sdk/runtime-config-snapshot", () => ({
+vi.mock("grokbot/plugin-sdk/runtime-config-snapshot", () => ({
   getRuntimeConfig: getRuntimeConfigMock,
 }));
 

@@ -1,5 +1,5 @@
 // Gateway RPC handlers for cron job CRUD, run logs, wake, and delivery previews.
-import { parseBoolean } from "@openclaw/normalization-core/boolean-coercion";
+import { parseBoolean } from "@grokbot/normalization-core/boolean-coercion";
 import {
   ErrorCodes,
   errorShape,
@@ -14,7 +14,7 @@ import {
   validateCronUpdateParams,
   validateWakeParams,
 } from "../../../packages/gateway-protocol/src/index.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import { resolveCronJobConfigRevision } from "../../cron/config-revision.js";
 import {
   assertValidCronAnnounceDelivery,

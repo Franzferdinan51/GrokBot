@@ -3,7 +3,7 @@ import {
   resolveAckReaction,
   shouldAckReaction as shouldAckReactionGate,
   type AckReactionScope,
-} from "openclaw/plugin-sdk/channel-feedback";
+} from "grokbot/plugin-sdk/channel-feedback";
 import {
   buildChannelInboundEventContext,
   buildMentionRegexes,
@@ -17,27 +17,27 @@ import {
   resolveEnvelopeFormatOptions,
   resolveUnmentionedGroupInboundPolicy,
   toInboundMediaFacts,
-} from "openclaw/plugin-sdk/channel-inbound";
-import { resolveChannelImplicitMentions } from "openclaw/plugin-sdk/channel-ingress-runtime";
-import { resolveChannelMessageSourceReplyDeliveryMode } from "openclaw/plugin-sdk/channel-outbound";
-import { hasControlCommand } from "openclaw/plugin-sdk/command-detection";
-import { isAbortRequestText } from "openclaw/plugin-sdk/command-primitives-runtime";
-import { shouldHandleTextCommands } from "openclaw/plugin-sdk/command-surface";
-import { ensureConfiguredBindingRouteReady } from "openclaw/plugin-sdk/conversation-runtime";
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
-import { mimeTypeFromFilePath } from "openclaw/plugin-sdk/media-mime";
-import { createChannelHistoryWindow } from "openclaw/plugin-sdk/reply-history";
-import type { FinalizedMsgContext } from "openclaw/plugin-sdk/reply-runtime";
-import { resolveInboundLastRouteSessionKey } from "openclaw/plugin-sdk/routing";
-import { logVerbose, shouldLogVerbose } from "openclaw/plugin-sdk/runtime-env";
-import { resolvePinnedMainDmOwnerFromAllowlist } from "openclaw/plugin-sdk/security-runtime";
+} from "grokbot/plugin-sdk/channel-inbound";
+import { resolveChannelImplicitMentions } from "grokbot/plugin-sdk/channel-ingress-runtime";
+import { resolveChannelMessageSourceReplyDeliveryMode } from "grokbot/plugin-sdk/channel-outbound";
+import { hasControlCommand } from "grokbot/plugin-sdk/command-detection";
+import { isAbortRequestText } from "grokbot/plugin-sdk/command-primitives-runtime";
+import { shouldHandleTextCommands } from "grokbot/plugin-sdk/command-surface";
+import { ensureConfiguredBindingRouteReady } from "grokbot/plugin-sdk/conversation-runtime";
+import { formatErrorMessage } from "grokbot/plugin-sdk/error-runtime";
+import { mimeTypeFromFilePath } from "grokbot/plugin-sdk/media-mime";
+import { createChannelHistoryWindow } from "grokbot/plugin-sdk/reply-history";
+import type { FinalizedMsgContext } from "grokbot/plugin-sdk/reply-runtime";
+import { resolveInboundLastRouteSessionKey } from "grokbot/plugin-sdk/routing";
+import { logVerbose, shouldLogVerbose } from "grokbot/plugin-sdk/runtime-env";
+import { resolvePinnedMainDmOwnerFromAllowlist } from "grokbot/plugin-sdk/security-runtime";
 import {
   asOptionalRecord as asRecord,
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalString,
-} from "openclaw/plugin-sdk/string-coerce-runtime";
-import { enqueueSystemEvent } from "openclaw/plugin-sdk/system-event-runtime";
-import { truncateUtf16Safe } from "openclaw/plugin-sdk/text-utility-runtime";
+} from "grokbot/plugin-sdk/string-coerce-runtime";
+import { enqueueSystemEvent } from "grokbot/plugin-sdk/system-event-runtime";
+import { truncateUtf16Safe } from "grokbot/plugin-sdk/text-utility-runtime";
 import { resolveSlackReplyToMode } from "../../account-reply-mode.js";
 import type { ResolvedSlackAccount } from "../../accounts.js";
 import { reactSlackMessage } from "../../actions.js";

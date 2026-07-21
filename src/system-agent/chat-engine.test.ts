@@ -2,7 +2,7 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import {
   fingerprintAuthProfileCredential,
@@ -10,7 +10,7 @@ import {
   fingerprintResolvedProviderAuth,
 } from "../agents/execution-auth-binding.js";
 import { hashSystemAgentOperation } from "../agents/tools/system-agent-tool.js";
-import type { ConfigFileSnapshot, OpenClawConfig } from "../config/types.openclaw.js";
+import type { ConfigFileSnapshot, OpenClawConfig } from "../config/types.grokbot.js";
 import type { WizardPrompter } from "../wizard/prompts.js";
 import { runSystemAgentTurnWithDeps } from "./agent-turn.test-support.js";
 import { classifySystemAgentApprovalText } from "./approval-intent.js";
@@ -34,7 +34,7 @@ const mocks = vi.hoisted(() => ({
   readConfigFileSnapshot: vi.fn(async () => ({
     exists: true,
     valid: true,
-    path: "/tmp/openclaw.json",
+    path: "/tmp/grokbot.json",
     hash: "h",
     config: {},
     sourceConfig: {},
@@ -77,7 +77,7 @@ const sharedVerifiedInferenceConfig = {
       {
         id: "main",
         default: true,
-        agentDir: "/tmp/openclaw-openclaw-chat-engine-agent",
+        agentDir: "/tmp/grokbot-grokbot-chat-engine-agent",
         model: "openai/gpt-5.5",
       },
     ],
@@ -98,7 +98,7 @@ let sharedVerifiedInference: SystemAgentVerifiedInferenceBinding | undefined;
 let sharedVerifiedInferenceDeps: SystemAgentVerifiedInferenceDeps | undefined;
 
 function useTempStateDir(): string {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-engine-"));
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-engine-"));
   tempDirs.push(dir);
   vi.stubEnv("OPENCLAW_STATE_DIR", dir);
   return dir;
@@ -108,7 +108,7 @@ function configSnapshot(config: OpenClawConfig): ConfigFileSnapshot {
   return {
     exists: true,
     valid: true,
-    path: "/tmp/openclaw.json",
+    path: "/tmp/grokbot.json",
     hash: "h",
     raw: null,
     parsed: config,
@@ -127,8 +127,8 @@ function testHarnessBinding(route: SystemAgentConfiguredRoute) {
     return { auth: {}, deps: {} };
   }
   const agentHarnessId =
-    route.agentHarnessRuntimeOverride === "auto" ? "openclaw" : route.agentHarnessRuntimeOverride;
-  if (agentHarnessId === "openclaw") {
+    route.agentHarnessRuntimeOverride === "auto" ? "grokbot" : route.agentHarnessRuntimeOverride;
+  if (agentHarnessId === "grokbot") {
     return { auth: { agentHarnessId }, deps: {} };
   }
   return {
@@ -365,7 +365,7 @@ describe("SystemAgentChatEngine", () => {
     expect(pending.text).toContain("Approval pending");
     expect(runAgentTurn).not.toHaveBeenCalled();
     expect(runConfigSet).toHaveBeenCalledOnce();
-    expect(applied?.text).toContain("[openclaw] done: config.set");
+    expect(applied?.text).toContain("[grokbot] done: config.set");
     expect(engine.hasPendingProposal()).toBe(false);
   });
 
@@ -381,7 +381,7 @@ describe("SystemAgentChatEngine", () => {
     const reply = await engine.handle("yes");
     expect(runConfigSet).toHaveBeenCalledOnce();
     expect(reply.action).toBe("none");
-    expect(reply.text).toContain("[openclaw] done: config.set");
+    expect(reply.text).toContain("[grokbot] done: config.set");
     expect(engine.hasPendingProposal()).toBe(false);
   });
 
@@ -393,7 +393,7 @@ describe("SystemAgentChatEngine", () => {
       latencyMs: 100,
     }));
     const applySetup = vi.fn(async () => ({
-      configPath: "/tmp/openclaw.json",
+      configPath: "/tmp/grokbot.json",
       configHashBefore: "before",
       configHashAfter: "after",
       bootstrapPending: true,
@@ -422,7 +422,7 @@ describe("SystemAgentChatEngine", () => {
       agentDraft: "hatch",
     });
     expect(reply.text).toContain("Your agent is hatching");
-    expect(reply.text).toContain("Settings → Ask OpenClaw");
+    expect(reply.text).toContain("Settings → Ask GrokBot");
   });
 
   it("hatches into a newly created agent and carries its id", async () => {
@@ -457,7 +457,7 @@ describe("SystemAgentChatEngine", () => {
   it("stays in setup when an established workspace has no bootstrap pending", async () => {
     useTempStateDir();
     const applySetup = vi.fn(async () => ({
-      configPath: "/tmp/openclaw.json",
+      configPath: "/tmp/grokbot.json",
       configHashBefore: "before",
       configHashAfter: "after",
       bootstrapPending: false,
@@ -498,7 +498,7 @@ describe("SystemAgentChatEngine", () => {
     const applySetup = vi.fn(async () => {
       applied = true;
       return {
-        configPath: "/tmp/openclaw.json",
+        configPath: "/tmp/grokbot.json",
         configHashBefore: "before",
         configHashAfter: "after",
         bootstrapPending: true,
@@ -593,7 +593,7 @@ describe("SystemAgentChatEngine", () => {
   it("rejects a setup write without a verified inference binding", async () => {
     useTempStateDir();
     const applySetup = vi.fn(async () => ({
-      configPath: "/tmp/openclaw.json",
+      configPath: "/tmp/grokbot.json",
       configHashBefore: null,
       configHashAfter: "after",
       bootstrapPending: false,
@@ -628,7 +628,7 @@ describe("SystemAgentChatEngine", () => {
     expect(reply.handoff).toBeUndefined();
     expect(reply.sensitive).toBeUndefined();
     expect(reply.text).toContain("replace the inference route powering this session");
-    expect(reply.text).toContain("Exit OpenClaw and run `openclaw onboard`");
+    expect(reply.text).toContain("Exit GrokBot and run `grokbot onboard`");
   });
 
   it("keeps the current inference route when model provider setup is declined", async () => {
@@ -804,7 +804,7 @@ describe("SystemAgentChatEngine", () => {
     mocks.readSetupConfigFileSnapshot.mockImplementation(async () => ({
       exists: true,
       valid: true,
-      path: "/tmp/openclaw.json",
+      path: "/tmp/grokbot.json",
       hash: currentHash,
       config: structuredClone(currentConfig),
       sourceConfig: structuredClone(currentConfig),
@@ -891,7 +891,7 @@ describe("SystemAgentChatEngine", () => {
     mocks.readSetupConfigFileSnapshot.mockResolvedValue({
       exists: true,
       valid: true,
-      path: "/tmp/openclaw.json",
+      path: "/tmp/grokbot.json",
       hash: "base-hash",
       config: structuredClone(baseConfig),
       sourceConfig: structuredClone(baseConfig),
@@ -953,7 +953,7 @@ describe("SystemAgentChatEngine", () => {
     mocks.readSetupConfigFileSnapshot.mockResolvedValue({
       exists: true,
       valid: true,
-      path: "/tmp/openclaw.json",
+      path: "/tmp/grokbot.json",
       hash: "base-hash",
       config: structuredClone(baseConfig),
       sourceConfig: structuredClone(baseConfig),
@@ -1060,7 +1060,7 @@ describe("SystemAgentChatEngine", () => {
     const reply = await engine.handle("connect telegram");
 
     expect(reply.text).toContain("Sensitive input is not accepted");
-    expect(reply.text).toContain("openclaw channels add --channel telegram");
+    expect(reply.text).toContain("grokbot channels add --channel telegram");
     expect(reply.sensitive).toBeUndefined();
 
     const handoff = await engine.handle("open channel wizard");
@@ -1095,7 +1095,7 @@ describe("SystemAgentChatEngine", () => {
       const cliReply = await cli.handle(command);
       expect(cliReply.action).toBe("none");
       expect(cliReply.handoff).toBeUndefined();
-      expect(cliReply.text).toContain("run `openclaw onboard`");
+      expect(cliReply.text).toContain("run `grokbot onboard`");
     }
 
     const gateway = new SystemAgentChatEngine({ ...common, surface: "gateway" });
@@ -1344,7 +1344,7 @@ describe("SystemAgentChatEngine", () => {
     expect(reply.action).toBe("none");
     expect(reply.handoff).toBeUndefined();
     expect(reply.text).toContain("Opening the menu wizard");
-    expect(reply.text).toContain("run `openclaw onboard`");
+    expect(reply.text).toContain("run `grokbot onboard`");
   });
 
   it("starts the channel wizard from an agent-loop directive", async () => {
@@ -1495,7 +1495,7 @@ describe("SystemAgentChatEngine", () => {
     const reply = await engine.handle("yes, apply that exact port change");
 
     expect(runConfigSet).toHaveBeenCalledOnce();
-    expect(reply.text).toContain("[openclaw] done: config.set");
+    expect(reply.text).toContain("[grokbot] done: config.set");
   });
 
   it("arms an agent turn when the classifier approves in the user's own words", async () => {
@@ -1575,7 +1575,7 @@ describe("SystemAgentChatEngine", () => {
       latencyMs: 100,
     }));
     const applySetup = vi.fn(async () => ({
-      configPath: "/tmp/openclaw.json",
+      configPath: "/tmp/grokbot.json",
       configHashBefore: "before",
       configHashAfter: "after",
       bootstrapPending: false,
@@ -1740,7 +1740,7 @@ describe("SystemAgentChatEngine", () => {
 
     const applied = await engine.handle("yes");
     expect(runConfigSet).toHaveBeenCalledOnce();
-    expect(applied.text).toContain("[openclaw] done: config.set");
+    expect(applied.text).toContain("[grokbot] done: config.set");
   });
 
   it("redacts sensitive config-set values from the AI-visible history", async () => {
@@ -1795,7 +1795,7 @@ describe("SystemAgentChatEngine", () => {
     expect(call.surface).toBe("gateway");
     // A question is not consent: mutations stay locked for this turn.
     expect(call.approvalArmed).toBe(false);
-    expect(call.session.sessionId).toMatch(/^openclaw-/);
+    expect(call.session.sessionId).toMatch(/^grokbot-/);
     // The same session flows into every turn for real multi-turn memory.
     await engine.handle("and the gateway?");
     expect(runAgentTurn.mock.calls[1]?.[0]).toMatchObject({
@@ -1975,7 +1975,7 @@ describe("SystemAgentChatEngine", () => {
       mocks.readConfigFileSnapshot.mockResolvedValue({
         exists: true,
         valid: false,
-        path: "/tmp/openclaw.json",
+        path: "/tmp/grokbot.json",
         hash: "h",
         config: {},
         sourceConfig: {},
@@ -2006,7 +2006,7 @@ describe("SystemAgentChatEngine", () => {
       mocks.readConfigFileSnapshot.mockResolvedValue({
         exists: true,
         valid: false,
-        path: "/tmp/openclaw.json",
+        path: "/tmp/grokbot.json",
         hash: "h",
         config: {},
         sourceConfig: {},
@@ -2027,7 +2027,7 @@ describe("SystemAgentChatEngine", () => {
     expect(runInvalidConfigSet).toHaveBeenCalledOnce();
     expect(reply.text).toContain("failed validation");
     expect(reply.text).toContain("The write was applied");
-    expect(reply.text).toContain("openclaw doctor --fix");
+    expect(reply.text).toContain("grokbot doctor --fix");
   });
 
   it("warns when an applied write leaves no config to verify", async () => {
@@ -2036,7 +2036,7 @@ describe("SystemAgentChatEngine", () => {
       mocks.readConfigFileSnapshot.mockResolvedValue({
         exists: false,
         valid: true,
-        path: "/tmp/openclaw.json",
+        path: "/tmp/grokbot.json",
         hash: null,
         config: {},
         sourceConfig: {},
@@ -2051,8 +2051,8 @@ describe("SystemAgentChatEngine", () => {
     expect(runConfigSet).toHaveBeenCalledOnce();
     expect(reply.text).toContain("The write was applied");
     expect(reply.text).toContain("post-write verification is unavailable");
-    expect(reply.text).toContain("openclaw.json was not found");
-    expect(reply.text).toContain("openclaw doctor --fix");
+    expect(reply.text).toContain("grokbot.json was not found");
+    expect(reply.text).toContain("grokbot doctor --fix");
   });
 
   it("warns when the applied write cannot be read back for verification", async () => {
@@ -2060,7 +2060,7 @@ describe("SystemAgentChatEngine", () => {
     const validSnapshot = {
       exists: true,
       valid: true,
-      path: "/tmp/openclaw.json",
+      path: "/tmp/grokbot.json",
       hash: "h",
       config: {},
       sourceConfig: {},
@@ -2079,8 +2079,8 @@ describe("SystemAgentChatEngine", () => {
     expect(runConfigSet).toHaveBeenCalledOnce();
     expect(reply.text).toContain("The write was applied");
     expect(reply.text).toContain("post-write verification is unavailable");
-    expect(reply.text).toContain("openclaw.json could not be read");
-    expect(reply.text).toContain("openclaw doctor --fix");
+    expect(reply.text).toContain("grokbot.json could not be read");
+    expect(reply.text).toContain("grokbot doctor --fix");
   });
 
   it("stays quiet when the post-write validation passes", async () => {
@@ -2114,7 +2114,7 @@ describe("SystemAgentChatEngine", () => {
   });
 });
 
-describe("OpenClaw agent loop backends", () => {
+describe("GrokBot agent loop backends", () => {
   it("runs a configured claude-cli model through the CLI loop with the ring-zero MCP tool", async () => {
     useTempStateDir();
     const config = {
@@ -2225,7 +2225,7 @@ function fakeOverviewLoader(
 ) {
   return async () =>
     ({
-      config: { path: "/tmp/openclaw.json", exists: false, valid: true, issues: [], hash: null },
+      config: { path: "/tmp/grokbot.json", exists: false, valid: true, issues: [], hash: null },
       agents: [],
       defaultAgentId: "main",
       defaultModel: overrides.defaultModel,
@@ -2237,8 +2237,8 @@ function fakeOverviewLoader(
       },
       gateway: { url: "ws://127.0.0.1:18789", source: "local", reachable: false },
       references: {
-        docsUrl: "https://docs.openclaw.ai",
-        sourceUrl: "https://github.com/openclaw/openclaw",
+        docsUrl: "https://docs.grokbot.ai",
+        sourceUrl: "https://github.com/grokbot/grokbot",
       },
     }) as never;
 }

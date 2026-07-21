@@ -69,7 +69,7 @@ async function withExecDryRunConfigHarness(
   }) => Promise<void>,
 ) {
   const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), prefix));
-  const configPath = path.join(tempDir, "openclaw.json");
+  const configPath = path.join(tempDir, "grokbot.json");
   const batchPath = path.join(tempDir, "batch.json");
   const markerPath = path.join(tempDir, "marker.txt");
   const envSnapshot = captureEnv(["OPENCLAW_CONFIG_PATH", "OPENCLAW_TEST_FAST"]);
@@ -112,8 +112,8 @@ async function withExecDryRunConfigHarness(
 
 describe("config cli integration", () => {
   beforeAll(async () => {
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-config-cli-warmup-"));
-    const configPath = path.join(tempDir, "openclaw.json");
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-config-cli-warmup-"));
+    const configPath = path.join(tempDir, "grokbot.json");
     const envSnapshot = captureEnv(["OPENCLAW_CONFIG_PATH", "OPENCLAW_TEST_FAST"]);
     try {
       fs.writeFileSync(configPath, `${JSON.stringify({ gateway: { port: 18789 } }, null, 2)}\n`);
@@ -136,8 +136,8 @@ describe("config cli integration", () => {
   });
 
   it("accepts plugin hook conversation-access policy via config set", async () => {
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-config-cli-plugin-hooks-"));
-    const configPath = path.join(tempDir, "openclaw.json");
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-config-cli-plugin-hooks-"));
+    const configPath = path.join(tempDir, "grokbot.json");
     const envSnapshot = captureEnv(["OPENCLAW_CONFIG_PATH", "OPENCLAW_TEST_FAST"]);
     try {
       fs.writeFileSync(
@@ -159,7 +159,7 @@ describe("config cli integration", () => {
 
       const runtime = createTestRuntime();
       await runConfigSet({
-        path: "plugins.entries.openclaw-mem0.hooks.allowConversationAccess",
+        path: "plugins.entries.grokbot-mem0.hooks.allowConversationAccess",
         value: "true",
         cliOptions: {},
         runtime: runtime.runtime,
@@ -167,7 +167,7 @@ describe("config cli integration", () => {
 
       expect(runtime.errors).toStrictEqual([]);
       const afterWrite = JSON5.parse(fs.readFileSync(configPath, "utf8"));
-      expect(afterWrite.plugins?.entries?.["openclaw-mem0"]?.hooks).toEqual({
+      expect(afterWrite.plugins?.entries?.["grokbot-mem0"]?.hooks).toEqual({
         allowConversationAccess: true,
       });
     } finally {
@@ -179,8 +179,8 @@ describe("config cli integration", () => {
   });
 
   it("supports batch-file dry-run and then writes real config changes", async () => {
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-config-cli-int-"));
-    const configPath = path.join(tempDir, "openclaw.json");
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-config-cli-int-"));
+    const configPath = path.join(tempDir, "grokbot.json");
     const batchPath = path.join(tempDir, "batch.json");
     const envSnapshot = captureEnv([
       "OPENCLAW_CONFIG_PATH",
@@ -268,8 +268,8 @@ describe("config cli integration", () => {
   });
 
   it("keeps file unchanged when real-file dry-run fails and reports JSON error payload", async () => {
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-config-cli-int-fail-"));
-    const configPath = path.join(tempDir, "openclaw.json");
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-config-cli-int-fail-"));
+    const configPath = path.join(tempDir, "grokbot.json");
     const envSnapshot = captureEnv([
       "OPENCLAW_CONFIG_PATH",
       "OPENCLAW_TEST_FAST",
@@ -341,7 +341,7 @@ describe("config cli integration", () => {
   });
 
   it("skips exec provider execution during dry-run by default", async () => {
-    await withExecDryRunConfigHarness("openclaw-config-cli-int-exec-skip-", async (params) => {
+    await withExecDryRunConfigHarness("grokbot-config-cli-int-exec-skip-", async (params) => {
       const before = fs.readFileSync(params.configPath, "utf8");
       await runConfigSet({
         cliOptions: {
@@ -363,7 +363,7 @@ describe("config cli integration", () => {
   });
 
   it("executes exec providers during dry-run when --allow-exec is set", async () => {
-    await withExecDryRunConfigHarness("openclaw-config-cli-int-exec-allow-", async (params) => {
+    await withExecDryRunConfigHarness("grokbot-config-cli-int-exec-allow-", async (params) => {
       const before = fs.readFileSync(params.configPath, "utf8");
       await runConfigSet({
         cliOptions: {

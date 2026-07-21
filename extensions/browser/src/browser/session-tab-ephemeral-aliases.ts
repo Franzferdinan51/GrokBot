@@ -14,13 +14,13 @@ type VolatileAliasTarget = {
 };
 
 const durableAliasStateSymbol = Symbol.for(
-  "openclaw.browser.session-tabs.interaction-storage-keys",
+  "grokbot.browser.session-tabs.interaction-storage-keys",
 );
 const durableExactStateSymbol = Symbol.for(
-  "openclaw.browser.session-tabs.exact-interaction-storage-keys",
+  "grokbot.browser.session-tabs.exact-interaction-storage-keys",
 );
-const volatileAliasStateSymbol = Symbol.for("openclaw.browser.session-tabs.volatile-aliases");
-const volatileExactStateSymbol = Symbol.for("openclaw.browser.session-tabs.exact-volatile-aliases");
+const volatileAliasStateSymbol = Symbol.for("grokbot.browser.session-tabs.volatile-aliases");
+const volatileExactStateSymbol = Symbol.for("grokbot.browser.session-tabs.exact-volatile-aliases");
 
 function interactionKey(identity: AliasIdentity): string {
   return `${identity.sessionKey}\u0000${identity.baseUrl ?? ""}\u0000${identity.profile ?? ""}\u0000${identity.targetId}`;

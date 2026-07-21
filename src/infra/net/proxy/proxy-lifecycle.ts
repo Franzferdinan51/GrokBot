@@ -4,12 +4,12 @@ import {
   installGlobalProxy,
   type ProxylineHandle,
   type ProxylineUndiciOptions,
-} from "@openclaw/proxyline";
+} from "@grokbot/proxyline";
 import type { ProxyConfig } from "../../../config/zod-schema.proxy.js";
 
 type ProxyLoopbackMode = NonNullable<NonNullable<ProxyConfig>["loopbackMode"]>;
-import { isLoopbackIpAddress } from "@openclaw/net-policy/ip";
-import { isHttpUrl, isWebSocketUrl } from "@openclaw/net-policy/url-protocol";
+import { isLoopbackIpAddress } from "@grokbot/net-policy/ip";
+import { isHttpUrl, isWebSocketUrl } from "@grokbot/net-policy/url-protocol";
 import { logInfo, logWarn } from "../../../logger.js";
 import { forceResetGlobalDispatcher } from "../undici-global-dispatcher.js";
 import {
@@ -329,7 +329,7 @@ function isGatewayControlPlaneLoopbackHost(hostname: string): boolean {
 
 /**
  * Carve out the operator-managed external proxy for the Browser plugin's
- * loopback CDP probe to a Chromium instance OpenClaw spawned itself.
+ * loopback CDP probe to a Chromium instance GrokBot spawned itself.
  *
  * The managed proxy installs a process-wide undici dispatcher that would
  * otherwise route `http://127.0.0.1:<cdpPort>/json/version` and the

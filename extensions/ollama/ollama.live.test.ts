@@ -4,7 +4,7 @@ import * as fsSync from "node:fs";
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { describe, expect, it } from "vitest";
 import { isLocalOllamaBaseUrl } from "./src/discovery-shared.js";
 import { createOllamaEmbeddingProvider } from "./src/embedding-provider.js";
@@ -61,10 +61,10 @@ async function collectStreamEvents<T>(stream: AsyncIterable<T>): Promise<T[]> {
 }
 
 async function withTempOpenClawState<T>(run: (paths: { root: string }) => Promise<T>): Promise<T> {
-  const root = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-ollama-cli-live-"));
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-ollama-cli-live-"));
   try {
     await fs.writeFile(
-      path.join(root, "openclaw.json"),
+      path.join(root, "grokbot.json"),
       JSON.stringify(
         {
           models: {
@@ -95,8 +95,8 @@ async function runOpenClawCli(args: string[], env: NodeJS.ProcessEnv) {
   const sourceRunnerAvailable = !hasBuiltEntry;
   const commandArgs = sourceRunnerAvailable
     ? ["scripts/run-node.mjs", ...args]
-    : ["openclaw.mjs", ...args];
-  const outputRoot = fsSync.mkdtempSync(path.join(os.tmpdir(), "openclaw-ollama-cli-output-"));
+    : ["grokbot.mjs", ...args];
+  const outputRoot = fsSync.mkdtempSync(path.join(os.tmpdir(), "grokbot-ollama-cli-output-"));
   const stdoutPath = path.join(outputRoot, "stdout.txt");
   const stderrPath = path.join(outputRoot, "stderr.txt");
   const stdoutFd = fsSync.openSync(stdoutPath, "w");
@@ -150,7 +150,7 @@ function buildCliEnv(root: string): NodeJS.ProcessEnv {
     OPENCLAW_LIVE_OLLAMA: "1",
     OPENCLAW_LIVE_OLLAMA_WEB_SEARCH: "0",
     OPENCLAW_STATE_DIR: path.join(root, "state"),
-    OPENCLAW_CONFIG_PATH: path.join(root, "openclaw.json"),
+    OPENCLAW_CONFIG_PATH: path.join(root, "grokbot.json"),
     OPENCLAW_NO_RESPAWN: "1",
     OPENCLAW_TEST_FAST: "1",
     PNPM_CONFIG_VERIFY_DEPS_BEFORE_RUN: "false",
@@ -322,7 +322,7 @@ describe.skipIf(!LIVE)("ollama live", () => {
       }
 
       const result = (await tool.execute({
-        query: "OpenClaw documentation",
+        query: "GrokBot documentation",
         count: 1,
       })) as {
         provider?: string;

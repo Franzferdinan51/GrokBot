@@ -1,10 +1,10 @@
 // Imessage plugin module implements media staging behavior.
 import fs from "node:fs/promises";
 import path from "node:path";
-import type { ChannelInboundMediaInput } from "openclaw/plugin-sdk/channel-inbound";
-import { isInboundPathAllowed, kindFromMime } from "openclaw/plugin-sdk/media-runtime";
-import { saveMediaBuffer } from "openclaw/plugin-sdk/media-store";
-import { loadWebMedia } from "openclaw/plugin-sdk/web-media";
+import type { ChannelInboundMediaInput } from "grokbot/plugin-sdk/channel-inbound";
+import { isInboundPathAllowed, kindFromMime } from "grokbot/plugin-sdk/media-runtime";
+import { saveMediaBuffer } from "grokbot/plugin-sdk/media-store";
+import { loadWebMedia } from "grokbot/plugin-sdk/web-media";
 import type { IMessageAttachment } from "./types.js";
 
 type StagedIMessageAttachment = ChannelInboundMediaInput;

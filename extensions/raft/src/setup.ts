@@ -1,13 +1,13 @@
-import type { ChannelPlugin } from "openclaw/plugin-sdk/core";
+import type { ChannelPlugin } from "grokbot/plugin-sdk/core";
 // Raft plugin setup owns only the Raft CLI profile, never Raft credentials.
-import { createPatchedAccountSetupAdapter } from "openclaw/plugin-sdk/setup";
+import { createPatchedAccountSetupAdapter } from "grokbot/plugin-sdk/setup";
 import {
   createDetectedBinaryStatus,
   formatDocsLink,
   setSetupChannelEnabled,
-} from "openclaw/plugin-sdk/setup";
-import { detectBinary } from "openclaw/plugin-sdk/setup-tools";
-import { normalizeOptionalString } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/setup";
+import { detectBinary } from "grokbot/plugin-sdk/setup-tools";
+import { normalizeOptionalString } from "grokbot/plugin-sdk/string-coerce-runtime";
 import {
   listRaftAccountIds,
   RAFT_CHANNEL_ID,

@@ -1,5 +1,5 @@
 import path from "node:path";
-import { normalizeOptionalLowercaseString } from "@openclaw/normalization-core/string-coerce";
+import { normalizeOptionalLowercaseString } from "@grokbot/normalization-core/string-coerce";
 import {
   resolveAgentConfig,
   resolveAgentDir,
@@ -33,7 +33,7 @@ import type { ThinkLevel } from "../auto-reply/thinking.js";
 import { toAgentModelListLike } from "../config/model-input.js";
 import type { SessionEntry } from "../config/sessions.js";
 import { hasSessionAutoModelFallbackProvenance } from "../config/sessions/model-override-provenance.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import {
   formatUsageWindowSummary,
   loadProviderUsageSummary,
@@ -243,7 +243,7 @@ async function resolveStatusHarnessId(params: {
           undefined,
       )
     ) {
-      return "openclaw";
+      return "grokbot";
     }
     const { resolveEffectiveAgentRuntime } = await loadAgentThinkingRuntime();
     const id = resolveEffectiveAgentRuntime({

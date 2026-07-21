@@ -1,8 +1,8 @@
-// Provider-neutral live inference ladder for delegated OpenClaw sessions.
-import { normalizeProviderId } from "@openclaw/model-catalog-core/provider-id";
+// Provider-neutral live inference ladder for delegated GrokBot sessions.
+import { normalizeProviderId } from "@grokbot/model-catalog-core/provider-id";
 import { resolveDefaultAgentId } from "../agents/agent-scope.js";
 import { hasAvailableAuthForProvider } from "../agents/model-auth.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { normalizeAgentId } from "../routing/session-key.js";
 import type { RuntimeEnv } from "../runtime.js";
 import {

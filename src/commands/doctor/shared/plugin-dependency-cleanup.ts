@@ -3,7 +3,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { resolveStateDir } from "../../../config/paths.js";
 import type { HealthFinding } from "../../../flows/health-checks.js";
-import { resolveOpenClawPackageRootSync } from "../../../infra/openclaw-root.js";
+import { resolveOpenClawPackageRootSync } from "../../../infra/grokbot-root.js";
 import { resolveConfigDir, resolveUserPath } from "../../../utils.js";
 import { removeStalePluginRuntimeSymlinks } from "./plugin-runtime-symlinks.js";
 
@@ -58,21 +58,21 @@ async function pathExists(targetPath: string): Promise<boolean> {
 
 function isRuntimeDependencyMarkerName(name: string): boolean {
   return (
-    name === ".openclaw-runtime-deps.json" ||
-    name === ".openclaw-runtime-deps-stamp.json" ||
-    name.startsWith(".openclaw-runtime-deps-")
+    name === ".grokbot-runtime-deps.json" ||
+    name === ".grokbot-runtime-deps-stamp.json" ||
+    name.startsWith(".grokbot-runtime-deps-")
   );
 }
 
 function isInstallStageDebrisName(name: string): boolean {
-  return /^\.openclaw-install-stage(?:-.+)?$/u.test(name);
+  return /^\.grokbot-install-stage(?:-.+)?$/u.test(name);
 }
 
 function isLegacyDependencyDebrisName(name: string): boolean {
   return (
     isRuntimeDependencyMarkerName(name) ||
-    name === ".openclaw-pnpm-store" ||
-    name === ".openclaw-install-backups" ||
+    name === ".grokbot-pnpm-store" ||
+    name === ".grokbot-install-backups" ||
     isInstallStageDebrisName(name)
   );
 }
@@ -190,7 +190,7 @@ function collectExplicitStageTargets(env: NodeJS.ProcessEnv): CleanupTarget[] {
 
 async function hasOpenClawRenameResidue(root: string): Promise<boolean> {
   const nodeModulesRoot = path.join(root, "node_modules");
-  if (await isFile(path.join(nodeModulesRoot, ".openclaw-rename-tmp"))) {
+  if (await isFile(path.join(nodeModulesRoot, ".grokbot-rename-tmp"))) {
     return true;
   }
   const entries = await fs.readdir(nodeModulesRoot, { withFileTypes: true }).catch(() => []);
@@ -199,7 +199,7 @@ async function hasOpenClawRenameResidue(root: string): Promise<boolean> {
       continue;
     }
     const entryPath = path.join(nodeModulesRoot, entry.name);
-    if (await isFile(path.join(entryPath, ".openclaw-rename-tmp"))) {
+    if (await isFile(path.join(entryPath, ".grokbot-rename-tmp"))) {
       return true;
     }
     if (!entry.name.startsWith("@")) {
@@ -210,7 +210,7 @@ async function hasOpenClawRenameResidue(root: string): Promise<boolean> {
       if (!scopedEntry.isDirectory() || scopedEntry.isSymbolicLink()) {
         continue;
       }
-      if (await isFile(path.join(entryPath, scopedEntry.name, ".openclaw-rename-tmp"))) {
+      if (await isFile(path.join(entryPath, scopedEntry.name, ".grokbot-rename-tmp"))) {
         return true;
       }
     }
@@ -255,7 +255,7 @@ function filterLegacyStaleRootCandidates(
     }
     if (!cleanupRootPaths.some((rootPath) => isPathInsideRoot(targetPath, rootPath))) {
       warnings.push(
-        `Skipped legacy plugin dependency state ${targetPath}: outside OpenClaw cleanup roots`,
+        `Skipped legacy plugin dependency state ${targetPath}: outside GrokBot cleanup roots`,
       );
       continue;
     }
@@ -297,7 +297,7 @@ async function resolveSafeRemovalTarget(
   }
   if (!cleanupRoots.some((root) => isPathInsideRoot(realPath, root.realPath))) {
     return {
-      warning: `Skipped legacy plugin dependency state ${targetPath}: resolved outside OpenClaw cleanup roots`,
+      warning: `Skipped legacy plugin dependency state ${targetPath}: resolved outside GrokBot cleanup roots`,
     };
   }
   return { target: targetPath };
@@ -431,11 +431,11 @@ export function legacyPluginDependencyStateIssueToHealthFinding(
     target: issue.path,
     path: issue.path,
     requirement: "legacy-plugin-dependency-state-removed",
-    fixHint: "Run `openclaw doctor --fix` to remove legacy plugin dependency state.",
+    fixHint: "Run `grokbot doctor --fix` to remove legacy plugin dependency state.",
   };
 }
 
-/** Remove legacy plugin dependency state under trusted OpenClaw cleanup roots. */
+/** Remove legacy plugin dependency state under trusted GrokBot cleanup roots. */
 export async function cleanupLegacyPluginDependencyState(params: {
   env?: NodeJS.ProcessEnv;
   packageRoot?: string | null;
@@ -477,6 +477,6 @@ export async function cleanupLegacyPluginDependencyState(params: {
 
 if (process.env.VITEST || process.env.NODE_ENV === "test") {
   (globalThis as Record<PropertyKey, unknown>)[
-    Symbol.for("openclaw.pluginDependencyCleanupTestApi")
+    Symbol.for("grokbot.pluginDependencyCleanupTestApi")
   ] = { collectLegacyPluginDependencyTargets };
 }

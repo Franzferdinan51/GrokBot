@@ -7,14 +7,14 @@ import { requireNodeSqlite } from "../infra/node-sqlite.js";
 import {
   readOpenClawDatabaseQuarantine,
   recordOpenClawDatabaseQuarantine,
-} from "../state/openclaw-quarantine-store.js";
+} from "../state/grokbot-quarantine-store.js";
 import {
   closeOpenClawStateDatabase,
   openOpenClawStateDatabase,
   OPENCLAW_STATE_SCHEMA_VERSION,
-} from "../state/openclaw-state-db.js";
-import { resolveOpenClawStateSqlitePath } from "../state/openclaw-state-db.paths.js";
-import { OPENCLAW_STATE_SCHEMA_SQL } from "../state/openclaw-state-schema.generated.js";
+} from "../state/grokbot-state-db.js";
+import { resolveOpenClawStateSqlitePath } from "../state/grokbot-state-db.paths.js";
+import { OPENCLAW_STATE_SCHEMA_SQL } from "../state/grokbot-state-schema.generated.js";
 import { runDoctorStateSqliteCompact } from "./doctor-state-sqlite-compact.js";
 
 const tempDirs = useAutoCleanupTempDirTracker((cleanup) => {
@@ -30,7 +30,7 @@ type CompletedStateSqliteCompactReport = Extract<
 >;
 
 function createStateEnv(): NodeJS.ProcessEnv {
-  const stateDir = tempDirs.make("openclaw-state-compact-");
+  const stateDir = tempDirs.make("grokbot-state-compact-");
   return { ...process.env, OPENCLAW_STATE_DIR: stateDir };
 }
 
@@ -266,7 +266,7 @@ describe("runDoctorStateSqliteCompact", () => {
         { env },
         {
           withMaintenanceLock: async () => {
-            throw new Error("Gateway owns this OpenClaw state directory");
+            throw new Error("Gateway owns this GrokBot state directory");
           },
         },
       ),

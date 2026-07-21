@@ -1,5 +1,5 @@
 // Covers agent harness selection, fallback behavior, and compaction routing.
-import type { Model } from "openclaw/plugin-sdk/llm";
+import type { Model } from "grokbot/plugin-sdk/llm";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { OpenClawConfig } from "../../config/config.js";
 import { OPENCLAW_EMBEDDED_CONTEXT_ENGINE_HOST } from "../../context-engine/host-compat.js";
@@ -37,7 +37,7 @@ import type {
 } from "./types.js";
 
 const agentRunAttempt = vi.fn<AgentHarness["runAttempt"]>(async () =>
-  createAttemptResult("openclaw"),
+  createAttemptResult("grokbot"),
 );
 const compactAuthMocks = vi.hoisted(() => ({
   ensureAuthProfileStore: vi.fn(),
@@ -49,21 +49,21 @@ const providerOwnerMocks = vi.hoisted(() => ({
   resolveProviderRefOwnership: vi.fn(),
 }));
 
-it("identifies harnesses that expose OpenClaw tools", () => {
-  expect(agentHarnessBuildsOpenClawTools("openclaw")).toBe(false);
+it("identifies harnesses that expose GrokBot tools", () => {
+  expect(agentHarnessBuildsOpenClawTools("grokbot")).toBe(false);
   expect(agentHarnessBuildsOpenClawTools("codex")).toBe(true);
   expect(agentHarnessBuildsOpenClawTools("copilot")).toBe(true);
   expect(agentHarnessBuildsOpenClawTools("custom")).toBe(false);
-  expect(agentHarnessExposesOpenClawTools("openclaw")).toBe(true);
+  expect(agentHarnessExposesOpenClawTools("grokbot")).toBe(true);
   expect(agentHarnessExposesOpenClawTools("codex")).toBe(true);
   expect(agentHarnessExposesOpenClawTools("copilot")).toBe(true);
   expect(agentHarnessExposesOpenClawTools("custom")).toBe(false);
 });
 
-vi.mock("./builtin-openclaw.js", () => ({
+vi.mock("./builtin-grokbot.js", () => ({
   createOpenClawAgentHarness: (): AgentHarness => ({
-    id: "openclaw",
-    label: "OpenClaw embedded agent",
+    id: "grokbot",
+    label: "GrokBot embedded agent",
     contextEngineHostCapabilities: OPENCLAW_EMBEDDED_CONTEXT_ENGINE_HOST.capabilities,
     supports: () => ({ supported: true, priority: 0 }),
     runAttempt: agentRunAttempt,
@@ -380,7 +380,7 @@ function registerTestCompactor(
 
 describe("runAgentHarnessAttempt", () => {
   it.each(["codex", "copilot"] as const)(
-    "binds the host OpenClaw tool to the %s SDK construction path without leaking authority",
+    "binds the host GrokBot tool to the %s SDK construction path without leaking authority",
     async (harnessId) => {
       let receivedPrivateAuthority = true;
       let hostScopeActive = false;
@@ -388,10 +388,10 @@ describe("runAgentHarnessAttempt", () => {
       const pluginRunAttempt = vi.fn<AgentHarness["runAttempt"]>(async (attemptParams) => {
         receivedPrivateAuthority = "systemAgentTool" in attemptParams;
         await Promise.resolve();
-        hostScopeActive = isHostScopedAgentToolActive("openclaw");
+        hostScopeActive = isHostScopedAgentToolActive("grokbot");
         toolNames = createOpenClawCodingTools({
-          config: { tools: { allow: ["read"], deny: ["openclaw"], toolSearch: true } },
-          runtimeToolAllowlist: ["openclaw"],
+          config: { tools: { allow: ["read"], deny: ["grokbot"], toolSearch: true } },
+          runtimeToolAllowlist: ["grokbot"],
           toolConstructionPlan: {
             includeBaseCodingTools: false,
             includeShellTools: false,
@@ -414,7 +414,7 @@ describe("runAgentHarnessAttempt", () => {
       const params = createAttemptParams(
         providerRuntimeConfig("codex", harnessId),
       ) as EmbeddedRunAttemptParams & { systemAgentTool?: SystemAgentToolOptions };
-      params.toolsAllow = ["openclaw"];
+      params.toolsAllow = ["grokbot"];
       params.systemAgentTool = { surface: "cli", proposalRef: {}, directiveRef: {} };
 
       await runAgentHarnessAttempt(params);
@@ -422,15 +422,15 @@ describe("runAgentHarnessAttempt", () => {
       expect(pluginRunAttempt).toHaveBeenCalledTimes(1);
       expect(receivedPrivateAuthority).toBe(false);
       expect(hostScopeActive).toBe(true);
-      expect(toolNames).toEqual(["openclaw"]);
-      expect(isHostScopedAgentToolActive("openclaw")).toBe(false);
+      expect(toolNames).toEqual(["grokbot"]);
+      expect(isHostScopedAgentToolActive("grokbot")).toBe(false);
     },
   );
 
   it.each([
     { name: "missing", toolsAllow: undefined },
-    { name: "broad", toolsAllow: ["openclaw", "read"] },
-  ])("rejects $name allowlists for private OpenClaw authority", async ({ toolsAllow }) => {
+    { name: "broad", toolsAllow: ["grokbot", "read"] },
+  ])("rejects $name allowlists for private GrokBot authority", async ({ toolsAllow }) => {
     const pluginRunAttempt = vi.fn<AgentHarness["runAttempt"]>(async () =>
       createAttemptResult("codex"),
     );
@@ -450,13 +450,13 @@ describe("runAgentHarnessAttempt", () => {
     params.systemAgentTool = { surface: "cli", proposalRef: {}, directiveRef: {} };
 
     await expect(runAgentHarnessAttempt(params)).rejects.toThrow(
-      'OpenClaw host authority requires toolsAllow: ["openclaw"]',
+      'GrokBot host authority requires toolsAllow: ["grokbot"]',
     );
     expect(pluginRunAttempt).not.toHaveBeenCalled();
-    expect(isHostScopedAgentToolActive("openclaw")).toBe(false);
+    expect(isHostScopedAgentToolActive("grokbot")).toBe(false);
   });
 
-  it("keeps the host OpenClaw allowlist across global, agent, and sandbox deny-all policy", async () => {
+  it("keeps the host GrokBot allowlist across global, agent, and sandbox deny-all policy", async () => {
     const received: Array<{
       toolsAllow: string[] | undefined;
       extraSystemPrompt: string | undefined;
@@ -466,7 +466,7 @@ describe("runAgentHarnessAttempt", () => {
       received.push({
         toolsAllow: attemptParams.toolsAllow,
         extraSystemPrompt: attemptParams.extraSystemPrompt,
-        hostScopeActive: isHostScopedAgentToolActive("openclaw"),
+        hostScopeActive: isHostScopedAgentToolActive("grokbot"),
       });
       return createAttemptResult("codex");
     });
@@ -508,26 +508,26 @@ describe("runAgentHarnessAttempt", () => {
       params.agentHarnessRuntimeOverride = "codex";
       params.agentId = testCase.agentId;
       params.sessionKey = testCase.sessionKey;
-      params.toolsAllow = ["openclaw"];
+      params.toolsAllow = ["grokbot"];
       params.systemAgentTool = { surface: "cli", proposalRef: {}, directiveRef: {} };
       await runAgentHarnessAttempt(params);
     }
 
     expect(received).toEqual([
-      { toolsAllow: ["openclaw"], extraSystemPrompt: undefined, hostScopeActive: true },
-      { toolsAllow: ["openclaw"], extraSystemPrompt: undefined, hostScopeActive: true },
-      { toolsAllow: ["openclaw"], extraSystemPrompt: undefined, hostScopeActive: true },
+      { toolsAllow: ["grokbot"], extraSystemPrompt: undefined, hostScopeActive: true },
+      { toolsAllow: ["grokbot"], extraSystemPrompt: undefined, hostScopeActive: true },
+      { toolsAllow: ["grokbot"], extraSystemPrompt: undefined, hostScopeActive: true },
     ]);
-    expect(isHostScopedAgentToolActive("openclaw")).toBe(false);
+    expect(isHostScopedAgentToolActive("grokbot")).toBe(false);
   });
 
-  it("binds the same host OpenClaw scope to the built-in OpenClaw harness", async () => {
+  it("binds the same host GrokBot scope to the built-in GrokBot harness", async () => {
     let toolNames: string[] = [];
     agentRunAttempt.mockImplementationOnce(async () => {
       await Promise.resolve();
       toolNames = createOpenClawCodingTools({
-        config: { tools: { allow: ["read"], deny: ["openclaw"], toolSearch: true } },
-        runtimeToolAllowlist: ["openclaw"],
+        config: { tools: { allow: ["read"], deny: ["grokbot"], toolSearch: true } },
+        runtimeToolAllowlist: ["grokbot"],
         toolConstructionPlan: {
           includeBaseCodingTools: false,
           includeShellTools: false,
@@ -536,19 +536,19 @@ describe("runAgentHarnessAttempt", () => {
           includePluginTools: false,
         },
       }).map((tool) => tool.name);
-      return createAttemptResult("openclaw");
+      return createAttemptResult("grokbot");
     });
     const params = createAttemptParams(
-      providerRuntimeConfig("codex", "openclaw"),
+      providerRuntimeConfig("codex", "grokbot"),
     ) as EmbeddedRunAttemptParams & { systemAgentTool?: SystemAgentToolOptions };
-    params.toolsAllow = ["openclaw"];
+    params.toolsAllow = ["grokbot"];
     params.systemAgentTool = { surface: "gateway", proposalRef: {}, directiveRef: {} };
 
     const result = await runAgentHarnessAttempt(params);
 
-    expect(result.sessionIdUsed).toBe("openclaw");
-    expect(toolNames).toEqual(["openclaw"]);
-    expect(isHostScopedAgentToolActive("openclaw")).toBe(false);
+    expect(result.sessionIdUsed).toBe("grokbot");
+    expect(toolNames).toEqual(["grokbot"]);
+    expect(isHostScopedAgentToolActive("grokbot")).toBe(false);
   });
 
   it("unwraps sentinels only at the plugin harness handoff", async () => {
@@ -591,24 +591,24 @@ describe("runAgentHarnessAttempt", () => {
     expect(agentRunAttempt).not.toHaveBeenCalled();
   });
 
-  it("falls back to the OpenClaw harness in auto mode when no plugin harness matches", async () => {
+  it("falls back to the GrokBot harness in auto mode when no plugin harness matches", async () => {
     const result = await runAgentHarnessAttempt(createAttemptParams());
 
-    expect(result.sessionIdUsed).toBe("openclaw");
+    expect(result.sessionIdUsed).toBe("grokbot");
     expect(agentRunAttempt).toHaveBeenCalledTimes(1);
   });
 
-  it("allows the selected OpenClaw harness to satisfy context-engine pre-prompt assembly", async () => {
+  it("allows the selected GrokBot harness to satisfy context-engine pre-prompt assembly", async () => {
     const result = await runAgentHarnessAttempt({
-      ...createAttemptParams(providerRuntimeConfig("codex", "openclaw")),
+      ...createAttemptParams(providerRuntimeConfig("codex", "grokbot")),
       contextEngine: createContextEngineRequiringAssembly(),
     });
 
-    expect(result.sessionIdUsed).toBe("openclaw");
+    expect(result.sessionIdUsed).toBe("grokbot");
     expect(agentRunAttempt).toHaveBeenCalledTimes(1);
   });
 
-  it("surfaces an auto-selected plugin harness failure instead of replaying through OpenClaw", async () => {
+  it("surfaces an auto-selected plugin harness failure instead of replaying through GrokBot", async () => {
     registerFailingCodexHarness();
 
     await expect(runAgentHarnessAttempt(createAttemptParams())).rejects.toThrow(
@@ -660,7 +660,7 @@ describe("runAgentHarnessAttempt", () => {
         harnessAuthProvider: "openai",
         deferredRouteSupport: {
           requestTransportOverrides: "none",
-          runtimePolicy: { compatibleIds: ["openclaw", "codex"] },
+          runtimePolicy: { compatibleIds: ["grokbot", "codex"] },
         },
       },
     } as never;
@@ -672,14 +672,14 @@ describe("runAgentHarnessAttempt", () => {
       expect.objectContaining({
         modelProvider: expect.objectContaining({
           requestTransportOverrides: "none",
-          runtimePolicy: { compatibleIds: ["openclaw", "codex"] },
+          runtimePolicy: { compatibleIds: ["grokbot", "codex"] },
           preparedAuth: { source: "harness" },
         }),
       }),
     );
   });
 
-  it("surfaces a forced plugin harness failure instead of replaying through OpenClaw", async () => {
+  it("surfaces a forced plugin harness failure instead of replaying through GrokBot", async () => {
     registerFailingCodexHarness();
 
     await expect(
@@ -763,13 +763,13 @@ describe("runAgentHarnessAttempt", () => {
     expect(agentRunAttempt).not.toHaveBeenCalled();
   });
 
-  it("falls back to OpenClaw when the implicit OpenAI Codex harness is unavailable", async () => {
+  it("falls back to GrokBot when the implicit OpenAI Codex harness is unavailable", async () => {
     expect(resolveAgentHarnessPolicy({ provider: "openai", modelId: "gpt-5.4" })).toEqual({
       runtime: "codex",
       runtimeSource: "implicit",
     });
     expect(resolveAvailableAgentHarnessPolicy({ provider: "openai", modelId: "gpt-5.4" })).toEqual({
-      runtime: "openclaw",
+      runtime: "grokbot",
       runtimeSource: "implicit",
     });
 
@@ -779,29 +779,29 @@ describe("runAgentHarnessAttempt", () => {
       modelId: "gpt-5.4",
     });
 
-    expect(result.sessionIdUsed).toBe("openclaw");
+    expect(result.sessionIdUsed).toBe("grokbot");
     expect(agentRunAttempt).toHaveBeenCalledTimes(1);
   });
 
-  it("honors explicit OpenClaw runtime for OpenAI agent model runs", async () => {
+  it("honors explicit GrokBot runtime for OpenAI agent model runs", async () => {
     const result = await runAgentHarnessAttempt({
-      ...createAttemptParams(providerRuntimeConfig("openai", "openclaw")),
+      ...createAttemptParams(providerRuntimeConfig("openai", "grokbot")),
       provider: "openai",
       modelId: "gpt-5.4",
     });
-    expect(result.sessionIdUsed).toBe("openclaw");
+    expect(result.sessionIdUsed).toBe("grokbot");
     expect(agentRunAttempt).toHaveBeenCalledTimes(1);
   });
 
-  it("honors provider wildcard OpenClaw runtime policy for OpenAI agent model runs", async () => {
+  it("honors provider wildcard GrokBot runtime policy for OpenAI agent model runs", async () => {
     registerSuccessfulCodexHarness();
 
     const result = await runAgentHarnessAttempt({
-      ...createAttemptParams(agentModelRuntimeConfig("openai/*", "openclaw")),
+      ...createAttemptParams(agentModelRuntimeConfig("openai/*", "grokbot")),
       provider: "openai",
       modelId: "gpt-5.4",
     });
-    expect(result.sessionIdUsed).toBe("openclaw");
+    expect(result.sessionIdUsed).toBe("grokbot");
     expect(agentRunAttempt).toHaveBeenCalledTimes(1);
   });
 
@@ -945,7 +945,7 @@ describe("runAgentHarnessAttempt", () => {
     ).toEqual([]);
   });
 
-  it("leaves OpenClaw harness params unchanged for channel group sender deny-all policy", async () => {
+  it("leaves GrokBot harness params unchanged for channel group sender deny-all policy", async () => {
     await runAgentHarnessAttempt({
       ...createAttemptParams(groupSenderDenyAllConfig()),
       sessionKey: "agent:main:telegram:group:test-deny-room",
@@ -965,7 +965,7 @@ describe("runAgentHarnessAttempt", () => {
     expect(agentRunAttempt).not.toHaveBeenCalled();
   });
 
-  it("does not let a strict agent model plugin runtime fall back to OpenClaw", async () => {
+  it("does not let a strict agent model plugin runtime fall back to GrokBot", async () => {
     await expect(
       runAgentHarnessAttempt({
         ...createAttemptParams(agentModelRuntimeConfig("codex/gpt-5.4", "codex", "strict")),
@@ -985,7 +985,7 @@ describe("selectAgentHarness", () => {
       runtimeSource: "implicit",
     });
     expect(selectAgentHarness({ provider: "custom", modelId: "gpt-5.4-codex" }).id).toBe(
-      "openclaw",
+      "grokbot",
     );
   });
 
@@ -1018,7 +1018,7 @@ describe("selectAgentHarness", () => {
     });
 
     expect(selectAgentHarness({ provider: "deepseek", modelId: "deepseek-v4-pro" }).id).toBe(
-      "openclaw",
+      "grokbot",
     );
     expect(supports).not.toHaveBeenCalled();
     expect(providerOwnerMocks.resolveProviderRefOwnership).not.toHaveBeenCalled();
@@ -1078,7 +1078,7 @@ describe("selectAgentHarness", () => {
     expect(unsupportedSupports).toHaveBeenCalledTimes(1);
   });
 
-  it("honors session-level OpenClaw pins when selecting a harness", () => {
+  it("honors session-level GrokBot pins when selecting a harness", () => {
     const supports = vi.fn(() => ({ supported: true as const, priority: 100 }));
     registerAgentHarness({
       id: "codex",
@@ -1090,10 +1090,10 @@ describe("selectAgentHarness", () => {
     const harness = selectAgentHarness({
       provider: "codex",
       modelId: "gpt-5.4",
-      agentHarnessId: "openclaw",
+      agentHarnessId: "grokbot",
     });
 
-    expect(harness.id).toBe("openclaw");
+    expect(harness.id).toBe("grokbot");
     expect(supports).not.toHaveBeenCalled();
   });
 
@@ -1323,7 +1323,7 @@ describe("selectAgentHarness", () => {
     ).toMatchObject({
       api: "openai-completions",
       requestTransportOverrides: "present",
-      runtimePolicy: { compatibleIds: ["openclaw"] },
+      runtimePolicy: { compatibleIds: ["grokbot"] },
     });
   });
 
@@ -1356,7 +1356,7 @@ describe("selectAgentHarness", () => {
       api: "openai-completions",
       baseUrl: "https://api.openai.com/v1",
       requestTransportOverrides: "present",
-      runtimePolicy: { compatibleIds: ["openclaw"] },
+      runtimePolicy: { compatibleIds: ["grokbot"] },
     });
   });
 
@@ -1372,7 +1372,7 @@ describe("selectAgentHarness", () => {
         requestedRuntime: "codex",
       }).modelProvider,
     ).toMatchObject({
-      runtimePolicy: { compatibleIds: ["openclaw", "codex"] },
+      runtimePolicy: { compatibleIds: ["grokbot", "codex"] },
     });
   });
 
@@ -1418,7 +1418,7 @@ describe("selectAgentHarness", () => {
         }).modelProvider,
       ).toMatchObject({
         requestTransportOverrides: "present",
-        runtimePolicy: { compatibleIds: ["openclaw"] },
+        runtimePolicy: { compatibleIds: ["grokbot"] },
       });
     },
   );
@@ -1444,7 +1444,7 @@ describe("selectAgentHarness", () => {
           api: "openai-responses",
           baseUrl: "https://api.openai.com/v1",
           requestTransportOverrides: "none",
-          runtimePolicy: { compatibleIds: ["openclaw", "codex"] },
+          runtimePolicy: { compatibleIds: ["grokbot", "codex"] },
         },
         config: { agents: { defaults: { params: { store: false } } } },
         agentHarnessRuntimeOverride: "codex",
@@ -1457,7 +1457,7 @@ describe("selectAgentHarness", () => {
     );
   });
 
-  it("keeps request-scoped transport overrides on the implicit OpenClaw runtime", () => {
+  it("keeps request-scoped transport overrides on the implicit GrokBot runtime", () => {
     registerAgentHarness({
       id: "codex",
       label: "Codex",
@@ -1488,7 +1488,7 @@ describe("selectAgentHarness", () => {
         modelProvider,
         config,
       }),
-    ).toEqual({ runtime: "openclaw", runtimeSource: "implicit" });
+    ).toEqual({ runtime: "grokbot", runtimeSource: "implicit" });
     expect(
       selectAgentHarness({
         provider: "openai",
@@ -1496,7 +1496,7 @@ describe("selectAgentHarness", () => {
         modelProvider,
         config,
       }).id,
-    ).toBe("openclaw");
+    ).toBe("grokbot");
     expect(
       selectAgentHarness({
         provider: "openai",
@@ -1540,9 +1540,9 @@ describe("selectAgentHarness", () => {
 
     expect(
       resolveAvailableAgentHarnessPolicy({ provider: "openai", modelId: "gpt-5.5", config }),
-    ).toEqual({ runtime: "openclaw", runtimeSource: "implicit" });
+    ).toEqual({ runtime: "grokbot", runtimeSource: "implicit" });
     expect(selectAgentHarness({ provider: "openai", modelId: "gpt-5.5", config }).id).toBe(
-      "openclaw",
+      "grokbot",
     );
     expect(() =>
       selectAgentHarness({
@@ -1570,11 +1570,11 @@ describe("selectAgentHarness", () => {
       api: "openai-completions",
       baseUrl: "https://api.openai.com/v1",
       requestTransportOverrides: "none" as const,
-      runtimePolicy: { compatibleIds: ["openclaw"] },
+      runtimePolicy: { compatibleIds: ["grokbot"] },
     };
 
     expect(selectAgentHarness({ provider: "openai", modelId: "gpt-5.5", modelProvider }).id).toBe(
-      "openclaw",
+      "grokbot",
     );
     expect(() =>
       selectAgentHarness({
@@ -1599,7 +1599,7 @@ describe("selectAgentHarness", () => {
       runAttempt: vi.fn(async () => createAttemptResult("codex")),
     });
 
-    expect(selectAgentHarness({ provider: "openai", modelId: "gpt-future" }).id).toBe("openclaw");
+    expect(selectAgentHarness({ provider: "openai", modelId: "gpt-future" }).id).toBe("grokbot");
     expect(supports).toHaveBeenCalledWith(
       expect.objectContaining({
         modelProvider: expect.objectContaining({ runtimePolicy: undefined }),
@@ -1610,7 +1610,7 @@ describe("selectAgentHarness", () => {
   it("projects a harness-owned auth plan as a closed harness source", () => {
     const deferredRouteSupport = {
       requestTransportOverrides: "none" as const,
-      runtimePolicy: { compatibleIds: ["openclaw", "codex"] },
+      runtimePolicy: { compatibleIds: ["grokbot", "codex"] },
     };
     expect(
       resolveAgentHarnessPreparedAuthSupport({
@@ -1669,7 +1669,7 @@ describe("selectAgentHarness", () => {
         modelId: "gpt-future",
         modelProvider: {
           requestTransportOverrides: "none",
-          runtimePolicy: { compatibleIds: ["openclaw", "codex"] },
+          runtimePolicy: { compatibleIds: ["grokbot", "codex"] },
           preparedAuth: { source: "harness" },
         },
         agentHarnessRuntimeOverride: "codex",
@@ -1679,7 +1679,7 @@ describe("selectAgentHarness", () => {
       expect.objectContaining({
         modelProvider: expect.objectContaining({
           preparedAuth: { source: "harness" },
-          runtimePolicy: { compatibleIds: ["openclaw", "codex"] },
+          runtimePolicy: { compatibleIds: ["grokbot", "codex"] },
         }),
       }),
     );
@@ -1699,14 +1699,14 @@ describe("selectAgentHarness", () => {
       api: "openai-responses",
       baseUrl: "https://api.openai.com/v1",
       requestTransportOverrides: "none" as const,
-      runtimePolicy: { compatibleIds: ["openclaw", "codex"] },
+      runtimePolicy: { compatibleIds: ["grokbot", "codex"] },
       preparedAuth: { source: "direct" as const, mode: "api-key", requirement: "api-key" as const },
     };
     const incompatible = {
       api: "openai-completions",
       baseUrl: "https://api.openai.com/v1",
       requestTransportOverrides: "none" as const,
-      runtimePolicy: { compatibleIds: ["openclaw"] },
+      runtimePolicy: { compatibleIds: ["grokbot"] },
       preparedAuth: { source: "direct" as const, mode: "api-key", requirement: "api-key" as const },
     };
     const base = { provider: "openai", modelId: "gpt-5.5" };
@@ -1722,7 +1722,7 @@ describe("selectAgentHarness", () => {
         ...base,
         modelProviders: [compatible, incompatible],
       }).id,
-    ).toBe("openclaw");
+    ).toBe("grokbot");
   });
 
   it.each([
@@ -1748,13 +1748,13 @@ describe("selectAgentHarness", () => {
             api: "openai-responses",
             baseUrl: "https://api.openai.com/v1",
             requestTransportOverrides: "none",
-            runtimePolicy: { compatibleIds: ["openclaw", "codex"] },
+            runtimePolicy: { compatibleIds: ["grokbot", "codex"] },
           },
           {
             api: "openai-completions",
             baseUrl: "https://api.openai.com/v1",
             requestTransportOverrides: "none",
-            runtimePolicy: { compatibleIds: ["openclaw"] },
+            runtimePolicy: { compatibleIds: ["grokbot"] },
           },
         ],
         ...pin,
@@ -1817,28 +1817,28 @@ describe("selectAgentHarness", () => {
     },
   );
 
-  it("honors explicit OpenClaw runtime overrides when selecting a harness", async () => {
+  it("honors explicit GrokBot runtime overrides when selecting a harness", async () => {
     registerSuccessfulCodexHarness();
 
     const harness = selectAgentHarness({
       provider: "openai",
       modelId: "gpt-5.4",
-      agentHarnessRuntimeOverride: "openclaw",
+      agentHarnessRuntimeOverride: "grokbot",
     });
 
-    expect(harness.id).toBe("openclaw");
+    expect(harness.id).toBe("grokbot");
     expect(providerOwnerMocks.resolveProviderRefOwnership).not.toHaveBeenCalled();
 
     const result = await runAgentHarnessAttempt({
       ...createAttemptParams(),
       provider: "openai",
       modelId: "gpt-5.4",
-      agentHarnessRuntimeOverride: "openclaw",
+      agentHarnessRuntimeOverride: "grokbot",
     });
-    expect(result.sessionIdUsed).toBe("openclaw");
+    expect(result.sessionIdUsed).toBe("grokbot");
   });
 
-  it("treats legacy PI runtime overrides as the built-in OpenClaw harness", async () => {
+  it("treats legacy PI runtime overrides as the built-in GrokBot harness", async () => {
     registerSuccessfulCodexHarness();
 
     const harness = selectAgentHarness({
@@ -1847,7 +1847,7 @@ describe("selectAgentHarness", () => {
       agentHarnessRuntimeOverride: "pi",
     });
 
-    expect(harness.id).toBe("openclaw");
+    expect(harness.id).toBe("grokbot");
 
     const result = await runAgentHarnessAttempt({
       ...createAttemptParams(),
@@ -1855,7 +1855,7 @@ describe("selectAgentHarness", () => {
       modelId: "gpt-5.4",
       agentHarnessRuntimeOverride: "pi",
     });
-    expect(result.sessionIdUsed).toBe("openclaw");
+    expect(result.sessionIdUsed).toBe("grokbot");
   });
 
   it("allows per-agent model runtime policy overrides", () => {
@@ -1870,23 +1870,23 @@ describe("selectAgentHarness", () => {
       }),
     ).toThrow('Requested agent harness "codex" is not registered');
     expect(selectAgentHarness({ provider: "anthropic", modelId: "sonnet-4.6", config }).id).toBe(
-      "openclaw",
+      "grokbot",
     );
   });
 
-  it("selects OpenClaw when the implicit OpenAI Codex harness is unavailable", () => {
-    expect(selectAgentHarness({ provider: "openai", modelId: "gpt-5.4" }).id).toBe("openclaw");
+  it("selects GrokBot when the implicit OpenAI Codex harness is unavailable", () => {
+    expect(selectAgentHarness({ provider: "openai", modelId: "gpt-5.4" }).id).toBe("grokbot");
   });
 
   it.each(["default", "auto"] as const)(
-    "falls back from configured %s to OpenClaw when implicit Codex is unavailable or unsupported",
+    "falls back from configured %s to GrokBot when implicit Codex is unavailable or unsupported",
     (runtime) => {
       const config = providerRuntimeConfig("openai", runtime);
       expect(resolveAgentHarnessPolicy({ provider: "openai", modelId: "gpt-5.4", config })).toEqual(
         { runtime: "codex", runtimeSource: "implicit" },
       );
       expect(selectAgentHarness({ provider: "openai", modelId: "gpt-5.4", config }).id).toBe(
-        "openclaw",
+        "grokbot",
       );
 
       const supports = vi.fn(() => ({ supported: false as const, reason: "unsupported route" }));
@@ -1900,14 +1900,14 @@ describe("selectAgentHarness", () => {
         { ownerPluginId: "codex" },
       );
       expect(selectAgentHarness({ provider: "openai", modelId: "gpt-5.4", config }).id).toBe(
-        "openclaw",
+        "grokbot",
       );
       expect(supports).toHaveBeenCalledOnce();
     },
   );
 
   it.each(["default", "auto"] as const)(
-    "keeps a custom OpenAI route on implicit OpenClaw with configured %s",
+    "keeps a custom OpenAI route on implicit GrokBot with configured %s",
     (runtime) => {
       const supports = vi.fn(() => ({ supported: true as const, priority: 100 }));
       registerAgentHarness(
@@ -1933,10 +1933,10 @@ describe("selectAgentHarness", () => {
       } as OpenClawConfig;
 
       expect(resolveAgentHarnessPolicy({ provider: "openai", modelId: "gpt-5.4", config })).toEqual(
-        { runtime: "openclaw", runtimeSource: "implicit" },
+        { runtime: "grokbot", runtimeSource: "implicit" },
       );
       expect(selectAgentHarness({ provider: "openai", modelId: "gpt-5.4", config }).id).toBe(
-        "openclaw",
+        "grokbot",
       );
       expect(supports).not.toHaveBeenCalled();
     },
@@ -1957,7 +1957,7 @@ describe("selectAgentHarness", () => {
         modelId: "sonnet-4.6",
         config,
       }).id,
-    ).toBe("openclaw");
+    ).toBe("grokbot");
   });
 
   it("ignores legacy agent CLI runtime aliases for OpenAI agent model runs", async () => {
@@ -1981,21 +1981,21 @@ describe("selectAgentHarness", () => {
     expect(agentRunAttempt).not.toHaveBeenCalled();
   });
 
-  it("keeps an existing session OpenClaw pin when provider policy forces a plugin harness", () => {
+  it("keeps an existing session GrokBot pin when provider policy forces a plugin harness", () => {
     registerFailingCodexHarness();
 
     expect(
       selectAgentHarness({
         provider: "codex",
         modelId: "gpt-5.4",
-        agentHarnessId: "openclaw",
+        agentHarnessId: "grokbot",
         config: providerRuntimeConfig("codex", "codex"),
       }).id,
-    ).toBe("openclaw");
+    ).toBe("grokbot");
   });
 
-  it("ignores env-forced OpenClaw for OpenAI default runtime selection", () => {
-    process.env.OPENCLAW_AGENT_RUNTIME = "openclaw";
+  it("ignores env-forced GrokBot for OpenAI default runtime selection", () => {
+    process.env.OPENCLAW_AGENT_RUNTIME = "grokbot";
     registerFailingCodexHarness();
 
     expect(
@@ -2035,11 +2035,11 @@ describe("selectAgentHarness", () => {
     ).resolves.toBeUndefined();
   });
 
-  it("keeps host auth on the built-in OpenClaw compaction fallback", async () => {
+  it("keeps host auth on the built-in GrokBot compaction fallback", async () => {
     await expect(
       maybeCompactAgentHarnessSession(
         createCompactionParams({
-          agentHarnessId: "openclaw",
+          agentHarnessId: "grokbot",
           authProfileId: "openai:work",
           authProfileIdSource: "user",
           runtimeAuthPlan: {
@@ -2219,7 +2219,7 @@ describe("selectAgentHarness", () => {
             list: [{ id: "main", default: true, agentDir: "/tmp/main-agent" }],
             defaults: {
               models: {
-                "openai/gpt-5.5": { agentRuntime: { id: "openclaw" } },
+                "openai/gpt-5.5": { agentRuntime: { id: "grokbot" } },
               },
             },
           },
@@ -2359,7 +2359,7 @@ describe("selectAgentHarness", () => {
         model: "gpt-5.5",
         authProfileId: "deleted-profile",
         agentHarnessId: "codex",
-        config: agentModelRuntimeConfig("openai/gpt-5.5", "openclaw"),
+        config: agentModelRuntimeConfig("openai/gpt-5.5", "grokbot"),
       }),
     ).resolves.toEqual({ ok: true, compacted: false });
     expect(compact).toHaveBeenCalledTimes(1);
@@ -2502,7 +2502,7 @@ describe("selectAgentHarness", () => {
     );
   });
 
-  it("does not compact a selected plugin harness through OpenClaw when the plugin has no compactor", async () => {
+  it("does not compact a selected plugin harness through GrokBot when the plugin has no compactor", async () => {
     registerFailingCodexHarness();
 
     await expect(
@@ -2626,7 +2626,7 @@ describe("selectAgentHarness", () => {
     { provider: "anthropic", modelId: "sonnet-4.6", alias: "claude-cli" },
     { provider: "google", modelId: "gemini-3-pro-preview", alias: "google-gemini-cli" },
   ])(
-    "returns OpenClaw for explicit CLI runtime alias $alias on $provider instead of throwing MissingAgentHarnessError",
+    "returns GrokBot for explicit CLI runtime alias $alias on $provider instead of throwing MissingAgentHarnessError",
     ({ provider, modelId, alias }) => {
       expect(
         selectAgentHarness({
@@ -2634,7 +2634,7 @@ describe("selectAgentHarness", () => {
           modelId,
           agentHarnessRuntimeOverride: alias,
         }).id,
-      ).toBe("openclaw");
+      ).toBe("grokbot");
     },
   );
 

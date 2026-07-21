@@ -1,4 +1,4 @@
-// Verifies installed packages can bootstrap the default OpenClaw workspace files.
+// Verifies installed packages can bootstrap the default GrokBot workspace files.
 import { execFileSync } from "node:child_process";
 import { existsSync, mkdtempSync, mkdirSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -101,7 +101,7 @@ function describeExecFailure(error) {
  * Runs the installed CLI workspace bootstrap smoke and validates created files.
  */
 export function runInstalledWorkspaceBootstrapSmoke(params) {
-  const tempRoot = mkdtempSync(join(tmpdir(), "openclaw-workspace-bootstrap-smoke-"));
+  const tempRoot = mkdtempSync(join(tmpdir(), "grokbot-workspace-bootstrap-smoke-"));
   const homeDir = join(tempRoot, "home");
   const cwd = join(tempRoot, "cwd");
   mkdirSync(homeDir, { recursive: true });
@@ -113,7 +113,7 @@ export function runInstalledWorkspaceBootstrapSmoke(params) {
       execFileSync(
         process.execPath,
         [
-          join(params.packageRoot, "openclaw.mjs"),
+          join(params.packageRoot, "grokbot.mjs"),
           "agent",
           "--message",
           "workspace bootstrap smoke",
@@ -143,7 +143,7 @@ export function runInstalledWorkspaceBootstrapSmoke(params) {
       );
     }
 
-    const workspaceDir = join(homeDir, ".openclaw", "workspace");
+    const workspaceDir = join(homeDir, ".grokbot", "workspace");
     const missingFiles = collectMissingBootstrapWorkspaceFiles(workspaceDir);
     if (missingFiles.length > 0) {
       const outputDetails = combinedOutput.length > 0 ? `\nCommand output:\n${combinedOutput}` : "";

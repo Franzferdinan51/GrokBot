@@ -3,7 +3,7 @@
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
-import { getApiProvider } from "@openclaw/ai/internal/runtime";
+import { getApiProvider } from "@grokbot/ai/internal/runtime";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { PLUGIN_MODEL_CATALOG_GENERATED_BY } from "../plugin-model-catalog.js";
 import { AuthStorage } from "./auth-storage.js";
@@ -15,7 +15,7 @@ const PLUGIN_MODEL_CATALOG_FILE = "catalog.json";
 const tempDirs: string[] = [];
 
 function writeModelsJson(contents: unknown): string {
-  const dir = mkdtempSync(join(tmpdir(), "openclaw-model-registry-"));
+  const dir = mkdtempSync(join(tmpdir(), "grokbot-model-registry-"));
   tempDirs.push(dir);
   const file = join(dir, "models.json");
   writeFileSync(file, JSON.stringify(contents, null, 2), "utf-8");
@@ -45,7 +45,7 @@ function writeModelsJsonWithPluginCatalogs(params: {
     pluginCatalog: unknown;
   }>;
 }): string {
-  const dir = mkdtempSync(join(tmpdir(), "openclaw-model-registry-"));
+  const dir = mkdtempSync(join(tmpdir(), "grokbot-model-registry-"));
   tempDirs.push(dir);
   const file = join(dir, "models.json");
   writeFileSync(file, JSON.stringify(params.root, null, 2), "utf-8");

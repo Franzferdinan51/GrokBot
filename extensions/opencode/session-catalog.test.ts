@@ -3,7 +3,7 @@ import { once } from "node:events";
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import type { OpenClawPluginApi } from "openclaw/plugin-sdk/plugin-entry";
+import type { OpenClawPluginApi } from "grokbot/plugin-sdk/plugin-entry";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 const nodeHostMocks = vi.hoisted(() => ({
@@ -24,8 +24,8 @@ vi.mock("node:child_process", async (importOriginal) => {
   return { ...actual, spawn: childProcessMocks.spawn };
 });
 
-vi.mock("openclaw/plugin-sdk/node-host", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("openclaw/plugin-sdk/node-host")>();
+vi.mock("grokbot/plugin-sdk/node-host", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("grokbot/plugin-sdk/node-host")>();
   return {
     ...actual,
     runNodePtyCommand: nodeHostMocks.runNodePtyCommand,
@@ -88,7 +88,7 @@ async function installFakeOpenCode(
   sessionTitle = "Catalog session",
   toolInput: unknown = { command: "pwd" },
 ): Promise<string> {
-  const directory = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-opencode-catalog-"));
+  const directory = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-opencode-catalog-"));
   temporaryDirectories.push(directory);
   const executable = path.join(directory, "opencode");
   const session = {
@@ -153,7 +153,7 @@ if (args[0] === "--pure" && args[1] === "db" && args.includes("--format") && arg
 }
 
 async function installHangingOpenCode(): Promise<void> {
-  const directory = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-opencode-stream-"));
+  const directory = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-opencode-stream-"));
   temporaryDirectories.push(directory);
   const executableName = process.platform === "win32" ? "opencode.js" : "opencode";
   await fs.writeFile(

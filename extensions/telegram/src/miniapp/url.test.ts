@@ -1,4 +1,4 @@
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import { describe, expect, it, vi } from "vitest";
 import { resolveTelegramMiniAppUrls, TELEGRAM_MINIAPP_URL_ERROR } from "./url.js";
 
@@ -11,14 +11,14 @@ describe("resolveTelegramMiniAppUrls", () => {
     const cfg = {
       gateway: {
         tailscale: { mode: "serve" },
-        controlUi: { basePath: "/openclaw/" },
+        controlUi: { basePath: "/grokbot/" },
       },
     } satisfies OpenClawConfig;
 
     await expect(resolveTelegramMiniAppUrls({ cfg, runCommand })).resolves.toEqual({
       pageUrl: "https://host.tailnet.ts.net/__openclaw_tg_miniapp/",
-      controlUiUrl: "https://host.tailnet.ts.net/openclaw",
-      gatewayUrl: "wss://host.tailnet.ts.net/openclaw",
+      controlUiUrl: "https://host.tailnet.ts.net/grokbot",
+      gatewayUrl: "wss://host.tailnet.ts.net/grokbot",
     });
     expect(runCommand).toHaveBeenCalledWith(["tailscale", "status", "--json"], {
       timeoutMs: 5000,
@@ -32,13 +32,13 @@ describe("resolveTelegramMiniAppUrls", () => {
     }));
     const cfg = {
       gateway: {
-        tailscale: { mode: "serve", serviceName: "svc:openclaw" },
+        tailscale: { mode: "serve", serviceName: "svc:grokbot" },
       },
     } satisfies OpenClawConfig;
 
     await expect(resolveTelegramMiniAppUrls({ cfg, runCommand })).resolves.toMatchObject({
-      pageUrl: "https://openclaw.tailnet.ts.net/__openclaw_tg_miniapp/",
-      gatewayUrl: "wss://openclaw.tailnet.ts.net",
+      pageUrl: "https://grokbot.tailnet.ts.net/__openclaw_tg_miniapp/",
+      gatewayUrl: "wss://grokbot.tailnet.ts.net",
     });
   });
 

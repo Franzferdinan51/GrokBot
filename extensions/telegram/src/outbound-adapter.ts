@@ -1,24 +1,24 @@
 // Telegram plugin module implements outbound adapter behavior.
-import type { OutboundDeliveryFormattingOptions } from "openclaw/plugin-sdk/channel-outbound";
+import type { OutboundDeliveryFormattingOptions } from "grokbot/plugin-sdk/channel-outbound";
 import {
   resolveOutboundSendDep,
   sanitizeForPlainText,
   type OutboundSendDeps,
-} from "openclaw/plugin-sdk/channel-outbound";
-import type { ChannelOutboundAdapter } from "openclaw/plugin-sdk/channel-send-result";
+} from "grokbot/plugin-sdk/channel-outbound";
+import type { ChannelOutboundAdapter } from "grokbot/plugin-sdk/channel-send-result";
 import {
   attachChannelToResult,
   createAttachedChannelResultAdapter,
-} from "openclaw/plugin-sdk/channel-send-result";
-import { questionGatewayRuntime } from "openclaw/plugin-sdk/question-gateway-runtime";
-import { chunkMarkdownTextWithMode } from "openclaw/plugin-sdk/reply-chunking";
+} from "grokbot/plugin-sdk/channel-send-result";
+import { questionGatewayRuntime } from "grokbot/plugin-sdk/question-gateway-runtime";
+import { chunkMarkdownTextWithMode } from "grokbot/plugin-sdk/reply-chunking";
 import {
   resolveSendableOutboundReplyParts,
   sendPayloadMediaSequenceOrFallback,
-} from "openclaw/plugin-sdk/reply-payload";
-import { isSingleUseReplyToMode } from "openclaw/plugin-sdk/reply-reference";
-import type { ReplyPayload } from "openclaw/plugin-sdk/reply-runtime";
-import { sanitizeAssistantVisibleText } from "openclaw/plugin-sdk/text-chunking";
+} from "grokbot/plugin-sdk/reply-payload";
+import { isSingleUseReplyToMode } from "grokbot/plugin-sdk/reply-reference";
+import type { ReplyPayload } from "grokbot/plugin-sdk/reply-runtime";
+import { sanitizeAssistantVisibleText } from "grokbot/plugin-sdk/text-chunking";
 import { mergeTelegramAccountConfig, resolveDefaultTelegramAccountId } from "./accounts.js";
 import type { TelegramInlineButtons } from "./button-types.js";
 import { resolveTelegramInlineButtons } from "./button-types.js";

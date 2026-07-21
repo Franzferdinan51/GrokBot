@@ -1,6 +1,6 @@
-import { normalizeOptionalLowercaseString } from "@openclaw/normalization-core/string-coerce";
+import { normalizeOptionalLowercaseString } from "@grokbot/normalization-core/string-coerce";
 import { executeSqliteQuerySync } from "../../infra/kysely-sync.js";
-import { openOpenClawAgentDatabase } from "../../state/openclaw-agent-db.js";
+import { openOpenClawAgentDatabase } from "../../state/grokbot-agent-db.js";
 import type { ConversationIdentity, ConversationKind } from "./conversation-identity.js";
 import { upsertConversationIdentity } from "./session-accessor.sqlite-conversation.js";
 import {

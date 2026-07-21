@@ -1,6 +1,6 @@
-name: OpenClaw Release Telegram QA
+name: GrokBot Release Telegram QA
 
-run-name: ${{ github.event_name == 'workflow_dispatch' && format('OpenClaw Release Telegram QA {0}', inputs.dispatch_id) || 'OpenClaw Release Telegram QA' }}
+run-name: ${{ github.event_name == 'workflow_dispatch' && format('GrokBot Release Telegram QA {0}', inputs.dispatch_id) || 'GrokBot Release Telegram QA' }}
 
 on:
   # Transitional compatibility for supported release refs whose parent still calls @main.
@@ -81,8 +81,8 @@ jobs:
         run: |
           set -euo pipefail
 
-          expected_repository="openclaw/openclaw"
-          expected_ref="${expected_repository}/.github/workflows/openclaw-release-telegram-qa.yml@refs/heads/main"
+          expected_repository="grokbot/grokbot"
+          expected_ref="${expected_repository}/.github/workflows/grokbot-release-telegram-qa.yml@refs/heads/main"
           if [[ "$GITHUB_REPOSITORY" != "$expected_repository" ||
                 ! "$EXPECTED_TRUSTED_WORKFLOW_SHA" =~ ^[a-f0-9]{40}$ ||
                 ! "$TARGET_SHA" =~ ^[a-f0-9]{40}$ ||
@@ -105,7 +105,7 @@ jobs:
               --connect-timeout 10 \
               --max-time 30 \
               -H "Authorization: bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" \
-              "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=openclaw-release-telegram-qa"
+              "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=grokbot-release-telegram-qa"
           )"
           oidc_token="$(jq -er '.value' <<<"$oidc_json")"
           EXPECTED_WORKFLOW_REF="$expected_ref" OIDC_TOKEN="$oidc_token" \
@@ -124,7 +124,7 @@ jobs:
           const expectedTrustedWorkflowSha = process.env.EXPECTED_TRUSTED_WORKFLOW_SHA;
           const eventName = process.env.GITHUB_EVENT_NAME;
           const expected = {
-            aud: "openclaw-release-telegram-qa",
+            aud: "grokbot-release-telegram-qa",
             event_name: eventName,
             iss: "https://token.actions.githubusercontent.com",
             ref: process.env.GITHUB_REF,
@@ -439,7 +439,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          candidate_home="${RUNNER_TEMP}/openclaw-telegram-candidate-home"
+          candidate_home="${RUNNER_TEMP}/grokbot-telegram-candidate-home"
           mkdir -p "$candidate_home"
           env -i \
             CI=true \
@@ -450,7 +450,7 @@ jobs:
             PATH="$PATH" \
             RUNNER_TEMP="$RUNNER_TEMP" \
             pnpm --dir .candidate install \
-              --store-dir "$RUNNER_TEMP/openclaw-telegram-candidate-pnpm-store" \
+              --store-dir "$RUNNER_TEMP/grokbot-telegram-candidate-pnpm-store" \
               --prefer-offline \
               --frozen-lockfile \
               --ignore-scripts=false \
@@ -464,7 +464,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          candidate_home="${RUNNER_TEMP}/openclaw-telegram-candidate-home"
+          candidate_home="${RUNNER_TEMP}/grokbot-telegram-candidate-home"
           env -i \
             CI=true \
             COREPACK_HOME="${candidate_home}/.cache/corepack" \
@@ -483,7 +483,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          candidate_root="${RUNNER_TEMP}/openclaw-telegram-candidate-build"
+          candidate_root="${RUNNER_TEMP}/grokbot-telegram-candidate-build"
           candidate_sha="$(git -C .candidate rev-parse HEAD)"
           candidate_tree="$(git -C .candidate rev-parse 'HEAD^{tree}')"
           tracked_status="$(git -C .candidate status --porcelain --untracked-files=no)"
@@ -520,8 +520,8 @@ jobs:
           [[ "$(git rev-parse HEAD)" == "$CALLED_WORKFLOW_SHA" ]]
           [[ -d "$CANDIDATE_ROOT/node_modules" && -f "$CANDIDATE_ROOT/dist/index.js" ]]
 
-          bundle_root="${RUNNER_TEMP}/openclaw-telegram-candidate-bundle"
-          archive_root="openclaw-telegram-candidate"
+          bundle_root="${RUNNER_TEMP}/grokbot-telegram-candidate-bundle"
+          archive_root="grokbot-telegram-candidate"
           candidate_root="${bundle_root}/${archive_root}"
           manifest_path="${bundle_root}/manifest.json"
           rm -rf "$bundle_root"
@@ -704,7 +704,7 @@ jobs:
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
         with:
           artifact-ids: ${{ needs.build_candidate.outputs.artifact_id }}
-          path: ${{ runner.temp }}/openclaw-telegram-attestor-download
+          path: ${{ runner.temp }}/grokbot-telegram-attestor-download
           skip-decompress: true
           digest-mismatch: error
 
@@ -720,16 +720,16 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          download_dir="${RUNNER_TEMP}/openclaw-telegram-attestor-download"
+          download_dir="${RUNNER_TEMP}/grokbot-telegram-attestor-download"
           archive_path="${download_dir}/${ARCHIVE_NAME}"
-          extract_root="${RUNNER_TEMP}/openclaw-telegram-attestor-extract"
-          candidate_root="${extract_root}/openclaw-telegram-candidate"
+          extract_root="${RUNNER_TEMP}/grokbot-telegram-attestor-extract"
+          candidate_root="${extract_root}/grokbot-telegram-candidate"
           [[ "$(sha256sum "$archive_path" | awk '{print $1}')" == "$ARCHIVE_SHA256" ]]
           rm -rf "$extract_root"
           python3 scripts/release-telegram-candidate-archive.py extract-zstd \
             "$archive_path" \
             "$extract_root" \
-            --allowed-root openclaw-telegram-candidate
+            --allowed-root grokbot-telegram-candidate
 
           manifest_path="${extract_root}/manifest.json"
           [[ "$(sha256sum "$manifest_path" | awk '{print $1}')" == "$MANIFEST_SHA256" ]]
@@ -744,7 +744,7 @@ jobs:
               .workflowSha == $workflowSha and
               .candidateSha == $candidateSha and
               .candidateTree == $candidateTree and
-              .archiveRoot == "openclaw-telegram-candidate" and
+              .archiveRoot == "grokbot-telegram-candidate" and
               .buildCommand == "node scripts/build-all.mjs qaRuntime" and
               .sourceJob == "build_candidate"
             ' "$manifest_path" >/dev/null
@@ -762,7 +762,7 @@ jobs:
       - name: Compare candidate tracked source and tree
         id: compare_source
         env:
-          CANDIDATE_ROOT: ${{ runner.temp }}/openclaw-telegram-attestor-extract/openclaw-telegram-candidate
+          CANDIDATE_ROOT: ${{ runner.temp }}/grokbot-telegram-attestor-extract/grokbot-telegram-candidate
           CANDIDATE_TREE: ${{ needs.build_candidate.outputs.candidate_tree }}
           TARGET_SHA: ${{ inputs.target_sha }}
         shell: bash
@@ -943,7 +943,7 @@ jobs:
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
         with:
           artifact-ids: ${{ needs.build_candidate.outputs.artifact_id }}
-          path: ${{ runner.temp }}/openclaw-telegram-executor-download
+          path: ${{ runner.temp }}/grokbot-telegram-executor-download
           skip-decompress: true
           digest-mismatch: error
 
@@ -959,15 +959,15 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          download_dir="${RUNNER_TEMP}/openclaw-telegram-executor-download"
+          download_dir="${RUNNER_TEMP}/grokbot-telegram-executor-download"
           archive_path="${download_dir}/${ARCHIVE_NAME}"
-          extract_root="${RUNNER_TEMP}/openclaw-telegram-executor-extract"
-          candidate_root="${extract_root}/openclaw-telegram-candidate"
+          extract_root="${RUNNER_TEMP}/grokbot-telegram-executor-extract"
+          candidate_root="${extract_root}/grokbot-telegram-candidate"
           [[ "$(sha256sum "$archive_path" | awk '{print $1}')" == "$ARCHIVE_SHA256" ]]
 
           gh attestation verify "$archive_path" \
             --repo "$GITHUB_REPOSITORY" \
-            --cert-identity "https://github.com/openclaw/openclaw/.github/workflows/openclaw-release-telegram-qa.yml@refs/heads/main" \
+            --cert-identity "https://github.com/grokbot/grokbot/.github/workflows/grokbot-release-telegram-qa.yml@refs/heads/main" \
             --signer-digest "$CALLED_WORKFLOW_SHA" \
             --source-ref "$GITHUB_REF" \
             --source-digest "$GITHUB_SHA" \
@@ -978,7 +978,7 @@ jobs:
           python3 scripts/release-telegram-candidate-archive.py extract-zstd \
             "$archive_path" \
             "$extract_root" \
-            --allowed-root openclaw-telegram-candidate
+            --allowed-root grokbot-telegram-candidate
           jq -e \
             --arg candidateSha "$TARGET_SHA" \
             --arg candidateTree "$CANDIDATE_TREE" \
@@ -990,7 +990,7 @@ jobs:
               .workflowSha == $workflowSha and
               .candidateSha == $candidateSha and
               .candidateTree == $candidateTree and
-              .archiveRoot == "openclaw-telegram-candidate" and
+              .archiveRoot == "grokbot-telegram-candidate" and
               .sourceJob == "build_candidate"
             ' "${extract_root}/manifest.json" >/dev/null
           [[ -d "$candidate_root/node_modules" && -f "$candidate_root/dist/index.js" ]]
@@ -1178,18 +1178,18 @@ jobs:
           set -euo pipefail
           sut_user="ocqatg${GITHUB_RUN_ID}${GITHUB_RUN_ATTEMPT}"
           candidate_extract_root="$(dirname "$CANDIDATE_ROOT")"
-          candidate_runtime_root="/opt/openclaw-telegram-sut-candidate-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
-          runtime_root="/var/lib/openclaw-telegram-sut-runtime-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          candidate_runtime_root="/opt/grokbot-telegram-sut-candidate-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          runtime_root="/var/lib/grokbot-telegram-sut-runtime-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
           node_bin="${runtime_root}/node"
-          launcher="/usr/local/bin/openclaw-telegram-sut-launcher"
-          config="/etc/openclaw-telegram-sut.conf"
-          preload="${runtime_root}/openclaw-telegram-preentry.mjs"
+          launcher="/usr/local/bin/grokbot-telegram-sut-launcher"
+          config="/etc/grokbot-telegram-sut.conf"
+          preload="${runtime_root}/grokbot-telegram-preentry.mjs"
           runner_uid="$(id -u)"
           runner_gid="$(id -g)"
           runner_home="$(realpath -e "$HOME")"
           runner_temp="$(realpath -e "$RUNNER_TEMP")"
           source_node_bin="$(realpath -e "$(command -v node)")"
-          [[ "$candidate_extract_root" == "${RUNNER_TEMP}/openclaw-telegram-executor-extract" ]]
+          [[ "$candidate_extract_root" == "${RUNNER_TEMP}/grokbot-telegram-executor-extract" ]]
           case "$runner_temp/" in
             "$runner_home"/*) ;;
             *) echo "GitHub runner temp must be contained by runner home." >&2; exit 1 ;;
@@ -1214,16 +1214,16 @@ jobs:
           [[ "$(stat -c '%F:%a:%u:%g' "$node_bin")" == "regular file:555:0:0" ]]
           "$node_bin" --version >/dev/null
           sudo install -d -o "$runner_uid" -g "$runner_gid" -m 0711 "$runtime_root/tmp"
-          # Frozen candidates prefer /tmp/openclaw before TMPDIR. Make that shared path
+          # Frozen candidates prefer /tmp/grokbot before TMPDIR. Make that shared path
           # unavailable to the runner so they use the isolated runtime fallback instead.
-          sudo rm -rf -- /tmp/openclaw
-          sudo install -d -o root -g root -m 0700 /tmp/openclaw
+          sudo rm -rf -- /tmp/grokbot
+          sudo install -d -o root -g root -m 0700 /tmp/grokbot
           sudo install \
             -d \
             -o "$runner_uid" \
             -g "$runner_gid" \
             -m 0711 \
-            "${runtime_root}/tmp/openclaw-${runner_uid}"
+            "${runtime_root}/tmp/grokbot-${runner_uid}"
           sudo chown -R root:root "$CANDIDATE_ROOT"
           sudo chmod -R go-w "$CANDIDATE_ROOT"
           sudo chmod -R a+rX "$CANDIDATE_ROOT"
@@ -1244,7 +1244,7 @@ jobs:
             "/var/lib/systemd/linger/${sut_user}" \
             "/var/spool/cron/crontabs/${sut_user}" \
             "/var/spool/cron/${sut_user}"
-          sudo tee "/etc/security/limits.d/99-openclaw-telegram-sut.conf" >/dev/null <<EOF
+          sudo tee "/etc/security/limits.d/99-grokbot-telegram-sut.conf" >/dev/null <<EOF
           ${sut_user} hard core 0
           ${sut_user} soft core 0
           ${sut_user} hard nproc 256
@@ -1364,11 +1364,11 @@ jobs:
           )
 
           load_process_identity() {
-            source /etc/openclaw-telegram-sut.conf
+            source /etc/grokbot-telegram-sut.conf
             identity_file="$(realpath -e "$1")"
             case "$identity_file" in
-              "$RUNTIME_ROOT"/tmp/openclaw-qa-suite-*/process-boundary/identity-*.json | \
-              "$RUNTIME_ROOT"/tmp/openclaw-"$RUNNER_UID"/openclaw-qa-suite-*/process-boundary/identity-*.json) ;;
+              "$RUNTIME_ROOT"/tmp/grokbot-qa-suite-*/process-boundary/identity-*.json | \
+              "$RUNTIME_ROOT"/tmp/grokbot-"$RUNNER_UID"/grokbot-qa-suite-*/process-boundary/identity-*.json) ;;
               *) echo "Telegram SUT identity escaped the runtime root." >&2; exit 1 ;;
             esac
             [[ "$(stat -c '%F:%a:%u:%g' "$identity_file")" == "regular file:640:0:${RUNNER_GID}" ]]
@@ -1744,7 +1744,7 @@ jobs:
 
           if [[ "${1:-}" == "--root-terminate-uid" ]]; then
             [[ "$EUID" == "0" ]]
-            source /etc/openclaw-telegram-sut.conf
+            source /etc/grokbot-telegram-sut.conf
             terminate_sut_uid
             exit 0
           fi
@@ -1766,7 +1766,7 @@ jobs:
           shift
           launcher_stage=root-run-setup
           [[ "$EUID" == "0" ]]
-          source /etc/openclaw-telegram-sut.conf
+          source /etc/grokbot-telegram-sut.conf
 
           declare -A keep_env=()
           for key in "${transport_keys[@]}" "${control_keys[@]}"; do
@@ -1782,11 +1782,11 @@ jobs:
 
           temp_root="$(realpath -e "${OPENCLAW_QA_TEMP_ROOT:?}")"
           case "$temp_root" in
-            "$RUNTIME_ROOT"/tmp/openclaw-qa-suite-* | \
-            "$RUNTIME_ROOT"/tmp/openclaw-"$RUNNER_UID"/openclaw-qa-suite-*) ;;
+            "$RUNTIME_ROOT"/tmp/grokbot-qa-suite-* | \
+            "$RUNTIME_ROOT"/tmp/grokbot-"$RUNNER_UID"/grokbot-qa-suite-*) ;;
             *) echo "SUT temp root escaped the workflow runtime root." >&2; exit 1 ;;
           esac
-          config_path="${temp_root}/openclaw.json"
+          config_path="${temp_root}/grokbot.json"
           [[ -f "$config_path" && ! -L "$config_path" ]]
           [[ "$(realpath -e "$config_path")" == "$config_path" ]]
           capture_live_model_config "$config_path"
@@ -1911,7 +1911,7 @@ jobs:
                 mount \
                   -t tmpfs \
                   -o mode=000,nosuid,nodev,noexec \
-                  openclaw-telegram-mask \
+                  grokbot-telegram-mask \
                   "$masked_path"
               done
               set_launcher_stage mount-proc
@@ -2114,8 +2114,8 @@ jobs:
                     fi
                     runtime_stage=exec-runtime
                     exec "$runtime_node_bin" "$runtime_candidate_root/dist/index.js" "$@"
-                  '\'' openclaw-sut "$@"
-            ' openclaw-sut "$@"
+                  '\'' grokbot-sut "$@"
+            ' grokbot-sut "$@"
           LAUNCHER
           sudo chown root:root "$launcher"
           sudo chmod 0755 "$launcher"
@@ -2232,7 +2232,7 @@ jobs:
             trap 'printf "::%s::\n" "$workflow_command_token"' EXIT
             set +e
             TMPDIR="${SUT_RUNTIME_ROOT}/tmp" \
-              pnpm openclaw qa telegram \
+              pnpm grokbot qa telegram \
                 --repo-root "$CANDIDATE_ROOT" \
                 --output-dir "${EVIDENCE_RELATIVE}/${output_name}" \
                 --provider-mode mock-openai \
@@ -2260,7 +2260,7 @@ jobs:
             fi
           done < <(
             TMPDIR="${SUT_RUNTIME_ROOT}/tmp" \
-              pnpm openclaw qa telegram \
+              pnpm grokbot qa telegram \
                 --repo-root "$CANDIDATE_ROOT" \
                 --provider-mode mock-openai \
                 --list-scenarios
@@ -2326,10 +2326,10 @@ jobs:
         run: |
           set -euo pipefail
           umask 077
-          [[ "$RUNTIME_ROOT" == "/var/lib/openclaw-telegram-sut-runtime-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}" ]]
+          [[ "$RUNTIME_ROOT" == "/var/lib/grokbot-telegram-sut-runtime-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}" ]]
           diagnostics_dir="${OUTPUT_DIR}/trusted-runtime-diagnostics"
           install -d -m 0700 "$diagnostics_dir"
-          trusted_temp_root="$(mktemp -d "${RUNNER_TEMP}/openclaw-telegram-diagnostics.XXXXXX")"
+          trusted_temp_root="$(mktemp -d "${RUNNER_TEMP}/grokbot-telegram-diagnostics.XXXXXX")"
           trap 'rm -rf -- "$trusted_temp_root"' EXIT
           redactor_script="${trusted_temp_root}/redact-gateway-tail.mts"
           cat >"$redactor_script" <<'NODE'
@@ -2475,7 +2475,7 @@ jobs:
           # The live suite can launch more than eight gateways. Keep the newest
           # bounded tails instead of failing diagnostics after a successful lane.
           mapfile -d '' -t gateway_logs < <(
-            sudo find "$RUNTIME_ROOT/tmp" -xdev -type f -name 'openclaw-*.log' -printf '%T@\t%p\0' |
+            sudo find "$RUNTIME_ROOT/tmp" -xdev -type f -name 'grokbot-*.log' -printf '%T@\t%p\0' |
               sort -z -nr |
               sed -z -n '1,8p' |
               cut -z -f2-
@@ -2669,9 +2669,9 @@ jobs:
           set -euo pipefail
           sudo userdel "$SUT_USER"
           sudo rm -f \
-            /etc/openclaw-telegram-sut.conf \
-            /etc/security/limits.d/99-openclaw-telegram-sut.conf \
-            /usr/local/bin/openclaw-telegram-sut-launcher
+            /etc/grokbot-telegram-sut.conf \
+            /etc/security/limits.d/99-grokbot-telegram-sut.conf \
+            /usr/local/bin/grokbot-telegram-sut-launcher
 
       - name: Upload Telegram QA artifacts
         id: upload_evidence
@@ -2693,9 +2693,9 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          [[ "$RUNTIME_ROOT" == "/var/lib/openclaw-telegram-sut-runtime-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}" ]]
-          [[ "$CANDIDATE_ROOT" == "/opt/openclaw-telegram-sut-candidate-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}" ]]
-          [[ "$CANDIDATE_EXTRACT_ROOT" == "${RUNNER_TEMP}/openclaw-telegram-executor-extract" ]]
+          [[ "$RUNTIME_ROOT" == "/var/lib/grokbot-telegram-sut-runtime-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}" ]]
+          [[ "$CANDIDATE_ROOT" == "/opt/grokbot-telegram-sut-candidate-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}" ]]
+          [[ "$CANDIDATE_EXTRACT_ROOT" == "${RUNNER_TEMP}/grokbot-telegram-executor-extract" ]]
           sudo rm -rf -- "$RUNTIME_ROOT"
           sudo rm -rf -- "$CANDIDATE_ROOT"
           sudo rm -rf -- "$CANDIDATE_EXTRACT_ROOT"

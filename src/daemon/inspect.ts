@@ -1,7 +1,7 @@
-/** Inspects installed platform services for extra OpenClaw or legacy gateway jobs. */
+/** Inspects installed platform services for extra GrokBot or legacy gateway jobs. */
 import fs from "node:fs/promises";
 import path from "node:path";
-import { normalizeLowercaseStringOrEmpty } from "@openclaw/normalization-core/string-coerce";
+import { normalizeLowercaseStringOrEmpty } from "@grokbot/normalization-core/string-coerce";
 import {
   GATEWAY_SERVICE_KIND,
   GATEWAY_SERVICE_MARKER,
@@ -18,7 +18,7 @@ export type ExtraGatewayService = {
   label: string;
   detail: string;
   scope: "user" | "system";
-  marker?: "openclaw" | "clawdbot";
+  marker?: "grokbot" | "clawdbot";
   legacy?: boolean;
 };
 
@@ -26,7 +26,7 @@ export type FindExtraGatewayServicesOptions = {
   deep?: boolean;
 };
 
-const EXTRA_MARKERS = ["openclaw", "clawdbot"] as const;
+const EXTRA_MARKERS = ["grokbot", "clawdbot"] as const;
 const SYSTEMD_REFERENCE_ONLY_KEYS = new Set([
   "after",
   "before",
@@ -182,17 +182,17 @@ function isOpenClawGatewayLaunchdService(label: string, contents: string): boole
   if (hasGatewayServiceMarker(contents)) {
     return true;
   }
-  if (detectLaunchdGatewayExecutionMarker(contents) !== "openclaw") {
+  if (detectLaunchdGatewayExecutionMarker(contents) !== "grokbot") {
     return false;
   }
-  return label.startsWith("ai.openclaw.");
+  return label.startsWith("ai.grokbot.");
 }
 
 function isOpenClawGatewaySystemdService(name: string, contents: string): boolean {
   if (hasGatewayServiceMarker(contents)) {
     return true;
   }
-  if (!name.startsWith("openclaw-gateway")) {
+  if (!name.startsWith("grokbot-gateway")) {
     return false;
   }
   return normalizeLowercaseStringOrEmpty(contents).includes("gateway");
@@ -204,12 +204,12 @@ function isOpenClawGatewayTaskName(name: string): boolean {
     return false;
   }
   // Windows schtasks /Query returns task names prefixed with \ (e.g.
-  // \OpenClaw Gateway for root-folder tasks). Strip the leading
+  // \GrokBot Gateway for root-folder tasks). Strip the leading
   // backslash so the configured name matches correctly and the live
   // gateway task is not misidentified as an extra gateway service.
   const stripped = normalized.replace(/^\\+/, "");
   const defaultName = normalizeLowercaseStringOrEmpty(resolveGatewayWindowsTaskName());
-  return stripped === defaultName || /^openclaw gateway \(.+\)$/.test(stripped);
+  return stripped === defaultName || /^grokbot gateway \(.+\)$/.test(stripped);
 }
 
 function tryExtractPlistLabel(contents: string): string | null {
@@ -297,8 +297,8 @@ async function scanLaunchdDir(params: {
     const legacyLabel = isLegacyLabel(labelFromName) || isLegacyLabel(label);
     const executionMarker = detectLaunchdGatewayExecutionMarker(contents);
     const marker =
-      hasGatewayServiceMarker(contents) || executionMarker === "openclaw"
-        ? "openclaw"
+      hasGatewayServiceMarker(contents) || executionMarker === "grokbot"
+        ? "grokbot"
         : executionMarker === "clawdbot" || legacyLabel
           ? "clawdbot"
           : null;
@@ -310,7 +310,7 @@ async function scanLaunchdDir(params: {
     if (isIgnoredLaunchdLabel(label)) {
       continue;
     }
-    if (marker === "openclaw" && isOpenClawGatewayLaunchdService(label, contents)) {
+    if (marker === "grokbot" && isOpenClawGatewayLaunchdService(label, contents)) {
       continue;
     }
     results.push({
@@ -319,7 +319,7 @@ async function scanLaunchdDir(params: {
       detail: `plist: ${fullPath}`,
       scope: params.scope,
       marker,
-      legacy: marker !== "openclaw" || isLegacyLabel(label),
+      legacy: marker !== "grokbot" || isLegacyLabel(label),
     });
   }
 
@@ -340,14 +340,14 @@ async function scanSystemdDir(params: {
 
   for (const { entry, name, fullPath, contents } of candidates) {
     const marker = hasGatewayServiceMarker(contents)
-      ? "openclaw"
+      ? "grokbot"
       : detectMarkerLineWithGateway(contents);
     if (!marker) {
       continue;
     }
     if (
       !params.includeManagedOpenClaw &&
-      marker === "openclaw" &&
+      marker === "grokbot" &&
       isOpenClawGatewaySystemdService(name, contents)
     ) {
       continue;
@@ -358,7 +358,7 @@ async function scanSystemdDir(params: {
       detail: `unit: ${fullPath}`,
       scope: params.scope,
       marker,
-      legacy: marker !== "openclaw",
+      legacy: marker !== "grokbot",
     });
   }
 
@@ -546,7 +546,7 @@ export async function findExtraGatewayServices(
         detail: task.taskToRun ? `task: ${name}, run: ${task.taskToRun}` : name,
         scope: "system",
         marker,
-        legacy: marker !== "openclaw",
+        legacy: marker !== "grokbot",
       });
     }
     return results;

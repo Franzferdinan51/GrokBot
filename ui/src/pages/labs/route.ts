@@ -1,4 +1,4 @@
-import { definePage } from "@openclaw/uirouter";
+import { definePage } from "@grokbot/uirouter";
 import { html } from "lit";
 import type { ApplicationContext } from "../../app/context.ts";
 
@@ -9,6 +9,6 @@ export const page = definePage({
   component: () =>
     import("./labs-page.ts").then(() => ({
       header: true,
-      render: () => html`<openclaw-labs-page></openclaw-labs-page>`,
+      render: () => html`<grokbot-labs-page></grokbot-labs-page>`,
     })),
 });

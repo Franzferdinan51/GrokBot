@@ -9,7 +9,7 @@ import {
 import { DEFAULT_MODEL, DEFAULT_PROVIDER } from "../../../agents/defaults.js";
 import { normalizeProviderId } from "../../../agents/model-selection.js";
 import type { AgentModelConfig } from "../../../config/types.agents-shared.js";
-import type { OpenClawConfig } from "../../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../../config/types.grokbot.js";
 import { resolvePluginMetadataSnapshot } from "../../../plugins/plugin-metadata-snapshot.js";
 
 type StaleAgentModelRefRepair = {

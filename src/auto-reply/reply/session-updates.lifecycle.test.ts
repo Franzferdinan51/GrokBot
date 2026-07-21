@@ -28,7 +28,7 @@ let incrementCompactionCount: typeof import("./session-updates.js").incrementCom
 const tempDirs: string[] = [];
 
 async function createFixture() {
-  const root = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-session-updates-"));
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-session-updates-"));
   tempDirs.push(root);
   const storePath = path.join(root, "sessions.json");
   const sessionKey = "agent:main:forum:direct:compaction";

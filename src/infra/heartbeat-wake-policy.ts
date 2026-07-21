@@ -1,6 +1,6 @@
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+import { normalizeOptionalString } from "@grokbot/normalization-core/string-coerce";
 import { listAgentIds } from "../agents/agent-scope.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { normalizeAgentId } from "../routing/session-key.js";
 import type { HeartbeatWakeIntent, HeartbeatWakeSource } from "./heartbeat-wake.js";
 

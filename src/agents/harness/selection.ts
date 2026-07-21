@@ -1,7 +1,7 @@
 /**
  * Selects and invokes native agent harnesses for embedded run attempts.
  */
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import {
   createChildDiagnosticTraceContext,
   createDiagnosticTraceContext,
@@ -32,7 +32,7 @@ import { resolveSandboxRuntimeStatus } from "../sandbox/runtime-status.js";
 import { expandToolGroups, mergeAlsoAllowPolicy, normalizeToolName } from "../tool-policy.js";
 import type { SystemAgentToolOptions } from "../tools/system-agent-tool.js";
 import { resolveAgentHarnessAutoSelectionHint } from "./auto-selection.js";
-import { createOpenClawAgentHarness } from "./builtin-openclaw.js";
+import { createOpenClawAgentHarness } from "./builtin-grokbot.js";
 import { MissingAgentHarnessError } from "./errors.js";
 import { runAgentHarnessLifecycleAttempt } from "./lifecycle.js";
 import {
@@ -110,15 +110,15 @@ type AgentHarnessSelectionDecision = {
   selectedReason:
     | "forced_openclaw"
     | "forced_plugin"
-    // Implicit Codex preference found no registered Codex harness, so OpenClaw handled the run.
+    // Implicit Codex preference found no registered Codex harness, so GrokBot handled the run.
     | "implicit_plugin_unavailable_openclaw"
-    // Implicit Codex preference cannot reproduce the prepared transport, so OpenClaw handled it.
+    // Implicit Codex preference cannot reproduce the prepared transport, so GrokBot handled it.
     | "implicit_plugin_unsupported_openclaw"
     // Provider-owned CLI runtime aliases have no agent harness plugin counterpart.
     | "cli_runtime_passthrough_openclaw"
     // Auto mode chose a registered plugin harness that supports the provider/model.
     | "auto_plugin"
-    // Auto mode found no supporting plugin harness, so OpenClaw handled the run.
+    // Auto mode found no supporting plugin harness, so GrokBot handled the run.
     | "auto_openclaw";
   candidates: AgentHarnessSelectionCandidate[];
 };
@@ -180,7 +180,7 @@ function resolveAgentHarnessAvailabilityDecision(
   if (!codexHarness) {
     return {
       kind: "implicit-unavailable",
-      policy: { ...policy, runtime: "openclaw" },
+      policy: { ...policy, runtime: "grokbot" },
     };
   }
   const provider = params.provider?.trim();
@@ -204,7 +204,7 @@ function resolveAgentHarnessAvailabilityDecision(
   }
   return {
     kind: "implicit-unsupported",
-    policy: { ...policy, runtime: "openclaw" },
+    policy: { ...policy, runtime: "grokbot" },
   };
 }
 
@@ -239,19 +239,19 @@ export function selectAgentHarnessForPreparedModelProviders(
   // Only implicit/auto selection can produce different supported harnesses. One embedded
   // runtime owns the complete retry set; explicit and pinned plugins fail during probing above.
   return (
-    decisions.find((decision) => decision.selectedHarnessId === "openclaw")?.harness ??
+    decisions.find((decision) => decision.selectedHarnessId === "grokbot")?.harness ??
     createOpenClawAgentHarness()
   );
 }
 
-/** Returns whether a plugin harness constructs OpenClaw tools inside its runtime. */
+/** Returns whether a plugin harness constructs GrokBot tools inside its runtime. */
 export function agentHarnessBuildsOpenClawTools(harnessId: string): boolean {
   return harnessId === "codex" || harnessId === "copilot";
 }
 
-/** Returns whether the selected harness exposes OpenClaw's agent-tool surface. */
+/** Returns whether the selected harness exposes GrokBot's agent-tool surface. */
 export function agentHarnessExposesOpenClawTools(harnessId: string): boolean {
-  return harnessId === "openclaw" || agentHarnessBuildsOpenClawTools(harnessId);
+  return harnessId === "grokbot" || agentHarnessBuildsOpenClawTools(harnessId);
 }
 
 function selectAgentHarnessDecision(
@@ -285,12 +285,12 @@ function selectAgentHarnessDecision(
         runtimeSource: "model",
       } as AgentHarnessPolicy)
     : resolvedPolicy;
-  // OpenClaw's built-in harness is intentionally not part of the plugin candidate list. Explicit plugin
-  // runtimes fail closed; only `auto` may route an unmatched turn to OpenClaw.
+  // GrokBot's built-in harness is intentionally not part of the plugin candidate list. Explicit plugin
+  // runtimes fail closed; only `auto` may route an unmatched turn to GrokBot.
   const pluginHarnesses = listPluginAgentHarnesses();
   const openClawHarness = createOpenClawAgentHarness();
   const runtime = policy.runtime;
-  if (runtime === "openclaw") {
+  if (runtime === "grokbot") {
     const selectedReason = selectedRuntimeOverride
       ? "forced_openclaw"
       : availability.kind === "implicit-unavailable"
@@ -346,7 +346,7 @@ function selectAgentHarnessDecision(
           harness: openClawHarness,
           policy: {
             ...policy,
-            runtime: "openclaw",
+            runtime: "grokbot",
           },
           selectedReason: "cli_runtime_passthrough_openclaw",
           candidates: listHarnessCandidates(pluginHarnesses),
@@ -363,7 +363,7 @@ function selectAgentHarnessDecision(
         harness: openClawHarness,
         policy: {
           ...policy,
-          runtime: "openclaw",
+          runtime: "grokbot",
         },
         selectedReason: "implicit_plugin_unavailable_openclaw",
         candidates: listHarnessCandidates(pluginHarnesses),
@@ -380,7 +380,7 @@ function selectAgentHarnessDecision(
         harness: openClawHarness,
         policy: {
           ...policy,
-          runtime: "openclaw",
+          runtime: "grokbot",
         },
         selectedReason: "cli_runtime_passthrough_openclaw",
         candidates: listHarnessCandidates(pluginHarnesses),
@@ -474,7 +474,7 @@ export async function runAgentHarnessAttempt(
   });
   const harness = selection.harness;
   if (internalParams.systemAgentTool && !isSystemAgentOnlyAllowlist(internalParams.toolsAllow)) {
-    throw new Error('OpenClaw host authority requires toolsAllow: ["openclaw"]');
+    throw new Error('GrokBot host authority requires toolsAllow: ["grokbot"]');
   }
   const ringZeroTools = internalParams.systemAgentTool
     ? [
@@ -495,17 +495,17 @@ export async function runAgentHarnessAttempt(
       // Resolve plugin policy after entering the host scope. Ring-zero tools are
       // trusted setup authority and must survive ordinary deny-all policy.
       const attemptParams =
-        harness.id === "openclaw" ? pluginParams : preparePluginHarnessParams(pluginParams);
+        harness.id === "grokbot" ? pluginParams : preparePluginHarnessParams(pluginParams);
       return runAgentHarnessLifecycleAttempt(harness, attemptParams);
     });
-  if (harness.id === "openclaw") {
+  if (harness.id === "grokbot") {
     return await runWithDiagnosticTraceContext(harnessTrace, runAttempt);
   }
 
   try {
     return await runWithDiagnosticTraceContext(harnessTrace, runAttempt);
   } catch (error) {
-    log.warn(`${harness.label} failed; not falling back to embedded OpenClaw backend`, {
+    log.warn(`${harness.label} failed; not falling back to embedded GrokBot backend`, {
       harnessId: harness.id,
       provider: params.provider,
       modelId: params.modelId,
@@ -516,7 +516,7 @@ export async function runAgentHarnessAttempt(
 }
 
 function isSystemAgentOnlyAllowlist(toolsAllow: readonly string[] | undefined): boolean {
-  return toolsAllow?.length === 1 && normalizeToolName(toolsAllow[0] ?? "") === "openclaw";
+  return toolsAllow?.length === 1 && normalizeToolName(toolsAllow[0] ?? "") === "grokbot";
 }
 
 function withoutInternalHarnessAuthority(
@@ -549,9 +549,9 @@ function applyPluginHarnessDenyAllToolPolicy(
   params: EmbeddedRunAttemptParams,
 ): EmbeddedRunAttemptParams {
   if (
-    isHostScopedAgentToolActive("openclaw") &&
+    isHostScopedAgentToolActive("grokbot") &&
     params.toolsAllow?.length === 1 &&
-    normalizeToolName(params.toolsAllow[0] ?? "") === "openclaw"
+    normalizeToolName(params.toolsAllow[0] ?? "") === "grokbot"
   ) {
     return params;
   }

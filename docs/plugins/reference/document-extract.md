@@ -11,8 +11,8 @@ Extract text and fallback page images from local document attachments.
 
 ## Distribution
 
-- Package: `@openclaw/document-extract-plugin`
-- Install route: included in OpenClaw
+- Package: `@grokbot/document-extract-plugin`
+- Install route: included in GrokBot
 
 ## Surface
 

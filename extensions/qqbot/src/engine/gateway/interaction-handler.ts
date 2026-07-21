@@ -11,10 +11,10 @@
  * branches fall through to a bare ACK (backward-compatible).
  */
 
-import { isImplicitSameChatApprovalAuthorization } from "openclaw/plugin-sdk/approval-auth-runtime";
-import type { ApprovalResolveResult } from "openclaw/plugin-sdk/approval-gateway-runtime";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { uniqueStrings } from "openclaw/plugin-sdk/string-coerce-runtime";
+import { isImplicitSameChatApprovalAuthorization } from "grokbot/plugin-sdk/approval-auth-runtime";
+import type { ApprovalResolveResult } from "grokbot/plugin-sdk/approval-gateway-runtime";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { uniqueStrings } from "grokbot/plugin-sdk/string-coerce-runtime";
 import { authorizeQQBotApprovalAction } from "../../exec-approvals.js";
 import { resolveQQBotEffectivePolicies } from "../access/resolve-policy.js";
 import { getPlatformAdapter } from "../adapter/index.js";
@@ -83,7 +83,7 @@ function buildClawCfgSnapshot(
   return {
     channel_type: "qqbot",
     channel_ver: getPluginVersion(),
-    claw_type: "openclaw",
+    claw_type: "grokbot",
     claw_ver: getFrameworkVersion(),
     require_mention: requireMentionMode,
     group_policy: policies.groupPolicy,

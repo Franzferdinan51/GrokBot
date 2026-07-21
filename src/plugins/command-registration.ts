@@ -2,7 +2,7 @@
 import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalLowercaseString,
-} from "@openclaw/normalization-core/string-coerce";
+} from "@grokbot/normalization-core/string-coerce";
 import { isOperatorScope } from "../gateway/operator-scopes.js";
 import { logVerbose } from "../globals.js";
 import { isRecord } from "../utils.js";
@@ -82,7 +82,7 @@ type CommandRegistrationResult = {
   error?: string;
 };
 
-/** Returns true when a command name is owned by built-in OpenClaw command handling. */
+/** Returns true when a command name is owned by built-in GrokBot command handling. */
 export function isReservedCommandName(name: string): boolean {
   const trimmed = normalizeOptionalLowercaseString(name) ?? "";
   return Boolean(trimmed && getReservedCommands().has(trimmed));

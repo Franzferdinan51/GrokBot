@@ -1,15 +1,15 @@
 import { setTimeout as sleep } from "node:timers/promises";
 // Qa Lab plugin module owns Telegram live adapter API and credential behavior.
-import type { TelegramBotMessage, TelegramBotUpdate } from "@openclaw/telegram/api.js";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
+import type { TelegramBotMessage, TelegramBotUpdate } from "@grokbot/telegram/api.js";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { formatErrorMessage } from "grokbot/plugin-sdk/error-runtime";
 import {
   parseStrictPositiveInteger,
   resolveTimerTimeoutMs,
-} from "openclaw/plugin-sdk/number-runtime";
-import { readProviderJsonResponse } from "openclaw/plugin-sdk/provider-http";
-import { fetchWithSsrFGuard } from "openclaw/plugin-sdk/ssrf-runtime";
-import { isRecord, uniqueStrings } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/number-runtime";
+import { readProviderJsonResponse } from "grokbot/plugin-sdk/provider-http";
+import { fetchWithSsrFGuard } from "grokbot/plugin-sdk/ssrf-runtime";
+import { isRecord, uniqueStrings } from "grokbot/plugin-sdk/string-coerce-runtime";
 import { z } from "zod";
 
 export type TelegramQaRuntimeEnv = {
@@ -269,7 +269,7 @@ export function buildTelegramQaConfig(
           ...baseCfg.agents?.defaults?.models,
           "openai/gpt-5.6-luna": {
             ...baseCfg.agents?.defaults?.models?.["openai/gpt-5.6-luna"],
-            agentRuntime: { id: "openclaw" },
+            agentRuntime: { id: "grokbot" },
           },
         },
         skipBootstrap: true,

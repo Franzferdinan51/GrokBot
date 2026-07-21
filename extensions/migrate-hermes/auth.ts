@@ -3,14 +3,14 @@ import { createHash } from "node:crypto";
 import {
   loadAuthProfileStoreWithoutExternalProfiles,
   resolveAuthStorePathForDisplay,
-} from "openclaw/plugin-sdk/agent-runtime";
+} from "grokbot/plugin-sdk/agent-runtime";
 import {
   createMigrationItem,
   markMigrationItemConflict,
   markMigrationItemError,
   markMigrationItemSkipped,
-} from "openclaw/plugin-sdk/migration";
-import type { MigrationItem, MigrationProviderContext } from "openclaw/plugin-sdk/plugin-entry";
+} from "grokbot/plugin-sdk/migration";
+import type { MigrationItem, MigrationProviderContext } from "grokbot/plugin-sdk/plugin-entry";
 import {
   buildOpenAICodexCredentialExtra,
   buildOauthProviderAuthResult,
@@ -22,11 +22,11 @@ import {
   type OAuthCredential,
   type OpenClawConfig,
   type ProviderAuthResult,
-} from "openclaw/plugin-sdk/provider-auth";
+} from "grokbot/plugin-sdk/provider-auth";
 import {
   applyAgentDefaultModelPrimary,
   resolveAgentModelPrimaryValue,
-} from "openclaw/plugin-sdk/provider-onboard";
+} from "grokbot/plugin-sdk/provider-onboard";
 import {
   applyAuthProfileConfigWithConflictCheck,
   hasAuthProfileConfigConflict,

@@ -398,7 +398,7 @@ function createIsolatedEnv(repoRoot, runRoot) {
     XDG_CACHE_HOME: path.join(home, ".cache"),
     XDG_DATA_HOME: path.join(home, ".local", "share"),
     OPENCLAW_STATE_DIR: stateDir,
-    OPENCLAW_CONFIG_PATH: path.join(stateDir, "openclaw.json"),
+    OPENCLAW_CONFIG_PATH: path.join(stateDir, "grokbot.json"),
     OPENCLAW_LOG_DIR: path.join(runRoot, "logs"),
     OPENCLAW_QA_SUITE_PROGRESS: process.env.OPENCLAW_QA_SUITE_PROGRESS ?? "1",
     PATH: process.env.PATH,
@@ -1007,7 +1007,7 @@ async function main() {
   const repoRoot = path.resolve(options.repoRoot);
   validateOutputDir(options, repoRoot);
   fs.mkdirSync(options.outputDir, { recursive: true });
-  const runRoot = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-plugin-gauntlet-"));
+  const runRoot = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-plugin-gauntlet-"));
   let preserveRunRoot = options.keepRunRoot;
   const env = createIsolatedEnv(repoRoot, runRoot);
   try {

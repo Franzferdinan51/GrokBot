@@ -2,15 +2,15 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+import { normalizeOptionalString } from "@grokbot/normalization-core/string-coerce";
 import {
   normalizeTrimmedStringList,
   uniqueStrings,
-} from "@openclaw/normalization-core/string-normalization";
-import { truncateUtf16Safe } from "@openclaw/normalization-core/utf16-slice";
+} from "@grokbot/normalization-core/string-normalization";
+import { truncateUtf16Safe } from "@grokbot/normalization-core/utf16-slice";
 import { resolveSandboxPath } from "../../agents/sandbox-paths.js";
 import { canonicalizePath } from "../../agents/utils/paths.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import { walkDirectorySync } from "../../infra/fs-safe.js";
 import { resolveOsHomeDir } from "../../infra/home-dir.js";
 import { isPathInside } from "../../infra/path-guards.js";
@@ -58,7 +58,7 @@ import { resolveAllowedSkillSymlinkTargetRealPaths, tryRealpath } from "./symlin
 
 const fsp = fs.promises;
 const skillsLogger = createSubsystemLogger("skills");
-const SKILL_SOURCE_ORIGIN_RELATIVE_PATH = path.join(".openclaw", "source-origin.json");
+const SKILL_SOURCE_ORIGIN_RELATIVE_PATH = path.join(".grokbot", "source-origin.json");
 const MAX_SKILL_SOURCE_ORIGIN_BYTES = 16 * 1024;
 
 /**
@@ -137,7 +137,7 @@ function isContainerStateHomeWherePromptTildeEscapes(home: string): boolean {
   const configDir = path.resolve(resolveConfigDir());
   return (
     home === "/data" &&
-    (configDir === "/data/.openclaw" || isPathInside("/data/.openclaw", configDir))
+    (configDir === "/data/.grokbot" || isPathInside("/data/.grokbot", configDir))
   );
 }
 
@@ -469,7 +469,7 @@ function buildEscapedSkillPathReason(params: { source: string; candidatePath: st
   consoleHint: string;
 } {
   const candidateIsSymlink = isSymlinkPath(params.candidatePath);
-  if (params.source === "openclaw-bundled" && candidateIsSymlink) {
+  if (params.source === "grokbot-bundled" && candidateIsSymlink) {
     return {
       reason: "bundled-symlink-escape",
       consoleHint:
@@ -482,7 +482,7 @@ function buildEscapedSkillPathReason(params: { source: string; candidatePath: st
       consoleHint: "reason=symlink-escape",
     };
   }
-  if (params.source === "openclaw-bundled") {
+  if (params.source === "grokbot-bundled") {
     return {
       reason: "bundled-root-escape",
       consoleHint:
@@ -753,13 +753,13 @@ function isPathInsideAnyRoot(rootRealPaths: readonly string[], candidateRealPath
 }
 
 function shouldEnforceConfiguredSkillRootContainment(source: string): boolean {
-  return source !== "openclaw-managed" && source !== "agents-skills-personal";
+  return source !== "grokbot-managed" && source !== "agents-skills-personal";
 }
 
 function shouldUseConfiguredSymlinkTargets(source: string): boolean {
   return (
-    source === "openclaw-workspace" ||
-    source === "openclaw-extra" ||
+    source === "grokbot-workspace" ||
+    source === "grokbot-extra" ||
     source === "agents-skills-project"
   );
 }
@@ -879,7 +879,7 @@ function loadGeneratedPluginSkillRecords(params: {
       continue;
     }
 
-    // Plugin skills live as symlinks under ~/.openclaw/plugin-skills/, so
+    // Plugin skills live as symlinks under ~/.grokbot/plugin-skills/, so
     // skillDir is the symlink path while skillDirRealPath is the real target.
     // We set syncSourceDir to the real path so syncSkillsToWorkspace can copy
     // the actual skill directory into the sandbox workspace, but we preserve
@@ -1100,7 +1100,7 @@ function loadSkillEntries(
 
       const candidatePath = path.resolve(candidate.skillDir);
       const maxGroupedDepth =
-        params.source === "openclaw-extra" &&
+        params.source === "grokbot-extra" &&
         !baseDirIsNestedSkillsRoot &&
         !baseDirLooksLikeSkillsRoot &&
         candidatePath !== nestedSkillsRootPath &&
@@ -1199,7 +1199,7 @@ function loadSkillEntries(
   const bundledSkills = bundledSkillsDir
     ? loadSkills({
         dir: bundledSkillsDir,
-        source: "openclaw-bundled",
+        source: "grokbot-bundled",
       })
     : [];
   const extraSkills = [
@@ -1207,13 +1207,13 @@ function loadSkillEntries(
       const resolved = resolveUserPath(dir);
       return loadSkills({
         dir: resolved,
-        source: "openclaw-extra",
+        source: "grokbot-extra",
       });
     }),
     ...loadGeneratedPluginSkillRecords({
       pluginSkillsDir,
       pluginSkillDirs,
-      source: "openclaw-extra",
+      source: "grokbot-extra",
       limits,
     }),
   ];
@@ -1221,7 +1221,7 @@ function loadSkillEntries(
     ? []
     : loadSkills({
         dir: managedSkillsDir,
-        source: "openclaw-managed",
+        source: "grokbot-managed",
       });
   const osHomeDir = resolveUserHomeDir();
   const personalAgentsSkillsDir = osHomeDir
@@ -1242,7 +1242,7 @@ function loadSkillEntries(
       });
   const workspaceSkills = loadSkills({
     dir: workspaceSkillsDir,
-    source: "openclaw-workspace",
+    source: "grokbot-workspace",
   });
 
   const merged = new Map<string, LoadedSkillRecord>();
@@ -1400,12 +1400,12 @@ function buildSkillsLimitNote(params: {
       params.format.kind === "compact"
         ? ` (compact format, ${params.format.descriptionMaxChars > 0 ? "descriptions shortened" : "descriptions omitted"})`
         : "";
-    return `⚠️ Skills truncated: included ${params.included} of ${params.total}${compactDetails}. Run \`openclaw skills check\` to audit.`;
+    return `⚠️ Skills truncated: included ${params.included} of ${params.total}${compactDetails}. Run \`grokbot skills check\` to audit.`;
   }
   if (params.format.kind === "compact") {
     const compactDetails =
       params.format.descriptionMaxChars > 0 ? "descriptions shortened" : "descriptions omitted";
-    return `⚠️ Skills catalog using compact format (${compactDetails}). Run \`openclaw skills check\` to audit.`;
+    return `⚠️ Skills catalog using compact format (${compactDetails}). Run \`grokbot skills check\` to audit.`;
   }
   return "";
 }

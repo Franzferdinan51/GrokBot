@@ -6,11 +6,11 @@ import path from "node:path";
 import {
   createPluginStateKeyedStoreForTests,
   resetPluginStateStoreForTests,
-} from "openclaw/plugin-sdk/plugin-state-test-runtime";
+} from "grokbot/plugin-sdk/plugin-state-test-runtime";
 import type {
   OpenKeyedStoreOptions,
   PluginDoctorStateMigrationContext,
-} from "openclaw/plugin-sdk/runtime-doctor";
+} from "grokbot/plugin-sdk/runtime-doctor";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import {
   legacyConfigRules,
@@ -78,7 +78,7 @@ describe("msteams doctor state migration", () => {
 
   beforeEach(async () => {
     resetPluginStateStoreForTests();
-    stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-msteams-doctor-"));
+    stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-msteams-doctor-"));
     env = { ...process.env, OPENCLAW_STATE_DIR: stateDir };
   });
 

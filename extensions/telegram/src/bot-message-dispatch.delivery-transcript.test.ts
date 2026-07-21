@@ -190,7 +190,7 @@ describeTelegramDispatch("dispatchTelegramMessage delivery-transcript", () => {
   });
 
   it("records streamed final replies into the prompt context cache", async () => {
-    const storePath = `/tmp/openclaw-telegram-stream-context-${process.pid}-${Date.now()}.json`;
+    const storePath = `/tmp/grokbot-telegram-stream-context-${process.pid}-${Date.now()}.json`;
     const transcriptTimestamp = Date.now() + 1_000;
     const context = createContext({
       primaryCtx: {

@@ -1,7 +1,7 @@
 // Shared plugin CLI helpers for install logging, file specs, and hooks.
-import { normalizeLowercaseStringOrEmpty } from "@openclaw/normalization-core/string-coerce";
+import { normalizeLowercaseStringOrEmpty } from "@grokbot/normalization-core/string-coerce";
 import { theme } from "../../packages/terminal-core/src/theme.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { HOOK_INSTALL_ERROR_CODE } from "../hooks/install.js";
 import { defaultRuntime, type RuntimeEnv } from "../runtime.js";
 export { quietPluginJsonLogger } from "./plugins-json-logger.js";
@@ -87,7 +87,7 @@ export function formatPluginInstallWithHookFallbackError(
   const formattedPluginError = formatPluginInstallAttemptError(pluginError);
   const formattedHookError = formatPluginInstallAttemptError(hookFallback.error);
   if (/plugin already exists: .+ \(delete it first\)/.test(pluginError)) {
-    return `${formattedPluginError}\nUse \`openclaw plugins update <id-or-npm-spec>\` to upgrade the tracked plugin, or rerun install with \`--force\` to replace it.`;
+    return `${formattedPluginError}\nUse \`grokbot plugins update <id-or-npm-spec>\` to upgrade the tracked plugin, or rerun install with \`--force\` to replace it.`;
   }
   if (
     pluginError.startsWith("Invalid extensions directory:") ||

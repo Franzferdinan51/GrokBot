@@ -1,4 +1,4 @@
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { afterAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { verifyAgentRuntimeIdentityToken } from "../../gateway/agent-runtime-identity-token.js";
 import type { CallGatewayOptions } from "../../gateway/call.js";
@@ -63,7 +63,7 @@ function capturedGatewayCall(): CallGatewayOptions {
 
 describe("gateway tool defaults", () => {
   const envSnapshot = {
-    openclaw: process.env.OPENCLAW_GATEWAY_TOKEN,
+    grokbot: process.env.OPENCLAW_GATEWAY_TOKEN,
     gatewayUrl: process.env.OPENCLAW_GATEWAY_URL,
   };
 
@@ -78,10 +78,10 @@ describe("gateway tool defaults", () => {
   });
 
   afterAll(() => {
-    if (envSnapshot.openclaw === undefined) {
+    if (envSnapshot.grokbot === undefined) {
       delete process.env.OPENCLAW_GATEWAY_TOKEN;
     } else {
-      process.env.OPENCLAW_GATEWAY_TOKEN = envSnapshot.openclaw;
+      process.env.OPENCLAW_GATEWAY_TOKEN = envSnapshot.grokbot;
     }
     if (envSnapshot.gatewayUrl === undefined) {
       delete process.env.OPENCLAW_GATEWAY_URL;
@@ -471,7 +471,7 @@ describe("gateway tool defaults", () => {
         },
       ),
     ).rejects.toThrow(
-      "The running Gateway is from an older OpenClaw build and rejected current agent runtime connection metadata. Restart the Gateway with `openclaw gateway restart`, then retry.",
+      "The running Gateway is from an older GrokBot build and rejected current agent runtime connection metadata. Restart the Gateway with `grokbot gateway restart`, then retry.",
     );
 
     const call = capturedGatewayCall();
@@ -493,7 +493,7 @@ describe("gateway tool defaults", () => {
         },
       ),
     ).rejects.toThrow(
-      "The running Gateway is from an older OpenClaw build and rejected current agent runtime connection metadata. Restart the Gateway with `openclaw gateway restart`, then retry.",
+      "The running Gateway is from an older GrokBot build and rejected current agent runtime connection metadata. Restart the Gateway with `grokbot gateway restart`, then retry.",
     );
 
     const call = capturedGatewayCall();

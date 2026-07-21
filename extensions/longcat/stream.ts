@@ -1,6 +1,6 @@
 // LongCat stream helpers apply the provider's binary thinking control.
-import type { ProviderWrapStreamFnContext } from "openclaw/plugin-sdk/plugin-entry";
-import { createPayloadPatchStreamWrapper } from "openclaw/plugin-sdk/provider-stream-shared";
+import type { ProviderWrapStreamFnContext } from "grokbot/plugin-sdk/plugin-entry";
+import { createPayloadPatchStreamWrapper } from "grokbot/plugin-sdk/provider-stream-shared";
 
 export function createLongCatThinkingWrapper(
   baseStreamFn: ProviderWrapStreamFnContext["streamFn"],

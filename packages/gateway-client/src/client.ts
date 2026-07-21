@@ -4,21 +4,21 @@ import {
   GATEWAY_CLIENT_NAMES,
   type GatewayClientMode,
   type GatewayClientName,
-} from "@openclaw/gateway-protocol/client-info";
+} from "@grokbot/gateway-protocol/client-info";
 import {
   ConnectErrorDetailCodes,
   formatConnectErrorMessage,
   readConnectErrorDetailCode,
-} from "@openclaw/gateway-protocol/connect-error-details";
+} from "@grokbot/gateway-protocol/connect-error-details";
 import type {
   ConnectParams,
   ErrorShape,
   EventFrame,
   HelloOk,
-} from "@openclaw/gateway-protocol/frame-guards";
-import { resolveGatewayStartupRetryAfterMs } from "@openclaw/gateway-protocol/startup-unavailable";
-import { MIN_CLIENT_PROTOCOL_VERSION, PROTOCOL_VERSION } from "@openclaw/gateway-protocol/version";
-import { isLoopbackIpAddress, type ParsedIpAddress } from "@openclaw/net-policy/ip";
+} from "@grokbot/gateway-protocol/frame-guards";
+import { resolveGatewayStartupRetryAfterMs } from "@grokbot/gateway-protocol/startup-unavailable";
+import { MIN_CLIENT_PROTOCOL_VERSION, PROTOCOL_VERSION } from "@grokbot/gateway-protocol/version";
+import { isLoopbackIpAddress, type ParsedIpAddress } from "@grokbot/net-policy/ip";
 import { WebSocket, type ClientOptions, type CertMeta } from "ws";
 import {
   isSensitiveUrlQueryParamName,
@@ -63,7 +63,7 @@ export type DeviceAuthTokenRecord = {
   scopes?: string[];
 };
 
-// The package stays reusable by depending on host callbacks for OpenClaw-owned
+// The package stays reusable by depending on host callbacks for GrokBot-owned
 // state: device keys, token storage, proxy routing, logging, and TLS formatting.
 export type GatewayClientHostDeps = {
   loadOrCreateDeviceIdentity?: () => DeviceIdentity | undefined;
@@ -513,7 +513,7 @@ export class GatewayClient {
           (allowPrivateWs
             ? ""
             : "Break-glass (trusted private networks only): set OPENCLAW_ALLOW_INSECURE_PRIVATE_WS=1. ") +
-          "Run `openclaw doctor --fix` for guidance.",
+          "Run `grokbot doctor --fix` for guidance.",
       );
     }
     // Allow node screen snapshots and other large responses.

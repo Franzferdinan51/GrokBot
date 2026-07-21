@@ -1,5 +1,5 @@
 /** Builds doctor/install repair hints for missing official external plugin owners. */
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { resolveConfiguredChannelPresencePolicy } from "./channel-plugin-ids.js";
 import {
   getOfficialExternalPluginCatalogEntry,
@@ -40,8 +40,8 @@ export function resolveOfficialExternalPluginRepairHint(
   const pluginId = resolveOfficialExternalPluginId(entry) ?? pluginIdOrChannelId.trim();
   const channelId = manifest?.channel?.id?.trim();
   const label = resolveOfficialExternalPluginLabel(entry);
-  const installCommand = `openclaw plugins install ${installSpec}`;
-  const doctorFixCommand = "openclaw doctor --fix";
+  const installCommand = `grokbot plugins install ${installSpec}`;
+  const doctorFixCommand = "grokbot doctor --fix";
   return {
     pluginId,
     ...(channelId ? { channelId } : {}),

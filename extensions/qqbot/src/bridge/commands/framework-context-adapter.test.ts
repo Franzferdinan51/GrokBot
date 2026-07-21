@@ -1,6 +1,6 @@
 // Qqbot tests cover framework context adapter plugin behavior.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import type { PluginCommandContext } from "openclaw/plugin-sdk/plugin-entry";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import type { PluginCommandContext } from "grokbot/plugin-sdk/plugin-entry";
 import { describe, expect, it } from "vitest";
 import { buildFrameworkSlashContext } from "./framework-context-adapter.js";
 

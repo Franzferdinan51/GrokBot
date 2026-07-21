@@ -13,7 +13,7 @@ import {
 const tempRoots = new Set<string>();
 
 async function makeTempRoot() {
-  const root = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-setup-migration-"));
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-setup-migration-"));
   tempRoots.add(root);
   return root;
 }
@@ -101,7 +101,7 @@ describe("setup migration import freshness", () => {
       "state agents/ exists",
     ]);
     expect(() => assertFreshSetupMigrationTarget(result)).toThrow(
-      "Migration import during onboarding requires a fresh OpenClaw setup.",
+      "Migration import during onboarding requires a fresh GrokBot setup.",
     );
   });
 });

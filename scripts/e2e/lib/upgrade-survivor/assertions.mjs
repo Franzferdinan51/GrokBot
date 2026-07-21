@@ -7,7 +7,7 @@ import { readPluginInstallIndex } from "../plugin-index-sqlite.mjs";
 const command = process.argv[2];
 const SCENARIOS = new Set([
   "base",
-  "acpx-openclaw-tools-bridge",
+  "acpx-grokbot-tools-bridge",
   "feishu-channel",
   "bootstrap-persona",
   "channel-post-core-restore",
@@ -104,7 +104,7 @@ function seedLegacySessionMetadata(stateDir) {
         resolvedSkills: [
           {
             name: "legacy-heavy-skill-cache",
-            filePath: "/tmp/openclaw-old-package/skills/legacy-heavy-skill-cache/SKILL.md",
+            filePath: "/tmp/grokbot-old-package/skills/legacy-heavy-skill-cache/SKILL.md",
           },
         ],
       },
@@ -185,7 +185,7 @@ function seedState() {
       write(path.join(workspace, fileName), contents);
     }
   }
-  writeJson(path.join(workspace, ".openclaw", "workspace-state.json"), {
+  writeJson(path.join(workspace, ".grokbot", "workspace-state.json"), {
     version: 1,
     setupCompletedAt: "2026-04-01T00:00:00.000Z",
   });
@@ -198,7 +198,7 @@ function seedState() {
 
   const runtimeRoot = path.join(stateDir, "plugin-runtime-deps");
   for (const plugin of ["discord", "telegram", "whatsapp"]) {
-    writeJson(path.join(runtimeRoot, plugin, ".openclaw-runtime-deps-stamp.json"), {
+    writeJson(path.join(runtimeRoot, plugin, ".grokbot-runtime-deps-stamp.json"), {
       version: 0,
       plugin,
       stale: true,
@@ -207,7 +207,7 @@ function seedState() {
       path.join(
         runtimeRoot,
         plugin,
-        ".openclaw-runtime-deps-copy-stale",
+        ".grokbot-runtime-deps-copy-stale",
         "node_modules",
         "stale-sentinel",
         "package.json",
@@ -221,8 +221,8 @@ function seedState() {
       writeJson(
         path.join(
           runtimeRoot,
-          `openclaw-${version}-${plugin}`,
-          ".openclaw-runtime-deps-stamp.json",
+          `grokbot-${version}-${plugin}`,
+          ".grokbot-runtime-deps-stamp.json",
         ),
         {
           packageVersion: version,
@@ -233,7 +233,7 @@ function seedState() {
       write(
         path.join(
           runtimeRoot,
-          `openclaw-${version}-${plugin}`,
+          `grokbot-${version}-${plugin}`,
           "node_modules",
           "stale-sentinel",
           "package.json",
@@ -317,13 +317,13 @@ function assertConfigSurvived() {
     }
   }
 
-  if (hasCoverage(coverage) && acceptsIntent(coverage, "acpx-openclaw-tools-bridge")) {
+  if (hasCoverage(coverage) && acceptsIntent(coverage, "acpx-grokbot-tools-bridge")) {
     const pluginAllow = config.plugins?.allow ?? [];
     assert(pluginAllow.includes("acpx"), "ACPX plugin allow entry missing");
     assert(config.plugins?.entries?.acpx?.enabled === true, "ACPX plugin entry changed");
     assert(
       config.plugins?.entries?.acpx?.config?.openClawToolsMcpBridge === true,
-      "ACPX OpenClaw tools bridge config changed",
+      "ACPX GrokBot tools bridge config changed",
     );
   }
 
@@ -416,7 +416,7 @@ function assertConfigSurvived() {
 
   if (hasCoverage(coverage) && acceptsIntent(coverage, "logging")) {
     assert(
-      config.logging?.file === "~/openclaw-upgrade-survivor/gateway.jsonl",
+      config.logging?.file === "~/grokbot-upgrade-survivor/gateway.jsonl",
       "logging.file tilde path changed",
     );
   }
@@ -456,7 +456,7 @@ function assertStateSurvived() {
     }
   }
   if (scenario === "stale-source-plugin-shadow") {
-    const staleRoot = path.join(stateDir, "extensions", "opik-openclaw");
+    const staleRoot = path.join(stateDir, "extensions", "opik-grokbot");
     assert(
       fs.existsSync(path.join(staleRoot, "src", "index.ts")),
       "source-only plugin shadow fixture missing",
@@ -469,7 +469,7 @@ function assertStateSurvived() {
     const version = process.env.OPENCLAW_UPGRADE_SURVIVOR_BASELINE_VERSION || "2026.4.24";
     const runtimeRoot = path.join(stateDir, "plugin-runtime-deps");
     const staleVersionedRoots = fs.existsSync(runtimeRoot)
-      ? fs.readdirSync(runtimeRoot).filter((entry) => entry.startsWith(`openclaw-${version}-`))
+      ? fs.readdirSync(runtimeRoot).filter((entry) => entry.startsWith(`grokbot-${version}-`))
       : [];
     assert(
       staleVersionedRoots.length === 0,
@@ -482,7 +482,7 @@ function assertSessionMetadataMigrated(stateDir) {
   const legacyStorePath = path.join(stateDir, "sessions", "sessions.json");
   const agentSessionsDir = path.join(stateDir, "agents", "main", "sessions");
   const targetStorePath = path.join(agentSessionsDir, "sessions.json");
-  const dbPath = path.join(stateDir, "agents", "main", "agent", "openclaw-agent.sqlite");
+  const dbPath = path.join(stateDir, "agents", "main", "agent", "grokbot-agent.sqlite");
   assert(
     !fs.existsSync(legacyStorePath),
     `legacy sessions.json survived migration: ${legacyStorePath}`,
@@ -548,7 +548,7 @@ function readMigratedSessionStore(stateDir, targetStorePath) {
     return readJson(targetStorePath);
   }
 
-  const dbPath = path.join(stateDir, "agents", "main", "agent", "openclaw-agent.sqlite");
+  const dbPath = path.join(stateDir, "agents", "main", "agent", "grokbot-agent.sqlite");
   assert(fs.existsSync(dbPath), `agent session store missing: ${targetStorePath} or ${dbPath}`);
 
   let db;
@@ -656,11 +656,11 @@ function assertConfiguredPluginInstalls() {
   const records = index.installRecords ?? {};
   assertOptionalConfiguredPluginIndex(records, index.plugins ?? [], {
     bundled: true,
-    packageName: "@openclaw/matrix",
+    packageName: "@grokbot/matrix",
     pluginId: "matrix",
   });
   assertOptionalConfiguredPluginIndex(records, index.plugins ?? [], {
-    packageName: "@openclaw/brave-plugin",
+    packageName: "@grokbot/brave-plugin",
     pluginId: "brave",
   });
   assert(!records.telegram, "internal telegram plugin should not be installed externally");
@@ -742,11 +742,11 @@ function assertUpdateRunSelfUpgrade([file]) {
   const qaAccounts = summary?.qaChannel?.status?.channelAccounts?.["qa-channel"];
   const targetServiceStarts = (summary?.supervisorHandoff?.systemctlInvocations ?? [])
     .map(normalizeSystemctlInvocation)
-    .filter((invocation) => invocation === "start openclaw-gateway.service");
+    .filter((invocation) => invocation === "start grokbot-gateway.service");
 
   assert(summary?.status === "passed", "update.run self-upgrade summary did not pass");
   assert(sourceVersion === "2026.4.26", `unexpected source version: ${String(sourceVersion)}`);
-  assert(summary?.source?.spec === "openclaw@2026.4.26", "source package spec was not exact");
+  assert(summary?.source?.spec === "grokbot@2026.4.26", "source package spec was not exact");
   assert(summary?.target?.tag === "latest", "target tag was not latest");
   assert(
     compareStableVersions(targetVersion, sourceVersion) > 0,

@@ -5,7 +5,7 @@
  */
 import { existsSync } from "node:fs";
 import { Container, Text, truncateToWidth } from "@earendil-works/pi-tui";
-import { resolveTimerTimeoutMs } from "@openclaw/normalization-core/number-coercion";
+import { resolveTimerTimeoutMs } from "@grokbot/normalization-core/number-coercion";
 import { Type } from "typebox";
 import { toErrorObject } from "../../../infra/errors.js";
 import { formatDurationSeconds } from "../../../infra/format-time/format-duration.js";
@@ -48,15 +48,15 @@ function resolveBashTimeoutMs(timeoutSeconds: unknown): number | undefined {
 }
 
 if (process.env.VITEST || process.env.NODE_ENV === "test") {
-  (globalThis as Record<PropertyKey, unknown>)[Symbol.for("openclaw.bashToolTestApi")] = {
+  (globalThis as Record<PropertyKey, unknown>)[Symbol.for("grokbot.bashToolTestApi")] = {
     resolveBashTimeoutMs,
   };
 }
 
 /**
- * Create bash operations using OpenClaw runtime's built-in local shell execution backend.
+ * Create bash operations using GrokBot runtime's built-in local shell execution backend.
  *
- * This is useful for extensions that intercept user_bash and still want OpenClaw runtime's
+ * This is useful for extensions that intercept user_bash and still want GrokBot runtime's
  * standard local shell behavior while wrapping or rewriting commands.
  */
 export function createLocalBashOperations(options?: { shellPath?: string }): BashOperations {
@@ -324,7 +324,7 @@ export function createBashToolDefinition(
       resolveBashTimeoutMs(timeout);
       const resolvedCommand = commandPrefix ? `${commandPrefix}\n${command}` : command;
       const spawnContext = resolveSpawnContext(resolvedCommand, cwd, spawnHook, options?.shellPath);
-      const output = new OutputAccumulator({ tempFilePrefix: "openclaw-bash" });
+      const output = new OutputAccumulator({ tempFilePrefix: "grokbot-bash" });
       let acceptingOutput = true;
       let updateTimer: NodeJS.Timeout | undefined;
       let updateDirty = false;

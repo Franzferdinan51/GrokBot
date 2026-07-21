@@ -30,8 +30,8 @@ class OpenClawMascot extends LitElement {
   static override styles = css`
     :host {
       display: inline-block;
-      width: var(--openclaw-mascot-size, 120px);
-      height: var(--openclaw-mascot-size, 120px);
+      width: var(--grokbot-mascot-size, 120px);
+      height: var(--grokbot-mascot-size, 120px);
       overflow: visible;
       contain: layout style;
       pointer-events: none;
@@ -115,7 +115,7 @@ class OpenClawMascot extends LitElement {
 
   protected override updated(changed: PropertyValues<this>): void {
     if (changed.has("size")) {
-      this.style.setProperty("--openclaw-mascot-size", `${this.resolvedSize}px`);
+      this.style.setProperty("--grokbot-mascot-size", `${this.resolvedSize}px`);
     }
     if (changed.has("mood")) {
       this.animator.setMood(this.resolvedMood, currentSeconds());
@@ -230,6 +230,6 @@ class OpenClawMascot extends LitElement {
   }
 }
 
-if (!customElements.get("openclaw-mascot")) {
-  customElements.define("openclaw-mascot", OpenClawMascot);
+if (!customElements.get("grokbot-mascot")) {
+  customElements.define("grokbot-mascot", OpenClawMascot);
 }

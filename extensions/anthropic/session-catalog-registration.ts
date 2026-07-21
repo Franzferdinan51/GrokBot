@@ -1,4 +1,4 @@
-import type { OpenClawPluginApi } from "openclaw/plugin-sdk/plugin-entry";
+import type { OpenClawPluginApi } from "grokbot/plugin-sdk/plugin-entry";
 import { createClaudeSessionNodeHostCommands } from "./session-catalog-node-commands.js";
 import { registerClaudeSessionCatalog } from "./session-catalog.js";
 

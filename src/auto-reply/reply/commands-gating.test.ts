@@ -110,7 +110,7 @@ vi.mock("../../config/config.js", () => ({
     const afterWrite = params.afterWrite ?? { mode: "auto" };
     await replaceConfigFileMock({ nextConfig: transformed.nextConfig, afterWrite });
     return {
-      path: snapshot.path ?? "/tmp/openclaw.json",
+      path: snapshot.path ?? "/tmp/grokbot.json",
       previousHash,
       persistedHash: "persisted-hash",
       snapshot,

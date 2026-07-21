@@ -1,12 +1,12 @@
 // Qqbot plugin module implements activation behavior.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import {
   normalizeGroupActivation,
   type GroupActivationMode,
-} from "openclaw/plugin-sdk/group-activation";
-import { getSessionEntry, resolveStorePath } from "openclaw/plugin-sdk/session-store-runtime";
+} from "grokbot/plugin-sdk/group-activation";
+import { getSessionEntry, resolveStorePath } from "grokbot/plugin-sdk/session-store-runtime";
 
-export type { GroupActivationMode } from "openclaw/plugin-sdk/group-activation";
+export type { GroupActivationMode } from "grokbot/plugin-sdk/group-activation";
 
 export function resolveGroupActivation(params: {
   cfg: OpenClawConfig;

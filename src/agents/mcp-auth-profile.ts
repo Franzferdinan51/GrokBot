@@ -3,7 +3,7 @@
  */
 import crypto from "node:crypto";
 import type { FetchLike } from "@modelcontextprotocol/sdk/shared/transport.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import type { BundleMcpConfig, BundleMcpServerConfig } from "../plugins/bundle-mcp.js";
 import { resolveApiKeyForProfile } from "./auth-profiles/oauth.js";
 import { loadAuthProfileStoreForSecretsRuntime } from "./auth-profiles/store.js";
@@ -45,7 +45,7 @@ export function resolveMcpAuthProfileId(rawServer: unknown): string | undefined 
     : undefined;
 }
 
-/** Returns whether a server needs an OpenClaw-managed bearer projected externally. */
+/** Returns whether a server needs an GrokBot-managed bearer projected externally. */
 export function requiresMcpBearerProjection(rawServer: unknown): boolean {
   if (!isRecord(rawServer) || rawServer.auth !== "oauth") {
     return false;

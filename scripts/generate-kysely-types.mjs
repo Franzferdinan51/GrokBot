@@ -7,17 +7,17 @@ import { DatabaseSync } from "node:sqlite";
 
 const SCHEMAS = [
   {
-    name: "openclaw-state",
-    schema: "src/state/openclaw-state-schema.sql",
-    outFile: "src/state/openclaw-state-db.generated.d.ts",
-    schemaOutFile: "src/state/openclaw-state-schema.generated.ts",
+    name: "grokbot-state",
+    schema: "src/state/grokbot-state-schema.sql",
+    outFile: "src/state/grokbot-state-db.generated.d.ts",
+    schemaOutFile: "src/state/grokbot-state-schema.generated.ts",
     schemaExport: "OPENCLAW_STATE_SCHEMA_SQL",
   },
   {
-    name: "openclaw-agent",
-    schema: "src/state/openclaw-agent-schema.sql",
-    outFile: "src/state/openclaw-agent-db.generated.d.ts",
-    schemaOutFile: "src/state/openclaw-agent-schema.generated.ts",
+    name: "grokbot-agent",
+    schema: "src/state/grokbot-agent-schema.sql",
+    outFile: "src/state/grokbot-agent-db.generated.d.ts",
+    schemaOutFile: "src/state/grokbot-agent-schema.generated.ts",
     schemaExport: "OPENCLAW_AGENT_SCHEMA_SQL",
   },
 ];

@@ -1,4 +1,4 @@
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import type { PluginMetadataSnapshot } from "../plugins/plugin-metadata-snapshot.js";
 import "./models-config.plan.js";
 import type { ProviderConfig } from "./models-config.providers.secrets.js";
@@ -41,7 +41,7 @@ type ModelsConfigPlanTestApi = {
 
 function getTestApi(): ModelsConfigPlanTestApi {
   return (globalThis as Record<PropertyKey, unknown>)[
-    Symbol.for("openclaw.modelsConfigPlanTestApi")
+    Symbol.for("grokbot.modelsConfigPlanTestApi")
   ] as ModelsConfigPlanTestApi;
 }
 

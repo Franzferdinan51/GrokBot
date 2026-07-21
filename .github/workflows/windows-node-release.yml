@@ -4,11 +4,11 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: Existing OpenClaw release tag to receive Windows Hub installers, for example v2026.6.1
+        description: Existing GrokBot release tag to receive Windows Hub installers, for example v2026.6.1
         required: true
         type: string
       windows_node_tag:
-        description: Exact openclaw-windows-node release tag to promote, for example v0.6.3
+        description: Exact grokbot-windows-node release tag to promote, for example v0.6.3
         required: true
         type: string
       expected_installer_digests:
@@ -38,14 +38,14 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           if ($env:RELEASE_TAG -notmatch '^v[0-9]{4}\.[1-9][0-9]*\.[1-9][0-9]*((-(alpha|beta)\.[1-9][0-9]*)|(-[1-9][0-9]*))?$') {
-            throw "Invalid OpenClaw release tag: $env:RELEASE_TAG"
+            throw "Invalid GrokBot release tag: $env:RELEASE_TAG"
           }
           $stableRelease = -not (
             $env:RELEASE_TAG.Contains("-alpha.") -or
             $env:RELEASE_TAG.Contains("-beta.")
           )
           if ($env:WINDOWS_NODE_TAG -notmatch '^v[0-9]+\.[0-9]+\.[0-9]+([-.][0-9A-Za-z]+([.-][0-9A-Za-z]+)*)?$') {
-            throw "windows_node_tag must be an explicit openclaw-windows-node release tag, not latest: $env:WINDOWS_NODE_TAG"
+            throw "windows_node_tag must be an explicit grokbot-windows-node release tag, not latest: $env:WINDOWS_NODE_TAG"
           }
 
           try {
@@ -74,7 +74,7 @@ jobs:
 
           $targetRelease = gh release view $env:RELEASE_TAG --repo $env:GITHUB_REPOSITORY --json tagName,isDraft,isPrerelease,assets,url | ConvertFrom-Json
           if ($targetRelease.tagName -ne $env:RELEASE_TAG) {
-            throw "OpenClaw release tag mismatch: expected $env:RELEASE_TAG, got $($targetRelease.tagName)"
+            throw "GrokBot release tag mismatch: expected $env:RELEASE_TAG, got $($targetRelease.tagName)"
           }
           $unexpectedTargetCompanionAssets = @(
             $targetRelease.assets |
@@ -86,10 +86,10 @@ jobs:
               Sort-Object
           )
           if ($unexpectedTargetCompanionAssets.Count -ne 0) {
-            throw "Target OpenClaw release contains unexpected OpenClawCompanion assets before upload: $($unexpectedTargetCompanionAssets -join ', ')"
+            throw "Target GrokBot release contains unexpected OpenClawCompanion assets before upload: $($unexpectedTargetCompanionAssets -join ', ')"
           }
 
-          $sourceRelease = gh release view $env:WINDOWS_NODE_TAG --repo openclaw/openclaw-windows-node --json tagName,isDraft,isPrerelease,assets,url | ConvertFrom-Json
+          $sourceRelease = gh release view $env:WINDOWS_NODE_TAG --repo grokbot/grokbot-windows-node --json tagName,isDraft,isPrerelease,assets,url | ConvertFrom-Json
           if ($sourceRelease.tagName -ne $env:WINDOWS_NODE_TAG) {
             throw "Windows source release tag mismatch: expected $env:WINDOWS_NODE_TAG, got $($sourceRelease.tagName)"
           }
@@ -97,7 +97,7 @@ jobs:
             throw "Windows source release must be published: $($sourceRelease.url)"
           }
           if ($stableRelease -and $sourceRelease.isPrerelease) {
-            throw "Stable OpenClaw releases require a non-prerelease Windows source release: $($sourceRelease.url)"
+            throw "Stable GrokBot releases require a non-prerelease Windows source release: $($sourceRelease.url)"
           }
           foreach ($name in $requiredInstallerNames) {
             $sourceAssets = @($sourceRelease.assets | Where-Object name -eq $name)
@@ -125,7 +125,7 @@ jobs:
           )
           $downloadArgs = @(
             $env:WINDOWS_NODE_TAG,
-            "--repo", "openclaw/openclaw-windows-node",
+            "--repo", "grokbot/grokbot-windows-node",
             "--dir", "dist"
           )
           foreach ($pattern in $installerPatterns) {
@@ -155,7 +155,7 @@ jobs:
       - name: Verify Authenticode signatures
         shell: pwsh
         run: |
-          $expectedSignerSubject = "CN=OpenClaw Foundation, O=OpenClaw Foundation, L=Mill Valley, S=California, C=US"
+          $expectedSignerSubject = "CN=GrokBot Foundation, O=GrokBot Foundation, L=Mill Valley, S=California, C=US"
           Get-ChildItem -LiteralPath dist -File | ForEach-Object {
             $signature = Get-AuthenticodeSignature -LiteralPath $_.FullName
             if ($signature.Status -ne "Valid") {
@@ -184,7 +184,7 @@ jobs:
               "$($hash.Hash.ToLowerInvariant())  $($_.Name)"
             } | Set-Content -Encoding utf8NoBOM -Path dist/OpenClawCompanion-SHA256SUMS.txt
 
-      - name: Upload to OpenClaw release
+      - name: Upload to GrokBot release
         shell: pwsh
         env:
           RELEASE_TAG: ${{ inputs.tag }}
@@ -275,11 +275,11 @@ jobs:
           @"
           ## Windows Hub installers promoted
 
-          OpenClaw release: $env:RELEASE_TAG
-          Source release: openclaw/openclaw-windows-node@$env:WINDOWS_NODE_TAG
+          GrokBot release: $env:RELEASE_TAG
+          Source release: grokbot/grokbot-windows-node@$env:WINDOWS_NODE_TAG
           "@ >> $env:GITHUB_STEP_SUMMARY
           Get-ChildItem -LiteralPath dist -File |
             Sort-Object Name |
             ForEach-Object {
-              "- https://github.com/openclaw/openclaw/releases/download/$env:RELEASE_TAG/$($_.Name)"
+              "- https://github.com/grokbot/grokbot/releases/download/$env:RELEASE_TAG/$($_.Name)"
             } >> $env:GITHUB_STEP_SUMMARY

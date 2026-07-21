@@ -3,9 +3,9 @@ import { spawn, spawnSync } from "node:child_process";
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { expectDefined } from "@openclaw/normalization-core";
-import { normalizeLowercaseStringOrEmpty } from "@openclaw/normalization-core/string-coerce";
-import { uniqueStrings } from "@openclaw/normalization-core/string-normalization";
+import { expectDefined } from "@grokbot/normalization-core";
+import { normalizeLowercaseStringOrEmpty } from "@grokbot/normalization-core/string-coerce";
+import { uniqueStrings } from "@grokbot/normalization-core/string-normalization";
 import { isGatewayArgv } from "../infra/gateway-process-argv.js";
 import { findVerifiedGatewayListenerPidsOnPortSync } from "../infra/gateway-processes.js";
 import { inspectPortUsage, type PortListener } from "../infra/ports.js";
@@ -198,7 +198,7 @@ function buildScheduledTaskXml(params: {
 }
 
 async function writeTaskXmlTempFile(xml: string): Promise<string> {
-  const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-task-xml-"));
+  const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-task-xml-"));
   const xmlPath = path.join(tmpDir, "task.xml");
   // schtasks /XML expects UTF-16 LE with BOM; Node's "utf16le" Buffer plus a
   // manual FFFE BOM matches what Task Scheduler import accepts on all locales.
@@ -639,7 +639,7 @@ async function resolveScheduledTaskProcess(
   if (!snapshot) {
     return null;
   }
-  // Match the full persisted argv so another OpenClaw process on the same port
+  // Match the full persisted argv so another GrokBot process on the same port
   // cannot be mistaken for this task while its listener is still starting.
   const pid = findInstalledProcessPid(snapshot, port, installedArguments, matchesProcess);
   if (!pid) {
@@ -1361,7 +1361,7 @@ async function updateExistingScheduledTask(params: {
   // upgraders keep the prior buggy defaults rather than losing the task.
   const upgradeXmlPath = await writeTaskXmlTempFile(
     buildScheduledTaskXml({
-      taskDescription: params.description ?? "OpenClaw Gateway",
+      taskDescription: params.description ?? "GrokBot Gateway",
       taskUser: resolveTaskUser(params.env),
       launchPath: params.taskLaunchPath,
     }),
@@ -1547,7 +1547,7 @@ async function activateScheduledTask(params: {
   taskLaunchPath: string;
   description?: string;
 }): Promise<ScheduledTaskActivation | "startup-fallback"> {
-  const taskDescription = params.description ?? "OpenClaw Gateway";
+  const taskDescription = params.description ?? "GrokBot Gateway";
 
   const taskName = resolveTaskName(params.env);
   const quotedLaunchPath = quoteSchtasksArg(params.taskLaunchPath);

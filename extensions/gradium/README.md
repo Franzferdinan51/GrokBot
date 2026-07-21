@@ -1,12 +1,12 @@
-# OpenClaw Gradium Plugin
+# GrokBot Gradium Plugin
 
-Official OpenClaw plugin for Gradium.
+Official GrokBot plugin for Gradium.
 
-Install from OpenClaw:
+Install from GrokBot:
 
 ```bash
-openclaw plugins install @openclaw/gradium-speech
-openclaw gateway restart
+grokbot plugins install @grokbot/gradium-speech
+grokbot gateway restart
 ```
 
-See <https://docs.openclaw.ai/providers/gradium> for setup and configuration.
+See <https://docs.grokbot.ai/providers/gradium> for setup and configuration.

@@ -2,7 +2,7 @@
 import { describe, expect, it } from "vitest";
 import { buildModelAliasIndex } from "../../agents/model-selection.js";
 import { createModelVisibilityPolicy } from "../../agents/model-visibility-policy.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import { resolveModelDirectiveSelection } from "./model-selection-directive.js";
 
 function resolveDirective(params: { cfg: OpenClawConfig; raw: string; agentId?: string }) {

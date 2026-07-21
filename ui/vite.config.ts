@@ -285,7 +285,7 @@ function resolveTsconfigPathAlias(key: string, target: string): ControlUiViteAli
 
 function sourcePackageAlias(packageId: string, subpath?: string): ControlUiViteAlias {
   return {
-    find: `@openclaw/${packageId}${subpath ? `/${subpath}` : ""}`,
+    find: `@grokbot/${packageId}${subpath ? `/${subpath}` : ""}`,
     replacement: path.join(
       repoRoot,
       "packages",
@@ -317,12 +317,12 @@ export function resolveExternalPackageAliasesForVite(
     path.dirname(resolvePackage(`${specifier}/package.json`));
   return [
     {
-      find: "@openclaw/libterminal/browser",
-      replacement: path.join(packageRoot("@openclaw/libterminal"), "dist/browser.js"),
+      find: "@grokbot/libterminal/browser",
+      replacement: path.join(packageRoot("@grokbot/libterminal"), "dist/browser.js"),
     },
     {
-      find: "@openclaw/uirouter",
-      replacement: path.join(packageRoot("@openclaw/uirouter"), "dist/index.js"),
+      find: "@grokbot/uirouter",
+      replacement: path.join(packageRoot("@grokbot/uirouter"), "dist/index.js"),
     },
   ];
 }

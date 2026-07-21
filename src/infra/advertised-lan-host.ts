@@ -1,5 +1,5 @@
-// Resolves the LAN host OpenClaw should advertise to nearby devices.
-import { isRfc1918Ipv4Address } from "@openclaw/net-policy/ip";
+// Resolves the LAN host GrokBot should advertise to nearby devices.
+import { isRfc1918Ipv4Address } from "@grokbot/net-policy/ip";
 import { runCommandWithTimeout as defaultRunCommandWithTimeout } from "../process/exec.js";
 import {
   listExternalInterfaceAddresses,

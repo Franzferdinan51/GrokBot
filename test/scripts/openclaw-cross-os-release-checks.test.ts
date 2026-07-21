@@ -1,4 +1,4 @@
-// Openclaw Cross Os Release Checks tests cover openclaw cross os release checks script behavior.
+// Openclaw Cross Os Release Checks tests cover grokbot cross os release checks script behavior.
 import { spawn } from "node:child_process";
 import {
   existsSync,
@@ -159,7 +159,7 @@ async function waitForExit(
   });
 }
 
-describe("scripts/openclaw-cross-os-release-checks", () => {
+describe("scripts/grokbot-cross-os-release-checks", () => {
   it("keeps dashboard smoke patient enough for cold packaged gateway startup", () => {
     expect(CROSS_OS_DASHBOARD_SMOKE_TIMEOUT_MS).toBeGreaterThanOrEqual(120_000);
     expect(CROSS_OS_DASHBOARD_FETCH_TIMEOUT_MS).toBeGreaterThanOrEqual(10_000);
@@ -167,20 +167,20 @@ describe("scripts/openclaw-cross-os-release-checks", () => {
 
   it("bounds public installer fetches on Windows and POSIX", () => {
     const windowsScript = buildInstallerSmokeScript({
-      installerUrl: "https://openclaw.ai/install.ps1",
+      installerUrl: "https://grokbot.ai/install.ps1",
       installTarget: "2026.7.1",
       platform: "win32",
     });
     const posixScript = buildInstallerSmokeScript({
-      installerUrl: "https://openclaw.ai/install.sh",
+      installerUrl: "https://grokbot.ai/install.sh",
       installTarget: "2026.7.1",
       platform: "linux",
     });
 
     expect(windowsScript).toContain(
-      "curl.exe -fsSL --connect-timeout 10 --max-time 120 -o $installerPath 'https://openclaw.ai/install.ps1'",
+      "curl.exe -fsSL --connect-timeout 10 --max-time 120 -o $installerPath 'https://grokbot.ai/install.ps1'",
     );
-    expect(windowsScript).toContain("openclaw-installer-");
+    expect(windowsScript).toContain("grokbot-installer-");
     expect(windowsScript).toContain("if ($LASTEXITCODE -ne 0)");
     expect(windowsScript).toContain(
       "[System.IO.File]::ReadAllText($installerPath, [System.Text.Encoding]::UTF8)",
@@ -190,11 +190,11 @@ describe("scripts/openclaw-cross-os-release-checks", () => {
     );
     expect(windowsScript).not.toContain("Invoke-WebRequest");
     expect(posixScript).toContain(
-      'installer_path="$(mktemp "${TMPDIR:-/tmp}/openclaw-installer-XXXXXX")"',
+      'installer_path="$(mktemp "${TMPDIR:-/tmp}/grokbot-installer-XXXXXX")"',
     );
     expect(posixScript).toContain("trap 'rm -f \"$installer_path\"' EXIT");
     expect(posixScript).toContain(
-      "curl -fsSL --connect-timeout 10 --max-time 120 -o \"$installer_path\" 'https://openclaw.ai/install.sh'",
+      "curl -fsSL --connect-timeout 10 --max-time 120 -o \"$installer_path\" 'https://grokbot.ai/install.sh'",
     );
     expect(posixScript).toContain("bash -- \"$installer_path\" --version '2026.7.1' --no-onboard");
     expect(posixScript).not.toContain("| bash");
@@ -274,8 +274,8 @@ describe("scripts/openclaw-cross-os-release-checks", () => {
 
   it("requires dashboard root markers and same-origin asset URLs", () => {
     const html = [
-      "<title>OpenClaw Control</title>",
-      "<openclaw-app></openclaw-app>",
+      "<title>GrokBot Control</title>",
+      "<grokbot-app></grokbot-app>",
       '<link rel="stylesheet" href="/assets/index.css">',
       '<script type="module" src="assets/index.js"></script>',
       '<script type="module" src="https://example.com/assets/ignored.js"></script>',
@@ -329,7 +329,7 @@ describe("scripts/openclaw-cross-os-release-checks", () => {
       "--timeout",
       String(CROSS_OS_GATEWAY_STATUS_RPC_TIMEOUT_MS),
     ]);
-    expect(buildGatewayStatusArgsFromHelpText("Usage: openclaw gateway status")).toEqual([
+    expect(buildGatewayStatusArgsFromHelpText("Usage: grokbot gateway status")).toEqual([
       "gateway",
       "status",
     ]);
@@ -340,7 +340,7 @@ describe("scripts/openclaw-cross-os-release-checks", () => {
     ).toEqual(["gateway", "status"]);
   });
 
-  it("gives the Windows packaged updater wrapper enough headroom for OpenClaw timeout output", () => {
+  it("gives the Windows packaged updater wrapper enough headroom for GrokBot timeout output", () => {
     expect(CROSS_OS_WINDOWS_PACKAGED_UPGRADE_STEP_TIMEOUT_SECONDS).toBeLessThanOrEqual(10 * 60);
     expect(CROSS_OS_WINDOWS_PACKAGED_UPGRADE_WRAPPER_TIMEOUT_MS).toBeGreaterThan(
       CROSS_OS_WINDOWS_PACKAGED_UPGRADE_STEP_TIMEOUT_SECONDS * 1000,
@@ -389,7 +389,7 @@ describe("scripts/openclaw-cross-os-release-checks", () => {
   });
 
   it("accepts OK agent output from the captured log when stdout is empty", () => {
-    const dir = mkdtempSync(join(tmpdir(), "openclaw-cross-os-agent-output-"));
+    const dir = mkdtempSync(join(tmpdir(), "grokbot-cross-os-agent-output-"));
     try {
       const logPath = join(dir, "agent.log");
       writeFileSync(
@@ -410,7 +410,7 @@ describe("scripts/openclaw-cross-os-release-checks", () => {
   });
 
   it("ignores stale OK markers outside the recent agent log tail", () => {
-    const dir = mkdtempSync(join(tmpdir(), "openclaw-cross-os-agent-output-tail-"));
+    const dir = mkdtempSync(join(tmpdir(), "grokbot-cross-os-agent-output-tail-"));
     try {
       const logPath = join(dir, "agent.log");
       writeFileSync(
@@ -487,7 +487,7 @@ describe("scripts/openclaw-cross-os-release-checks", () => {
   });
 
   it("detects embedded fallback agent turns as non-gateway proof", () => {
-    const dir = mkdtempSync(join(tmpdir(), "openclaw-cross-os-agent-fallback-"));
+    const dir = mkdtempSync(join(tmpdir(), "grokbot-cross-os-agent-fallback-"));
     const logPath = join(dir, "agent.log");
     expect(
       agentTurnUsedEmbeddedFallback({
@@ -516,7 +516,7 @@ describe("scripts/openclaw-cross-os-release-checks", () => {
   });
 
   it("skips optional live agent turns only for model availability failures", () => {
-    const dir = mkdtempSync(join(tmpdir(), "openclaw-cross-os-agent-skip-"));
+    const dir = mkdtempSync(join(tmpdir(), "grokbot-cross-os-agent-skip-"));
     try {
       const logPath = join(dir, "agent.log");
       writeFileSync(
@@ -557,7 +557,7 @@ describe("scripts/openclaw-cross-os-release-checks", () => {
   });
 
   it("does not classify stale timeout logs as current optional agent-turn failures", () => {
-    const dir = mkdtempSync(join(tmpdir(), "openclaw-cross-os-agent-skip-tail-"));
+    const dir = mkdtempSync(join(tmpdir(), "grokbot-cross-os-agent-skip-tail-"));
     try {
       const logPath = join(dir, "agent.log");
       writeFileSync(
@@ -584,7 +584,7 @@ describe("scripts/openclaw-cross-os-release-checks", () => {
   });
 
   it("only skips opted-in cross-OS live agent turns after retry exhaustion", () => {
-    const dir = mkdtempSync(join(tmpdir(), "openclaw-cross-os-agent-skip-retry-"));
+    const dir = mkdtempSync(join(tmpdir(), "grokbot-cross-os-agent-skip-retry-"));
     try {
       const logPath = join(dir, "agent.log");
       const error = new Error("gateway request timeout for agent after 210000ms");
@@ -639,10 +639,10 @@ describe("scripts/openclaw-cross-os-release-checks", () => {
 
   it("keeps release cross-OS OpenAI smoke on GPT-5.6 Luna", () => {
     const workflow = readFileSync(
-      ".github/workflows/openclaw-cross-os-release-checks-reusable.yml",
+      ".github/workflows/grokbot-cross-os-release-checks-reusable.yml",
       "utf8",
     );
-    const releaseChecks = readFileSync(".github/workflows/openclaw-release-checks.yml", "utf8");
+    const releaseChecks = readFileSync(".github/workflows/grokbot-release-checks.yml", "utf8");
 
     expect(workflow).toContain(
       "OPENCLAW_CROSS_OS_OPENAI_MODEL: ${{ inputs.openai_model || vars.OPENCLAW_CROSS_OS_OPENAI_MODEL || 'openai/gpt-5.6-luna' }}",
@@ -673,10 +673,10 @@ describe("scripts/openclaw-cross-os-release-checks", () => {
   });
 
   it("can stage packaged-upgrade baselines without npm lifecycle scripts", () => {
-    expect(buildNpmGlobalInstallArgs("openclaw@2026.5.2", { ignoreScripts: true })).toEqual([
+    expect(buildNpmGlobalInstallArgs("grokbot@2026.5.2", { ignoreScripts: true })).toEqual([
       "install",
       "-g",
-      "openclaw@2026.5.2",
+      "grokbot@2026.5.2",
       "--omit=dev",
       "--no-fund",
       "--no-audit",
@@ -686,16 +686,16 @@ describe("scripts/openclaw-cross-os-release-checks", () => {
   });
 
   it("rejects unsafe npm pack tarball filenames before staging release artifacts", () => {
-    expect(resolveNpmPackTarballFileName("openclaw-2026.6.17.tgz")).toBe("openclaw-2026.6.17.tgz");
+    expect(resolveNpmPackTarballFileName("grokbot-2026.6.17.tgz")).toBe("grokbot-2026.6.17.tgz");
 
     const unsafeFilenames = [
-      "../openclaw.tgz",
-      "nested/openclaw.tgz",
-      "nested\\openclaw.tgz",
-      "/tmp/openclaw.tgz",
-      "C:\\temp\\openclaw.tgz",
-      "openclaw\u0000.tgz",
-      "openclaw.tar.gz",
+      "../grokbot.tgz",
+      "nested/grokbot.tgz",
+      "nested\\grokbot.tgz",
+      "/tmp/grokbot.tgz",
+      "C:\\temp\\grokbot.tgz",
+      "grokbot\u0000.tgz",
+      "grokbot.tar.gz",
     ];
 
     for (const filename of unsafeFilenames) {
@@ -706,34 +706,34 @@ describe("scripts/openclaw-cross-os-release-checks", () => {
   });
 
   it("accepts pnpm pack tarballs reported under the requested destination", () => {
-    const packDir = resolvePath("/tmp/openclaw-pack");
+    const packDir = resolvePath("/tmp/grokbot-pack");
 
-    expect(resolvePackDestinationTarball("openclaw-2026.6.17.tgz", packDir, "pnpm pack")).toEqual({
-      fileName: "openclaw-2026.6.17.tgz",
-      path: resolvePath(packDir, "openclaw-2026.6.17.tgz"),
+    expect(resolvePackDestinationTarball("grokbot-2026.6.17.tgz", packDir, "pnpm pack")).toEqual({
+      fileName: "grokbot-2026.6.17.tgz",
+      path: resolvePath(packDir, "grokbot-2026.6.17.tgz"),
     });
     expect(
       resolvePackDestinationTarball(
-        resolvePath(packDir, "openclaw-2026.6.17.tgz"),
+        resolvePath(packDir, "grokbot-2026.6.17.tgz"),
         packDir,
         "pnpm pack",
       ),
     ).toEqual({
-      fileName: "openclaw-2026.6.17.tgz",
-      path: resolvePath(packDir, "openclaw-2026.6.17.tgz"),
+      fileName: "grokbot-2026.6.17.tgz",
+      path: resolvePath(packDir, "grokbot-2026.6.17.tgz"),
     });
   });
 
   it("rejects pnpm pack tarballs outside the requested destination", () => {
-    const packDir = resolvePath("/tmp/openclaw-pack");
+    const packDir = resolvePath("/tmp/grokbot-pack");
     const unsafeFilenames = [
-      "../openclaw.tgz",
-      "nested/openclaw.tgz",
-      "nested\\openclaw.tgz",
-      resolvePath(dirname(packDir), "openclaw.tgz"),
-      resolvePath(packDir, "nested", "openclaw.tgz"),
-      "openclaw\u0000.tgz",
-      "openclaw.tar.gz",
+      "../grokbot.tgz",
+      "nested/grokbot.tgz",
+      "nested\\grokbot.tgz",
+      resolvePath(dirname(packDir), "grokbot.tgz"),
+      resolvePath(packDir, "nested", "grokbot.tgz"),
+      "grokbot\u0000.tgz",
+      "grokbot.tar.gz",
     ];
 
     for (const filename of unsafeFilenames) {
@@ -744,7 +744,7 @@ describe("scripts/openclaw-cross-os-release-checks", () => {
   });
 
   it("falls back to pnpm pack for historical refs without the Docker package helper", () => {
-    const dir = mkdtempSync(join(tmpdir(), "openclaw-cross-os-pack-command-"));
+    const dir = mkdtempSync(join(tmpdir(), "grokbot-cross-os-pack-command-"));
     try {
       const packDir = join(dir, "out");
       const fallback = resolvePackageCandidatePackCommand(dir, packDir);
@@ -755,7 +755,7 @@ describe("scripts/openclaw-cross-os-release-checks", () => {
         kind: "pnpm-pack",
       });
 
-      const helperPath = join(dir, "scripts", "package-openclaw-for-docker.mjs");
+      const helperPath = join(dir, "scripts", "package-grokbot-for-docker.mjs");
       mkdirSync(dirname(helperPath), { recursive: true });
       writeFileSync(helperPath, "export {};\n");
       const helper = resolvePackageCandidatePackCommand(dir, packDir);
@@ -781,11 +781,11 @@ describe("scripts/openclaw-cross-os-release-checks", () => {
   });
 
   it("keeps packaged-upgrade release updates out of service restart flow", () => {
-    const args = buildPackagedUpgradeUpdateArgs("http://127.0.0.1:49152/openclaw-current.tgz");
+    const args = buildPackagedUpgradeUpdateArgs("http://127.0.0.1:49152/grokbot-current.tgz");
     expect(args.slice(0, 6)).toEqual([
       "update",
       "--tag",
-      "http://127.0.0.1:49152/openclaw-current.tgz",
+      "http://127.0.0.1:49152/grokbot-current.tgz",
       "--yes",
       "--json",
       "--no-restart",
@@ -822,7 +822,7 @@ describe("scripts/openclaw-cross-os-release-checks", () => {
     expect(CROSS_OS_AGENT_TURN_TIMEOUT_SECONDS).toBeGreaterThanOrEqual(600);
     expect(source).toContain("buildReleaseProviderConfigOverride");
     expect(source).toContain("models: []");
-    expect(source).toContain('agentRuntime: { id: "openclaw" }');
+    expect(source).toContain('agentRuntime: { id: "grokbot" }');
     expect(source).toContain('"--merge"');
     expect(source).toContain(providerOverride);
     expect(source.match(/args: buildCrossOsReleaseSmokeMemorySlotConfigArgs\(\)/g)).toHaveLength(2);
@@ -1058,8 +1058,8 @@ describe("scripts/openclaw-cross-os-release-checks", () => {
     );
     expect(script).toContain("Get-Command npm.cmd -ErrorAction SilentlyContinue");
     expect(script).toContain('$env:Path = "$npmPrefix;$env:Path"');
-    expect(script).toContain("(Join-Path $npmPrefix 'openclaw.cmd')");
-    expect(script).toContain("$cmd = Get-Command openclaw -ErrorAction Stop");
+    expect(script).toContain("(Join-Path $npmPrefix 'grokbot.cmd')");
+    expect(script).toContain("$cmd = Get-Command grokbot -ErrorAction Stop");
   });
 
   it("keeps Windows dev-update toolchain checks compatible with setup-node PATH shims", () => {
@@ -1110,12 +1110,12 @@ describe("scripts/openclaw-cross-os-release-checks", () => {
   it("serves installer scripts as UTF-8 text and package payloads as binary", () => {
     expect(resolveStaticFileContentType("scripts/install.sh")).toBe("text/plain; charset=utf-8");
     expect(resolveStaticFileContentType("scripts/install.ps1")).toBe("text/plain; charset=utf-8");
-    expect(resolveStaticFileContentType("openclaw-2026.4.14.tgz")).toBe("application/octet-stream");
+    expect(resolveStaticFileContentType("grokbot-2026.4.14.tgz")).toBe("application/octet-stream");
   });
 
   it("streams release artifacts from the static file server", async () => {
-    const dir = mkdtempSync(join(tmpdir(), "openclaw-cross-os-static-server-"));
-    const filePath = join(dir, "openclaw-2026.4.14.tgz");
+    const dir = mkdtempSync(join(tmpdir(), "grokbot-cross-os-static-server-"));
+    const filePath = join(dir, "grokbot-2026.4.14.tgz");
     const logPath = join(dir, "server.log");
     let server: Awaited<ReturnType<typeof startStaticFileServer>> | undefined;
 
@@ -1139,8 +1139,8 @@ describe("scripts/openclaw-cross-os-release-checks", () => {
   });
 
   it("closes static release artifact sockets left by aborted clients", async () => {
-    const dir = mkdtempSync(join(tmpdir(), "openclaw-cross-os-static-server-close-"));
-    const filePath = join(dir, "openclaw-2026.4.14.tgz");
+    const dir = mkdtempSync(join(tmpdir(), "grokbot-cross-os-static-server-close-"));
+    const filePath = join(dir, "grokbot-2026.4.14.tgz");
     const logPath = join(dir, "server.log");
     let server: Awaited<ReturnType<typeof startStaticFileServer>> | undefined;
 
@@ -1178,8 +1178,8 @@ describe("scripts/openclaw-cross-os-release-checks", () => {
   });
 
   it("flushes static release artifact logs before close resolves", async () => {
-    const dir = mkdtempSync(join(tmpdir(), "openclaw-cross-os-static-server-log-flush-"));
-    const filePath = join(dir, "openclaw-2026.4.14.tgz");
+    const dir = mkdtempSync(join(tmpdir(), "grokbot-cross-os-static-server-log-flush-"));
+    const filePath = join(dir, "grokbot-2026.4.14.tgz");
     const logPath = join(dir, "server.log");
     let server: Awaited<ReturnType<typeof startStaticFileServer>> | undefined;
 
@@ -1214,9 +1214,9 @@ describe("scripts/openclaw-cross-os-release-checks", () => {
   });
 
   it("uses the published installer URLs for native installer lanes", () => {
-    expect(resolvePublishedInstallerUrl("darwin")).toBe("https://openclaw.ai/install.sh");
-    expect(resolvePublishedInstallerUrl("linux")).toBe("https://openclaw.ai/install.sh");
-    expect(resolvePublishedInstallerUrl("win32")).toBe("https://openclaw.ai/install.ps1");
+    expect(resolvePublishedInstallerUrl("darwin")).toBe("https://grokbot.ai/install.sh");
+    expect(resolvePublishedInstallerUrl("linux")).toBe("https://grokbot.ai/install.sh");
+    expect(resolvePublishedInstallerUrl("win32")).toBe("https://grokbot.ai/install.ps1");
   });
 
   it("uses managed gateway services only on native Windows runners", () => {
@@ -1278,17 +1278,17 @@ describe("scripts/openclaw-cross-os-release-checks", () => {
     expect(shouldRunWindowsInstalledBrowserOverrideImportSmoke("linux")).toBe(false);
 
     const script = buildInstalledBrowserOverrideImportProbeScript();
-    expect(script).toContain('from "openclaw/plugin-sdk/plugin-runtime"');
+    expect(script).toContain('from "grokbot/plugin-sdk/plugin-runtime"');
     expect(script).toContain('overrideEnvVar: "OPENCLAW_BROWSER_CONTROL_MODULE"');
     expect(script).toContain("startBrowserControlService");
     expect(script).toContain("stopBrowserControlService");
     expect(script).toContain("Browser control override start sentinel was not written.");
 
     const installedScript = buildInstalledBrowserOverrideImportProbeScript(
-      "file:///C:/Users/runner/AppData/Roaming/npm/node_modules/openclaw/dist/plugin-sdk/plugin-runtime.js",
+      "file:///C:/Users/runner/AppData/Roaming/npm/node_modules/grokbot/dist/plugin-sdk/plugin-runtime.js",
     );
     expect(installedScript).toContain(
-      'from "file:///C:/Users/runner/AppData/Roaming/npm/node_modules/openclaw/dist/plugin-sdk/plugin-runtime.js"',
+      'from "file:///C:/Users/runner/AppData/Roaming/npm/node_modules/grokbot/dist/plugin-sdk/plugin-runtime.js"',
     );
     expect(readFileSync("scripts/lib/cross-os-release-checks/install.ts", "utf8")).toContain(
       "OPENCLAW_BROWSER_CONTROL_MODULE: pathToFileURL(overridePath).href",
@@ -1298,14 +1298,14 @@ describe("scripts/openclaw-cross-os-release-checks", () => {
   it("normalizes Windows installed CLI paths to the cmd shim", () => {
     expect(
       normalizeWindowsInstalledCliPath(
-        String.raw`C:\Users\runner\AppData\Roaming\npm\openclaw.ps1`,
+        String.raw`C:\Users\runner\AppData\Roaming\npm\grokbot.ps1`,
       ),
-    ).toBe(String.raw`C:\Users\runner\AppData\Roaming\npm\openclaw.cmd`);
+    ).toBe(String.raw`C:\Users\runner\AppData\Roaming\npm\grokbot.cmd`);
     expect(
       normalizeWindowsInstalledCliPath(
-        String.raw`C:\Users\runner\AppData\Roaming\npm\openclaw.cmd`,
+        String.raw`C:\Users\runner\AppData\Roaming\npm\grokbot.cmd`,
       ),
-    ).toBe(String.raw`C:\Users\runner\AppData\Roaming\npm\openclaw.cmd`);
+    ).toBe(String.raw`C:\Users\runner\AppData\Roaming\npm\grokbot.cmd`);
   });
 
   it("normalizes generic Windows PowerShell shims to cmd shims", () => {
@@ -1324,7 +1324,7 @@ describe("scripts/openclaw-cross-os-release-checks", () => {
     expect(
       resolveCommandSpawnInvocation(
         String.raw`C:\Program Files\nodejs\npm.cmd`,
-        ["view", "openclaw@latest", "version"],
+        ["view", "grokbot@latest", "version"],
         {
           comSpec: String.raw`C:\Windows\System32\cmd.exe`,
           platform: "win32",
@@ -1336,7 +1336,7 @@ describe("scripts/openclaw-cross-os-release-checks", () => {
         "/d",
         "/s",
         "/c",
-        String.raw`""C:\Program Files\nodejs\npm.cmd" view openclaw@latest version"`,
+        String.raw`""C:\Program Files\nodejs\npm.cmd" view grokbot@latest version"`,
       ],
       shell: false,
       windowsVerbatimArguments: true,
@@ -1372,7 +1372,7 @@ describe("scripts/openclaw-cross-os-release-checks", () => {
   it("wraps installed Windows CLI cmd fallbacks without Node shell argv", () => {
     expect(
       resolveInstalledCliInvocation(
-        win32.join(String.raw`C:\OpenClaw Prefix`, "openclaw.cmd"),
+        win32.join(String.raw`C:\GrokBot Prefix`, "grokbot.cmd"),
         ["gateway", "run", "--port", "1234"],
         {
           comSpec: String.raw`C:\Windows\System32\cmd.exe`,
@@ -1385,7 +1385,7 @@ describe("scripts/openclaw-cross-os-release-checks", () => {
         "/d",
         "/s",
         "/c",
-        String.raw`""C:\OpenClaw Prefix\openclaw.cmd" gateway run --port 1234"`,
+        String.raw`""C:\GrokBot Prefix\grokbot.cmd" gateway run --port 1234"`,
       ],
       shell: false,
       windowsVerbatimArguments: true,
@@ -1393,7 +1393,7 @@ describe("scripts/openclaw-cross-os-release-checks", () => {
   });
 
   it("runs resolved command invocations and writes command logs", async () => {
-    const dir = mkdtempSync(join(tmpdir(), "openclaw-cross-os-run-command-"));
+    const dir = mkdtempSync(join(tmpdir(), "grokbot-cross-os-run-command-"));
     try {
       const logPath = join(dir, "command.log");
       const result = await runCommand(process.execPath, ["-e", "process.stdout.write('ok')"], {
@@ -1414,7 +1414,7 @@ describe("scripts/openclaw-cross-os-release-checks", () => {
   });
 
   it("bounds retained command output while preserving full command logs", async () => {
-    const dir = mkdtempSync(join(tmpdir(), "openclaw-cross-os-run-command-output-"));
+    const dir = mkdtempSync(join(tmpdir(), "grokbot-cross-os-run-command-output-"));
     try {
       const logPath = join(dir, "command.log");
       const result = await runCommand(
@@ -1445,7 +1445,7 @@ describe("scripts/openclaw-cross-os-release-checks", () => {
   });
 
   it("flushes command logs before resolving", async () => {
-    const dir = mkdtempSync(join(tmpdir(), "openclaw-cross-os-run-command-flush-"));
+    const dir = mkdtempSync(join(tmpdir(), "grokbot-cross-os-run-command-flush-"));
     try {
       const logPath = join(dir, "flush.log");
       const marker = `flush-start-${"x".repeat(128 * 1024)}-flush-end`;
@@ -1474,7 +1474,7 @@ describe("scripts/openclaw-cross-os-release-checks", () => {
   });
 
   it("reads npm debug logs from the Windows cache root", () => {
-    const dir = mkdtempSync(join(tmpdir(), "openclaw-cross-os-npm-debug-"));
+    const dir = mkdtempSync(join(tmpdir(), "grokbot-cross-os-npm-debug-"));
     try {
       const homeDir = join(dir, "home");
       const localAppData = join(homeDir, "AppData", "Local");
@@ -1497,7 +1497,7 @@ describe("scripts/openclaw-cross-os-release-checks", () => {
   });
 
   it("prefers npm configured log directories over cache defaults", () => {
-    const dir = mkdtempSync(join(tmpdir(), "openclaw-cross-os-npm-logs-dir-"));
+    const dir = mkdtempSync(join(tmpdir(), "grokbot-cross-os-npm-logs-dir-"));
     try {
       const homeDir = join(dir, "home");
       const logsDir = join(dir, "custom-logs");
@@ -1527,7 +1527,7 @@ describe("scripts/openclaw-cross-os-release-checks", () => {
   });
 
   it("keeps npm debug log collection best-effort", () => {
-    const dir = mkdtempSync(join(tmpdir(), "openclaw-cross-os-npm-debug-best-effort-"));
+    const dir = mkdtempSync(join(tmpdir(), "grokbot-cross-os-npm-debug-best-effort-"));
     try {
       const homeDir = join(dir, "home");
       const logPath = join(dir, "install.log");
@@ -1545,7 +1545,7 @@ describe("scripts/openclaw-cross-os-release-checks", () => {
   });
 
   it("resolves relative npm log config from the install working directory", () => {
-    const dir = mkdtempSync(join(tmpdir(), "openclaw-cross-os-npm-relative-logs-"));
+    const dir = mkdtempSync(join(tmpdir(), "grokbot-cross-os-npm-relative-logs-"));
     try {
       const homeDir = join(dir, "home");
       const logsDir = join(homeDir, "relative-logs");
@@ -1569,7 +1569,7 @@ describe("scripts/openclaw-cross-os-release-checks", () => {
       return;
     }
 
-    const dir = mkdtempSync(join(tmpdir(), "openclaw-cross-os-run-command-timeout-"));
+    const dir = mkdtempSync(join(tmpdir(), "grokbot-cross-os-run-command-timeout-"));
     const childPidPath = join(dir, "child.pid");
     try {
       const logPath = join(dir, "timeout.log");
@@ -1610,7 +1610,7 @@ describe("scripts/openclaw-cross-os-release-checks", () => {
       return;
     }
 
-    const dir = mkdtempSync(join(tmpdir(), "openclaw-cross-os-run-command-signal-"));
+    const dir = mkdtempSync(join(tmpdir(), "grokbot-cross-os-run-command-signal-"));
     const childPidPath = join(dir, "child.pid");
     const scriptUrl = pathToFileURL(
       resolvePath("scripts/lib/cross-os-release-checks/process.ts"),
@@ -1674,7 +1674,7 @@ describe("scripts/openclaw-cross-os-release-checks", () => {
       return;
     }
 
-    const dir = mkdtempSync(join(tmpdir(), "openclaw-cross-os-run-command-signal-exit-"));
+    const dir = mkdtempSync(join(tmpdir(), "grokbot-cross-os-run-command-signal-exit-"));
     const childPidPath = join(dir, "child.pid");
     const logPath = join(dir, "signal.log");
     const scriptUrl = pathToFileURL(
@@ -1743,37 +1743,37 @@ describe("scripts/openclaw-cross-os-release-checks", () => {
   it("derives the installed prefix from resolved CLI paths", () => {
     expect(
       resolveInstalledPrefixDirFromCliPath(
-        String.raw`C:\Users\runner\AppData\Roaming\npm\openclaw.ps1`,
+        String.raw`C:\Users\runner\AppData\Roaming\npm\grokbot.ps1`,
         "win32",
       ),
     ).toBe(String.raw`C:\Users\runner\AppData\Roaming\npm`);
     expect(
-      resolveInstalledPrefixDirFromCliPath("/Users/runner/.npm-global/bin/openclaw", "darwin"),
+      resolveInstalledPrefixDirFromCliPath("/Users/runner/.npm-global/bin/grokbot", "darwin"),
     ).toBe("/Users/runner/.npm-global");
   });
 
   it("resolves Linux npm package roots when the CLI is a user-local shim", () => {
-    const homeDir = mkdtempSync(join(tmpdir(), "openclaw-cross-os-linux-home-"));
+    const homeDir = mkdtempSync(join(tmpdir(), "grokbot-cross-os-linux-home-"));
     try {
-      const packageRoot = join(homeDir, ".npm-global", "lib", "node_modules", "openclaw");
+      const packageRoot = join(homeDir, ".npm-global", "lib", "node_modules", "grokbot");
       const distDir = join(packageRoot, "dist");
       const cliDir = join(homeDir, ".local", "bin");
       mkdirSync(distDir, { recursive: true });
       mkdirSync(cliDir, { recursive: true });
-      writeFileSync(join(packageRoot, "package.json"), JSON.stringify({ name: "openclaw" }));
+      writeFileSync(join(packageRoot, "package.json"), JSON.stringify({ name: "grokbot" }));
       writeFileSync(join(distDir, "entry.js"), "#!/usr/bin/env node\n");
 
       expect(
-        resolveInstalledPackageRootFromCliPath(join(cliDir, "openclaw"), "linux", {
+        resolveInstalledPackageRootFromCliPath(join(cliDir, "grokbot"), "linux", {
           HOME: homeDir,
         }),
       ).toBe(packageRoot);
 
-      rmSync(join(cliDir, "openclaw"), { force: true });
-      symlinkSync(join(distDir, "entry.js"), join(cliDir, "openclaw"));
+      rmSync(join(cliDir, "grokbot"), { force: true });
+      symlinkSync(join(distDir, "entry.js"), join(cliDir, "grokbot"));
 
       expect(
-        resolveInstalledPackageRootFromCliPath(join(cliDir, "openclaw"), "linux", {
+        resolveInstalledPackageRootFromCliPath(join(cliDir, "grokbot"), "linux", {
           HOME: homeDir,
         }),
       ).toBe(realpathSync(packageRoot));
@@ -1908,7 +1908,7 @@ describe("scripts/openclaw-cross-os-release-checks", () => {
     expect(
       buildRealUpdateEnv({
         FOO: "bar",
-        NODE_COMPILE_CACHE: "/tmp/stale-openclaw-cache",
+        NODE_COMPILE_CACHE: "/tmp/stale-grokbot-cache",
         OPENCLAW_DISABLE_BUNDLED_PLUGIN_POSTINSTALL: "1",
       }),
     ).toEqual({
@@ -1929,7 +1929,7 @@ describe("scripts/openclaw-cross-os-release-checks", () => {
             steps: [{ name: "global update", exitCode: 0 }],
           }),
           stderr:
-            "[openclaw] Failed to start CLI: Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/tmp/prefix/lib/node_modules/openclaw/dist/memory-state-old.js'",
+            "[grokbot] Failed to start CLI: Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/tmp/prefix/lib/node_modules/grokbot/dist/memory-state-old.js'",
         },
         { candidateVersion: "2026.4.27" },
       ),
@@ -1947,7 +1947,7 @@ describe("scripts/openclaw-cross-os-release-checks", () => {
             steps: [{ name: "global update", exitCode: 0 }],
           }),
           stderr:
-            "[openclaw] Failed to start CLI: Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/tmp/prefix/lib/node_modules/openclaw/dist/memory-state-old.js'",
+            "[grokbot] Failed to start CLI: Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/tmp/prefix/lib/node_modules/grokbot/dist/memory-state-old.js'",
         },
         { candidateVersion: "2026.4.27" },
       ),
@@ -1965,7 +1965,7 @@ describe("scripts/openclaw-cross-os-release-checks", () => {
             steps: [{ name: "global update", exitCode: 1 }],
           }),
           stderr:
-            "[openclaw] Failed to start CLI: Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/tmp/prefix/lib/node_modules/openclaw/dist/memory-state-old.js'",
+            "[grokbot] Failed to start CLI: Error [ERR_MODULE_NOT_FOUND]: Cannot find module '/tmp/prefix/lib/node_modules/grokbot/dist/memory-state-old.js'",
         },
         { candidateVersion: "2026.4.27" },
       ),
@@ -1986,7 +1986,7 @@ describe("scripts/openclaw-cross-os-release-checks", () => {
                 name: "global install swap",
                 exitCode: 1,
                 stderrTail:
-                  "EPERM: operation not permitted, unlink 'C:\\Users\\runner\\prefix\\node_modules\\.openclaw-5748-1777776287462\\node_modules\\@mariozechner\\clipboard-win32-x64-msvc\\clipboard.win32-x64-msvc.node'",
+                  "EPERM: operation not permitted, unlink 'C:\\Users\\runner\\prefix\\node_modules\\.grokbot-5748-1777776287462\\node_modules\\@mariozechner\\clipboard-win32-x64-msvc\\clipboard.win32-x64-msvc.node'",
               },
             ],
           }),
@@ -1999,14 +1999,14 @@ describe("scripts/openclaw-cross-os-release-checks", () => {
 
   it("recognizes the shipped Windows updater packaged-upgrade timeout", () => {
     const error = new Error(
-      "Command timed out: C:\\hostedtoolcache\\windows\\node\\24.15.0\\x64\\node.exe C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\openclaw-upgrade-q9DsA7\\prefix\\node_modules\\openclaw\\openclaw.mjs update --tag http://127.0.0.1:49951/openclaw-2026.5.4-beta.1.tgz --yes --json --no-restart --timeout 1500",
+      "Command timed out: C:\\hostedtoolcache\\windows\\node\\24.15.0\\x64\\node.exe C:\\Users\\RUNNER~1\\AppData\\Local\\Temp\\grokbot-upgrade-q9DsA7\\prefix\\node_modules\\grokbot\\grokbot.mjs update --tag http://127.0.0.1:49951/grokbot-2026.5.4-beta.1.tgz --yes --json --no-restart --timeout 1500",
     );
 
     expect(isRecoverableWindowsPackagedUpgradeTimeoutError(error, "win32")).toBe(true);
     expect(
       isRecoverableWindowsPackagedUpgradeTimeoutError(
         new Error(
-          "Command timed out: C:\\prefix\\node_modules\\openclaw\\openclaw.mjs update --tag http://127.0.0.1:49951/openclaw-current.tgz --yes --json --timeout 1500",
+          "Command timed out: C:\\prefix\\node_modules\\grokbot\\grokbot.mjs update --tag http://127.0.0.1:49951/grokbot-current.tgz --yes --json --timeout 1500",
         ),
         "win32",
       ),
@@ -2014,7 +2014,7 @@ describe("scripts/openclaw-cross-os-release-checks", () => {
     expect(isRecoverableWindowsPackagedUpgradeTimeoutError(error, "linux")).toBe(false);
     expect(
       isRecoverableWindowsPackagedUpgradeTimeoutError(
-        new Error("Command timed out: node openclaw.mjs update --tag openclaw@beta"),
+        new Error("Command timed out: node grokbot.mjs update --tag grokbot@beta"),
         "win32",
       ),
     ).toBe(false);
@@ -2082,7 +2082,7 @@ describe("scripts/openclaw-cross-os-release-checks", () => {
         {
           exitCode: 1,
           stdout:
-            "EPERM: operation not permitted, unlink '/tmp/prefix/node_modules/.openclaw-1-2/native.node'",
+            "EPERM: operation not permitted, unlink '/tmp/prefix/node_modules/.grokbot-1-2/native.node'",
           stderr: "",
         },
         "linux",
@@ -2092,23 +2092,23 @@ describe("scripts/openclaw-cross-os-release-checks", () => {
 
   it("only treats pinned baseline specs as exact installer version assertions", () => {
     expect(resolveExplicitBaselineVersion("")).toBe("");
-    expect(resolveExplicitBaselineVersion("openclaw@latest")).toBe("");
-    expect(resolveExplicitBaselineVersion("openclaw@2026.4.10")).toBe("2026.4.10");
+    expect(resolveExplicitBaselineVersion("grokbot@latest")).toBe("");
+    expect(resolveExplicitBaselineVersion("grokbot@2026.4.10")).toBe("2026.4.10");
     expect(resolveExplicitBaselineVersion("2026.4.10")).toBe("2026.4.10");
   });
 
   it("reads an installed baseline version without requiring build metadata", () => {
-    const prefixDir = mkdtempSync(join(tmpdir(), "openclaw-cross-os-installed-version-"));
+    const prefixDir = mkdtempSync(join(tmpdir(), "grokbot-cross-os-installed-version-"));
     try {
       const packageRoot =
         process.platform === "win32"
-          ? join(prefixDir, "node_modules", "openclaw")
-          : join(prefixDir, "lib", "node_modules", "openclaw");
+          ? join(prefixDir, "node_modules", "grokbot")
+          : join(prefixDir, "lib", "node_modules", "grokbot");
       mkdirSync(packageRoot, { recursive: true });
       writeFileSync(
         join(packageRoot, "package.json"),
         JSON.stringify({
-          name: "openclaw",
+          name: "grokbot",
           version: "2026.4.10",
         }),
         "utf8",
@@ -2121,12 +2121,12 @@ describe("scripts/openclaw-cross-os-release-checks", () => {
   });
 
   it("treats missing package scripts as optional in older refs", () => {
-    const packageRoot = mkdtempSync(join(tmpdir(), "openclaw-cross-os-scripts-"));
+    const packageRoot = mkdtempSync(join(tmpdir(), "grokbot-cross-os-scripts-"));
     try {
       writeFileSync(
         join(packageRoot, "package.json"),
         JSON.stringify({
-          name: "openclaw",
+          name: "grokbot",
           scripts: {
             build: "pnpm build",
           },
@@ -2142,14 +2142,14 @@ describe("scripts/openclaw-cross-os-release-checks", () => {
   });
 
   it("rejects legacy plugin dependency staging debris before candidate inventory generation", async () => {
-    const packageRoot = mkdtempSync(join(tmpdir(), "openclaw-cross-os-stage-debris-"));
+    const packageRoot = mkdtempSync(join(tmpdir(), "grokbot-cross-os-stage-debris-"));
     try {
       mkdirSync(
-        join(packageRoot, "dist", "Extensions", "demo", ".OpenClaw-Install-Stage", "node_modules"),
+        join(packageRoot, "dist", "Extensions", "demo", ".GrokBot-Install-Stage", "node_modules"),
         { recursive: true },
       );
       writeFileSync(
-        join(packageRoot, "dist", "Extensions", "demo", ".OpenClaw-Install-Stage", "package.json"),
+        join(packageRoot, "dist", "Extensions", "demo", ".GrokBot-Install-Stage", "package.json"),
         "{}\n",
         "utf8",
       );
@@ -2166,12 +2166,12 @@ describe("scripts/openclaw-cross-os-release-checks", () => {
   });
 
   it("omits local build metadata from candidate package inventories", async () => {
-    const packageRoot = mkdtempSync(join(tmpdir(), "openclaw-cross-os-local-stamps-"));
+    const packageRoot = mkdtempSync(join(tmpdir(), "grokbot-cross-os-local-stamps-"));
     try {
       mkdirSync(join(packageRoot, "dist"), { recursive: true });
       writeFileSync(
         join(packageRoot, "package.json"),
-        JSON.stringify({ name: "openclaw-fixture", version: "0.0.0", files: ["dist/"] }),
+        JSON.stringify({ name: "grokbot-fixture", version: "0.0.0", files: ["dist/"] }),
         "utf8",
       );
       writeFileSync(join(packageRoot, "dist", "index.js"), "export {};\n", "utf8");

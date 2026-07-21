@@ -1,9 +1,9 @@
-// Qqbot plugin entrypoint registers its OpenClaw integration.
+// Qqbot plugin entrypoint registers its GrokBot integration.
 import {
   defineBundledChannelEntry,
   loadBundledEntryExportSync,
   type OpenClawPluginApi,
-} from "openclaw/plugin-sdk/channel-entry-contract";
+} from "grokbot/plugin-sdk/channel-entry-contract";
 
 function registerQQBotFull(api: OpenClawPluginApi): void {
   if (api.registrationMode === "tool-discovery") {

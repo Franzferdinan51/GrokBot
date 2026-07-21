@@ -2,12 +2,12 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { DB as OpenClawStateKyselyDatabase } from "../state/openclaw-state-db.generated.js";
+import type { DB as OpenClawStateKyselyDatabase } from "../state/grokbot-state-db.generated.js";
 import {
   closeOpenClawStateDatabaseForTest,
   openOpenClawStateDatabase,
   runOpenClawStateWriteTransaction,
-} from "../state/openclaw-state-db.js";
+} from "../state/grokbot-state-db.js";
 import { createTrackedTempDirs } from "../test-utils/tracked-temp-dirs.js";
 import { executeSqliteQuerySync, getNodeSqliteKysely } from "./kysely-sync.js";
 import {
@@ -24,7 +24,7 @@ const APNS_DEVICE_IDENTIFIER = "ABCD1234ABCD1234ABCD1234ABCD1234";
 type TestDatabase = Pick<OpenClawStateKyselyDatabase, "apns_registrations">;
 
 async function makeTempDir(): Promise<string> {
-  return await tempDirs.make("openclaw-push-apns-store-test-");
+  return await tempDirs.make("grokbot-push-apns-store-test-");
 }
 
 async function registerDirectApnsRegistration(params: {
@@ -36,7 +36,7 @@ async function registerDirectApnsRegistration(params: {
 }) {
   return await registerApnsRegistration({
     [APNS_DEVICE_FIELD]: APNS_DEVICE_IDENTIFIER,
-    topic: "ai.openclaw.ios",
+    topic: "ai.grokbot.ios",
     ...params,
     transport: "direct",
   });
@@ -78,7 +78,7 @@ describe("push APNs registration store", () => {
           "legacy-node": {
             nodeId: "legacy-node",
             [APNS_DEVICE_FIELD]: APNS_DEVICE_IDENTIFIER,
-            topic: "ai.openclaw.ios",
+            topic: "ai.grokbot.ios",
             environment: "sandbox",
             updatedAtMs: 1,
           },
@@ -99,17 +99,17 @@ describe("push APNs registration store", () => {
       relayHandle: "relay-handle-123",
       sendGrant: "send-grant-123",
       installationId: "install-123",
-      topic: "ai.openclaw.ios",
+      topic: "ai.grokbot.ios",
       environment: "sandbox",
       distribution: "official",
-      relayOrigin: "https://ios-push-relay-sandbox.openclaw.ai/",
+      relayOrigin: "https://ios-push-relay-sandbox.grokbot.ai/",
       tokenDebugSuffix: " abcd-1234 ",
       baseDir,
     });
 
     await expect(loadApnsRegistration("ios-node-relay", baseDir)).resolves.toEqual({
       ...relay,
-      relayOrigin: "https://ios-push-relay-sandbox.openclaw.ai",
+      relayOrigin: "https://ios-push-relay-sandbox.grokbot.ai",
       tokenDebugSuffix: "abcd1234",
     });
   });
@@ -123,7 +123,7 @@ describe("push APNs registration store", () => {
       relayHandle: "relay-handle-123",
       sendGrant: "send-grant-123",
       installationId: "install-123",
-      topic: "ai.openclaw.ios",
+      topic: "ai.grokbot.ios",
       environment: "production",
       distribution: "official",
       baseDir,
@@ -171,7 +171,7 @@ describe("push APNs registration store", () => {
               send_grant: null,
               installation_id: null,
               relay_origin: null,
-              topic: "ai.openclaw.ios",
+              topic: "ai.grokbot.ios",
               environment: "sandbox",
               distribution: null,
               token_debug_suffix: null,
@@ -268,7 +268,7 @@ describe("push APNs registration store", () => {
         relayHandle: "relay-handle-123",
         sendGrant: "send-grant-123",
         installationId: "install-123",
-        topic: "ai.openclaw.ios",
+        topic: "ai.grokbot.ios",
         environment: "staging",
         distribution: "official",
         baseDir,
@@ -281,7 +281,7 @@ describe("push APNs registration store", () => {
         relayHandle: oversized,
         sendGrant: "send-grant-123",
         installationId: "install-123",
-        topic: "ai.openclaw.ios",
+        topic: "ai.grokbot.ios",
         environment: "production",
         distribution: "official",
         baseDir,
@@ -298,7 +298,7 @@ describe("push APNs registration store", () => {
           `INSERT INTO apns_registrations (
              node_id, transport, topic, environment, updated_at_ms
            ) VALUES (?, ?, ?, ?, ?)`,
-        ).run("corrupt-node", "unknown", "ai.openclaw.ios", "sandbox", 1);
+        ).run("corrupt-node", "unknown", "ai.grokbot.ios", "sandbox", 1);
       },
       { env },
     );

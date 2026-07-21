@@ -3,10 +3,10 @@ import {
   createChannelIngressMonitor,
   type ChannelIngressQueue,
   type ChannelIngressMonitorLifecycle,
-} from "openclaw/plugin-sdk/channel-outbound";
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
-import { resolvePersistentDedupePluginStateNamespace } from "openclaw/plugin-sdk/persistent-dedupe";
-import type { RuntimeEnv } from "openclaw/plugin-sdk/runtime-env";
+} from "grokbot/plugin-sdk/channel-outbound";
+import { formatErrorMessage } from "grokbot/plugin-sdk/error-runtime";
+import { resolvePersistentDedupePluginStateNamespace } from "grokbot/plugin-sdk/persistent-dedupe";
+import type { RuntimeEnv } from "grokbot/plugin-sdk/runtime-env";
 import { z } from "zod";
 import {
   NEXTCLOUD_TALK_REPLAY_DEDUPE_MAX_ENTRIES,

@@ -6,7 +6,7 @@ import {
   closeOpenClawStateDatabaseForTest,
   openOpenClawStateDatabase,
   type OpenClawStateDatabase,
-} from "../../state/openclaw-state-db.js";
+} from "../../state/grokbot-state-db.js";
 import {
   createDispatchEnvironmentFixtures,
   REQUEST,
@@ -20,7 +20,7 @@ describe("forced worker environment abandonment", () => {
   let database: OpenClawStateDatabase;
 
   beforeEach(async () => {
-    root = await fs.mkdtemp(path.join(await fs.realpath(os.tmpdir()), "openclaw-force-worker-"));
+    root = await fs.mkdtemp(path.join(await fs.realpath(os.tmpdir()), "grokbot-force-worker-"));
     database = openOpenClawStateDatabase({ env: { OPENCLAW_STATE_DIR: root } });
   });
 
@@ -74,7 +74,7 @@ describe("forced worker environment abandonment", () => {
     store.markWorkspaceResultPending(claim);
     store.recordStagedWorkspaceResult(
       claim,
-      "refs/openclaw/worker-results/forced-missing-workspace-claim",
+      "refs/grokbot/worker-results/forced-missing-workspace-claim",
     );
 
     await forceAbandonWorkerEnvironment({

@@ -1,12 +1,12 @@
-# OpenClaw Exa Plugin
+# GrokBot Exa Plugin
 
-Official OpenClaw plugin for Exa.
+Official GrokBot plugin for Exa.
 
-Install from OpenClaw:
+Install from GrokBot:
 
 ```bash
-openclaw plugins install @openclaw/exa-plugin
-openclaw gateway restart
+grokbot plugins install @grokbot/exa-plugin
+grokbot gateway restart
 ```
 
-See <https://docs.openclaw.ai/tools/exa-search> for setup and configuration.
+See <https://docs.grokbot.ai/tools/exa-search> for setup and configuration.

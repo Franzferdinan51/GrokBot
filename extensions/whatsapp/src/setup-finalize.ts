@@ -5,9 +5,9 @@ import {
   createSetupTranslator,
   type DmPolicy,
   type OpenClawConfig,
-} from "openclaw/plugin-sdk/setup";
-import type { ChannelSetupWizard } from "openclaw/plugin-sdk/setup";
-import { formatCliCommand, formatDocsLink } from "openclaw/plugin-sdk/setup-tools";
+} from "grokbot/plugin-sdk/setup";
+import type { ChannelSetupWizard } from "grokbot/plugin-sdk/setup";
+import { formatCliCommand, formatDocsLink } from "grokbot/plugin-sdk/setup-tools";
 import {
   resolveDefaultWhatsAppAccountId,
   resolveWhatsAppAccount,
@@ -472,7 +472,7 @@ export async function finalizeWhatsAppSetup(params: {
   } else if (!linked) {
     await params.prompter.note(
       t("wizard.whatsapp.linkLater", {
-        command: formatCliCommand("openclaw channels login"),
+        command: formatCliCommand("grokbot channels login"),
       }),
       "WhatsApp",
     );

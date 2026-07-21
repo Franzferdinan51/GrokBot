@@ -1,9 +1,9 @@
 // Update method tests cover update.run/status, restart sentinel metadata,
 // managed-service handoff, restart scheduling, and delivery context preservation.
 
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { ConfigFileSnapshot, OpenClawConfig } from "../../config/types.openclaw.js";
+import type { ConfigFileSnapshot, OpenClawConfig } from "../../config/types.grokbot.js";
 import type { RestartSentinelPayload } from "../../infra/restart-sentinel.js";
 import type { RespawnSupervisor } from "../../infra/supervisor-markers.js";
 import type { UpdateChannel } from "../../infra/update-channels.js";
@@ -21,8 +21,8 @@ type UpdateInstallSurface = Awaited<
 const resolveUpdateInstallSurfaceMock = vi.fn<() => Promise<UpdateInstallSurface>>(async () => ({
   kind: "git",
   mode: "git",
-  root: "/tmp/openclaw",
-  packageRoot: "/tmp/openclaw",
+  root: "/tmp/grokbot",
+  packageRoot: "/tmp/grokbot",
 }));
 const getLatestUpdateRestartSentinelMock = vi.fn<() => RestartSentinelPayload | null>(() => null);
 const refreshLatestUpdateRestartSentinelMock = vi.fn<() => Promise<RestartSentinelPayload | null>>(
@@ -52,8 +52,8 @@ const startManagedServiceUpdateHandoffMock = vi.fn<
 >(async (params) => ({
   status: "started",
   pid: 12345,
-  command: "openclaw update --yes --timeout 1800",
-  logPath: "/tmp/openclaw-update-run-handoff/handoff.log",
+  command: "grokbot update --yes --timeout 1800",
+  logPath: "/tmp/grokbot-update-run-handoff/handoff.log",
   handoffId: params?.handoffId,
 }));
 
@@ -104,13 +104,13 @@ vi.mock("../../config/sessions.js", () => ({
   },
 }));
 
-vi.mock("../../infra/openclaw-root.js", async () => {
-  const actual = await vi.importActual<typeof import("../../infra/openclaw-root.js")>(
-    "../../infra/openclaw-root.js",
+vi.mock("../../infra/grokbot-root.js", async () => {
+  const actual = await vi.importActual<typeof import("../../infra/grokbot-root.js")>(
+    "../../infra/grokbot-root.js",
   );
   return {
     ...actual,
-    resolveOpenClawPackageRoot: async () => "/tmp/openclaw",
+    resolveOpenClawPackageRoot: async () => "/tmp/grokbot",
   };
 });
 
@@ -193,7 +193,7 @@ vi.mock("./restart-request.js", () => ({
 vi.mock("../../infra/update-managed-service-handoff.js", () => ({
   startManagedServiceUpdateHandoff: startManagedServiceUpdateHandoffMock,
   formatManagedServiceUpdateCommand: (params?: { timeoutMs?: number; channel?: UpdateChannel }) => {
-    const args = ["openclaw", "update", "--yes"];
+    const args = ["grokbot", "update", "--yes"];
     if (params?.channel) {
       args.push("--channel", params.channel);
     }
@@ -204,7 +204,7 @@ vi.mock("../../infra/update-managed-service-handoff.js", () => ({
   },
   buildManagedServiceHandoffUnavailableMessage: (command: string) =>
     [
-      "OpenClaw updates cannot safely run inside the live gateway process without a managed-service handoff.",
+      "GrokBot updates cannot safely run inside the live gateway process without a managed-service handoff.",
       `Run \`${command}\` from a shell outside the gateway service, or restart/update from the host UI.`,
     ].join("\n"),
 }));
@@ -226,7 +226,7 @@ beforeEach(() => {
   getUpdateAvailableMock.mockReturnValue(null);
   readConfigFileSnapshotMock.mockReset();
   readConfigFileSnapshotMock.mockResolvedValue({
-    path: "/tmp/openclaw.json",
+    path: "/tmp/grokbot.json",
     exists: true,
     raw: "{}",
     parsed: {},
@@ -253,8 +253,8 @@ beforeEach(() => {
   resolveUpdateInstallSurfaceMock.mockResolvedValue({
     kind: "git",
     mode: "git",
-    root: "/tmp/openclaw",
-    packageRoot: "/tmp/openclaw",
+    root: "/tmp/grokbot",
+    packageRoot: "/tmp/grokbot",
   });
   getLatestUpdateRestartSentinelMock.mockClear();
   refreshLatestUpdateRestartSentinelMock.mockClear();
@@ -265,8 +265,8 @@ beforeEach(() => {
     async (params?: { handoffId?: string }) => ({
       status: "started" as const,
       pid: 12345,
-      command: "openclaw update --yes --timeout 1800",
-      logPath: "/tmp/openclaw-update-run-handoff/handoff.log",
+      command: "grokbot update --yes --timeout 1800",
+      logPath: "/tmp/grokbot-update-run-handoff/handoff.log",
       handoffId: params?.handoffId,
     }),
   );
@@ -340,8 +340,8 @@ function mockGlobalInstallSurface() {
   resolveUpdateInstallSurfaceMock.mockResolvedValueOnce({
     kind: "global",
     mode: "npm",
-    root: "/tmp/openclaw-global",
-    packageRoot: "/tmp/openclaw-global",
+    root: "/tmp/grokbot-global",
+    packageRoot: "/tmp/grokbot-global",
   });
 }
 
@@ -488,7 +488,7 @@ describe("update.run restart scheduling", () => {
     detectRespawnSupervisorMock.mockReturnValueOnce("launchd");
     mockGlobalInstallSurface();
 
-    const payload = await withProcessEnv({ OPENCLAW_LAUNCHD_LABEL: "ai.openclaw.gateway" }, () =>
+    const payload = await withProcessEnv({ OPENCLAW_LAUNCHD_LABEL: "ai.grokbot.gateway" }, () =>
       captureUpdateRunPayload({}, {}),
     );
 
@@ -496,7 +496,7 @@ describe("update.run restart scheduling", () => {
     expect(startManagedServiceUpdateHandoffMock).toHaveBeenCalledTimes(1);
     expect(startManagedServiceUpdateHandoffMock).toHaveBeenCalledWith(
       expect.objectContaining({
-        root: "/tmp/openclaw",
+        root: "/tmp/grokbot",
         restartDrainTimeoutMs: 300_000,
         restartDelayMs: 2000,
         handoffId: expect.any(String),
@@ -527,7 +527,7 @@ describe("update.run restart scheduling", () => {
     ).toEqual({
       status: "started",
       pid: 12345,
-      command: "openclaw update --yes --timeout 1800",
+      command: "grokbot update --yes --timeout 1800",
     });
     expect(payload?.sentinel?.persisted).toBe(true);
     const sentinel = readCapturedPayload();
@@ -556,12 +556,12 @@ describe("update.run restart scheduling", () => {
     startManagedServiceUpdateHandoffMock.mockResolvedValueOnce({
       status: "joined",
       pid: 12345,
-      command: "openclaw update --yes --timeout 1800",
-      logPath: "/tmp/openclaw-update-run-handoff/handoff.log",
+      command: "grokbot update --yes --timeout 1800",
+      logPath: "/tmp/grokbot-update-run-handoff/handoff.log",
       handoffId: "handoff-existing",
     });
 
-    const payload = await withProcessEnv({ OPENCLAW_LAUNCHD_LABEL: "ai.openclaw.gateway" }, () =>
+    const payload = await withProcessEnv({ OPENCLAW_LAUNCHD_LABEL: "ai.grokbot.gateway" }, () =>
       captureUpdateRunPayload({
         sessionKey: "agent:main:webchat:dm:user-123",
         continuationMessage: "Report the update result after restart.",
@@ -586,7 +586,7 @@ describe("update.run restart scheduling", () => {
     });
     expect(payload?.handoff).toEqual({
       status: "already-running",
-      command: "openclaw update --yes --timeout 1800",
+      command: "grokbot update --yes --timeout 1800",
       message: "Another managed update is already running; retry after it completes.",
     });
     expect(payload?.sentinel?.persisted).toBe(false);
@@ -597,7 +597,7 @@ describe("update.run restart scheduling", () => {
     mockGlobalInstallSurface();
     restartSentinelWriteError = new Error("state database unavailable");
 
-    const payload = await withProcessEnv({ OPENCLAW_LAUNCHD_LABEL: "ai.openclaw.gateway" }, () =>
+    const payload = await withProcessEnv({ OPENCLAW_LAUNCHD_LABEL: "ai.grokbot.gateway" }, () =>
       captureUpdateRunPayload(),
     );
 
@@ -614,7 +614,7 @@ describe("update.run restart scheduling", () => {
       Object.assign(new Error("spawn ENOENT"), { code: "ENOENT" }),
     );
 
-    const payload = await withProcessEnv({ OPENCLAW_LAUNCHD_LABEL: "ai.openclaw.gateway" }, () =>
+    const payload = await withProcessEnv({ OPENCLAW_LAUNCHD_LABEL: "ai.grokbot.gateway" }, () =>
       captureUpdateRunPayload(),
     );
 
@@ -631,7 +631,7 @@ describe("update.run restart scheduling", () => {
     detectRespawnSupervisorMock.mockReturnValueOnce("systemd");
     mockGlobalInstallSurface();
 
-    await withProcessEnv({ OPENCLAW_SYSTEMD_UNIT: "openclaw-gateway.service" }, () =>
+    await withProcessEnv({ OPENCLAW_SYSTEMD_UNIT: "grokbot-gateway.service" }, () =>
       invokeUpdateRun({ restartDelayMs: 0 }),
     );
 
@@ -658,7 +658,7 @@ describe("update.run restart scheduling", () => {
       throw Object.assign(new Error("uv_cwd"), { code: "ENOENT", syscall: "uv_cwd" });
     });
     try {
-      await withProcessEnv({ OPENCLAW_LAUNCHD_LABEL: "ai.openclaw.gateway" }, () =>
+      await withProcessEnv({ OPENCLAW_LAUNCHD_LABEL: "ai.grokbot.gateway" }, () =>
         invokeUpdateRun({}),
       );
     } finally {
@@ -668,15 +668,15 @@ describe("update.run restart scheduling", () => {
     expect(startManagedServiceUpdateHandoffMock).toHaveBeenCalledTimes(1);
     expect(startManagedServiceUpdateHandoffMock).toHaveBeenCalledWith(
       expect.objectContaining({
-        root: "/tmp/openclaw",
+        root: "/tmp/grokbot",
       }),
     );
   });
 
   it("hands supervised git/dev updates to the CLI path instead of rebuilding live dist in-process", async () => {
     detectRespawnSupervisorMock.mockReturnValueOnce("launchd");
-    mockGitInstallSurface("/tmp/openclaw-git");
-    const payload = await withProcessEnv({ OPENCLAW_LAUNCHD_LABEL: "ai.openclaw.gateway" }, () =>
+    mockGitInstallSurface("/tmp/grokbot-git");
+    const payload = await withProcessEnv({ OPENCLAW_LAUNCHD_LABEL: "ai.grokbot.gateway" }, () =>
       captureUpdateRunPayload(),
     );
 
@@ -684,7 +684,7 @@ describe("update.run restart scheduling", () => {
     expect(startManagedServiceUpdateHandoffMock).toHaveBeenCalledTimes(1);
     expect(startManagedServiceUpdateHandoffMock).toHaveBeenCalledWith(
       expect.objectContaining({
-        root: "/tmp/openclaw",
+        root: "/tmp/grokbot",
         handoffId: expect.any(String),
         supervisor: "launchd",
         meta: expect.objectContaining({
@@ -700,18 +700,18 @@ describe("update.run restart scheduling", () => {
     expect(payload?.handoff).toEqual({
       status: "started",
       pid: 12345,
-      command: "openclaw update --yes --timeout 1800",
+      command: "grokbot update --yes --timeout 1800",
     });
     expect(readCapturedPayload().status).toBe("skipped");
   });
 
   it("hands Windows fallback gateways to the CLI path before doctor activation", async () => {
     detectRespawnSupervisorMock.mockReturnValueOnce("schtasks");
-    mockGitInstallSurface("C:\\openclaw");
+    mockGitInstallSurface("C:\\grokbot");
 
     const payload = await withProcessEnv(
       {
-        OPENCLAW_SERVICE_MARKER: "openclaw",
+        OPENCLAW_SERVICE_MARKER: "grokbot",
         OPENCLAW_SERVICE_KIND: "gateway",
       },
       () => captureUpdateRunPayload(),
@@ -731,9 +731,9 @@ describe("update.run restart scheduling", () => {
   it("does not pass the stored stable channel to supervised git handoff CLI", async () => {
     normalizeUpdateChannelMock.mockReturnValueOnce("stable");
     detectRespawnSupervisorMock.mockReturnValueOnce("launchd");
-    mockGitInstallSurface("/tmp/openclaw-git");
+    mockGitInstallSurface("/tmp/grokbot-git");
 
-    const payload = await withProcessEnv({ OPENCLAW_LAUNCHD_LABEL: "ai.openclaw.gateway" }, () =>
+    const payload = await withProcessEnv({ OPENCLAW_LAUNCHD_LABEL: "ai.grokbot.gateway" }, () =>
       captureUpdateRunPayload(),
     );
 
@@ -750,9 +750,9 @@ describe("update.run restart scheduling", () => {
   it("rejects stored extended-stable on Git without starting a handoff or mutation", async () => {
     normalizeUpdateChannelMock.mockReturnValueOnce("extended-stable");
     detectRespawnSupervisorMock.mockReturnValueOnce("launchd");
-    mockGitInstallSurface("/tmp/openclaw-git");
+    mockGitInstallSurface("/tmp/grokbot-git");
 
-    const payload = await withProcessEnv({ OPENCLAW_LAUNCHD_LABEL: "ai.openclaw.gateway" }, () =>
+    const payload = await withProcessEnv({ OPENCLAW_LAUNCHD_LABEL: "ai.grokbot.gateway" }, () =>
       captureUpdateRunPayload(),
     );
 
@@ -772,7 +772,7 @@ describe("update.run restart scheduling", () => {
     detectRespawnSupervisorMock.mockReturnValueOnce("launchd");
     mockGlobalInstallSurface();
 
-    await withProcessEnv({ OPENCLAW_LAUNCHD_LABEL: "ai.openclaw.gateway" }, () =>
+    await withProcessEnv({ OPENCLAW_LAUNCHD_LABEL: "ai.grokbot.gateway" }, () =>
       captureUpdateRunPayload(),
     );
 
@@ -789,7 +789,7 @@ describe("update.run restart scheduling", () => {
       steps: [],
       durationMs: 100,
     });
-    mockGitInstallSurface("/tmp/openclaw-git");
+    mockGitInstallSurface("/tmp/grokbot-git");
 
     const payload = await captureUpdateRunPayload();
 
@@ -804,11 +804,11 @@ describe("update.run restart scheduling", () => {
 
   it("hands systemd-supervised git/dev updates to handoff from the durable unit identity", async () => {
     detectRespawnSupervisorMock.mockReturnValueOnce("systemd");
-    mockGitInstallSurface("/tmp/openclaw-git");
+    mockGitInstallSurface("/tmp/grokbot-git");
 
     const payload = await withProcessEnv(
       {
-        OPENCLAW_SYSTEMD_UNIT: "openclaw-gateway.service",
+        OPENCLAW_SYSTEMD_UNIT: "grokbot-gateway.service",
         INVOCATION_ID: "8a77e69a8f604bf0b7984879b9f17a7c",
       },
       () => captureUpdateRunPayload(),
@@ -818,7 +818,7 @@ describe("update.run restart scheduling", () => {
     expect(startManagedServiceUpdateHandoffMock).toHaveBeenCalledTimes(1);
     expect(startManagedServiceUpdateHandoffMock).toHaveBeenCalledWith(
       expect.objectContaining({
-        root: "/tmp/openclaw",
+        root: "/tmp/grokbot",
         supervisor: "systemd",
       }),
     );
@@ -831,7 +831,7 @@ describe("update.run restart scheduling", () => {
 
   it("does not hand off systemd-supervised git/dev updates from generic systemd markers alone", async () => {
     detectRespawnSupervisorMock.mockReturnValueOnce("systemd");
-    mockGitInstallSurface("/tmp/openclaw-git");
+    mockGitInstallSurface("/tmp/grokbot-git");
 
     const payload = await withProcessEnv(
       {
@@ -866,10 +866,10 @@ describe("update.run restart scheduling", () => {
     expect(payload?.result?.reason).toBe("managed-service-handoff-unavailable");
     expect(payload?.handoff).toEqual({
       status: "unavailable",
-      command: "openclaw update --yes --timeout 1800",
+      command: "grokbot update --yes --timeout 1800",
       message:
-        "OpenClaw updates cannot safely run inside the live gateway process without a managed-service handoff.\n" +
-        "Run `openclaw update --yes --timeout 1800` from a shell outside the gateway service, or restart/update from the host UI.",
+        "GrokBot updates cannot safely run inside the live gateway process without a managed-service handoff.\n" +
+        "Run `grokbot update --yes --timeout 1800` from a shell outside the gateway service, or restart/update from the host UI.",
     });
   });
 
@@ -924,9 +924,9 @@ describe("update.run post-core plugin finalize", () => {
   it("resumes official plugin convergence after a git/source core update", async () => {
     runPostCoreFinalizeAfterGatewayUpdateMock.mockResolvedValueOnce({
       status: "ok",
-      entrypoint: "/tmp/openclaw-git/dist/index.mjs",
+      entrypoint: "/tmp/grokbot-git/dist/index.mjs",
     });
-    mockGitOkUpdate("/tmp/openclaw-git");
+    mockGitOkUpdate("/tmp/grokbot-git");
 
     const payload = await captureUpdateRunPayload();
 
@@ -953,7 +953,7 @@ describe("update.run post-core plugin finalize", () => {
       },
     } as OpenClawConfig;
     readConfigFileSnapshotMock.mockResolvedValueOnce({
-      path: "/tmp/openclaw.json",
+      path: "/tmp/grokbot.json",
       exists: true,
       raw: JSON.stringify(preUpdateConfig),
       parsed: preUpdateConfig,
@@ -968,9 +968,9 @@ describe("update.run post-core plugin finalize", () => {
     });
     runPostCoreFinalizeAfterGatewayUpdateMock.mockResolvedValueOnce({
       status: "ok",
-      entrypoint: "/tmp/openclaw-git/dist/index.mjs",
+      entrypoint: "/tmp/grokbot-git/dist/index.mjs",
     });
-    mockGitOkUpdate("/tmp/openclaw-git");
+    mockGitOkUpdate("/tmp/grokbot-git");
 
     await captureUpdateRunPayload();
 
@@ -988,11 +988,11 @@ describe("update.run post-core plugin finalize", () => {
     runPostCoreFinalizeAfterGatewayUpdateMock.mockResolvedValueOnce({
       status: "error",
       reason: "nonzero-exit",
-      entrypoint: "/tmp/openclaw-git/dist/index.mjs",
+      entrypoint: "/tmp/grokbot-git/dist/index.mjs",
       exitCode: 1,
       message: "convergence failed",
     });
-    mockGitOkUpdate("/tmp/openclaw-git");
+    mockGitOkUpdate("/tmp/grokbot-git");
 
     const payload = await captureUpdateRunPayload();
 
@@ -1008,7 +1008,7 @@ describe("update.run post-core plugin finalize", () => {
     detectRespawnSupervisorMock.mockReturnValueOnce("launchd");
     mockGlobalInstallSurface();
 
-    await withProcessEnv({ OPENCLAW_LAUNCHD_LABEL: "ai.openclaw.gateway" }, () =>
+    await withProcessEnv({ OPENCLAW_LAUNCHD_LABEL: "ai.grokbot.gateway" }, () =>
       captureUpdateRunPayload(),
     );
 

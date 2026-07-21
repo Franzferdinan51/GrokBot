@@ -4,4 +4,4 @@ export {
   listRuntimeImageGenerationProviders,
   type GenerateImageParams,
   type GenerateImageRuntimeResult,
-} from "openclaw/plugin-sdk/image-generation-runtime";
+} from "grokbot/plugin-sdk/image-generation-runtime";

@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { normalizeLowercaseStringOrEmpty } from "@openclaw/normalization-core/string-coerce";
+import { normalizeLowercaseStringOrEmpty } from "@grokbot/normalization-core/string-coerce";
 import { writeAcpSessionMetaForMigration } from "../acp/runtime/session-meta.js";
 import { resolveStateDir } from "../config/paths.js";
 import type { SessionEntry } from "../config/sessions.js";
@@ -15,7 +15,7 @@ import {
   resolveSessionStoreTargets,
 } from "../config/sessions/targets.js";
 import type { SessionScope } from "../config/sessions/types.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import {
   collectRelevantDoctorPluginIds,
   listPluginDoctorSessionStoreAgentIds,
@@ -370,15 +370,15 @@ export function aliasedSessionStoreMigrationWarning(params: {
   count: number;
   storePath: string;
 }): string {
-  return `Deferred ${params.subject} ${params.count} ambiguous session key(s) in aliased store ${params.storePath}; remove filesystem aliases or configure one canonical session.store path, then rerun openclaw doctor --fix`;
+  return `Deferred ${params.subject} ${params.count} ambiguous session key(s) in aliased store ${params.storePath}; remove filesystem aliases or configure one canonical session.store path, then rerun grokbot doctor --fix`;
 }
 
 export function unresolvedSessionStoreIdentityWarning(subject: string, storePath: string): string {
-  return `Deferred ${subject} for ${storePath}; filesystem identity could not be established for every configured store path. Restore path access or configure one canonical session.store path, then rerun openclaw doctor --fix`;
+  return `Deferred ${subject} for ${storePath}; filesystem identity could not be established for every configured store path. Restore path access or configure one canonical session.store path, then rerun grokbot doctor --fix`;
 }
 
 export function distinctSessionStoreAliasWarning(subject: string, storePath: string): string {
-  return `Deferred ${subject} in aliased store ${storePath}; atomic replacement cannot update distinct filesystem aliases as one operation. Remove filesystem aliases or configure one canonical session.store path, then rerun openclaw doctor --fix`;
+  return `Deferred ${subject} in aliased store ${storePath}; atomic replacement cannot update distinct filesystem aliases as one operation. Remove filesystem aliases or configure one canonical session.store path, then rerun grokbot doctor --fix`;
 }
 
 export function resolveStaleLegacySessionFile(params: {
@@ -867,7 +867,7 @@ export async function migrateOrphanedSessionKeys(params: {
     }
     if (storeAliases.hasFinalSymlink) {
       warnings.push(
-        `Deferred session key migration in final-component symlink store ${storePath}; configure one canonical session.store path, then rerun openclaw doctor --fix`,
+        `Deferred session key migration in final-component symlink store ${storePath}; configure one canonical session.store path, then rerun grokbot doctor --fix`,
       );
       continue;
     }
@@ -1041,7 +1041,7 @@ export async function migrateLegacyAcpSessionMetadata(params: {
     }
     if (hasLegacyAcpMetadata && storeAliases.hasFinalSymlink) {
       warnings.push(
-        `Deferred ACP metadata migration in final-component symlink store ${storePath}; configure one canonical session.store path, then rerun openclaw doctor --fix`,
+        `Deferred ACP metadata migration in final-component symlink store ${storePath}; configure one canonical session.store path, then rerun grokbot doctor --fix`,
       );
       continue;
     }

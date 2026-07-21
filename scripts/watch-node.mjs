@@ -132,7 +132,7 @@ const writeWatchLock = (lockPath, payload) => {
 };
 
 const logWatcher = (message, deps) => {
-  deps.process.stderr?.write?.(`[openclaw] ${message}\n`);
+  deps.process.stderr?.write?.(`[grokbot] ${message}\n`);
 };
 
 const isInvalidPackageConfigError = (err) => err?.code === "ERR_INVALID_PACKAGE_CONFIG";
@@ -148,18 +148,18 @@ const printFriendlyWatchStartupError = (err) => {
 
   console.error("");
   console.error(
-    "[openclaw] gateway:watch could not start because a dependency package config looks corrupted.",
+    "[grokbot] gateway:watch could not start because a dependency package config looks corrupted.",
   );
   if (packageConfigPath) {
-    console.error(`[openclaw] Invalid package config: ${packageConfigPath}`);
+    console.error(`[grokbot] Invalid package config: ${packageConfigPath}`);
   }
-  console.error("[openclaw] This usually means a file in node_modules is empty or truncated.");
-  console.error("[openclaw] Recommended recovery:");
-  console.error("[openclaw]   rm -rf node_modules");
-  console.error("[openclaw]   pnpm store prune");
-  console.error("[openclaw]   pnpm install");
+  console.error("[grokbot] This usually means a file in node_modules is empty or truncated.");
+  console.error("[grokbot] Recommended recovery:");
+  console.error("[grokbot]   rm -rf node_modules");
+  console.error("[grokbot]   pnpm store prune");
+  console.error("[grokbot]   pnpm install");
   console.error("");
-  console.error("[openclaw] Original error:");
+  console.error("[grokbot] Original error:");
   console.error(err);
 };
 
@@ -491,7 +491,7 @@ export async function runWatchMain(params = {}) {
     const runAutoDoctorAndRestart = () => {
       autoDoctorAttempted = true;
       logWatcher(
-        "Gateway exited early; running `openclaw doctor --fix --non-interactive` once.",
+        "Gateway exited early; running `grokbot doctor --fix --non-interactive` once.",
         deps,
       );
       watchProcess = deps.spawn(deps.process.execPath, buildDoctorRunnerArgs(), {

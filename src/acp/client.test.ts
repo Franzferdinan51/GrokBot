@@ -81,7 +81,7 @@ function makePermissionRequest(
 }
 
 const tempDirs = createTrackedTempDirs();
-const createTempDir = () => tempDirs.make("openclaw-acp-client-test-");
+const createTempDir = () => tempDirs.make("grokbot-acp-client-test-");
 
 afterEach(async () => {
   await tempDirs.cleanup();
@@ -91,12 +91,12 @@ describe("resolveAcpClientSpawnEnv", () => {
   it("sets OPENCLAW_SHELL marker and preserves existing env values", () => {
     const env = resolveAcpClientSpawnEnv({
       PATH: "/usr/bin",
-      USER: "openclaw",
+      USER: "grokbot",
     });
 
     expect(env.OPENCLAW_SHELL).toBe("acp-client");
     expect(env.PATH).toBe("/usr/bin");
-    expect(env.USER).toBe("openclaw");
+    expect(env.USER).toBe("grokbot");
   });
 
   it("overrides pre-existing OPENCLAW_SHELL to acp-client", () => {
@@ -154,7 +154,7 @@ describe("resolveAcpClientSpawnEnv", () => {
     expect(env.OPENAI_API_KEY).toBeUndefined();
   });
 
-  it("strips provider auth env vars for the default OpenClaw bridge", () => {
+  it("strips provider auth env vars for the default GrokBot bridge", () => {
     const stripKeys = new Set(["OPENAI_API_KEY", "GITHUB_TOKEN", "HF_TOKEN"]);
     const env = resolveAcpClientSpawnEnv(
       {
@@ -212,9 +212,9 @@ describe("shouldStripProviderAuthEnvVarsForAcpServer", () => {
     expect(shouldStripProviderAuthEnvVarsForAcpServer()).toBe(true);
     expect(
       shouldStripProviderAuthEnvVarsForAcpServer({
-        serverCommand: "openclaw",
+        serverCommand: "grokbot",
         serverArgs: ["acp"],
-        defaultServerCommand: "openclaw",
+        defaultServerCommand: "grokbot",
         defaultServerArgs: ["acp"],
       }),
     ).toBe(true);
@@ -225,7 +225,7 @@ describe("shouldStripProviderAuthEnvVarsForAcpServer", () => {
       shouldStripProviderAuthEnvVarsForAcpServer({
         serverCommand: "custom-acp-server",
         serverArgs: ["serve"],
-        defaultServerCommand: "openclaw",
+        defaultServerCommand: "grokbot",
         defaultServerArgs: ["acp"],
       }),
     ).toBe(false);
@@ -275,7 +275,7 @@ describe("buildAcpClientStripKeys", () => {
 describe("resolveAcpClientSpawnInvocation", () => {
   it("keeps non-windows invocation unchanged", () => {
     const resolved = resolveAcpClientSpawnInvocation(
-      { serverCommand: "openclaw", serverArgs: ["acp", "--verbose"] },
+      { serverCommand: "grokbot", serverArgs: ["acp", "--verbose"] },
       {
         platform: "darwin",
         env: {},
@@ -283,7 +283,7 @@ describe("resolveAcpClientSpawnInvocation", () => {
       },
     );
     expect(resolved).toEqual({
-      command: "openclaw",
+      command: "grokbot",
       args: ["acp", "--verbose"],
       shell: undefined,
       windowsHide: undefined,
@@ -292,11 +292,11 @@ describe("resolveAcpClientSpawnInvocation", () => {
 
   it("unwraps .cmd shim entrypoint on windows", async () => {
     const dir = await createTempDir();
-    const scriptPath = path.join(dir, "openclaw", "dist", "entry.js");
-    const shimPath = path.join(dir, "openclaw.cmd");
+    const scriptPath = path.join(dir, "grokbot", "dist", "entry.js");
+    const shimPath = path.join(dir, "grokbot.cmd");
     await mkdir(path.dirname(scriptPath), { recursive: true });
     await writeFile(scriptPath, "console.log('ok')\n", "utf8");
-    await writeFile(shimPath, `@ECHO off\r\n"%~dp0\\openclaw\\dist\\entry.js" %*\r\n`, "utf8");
+    await writeFile(shimPath, `@ECHO off\r\n"%~dp0\\grokbot\\dist\\entry.js" %*\r\n`, "utf8");
 
     const resolved = resolveAcpClientSpawnInvocation(
       { serverCommand: shimPath, serverArgs: ["acp", "--verbose"] },
@@ -314,7 +314,7 @@ describe("resolveAcpClientSpawnInvocation", () => {
 
   it("fails closed for unresolved wrappers on windows", async () => {
     const dir = await createTempDir();
-    const shimPath = path.join(dir, "openclaw.cmd");
+    const shimPath = path.join(dir, "grokbot.cmd");
     await writeFile(shimPath, "@ECHO off\r\necho wrapper\r\n", "utf8");
 
     expect(() =>
@@ -515,7 +515,7 @@ describe("resolvePermissionRequest", () => {
           rawInput: { name: "search", query: "TODO", path: "src" },
         },
       },
-      cwd: "/tmp/openclaw-acp-cwd",
+      cwd: "/tmp/grokbot-acp-cwd",
     });
   });
 
@@ -530,7 +530,7 @@ describe("resolvePermissionRequest", () => {
           rawInput: { name: "search", query: "key", path: "../.ssh" },
         },
       }),
-      { prompt, log: () => {}, cwd: "/tmp/openclaw-acp-cwd/workspace" },
+      { prompt, log: () => {}, cwd: "/tmp/grokbot-acp-cwd/workspace" },
     );
     expect(prompt).toHaveBeenCalledTimes(1);
     expect(prompt).toHaveBeenCalledWith("search", "search: ignored-by-raw-input");
@@ -547,7 +547,7 @@ describe("resolvePermissionRequest", () => {
           rawInput: { name: "search", query: "literal text, path: ~/.ssh" },
         },
       },
-      cwd: "/tmp/openclaw-acp-cwd/workspace",
+      cwd: "/tmp/grokbot-acp-cwd/workspace",
     });
   });
 
@@ -562,7 +562,7 @@ describe("resolvePermissionRequest", () => {
           rawInput: { name: "search", query: "key" },
         },
       }),
-      { prompt, log: () => {}, cwd: "/tmp/openclaw-acp-cwd/workspace" },
+      { prompt, log: () => {}, cwd: "/tmp/grokbot-acp-cwd/workspace" },
     );
     expect(prompt).toHaveBeenCalledTimes(1);
     expect(prompt).toHaveBeenCalledWith("search", "search: path: ~/.ssh");
@@ -580,7 +580,7 @@ describe("resolvePermissionRequest", () => {
           locations: [{ path: "src/index.ts" }],
         },
       },
-      cwd: "/tmp/openclaw-acp-cwd",
+      cwd: "/tmp/grokbot-acp-cwd",
     });
   });
 
@@ -596,7 +596,7 @@ describe("resolvePermissionRequest", () => {
           locations: [{ path: "/etc/passwd" }],
         },
       }),
-      { prompt, log: () => {}, cwd: "/tmp/openclaw-acp-cwd/workspace" },
+      { prompt, log: () => {}, cwd: "/tmp/grokbot-acp-cwd/workspace" },
     );
     expect(prompt).toHaveBeenCalledTimes(1);
     expect(prompt).toHaveBeenCalledWith("search", "search: TODO");
@@ -647,7 +647,7 @@ describe("resolvePermissionRequest", () => {
           rawInput: { path: "docs/security.md" },
         },
       },
-      cwd: "/tmp/openclaw-acp-cwd",
+      cwd: "/tmp/grokbot-acp-cwd",
     });
   });
 
@@ -658,10 +658,10 @@ describe("resolvePermissionRequest", () => {
           toolCallId: "tool-read-inside-cwd-file-url",
           title: "read: ignored-by-raw-input",
           status: "pending",
-          rawInput: { path: "file:///tmp/openclaw-acp-cwd/docs/security.md" },
+          rawInput: { path: "file:///tmp/grokbot-acp-cwd/docs/security.md" },
         },
       },
-      cwd: "/tmp/openclaw-acp-cwd",
+      cwd: "/tmp/grokbot-acp-cwd",
     });
   });
 
@@ -676,7 +676,7 @@ describe("resolvePermissionRequest", () => {
           rawInput: { path: "../.ssh/id_rsa" },
         },
       }),
-      { prompt, log: () => {}, cwd: "/tmp/openclaw-acp-cwd/workspace" },
+      { prompt, log: () => {}, cwd: "/tmp/grokbot-acp-cwd/workspace" },
     );
     expect(prompt).toHaveBeenCalledTimes(1);
     expect(prompt).toHaveBeenCalledWith("read", "read: ignored-by-raw-input");

@@ -1,10 +1,10 @@
 import { afterEach, describe, expect, it } from "vitest";
 import { executeSqliteQuerySync, getNodeSqliteKysely } from "../infra/kysely-sync.js";
-import type { DB as OpenClawAgentKyselyDatabase } from "../state/openclaw-agent-db.generated.js";
+import type { DB as OpenClawAgentKyselyDatabase } from "../state/grokbot-agent-db.generated.js";
 import {
   closeOpenClawAgentDatabasesForTest,
   runOpenClawAgentWriteTransaction,
-} from "../state/openclaw-agent-db.js";
+} from "../state/grokbot-agent-db.js";
 import { withTempDir } from "../test-helpers/temp-dir.js";
 import { recordAcpParentStreamEvents } from "./acp-parent-stream-store.sqlite.js";
 import { listAcpParentStreamEventsForTest } from "./acp-parent-stream-store.sqlite.test-support.js";
@@ -15,7 +15,7 @@ describe("ACP parent stream SQLite store", () => {
   });
 
   it("orders run events and removes them with the child session", async () => {
-    await withTempDir({ prefix: "openclaw-acp-parent-stream-" }, async (stateDir) => {
+    await withTempDir({ prefix: "grokbot-acp-parent-stream-" }, async (stateDir) => {
       const options = {
         agentId: "codex",
         env: { ...process.env, OPENCLAW_STATE_DIR: stateDir },
@@ -65,7 +65,7 @@ describe("ACP parent stream SQLite store", () => {
   });
 
   it("drops unserializable events without blocking later diagnostics", async () => {
-    await withTempDir({ prefix: "openclaw-acp-parent-stream-invalid-" }, async (stateDir) => {
+    await withTempDir({ prefix: "grokbot-acp-parent-stream-invalid-" }, async (stateDir) => {
       const options = {
         agentId: "codex",
         env: { ...process.env, OPENCLAW_STATE_DIR: stateDir },

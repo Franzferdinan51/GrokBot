@@ -1,6 +1,6 @@
 // Workboard tests cover command plugin behavior.
-import { expectDefined } from "@openclaw/normalization-core";
-import type { OpenClawPluginCommandDefinition } from "openclaw/plugin-sdk/core";
+import { expectDefined } from "@grokbot/normalization-core";
+import type { OpenClawPluginCommandDefinition } from "grokbot/plugin-sdk/core";
 import { describe, expect, it, vi } from "vitest";
 import type { OpenClawPluginApi } from "../api.js";
 import { registerWorkboardCommand } from "./command.js";
@@ -335,7 +335,7 @@ describe("handleWorkboardCommand", () => {
     createWorktree.mockResolvedValue({
       id: "managed-id",
       path: "/state/worktrees/fingerprint/wb-card",
-      branch: "openclaw/wb-card",
+      branch: "grokbot/wb-card",
     });
     await store.create({
       title: "Denied checkout",

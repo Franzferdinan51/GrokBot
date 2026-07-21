@@ -1,10 +1,10 @@
 // Stores voice wake trigger configuration.
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
-import type { DB as OpenClawStateKyselyDatabase } from "../state/openclaw-state-db.generated.js";
+import { normalizeOptionalString } from "@grokbot/normalization-core/string-coerce";
+import type { DB as OpenClawStateKyselyDatabase } from "../state/grokbot-state-db.generated.js";
 import {
   openOpenClawStateDatabase,
   runOpenClawStateWriteTransaction,
-} from "../state/openclaw-state-db.js";
+} from "../state/grokbot-state-db.js";
 import { executeSqliteQuerySync, getNodeSqliteKysely } from "./kysely-sync.js";
 
 // Voice wake config stores trigger words used by local voice integrations.
@@ -13,7 +13,7 @@ type VoiceWakeConfig = {
   updatedAtMs: number;
 };
 
-const DEFAULT_TRIGGERS = ["openclaw", "claude", "computer"];
+const DEFAULT_TRIGGERS = ["grokbot", "claude", "computer"];
 const VOICEWAKE_CONFIG_KEY = "default";
 
 type VoiceWakeDatabase = Pick<OpenClawStateKyselyDatabase, "voicewake_triggers">;

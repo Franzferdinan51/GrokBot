@@ -7,13 +7,13 @@ import {
   DiscordApiError,
   handleDiscordMessageAction,
   requestDiscord,
-} from "@openclaw/discord/api.js";
-import { DEFAULT_EMOJIS } from "openclaw/plugin-sdk/channel-feedback";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
-import { writeExternalFileWithinRoot } from "openclaw/plugin-sdk/security-runtime";
-import { uniqueStrings } from "openclaw/plugin-sdk/string-coerce-runtime";
-import { escapeHtml } from "openclaw/plugin-sdk/text-utility-runtime";
+} from "@grokbot/discord/api.js";
+import { DEFAULT_EMOJIS } from "grokbot/plugin-sdk/channel-feedback";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { formatErrorMessage } from "grokbot/plugin-sdk/error-runtime";
+import { writeExternalFileWithinRoot } from "grokbot/plugin-sdk/security-runtime";
+import { uniqueStrings } from "grokbot/plugin-sdk/string-coerce-runtime";
+import { escapeHtml } from "grokbot/plugin-sdk/text-utility-runtime";
 import { chromium } from "playwright-core";
 import { z } from "zod";
 import { startQaGatewayChild } from "../../gateway-child.js";
@@ -886,7 +886,7 @@ function renderDiscordThreadReplyAttachmentHtml(params: {
     <h1>${escapeHtml(params.scenarioTitle)}</h1>
     <div class="sub">Thread: ${escapeHtml(params.threadName)}</div>
     <section class="message">
-      <div class="author">OpenClaw Discord SUT</div>
+      <div class="author">GrokBot Discord SUT</div>
       <div class="badge">${params.status === "pass" ? "Attachment found" : "Attachment missing"}</div>
       <div class="content">${escapeHtml(params.messageContent ?? "No SUT reply content captured")}</div>
       <div class="attachments">${attachmentRows}</div>

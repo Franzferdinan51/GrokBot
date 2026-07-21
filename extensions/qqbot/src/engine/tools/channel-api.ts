@@ -8,14 +8,14 @@
  * validation, fetch, and structured response formatting.
  */
 
-import { resolveChannelGroupPolicy } from "openclaw/plugin-sdk/channel-policy";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import { resolveChannelGroupPolicy } from "grokbot/plugin-sdk/channel-policy";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import {
   readProviderTextResponse,
   readResponseTextLimited,
-} from "openclaw/plugin-sdk/provider-http";
-import { fetchWithSsrFGuard, type SsrFPolicy } from "openclaw/plugin-sdk/ssrf-runtime";
-import { jsonResult as json } from "openclaw/plugin-sdk/tool-results";
+} from "grokbot/plugin-sdk/provider-http";
+import { fetchWithSsrFGuard, type SsrFPolicy } from "grokbot/plugin-sdk/ssrf-runtime";
+import { jsonResult as json } from "grokbot/plugin-sdk/tool-results";
 import { formatErrorMessage } from "../utils/format.js";
 import { debugLog, debugError } from "../utils/log.js";
 

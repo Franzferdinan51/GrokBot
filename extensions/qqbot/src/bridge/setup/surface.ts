@@ -2,8 +2,8 @@
 import {
   createStandardChannelSetupStatus,
   setSetupChannelEnabled,
-} from "openclaw/plugin-sdk/setup";
-import type { ChannelSetupWizard } from "openclaw/plugin-sdk/setup";
+} from "grokbot/plugin-sdk/setup";
+import type { ChannelSetupWizard } from "grokbot/plugin-sdk/setup";
 import { isAccountConfigured } from "../../engine/config/resolve.js";
 import { listQQBotAccountIds, resolveQQBotAccount } from "../config.js";
 import { finalizeQQBotSetup } from "./finalize.js";

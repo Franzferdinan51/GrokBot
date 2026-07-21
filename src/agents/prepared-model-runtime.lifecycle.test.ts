@@ -97,7 +97,7 @@ import {
 describe("prepared model runtime snapshots", () => {
   const getTesting = () =>
     (globalThis as Record<PropertyKey, unknown>)[
-      Symbol.for("openclaw.preparedModelRuntimeTestApi")
+      Symbol.for("grokbot.preparedModelRuntimeTestApi")
     ] as {
       resetPreparedModelRuntimeSnapshotsForTest: () => void;
       setModelRuntimeBuildTimeoutMsForTest: (timeoutMs: number) => void;
@@ -341,12 +341,12 @@ describe("prepared model runtime snapshots", () => {
   });
 
   it("rebases a reserved run identity through its configured agent directory", async () => {
-    mocks.configuredAgentIds = ["default", "openclaw"];
+    mocks.configuredAgentIds = ["default", "grokbot"];
     const config = {};
     await refreshPreparedModelRuntimeSnapshots(config, { gatewayLifecycle: true });
 
     const lease = await acquireAgentRunPreparedModelRuntime({
-      agentId: "openclaw",
+      agentId: "grokbot",
       config,
       agentDir: "/tmp/unused-agent",
       inheritedAuthDir: "/tmp/unused-agent",
@@ -354,7 +354,7 @@ describe("prepared model runtime snapshots", () => {
     });
 
     expect(lease.snapshot).toMatchObject({
-      agentId: "openclaw",
+      agentId: "grokbot",
       agentDir: "/tmp/unused-agent",
       workspaceDir: "/tmp/setup-probe-workspace",
       config,

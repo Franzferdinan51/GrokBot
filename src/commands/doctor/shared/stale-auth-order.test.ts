@@ -18,12 +18,12 @@ import {
 } from "../../../agents/auth-profiles/sqlite.js";
 import type { AuthProfileStore } from "../../../agents/auth-profiles/types.js";
 import { resetProviderAuthAliasMapCacheForTest } from "../../../agents/provider-auth-aliases.test-support.js";
-import type { OpenClawConfig } from "../../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../../config/types.grokbot.js";
 import {
   closeOpenClawAgentDatabasesForTest,
   openOpenClawAgentDatabase,
-} from "../../../state/openclaw-agent-db.js";
-import { closeOpenClawStateDatabaseForTest } from "../../../state/openclaw-state-db.js";
+} from "../../../state/grokbot-agent-db.js";
+import { closeOpenClawStateDatabaseForTest } from "../../../state/grokbot-state-db.js";
 import {
   collectStaleConfiguredAuthOrderWarnings,
   maybeRepairStaleConfiguredAuthOrders,
@@ -159,7 +159,7 @@ describe("repairStaleConfiguredAuthOrders", () => {
       expect(
         collectStaleConfiguredAuthOrderWarnings({
           cfg,
-          doctorFixCommand: "openclaw doctor --fix",
+          doctorFixCommand: "grokbot doctor --fix",
         }),
       ).toEqual([]);
     },
@@ -180,7 +180,7 @@ describe("repairStaleConfiguredAuthOrders", () => {
     expect(
       collectStaleConfiguredAuthOrderWarnings({
         cfg,
-        doctorFixCommand: "openclaw doctor --fix",
+        doctorFixCommand: "grokbot doctor --fix",
       }),
     ).toEqual([]);
   });
@@ -329,7 +329,7 @@ describe("repairStaleConfiguredAuthOrders", () => {
   });
 
   it("includes inherited main credentials when main is not a configured agent", async () => {
-    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-stale-auth-order-"));
+    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-stale-auth-order-"));
     try {
       const mainAgentDir = path.join(stateDir, "agents", "main", "agent");
       writePersistedAuthProfileStoreRaw(
@@ -353,7 +353,7 @@ describe("repairStaleConfiguredAuthOrders", () => {
   });
 
   it("does not require the inherited main store itself to have a fallback", async () => {
-    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-stale-auth-order-"));
+    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-stale-auth-order-"));
     try {
       writePersistedAuthProfileStoreRaw(
         tokenStore({ profileId: "claude-cli:work-token" }),
@@ -378,7 +378,7 @@ describe("repairStaleConfiguredAuthOrders", () => {
   it.skipIf(process.platform === "win32")(
     "fails closed on an unreadable SQLite sidecar beside a present database",
     async () => {
-      const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-stale-auth-order-"));
+      const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-stale-auth-order-"));
       const agentDir = path.join(stateDir, "agents", "main", "agent");
       try {
         writePersistedAuthProfileStoreRaw(
@@ -416,7 +416,7 @@ describe("repairStaleConfiguredAuthOrders", () => {
   );
 
   it("preserves an ordered profile owned by a retained unconfigured agent", async () => {
-    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-retained-auth-order-"));
+    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-retained-auth-order-"));
     try {
       writePersistedAuthProfileStoreRaw(
         tokenStore({ profileId: "claude-cli:setup-token" }),
@@ -442,7 +442,7 @@ describe("repairStaleConfiguredAuthOrders", () => {
   });
 
   it("preserves an ordered profile in a registered custom agent directory", async () => {
-    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-custom-auth-order-"));
+    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-custom-auth-order-"));
     const env = { OPENCLAW_STATE_DIR: stateDir };
     try {
       writePersistedAuthProfileStoreRaw(
@@ -477,7 +477,7 @@ describe("repairStaleConfiguredAuthOrders", () => {
   });
 
   it("does not use a registered inactive store as the automatic fallback proof", async () => {
-    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-custom-fallback-"));
+    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-custom-fallback-"));
     const env = { OPENCLAW_STATE_DIR: stateDir };
     try {
       const customAgentDir = path.join(stateDir, "custom-agents", "retained");
@@ -508,7 +508,7 @@ describe("repairStaleConfiguredAuthOrders", () => {
   });
 
   it("preserves an ordered runtime profile from a registered custom agent directory", async () => {
-    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-custom-runtime-auth-"));
+    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-custom-runtime-auth-"));
     const env = { OPENCLAW_STATE_DIR: stateDir };
     try {
       writePersistedAuthProfileStoreRaw(
@@ -561,7 +561,7 @@ describe("repairStaleConfiguredAuthOrders", () => {
   });
 
   it("does not repair while a registered custom agent has an unmigrated auth store", async () => {
-    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-custom-legacy-auth-"));
+    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-custom-legacy-auth-"));
     const env = { OPENCLAW_STATE_DIR: stateDir };
     try {
       writePersistedAuthProfileStoreRaw(
@@ -592,7 +592,7 @@ describe("repairStaleConfiguredAuthOrders", () => {
   });
 
   it("does not use an inactive retained agent as the automatic fallback proof", async () => {
-    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-inactive-auth-order-"));
+    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-inactive-auth-order-"));
     try {
       writePersistedAuthProfileStoreRaw(
         tokenStore({ profileId: "claude-cli:inactive-token" }),
@@ -616,7 +616,7 @@ describe("repairStaleConfiguredAuthOrders", () => {
   it.skipIf(process.platform === "win32")(
     "fails closed on a dangling retained-agent symlink",
     async () => {
-      const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-dangling-auth-order-"));
+      const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-dangling-auth-order-"));
       try {
         writePersistedAuthProfileStoreRaw(
           tokenStore({ profileId: "claude-cli:main-token" }),
@@ -650,7 +650,7 @@ describe("repairStaleConfiguredAuthOrders", () => {
   it.each(["OPENCLAW_AGENT_DIR", "PI_CODING_AGENT_DIR"] as const)(
     "preserves profiles in the %s-selected auth store",
     async (envKey) => {
-      const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-env-auth-order-"));
+      const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-env-auth-order-"));
       try {
         const selectedAgentDir = path.join(stateDir, "selected-agent");
         writePersistedAuthProfileStoreRaw(
@@ -681,7 +681,7 @@ describe("repairStaleConfiguredAuthOrders", () => {
   );
 
   it("preserves an order that selects a runtime-only external profile", async () => {
-    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-runtime-auth-order-"));
+    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-runtime-auth-order-"));
     try {
       const workAgentDir = path.join(stateDir, "agents", "work", "agent");
       const cfg = {
@@ -732,7 +732,7 @@ describe("repairStaleConfiguredAuthOrders", () => {
   });
 
   it("warns and does not repair when an active auth database is unreadable", async () => {
-    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-unreadable-auth-order-"));
+    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-unreadable-auth-order-"));
     try {
       const workAgentDir = path.join(stateDir, "agents", "work", "agent");
       writePersistedAuthProfileStoreRaw(
@@ -757,7 +757,7 @@ describe("repairStaleConfiguredAuthOrders", () => {
       expect(
         collectStaleConfiguredAuthOrderWarnings({
           cfg,
-          doctorFixCommand: "openclaw doctor --fix",
+          doctorFixCommand: "grokbot doctor --fix",
           env: { OPENCLAW_STATE_DIR: stateDir },
         }).join("\n"),
       ).toContain("SQLite auth profile store is unreadable");
@@ -770,7 +770,7 @@ describe("repairStaleConfiguredAuthOrders", () => {
     "fails closed on a dangling active auth database symlink",
     async () => {
       const stateDir = await fs.mkdtemp(
-        path.join(os.tmpdir(), "openclaw-active-dangling-auth-order-"),
+        path.join(os.tmpdir(), "grokbot-active-dangling-auth-order-"),
       );
       try {
         writePersistedAuthProfileStoreRaw(
@@ -806,7 +806,7 @@ describe("repairStaleConfiguredAuthOrders", () => {
     "fails closed on a dangling legacy auth source beside a legacy database",
     async () => {
       const stateDir = await fs.mkdtemp(
-        path.join(os.tmpdir(), "openclaw-dangling-legacy-auth-order-"),
+        path.join(os.tmpdir(), "grokbot-dangling-legacy-auth-order-"),
       );
       try {
         writePersistedAuthProfileStoreRaw(
@@ -842,7 +842,7 @@ describe("repairStaleConfiguredAuthOrders", () => {
   );
 
   it("fails closed when a retained unconfigured auth database is unreadable", async () => {
-    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-retained-invalid-auth-"));
+    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-retained-invalid-auth-"));
     try {
       writePersistedAuthProfileStoreRaw(
         tokenStore({ profileId: "claude-cli:main-token" }),
@@ -869,7 +869,7 @@ describe("repairStaleConfiguredAuthOrders", () => {
   });
 
   it("fails closed when a registered custom auth database is unreadable", async () => {
-    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-custom-invalid-auth-"));
+    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-custom-invalid-auth-"));
     const env = { OPENCLAW_STATE_DIR: stateDir };
     try {
       writePersistedAuthProfileStoreRaw(
@@ -899,7 +899,7 @@ describe("repairStaleConfiguredAuthOrders", () => {
   });
 
   it("fails closed when registered auth runtime state is unreadable without a secrets row", async () => {
-    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-custom-state-auth-"));
+    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-custom-state-auth-"));
     const env = { OPENCLAW_STATE_DIR: stateDir };
     try {
       writePersistedAuthProfileStoreRaw(
@@ -942,7 +942,7 @@ describe("repairStaleConfiguredAuthOrders", () => {
   });
 
   it("fails closed when a registered auth database owner no longer matches", async () => {
-    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-custom-owner-auth-"));
+    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-custom-owner-auth-"));
     const env = { OPENCLAW_STATE_DIR: stateDir };
     try {
       writePersistedAuthProfileStoreRaw(
@@ -976,7 +976,7 @@ describe("repairStaleConfiguredAuthOrders", () => {
   });
 
   it("uses the live owner after a registered database pathname is recreated", async () => {
-    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-reowned-auth-"));
+    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-reowned-auth-"));
     const env = { OPENCLAW_STATE_DIR: stateDir };
     try {
       writePersistedAuthProfileStoreRaw(
@@ -1010,7 +1010,7 @@ describe("repairStaleConfiguredAuthOrders", () => {
   });
 
   it("fails closed when an active agent points at another agent's database", async () => {
-    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-active-owner-auth-"));
+    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-active-owner-auth-"));
     const env = { OPENCLAW_STATE_DIR: stateDir };
     try {
       writePersistedAuthProfileStoreRaw(
@@ -1048,7 +1048,7 @@ describe("repairStaleConfiguredAuthOrders", () => {
   });
 
   it("fails closed when an ownerless active database contains auth tables", async () => {
-    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-ownerless-auth-"));
+    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-ownerless-auth-"));
     try {
       const agentDir = path.join(stateDir, "agents", "main", "agent");
       const databasePath = resolveAuthProfileDatabasePath(agentDir);
@@ -1096,7 +1096,7 @@ describe("repairStaleConfiguredAuthOrders", () => {
   });
 
   it("prefers a configured owner over the retained directory basename", async () => {
-    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-renamed-owner-auth-"));
+    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-renamed-owner-auth-"));
     const env = { OPENCLAW_STATE_DIR: stateDir };
     try {
       writePersistedAuthProfileStoreRaw(
@@ -1129,7 +1129,7 @@ describe("repairStaleConfiguredAuthOrders", () => {
   });
 
   it("uses durable ownership for a deconfigured relocated agent directory", async () => {
-    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-relocated-owner-auth-"));
+    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-relocated-owner-auth-"));
     const env = { OPENCLAW_STATE_DIR: stateDir };
     try {
       writePersistedAuthProfileStoreRaw(
@@ -1161,7 +1161,7 @@ describe("repairStaleConfiguredAuthOrders", () => {
   });
 
   it("fails closed when an environment-selected directory belongs to another agent", async () => {
-    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-env-owner-auth-"));
+    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-env-owner-auth-"));
     const envAgentDir = path.join(stateDir, "custom-env-agent");
     const env = { OPENCLAW_STATE_DIR: stateDir, OPENCLAW_AGENT_DIR: envAgentDir };
     try {
@@ -1198,7 +1198,7 @@ describe("repairStaleConfiguredAuthOrders", () => {
   });
 
   it("fails closed when an active auth database has only one auth table", async () => {
-    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-partial-schema-auth-"));
+    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-partial-schema-auth-"));
     try {
       const workAgentDir = path.join(stateDir, "agents", "work", "agent");
       writePersistedAuthProfileStoreRaw(
@@ -1235,7 +1235,7 @@ describe("repairStaleConfiguredAuthOrders", () => {
   });
 
   it("fails closed when a stale registered database leaves a SQLite sidecar", async () => {
-    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-custom-sidecar-auth-"));
+    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-custom-sidecar-auth-"));
     const env = { OPENCLAW_STATE_DIR: stateDir };
     try {
       writePersistedAuthProfileStoreRaw(
@@ -1270,7 +1270,7 @@ describe("repairStaleConfiguredAuthOrders", () => {
   });
 
   it("ignores a stale registered auth database after its pathname is removed", async () => {
-    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-custom-missing-auth-"));
+    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-custom-missing-auth-"));
     const env = { OPENCLAW_STATE_DIR: stateDir };
     try {
       writePersistedAuthProfileStoreRaw(
@@ -1302,7 +1302,7 @@ describe("repairStaleConfiguredAuthOrders", () => {
   it.skipIf(process.platform === "win32")(
     "fails closed on a dangling registered auth database symlink",
     async () => {
-      const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-custom-dangling-auth-"));
+      const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-custom-dangling-auth-"));
       const env = { OPENCLAW_STATE_DIR: stateDir };
       try {
         writePersistedAuthProfileStoreRaw(
@@ -1337,7 +1337,7 @@ describe("repairStaleConfiguredAuthOrders", () => {
     "fails closed on a dangling registered auth database parent symlink",
     async () => {
       const stateDir = await fs.mkdtemp(
-        path.join(os.tmpdir(), "openclaw-custom-dangling-parent-auth-"),
+        path.join(os.tmpdir(), "grokbot-custom-dangling-parent-auth-"),
       );
       const env = { OPENCLAW_STATE_DIR: stateDir };
       try {
@@ -1377,7 +1377,7 @@ describe("repairStaleConfiguredAuthOrders", () => {
   );
 
   it("warns and preserves an ordered profile dropped by store coercion", async () => {
-    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-invalid-auth-order-"));
+    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-invalid-auth-order-"));
     try {
       writePersistedAuthProfileStoreRaw(
         {
@@ -1411,7 +1411,7 @@ describe("repairStaleConfiguredAuthOrders", () => {
   });
 
   it("repairs when an active agent database has no auth-profile row", async () => {
-    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-empty-auth-order-"));
+    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-empty-auth-order-"));
     try {
       const workAgentDir = path.join(stateDir, "agents", "work", "agent");
       writePersistedAuthProfileStateRaw({ version: 1 }, workAgentDir);
@@ -1436,7 +1436,7 @@ describe("repairStaleConfiguredAuthOrders", () => {
   });
 
   it("repairs when an active legacy agent database predates auth tables", async () => {
-    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-legacy-db-auth-order-"));
+    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-legacy-db-auth-order-"));
     try {
       const workAgentDir = path.join(stateDir, "agents", "work", "agent");
       const databasePath = resolveAuthProfileDatabasePath(workAgentDir);
@@ -1465,7 +1465,7 @@ describe("repairStaleConfiguredAuthOrders", () => {
   });
 
   it("does not repair while an invalid legacy auth source remains", async () => {
-    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-legacy-auth-order-"));
+    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-legacy-auth-order-"));
     try {
       const workAgentDir = path.join(stateDir, "agents", "work", "agent");
       await fs.mkdir(workAgentDir, { recursive: true });

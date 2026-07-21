@@ -1,6 +1,6 @@
 /** Builds bounded, redacted diagnostics for cron run logs and UI surfaces. */
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
-import { truncateUtf16Safe } from "@openclaw/normalization-core/utf16-slice";
+import { normalizeOptionalString } from "@grokbot/normalization-core/string-coerce";
+import { truncateUtf16Safe } from "@grokbot/normalization-core/utf16-slice";
 import { isToolAllowedByPolicyName } from "../agents/tool-policy-match.js";
 import { normalizeToolName as normalizePolicyToolName } from "../agents/tool-policy.js";
 import { getReplyPayloadMetadata } from "../auto-reply/reply-payload.js";
@@ -25,7 +25,7 @@ const EXEC_DIAGNOSTIC_TAIL_CHARS = 2_000;
 const WEB_SEARCH_TOOL_NAME = "web_search";
 
 const MISSING_WEB_SEARCH_PROVIDER_DIAGNOSTIC_MESSAGE =
-  "web_search tool requested in toolsAllow but no web search provider is selected. Configure one with: openclaw configure --section web, or set tools.web.search.provider.";
+  "web_search tool requested in toolsAllow but no web search provider is selected. Configure one with: grokbot configure --section web, or set tools.web.search.provider.";
 
 export function toolsAllowRequestsWebSearch(toolsAllow?: string[]): boolean {
   const explicitAllow = (toolsAllow ?? []).filter(

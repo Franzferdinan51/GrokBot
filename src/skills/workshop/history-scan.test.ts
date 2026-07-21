@@ -173,7 +173,7 @@ describe("Skill Workshop history scan", () => {
     }));
     const messages = [
       ...interactive,
-      { role: "user", content: "[OpenClaw heartbeat poll]" },
+      { role: "user", content: "[GrokBot heartbeat poll]" },
       ...Array.from({ length: 100 }, (_, index) => ({
         role: index % 2 === 0 ? "assistant" : "toolResult",
         content: `scheduled heartbeat work ${index}`,
@@ -513,7 +513,7 @@ describe("Skill Workshop history scan", () => {
   });
 
   it("rejects an opposite-direction scan while one is active", async () => {
-    const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-history-scan-test-"));
+    const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-history-scan-test-"));
     try {
       const workspaceDir = path.join(tempDir, "workspace");
       await fs.mkdir(workspaceDir, { recursive: true });
@@ -535,7 +535,7 @@ describe("Skill Workshop history scan", () => {
   });
 
   it("keeps scan cursors separate when the transcript store changes", async () => {
-    const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-history-store-scope-"));
+    const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-history-store-scope-"));
     try {
       const workspaceDir = path.join(tempDir, "workspace");
       const env = { ...process.env, OPENCLAW_STATE_DIR: path.join(tempDir, "state") };
@@ -573,7 +573,7 @@ describe("Skill Workshop history scan", () => {
 
   it("keeps the wire result free of transcript content", () => {
     const result: SkillHistoryScanResult = {
-      schema: "openclaw.skill-workshop.history-scan.v1",
+      schema: "grokbot.skill-workshop.history-scan.v1",
       hasScanned: true,
       reviewedSessions: 20,
       ideasFound: 2,

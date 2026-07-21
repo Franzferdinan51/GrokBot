@@ -1,6 +1,6 @@
 // Qqbot plugin module implements inbound context behavior.
-import type { ChannelIngressDecision } from "openclaw/plugin-sdk/channel-ingress-runtime";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { ChannelIngressDecision } from "grokbot/plugin-sdk/channel-ingress-runtime";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import type { EngineAdapters } from "../adapter/index.js";
 import type { QQBotGroupCommandLevel } from "../config/group.js";
 import type { GroupActivationMode } from "../group/activation.js";

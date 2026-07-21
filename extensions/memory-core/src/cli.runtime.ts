@@ -3,16 +3,16 @@ import fsSync from "node:fs";
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { isUsageCountedSessionTranscriptFileName } from "openclaw/plugin-sdk/memory-core-host-engine-qmd";
-import type { MemoryEmbeddingProbeResult } from "openclaw/plugin-sdk/memory-core-host-engine-storage";
+import { isUsageCountedSessionTranscriptFileName } from "grokbot/plugin-sdk/memory-core-host-engine-qmd";
+import type { MemoryEmbeddingProbeResult } from "grokbot/plugin-sdk/memory-core-host-engine-storage";
 import {
   resolveMemoryDreamingConfig,
   resolveMemoryLightDreamingConfig,
   resolveMemoryRemDreamingConfig,
-} from "openclaw/plugin-sdk/memory-core-host-status";
-import type { PluginStateLeaseRunner } from "openclaw/plugin-sdk/plugin-state-runtime";
-import { buildAgentSessionKey } from "openclaw/plugin-sdk/routing";
-import { resolvePreferredOpenClawTmpDir } from "openclaw/plugin-sdk/temp-path";
+} from "grokbot/plugin-sdk/memory-core-host-status";
+import type { PluginStateLeaseRunner } from "grokbot/plugin-sdk/plugin-state-runtime";
+import { buildAgentSessionKey } from "grokbot/plugin-sdk/routing";
+import { resolvePreferredOpenClawTmpDir } from "grokbot/plugin-sdk/temp-path";
 import {
   defaultRuntime,
   formatErrorMessage,
@@ -125,7 +125,7 @@ function formatMemoryIndexIdentityWarning(
   }
   return {
     reason,
-    fix: `Run: openclaw memory status --index --agent ${agentId}`,
+    fix: `Run: grokbot memory status --index --agent ${agentId}`,
   };
 }
 
@@ -243,7 +243,7 @@ async function createHistoricalRemHarnessWorkspace(params: {
 }> {
   const sourceFiles = await listHistoricalDailyFiles(params.inputPath);
   const workspaceDir = await fs.mkdtemp(
-    path.join(resolvePreferredOpenClawTmpDir(), "openclaw-rem-harness-"),
+    path.join(resolvePreferredOpenClawTmpDir(), "grokbot-rem-harness-"),
   );
   const memoryDir = path.join(workspaceDir, "memory");
   await fs.mkdir(memoryDir, { recursive: true });
@@ -1147,7 +1147,7 @@ export async function runMemoryStatus(
         lines.push(`  ${issue.severity === "error" ? warn(issue.message) : muted(issue.message)}`);
       }
       if (!opts.fix) {
-        lines.push(`  ${muted(`Fix: openclaw memory status --fix --agent ${agentId}`)}`);
+        lines.push(`  ${muted(`Fix: grokbot memory status --fix --agent ${agentId}`)}`);
       }
     }
     if (dreamingAudit?.issues.length) {
@@ -1158,7 +1158,7 @@ export async function runMemoryStatus(
         lines.push(`  ${issue.severity === "error" ? warn(issue.message) : muted(issue.message)}`);
       }
       if (!opts.fix) {
-        lines.push(`  ${muted(`Fix: openclaw memory status --fix --agent ${agentId}`)}`);
+        lines.push(`  ${muted(`Fix: grokbot memory status --fix --agent ${agentId}`)}`);
       }
     }
     defaultRuntime.log(lines.join("\n"));
@@ -1940,7 +1940,7 @@ export async function runMemoryRemBackfill(
       }
 
       const scratchDir = await fs.mkdtemp(
-        path.join(resolvePreferredOpenClawTmpDir(), "openclaw-rem-backfill-"),
+        path.join(resolvePreferredOpenClawTmpDir(), "grokbot-rem-backfill-"),
       );
       try {
         const sourceFiles = await listHistoricalDailyFiles(opts.path);

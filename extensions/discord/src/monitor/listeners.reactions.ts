@@ -1,8 +1,8 @@
 // Discord plugin module implements listeners.reactions behavior.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { resolveAgentRoute } from "openclaw/plugin-sdk/routing";
-import { danger, logVerbose } from "openclaw/plugin-sdk/runtime-env";
-import { enqueueSystemEvent } from "openclaw/plugin-sdk/system-event-runtime";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { resolveAgentRoute } from "grokbot/plugin-sdk/routing";
+import { danger, logVerbose } from "grokbot/plugin-sdk/runtime-env";
+import { enqueueSystemEvent } from "grokbot/plugin-sdk/system-event-runtime";
 import {
   ChannelType,
   type Client,
@@ -25,7 +25,7 @@ import { runDiscordListenerWithSlowLog, type DiscordListenerLogger } from "./lis
 import { resolveFetchedDiscordThreadLikeChannelContext } from "./thread-channel-context.js";
 
 type LoadedConfig = OpenClawConfig;
-type RuntimeEnv = import("openclaw/plugin-sdk/runtime-env").RuntimeEnv;
+type RuntimeEnv = import("grokbot/plugin-sdk/runtime-env").RuntimeEnv;
 
 type DiscordReactionEvent = Parameters<MessageReactionAddListener["handle"]>[0];
 

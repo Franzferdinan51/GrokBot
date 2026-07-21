@@ -2,8 +2,8 @@
 import { spawnSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import path from "node:path";
-import { normalizeLowercaseStringOrEmpty } from "@openclaw/normalization-core/string-coerce";
-import { uniqueValues } from "@openclaw/normalization-core/string-normalization";
+import { normalizeLowercaseStringOrEmpty } from "@grokbot/normalization-core/string-coerce";
+import { uniqueValues } from "@grokbot/normalization-core/string-normalization";
 import { resolveGatewayPort } from "../config/paths.js";
 import { createSubsystemLogger } from "../logging/subsystem.js";
 import { formatErrorMessage, hasErrnoCode } from "./errors.js";
@@ -277,7 +277,7 @@ function parsePidsFromLsofOutput(
     if (excluded.has(entry.pid)) {
       continue;
     }
-    if (entry.cmd && normalizeLowercaseStringOrEmpty(entry.cmd).includes("openclaw")) {
+    if (entry.cmd && normalizeLowercaseStringOrEmpty(entry.cmd).includes("grokbot")) {
       pids.push(entry.pid);
       continue;
     }
@@ -289,7 +289,7 @@ function parsePidsFromLsofOutput(
 }
 
 /**
- * Windows: find listening PIDs on the port, then verify each is an openclaw
+ * Windows: find listening PIDs on the port, then verify each is an grokbot
  * gateway process via command-line inspection. Excludes the current process
  * and its ancestors (same invariant as the lsof path — see
  * `getSelfAndAncestorPidsSync`).
@@ -352,7 +352,7 @@ function findGatewayPidsOnPortWithProtectedPidSync(
 ): number[] {
   if (process.platform === "win32") {
     // Use the shared Windows port inspection (PowerShell / netstat) with
-    // command-line verification to find only openclaw gateway processes.
+    // command-line verification to find only grokbot gateway processes.
     return findVerifiedWindowsGatewayPidsOnPortSync(port, protectedPid);
   }
   const lsof = resolveLsofCommandSync();
@@ -390,7 +390,7 @@ function findGatewayPidsOnPortWithProtectedPidSync(
 
 /**
  * Find PIDs of gateway processes listening on the given port using synchronous lsof.
- * Returns only PIDs that belong to openclaw gateway processes (not the current process).
+ * Returns only PIDs that belong to grokbot gateway processes (not the current process).
  */
 export function findGatewayPidsOnPortSync(
   port: number,
@@ -451,7 +451,7 @@ function pollPortOnce(port: number): PollResult {
       return { free: null, permanent: false };
     }
     // status === 0: lsof found a listener. Occupancy does not depend on whether
-    // its PID field is present, valid, or attributable to an OpenClaw process.
+    // its PID field is present, valid, or attributable to an GrokBot process.
     return { free: false };
   } catch {
     return { free: null, permanent: false };

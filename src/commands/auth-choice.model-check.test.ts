@@ -1,7 +1,7 @@
 // Auth-choice model check tests cover warnings for mismatched model and auth config.
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { AuthProfileStore } from "../agents/auth-profiles.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import {
   resolveDefaultModelAuthStatus,
   warnIfModelConfigLooksOff,
@@ -81,7 +81,7 @@ describe("warnIfModelConfigLooksOff", () => {
       }),
     );
     expect(note).toHaveBeenCalledWith(
-      'No auth configured for provider "openai". The agent may fail until credentials are added. Run `openclaw models auth login --provider openai`, `openclaw configure`, or set an API key env var.',
+      'No auth configured for provider "openai". The agent may fail until credentials are added. Run `grokbot models auth login --provider openai`, `grokbot configure`, or set an API key env var.',
       "Model check",
     );
   });
@@ -166,7 +166,7 @@ describe("warnIfModelConfigLooksOff", () => {
     await warnIfModelConfigLooksOff(config, prompter, { validateCatalog: false });
 
     expect(note).toHaveBeenCalledWith(
-      'No auth configured for provider "openai". The agent may fail until credentials are added. Run `openclaw models auth login --provider openai`, `openclaw configure`, or set an API key env var.',
+      'No auth configured for provider "openai". The agent may fail until credentials are added. Run `grokbot models auth login --provider openai`, `grokbot configure`, or set an API key env var.',
       "Model check",
     );
   });
@@ -198,7 +198,7 @@ describe("warnIfModelConfigLooksOff", () => {
         list: [
           {
             id: "worker",
-            workspace: "/tmp/openclaw-worker-workspace",
+            workspace: "/tmp/grokbot-worker-workspace",
             model: "openai/gpt-5.5",
           },
         ],
@@ -207,15 +207,15 @@ describe("warnIfModelConfigLooksOff", () => {
 
     await warnIfModelConfigLooksOff(config, prompter, {
       agentId: "worker",
-      agentDir: "/tmp/openclaw-worker-agent",
+      agentDir: "/tmp/grokbot-worker-agent",
     });
 
     expect(loadModelCatalog).toHaveBeenCalledWith(
       expect.objectContaining({
         config,
         agentId: "worker",
-        agentDir: "/tmp/openclaw-worker-agent",
-        workspaceDir: "/tmp/openclaw-worker-workspace",
+        agentDir: "/tmp/grokbot-worker-agent",
+        workspaceDir: "/tmp/grokbot-worker-workspace",
       }),
       { force: true, provenance: "explicit" },
     );
@@ -239,7 +239,7 @@ describe("warnIfModelConfigLooksOff", () => {
       env: { OPENAI_API_KEY: "api-key" },
     });
     const warning = note.mock.calls.flatMap(([message]) => message).join("\n");
-    expect(warning).toContain("openclaw models auth login --provider openai");
+    expect(warning).toContain("grokbot models auth login --provider openai");
     expect(warning).not.toContain("set an API key env var");
 
     const store = {

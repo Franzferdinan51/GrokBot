@@ -3,7 +3,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { clearCurrentPluginMetadataSnapshot } from "../plugins/current-plugin-metadata-snapshot.js";
 import { discoverAuthStorage, discoverModels } from "./agent-model-discovery.js";
 
@@ -38,7 +38,7 @@ function writeModelsJson(agentDir: string, modelId: string): void {
 
 describe("discoverModels", () => {
   it("clears cached find results when the agent model registry refreshes", () => {
-    const agentDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-agent-models-"));
+    const agentDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-agent-models-"));
     writeModelsJson(agentDir, "old-model");
     const authStorage = discoverAuthStorage(agentDir, { skipCredentials: true });
     const registry = discoverModels(authStorage, agentDir, { normalizeModels: false });
@@ -53,7 +53,7 @@ describe("discoverModels", () => {
   });
 
   it("preserves authored OpenAI Completions while normalizing models.json entries", () => {
-    const agentDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-agent-models-"));
+    const agentDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-agent-models-"));
     fs.writeFileSync(
       path.join(agentDir, "models.json"),
       JSON.stringify({

@@ -99,10 +99,10 @@ describe("active tool schema doctor warnings", () => {
             },
           },
         },
-        env: { HOME: "/tmp/openclaw-test" },
+        env: { HOME: "/tmp/grokbot-test" },
       }),
     ).toEqual([
-      '- agents.main: active tool "fuzzplugin_move_angles" from plugin "fuzzplugin" has unsupported runtime input schema (fuzzplugin_move_angles.parameters.type must be "object"). OpenClaw will quarantine this tool at runtime; fix or disable the plugin, or remove the tool from active allowlists.',
+      '- agents.main: active tool "fuzzplugin_move_angles" from plugin "fuzzplugin" has unsupported runtime input schema (fuzzplugin_move_angles.parameters.type must be "object"). GrokBot will quarantine this tool at runtime; fix or disable the plugin, or remove the tool from active allowlists.',
     ]);
     expect(toolState.createTools).toHaveBeenCalledWith(
       expect.objectContaining({ toolPolicyAuditLogLevel: "debug" }),
@@ -129,10 +129,10 @@ describe("active tool schema doctor warnings", () => {
     expect(
       collectActiveToolSchemaProjectionWarnings({
         cfg: {},
-        env: { HOME: "/tmp/openclaw-test" },
+        env: { HOME: "/tmp/grokbot-test" },
       }),
     ).toEqual([
-      '- agents.main: active tool "tool[0]" has unsupported runtime input schema (tool[0] is unreadable). OpenClaw will quarantine this tool at runtime; fix or disable the plugin, or remove the tool from active allowlists.',
+      '- agents.main: active tool "tool[0]" has unsupported runtime input schema (tool[0] is unreadable). GrokBot will quarantine this tool at runtime; fix or disable the plugin, or remove the tool from active allowlists.',
     ]);
   });
 
@@ -145,7 +145,7 @@ describe("active tool schema doctor warnings", () => {
     expect(
       collectActiveToolSchemaProjectionWarnings({
         cfg: { plugins: { enabled: false } },
-        env: { HOME: "/tmp/openclaw-test" },
+        env: { HOME: "/tmp/grokbot-test" },
       }),
     ).toEqual([]);
     expect(toolState.createTools).not.toHaveBeenCalled();
@@ -199,10 +199,10 @@ describe("active tool schema doctor warnings", () => {
             },
           },
         },
-        env: { HOME: "/tmp/openclaw-test" },
+        env: { HOME: "/tmp/grokbot-test" },
       }),
     ).toEqual([
-      '- agents.main: active tool "fuzzplugin_move_angles" from plugin "fuzzplugin" has unsupported runtime input schema (fuzzplugin_move_angles.parameters.properties.target.$dynamicRef). OpenClaw will quarantine this tool at runtime; fix or disable the plugin, or remove the tool from active allowlists.',
+      '- agents.main: active tool "fuzzplugin_move_angles" from plugin "fuzzplugin" has unsupported runtime input schema (fuzzplugin_move_angles.parameters.properties.target.$dynamicRef). GrokBot will quarantine this tool at runtime; fix or disable the plugin, or remove the tool from active allowlists.',
     ]);
     expect(toolState.createTools).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -228,7 +228,7 @@ describe("active tool schema doctor warnings", () => {
     expect(
       collectActiveToolSchemaProjectionWarnings({
         cfg: {},
-        env: { HOME: "/tmp/openclaw-test" },
+        env: { HOME: "/tmp/grokbot-test" },
       }),
     ).toEqual([
       "- agents.main: active tool schema validation could not normalize the runtime tool set (provider schema hook failed). Fix provider/plugin loading errors before relying on assistant tool startup.",
@@ -242,7 +242,7 @@ describe("active tool schema doctor warnings", () => {
     expect(
       collectActiveToolSchemaProjectionWarnings({
         cfg: {},
-        env: { HOME: "/tmp/openclaw-test" },
+        env: { HOME: "/tmp/grokbot-test" },
       }),
     ).toEqual([
       "- agents.main: active tool schema validation could not resolve the runtime model context (provider model hook failed). Fix provider/model loading errors before relying on assistant tool startup.",
@@ -257,7 +257,7 @@ describe("active tool schema doctor warnings", () => {
     expect(
       collectActiveToolSchemaProjectionWarnings({
         cfg: { plugins: { entries: { fuzzplugin: { enabled: true } } } },
-        env: { HOME: "/tmp/openclaw-test" },
+        env: { HOME: "/tmp/grokbot-test" },
       }),
     ).toEqual([
       "- agents.main: active tool schema validation could not load the runtime tool set (plugin startup failed). Fix plugin loading errors before relying on assistant tool startup.",

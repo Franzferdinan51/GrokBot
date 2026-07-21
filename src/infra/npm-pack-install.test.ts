@@ -14,15 +14,15 @@ vi.mock("./install-source-utils.js", async () => {
   return {
     ...actual,
     withTempDir: vi.fn(async (_prefix: string, fn: (tmpDir: string) => Promise<unknown>) => {
-      return await fn("/tmp/openclaw-npm-pack-install-test");
+      return await fn("/tmp/grokbot-npm-pack-install-test");
     }),
     packNpmSpecToArchive: vi.fn(),
   };
 });
 
 describe("installFromNpmSpecArchiveWithInstaller", () => {
-  const baseSpec = "@openclaw/test@1.0.0";
-  const baseArchivePath = "/tmp/openclaw-test.tgz";
+  const baseSpec = "@grokbot/test@1.0.0";
+  const baseArchivePath = "/tmp/grokbot-test.tgz";
 
   const mockPackedSuccess = (overrides?: {
     resolvedSpec?: string;
@@ -52,7 +52,7 @@ describe("installFromNpmSpecArchiveWithInstaller", () => {
     }) => Promise<{ ok: boolean; [key: string]: unknown }>;
   }) =>
     await installFromNpmSpecArchiveWithInstaller({
-      tempDirPrefix: "openclaw-test-",
+      tempDirPrefix: "grokbot-test-",
       spec: overrides.spec ?? baseSpec,
       timeoutMs: 1000,
       expectedIntegrity: overrides.expectedIntegrity,
@@ -87,14 +87,14 @@ describe("installFromNpmSpecArchiveWithInstaller", () => {
 
     expect(result).toEqual({ ok: false, error: "pack failed" });
     expect(installFromArchive).not.toHaveBeenCalled();
-    expect(withTempDir).toHaveBeenCalledWith("openclaw-test-", expect.any(Function));
+    expect(withTempDir).toHaveBeenCalledWith("grokbot-test-", expect.any(Function));
   });
 
   it("rejects unsupported npm specs before packing", async () => {
     const installFromArchive = vi.fn(async () => ({ ok: true as const }));
 
     const result = await runInstall({
-      spec: "file:/tmp/openclaw.tgz",
+      spec: "file:/tmp/grokbot.tgz",
       installFromArchive,
     });
 
@@ -104,7 +104,7 @@ describe("installFromNpmSpecArchiveWithInstaller", () => {
   });
 
   it("returns resolution metadata and installer result on success", async () => {
-    mockPackedSuccess({ name: "@openclaw/test", version: "1.0.0" });
+    mockPackedSuccess({ name: "@grokbot/test", version: "1.0.0" });
     const installFromArchive = vi.fn(async () => ({ ok: true as const, target: "done" }));
 
     const result = await runInstall({
@@ -154,7 +154,7 @@ describe("installFromNpmSpecArchiveWithInstaller", () => {
 
     expect(result).toEqual({
       ok: false,
-      error: "aborted: npm package integrity drift detected for @openclaw/test@1.0.0",
+      error: "aborted: npm package integrity drift detected for @grokbot/test@1.0.0",
     });
     expect(installFromArchive).not.toHaveBeenCalled();
   });
@@ -172,10 +172,10 @@ describe("installFromNpmSpecArchiveWithInstaller", () => {
 
     expect(result).toEqual({
       ok: false,
-      error: "aborted: npm package integrity drift detected for @openclaw/test@1.0.0",
+      error: "aborted: npm package integrity drift detected for @grokbot/test@1.0.0",
     });
     expect(warn).toHaveBeenCalledWith(
-      "Integrity drift detected for @openclaw/test@1.0.0: expected sha512-old, got sha512-new",
+      "Integrity drift detected for @grokbot/test@1.0.0: expected sha512-old, got sha512-new",
     );
     expect(installFromArchive).not.toHaveBeenCalled();
   });
@@ -195,13 +195,13 @@ describe("installFromNpmSpecArchiveWithInstaller", () => {
 
   it("rejects prerelease resolutions unless explicitly requested", async () => {
     mockPackedSuccess({
-      resolvedSpec: "@openclaw/test@latest",
+      resolvedSpec: "@grokbot/test@latest",
       version: "1.1.0-beta.1",
     });
     const installFromArchive = vi.fn(async () => ({ ok: true as const }));
 
     const result = await runInstall({
-      spec: "@openclaw/test@latest",
+      spec: "@grokbot/test@latest",
       installFromArchive,
     });
 
@@ -215,13 +215,13 @@ describe("installFromNpmSpecArchiveWithInstaller", () => {
 
   it("allows prerelease resolutions when explicitly requested by tag", async () => {
     mockPackedSuccess({
-      resolvedSpec: "@openclaw/test@beta",
+      resolvedSpec: "@grokbot/test@beta",
       version: "1.1.0-beta.1",
     });
     const installFromArchive = vi.fn(async () => ({ ok: true as const, pluginId: "beta-plugin" }));
 
     const result = await runInstall({
-      spec: "@openclaw/test@beta",
+      spec: "@grokbot/test@beta",
       installFromArchive,
     });
 
@@ -232,9 +232,9 @@ describe("installFromNpmSpecArchiveWithInstaller", () => {
   it("passes archive path and installer params to installFromArchive", async () => {
     vi.mocked(packNpmSpecToArchive).mockResolvedValue({
       ok: true,
-      archivePath: "/tmp/openclaw-plugin.tgz",
+      archivePath: "/tmp/grokbot-plugin.tgz",
       metadata: {
-        resolvedSpec: "@openclaw/voice-call@1.0.0",
+        resolvedSpec: "@grokbot/voice-call@1.0.0",
         integrity: "sha512-same",
       },
     });
@@ -244,8 +244,8 @@ describe("installFromNpmSpecArchiveWithInstaller", () => {
     );
 
     const result = await installFromNpmSpecArchiveWithInstaller({
-      tempDirPrefix: "openclaw-test-",
-      spec: "@openclaw/voice-call@1.0.0",
+      tempDirPrefix: "grokbot-test-",
+      spec: "@grokbot/voice-call@1.0.0",
       timeoutMs: 1000,
       installFromArchive,
       archiveInstallParams: { pluginId: "voice-call" },
@@ -256,7 +256,7 @@ describe("installFromNpmSpecArchiveWithInstaller", () => {
       return;
     }
     expect(installFromArchive).toHaveBeenCalledWith({
-      archivePath: "/tmp/openclaw-plugin.tgz",
+      archivePath: "/tmp/grokbot-plugin.tgz",
       pluginId: "voice-call",
     });
     expect(result.installResult).toEqual({ ok: true, pluginId: "voice-call" });
@@ -278,7 +278,7 @@ describe("finalizeNpmSpecArchiveInstall", () => {
       ok: true,
       installResult: { ok: false, error: "install failed" },
       npmResolution: {
-        resolvedSpec: "@openclaw/test@1.0.0",
+        resolvedSpec: "@grokbot/test@1.0.0",
         integrity: "sha512-same",
         resolvedAt: "2026-01-01T00:00:00.000Z",
       },
@@ -294,7 +294,7 @@ describe("finalizeNpmSpecArchiveInstall", () => {
       ok: true,
       installResult: { ok: true, pluginId: "voice-call" },
       npmResolution: {
-        resolvedSpec: "@openclaw/voice-call@1.0.0",
+        resolvedSpec: "@grokbot/voice-call@1.0.0",
         integrity: "sha512-same",
         resolvedAt: "2026-01-01T00:00:00.000Z",
       },
@@ -308,7 +308,7 @@ describe("finalizeNpmSpecArchiveInstall", () => {
       ok: true,
       pluginId: "voice-call",
       npmResolution: {
-        resolvedSpec: "@openclaw/voice-call@1.0.0",
+        resolvedSpec: "@grokbot/voice-call@1.0.0",
         integrity: "sha512-same",
         resolvedAt: "2026-01-01T00:00:00.000Z",
       },

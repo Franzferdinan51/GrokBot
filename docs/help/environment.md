@@ -1,5 +1,5 @@
 ---
-summary: "Where OpenClaw loads environment variables and the precedence order"
+summary: "Where GrokBot loads environment variables and the precedence order"
 read_when:
   - You need to know which env vars are loaded, and in what order
   - You are debugging missing API keys in the Gateway
@@ -7,33 +7,33 @@ read_when:
 title: "Environment variables"
 ---
 
-OpenClaw pulls environment variables from multiple sources. The rule is **never override existing values**.
-Workspace `.env` files are a lower-trust source: OpenClaw ignores provider credentials and protected runtime controls from workspace `.env` before applying precedence.
+GrokBot pulls environment variables from multiple sources. The rule is **never override existing values**.
+Workspace `.env` files are a lower-trust source: GrokBot ignores provider credentials and protected runtime controls from workspace `.env` before applying precedence.
 
 ## Precedence (highest to lowest)
 
 1. **Process environment** (what the Gateway process already has from the parent shell/daemon).
 2. **`.env` in the current working directory** (dotenv default; does not override; provider credentials and protected runtime controls are ignored).
-3. **Global `.env`** at `~/.openclaw/.env` (aka `$OPENCLAW_STATE_DIR/.env`; recommended for provider API keys; does not override).
-4. **Config `env` block** in `~/.openclaw/openclaw.json` (applied only if missing).
+3. **Global `.env`** at `~/.grokbot/.env` (aka `$OPENCLAW_STATE_DIR/.env`; recommended for provider API keys; does not override).
+4. **Config `env` block** in `~/.grokbot/grokbot.json` (applied only if missing).
 5. **Optional login-shell import** (`env.shellEnv.enabled` or `OPENCLAW_LOAD_SHELL_ENV=1`), applied only for missing expected keys.
 
-On fresh Ubuntu installs that use the default state dir, OpenClaw also treats `~/.config/openclaw/gateway.env` as a compatibility fallback after the global `.env`. If both files exist and disagree, OpenClaw keeps `~/.openclaw/.env` and prints a warning.
+On fresh Ubuntu installs that use the default state dir, GrokBot also treats `~/.config/grokbot/gateway.env` as a compatibility fallback after the global `.env`. If both files exist and disagree, GrokBot keeps `~/.grokbot/.env` and prints a warning.
 
 If the config file is missing entirely, step 4 is skipped; shell import still runs if enabled.
 
 ## Provider credentials and workspace `.env`
 
-Do not keep provider API keys only in a workspace `.env`. OpenClaw blocks a large set of provider credential and endpoint-redirect keys from workspace `.env` files, including every known provider auth env var (for example `GEMINI_API_KEY`, `GOOGLE_API_KEY`, `XAI_API_KEY`, `MISTRAL_API_KEY`, `GROQ_API_KEY`, `DEEPSEEK_API_KEY`, `PERPLEXITY_API_KEY`, `BRAVE_API_KEY`, `TAVILY_API_KEY`, `EXA_API_KEY`, `FIRECRAWL_API_KEY`), plus any key ending in `_API_HOST`, `_BASE_URL`, `_ENDPOINT`, or `_HOMESERVER`, and the entire `OPENCLAW_*`, `CLAWHUB_*`, `ANTHROPIC_API_KEY_*`, and `OPENAI_API_KEY_*` namespaces.
+Do not keep provider API keys only in a workspace `.env`. GrokBot blocks a large set of provider credential and endpoint-redirect keys from workspace `.env` files, including every known provider auth env var (for example `GEMINI_API_KEY`, `GOOGLE_API_KEY`, `XAI_API_KEY`, `MISTRAL_API_KEY`, `GROQ_API_KEY`, `DEEPSEEK_API_KEY`, `PERPLEXITY_API_KEY`, `BRAVE_API_KEY`, `TAVILY_API_KEY`, `EXA_API_KEY`, `FIRECRAWL_API_KEY`), plus any key ending in `_API_HOST`, `_BASE_URL`, `_ENDPOINT`, or `_HOMESERVER`, and the entire `GROKBOT_*`, `CLAWHUB_*`, `ANTHROPIC_API_KEY_*`, and `OPENAI_API_KEY_*` namespaces.
 
 Use one of these trusted sources for provider credentials instead:
 
 - The Gateway process environment, such as a shell, launchd/systemd unit, container secret, or CI secret.
-- The global runtime dotenv file at `~/.openclaw/.env` or `$OPENCLAW_STATE_DIR/.env`.
-- The config `env` block in `~/.openclaw/openclaw.json`.
+- The global runtime dotenv file at `~/.grokbot/.env` or `$OPENCLAW_STATE_DIR/.env`.
+- The config `env` block in `~/.grokbot/grokbot.json`.
 - Optional login-shell import when `env.shellEnv.enabled` or `OPENCLAW_LOAD_SHELL_ENV=1` is enabled.
 
-If you previously stored provider keys or endpoint routing values only in a workspace `.env`, move them to one of the trusted sources above. Workspace `.env` can still provide ordinary project variables that are not credentials, endpoint redirects, host overrides, or `OPENCLAW_*` runtime controls.
+If you previously stored provider keys or endpoint routing values only in a workspace `.env`, move them to one of the trusted sources above. Workspace `.env` can still provide ordinary project variables that are not credentials, endpoint redirects, host overrides, or `GROKBOT_*` runtime controls.
 
 See [Workspace `.env` files](/gateway/security#workspace-env-files) for the security rationale.
 
@@ -65,7 +65,7 @@ supports it:
     providers: {
       xai_key_file: {
         source: "file",
-        path: "~/.openclaw/secrets/xai-api-key.txt",
+        path: "~/.grokbot/secrets/xai-api-key.txt",
         mode: "singleValue",
       },
     },
@@ -113,10 +113,10 @@ snapshots or redirect the snapshot cache.
 
 ## Runtime-injected env vars
 
-OpenClaw also injects context markers into spawned child processes:
+GrokBot also injects context markers into spawned child processes:
 
 - `OPENCLAW_SHELL=exec`: set for commands run through the `exec` tool.
-- `OPENCLAW_SHELL=acp-client`: set for `openclaw acp client` when it spawns the ACP bridge process.
+- `OPENCLAW_SHELL=acp-client`: set for `grokbot acp client` when it spawns the ACP bridge process.
 - `OPENCLAW_SHELL=tui-local`: set for local TUI `!` shell commands.
 - `OPENCLAW_CLI=1`: set for child processes spawned by the CLI entry point.
 
@@ -127,7 +127,7 @@ to apply context-specific rules.
 
 - `OPENCLAW_THEME=light`: force the light TUI palette when your terminal has a light background.
 - `OPENCLAW_THEME=dark`: force the dark TUI palette.
-- `COLORFGBG`: if your terminal exports it, OpenClaw uses the background color hint to auto-pick the TUI palette.
+- `COLORFGBG`: if your terminal exports it, GrokBot uses the background color hint to auto-pick the TUI palette.
 
 ## Env var substitution in config
 
@@ -149,7 +149,7 @@ See [Configuration: Env var substitution](/gateway/configuration-reference#env-v
 
 ## Secret refs vs `${ENV}` strings
 
-OpenClaw supports two env-driven patterns:
+GrokBot supports two env-driven patterns:
 
 - `${VAR}` string substitution in config values.
 - SecretRef objects (`{ source: "env", provider: "default", id: "VAR" }`) for fields that support secrets references.
@@ -162,15 +162,15 @@ shorthand values.
 
 | Variable                 | Purpose                                                                                                                                                                                                                                 |
 | ------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `OPENCLAW_HOME`          | Override the home directory used for internal OpenClaw path defaults (`~/.openclaw/`, agent dirs, sessions, credentials, installer onboarding, and the default dev checkout). Useful when running OpenClaw as a dedicated service user. |
-| `OPENCLAW_STATE_DIR`     | Override the state directory (default `~/.openclaw`).                                                                                                                                                                                   |
-| `OPENCLAW_CONFIG_PATH`   | Override the config file path (default `~/.openclaw/openclaw.json`).                                                                                                                                                                    |
+| `OPENCLAW_HOME`          | Override the home directory used for internal GrokBot path defaults (`~/.grokbot/`, agent dirs, sessions, credentials, installer onboarding, and the default dev checkout). Useful when running GrokBot as a dedicated service user. |
+| `OPENCLAW_STATE_DIR`     | Override the state directory (default `~/.grokbot`).                                                                                                                                                                                   |
+| `OPENCLAW_CONFIG_PATH`   | Override the config file path (default `~/.grokbot/grokbot.json`).                                                                                                                                                                    |
 | `OPENCLAW_INCLUDE_ROOTS` | Path-list of directories where `$include` directives may resolve files outside the config directory (default: none - `$include` is confined to the config dir). Tilde-expanded.                                                         |
 
 ## Agent helper tool downloads
 
-Set `OPENCLAW_OFFLINE=1` to prevent OpenClaw from downloading its pinned `fd`
-and `ripgrep` helper binaries. Existing helpers under the OpenClaw tools
+Set `OPENCLAW_OFFLINE=1` to prevent GrokBot from downloading its pinned `fd`
+and `ripgrep` helper binaries. Existing helpers under the GrokBot tools
 directory and working system binaries remain eligible; a missing helper stays
 unavailable instead of triggering a network request.
 
@@ -186,7 +186,7 @@ unavailable instead of triggering a network request.
 
 ### `OPENCLAW_HOME`
 
-When set, `OPENCLAW_HOME` replaces the system home directory (`$HOME` / `os.homedir()`) for internal OpenClaw path defaults. This includes the default state directory, config path, agent directories, credentials, installer onboarding workspace, and the default dev checkout used by `openclaw update --channel dev`.
+When set, `OPENCLAW_HOME` replaces the system home directory (`$HOME` / `os.homedir()`) for internal GrokBot path defaults. This includes the default state directory, config path, agent directories, credentials, installer onboarding workspace, and the default dev checkout used by `grokbot update --channel dev`.
 
 **Precedence:** `OPENCLAW_HOME` > `$HOME` > `USERPROFILE` > Termux `PREFIX` home fallback on Android > `os.homedir()`
 
@@ -210,33 +210,33 @@ If Node.js was installed via **nvm** (not the system package manager), the built
 nvm's bundled CA store, which may be missing modern root CAs (ISRG Root X1/X2 for Let's Encrypt,
 DigiCert Global Root G2, etc.). This causes `web_fetch` to fail with `"fetch failed"` on most HTTPS sites.
 
-On Linux, OpenClaw automatically detects nvm and applies the fix in the actual startup environment:
+On Linux, GrokBot automatically detects nvm and applies the fix in the actual startup environment:
 
-- `openclaw gateway install` writes `NODE_EXTRA_CA_CERTS` into the systemd service environment
-- the `openclaw` CLI entrypoint re-execs itself with `NODE_EXTRA_CA_CERTS` set before Node startup
+- `grokbot gateway install` writes `NODE_EXTRA_CA_CERTS` into the systemd service environment
+- the `grokbot` CLI entrypoint re-execs itself with `NODE_EXTRA_CA_CERTS` set before Node startup
 
 **Manual fix (for older versions or direct `node ...` launches):**
 
-Export the variable before starting OpenClaw:
+Export the variable before starting GrokBot:
 
 ```bash
 export NODE_EXTRA_CA_CERTS=/etc/ssl/certs/ca-certificates.crt
-openclaw gateway run
+grokbot gateway run
 ```
 
-Do not rely on writing only to `~/.openclaw/.env` for this variable; Node reads
+Do not rely on writing only to `~/.grokbot/.env` for this variable; Node reads
 `NODE_EXTRA_CA_CERTS` at process startup.
 
 ## Legacy environment variables
 
-OpenClaw only reads `OPENCLAW_*` environment variables. The legacy
+GrokBot only reads `GROKBOT_*` environment variables. The legacy
 `CLAWDBOT_*` and `MOLTBOT_*` prefixes from earlier releases are silently
 ignored.
 
-If any are still set on the Gateway process at startup, OpenClaw emits a
+If any are still set on the Gateway process at startup, GrokBot emits a
 single Node deprecation warning (`OPENCLAW_LEGACY_ENV_VARS`) listing the
 detected prefixes and the total count. Rename each value by replacing the
-legacy prefix with `OPENCLAW_` (for example `CLAWDBOT_GATEWAY_TOKEN` to
+legacy prefix with `GROKBOT_` (for example `CLAWDBOT_GATEWAY_TOKEN` to
 `OPENCLAW_GATEWAY_TOKEN`); the old names take no effect.
 
 ## Related

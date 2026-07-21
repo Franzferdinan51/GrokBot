@@ -1,9 +1,9 @@
 // Discord plugin module implements preflight audio behavior.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { createLazyRuntimeModule } from "openclaw/plugin-sdk/lazy-runtime";
-import { getFileExtension } from "openclaw/plugin-sdk/media-mime";
-import { logVerbose } from "openclaw/plugin-sdk/runtime-env";
-import { normalizeOptionalString } from "openclaw/plugin-sdk/string-coerce-runtime";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { createLazyRuntimeModule } from "grokbot/plugin-sdk/lazy-runtime";
+import { getFileExtension } from "grokbot/plugin-sdk/media-mime";
+import { logVerbose } from "grokbot/plugin-sdk/runtime-env";
+import { normalizeOptionalString } from "grokbot/plugin-sdk/string-coerce-runtime";
 
 const loadDiscordPreflightAudioRuntime = createLazyRuntimeModule(
   () => import("./preflight-audio.runtime.js"),

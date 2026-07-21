@@ -1,4 +1,4 @@
-// Check No Monolithic Plugin Sdk Entry Imports script supports OpenClaw repository automation.
+// Check No Monolithic Plugin Sdk Entry Imports script supports GrokBot repository automation.
 import fs from "node:fs";
 import path from "node:path";
 import { discoverOpenClawPlugins } from "../src/plugins/discovery.js";
@@ -6,12 +6,12 @@ import { collectFilesSync, isCodeFile, relativeToCwd } from "./check-file-utils.
 
 const LEGACY_BROAD_SUBPATH_PATTERNS = [
   {
-    pattern: /["']openclaw\/plugin-sdk\/config-runtime["']/,
-    label: "openclaw/plugin-sdk/config-runtime",
+    pattern: /["']grokbot\/plugin-sdk\/config-runtime["']/,
+    label: "grokbot/plugin-sdk/config-runtime",
   },
   {
-    pattern: /["']openclaw\/plugin-sdk\/infra-runtime["']/,
-    label: "openclaw/plugin-sdk/infra-runtime",
+    pattern: /["']grokbot\/plugin-sdk\/infra-runtime["']/,
+    label: "grokbot/plugin-sdk/infra-runtime",
   },
 ] as const;
 
@@ -99,7 +99,7 @@ function main() {
         console.error(`- ${relativeToCwd(file)} (${labels.join(", ")})`);
       }
     }
-    console.error("Use focused openclaw/plugin-sdk/<domain> subpaths for bundled plugins.");
+    console.error("Use focused grokbot/plugin-sdk/<domain> subpaths for bundled plugins.");
     process.exit(1);
   }
 

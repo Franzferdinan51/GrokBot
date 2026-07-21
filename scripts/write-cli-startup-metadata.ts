@@ -1,4 +1,4 @@
-// Write Cli Startup Metadata script supports OpenClaw repository automation.
+// Write Cli Startup Metadata script supports GrokBot repository automation.
 import { spawn, spawnSync } from "node:child_process";
 import { createHash } from "node:crypto";
 import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from "node:fs";
@@ -283,7 +283,7 @@ function readBundledChannelCatalog(
       const raw = readFileSync(packageJsonPath, "utf8");
       signature.update(`${dirEntry.name}\0${raw}\0`);
       const parsed = JSON.parse(raw) as {
-        openclaw?: {
+        grokbot?: {
           channel?: {
             id?: unknown;
             order?: unknown;
@@ -291,12 +291,12 @@ function readBundledChannelCatalog(
           };
         };
       };
-      const id = parsed.openclaw?.channel?.id;
+      const id = parsed.grokbot?.channel?.id;
       if (typeof id !== "string" || !id.trim()) {
         continue;
       }
-      const orderRaw = parsed.openclaw?.channel?.order;
-      const labelRaw = parsed.openclaw?.channel?.label;
+      const orderRaw = parsed.grokbot?.channel?.order;
+      const labelRaw = parsed.grokbot?.channel?.label;
       entries.push({
         id: id.trim(),
         order: typeof orderRaw === "number" ? orderRaw : 999,
@@ -319,13 +319,13 @@ function readBundledChannelCatalog(
 function createIsolatedRootHelpRenderContext(
   bundledPluginsDir: string = extensionsDir,
 ): RootHelpRenderContext {
-  const stateDir = path.join(rootDir, ".openclaw-build-root-help");
+  const stateDir = path.join(rootDir, ".grokbot-build-root-help");
   const workspaceDir = path.join(stateDir, "workspace");
   const homeDir = path.join(stateDir, "home");
   const env: NodeJS.ProcessEnv = {
     HOME: homeDir,
-    LOGNAME: process.env.LOGNAME ?? process.env.USER ?? "openclaw-build",
-    USER: process.env.USER ?? process.env.LOGNAME ?? "openclaw-build",
+    LOGNAME: process.env.LOGNAME ?? process.env.USER ?? "grokbot-build",
+    USER: process.env.USER ?? process.env.LOGNAME ?? "grokbot-build",
     PATH: process.env.PATH ?? "",
     TMPDIR: process.env.TMPDIR ?? "/tmp",
     LANG: process.env.LANG ?? "C.UTF-8",
@@ -671,7 +671,7 @@ async function renderSourceCommandHelpText(
   command: SourceCommandHelpCommand,
   renderContext: RootHelpRenderContext = createIsolatedRootHelpRenderContext(),
 ): Promise<string> {
-  return await spawnText(["openclaw.mjs", command, "--help"], {
+  return await spawnText(["grokbot.mjs", command, "--help"], {
     cwd: rootDir,
     env: {
       ...renderContext.env,

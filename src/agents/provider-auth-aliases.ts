@@ -3,8 +3,8 @@
  * Maps deprecated and plugin-defined provider IDs to canonical credential
  * providers, with trusted workspace plugin handling and process-stable caching.
  */
-import { normalizeProviderId } from "@openclaw/model-catalog-core/provider-id";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import { normalizeProviderId } from "@grokbot/model-catalog-core/provider-id";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { normalizePluginsConfig } from "../plugins/config-state.js";
 import { getCurrentPluginMetadataSnapshot } from "../plugins/current-plugin-metadata-snapshot.js";
 import type { PluginManifestRecord } from "../plugins/manifest-registry.js";
@@ -63,7 +63,7 @@ function resetProviderAuthAliasMapCacheForTest(): void {
 }
 
 if (process.env.VITEST || process.env.NODE_ENV === "test") {
-  (globalThis as Record<PropertyKey, unknown>)[Symbol.for("openclaw.providerAuthAliasesTestApi")] =
+  (globalThis as Record<PropertyKey, unknown>)[Symbol.for("grokbot.providerAuthAliasesTestApi")] =
     {
       resetProviderAuthAliasMapCacheForTest,
     };

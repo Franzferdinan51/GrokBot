@@ -45,7 +45,7 @@ function finding(overrides: Record<string, unknown> = {}) {
 }
 
 function withSharedSource(source: string, test: (repoRoot: string) => void) {
-  const repoRoot = mkdtempSync(join(tmpdir(), "openclaw-periphery-intersection-"));
+  const repoRoot = mkdtempSync(join(tmpdir(), "grokbot-periphery-intersection-"));
   const sourceFile = join(repoRoot, "apps/shared/OpenClawKit/Sources/OpenClawKit/Example.swift");
   mkdirSync(dirname(sourceFile), { recursive: true });
   writeFileSync(sourceFile, source);

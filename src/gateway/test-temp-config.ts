@@ -27,12 +27,12 @@ function withStableOwnerDisplaySecretForTest(cfg: unknown): unknown {
     ...record,
     commands: {
       ...commands,
-      ownerDisplaySecret: "openclaw-test-owner-display-secret",
+      ownerDisplaySecret: "grokbot-test-owner-display-secret",
     },
   };
 }
 
-/** Writes a temp OpenClaw config, installs it as runtime state, then restores globals. */
+/** Writes a temp GrokBot config, installs it as runtime state, then restores globals. */
 export async function withTempConfig(params: {
   cfg: unknown;
   run: () => Promise<void>;
@@ -41,8 +41,8 @@ export async function withTempConfig(params: {
   const prevConfigPath = process.env.OPENCLAW_CONFIG_PATH;
 
   const testConfig = withStableOwnerDisplaySecretForTest(params.cfg) as OpenClawConfig;
-  const dir = await mkdtemp(path.join(os.tmpdir(), params.prefix ?? "openclaw-test-config-"));
-  const configPath = path.join(dir, "openclaw.json");
+  const dir = await mkdtemp(path.join(os.tmpdir(), params.prefix ?? "grokbot-test-config-"));
+  const configPath = path.join(dir, "grokbot.json");
 
   process.env.OPENCLAW_CONFIG_PATH = configPath;
 

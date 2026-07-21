@@ -11,7 +11,7 @@ import {
   parseFiniteNumber,
   resolveDateTimestampMs,
   resolveExpiresAtMsFromDurationMs,
-} from "@openclaw/normalization-core/number-coercion";
+} from "@grokbot/normalization-core/number-coercion";
 import { callGateway } from "../gateway/call.js";
 import { formatErrorMessage } from "../infra/errors.js";
 import { hasRetryableConnectionErrorCode } from "../infra/retryable-network-errors.js";
@@ -20,7 +20,7 @@ import {
   isOpenClawInternalSourceReplyMirrorAssistantMessage,
   isOpenClawMessageToolMirrorAssistantMessage,
   isTranscriptOnlyOpenClawAssistantMessage,
-} from "../shared/transcript-only-openclaw-assistant.js";
+} from "../shared/transcript-only-grokbot-assistant.js";
 import {
   buildAgentRunTerminalOutcomeFromWaitResult,
   type AgentRunTerminalOutcome,

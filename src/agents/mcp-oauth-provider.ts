@@ -1,11 +1,11 @@
-/** MCP SDK OAuth provider backed by canonical OpenClaw state. */
+/** MCP SDK OAuth provider backed by canonical GrokBot state. */
 import { randomUUID } from "node:crypto";
 import type { DatabaseSync } from "node:sqlite";
 import type { OAuthClientProvider } from "@modelcontextprotocol/sdk/client/auth.js";
 import type { OAuthClientMetadata, OAuthTokens } from "@modelcontextprotocol/sdk/shared/auth.js";
 import type { FetchLike } from "@modelcontextprotocol/sdk/shared/transport.js";
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
-import type { OpenClawStateLeaseContext } from "../state/openclaw-state-lease.js";
+import { normalizeOptionalString } from "@grokbot/normalization-core/string-coerce";
+import type { OpenClawStateLeaseContext } from "../state/grokbot-state-lease.js";
 import {
   readMcpOAuthStore,
   resolveMcpOAuthStoreKey,
@@ -42,7 +42,7 @@ function buildOAuthClientMetadata(
 ): OAuthClientMetadata {
   const redirectUrl = resolveOAuthRedirectUrl(config, store);
   return {
-    client_name: "OpenClaw MCP",
+    client_name: "GrokBot MCP",
     redirect_uris: [redirectUrl],
     grant_types: ["authorization_code", "refresh_token"],
     response_types: ["code"],
@@ -100,7 +100,7 @@ export function createMcpOAuthClientProvider(params: {
   const assertAuthorizationRedirectAllowed = () => {
     if (!allowAuthorizationRedirect) {
       throw new Error(
-        `MCP server "${params.serverName}" requires OAuth authorization. Run openclaw mcp login ${params.serverName}.`,
+        `MCP server "${params.serverName}" requires OAuth authorization. Run grokbot mcp login ${params.serverName}.`,
       );
     }
   };

@@ -16,4 +16,4 @@ export {
   withManager,
   withProgress,
   withProgressTotals,
-} from "./openclaw-runtime.js";
+} from "./grokbot-runtime.js";

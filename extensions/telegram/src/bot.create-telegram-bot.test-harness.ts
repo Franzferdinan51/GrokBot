@@ -1,10 +1,10 @@
 // Telegram plugin module implements bot.create telegram bot harness behavior.
 import { existsSync, readdirSync, rmSync } from "node:fs";
 import path from "node:path";
-import { buildChannelInboundEventContext } from "openclaw/plugin-sdk/channel-inbound";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import type { MockFn } from "openclaw/plugin-sdk/plugin-test-runtime";
-import type { GetReplyOptions, MsgContext } from "openclaw/plugin-sdk/reply-runtime";
+import { buildChannelInboundEventContext } from "grokbot/plugin-sdk/channel-inbound";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import type { MockFn } from "grokbot/plugin-sdk/plugin-test-runtime";
+import type { GetReplyOptions, MsgContext } from "grokbot/plugin-sdk/reply-runtime";
 import { beforeEach, vi } from "vitest";
 import type { TelegramBotDeps } from "./bot-deps.js";
 
@@ -12,20 +12,20 @@ type AnyMock = ReturnType<typeof vi.fn>;
 type AnyAsyncMock = ReturnType<typeof vi.fn<(...args: unknown[]) => Promise<unknown>>>;
 type TelegramBotRuntimeForTest = typeof import("./bot.runtime.js");
 type GetRuntimeConfigFn =
-  typeof import("openclaw/plugin-sdk/runtime-config-snapshot").getRuntimeConfig;
-type GetSessionEntryFn = typeof import("openclaw/plugin-sdk/session-store-runtime").getSessionEntry;
+  typeof import("grokbot/plugin-sdk/runtime-config-snapshot").getRuntimeConfig;
+type GetSessionEntryFn = typeof import("grokbot/plugin-sdk/session-store-runtime").getSessionEntry;
 type ListSessionEntriesFn =
-  typeof import("openclaw/plugin-sdk/session-store-runtime").listSessionEntries;
+  typeof import("grokbot/plugin-sdk/session-store-runtime").listSessionEntries;
 type ResolveStorePathFn =
-  typeof import("openclaw/plugin-sdk/session-store-runtime").resolveStorePath;
+  typeof import("grokbot/plugin-sdk/session-store-runtime").resolveStorePath;
 type ReadSessionUpdatedAtFn =
-  typeof import("openclaw/plugin-sdk/session-store-runtime").readSessionUpdatedAt;
-type SessionEntry = import("openclaw/plugin-sdk/session-store-runtime").SessionEntry;
+  typeof import("grokbot/plugin-sdk/session-store-runtime").readSessionUpdatedAt;
+type SessionEntry = import("grokbot/plugin-sdk/session-store-runtime").SessionEntry;
 type SessionStore = Record<string, SessionEntry>;
 type LoadSessionStoreFn = (storePath?: string, opts?: unknown) => SessionStore;
 type ResolveTelegramApprovalForTest = NonNullable<TelegramBotDeps["resolveApproval"]>;
 type DispatchReplyWithBufferedBlockDispatcherFn =
-  typeof import("openclaw/plugin-sdk/reply-dispatch-runtime").dispatchReplyWithBufferedBlockDispatcher;
+  typeof import("grokbot/plugin-sdk/reply-dispatch-runtime").dispatchReplyWithBufferedBlockDispatcher;
 type DispatchReplyWithBufferedBlockDispatcherResult = Awaited<
   ReturnType<DispatchReplyWithBufferedBlockDispatcherFn>
 >;
@@ -44,7 +44,7 @@ const { sessionStorePath } = vi.hoisted(() => {
       : (process.env.TMPDIR ?? "/tmp");
   const separator = process.platform === "win32" ? "\\" : "/";
   return {
-    sessionStorePath: `${tempRoot.replace(/[\\/]+$/u, "")}${separator}openclaw-telegram-${
+    sessionStorePath: `${tempRoot.replace(/[\\/]+$/u, "")}${separator}grokbot-telegram-${
       process.pid
     }-${process.env.VITEST_POOL_ID ?? "0"}.json`,
   };
@@ -58,7 +58,7 @@ export function getLoadWebMediaMock(): AnyMock {
   return loadWebMedia;
 }
 
-vi.mock("openclaw/plugin-sdk/web-media", () => ({
+vi.mock("grokbot/plugin-sdk/web-media", () => ({
   loadWebMedia,
 }));
 

@@ -1,17 +1,17 @@
-/** Persists hosted official external plugin catalog snapshots in OpenClaw state. */
+/** Persists hosted official external plugin catalog snapshots in GrokBot state. */
 import { existsSync } from "node:fs";
 import {
   executeSqliteQuerySync,
   executeSqliteQueryTakeFirstSync,
   getNodeSqliteKysely,
 } from "../infra/kysely-sync.js";
-import type { DB as OpenClawStateKyselyDatabase } from "../state/openclaw-state-db.generated.js";
+import type { DB as OpenClawStateKyselyDatabase } from "../state/grokbot-state-db.generated.js";
 import {
   openOpenClawStateDatabase,
   runOpenClawStateWriteTransaction,
   type OpenClawStateDatabaseOptions,
-} from "../state/openclaw-state-db.js";
-import { resolveOpenClawStateSqlitePath } from "../state/openclaw-state-db.paths.js";
+} from "../state/grokbot-state-db.js";
+import { resolveOpenClawStateSqlitePath } from "../state/grokbot-state-db.paths.js";
 import {
   type HostedOfficialExternalPluginCatalogMetadata,
   type HostedOfficialExternalPluginCatalogSnapshot,
@@ -196,7 +196,7 @@ function rowToSnapshot(
   };
 }
 
-/** Creates a snapshot store backed by the shared `state/openclaw.sqlite` database. */
+/** Creates a snapshot store backed by the shared `state/grokbot.sqlite` database. */
 export function createSqliteHostedOfficialExternalPluginCatalogSnapshotStore(
   options: HostedOfficialExternalPluginCatalogSnapshotStoreOptions = {},
 ): HostedOfficialExternalPluginCatalogSnapshotStore {

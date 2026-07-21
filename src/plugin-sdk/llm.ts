@@ -1,7 +1,7 @@
 /**
  * Public SDK subpath for LLM streaming, model utils, and validation.
  */
-export type { ApiProvider } from "@openclaw/ai";
+export type { ApiProvider } from "@grokbot/ai";
 export {
   calculateCost,
   clampThinkingLevel,
@@ -10,13 +10,13 @@ export {
   getEnvApiKey,
   parseStreamingJson,
   sanitizeSurrogates,
-} from "@openclaw/ai/internal/runtime";
+} from "@grokbot/ai/internal/runtime";
 export {
   adjustMaxTokensForThinking,
   buildBaseOptions,
   clampReasoning,
-} from "@openclaw/ai/internal/shared";
-export { transformMessages } from "@openclaw/ai/internal/shared";
+} from "@grokbot/ai/internal/shared";
+export { transformMessages } from "@grokbot/ai/internal/shared";
 export { complete, completeSimple, stream, streamSimple } from "../llm/stream.js";
 export type {
   Api,

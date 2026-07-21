@@ -1,11 +1,11 @@
-import type { Context, Model } from "@openclaw/ai";
-import { streamOpenAICompletions, streamOpenAIResponses } from "@openclaw/ai/internal/openai";
+import type { Context, Model } from "@grokbot/ai";
+import { streamOpenAICompletions, streamOpenAIResponses } from "@grokbot/ai/internal/openai";
 // OpenAI-compatible auth tests cover API key and base URL normalization.
 // Lives in core: it proves the facade-installed guarded fetch routes provider
-// requests through OpenClaw's SSRF guard.
+// requests through GrokBot's SSRF guard.
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { captureEnv } from "../test-utils/env.js";
-// Importing the facade installs the OpenClaw AI transport host ports.
+// Importing the facade installs the GrokBot AI transport host ports.
 import "./stream.js";
 
 const mocks = vi.hoisted(() => ({

@@ -1,7 +1,7 @@
 // Qa Lab tests cover suite runtime agent process plugin behavior.
 import { EventEmitter } from "node:events";
 import path from "node:path";
-import { MAX_TIMER_TIMEOUT_MS } from "openclaw/plugin-sdk/number-runtime";
+import { MAX_TIMER_TIMEOUT_MS } from "grokbot/plugin-sdk/number-runtime";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const spawnMock = vi.hoisted(() => vi.fn());
@@ -172,7 +172,7 @@ describe("qa suite runtime agent process helpers", () => {
         { timeoutMs: 1 },
       );
       const timeoutAssertion = expect(pending).rejects.toThrow(
-        "qa cli timed out: openclaw qa suite",
+        "qa cli timed out: grokbot qa suite",
       );
 
       await waitForSpawnCount(1);
@@ -211,7 +211,7 @@ describe("qa suite runtime agent process helpers", () => {
         { timeoutMs: 1 },
       );
       const timeoutAssertion = expect(pending).rejects.toThrow(
-        "qa cli timed out: openclaw qa suite",
+        "qa cli timed out: grokbot qa suite",
       );
 
       await waitForSpawnCount(1);
@@ -258,11 +258,11 @@ describe("qa suite runtime agent process helpers", () => {
         alternateModel: "openai/gpt-5.6-luna-mini",
         providerMode: "mock-openai",
       } as never,
-      ["openclaw", "-m", "overview"],
+      ["grokbot", "-m", "overview"],
       {
         env: {
           OPENCLAW_STATE_DIR: "/tmp/isolated-state",
-          OPENCLAW_CONFIG_PATH: "/tmp/isolated-state/openclaw.json",
+          OPENCLAW_CONFIG_PATH: "/tmp/isolated-state/grokbot.json",
         },
       },
     );
@@ -276,14 +276,14 @@ describe("qa suite runtime agent process helpers", () => {
     expect(spawnCall?.[0]).toBe("/usr/bin/node");
     expect(spawnCall?.[1]).toEqual([
       path.join("/repo", "dist", "index.js"),
-      "openclaw",
+      "grokbot",
       "-m",
       "overview",
     ]);
     const spawnEnv = (spawnCall?.[2] as { env?: Record<string, string> } | undefined)?.env;
     expect(spawnEnv?.PATH).toBe("/usr/bin");
     expect(spawnEnv?.OPENCLAW_STATE_DIR).toBe("/tmp/isolated-state");
-    expect(spawnEnv?.OPENCLAW_CONFIG_PATH).toBe("/tmp/isolated-state/openclaw.json");
+    expect(spawnEnv?.OPENCLAW_CONFIG_PATH).toBe("/tmp/isolated-state/grokbot.json");
   });
 
   it("parses json qa cli output when requested", async () => {

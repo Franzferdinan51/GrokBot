@@ -1,6 +1,6 @@
-## OpenClaw Android App
+## GrokBot Android App
 
-OpenClaw Android is the officially released Google Play app. It connects to an OpenClaw Gateway as a companion node for chat, voice, approvals, screen, and device-aware automation.
+GrokBot Android is the officially released Google Play app. It connects to an GrokBot Gateway as a companion node for chat, voice, approvals, screen, and device-aware automation.
 
 ### Current App Surface
 
@@ -103,15 +103,15 @@ explicitly use a connected emulator.
 
 `pnpm android:release:archive` builds signed release artifacts into `apps/android/build/release-artifacts/` and writes `.sha256` checksum files:
 
-- Play build: `openclaw-<version>-play-release.aab`
-- Wear build: `openclaw-<version>-wear-release.aab`
-- Third-party build: `openclaw-<version>-third-party-release.apk`
+- Play build: `grokbot-<version>-play-release.aab`
+- Wear build: `grokbot-<version>-wear-release.aab`
+- Third-party build: `grokbot-<version>-third-party-release.apk`
 
 `pnpm android:bundle:release` is an alias for the same Fastlane archive lane.
 
-Regular final and correction OpenClaw releases publish the signed third-party APK as `OpenClaw-Android.apk` with a checksum manifest and GitHub Actions provenance. `.github/workflows/android-release.yml` is the only automated GitHub Release upload path; `OpenClaw Release Publish` dispatches it while the canonical release is still a draft and blocks publication until the uploaded asset contract verifies.
+Regular final and correction GrokBot releases publish the signed third-party APK as `GrokBot-Android.apk` with a checksum manifest and GitHub Actions provenance. `.github/workflows/android-release.yml` is the only automated GitHub Release upload path; `GrokBot Release Publish` dispatches it while the canonical release is still a draft and blocks publication until the uploaded asset contract verifies.
 
-The protected `android-release` environment supplies `MATCH_PASSWORD`; the repository's read-only GitHub App token checks out encrypted material from `openclaw/apps-signing`. The workflow builds the exact release tag, refuses to replace different existing bytes, and re-downloads the APK for checksum, certificate, and provenance verification.
+The protected `android-release` environment supplies `MATCH_PASSWORD`; the repository's read-only GitHub App token checks out encrypted material from `grokbot/apps-signing`. The workflow builds the exact release tag, refuses to replace different existing bytes, and re-downloads the APK for checksum, certificate, and provenance verification.
 
 `pnpm android:release:archive` is for local archive validation only. It is not a
 fallback upload path after `pnpm android:release:upload` fails.
@@ -224,7 +224,7 @@ Use `adb reverse` so Android `localhost:18789` tunnels to your laptop `localhost
 Terminal A (gateway):
 
 ```bash
-pnpm openclaw gateway --port 18789 --verbose
+pnpm grokbot gateway --port 18789 --verbose
 ```
 
 Terminal B (USB tunnel):
@@ -253,7 +253,7 @@ This app is native Kotlin + Jetpack Compose.
 1) Start the gateway (on your main machine):
 
 ```bash
-pnpm openclaw gateway --port 18789 --verbose
+pnpm grokbot gateway --port 18789 --verbose
 ```
 
 2) In the Android app:
@@ -264,8 +264,8 @@ pnpm openclaw gateway --port 18789 --verbose
 3) Approve pairing (on the gateway machine):
 
 ```bash
-openclaw devices list
-openclaw devices approve <requestId>
+grokbot devices list
+grokbot devices approve <requestId>
 ```
 
 More details: `docs/platforms/android.md`.
@@ -298,7 +298,7 @@ Why these matter:
 - The Play build removes these behind the `play` flavor.
 - Photo library access is also removed from the Play build. Use third-party builds for `photos.latest`.
 
-Current OpenClaw Android implication:
+Current GrokBot Android implication:
 
 - APK / sideload build can keep SMS, Call Log, and recent-photo features.
 - Google Play build excludes SMS send/search, Call Log search, and recent-photo access unless the product is intentionally positioned and approved under the relevant policy exception.
@@ -334,7 +334,7 @@ This suite assumes setup is already done manually. It does **not** install/run/p
 Pre-req checklist:
 
 1) Gateway is running and reachable from the Android app.
-2) Android app is connected to that gateway and `openclaw nodes status` shows it as paired + connected.
+2) Android app is connected to that gateway and `grokbot nodes status` shows it as paired + connected.
 3) App stays unlocked and in foreground for the whole run.
 4) Open the app **Screen** tab and keep it active during the run (canvas/A2UI commands require the canvas WebView attached there).
 5) Grant runtime permissions for capabilities you expect to pass (camera/mic/location/notification listener/location, etc.).
@@ -344,9 +344,9 @@ Pre-req checklist:
 9) For A2UI checks, keep the app on **Screen** tab; the node uses its bundled app-owned A2UI page for message application.
 
 ```bash
-openclaw devices list
-openclaw devices approve --latest   # preview only; copy the requestId from output
-openclaw devices approve <requestId>
+grokbot devices list
+grokbot devices approve --latest   # preview only; copy the requestId from output
+grokbot devices approve <requestId>
 ```
 
 Run:
@@ -357,7 +357,7 @@ pnpm android:test:integration
 
 Optional overrides:
 
-- `OPENCLAW_ANDROID_GATEWAY_URL=ws://...` (default: from your local OpenClaw config)
+- `OPENCLAW_ANDROID_GATEWAY_URL=ws://...` (default: from your local GrokBot config)
 - `OPENCLAW_ANDROID_GATEWAY_TOKEN=...`
 - `OPENCLAW_ANDROID_GATEWAY_PASSWORD=...`
 - `OPENCLAW_ANDROID_NODE_ID=...` or `OPENCLAW_ANDROID_NODE_NAME=...`
@@ -372,7 +372,7 @@ What it does:
 Common failure quick-fixes:
 
 - `pairing required` before tests start:
-  - list pending requests (`openclaw devices list`), then approve with the exact ID (`openclaw devices approve <requestId>`) and rerun.
+  - list pending requests (`grokbot devices list`), then approve with the exact ID (`grokbot devices approve <requestId>`) and rerun.
 - `A2UI host not reachable` / `A2UI_HOST_UNAVAILABLE`:
   - keep the app foregrounded on the **Screen** tab and rerun. A2UI commands use the bundled app-owned A2UI page; the Gateway Canvas host is still needed for remote Canvas checks, but not for A2UI message application.
 - `NODE_BACKGROUND_UNAVAILABLE: canvas unavailable`:

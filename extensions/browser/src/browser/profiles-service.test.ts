@@ -1,7 +1,7 @@
 // Browser tests cover profiles service plugin behavior.
 import fs from "node:fs";
 import path from "node:path";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { useAutoCleanupTempDirTracker } from "../../test-support.js";
 import { getRuntimeConfig } from "../config/config.js";
@@ -39,17 +39,17 @@ const configMocks = vi.hoisted(() => ({
       const draft = structuredClone(currentConfig);
       const result = await params.mutate(draft, {
         snapshot: {
-          path: "/tmp/openclaw.json",
+          path: "/tmp/grokbot.json",
           runtimeConfig: currentConfig,
           sourceConfig: currentConfig,
         },
       });
       await configMocks.writeConfigFile(draft);
       return {
-        path: "/tmp/openclaw.json",
+        path: "/tmp/grokbot.json",
         previousHash: "test-hash",
         persistedHash: "test-hash",
-        snapshot: { path: "/tmp/openclaw.json" },
+        snapshot: { path: "/tmp/grokbot.json" },
         nextConfig: draft,
         result,
         attempts: 1,
@@ -94,7 +94,7 @@ vi.mock("./pw-ai-module.js", () => ({
 }));
 
 vi.mock("./chrome.js", () => ({
-  resolveOpenClawUserDataDir: vi.fn(() => "/tmp/openclaw-test/openclaw/user-data"),
+  resolveOpenClawUserDataDir: vi.fn(() => "/tmp/grokbot-test/grokbot/user-data"),
   stopOpenClawChrome: lifecycleMocks.stopOpenClawChrome,
 }));
 
@@ -162,7 +162,7 @@ describe("BrowserProfilesService", () => {
     lifecycleMocks.stopOpenClawChrome.mockReset().mockResolvedValue(undefined);
     vi.mocked(resolveOpenClawUserDataDir)
       .mockReset()
-      .mockReturnValue("/tmp/openclaw-test/openclaw/user-data");
+      .mockReturnValue("/tmp/grokbot-test/grokbot/user-data");
     vi.mocked(movePathToTrash)
       .mockReset()
       .mockImplementation(async (targetPath) => targetPath);
@@ -202,7 +202,7 @@ describe("BrowserProfilesService", () => {
       const createdProfile = expectDefined(createdProfiles[profileName], "created browser profile");
       vi.mocked(getRuntimeConfig).mockReturnValue({
         browser: {
-          defaultProfile: "openclaw",
+          defaultProfile: "grokbot",
           profiles: { [profileName]: createdProfile },
         },
       });
@@ -473,7 +473,7 @@ describe("BrowserProfilesService", () => {
     const { ctx, state } = createCtx(resolved);
     vi.mocked(getRuntimeConfig).mockReturnValue({ browser: { profiles: {} } });
 
-    const tempDir = tempDirs.make("openclaw-profile-");
+    const tempDir = tempDirs.make("grokbot-profile-");
     const userDataDir = path.join(tempDir, "BraveSoftware", "Brave-Browser");
     fs.mkdirSync(userDataDir, { recursive: true });
 
@@ -498,7 +498,7 @@ describe("BrowserProfilesService", () => {
     const { ctx } = createCtx(resolved);
     vi.mocked(getRuntimeConfig).mockReturnValue({ browser: { profiles: {} } });
 
-    const tempDir = tempDirs.make("openclaw-profile-");
+    const tempDir = tempDirs.make("grokbot-profile-");
     const userDataDir = path.join(tempDir, "BraveSoftware", "Brave-Browser");
     fs.mkdirSync(userDataDir, { recursive: true });
 
@@ -522,9 +522,9 @@ describe("BrowserProfilesService", () => {
 
     vi.mocked(getRuntimeConfig).mockReturnValue({
       browser: {
-        defaultProfile: "openclaw",
+        defaultProfile: "grokbot",
         profiles: {
-          openclaw: { cdpPort: 18800, color: "#FF4500" },
+          grokbot: { cdpPort: 18800, color: "#FF4500" },
           remote: { cdpUrl: "http://10.0.0.42:9222", color: "#0066CC" },
         },
       },
@@ -549,9 +549,9 @@ describe("BrowserProfilesService", () => {
     vi.mocked(getRuntimeConfig)
       .mockReturnValueOnce({
         browser: {
-          defaultProfile: "openclaw",
+          defaultProfile: "grokbot",
           profiles: {
-            openclaw: { cdpPort: 18800, color: "#FF4500" },
+            grokbot: { cdpPort: 18800, color: "#FF4500" },
             work: { cdpUrl: "http://10.0.0.42:9222", color: "#0066CC" },
           },
         },
@@ -560,7 +560,7 @@ describe("BrowserProfilesService", () => {
         browser: {
           defaultProfile: "work",
           profiles: {
-            openclaw: { cdpPort: 18800, color: "#FF4500" },
+            grokbot: { cdpPort: 18800, color: "#FF4500" },
             work: { cdpUrl: "http://10.0.0.42:9222", color: "#0066CC" },
           },
         },
@@ -588,15 +588,15 @@ describe("BrowserProfilesService", () => {
 
     vi.mocked(getRuntimeConfig).mockReturnValue({
       browser: {
-        defaultProfile: "openclaw",
+        defaultProfile: "grokbot",
         profiles: {
-          openclaw: { cdpPort: 18800, color: "#FF4500" },
+          grokbot: { cdpPort: 18800, color: "#FF4500" },
           work: { cdpPort: 18801, color: "#0066CC" },
         },
       },
     });
 
-    const tempDir = tempDirs.make("openclaw-profile-");
+    const tempDir = tempDirs.make("grokbot-profile-");
     const userDataDir = path.join(tempDir, "work", "user-data");
     fs.mkdirSync(path.dirname(userDataDir), { recursive: true });
     vi.mocked(resolveOpenClawUserDataDir).mockReturnValue(userDataDir);
@@ -615,14 +615,14 @@ describe("BrowserProfilesService", () => {
     const { ctx, state } = createCtx(resolved);
     vi.mocked(getRuntimeConfig).mockReturnValue({
       browser: {
-        defaultProfile: "openclaw",
+        defaultProfile: "grokbot",
         profiles: {
-          openclaw: { cdpPort: 18800, color: "#FF4500" },
+          grokbot: { cdpPort: 18800, color: "#FF4500" },
           work: { cdpPort: 18801, color: "#0066CC" },
         },
       },
     });
-    const tempDir = tempDirs.make("openclaw-trash-failure-");
+    const tempDir = tempDirs.make("grokbot-trash-failure-");
     const userDataDir = path.join(tempDir, "work", "user-data");
     fs.mkdirSync(path.dirname(userDataDir), { recursive: true });
     vi.mocked(resolveOpenClawUserDataDir).mockReturnValue(userDataDir);
@@ -644,7 +644,7 @@ describe("BrowserProfilesService", () => {
     vi.mocked(getRuntimeConfig).mockReturnValue({
       browser: {
         profiles: {
-          openclaw: { cdpPort: 18800, color: "#FF4500" },
+          grokbot: { cdpPort: 18800, color: "#FF4500" },
           work: { cdpPort: 18801, color: "#0066CC" },
         },
       },
@@ -654,7 +654,7 @@ describe("BrowserProfilesService", () => {
       throw new Error("Expected work profile");
     }
     const runtime = getOrCreateProfileRuntime(state, profile);
-    const tempDir = tempDirs.make("openclaw-delete-race-");
+    const tempDir = tempDirs.make("grokbot-delete-race-");
     const userDataDir = path.join(tempDir, "work", "user-data");
     fs.mkdirSync(userDataDir, { recursive: true });
     vi.mocked(resolveOpenClawUserDataDir).mockReturnValue(userDataDir);
@@ -710,7 +710,7 @@ describe("BrowserProfilesService", () => {
     vi.mocked(getRuntimeConfig).mockReturnValue({
       browser: {
         profiles: {
-          openclaw: { cdpPort: 18800, color: "#FF4500" },
+          grokbot: { cdpPort: 18800, color: "#FF4500" },
           work: { cdpPort: 18801, color: "#0066CC" },
         },
       },
@@ -756,9 +756,9 @@ describe("BrowserProfilesService", () => {
 
     vi.mocked(getRuntimeConfig).mockReturnValue({
       browser: {
-        defaultProfile: "openclaw",
+        defaultProfile: "grokbot",
         profiles: {
-          openclaw: { cdpPort: 18800, color: "#FF4500" },
+          grokbot: { cdpPort: 18800, color: "#FF4500" },
           "chrome-live": {
             cdpPort: 18801,
             color: "#0066CC",
@@ -777,7 +777,7 @@ describe("BrowserProfilesService", () => {
     expect(movePathToTrash).not.toHaveBeenCalled();
   });
 
-  it("deletes attach-only openclaw profiles without touching local browser data", async () => {
+  it("deletes attach-only grokbot profiles without touching local browser data", async () => {
     const resolved = resolveBrowserConfig({
       profiles: {
         work: {
@@ -789,13 +789,13 @@ describe("BrowserProfilesService", () => {
     const { ctx } = createCtx(resolved);
     vi.mocked(getRuntimeConfig).mockReturnValue({
       browser: {
-        defaultProfile: "openclaw",
+        defaultProfile: "grokbot",
         profiles: {
-          openclaw: { cdpPort: 18800, color: "#FF4500" },
+          grokbot: { cdpPort: 18800, color: "#FF4500" },
           work: {
             cdpPort: 18801,
             color: "#0066CC",
-            driver: "openclaw",
+            driver: "grokbot",
             attachOnly: true,
           },
         },
@@ -813,9 +813,9 @@ describe("BrowserProfilesService", () => {
     const originalProfile = { cdpPort: 18801, color: "#0066CC" };
     let currentConfig: OpenClawConfig = {
       browser: {
-        defaultProfile: "openclaw",
+        defaultProfile: "grokbot",
         profiles: {
-          openclaw: { cdpPort: 18800, color: "#FF4500" },
+          grokbot: { cdpPort: 18800, color: "#FF4500" },
           work: originalProfile,
         },
       },
@@ -850,9 +850,9 @@ describe("BrowserProfilesService", () => {
     );
     currentConfig = {
       browser: {
-        defaultProfile: "openclaw",
+        defaultProfile: "grokbot",
         profiles: {
-          openclaw: { cdpPort: 18800, color: "#FF4500" },
+          grokbot: { cdpPort: 18800, color: "#FF4500" },
           work: { cdpPort: 18802, color: "#00AA00" },
         },
       },

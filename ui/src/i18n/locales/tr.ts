@@ -274,14 +274,14 @@ export const tr: TranslationMap = {
     errorTitle: "Panel yüklenemedi",
     genericSubtitle: "Bu panel yüklenirken bir sorun oluştu.",
     staleTitle: "Yeni bir sürüm mevcut",
-    staleSubtitle: "OpenClaw arka planda güncellendi. En son paneli almak için yeniden yükleyin.",
+    staleSubtitle: "GrokBot arka planda güncellendi. En son paneli almak için yeniden yükleyin.",
     retry: "Tekrar dene",
   },
   nodes: {
     pairing: {
       button: "Mobil cihazı eşleştir",
       adminRequired: "Kurulum kodları oluşturmak için yönetici erişimi gerekir.",
-      title: "OpenClaw mobil",
+      title: "GrokBot mobil",
       subtitle: "Yeni bir telefonu bağlamak için mobil uygulamada bu QR kodunu tarayın.",
       generating: "Güvenli bir kurulum kodu oluşturuluyor…",
       accessTitle: "Mobil erişim",
@@ -294,14 +294,14 @@ export const tr: TranslationMap = {
       transportLimitedHint:
         "Bu Gateway URL'si düz metin ws:// kullanıyor. Tam erişim için wss:// veya Tailscale Serve kullanın, ardından yeni bir kod oluşturun.",
       failed: "Kurulum kodu oluşturulamadı.",
-      qrAlt: "OpenClaw mobil eşleştirme QR kodu",
+      qrAlt: "GrokBot mobil eşleştirme QR kodu",
       qrUnavailable: "QR kullanılamıyor. Bunun yerine kurulum kodunu kopyalayın.",
       copySetupCode: "Kurulum kodunu kopyala",
       newCode: "Yeni kod",
       showSetupCode: "Kurulum kodunu göster",
       pending: "İnceleme bekleyen cihaz istekleri: {count}",
       review: "İnceleme",
-      waiting: "Resmi OpenClaw mobil uygulamaları taramadan sonra otomatik olarak bağlanır.",
+      waiting: "Resmi GrokBot mobil uygulamaları taramadan sonra otomatik olarak bağlanır.",
       help: "Eşleştirme yardımı",
       manageDevices: "Cihazları yönet",
     },
@@ -448,11 +448,11 @@ export const tr: TranslationMap = {
     ownerSession: "Oturum",
     ownerWorkboard: "Workboard",
     title: "Yönetilen Worktree'ler",
-    subtitle: "OpenClaw tarafından sahip olunan yalıtılmış depo checkout'ları.",
+    subtitle: "GrokBot tarafından sahip olunan yalıtılmış depo checkout'ları.",
     cleanNow: "Şimdi temizle",
     cleanupTitle: "Temizleme",
     cleanupSubtitle:
-      "OpenClaw, disk alanı açmak için eski worktree'leri düzenli olarak kaldırır. Temizlemenin ne kadar yoğun yapılacağını ayarlayın.",
+      "GrokBot, disk alanı açmak için eski worktree'leri düzenli olarak kaldırır. Temizlemenin ne kadar yoğun yapılacağını ayarlayın.",
     cleanupMaxCount: "Maksimum worktree sayısı",
     cleanupMaxCountHelp:
       "Tüm depolarda tutulacak maksimum yönetilen worktree sayısı. Önce eski worktree'lerin anlık görüntüsü alınır ve ardından bunlar kaldırılır. Sayı sınırını devre dışı bırakmak için 0 olarak ayarlayın.",
@@ -1348,7 +1348,7 @@ export const tr: TranslationMap = {
     autoSaveConflict: "Ayarlar başka bir yerden değiştirildi",
     retry: "Tekrar dene",
     applyBannerText:
-      "openclaw.json dosyasına kaydedildi — uygulamak için gateway'i yeniden başlatın.",
+      "grokbot.json dosyasına kaydedildi — uygulamak için gateway'i yeniden başlatın.",
     applyBannerAction: "Yeniden başlat ve uygula",
     rawDiscard: "Vazgeç",
     rawDraftBlocksApply:
@@ -1403,7 +1403,7 @@ export const tr: TranslationMap = {
     },
   },
   approvalPage: {
-    brandName: "OpenClaw",
+    brandName: "GrokBot",
     eyebrow: "Operator approval",
     loadingTitle: "Loading approval",
     loadingDescription: "Checking the current approval state with the Gateway.",
@@ -1412,7 +1412,7 @@ export const tr: TranslationMap = {
       "This approval could not be found or this device is not authorized to review it.",
     connectionErrorTitle: "Connection interrupted",
     connectionErrorDescription:
-      "OpenClaw cannot confirm or record a decision while disconnected. Reconnect to check the current status.",
+      "GrokBot cannot confirm or record a decision while disconnected. Reconnect to check the current status.",
     retry: "Retry",
     execTitle: "Command approval",
     pending: "Waiting for your decision",
@@ -1739,7 +1739,7 @@ export const tr: TranslationMap = {
       "Teklifleri canlı becerilere dönüşmeden önce gözden geçirin, iyileştirin ve uygulayın.",
     nodes: "Eşleştirilmiş cihazlar ve komutlar.",
     chat: "Hızlı müdahaleler için Gateway sohbeti.",
-    config: "openclaw.json dosyasını düzenleyin.",
+    config: "grokbot.json dosyasını düzenleyin.",
     profile: "Ajanınızın istatistikleri, serileri ve resifteki yaşamı.",
     communications: "Kanallar, mesajlar ve ses ayarları.",
     appearance: "Tema, UI ve kurulum sihirbazı ayarları.",
@@ -1758,7 +1758,7 @@ export const tr: TranslationMap = {
   modelSetup: {
     heading: "AI'ınıza bağlanın",
     intro:
-      "OpenClaw, hâlihazırda sahip olduğunuz AI erişimini yeniden kullanır — bir CLI oturumu, API anahtarı veya sağlayıcı oturumu.",
+      "GrokBot, hâlihazırda sahip olduğunuz AI erişimini yeniden kullanır — bir CLI oturumu, API anahtarı veya sağlayıcı oturumu.",
     loading: "Bu Gateway'deki kullanılabilir AI erişimi kontrol ediliyor…",
     retry: "Tekrar dene",
     checkAgain: "Tekrar kontrol et",
@@ -1771,7 +1771,7 @@ export const tr: TranslationMap = {
     },
     access: {
       adminRequired: "Model kurulumu için operator.admin erişimi gerekir.",
-      gatewayTooOld: "Gateway, OpenClaw'ın eski bir sürümünü çalıştırıyor",
+      gatewayTooOld: "Gateway, GrokBot'ın eski bir sürümünü çalıştırıyor",
     },
     candidates: {
       title: "Bu Gateway'de bulunanlar",
@@ -1871,12 +1871,12 @@ export const tr: TranslationMap = {
     confirmDescription: "Seçilen {count} bellek dosyasını bu temsilci çalışma alanına kopyalayın.",
     confirmReplace: "Mevcut hedef dosyalar değiştirilmeden önce geçiş raporunda yedeklenecektir.",
     confirmBackup:
-      "OpenClaw, belleği kopyalamadan önce doğrulanmış bir içe aktarma öncesi yedeği oluşturur.",
+      "GrokBot, belleği kopyalamadan önce doğrulanmış bir içe aktarma öncesi yedeği oluşturur.",
     confirmImport: "Belleği içe aktar",
     disconnected: "Belleği içe aktarmak için Gateway'e bağlanın.",
     title: "Asistan belleğini içe aktar",
     subtitle:
-      "Codex'in birleştirilmiş belleğini ve Claude Code'un otomatik belleğini OpenClaw'a kopyalamadan önce inceleyin.",
+      "Codex'in birleştirilmiş belleğini ve Claude Code'un otomatik belleğini GrokBot'a kopyalamadan önce inceleyin.",
     agent: "Hedef temsilci",
     replaceExisting: "Mevcut içe aktarılanları değiştir",
     replaceHint: "Çakışmaları yeniden önizleyin ve değiştirmeden önce öğe yedeklerini koruyun.",
@@ -1884,7 +1884,7 @@ export const tr: TranslationMap = {
   onboarding: {
     memoryImport: {
       title: "Asistan belleğinizi yanınızda getirin",
-      body: "OpenClaw, diğer kodlama asistanlarına ait bellek buldu. Bu belleği agent çalışma alanınıza aktarmak ister misiniz?",
+      body: "GrokBot, diğer kodlama asistanlarına ait bellek buldu. Bu belleği agent çalışma alanınıza aktarmak ister misiniz?",
       plannedCount: "{count} öğe içe aktarılmaya hazır",
       alreadyImported: "Zaten içe aktarılan: {count}",
       sourceUnavailable: "Kaynak yolu kullanılamıyor",
@@ -1899,7 +1899,7 @@ export const tr: TranslationMap = {
       connectionChanged: "Atlandı: İçe aktarma sırasında Gateway bağlantısı değişti",
       unknownError: "İstek başarısız oldu",
       doneTitle: "Bellek içe aktarma işlemi tamamlandı",
-      doneBody: "{migrated} taşındı, {skipped} atlandı. OpenClaw kurulumuna devam edebilirsiniz.",
+      doneBody: "{migrated} taşındı, {skipped} atlandı. GrokBot kurulumuna devam edebilirsiniz.",
     },
   },
   mcpPage: {
@@ -1999,7 +1999,7 @@ export const tr: TranslationMap = {
     },
     noInstalledTitle: "İsteğe bağlı eklenti yüklü değil",
     noInstalledBody:
-      "OpenClaw'ı genişletmek için öne çıkan bir eklenti keşfedin veya ClawHub'da arama yapın.",
+      "GrokBot'ı genişletmek için öne çıkan bir eklenti keşfedin veya ClawHub'da arama yapın.",
     noInstalledMatchTitle: "Yüklü eklentilerle eşleşme yok",
     noMatchBody: "Farklı bir arama deneyin.",
     filterAll: "Tümü",
@@ -2047,7 +2047,7 @@ export const tr: TranslationMap = {
     detailPluginId: "Eklenti Kimliği",
     offlineTitle: "Gateway çevrimdışı",
     offlineBody: "Yüklü ve önerilen eklentilere göz atmak için bağlanın.",
-    optionalCapability: "İsteğe bağlı OpenClaw özelliği.",
+    optionalCapability: "İsteğe bağlı GrokBot özelliği.",
     enabled: "Etkin",
     disabled: "Devre dışı",
     available: "Kullanılabilir",
@@ -2082,7 +2082,7 @@ export const tr: TranslationMap = {
       "{name} devre dışı bırakıldı. Değişikliği uygulamak için Gateway yeniden başlatılmalıdır.",
   },
   aboutPage: {
-    productName: "OpenClaw",
+    productName: "GrokBot",
     tagline: "Kendi cihazlarınızda çalışan kişisel AI asistanınız.",
     waveHello: "Clawd'a el sallayın",
     linksLabel: "Topluluk ve kaynaklar",
@@ -2091,7 +2091,7 @@ export const tr: TranslationMap = {
     linkGitHub: "GitHub",
     linkDiscord: "Discord",
     linkChangelog: "Değişiklik günlüğü",
-    license: "© 2026 OpenClaw Foundation — MIT Lisansı.",
+    license: "© 2026 GrokBot Foundation — MIT Lisansı.",
     artifactTitle: "Control UI",
     artifactSubtitle: "Bu tarayıcı yapıtı derlendiğinde gömülen kimlik.",
     artifactDetails: "Control UI derleme ayrıntıları",
@@ -2271,7 +2271,7 @@ export const tr: TranslationMap = {
     selfLearning: {
       pitchTitle: "Kendi kendine öğrenmeyi aç",
       pitchBody:
-        "OpenClaw, düzeltmeleri ve tamamlanan kapsamlı çalışmaları inceler, ardından bu pano için beceri önerileri taslakları oluşturur. Arka planda ek token harcar ve taslaklar bekleyen öneriler olarak eklenir.",
+        "GrokBot, düzeltmeleri ve tamamlanan kapsamlı çalışmaları inceler, ardından bu pano için beceri önerileri taslakları oluşturur. Arka planda ek token harcar ve taslaklar bekleyen öneriler olarak eklenir.",
       enable: "Kendi kendine öğrenmeyi etkinleştir",
       enabling: "Etkinleştiriliyor…",
       updateError: "Kendi kendine öğrenme ayarı güncellenemedi.",
@@ -2466,7 +2466,7 @@ export const tr: TranslationMap = {
       onboardingTitle: "No workspaces yet",
       onboardingSubtitle:
         "Ask your agent to build a workspace, or create one from the command line.",
-      onboardingCommand: "openclaw workspaces tabs create --title Main",
+      onboardingCommand: "grokbot workspaces tabs create --title Main",
       tabTitle: "This workspace is empty",
       tabSubtitle: "Ask your agent to add a widget, or add one yourself.",
       noVisibleTabs: "Every workspace tab is hidden. Restore one from the hidden menu.",
@@ -3482,9 +3482,9 @@ export const tr: TranslationMap = {
         summary:
           "Gateway erişilebilir, ancak bu tarayıcı bağlanmadan önce eşleşen bir token veya parola gerekir.",
         stepPaste:
-          "openclaw dashboard --no-open çıktısındaki tokenı yapıştırın veya yapılandırılmış parolayı girin.",
+          "grokbot dashboard --no-open çıktısındaki tokenı yapıştırın veya yapılandırılmış parolayı girin.",
         stepGenerate:
-          "Token yapılandırılmamışsa Gateway ana makinesinde openclaw doctor --generate-gateway-token çalıştırın.",
+          "Token yapılandırılmamışsa Gateway ana makinesinde grokbot doctor --generate-gateway-token çalıştırın.",
         stepConnect: "Kimlik bilgisini güncelledikten sonra Connect düğmesine tekrar tıklayın.",
       },
       authFailed: {
@@ -3492,7 +3492,7 @@ export const tr: TranslationMap = {
         summary:
           "Sağlanan kimlik bilgisi reddedildi. En yaygın neden eski bir token veya başka bir Gateway URL’sinden kopyalanmış tokendır.",
         stepDashboard:
-          "openclaw dashboard --no-open çalıştırın ve yeni URL’yi açın veya tokenını yapıştırın.",
+          "grokbot dashboard --no-open çalıştırın ve yeni URL’yi açın veya tokenını yapıştırın.",
         stepReplace:
           "Eski token/parola değerlerini değiştirin; başka bir Gateway URL’sinden tokenı yeniden kullanmayın.",
         stepMode:
@@ -3516,8 +3516,8 @@ export const tr: TranslationMap = {
           "Bu tarayıcının Control UI kullanabilmesi için Gateway hostundan tek seferlik onay gerekir.",
         upgradeSummary:
           "Bu tarayıcı zaten biliniyor, ancak istenen erişim değişti ve yeni onay gerekiyor.",
-        stepList: "Gateway hostunda openclaw devices list çalıştırın.",
-        stepApproveId: "Bu isteği onaylayın: openclaw devices approve {requestId}.",
+        stepList: "Gateway hostunda grokbot devices list çalıştırın.",
+        stepApproveId: "Bu isteği onaylayın: grokbot devices approve {requestId}.",
         stepApprove: "Bu listedeki bekleyen tarayıcı/cihaz isteğini onaylayın.",
         stepReconnect: "Onay tamamlandıktan sonra yeniden bağlanın.",
       },
@@ -3545,22 +3545,22 @@ export const tr: TranslationMap = {
         summary:
           "Sunulan Control UI ile çalışan Gateway desteklenen bağlantı protokolü konusunda uyuşmuyor.",
         stepDashboard:
-          "UI ve Gateway aynı kurulumdan gelsin diye sunulan dashboardı openclaw dashboard ile yeniden açın.",
+          "UI ve Gateway aynı kurulumdan gelsin diye sunulan dashboardı grokbot dashboard ile yeniden açın.",
         stepDevUi:
           "pnpm ui:dev kullanıyorsanız geliştirme UI’sini mevcut checkouta göre yeniden derleyin veya yeniden başlatın.",
         stepRestart:
-          "OpenClaw güncellemesinden sonra Gateway’i yeniden başlatın, böylece güncel protokolü sunsun.",
+          "GrokBot güncellemesinden sonra Gateway’i yeniden başlatın, böylece güncel protokolü sunsun.",
       },
       network: {
         title: "Bağlanılamadı",
         summary:
           "Tarayıcı Gateway bağlantısını tamamlayamadı. Kimlik bilgilerini yeniden denemeden önce hedefi ve taşıma yolunu kontrol edin.",
         stepGateway:
-          "openclaw status veya openclaw gateway run ile Gateway’in çalıştığını doğrulayın.",
+          "grokbot status veya grokbot gateway run ile Gateway’in çalıştığını doğrulayın.",
         stepUrl:
           "WebSocket URL’sini kontrol edin ve Gateway HTTPS/Tailscale Serve arkasındaysa wss:// kullanın.",
         stepDashboard:
-          "Geçerli URL ve auth ayrıntılarını yeniden kopyalamak için dashboardı openclaw dashboard --no-open ile yeniden açın.",
+          "Geçerli URL ve auth ayrıntılarını yeniden kopyalamak için dashboardı grokbot dashboard --no-open ile yeniden açın.",
       },
     },
   },
@@ -3585,7 +3585,7 @@ export const tr: TranslationMap = {
       remoteViewOnly: "Bu oturum eşleştirilmiş bir düğümdedir ve yalnızca görüntülenebilir.",
       unsupportedViewOnly: "Bu harici oturum kaynağı yalnızca görüntülenebilir.",
       sessionMenu: "External session actions",
-      openInOpenClaw: "Open in OpenClaw",
+      openInOpenClaw: "Open in GrokBot",
       openInTerminal: "Open in terminal",
       terminalUnavailable: "Terminal opening is unavailable for this session.",
     },
@@ -3640,7 +3640,7 @@ export const tr: TranslationMap = {
     followUpModeOverriding: "Sunucu varsayılanı geçersiz kılınıyor ({mode})",
     followUpModeReset: "Sunucu varsayılanına sıfırla",
     catalogOpenTarget: "Open Codex/Claude sessions in",
-    catalogOpenTargetViewer: "OpenClaw viewer",
+    catalogOpenTargetViewer: "GrokBot viewer",
     catalogOpenTargetTerminal: "Terminal",
     onboardingDisabled: "Kurulum sırasında devre dışı",
     gatewayStatus: "Gateway durumu: {status}",
@@ -4081,7 +4081,7 @@ export const tr: TranslationMap = {
       shownOf: "{total} görevden {shown} tanesi",
       emptyTitle: "Henüz zamanlanmış görev yok",
       emptyHint:
-        "OpenClaw'ın ne ve ne zaman yapması gerektiğini tanımlayın — zamanlamaya göre çalışır.",
+        "GrokBot'ın ne ve ne zaman yapması gerektiğini tanımlayın — zamanlamaya göre çalışır.",
       noMatching: "Geçerli filtrelerle eşleşen görev yok.",
       loadMore: "Daha fazla yükle",
       loading: "Yükleniyor...",
@@ -4149,7 +4149,7 @@ export const tr: TranslationMap = {
       tabsLabel: "Otomasyon ayrıntıları",
       newTitle: "Yeni zamanlanmış görev",
       newSubtitle:
-        "OpenClaw'ın ne yapması gerektiğini açıklayın, ardından ne zaman çalışacağını seçin.",
+        "GrokBot'ın ne yapması gerektiğini açıklayın, ardından ne zaman çalışacağını seçin.",
       back: "Tüm otomasyonlar",
       settingsTab: "Ayarlar",
       historyTitle: "Çalıştırma geçmişi",
@@ -4222,7 +4222,7 @@ export const tr: TranslationMap = {
       descriptionPlaceholder: "Bu iş için isteğe bağlı bağlam",
       agentPlaceholder: "main veya ops",
       agentHelp: "Bilinen bir aracı seçmek için yazmaya başlayın veya özel bir aracı girin.",
-      promptPlaceholder: "OpenClaw'ın ne yapması gerektiğini açıklayın...",
+      promptPlaceholder: "GrokBot'ın ne yapması gerektiğini açıklayın...",
       repeat: "Tekrarla",
       repeatInterval: "Aralık",
       repeatOnce: "Bir kez",

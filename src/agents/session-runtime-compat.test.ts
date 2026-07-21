@@ -9,7 +9,7 @@ describe("resolvePersistedSessionRuntimeId", () => {
     expect(
       resolvePersistedSessionRuntimeId({
         agentHarnessId: "codex",
-        agentRuntimeOverride: "openclaw",
+        agentRuntimeOverride: "grokbot",
         modelSelectionLocked: true,
       }),
     ).toBe("codex");
@@ -19,10 +19,10 @@ describe("resolvePersistedSessionRuntimeId", () => {
     expect(
       resolvePersistedSessionRuntimeId({
         agentHarnessId: "codex",
-        agentRuntimeOverride: "openclaw",
+        agentRuntimeOverride: "grokbot",
         modelSelectionLocked: false,
       }),
-    ).toBe("openclaw");
+    ).toBe("grokbot");
   });
 
   it("filters default overrides before falling back to the persisted harness", () => {

@@ -3,7 +3,7 @@ import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import {
   clearCurrentPluginMetadataSnapshot,
   setCurrentPluginMetadataSnapshot,
@@ -32,7 +32,7 @@ afterEach(() => {
 });
 
 function makeTempDir() {
-  return makeTrackedTempDir("openclaw-plugin-registry-snapshot", tempDirs);
+  return makeTrackedTempDir("grokbot-plugin-registry-snapshot", tempDirs);
 }
 
 function createHermeticEnv(rootDir: string): NodeJS.ProcessEnv {
@@ -61,7 +61,7 @@ function writePackagePlugin(
   fs.mkdirSync(rootDir, { recursive: true });
   fs.writeFileSync(path.join(rootDir, "index.ts"), "export default { register() {} };\n", "utf8");
   fs.writeFileSync(
-    path.join(rootDir, "openclaw.plugin.json"),
+    path.join(rootDir, "grokbot.plugin.json"),
     JSON.stringify({
       id: pluginId,
       name: pluginId,
@@ -83,7 +83,7 @@ function writeBundledPlugin(rootDir: string, pluginId: string, entryPath: string
   fs.mkdirSync(rootDir, { recursive: true });
   fs.writeFileSync(path.join(rootDir, entryPath), "export default { register() {} };\n", "utf8");
   fs.writeFileSync(
-    path.join(rootDir, "openclaw.plugin.json"),
+    path.join(rootDir, "grokbot.plugin.json"),
     JSON.stringify({
       id: pluginId,
       name: pluginId,
@@ -95,9 +95,9 @@ function writeBundledPlugin(rootDir: string, pluginId: string, entryPath: string
   fs.writeFileSync(
     path.join(rootDir, "package.json"),
     JSON.stringify({
-      name: `@openclaw/${pluginId}`,
+      name: `@grokbot/${pluginId}`,
       version: "1.0.0",
-      openclaw: { extensions: [`./${entryPath}`] },
+      grokbot: { extensions: [`./${entryPath}`] },
     }),
     "utf8",
   );
@@ -121,7 +121,7 @@ function createCandidate(rootDir: string, pluginId = "demo"): PluginCandidate {
   fs.mkdirSync(rootDir, { recursive: true });
   fs.writeFileSync(path.join(rootDir, "index.ts"), "export default { register() {} };\n", "utf8");
   fs.writeFileSync(
-    path.join(rootDir, "openclaw.plugin.json"),
+    path.join(rootDir, "grokbot.plugin.json"),
     JSON.stringify({
       id: pluginId,
       name: pluginId,
@@ -415,7 +415,7 @@ describe("loadPluginRegistrySnapshotWithMetadata", () => {
     const config = {};
     const whatsappDir = writeManagedNpmPlugin({
       stateDir,
-      packageName: "@openclaw/whatsapp",
+      packageName: "@grokbot/whatsapp",
       pluginId: "whatsapp",
       version: "2026.5.2",
     });
@@ -438,12 +438,12 @@ describe("loadPluginRegistrySnapshotWithMetadata", () => {
     expectDiagnosticsContainCode(result.diagnostics, "persisted-registry-stale-source");
     expect(result.snapshot.installRecords.whatsapp).toEqual({
       source: "npm",
-      spec: "@openclaw/whatsapp@2026.5.2",
+      spec: "@grokbot/whatsapp@2026.5.2",
       installPath: whatsappDir,
       version: "2026.5.2",
-      resolvedName: "@openclaw/whatsapp",
+      resolvedName: "@grokbot/whatsapp",
       resolvedVersion: "2026.5.2",
-      resolvedSpec: "@openclaw/whatsapp@2026.5.2",
+      resolvedSpec: "@grokbot/whatsapp@2026.5.2",
     });
     const whatsappPlugin = requirePluginRecord(result.snapshot.plugins, "whatsapp");
     expect(whatsappPlugin.origin).toBe("global");
@@ -460,7 +460,7 @@ describe("loadPluginRegistrySnapshotWithMetadata", () => {
     const config = {};
     const codexDir = writeManagedNpmPlugin({
       stateDir,
-      packageName: "@openclaw/codex",
+      packageName: "@grokbot/codex",
       pluginId: "codex",
       version: "2026.6.10-beta.1",
     });
@@ -499,12 +499,12 @@ describe("loadPluginRegistrySnapshotWithMetadata", () => {
     };
     const codexDir = writeManagedNpmPlugin({
       stateDir,
-      packageName: "@openclaw/codex",
+      packageName: "@grokbot/codex",
       pluginId: "codex",
       version: "2026.6.10-beta.1",
     });
     fs.writeFileSync(
-      path.join(codexDir, ".openclaw-retained-npm-install.json"),
+      path.join(codexDir, ".grokbot-retained-npm-install.json"),
       '{"version":1,"pluginId":"codex"}\n',
       "utf8",
     );
@@ -567,7 +567,7 @@ describe("loadPluginRegistrySnapshotWithMetadata", () => {
     const first = loadPluginRegistrySnapshotWithMetadata({ config: {}, env, workspaceDir });
     expect(first.snapshot.plugins.map((plugin) => plugin.pluginId)).not.toContain("demo");
 
-    writePackagePlugin(path.join(workspaceDir, ".openclaw", "extensions", "demo"));
+    writePackagePlugin(path.join(workspaceDir, ".grokbot", "extensions", "demo"));
 
     const second = loadPluginRegistrySnapshotWithMetadata({ config: {}, env, workspaceDir });
     expect(second.snapshot.plugins.map((plugin) => plugin.pluginId)).toContain("demo");
@@ -602,7 +602,7 @@ describe("loadPluginRegistrySnapshotWithMetadata", () => {
       throw new Error("expected package plugin index record with file signatures");
     }
     expect(record.manifestFile.size).toBe(
-      fs.statSync(path.join(rootDir, "openclaw.plugin.json")).size,
+      fs.statSync(path.join(rootDir, "grokbot.plugin.json")).size,
     );
     expect(record.packageJson.fileSignature.size).toBe(
       fs.statSync(path.join(rootDir, "package.json")).size,
@@ -859,7 +859,7 @@ describe("loadPluginRegistrySnapshotWithMetadata", () => {
     writePersistedInstalledPluginIndexSync(index, { stateDir });
 
     replaceFilePreservingSizeAndMtime(
-      path.join(rootDir, "openclaw.plugin.json"),
+      path.join(rootDir, "grokbot.plugin.json"),
       JSON.stringify({
         id: "demo",
         name: "Demo",
@@ -958,7 +958,7 @@ describe("loadPluginRegistrySnapshotWithMetadata", () => {
 
   it("keeps mixed source-checkout bundled roots from the same checkout", () => {
     const tempRoot = makeTempDir();
-    const packageRoot = path.join(tempRoot, "openclaw");
+    const packageRoot = path.join(tempRoot, "grokbot");
     const bundledRoot = path.join(packageRoot, "dist", "extensions");
     const sourceRoot = path.join(packageRoot, "extensions");
     const stateDir = path.join(tempRoot, "state");
@@ -992,7 +992,7 @@ describe("loadPluginRegistrySnapshotWithMetadata", () => {
 
   it("treats a persisted source bundled root as stale once its built peer appears", () => {
     const tempRoot = makeTempDir();
-    const packageRoot = path.join(tempRoot, "openclaw");
+    const packageRoot = path.join(tempRoot, "grokbot");
     const bundledRoot = path.join(packageRoot, "dist", "extensions");
     const sourceRoot = path.join(packageRoot, "extensions");
     const stateDir = path.join(tempRoot, "state");
@@ -1027,7 +1027,7 @@ describe("loadPluginRegistrySnapshotWithMetadata", () => {
 
   it("keeps a persisted bind-mounted source overlay when its built peer exists", () => {
     const tempRoot = makeTempDir();
-    const packageRoot = path.join(tempRoot, "openclaw");
+    const packageRoot = path.join(tempRoot, "grokbot");
     const bundledRoot = path.join(packageRoot, "dist", "extensions");
     const sourcePluginDir = path.join(packageRoot, "extensions", "whatsapp");
     const stateDir = path.join(tempRoot, "state");

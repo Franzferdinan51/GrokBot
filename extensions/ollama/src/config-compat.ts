@@ -1,5 +1,5 @@
 // Ollama helper module supports config compat behavior.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import { OLLAMA_CLOUD_BASE_URL, OLLAMA_CLOUD_PROVIDER_ID } from "./defaults.js";
 
 type LegacyConfigRule = {
@@ -43,7 +43,7 @@ export const legacyConfigRules: LegacyConfigRule[] = [
   {
     path: ["models", "providers", OLLAMA_CLOUD_PROVIDER_ID],
     message:
-      'models.providers.ollama-cloud.baseUrl="https://ai.ollama.com" is retired; use "https://ollama.com". Run "openclaw doctor --fix".',
+      'models.providers.ollama-cloud.baseUrl="https://ai.ollama.com" is retired; use "https://ollama.com". Run "grokbot doctor --fix".',
     match: (value) => findRetiredOllamaCloudBaseUrl(value) !== null,
   },
 ];

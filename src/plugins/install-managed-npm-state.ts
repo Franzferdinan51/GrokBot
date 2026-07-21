@@ -27,7 +27,7 @@ import type { OpenClawPackageManifest } from "./manifest.js";
 import { relinkOpenClawPeerDependenciesInManagedNpmRoot } from "./plugin-peer-link.js";
 
 const rollbackSnapshotCopyMode = fsConstants.COPYFILE_FICLONE;
-const MANAGED_NPM_PROJECT_QUARANTINE_DIR = "_openclaw-quarantined-npm-projects";
+const MANAGED_NPM_PROJECT_QUARANTINE_DIR = "_grokbot-quarantined-npm-projects";
 const MANAGED_NPM_PROJECT_REBUILD_ARTIFACTS = [
   "node_modules",
   "package-lock.json",
@@ -177,7 +177,7 @@ export async function rollbackManagedNpmPluginInstall(params: {
       );
     }
   }
-  if (params.packageName !== "openclaw") {
+  if (params.packageName !== "grokbot") {
     try {
       await repairManagedNpmRootOpenClawPeer({
         npmRoot: params.npmRoot,
@@ -186,7 +186,7 @@ export async function rollbackManagedNpmPluginInstall(params: {
       });
     } catch (error) {
       params.logger.warn?.(
-        `Failed to repair managed npm openclaw peer after rollback: ${String(error)}`,
+        `Failed to repair managed npm grokbot peer after rollback: ${String(error)}`,
       );
     }
   }
@@ -323,7 +323,7 @@ async function writeOrRemoveRollbackFile(filePath: string, contents: string | un
 export async function createManagedNpmPluginInstallRollbackSnapshot(params: {
   npmRoot: string;
 }): Promise<ManagedNpmPluginInstallRollbackSnapshot> {
-  const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-npm-plugin-rollback-"));
+  const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-npm-plugin-rollback-"));
   let nodeModulesBackupDir: string | undefined;
   const nodeModulesDir = path.join(params.npmRoot, "node_modules");
   try {
@@ -374,11 +374,11 @@ async function shouldCopyManagedNpmRollbackSnapshotEntry(params: {
   const isPluginLocalOpenClawPeer =
     (relativeParts.length === 3 &&
       relativeParts[1] === "node_modules" &&
-      relativeParts[2] === "openclaw") ||
+      relativeParts[2] === "grokbot") ||
     (relativeParts.length === 4 &&
       relativeParts[0]?.startsWith("@") &&
       relativeParts[2] === "node_modules" &&
-      relativeParts[3] === "openclaw");
+      relativeParts[3] === "grokbot");
   if (!isPluginLocalOpenClawPeer) {
     return true;
   }
@@ -490,7 +490,7 @@ export async function listManagedNpmRootPackageNames(npmRoot: string): Promise<S
 
   const packageNames = new Set<string>();
   for (const entry of entries.toSorted((left, right) => left.name.localeCompare(right.name))) {
-    if (entry.name === ".bin" || entry.name === "openclaw") {
+    if (entry.name === ".bin" || entry.name === "grokbot") {
       continue;
     }
     if (entry.name.startsWith("@")) {
@@ -671,7 +671,7 @@ export function resolveRequiredPlatformPackageNames(
   if (!Array.isArray(raw)) {
     return {
       ok: false,
-      error: "package.json openclaw.install.requiredPlatformPackages must be an array",
+      error: "package.json grokbot.install.requiredPlatformPackages must be an array",
     };
   }
   const packageNames = new Set<string>();
@@ -680,7 +680,7 @@ export function resolveRequiredPlatformPackageNames(
       return {
         ok: false,
         error:
-          "package.json openclaw.install.requiredPlatformPackages must contain only npm package names",
+          "package.json grokbot.install.requiredPlatformPackages must contain only npm package names",
       };
     }
     const specError = validateRegistryNpmSpec(value);
@@ -688,7 +688,7 @@ export function resolveRequiredPlatformPackageNames(
     if (specError || !parsed || parsed.selectorKind !== "none") {
       return {
         ok: false,
-        error: `package.json openclaw.install.requiredPlatformPackages contains invalid package name: ${value}`,
+        error: `package.json grokbot.install.requiredPlatformPackages contains invalid package name: ${value}`,
       };
     }
     packageNames.add(parsed.name);

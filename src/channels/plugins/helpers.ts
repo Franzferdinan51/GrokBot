@@ -3,9 +3,9 @@
  *
  * Resolves default accounts, pairing hints, delimited entries, and DM security policy views.
  */
-import { normalizeStringEntries } from "@openclaw/normalization-core/string-normalization";
+import { normalizeStringEntries } from "@grokbot/normalization-core/string-normalization";
 import { formatCliCommand } from "../../cli/command-format.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import { DEFAULT_ACCOUNT_ID } from "../../routing/session-key.js";
 import type { ChannelSecurityDmPolicy } from "./types.core.js";
 import type { ChannelPlugin } from "./types.plugin.js";
@@ -20,8 +20,8 @@ export function resolveChannelDefaultAccountId<ResolvedAccount>(params: {
 }
 
 export function formatPairingApproveHint(channelId: string): string {
-  const listCmd = formatCliCommand(`openclaw pairing list ${channelId}`);
-  const approveCmd = formatCliCommand(`openclaw pairing approve ${channelId} <code>`);
+  const listCmd = formatCliCommand(`grokbot pairing list ${channelId}`);
+  const approveCmd = formatCliCommand(`grokbot pairing approve ${channelId} <code>`);
   return `Approve via: ${listCmd} / ${approveCmd}`;
 }
 

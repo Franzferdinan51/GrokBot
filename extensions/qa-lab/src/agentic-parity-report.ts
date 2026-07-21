@@ -189,7 +189,7 @@ function scenarioHasRuntimeToolCallEvidence(scenario: QaParityReportScenario): b
   return (
     scenario.status === "pass" &&
     isRuntimeParityResultPass(parity) &&
-    parity.cells.openclaw.toolCalls.length > 0 &&
+    parity.cells.grokbot.toolCalls.length > 0 &&
     parity.cells.codex.toolCalls.length > 0
   );
 }
@@ -280,7 +280,7 @@ function describeLiveUsageFailure(scenarioName: string, scenario: QaRuntimeParit
   const missing = [
     scenario.openclawTokens > 0
       ? undefined
-      : `${scenario.openclawStatus === "pass" ? "openclaw" : "openclaw failed"}=0`,
+      : `${scenario.openclawStatus === "pass" ? "grokbot" : "grokbot failed"}=0`,
     scenario.codexTokens > 0
       ? undefined
       : `${scenario.codexStatus === "pass" ? "codex" : "codex failed"}=0`,
@@ -297,7 +297,7 @@ function normalizeRuntimePair(
   if (pair?.[0] && pair?.[1]) {
     return pair;
   }
-  return ["openclaw", "codex"];
+  return ["grokbot", "codex"];
 }
 
 function requiredCoverageStatus(
@@ -594,7 +594,7 @@ export function renderQaAgenticParityMarkdownReport(comparison: QaAgenticParityC
   // openai/gpt-5.6-luna vs anthropic/claude-opus-4-8, but the helper works for
   // any parity comparison a caller configures.
   const lines = [
-    `# OpenClaw Agentic Parity Report — ${comparison.candidateLabel} vs ${comparison.baselineLabel}`,
+    `# GrokBot Agentic Parity Report — ${comparison.candidateLabel} vs ${comparison.baselineLabel}`,
     "",
     `- Compared at: ${comparison.comparedAt}`,
     `- Candidate: ${comparison.candidateLabel}`,
@@ -671,7 +671,7 @@ export function buildQaRuntimeParityReport(params: {
       } satisfies QaRuntimeParityScenarioReport;
     }
     driftCounts[parity.drift] += 1;
-    const openclawCell = parity.cells.openclaw;
+    const openclawCell = parity.cells.grokbot;
     const codexCell = parity.cells.codex;
     const openclawStatus = runtimeParityCellStatus(openclawCell);
     const codexStatus = runtimeParityCellStatus(codexCell);
@@ -734,7 +734,7 @@ export function buildQaRuntimeParityReport(params: {
 
 export function renderQaRuntimeParityMarkdownReport(report: QaRuntimeParityReport): string {
   const lines = [
-    `# OpenClaw Runtime Parity Report — ${report.runtimePair[0]} vs ${report.runtimePair[1]}`,
+    `# GrokBot Runtime Parity Report — ${report.runtimePair[0]} vs ${report.runtimePair[1]}`,
     "",
     `- Compared at: ${report.comparedAt}`,
     `- Provider mode: ${report.providerMode ?? "unknown"}`,
@@ -774,7 +774,7 @@ export function renderQaRuntimeParityMarkdownReport(report: QaRuntimeParityRepor
     lines.push(`- status: ${scenario.status}`);
     lines.push(`- drift: ${scenario.drift}`);
     lines.push(
-      `- openclaw: ${scenario.openclawStatus} (${scenario.openclawToolCalls} tool calls, ${openclawTokens} tokens)`,
+      `- grokbot: ${scenario.openclawStatus} (${scenario.openclawToolCalls} tool calls, ${openclawTokens} tokens)`,
     );
     lines.push(
       `- codex: ${scenario.codexStatus} (${scenario.codexToolCalls} tool calls, ${codexTokens} tokens)`,

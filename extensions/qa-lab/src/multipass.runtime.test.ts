@@ -2,14 +2,14 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { resolvePreferredOpenClawTmpDir } from "openclaw/plugin-sdk/temp-path";
+import { resolvePreferredOpenClawTmpDir } from "grokbot/plugin-sdk/temp-path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const runExecMock = vi.hoisted(() => vi.fn());
 const TEST_ENV_VALUE = "qa-fixture-value";
 
-vi.mock("openclaw/plugin-sdk/process-runtime", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("openclaw/plugin-sdk/process-runtime")>();
+vi.mock("grokbot/plugin-sdk/process-runtime", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("grokbot/plugin-sdk/process-runtime")>();
   return {
     ...actual,
     runExec: runExecMock,
@@ -105,7 +105,7 @@ describe("qa multipass runtime", () => {
   });
 
   it("rejects repo-local symlink output directories that escape the repo root", async () => {
-    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-multipass-"));
+    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-multipass-"));
     const repoRoot = path.join(tempRoot, "repo");
     const outsideRoot = path.join(tempRoot, "outside");
     const symlinkPath = path.join(repoRoot, "artifacts-link");
@@ -147,11 +147,11 @@ describe("qa multipass runtime", () => {
     expect(script).toContain(
       'curl -fsSL --connect-timeout 10 --max-time 120 --retry 2 --retry-delay 2 --retry-max-time 120 "${base_url}/${tarball_name}" -o "${node_tmp_dir}/${tarball_name}"',
     );
-    expect(script).toContain("'pnpm' 'openclaw' 'qa' 'suite' '--transport' 'qa-channel'");
+    expect(script).toContain("'pnpm' 'grokbot' 'qa' 'suite' '--transport' 'qa-channel'");
     expect(script).toContain("'--provider-mode' 'live-frontier'");
     expect(script).toContain("'--scenario' 'channel-chat-baseline'");
     expect(script).toContain("'--scenario' 'thread-follow-up'");
-    expect(script).toContain("/workspace/openclaw-host/.artifacts/qa-e2e/multipass-default-test");
+    expect(script).toContain("/workspace/grokbot-host/.artifacts/qa-e2e/multipass-default-test");
   });
 
   it("redacts persisted credentials while forwarding them to the executable script", async () => {
@@ -179,7 +179,7 @@ describe("qa multipass runtime", () => {
   it("persists runtime, channel-driver, and plugin selections", async () => {
     const script = await renderPersistedGuestScript({
       outputDirName: "multipass-selection-test",
-      runtimePair: ["openclaw", "codex"],
+      runtimePair: ["grokbot", "codex"],
       channelDriverSelection: {
         capabilityMatrixPath: "crabline-fake-provider-capabilities.json",
         channel: "telegram",
@@ -189,7 +189,7 @@ describe("qa multipass runtime", () => {
       enabledPluginIds: ["browser", "memory-core", "browser"],
     });
 
-    expect(script).toContain("'--runtime-pair' 'openclaw,codex'");
+    expect(script).toContain("'--runtime-pair' 'grokbot,codex'");
     expect(script).toContain("'--channel-driver' 'crabline' '--channel' 'telegram'");
     expect(script).toContain("'--enable-plugin' 'browser' '--enable-plugin' 'memory-core'");
   });
@@ -218,7 +218,7 @@ describe("qa multipass runtime", () => {
   });
 
   it("omits stale CODEX_HOME values", async () => {
-    vi.stubEnv("CODEX_HOME", "/tmp/does-not-exist-openclaw-codex-home");
+    vi.stubEnv("CODEX_HOME", "/tmp/does-not-exist-grokbot-codex-home");
     const script = await renderPersistedGuestScript({
       outputDirName: "multipass-stale-codex-home-test",
       providerMode: "live-frontier",
@@ -228,7 +228,7 @@ describe("qa multipass runtime", () => {
   });
 
   it("uses os.homedir() when HOME is unset for CODEX_HOME discovery", async () => {
-    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-multipass-home-"));
+    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-multipass-home-"));
     const fakeHome = path.join(tempRoot, "home");
     fs.mkdirSync(path.join(fakeHome, ".codex"), { recursive: true });
     vi.stubEnv("HOME", "");
@@ -240,7 +240,7 @@ describe("qa multipass runtime", () => {
         outputDirName: "multipass-home-test",
         providerMode: "live-frontier",
       });
-      expect(script).toContain("CODEX_HOME='/workspace/openclaw-codex-home'");
+      expect(script).toContain("CODEX_HOME='/workspace/grokbot-codex-home'");
       expect(script).not.toContain(fakeHome);
     } finally {
       fs.rmSync(tempRoot, { recursive: true, force: true });

@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: openclaw
+  name: grokbot
   labels:
-    app: openclaw
+    app: grokbot
 spec:
   type: ClusterIP
   selector:
-    app: openclaw
+    app: grokbot
   ports:
     - name: gateway
       port: 18789

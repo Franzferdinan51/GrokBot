@@ -1,8 +1,8 @@
 /** Prepares and runs auto-reply agent turns, including prompt context and session policy. */
 import crypto from "node:crypto";
-import { normalizeProviderId } from "@openclaw/model-catalog-core/provider-id";
-import { asDateTimestampMs } from "@openclaw/normalization-core/number-coercion";
-import { type FastMode, normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+import { normalizeProviderId } from "@grokbot/model-catalog-core/provider-id";
+import { asDateTimestampMs } from "@grokbot/normalization-core/number-coercion";
+import { type FastMode, normalizeOptionalString } from "@grokbot/normalization-core/string-coerce";
 import {
   clearAutoFallbackPrimaryProbeSelection,
   hasLegacyAutoFallbackWithoutOrigin,
@@ -36,7 +36,7 @@ import {
 } from "../../config/sessions/sqlite-marker.js";
 import type { PendingSkillSuggestion, SessionEntry } from "../../config/sessions/types.js";
 import { resolveSilentReplySettings } from "../../config/silent-reply.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import { logVerbose } from "../../globals.js";
 import { measureDiagnosticsTimelineSpan } from "../../infra/diagnostics-timeline.js";
 import { resolveHeartbeatRunScope } from "../../infra/heartbeat-run-scope.js";
@@ -1517,7 +1517,7 @@ export async function runPreparedReply(
           // LLM-boundary stamping site (normalizeMessagesForLlmBoundary) can
           // derive a stable per-message `[DOW YYYY-MM-DD HH:MM TZ]` prefix that
           // is identical whether this turn is sent as the current turn or
-          // replayed as history. See: https://github.com/openclaw/openclaw/issues/3658
+          // replayed as history. See: https://github.com/grokbot/grokbot/issues/3658
           ...(userTurnTimestamp ? { timestamp: userTurnTimestamp } : {}),
           // Direct transcripts keep their existing identity-storage boundary.
           sender: persistGroupSender

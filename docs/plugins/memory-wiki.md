@@ -33,7 +33,7 @@ A common local-first setup: QMD as the active memory backend for recall, and
 QMD + bridge mode example under [Configuration](#configuration).
 
 If bridge mode reports zero exported artifacts, the active memory plugin is
-not currently exposing public bridge inputs. Run `openclaw wiki doctor` first,
+not currently exposing public bridge inputs. Run `grokbot wiki doctor` first,
 then confirm the active memory plugin supports public artifacts.
 
 ## Vault modes
@@ -62,7 +62,7 @@ Bridge mode can index, per `bridge.*` config toggle:
 - memory event logs (`followMemoryEvents`)
 
 When bridge mode is active and `bridge.readMemoryArtifacts` is enabled,
-`openclaw wiki status`, `openclaw wiki doctor`, and `openclaw wiki bridge
+`grokbot wiki status`, `grokbot wiki doctor`, and `grokbot wiki bridge
 import` route through the running Gateway so they see the same active memory
 plugin context as agent/runtime memory. If bridge is disabled or artifact
 reads are off, those commands keep local/offline behavior.
@@ -82,7 +82,7 @@ reads are off, those commands keep local/offline behavior.
   reports/
   _attachments/
   _views/
-  .openclaw-wiki/
+  .grokbot-wiki/
 ```
 
 Managed content stays inside generated blocks; human note blocks are
@@ -97,13 +97,13 @@ preserved across regeneration.
 ## Open Knowledge Format imports
 
 ```bash
-openclaw wiki okf import ./bundles/ga4
+grokbot wiki okf import ./bundles/ga4
 ```
 
 Import an unpacked Open Knowledge Format bundle into wiki concept pages. Good
 fit when a data catalog, documentation crawler, or enrichment agent already
 produces OKF: keep OKF as the portable exchange artifact, let `memory-wiki`
-turn it into OpenClaw-native concept pages and compiled digests.
+turn it into GrokBot-native concept pages and compiled digests.
 
 - non-reserved `.md` files are concept documents
 - each imported concept requires a non-empty `type` frontmatter field; missing `type` produces a `missing-type` warning and the file is skipped
@@ -197,7 +197,7 @@ claims:
 ## Compile pipeline
 
 Compile reads wiki pages, normalizes summaries, and persists a machine-facing
-snapshot in OpenClaw's shared SQLite plugin state. Runtime code uses the
+snapshot in GrokBot's shared SQLite plugin state. Runtime code uses the
 lifecycle-owned owner snapshot to load SQLite during async prompt preparation;
 synchronous prompt assembly never scrapes Markdown or reads cache files.
 Compiled output also powers first-pass wiki indexing for search/get, claim-id
@@ -299,13 +299,13 @@ Put config under `plugins.entries.memory-wiki.config`:
           vaultMode: "isolated",
           vault: {
             scope: "global",
-            path: "~/.openclaw/wiki/main",
+            path: "~/.grokbot/wiki/main",
             renderMode: "obsidian",
           },
           obsidian: {
             enabled: true,
             useOfficialCli: true,
-            vaultName: "OpenClaw Wiki",
+            vaultName: "GrokBot Wiki",
             openAfterWrites: false,
           },
           bridge: {
@@ -350,7 +350,7 @@ Key toggles:
 | ------------------------------------------ | ---------------------------------------------- | ----------------------------------------------------------------------------- |
 | `vaultMode`                                | `isolated` (default), `bridge`, `unsafe-local` | chooses input and integration behavior                                        |
 | `vault.scope`                              | `global` (default), `agent`                    | one shared vault or one child vault per agent                                 |
-| `vault.path`                               | global default `~/.openclaw/wiki/main`         | exact vault globally; agent-scope parent defaults to `~/.openclaw/wiki`       |
+| `vault.path`                               | global default `~/.grokbot/wiki/main`         | exact vault globally; agent-scope parent defaults to `~/.grokbot/wiki`       |
 | `vault.renderMode`                         | `native` (default), `obsidian`                 |                                                                               |
 | `bridge.readMemoryArtifacts`               | default `true`                                 | import active memory plugin public artifacts                                  |
 | `bridge.followMemoryEvents`                | default `true`                                 | include event logs in bridge mode                                             |
@@ -365,7 +365,7 @@ Key toggles:
 ### Per-agent vaults
 
 Set `vault.scope` to `agent` to give every configured agent a separate wiki.
-In this scope, `vault.path` is a parent directory and OpenClaw appends the
+In this scope, `vault.path` is a parent directory and GrokBot appends the
 normalized agent id:
 
 ```json5
@@ -381,7 +381,7 @@ normalized agent id:
           vaultMode: "bridge",
           vault: {
             scope: "agent",
-            path: "~/.openclaw/wiki",
+            path: "~/.grokbot/wiki",
           },
           bridge: {
             enabled: true,
@@ -394,15 +394,15 @@ normalized agent id:
 }
 ```
 
-This resolves to `~/.openclaw/wiki/support` and
-`~/.openclaw/wiki/marketing`. If `vault.path` is omitted in agent scope, the
-parent defaults to `~/.openclaw/wiki`. The default `main` agent therefore keeps
-the existing `~/.openclaw/wiki/main` path.
+This resolves to `~/.grokbot/wiki/support` and
+`~/.grokbot/wiki/marketing`. If `vault.path` is omitted in agent scope, the
+parent defaults to `~/.grokbot/wiki`. The default `main` agent therefore keeps
+the existing `~/.grokbot/wiki/main` path.
 
 Agent tools, compiled prompt digests, and the wiki supplement exposed through
 `memory_search` / `memory_get` resolve the vault from the active agent context.
 For CLI and Gateway calls in a setup with multiple configured agents, provide
-the agent explicitly with `openclaw wiki --agent <agentId> ...` or the Gateway
+the agent explicitly with `grokbot wiki --agent <agentId> ...` or the Gateway
 request's `agentId`. A single configured agent remains the default when no id is
 provided.
 
@@ -471,17 +471,17 @@ intentionally enable compiled digest prompts.
 ## CLI
 
 ```bash
-openclaw wiki status
-openclaw wiki doctor
-openclaw wiki init
-openclaw wiki ingest ./notes/alpha.md
-openclaw wiki compile
-openclaw wiki lint
-openclaw wiki search "alpha"
-openclaw wiki get entity.alpha
-openclaw wiki apply synthesis "Alpha Summary" --body "..." --source-id source.alpha
-openclaw wiki bridge import
-openclaw wiki obsidian status
+grokbot wiki status
+grokbot wiki doctor
+grokbot wiki init
+grokbot wiki ingest ./notes/alpha.md
+grokbot wiki compile
+grokbot wiki lint
+grokbot wiki search "alpha"
+grokbot wiki get entity.alpha
+grokbot wiki apply synthesis "Alpha Summary" --body "..." --source-id source.alpha
+grokbot wiki bridge import
+grokbot wiki obsidian status
 ```
 
 See [CLI: wiki](/cli/wiki) for the full command reference, including

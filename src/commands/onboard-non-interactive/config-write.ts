@@ -1,5 +1,5 @@
 import { replaceConfigFile } from "../../config/config.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 /**
  * Config write commit helper for non-interactive onboarding.
  *
@@ -21,7 +21,7 @@ export async function commitNonInteractiveOnboardConfig(params: {
   reset?: boolean;
 }): Promise<OpenClawConfig> {
   // Ordinary onboard reruns must preserve existing agents.list / bindings.
-  // Only explicit --reset may allow a config size drop; see openclaw#84692.
+  // Only explicit --reset may allow a config size drop; see grokbot#84692.
   const allowConfigSizeDrop = params.reset === true;
   let writeBaseHash = params.baseHash;
   let nextConfig = params.nextConfig;

@@ -30,7 +30,7 @@ function createProgram(config: Record<string, unknown> = {}): Command {
 }
 
 async function createSetupPlan(args: string[]): Promise<VaultPlan> {
-  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-vault-cli-"));
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-vault-cli-"));
   const planPath = path.join(dir, "plan.json");
   const stdout = captureStdout();
   try {
@@ -100,7 +100,7 @@ describe("vault CLI setup plan", () => {
     ]);
   });
 
-  it("generates arbitrary known OpenClaw and auth-profile targets", async () => {
+  it("generates arbitrary known GrokBot and auth-profile targets", async () => {
     const plan = await createSetupPlan([
       "--target",
       "channels.telegram.botToken=channels/telegram/botToken",

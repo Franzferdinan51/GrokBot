@@ -9,7 +9,7 @@ import {
   isSessionLifecycleMutationActive,
   runExclusiveSessionLifecycleMutation,
 } from "../../sessions/session-lifecycle-admission.js";
-import { withOpenClawTestState } from "../../test-utils/openclaw-test-state.js";
+import { withOpenClawTestState } from "../../test-utils/grokbot-test-state.js";
 import { createRuntimeAgent } from "./runtime-agent.js";
 
 function createDeferred(): { promise: Promise<void>; resolve: () => void } {
@@ -274,7 +274,7 @@ describe("plugin runtime session creation", () => {
       async (state) => {
         const runtime = createRuntimeAgent();
         const key = "agent:main:dashboard:codex-initial-write-failure";
-        fs.mkdirSync(path.join(state.agentDir(), "openclaw-agent.sqlite"), { recursive: true });
+        fs.mkdirSync(path.join(state.agentDir(), "grokbot-agent.sqlite"), { recursive: true });
         let initializerRan = false;
 
         await expect(
@@ -873,7 +873,7 @@ describe("plugin runtime session work admission", () => {
   const sessionId = "voice-session-id";
 
   beforeEach(async () => {
-    tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-plugin-session-admission-"));
+    tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-plugin-session-admission-"));
     storePath = path.join(tempDir, "sessions.json");
     await createRuntimeAgent().session.upsertSessionEntry({
       storePath,

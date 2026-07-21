@@ -4,7 +4,7 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 source "$ROOT_DIR/scripts/lib/docker-e2e-image.sh"
 
-IMAGE_NAME="$(docker_e2e_resolve_image "openclaw-agents-delete-shared-workspace-e2e:local" OPENCLAW_AGENTS_DELETE_SHARED_WORKSPACE_E2E_IMAGE)"
+IMAGE_NAME="$(docker_e2e_resolve_image "grokbot-agents-delete-shared-workspace-e2e:local" OPENCLAW_AGENTS_DELETE_SHARED_WORKSPACE_E2E_IMAGE)"
 SKIP_BUILD="${OPENCLAW_AGENTS_DELETE_SHARED_WORKSPACE_E2E_SKIP_BUILD:-0}"
 DOCKER_COMMAND_TIMEOUT="${OPENCLAW_AGENTS_DELETE_SHARED_WORKSPACE_DOCKER_COMMAND_TIMEOUT:-300s}"
 OPENCLAW_TEST_STATE_SCRIPT_B64="$(docker_e2e_test_state_shell_b64 agents-delete-shared-workspace empty)"
@@ -28,18 +28,18 @@ run_logged agents-delete-shared-workspace docker_e2e_docker_cmd run --rm \
   "$IMAGE_NAME" \
   -lc '
 set -euo pipefail
-source scripts/lib/openclaw-e2e-instance.sh
+source scripts/lib/grokbot-e2e-instance.sh
 
 run_openclaw() {
-  if command -v openclaw >/dev/null 2>&1; then
-    openclaw "$@"
+  if command -v grokbot >/dev/null 2>&1; then
+    grokbot "$@"
     return
   fi
-  if [ -f /app/openclaw.mjs ]; then
-    node /app/openclaw.mjs "$@"
+  if [ -f /app/grokbot.mjs ]; then
+    node /app/grokbot.mjs "$@"
     return
   fi
-  echo "openclaw CLI not found in Docker image" >&2
+  echo "grokbot CLI not found in Docker image" >&2
   exit 1
 }
 

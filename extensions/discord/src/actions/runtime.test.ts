@@ -1,8 +1,8 @@
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 // Discord tests cover runtime plugin behavior.
 import { ChannelType, PermissionFlagsBits } from "discord-api-types/v10";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import type { DiscordActionConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import type { DiscordActionConfig } from "grokbot/plugin-sdk/config-contracts";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { clearPresences, setPresence } from "../monitor/presence-cache.js";
 import { DiscordThreadInitialMessageError } from "../send.js";
@@ -1517,7 +1517,7 @@ describe("handleDiscordMessagingAction", () => {
     });
     fetchGuildInfoDiscord.mockResolvedValueOnce({
       id: "111",
-      name: "Friends of OpenClaw",
+      name: "Friends of GrokBot",
     });
     const cfg = {
       channels: {
@@ -1525,7 +1525,7 @@ describe("handleDiscordMessagingAction", () => {
           token: "token",
           groupPolicy: "allowlist",
           guilds: {
-            "friends-of-openclaw": {
+            "friends-of-grokbot": {
               channels: {
                 "222": { enabled: true },
               },
@@ -1630,7 +1630,7 @@ describe("handleDiscordMessagingAction", () => {
     });
     fetchGuildInfoDiscord.mockResolvedValueOnce({
       id: "111",
-      name: "Friends of OpenClaw",
+      name: "Friends of GrokBot",
     });
     const cfg = {
       channels: {
@@ -1638,7 +1638,7 @@ describe("handleDiscordMessagingAction", () => {
           token: "token",
           groupPolicy: "allowlist",
           guilds: {
-            "friends-of-openclaw": {
+            "friends-of-grokbot": {
               channels: {
                 "222": { enabled: true },
               },

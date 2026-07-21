@@ -1,42 +1,42 @@
 // Telegram plugin module implements channel behavior.
-import { DEFAULT_ACCOUNT_ID } from "openclaw/plugin-sdk/account-id";
+import { DEFAULT_ACCOUNT_ID } from "grokbot/plugin-sdk/account-id";
 import {
   buildDmGroupAccountAllowlistAdapter,
   createNestedAllowlistOverrideResolver,
-} from "openclaw/plugin-sdk/allowlist-config-edit";
-import type { ChannelMessageActionAdapter } from "openclaw/plugin-sdk/channel-contract";
+} from "grokbot/plugin-sdk/allowlist-config-edit";
+import type { ChannelMessageActionAdapter } from "grokbot/plugin-sdk/channel-contract";
 import {
   buildChannelOutboundSessionRoute,
   buildThreadAwareOutboundSessionRoute,
   clearAccountEntryFields,
   createChatChannelPlugin,
-} from "openclaw/plugin-sdk/channel-core";
-import { createAccountStatusSink } from "openclaw/plugin-sdk/channel-outbound";
-import { createChannelMessageAdapterFromOutbound } from "openclaw/plugin-sdk/channel-outbound";
+} from "grokbot/plugin-sdk/channel-core";
+import { createAccountStatusSink } from "grokbot/plugin-sdk/channel-outbound";
+import { createChannelMessageAdapterFromOutbound } from "grokbot/plugin-sdk/channel-outbound";
 import {
   resolveOutboundSendDep,
   type OutboundSendDeps,
-} from "openclaw/plugin-sdk/channel-outbound";
-import { createPairingPrefixStripper } from "openclaw/plugin-sdk/channel-pairing";
+} from "grokbot/plugin-sdk/channel-outbound";
+import { createPairingPrefixStripper } from "grokbot/plugin-sdk/channel-pairing";
 import {
   PAIRING_APPROVED_MESSAGE,
   buildTokenChannelStatusSummary,
   projectCredentialSnapshotFields,
   resolveConfiguredFromCredentialStatuses,
-} from "openclaw/plugin-sdk/channel-status";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { createChannelDirectoryAdapter } from "openclaw/plugin-sdk/directory-runtime";
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
-import { createLazyRuntimeModule } from "openclaw/plugin-sdk/lazy-runtime";
-import type { RoutePeer } from "openclaw/plugin-sdk/routing";
+} from "grokbot/plugin-sdk/channel-status";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { createChannelDirectoryAdapter } from "grokbot/plugin-sdk/directory-runtime";
+import { formatErrorMessage } from "grokbot/plugin-sdk/error-runtime";
+import { createLazyRuntimeModule } from "grokbot/plugin-sdk/lazy-runtime";
+import type { RoutePeer } from "grokbot/plugin-sdk/routing";
 import {
   createComputedAccountStatusAdapter,
   createDefaultChannelRuntimeState,
-} from "openclaw/plugin-sdk/status-helpers";
+} from "grokbot/plugin-sdk/status-helpers";
 import {
   normalizeOptionalLowercaseString,
   normalizeOptionalString,
-} from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/string-coerce-runtime";
 import {
   mergeTelegramAccountConfig,
   resolveDefaultTelegramAccountId,
@@ -629,7 +629,7 @@ function resolveTelegramNativeTopicThreadId(
   if (nativeTopicId !== undefined) {
     return nativeTopicId;
   }
-  // Keep the chat-scoped canonical id inside OpenClaw state; translate it back
+  // Keep the chat-scoped canonical id inside GrokBot state; translate it back
   // only when returning Telegram route metadata used by send/typing paths.
   if (threadId === undefined) {
     return undefined;
@@ -826,7 +826,7 @@ export const telegramPlugin = createChatChannelPlugin({
           return {
             text_markup: "markdown_telegram_rich",
             rules: [
-              "Telegram rich ON (Bot API 10.2 blocks; OpenClaw maps markdown + these HTML islands to typed blocks).",
+              "Telegram rich ON (Bot API 10.2 blocks; GrokBot maps markdown + these HTML islands to typed blocks).",
               'Supported: headings, tables (markdown, or `<table>` HTML for caption/colspan/rowspan/align), block/pull quotes (`<aside>` + `<cite>`), `<details><summary>` (+`open`), dividers `<hr/>`, sup/sub/mark/spoilers, `<ul>`/`<ol>` + `<input type="checkbox" checked/>` tasks, code, anchors `<a name="x"></a>` + `<a href="#x">label</a>`, custom emoji `<tg-emoji emoji-id="...">`, maps `<tg-map lat="" long="" zoom=""/>`, collages/slideshows `<tg-collage>`/`<tg-slideshow>`, block media e.g. `<img src="https://..."/>` (+`<figure>`/`<figcaption>`).',
               "Math: `<tg-math>` inline, `<tg-math-block>` block; never `$...$`/`\\(...\\)`.",
               "Not MarkdownV2/parse_mode.",

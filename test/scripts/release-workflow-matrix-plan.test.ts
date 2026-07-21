@@ -1,13 +1,13 @@
 // Release Workflow Matrix Plan tests cover release workflow matrix plan script behavior.
 import { readFileSync } from "node:fs";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { describe, expect, it } from "vitest";
 import { parse } from "yaml";
 import { createReleaseWorkflowMatrixPlan } from "../../scripts/plan-release-workflow-matrix.mjs";
 
 function workflow(): WorkflowDocument {
   return parse(
-    readFileSync(".github/workflows/openclaw-live-and-e2e-checks-reusable.yml", "utf8"),
+    readFileSync(".github/workflows/grokbot-live-and-e2e-checks-reusable.yml", "utf8"),
   ) as WorkflowDocument;
 }
 
@@ -191,7 +191,7 @@ describe("scripts/plan-release-workflow-matrix.mjs", () => {
       "${{ inputs.allow_unreleased_changelog }}",
     );
     const packageStep = requiredJob(definition, "prepare_docker_e2e_image").steps.find(
-      (step: WorkflowStep) => step.name === "Pack OpenClaw package for Docker E2E",
+      (step: WorkflowStep) => step.name === "Pack GrokBot package for Docker E2E",
     );
     const requiredPackageStep = expectDefined(packageStep, "Docker E2E package step");
     expect(requiredPackageStep.env?.ALLOW_UNRELEASED_CHANGELOG).toBe(

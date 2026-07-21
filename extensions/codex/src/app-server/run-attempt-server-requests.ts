@@ -1,4 +1,4 @@
-import { onInternalDiagnosticEvent } from "openclaw/plugin-sdk/diagnostic-runtime";
+import { onInternalDiagnosticEvent } from "grokbot/plugin-sdk/diagnostic-runtime";
 import { isCodexAppServerApprovalRequest } from "./client.js";
 import { shouldAutoApproveCodexAppServerApprovals } from "./config.js";
 import {

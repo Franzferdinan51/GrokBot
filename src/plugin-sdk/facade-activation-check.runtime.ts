@@ -132,7 +132,7 @@ function readBundledPluginManifestRecordFromDir(params: {
   const manifestPath = path.join(
     params.pluginsRoot,
     params.resolvedDirName,
-    "openclaw.plugin.json",
+    "grokbot.plugin.json",
   );
   if (!fs.existsSync(manifestPath)) {
     return null;

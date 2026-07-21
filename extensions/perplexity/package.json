@@ -1,22 +1,22 @@
 {
-  "name": "@openclaw/perplexity-plugin",
+  "name": "@grokbot/perplexity-plugin",
   "version": "2026.7.2",
-  "description": "OpenClaw Perplexity plugin.",
+  "description": "GrokBot Perplexity plugin.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/openclaw/openclaw"
+    "url": "https://github.com/grokbot/grokbot"
   },
   "type": "module",
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@grokbot/plugin-sdk": "workspace:*"
   },
-  "openclaw": {
+  "grokbot": {
     "extensions": [
       "./index.ts"
     ],
     "install": {
-      "clawhubSpec": "clawhub:@openclaw/perplexity-plugin",
-      "npmSpec": "@openclaw/perplexity-plugin",
+      "clawhubSpec": "clawhub:@grokbot/perplexity-plugin",
+      "npmSpec": "@grokbot/perplexity-plugin",
       "defaultChoice": "npm",
       "minHostVersion": ">=2026.6.8"
     },

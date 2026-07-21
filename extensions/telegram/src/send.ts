@@ -2,27 +2,27 @@
 import * as grammy from "grammy";
 import { type ApiClientOptions, Bot, HttpError } from "grammy";
 import type { ReactionType, ReactionTypeEmoji } from "grammy/types";
-import { recordChannelActivity } from "openclaw/plugin-sdk/channel-activity-runtime";
+import { recordChannelActivity } from "grokbot/plugin-sdk/channel-activity-runtime";
 import {
   formatLocationText,
   normalizeOutboundLocation,
   type OutboundLocation,
-} from "openclaw/plugin-sdk/channel-inbound";
+} from "grokbot/plugin-sdk/channel-inbound";
 import {
   createMessageReceiptFromOutboundResults,
   type MessageReceipt,
-} from "openclaw/plugin-sdk/channel-outbound";
-import type { MarkdownTableMode, ReplyToMode } from "openclaw/plugin-sdk/config-contracts";
-import { isDiagnosticFlagEnabled } from "openclaw/plugin-sdk/diagnostic-runtime";
-import { formatUncaughtError } from "openclaw/plugin-sdk/error-runtime";
-import { redactSensitiveText } from "openclaw/plugin-sdk/logging-core";
-import { parseStrictInteger } from "openclaw/plugin-sdk/number-runtime";
-import { resolveTextChunkLimit } from "openclaw/plugin-sdk/reply-chunking";
-import { isSingleUseReplyToMode } from "openclaw/plugin-sdk/reply-reference";
-import { createChannelApiRetryRunner, type RetryConfig } from "openclaw/plugin-sdk/retry-runtime";
-import { createSubsystemLogger, logVerbose } from "openclaw/plugin-sdk/runtime-env";
-import { formatErrorMessage } from "openclaw/plugin-sdk/ssrf-runtime";
-import { normalizeOptionalString } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/channel-outbound";
+import type { MarkdownTableMode, ReplyToMode } from "grokbot/plugin-sdk/config-contracts";
+import { isDiagnosticFlagEnabled } from "grokbot/plugin-sdk/diagnostic-runtime";
+import { formatUncaughtError } from "grokbot/plugin-sdk/error-runtime";
+import { redactSensitiveText } from "grokbot/plugin-sdk/logging-core";
+import { parseStrictInteger } from "grokbot/plugin-sdk/number-runtime";
+import { resolveTextChunkLimit } from "grokbot/plugin-sdk/reply-chunking";
+import { isSingleUseReplyToMode } from "grokbot/plugin-sdk/reply-reference";
+import { createChannelApiRetryRunner, type RetryConfig } from "grokbot/plugin-sdk/retry-runtime";
+import { createSubsystemLogger, logVerbose } from "grokbot/plugin-sdk/runtime-env";
+import { formatErrorMessage } from "grokbot/plugin-sdk/ssrf-runtime";
+import { normalizeOptionalString } from "grokbot/plugin-sdk/string-coerce-runtime";
 import { getOrCreateAccountThrottler } from "./account-throttler.js";
 import { type ResolvedTelegramAccount, resolveTelegramAccount } from "./accounts.js";
 import { withTelegramApiErrorLogging } from "./api-logging.js";

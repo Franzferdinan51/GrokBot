@@ -9,7 +9,7 @@ import { getCompletionScript } from "./completion-cli.js";
 
 function createCompletionProgram(): Command {
   const program = new Command();
-  program.name("openclaw");
+  program.name("grokbot");
   program.description("CLI root");
   program.option("-v, --verbose", "Verbose output");
   program.option(
@@ -48,7 +48,7 @@ describe("completion-cli", () => {
 
   it("escapes zsh option descriptions for double-quoted arguments specs", () => {
     const program = new Command()
-      .name("openclaw")
+      .name("grokbot")
       .option("--literal", "Use $OPENCLAW_STATE_DIR with `model/list` and John's profile");
 
     const script = getCompletionScript("zsh", program);
@@ -75,9 +75,9 @@ describe("completion-cli", () => {
       throw probe.error;
     }
 
-    const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-zsh-completion-"));
+    const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-zsh-completion-"));
     try {
-      const scriptPath = path.join(tempDir, "openclaw.zsh");
+      const scriptPath = path.join(tempDir, "grokbot.zsh");
       await fs.writeFile(scriptPath, getCompletionScript("zsh", createCompletionProgram()), "utf8");
 
       const result = spawnSync(
@@ -86,13 +86,13 @@ describe("completion-cli", () => {
           "-fc",
           `
             source ${JSON.stringify(scriptPath)}
-            [[ -z "\${_comps[openclaw]-}" ]] || exit 10
+            [[ -z "\${_comps[grokbot]-}" ]] || exit 10
             [[ "\${precmd_functions[(r)_openclaw_register_completion]}" = "_openclaw_register_completion" ]] || exit 11
             autoload -Uz compinit
             compinit -C
             _openclaw_register_completion
             [[ -z "\${precmd_functions[(r)_openclaw_register_completion]}" ]] || exit 12
-            [[ "\${_comps[openclaw]-}" = "_openclaw_root_completion" ]]
+            [[ "\${_comps[grokbot]-}" = "_openclaw_root_completion" ]]
           `,
         ],
         {
@@ -117,16 +117,16 @@ describe("completion-cli", () => {
 
     expect(script).toContain("if ($commandPath -eq 'gateway') {");
     expect(script).toContain("if ($commandPath -eq 'gateway status') {");
-    expect(script).not.toContain("if ($commandPath -eq 'openclaw gateway') {");
+    expect(script).not.toContain("if ($commandPath -eq 'grokbot gateway') {");
     expect(script).toContain("$completions = @('status','restart','--force','--token')");
     expect(script).not.toContain("'-t,'");
   });
 
   it("generates valid PowerShell root arrays when commands or options are empty", () => {
-    const commandsOnly = new Command().name("openclaw");
+    const commandsOnly = new Command().name("grokbot");
     commandsOnly.command("status");
-    const optionsOnly = new Command().name("openclaw").option("--json", "JSON output");
-    const empty = new Command().name("openclaw");
+    const optionsOnly = new Command().name("grokbot").option("--json", "JSON output");
+    const empty = new Command().name("grokbot");
 
     expect(getCompletionScript("powershell", commandsOnly)).toContain("$completions = @('status')");
     expect(getCompletionScript("powershell", optionsOnly)).toContain("$completions = @('--json')");
@@ -137,16 +137,16 @@ describe("completion-cli", () => {
     const script = getCompletionScript("fish", createCompletionProgram());
 
     expect(script).toContain(
-      'complete -c openclaw -n "__fish_use_subcommand" -a "gateway" -d \'Gateway commands\'',
+      'complete -c grokbot -n "__fish_use_subcommand" -a "gateway" -d \'Gateway commands\'',
     );
     expect(script).toContain(
-      'complete -c openclaw -n "__openclaw_command_path_matches gateway -- -t --token" -a "status" -d \'Show gateway status\'',
+      'complete -c grokbot -n "__openclaw_command_path_matches gateway -- -t --token" -a "status" -d \'Show gateway status\'',
     );
     expect(script).toContain(
-      "complete -c openclaw -n \"__openclaw_command_path_matches gateway -- -t --token\" -l force -d 'Force the action'",
+      "complete -c grokbot -n \"__openclaw_command_path_matches gateway -- -t --token\" -l force -d 'Force the action'",
     );
     expect(script).toContain(
-      "complete -c openclaw -n \"__openclaw_command_path_matches gateway status -- -t --token\" -l json -d 'JSON output'",
+      "complete -c grokbot -n \"__openclaw_command_path_matches gateway status -- -t --token\" -l json -d 'JSON output'",
     );
     expect(script).toContain("__openclaw_command_path_matches gateway -- -t --token");
     expect(script).toContain("if contains -- $flag $value_options");
@@ -159,20 +159,20 @@ describe("completion-cli", () => {
     expect(script).toContain("__openclaw_command_path_matches sessions cleanup --");
     expect(script).not.toContain("__openclaw_command_path_matches sessions cleanup -- --verbose");
     expect(script).toContain(
-      "complete -c openclaw -n \"__openclaw_command_path_matches sessions cleanup --\" -l dry-run -d 'Preview cleanup'",
+      "complete -c grokbot -n \"__openclaw_command_path_matches sessions cleanup --\" -l dry-run -d 'Preview cleanup'",
     );
   });
 
   it("uses Commander's parsed flags instead of value placeholder syntax", () => {
     const program = new Command()
-      .name("openclaw")
+      .name("grokbot")
       .option("--trigger-script <path|->", "Condition script file, or - for stdin")
       .option("--ws, --workspace <name>", "Workspace");
 
     const fishScript = getCompletionScript("fish", program);
 
     expect(fishScript).toContain(
-      "complete -c openclaw -n \"__fish_use_subcommand\" -l trigger-script -d 'Condition script file, or - for stdin'",
+      "complete -c grokbot -n \"__fish_use_subcommand\" -l trigger-script -d 'Condition script file, or - for stdin'",
     );
     expect(fishScript).not.toContain(" -s > ");
     expect(fishScript).toContain(" -l ws -l workspace -d 'Workspace'");
@@ -192,7 +192,7 @@ describe("completion-cli", () => {
       return;
     }
 
-    const script = getCompletionScript("bash", new Command().name("openclaw"));
+    const script = getCompletionScript("bash", new Command().name("grokbot"));
     const result = spawnSync("bash", ["--noprofile", "--norc", "-n"], {
       encoding: "utf8",
       input: script,
@@ -203,11 +203,11 @@ describe("completion-cli", () => {
   });
 });
 
-// Commander aliases are typeable commands (`openclaw capability` == `openclaw infer`),
+// Commander aliases are typeable commands (`grokbot capability` == `grokbot infer`),
 // so every shell must complete alias names and keep completing after an alias.
 function createAliasedCompletionProgram(): Command {
   const program = new Command();
-  program.name("openclaw");
+  program.name("grokbot");
   program.option("--profile <name>", "Profile");
   const infer = program.command("infer").alias("capability").description("Run inference");
   infer.command("embed").description("Embed text").option("--model <id>", "Model id");
@@ -254,7 +254,7 @@ describe("completion-cli command aliases", () => {
         "--norc",
         "-c",
         `${script}
-COMP_WORDS=(openclaw --profile work cron create --a)
+COMP_WORDS=(grokbot --profile work cron create --a)
 COMP_CWORD=5
 _openclaw_completion
 printf '%s\\n' "\${COMPREPLY[@]}"
@@ -281,16 +281,16 @@ printf '%s\\n' "\${COMPREPLY[@]}"
     const script = getCompletionScript("fish", createAliasedCompletionProgram());
 
     expect(script).toContain(
-      'complete -c openclaw -n "__fish_use_subcommand" -a "capability" -d \'Run inference\'',
+      'complete -c grokbot -n "__fish_use_subcommand" -a "capability" -d \'Run inference\'',
     );
     expect(script).toContain(
-      'complete -c openclaw -n "__openclaw_command_path_matches capability -- --profile" -a "embed" -d \'Embed text\'',
+      'complete -c grokbot -n "__openclaw_command_path_matches capability -- --profile" -a "embed" -d \'Embed text\'',
     );
     expect(script).toContain(
-      'complete -c openclaw -n "__openclaw_command_path_matches cron -- --profile" -a "create" -d \'Add a job\'',
+      'complete -c grokbot -n "__openclaw_command_path_matches cron -- --profile" -a "create" -d \'Add a job\'',
     );
     expect(script).toContain(
-      "complete -c openclaw -n \"__openclaw_command_path_matches cron create -- --profile --at\" -l at -d 'Schedule time'",
+      "complete -c grokbot -n \"__openclaw_command_path_matches cron create -- --profile --at\" -l at -d 'Schedule time'",
     );
   });
 

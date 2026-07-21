@@ -1,10 +1,10 @@
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { isLiveTestEnabled } from "../../agents/live-test-helpers.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import {
   createOpenClawTestState,
   type OpenClawTestState,
-} from "../../test-utils/openclaw-test-state.js";
+} from "../../test-utils/grokbot-test-state.js";
 import { createTrackedTempDirs } from "../../test-utils/tracked-temp-dirs.js";
 import { formatSkillExperienceReviewTranscript } from "./experience-review-prompt.js";
 import type { SkillHistoryScanPromptSession } from "./history-scan-prompt.js";
@@ -26,7 +26,7 @@ function liveConfig(): OpenClawConfig {
       providers: {
         openai: {
           api: "openai-responses",
-          agentRuntime: { id: "openclaw" },
+          agentRuntime: { id: "grokbot" },
           apiKey: { source: "env", provider: "default", id: "OPENAI_API_KEY" },
           baseUrl: "https://api.openai.com/v1",
           models: [
@@ -34,7 +34,7 @@ function liveConfig(): OpenClawConfig {
               id: modelId,
               name: modelId,
               api: "openai-responses",
-              agentRuntime: { id: "openclaw" },
+              agentRuntime: { id: "grokbot" },
               input: ["text"],
               reasoning: true,
               contextWindow: 1_047_576,
@@ -50,7 +50,7 @@ function liveConfig(): OpenClawConfig {
         model: { primary: `openai/${modelId}` },
         models: {
           [`openai/${modelId}`]: {
-            agentRuntime: { id: "openclaw" },
+            agentRuntime: { id: "grokbot" },
             params: { maxTokens: 3_000 },
           },
         },
@@ -84,9 +84,9 @@ describeLive("Skill Workshop history scan live OpenAI eval", () => {
   beforeAll(async () => {
     testState = await createOpenClawTestState({
       layout: "state-only",
-      prefix: "openclaw-live-skill-history-state-",
+      prefix: "grokbot-live-skill-history-state-",
     });
-    workspaceDir = await tempDirs.make("openclaw-live-skill-history-workspace-");
+    workspaceDir = await tempDirs.make("grokbot-live-skill-history-workspace-");
   });
 
   afterAll(async () => {

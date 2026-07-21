@@ -1,10 +1,10 @@
-// Resolve OpenClaw ref tests cover the release workflow ref resolver script.
+// Resolve GrokBot ref tests cover the release workflow ref resolver script.
 import { execFileSync, spawnSync } from "node:child_process";
 import { join } from "node:path";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { createTempDirTracker } from "../helpers/temp-dir.js";
 
-const SCRIPT_PATH = "scripts/github/resolve-openclaw-ref.sh";
+const SCRIPT_PATH = "scripts/github/resolve-grokbot-ref.sh";
 const tempDirs = createTempDirTracker();
 let remoteRepo: string;
 let remoteSha: string;
@@ -22,7 +22,7 @@ function git(cwd: string, args: string[]): string {
 }
 
 function createRemoteRepo() {
-  const repo = tempDirs.make("openclaw-ref-remote-");
+  const repo = tempDirs.make("grokbot-ref-remote-");
   git(repo, ["init", "-q", "-b", "main"]);
   git(repo, ["config", "user.email", "test-user"]);
   git(repo, ["config", "user.name", "Test User"]);
@@ -72,7 +72,7 @@ function expectSuccessfulOutput(result: ReturnType<typeof runResolver>): Record<
   return parseOutput(result.stdout);
 }
 
-describe("scripts/github/resolve-openclaw-ref.sh", () => {
+describe("scripts/github/resolve-grokbot-ref.sh", () => {
   it("resolves branch and tag refs with git ls-remote", () => {
     expect(expectSuccessfulOutput(runResolver(remoteRepo, ["--ref", "release/test"]))).toEqual({
       fallback: "false",
@@ -100,7 +100,7 @@ describe("scripts/github/resolve-openclaw-ref.sh", () => {
   });
 
   it("writes fallback outputs for unresolved refs when a caller supplies an expected SHA", () => {
-    const outputPath = join(tempDirs.make("openclaw-ref-output-"), "github-output.txt");
+    const outputPath = join(tempDirs.make("grokbot-ref-output-"), "github-output.txt");
     const result = runResolver(remoteRepo, [
       "--ref",
       "missing-ref",
@@ -122,7 +122,7 @@ describe("scripts/github/resolve-openclaw-ref.sh", () => {
   });
 
   it("does not let fallback mode hide remote lookup failures", () => {
-    const missingRemote = join(tempDirs.make("openclaw-ref-missing-"), "missing.git");
+    const missingRemote = join(tempDirs.make("grokbot-ref-missing-"), "missing.git");
     const result = runResolver(missingRemote, [
       "--ref",
       "missing-ref",

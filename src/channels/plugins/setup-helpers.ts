@@ -1,11 +1,11 @@
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 /**
  * Channel setup config mutation helpers.
  *
  * Applies account names and validates setup results for channel onboarding adapters.
  */
 import { z, type ZodType } from "zod";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "../../routing/session-key.js";
 import {
   collectSingleAccountPromotionEntries,

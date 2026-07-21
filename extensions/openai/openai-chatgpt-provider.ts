@@ -1,25 +1,25 @@
 // Openai provider module implements model/runtime integration.
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
+import { formatErrorMessage } from "grokbot/plugin-sdk/error-runtime";
 import type {
   ProviderAuthContext,
   ProviderAuthMethod,
   ProviderAuthResult,
   ProviderResolveDynamicModelContext,
   ProviderRuntimeModel,
-} from "openclaw/plugin-sdk/plugin-entry";
-import { CODEX_CLI_PROFILE_ID, type OAuthCredential } from "openclaw/plugin-sdk/provider-auth";
-import { buildOauthProviderAuthResult } from "openclaw/plugin-sdk/provider-auth";
+} from "grokbot/plugin-sdk/plugin-entry";
+import { CODEX_CLI_PROFILE_ID, type OAuthCredential } from "grokbot/plugin-sdk/provider-auth";
+import { buildOauthProviderAuthResult } from "grokbot/plugin-sdk/provider-auth";
 import {
   DEFAULT_CONTEXT_TOKENS,
   normalizeModelCompat,
   normalizeProviderId,
   type ProviderPlugin,
-} from "openclaw/plugin-sdk/provider-model-shared";
+} from "grokbot/plugin-sdk/provider-model-shared";
 import {
   normalizeLowercaseStringOrEmpty,
   readStringValue,
   uniqueValues,
-} from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/string-coerce-runtime";
 import {
   OPENAI_CHATGPT_DEVICE_PAIRING_HINT,
   OPENAI_CHATGPT_DEVICE_PAIRING_LABEL,
@@ -170,7 +170,7 @@ function matchesOpenAICodexImageCapableModel(modelId: string, modelName?: string
  * Restore native `["text", "image"]` input capability on resolved Codex rows
  * for known image-capable modern model IDs (GPT-5.4 through GPT-5.6).
  * Persisted/configured model rows can omit the `input` field
- * entirely when they were written by older OpenClaw versions. When that row wins
+ * entirely when they were written by older GrokBot versions. When that row wins
  * the catalog merge, `modelSupportsInput(entry, "image")` returns false and the
  * gateway's `chat.send` handler offloads inbound images as `media://inbound/<id>`
  * claim-check URIs instead of inlining them.
@@ -564,7 +564,7 @@ async function runOpenAICodexDeviceCode(ctx: ProviderAuthContext) {
     spin.stop("OpenAI device code failed");
     ctx.runtime.error(formatErrorMessage(error));
     await ctx.prompter.note(
-      "Trouble with device code login? See https://docs.openclaw.ai/start/faq",
+      "Trouble with device code login? See https://docs.grokbot.ai/start/faq",
       "OAuth help",
     );
     throw error;
@@ -575,7 +575,7 @@ function buildOpenAICodexAuthDoctorHint(ctx: { profileId?: string }) {
   if (ctx.profileId !== CODEX_CLI_PROFILE_ID) {
     return undefined;
   }
-  return "Deprecated profile. Run `openclaw models auth login --provider openai` or `openclaw configure`.";
+  return "Deprecated profile. Run `grokbot models auth login --provider openai` or `grokbot configure`.";
 }
 
 export function buildOpenAIChatGPTAuthMethods(): ProviderAuthMethod[] {

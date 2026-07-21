@@ -76,7 +76,7 @@ describe("installScheduledTask", () => {
   async function withUserProfileDir(
     run: (tmpDir: string, env: Record<string, string>) => Promise<void>,
   ) {
-    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-schtasks-install-"));
+    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-schtasks-install-"));
     const env = {
       USERPROFILE: tmpDir,
       OPENCLAW_PROFILE: "default",
@@ -97,12 +97,12 @@ describe("installScheduledTask", () => {
     });
   }
 
-  function expectInitialTaskQueries(taskName = "OpenClaw Gateway"): void {
+  function expectInitialTaskQueries(taskName = "GrokBot Gateway"): void {
     expect(schtasksCalls[0]).toEqual(["/Query"]);
     expect(schtasksCalls[1]).toEqual(["/Query", "/TN", taskName]);
   }
 
-  function expectTaskRunCall(index: number, taskName = "OpenClaw Gateway"): void {
+  function expectTaskRunCall(index: number, taskName = "GrokBot Gateway"): void {
     expect(schtasksCalls[index]).toEqual(["/Run", "/TN", taskName]);
   }
 
@@ -176,17 +176,17 @@ describe("installScheduledTask", () => {
       });
 
       expect(schtasksCalls[0]).toEqual(["/Query"]);
-      expect(schtasksCalls[1]).toEqual(["/Query", "/TN", "OpenClaw Gateway"]);
+      expect(schtasksCalls[1]).toEqual(["/Query", "/TN", "GrokBot Gateway"]);
       expect(schtasksCalls[2]?.[0]).toBe("/Change");
       // Battery-flag XML re-apply runs between /Change and /Run on upgrades.
       expect(schtasksCalls[3]?.slice(0, 5)).toEqual([
         "/Create",
         "/F",
         "/TN",
-        "OpenClaw Gateway",
+        "GrokBot Gateway",
         "/XML",
       ]);
-      expect(schtasksCalls[4]).toEqual(["/Run", "/TN", "OpenClaw Gateway"]);
+      expect(schtasksCalls[4]).toEqual(["/Run", "/TN", "GrokBot Gateway"]);
     });
   });
 
@@ -257,7 +257,7 @@ describe("installScheduledTask", () => {
         "/Create",
         "/F",
         "/TN",
-        "OpenClaw Gateway",
+        "GrokBot Gateway",
         "/XML",
       ]);
       expect(schtasksCalls[2]?.slice(6)).toEqual(["/RU", "WORKSTATION\\alice", "/NP"]);
@@ -315,7 +315,7 @@ describe("installScheduledTask", () => {
         HOME: env.USERPROFILE,
         USERDOMAIN: "WORKSTATION",
         USERNAME: "alice",
-        OPENCLAW_WINDOWS_TASK_NAME: "OpenClaw Custom Gateway",
+        OPENCLAW_WINDOWS_TASK_NAME: "GrokBot Custom Gateway",
       };
       const gatewayEnv = buildServiceEnvironment({
         env: callerEnv,
@@ -325,7 +325,7 @@ describe("installScheduledTask", () => {
 
       expect(callerEnv.OPENCLAW_WINDOWS_TASK_HIDDEN_LAUNCHER).toBeUndefined();
       expect(gatewayEnv.OPENCLAW_WINDOWS_TASK_HIDDEN_LAUNCHER).toBe("1");
-      expect(gatewayEnv.OPENCLAW_WINDOWS_TASK_NAME).toBe("OpenClaw Gateway");
+      expect(gatewayEnv.OPENCLAW_WINDOWS_TASK_NAME).toBe("GrokBot Gateway");
 
       const { scriptPath } = await installScheduledTask({
         env: callerEnv,
@@ -345,16 +345,16 @@ describe("installScheduledTask", () => {
         "/Create",
         "/F",
         "/TN",
-        "OpenClaw Custom Gateway",
+        "GrokBot Custom Gateway",
         "/XML",
       ]);
       expect(schtasksCalls[2]?.slice(6)).toEqual(["/RU", "WORKSTATION\\alice", "/NP"]);
       const captured = xmlPayloadCaptures.find((entry) => entry.index === 2);
       expect(captured?.xml).toContain("gateway.vbs</Command>");
-      expect(script).toContain('set "OPENCLAW_WINDOWS_TASK_NAME=OpenClaw Custom Gateway"');
+      expect(script).toContain('set "OPENCLAW_WINDOWS_TASK_NAME=GrokBot Custom Gateway"');
       expect(launcher).toContain("WScript.Shell");
       expect(launcher).toContain(`Run """${scriptPath}""", 0, False`);
-      expectTaskRunCall(3, "OpenClaw Custom Gateway");
+      expectTaskRunCall(3, "GrokBot Custom Gateway");
     });
   });
 
@@ -426,7 +426,7 @@ describe("installScheduledTask", () => {
 
       expectInitialTaskQueries();
       const createCall = schtasksCalls[2];
-      expect(createCall?.slice(0, 5)).toEqual(["/Create", "/F", "/TN", "OpenClaw Gateway", "/XML"]);
+      expect(createCall?.slice(0, 5)).toEqual(["/Create", "/F", "/TN", "GrokBot Gateway", "/XML"]);
       expect(createCall).not.toContain("/RU");
       const captured = xmlPayloadCaptures.find((entry) => entry.index === 2);
       expect(captured?.xml).toContain("<UserId>alice</UserId>");
@@ -454,7 +454,7 @@ describe("installScheduledTask", () => {
         "/Create",
         "/F",
         "/TN",
-        "OpenClaw Gateway",
+        "GrokBot Gateway",
         "/XML",
       ]);
       const upgradeCapture = xmlPayloadCaptures.find((entry) => entry.index === 3);
@@ -491,7 +491,7 @@ describe("installScheduledTask", () => {
       expect(schtasksCalls[2]).toEqual([
         "/Change",
         "/TN",
-        "OpenClaw Gateway",
+        "GrokBot Gateway",
         "/TR",
         expect.stringContaining("gateway.vbs"),
       ]);
@@ -501,7 +501,7 @@ describe("installScheduledTask", () => {
         "/Create",
         "/F",
         "/TN",
-        "OpenClaw Gateway",
+        "GrokBot Gateway",
         "/XML",
       ]);
       expectTaskRunCall(4);

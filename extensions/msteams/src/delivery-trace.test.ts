@@ -19,11 +19,11 @@ import {
   type DeliveryTraceInStep,
   type DeliveryTraceScenarioName,
   type WireRecorder,
-} from "openclaw/plugin-sdk/channel-contract-testing";
-import type { PluginRuntime } from "openclaw/plugin-sdk/core";
-import { resolveMarkdownTableMode } from "openclaw/plugin-sdk/markdown-table-runtime";
-import { chunkMarkdownTextWithMode, resolveChunkMode } from "openclaw/plugin-sdk/reply-chunking";
-import { convertMarkdownTables } from "openclaw/plugin-sdk/text-chunking";
+} from "grokbot/plugin-sdk/channel-contract-testing";
+import type { PluginRuntime } from "grokbot/plugin-sdk/core";
+import { resolveMarkdownTableMode } from "grokbot/plugin-sdk/markdown-table-runtime";
+import { chunkMarkdownTextWithMode, resolveChunkMode } from "grokbot/plugin-sdk/reply-chunking";
+import { convertMarkdownTables } from "grokbot/plugin-sdk/text-chunking";
 import { describe, it } from "vitest";
 import type { OpenClawConfig, ReplyPayload } from "../runtime-api.js";
 import { createMSTeamsReplyDispatcher } from "./reply-dispatcher.js";
@@ -248,7 +248,7 @@ function setupMSTeamsTrace(recorder: WireRecorder, traceCase: MSTeamsTraceCase) 
     conversationRef: {
       activityId: "inbound-activity",
       user: { id: "29:trace-user", name: "Trace User" },
-      agent: { id: "28:trace-bot", name: "OpenClaw" },
+      agent: { id: "28:trace-bot", name: "GrokBot" },
       conversation: {
         id: traceCase.conversationId,
         conversationType: traceCase.conversationType,

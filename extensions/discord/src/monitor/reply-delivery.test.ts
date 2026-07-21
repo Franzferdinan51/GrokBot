@@ -1,7 +1,7 @@
 // Discord tests cover reply delivery plugin behavior.
-import { expectDefined } from "@openclaw/normalization-core";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import type { RuntimeEnv } from "openclaw/plugin-sdk/runtime-env";
+import { expectDefined } from "@grokbot/normalization-core";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import type { RuntimeEnv } from "grokbot/plugin-sdk/runtime-env";
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import type { RequestClient } from "../internal/discord.js";
 
@@ -14,9 +14,9 @@ const sendDurableMessageBatchMock = vi.hoisted(() =>
 const sendMessageDiscordMock = vi.hoisted(() => vi.fn());
 const sendVoiceMessageDiscordMock = vi.hoisted(() => vi.fn());
 
-vi.mock("openclaw/plugin-sdk/channel-outbound", async () => {
-  const actual = await vi.importActual<typeof import("openclaw/plugin-sdk/channel-outbound")>(
-    "openclaw/plugin-sdk/channel-outbound",
+vi.mock("grokbot/plugin-sdk/channel-outbound", async () => {
+  const actual = await vi.importActual<typeof import("grokbot/plugin-sdk/channel-outbound")>(
+    "grokbot/plugin-sdk/channel-outbound",
   );
   return {
     ...actual,
@@ -231,7 +231,7 @@ describe("deliverDiscordReply", () => {
           text: [
             "📊 Session Status: current",
             "🛠️ run git status",
-            "⚠️ 🛠️ `run openclaw definitely-not-a-real-subcommand (agent)` failed",
+            "⚠️ 🛠️ `run grokbot definitely-not-a-real-subcommand (agent)` failed",
             "🛠️ `gh pr view`",
             "🛠️ `docker compose up`",
             "🛠️ elevated · `cd /tmp && pnpm test`",
@@ -257,7 +257,7 @@ describe("deliverDiscordReply", () => {
     await deliverDiscordReply({
       replies: [
         {
-          text: "⚠️ 🛠️ `run openclaw definitely-not-a-real-subcommand (agent)` failed",
+          text: "⚠️ 🛠️ `run grokbot definitely-not-a-real-subcommand (agent)` failed",
           isError: true,
         },
       ],
@@ -280,7 +280,7 @@ describe("deliverDiscordReply", () => {
           text: [
             "[tool:exec]",
             "<parameter=command>",
-            'cat /proc/mounts 2>/dev/null | grep -i "libra|rav|openclaw" | head -20',
+            'cat /proc/mounts 2>/dev/null | grep -i "libra|rav|grokbot" | head -20',
             "</parameter>",
             "",
             "<function=exec>",
@@ -494,7 +494,7 @@ describe("deliverDiscordReply", () => {
       cfg,
       textLimit: 2000,
       replyToMode: "off",
-      mediaLocalRoots: ["/tmp/openclaw-media"],
+      mediaLocalRoots: ["/tmp/grokbot-media"],
       kind: "final",
     });
 
@@ -502,7 +502,7 @@ describe("deliverDiscordReply", () => {
     expect(params.payloads).toEqual(replies);
     expect(params.replyToId).toBeUndefined();
     expect(params.replyToMode).toBe("off");
-    expect(params.mediaAccess).toEqual({ localRoots: ["/tmp/openclaw-media"] });
+    expect(params.mediaAccess).toEqual({ localRoots: ["/tmp/grokbot-media"] });
   });
 
   it("bridges Discord voice sends through the outbound dependency bag", async () => {

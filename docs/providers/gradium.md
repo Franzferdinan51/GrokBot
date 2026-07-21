@@ -1,12 +1,12 @@
 ---
-summary: "Use Gradium text-to-speech in OpenClaw"
+summary: "Use Gradium text-to-speech in GrokBot"
 read_when:
   - You want Gradium for text-to-speech
   - You need Gradium API key, voice, or directive token configuration
 title: "Gradium"
 ---
 
-[Gradium](https://gradium.ai) is a text-to-speech provider for OpenClaw. It renders standard audio replies (WAV), voice-note-compatible Opus output, and 8 kHz u-law audio for telephony surfaces.
+[Gradium](https://gradium.ai) is a text-to-speech provider for GrokBot. It renders standard audio replies (WAV), voice-note-compatible Opus output, and 8 kHz u-law audio for telephony surfaces.
 
 | Property      | Value                                |
 | ------------- | ------------------------------------ |
@@ -20,8 +20,8 @@ title: "Gradium"
 Gradium is an official external plugin. Install it, then restart Gateway:
 
 ```bash
-openclaw plugins install @openclaw/gradium-speech
-openclaw gateway restart
+grokbot plugins install @grokbot/gradium-speech
+grokbot gateway restart
 ```
 
 ## Setup
@@ -80,7 +80,7 @@ Create a Gradium API key, then expose it with an env var or the config key. Conf
 | `messages.tts.providers.gradium.baseUrl`        | string | HTTPS Gradium API URL on `api.gradium.ai`. Trailing slashes stripped. Default `https://api.gradium.ai`. |
 | `messages.tts.providers.gradium.speakerVoiceId` | string | Default voice id used when no directive override is present.                                            |
 
-Output format is chosen automatically by target surface (see [Output](#output)) and is not configurable in `openclaw.json`.
+Output format is chosen automatically by target surface (see [Output](#output)) and is not configurable in `grokbot.json`.
 
 ## Voices
 
@@ -120,7 +120,7 @@ Output format is selected by target surface; the provider does not synthesize ot
 
 ## Auto-select order
 
-Among configured TTS providers, Gradium's auto-select order is `30`. See [Text-to-Speech](/tools/tts) for how OpenClaw picks the active provider when `messages.tts.provider` is not pinned.
+Among configured TTS providers, Gradium's auto-select order is `30`. See [Text-to-Speech](/tools/tts) for how GrokBot picks the active provider when `messages.tts.provider` is not pinned.
 
 ## Related
 

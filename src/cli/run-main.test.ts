@@ -53,33 +53,33 @@ const browserCommandAliasRegistry: PluginManifestCommandAliasRegistry = {
 
 describe("isGatewayRunFastPathArgv", () => {
   it("matches only plain gateway foreground starts without root options or help", () => {
-    expect(isGatewayRunFastPathArgv(["node", "openclaw", "gateway"])).toBe(true);
-    expect(isGatewayRunFastPathArgv(["node", "openclaw", "gateway", "--force"])).toBe(true);
-    expect(isGatewayRunFastPathArgv(["node", "openclaw", "gateway", "--port", "18789"])).toBe(true);
-    expect(isGatewayRunFastPathArgv(["node", "openclaw", "gateway", "--auth=none"])).toBe(true);
+    expect(isGatewayRunFastPathArgv(["node", "grokbot", "gateway"])).toBe(true);
+    expect(isGatewayRunFastPathArgv(["node", "grokbot", "gateway", "--force"])).toBe(true);
+    expect(isGatewayRunFastPathArgv(["node", "grokbot", "gateway", "--port", "18789"])).toBe(true);
+    expect(isGatewayRunFastPathArgv(["node", "grokbot", "gateway", "--auth=none"])).toBe(true);
     expect(
-      isGatewayRunFastPathArgv(["node", "openclaw", "--no-color", "gateway", "--bind", "loopback"]),
+      isGatewayRunFastPathArgv(["node", "grokbot", "--no-color", "gateway", "--bind", "loopback"]),
     ).toBe(true);
-    expect(isGatewayRunFastPathArgv(["node", "openclaw", "gateway", "run"])).toBe(true);
+    expect(isGatewayRunFastPathArgv(["node", "grokbot", "gateway", "run"])).toBe(true);
     expect(
-      isGatewayRunFastPathArgv(["node", "openclaw", "gateway", "run", "--raw-stream-path", "x"]),
+      isGatewayRunFastPathArgv(["node", "grokbot", "gateway", "run", "--raw-stream-path", "x"]),
     ).toBe(true);
-    expect(isGatewayRunFastPathArgv(["node", "openclaw", "gateway", "call", "health"])).toBe(false);
-    expect(isGatewayRunFastPathArgv(["node", "openclaw", "gateway", "--help"])).toBe(false);
-    expect(isGatewayRunFastPathArgv(["node", "openclaw", "gateway", "--port"])).toBe(false);
-    expect(isGatewayRunFastPathArgv(["node", "openclaw", "gateway", "--unknown"])).toBe(false);
+    expect(isGatewayRunFastPathArgv(["node", "grokbot", "gateway", "call", "health"])).toBe(false);
+    expect(isGatewayRunFastPathArgv(["node", "grokbot", "gateway", "--help"])).toBe(false);
+    expect(isGatewayRunFastPathArgv(["node", "grokbot", "gateway", "--port"])).toBe(false);
+    expect(isGatewayRunFastPathArgv(["node", "grokbot", "gateway", "--unknown"])).toBe(false);
   });
 });
 
 describe("resolveGatewayRunPreBootstrapOptions", () => {
   it("resolves destructive gateway flags across fast and full Commander paths", () => {
     expect(
-      resolveGatewayRunPreBootstrapOptions(["node", "openclaw", "gateway", "run", "--force"]),
+      resolveGatewayRunPreBootstrapOptions(["node", "grokbot", "gateway", "run", "--force"]),
     ).toEqual({ force: true, reset: false });
     expect(
       resolveGatewayRunPreBootstrapOptions([
         "node",
-        "openclaw",
+        "grokbot",
         "--log-level",
         "debug",
         "gateway",
@@ -92,7 +92,7 @@ describe("resolveGatewayRunPreBootstrapOptions", () => {
 
   it("does not treat malformed required option values as destructive flags", () => {
     expect(
-      resolveGatewayRunPreBootstrapOptions(["node", "openclaw", "gateway", "--token", "--force"]),
+      resolveGatewayRunPreBootstrapOptions(["node", "grokbot", "gateway", "--token", "--force"]),
     ).toEqual({ force: false, reset: false });
   });
 });
@@ -172,99 +172,99 @@ describe("rewriteUpdateFlagArgv", () => {
 
 describe("shouldEnsureCliPath", () => {
   it("skips path bootstrap for help/version invocations", () => {
-    expect(shouldEnsureCliPath(["node", "openclaw", "--help"])).toBe(false);
-    expect(shouldEnsureCliPath(["node", "openclaw", "-V"])).toBe(false);
-    expect(shouldEnsureCliPath(["node", "openclaw", "-v"])).toBe(false);
+    expect(shouldEnsureCliPath(["node", "grokbot", "--help"])).toBe(false);
+    expect(shouldEnsureCliPath(["node", "grokbot", "-V"])).toBe(false);
+    expect(shouldEnsureCliPath(["node", "grokbot", "-v"])).toBe(false);
   });
 
   it("skips path bootstrap for read-only fast paths", () => {
-    expect(shouldEnsureCliPath(["node", "openclaw"])).toBe(false);
-    expect(shouldEnsureCliPath(["node", "openclaw", "--profile", "work"])).toBe(false);
-    expect(shouldEnsureCliPath(["node", "openclaw", "approvals"])).toBe(false);
-    expect(shouldEnsureCliPath(["node", "openclaw", "channels"])).toBe(false);
-    expect(shouldEnsureCliPath(["node", "openclaw", "cron"])).toBe(false);
-    expect(shouldEnsureCliPath(["node", "openclaw", "devices"])).toBe(false);
-    expect(shouldEnsureCliPath(["node", "openclaw", "plugins"])).toBe(false);
-    expect(shouldEnsureCliPath(["node", "openclaw", "mcp"])).toBe(false);
-    expect(shouldEnsureCliPath(["node", "openclaw", "status"])).toBe(false);
-    expect(shouldEnsureCliPath(["node", "openclaw", "--log-level", "debug", "status"])).toBe(false);
-    expect(shouldEnsureCliPath(["node", "openclaw", "sessions", "--json"])).toBe(false);
-    expect(shouldEnsureCliPath(["node", "openclaw", "config", "get", "update"])).toBe(false);
-    expect(shouldEnsureCliPath(["node", "openclaw", "models", "status", "--json"])).toBe(false);
-    expect(shouldEnsureCliPath(["node", "openclaw", "tools", "effective"])).toBe(false);
+    expect(shouldEnsureCliPath(["node", "grokbot"])).toBe(false);
+    expect(shouldEnsureCliPath(["node", "grokbot", "--profile", "work"])).toBe(false);
+    expect(shouldEnsureCliPath(["node", "grokbot", "approvals"])).toBe(false);
+    expect(shouldEnsureCliPath(["node", "grokbot", "channels"])).toBe(false);
+    expect(shouldEnsureCliPath(["node", "grokbot", "cron"])).toBe(false);
+    expect(shouldEnsureCliPath(["node", "grokbot", "devices"])).toBe(false);
+    expect(shouldEnsureCliPath(["node", "grokbot", "plugins"])).toBe(false);
+    expect(shouldEnsureCliPath(["node", "grokbot", "mcp"])).toBe(false);
+    expect(shouldEnsureCliPath(["node", "grokbot", "status"])).toBe(false);
+    expect(shouldEnsureCliPath(["node", "grokbot", "--log-level", "debug", "status"])).toBe(false);
+    expect(shouldEnsureCliPath(["node", "grokbot", "sessions", "--json"])).toBe(false);
+    expect(shouldEnsureCliPath(["node", "grokbot", "config", "get", "update"])).toBe(false);
+    expect(shouldEnsureCliPath(["node", "grokbot", "models", "status", "--json"])).toBe(false);
+    expect(shouldEnsureCliPath(["node", "grokbot", "tools", "effective"])).toBe(false);
   });
 
   it("keeps path bootstrap for mutating or unknown commands", () => {
-    expect(shouldEnsureCliPath(["node", "openclaw", "message", "send"])).toBe(true);
-    expect(shouldEnsureCliPath(["node", "openclaw", "voicecall", "status"])).toBe(true);
-    expect(shouldEnsureCliPath(["node", "openclaw", "acp", "-v"])).toBe(true);
+    expect(shouldEnsureCliPath(["node", "grokbot", "message", "send"])).toBe(true);
+    expect(shouldEnsureCliPath(["node", "grokbot", "voicecall", "status"])).toBe(true);
+    expect(shouldEnsureCliPath(["node", "grokbot", "acp", "-v"])).toBe(true);
   });
 });
 
 describe("shouldHandleBareRoot", () => {
   it("handles bare root invocations", () => {
-    expect(shouldHandleBareRoot(["node", "openclaw"])).toBe(true);
-    expect(shouldHandleBareRoot(["node", "openclaw", "--profile", "work"])).toBe(true);
-    expect(shouldHandleBareRoot(["node", "openclaw", "--dev"])).toBe(true);
+    expect(shouldHandleBareRoot(["node", "grokbot"])).toBe(true);
+    expect(shouldHandleBareRoot(["node", "grokbot", "--profile", "work"])).toBe(true);
+    expect(shouldHandleBareRoot(["node", "grokbot", "--dev"])).toBe(true);
   });
 
   it("does not handle help, version, or commands", () => {
-    expect(shouldHandleBareRoot(["node", "openclaw", "--help"])).toBe(false);
-    expect(shouldHandleBareRoot(["node", "openclaw", "-V"])).toBe(false);
-    expect(shouldHandleBareRoot(["node", "openclaw", "status"])).toBe(false);
+    expect(shouldHandleBareRoot(["node", "grokbot", "--help"])).toBe(false);
+    expect(shouldHandleBareRoot(["node", "grokbot", "-V"])).toBe(false);
+    expect(shouldHandleBareRoot(["node", "grokbot", "status"])).toBe(false);
   });
 });
 
 describe("shouldStartProxyForCli", () => {
   it("starts managed proxy routing for the --update shorthand", () => {
-    expect(shouldStartProxyForCli(["node", "openclaw", "--update"])).toBe(true);
-    expect(shouldStartProxyForCli(["node", "openclaw", "--profile", "p", "--update"])).toBe(true);
+    expect(shouldStartProxyForCli(["node", "grokbot", "--update"])).toBe(true);
+    expect(shouldStartProxyForCli(["node", "grokbot", "--profile", "p", "--update"])).toBe(true);
   });
 
   it("skips managed proxy routing for bare parent default help", () => {
-    expect(shouldStartProxyForCli(["node", "openclaw", "qa", "suite"])).toBe(false);
-    expect(shouldStartProxyForCli(["node", "openclaw", "plugins"])).toBe(false);
-    expect(shouldStartProxyForCli(["node", "openclaw", "channels"])).toBe(false);
-    expect(shouldStartProxyForCli(["node", "openclaw", "cron"])).toBe(false);
-    expect(shouldStartProxyForCli(["node", "openclaw", "devices"])).toBe(false);
-    expect(shouldStartProxyForCli(["node", "openclaw", "mcp"])).toBe(false);
+    expect(shouldStartProxyForCli(["node", "grokbot", "qa", "suite"])).toBe(false);
+    expect(shouldStartProxyForCli(["node", "grokbot", "plugins"])).toBe(false);
+    expect(shouldStartProxyForCli(["node", "grokbot", "channels"])).toBe(false);
+    expect(shouldStartProxyForCli(["node", "grokbot", "cron"])).toBe(false);
+    expect(shouldStartProxyForCli(["node", "grokbot", "devices"])).toBe(false);
+    expect(shouldStartProxyForCli(["node", "grokbot", "mcp"])).toBe(false);
   });
 
   it("skips managed proxy routing before shared-state SQLite maintenance", () => {
     expect(
-      shouldStartProxyForCli(["node", "openclaw", "doctor", "--state-sqlite", "compact", "--json"]),
+      shouldStartProxyForCli(["node", "grokbot", "doctor", "--state-sqlite", "compact", "--json"]),
     ).toBe(false);
     expect(
-      shouldStartProxyForCli(["node", "openclaw", "doctor", "--state-sqlite=compact", "--json"]),
+      shouldStartProxyForCli(["node", "grokbot", "doctor", "--state-sqlite=compact", "--json"]),
     ).toBe(false);
-    expect(shouldStartProxyForCli(["node", "openclaw", "doctor", "--lint"])).toBe(true);
+    expect(shouldStartProxyForCli(["node", "grokbot", "doctor", "--lint"])).toBe(true);
   });
 });
 
 describe("shouldUseRootHelpFastPath", () => {
   it("uses the fast path for root help only", () => {
-    expect(shouldUseRootHelpFastPath(["node", "openclaw", "--help"])).toBe(true);
-    expect(shouldUseRootHelpFastPath(["node", "openclaw", "--profile", "work", "-h"])).toBe(true);
-    expect(shouldUseRootHelpFastPath(["node", "openclaw", "help", "--help"])).toBe(true);
-    expect(shouldUseRootHelpFastPath(["node", "openclaw", "tools", "--help"])).toBe(true);
-    expect(shouldUseRootHelpFastPath(["node", "openclaw", "status", "--help"])).toBe(false);
-    expect(shouldUseRootHelpFastPath(["node", "openclaw", "--help", "status"])).toBe(false);
-    expect(shouldUseRootHelpFastPath(["node", "openclaw", "help", "gateway"])).toBe(false);
+    expect(shouldUseRootHelpFastPath(["node", "grokbot", "--help"])).toBe(true);
+    expect(shouldUseRootHelpFastPath(["node", "grokbot", "--profile", "work", "-h"])).toBe(true);
+    expect(shouldUseRootHelpFastPath(["node", "grokbot", "help", "--help"])).toBe(true);
+    expect(shouldUseRootHelpFastPath(["node", "grokbot", "tools", "--help"])).toBe(true);
+    expect(shouldUseRootHelpFastPath(["node", "grokbot", "status", "--help"])).toBe(false);
+    expect(shouldUseRootHelpFastPath(["node", "grokbot", "--help", "status"])).toBe(false);
+    expect(shouldUseRootHelpFastPath(["node", "grokbot", "help", "gateway"])).toBe(false);
   });
 });
 
 describe("shouldUseSetupOnboardConfigureHelpFastPath", () => {
   it("uses the fast path only for setup, onboard, and configure help", () => {
     expect(
-      shouldUseSetupOnboardConfigureHelpFastPath(["node", "openclaw", "setup", "--help"]),
+      shouldUseSetupOnboardConfigureHelpFastPath(["node", "grokbot", "setup", "--help"]),
     ).toBe(true);
-    expect(shouldUseSetupOnboardConfigureHelpFastPath(["node", "openclaw", "onboard", "-h"])).toBe(
+    expect(shouldUseSetupOnboardConfigureHelpFastPath(["node", "grokbot", "onboard", "-h"])).toBe(
       true,
     );
     expect(
       shouldUseSetupOnboardConfigureHelpFastPath([
         "node",
-        "openclaw",
+        "grokbot",
         "--profile",
         "work",
         "configure",
@@ -274,14 +274,14 @@ describe("shouldUseSetupOnboardConfigureHelpFastPath", () => {
     expect(
       shouldUseSetupOnboardConfigureHelpFastPath([
         "node",
-        "openclaw",
+        "grokbot",
         "onboard",
         "status",
         "--help",
       ]),
     ).toBe(false);
     expect(
-      shouldUseSetupOnboardConfigureHelpFastPath(["node", "openclaw", "status", "--help"]),
+      shouldUseSetupOnboardConfigureHelpFastPath(["node", "grokbot", "status", "--help"]),
     ).toBe(false);
   });
 });
@@ -347,7 +347,7 @@ describe("resolveMissingPluginCommandMessage", () => {
     expect(message).toContain("runtime slash command");
     expect(message).toContain("/dreaming");
     expect(message).toContain("memory-core");
-    expect(message).toContain("openclaw memory");
+    expect(message).toContain("grokbot memory");
   });
 
   it("returns the runtime command message even when plugins.allow is set", () => {
@@ -401,7 +401,7 @@ describe("resolveMissingPluginCommandMessage", () => {
 
     expect(message).toContain('"voice-call" plugin');
     expect(message).toContain("disabled by default");
-    expect(message).toContain("openclaw plugins enable voice-call");
+    expect(message).toContain("grokbot plugins enable voice-call");
   });
 
   it("returns null for CLI command aliases when disabled-by-default parent plugins are enabled", () => {

@@ -1,13 +1,13 @@
 // Proves when a new state root cannot contain legacy state migration work.
 import fs from "node:fs";
 import path from "node:path";
-import { isRecord } from "@openclaw/normalization-core/record-coerce";
+import { isRecord } from "@grokbot/normalization-core/record-coerce";
 import {
   resolveConfigPath,
   resolveLegacyStateDirs,
   resolveStateDir,
 } from "../../../config/paths.js";
-import type { OpenClawConfig } from "../../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../../config/types.grokbot.js";
 import { resolveEffectiveHomeDir } from "../../../infra/home-dir.js";
 import { tryReadJsonSync } from "../../../infra/json-files.js";
 import { inspectBundledPluginStartupMetadata } from "../../../plugins/bundled-plugin-startup-metadata.js";

@@ -1,8 +1,8 @@
-// Nostr plugin entrypoint registers its OpenClaw integration.
+// Nostr plugin entrypoint registers its GrokBot integration.
 import {
   defineBundledChannelEntry,
   loadBundledEntryExportSync,
-} from "openclaw/plugin-sdk/channel-entry-contract";
+} from "grokbot/plugin-sdk/channel-entry-contract";
 import type { OpenClawConfig, PluginRuntime, ResolvedNostrAccount } from "./api.js";
 
 function createNostrProfileHttpHandler() {

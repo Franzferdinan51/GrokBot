@@ -249,7 +249,7 @@ vi.mock("../plugins/web-provider-public-artifacts.explicit.js", () => ({
 
 type SecretRegistryEntry = {
   id: string;
-  configFile: "openclaw.json" | "auth-profiles.json";
+  configFile: "grokbot.json" | "auth-profiles.json";
   pathPattern: string;
   refPathPattern?: string;
   secretShape: "secret_input" | "sibling_ref";
@@ -260,7 +260,7 @@ type SecretRegistryEntry = {
 type SecretRefCredentialMatrix = {
   entries: Array<{
     id: string;
-    configFile: "openclaw.json" | "auth-profiles.json";
+    configFile: "grokbot.json" | "auth-profiles.json";
     path: string;
     refPath?: string;
     secretShape: SecretRegistryEntry["secretShape"];
@@ -546,7 +546,7 @@ function collectOpenClawCoverageEntries(options: {
 }): SecretRegistryEntry[] {
   return COVERAGE_REGISTRY_ENTRIES.filter(
     (entry) =>
-      entry.configFile === "openclaw.json" &&
+      entry.configFile === "grokbot.json" &&
       entry.id.startsWith("plugins.entries.") === options.includePluginEntries &&
       !PLUGIN_OWNED_OPENCLAW_COVERAGE_EXCLUSIONS.has(entry.id),
   );
@@ -922,7 +922,7 @@ describe("secrets runtime target coverage", () => {
       batch.some((entry) => entry.id === "channels.googlechat.serviceAccount"),
     );
     if (googleChatBatch) {
-      await expectOpenClawCoverageBatchResolved("openclaw.json core", googleChatBatch);
+      await expectOpenClawCoverageBatchResolved("grokbot.json core", googleChatBatch);
     }
     const webProviderBatch = OPENCLAW_PLUGIN_COVERAGE_BATCHES.find((batch) =>
       batch.some((entry) => entry.id.includes(".config.webSearch.")),
@@ -930,25 +930,25 @@ describe("secrets runtime target coverage", () => {
     if (webProviderBatch) {
       // Warm the shared plugin snapshot once; individual target assertions then
       // measure resolution work instead of one-time manifest discovery.
-      await expectOpenClawCoverageBatchResolved("openclaw.json plugins", webProviderBatch);
+      await expectOpenClawCoverageBatchResolved("grokbot.json plugins", webProviderBatch);
     }
   });
 
-  describe("openclaw.json core and channel registry targets", () => {
+  describe("grokbot.json core and channel registry targets", () => {
     test.each(OPENCLAW_CORE_COVERAGE_BATCHES.map(toCoverageBatchCase))(
       "handles $name",
       async ({ batch }) => {
-        await expectOpenClawCoverageBatchResolved("openclaw.json core", batch);
+        await expectOpenClawCoverageBatchResolved("grokbot.json core", batch);
       },
       RUNTIME_COVERAGE_TEST_TIMEOUT_MS,
     );
   });
 
-  describe("openclaw.json plugin registry targets", () => {
+  describe("grokbot.json plugin registry targets", () => {
     test.each(OPENCLAW_PLUGIN_COVERAGE_BATCHES.map(toCoverageBatchCase))(
       "handles $name",
       async ({ batch }) => {
-        await expectOpenClawCoverageBatchResolved("openclaw.json plugins", batch);
+        await expectOpenClawCoverageBatchResolved("grokbot.json plugins", batch);
       },
       RUNTIME_COVERAGE_TEST_TIMEOUT_MS,
     );
@@ -972,7 +972,7 @@ describe("secrets runtime target coverage", () => {
         const snapshot = await prepareAuthCoverageSnapshot({
           config: {} as OpenClawConfig,
           env,
-          agentDirs: ["/tmp/openclaw-agent-main"],
+          agentDirs: ["/tmp/grokbot-agent-main"],
           loadAuthStore: () => authStore,
         });
         const resolvedStore = snapshot.authStores[0]?.store;

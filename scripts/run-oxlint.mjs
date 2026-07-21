@@ -40,7 +40,7 @@ const OXLINT_VALUE_FLAGS = new Set([
   "--tsconfig",
   "--warn",
 ]);
-const OPENCLAW_FOCUSED_CONFIG_FLAG = "--openclaw-focused-config";
+const OPENCLAW_FOCUSED_CONFIG_FLAG = "--grokbot-focused-config";
 
 /**
  * Returns whether oxlint args need package-boundary declaration artifacts first.

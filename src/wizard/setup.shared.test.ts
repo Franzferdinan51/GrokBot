@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { ConfigFileSnapshot, OpenClawConfig } from "../config/types.openclaw.js";
+import type { ConfigFileSnapshot, OpenClawConfig } from "../config/types.grokbot.js";
 import { withoutPluginInstallRecords } from "../plugins/installed-plugin-index-records.js";
 
 const mocks = vi.hoisted(() => ({
@@ -101,7 +101,7 @@ describe("writeWizardConfigFile pending install ownership", () => {
   it("preserves an absent config snapshot through the final write", async () => {
     const config: OpenClawConfig = { gateway: { port: 18789 } };
     const baseSnapshot: ConfigFileSnapshot = {
-      path: "/tmp/openclaw.json",
+      path: "/tmp/grokbot.json",
       exists: false,
       raw: null,
       parsed: undefined,

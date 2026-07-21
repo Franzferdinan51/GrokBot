@@ -1,4 +1,4 @@
-// Extension Package Boundary script supports OpenClaw repository automation.
+// Extension Package Boundary script supports GrokBot repository automation.
 import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join, posix, resolve } from "node:path";
 import { privateLocalOnlyPluginSdkEntrypoints } from "./plugin-sdk-entries.mjs";
@@ -16,7 +16,7 @@ export const EXTENSION_PACKAGE_BOUNDARY_EXCLUDE = [
 
 const privateLocalOnlyPluginSdkPackageDtsPaths = Object.fromEntries(
   privateLocalOnlyPluginSdkEntrypoints.map((entrypoint) => [
-    `openclaw/plugin-sdk/${entrypoint}`,
+    `grokbot/plugin-sdk/${entrypoint}`,
     [`../packages/plugin-sdk/dist/src/plugin-sdk/${entrypoint}.d.ts`],
   ]),
 ) as Record<string, readonly string[]>;
@@ -54,183 +54,183 @@ function buildPackageBoundaryDtsPaths(params: {
 }
 
 export const EXTENSION_PACKAGE_BOUNDARY_BASE_PATHS = {
-  "openclaw/plugin-sdk/*": ["../dist/plugin-sdk/*.d.ts"],
+  "grokbot/plugin-sdk/*": ["../dist/plugin-sdk/*.d.ts"],
   ...privateLocalOnlyPluginSdkPackageDtsPaths,
-  "openclaw/plugin-sdk/account-id": ["../dist/plugin-sdk/account-id.d.ts"],
-  "openclaw/plugin-sdk/channel-entry-contract": ["../dist/plugin-sdk/channel-entry-contract.d.ts"],
-  "openclaw/plugin-sdk/browser-maintenance": [
+  "grokbot/plugin-sdk/account-id": ["../dist/plugin-sdk/account-id.d.ts"],
+  "grokbot/plugin-sdk/channel-entry-contract": ["../dist/plugin-sdk/channel-entry-contract.d.ts"],
+  "grokbot/plugin-sdk/browser-maintenance": [
     "../packages/plugin-sdk/dist/extensions/browser/browser-maintenance.d.ts",
   ],
-  "openclaw/plugin-sdk/channel-secret-basic-runtime": [
+  "grokbot/plugin-sdk/channel-secret-basic-runtime": [
     "../dist/plugin-sdk/channel-secret-basic-runtime.d.ts",
   ],
-  "openclaw/plugin-sdk/channel-secret-runtime": ["../dist/plugin-sdk/channel-secret-runtime.d.ts"],
-  "openclaw/plugin-sdk/channel-streaming": ["../dist/plugin-sdk/channel-streaming.d.ts"],
-  "openclaw/plugin-sdk/error-runtime": ["../dist/plugin-sdk/error-runtime.d.ts"],
-  "openclaw/plugin-sdk/secret-ref-runtime": ["../dist/plugin-sdk/secret-ref-runtime.d.ts"],
-  "openclaw/plugin-sdk/ssrf-runtime": ["../dist/plugin-sdk/ssrf-runtime.d.ts"],
-  "@openclaw/qa-channel/api.js": ["../dist/plugin-sdk/extensions/qa-channel/api.d.ts"],
-  "@openclaw/matrix/test-api.js": ["../dist/plugin-sdk/extensions/matrix/test-api.d.ts"],
-  "@openclaw/discord/api.js": ["../dist/plugin-sdk/extensions/discord/api.d.ts"],
-  "@openclaw/slack/api.js": ["../dist/plugin-sdk/extensions/slack/api.d.ts"],
-  "@openclaw/telegram/api.js": ["../dist/plugin-sdk/extensions/telegram/api.d.ts"],
-  "@openclaw/whatsapp/api.js": ["../dist/plugin-sdk/extensions/whatsapp/api.d.ts"],
-  "@openclaw/ai": ["../dist/plugin-sdk/packages/ai/src/index.d.ts"],
-  "@openclaw/ai/diagnostics": ["../dist/plugin-sdk/packages/ai/src/utils/diagnostics.d.ts"],
-  "@openclaw/ai/event-stream": ["../dist/plugin-sdk/packages/ai/src/utils/event-stream.d.ts"],
-  "@openclaw/ai/providers": ["../dist/plugin-sdk/packages/ai/src/providers.d.ts"],
-  "@openclaw/ai/types": ["../dist/plugin-sdk/packages/ai/src/types.d.ts"],
-  "@openclaw/ai/validation": ["../dist/plugin-sdk/packages/ai/src/validation.d.ts"],
-  "@openclaw/ai/internal/*": ["../dist/plugin-sdk/packages/ai/src/internal/*.d.ts"],
-  "@openclaw/llm-core": ["../dist/plugin-sdk/packages/llm-core/src/index.d.ts"],
-  "@openclaw/llm-core/diagnostics": [
+  "grokbot/plugin-sdk/channel-secret-runtime": ["../dist/plugin-sdk/channel-secret-runtime.d.ts"],
+  "grokbot/plugin-sdk/channel-streaming": ["../dist/plugin-sdk/channel-streaming.d.ts"],
+  "grokbot/plugin-sdk/error-runtime": ["../dist/plugin-sdk/error-runtime.d.ts"],
+  "grokbot/plugin-sdk/secret-ref-runtime": ["../dist/plugin-sdk/secret-ref-runtime.d.ts"],
+  "grokbot/plugin-sdk/ssrf-runtime": ["../dist/plugin-sdk/ssrf-runtime.d.ts"],
+  "@grokbot/qa-channel/api.js": ["../dist/plugin-sdk/extensions/qa-channel/api.d.ts"],
+  "@grokbot/matrix/test-api.js": ["../dist/plugin-sdk/extensions/matrix/test-api.d.ts"],
+  "@grokbot/discord/api.js": ["../dist/plugin-sdk/extensions/discord/api.d.ts"],
+  "@grokbot/slack/api.js": ["../dist/plugin-sdk/extensions/slack/api.d.ts"],
+  "@grokbot/telegram/api.js": ["../dist/plugin-sdk/extensions/telegram/api.d.ts"],
+  "@grokbot/whatsapp/api.js": ["../dist/plugin-sdk/extensions/whatsapp/api.d.ts"],
+  "@grokbot/ai": ["../dist/plugin-sdk/packages/ai/src/index.d.ts"],
+  "@grokbot/ai/diagnostics": ["../dist/plugin-sdk/packages/ai/src/utils/diagnostics.d.ts"],
+  "@grokbot/ai/event-stream": ["../dist/plugin-sdk/packages/ai/src/utils/event-stream.d.ts"],
+  "@grokbot/ai/providers": ["../dist/plugin-sdk/packages/ai/src/providers.d.ts"],
+  "@grokbot/ai/types": ["../dist/plugin-sdk/packages/ai/src/types.d.ts"],
+  "@grokbot/ai/validation": ["../dist/plugin-sdk/packages/ai/src/validation.d.ts"],
+  "@grokbot/ai/internal/*": ["../dist/plugin-sdk/packages/ai/src/internal/*.d.ts"],
+  "@grokbot/llm-core": ["../dist/plugin-sdk/packages/llm-core/src/index.d.ts"],
+  "@grokbot/llm-core/diagnostics": [
     "../dist/plugin-sdk/packages/llm-core/src/utils/diagnostics.d.ts",
   ],
-  "@openclaw/llm-core/event-stream": [
+  "@grokbot/llm-core/event-stream": [
     "../dist/plugin-sdk/packages/llm-core/src/utils/event-stream.d.ts",
   ],
-  "@openclaw/llm-core/types": ["../dist/plugin-sdk/packages/llm-core/src/types.d.ts"],
-  "@openclaw/llm-core/validation": ["../dist/plugin-sdk/packages/llm-core/src/validation.d.ts"],
-  "@openclaw/llm-core/*": ["../dist/plugin-sdk/packages/llm-core/src/*.d.ts"],
-  "@openclaw/model-catalog-core": ["../dist/plugin-sdk/packages/model-catalog-core/src/index.d.ts"],
-  "@openclaw/model-catalog-core/configured-model-refs": [
+  "@grokbot/llm-core/types": ["../dist/plugin-sdk/packages/llm-core/src/types.d.ts"],
+  "@grokbot/llm-core/validation": ["../dist/plugin-sdk/packages/llm-core/src/validation.d.ts"],
+  "@grokbot/llm-core/*": ["../dist/plugin-sdk/packages/llm-core/src/*.d.ts"],
+  "@grokbot/model-catalog-core": ["../dist/plugin-sdk/packages/model-catalog-core/src/index.d.ts"],
+  "@grokbot/model-catalog-core/configured-model-refs": [
     "../dist/plugin-sdk/packages/model-catalog-core/src/configured-model-refs.d.ts",
   ],
-  "@openclaw/model-catalog-core/model-catalog-refs": [
+  "@grokbot/model-catalog-core/model-catalog-refs": [
     "../dist/plugin-sdk/packages/model-catalog-core/src/model-catalog-refs.d.ts",
   ],
-  "@openclaw/model-catalog-core/model-catalog-normalize": [
+  "@grokbot/model-catalog-core/model-catalog-normalize": [
     "../dist/plugin-sdk/packages/model-catalog-core/src/model-catalog-normalize.d.ts",
   ],
-  "@openclaw/model-catalog-core/model-catalog-types": [
+  "@grokbot/model-catalog-core/model-catalog-types": [
     "../dist/plugin-sdk/packages/model-catalog-core/src/model-catalog-types.d.ts",
   ],
-  "@openclaw/model-catalog-core/provider-id": [
+  "@grokbot/model-catalog-core/provider-id": [
     "../dist/plugin-sdk/packages/model-catalog-core/src/provider-id.d.ts",
   ],
-  "@openclaw/model-catalog-core/provider-model-id-normalization": [
+  "@grokbot/model-catalog-core/provider-model-id-normalization": [
     "../dist/plugin-sdk/packages/model-catalog-core/src/provider-model-id-normalization.d.ts",
   ],
-  "@openclaw/model-catalog-core/provider-model-id-normalize": [
+  "@grokbot/model-catalog-core/provider-model-id-normalize": [
     "../dist/plugin-sdk/packages/model-catalog-core/src/provider-model-id-normalize.d.ts",
   ],
-  "@openclaw/model-catalog-core/*": ["../dist/plugin-sdk/packages/model-catalog-core/src/*.d.ts"],
-  "@openclaw/markdown-core": ["../dist/plugin-sdk/packages/markdown-core/src/index.d.ts"],
-  "@openclaw/markdown-core/code-spans": [
+  "@grokbot/model-catalog-core/*": ["../dist/plugin-sdk/packages/model-catalog-core/src/*.d.ts"],
+  "@grokbot/markdown-core": ["../dist/plugin-sdk/packages/markdown-core/src/index.d.ts"],
+  "@grokbot/markdown-core/code-spans": [
     "../dist/plugin-sdk/packages/markdown-core/src/code-spans.d.ts",
   ],
-  "@openclaw/markdown-core/fences": ["../dist/plugin-sdk/packages/markdown-core/src/fences.d.ts"],
-  "@openclaw/markdown-core/frontmatter": [
+  "@grokbot/markdown-core/fences": ["../dist/plugin-sdk/packages/markdown-core/src/fences.d.ts"],
+  "@grokbot/markdown-core/frontmatter": [
     "../dist/plugin-sdk/packages/markdown-core/src/frontmatter.d.ts",
   ],
-  "@openclaw/markdown-core/ir": ["../dist/plugin-sdk/packages/markdown-core/src/ir.d.ts"],
-  "@openclaw/markdown-core/render": ["../dist/plugin-sdk/packages/markdown-core/src/render.d.ts"],
-  "@openclaw/markdown-core/render-aware-chunking": [
+  "@grokbot/markdown-core/ir": ["../dist/plugin-sdk/packages/markdown-core/src/ir.d.ts"],
+  "@grokbot/markdown-core/render": ["../dist/plugin-sdk/packages/markdown-core/src/render.d.ts"],
+  "@grokbot/markdown-core/render-aware-chunking": [
     "../dist/plugin-sdk/packages/markdown-core/src/render-aware-chunking.d.ts",
   ],
-  "@openclaw/markdown-core/tables": ["../dist/plugin-sdk/packages/markdown-core/src/tables.d.ts"],
-  "@openclaw/markdown-core/types": ["../dist/plugin-sdk/packages/markdown-core/src/types.d.ts"],
-  "@openclaw/markdown-core/*": ["../dist/plugin-sdk/packages/markdown-core/src/*.d.ts"],
-  "@openclaw/media-generation-core": [
+  "@grokbot/markdown-core/tables": ["../dist/plugin-sdk/packages/markdown-core/src/tables.d.ts"],
+  "@grokbot/markdown-core/types": ["../dist/plugin-sdk/packages/markdown-core/src/types.d.ts"],
+  "@grokbot/markdown-core/*": ["../dist/plugin-sdk/packages/markdown-core/src/*.d.ts"],
+  "@grokbot/media-generation-core": [
     "../dist/plugin-sdk/packages/media-generation-core/src/index.d.ts",
   ],
-  "@openclaw/media-generation-core/capability-model-ref": [
+  "@grokbot/media-generation-core/capability-model-ref": [
     "../dist/plugin-sdk/packages/media-generation-core/src/capability-model-ref.d.ts",
   ],
-  "@openclaw/media-generation-core/catalog": [
+  "@grokbot/media-generation-core/catalog": [
     "../dist/plugin-sdk/packages/media-generation-core/src/catalog.d.ts",
   ],
-  "@openclaw/media-generation-core/model-ref": [
+  "@grokbot/media-generation-core/model-ref": [
     "../dist/plugin-sdk/packages/media-generation-core/src/model-ref.d.ts",
   ],
-  "@openclaw/media-generation-core/normalization": [
+  "@grokbot/media-generation-core/normalization": [
     "../dist/plugin-sdk/packages/media-generation-core/src/normalization.d.ts",
   ],
-  "@openclaw/media-generation-core/*": [
+  "@grokbot/media-generation-core/*": [
     "../dist/plugin-sdk/packages/media-generation-core/src/*.d.ts",
   ],
-  "@openclaw/media-core": ["../dist/plugin-sdk/packages/media-core/src/index.d.ts"],
-  "@openclaw/media-core/base64": ["../dist/plugin-sdk/packages/media-core/src/base64.d.ts"],
-  "@openclaw/media-core/constants": ["../dist/plugin-sdk/packages/media-core/src/constants.d.ts"],
-  "@openclaw/media-core/content-length": [
+  "@grokbot/media-core": ["../dist/plugin-sdk/packages/media-core/src/index.d.ts"],
+  "@grokbot/media-core/base64": ["../dist/plugin-sdk/packages/media-core/src/base64.d.ts"],
+  "@grokbot/media-core/constants": ["../dist/plugin-sdk/packages/media-core/src/constants.d.ts"],
+  "@grokbot/media-core/content-length": [
     "../dist/plugin-sdk/packages/media-core/src/content-length.d.ts",
   ],
-  "@openclaw/media-core/file-name": ["../dist/plugin-sdk/packages/media-core/src/file-name.d.ts"],
-  "@openclaw/media-core/inbound-path-policy": [
+  "@grokbot/media-core/file-name": ["../dist/plugin-sdk/packages/media-core/src/file-name.d.ts"],
+  "@grokbot/media-core/inbound-path-policy": [
     "../dist/plugin-sdk/packages/media-core/src/inbound-path-policy.d.ts",
   ],
-  "@openclaw/media-core/inline-image-data-url": [
+  "@grokbot/media-core/inline-image-data-url": [
     "../dist/plugin-sdk/packages/media-core/src/inline-image-data-url.d.ts",
   ],
-  "@openclaw/media-core/media-source-url": [
+  "@grokbot/media-core/media-source-url": [
     "../dist/plugin-sdk/packages/media-core/src/media-source-url.d.ts",
   ],
-  "@openclaw/media-core/mime": ["../dist/plugin-sdk/packages/media-core/src/mime.d.ts"],
-  "@openclaw/media-core/read-byte-stream-with-limit": [
+  "@grokbot/media-core/mime": ["../dist/plugin-sdk/packages/media-core/src/mime.d.ts"],
+  "@grokbot/media-core/read-byte-stream-with-limit": [
     "../dist/plugin-sdk/packages/media-core/src/read-byte-stream-with-limit.d.ts",
   ],
-  "@openclaw/media-core/*": ["../dist/plugin-sdk/packages/media-core/src/*.d.ts"],
-  "@openclaw/normalization-core/record-coerce": [
+  "@grokbot/media-core/*": ["../dist/plugin-sdk/packages/media-core/src/*.d.ts"],
+  "@grokbot/normalization-core/record-coerce": [
     "../dist/plugin-sdk/packages/normalization-core/src/record-coerce.d.ts",
   ],
-  "@openclaw/normalization-core/string-coerce": [
+  "@grokbot/normalization-core/string-coerce": [
     "../dist/plugin-sdk/packages/normalization-core/src/string-coerce.d.ts",
   ],
-  "@openclaw/normalization-core/*": ["../dist/plugin-sdk/packages/normalization-core/src/*.d.ts"],
-  "@openclaw/retry": ["../dist/plugin-sdk/packages/retry/src/index.d.ts"],
-  "@openclaw/workboard-contract": ["../packages/workboard-contract/src/index.ts"],
+  "@grokbot/normalization-core/*": ["../dist/plugin-sdk/packages/normalization-core/src/*.d.ts"],
+  "@grokbot/retry": ["../dist/plugin-sdk/packages/retry/src/index.d.ts"],
+  "@grokbot/workboard-contract": ["../packages/workboard-contract/src/index.ts"],
   ...buildPackageBoundaryDtsPaths({
-    packageName: "@openclaw/acp-core",
+    packageName: "@grokbot/acp-core",
     packageDir: "acp-core",
   }),
-  "@openclaw/acp-core/*": ["../dist/plugin-sdk/packages/acp-core/src/*.d.ts"],
-  "@openclaw/terminal-core": ["../dist/plugin-sdk/packages/terminal-core/src/index.d.ts"],
-  "@openclaw/terminal-core/ansi": ["../dist/plugin-sdk/packages/terminal-core/src/ansi.d.ts"],
-  "@openclaw/terminal-core/decorative-emoji": [
+  "@grokbot/acp-core/*": ["../dist/plugin-sdk/packages/acp-core/src/*.d.ts"],
+  "@grokbot/terminal-core": ["../dist/plugin-sdk/packages/terminal-core/src/index.d.ts"],
+  "@grokbot/terminal-core/ansi": ["../dist/plugin-sdk/packages/terminal-core/src/ansi.d.ts"],
+  "@grokbot/terminal-core/decorative-emoji": [
     "../dist/plugin-sdk/packages/terminal-core/src/decorative-emoji.d.ts",
   ],
-  "@openclaw/terminal-core/health-style": [
+  "@grokbot/terminal-core/health-style": [
     "../dist/plugin-sdk/packages/terminal-core/src/health-style.d.ts",
   ],
-  "@openclaw/terminal-core/links": ["../dist/plugin-sdk/packages/terminal-core/src/links.d.ts"],
-  "@openclaw/terminal-core/note": ["../dist/plugin-sdk/packages/terminal-core/src/note.d.ts"],
-  "@openclaw/terminal-core/osc-progress": [
+  "@grokbot/terminal-core/links": ["../dist/plugin-sdk/packages/terminal-core/src/links.d.ts"],
+  "@grokbot/terminal-core/note": ["../dist/plugin-sdk/packages/terminal-core/src/note.d.ts"],
+  "@grokbot/terminal-core/osc-progress": [
     "../dist/plugin-sdk/packages/terminal-core/src/osc-progress.d.ts",
   ],
-  "@openclaw/terminal-core/palette": ["../dist/plugin-sdk/packages/terminal-core/src/palette.d.ts"],
-  "@openclaw/terminal-core/progress-line": [
+  "@grokbot/terminal-core/palette": ["../dist/plugin-sdk/packages/terminal-core/src/palette.d.ts"],
+  "@grokbot/terminal-core/progress-line": [
     "../dist/plugin-sdk/packages/terminal-core/src/progress-line.d.ts",
   ],
-  "@openclaw/terminal-core/prompt-select-styled": [
+  "@grokbot/terminal-core/prompt-select-styled": [
     "../dist/plugin-sdk/packages/terminal-core/src/prompt-select-styled.d.ts",
   ],
-  "@openclaw/terminal-core/prompt-select-styled-params": [
+  "@grokbot/terminal-core/prompt-select-styled-params": [
     "../dist/plugin-sdk/packages/terminal-core/src/prompt-select-styled-params.d.ts",
   ],
-  "@openclaw/terminal-core/prompt-style": [
+  "@grokbot/terminal-core/prompt-style": [
     "../dist/plugin-sdk/packages/terminal-core/src/prompt-style.d.ts",
   ],
-  "@openclaw/terminal-core/restore": ["../dist/plugin-sdk/packages/terminal-core/src/restore.d.ts"],
-  "@openclaw/terminal-core/safe-text": [
+  "@grokbot/terminal-core/restore": ["../dist/plugin-sdk/packages/terminal-core/src/restore.d.ts"],
+  "@grokbot/terminal-core/safe-text": [
     "../dist/plugin-sdk/packages/terminal-core/src/safe-text.d.ts",
   ],
-  "@openclaw/terminal-core/stream-writer": [
+  "@grokbot/terminal-core/stream-writer": [
     "../dist/plugin-sdk/packages/terminal-core/src/stream-writer.d.ts",
   ],
-  "@openclaw/terminal-core/table": ["../dist/plugin-sdk/packages/terminal-core/src/table.d.ts"],
-  "@openclaw/terminal-core/terminal-link": [
+  "@grokbot/terminal-core/table": ["../dist/plugin-sdk/packages/terminal-core/src/table.d.ts"],
+  "@grokbot/terminal-core/terminal-link": [
     "../dist/plugin-sdk/packages/terminal-core/src/terminal-link.d.ts",
   ],
-  "@openclaw/terminal-core/theme": ["../dist/plugin-sdk/packages/terminal-core/src/theme.d.ts"],
-  "@openclaw/terminal-core/*": ["../dist/plugin-sdk/packages/terminal-core/src/*.d.ts"],
-  "@openclaw/*.js": ["../packages/plugin-sdk/dist/extensions/*.d.ts", "../extensions/*"],
-  "@openclaw/*": ["../packages/plugin-sdk/dist/extensions/*", "../extensions/*"],
-  "openclaw/plugin-sdk/qa-channel": ["../dist/plugin-sdk/src/plugin-sdk/qa-channel.d.ts"],
-  "openclaw/plugin-sdk/qa-channel-protocol": [
+  "@grokbot/terminal-core/theme": ["../dist/plugin-sdk/packages/terminal-core/src/theme.d.ts"],
+  "@grokbot/terminal-core/*": ["../dist/plugin-sdk/packages/terminal-core/src/*.d.ts"],
+  "@grokbot/*.js": ["../packages/plugin-sdk/dist/extensions/*.d.ts", "../extensions/*"],
+  "@grokbot/*": ["../packages/plugin-sdk/dist/extensions/*", "../extensions/*"],
+  "grokbot/plugin-sdk/qa-channel": ["../dist/plugin-sdk/src/plugin-sdk/qa-channel.d.ts"],
+  "grokbot/plugin-sdk/qa-channel-protocol": [
     "../dist/plugin-sdk/src/plugin-sdk/qa-channel-protocol.d.ts",
   ],
-  "openclaw/plugin-sdk/qa-runtime": ["../dist/plugin-sdk/src/plugin-sdk/qa-runtime.d.ts"],
-  "@openclaw/plugin-sdk/*": ["../dist/plugin-sdk/*.d.ts"],
+  "grokbot/plugin-sdk/qa-runtime": ["../dist/plugin-sdk/src/plugin-sdk/qa-runtime.d.ts"],
+  "@grokbot/plugin-sdk/*": ["../dist/plugin-sdk/*.d.ts"],
 } as const;
 
 function prefixExtensionPackageBoundaryPaths(
@@ -256,30 +256,30 @@ function omitExtensionPackageBoundaryPaths(
 export const EXTENSION_PACKAGE_BOUNDARY_XAI_PATHS = {
   ...prefixExtensionPackageBoundaryPaths(
     omitExtensionPackageBoundaryPaths(EXTENSION_PACKAGE_BOUNDARY_BASE_PATHS, [
-      "openclaw/plugin-sdk/channel-secret-basic-runtime",
-      "openclaw/plugin-sdk/channel-secret-tts-runtime",
-      "@openclaw/matrix/test-api.js",
-      "@openclaw/discord/api.js",
-      "@openclaw/slack/api.js",
-      "@openclaw/telegram/api.js",
-      "@openclaw/whatsapp/api.js",
+      "grokbot/plugin-sdk/channel-secret-basic-runtime",
+      "grokbot/plugin-sdk/channel-secret-tts-runtime",
+      "@grokbot/matrix/test-api.js",
+      "@grokbot/discord/api.js",
+      "@grokbot/slack/api.js",
+      "@grokbot/telegram/api.js",
+      "@grokbot/whatsapp/api.js",
     ]),
     "../",
   ),
-  "openclaw/plugin-sdk/channel-entry-contract": [
+  "grokbot/plugin-sdk/channel-entry-contract": [
     "../../dist/plugin-sdk/channel-entry-contract.d.ts",
   ],
-  "openclaw/plugin-sdk/browser-maintenance": [
+  "grokbot/plugin-sdk/browser-maintenance": [
     "../../dist/plugin-sdk/src/plugin-sdk/browser-maintenance.d.ts",
   ],
-  "@openclaw/qa-channel/api.js": ["../../dist/plugin-sdk/extensions/qa-channel/api.d.ts"],
-  "@openclaw/*.js": ["../../packages/plugin-sdk/dist/extensions/*.d.ts", "../*"],
-  "@openclaw/*": ["../*"],
-  "@openclaw/plugin-sdk/*": ["../../dist/plugin-sdk/*.d.ts"],
-  "@openclaw/anthropic-vertex/api.js": ["./.boundary-stubs/anthropic-vertex-api.d.ts"],
-  "@openclaw/ollama/api.js": ["./.boundary-stubs/ollama-api.d.ts"],
-  "@openclaw/ollama/runtime-api.js": ["./.boundary-stubs/ollama-runtime-api.d.ts"],
-  "@openclaw/speech-core/runtime-api.js": ["./.boundary-stubs/speech-core-runtime-api.d.ts"],
+  "@grokbot/qa-channel/api.js": ["../../dist/plugin-sdk/extensions/qa-channel/api.d.ts"],
+  "@grokbot/*.js": ["../../packages/plugin-sdk/dist/extensions/*.d.ts", "../*"],
+  "@grokbot/*": ["../*"],
+  "@grokbot/plugin-sdk/*": ["../../dist/plugin-sdk/*.d.ts"],
+  "@grokbot/anthropic-vertex/api.js": ["./.boundary-stubs/anthropic-vertex-api.d.ts"],
+  "@grokbot/ollama/api.js": ["./.boundary-stubs/ollama-api.d.ts"],
+  "@grokbot/ollama/runtime-api.js": ["./.boundary-stubs/ollama-runtime-api.d.ts"],
+  "@grokbot/speech-core/runtime-api.js": ["./.boundary-stubs/speech-core-runtime-api.d.ts"],
 } as const;
 
 type ExtensionPackageBoundaryTsConfigJson = {

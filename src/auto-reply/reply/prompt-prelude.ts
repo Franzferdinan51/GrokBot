@@ -1,5 +1,5 @@
 /** Builds prompt body and envelope metadata for reply runs. */
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+import { normalizeOptionalString } from "@grokbot/normalization-core/string-coerce";
 import type { CurrentInboundPromptContext } from "../../agents/embedded-agent-runner/run/params.js";
 import type { InboundEventKind } from "../../channels/inbound-event/kind.js";
 import { MESSAGE_TOOL_ONLY_DELIVERY_HINT } from "../../plugin-sdk/message-tool-delivery-hints.js";
@@ -13,7 +13,7 @@ import { appendUntrustedContext } from "./untrusted-context.js";
 
 const REPLY_MEDIA_HINT =
   "To send an image back, use the message tool with structured media fields such as media, mediaUrl, path, or filePath. Keep caption in the text body.";
-const ROOM_EVENT_PROMPT = "[OpenClaw room event]";
+const ROOM_EVENT_PROMPT = "[GrokBot room event]";
 const RESUMABLE_ROOM_CONTEXT_OMITTED_PREFIXES = [
   "Conversation context (untrusted, chronological, selected for current message):",
   "Chat history since last reply (untrusted, for context):",
@@ -173,7 +173,7 @@ function buildRoomEventContext(params: ReplyPromptEnvelopeBaseParams, roomContex
   const roomContextBlock = roomContext.trim() ? `Room context:\n${roomContext.trim()}` : "";
   const deliveryDirective = resolvePerTurnDeliveryDirective(params);
   return [
-    "[OpenClaw room event]",
+    "[GrokBot room event]",
     "inbound_event_kind: room_event",
     roomContextBlock,
     `Current event:\n${roomEventBody}`,
@@ -229,11 +229,11 @@ export function buildReplyPromptEnvelopeBase(
       ? resetModelBody
       : MEDIA_ONLY_USER_TEXT;
   // Room-event transcript rows are plain chat lines; replay treats them as
-  // conversation, while the OpenClaw marker remains current-turn context only.
+  // conversation, while the GrokBot marker remains current-turn context only.
   const transcriptBody = params.isHeartbeat
     ? HEARTBEAT_TRANSCRIPT_PROMPT
     : params.isBareSessionReset
-      ? softResetTail || `[OpenClaw session ${params.startupAction}]`
+      ? softResetTail || `[GrokBot session ${params.startupAction}]`
       : isRoomEvent
         ? resolveRoomEventTranscriptBody(params)
         : params.hasUserBody

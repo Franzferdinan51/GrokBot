@@ -661,6 +661,6 @@ class ChatQuestionPanel extends LitElement {
   }
 }
 
-if (!customElements.get("openclaw-chat-question-panel")) {
-  customElements.define("openclaw-chat-question-panel", ChatQuestionPanel);
+if (!customElements.get("grokbot-chat-question-panel")) {
+  customElements.define("grokbot-chat-question-panel", ChatQuestionPanel);
 }

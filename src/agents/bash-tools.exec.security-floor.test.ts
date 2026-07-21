@@ -67,7 +67,7 @@ describe("exec security floor", () => {
       "OPENCLAW_STATE_DIR",
       "SHELL",
     ]);
-    tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-exec-security-floor-"));
+    tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-exec-security-floor-"));
     setTestEnvValue("HOME", tempRoot);
     setTestEnvValue("USERPROFILE", tempRoot);
     setTestEnvValue("OPENCLAW_HOME", tempRoot);

@@ -2,10 +2,10 @@
 import { mkdtempSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { clearLiveCatalogCacheForTests } from "openclaw/plugin-sdk/provider-catalog-shared";
-import type { ModelDefinitionConfig } from "openclaw/plugin-sdk/provider-onboard";
-import { withFetchPreconnect } from "openclaw/plugin-sdk/test-env";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { clearLiveCatalogCacheForTests } from "grokbot/plugin-sdk/provider-catalog-shared";
+import type { ModelDefinitionConfig } from "grokbot/plugin-sdk/provider-onboard";
+import { withFetchPreconnect } from "grokbot/plugin-sdk/test-env";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { ollamaProviderDiscovery } from "./provider-discovery.js";
 
@@ -18,7 +18,7 @@ afterEach(() => {
 });
 
 describe("Ollama provider", () => {
-  const createAgentDir = () => mkdtempSync(join(tmpdir(), "openclaw-test-"));
+  const createAgentDir = () => mkdtempSync(join(tmpdir(), "grokbot-test-"));
 
   const enableDiscoveryEnv = () => {
     vi.stubEnv("VITEST", "");

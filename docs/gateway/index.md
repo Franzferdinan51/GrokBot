@@ -28,11 +28,11 @@ Use this page for day-1 startup and day-2 operations of the Gateway service.
   <Step title="Start the Gateway">
 
 ```bash
-openclaw gateway --port 18789
+grokbot gateway --port 18789
 # debug/trace mirrored to stdio
-openclaw gateway --port 18789 --verbose
+grokbot gateway --port 18789 --verbose
 # force-kill listener on selected port, then start
-openclaw gateway --force
+grokbot gateway --force
 ```
 
   </Step>
@@ -40,19 +40,19 @@ openclaw gateway --force
   <Step title="Verify service health">
 
 ```bash
-openclaw gateway status
-openclaw status
-openclaw logs --follow
+grokbot gateway status
+grokbot status
+grokbot logs --follow
 ```
 
-Healthy baseline: `Runtime: running`, `Connectivity probe: ok`, and a `Capability` line that matches what you expect. Use `openclaw gateway status --require-rpc` for read-scope RPC proof, not just reachability.
+Healthy baseline: `Runtime: running`, `Connectivity probe: ok`, and a `Capability` line that matches what you expect. Use `grokbot gateway status --require-rpc` for read-scope RPC proof, not just reachability.
 
   </Step>
 
   <Step title="Validate channel readiness">
 
 ```bash
-openclaw channels status --probe
+grokbot channels status --probe
 ```
 
 With a reachable gateway this runs live per-account channel probes and optional audits. If the gateway is unreachable, the CLI falls back to config-only channel summaries.
@@ -77,7 +77,7 @@ Gateway config reload watches the active config file path (resolved from profile
 
 ## OpenAI-compatible endpoints
 
-OpenClaw's highest-leverage compatibility surface:
+GrokBot's highest-leverage compatibility surface:
 
 - `GET /v1/models`
 - `GET /v1/models/{id}`
@@ -91,7 +91,7 @@ Why this set matters:
 - Many RAG and memory pipelines expect `/v1/embeddings`.
 - Agent-native clients increasingly prefer `/v1/responses`.
 
-`/v1/models` is agent-first: it returns `openclaw`, `openclaw/default`, and `openclaw/<agentId>` for every configured agent. `openclaw/default` is the stable alias that always maps to the configured default agent. Send `x-openclaw-model` when you want a backend provider/model override; otherwise the selected agent's normal model and embedding setup stays in control.
+`/v1/models` is agent-first: it returns `grokbot`, `grokbot/default`, and `grokbot/<agentId>` for every configured agent. `grokbot/default` is the stable alias that always maps to the configured default agent. Send `x-grokbot-model` when you want a backend provider/model override; otherwise the selected agent's normal model and embedding setup stays in control.
 
 All of these run on the main Gateway port and use the same trusted operator auth boundary as the rest of the Gateway HTTP API.
 
@@ -104,7 +104,7 @@ Admin HTTP RPC (`POST /api/v1/admin/rpc`) is a separate, default-off plugin rout
 | Gateway port | `--port` → `OPENCLAW_GATEWAY_PORT` → `gateway.port` → `18789`        |
 | Bind mode    | CLI/override → `gateway.bind` → `loopback` (or `auto` in containers) |
 
-Installed gateway services record the resolved `--port` in supervisor metadata. After changing `gateway.port`, run `openclaw doctor --fix` or `openclaw gateway install --force` so launchd/systemd/schtasks starts the process on the new port.
+Installed gateway services record the resolved `--port` in supervisor metadata. After changing `gateway.port`, run `grokbot doctor --fix` or `grokbot gateway install --force` so launchd/systemd/schtasks starts the process on the new port.
 
 Gateway startup uses the same effective port and bind when it seeds local Control UI origins for non-loopback binds. For example, `--bind lan --port 3000` seeds `http://localhost:3000` and `http://127.0.0.1:3000` before runtime validation runs. Add any remote browser origins, such as HTTPS proxy URLs, to `gateway.controlUi.allowedOrigins` explicitly.
 
@@ -120,15 +120,15 @@ Gateway startup uses the same effective port and bind when it seeds local Contro
 ## Operator command set
 
 ```bash
-openclaw gateway status
-openclaw gateway status --deep   # adds a system-level service scan
-openclaw gateway status --json
-openclaw gateway install
-openclaw gateway restart
-openclaw gateway stop
-openclaw secrets reload
-openclaw logs --follow
-openclaw doctor
+grokbot gateway status
+grokbot gateway status --deep   # adds a system-level service scan
+grokbot gateway status --json
+grokbot gateway install
+grokbot gateway restart
+grokbot gateway stop
+grokbot secrets reload
+grokbot logs --follow
+grokbot doctor
 ```
 
 `gateway status --deep` is for extra service discovery (LaunchDaemons/systemd system units/schtasks), not a deeper RPC health probe.
@@ -140,14 +140,14 @@ Most installs should run one gateway per machine. A single gateway can host mult
 Useful checks:
 
 ```bash
-openclaw gateway status --deep
-openclaw gateway probe
+grokbot gateway status --deep
+grokbot gateway probe
 ```
 
 What to expect:
 
 - `gateway status --deep` can report `Other gateway-like services detected (best effort)` and print cleanup hints when stale launchd/systemd/schtasks installs are still around.
-- `gateway probe` can warn about `multiple reachable gateway identities` when distinct gateways answer, or when OpenClaw cannot prove reachable targets are the same gateway. An SSH tunnel, proxy URL, or configured remote URL to the same gateway is one gateway with multiple transports, even when transport ports differ.
+- `gateway probe` can warn about `multiple reachable gateway identities` when distinct gateways answer, or when GrokBot cannot prove reachable targets are the same gateway. An SSH tunnel, proxy URL, or configured remote URL to the same gateway is one gateway with multiple transports, even when transport ports differ.
 - If that is intentional, isolate ports, config/state, and workspace roots per gateway.
 
 Checklist per instance:
@@ -160,8 +160,8 @@ Checklist per instance:
 Example:
 
 ```bash
-OPENCLAW_CONFIG_PATH=~/.openclaw/a.json OPENCLAW_STATE_DIR=~/.openclaw-a openclaw gateway --port 19001
-OPENCLAW_CONFIG_PATH=~/.openclaw/b.json OPENCLAW_STATE_DIR=~/.openclaw-b openclaw gateway --port 19002
+OPENCLAW_CONFIG_PATH=~/.grokbot/a.json OPENCLAW_STATE_DIR=~/.grokbot-a grokbot gateway --port 19001
+OPENCLAW_CONFIG_PATH=~/.grokbot/b.json OPENCLAW_STATE_DIR=~/.grokbot-b grokbot gateway --port 19002
 ```
 
 Detailed setup: [/gateway/multiple-gateways](/gateway/multiple-gateways).
@@ -193,26 +193,26 @@ Use supervised runs for production-like reliability.
   <Tab title="macOS (launchd)">
 
 ```bash
-openclaw gateway install
-openclaw gateway status
-openclaw gateway restart
-openclaw gateway stop
+grokbot gateway install
+grokbot gateway status
+grokbot gateway restart
+grokbot gateway stop
 ```
 
-Use `openclaw gateway restart` for restarts. Do not chain `openclaw gateway stop` and `openclaw gateway start` as a restart substitute.
+Use `grokbot gateway restart` for restarts. Do not chain `grokbot gateway stop` and `grokbot gateway start` as a restart substitute.
 
-On macOS, `gateway stop` uses `launchctl bootout` by default. This removes the LaunchAgent from the current boot session without persisting a disable, so KeepAlive auto-recovery still works after unexpected crashes and `gateway start` re-enables cleanly. To persistently suppress auto-respawn across reboots, pass `--disable`: `openclaw gateway stop --disable`.
+On macOS, `gateway stop` uses `launchctl bootout` by default. This removes the LaunchAgent from the current boot session without persisting a disable, so KeepAlive auto-recovery still works after unexpected crashes and `gateway start` re-enables cleanly. To persistently suppress auto-respawn across reboots, pass `--disable`: `grokbot gateway stop --disable`.
 
-LaunchAgent labels are `ai.openclaw.gateway` (default) or `ai.openclaw.<profile>` (named profile). `openclaw doctor` audits and repairs service config drift.
+LaunchAgent labels are `ai.grokbot.gateway` (default) or `ai.grokbot.<profile>` (named profile). `grokbot doctor` audits and repairs service config drift.
 
   </Tab>
 
   <Tab title="Linux (systemd user)">
 
 ```bash
-openclaw gateway install
-systemctl --user enable --now openclaw-gateway[-<profile>].service
-openclaw gateway status
+grokbot gateway install
+systemctl --user enable --now grokbot-gateway[-<profile>].service
+grokbot gateway status
 ```
 
 For persistence after logout, enable lingering:
@@ -227,14 +227,14 @@ Manual user-unit example when you need a custom install path:
 
 ```ini
 [Unit]
-Description=OpenClaw Gateway
+Description=GrokBot Gateway
 After=network-online.target
 Wants=network-online.target
 StartLimitBurst=5
 StartLimitIntervalSec=60
 
 [Service]
-ExecStart=/usr/local/bin/openclaw gateway --port 18789
+ExecStart=/usr/local/bin/grokbot gateway --port 18789
 Restart=always
 RestartSec=5
 RestartPreventExitStatus=78
@@ -253,15 +253,15 @@ WantedBy=default.target
   <Tab title="Windows (native)">
 
 ```powershell
-openclaw gateway install
-openclaw gateway status --json
-openclaw gateway restart
-openclaw gateway stop
+grokbot gateway install
+grokbot gateway status --json
+grokbot gateway restart
+grokbot gateway stop
 ```
 
-Native Windows managed startup uses a Scheduled Task named `OpenClaw Gateway`
-(or `OpenClaw Gateway (<profile>)` for named profiles). If Scheduled Task
-creation is denied, OpenClaw falls back to a per-user Startup-folder launcher
+Native Windows managed startup uses a Scheduled Task named `GrokBot Gateway`
+(or `GrokBot Gateway (<profile>)` for named profiles). If Scheduled Task
+creation is denied, GrokBot falls back to a per-user Startup-folder launcher
 that points at `gateway.cmd` inside the state directory.
 
   </Tab>
@@ -272,14 +272,14 @@ Use a system unit for multi-user/always-on hosts.
 
 ```bash
 sudo systemctl daemon-reload
-sudo systemctl enable --now openclaw-gateway[-<profile>].service
+sudo systemctl enable --now grokbot-gateway[-<profile>].service
 ```
 
 Use the same service body as the user unit, but install it under
-`/etc/systemd/system/openclaw-gateway[-<profile>].service` and adjust
-`ExecStart=` if your `openclaw` binary lives elsewhere.
+`/etc/systemd/system/grokbot-gateway[-<profile>].service` and adjust
+`ExecStart=` if your `grokbot` binary lives elsewhere.
 
-Do not also let `openclaw doctor --fix` install a user-level gateway service for the same profile/port. Doctor refuses that automatic install when it finds a system-level OpenClaw gateway service; use `OPENCLAW_SERVICE_REPAIR_POLICY=external` when the system unit owns the lifecycle.
+Do not also let `grokbot doctor --fix` install a user-level gateway service for the same profile/port. Doctor refuses that automatic install when it finds a system-level GrokBot gateway service; use `OPENCLAW_SERVICE_REPAIR_POLICY=external` when the system unit owns the lifecycle.
 
   </Tab>
 </Tabs>
@@ -289,9 +289,9 @@ Invalid configuration errors exit with code `78`. Linux systemd units use `Resta
 ## Dev profile quick path
 
 ```bash
-openclaw --dev setup
-openclaw --dev gateway --allow-unconfigured
-openclaw --dev status
+grokbot --dev setup
+grokbot --dev gateway --allow-unconfigured
+grokbot --dev status
 ```
 
 Defaults include isolated state/config and base gateway port `19001`.
@@ -325,9 +325,9 @@ See full protocol docs: [Gateway Protocol](/gateway/protocol).
 ### Readiness
 
 ```bash
-openclaw gateway status
-openclaw channels status --probe
-openclaw health
+grokbot gateway status
+grokbot channels status --probe
+grokbot health
 ```
 
 ### Gap recovery

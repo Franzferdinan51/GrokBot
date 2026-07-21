@@ -12,7 +12,7 @@ import {
 import { useAutoCleanupTempDirTracker } from "../../test/helpers/temp-dir.js";
 import { createPinnedLookup } from "../infra/net/ssrf.js";
 import { setMediaStoreNetworkDepsForTest } from "../media/store.test-support.js";
-import { closeOpenClawStateDatabaseForTest } from "../state/openclaw-state-db.js";
+import { closeOpenClawStateDatabaseForTest } from "../state/grokbot-state-db.js";
 import { withEnvAsync } from "../test-utils/env.js";
 import {
   insertManagedImageRecord,
@@ -416,7 +416,7 @@ describe("handleManagedOutgoingImageHttpRequest", () => {
       stateDir,
       pathName: `/api/chat/media/outgoing/${encodeURIComponent(sessionKey)}/${attachmentId}/full`,
       authResponse: { authMethod: "trusted-proxy", trustDeclaredOperatorScopes: true },
-      headers: { "x-openclaw-requester-session-key": sessionKey },
+      headers: { "x-grokbot-requester-session-key": sessionKey },
     });
 
     expect(result.statusCode).toBe(403);
@@ -429,7 +429,7 @@ describe("handleManagedOutgoingImageHttpRequest", () => {
       stateDir,
       pathName: `/api/chat/media/outgoing/${encodeURIComponent(sessionKey)}/${attachmentId}/full`,
       authResponse: { authMethod: "device-token" },
-      headers: { "x-openclaw-requester-session-key": sessionKey },
+      headers: { "x-grokbot-requester-session-key": sessionKey },
     });
 
     expect(result.statusCode).toBe(403);
@@ -456,7 +456,7 @@ describe("handleManagedOutgoingImageHttpRequest", () => {
       stateDir,
       pathName: `/api/chat/media/outgoing/${encodeURIComponent(sessionKey)}/${attachmentId}/full`,
       method: "POST",
-      headers: { "x-openclaw-requester-session-key": sessionKey },
+      headers: { "x-grokbot-requester-session-key": sessionKey },
     });
 
     expect(result.statusCode).toBe(405);
@@ -817,7 +817,7 @@ describe("createManagedOutgoingImageBlocks", () => {
   it("serves managed originals from a split config-path media root", async () => {
     const openClawHome = tempDirs.make("managed-image-home-");
     const externalConfigDir = tempDirs.make("managed-image-config-");
-    const splitStateDir = path.join(openClawHome, ".openclaw");
+    const splitStateDir = path.join(openClawHome, ".grokbot");
     const sourcePath = path.join(splitStateDir, "workspace", "fixtures", "dot.png");
     await fs.mkdir(path.dirname(sourcePath), { recursive: true });
     await fs.writeFile(sourcePath, Buffer.from(TINY_PNG_BASE64, "base64"));

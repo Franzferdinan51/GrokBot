@@ -3,9 +3,9 @@ import {
   createPluginSetupWizardStatus,
   createQueuedWizardPrompter,
   runSetupWizardFinalize,
-} from "openclaw/plugin-sdk/plugin-test-runtime";
-import type { RuntimeEnv } from "openclaw/plugin-sdk/runtime-env";
-import { DEFAULT_ACCOUNT_ID, type OpenClawConfig } from "openclaw/plugin-sdk/setup";
+} from "grokbot/plugin-sdk/plugin-test-runtime";
+import type { RuntimeEnv } from "grokbot/plugin-sdk/runtime-env";
+import { DEFAULT_ACCOUNT_ID, type OpenClawConfig } from "grokbot/plugin-sdk/setup";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { whatsappSetupWizard } from "./setup-surface.js";
 import {
@@ -40,7 +40,7 @@ const hoisted = vi.hoisted(() => ({
   resolveWhatsAppAuthDir: vi.fn<
     (params: { cfg: OpenClawConfig; accountId: string }) => { authDir: string }
   >(() => ({
-    authDir: "/tmp/openclaw-whatsapp-test",
+    authDir: "/tmp/grokbot-whatsapp-test",
   })),
 }));
 
@@ -65,9 +65,9 @@ vi.mock("./creds-files.js", async () => {
   };
 });
 
-vi.mock("openclaw/plugin-sdk/setup", async () => {
-  const actual = await vi.importActual<typeof import("openclaw/plugin-sdk/setup")>(
-    "openclaw/plugin-sdk/setup",
+vi.mock("grokbot/plugin-sdk/setup", async () => {
+  const actual = await vi.importActual<typeof import("grokbot/plugin-sdk/setup")>(
+    "grokbot/plugin-sdk/setup",
   );
   return {
     ...actual,
@@ -169,7 +169,7 @@ describe("whatsapp setup wizard", () => {
     hoisted.readWebAuthState.mockReset();
     hoisted.readWebAuthState.mockResolvedValue("not-linked");
     hoisted.resolveWhatsAppAuthDir.mockReset();
-    hoisted.resolveWhatsAppAuthDir.mockReturnValue({ authDir: "/tmp/openclaw-whatsapp-test" });
+    hoisted.resolveWhatsAppAuthDir.mockReturnValue({ authDir: "/tmp/grokbot-whatsapp-test" });
   });
 
   it("applies owner allowlist when forceAllowFrom is enabled", async () => {

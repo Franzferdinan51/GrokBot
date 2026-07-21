@@ -14,7 +14,7 @@ const resolveLsofCommandSyncMock = vi.hoisted(() => vi.fn());
 const resolveGatewayPortMock = vi.hoisted(() => vi.fn());
 
 vi.mock("node:child_process", async () => {
-  const { mockNodeBuiltinModule } = await import("openclaw/plugin-sdk/test-node-mocks");
+  const { mockNodeBuiltinModule } = await import("grokbot/plugin-sdk/test-node-mocks");
   return mockNodeBuiltinModule(
     () => vi.importActual<typeof import("node:child_process")>("node:child_process"),
     {
@@ -31,7 +31,7 @@ vi.mock("./ports-lsof.js", () => ({
 vi.mock("../config/paths.js", () => ({
   resolveGatewayPort: (...args: unknown[]) => resolveGatewayPortMock(...args),
   resolveStateDir: (env: NodeJS.ProcessEnv = process.env) =>
-    env.OPENCLAW_STATE_DIR ?? "/tmp/openclaw-state",
+    env.OPENCLAW_STATE_DIR ?? "/tmp/grokbot-state",
 }));
 
 const { cleanStaleGatewayProcessesSync, findGatewayPidsOnPortSync } =
@@ -68,7 +68,7 @@ function requireFirstSpawnSyncCall(): [unknown, unknown, unknown] {
 }
 
 describe.runIf(process.platform !== "win32")("findGatewayPidsOnPortSync", () => {
-  it("parses lsof output and filters non-openclaw/current processes", () => {
+  it("parses lsof output and filters non-grokbot/current processes", () => {
     const gatewayPidA = process.pid + 1000;
     const gatewayPidB = process.pid + 2000;
     const foreignPid = process.pid + 3000;
@@ -79,7 +79,7 @@ describe.runIf(process.platform !== "win32")("findGatewayPidsOnPortSync", () => 
         `p${process.pid}`,
         "copenclaw",
         `p${gatewayPidA}`,
-        "copenclaw-gateway",
+        "cgrokbot-gateway",
         `p${foreignPid}`,
         "cnode",
         `p${gatewayPidB}`,
@@ -125,7 +125,7 @@ describe.runIf(process.platform !== "win32")("cleanStaleGatewayProcessesSync", (
       .mockReturnValueOnce({
         error: undefined,
         status: 0,
-        stdout: [`p${stalePidA}`, "copenclaw", `p${stalePidB}`, "copenclaw-gateway"].join("\n"),
+        stdout: [`p${stalePidA}`, "copenclaw", `p${stalePidB}`, "cgrokbot-gateway"].join("\n"),
       })
       .mockReturnValue({
         error: undefined,
@@ -217,8 +217,8 @@ describe("triggerOpenClawRestart", () => {
           ok: true,
           method: "launchctl",
           tried: [
-            `launchctl kickstart -k gui/${uid}/ai.openclaw.gateway`,
-            `launchctl bootstrap gui/${uid} /Users/test/Library/LaunchAgents/ai.openclaw.gateway.plist`,
+            `launchctl kickstart -k gui/${uid}/ai.grokbot.gateway`,
+            `launchctl bootstrap gui/${uid} /Users/test/Library/LaunchAgents/ai.grokbot.gateway.plist`,
           ],
         });
       },
@@ -253,9 +253,9 @@ describe("triggerOpenClawRestart", () => {
           ok: true,
           method: "launchctl",
           tried: [
-            `launchctl kickstart -k gui/${uid}/ai.openclaw.gateway`,
-            `launchctl bootstrap gui/${uid} /Users/test/Library/LaunchAgents/ai.openclaw.gateway.plist`,
-            `launchctl kickstart gui/${uid}/ai.openclaw.gateway`,
+            `launchctl kickstart -k gui/${uid}/ai.grokbot.gateway`,
+            `launchctl bootstrap gui/${uid} /Users/test/Library/LaunchAgents/ai.grokbot.gateway.plist`,
+            `launchctl kickstart gui/${uid}/ai.grokbot.gateway`,
           ],
         });
       },

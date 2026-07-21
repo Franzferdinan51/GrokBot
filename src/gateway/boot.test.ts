@@ -5,7 +5,7 @@ import os from "node:os";
 import path from "node:path";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { SessionScope } from "../config/sessions/types.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 
 const agentCommand = vi.fn();
 
@@ -67,7 +67,7 @@ describe("runBootOnce", () => {
     options: BootWorkspaceOptions,
     run: (workspaceDir: string) => Promise<void>,
   ) => {
-    const workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-boot-"));
+    const workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-boot-"));
     try {
       const bootPath = path.join(workspaceDir, "BOOT.md");
       if (options.bootAsDirectory) {

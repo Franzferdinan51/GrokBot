@@ -3,7 +3,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import type { ChatType } from "../../channels/chat-type.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import { createSubsystemLogger } from "../../logging/subsystem.js";
 import { CommandLane } from "../../process/lanes.js";
 import { resolveSkillWorkshopConfig } from "./config.js";
@@ -373,7 +373,7 @@ export async function runSkillExperienceReview(
     return;
   }
 
-  const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-skill-review-"));
+  const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-skill-review-"));
   try {
     const sessionId = randomUUID();
     const reviewSessionKey = `agent:${candidate.ctx.agentId ?? "main"}:${EXPERIENCE_REVIEW_SESSION_SEGMENT}:${sessionId}`;
@@ -401,8 +401,8 @@ export async function runSkillExperienceReview(
       senderUsername: candidate.ctx.senderUsername,
       senderE164: candidate.ctx.senderE164,
       senderIsOwner: candidate.ctx.senderIsOwner,
-      agentHarnessId: "openclaw",
-      agentHarnessRuntimeOverride: "openclaw",
+      agentHarnessId: "grokbot",
+      agentHarnessRuntimeOverride: "grokbot",
       workspaceDir,
       ...(candidate.config ? { config: candidate.config } : {}),
       prompt: buildSkillExperienceReviewPrompt(candidate),

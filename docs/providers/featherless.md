@@ -2,19 +2,19 @@
 summary: "Featherless AI setup, model selection, and tool calling"
 title: "Featherless AI"
 read_when:
-  - You want to use Featherless AI with OpenClaw
+  - You want to use Featherless AI with GrokBot
   - You need the Featherless API key env var or model ref format
 ---
 
 [Featherless AI](https://featherless.ai) serves open models through an
-OpenAI-compatible API. OpenClaw installs Featherless as an official external
+OpenAI-compatible API. GrokBot installs Featherless as an official external
 provider plugin and keeps the built-in catalog small while accepting exact
 model ids from Featherless at runtime.
 
 | Property        | Value                                    |
 | --------------- | ---------------------------------------- |
 | Provider id     | `featherless`                            |
-| Package         | `@openclaw/featherless-provider`         |
+| Package         | `@grokbot/featherless-provider`         |
 | Auth env var    | `FEATHERLESS_API_KEY`                    |
 | Onboarding flag | `--auth-choice featherless-api-key`      |
 | Direct CLI flag | `--featherless-api-key <key>`            |
@@ -27,20 +27,20 @@ model ids from Featherless at runtime.
 Install the plugin and restart the Gateway:
 
 ```bash
-openclaw plugins install @openclaw/featherless-provider
-openclaw gateway restart
+grokbot plugins install @grokbot/featherless-provider
+grokbot gateway restart
 ```
 
 Run onboarding:
 
 ```bash
-openclaw onboard --auth-choice featherless-api-key
+grokbot onboard --auth-choice featherless-api-key
 ```
 
 For non-interactive setup:
 
 ```bash
-openclaw onboard --non-interactive \
+grokbot onboard --non-interactive \
   --mode local \
   --auth-choice featherless-api-key \
   --featherless-api-key "$FEATHERLESS_API_KEY"
@@ -55,18 +55,18 @@ export FEATHERLESS_API_KEY="<your-featherless-api-key>" # pragma: allowlist secr
 Verify the provider:
 
 ```bash
-openclaw models list --provider featherless
+grokbot models list --provider featherless
 ```
 
 ## Default model
 
 The plugin uses `Qwen/Qwen3-32B` as the setup default because Featherless
-documents native tool calling for the Qwen 3 family. OpenClaw configures its
+documents native tool calling for the Qwen 3 family. GrokBot configures its
 32,768-token context window, a conservative 4,096-token output limit, and
 Qwen chat-template thinking controls.
 
 The catalog cost fields are zero because Featherless supports multiple billing
-modes and OpenClaw does not embed account-specific plan or request-pricing
+modes and GrokBot does not embed account-specific plan or request-pricing
 rates.
 
 ## Other Featherless models
@@ -85,7 +85,7 @@ Use the exact Featherless model id after the `featherless/` provider prefix:
 }
 ```
 
-OpenClaw deliberately does not copy Featherless's full public model index into
+GrokBot deliberately does not copy Featherless's full public model index into
 the picker. The index is large and does not expose enough structured capability
 metadata to classify every text, vision, embedding, and reasoning model safely.
 Unknown ids therefore resolve with conservative text-only, non-reasoning
@@ -129,7 +129,7 @@ tags before adding custom metadata.
   `featherless/` prefix.
 - Tool calls returned as text: choose a model family Featherless documents for
   native function calling, such as Qwen 3.
-- Managed Gateway cannot see the key: put it in `~/.openclaw/.env` or another
+- Managed Gateway cannot see the key: put it in `~/.grokbot/.env` or another
   environment source loaded by the service, then restart the Gateway.
 
 ## Related

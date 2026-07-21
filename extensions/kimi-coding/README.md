@@ -1,12 +1,12 @@
-# OpenClaw Kimi Coding Provider
+# GrokBot Kimi Coding Provider
 
-Official OpenClaw provider plugin for Kimi Coding.
+Official GrokBot provider plugin for Kimi Coding.
 
-Install from OpenClaw:
+Install from GrokBot:
 
 ```bash
-openclaw plugins install @openclaw/kimi-provider
-openclaw gateway restart
+grokbot plugins install @grokbot/kimi-provider
+grokbot gateway restart
 ```
 
-See <https://docs.openclaw.ai/providers/moonshot> for setup and configuration.
+See <https://docs.grokbot.ai/providers/moonshot> for setup and configuration.

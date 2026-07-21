@@ -11,8 +11,8 @@ Adds agent-callable tools.
 
 ## Distribution
 
-- Package: `@openclaw/memory-core`
-- Install route: included in OpenClaw
+- Package: `@grokbot/memory-core`
+- Install route: included in GrokBot
 
 ## Surface
 

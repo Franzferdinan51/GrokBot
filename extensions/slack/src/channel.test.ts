@@ -1,5 +1,5 @@
 // Slack tests cover channel plugin behavior.
-import { createRuntimeEnv } from "openclaw/plugin-sdk/plugin-test-runtime";
+import { createRuntimeEnv } from "grokbot/plugin-sdk/plugin-test-runtime";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { slackPlugin } from "./channel.js";
 import { slackOutbound } from "./outbound-adapter.js";
@@ -512,8 +512,8 @@ describe("slackPlugin status", () => {
     const probeSpy = vi.spyOn(probeModule, "probeSlack").mockResolvedValueOnce({
       ok: true,
       status: 200,
-      bot: { id: "B1", name: "openclaw-bot" },
-      team: { id: "T1", name: "OpenClaw" },
+      bot: { id: "B1", name: "grokbot-bot" },
+      team: { id: "T1", name: "GrokBot" },
     });
     const cfg = {
       channels: {
@@ -539,8 +539,8 @@ describe("slackPlugin status", () => {
     expect(result).toEqual({
       ok: true,
       status: 200,
-      bot: { id: "B1", name: "openclaw-bot" },
-      team: { id: "T1", name: "OpenClaw" },
+      bot: { id: "B1", name: "grokbot-bot" },
+      team: { id: "T1", name: "GrokBot" },
     });
   });
 
@@ -550,7 +550,7 @@ describe("slackPlugin status", () => {
         ok: true,
         warning: "Slack bot token is a user token",
         bot: { id: "UUSER", name: "human-installer" },
-        team: { id: "T1", name: "OpenClaw" },
+        team: { id: "T1", name: "GrokBot" },
       },
     });
 
@@ -560,7 +560,7 @@ describe("slackPlugin status", () => {
         tone: "warn",
       },
       { text: "Bot: @human-installer" },
-      { text: "Team: OpenClaw (T1)" },
+      { text: "Team: GrokBot (T1)" },
     ]);
   });
 
@@ -1452,7 +1452,7 @@ describe("slackPlugin agentPrompt", () => {
       "- Slack interactive replies are disabled. If needed, ask to set `channels.slack.capabilities.interactiveReplies=true` (or the same under `channels.slack.accounts.<account>.capabilities`).",
     );
     expect(hints).toContain(
-      "- Slack plain text sends: write standard Markdown; OpenClaw converts it to Slack mrkdwn, including `**bold**`, headings, lists, and `[label](url)` links.",
+      "- Slack plain text sends: write standard Markdown; GrokBot converts it to Slack mrkdwn, including `**bold**`, headings, lists, and `[label](url)` links.",
     );
     expect(hints).toContain(
       "- For row-and-column data, use an explicit `presentation` table block; Slack renders it as a native table and retains a linear text summary for accessibility. Markdown pipe tables are not auto-promoted.",
@@ -1488,7 +1488,7 @@ describe("slackPlugin agentPrompt", () => {
       "- Slack selects: use `[[slack_select: Placeholder | Label:value, Other:other]]` to add a static select menu that routes the chosen value back as a Slack interaction system event.",
     );
     expect(hints).toContain(
-      "- Slack plain text sends: write standard Markdown; OpenClaw converts it to Slack mrkdwn, including `**bold**`, headings, lists, and `[label](url)` links.",
+      "- Slack plain text sends: write standard Markdown; GrokBot converts it to Slack mrkdwn, including `**bold**`, headings, lists, and `[label](url)` links.",
     );
     expect(hints).toContain(
       "- For row-and-column data, use an explicit `presentation` table block; Slack renders it as a native table and retains a linear text summary for accessibility. Markdown pipe tables are not auto-promoted.",

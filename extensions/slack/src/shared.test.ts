@@ -1,5 +1,5 @@
 // Slack tests cover shared plugin behavior.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import { describe, expect, it } from "vitest";
 import { setSlackChannelAllowlist } from "./setup-shared.js";
 import { createSlackPluginBase, slackConfigAdapter } from "./shared.js";
@@ -102,12 +102,12 @@ describe("slackConfigAdapter", () => {
         providers: {
           slack_bot: {
             source: "file",
-            path: "/tmp/openclaw-missing-slack-bot-token",
+            path: "/tmp/grokbot-missing-slack-bot-token",
             mode: "singleValue",
           },
           slack_app: {
             source: "file",
-            path: "/tmp/openclaw-missing-slack-app-token",
+            path: "/tmp/grokbot-missing-slack-app-token",
             mode: "singleValue",
           },
         },

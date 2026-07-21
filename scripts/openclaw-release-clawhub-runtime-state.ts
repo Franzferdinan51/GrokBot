@@ -1,5 +1,5 @@
 #!/usr/bin/env -S node --import tsx
-import { buildOpenClawReleaseClawHubRuntimeState } from "./lib/openclaw-release-clawhub-plan.ts";
+import { buildOpenClawReleaseClawHubRuntimeState } from "./lib/grokbot-release-clawhub-plan.ts";
 
 function parseBoolean(value: string, label: string): boolean {
   if (value === "true") {

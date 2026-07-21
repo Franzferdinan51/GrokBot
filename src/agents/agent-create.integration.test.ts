@@ -1,8 +1,8 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { expect, it } from "vitest";
-import { closeOpenClawStateDatabaseForTest } from "../state/openclaw-state-db.js";
-import { createOpenClawTestState } from "../test-utils/openclaw-test-state.js";
+import { closeOpenClawStateDatabaseForTest } from "../state/grokbot-state-db.js";
+import { createOpenClawTestState } from "../test-utils/grokbot-test-state.js";
 import { createAgent } from "./agent-create.js";
 import {
   DEFAULT_IDENTITY_FILENAME,

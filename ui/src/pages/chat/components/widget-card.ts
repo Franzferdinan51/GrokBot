@@ -130,10 +130,10 @@ function isManagedCanvasDocumentPreview(preview: ToolPreview): boolean {
 // preview iframe can fit short/tall widgets. The event source must be one of our
 // preview frames and the height is clamped, so widget code can only resize its
 // own frame within the same bounds the preview contract allows.
-const WIDGET_SIZE_MESSAGE_TYPE = "openclaw:widget-size";
-const WIDGET_PROMPT_OFFER_MESSAGE_TYPE = "openclaw:widget-prompt-offer";
-const WIDGET_PROMPT_MESSAGE_TYPE = "openclaw:widget-prompt";
-const WIDGET_PROMPT_HOST_READY_MESSAGE_TYPE = "openclaw:widget-prompt-host-ready";
+const WIDGET_SIZE_MESSAGE_TYPE = "grokbot:widget-size";
+const WIDGET_PROMPT_OFFER_MESSAGE_TYPE = "grokbot:widget-prompt-offer";
+const WIDGET_PROMPT_MESSAGE_TYPE = "grokbot:widget-prompt";
+const WIDGET_PROMPT_HOST_READY_MESSAGE_TYPE = "grokbot:widget-prompt-host-ready";
 const WIDGET_FRAME_MIN_HEIGHT = 160;
 const WIDGET_FRAME_MAX_HEIGHT = 1200;
 // Preview frames render inside lit shadow roots, so a document query cannot
@@ -345,7 +345,7 @@ function renderMcpAppView(params: {
   // Insert the tag before its chunk arrives. Native custom-element upgrade
   // preserves these bound fields, so the first preview initializes after registration.
   void ensureCustomElementDefined("mcp-app-view", loadMcpAppView).catch((error: unknown) => {
-    console.error("[openclaw] failed to load MCP App view", error);
+    console.error("[grokbot] failed to load MCP App view", error);
   });
   return html`<mcp-app-view
     .sessionKey=${params.sessionKey}

@@ -8,9 +8,9 @@ import {
   type ClientCapabilities,
 } from "@modelcontextprotocol/sdk/types.js";
 import type { ServerCapabilities } from "@modelcontextprotocol/sdk/types.js";
-import { redactSensitiveUrlLikeString } from "@openclaw/net-policy/redact-sensitive-url";
-import { normalizeLowercaseStringOrEmpty } from "@openclaw/normalization-core/string-coerce";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import { redactSensitiveUrlLikeString } from "@grokbot/net-policy/redact-sensitive-url";
+import { normalizeLowercaseStringOrEmpty } from "@grokbot/normalization-core/string-coerce";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { logWarn } from "../logger.js";
 import type { PluginManifestRegistry } from "../plugins/manifest-registry.js";
 import { runTasksWithConcurrency } from "../utils/run-with-concurrency.js";
@@ -83,7 +83,7 @@ const BUNDLE_MCP_CATALOG_LIST_TIMEOUT_MS = 1_500;
 const BUNDLE_MCP_DISPOSE_TIMEOUT_MS = 5_000;
 const BUNDLE_MCP_CATALOG_CONNECT_CONCURRENCY = 6;
 let bundleMcpCatalogListTimeoutMs: number | undefined;
-const BUNDLE_MCP_TEST_STATE_KEY = Symbol.for("openclaw.bundleMcpTestState");
+const BUNDLE_MCP_TEST_STATE_KEY = Symbol.for("grokbot.bundleMcpTestState");
 type BundleMcpTestState = { disposeTimeoutMs?: number };
 
 function getBundleMcpTestState(): BundleMcpTestState {
@@ -614,7 +614,7 @@ export function createSessionMcpRuntime(params: {
               if (!session) {
                 const client = new Client(
                   {
-                    name: "openclaw-bundle-mcp",
+                    name: "grokbot-bundle-mcp",
                     version: "0.0.0",
                   },
                   {

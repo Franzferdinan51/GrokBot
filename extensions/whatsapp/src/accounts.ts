@@ -6,10 +6,10 @@ import {
   normalizeAccountId,
   resolveUserPath,
   type OpenClawConfig,
-} from "openclaw/plugin-sdk/account-core";
-import type { DmPolicy, GroupPolicy, ReplyToMode } from "openclaw/plugin-sdk/config-contracts";
-import { resolveOAuthDir } from "openclaw/plugin-sdk/state-paths";
-import { normalizeOptionalString } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/account-core";
+import type { DmPolicy, GroupPolicy, ReplyToMode } from "grokbot/plugin-sdk/config-contracts";
+import { resolveOAuthDir } from "grokbot/plugin-sdk/state-paths";
+import { normalizeOptionalString } from "grokbot/plugin-sdk/string-coerce-runtime";
 import { resolveMergedWhatsAppAccountConfig } from "./account-config.js";
 import {
   listConfiguredAccountIds,

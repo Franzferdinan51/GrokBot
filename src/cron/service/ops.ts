@@ -3,7 +3,7 @@ import { isDeepStrictEqual } from "node:util";
 import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalString,
-} from "@openclaw/normalization-core/string-coerce";
+} from "@grokbot/normalization-core/string-coerce";
 import {
   AgentDeletionAuthorityRollbackError,
   AgentDeletionCommitUncertainError,
@@ -12,7 +12,7 @@ import { enqueueCommandInLane, type CommandLaneTaskMarker } from "../../process/
 import { runWithGatewayIndependentRootWorkContinuation } from "../../process/gateway-work-admission.js";
 import { CommandLane } from "../../process/lanes.js";
 import { DEFAULT_AGENT_ID } from "../../routing/session-key.js";
-import { resolveOpenClawStateSqlitePath } from "../../state/openclaw-state-db.paths.js";
+import { resolveOpenClawStateSqlitePath } from "../../state/grokbot-state-db.paths.js";
 import {
   clearCronJobActive,
   isCronActiveJobMarkerCurrent,

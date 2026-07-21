@@ -1,9 +1,9 @@
-import { runCommandWithTimeout } from "openclaw/plugin-sdk/process-runtime";
+import { runCommandWithTimeout } from "grokbot/plugin-sdk/process-runtime";
 // iMessage tests cover canonical bounded CLI execution.
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { runIMessageCliJsonCommand } from "./cli-output.js";
 
-vi.mock("openclaw/plugin-sdk/process-runtime", () => ({
+vi.mock("grokbot/plugin-sdk/process-runtime", () => ({
   runCommandWithTimeout: vi.fn(),
 }));
 

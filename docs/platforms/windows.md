@@ -1,13 +1,13 @@
 ---
 summary: "Windows support: Windows Hub, native CLI and Gateway, WSL2 gateway setup, node mode, and troubleshooting"
 read_when:
-  - Installing OpenClaw on Windows
+  - Installing GrokBot on Windows
   - Choosing between Windows Hub, native Windows, and WSL2
   - Setting up the Windows companion app or Windows node mode
 title: "Windows"
 ---
 
-OpenClaw ships a native **Windows Hub** companion app plus Windows CLI support.
+GrokBot ships a native **Windows Hub** companion app plus Windows CLI support.
 Use Windows Hub for a desktop app with setup, tray status, chat, Command
 Center diagnostics, and Windows node capabilities. Use the PowerShell
 installer for the CLI/Gateway directly. Use WSL2 for the most
@@ -19,20 +19,20 @@ Windows Hub is the native WinUI companion app for Windows 10 20H2+ and
 Windows 11. It installs without administrator privileges and ships signed x64
 and ARM64 installers from its own release page.
 
-Windows Hub publishes independently from the OpenClaw CLI and Gateway. Download
+Windows Hub publishes independently from the GrokBot CLI and Gateway. Download
 the latest stable Hub installer from the
-[Windows Hub releases page](https://github.com/openclaw/openclaw-windows-node/releases/latest)
+[Windows Hub releases page](https://github.com/grokbot/grokbot-windows-node/releases/latest)
 or directly via `releases/latest/download`:
 
-- [OpenClawCompanion-Setup-x64.exe](https://github.com/openclaw/openclaw-windows-node/releases/latest/download/OpenClawCompanion-Setup-x64.exe)
-- [OpenClawCompanion-Setup-arm64.exe](https://github.com/openclaw/openclaw-windows-node/releases/latest/download/OpenClawCompanion-Setup-arm64.exe)
+- [OpenClawCompanion-Setup-x64.exe](https://github.com/grokbot/grokbot-windows-node/releases/latest/download/OpenClawCompanion-Setup-x64.exe)
+- [OpenClawCompanion-Setup-arm64.exe](https://github.com/grokbot/grokbot-windows-node/releases/latest/download/OpenClawCompanion-Setup-arm64.exe)
 
-If a link above 404s, visit the [Windows Hub releases page](https://github.com/openclaw/openclaw-windows-node/releases)
-and open the newest stable Windows Hub release. Regular OpenClaw stable releases
+If a link above 404s, visit the [Windows Hub releases page](https://github.com/grokbot/grokbot-windows-node/releases)
+and open the newest stable Windows Hub release. Regular GrokBot stable releases
 also mirror a pinned, release-validated Windows Hub build; that mirror can lag a
 newer standalone Hub release.
 
-After install, launch **OpenClaw Companion** from the Start menu or system
+After install, launch **GrokBot Companion** from the Start menu or system
 tray. The installer also adds shortcuts for Gateway Setup, Chat, Settings,
 Check for Updates, and uninstall.
 
@@ -69,7 +69,7 @@ the tray to confirm connection, pairing, node status, and channel health.
 
 ## Windows node mode
 
-Windows Hub can register as an OpenClaw node so the agent can use declared
+Windows Hub can register as an GrokBot node so the agent can use declared
 Windows-native capabilities through the Gateway. Node commands must be
 declared by the node and allowed by Gateway policy before they run; see
 [Nodes](/nodes#command-policy) for the full allow/deny model.
@@ -89,9 +89,9 @@ Node mode requires Gateway pairing. If the app shows a pairing request,
 approve it from the Gateway host:
 
 ```powershell
-openclaw devices list
-openclaw devices approve <requestId>
-openclaw nodes status
+grokbot devices list
+grokbot devices approve <requestId>
+grokbot nodes status
 ```
 
 The Gateway only forwards commands the node declares and server policy
@@ -102,7 +102,7 @@ and `camera.clip` need explicit `gateway.nodes.allowCommands` opt-in.
 
 Windows Hub can expose the same Windows-native capability registry as a local
 MCP server on loopback, so local MCP clients can drive Windows capabilities
-without a running OpenClaw Gateway.
+without a running GrokBot Gateway.
 
 Enable it in Windows Hub Settings under the developer/advanced section. The
 app shows the loopback endpoint and bearer token once the server is enabled.
@@ -118,38 +118,38 @@ Mode matrix:
 
 ## Native Windows CLI and Gateway
 
-For terminal-first use, install OpenClaw from PowerShell:
+For terminal-first use, install GrokBot from PowerShell:
 
 ```powershell
-iwr -useb https://openclaw.ai/install.ps1 | iex
+iwr -useb https://grokbot.ai/install.ps1 | iex
 ```
 
 Verify:
 
 ```powershell
-openclaw --version
-openclaw doctor
-openclaw gateway status --json
+grokbot --version
+grokbot doctor
+grokbot gateway status --json
 ```
 
 Managed startup uses Windows Scheduled Tasks when available. The task keeps
-the readable `gateway.cmd` script in the OpenClaw state dir but launches it
+the readable `gateway.cmd` script in the GrokBot state dir but launches it
 through a generated `gateway.vbs` WScript wrapper, so the background Gateway
-does not open a visible console window. If task creation is denied, OpenClaw
+does not open a visible console window. If task creation is denied, GrokBot
 falls back to a per-user Startup-folder login item.
 
 Install the Gateway service:
 
 ```powershell
-openclaw gateway install
-openclaw gateway status --json
+grokbot gateway install
+grokbot gateway status --json
 ```
 
 For CLI-only use without a managed Gateway service:
 
 ```powershell
-openclaw onboard --non-interactive --skip-health
-openclaw gateway run
+grokbot onboard --non-interactive --skip-health
+grokbot gateway run
 ```
 
 ## WSL2 Gateway
@@ -182,11 +182,11 @@ Restart WSL from PowerShell:
 wsl --shutdown
 ```
 
-Then install OpenClaw inside WSL with the Linux quickstart:
+Then install GrokBot inside WSL with the Linux quickstart:
 
 ```bash
-curl -fsSL https://openclaw.ai/install.sh | bash
-openclaw gateway status
+curl -fsSL https://grokbot.ai/install.sh | bash
+grokbot gateway status
 ```
 
 ## Gateway auto-start before Windows login
@@ -199,7 +199,7 @@ Inside WSL:
 ```bash
 sudo apt-get install -y dbus-x11
 sudo loginctl enable-linger "$(whoami)"
-openclaw gateway install
+grokbot gateway install
 ```
 
 In PowerShell as Administrator:
@@ -232,8 +232,8 @@ Two changes from older recipes:
 After reboot, verify from WSL:
 
 ```bash
-systemctl --user is-enabled openclaw-gateway.service
-systemctl --user status openclaw-gateway.service --no-pager
+systemctl --user is-enabled grokbot-gateway.service
+systemctl --user status grokbot-gateway.service --no-pager
 ```
 
 ## Expose WSL services over LAN
@@ -269,8 +269,8 @@ Notes:
 
 ### The tray icon does not appear
 
-Check Task Manager for `OpenClaw.Tray.WinUI.exe`. If it is running, open the
-hidden tray-icons area and pin it. If not, launch **OpenClaw Companion** from
+Check Task Manager for `GrokBot.Tray.WinUI.exe`. If it is running, open the
+hidden tray-icons area and pin it. If not, launch **GrokBot Companion** from
 the Start menu.
 
 ### Local setup fails
@@ -289,8 +289,8 @@ state, or a network failure while installing the Gateway package.
 Approve the operator or node request from the Gateway:
 
 ```powershell
-openclaw devices list
-openclaw devices approve <requestId>
+grokbot devices list
+grokbot devices approve <requestId>
 ```
 
 If the device already had a token, reconnect from the Connections tab after

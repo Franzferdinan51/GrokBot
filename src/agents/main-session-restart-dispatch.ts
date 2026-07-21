@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+import { normalizeOptionalString } from "@grokbot/normalization-core/string-coerce";
 import { GatewayClientRequestError } from "../../packages/gateway-client/src/index.js";
 import { sanitizePendingFinalDeliveryText } from "../auto-reply/reply/pending-final-delivery.js";
 import type { SessionEntry } from "../config/sessions.js";
@@ -9,7 +9,7 @@ import {
   resolveRestartRecoveryChannelAuthority,
 } from "../config/sessions/restart-recovery-state.js";
 import { applySessionEntryReplacements } from "../config/sessions/session-accessor.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { isTrustedMessageActionTurnIngress } from "../gateway/message-action-turn-capability.js";
 import type { GatewayRecoveryRuntime } from "../gateway/server-instance-runtime.types.js";
 import { getAgentEventLifecycleGeneration } from "../infra/agent-events.js";
@@ -47,7 +47,7 @@ const RESERVATION_ROLLBACK_RETRY_DELAY_MS = 1_000;
 const RESERVATION_ROLLBACK_RETRY_MAX_DELAY_MS = 30_000;
 const RESTART_RECOVERY_RESUME_MESSAGE =
   "[System] Your previous turn was interrupted by a gateway restart while " +
-  "OpenClaw was waiting on tool/model work. Continue from the existing " +
+  "GrokBot was waiting on tool/model work. Continue from the existing " +
   "transcript and finish the interrupted response.";
 
 type RestartRecoveryTerminalStatus = "error" | "ok" | "timeout";

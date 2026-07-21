@@ -119,7 +119,7 @@ async function resolveProvidersForConfigEnvTest(params: {
   return await resolveProvidersForModelsJsonWithDeps(
     {
       cfg: params.cfg,
-      agentDir: "/tmp/openclaw-models-config-env-vars-test",
+      agentDir: "/tmp/grokbot-models-config-env-vars-test",
       env,
     },
     {
@@ -161,7 +161,7 @@ let unauthenticatedProviderParsed: { providers?: Record<string, unknown> };
 let googleVertexProfileCatalogPlan: Awaited<ReturnType<typeof planGoogleVertexProfileCatalog>>;
 
 async function planGoogleVertexProfileCatalog() {
-  const agentDir = "/tmp/openclaw-google-vertex-models-profile";
+  const agentDir = "/tmp/grokbot-google-vertex-models-profile";
   try {
     externalAuthTesting.setResolveExternalAuthProfilesForTest(() => []);
     replaceRuntimeAuthProfileStoreSnapshots([
@@ -219,7 +219,7 @@ beforeAll(async () => {
   unauthenticatedProviderWritePlan = await planOpenClawModelsJsonWithDeps(
     {
       cfg: { models: { providers: {} } },
-      agentDir: "/tmp/openclaw-models-config-env-vars-test",
+      agentDir: "/tmp/grokbot-models-config-env-vars-test",
       env: {},
       existingRaw: "",
       existingParsed: null,
@@ -262,7 +262,7 @@ describe("models-config", () => {
             },
           },
         },
-        agentDir: "/tmp/openclaw-models-config-env-vars-test",
+        agentDir: "/tmp/grokbot-models-config-env-vars-test",
         env: {},
       },
       {
@@ -293,7 +293,7 @@ describe("models-config", () => {
     await resolveProvidersForModelsJsonWithDeps(
       {
         cfg: { models: { providers: {} } },
-        agentDir: "/tmp/openclaw-models-config-env-vars-test",
+        agentDir: "/tmp/grokbot-models-config-env-vars-test",
         env: {},
         pluginMetadataSnapshot,
       },
@@ -314,9 +314,9 @@ describe("models-config", () => {
     await resolveProvidersForModelsJsonWithDeps(
       {
         cfg: { models: { providers: {} } },
-        agentDir: "/tmp/openclaw-models-config-env-vars-test",
+        agentDir: "/tmp/grokbot-models-config-env-vars-test",
         env: {},
-        workspaceDir: "/tmp/openclaw-workspace",
+        workspaceDir: "/tmp/grokbot-workspace",
       },
       {
         resolveImplicitProviders: async ({ workspaceDir }) => {
@@ -326,7 +326,7 @@ describe("models-config", () => {
       },
     );
 
-    expect(observedWorkspaceDir).toBe("/tmp/openclaw-workspace");
+    expect(observedWorkspaceDir).toBe("/tmp/grokbot-workspace");
   });
 
   it("threads startup provider discovery scope into implicit provider discovery", async () => {
@@ -337,7 +337,7 @@ describe("models-config", () => {
     await resolveProvidersForModelsJsonWithDeps(
       {
         cfg: { models: { providers: {} } },
-        agentDir: "/tmp/openclaw-models-config-env-vars-test",
+        agentDir: "/tmp/grokbot-models-config-env-vars-test",
         env: {},
         providerDiscoveryProviderIds: ["openai"],
         providerDiscoveryEntriesOnly: true,
@@ -376,7 +376,7 @@ describe("models-config", () => {
     await planOpenClawModelsJsonWithDeps(
       {
         cfg: { models: { providers: {} } },
-        agentDir: "/tmp/openclaw-models-config-env-vars-test",
+        agentDir: "/tmp/grokbot-models-config-env-vars-test",
         env: {},
         existingRaw: "",
         existingParsed: null,
@@ -403,7 +403,7 @@ describe("models-config", () => {
     const plan = await planOpenClawModelsJsonWithDeps(
       {
         cfg: { models: { mode: "replace", providers: {} } },
-        agentDir: "/tmp/openclaw-models-config-env-vars-test",
+        agentDir: "/tmp/grokbot-models-config-env-vars-test",
         env: {},
         existingRaw: `${JSON.stringify({ providers: { stale: {} } }, null, 2)}\n`,
         existingParsed: { providers: { stale: {} } },
@@ -435,7 +435,7 @@ describe("models-config", () => {
     const plan = await planOpenClawModelsJsonWithDeps(
       {
         cfg: { models: { providers: {} } },
-        agentDir: "/tmp/openclaw-models-config-env-vars-test",
+        agentDir: "/tmp/grokbot-models-config-env-vars-test",
         env: { ZAI_API_KEY: "sk-test" } as NodeJS.ProcessEnv,
         existingRaw: "",
         existingParsed: null,
@@ -475,7 +475,7 @@ describe("models-config", () => {
     const plan = await planOpenClawModelsJsonWithDeps(
       {
         cfg: { models: { providers: {} } },
-        agentDir: "/tmp/openclaw-models-config-env-vars-test",
+        agentDir: "/tmp/grokbot-models-config-env-vars-test",
         env: { OPENAI_API_KEY: "sk-test" } as NodeJS.ProcessEnv,
         existingRaw: "",
         existingParsed: null,
@@ -501,7 +501,7 @@ describe("models-config", () => {
     const plan = await planOpenClawModelsJsonWithDeps(
       {
         cfg: { models: { mode: "merge", providers: {} } },
-        agentDir: "/tmp/openclaw-models-config-env-vars-test",
+        agentDir: "/tmp/grokbot-models-config-env-vars-test",
         env: {},
         existingRaw: "",
         existingParsed: {
@@ -589,7 +589,7 @@ describe("models-config", () => {
           },
           models: { providers: {} },
         },
-        agentDir: "/tmp/openclaw-google-vertex-adc-models",
+        agentDir: "/tmp/grokbot-google-vertex-adc-models",
         env: {},
         existingRaw: "",
         existingParsed: null,

@@ -7,7 +7,7 @@ import fs from "node:fs/promises";
 import { createRequire } from "node:module";
 import os from "node:os";
 import path from "node:path";
-import { readJsonFileWithFallback } from "openclaw/plugin-sdk/json-store";
+import { readJsonFileWithFallback } from "grokbot/plugin-sdk/json-store";
 import {
   parse as parseToml,
   stringify as stringifyToml,
@@ -34,7 +34,7 @@ import {
 
 const CLAUDE_ACP_PACKAGE = "@agentclientprotocol/claude-agent-acp";
 const CLAUDE_ACP_BIN = "claude-agent-acp";
-const RUN_CONFIGURED_COMMAND_SENTINEL = "--openclaw-run-configured";
+const RUN_CONFIGURED_COMMAND_SENTINEL = "--grokbot-run-configured";
 const requireFromHere = createRequire(import.meta.url);
 
 type PackageManifest = {
@@ -51,7 +51,7 @@ function readSelfManifest(): PackageManifest {
 function readManifestDependencyVersion(packageName: string): string {
   const version = readSelfManifest().dependencies?.[packageName];
   if (typeof version !== "string" || version.trim() === "") {
-    throw new Error(`Missing ${packageName} dependency version in @openclaw/acpx manifest`);
+    throw new Error(`Missing ${packageName} dependency version in @grokbot/acpx manifest`);
   }
   return version;
 }
@@ -106,7 +106,7 @@ async function resolveInstalledAcpPackageBinPath(
 }
 
 async function resolveInstalledCodexAcpBinPath(): Promise<string | undefined> {
-  // Keep OpenClaw's isolated CODEX_HOME wrapper, but launch the plugin-local
+  // Keep GrokBot's isolated CODEX_HOME wrapper, but launch the plugin-local
   // Codex ACP adapter when the package dependency is available.
   return await resolveInstalledAcpPackageBinPath(CODEX_ACP_PACKAGE, CODEX_ACP_BIN);
 }
@@ -474,7 +474,7 @@ const args =
     : [...defaultArgs, ...configuredArgs];
 
 if (!command) {
-  console.error("[openclaw] missing configured ${params.displayName} ACP command");
+  console.error("[grokbot] missing configured ${params.displayName} ACP command");
   process.exit(1);
 }
 
@@ -549,7 +549,7 @@ const parentWatcher =
 parentWatcher?.unref?.();
 
 child.on("error", (error) => {
-  console.error(\`[openclaw] failed to launch ${params.displayName} ACP wrapper: \${error.message}\`);
+  console.error(\`[grokbot] failed to launch ${params.displayName} ACP wrapper: \${error.message}\`);
   process.exit(1);
 });
 
@@ -649,7 +649,7 @@ if (openClawCodexConfigs.length > 0) {
       }
       existingCodexConfig = parsedCodexConfig;
     } catch {
-      console.error("[openclaw] CODEX_CONFIG must be a valid JSON object");
+      console.error("[grokbot] CODEX_CONFIG must be a valid JSON object");
       process.exit(1);
     }
   }
@@ -661,11 +661,11 @@ if (openClawCodexConfigs.length > 0) {
         typeof parsedOpenClawCodexConfig !== "object" ||
         Array.isArray(parsedOpenClawCodexConfig)
       ) {
-        throw new Error("invalid OpenClaw Codex config");
+        throw new Error("invalid GrokBot Codex config");
       }
       existingCodexConfig = mergeCodexConfig(existingCodexConfig, parsedOpenClawCodexConfig);
     } catch {
-      console.error("[openclaw] invalid generated Codex ACP startup config");
+      console.error("[grokbot] invalid generated Codex ACP startup config");
       process.exit(1);
     }
   }
@@ -677,7 +677,7 @@ if (openClawCodexConfigs.length > 0) {
 function buildClaudeAcpWrapperScript(installedBinPath?: string): string {
   return buildAdapterWrapperScript({
     displayName: "Claude",
-    // This package is patched in OpenClaw; fallback must not float to an unpatched newer release.
+    // This package is patched in GrokBot; fallback must not float to an unpatched newer release.
     packageSpec: `${CLAUDE_ACP_PACKAGE}@${CLAUDE_ACP_PACKAGE_VERSION}`,
     binName: CLAUDE_ACP_BIN,
     installedBinPath,

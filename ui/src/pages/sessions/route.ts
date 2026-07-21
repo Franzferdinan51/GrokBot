@@ -1,5 +1,5 @@
-import type { RouteLocation } from "@openclaw/uirouter";
-import { definePage } from "@openclaw/uirouter";
+import type { RouteLocation } from "@grokbot/uirouter";
+import { definePage } from "@grokbot/uirouter";
 import { html } from "lit";
 import type { ApplicationContext } from "../../app/context.ts";
 import { DEFAULT_SESSION_LIST_QUERY } from "../../lib/sessions/index.ts";
@@ -60,6 +60,6 @@ export const page = definePage({
     import("./sessions-page.ts").then(() => ({
       header: true,
       render: (data: SessionsRouteData | undefined) =>
-        html`<openclaw-sessions-page .routeData=${data}></openclaw-sessions-page>`,
+        html`<grokbot-sessions-page .routeData=${data}></grokbot-sessions-page>`,
     })),
 });

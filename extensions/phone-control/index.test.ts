@@ -5,12 +5,12 @@ import path from "node:path";
 import type {
   OpenKeyedStoreOptions,
   PluginStateKeyedStore,
-} from "openclaw/plugin-sdk/plugin-state-runtime";
+} from "grokbot/plugin-sdk/plugin-state-runtime";
 import {
   createPluginStateKeyedStoreForTests,
   resetPluginStateStoreForTests,
-} from "openclaw/plugin-sdk/plugin-state-test-runtime";
-import { createTestPluginApi } from "openclaw/plugin-sdk/plugin-test-api";
+} from "grokbot/plugin-sdk/plugin-state-test-runtime";
+import { createTestPluginApi } from "grokbot/plugin-sdk/plugin-test-api";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import registerPhoneControl from "./index.js";
 import type {
@@ -23,7 +23,7 @@ import type {
 type RegisteredNodeInvokePolicy = Parameters<OpenClawPluginApi["registerNodeInvokePolicy"]>[0];
 type NodeInvokePolicyContext = Parameters<RegisteredNodeInvokePolicy["handle"]>[0];
 
-const PHONE_CONTROL_STATE_PREFIX = "openclaw-phone-control-test-";
+const PHONE_CONTROL_STATE_PREFIX = "grokbot-phone-control-test-";
 const WRITE_COMMANDS = ["calendar.add", "contacts.add", "reminders.add", "sms.send"] as const;
 const FRESH_SETUP_DENY_COMMANDS = [
   "calendar.add",
@@ -72,7 +72,7 @@ function createApi(params: {
           await mutate(nextConfig);
           await params.writeConfig(nextConfig);
           return {
-            path: "/tmp/openclaw.json",
+            path: "/tmp/grokbot.json",
             previousHash: null,
             persistedHash: null,
             snapshot: {},

@@ -13,9 +13,9 @@ import {
   closeOpenClawAgentDatabasesForTest,
   OPENCLAW_AGENT_SCHEMA_VERSION,
   openOpenClawAgentDatabase,
-} from "../state/openclaw-agent-db.js";
-import { closeOpenClawStateDatabaseForTest } from "../state/openclaw-state-db.js";
-import { resolveOpenClawStateSqlitePath } from "../state/openclaw-state-db.paths.js";
+} from "../state/grokbot-agent-db.js";
+import { closeOpenClawStateDatabaseForTest } from "../state/grokbot-state-db.js";
+import { resolveOpenClawStateSqlitePath } from "../state/grokbot-state-db.paths.js";
 import { withEnvAsync } from "../test-utils/env.js";
 import { resolveAgentDir } from "./agent-scope.js";
 import { loadPersistedAuthProfileStore } from "./auth-profiles/persisted.js";
@@ -94,7 +94,7 @@ describe("auth profile sqlite store", () => {
   });
 
   it("persists auth profiles and runtime scheduling state in the agent sqlite database", async () => {
-    await withAgentDirEnv("openclaw-auth-sqlite-", (agentDir) => {
+    await withAgentDirEnv("grokbot-auth-sqlite-", (agentDir) => {
       saveAuthProfileStore(
         {
           ...apiKeyStore("sk-test"),
@@ -113,12 +113,12 @@ describe("auth profile sqlite store", () => {
       expect(loaded.usageStats?.["openai:default"]?.lastUsed).toBe(123);
       expect(fs.existsSync(path.join(agentDir, "auth-profiles.json"))).toBe(false);
       expect(fs.existsSync(path.join(agentDir, "auth-state.json"))).toBe(false);
-      expect(fs.existsSync(path.join(agentDir, "openclaw-agent.sqlite"))).toBe(true);
+      expect(fs.existsSync(path.join(agentDir, "grokbot-agent.sqlite"))).toBe(true);
     });
   });
 
   it("does not read legacy auth-profiles.json at runtime", async () => {
-    await withAgentDirEnv("openclaw-auth-no-json-fallback-", (agentDir) => {
+    await withAgentDirEnv("grokbot-auth-no-json-fallback-", (agentDir) => {
       fs.writeFileSync(
         path.join(agentDir, "auth-profiles.json"),
         `${JSON.stringify(apiKeyStore("sk-json"))}\n`,
@@ -132,14 +132,14 @@ describe("auth profile sqlite store", () => {
   });
 
   it("does not create sqlite files for missing-store reads", async () => {
-    await withAgentDirEnv("openclaw-auth-sqlite-no-create-", (agentDir) => {
+    await withAgentDirEnv("grokbot-auth-sqlite-no-create-", (agentDir) => {
       expect(loadPersistedAuthProfileStore(agentDir)).toBeNull();
-      expect(fs.existsSync(path.join(agentDir, "openclaw-agent.sqlite"))).toBe(false);
+      expect(fs.existsSync(path.join(agentDir, "grokbot-agent.sqlite"))).toBe(false);
     });
   });
 
   it("treats a legacy agent database without auth tables as a missing store", async () => {
-    await withAgentDirEnv("openclaw-auth-sqlite-legacy-schema-", (agentDir) => {
+    await withAgentDirEnv("grokbot-auth-sqlite-legacy-schema-", (agentDir) => {
       const database = new DatabaseSync(resolveAuthProfileDatabasePath(agentDir));
       database.exec("CREATE TABLE legacy_state (id INTEGER PRIMARY KEY);");
       database.close();
@@ -152,7 +152,7 @@ describe("auth profile sqlite store", () => {
   });
 
   it("rejects a newer agent database that has no current auth table", async () => {
-    await withAgentDirEnv("openclaw-auth-sqlite-newer-schema-", (agentDir) => {
+    await withAgentDirEnv("grokbot-auth-sqlite-newer-schema-", (agentDir) => {
       const database = new DatabaseSync(resolveAuthProfileDatabasePath(agentDir));
       database.exec(`PRAGMA user_version = ${OPENCLAW_AGENT_SCHEMA_VERSION + 1};`);
       database.close();
@@ -162,7 +162,7 @@ describe("auth profile sqlite store", () => {
   });
 
   it("treats a non-table auth schema object as unreadable", async () => {
-    await withAgentDirEnv("openclaw-auth-sqlite-invalid-schema-", (agentDir) => {
+    await withAgentDirEnv("grokbot-auth-sqlite-invalid-schema-", (agentDir) => {
       const database = new DatabaseSync(resolveAuthProfileDatabasePath(agentDir));
       database.exec(
         "CREATE VIEW auth_profile_store AS SELECT 'primary' AS store_key, '{}' AS store_json;",
@@ -174,7 +174,7 @@ describe("auth profile sqlite store", () => {
   });
 
   it("reads existing sqlite auth stores without registering shared state", async () => {
-    await withAgentDirEnv("openclaw-auth-sqlite-readonly-", (agentDir) => {
+    await withAgentDirEnv("grokbot-auth-sqlite-readonly-", (agentDir) => {
       saveAuthProfileStore(apiKeyStore("sk-test"), agentDir);
       closeOpenClawAgentDatabasesForTest();
       closeOpenClawStateDatabaseForTest();
@@ -189,7 +189,7 @@ describe("auth profile sqlite store", () => {
   });
 
   it("waits for brief rollback-journal contention before reading persisted auth", async () => {
-    await withAgentDirEnv("openclaw-auth-sqlite-contention-", async (agentDir) => {
+    await withAgentDirEnv("grokbot-auth-sqlite-contention-", async (agentDir) => {
       saveAuthProfileStore(apiKeyStore("sk-test"), agentDir);
       closeOpenClawAgentDatabasesForTest();
 
@@ -251,7 +251,7 @@ describe("auth profile sqlite store", () => {
   });
 
   it("uses the configured agent id for custom agentDir databases", async () => {
-    await withAgentDirEnv("openclaw-auth-sqlite-custom-agent-", (envAgentDir) => {
+    await withAgentDirEnv("grokbot-auth-sqlite-custom-agent-", (envAgentDir) => {
       const customAgentDir = path.join(path.dirname(path.dirname(envAgentDir)), "custom-coder");
       const cfg = {
         agents: {
@@ -271,7 +271,7 @@ describe("auth profile sqlite store", () => {
   });
 
   it("keeps SecretRef-backed credentials from persisting duplicate plaintext", async () => {
-    await withAgentDirEnv("openclaw-auth-sqlite-secret-ref-", (agentDir) => {
+    await withAgentDirEnv("grokbot-auth-sqlite-secret-ref-", (agentDir) => {
       saveAuthProfileStore(
         {
           version: 1,
@@ -309,7 +309,7 @@ describe("auth profile sqlite store", () => {
   });
 
   it("recomputes runtime-only external auth overlays from the sqlite base store", async () => {
-    await withAgentDirEnv("openclaw-auth-sqlite-overlay-", (agentDir) => {
+    await withAgentDirEnv("grokbot-auth-sqlite-overlay-", (agentDir) => {
       saveAuthProfileStore(apiKeyStore("sk-test"), agentDir);
       mocks.resolveExternalCliAuthProfiles
         .mockReturnValueOnce([

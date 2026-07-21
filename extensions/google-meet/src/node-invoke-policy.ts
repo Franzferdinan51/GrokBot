@@ -1,5 +1,5 @@
-import { createMeetingBrowserNodeInvokePolicy } from "openclaw/plugin-sdk/meeting-runtime";
-import type { OpenClawPluginNodeInvokePolicy } from "openclaw/plugin-sdk/plugin-entry";
+import { createMeetingBrowserNodeInvokePolicy } from "grokbot/plugin-sdk/meeting-runtime";
+import type { OpenClawPluginNodeInvokePolicy } from "grokbot/plugin-sdk/plugin-entry";
 import type { GoogleMeetConfig } from "./config.js";
 import { GOOGLE_MEET_PLATFORM_ADAPTER } from "./transports/google-meet-platform-adapter.js";
 import { GOOGLE_MEET_NODE_COMMAND } from "./transports/google-meet-platform-constants.js";

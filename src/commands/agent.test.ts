@@ -1,9 +1,9 @@
 // Agent command tests cover local agent runs, session routing, and command runtime behavior.
 import fs from "node:fs";
 import path from "node:path";
-import { expectDefined } from "@openclaw/normalization-core";
-import { buildChannelOutboundSessionRoute } from "openclaw/plugin-sdk/core";
-import { withTempHome as withTempHomeBase } from "openclaw/plugin-sdk/test-env";
+import { expectDefined } from "@grokbot/normalization-core";
+import { buildChannelOutboundSessionRoute } from "grokbot/plugin-sdk/core";
+import { withTempHome as withTempHomeBase } from "grokbot/plugin-sdk/test-env";
 import { beforeEach, describe, expect, it, type MockInstance, vi } from "vitest";
 // Register shared mocks before imports bind their production exports.
 import "./agent-command.test-mocks.js";
@@ -27,7 +27,7 @@ import {
 import { parseSqliteSessionFileMarker } from "../config/sessions/sqlite-marker.js";
 import { clearSessionStoreCacheForTest } from "../config/sessions/store.js";
 import type { InternalSessionEntry as SessionEntry } from "../config/sessions/types.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { emitAgentEvent, onAgentEvent, resetAgentEventsForTest } from "../infra/agent-events.js";
 import type { PluginProviderRegistration } from "../plugins/registry.test-fixtures.js";
 import { resetPluginRuntimeStateForTest, setActivePluginRegistry } from "../plugins/runtime.js";
@@ -258,7 +258,7 @@ const runtime = createThrowingTestRuntime();
 
 async function withTempHome<T>(fn: (home: string) => Promise<T>): Promise<T> {
   return withTempHomeBase(fn, {
-    prefix: "openclaw-agent-",
+    prefix: "grokbot-agent-",
     skipHomeCleanup: true,
     skipSessionCleanup: true,
   });
@@ -277,7 +277,7 @@ function mockConfig(
       defaults: {
         model: { primary: "anthropic/claude-opus-4-6" },
         models: { "anthropic/claude-opus-4-6": {} },
-        workspace: path.join(home, "openclaw"),
+        workspace: path.join(home, "grokbot"),
         ...agentOverrides,
       },
       list: agentsList,
@@ -422,7 +422,7 @@ describe("agentCommand", () => {
           provider: "openai",
           modelId: "gpt-5.2",
           agentId: "main",
-          workspaceDir: path.join(home, "openclaw"),
+          workspaceDir: path.join(home, "grokbot"),
         }),
       );
       expectLastRunProviderModel("openai", "gpt-5.2");
@@ -484,13 +484,13 @@ describe("agentCommand", () => {
   it("continues an existing locked harness-owned session", async () => {
     await withTempHome(async (home) => {
       const store = path.join(home, "sessions.json");
-      const sessionKey = "agent:main:harness:openclaw:supervision:existing";
+      const sessionKey = "agent:main:harness:grokbot:supervision:existing";
       mockConfig(home, store);
       await writeSessionStoreSeed(store, {
         [sessionKey]: {
           sessionId: "existing-harness-session",
           updatedAt: Date.now(),
-          agentHarnessId: "openclaw",
+          agentHarnessId: "grokbot",
           modelSelectionLocked: true,
         },
       });
@@ -606,7 +606,7 @@ describe("agentCommand", () => {
             updatedAt: Date.now(),
           },
         });
-        return { dir: params?.dir ?? "/tmp/openclaw-workspace" };
+        return { dir: params?.dir ?? "/tmp/grokbot-workspace" };
       });
 
       await expect(
@@ -642,7 +642,7 @@ describe("agentCommand", () => {
         await writeSessionStoreSeed(store, {
           [sessionKey]: { sessionId, updatedAt: Date.now() },
         });
-        return { dir: params?.dir ?? "/tmp/openclaw-workspace" };
+        return { dir: params?.dir ?? "/tmp/grokbot-workspace" };
       });
 
       await agentCommandFromIngress(
@@ -1955,7 +1955,7 @@ describe("agentCommand", () => {
   it("rejects agent-scoped to session selectors that conflict with the requested agent", async () => {
     await withTempHome(async (home) => {
       const store = path.join(home, "sessions.json");
-      const sessionKey = "agent:main:openclaw-weixin:direct:o9cq802hhmfc@im.wechat";
+      const sessionKey = "agent:main:grokbot-weixin:direct:o9cq802hhmfc@im.wechat";
       await writeSessionStoreSeed(store, {
         [sessionKey]: { sessionId: "wechat-session", updatedAt: Date.now() },
       });
@@ -1971,7 +1971,7 @@ describe("agentCommand", () => {
   it("does not forward agent-scoped to session selectors as delivery targets", async () => {
     await withTempHome(async (home) => {
       const store = path.join(home, "sessions.json");
-      const sessionKey = "agent:main:openclaw-weixin:direct:o9cq802hhmfc@im.wechat";
+      const sessionKey = "agent:main:grokbot-weixin:direct:o9cq802hhmfc@im.wechat";
       await writeSessionStoreSeed(store, {
         [sessionKey]: {
           sessionId: "wechat-session",

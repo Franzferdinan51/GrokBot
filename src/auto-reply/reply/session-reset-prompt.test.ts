@@ -13,7 +13,7 @@ async function resolveResetPrompt(params: ResetPromptParams = {}): Promise<strin
 }
 
 async function makeBootstrapPendingWorkspace(): Promise<string> {
-  const workspaceDir = await makeTempWorkspace("openclaw-reset-bootstrap-");
+  const workspaceDir = await makeTempWorkspace("grokbot-reset-bootstrap-");
   await fs.writeFile(path.join(workspaceDir, "BOOTSTRAP.md"), "ritual", "utf8");
   return workspaceDir;
 }
@@ -95,7 +95,7 @@ describe("resolveBareSessionResetPromptState", () => {
   });
 
   it("does not resolve bootstrap file access when bootstrap is complete", async () => {
-    const workspaceDir = await makeTempWorkspace("openclaw-reset-bootstrap-complete-");
+    const workspaceDir = await makeTempWorkspace("grokbot-reset-bootstrap-complete-");
     let resolvedAccess = false;
 
     const complete = await resolveBareSessionResetPromptState({
@@ -112,7 +112,7 @@ describe("resolveBareSessionResetPromptState", () => {
   });
 
   it("suppresses bootstrap mode for non-primary bare reset sessions", async () => {
-    const workspaceDir = await makeTempWorkspace("openclaw-reset-non-primary-");
+    const workspaceDir = await makeTempWorkspace("grokbot-reset-non-primary-");
     await fs.writeFile(path.join(workspaceDir, "BOOTSTRAP.md"), "ritual", "utf8");
 
     const pending = await resolveBareSessionResetPromptState({
@@ -127,7 +127,7 @@ describe("resolveBareSessionResetPromptState", () => {
   });
 
   it("uses limited bootstrap mode when bare reset has no bootstrap file access", async () => {
-    const workspaceDir = await makeTempWorkspace("openclaw-reset-no-file-access-");
+    const workspaceDir = await makeTempWorkspace("grokbot-reset-no-file-access-");
     await fs.writeFile(path.join(workspaceDir, "BOOTSTRAP.md"), "ritual", "utf8");
 
     const pending = await resolveBareSessionResetPromptState({

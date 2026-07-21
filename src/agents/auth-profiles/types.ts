@@ -3,7 +3,7 @@
  * These types describe credential payloads, runtime selection state, and repair
  * results consumed by providers, sessions, doctor, and plugin-facing seams.
  */
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import type { SecretRef } from "../../config/types.secrets.js";
 import type { LegacyOAuthRef } from "./legacy-oauth-ref.js";
 
@@ -42,11 +42,11 @@ export type ApiKeyCredential = {
   metadata?: Record<string, string>;
 };
 
-/** Static token credential that OpenClaw does not refresh. */
+/** Static token credential that GrokBot does not refresh. */
 export type TokenCredential = {
   /**
    * Static bearer-style token (often OAuth access token / PAT).
-   * Not refreshable by OpenClaw (unlike `type: "oauth"`).
+   * Not refreshable by GrokBot (unlike `type: "oauth"`).
    */
   type: "token";
   provider: string;

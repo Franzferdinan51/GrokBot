@@ -18,7 +18,7 @@ afterEach(() => {
 });
 
 describe("settings sidebar search", () => {
-  it("links Ask OpenClaw to the shared custodian route", () => {
+  it("links Ask GrokBot to the shared custodian route", () => {
     const onNavigate = vi.fn();
     render(
       renderSettingsSidebar({
@@ -41,7 +41,7 @@ describe("settings sidebar search", () => {
     const link = container.querySelector<HTMLAnchorElement>(
       '.settings-sidebar__item[href="/custodian"]',
     );
-    expect(link?.textContent?.trim()).toBe("Ask OpenClaw");
+    expect(link?.textContent?.trim()).toBe("Ask GrokBot");
     link?.click();
     expect(onNavigate).toHaveBeenCalledWith("custodian");
   });
@@ -273,7 +273,7 @@ describe("settings sidebar search", () => {
     );
 
     const card = container.querySelector<HTMLElement & { updateComplete: Promise<boolean> }>(
-      "openclaw-sidebar-update-card",
+      "grokbot-sidebar-update-card",
     );
     await card?.updateComplete;
     expect(card?.nextElementSibling?.classList.contains("settings-sidebar__footer")).toBe(true);

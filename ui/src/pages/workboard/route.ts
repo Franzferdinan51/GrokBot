@@ -1,5 +1,5 @@
-import type { RouteLocation } from "@openclaw/uirouter";
-import { definePage } from "@openclaw/uirouter";
+import type { RouteLocation } from "@grokbot/uirouter";
+import { definePage } from "@grokbot/uirouter";
 import { html } from "lit";
 import type { ApplicationContext } from "../../app/context.ts";
 import { boardFilterFromSearch } from "./board-filter.ts";
@@ -34,6 +34,6 @@ export const page = definePage({
     import("./workboard-page.ts").then(() => ({
       header: true,
       render: (data: WorkboardRouteData | undefined) =>
-        html`<openclaw-workboard-page .routeData=${data}></openclaw-workboard-page>`,
+        html`<grokbot-workboard-page .routeData=${data}></grokbot-workboard-page>`,
     })),
 });

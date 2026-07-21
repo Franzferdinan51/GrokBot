@@ -24,7 +24,7 @@ function runPluginPublishWrapper(args: string[], env: NodeJS.ProcessEnv = {}) {
 }
 
 function makePackage(version: string): { packageDir: string; path: string } {
-  const root = mkdtempSync(join(tmpdir(), "openclaw-plugin-publish-test-"));
+  const root = mkdtempSync(join(tmpdir(), "grokbot-plugin-publish-test-"));
   tempDirs.push(root);
   const packageDir = join(root, "plugin");
   const binDir = join(root, "bin");
@@ -32,7 +32,7 @@ function makePackage(version: string): { packageDir: string; path: string } {
   mkdirSync(binDir, { recursive: true });
   writeFileSync(
     join(packageDir, "package.json"),
-    JSON.stringify({ name: "@openclaw/demo", version }),
+    JSON.stringify({ name: "@grokbot/demo", version }),
   );
   const npmPath = join(binDir, "npm");
   writeFileSync(npmPath, "#!/bin/sh\nexit 1\n");

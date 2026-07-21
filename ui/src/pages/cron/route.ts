@@ -1,4 +1,4 @@
-import { definePage } from "@openclaw/uirouter";
+import { definePage } from "@grokbot/uirouter";
 import { html } from "lit";
 
 export const page = definePage({
@@ -7,6 +7,6 @@ export const page = definePage({
   component: () =>
     import("./cron-page.ts").then(() => ({
       header: true,
-      render: () => html`<openclaw-cron-page></openclaw-cron-page>`,
+      render: () => html`<grokbot-cron-page></grokbot-cron-page>`,
     })),
 });

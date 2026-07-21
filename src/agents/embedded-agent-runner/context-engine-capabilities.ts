@@ -1,8 +1,8 @@
 /**
  * Builds host capabilities passed into context-engine runtime calls.
  */
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import { normalizeOptionalString } from "@grokbot/normalization-core/string-coerce";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import type { ContextEngineRuntimeContext } from "../../context-engine/types.js";
 import { resolveBoundAgentIdForSession } from "../session-agent-binding.js";
 

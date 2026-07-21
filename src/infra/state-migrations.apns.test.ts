@@ -8,7 +8,7 @@ import { useAutoCleanupTempDirTracker } from "../../test/helpers/temp-dir.js";
 import {
   closeOpenClawStateDatabaseForTest,
   openOpenClawStateDatabase,
-} from "../state/openclaw-state-db.js";
+} from "../state/grokbot-state-db.js";
 import { captureEnv, deleteTestEnvValue, setTestEnvValue } from "../test-utils/env.js";
 import { acquireGatewayLock } from "./gateway-lock.js";
 import {
@@ -37,7 +37,7 @@ describe("legacy APNs Doctor migration", () => {
   });
 
   function useStateDir(): string {
-    const stateDir = tempDirs.make("openclaw-apns-migration-");
+    const stateDir = tempDirs.make("grokbot-apns-migration-");
     envSnapshot ??= captureEnv(["OPENCLAW_STATE_DIR", "OPENCLAW_APNS_RELAY_ALLOW_HTTP"]);
     setTestEnvValue("OPENCLAW_STATE_DIR", stateDir);
     return stateDir;
@@ -51,7 +51,7 @@ describe("legacy APNs Doctor migration", () => {
     return {
       nodeId: "legacy-direct",
       [APNS_DEVICE_FIELD]: `<${APNS_DEVICE_IDENTIFIER.toUpperCase()}>`,
-      topic: " ai.openclaw.ios ",
+      topic: " ai.grokbot.ios ",
       environment: "invalid-old-value",
       updatedAtMs: 1_000,
       ...overrides,
@@ -65,10 +65,10 @@ describe("legacy APNs Doctor migration", () => {
       relayHandle: "relay-handle-123",
       sendGrant: "send-grant-123",
       installationId: "installation-123",
-      topic: "ai.openclaw.ios",
+      topic: "ai.grokbot.ios",
       environment: "sandbox",
       distribution: "official",
-      relayOrigin: "https://ios-push-relay-sandbox.openclaw.ai/",
+      relayOrigin: "https://ios-push-relay-sandbox.grokbot.ai/",
       tokenDebugSuffix: " abcd-1234 ",
       updatedAtMs: 2_000,
       ...overrides,
@@ -133,7 +133,7 @@ describe("legacy APNs Doctor migration", () => {
       nodeId: "legacy-direct",
       transport: "direct",
       [APNS_DEVICE_FIELD]: APNS_DEVICE_IDENTIFIER,
-      topic: "ai.openclaw.ios",
+      topic: "ai.grokbot.ios",
       environment: "sandbox",
       updatedAtMs: 1_000,
     });
@@ -143,10 +143,10 @@ describe("legacy APNs Doctor migration", () => {
       relayHandle: "relay-handle-123",
       sendGrant: "send-grant-123",
       installationId: "installation-123",
-      topic: "ai.openclaw.ios",
+      topic: "ai.grokbot.ios",
       environment: "sandbox",
       distribution: "official",
-      relayOrigin: "https://ios-push-relay-sandbox.openclaw.ai",
+      relayOrigin: "https://ios-push-relay-sandbox.grokbot.ai",
       tokenDebugSuffix: "abcd1234",
       updatedAtMs: 2_000,
     });
@@ -180,7 +180,7 @@ describe("legacy APNs Doctor migration", () => {
       nodeId: "shared-node",
       transport: "direct",
       [APNS_DEVICE_FIELD]: APNS_DEVICE_IDENTIFIER,
-      topic: "ai.openclaw.ios",
+      topic: "ai.grokbot.ios",
       environment: "production",
       baseDir: stateDir,
     });
@@ -212,7 +212,7 @@ describe("legacy APNs Doctor migration", () => {
       nodeId: "legacy-direct",
       transport: "direct",
       [APNS_DEVICE_FIELD]: APNS_DEVICE_IDENTIFIER,
-      topic: "ai.openclaw.ios",
+      topic: "ai.grokbot.ios",
       environment: "production",
       baseDir: stateDir,
     });
@@ -397,7 +397,7 @@ describe("legacy APNs Doctor migration", () => {
            node_id, transport, topic, environment, updated_at_ms
          ) VALUES (?, ?, ?, ?, ?)`,
       )
-      .run("corrupt-node", "unknown", "ai.openclaw.ios", "sandbox", 1);
+      .run("corrupt-node", "unknown", "ai.grokbot.ios", "sandbox", 1);
 
     const result = await migrate(stateDir);
 
@@ -445,7 +445,7 @@ describe("legacy APNs Doctor migration", () => {
   it("rejects symlinks, hardlinks, and invalid UTF-8", async () => {
     for (const kind of ["symlink", "hardlink", "invalid-utf8"] as const) {
       closeOpenClawStateDatabaseForTest();
-      const stateDir = tempDirs.make(`openclaw-apns-${kind}-`);
+      const stateDir = tempDirs.make(`grokbot-apns-${kind}-`);
       const sourcePath = path.join(stateDir, "push", "apns-registrations.json");
       const targetPath = path.join(stateDir, "target.json");
       await fsp.mkdir(path.dirname(sourcePath), { recursive: true });

@@ -47,7 +47,7 @@ vi.mock("../config/config.js", async (importOriginal) => ({
   readConfigFileSnapshot: vi.fn(async () => ({
     exists: true,
     valid: true,
-    path: "/tmp/openclaw.json",
+    path: "/tmp/grokbot.json",
     hash: "hash",
     config: { agents: { defaults: { model: { primary: "openai/gpt-5.5" } } } },
     runtimeConfig: { agents: { defaults: { model: { primary: "openai/gpt-5.5" } } } },
@@ -59,7 +59,7 @@ vi.mock("../config/config.js", async (importOriginal) => ({
 const tempDirs: string[] = [];
 
 function useTempStateDir(): string {
-  const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-turn-"));
+  const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-turn-"));
   tempDirs.push(stateDir);
   vi.stubEnv("OPENCLAW_STATE_DIR", stateDir);
   return stateDir;
@@ -69,7 +69,7 @@ function configSnapshot(config: OpenClawConfig) {
   return {
     exists: true,
     valid: true,
-    path: "/tmp/openclaw.json",
+    path: "/tmp/grokbot.json",
     hash: "hash",
     config,
     runtimeConfig: config,
@@ -101,7 +101,7 @@ const cliBackendRouteChanges: Array<{
   {
     name: "backend command",
     first: { command: "claude" },
-    second: { command: "/opt/openclaw/bin/claude" },
+    second: { command: "/opt/grokbot/bin/claude" },
   },
   {
     name: "effective model alias",
@@ -163,7 +163,7 @@ describe("runSystemAgentTurn", () => {
         defaults: {
           model: "openai/gpt-5.5",
           models: {
-            "openai/gpt-5.5": { agentRuntime: { id: "openclaw" } },
+            "openai/gpt-5.5": { agentRuntime: { id: "grokbot" } },
           },
         },
       },
@@ -201,7 +201,7 @@ describe("runSystemAgentTurn", () => {
       auth: {
         authProfileId: "openai:p2",
         authFingerprint,
-        agentHarnessId: "openclaw",
+        agentHarnessId: "grokbot",
       },
       deps: authDeps,
     });
@@ -298,7 +298,7 @@ describe("runSystemAgentTurn", () => {
     await expect(fs.promises.access(firstPath)).rejects.toThrow();
   });
 
-  it("uses the default agent CLI route while keeping OpenClaw session identity", async () => {
+  it("uses the default agent CLI route while keeping GrokBot session identity", async () => {
     const stateDir = useTempStateDir();
     const agentDir = path.join(stateDir, "ops-agent");
     const config = {
@@ -349,13 +349,13 @@ describe("runSystemAgentTurn", () => {
       model: "claude-opus-4-8",
       agentDir,
       authProfileId: "claude-cli:ops",
-      agentId: "openclaw",
-      sessionKey: "agent:openclaw:main",
+      agentId: "grokbot",
+      sessionKey: "agent:grokbot:main",
       sessionId: session.sessionId,
-      workspaceDir: path.join(stateDir, "openclaw", "workspace"),
-      sessionFile: path.join(stateDir, "openclaw", "sessions", `${session.sessionId}.jsonl`),
-      messageChannel: "openclaw",
-      messageProvider: "openclaw",
+      workspaceDir: path.join(stateDir, "grokbot", "workspace"),
+      sessionFile: path.join(stateDir, "grokbot", "sessions", `${session.sessionId}.jsonl`),
+      messageChannel: "grokbot",
+      messageProvider: "grokbot",
     });
     expect(call.disableCliLiveSession).toBe(true);
     expect(call.cleanupCliLiveSessionOnRunEnd).toBe(true);
@@ -364,12 +364,12 @@ describe("runSystemAgentTurn", () => {
       mcp: ["mcp__openclaw__openclaw"],
     });
     expect(call.toolsAllow).toBeUndefined();
-    expect(requireValue(call.systemAgentTool, "missing CLI OpenClaw tool").proposalRef).toBe(
+    expect(requireValue(call.systemAgentTool, "missing CLI GrokBot tool").proposalRef).toBe(
       session.proposalRef,
     );
   });
 
-  it("rejects an always-on CLI backend before launching OpenClaw", async () => {
+  it("rejects an always-on CLI backend before launching GrokBot", async () => {
     useTempStateDir();
     const config = {
       agents: {
@@ -408,7 +408,7 @@ describe("runSystemAgentTurn", () => {
     expect((failure as SystemAgentInferenceUnavailableError).failures).toEqual([
       expect.objectContaining({
         message: expect.stringContaining(
-          "CLI backend google-gemini-cli cannot enforce OpenClaw's exact tool availability",
+          "CLI backend google-gemini-cli cannot enforce GrokBot's exact tool availability",
         ),
       }),
     ]);
@@ -467,7 +467,7 @@ describe("runSystemAgentTurn", () => {
       disableCliLiveSession: true,
       cleanupCliLiveSessionOnRunEnd: true,
     });
-    const transcript = path.join(stateDir, "openclaw", "sessions", `${session.sessionId}.jsonl`);
+    const transcript = path.join(stateDir, "grokbot", "sessions", `${session.sessionId}.jsonl`);
     await fs.promises.writeFile(transcript, "transcript");
 
     await cleanupSystemAgentSession(session);
@@ -550,7 +550,7 @@ describe("runSystemAgentTurn", () => {
       authEpoch: "auth-epoch",
       authEpochVersion: 1,
       cwdHash: "cwd-hash",
-      mcpResumeHash: "openclaw-mcp-resume",
+      mcpResumeHash: "grokbot-mcp-resume",
     };
     const runCliAgent = vi.fn(async (_params: RunCliAgentParams) => ({
       payloads: [{ text: "ready" }],
@@ -766,7 +766,7 @@ describe("runSystemAgentTurn", () => {
             {
               id: "ops",
               default: true,
-              // Keep the model owner's policy stable. OpenClaw executes with
+              // Keep the model owner's policy stable. GrokBot executes with
               // its own identity and therefore follows the changing global policy.
               tools: { exec: { security: "allowlist", ask: "on-miss" } },
             },
@@ -890,7 +890,7 @@ describe("runSystemAgentTurn", () => {
         defaults: {
           model: { primary: "anthropic/claude-global" },
           models: {
-            "openai/gpt-5.4": { agentRuntime: { id: "openclaw" } },
+            "openai/gpt-5.4": { agentRuntime: { id: "grokbot" } },
           },
         },
         list: [
@@ -906,7 +906,7 @@ describe("runSystemAgentTurn", () => {
             },
           },
           {
-            id: "openclaw",
+            id: "grokbot",
             params: { temperature: 1.7 },
             tools: { allow: ["exec"] },
           },
@@ -945,23 +945,23 @@ describe("runSystemAgentTurn", () => {
       authProfileId: "openai:ops",
       authProfileIdSource: "user",
       agentHarnessRuntimeOverride: "codex",
-      agentId: "openclaw",
-      sessionKey: "agent:openclaw:main",
+      agentId: "grokbot",
+      sessionKey: "agent:grokbot:main",
       sessionId: session.sessionId,
-      workspaceDir: path.join(stateDir, "openclaw", "workspace"),
-      sessionFile: path.join(stateDir, "openclaw", "sessions", `${session.sessionId}.jsonl`),
-      messageChannel: "openclaw",
-      messageProvider: "openclaw",
-      toolsAllow: ["openclaw"],
+      workspaceDir: path.join(stateDir, "grokbot", "workspace"),
+      sessionFile: path.join(stateDir, "grokbot", "sessions", `${session.sessionId}.jsonl`),
+      messageChannel: "grokbot",
+      messageProvider: "grokbot",
+      toolsAllow: ["grokbot"],
       disableMessageTool: true,
     });
     expect(call.agentHarnessId).toBeUndefined();
-    expect(call.config?.agents?.list?.find((agent) => agent.id === "openclaw")).toEqual({
-      id: "openclaw",
+    expect(call.config?.agents?.list?.find((agent) => agent.id === "grokbot")).toEqual({
+      id: "grokbot",
       params: { temperature: 0.2 },
       tools: { allow: ["read"], deny: ["exec"] },
     });
-    expect(requireValue(call.systemAgentTool, "missing embedded OpenClaw tool").proposalRef).toBe(
+    expect(requireValue(call.systemAgentTool, "missing embedded GrokBot tool").proposalRef).toBe(
       session.proposalRef,
     );
   });
@@ -974,7 +974,7 @@ describe("runSystemAgentTurn", () => {
       configSnapshot({ agents: { defaults: { model: "openai/gpt-5.5" } } }),
     );
     const unverifiedSession = {
-      sessionId: "openclaw-unverified",
+      sessionId: "grokbot-unverified",
       proposalRef: {},
     } as unknown as SystemAgentSession;
 

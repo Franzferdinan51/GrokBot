@@ -1,5 +1,5 @@
 import { generateKeyPairSync, sign } from "node:crypto";
-// OpenClaw npm postpublish tests validate postpublish verification behavior.
+// GrokBot npm postpublish tests validate postpublish verification behavior.
 import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
@@ -23,13 +23,13 @@ import {
   retryNpmRegistryProvenanceRead,
   verifyNpmProvenanceAttestation,
   verifyNpmRegistrySignatures,
-} from "../scripts/openclaw-npm-postpublish-verify.ts";
+} from "../scripts/grokbot-npm-postpublish-verify.ts";
 
 const INSTALLED_ROOT_DIST_JS_FILE_SCAN_LIMIT = 10_000;
 
 describe("parseOpenClawNpmPostpublishVerifyArgs", () => {
   it("keeps trusted release verification independent from target app dependencies", () => {
-    const source = readFileSync("scripts/openclaw-npm-postpublish-verify.ts", "utf8");
+    const source = readFileSync("scripts/grokbot-npm-postpublish-verify.ts", "utf8");
 
     expect(source).toContain('from "./lib/error-format.mjs"');
     expect(source).not.toContain('from "../src/infra/errors.ts"');
@@ -51,10 +51,10 @@ describe("parseOpenClawNpmPostpublishVerifyArgs", () => {
       openClawNpmPostpublishVerifyUsage(),
     );
     expect(() => parseOpenClawNpmPostpublishVerifyArgs(["--tag"])).toThrow(
-      "Unknown openclaw npm postpublish verifier option: --tag",
+      "Unknown grokbot npm postpublish verifier option: --tag",
     );
     expect(() => parseOpenClawNpmPostpublishVerifyArgs(["2026.3.23", "extra"])).toThrow(
-      "Unexpected openclaw npm postpublish verifier argument: extra",
+      "Unexpected grokbot npm postpublish verifier argument: extra",
     );
   });
 });
@@ -72,7 +72,7 @@ describe("buildPublishedInstallScenarios", () => {
     expect(buildPublishedInstallScenarios("2026.3.23")).toEqual([
       {
         name: "fresh-exact",
-        installSpecs: ["openclaw@2026.3.23"],
+        installSpecs: ["grokbot@2026.3.23"],
         expectedVersion: "2026.3.23",
       },
     ]);
@@ -82,12 +82,12 @@ describe("buildPublishedInstallScenarios", () => {
     expect(buildPublishedInstallScenarios("2026.3.23-2")).toEqual([
       {
         name: "fresh-exact",
-        installSpecs: ["openclaw@2026.3.23-2"],
+        installSpecs: ["grokbot@2026.3.23-2"],
         expectedVersion: "2026.3.23-2",
       },
       {
         name: "upgrade-from-base-stable",
-        installSpecs: ["openclaw@2026.3.23", "openclaw@2026.3.23-2"],
+        installSpecs: ["grokbot@2026.3.23", "grokbot@2026.3.23-2"],
         expectedVersion: "2026.3.23-2",
       },
     ]);
@@ -95,7 +95,7 @@ describe("buildPublishedInstallScenarios", () => {
 });
 
 describe("npm registry provenance verification", () => {
-  const packageName = "openclaw";
+  const packageName = "grokbot";
   const version = "2026.3.23";
   const integrity = `sha512-${Buffer.from("registry integrity", "utf8").toString("base64")}`;
   const provenancePayload = {
@@ -111,8 +111,8 @@ describe("npm registry provenance verification", () => {
       buildDefinition: {
         externalParameters: {
           workflow: {
-            repository: "https://github.com/openclaw/openclaw",
-            path: ".github/workflows/openclaw-npm-release.yml",
+            repository: "https://github.com/grokbot/grokbot",
+            path: ".github/workflows/grokbot-npm-release.yml",
             ref: "refs/heads/release/2026.3.23",
           },
         },
@@ -138,7 +138,7 @@ describe("npm registry provenance verification", () => {
     });
 
     await expect(
-      fetchRegistryJson("https://registry.example/openclaw", {
+      fetchRegistryJson("https://registry.example/grokbot", {
         fetchImpl: fetchImpl as typeof fetch,
         timeoutMs: 1234,
       }),
@@ -153,13 +153,13 @@ describe("npm registry provenance verification", () => {
     });
 
     await expect(
-      fetchRegistryJson("https://registry.example/openclaw", {
+      fetchRegistryJson("https://registry.example/grokbot", {
         fetchImpl,
         maxBodyBytes: 64,
         timeoutMs: 1234,
       }),
     ).rejects.toThrow(
-      "npm registry https://registry.example/openclaw response body exceeded 64 bytes",
+      "npm registry https://registry.example/grokbot response body exceeded 64 bytes",
     );
   });
 
@@ -169,12 +169,12 @@ describe("npm registry provenance verification", () => {
     });
 
     await expect(
-      fetchRegistryJson("https://registry.example/openclaw", {
+      fetchRegistryJson("https://registry.example/grokbot", {
         fetchImpl,
         timeoutMs: 5,
       }),
     ).rejects.toThrow(
-      "npm registry request timed out after 5ms: https://registry.example/openclaw",
+      "npm registry request timed out after 5ms: https://registry.example/grokbot",
     );
   });
 
@@ -232,7 +232,7 @@ describe("npm registry provenance verification", () => {
     expect(verificationPolicy).toEqual({
       certificateIssuer: "https://token.actions.githubusercontent.com",
       certificateIdentityURI:
-        "https://github.com/openclaw/openclaw/.github/workflows/openclaw-npm-release.yml@refs/heads/release/2026.3.23",
+        "https://github.com/grokbot/grokbot/.github/workflows/grokbot-npm-release.yml@refs/heads/release/2026.3.23",
     });
 
     verificationPolicy = undefined;
@@ -264,7 +264,7 @@ describe("npm registry provenance verification", () => {
                         },
                         resolvedDependencies: [
                           {
-                            uri: `git+https://github.com/openclaw/openclaw@${protectedWorkflowRef}`,
+                            uri: `git+https://github.com/grokbot/grokbot@${protectedWorkflowRef}`,
                             digest: { gitCommit: protectedWorkflowSha },
                           },
                         ],
@@ -286,7 +286,7 @@ describe("npm registry provenance verification", () => {
     ).resolves.toBeUndefined();
     expect(verificationPolicy).toEqual({
       certificateIssuer: "https://token.actions.githubusercontent.com",
-      certificateIdentityURI: `https://github.com/openclaw/openclaw/.github/workflows/openclaw-npm-release.yml@${protectedWorkflowRef}`,
+      certificateIdentityURI: `https://github.com/grokbot/grokbot/.github/workflows/grokbot-npm-release.yml@${protectedWorkflowRef}`,
     });
 
     await expect(
@@ -315,7 +315,7 @@ describe("npm registry provenance verification", () => {
                         },
                         resolvedDependencies: [
                           {
-                            uri: `git+https://github.com/openclaw/openclaw@${protectedWorkflowRef}`,
+                            uri: `git+https://github.com/grokbot/grokbot@${protectedWorkflowRef}`,
                             digest: { gitCommit: protectedWorkflowSha },
                           },
                         ],
@@ -349,7 +349,7 @@ describe("npm registry provenance verification", () => {
                 payload: Buffer.from(
                   JSON.stringify({
                     ...provenancePayload,
-                    subject: [{ name: "pkg:npm/openclaw@2026.3.24", digest: {} }],
+                    subject: [{ name: "pkg:npm/grokbot@2026.3.24", digest: {} }],
                   }),
                   "utf8",
                 ).toString("base64"),
@@ -401,7 +401,7 @@ describe("npm registry provenance verification", () => {
           verificationCalls += 1;
         },
       }),
-    ).rejects.toThrow("does not bind 2026.3.23 to the trusted OpenClaw GitHub release workflow");
+    ).rejects.toThrow("does not bind 2026.3.23 to the trusted GrokBot GitHub release workflow");
     expect(verificationCalls).toBe(0);
   });
 
@@ -438,12 +438,12 @@ describe("npm registry provenance verification", () => {
           attempts += 1;
           if (attempts === 1) {
             throw new Error(
-              "npm provenance attestation does not bind 2026.3.23 to the trusted OpenClaw GitHub release workflow.",
+              "npm provenance attestation does not bind 2026.3.23 to the trusted GrokBot GitHub release workflow.",
             );
           }
           if (attempts === 2) {
             throw new Error(
-              "npm registry provenance metadata is incomplete for openclaw@2026.3.23.",
+              "npm registry provenance metadata is incomplete for grokbot@2026.3.23.",
             );
           }
           return "verified";
@@ -463,14 +463,14 @@ describe("npm registry provenance verification", () => {
 
 describe("buildPublishedInstallCommandArgs", () => {
   it("runs lifecycle scripts for published install verification", () => {
-    const args = buildPublishedInstallCommandArgs("/tmp/openclaw-prefix", "openclaw@2026.4.10");
+    const args = buildPublishedInstallCommandArgs("/tmp/grokbot-prefix", "grokbot@2026.4.10");
 
     expect(args).toEqual([
       "install",
       "-g",
       "--prefix",
-      "/tmp/openclaw-prefix",
-      "openclaw@2026.4.10",
+      "/tmp/grokbot-prefix",
+      "grokbot@2026.4.10",
       "--no-fund",
       "--no-audit",
     ]);
@@ -480,14 +480,14 @@ describe("buildPublishedInstallCommandArgs", () => {
 
 describe("collectInstalledPackageErrors", () => {
   function makeInstalledPackageRoot(): string {
-    return mkdtempSync(join(tmpdir(), "openclaw-postpublish-package-"));
+    return mkdtempSync(join(tmpdir(), "grokbot-postpublish-package-"));
   }
 
   it("flags version mismatches", () => {
     const errors = collectInstalledPackageErrors({
       expectedVersion: "2026.3.23-2",
       installedVersion: "2026.3.23",
-      packageRoot: "/tmp/empty-openclaw",
+      packageRoot: "/tmp/empty-grokbot",
     });
 
     expect(errors[0]).toBe(
@@ -563,7 +563,7 @@ describe("collectInstalledPackageErrors", () => {
 
 describe("collectInstalledAlwaysAllowedRuntimeFacadeErrors", () => {
   function withInstalledPackageRoot(run: (packageRoot: string) => void): void {
-    const packageRoot = mkdtempSync(join(tmpdir(), "openclaw-postpublish-facade-runtime-"));
+    const packageRoot = mkdtempSync(join(tmpdir(), "grokbot-postpublish-facade-runtime-"));
     try {
       run(packageRoot);
     } finally {
@@ -600,7 +600,7 @@ describe("collectInstalledAlwaysAllowedRuntimeFacadeErrors", () => {
 
 describe("collectInstalledContextEngineRuntimeErrors", () => {
   function makeInstalledPackageRoot(): string {
-    return mkdtempSync(join(tmpdir(), "openclaw-postpublish-context-engine-"));
+    return mkdtempSync(join(tmpdir(), "grokbot-postpublish-context-engine-"));
   }
 
   it("rejects packaged bundles with unresolved legacy context engine runtime loaders", () => {
@@ -656,7 +656,7 @@ describe("collectInstalledContextEngineRuntimeErrors", () => {
 
 describe("collectInstalledPluginSdkZodArtifactErrors", () => {
   function withInstalledPackageRoot(run: (packageRoot: string) => void): void {
-    const packageRoot = mkdtempSync(join(tmpdir(), "openclaw-postpublish-zod-sdk-"));
+    const packageRoot = mkdtempSync(join(tmpdir(), "grokbot-postpublish-zod-sdk-"));
     try {
       run(packageRoot);
     } finally {
@@ -727,11 +727,11 @@ describe("collectInstalledPluginSdkZodArtifactErrors", () => {
 
 describe("normalizeInstalledBinaryVersion", () => {
   it("accepts decorated CLI version output", () => {
-    expect(normalizeInstalledBinaryVersion("OpenClaw 2026.4.8 (9ece252)")).toBe("2026.4.8");
-    expect(normalizeInstalledBinaryVersion("OpenClaw 2026.4.8-beta.1 (9ece252)")).toBe(
+    expect(normalizeInstalledBinaryVersion("GrokBot 2026.4.8 (9ece252)")).toBe("2026.4.8");
+    expect(normalizeInstalledBinaryVersion("GrokBot 2026.4.8-beta.1 (9ece252)")).toBe(
       "2026.4.8-beta.1",
     );
-    expect(normalizeInstalledBinaryVersion("OpenClaw 2026.4.8-alpha.1 (9ece252)")).toBe(
+    expect(normalizeInstalledBinaryVersion("GrokBot 2026.4.8-alpha.1 (9ece252)")).toBe(
       "2026.4.8-alpha.1",
     );
   });
@@ -739,14 +739,14 @@ describe("normalizeInstalledBinaryVersion", () => {
 
 describe("resolveInstalledBinaryPath", () => {
   it("uses the Unix global bin path on non-Windows platforms", () => {
-    expect(resolveInstalledBinaryPath("/tmp/openclaw-prefix", "darwin")).toBe(
-      "/tmp/openclaw-prefix/bin/openclaw",
+    expect(resolveInstalledBinaryPath("/tmp/grokbot-prefix", "darwin")).toBe(
+      "/tmp/grokbot-prefix/bin/grokbot",
     );
   });
 
   it("uses the Windows npm shim path on win32", () => {
-    expect(resolveInstalledBinaryPath("C:/openclaw-prefix", "win32")).toBe(
-      "C:\\openclaw-prefix\\openclaw.cmd",
+    expect(resolveInstalledBinaryPath("C:/grokbot-prefix", "win32")).toBe(
+      "C:\\grokbot-prefix\\grokbot.cmd",
     );
   });
 });
@@ -754,11 +754,11 @@ describe("resolveInstalledBinaryPath", () => {
 describe("resolveInstalledBinaryCommandInvocation", () => {
   it("runs the Unix installed binary directly", () => {
     expect(
-      resolveInstalledBinaryCommandInvocation("/tmp/openclaw-prefix", ["--version"], {
+      resolveInstalledBinaryCommandInvocation("/tmp/grokbot-prefix", ["--version"], {
         platform: "linux",
       }),
     ).toEqual({
-      command: "/tmp/openclaw-prefix/bin/openclaw",
+      command: "/tmp/grokbot-prefix/bin/grokbot",
       args: ["--version"],
     });
   });
@@ -766,7 +766,7 @@ describe("resolveInstalledBinaryCommandInvocation", () => {
   it("wraps the Windows installed npm shim without Node shell argv", () => {
     expect(
       resolveInstalledBinaryCommandInvocation(
-        "C:/openclaw prefix",
+        "C:/grokbot prefix",
         ["agent", "--message", "hello world"],
         {
           comSpec: "C:\\Windows\\System32\\cmd.exe",
@@ -779,7 +779,7 @@ describe("resolveInstalledBinaryCommandInvocation", () => {
         "/d",
         "/s",
         "/c",
-        '""C:\\openclaw prefix\\openclaw.cmd" agent --message "hello world""',
+        '""C:\\grokbot prefix\\grokbot.cmd" agent --message "hello world""',
       ],
       windowsVerbatimArguments: true,
     });
@@ -788,7 +788,7 @@ describe("resolveInstalledBinaryCommandInvocation", () => {
 
 describe("collectInstalledRootDependencyManifestErrors", () => {
   function makeInstalledPackageRoot(): string {
-    return mkdtempSync(join(tmpdir(), "openclaw-postpublish-root-deps-"));
+    return mkdtempSync(join(tmpdir(), "grokbot-postpublish-root-deps-"));
   }
 
   function writePackageFile(root: string, relativePath: string, value: unknown): void {

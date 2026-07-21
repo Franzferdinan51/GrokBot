@@ -24,7 +24,7 @@ vi.mock("../model-auth.js", async (importOriginal) => {
   return { ...actual, resolveEnvApiKey: authMocks.resolveEnvApiKey };
 });
 
-const AGENT_DIR = "/tmp/openclaw-model-config-helper";
+const AGENT_DIR = "/tmp/grokbot-model-config-helper";
 const MODEL = "gpt-5.5";
 
 type Decision = ReturnType<typeof resolveOpenAiImageMediaCandidate>;

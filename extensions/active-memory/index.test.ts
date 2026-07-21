@@ -2,16 +2,16 @@
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { expectDefined } from "@openclaw/normalization-core";
-import type { OpenClawPluginApi } from "openclaw/plugin-sdk/plugin-entry";
-import type { OpenKeyedStoreOptions } from "openclaw/plugin-sdk/plugin-state-runtime";
+import { expectDefined } from "@grokbot/normalization-core";
+import type { OpenClawPluginApi } from "grokbot/plugin-sdk/plugin-entry";
+import type { OpenKeyedStoreOptions } from "grokbot/plugin-sdk/plugin-state-runtime";
 import {
   createPluginStateKeyedStoreForTests,
   resetPluginStateStoreForTests,
-} from "openclaw/plugin-sdk/plugin-state-test-runtime";
-import { parseAgentSessionKey } from "openclaw/plugin-sdk/routing";
-import { parseSqliteSessionFileMarker } from "openclaw/plugin-sdk/session-store-runtime";
-import { appendSessionTranscriptMessageByIdentity } from "openclaw/plugin-sdk/session-transcript-runtime";
+} from "grokbot/plugin-sdk/plugin-state-test-runtime";
+import { parseAgentSessionKey } from "grokbot/plugin-sdk/routing";
+import { parseSqliteSessionFileMarker } from "grokbot/plugin-sdk/session-store-runtime";
+import { appendSessionTranscriptMessageByIdentity } from "grokbot/plugin-sdk/session-transcript-runtime";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { applyCliRuntimeRecallTimeoutDefault } from "./config.js";
 import plugin, { testing } from "./index.js";
@@ -66,13 +66,13 @@ const hoisted = vi.hoisted(() => {
   };
 });
 
-vi.mock("openclaw/plugin-sdk/memory-host-search", () => ({
+vi.mock("grokbot/plugin-sdk/memory-host-search", () => ({
   closeActiveMemorySearchManager: hoisted.closeActiveMemorySearchManager,
 }));
 
-vi.mock("openclaw/plugin-sdk/session-store-runtime", async () => {
-  const actual = await vi.importActual<typeof import("openclaw/plugin-sdk/session-store-runtime")>(
-    "openclaw/plugin-sdk/session-store-runtime",
+vi.mock("grokbot/plugin-sdk/session-store-runtime", async () => {
+  const actual = await vi.importActual<typeof import("grokbot/plugin-sdk/session-store-runtime")>(
+    "grokbot/plugin-sdk/session-store-runtime",
   );
   return {
     ...actual,
@@ -82,10 +82,10 @@ vi.mock("openclaw/plugin-sdk/session-store-runtime", async () => {
   };
 });
 
-vi.mock("openclaw/plugin-sdk/session-transcript-runtime", async () => {
+vi.mock("grokbot/plugin-sdk/session-transcript-runtime", async () => {
   const actual = await vi.importActual<
-    typeof import("openclaw/plugin-sdk/session-transcript-runtime")
-  >("openclaw/plugin-sdk/session-transcript-runtime");
+    typeof import("grokbot/plugin-sdk/session-transcript-runtime")
+  >("grokbot/plugin-sdk/session-transcript-runtime");
   return {
     ...actual,
     readSessionTranscriptRawDelta: async (
@@ -536,7 +536,7 @@ describe("active-memory plugin", () => {
   };
 
   beforeAll(async () => {
-    fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-active-memory-test-"));
+    fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-active-memory-test-"));
     pluginStateDir = path.join(fixtureRoot, "plugin-state");
     stateDir = path.join(fixtureRoot, "state");
   });
@@ -876,7 +876,7 @@ describe("active-memory plugin", () => {
 
     expect(result).toBeUndefined();
     expect(hoisted.cleanupSessionLifecycleArtifacts).toHaveBeenCalledTimes(3);
-    expect(rmSpy).toHaveBeenCalledWith(expect.stringMatching(/openclaw-active-memory-.*/), {
+    expect(rmSpy).toHaveBeenCalledWith(expect.stringMatching(/grokbot-active-memory-.*/), {
       recursive: true,
       force: true,
     });
@@ -6540,7 +6540,7 @@ describe("active-memory plugin", () => {
     );
 
     expect(mkdtempSpy).toHaveBeenCalled();
-    expect(rmSpy).toHaveBeenCalledWith(expect.stringMatching(/openclaw-active-memory-.*/), {
+    expect(rmSpy).toHaveBeenCalledWith(expect.stringMatching(/grokbot-active-memory-.*/), {
       recursive: true,
       force: true,
     });

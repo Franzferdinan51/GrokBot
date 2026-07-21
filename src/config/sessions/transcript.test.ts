@@ -10,7 +10,7 @@ import {
   OPENCLAW_DELIVERY_MIRROR_MODEL,
   OPENCLAW_TRANSCRIPT_ARTIFACT_API,
   OPENCLAW_TRANSCRIPT_ARTIFACT_PROVIDER,
-} from "../../shared/transcript-only-openclaw-assistant.js";
+} from "../../shared/transcript-only-grokbot-assistant.js";
 import { deleteTestEnvValue, setTestEnvValue } from "../../test-utils/env.js";
 import { resolveSessionTranscriptPathInDir } from "./paths.js";
 import {
@@ -569,7 +569,7 @@ describe("appendAssistantMessageToSessionTranscript", () => {
     expect(event?.messageId).toBeTypeOf("string");
     expect(message?.role).toBe("assistant");
     expect(message?.api).toBe(OPENCLAW_TRANSCRIPT_ARTIFACT_API);
-    expect(message?.provider).toBe("openclaw");
+    expect(message?.provider).toBe("grokbot");
     expect(message?.model).toBe("delivery-mirror");
     expect(message?.content).toEqual([{ type: "text", text: "Hello from delivery mirror!" }]);
     emitSpy.mockRestore();
@@ -1137,7 +1137,7 @@ describe("appendAssistantMessageToSessionTranscript", () => {
     }
   });
 
-  it("skips transcript-only OpenClaw assistant entries when reading latest assistant text", async () => {
+  it("skips transcript-only GrokBot assistant entries when reading latest assistant text", async () => {
     await writeTranscriptStore();
 
     const finalResult = await appendExactAssistantMessageToSessionTranscript({
@@ -1160,7 +1160,7 @@ describe("appendAssistantMessageToSessionTranscript", () => {
       storePath: fixture.storePath(),
       message: createExactAssistantMessage({
         text: "Injected transcript text",
-        provider: "openclaw",
+        provider: "grokbot",
         model: "gateway-injected",
       }),
     });
@@ -1172,7 +1172,7 @@ describe("appendAssistantMessageToSessionTranscript", () => {
     expect(latestAssistantText?.text).toBe("Complete final answer");
   });
 
-  it("does not report transcript-only OpenClaw assistant entries as latest assistant text", async () => {
+  it("does not report transcript-only GrokBot assistant entries as latest assistant text", async () => {
     await writeTranscriptStore();
 
     const mirrorResult = await appendAssistantMessageToSessionTranscript({
@@ -1191,7 +1191,7 @@ describe("appendAssistantMessageToSessionTranscript", () => {
     expect(latestAssistantText).toBeUndefined();
   });
 
-  it("keeps transcript-only OpenClaw assistant entries available to the tail reader", async () => {
+  it("keeps transcript-only GrokBot assistant entries available to the tail reader", async () => {
     await writeTranscriptStore();
 
     const mirrorResult = await appendAssistantMessageToSessionTranscript({
@@ -1211,8 +1211,8 @@ describe("appendAssistantMessageToSessionTranscript", () => {
     expect(tailAssistantText?.text).toBe("Tail delivery mirror");
   });
 
-  it("scans past trailing non-assistant entries (e.g. openclaw.cache-ttl) to find the latest assistant text", async () => {
-    // Regression for openclaw/openclaw#83427: the cache-ttl custom entry was
+  it("scans past trailing non-assistant entries (e.g. grokbot.cache-ttl) to find the latest assistant text", async () => {
+    // Regression for grokbot/grokbot#83427: the cache-ttl custom entry was
     // emitted after the canonical assistant turn, and the tail reader returned
     // undefined on the first non-assistant line, so the gap-fill check in
     // persistTextTurnTranscript wrote a duplicate `api: "cli"` assistant
@@ -1235,7 +1235,7 @@ describe("appendAssistantMessageToSessionTranscript", () => {
 
     const cacheTtlEntry = `${JSON.stringify({
       type: "custom",
-      customType: "openclaw.cache-ttl",
+      customType: "grokbot.cache-ttl",
       timestamp: new Date().toISOString(),
       data: {
         provider: "anthropic",
@@ -1361,7 +1361,7 @@ describe("appendAssistantMessageToSessionTranscript", () => {
           id: "delivery-mirror",
           message: {
             ...createExactAssistantMessage({
-              provider: "openclaw",
+              provider: "grokbot",
               model: "delivery-mirror",
               text: "delivery mirror text",
             }),
@@ -1421,7 +1421,7 @@ describe("appendAssistantMessageToSessionTranscript", () => {
       }>;
       expect(messages).toHaveLength(3);
       expect(messages[2]?.api).toBe(OPENCLAW_TRANSCRIPT_ARTIFACT_API);
-      expect(messages[2]?.provider).toBe("openclaw");
+      expect(messages[2]?.provider).toBe("grokbot");
       expect(messages[2]?.model).toBe("delivery-mirror");
       expect(messages[2]?.content?.[0]?.text).toBe("Repeated answer");
     }
@@ -1621,7 +1621,7 @@ describe("appendAssistantMessageToSessionTranscript", () => {
             textSignature: JSON.stringify({ v: 1, id: "item_final", phase: "final_answer" }),
           },
         ],
-        provider: "openclaw",
+        provider: "grokbot",
         model: "delivery-mirror",
       }),
     });
@@ -1869,7 +1869,7 @@ describe("appendAssistantMessageToSessionTranscript", () => {
           updateMode: "none",
           message: createExactAssistantMessage({
             text: "Mirrored reply",
-            provider: "openclaw",
+            provider: "grokbot",
             model: "delivery-mirror",
           }),
         }),
@@ -1901,7 +1901,7 @@ describe("appendAssistantMessageToSessionTranscript", () => {
       updateMode: "file-only",
       message: createExactAssistantMessage({
         text: "Done.",
-        provider: "openclaw",
+        provider: "grokbot",
         model: "delivery-mirror",
       }),
     });
@@ -2322,7 +2322,7 @@ describe("appendAssistantMessageToSessionTranscript", () => {
       transcriptPath: sessionFile,
       message: {
         role: "assistant",
-        provider: "openclaw",
+        provider: "grokbot",
         model: "delivery-mirror",
         content: "second side delivery",
       },
@@ -2422,7 +2422,7 @@ describe("appendAssistantMessageToSessionTranscript", () => {
       transcriptPath: sessionFile,
       message: {
         role: "assistant",
-        provider: "openclaw",
+        provider: "grokbot",
         model: "delivery-mirror",
         content: "second side delivery",
       },

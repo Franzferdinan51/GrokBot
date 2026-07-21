@@ -8,7 +8,7 @@ on:
         required: false
         type: string
       ref:
-        description: OpenClaw branch, tag, or SHA containing the maturity score source
+        description: GrokBot branch, tag, or SHA containing the maturity score source
         required: true
         default: main
         type: string
@@ -30,7 +30,7 @@ on:
         default: ""
         type: string
       ref:
-        description: OpenClaw branch, tag, or SHA containing the maturity score source
+        description: GrokBot branch, tag, or SHA containing the maturity score source
         required: true
         type: string
       expected_sha:
@@ -132,8 +132,8 @@ jobs:
           set -euo pipefail
 
           expected_file_path=".github/workflows/maturity-scorecard.yml"
-          expected_repository="openclaw/openclaw"
-          expected_workflow_ref="openclaw/openclaw/.github/workflows/maturity-scorecard.yml@refs/heads/main"
+          expected_repository="grokbot/grokbot"
+          expected_workflow_ref="grokbot/grokbot/.github/workflows/maturity-scorecard.yml@refs/heads/main"
           canonical_direct=false
           if [[ "$CALLER_EVENT_NAME" == "workflow_dispatch" &&
             "$CALLER_WORKFLOW_REF" == "$expected_workflow_ref" &&
@@ -281,10 +281,10 @@ jobs:
         if: >-
           ${{ inputs.publish_pull_request &&
             github.event_name == 'workflow_dispatch' &&
-            github.workflow_ref == 'openclaw/openclaw/.github/workflows/maturity-scorecard.yml@refs/heads/main' &&
+            github.workflow_ref == 'grokbot/grokbot/.github/workflows/maturity-scorecard.yml@refs/heads/main' &&
             needs.validate_selected_ref.outputs.workflow_file_path == '.github/workflows/maturity-scorecard.yml' &&
-            needs.validate_selected_ref.outputs.workflow_ref == 'openclaw/openclaw/.github/workflows/maturity-scorecard.yml@refs/heads/main' &&
-            needs.validate_selected_ref.outputs.workflow_repository == 'openclaw/openclaw' }}
+            needs.validate_selected_ref.outputs.workflow_ref == 'grokbot/grokbot/.github/workflows/maturity-scorecard.yml@refs/heads/main' &&
+            needs.validate_selected_ref.outputs.workflow_repository == 'grokbot/grokbot' }}
         uses: ./.github/actions/create-generated-pr-tokens
         with:
           contents-client-id: Iv23liOECG0slfuhz093
@@ -572,10 +572,10 @@ jobs:
         needs.publisher_preflight.result == 'success' &&
         needs.publish.result == 'success' &&
         github.event_name == 'workflow_dispatch' &&
-        github.workflow_ref == 'openclaw/openclaw/.github/workflows/maturity-scorecard.yml@refs/heads/main' &&
+        github.workflow_ref == 'grokbot/grokbot/.github/workflows/maturity-scorecard.yml@refs/heads/main' &&
         needs.validate_selected_ref.outputs.workflow_file_path == '.github/workflows/maturity-scorecard.yml' &&
-        needs.validate_selected_ref.outputs.workflow_ref == 'openclaw/openclaw/.github/workflows/maturity-scorecard.yml@refs/heads/main' &&
-        needs.validate_selected_ref.outputs.workflow_repository == 'openclaw/openclaw' }}
+        needs.validate_selected_ref.outputs.workflow_ref == 'grokbot/grokbot/.github/workflows/maturity-scorecard.yml@refs/heads/main' &&
+        needs.validate_selected_ref.outputs.workflow_repository == 'grokbot/grokbot' }}
     runs-on: ubuntu-24.04
     permissions:
       actions: read
@@ -671,10 +671,10 @@ jobs:
         if: >-
           ${{ inputs.publish_pull_request &&
             github.event_name == 'workflow_dispatch' &&
-            github.workflow_ref == 'openclaw/openclaw/.github/workflows/maturity-scorecard.yml@refs/heads/main' &&
+            github.workflow_ref == 'grokbot/grokbot/.github/workflows/maturity-scorecard.yml@refs/heads/main' &&
             needs.validate_selected_ref.outputs.workflow_file_path == '.github/workflows/maturity-scorecard.yml' &&
-            needs.validate_selected_ref.outputs.workflow_ref == 'openclaw/openclaw/.github/workflows/maturity-scorecard.yml@refs/heads/main' &&
-            needs.validate_selected_ref.outputs.workflow_repository == 'openclaw/openclaw' }}
+            needs.validate_selected_ref.outputs.workflow_ref == 'grokbot/grokbot/.github/workflows/maturity-scorecard.yml@refs/heads/main' &&
+            needs.validate_selected_ref.outputs.workflow_repository == 'grokbot/grokbot' }}
         uses: ./.github/actions/publish-generated-pr
         with:
           contents-client-id: Iv23liOECG0slfuhz093

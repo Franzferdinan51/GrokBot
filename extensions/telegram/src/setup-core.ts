@@ -1,5 +1,5 @@
 // Telegram plugin module implements setup core behavior.
-import type { ChannelSetupAdapter } from "openclaw/plugin-sdk/setup-runtime";
+import type { ChannelSetupAdapter } from "grokbot/plugin-sdk/setup-runtime";
 import {
   createEnvPatchedAccountSetupAdapter,
   patchChannelConfigForAccount,
@@ -8,8 +8,8 @@ import {
   createSetupTranslator,
   type OpenClawConfig,
   type WizardPrompter,
-} from "openclaw/plugin-sdk/setup-runtime";
-import { formatCliCommand, formatDocsLink } from "openclaw/plugin-sdk/setup-tools";
+} from "grokbot/plugin-sdk/setup-runtime";
+import { formatCliCommand, formatDocsLink } from "grokbot/plugin-sdk/setup-tools";
 import { resolveDefaultTelegramAccountId, resolveTelegramAccount } from "./accounts.js";
 import { isNumericTelegramSenderUserId } from "./allow-from.js";
 
@@ -27,19 +27,19 @@ export function getTelegramTokenHelpLines(): string[] {
     t("wizard.telegram.tokenHelpWebApp", { url: "https://t.me/BotFather?startapp" }),
     t("wizard.telegram.tokenEnvTip"),
     t("wizard.channels.docs", { link: formatDocsLink("/telegram") }),
-    t("wizard.telegram.website", { url: "https://openclaw.ai" }),
+    t("wizard.telegram.website", { url: "https://grokbot.ai" }),
   ];
 }
 
 export function getTelegramUserIdHelpLines(): string[] {
   return [
     t("wizard.telegram.userIdHelpLogs", {
-      command: formatCliCommand("openclaw logs --follow"),
+      command: formatCliCommand("grokbot logs --follow"),
     }),
     t("wizard.telegram.userIdHelpGetUpdates"),
     t("wizard.telegram.userIdHelpThirdParty"),
     t("wizard.channels.docs", { link: formatDocsLink("/telegram") }),
-    t("wizard.telegram.website", { url: "https://openclaw.ai" }),
+    t("wizard.telegram.website", { url: "https://grokbot.ai" }),
   ];
 }
 

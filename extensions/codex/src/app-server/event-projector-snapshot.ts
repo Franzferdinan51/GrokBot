@@ -1,9 +1,9 @@
 import type {
   AgentMessage,
   EmbeddedRunAttemptParams,
-} from "openclaw/plugin-sdk/agent-harness-runtime";
-import type { AssistantMessage } from "openclaw/plugin-sdk/llm";
-import { asDateTimestampMs } from "openclaw/plugin-sdk/number-runtime";
+} from "grokbot/plugin-sdk/agent-harness-runtime";
+import type { AssistantMessage } from "grokbot/plugin-sdk/llm";
+import { asDateTimestampMs } from "grokbot/plugin-sdk/number-runtime";
 import { attachCodexMirrorIdentity } from "./upstream-prompt-provenance.js";
 import { promptSnapshot } from "./user-prompt-message.js";
 

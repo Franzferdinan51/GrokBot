@@ -1,19 +1,19 @@
 // Discord provider module implements model/runtime integration.
-import type { ChannelRuntimeSurface } from "openclaw/plugin-sdk/channel-contract";
-import type { OpenClawConfig, ReplyToMode } from "openclaw/plugin-sdk/config-contracts";
-import { createConnectedChannelStatusPatch } from "openclaw/plugin-sdk/gateway-runtime";
-import { resolveTextChunkLimit } from "openclaw/plugin-sdk/reply-chunking";
-import { getRuntimeConfig } from "openclaw/plugin-sdk/runtime-config-snapshot";
-import { logVerbose, warn } from "openclaw/plugin-sdk/runtime-env";
-import { createSubsystemLogger } from "openclaw/plugin-sdk/runtime-env";
-import { createNonExitingRuntime, type RuntimeEnv } from "openclaw/plugin-sdk/runtime-env";
+import type { ChannelRuntimeSurface } from "grokbot/plugin-sdk/channel-contract";
+import type { OpenClawConfig, ReplyToMode } from "grokbot/plugin-sdk/config-contracts";
+import { createConnectedChannelStatusPatch } from "grokbot/plugin-sdk/gateway-runtime";
+import { resolveTextChunkLimit } from "grokbot/plugin-sdk/reply-chunking";
+import { getRuntimeConfig } from "grokbot/plugin-sdk/runtime-config-snapshot";
+import { logVerbose, warn } from "grokbot/plugin-sdk/runtime-env";
+import { createSubsystemLogger } from "grokbot/plugin-sdk/runtime-env";
+import { createNonExitingRuntime, type RuntimeEnv } from "grokbot/plugin-sdk/runtime-env";
 import {
   GROUP_POLICY_BLOCKED_LABEL,
   resolveOpenProviderRuntimeGroupPolicy,
   resolveDefaultGroupPolicy,
   warnMissingProviderGroupPolicyFallbackOnce,
-} from "openclaw/plugin-sdk/runtime-group-policy";
-import { formatErrorMessage } from "openclaw/plugin-sdk/ssrf-runtime";
+} from "grokbot/plugin-sdk/runtime-group-policy";
+import { formatErrorMessage } from "grokbot/plugin-sdk/ssrf-runtime";
 import { resolveDiscordAccountAllowFrom, resolveDiscordAccountDmPolicy } from "../accounts.js";
 import type { DiscordCommandDeployHashStore } from "../command-deploy-store.js";
 import { GatewayCloseCodes } from "../internal/gateway.js";
@@ -375,7 +375,7 @@ export async function monitorDiscordProvider(opts: MonitorDiscordOpts = {}) {
     const logger = createSubsystemLogger("discord/monitor");
     const guildHistories = new Map<
       string,
-      import("openclaw/plugin-sdk/reply-history").HistoryEntry[]
+      import("grokbot/plugin-sdk/reply-history").HistoryEntry[]
     >();
     const { botUserId, botUserName } = await fetchDiscordBotIdentity({
       client,

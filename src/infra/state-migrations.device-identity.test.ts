@@ -5,11 +5,11 @@ import fsp from "node:fs/promises";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import { useAutoCleanupTempDirTracker } from "../../test/helpers/temp-dir.js";
-import type { DB as OpenClawStateKyselyDatabase } from "../state/openclaw-state-db.generated.js";
+import type { DB as OpenClawStateKyselyDatabase } from "../state/grokbot-state-db.generated.js";
 import {
   closeOpenClawStateDatabaseForTest,
   openOpenClawStateDatabase,
-} from "../state/openclaw-state-db.js";
+} from "../state/grokbot-state-db.js";
 import {
   normalizeLegacyDeviceIdentity,
   type NormalizedLegacyDeviceIdentity,
@@ -45,7 +45,7 @@ describe("legacy device identity Doctor migration", () => {
   });
 
   function useStateDir(): { env: NodeJS.ProcessEnv; stateDir: string } {
-    const stateDir = tempDirs.make("openclaw-device-identity-migration-");
+    const stateDir = tempDirs.make("grokbot-device-identity-migration-");
     return {
       env: { ...process.env, HOME: stateDir, OPENCLAW_STATE_DIR: stateDir },
       stateDir,

@@ -1,4 +1,4 @@
-// OpenClaw agent database stores agent-scoped persisted runtime state.
+// GrokBot agent database stores agent-scoped persisted runtime state.
 import path from "node:path";
 import type { DatabaseSync } from "node:sqlite";
 import { clearNodeSqliteKyselyCacheForDatabase } from "../infra/kysely-sync.js";
@@ -21,35 +21,35 @@ import type {
   OpenClawAgentDatabase,
   OpenClawAgentDatabaseOptions,
   OpenClawAgentDatabaseOwnerInspection,
-} from "./openclaw-agent-db-contract.js";
+} from "./grokbot-agent-db-contract.js";
 import {
   claimOpenClawAgentDatabaseLease,
   releaseOpenClawAgentDatabaseLease,
-} from "./openclaw-agent-db-lease.js";
-import { ensureOpenClawAgentDatabasePermissions } from "./openclaw-agent-db-permissions.js";
+} from "./grokbot-agent-db-lease.js";
+import { ensureOpenClawAgentDatabasePermissions } from "./grokbot-agent-db-permissions.js";
 import {
   registerOpenClawAgentDatabase,
   unregisterOpenClawAgentDatabase,
-} from "./openclaw-agent-db-registry.js";
+} from "./grokbot-agent-db-registry.js";
 import {
   assertExistingAgentSchemaOwner,
   assertSupportedAgentSchemaVersion,
   readExistingAgentSchemaMeta,
-} from "./openclaw-agent-db-schema-helpers.js";
+} from "./grokbot-agent-db-schema-helpers.js";
 import {
   assertAgentDatabaseIntegrityBeforeMutation,
   ensureOpenClawAgentSchema,
-} from "./openclaw-agent-db-schema.js";
-import { resolveOpenClawAgentSqlitePath } from "./openclaw-agent-db.paths.js";
+} from "./grokbot-agent-db-schema.js";
+import { resolveOpenClawAgentSqlitePath } from "./grokbot-agent-db.paths.js";
 import {
   clearOpenClawDatabaseQuarantine,
   readOpenClawDatabaseQuarantine,
-} from "./openclaw-quarantine-store.js";
+} from "./grokbot-quarantine-store.js";
 import {
   createOpenClawDatabaseVerificationError,
   OPENCLAW_SQLITE_BUSY_TIMEOUT_MS,
   type OpenClawStateDatabaseOptions,
-} from "./openclaw-state-db.js";
+} from "./grokbot-state-db.js";
 
 export {
   OPENCLAW_AGENT_SCHEMA_VERSION,
@@ -57,22 +57,22 @@ export {
   type OpenClawAgentDatabaseOptions,
   type OpenClawAgentDatabaseOwnerInspection,
   type OpenClawRegisteredAgentDatabase,
-} from "./openclaw-agent-db-contract.js";
+} from "./grokbot-agent-db-contract.js";
 export {
   assertOpenClawAgentDatabaseForMaintenance,
   migrateOpenClawAgentDatabaseForMaintenance,
-} from "./openclaw-agent-db-maintenance.js";
-export { ensureOpenClawAgentDatabasePermissions } from "./openclaw-agent-db-permissions.js";
-export { listOpenClawRegisteredAgentDatabases } from "./openclaw-agent-db-registry.js";
-export { ensureOpenClawAgentDatabaseSchema } from "./openclaw-agent-db-schema.js";
-export { resolveOpenClawAgentSqlitePath } from "./openclaw-agent-db.paths.js";
+} from "./grokbot-agent-db-maintenance.js";
+export { ensureOpenClawAgentDatabasePermissions } from "./grokbot-agent-db-permissions.js";
+export { listOpenClawRegisteredAgentDatabases } from "./grokbot-agent-db-registry.js";
+export { ensureOpenClawAgentDatabaseSchema } from "./grokbot-agent-db-schema.js";
+export { resolveOpenClawAgentSqlitePath } from "./grokbot-agent-db.paths.js";
 
 /**
  * Per-agent SQLite database lifecycle and shared-state registration.
  *
  * Each opened agent database is schema-owned by one normalized agent id, cached
  * per pathname, protected with private file modes, and registered in the shared
- * OpenClaw state database for discovery and maintenance.
+ * GrokBot state database for discovery and maintenance.
  */
 const OPENCLAW_AGENT_DB_SLOW_OPEN_MS = 1_000;
 // Each WAL database consumes roughly three file descriptors, so the fixed cap
@@ -122,7 +122,7 @@ function logSlowAgentDatabaseOpen(params: {
   if (params.elapsedMs < OPENCLAW_AGENT_DB_SLOW_OPEN_MS) {
     return;
   }
-  agentDbLog.warn("slow OpenClaw agent database open", {
+  agentDbLog.warn("slow GrokBot agent database open", {
     agentId: params.agentId,
     elapsedMs: params.elapsedMs,
     path: params.path,
@@ -170,7 +170,7 @@ export function openOpenClawAgentDatabase(
     }
     if (cached.agentId !== agentId) {
       throw new Error(
-        `OpenClaw agent database ${pathname} is already open for agent ${cached.agentId}; requested agent ${agentId}.`,
+        `GrokBot agent database ${pathname} is already open for agent ${cached.agentId}; requested agent ${agentId}.`,
       );
     }
     cachedDatabases.delete(pathname);
@@ -243,7 +243,7 @@ export function openOpenClawAgentDatabase(
         });
         maintenance = configureSqliteConnectionPragmas(db, {
           busyTimeoutMs: OPENCLAW_SQLITE_BUSY_TIMEOUT_MS,
-          databaseLabel: `openclaw-agent:${agentId}`,
+          databaseLabel: `grokbot-agent:${agentId}`,
           databasePath: pathname,
           foreignKeys: true,
           synchronous: "NORMAL",
@@ -424,7 +424,7 @@ function evictLruAgentDatabaseHandles(): void {
       closeCachedOpenClawAgentDatabase(database, { eviction: true });
       cachedDatabases.delete(pathname);
       cachedDatabaseOpenFailures.delete(pathname);
-      agentDbLog.debug("evicted OpenClaw agent database handle", {
+      agentDbLog.debug("evicted GrokBot agent database handle", {
         agentId: database.agentId,
         openHandles: cachedDatabases.size,
         path: pathname,

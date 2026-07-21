@@ -1,4 +1,4 @@
-// Powershell script supports OpenClaw repository automation.
+// Powershell script supports GrokBot repository automation.
 import { modelProviderConfigBatchJson, providerIdFromModelId } from "./provider-auth.ts";
 
 export function psSingleQuote(value: string): string {
@@ -43,10 +43,10 @@ export function windowsAgentTurnConfigPatchScript(modelId: string): string {
     pluginId,
   });
   return `$agentTurnConfigPatchPath = $env:OPENCLAW_CONFIG_PATH
-if (-not $agentTurnConfigPatchPath) { $agentTurnConfigPatchPath = Join-Path $env:USERPROFILE '.openclaw\\openclaw.json' }
-$agentTurnVersionText = Invoke-OpenClaw --version 2>$null | Out-String
+if (-not $agentTurnConfigPatchPath) { $agentTurnConfigPatchPath = Join-Path $env:USERPROFILE '.grokbot\\grokbot.json' }
+$agentTurnVersionText = Invoke-GrokBot --version 2>$null | Out-String
 $agentTurnRuntimePolicySupported = $false
-if ($agentTurnVersionText -match 'OpenClaw\\s+(\\d{4})\\.(\\d{1,2})\\.(\\d{1,2})') {
+if ($agentTurnVersionText -match 'GrokBot\\s+(\\d{4})\\.(\\d{1,2})\\.(\\d{1,2})') {
   $agentTurnYear = [int]$Matches[1]
   $agentTurnMonth = [int]$Matches[2]
   $agentTurnDay = [int]$Matches[3]
@@ -57,7 +57,7 @@ ${payloadJson}
 '@
 $env:OPENCLAW_PARALLELS_AGENT_CONFIG_PATH = $agentTurnConfigPatchPath
 $env:OPENCLAW_PARALLELS_AGENT_RUNTIME_POLICY_SUPPORTED = if ($agentTurnRuntimePolicySupported) { '1' } else { '0' }
-$agentTurnConfigPatchScriptPath = Join-Path ([System.IO.Path]::GetTempPath()) 'openclaw-agent-turn-config-patch.cjs'
+$agentTurnConfigPatchScriptPath = Join-Path ([System.IO.Path]::GetTempPath()) 'grokbot-agent-turn-config-patch.cjs'
 @'
 const fs = require("node:fs");
 const path = require("node:path");
@@ -80,7 +80,7 @@ cfg.plugins = cfg.plugins && typeof cfg.plugins === "object" && !Array.isArray(c
 cfg.plugins.entries = { [payload.pluginId]: { enabled: true } };
 cfg.plugins.allow = [payload.pluginId];
 const stateDir = path.dirname(configPath);
-fs.rmSync(path.join(stateDir, "npm", "node_modules", "@openclaw", "codex"), { recursive: true, force: true });
+fs.rmSync(path.join(stateDir, "npm", "node_modules", "@grokbot", "codex"), { recursive: true, force: true });
 for (const op of payload.operations || []) {
   const segments = String(op.path || "").match(/(?:[^.[\\]]+)|(?:\\["((?:\\\\.|[^"\\\\])*)"\\])/g) || [];
   let cursor = cfg;
@@ -99,7 +99,7 @@ for (const op of payload.operations || []) {
 const selectedModelEntry = cfg.agents.defaults.models[payload.modelId];
 if (selectedModelEntry && typeof selectedModelEntry === "object" && !Array.isArray(selectedModelEntry)) {
   if (canWriteAgentRuntime) {
-    selectedModelEntry.agentRuntime = { id: "openclaw" };
+    selectedModelEntry.agentRuntime = { id: "grokbot" };
   } else {
     delete selectedModelEntry.agentRuntime;
   }
@@ -137,10 +137,10 @@ function Resolve-OpenClawCommand {
   if ($script:OpenClawResolvedCommand) { return $script:OpenClawResolvedCommand }
   $shimCandidates = @()
   if ($env:APPDATA) {
-    $shimCandidates += Join-Path $env:APPDATA 'npm\openclaw.cmd'
-    $shimCandidates += Join-Path $env:APPDATA 'npm\openclaw.ps1'
+    $shimCandidates += Join-Path $env:APPDATA 'npm\grokbot.cmd'
+    $shimCandidates += Join-Path $env:APPDATA 'npm\grokbot.ps1'
   }
-  foreach ($name in @('openclaw.cmd', 'openclaw.ps1', 'openclaw')) {
+  foreach ($name in @('grokbot.cmd', 'grokbot.ps1', 'grokbot')) {
     $command = Get-Command $name -ErrorAction SilentlyContinue | Select-Object -First 1
     if ($command -and $command.Source) { $shimCandidates += $command.Source }
   }
@@ -149,8 +149,8 @@ function Resolve-OpenClawCommand {
     $npmPrefix = (& npm.cmd prefix -g 2>$null | Select-Object -First 1)
   } catch {}
   if ($npmPrefix) {
-    $shimCandidates += Join-Path $npmPrefix 'openclaw.cmd'
-    $shimCandidates += Join-Path $npmPrefix 'openclaw.ps1'
+    $shimCandidates += Join-Path $npmPrefix 'grokbot.cmd'
+    $shimCandidates += Join-Path $npmPrefix 'grokbot.ps1'
   }
   foreach ($candidate in $shimCandidates) {
     if ($candidate -and (Test-Path $candidate)) {
@@ -160,10 +160,10 @@ function Resolve-OpenClawCommand {
   }
   $entryCandidates = @()
   if ($env:APPDATA) {
-    $entryCandidates += Join-Path $env:APPDATA 'npm\node_modules\openclaw\openclaw.mjs'
+    $entryCandidates += Join-Path $env:APPDATA 'npm\node_modules\grokbot\grokbot.mjs'
   }
   if ($npmPrefix) {
-    $entryCandidates += Join-Path $npmPrefix 'node_modules\openclaw\openclaw.mjs'
+    $entryCandidates += Join-Path $npmPrefix 'node_modules\grokbot\grokbot.mjs'
   }
   foreach ($candidate in $entryCandidates) {
     if ($candidate -and (Test-Path $candidate)) {
@@ -171,9 +171,9 @@ function Resolve-OpenClawCommand {
       return $script:OpenClawResolvedCommand
     }
   }
-  throw 'openclaw command not found in PATH, APPDATA npm, or npm global prefix'
+  throw 'grokbot command not found in PATH, APPDATA npm, or npm global prefix'
 }
-function Invoke-OpenClaw {
+function Invoke-GrokBot {
   param([Parameter(ValueFromRemainingArguments = $true)][string[]] $OpenClawArgs)
   $command = Resolve-OpenClawCommand
   $previousErrorActionPreference = $ErrorActionPreference

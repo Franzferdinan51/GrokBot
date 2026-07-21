@@ -1,12 +1,12 @@
-import { normalizeStructuredPromptSection } from "@openclaw/ai/internal/shared";
+import { normalizeStructuredPromptSection } from "@grokbot/ai/internal/shared";
 /**
  * Handles per-attempt thread prompt composition and cache TTL markers.
  */
-import type { OpenClawConfig } from "../../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../../config/types.grokbot.js";
 import { joinPresentTextSegments } from "../../../shared/text/join-segments.js";
 
 /** Custom transcript marker used to preserve cache-TTL pruning state across attempts. */
-const ATTEMPT_CACHE_TTL_CUSTOM_TYPE = "openclaw.cache-ttl";
+const ATTEMPT_CACHE_TTL_CUSTOM_TYPE = "grokbot.cache-ttl";
 
 /**
  * Combines hook-provided system context with the base prompt while preserving

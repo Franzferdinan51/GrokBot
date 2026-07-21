@@ -1,5 +1,5 @@
 // Gateway status command tests cover probe targets, JSON/text output, SSH tunnels, and warnings.
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { GatewayProbeResult } from "../gateway/probe.js";
 import type { GatewayBonjourBeacon } from "../infra/bonjour-discovery.js";
@@ -548,7 +548,7 @@ describe("gateway-status command", () => {
       warnings?: Array<{ code?: string; message?: string }>;
     };
     const warning = parsed.warnings?.find((entry) => entry.code === "no_gateway_reachable");
-    expect(warning?.message).toContain("openclaw gateway status --deep --require-rpc");
+    expect(warning?.message).toContain("grokbot gateway status --deep --require-rpc");
     expect(warning?.message).toContain("ss -ltnp");
   });
 

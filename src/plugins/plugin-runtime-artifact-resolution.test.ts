@@ -23,7 +23,7 @@ function createBundledPluginFixture(): {
   builtSource: string;
 } {
   const packageRoot = fs.realpathSync(
-    fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-plugin-runtime-artifact-")),
+    fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-plugin-runtime-artifact-")),
   );
   tempDirs.push(packageRoot);
   const rootDir = path.join(packageRoot, "extensions", "fixture");
@@ -34,7 +34,7 @@ function createBundledPluginFixture(): {
   fs.writeFileSync(source, "export default { register() {} };\n");
   fs.writeFileSync(builtSource, 'module.exports = { id: "fixture", register() {} };\n');
   fs.writeFileSync(
-    path.join(rootDir, "openclaw.plugin.json"),
+    path.join(rootDir, "grokbot.plugin.json"),
     JSON.stringify({
       id: "fixture",
       configSchema: { type: "object", additionalProperties: false, properties: {} },
@@ -203,7 +203,7 @@ describe("resolvePluginRuntimeArtifact", () => {
 
   it("leaves dist-only installs unchanged because both preferences resolve the built entry", () => {
     const packageRoot = fs.realpathSync(
-      fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-plugin-runtime-dist-only-")),
+      fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-plugin-runtime-dist-only-")),
     );
     tempDirs.push(packageRoot);
     const rootDir = path.join(packageRoot, "dist", "extensions", "fixture");

@@ -1,5 +1,5 @@
 // Xai tests cover x search plugin behavior.
-import { isBillingErrorMessage } from "openclaw/plugin-sdk/test-live";
+import { isBillingErrorMessage } from "grokbot/plugin-sdk/test-live";
 import { describe, expect, it } from "vitest";
 import { createXSearchTool } from "./x-search.js";
 
@@ -34,7 +34,7 @@ describeLive("xai x_search live", () => {
     let result: Awaited<ReturnType<typeof tool.execute>>;
     try {
       result = await tool.execute("x-search:live", {
-        query: "OpenClaw from:steipete",
+        query: "GrokBot from:steipete",
         to_date: "2026-03-28",
       });
     } catch (error) {

@@ -54,8 +54,8 @@ function parsePayload(element: HTMLScriptElement): DiffViewerPayload {
 function getCards(): Array<{ host: HTMLElement; payload: DiffViewerPayload }> {
   const cards: Array<{ host: HTMLElement; payload: DiffViewerPayload }> = [];
   for (const card of document.querySelectorAll<HTMLElement>(".oc-diff-card")) {
-    const host = card.querySelector<HTMLElement>("[data-openclaw-diff-host]");
-    const payloadNode = card.querySelector<HTMLScriptElement>("[data-openclaw-diff-payload]");
+    const host = card.querySelector<HTMLElement>("[data-grokbot-diff-host]");
+    const payloadNode = card.querySelector<HTMLScriptElement>("[data-grokbot-diff-payload]");
     if (!host || !payloadNode) {
       continue;
     }
@@ -339,7 +339,7 @@ async function main(): Promise<void> {
   }
 }
 
-const disableAutoStartKey = Symbol.for("openclaw.diffs.disableAutoStart");
+const disableAutoStartKey = Symbol.for("grokbot.diffs.disableAutoStart");
 
 const autoStartDisabled = Boolean(
   (globalThis as typeof globalThis & Record<symbol, unknown>)[disableAutoStartKey],

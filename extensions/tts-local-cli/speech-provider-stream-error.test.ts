@@ -1,15 +1,15 @@
 // TTS local CLI tests cover the canonical process-wrapper contract.
 import { writeFileSync } from "node:fs";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const { runCommandBufferedMock } = vi.hoisted(() => ({ runCommandBufferedMock: vi.fn() }));
 
-vi.mock("openclaw/plugin-sdk/process-runtime", () => ({
+vi.mock("grokbot/plugin-sdk/process-runtime", () => ({
   runCommandBuffered: runCommandBufferedMock,
 }));
 
-vi.mock("openclaw/plugin-sdk/media-runtime", () => ({
+vi.mock("grokbot/plugin-sdk/media-runtime", () => ({
   runFfmpeg: vi.fn(),
 }));
 

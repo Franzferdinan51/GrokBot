@@ -1,9 +1,9 @@
 import crypto from "node:crypto";
 import type { IncomingMessage, ServerResponse } from "node:http";
 import { Readable } from "node:stream";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import type { OpenClawPluginApi } from "openclaw/plugin-sdk/plugin-entry";
-import { createTestPluginApi } from "openclaw/plugin-sdk/plugin-test-api";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import type { OpenClawPluginApi } from "grokbot/plugin-sdk/plugin-entry";
+import { createTestPluginApi } from "grokbot/plugin-sdk/plugin-test-api";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 type OpenClawPluginHttpRouteParams = Parameters<OpenClawPluginApi["registerHttpRoute"]>[0];
@@ -14,13 +14,13 @@ const issueDeviceBootstrapToken = vi.hoisted(() =>
 const resolveTelegramMiniAppUrls = vi.hoisted(() =>
   vi.fn(async () => ({
     pageUrl: "https://host.tailnet.ts.net/__openclaw_tg_miniapp/",
-    controlUiUrl: "https://host.tailnet.ts.net/openclaw",
+    controlUiUrl: "https://host.tailnet.ts.net/grokbot",
     gatewayUrl: "wss://host.tailnet.ts.net",
   })),
 );
 
-vi.mock("openclaw/plugin-sdk/device-bootstrap", async (importOriginal) => ({
-  ...(await importOriginal<typeof import("openclaw/plugin-sdk/device-bootstrap")>()),
+vi.mock("grokbot/plugin-sdk/device-bootstrap", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("grokbot/plugin-sdk/device-bootstrap")>()),
   issueDeviceBootstrapToken,
 }));
 
@@ -147,7 +147,7 @@ describe("registerTelegramMiniAppRoutes", () => {
     expect(res.statusCode).toBe(200);
     expect(JSON.parse(res.body)).toEqual({
       bootstrapToken: "issued",
-      controlUiUrl: "https://host.tailnet.ts.net/openclaw",
+      controlUiUrl: "https://host.tailnet.ts.net/grokbot",
       gatewayUrl: "wss://host.tailnet.ts.net",
     });
     expect(issueDeviceBootstrapToken).toHaveBeenCalledWith({

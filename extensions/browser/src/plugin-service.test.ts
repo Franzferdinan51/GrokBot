@@ -6,7 +6,7 @@ import { createBrowserPluginService } from "./plugin-service.js";
 
 const SERVICE_CONTEXT = {
   config: {},
-  stateDir: "/tmp/openclaw-state",
+  stateDir: "/tmp/grokbot-state",
   logger: console,
 };
 

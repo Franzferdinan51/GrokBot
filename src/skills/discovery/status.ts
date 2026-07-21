@@ -1,6 +1,6 @@
 // Skill discovery status helpers summarize installed, workspace, and bundled skills.
 import path from "node:path";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import { evaluateEntryRequirementsForCurrentPlatform } from "../../shared/entry-status.js";
 import type { RequirementConfigCheck, Requirements } from "../../shared/requirements.js";
 import { CONFIG_DIR } from "../../utils.js";
@@ -298,7 +298,7 @@ function buildSkillStatus(
   const userInvocable = indexed.userInvocable;
 
   // Source ownership survives canonicalization of symlinked managed installs.
-  const isGlobalManagedSkill = !bundled && skillSource === "openclaw-managed";
+  const isGlobalManagedSkill = !bundled && skillSource === "grokbot-managed";
   const clawhub =
     workspaceDir && !bundled
       ? resolveClawHubSkillStatusLinkSync({

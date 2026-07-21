@@ -1,8 +1,8 @@
 import { createHash } from "node:crypto";
 // Memory Core plugin module implements search manager behavior.
 import fs from "node:fs/promises";
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
-import { createLazyRuntimeModule } from "openclaw/plugin-sdk/lazy-runtime";
+import { formatErrorMessage } from "grokbot/plugin-sdk/error-runtime";
+import { createLazyRuntimeModule } from "grokbot/plugin-sdk/lazy-runtime";
 import {
   createSubsystemLogger,
   resolveAgentContextLimits,
@@ -10,11 +10,11 @@ import {
   resolveGlobalSingleton,
   resolveMemorySearchSyncConfig,
   type OpenClawConfig,
-} from "openclaw/plugin-sdk/memory-core-host-engine-foundation";
+} from "grokbot/plugin-sdk/memory-core-host-engine-foundation";
 import {
   checkQmdBinaryAvailability,
   resolveQmdBinaryUnavailableReason,
-} from "openclaw/plugin-sdk/memory-core-host-engine-qmd";
+} from "grokbot/plugin-sdk/memory-core-host-engine-qmd";
 import {
   resolveMemoryBackendConfig,
   type MemoryEmbeddingProbeResult,
@@ -23,9 +23,9 @@ import {
   type MemorySource,
   type MemorySyncParams,
   type ResolvedQmdConfig,
-} from "openclaw/plugin-sdk/memory-core-host-engine-storage";
-import type { PluginStateLeaseRunner } from "openclaw/plugin-sdk/plugin-state-runtime";
-import { normalizeAgentId } from "openclaw/plugin-sdk/routing";
+} from "grokbot/plugin-sdk/memory-core-host-engine-storage";
+import type { PluginStateLeaseRunner } from "grokbot/plugin-sdk/plugin-state-runtime";
+import { normalizeAgentId } from "grokbot/plugin-sdk/routing";
 import {
   resolveMemoryCoreLocalServiceHostIdentity,
   type MemoryCoreAcquireLocalService,
@@ -38,7 +38,7 @@ import {
   type MemorySearchDeadlineControlOptions,
 } from "./search-deadline.js";
 
-const MEMORY_SEARCH_MANAGER_CACHE_KEY = Symbol.for("openclaw.memorySearchManagerCache");
+const MEMORY_SEARCH_MANAGER_CACHE_KEY = Symbol.for("grokbot.memorySearchManagerCache");
 type Maybe<T> = T | null;
 type QmdManagerRuntimeConfig = {
   workspaceDir: string;

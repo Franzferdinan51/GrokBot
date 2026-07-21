@@ -9,8 +9,8 @@ import type {
   SnapshotRef,
   SnapshotSummary,
 } from "../snapshot/snapshot-provider.js";
-import { resolveOpenClawAgentSqlitePath } from "../state/openclaw-agent-db.paths.js";
-import { resolveOpenClawStateSqlitePath } from "../state/openclaw-state-db.paths.js";
+import { resolveOpenClawAgentSqlitePath } from "../state/grokbot-agent-db.paths.js";
+import { resolveOpenClawStateSqlitePath } from "../state/grokbot-state-db.paths.js";
 import { resolveUserPath, shortenHomePath } from "../utils.js";
 
 type BackupSqliteCreateOptions = {

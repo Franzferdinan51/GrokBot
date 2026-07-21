@@ -1,4 +1,4 @@
-import { embeddedAgentLog } from "openclaw/plugin-sdk/agent-harness-runtime";
+import { embeddedAgentLog } from "grokbot/plugin-sdk/agent-harness-runtime";
 import {
   applyCodexTurnNotificationState,
   isTerminalCodexTurnNotificationForTurn,

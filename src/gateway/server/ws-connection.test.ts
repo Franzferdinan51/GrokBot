@@ -129,7 +129,7 @@ describe("attachGatewayWsConnectionHandler", () => {
     };
     const client = {
       socket,
-      connect: { client: { id: "openclaw-worker", mode: "worker" } },
+      connect: { client: { id: "grokbot-worker", mode: "worker" } },
       worker: { environmentId: "worker-1" },
     };
     expect(handler.setClient(client as never)).toBe(true);
@@ -217,7 +217,7 @@ describe("attachGatewayWsConnectionHandler", () => {
 
     const registered = handlerParams.setClient({
       socket,
-      connect: { client: { id: "openclaw-control-ui", mode: "webchat" } },
+      connect: { client: { id: "grokbot-control-ui", mode: "webchat" } },
       connId: "late-client",
       usesSharedGatewayAuth: false,
     });
@@ -238,7 +238,7 @@ describe("attachGatewayWsConnectionHandler", () => {
     expect(
       handlerParams.setClient({
         socket,
-        connect: { client: { id: "openclaw-control-ui", mode: "webchat" } },
+        connect: { client: { id: "grokbot-control-ui", mode: "webchat" } },
         connId: "ping-client",
         usesSharedGatewayAuth: false,
       }),
@@ -352,7 +352,7 @@ describe("attachGatewayWsConnectionHandler", () => {
     "demotes local app startup abort code %i before the first frame",
     async (closeCode) => {
       const { socket, logWsControl } = await connectTestWs({
-        headers: { "user-agent": "OpenClaw/2607000290 CFNetwork/3860 Darwin/25" },
+        headers: { "user-agent": "GrokBot/2607000290 CFNetwork/3860 Darwin/25" },
         options: { isStartupPending: () => true },
       });
 
@@ -373,7 +373,7 @@ describe("attachGatewayWsConnectionHandler", () => {
     const logWsControl = createGatewayWsTestLogger();
     const { socket } = attachGatewayWsForTest({
       attach: attachGatewayWsConnectionHandler,
-      headers: { "user-agent": "OpenClaw/2607000290 CFNetwork/3860 Darwin/25" },
+      headers: { "user-agent": "GrokBot/2607000290 CFNetwork/3860 Darwin/25" },
       options: { isStartupPending: () => true, logWsControl: logWsControl as never },
     });
 
@@ -418,7 +418,7 @@ describe("attachGatewayWsConnectionHandler", () => {
     expect(
       handlerParams.setClient({
         socket,
-        connect: { client: { id: "openclaw-control-ui", mode: "webchat" } },
+        connect: { client: { id: "grokbot-control-ui", mode: "webchat" } },
         connId: "ready-client",
         usesSharedGatewayAuth: false,
       } as never),
@@ -442,7 +442,7 @@ describe("attachGatewayWsConnectionHandler", () => {
     expect(
       handlerParams.setClient({
         socket,
-        connect: { client: { id: "openclaw-control-ui", mode: "ui" } },
+        connect: { client: { id: "grokbot-control-ui", mode: "ui" } },
         connId: "conn-authenticated-user",
         authenticatedUserId: "alice@example.com",
         usesSharedGatewayAuth: false,
@@ -478,7 +478,7 @@ describe("attachGatewayWsConnectionHandler", () => {
         socket,
         connect: {
           role: "node",
-          client: { id: "openclaw-macos", mode: "node" },
+          client: { id: "grokbot-macos", mode: "node" },
           device: { id: "node-1" },
         },
         connId: "conn-old",

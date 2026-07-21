@@ -1,7 +1,7 @@
 /** Doctor repair for main sessions accidentally occupied by synthetic heartbeat transcripts. */
 import fs from "node:fs";
 import { StringDecoder } from "node:string_decoder";
-import { asNullableObjectRecord } from "@openclaw/normalization-core/record-coerce";
+import { asNullableObjectRecord } from "@grokbot/normalization-core/record-coerce";
 import type { note } from "../../packages/terminal-core/src/note.js";
 import { isHeartbeatOkResponse, isHeartbeatUserMessage } from "../auto-reply/heartbeat-filter.js";
 import { formatSessionArchiveTimestamp } from "../config/sessions/artifacts.js";
@@ -12,7 +12,7 @@ import {
 } from "../config/sessions/paths.js";
 import { updateSessionStore } from "../config/sessions/store.js";
 import type { SessionEntry } from "../config/sessions/types.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { parseAgentSessionKey } from "../sessions/session-key-utils.js";
 import { clearTuiLastSessionPointers } from "../tui/tui-last-session.js";
 
@@ -262,7 +262,7 @@ function moveHeartbeatMainSessionEntry(params: {
 
 if (process.env.VITEST || process.env.NODE_ENV === "test") {
   (globalThis as Record<PropertyKey, unknown>)[
-    Symbol.for("openclaw.doctorHeartbeatMainSessionRepairTestApi")
+    Symbol.for("grokbot.doctorHeartbeatMainSessionRepairTestApi")
   ] = {
     TRANSCRIPT_RECORD_MAX_CHARS,
     moveHeartbeatMainSessionEntry,

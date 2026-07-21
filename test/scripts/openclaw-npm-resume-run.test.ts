@@ -3,13 +3,13 @@ import {
   resolveOpenClawNpmResumeRun,
   runOpenClawNpmResumeGh,
   validateOpenClawNpmResumeRun,
-} from "../../scripts/openclaw-npm-resume-run.mjs";
-import type { OpenClawNpmResumeValidationInput } from "../../scripts/openclaw-npm-resume-run.mjs";
+} from "../../scripts/grokbot-npm-resume-run.mjs";
+import type { OpenClawNpmResumeValidationInput } from "../../scripts/grokbot-npm-resume-run.mjs";
 
 const SHA = "a".repeat(40);
 const TAG_OBJECT_SHA = "b".repeat(40);
 const BRANCH = `release-publish/${SHA.slice(0, 12)}-123`;
-const URL = "https://github.com/openclaw/openclaw/actions/runs/456";
+const URL = "https://github.com/grokbot/grokbot/actions/runs/456";
 
 function fixture(
   overrides: Partial<OpenClawNpmResumeValidationInput> = {},
@@ -24,7 +24,7 @@ function fixture(
       head_branch: BRANCH,
       head_sha: SHA,
       html_url: URL,
-      path: `.github/workflows/openclaw-npm-release.yml@refs/tags/${BRANCH}`,
+      path: `.github/workflows/grokbot-npm-release.yml@refs/tags/${BRANCH}`,
       workflow_id: 101,
     },
     tag: {
@@ -36,18 +36,18 @@ function fixture(
   };
 }
 
-describe("openclaw npm resume run identity", () => {
+describe("grokbot npm resume run identity", () => {
   it("bounds each GitHub lookup", () => {
     const execFileSyncImpl = vi.fn(() => "result");
 
     expect(
-      runOpenClawNpmResumeGh(["api", "repos/openclaw/openclaw/actions/runs/456"], {
+      runOpenClawNpmResumeGh(["api", "repos/grokbot/grokbot/actions/runs/456"], {
         execFileSyncImpl,
       }),
     ).toBe("result");
     expect(execFileSyncImpl).toHaveBeenCalledWith(
       "gh",
-      ["api", "repos/openclaw/openclaw/actions/runs/456"],
+      ["api", "repos/grokbot/grokbot/actions/runs/456"],
       {
         encoding: "utf8",
         killSignal: "SIGKILL",
@@ -63,7 +63,7 @@ describe("openclaw npm resume run identity", () => {
     });
 
     expect(() =>
-      runOpenClawNpmResumeGh(["api", "repos/openclaw/openclaw/actions/runs/456"], {
+      runOpenClawNpmResumeGh(["api", "repos/grokbot/grokbot/actions/runs/456"], {
         execFileSyncImpl: () => {
           throw timeoutError;
         },
@@ -121,15 +121,15 @@ describe("openclaw npm resume run identity", () => {
 
   it("loads the exact run, workflow, signed tag, ancestry, and approval job", () => {
     const responses = new Map<string, unknown>([
-      [`api repos/openclaw/openclaw/actions/runs/456 --method GET`, fixture().run],
+      [`api repos/grokbot/grokbot/actions/runs/456 --method GET`, fixture().run],
       [
-        `api repos/openclaw/openclaw/actions/workflows/openclaw-npm-release.yml --method GET`,
+        `api repos/grokbot/grokbot/actions/workflows/grokbot-npm-release.yml --method GET`,
         { id: 101 },
       ],
-      [`api repos/openclaw/openclaw/git/ref/tags/${BRANCH} --method GET`, fixture().tagRef],
-      [`api repos/openclaw/openclaw/git/tags/${TAG_OBJECT_SHA} --method GET`, fixture().tag],
-      [`api repos/openclaw/openclaw/compare/${SHA}...main --method GET`, { status: "identical" }],
-      [`run view 456 --repo openclaw/openclaw --json jobs --jq .jobs`, fixture().jobs],
+      [`api repos/grokbot/grokbot/git/ref/tags/${BRANCH} --method GET`, fixture().tagRef],
+      [`api repos/grokbot/grokbot/git/tags/${TAG_OBJECT_SHA} --method GET`, fixture().tag],
+      [`api repos/grokbot/grokbot/compare/${SHA}...main --method GET`, { status: "identical" }],
+      [`run view 456 --repo grokbot/grokbot --json jobs --jq .jobs`, fixture().jobs],
     ]);
     const runGh = vi.fn((args: string[]) => {
       const response = responses.get(args.join(" "));
@@ -140,7 +140,7 @@ describe("openclaw npm resume run identity", () => {
     });
 
     expect(
-      resolveOpenClawNpmResumeRun({ repo: "openclaw/openclaw", runGh, runId: "456" }),
+      resolveOpenClawNpmResumeRun({ repo: "grokbot/grokbot", runGh, runId: "456" }),
     ).toMatchObject({ workflowRef: `refs/tags/${BRANCH}`, workflowSha: SHA });
     expect(runGh).toHaveBeenCalledTimes(6);
   });

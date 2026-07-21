@@ -1,11 +1,11 @@
-// OpenClaw NPM Publish tests cover publish wrapper argument safety.
+// GrokBot NPM Publish tests cover publish wrapper argument safety.
 import { execFileSync, spawnSync } from "node:child_process";
 import { copyFileSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 
-const scriptPath = "scripts/openclaw-npm-publish.sh";
+const scriptPath = "scripts/grokbot-npm-publish.sh";
 const tempDirs: string[] = [];
 
 function makeTempDir(prefix: string): string {
@@ -33,8 +33,8 @@ function makeReleaseCheckout(root: string, version: string): string {
   writeFileSync(path.join(checkout, "package.json"), JSON.stringify({ version }), "utf8");
   copyFileSync(scriptPath, path.join(checkout, scriptPath));
   copyFileSync(
-    "scripts/openclaw-npm-extended-stable-release.mjs",
-    path.join(checkout, "scripts/openclaw-npm-extended-stable-release.mjs"),
+    "scripts/grokbot-npm-extended-stable-release.mjs",
+    path.join(checkout, "scripts/grokbot-npm-extended-stable-release.mjs"),
   );
   mkdirSync(path.join(scriptsDir, "lib"));
   copyFileSync(
@@ -46,7 +46,7 @@ function makeReleaseCheckout(root: string, version: string): string {
 
 function makePackageTarball(root: string, packageJson?: string): string {
   const packageDir = path.join(root, "package");
-  const tarball = path.join(root, "openclaw.tgz");
+  const tarball = path.join(root, "grokbot.tgz");
   mkdirSync(packageDir);
   if (packageJson === undefined) {
     writeFileSync(path.join(packageDir, "README.md"), "missing package metadata", "utf8");
@@ -63,13 +63,13 @@ afterEach(() => {
   }
 });
 
-describe("openclaw npm publish wrapper", () => {
+describe("grokbot npm publish wrapper", () => {
   it("prints help without resolving release metadata", () => {
     const result = runPublishWrapper(["--help"]);
 
     expect(result.status).toBe(0);
     expect(result.stdout.trim()).toBe(
-      "usage: bash scripts/openclaw-npm-publish.sh --publish [package.tgz]",
+      "usage: bash scripts/grokbot-npm-publish.sh --publish [package.tgz]",
     );
     expect(result.stderr).toBe("");
   });
@@ -80,7 +80,7 @@ describe("openclaw npm publish wrapper", () => {
     expect(result.status).toBe(2);
     expect(result.stdout).toBe("");
     expect(result.stderr.trim()).toBe(
-      "usage: bash scripts/openclaw-npm-publish.sh --publish [package.tgz]",
+      "usage: bash scripts/grokbot-npm-publish.sh --publish [package.tgz]",
     );
   });
 
@@ -93,8 +93,8 @@ describe("openclaw npm publish wrapper", () => {
   });
 
   it("rejects extra publish arguments before npm publish", () => {
-    const tempRoot = makeTempDir("openclaw-npm-publish-");
-    const tarball = path.join(tempRoot, "openclaw.tgz");
+    const tempRoot = makeTempDir("grokbot-npm-publish-");
+    const tarball = path.join(tempRoot, "grokbot.tgz");
     writeFileSync(tarball, "placeholder", "utf8");
 
     const result = runPublishWrapper(["--publish", tarball, "extra"]);
@@ -105,7 +105,7 @@ describe("openclaw npm publish wrapper", () => {
   });
 
   it.each(["beta", "latest"])("publishes the prepared tarball to the %s dist-tag", (distTag) => {
-    const tempRoot = makeTempDir("openclaw-npm-publish-");
+    const tempRoot = makeTempDir("grokbot-npm-publish-");
     const binDir = path.join(tempRoot, "bin");
     const packageVersion = distTag === "beta" ? "2026.5.32-beta.1" : "2026.5.32";
     const checkout = makeReleaseCheckout(tempRoot, packageVersion);
@@ -133,7 +133,7 @@ describe("openclaw npm publish wrapper", () => {
   });
 
   it("rejects a tarball whose package version differs from the checkout", () => {
-    const tempRoot = makeTempDir("openclaw-npm-publish-");
+    const tempRoot = makeTempDir("grokbot-npm-publish-");
     const packageVersion = JSON.parse(readFileSync("package.json", "utf8")).version as string;
     const tarballVersion = `${packageVersion}-mismatch`;
     const tarball = makePackageTarball(tempRoot, JSON.stringify({ version: tarballVersion }));
@@ -150,9 +150,9 @@ describe("openclaw npm publish wrapper", () => {
   it.each([
     ["missing package.json", undefined, "missing a readable package/package.json"],
     ["malformed package.json", "{not-json", "package/package.json is malformed"],
-    ["missing version", JSON.stringify({ name: "openclaw" }), "has no valid version"],
+    ["missing version", JSON.stringify({ name: "grokbot" }), "has no valid version"],
   ])("rejects a tarball with %s", (_label, packageJson, expectedError) => {
-    const tempRoot = makeTempDir("openclaw-npm-publish-");
+    const tempRoot = makeTempDir("grokbot-npm-publish-");
     const tarball = makePackageTarball(tempRoot, packageJson);
     const result = runPublishWrapper(["--publish", tarball], {
       OPENCLAW_NPM_PUBLISH_TAG: "beta",
@@ -163,7 +163,7 @@ describe("openclaw npm publish wrapper", () => {
   });
 
   it("rejects publishing the current pre-.33 final version to extended-stable", () => {
-    const tempRoot = makeTempDir("openclaw-npm-publish-");
+    const tempRoot = makeTempDir("grokbot-npm-publish-");
     const checkout = makeReleaseCheckout(tempRoot, "2026.5.32");
     const result = runPublishWrapper(
       ["--publish"],
@@ -180,7 +180,7 @@ describe("openclaw npm publish wrapper", () => {
   });
 
   it("publishes a pre-.33 final version to extended-stable with the explicit bypass", () => {
-    const tempRoot = makeTempDir("openclaw-npm-publish-");
+    const tempRoot = makeTempDir("grokbot-npm-publish-");
     const binDir = path.join(tempRoot, "bin");
     const checkout = makeReleaseCheckout(tempRoot, "2026.5.32");
     const npmLog = path.join(tempRoot, "npm.log");

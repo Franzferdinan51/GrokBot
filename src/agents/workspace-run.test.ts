@@ -79,7 +79,7 @@ describe("resolveRunWorkspaceDir", () => {
   });
 
   it("falls back to built-in main workspace when config is unavailable", () => {
-    const workspaceDir = path.join(path.sep, "srv", "openclaw-workspace");
+    const workspaceDir = path.join(path.sep, "srv", "grokbot-workspace");
     const result = resolveRunWorkspaceDir({
       workspaceDir: null,
       sessionKey: "agent:main:subagent:test",
@@ -108,7 +108,7 @@ describe("resolveRunWorkspaceDir", () => {
       ...process.env,
       HOME: "/home/runner",
       OPENCLAW_HOME: undefined,
-      OPENCLAW_STATE_DIR: "/tmp/openclaw-state",
+      OPENCLAW_STATE_DIR: "/tmp/grokbot-state",
     } satisfies NodeJS.ProcessEnv;
     const result = resolveRunWorkspaceDir({
       workspaceDir: undefined,
@@ -120,7 +120,7 @@ describe("resolveRunWorkspaceDir", () => {
 
     expect(result.agentId).toBe("research");
     expect(result.agentIdSource).toBe("explicit");
-    expect(result.workspaceDir).toBe(path.resolve("/tmp/openclaw-state", "workspace-research"));
+    expect(result.workspaceDir).toBe(path.resolve("/tmp/grokbot-state", "workspace-research"));
   });
 
   it("throws for malformed agent session keys even when config has a default agent", () => {

@@ -1,6 +1,6 @@
 // Imported by agent.test.ts to keep its mocked suite in one Vitest module graph.
 import fs from "node:fs/promises";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { ErrorCodes } from "../../../packages/gateway-protocol/src/index.js";
 import type { SessionEntry } from "../../config/sessions.js";
@@ -53,7 +53,7 @@ describe("gateway agent handler", () => {
     setDateOnlyFakeClockActive(true);
     vi.setSystemTime(now);
 
-    await withTempDir({ prefix: "openclaw-gateway-failed-default-session-file-" }, async (root) => {
+    await withTempDir({ prefix: "grokbot-gateway-failed-default-session-file-" }, async (root) => {
       const sessionsDir = `${root}/sessions`;
       await fs.mkdir(sessionsDir, { recursive: true });
       await fs.writeFile(`${sessionsDir}/failed-present-default-session-id.jsonl`, "", "utf8");
@@ -122,7 +122,7 @@ describe("gateway agent handler", () => {
     setDateOnlyFakeClockActive(true);
     vi.setSystemTime(now);
 
-    await withTempDir({ prefix: "openclaw-gateway-stale-failed-session-" }, async (root) => {
+    await withTempDir({ prefix: "grokbot-gateway-stale-failed-session-" }, async (root) => {
       const sessionsDir = `${root}/sessions`;
       const storePath = `${sessionsDir}/sessions.json`;
       await fs.mkdir(sessionsDir, { recursive: true });
@@ -199,7 +199,7 @@ describe("gateway agent handler", () => {
     setDateOnlyFakeClockActive(true);
     vi.setSystemTime(now);
 
-    await withTempDir({ prefix: "openclaw-gateway-failed-session-file-" }, async (root) => {
+    await withTempDir({ prefix: "grokbot-gateway-failed-session-file-" }, async (root) => {
       const sessionsDir = `${root}/sessions`;
       await fs.mkdir(sessionsDir, { recursive: true });
       await fs.writeFile(`${sessionsDir}/relative-present.jsonl`, "", "utf8");
@@ -845,7 +845,7 @@ describe("gateway agent handler", () => {
 
   it("recovers terminal failed agent API sessions without rotating the session id", async () => {
     const sessionId = "failed-agent-session";
-    await withTempDir({ prefix: "openclaw-gateway-terminal-recovery-" }, async (root) => {
+    await withTempDir({ prefix: "grokbot-gateway-terminal-recovery-" }, async (root) => {
       const sessionsDir = `${root}/sessions`;
       await fs.mkdir(sessionsDir, { recursive: true });
       await fs.writeFile(`${sessionsDir}/${sessionId}.jsonl`, "", "utf8");
@@ -1742,7 +1742,7 @@ describe("gateway agent handler", () => {
       modelProvider: "openai",
       model: "gpt-5.4",
       contextTokens: 128_000,
-      agentHarnessId: "openclaw",
+      agentHarnessId: "grokbot",
       cliSessionBindings: { "openai-cli": { sessionId: "native-a" } },
       cronRunContinuation: {
         lifecycleRevision: "revision-1",
@@ -1809,7 +1809,7 @@ describe("gateway agent handler", () => {
         modelProvider: "openai",
         model: "gpt-5.4",
         contextTokens: 128_000,
-        agentHarnessId: "openclaw",
+        agentHarnessId: "grokbot",
         cliSessionBindings: { "openai-cli": { sessionId: "native-a" } },
       });
       expect(

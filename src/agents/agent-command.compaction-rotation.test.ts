@@ -13,7 +13,7 @@ import {
   formatSqliteSessionFileMarker,
   parseSqliteSessionFileMarker,
 } from "../config/sessions/sqlite-marker.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { rotateAgentEventLifecycleGeneration } from "../infra/agent-events.js";
 import type { runAgentAttempt } from "./command/attempt-execution.runtime.js";
 import type { EmbeddedAgentRunResult } from "./embedded-agent.js";
@@ -71,11 +71,11 @@ vi.mock("./agent-scope.js", async () => {
     markAutoFallbackPrimaryProbe: vi.fn(),
     resolveAutoFallbackPrimaryProbe: () => undefined,
     resolveAgentConfig: () => undefined,
-    resolveAgentDir: () => state.agentDir ?? "/tmp/openclaw-agent",
+    resolveAgentDir: () => state.agentDir ?? "/tmp/grokbot-agent",
     resolveDefaultAgentId: () => "main",
     resolveEffectiveModelFallbacks: () => undefined,
     resolveSessionAgentId: () => "main",
-    resolveAgentWorkspaceDir: () => state.workspaceDir ?? "/tmp/openclaw-workspace",
+    resolveAgentWorkspaceDir: () => state.workspaceDir ?? "/tmp/grokbot-workspace",
   };
 });
 
@@ -208,7 +208,7 @@ beforeEach(async () => {
       return { deliverySucceeded: true };
     },
   );
-  const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-rotation-e2e-"));
+  const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-rotation-e2e-"));
   state.workspaceDir = path.join(tmpDir, "workspace");
   state.agentDir = path.join(tmpDir, "agent");
   await fs.mkdir(state.workspaceDir, { recursive: true });

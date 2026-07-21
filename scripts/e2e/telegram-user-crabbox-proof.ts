@@ -1,5 +1,5 @@
 #!/usr/bin/env -S node --import tsx
-// Telegram User Crabbox Proof script supports OpenClaw repository automation.
+// Telegram User Crabbox Proof script supports GrokBot repository automation.
 
 import {
   type ChildProcess,
@@ -12,7 +12,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { clampTimerTimeoutMs } from "@openclaw/normalization-core/number-coercion";
+import { clampTimerTimeoutMs } from "@grokbot/normalization-core/number-coercion";
 import { sleep } from "../lib/sleep.mjs";
 import { resolveWindowsTaskkillPath } from "../lib/windows-taskkill.mjs";
 import { createPnpmRunnerSpawnSpec } from "../pnpm-runner.mjs";
@@ -169,7 +169,7 @@ export const COMMAND_TIMEOUT_MS = 30 * 60 * 1000;
 const COMMAND_TIMEOUT_KILL_GRACE_MS = 5_000;
 const COMMAND_PROCESS_TREE_EXIT_POLL_MS = 25;
 export const REMOTE_SETUP_COMMAND_TIMEOUT_MS = 90 * 60 * 1000;
-const REMOTE_ROOT = "/tmp/openclaw-telegram-user-crabbox";
+const REMOTE_ROOT = "/tmp/grokbot-telegram-user-crabbox";
 const CREDENTIAL_SCRIPT = fileURLToPath(new URL("./telegram-user-credential.ts", import.meta.url));
 export function readTelegramUserProofLogTailBytes(env: NodeJS.ProcessEnv = process.env): number {
   return readPositiveIntEnv("OPENCLAW_TELEGRAM_USER_PROOF_LOG_TAIL_BYTES", 256 * 1024, env);
@@ -193,7 +193,7 @@ const TELEGRAM_PROOF_CROP = {
 function usageText() {
   return [
     "Usage:",
-    "  node --import tsx scripts/e2e/telegram-user-crabbox-proof.ts [probe] [--text /status] [--expect OpenClaw]",
+    "  node --import tsx scripts/e2e/telegram-user-crabbox-proof.ts [probe] [--text /status] [--expect GrokBot]",
     "  node --import tsx scripts/e2e/telegram-user-crabbox-proof.ts start [--tdlib-url <url>]",
     "  node --import tsx scripts/e2e/telegram-user-crabbox-proof.ts send --session <session.json> --text <text>",
     "  node --import tsx scripts/e2e/telegram-user-crabbox-proof.ts run --session <session.json> -- <remote command>",
@@ -219,7 +219,7 @@ function usageText() {
     "  --pr <number>                 Pull request number for publish.",
     "  --record-fps <fps>             Desktop recording frames per second. Default: 24.",
     "  --record-seconds <seconds>    Desktop video duration. Default: 35.",
-    "  --repo <owner/name>           GitHub repo for publish. Default: openclaw/openclaw.",
+    "  --repo <owner/name>           GitHub repo for publish. Default: grokbot/grokbot.",
     "  --session <path>              Session file from start. Default: <output-dir>/session.json.",
     "  --summary <text>              Artifact publish summary.",
     "  --full-artifacts              Publish all session artifacts. Default publishes only the motion GIF.",
@@ -307,9 +307,9 @@ export function parseArgs(argvInput: string[]): Options {
     command,
     crabboxBin: trimToValue(process.env.OPENCLAW_TELEGRAM_USER_CRABBOX_BIN) ?? "crabbox",
     desktopChatTitle:
-      trimToValue(process.env.OPENCLAW_TELEGRAM_USER_DESKTOP_CHAT_TITLE) ?? "OpenClaw Testing",
+      trimToValue(process.env.OPENCLAW_TELEGRAM_USER_DESKTOP_CHAT_TITLE) ?? "GrokBot Testing",
     dryRun: false,
-    expect: ["OpenClaw"],
+    expect: ["GrokBot"],
     gatewayPort: 19_879,
     idleTimeout: "60m",
     keepBox: false,
@@ -322,7 +322,7 @@ export function parseArgs(argvInput: string[]): Options {
     previewWidth: 1920,
     provider: process.env.OPENCLAW_TELEGRAM_USER_CRABBOX_PROVIDER?.trim() || "aws",
     publishFullArtifacts: false,
-    publishRepo: "openclaw/openclaw",
+    publishRepo: "grokbot/grokbot",
     recordFps: 24,
     recordSeconds: 35,
     remoteCommand: [],
@@ -474,7 +474,7 @@ function repoRoot() {
     !fs.existsSync(path.join(cwd, "package.json")) ||
     !fs.existsSync(path.join(cwd, "scripts/e2e/mock-openai-server.mjs"))
   ) {
-    throw new Error("Run from the OpenClaw repo root.");
+    throw new Error("Run from the GrokBot repo root.");
   }
   return cwd;
 }
@@ -559,7 +559,7 @@ function gatewayEnv(params: {
 }) {
   return {
     ...childProcessBaseEnv(),
-    OPENAI_API_KEY: "sk-openclaw-e2e-mock",
+    OPENAI_API_KEY: "sk-grokbot-e2e-mock",
     OPENCLAW_CONFIG_PATH: params.configPath,
     ...(params.gatewayPassword ? { OPENCLAW_GATEWAY_PASSWORD: params.gatewayPassword } : {}),
     OPENCLAW_STATE_DIR: params.stateDir,
@@ -586,7 +586,7 @@ export function createOpenClawGatewaySpawnSpec(params: {
     nodeExecPath: params.nodeExecPath,
     npmExecPath: params.npmExecPath,
     platform: params.platform,
-    pnpmArgs: ["openclaw", "gateway", "--port", String(params.gatewayPort)],
+    pnpmArgs: ["grokbot", "gateway", "--port", String(params.gatewayPort)],
   });
   return {
     args: spec.args,
@@ -1143,12 +1143,12 @@ export function writeSutConfig(params: {
   repoRoot?: string;
   testerId: string;
 }) {
-  const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-tg-crabbox-sut-"));
+  const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-tg-crabbox-sut-"));
   const stateDir = path.join(tempRoot, "state");
   const workspace = path.join(tempRoot, "workspace");
   fs.mkdirSync(stateDir, { recursive: true });
   fs.mkdirSync(workspace, { recursive: true });
-  const configPath = path.join(tempRoot, "openclaw.json");
+  const configPath = path.join(tempRoot, "grokbot.json");
   const config = {
     agents: {
       defaults: {
@@ -1823,7 +1823,7 @@ download_file() {
 mkdir -p "$root"
 tar -xzf "$root/state.tgz" -C "$root"
 run_setup_step "apt-get update" "$apt_timeout" sudo apt-get update -y
-run_setup_step "apt-get install" "$apt_timeout" sudo env DEBIAN_FRONTEND=noninteractive apt-get install -y curl git cmake g++ make zlib1g-dev libssl-dev python3 ffmpeg scrot xz-utils tar wmctrl xdotool x11-utils zbar-tools libopengl0 libxcb-cursor0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render-util0 libxcb-shape0 libxcb-xfixes0 libxcb-xinerama0 libxkbcommon-x11-0 >/tmp/openclaw-telegram-apt.log
+run_setup_step "apt-get install" "$apt_timeout" sudo env DEBIAN_FRONTEND=noninteractive apt-get install -y curl git cmake g++ make zlib1g-dev libssl-dev python3 ffmpeg scrot xz-utils tar wmctrl xdotool x11-utils zbar-tools libopengl0 libxcb-cursor0 libxcb-icccm4 libxcb-image0 libxcb-keysyms1 libxcb-randr0 libxcb-render-util0 libxcb-shape0 libxcb-xfixes0 libxcb-xinerama0 libxkbcommon-x11-0 >/tmp/grokbot-telegram-apt.log
 if ! command -v python3 >/dev/null 2>&1; then
   echo "python3 is required" >&2
   exit 127
@@ -2461,10 +2461,10 @@ async function startSession(root: string, opts: Options, outputDir: string) {
       },
       webvnc: `${opts.crabboxBin} webvnc --provider ${opts.provider} --target ${opts.target} --id ${leaseId} --open`,
       commands: {
-        send: `openclaw-telegram-user-crabbox-proof send --session ${path.relative(root, pathname)} --text '/status'`,
-        view: `openclaw-telegram-user-crabbox-proof view --session ${path.relative(root, pathname)} --message-id <message-id>`,
-        run: `openclaw-telegram-user-crabbox-proof run --session ${path.relative(root, pathname)} -- bash -lc 'source ${REMOTE_ROOT}/env.sh && python3 ${REMOTE_ROOT}/user-driver.py transcript --limit 20 --json'`,
-        finish: `openclaw-telegram-user-crabbox-proof finish --session ${path.relative(root, pathname)} --preview-crop telegram-window`,
+        send: `grokbot-telegram-user-crabbox-proof send --session ${path.relative(root, pathname)} --text '/status'`,
+        view: `grokbot-telegram-user-crabbox-proof view --session ${path.relative(root, pathname)} --message-id <message-id>`,
+        run: `grokbot-telegram-user-crabbox-proof run --session ${path.relative(root, pathname)} -- bash -lc 'source ${REMOTE_ROOT}/env.sh && python3 ${REMOTE_ROOT}/user-driver.py transcript --limit 20 --json'`,
+        finish: `grokbot-telegram-user-crabbox-proof finish --session ${path.relative(root, pathname)} --preview-crop telegram-window`,
       },
     };
   } catch (error) {
@@ -2806,7 +2806,7 @@ async function publishSessionArtifacts(root: string, opts: Options, outputDir: s
           ? "Telegram real-user Crabbox session artifacts"
           : "Telegram real-user Crabbox session motion GIF"),
       "--template",
-      "openclaw",
+      "grokbot",
       ...(opts.dryRun ? ["--dry-run"] : []),
     ],
     cwd: root,
@@ -2863,7 +2863,7 @@ async function main() {
     return;
   }
 
-  const localRoot = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-telegram-crabbox-"));
+  const localRoot = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-telegram-crabbox-"));
   const summary: JsonObject = {
     artifacts: {},
     crabbox: { provider: opts.provider, target: opts.target },

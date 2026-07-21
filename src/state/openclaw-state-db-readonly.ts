@@ -10,8 +10,8 @@ import {
   OPENCLAW_SQLITE_BUSY_TIMEOUT_MS,
   OPENCLAW_STATE_SCHEMA_VERSION,
   type OpenClawStateDatabaseOptions,
-} from "./openclaw-state-db.js";
-import { resolveOpenClawStateSqlitePath } from "./openclaw-state-db.paths.js";
+} from "./grokbot-state-db.js";
+import { resolveOpenClawStateSqlitePath } from "./grokbot-state-db.paths.js";
 
 type OpenClawStateReadOnlyDatabase = {
   db: DatabaseSync;
@@ -22,7 +22,7 @@ function assertSupportedSchemaVersion(db: DatabaseSync, pathname: string): void 
   const userVersion = readSqliteUserVersion(db);
   if (userVersion > OPENCLAW_STATE_SCHEMA_VERSION) {
     throw createNewerSqliteSchemaVersionError(
-      "OpenClaw state database",
+      "GrokBot state database",
       pathname,
       userVersion,
       OPENCLAW_STATE_SCHEMA_VERSION,

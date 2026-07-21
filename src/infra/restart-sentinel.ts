@@ -1,12 +1,12 @@
 // Persists restart sentinel state that coordinates deferred restarts.
-import { isRecord as isPlainRecord } from "@openclaw/normalization-core/record-coerce";
-import { sliceUtf16Safe } from "@openclaw/normalization-core/utf16-slice";
+import { isRecord as isPlainRecord } from "@grokbot/normalization-core/record-coerce";
+import { sliceUtf16Safe } from "@grokbot/normalization-core/utf16-slice";
 import { formatCliCommand } from "../cli/command-format.js";
 import { createSubsystemLogger } from "../logging/subsystem.js";
 import {
   openOpenClawStateDatabase,
   runOpenClawStateWriteTransaction,
-} from "../state/openclaw-state-db.js";
+} from "../state/grokbot-state-db.js";
 import { resolveRuntimeServiceVersion } from "../version.js";
 import { formatErrorMessage } from "./errors.js";
 import {
@@ -30,9 +30,9 @@ export function formatDoctorNonInteractiveHint(
   env: Record<string, string | undefined> = process.env as Record<string, string | undefined>,
 ): string {
   return `Recommended follow-up: run ${formatCliCommand(
-    "openclaw doctor --non-interactive",
+    "grokbot doctor --non-interactive",
     env,
-  )} in a terminal or approvals-capable OpenClaw surface.`;
+  )} in a terminal or approvals-capable GrokBot surface.`;
 }
 
 export async function writeRestartSentinel(

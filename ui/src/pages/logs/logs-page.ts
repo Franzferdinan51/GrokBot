@@ -19,7 +19,7 @@ import {
   formatMissingOperatorReadScopeMessage,
   isMissingOperatorReadScopeError,
 } from "../../lib/gateway-errors.ts";
-import { OpenClawLightDomElement } from "../../lit/openclaw-element.ts";
+import { OpenClawLightDomElement } from "../../lit/grokbot-element.ts";
 import { PollController } from "../../lit/poll-controller.ts";
 import { SubscriptionsController } from "../../lit/subscriptions-controller.ts";
 import {
@@ -326,7 +326,7 @@ class LogsPage extends OpenClawLightDomElement {
     const anchor = document.createElement("a");
     const stamp = new Date().toISOString().slice(0, 19).replace(/[:T]/g, "-");
     anchor.href = url;
-    anchor.download = `openclaw-logs-${label}-${stamp}.log`;
+    anchor.download = `grokbot-logs-${label}-${stamp}.log`;
     anchor.click();
     URL.revokeObjectURL(url);
   }
@@ -366,6 +366,6 @@ class LogsPage extends OpenClawLightDomElement {
   }
 }
 
-if (!customElements.get("openclaw-logs-page")) {
-  customElements.define("openclaw-logs-page", LogsPage);
+if (!customElements.get("grokbot-logs-page")) {
+  customElements.define("grokbot-logs-page", LogsPage);
 }

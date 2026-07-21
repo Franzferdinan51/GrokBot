@@ -12,14 +12,14 @@ import type {
   PluginApprovalPendingView,
   PluginApprovalResolvedView,
   ResolvedApprovalView,
-} from "openclaw/plugin-sdk/approval-handler-runtime";
-import { createChannelApprovalNativeRuntimeAdapter } from "openclaw/plugin-sdk/approval-handler-runtime";
-import { buildChannelApprovalNativeTargetKey } from "openclaw/plugin-sdk/approval-native-runtime";
-import { buildApprovalPresentationFromActionDescriptors } from "openclaw/plugin-sdk/approval-reply-runtime";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { logError } from "openclaw/plugin-sdk/logging-core";
-import { normalizeOptionalString } from "openclaw/plugin-sdk/string-coerce-runtime";
-import { truncateUtf16Safe } from "openclaw/plugin-sdk/text-utility-runtime";
+} from "grokbot/plugin-sdk/approval-handler-runtime";
+import { createChannelApprovalNativeRuntimeAdapter } from "grokbot/plugin-sdk/approval-handler-runtime";
+import { buildChannelApprovalNativeTargetKey } from "grokbot/plugin-sdk/approval-native-runtime";
+import { buildApprovalPresentationFromActionDescriptors } from "grokbot/plugin-sdk/approval-reply-runtime";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { logError } from "grokbot/plugin-sdk/logging-core";
+import { normalizeOptionalString } from "grokbot/plugin-sdk/string-coerce-runtime";
+import { truncateUtf16Safe } from "grokbot/plugin-sdk/text-utility-runtime";
 import {
   isSlackAnyNativeApprovalClientEnabled,
   shouldHandleSlackNativeApprovalRequest,

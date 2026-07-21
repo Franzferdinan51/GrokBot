@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   assertPreparedOpenClawNpmShrinkwrap,
   prepareOpenClawNpmShrinkwrap,
-} from "../../scripts/prepare-openclaw-npm-shrinkwrap.ts";
+} from "../../scripts/prepare-grokbot-npm-shrinkwrap.ts";
 
 const AI_DEPENDENCIES = {
   "@anthropic-ai/sdk": "0.109.1",
@@ -23,7 +23,7 @@ function createShrinkwrap(): {
     lockfileVersion: 3,
     packages: {
       "": {
-        name: "openclaw",
+        name: "grokbot",
         version: "2026.7.1-beta.5",
         dependencies: {
           openai: "6.45.0",
@@ -44,26 +44,26 @@ describe("prepareOpenClawNpmShrinkwrap", () => {
     const prepared = prepareOpenClawNpmShrinkwrap({
       aiIntegrity: "sha512-test",
       aiManifest: {
-        name: "@openclaw/ai",
+        name: "@grokbot/ai",
         version: "2026.7.1-beta.5",
         license: "MIT",
         engines: { node: ">=22.19.0" },
         dependencies: AI_DEPENDENCIES,
       },
       rootManifest: {
-        name: "openclaw",
+        name: "grokbot",
         version: "2026.7.1-beta.5",
       },
       shrinkwrap: createShrinkwrap(),
     });
 
     expect(prepared.packages?.[""]?.dependencies).toEqual({
-      "@openclaw/ai": "2026.7.1-beta.5",
+      "@grokbot/ai": "2026.7.1-beta.5",
       openai: "6.45.0",
     });
-    expect(prepared.packages?.["node_modules/@openclaw/ai"]).toEqual({
+    expect(prepared.packages?.["node_modules/@grokbot/ai"]).toEqual({
       version: "2026.7.1-beta.5",
-      resolved: "https://registry.npmjs.org/@openclaw/ai/-/ai-2026.7.1-beta.5.tgz",
+      resolved: "https://registry.npmjs.org/@grokbot/ai/-/ai-2026.7.1-beta.5.tgz",
       integrity: "sha512-test",
       license: "MIT",
       dependencies: AI_DEPENDENCIES,
@@ -73,16 +73,16 @@ describe("prepareOpenClawNpmShrinkwrap", () => {
       assertPreparedOpenClawNpmShrinkwrap({
         aiIntegrity: "sha512-test",
         aiManifest: {
-          name: "@openclaw/ai",
+          name: "@grokbot/ai",
           version: "2026.7.1-beta.5",
           license: "MIT",
           engines: { node: ">=22.19.0" },
           dependencies: AI_DEPENDENCIES,
         },
         rootManifest: {
-          name: "openclaw",
+          name: "grokbot",
           version: "2026.7.1-beta.5",
-          dependencies: { "@openclaw/ai": "2026.7.1-beta.5" },
+          dependencies: { "@grokbot/ai": "2026.7.1-beta.5" },
         },
         shrinkwrap: prepared,
       }),
@@ -94,17 +94,17 @@ describe("prepareOpenClawNpmShrinkwrap", () => {
       prepareOpenClawNpmShrinkwrap({
         aiIntegrity: "sha512-test",
         aiManifest: {
-          name: "@openclaw/ai",
+          name: "@grokbot/ai",
           version: "2026.7.1-beta.4",
           dependencies: AI_DEPENDENCIES,
         },
         rootManifest: {
-          name: "openclaw",
+          name: "grokbot",
           version: "2026.7.1-beta.5",
         },
         shrinkwrap: createShrinkwrap(),
       }),
-    ).toThrow("does not match OpenClaw");
+    ).toThrow("does not match GrokBot");
 
     const incomplete = createShrinkwrap();
     Reflect.deleteProperty(incomplete.packages, "node_modules/openai");
@@ -112,12 +112,12 @@ describe("prepareOpenClawNpmShrinkwrap", () => {
       prepareOpenClawNpmShrinkwrap({
         aiIntegrity: "sha512-test",
         aiManifest: {
-          name: "@openclaw/ai",
+          name: "@grokbot/ai",
           version: "2026.7.1-beta.5",
           dependencies: AI_DEPENDENCIES,
         },
         rootManifest: {
-          name: "openclaw",
+          name: "grokbot",
           version: "2026.7.1-beta.5",
         },
         shrinkwrap: incomplete,
@@ -130,12 +130,12 @@ describe("prepareOpenClawNpmShrinkwrap", () => {
       prepareOpenClawNpmShrinkwrap({
         aiIntegrity: "sha512-test",
         aiManifest: {
-          name: "@openclaw/ai",
+          name: "@grokbot/ai",
           version: "2026.7.1-beta.5",
           dependencies: AI_DEPENDENCIES,
         },
         rootManifest: {
-          name: "openclaw",
+          name: "grokbot",
           version: "2026.7.1-beta.5",
         },
         shrinkwrap: stale,
@@ -146,28 +146,28 @@ describe("prepareOpenClawNpmShrinkwrap", () => {
       assertPreparedOpenClawNpmShrinkwrap({
         aiIntegrity: "sha512-test",
         aiManifest: {
-          name: "@openclaw/ai",
+          name: "@grokbot/ai",
           version: "2026.7.1-beta.5",
           dependencies: AI_DEPENDENCIES,
         },
         rootManifest: {
-          name: "openclaw",
+          name: "grokbot",
           version: "2026.7.1-beta.5",
-          dependencies: { "@openclaw/ai": "2026.7.1-beta.5" },
+          dependencies: { "@grokbot/ai": "2026.7.1-beta.5" },
         },
         shrinkwrap: createShrinkwrap(),
       }),
-    ).toThrow("does not lock the exact @openclaw/ai tarball");
+    ).toThrow("does not lock the exact @grokbot/ai tarball");
 
     const prepared = prepareOpenClawNpmShrinkwrap({
       aiIntegrity: "sha512-test",
       aiManifest: {
-        name: "@openclaw/ai",
+        name: "@grokbot/ai",
         version: "2026.7.1-beta.5",
         dependencies: AI_DEPENDENCIES,
       },
       rootManifest: {
-        name: "openclaw",
+        name: "grokbot",
         version: "2026.7.1-beta.5",
       },
       shrinkwrap: createShrinkwrap(),
@@ -176,17 +176,17 @@ describe("prepareOpenClawNpmShrinkwrap", () => {
       assertPreparedOpenClawNpmShrinkwrap({
         aiIntegrity: "sha512-test",
         aiManifest: {
-          name: "@openclaw/ai",
+          name: "@grokbot/ai",
           version: "2026.7.1-beta.5",
           dependencies: AI_DEPENDENCIES,
         },
         rootManifest: {
-          name: "openclaw",
+          name: "grokbot",
           version: "2026.7.1-beta.5",
         },
         shrinkwrap: prepared,
       }),
-    ).toThrow("packed OpenClaw manifest must depend on exact @openclaw/ai");
+    ).toThrow("packed GrokBot manifest must depend on exact @grokbot/ai");
   });
 
   it("validates semver ranges and rejects unsupported dependency specs", () => {
@@ -198,14 +198,14 @@ describe("prepareOpenClawNpmShrinkwrap", () => {
       prepareOpenClawNpmShrinkwrap({
         aiIntegrity: "sha512-test",
         aiManifest: {
-          name: "@openclaw/ai",
+          name: "@grokbot/ai",
           version: "2026.7.1-beta.5",
           dependencies: {
             ranged: "^2.4.0",
           },
         },
         rootManifest: {
-          name: "openclaw",
+          name: "grokbot",
           version: "2026.7.1-beta.5",
         },
         shrinkwrap,
@@ -216,12 +216,12 @@ describe("prepareOpenClawNpmShrinkwrap", () => {
       prepareOpenClawNpmShrinkwrap({
         aiIntegrity: "sha512-test",
         aiManifest: {
-          name: "@openclaw/ai",
+          name: "@grokbot/ai",
           version: "2026.7.1-beta.5",
           dependencies: { aliased: "npm:@scope/real-package@~3.2.0" },
         },
         rootManifest: {
-          name: "openclaw",
+          name: "grokbot",
           version: "2026.7.1-beta.5",
         },
         shrinkwrap,
@@ -233,12 +233,12 @@ describe("prepareOpenClawNpmShrinkwrap", () => {
       prepareOpenClawNpmShrinkwrap({
         aiIntegrity: "sha512-test",
         aiManifest: {
-          name: "@openclaw/ai",
+          name: "@grokbot/ai",
           version: "2026.7.1-beta.5",
           dependencies: { ranged: "^2.4.0" },
         },
         rootManifest: {
-          name: "openclaw",
+          name: "grokbot",
           version: "2026.7.1-beta.5",
         },
         shrinkwrap,
@@ -249,12 +249,12 @@ describe("prepareOpenClawNpmShrinkwrap", () => {
       prepareOpenClawNpmShrinkwrap({
         aiIntegrity: "sha512-test",
         aiManifest: {
-          name: "@openclaw/ai",
+          name: "@grokbot/ai",
           version: "2026.7.1-beta.5",
           dependencies: { ranged: "workspace:*" },
         },
         rootManifest: {
-          name: "openclaw",
+          name: "grokbot",
           version: "2026.7.1-beta.5",
         },
         shrinkwrap,

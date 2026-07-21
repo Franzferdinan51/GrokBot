@@ -4,7 +4,7 @@ import {
   normalizeMessagePresentation,
   renderMessagePresentationChartFallbackText,
   type MessagePresentationChartBlock,
-} from "openclaw/plugin-sdk/interactive-runtime";
+} from "grokbot/plugin-sdk/interactive-runtime";
 import { escapeSlackMrkdwn } from "./monitor/mrkdwn.js";
 import { renderSlackMessagePresentationChartFallbackText } from "./presentation-fallback.js";
 

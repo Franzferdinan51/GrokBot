@@ -1,4 +1,4 @@
 /**
- * Preferred OpenClaw temp directory helper for Browser outputs.
+ * Preferred GrokBot temp directory helper for Browser outputs.
  */
-export { resolvePreferredOpenClawTmpDir } from "openclaw/plugin-sdk/temp-path";
+export { resolvePreferredOpenClawTmpDir } from "grokbot/plugin-sdk/temp-path";

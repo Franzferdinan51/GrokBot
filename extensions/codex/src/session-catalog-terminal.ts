@@ -3,13 +3,13 @@ import {
   decodeNodePtyResumeParams,
   resolveNodeHostExecutable,
   runNodePtyCommand,
-} from "openclaw/plugin-sdk/node-host";
+} from "grokbot/plugin-sdk/node-host";
 import type {
   OpenClawPluginApi,
   OpenClawPluginNodeHostCommand,
-} from "openclaw/plugin-sdk/plugin-entry";
-import type { PluginRuntime } from "openclaw/plugin-sdk/plugin-runtime";
-import type { SessionCatalogTerminalPlan } from "openclaw/plugin-sdk/session-catalog";
+} from "grokbot/plugin-sdk/plugin-entry";
+import type { PluginRuntime } from "grokbot/plugin-sdk/plugin-runtime";
+import type { SessionCatalogTerminalPlan } from "grokbot/plugin-sdk/session-catalog";
 import {
   CatalogParamsError,
   CODEX_APP_SERVER_THREADS_CAPABILITY,

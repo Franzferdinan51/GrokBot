@@ -7,7 +7,7 @@ import {
   closeOpenClawStateDatabaseForTest,
   openOpenClawStateDatabase,
   type OpenClawStateDatabase,
-} from "../../state/openclaw-state-db.js";
+} from "../../state/grokbot-state-db.js";
 import type { WorkerSessionPlacementIdentity } from "./placement-record.js";
 import {
   createWorkerSessionPlacementStore,
@@ -27,7 +27,7 @@ describe("worker session placement store", () => {
   let nowMs: number;
 
   beforeEach(async () => {
-    root = await fs.mkdtemp(path.join(await fs.realpath(os.tmpdir()), "openclaw-placement-"));
+    root = await fs.mkdtemp(path.join(await fs.realpath(os.tmpdir()), "grokbot-placement-"));
     database = openOpenClawStateDatabase({ env: { OPENCLAW_STATE_DIR: root } });
     nowMs = 1_000;
     store = createWorkerSessionPlacementStore({ database, now: () => nowMs });
@@ -749,9 +749,9 @@ describe("worker session placement store", () => {
     expect(() => store.releaseTurn(claim)).toThrow("pending cloud workspace result");
 
     const manifestRef = `sha256:${"f".repeat(64)}`;
-    const stagedResultRef = `refs/openclaw/worker-results/${claim.claimId}`;
+    const stagedResultRef = `refs/grokbot/worker-results/${claim.claimId}`;
     expect(() =>
-      store.recordStagedWorkspaceResult(claim, "refs/openclaw/worker-results/unsafe.claim"),
+      store.recordStagedWorkspaceResult(claim, "refs/grokbot/worker-results/unsafe.claim"),
     ).toThrow("Worker workspace staged result reference is invalid");
     store.recordStagedWorkspaceResult(claim, stagedResultRef);
     store.recordWorkspaceResultConflict(claim, {
@@ -791,7 +791,7 @@ describe("worker session placement store", () => {
         { length: 300 },
         (_, index) => `conflict-${index.toString().padStart(3, "0")}`,
       ),
-      stagedResultRef: `refs/openclaw/worker-results/${laterClaim.claimId}`,
+      stagedResultRef: `refs/grokbot/worker-results/${laterClaim.claimId}`,
     });
     expect(store.get(SESSION.sessionId)?.workspaceResultConflict).toMatchObject({
       totalCount: 300,

@@ -1,5 +1,5 @@
 #!/usr/bin/env -S node --import tsx
-// Telegram User Credential script supports OpenClaw repository automation.
+// Telegram User Credential script supports GrokBot repository automation.
 
 import { createHash, randomUUID } from "node:crypto";
 import { copyFile, mkdir, mkdtemp, readFile, rm, unlink, writeFile } from "node:fs/promises";
@@ -467,7 +467,7 @@ async function createTelegramUserPayload(opts: Map<string, string>) {
     throw new Error("Missing group id in env, user-driver config, or bot credentials file.");
   }
 
-  const tempRoot = await mkdtemp(path.join(tmpdir(), "openclaw-telegram-user-credential-"));
+  const tempRoot = await mkdtemp(path.join(tmpdir(), "grokbot-telegram-user-credential-"));
   const tdlibArchive = path.join(tempRoot, "tdlib.tgz");
   const desktopArchive = path.join(tempRoot, "desktop-tdata.tgz");
   try {
@@ -545,7 +545,7 @@ async function restoreTelegramUserPayload(params: {
     usage();
   }
   const payload = parseTelegramUserQaCredentialPayload(params.payload);
-  const tempRoot = await mkdtemp(path.join(tmpdir(), "openclaw-telegram-user-restore-"));
+  const tempRoot = await mkdtemp(path.join(tmpdir(), "grokbot-telegram-user-restore-"));
   const tdlibArchive = path.join(tempRoot, "tdlib.tgz");
   const desktopArchive = path.join(tempRoot, "desktop-tdata.tgz");
   await mkdir(expandHome(userDriverDir), { recursive: true });

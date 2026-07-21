@@ -1,11 +1,11 @@
 /** MCP OAuth credential provider, flow coordinator, and login helpers. */
 import { auth } from "@modelcontextprotocol/sdk/client/auth.js";
 import type { FetchLike } from "@modelcontextprotocol/sdk/shared/transport.js";
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+import { normalizeOptionalString } from "@grokbot/normalization-core/string-coerce";
 import {
   type OpenClawStateLeaseContext,
   withOpenClawStateLease,
-} from "../state/openclaw-state-lease.js";
+} from "../state/grokbot-state-lease.js";
 import {
   bindMcpOAuthLeaseAssertion,
   createMcpOAuthClientProvider,
@@ -62,7 +62,7 @@ async function withMcpOAuthLease<T>(
 
 function mcpOAuthAdditionalAuthorizationError(serverName: string): Error {
   return new Error(
-    `MCP server "${serverName}" requires additional OAuth authorization. Run openclaw mcp login ${serverName}.`,
+    `MCP server "${serverName}" requires additional OAuth authorization. Run grokbot mcp login ${serverName}.`,
   );
 }
 
@@ -169,7 +169,7 @@ export async function resolveMcpOAuthAccessToken(
           return undefined;
         }
         throw new Error(
-          `MCP server "${params.serverName}" requires OAuth authorization. Run openclaw mcp login ${params.serverName}.`,
+          `MCP server "${params.serverName}" requires OAuth authorization. Run grokbot mcp login ${params.serverName}.`,
         );
       }
 
@@ -186,7 +186,7 @@ export async function resolveMcpOAuthAccessToken(
       }
       if (!tokens.refresh_token) {
         throw new Error(
-          `MCP server "${params.serverName}" has expired OAuth credentials. Run openclaw mcp login ${params.serverName}.`,
+          `MCP server "${params.serverName}" has expired OAuth credentials. Run grokbot mcp login ${params.serverName}.`,
         );
       }
 
@@ -209,7 +209,7 @@ export async function resolveMcpOAuthAccessToken(
       const refreshedTokens = await provider.tokens();
       if (result !== "AUTHORIZED" || !refreshedTokens?.access_token) {
         throw new Error(
-          `MCP server "${params.serverName}" could not refresh OAuth credentials. Run openclaw mcp login ${params.serverName}.`,
+          `MCP server "${params.serverName}" could not refresh OAuth credentials. Run grokbot mcp login ${params.serverName}.`,
         );
       }
       return refreshedTokens.access_token;

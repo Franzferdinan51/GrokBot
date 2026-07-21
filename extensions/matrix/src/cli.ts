@@ -1,10 +1,10 @@
 // Matrix plugin module implements cli behavior.
 import type { Command } from "commander";
-import { normalizeAccountId } from "openclaw/plugin-sdk/account-id";
-import { createLazyRuntimeModule } from "openclaw/plugin-sdk/lazy-runtime";
-import { parseStrictInteger, timestampMsToIsoString } from "openclaw/plugin-sdk/number-runtime";
-import { readByteStreamWithLimit } from "openclaw/plugin-sdk/response-limit-runtime";
-import type { ChannelSetupInput } from "openclaw/plugin-sdk/setup";
+import { normalizeAccountId } from "grokbot/plugin-sdk/account-id";
+import { createLazyRuntimeModule } from "grokbot/plugin-sdk/lazy-runtime";
+import { parseStrictInteger, timestampMsToIsoString } from "grokbot/plugin-sdk/number-runtime";
+import { readByteStreamWithLimit } from "grokbot/plugin-sdk/response-limit-runtime";
+import type { ChannelSetupInput } from "grokbot/plugin-sdk/setup";
 import { resolveMatrixAccount, resolveMatrixAccountConfig } from "./matrix/accounts.js";
 import { listMatrixOwnDevices, pruneMatrixStaleGatewayDevices } from "./matrix/actions/devices.js";
 import { updateMatrixOwnProfile } from "./matrix/actions/profile.js";
@@ -166,7 +166,7 @@ function formatMatrixCliRecoveryKeyStdinCommand(command: string, accountId?: str
 
 function formatMatrixCliCommandParts(parts: string[], accountId?: string): string {
   const normalizedAccountId = normalizeAccountId(accountId);
-  const command = ["openclaw", "matrix", ...parts];
+  const command = ["grokbot", "matrix", ...parts];
   if (normalizedAccountId !== "default") {
     const optionTerminatorIndex = command.indexOf("--");
     if (optionTerminatorIndex >= 0) {
@@ -979,7 +979,7 @@ function printMatrixVerificationSummary(summary: MatrixCliVerificationSummary): 
   console.log(`Other user: ${sanitizeMatrixCliText(summary.otherUserId)}`);
   console.log(`Other device: ${sanitizeMatrixCliText(summary.otherDeviceId ?? "unknown")}`);
   console.log(`Self-verification: ${summary.isSelfVerification ? "yes" : "no"}`);
-  console.log(`Initiated by OpenClaw: ${summary.initiatedByMe ? "yes" : "no"}`);
+  console.log(`Initiated by GrokBot: ${summary.initiatedByMe ? "yes" : "no"}`);
   console.log(`Phase: ${sanitizeMatrixCliText(summary.phaseName)}`);
   console.log(`Pending: ${summary.pending ? "yes" : "no"}`);
   console.log(`Completed: ${summary.completed ? "yes" : "no"}`);
@@ -1256,7 +1256,7 @@ function buildVerificationGuidance(
   }
   if (status.serverDeviceKnown === false) {
     nextSteps.add(
-      `This Matrix device is no longer listed on the homeserver. Create a new OpenClaw Matrix device with ${formatMatrixCliCommand("account add --homeserver <url> --user-id <@user:server> --password <password> --device-name OpenClaw-Gateway", accountId)}. If you use token auth, create a fresh Matrix access token in your Matrix client or admin UI, then run ${formatMatrixCliCommand("account add --homeserver <url> --access-token <token>", accountId)}.`,
+      `This Matrix device is no longer listed on the homeserver. Create a new GrokBot Matrix device with ${formatMatrixCliCommand("account add --homeserver <url> --user-id <@user:server> --password <password> --device-name GrokBot-Gateway", accountId)}. If you use token auth, create a fresh Matrix access token in your Matrix client or admin UI, then run ${formatMatrixCliCommand("account add --homeserver <url> --access-token <token>", accountId)}.`,
     );
   }
   for (const step of buildBackupGuidance(backup, accountId, {
@@ -1395,7 +1395,7 @@ export function registerMatrixCli(params: { program: Command }): void {
   const root = params.program
     .command("matrix")
     .description("Matrix channel utilities")
-    .addHelpText("after", () => "\nDocs: https://docs.openclaw.ai/channels/matrix\n");
+    .addHelpText("after", () => "\nDocs: https://docs.grokbot.ai/channels/matrix\n");
 
   const account = root.command("account").description("Manage matrix channel accounts");
 
@@ -1496,7 +1496,7 @@ export function registerMatrixCli(params: { program: Command }): void {
                 .map((deviceId) => formatMatrixCliText(deviceId))
                 .join(", ");
               console.log(
-                `Matrix device hygiene warning: stale OpenClaw devices detected (${staleDeviceIds}). Run ${formatMatrixCliCommand("devices prune-stale", result.accountId)}.`,
+                `Matrix device hygiene warning: stale GrokBot devices detected (${staleDeviceIds}). Run ${formatMatrixCliCommand("devices prune-stale", result.accountId)}.`,
               );
             }
             if (result.profile.attempted) {
@@ -1513,7 +1513,7 @@ export function registerMatrixCli(params: { program: Command }): void {
                 }
               }
             }
-            const bindHint = `openclaw agents bind --agent <id> --bind matrix:${result.accountId}`;
+            const bindHint = `grokbot agents bind --agent <id> --bind matrix:${result.accountId}`;
             console.log(`Bind this account to an agent: ${bindHint}`);
           },
           errorPrefix: "Account setup failed",
@@ -2288,7 +2288,7 @@ export function registerMatrixCli(params: { program: Command }): void {
 
   devices
     .command("prune-stale")
-    .description("Delete stale OpenClaw-managed devices for this account")
+    .description("Delete stale GrokBot-managed devices for this account")
     .option("--account <id>", "Account ID (for multi-account setups)")
     .option("--verbose", "Show detailed diagnostics")
     .option("--json", "Output as JSON")
@@ -2301,7 +2301,7 @@ export function registerMatrixCli(params: { program: Command }): void {
         onText: (result, verbose) => {
           printAccountLabel(accountId);
           console.log(
-            `Deleted stale OpenClaw devices: ${
+            `Deleted stale GrokBot devices: ${
               result.deletedDeviceIds.length
                 ? result.deletedDeviceIds
                     .map((deviceId) => formatMatrixCliText(deviceId))

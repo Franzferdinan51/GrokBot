@@ -105,14 +105,14 @@ export const resolveSessionAgentIdsMock = vi.fn(() => ({
   sessionAgentId: "main",
 }));
 export const estimateTokensMock = vi.fn((_message?: unknown) => 10);
-export const resolveAgentHarnessPolicyMock = vi.fn(() => ({ runtime: "openclaw" }));
+export const resolveAgentHarnessPolicyMock = vi.fn(() => ({ runtime: "grokbot" }));
 function createSelectedAgentHarnessMock(params: {
   agentHarnessId?: string;
   agentHarnessRuntimeOverride?: string;
 }): AgentHarness {
   const configured = resolveAgentHarnessPolicyMock() as { runtime?: string };
   const id =
-    params.agentHarnessId ?? params.agentHarnessRuntimeOverride ?? configured.runtime ?? "openclaw";
+    params.agentHarnessId ?? params.agentHarnessRuntimeOverride ?? configured.runtime ?? "grokbot";
   return {
     id,
     label: `${id} test harness`,
@@ -494,7 +494,7 @@ export function resetCompactSessionStateMocks(): void {
   maybeCompactAgentHarnessSessionMock.mockReset();
   maybeCompactAgentHarnessSessionMock.mockResolvedValue(undefined);
   resolveAgentHarnessPolicyMock.mockReset();
-  resolveAgentHarnessPolicyMock.mockReturnValue({ runtime: "openclaw" });
+  resolveAgentHarnessPolicyMock.mockReturnValue({ runtime: "grokbot" });
   selectAgentHarnessMock.mockReset();
   selectAgentHarnessMock.mockImplementation(createSelectedAgentHarnessMock);
   selectAgentHarnessForPreparedModelProvidersMock.mockReset();
@@ -569,7 +569,7 @@ export function resetCompactHooksHarnessMocks(): void {
       resolveModelMock(provider, modelId, agentDir, cfg),
   );
   resolveAgentHarnessPolicyMock.mockReset();
-  resolveAgentHarnessPolicyMock.mockReturnValue({ runtime: "openclaw" });
+  resolveAgentHarnessPolicyMock.mockReturnValue({ runtime: "grokbot" });
   resolveContextWindowInfoMock.mockReset();
   resolveContextWindowInfoMock.mockReturnValue({ tokens: 128_000 });
 

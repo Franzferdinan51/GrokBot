@@ -5,15 +5,15 @@ import {
   implicitMentionKindWhen,
   matchesMentionWithExplicit,
   resolveInboundMentionDecision,
-} from "openclaw/plugin-sdk/channel-inbound";
-import { hasControlCommand } from "openclaw/plugin-sdk/command-detection";
+} from "grokbot/plugin-sdk/channel-inbound";
+import { hasControlCommand } from "grokbot/plugin-sdk/command-detection";
 import type {
   OpenClawConfig,
   TelegramGroupConfig,
   TelegramTopicConfig,
-} from "openclaw/plugin-sdk/config-contracts";
-import { KeyedAsyncQueue } from "openclaw/plugin-sdk/keyed-async-queue";
-import { danger, warn } from "openclaw/plugin-sdk/runtime-env";
+} from "grokbot/plugin-sdk/config-contracts";
+import { KeyedAsyncQueue } from "grokbot/plugin-sdk/keyed-async-queue";
+import { danger, warn } from "grokbot/plugin-sdk/runtime-env";
 import { withTelegramApiErrorLogging } from "./api-logging.js";
 import { firstDefined, type NormalizedAllowFrom } from "./bot-access.js";
 import { isRecoverableMediaGroupError } from "./bot-handlers.media.js";

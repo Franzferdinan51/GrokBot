@@ -1,8 +1,8 @@
 // Lmstudio tests cover index plugin behavior.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/plugin-entry";
-import { capturePluginRegistration } from "openclaw/plugin-sdk/plugin-test-runtime";
-import { CUSTOM_LOCAL_AUTH_MARKER } from "openclaw/plugin-sdk/provider-auth";
-import type { ModelProviderConfig } from "openclaw/plugin-sdk/provider-model-shared";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/plugin-entry";
+import { capturePluginRegistration } from "grokbot/plugin-sdk/plugin-test-runtime";
+import { CUSTOM_LOCAL_AUTH_MARKER } from "grokbot/plugin-sdk/provider-auth";
+import type { ModelProviderConfig } from "grokbot/plugin-sdk/provider-model-shared";
 import { describe, expect, it } from "vitest";
 import plugin from "./index.js";
 import { LMSTUDIO_LOCAL_API_KEY_PLACEHOLDER } from "./src/defaults.js";
@@ -173,7 +173,7 @@ describe("lmstudio plugin", () => {
     expect(
       provider?.augmentModelCatalog?.({
         config,
-        agentDir: "/tmp/openclaw",
+        agentDir: "/tmp/grokbot",
         env: {},
         entries: [],
       }),

@@ -15,7 +15,7 @@ import type {
   BoardWidgetFrameUrl,
 } from "../../lib/board/view-types.ts";
 import { getBuiltinWidgetRenderer } from "../../lib/board/widgets/index.ts";
-import { OpenClawLightDomElement } from "../../lit/openclaw-element.ts";
+import { OpenClawLightDomElement } from "../../lit/grokbot-element.ts";
 import { renderBoardMcpAppContent } from "./board-mcp-app-content.ts";
 import { BoardMcpAppLifecycle } from "./board-mcp-app-lifecycle.ts";
 import { renderBoardGrantedCapabilities } from "./board-widget-capabilities.ts";
@@ -356,12 +356,12 @@ class OpenClawBoardWidgetCell extends OpenClawLightDomElement {
   }
 }
 
-if (!customElements.get("openclaw-board-widget-cell")) {
-  customElements.define("openclaw-board-widget-cell", OpenClawBoardWidgetCell);
+if (!customElements.get("grokbot-board-widget-cell")) {
+  customElements.define("grokbot-board-widget-cell", OpenClawBoardWidgetCell);
 }
 
 declare global {
   interface HTMLElementTagNameMap {
-    "openclaw-board-widget-cell": OpenClawBoardWidgetCell;
+    "grokbot-board-widget-cell": OpenClawBoardWidgetCell;
   }
 }

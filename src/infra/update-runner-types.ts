@@ -1,5 +1,5 @@
 import type { CommandOptions } from "../process/exec.js";
-import type { OpenClawSchemaVersions } from "../state/openclaw-schema-versions.js";
+import type { OpenClawSchemaVersions } from "../state/grokbot-schema-versions.js";
 import type { PackageUpdateStepAdvisory } from "./package-update-steps.js";
 import type { UpdateChannel } from "./update-channels.js";
 import type { GlobalInstallManager } from "./update-global.js";

@@ -7,7 +7,7 @@ import { clearRuntimeAuthProfileStoreSnapshots } from "../agents/auth-profiles/s
 import {
   createOpenClawTestState,
   type OpenClawTestState,
-} from "../test-utils/openclaw-test-state.js";
+} from "../test-utils/grokbot-test-state.js";
 import { maybeRepairLegacyOAuthSidecarProfiles } from "./doctor-auth-oauth-sidecar.js";
 import { testing } from "./doctor-auth-oauth-sidecar.test-support.js";
 import type { DoctorPrompter } from "./doctor-prompter.js";
@@ -36,7 +36,7 @@ function makePrompter(shouldRepair: boolean): DoctorPrompter {
 async function makeTestState(seed = "legacy-oauth-seed"): Promise<OpenClawTestState> {
   const state = await createOpenClawTestState({
     layout: "state-only",
-    prefix: "openclaw-doctor-oauth-sidecar-",
+    prefix: "grokbot-doctor-oauth-sidecar-",
     env: {
       OPENCLAW_AGENT_DIR: undefined,
       OPENCLAW_AUTH_PROFILE_SECRET_KEY: seed,
@@ -55,7 +55,7 @@ function writeLegacyAuthProfiles(
 }
 
 function encryptLegacySidecarMaterial(params: {
-  ref: { source: "openclaw-credentials"; provider: "openai-codex"; id: string };
+  ref: { source: "grokbot-credentials"; provider: "openai-codex"; id: string };
   profileId: string;
   provider: string;
   seed: string;
@@ -95,7 +95,7 @@ describe("maybeRepairLegacyOAuthSidecarProfiles", () => {
     const state = await makeTestState(seed);
     const profileId = "openai-codex:default";
     const ref = {
-      source: "openclaw-credentials" as const,
+      source: "grokbot-credentials" as const,
       provider: "openai-codex" as const,
       id: "0123456789abcdef0123456789abcdef",
     };
@@ -186,7 +186,7 @@ describe("maybeRepairLegacyOAuthSidecarProfiles", () => {
           type: "oauth",
           provider: "openai-codex",
           oauthRef: {
-            source: "openclaw-credentials",
+            source: "grokbot-credentials",
             provider: "openai-codex",
             id: "fedcba9876543210fedcba9876543210",
           },
@@ -210,7 +210,7 @@ describe("maybeRepairLegacyOAuthSidecarProfiles", () => {
     const state = await makeTestState("wrong-seed");
     const profileId = "openai-codex:default";
     const ref = {
-      source: "openclaw-credentials" as const,
+      source: "grokbot-credentials" as const,
       provider: "openai-codex" as const,
       id: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
     };
@@ -289,7 +289,7 @@ describe("maybeRepairLegacyOAuthSidecarProfiles", () => {
     async () => {
       const state = await makeTestState();
       const ref = {
-        source: "openclaw-credentials" as const,
+        source: "grokbot-credentials" as const,
         provider: "openai-codex" as const,
         id: "eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
       };
@@ -362,7 +362,7 @@ describe("maybeRepairLegacyOAuthSidecarProfiles", () => {
     const authPath = path.join(agentDir, "auth-profiles.json");
     const profileId = "openai-codex:external";
     const ref = {
-      source: "openclaw-credentials" as const,
+      source: "grokbot-credentials" as const,
       provider: "openai-codex" as const,
       id: "dddddddddddddddddddddddddddddddd",
     };
@@ -428,7 +428,7 @@ describe("maybeRepairLegacyOAuthSidecarProfiles", () => {
     const state = await makeTestState(seed);
     const profileId = "openai-codex:default";
     const ref = {
-      source: "openclaw-credentials" as const,
+      source: "grokbot-credentials" as const,
       provider: "openai-codex" as const,
       id: "cccccccccccccccccccccccccccccccc",
     };

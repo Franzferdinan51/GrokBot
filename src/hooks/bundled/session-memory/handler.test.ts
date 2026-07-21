@@ -2,7 +2,7 @@
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import type { OpenClawConfig } from "../../../config/config.js";
 import { replaceTranscriptEvents } from "../../../config/sessions/session-accessor.js";
@@ -13,7 +13,7 @@ import { createInternalHookEvent as createHookEvent } from "../../internal-hooks
 import { generateSlugViaLLM } from "../../llm-slug-generator.js";
 import { findPreviousSessionFile, getRecentSessionContentWithResetFallback } from "./transcript.js";
 
-// Avoid calling the embedded OpenClaw agent (global command lane); keep this unit test deterministic.
+// Avoid calling the embedded GrokBot agent (global command lane); keep this unit test deterministic.
 vi.mock("../../llm-slug-generator.js", () => ({
   generateSlugViaLLM: vi.fn().mockResolvedValue("simple-math"),
 }));
@@ -43,7 +43,7 @@ async function createCaseWorkspace(prefix = "case"): Promise<string> {
 
 beforeAll(async () => {
   ({ default: handler, flushSessionMemoryWritesForTest } = await import("./handler.js"));
-  suiteWorkspaceRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-session-memory-"));
+  suiteWorkspaceRoot = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-session-memory-"));
 });
 
 afterAll(async () => {
@@ -950,7 +950,7 @@ describe("session-memory hook", () => {
         type: "message",
         message: {
           role: "assistant",
-          provider: "openclaw",
+          provider: "grokbot",
           model: "delivery-mirror",
           content: [{ type: "text", text: "Lights turned on" }],
         },
@@ -971,7 +971,7 @@ describe("session-memory hook", () => {
         type: "message",
         message: {
           role: "assistant",
-          provider: "openclaw",
+          provider: "grokbot",
           model: "claude",
           content: [
             { type: "thinking", text: "..." },
@@ -983,7 +983,7 @@ describe("session-memory hook", () => {
         type: "message",
         message: {
           role: "assistant",
-          provider: "openclaw",
+          provider: "grokbot",
           model: "delivery-mirror",
           content: [{ type: "text", text: "2+2 = 4" }],
         },
@@ -992,7 +992,7 @@ describe("session-memory hook", () => {
         type: "message",
         message: {
           role: "assistant",
-          provider: "openclaw",
+          provider: "grokbot",
           model: "gateway-injected",
           content: [{ type: "text", text: "standalone gateway reply" }],
         },
@@ -1019,7 +1019,7 @@ describe("session-memory hook", () => {
         type: "message",
         message: {
           role: "assistant",
-          provider: "openclaw",
+          provider: "grokbot",
           model: "delivery-mirror",
           content: [{ type: "text", text: "Your number is 123-4567" }],
         },
@@ -1035,7 +1035,7 @@ describe("session-memory hook", () => {
         type: "message",
         message: {
           role: "assistant",
-          provider: "openclaw",
+          provider: "grokbot",
           model: "delivery-mirror",
           content: [{ type: "text", text: "Your number is 123-4567" }],
         },
@@ -1060,7 +1060,7 @@ describe("session-memory hook", () => {
         type: "message",
         message: {
           role: "assistant",
-          provider: "openclaw",
+          provider: "grokbot",
           model: "delivery-mirror",
           content: [{ type: "text", text: "Done" }],
         },
@@ -1073,7 +1073,7 @@ describe("session-memory hook", () => {
         type: "message",
         message: {
           role: "assistant",
-          provider: "openclaw",
+          provider: "grokbot",
           model: "delivery-mirror",
           content: [{ type: "text", text: "Done" }],
         },

@@ -3,7 +3,7 @@ import { execFileSync } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { MAX_TIMER_TIMEOUT_MS } from "@openclaw/normalization-core/number-coercion";
+import { MAX_TIMER_TIMEOUT_MS } from "@grokbot/normalization-core/number-coercion";
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import type { OpenClawConfig } from "../config/config.js";
 import { loggingState } from "../logging/state.js";
@@ -78,7 +78,7 @@ async function withTempStore(
   fn: (ctx: { dir: string; store: string }) => Promise<void>,
   overrides?: Partial<OpenClawConfig>,
 ) {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-agent-cli-"));
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-agent-cli-"));
   const store = path.join(dir, "sessions.json");
   mockConfig(store, overrides);
   try {
@@ -584,7 +584,7 @@ describe("agentCliCommand", () => {
 
   it("uses an agent-scoped --to value as the gateway session selector", async () => {
     await withTempStore(async () => {
-      const sessionKey = "agent:main:openclaw-weixin:direct:o9cq802hhmfc@im.wechat";
+      const sessionKey = "agent:main:grokbot-weixin:direct:o9cq802hhmfc@im.wechat";
       mockGatewaySuccessReply();
 
       await agentCliCommand({ message: "hi", to: sessionKey }, runtime);
@@ -2269,7 +2269,7 @@ describe("agentCliCommand", () => {
       expect(agentCommand).not.toHaveBeenCalled();
       expect(runtime.exit).toHaveBeenCalledWith(1);
       const errorMessages = mockMessages(runtime.error);
-      expect(errorMessages.some((m) => m.includes("openclaw sessions compact"))).toBe(true);
+      expect(errorMessages.some((m) => m.includes("grokbot sessions compact"))).toBe(true);
       expect(errorMessages.some((m) => m.includes("EMBEDDED FALLBACK"))).toBe(false);
     });
   }
@@ -2290,7 +2290,7 @@ describe("agentCliCommand", () => {
     expect(agentCommand).not.toHaveBeenCalled();
     expect(runtime.exit).toHaveBeenCalledWith(1);
     const errorMessages = mockMessages(runtime.error);
-    expect(errorMessages.some((m) => m.includes("openclaw sessions compact"))).toBe(true);
+    expect(errorMessages.some((m) => m.includes("grokbot sessions compact"))).toBe(true);
     expect(errorMessages.some((m) => m.includes("EMBEDDED FALLBACK"))).toBe(false);
   });
 

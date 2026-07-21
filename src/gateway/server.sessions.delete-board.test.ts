@@ -1,8 +1,8 @@
 import { afterEach, expect, test } from "vitest";
 import { SqliteBoardStore } from "../boards/sqlite-board-store.js";
 import { resolveSqliteTargetFromSessionStorePath } from "../config/sessions/session-sqlite-target.js";
-import { closeOpenClawAgentDatabasesForTest } from "../state/openclaw-agent-db.js";
-import { closeOpenClawStateDatabaseForTest } from "../state/openclaw-state-db.js";
+import { closeOpenClawAgentDatabasesForTest } from "../state/grokbot-agent-db.js";
+import { closeOpenClawStateDatabaseForTest } from "../state/grokbot-state-db.js";
 import { testState, writeSessionStore } from "./test-helpers.js";
 import {
   directSessionReq,

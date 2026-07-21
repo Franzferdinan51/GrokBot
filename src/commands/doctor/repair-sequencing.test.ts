@@ -296,7 +296,7 @@ describe("doctor repair sequencing", () => {
   });
 
   it("runs the doctor-only onboarding recommendation scope migration", async () => {
-    const env = { OPENCLAW_STATE_DIR: "/tmp/openclaw-doctor-test" };
+    const env = { OPENCLAW_STATE_DIR: "/tmp/grokbot-doctor-test" };
     const candidate = {} as OpenClawConfig;
     mocks.migrateLegacyOnboardingRecommendationsScope.mockReturnValue({
       changes: ["Migrated onboarding recommendation state."],
@@ -310,7 +310,7 @@ describe("doctor repair sequencing", () => {
         pendingChanges: false,
         fixHints: [],
       },
-      doctorFixCommand: "openclaw doctor --fix",
+      doctorFixCommand: "grokbot doctor --fix",
       env,
     });
 
@@ -370,7 +370,7 @@ describe("doctor repair sequencing", () => {
         pendingChanges: false,
         fixHints: [],
       },
-      doctorFixCommand: "openclaw doctor --fix",
+      doctorFixCommand: "grokbot doctor --fix",
     });
 
     expect(result.state.pendingChanges).toBe(true);
@@ -408,7 +408,7 @@ describe("doctor repair sequencing", () => {
         pendingChanges: false,
         fixHints: [],
       },
-      doctorFixCommand: "openclaw doctor --fix",
+      doctorFixCommand: "grokbot doctor --fix",
     });
 
     expect(result.state.candidate.auth?.order?.anthropic).toBeUndefined();
@@ -425,7 +425,7 @@ describe("doctor repair sequencing", () => {
       return true;
     });
     mocks.maybeRepairManagedNpmOpenClawPeerLinks.mockImplementation(async () => {
-      events.push("openclaw-peer-links");
+      events.push("grokbot-peer-links");
       return true;
     });
     mocks.repairMissingConfiguredPluginInstalls.mockImplementation(async () => {
@@ -452,10 +452,10 @@ describe("doctor repair sequencing", () => {
         pendingChanges: false,
         fixHints: [],
       },
-      doctorFixCommand: "openclaw doctor --fix",
+      doctorFixCommand: "grokbot doctor --fix",
     });
 
-    expect(events).toEqual(["bundled-shadow-cleanup", "openclaw-peer-links", "missing-installs"]);
+    expect(events).toEqual(["bundled-shadow-cleanup", "grokbot-peer-links", "missing-installs"]);
     expect(mocks.maybeRepairStaleManagedNpmBundledPlugins).toHaveBeenCalledOnce();
     const cleanupCall = mocks.maybeRepairStaleManagedNpmBundledPlugins.mock.calls[0]?.[0];
     expect(cleanupCall?.config.plugins?.entries?.["google-meet"]).toEqual({ enabled: true });
@@ -505,7 +505,7 @@ describe("doctor repair sequencing", () => {
         pendingChanges: false,
         fixHints: [],
       },
-      doctorFixCommand: "openclaw doctor --fix",
+      doctorFixCommand: "grokbot doctor --fix",
     });
 
     expect(events).toEqual([
@@ -543,7 +543,7 @@ describe("doctor repair sequencing", () => {
         pendingChanges: false,
         fixHints: [],
       },
-      doctorFixCommand: "openclaw doctor --fix",
+      doctorFixCommand: "grokbot doctor --fix",
     });
 
     expect(result.changeNotes).toEqual([
@@ -572,7 +572,7 @@ describe("doctor repair sequencing", () => {
         pendingChanges: false,
         fixHints: [],
       },
-      doctorFixCommand: "openclaw doctor --fix",
+      doctorFixCommand: "grokbot doctor --fix",
     });
 
     expect(result.changeNotes).toStrictEqual([]);
@@ -599,7 +599,7 @@ describe("doctor repair sequencing", () => {
         pendingChanges: false,
         fixHints: [],
       },
-      doctorFixCommand: "openclaw doctor --fix",
+      doctorFixCommand: "grokbot doctor --fix",
     });
 
     expect(result.changeNotes).toStrictEqual([]);
@@ -616,7 +616,7 @@ describe("doctor repair sequencing", () => {
 
   it("auto-enables newly installed configured plugins after doctor repair", async () => {
     mocks.repairMissingConfiguredPluginInstalls.mockResolvedValueOnce({
-      changes: ['Installed missing configured plugin "brave" from @openclaw/brave-plugin.'],
+      changes: ['Installed missing configured plugin "brave" from @grokbot/brave-plugin.'],
       warnings: [],
     });
     mocks.applyPluginAutoEnable.mockImplementationOnce((params: { config: OpenClawConfig }) => ({
@@ -647,21 +647,21 @@ describe("doctor repair sequencing", () => {
         pendingChanges: false,
         fixHints: [],
       },
-      doctorFixCommand: "openclaw doctor --fix",
+      doctorFixCommand: "grokbot doctor --fix",
     });
 
     expect(result.state.pendingChanges).toBe(true);
     expect(result.state.candidate.plugins?.allow).toEqual(["telegram", "brave"]);
     expect(result.state.candidate.plugins?.entries?.brave?.enabled).toBe(true);
     expect(result.changeNotes).toStrictEqual([
-      'Installed missing configured plugin "brave" from @openclaw/brave-plugin.',
+      'Installed missing configured plugin "brave" from @grokbot/brave-plugin.',
       "brave web search provider selected, enabled automatically.",
     ]);
   });
 
   it("explicitly enables plugins repaired from env-only configuration", async () => {
     mocks.repairMissingConfiguredPluginInstalls.mockResolvedValueOnce({
-      changes: ['Installed missing configured plugin "exa" from @openclaw/exa-plugin.'],
+      changes: ['Installed missing configured plugin "exa" from @grokbot/exa-plugin.'],
       warnings: [],
       repairedPluginIds: ["exa"],
     });
@@ -688,7 +688,7 @@ describe("doctor repair sequencing", () => {
         pendingChanges: false,
         fixHints: [],
       },
-      doctorFixCommand: "openclaw doctor --fix",
+      doctorFixCommand: "grokbot doctor --fix",
     });
 
     expect(mocks.materializePluginAutoEnableCandidates).toHaveBeenCalledWith({
@@ -698,17 +698,17 @@ describe("doctor repair sequencing", () => {
     });
     expect(result.state.candidate.plugins?.entries?.exa).toEqual({ enabled: true });
     expect(result.changeNotes).toStrictEqual([
-      'Installed missing configured plugin "exa" from @openclaw/exa-plugin.',
+      'Installed missing configured plugin "exa" from @grokbot/exa-plugin.',
       "exa installed for existing configuration, enabled automatically.",
     ]);
   });
 
   it("surfaces ClawHub notices from successful missing configured plugin repair", async () => {
     mocks.repairMissingConfiguredPluginInstalls.mockResolvedValueOnce({
-      changes: ['Installed missing configured plugin "brave" from @openclaw/brave-plugin.'],
+      changes: ['Installed missing configured plugin "brave" from @grokbot/brave-plugin.'],
       warnings: [],
       notices: [
-        'ClawHub trust warning for "@openclaw/brave-plugin@1.2.3": scan=pending; reasons=pending.',
+        'ClawHub trust warning for "@grokbot/brave-plugin@1.2.3": scan=pending; reasons=pending.',
       ],
     });
     mocks.maybeRepairStalePluginConfig.mockImplementationOnce((cfg: OpenClawConfig) => ({
@@ -732,7 +732,7 @@ describe("doctor repair sequencing", () => {
               brave: {
                 enabled: true,
                 source: "clawhub",
-                package: "@openclaw/brave-plugin",
+                package: "@grokbot/brave-plugin",
               },
             },
           },
@@ -744,7 +744,7 @@ describe("doctor repair sequencing", () => {
               brave: {
                 enabled: true,
                 source: "clawhub",
-                package: "@openclaw/brave-plugin",
+                package: "@grokbot/brave-plugin",
               },
             },
           },
@@ -752,15 +752,15 @@ describe("doctor repair sequencing", () => {
         pendingChanges: false,
         fixHints: [],
       },
-      doctorFixCommand: "openclaw doctor --fix",
+      doctorFixCommand: "grokbot doctor --fix",
     });
 
     expect(result.changeNotes).toStrictEqual([
-      'Installed missing configured plugin "brave" from @openclaw/brave-plugin.',
+      'Installed missing configured plugin "brave" from @grokbot/brave-plugin.',
       "- plugins.entries: removed 1 stale plugin entry (brave)",
     ]);
     expect(result.warningNotes).toStrictEqual([
-      'ClawHub trust warning for "@openclaw/brave-plugin@1.2.3": scan=pending; reasons=pending.',
+      'ClawHub trust warning for "@grokbot/brave-plugin@1.2.3": scan=pending; reasons=pending.',
     ]);
     expect(mocks.maybeRepairStalePluginConfig).toHaveBeenCalledOnce();
     expect(result.state.pendingChanges).toBe(true);
@@ -797,7 +797,7 @@ describe("doctor repair sequencing", () => {
         pendingChanges: false,
         fixHints: [],
       },
-      doctorFixCommand: "openclaw doctor --fix",
+      doctorFixCommand: "grokbot doctor --fix",
       env: {},
     });
 
@@ -851,7 +851,7 @@ describe("doctor repair sequencing", () => {
         pendingChanges: false,
         fixHints: [],
       },
-      doctorFixCommand: "openclaw doctor --fix",
+      doctorFixCommand: "grokbot doctor --fix",
       env: {},
     });
 
@@ -932,7 +932,7 @@ describe("doctor repair sequencing", () => {
         pendingChanges: false,
         fixHints: [],
       },
-      doctorFixCommand: "openclaw doctor --fix",
+      doctorFixCommand: "grokbot doctor --fix",
     });
 
     expect(events).toEqual(["open-policy", "group-fallback"]);
@@ -946,7 +946,7 @@ describe("doctor repair sequencing", () => {
   it("does not remove deferred configured plugins during the package update doctor pass", async () => {
     mocks.repairMissingConfiguredPluginInstalls.mockResolvedValueOnce({
       changes: [
-        'Skipped package-manager repair for configured plugin "brave" during package update; rerun "openclaw doctor --fix" after the update completes.',
+        'Skipped package-manager repair for configured plugin "brave" during package update; rerun "grokbot doctor --fix" after the update completes.',
       ],
       warnings: [],
     });
@@ -993,7 +993,7 @@ describe("doctor repair sequencing", () => {
         pendingChanges: false,
         fixHints: [],
       },
-      doctorFixCommand: "openclaw doctor --fix",
+      doctorFixCommand: "grokbot doctor --fix",
       env: {
         OPENCLAW_UPDATE_IN_PROGRESS: "1",
       },
@@ -1003,7 +1003,7 @@ describe("doctor repair sequencing", () => {
     expect(result.state.candidate.plugins?.allow).toEqual(["brave"]);
     expect(result.state.candidate.plugins?.entries?.brave?.enabled).toBe(true);
     expect(result.changeNotes).toStrictEqual([
-      'Skipped package-manager repair for configured plugin "brave" during package update; rerun "openclaw doctor --fix" after the update completes.',
+      'Skipped package-manager repair for configured plugin "brave" during package update; rerun "grokbot doctor --fix" after the update completes.',
     ]);
   });
 
@@ -1011,7 +1011,7 @@ describe("doctor repair sequencing", () => {
     mocks.repairMissingConfiguredPluginInstalls.mockResolvedValueOnce({
       changes: [],
       warnings: [
-        'Failed to install missing configured plugin "brave" from @openclaw/brave-plugin: package install failed',
+        'Failed to install missing configured plugin "brave" from @grokbot/brave-plugin: package install failed',
       ],
       failedPluginIds: ["brave"],
     });
@@ -1095,7 +1095,7 @@ describe("doctor repair sequencing", () => {
         pendingChanges: false,
         fixHints: [],
       },
-      doctorFixCommand: "openclaw doctor --fix",
+      doctorFixCommand: "grokbot doctor --fix",
     });
 
     expect(result.state.candidate.plugins?.allow).toEqual(["brave"]);
@@ -1106,7 +1106,7 @@ describe("doctor repair sequencing", () => {
       "plugins.entries: removed 1 stale plugin entry (old-plugin)",
     );
     expect(result.warningNotes).toStrictEqual([
-      'Failed to install missing configured plugin "brave" from @openclaw/brave-plugin: package install failed',
+      'Failed to install missing configured plugin "brave" from @grokbot/brave-plugin: package install failed',
     ]);
   });
 
@@ -1114,7 +1114,7 @@ describe("doctor repair sequencing", () => {
     mocks.repairMissingConfiguredPluginInstalls.mockResolvedValueOnce({
       changes: [],
       warnings: [
-        'Failed to install missing configured channel plugin "whatsapp" from @openclaw/whatsapp: package install failed',
+        'Failed to install missing configured channel plugin "whatsapp" from @grokbot/whatsapp: package install failed',
       ],
       failedPluginIds: ["whatsapp"],
     });
@@ -1159,7 +1159,7 @@ describe("doctor repair sequencing", () => {
         pendingChanges: false,
         fixHints: [],
       },
-      doctorFixCommand: "openclaw doctor --fix",
+      doctorFixCommand: "grokbot doctor --fix",
     });
 
     expect(mocks.maybeRepairStalePluginConfig).toHaveBeenCalledOnce();
@@ -1167,7 +1167,7 @@ describe("doctor repair sequencing", () => {
       allowFrom: ["+15555550123"],
     });
     expect(result.warningNotes).toStrictEqual([
-      'Failed to install missing configured channel plugin "whatsapp" from @openclaw/whatsapp: package install failed',
+      'Failed to install missing configured channel plugin "whatsapp" from @grokbot/whatsapp: package install failed',
     ]);
   });
 });

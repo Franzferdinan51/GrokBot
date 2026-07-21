@@ -2,7 +2,7 @@
 import path from "node:path";
 import { hashRuntimeConfigValue } from "../config/runtime-snapshot.js";
 import { MODEL_APIS } from "../config/types.models.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { withTimeout } from "../node-host/with-timeout.js";
 import { resolvePluginMetadataSnapshot } from "../plugins/plugin-metadata-snapshot.js";
 import type { PluginMetadataSnapshot } from "../plugins/plugin-metadata-snapshot.types.js";
@@ -117,7 +117,7 @@ export function rebindInputToCommittedConfiguredOwner(
   const owner = candidates[0]!;
   const preserveWorkspaceDir =
     input.preserveWorkspaceDirOnRefresh === true && input.workspaceDir !== undefined;
-  // Reserved execution identities (for example setup's `openclaw` agent) intentionally borrow a
+  // Reserved execution identities (for example setup's `grokbot` agent) intentionally borrow a
   // configured agent directory. Rebase their lifecycle inputs without erasing that run identity.
   const agentId = input.agentId ?? owner.input.agentId;
   return normalizePreparedModelRuntimeInput({

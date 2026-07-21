@@ -14,8 +14,8 @@ import {
   OPENCLAW_TRANSCRIPT_ARTIFACT_API,
   OPENCLAW_TRANSCRIPT_ARTIFACT_PROVIDER,
   isTranscriptOnlyOpenClawAssistantModel,
-} from "../../shared/transcript-only-openclaw-assistant.js";
-import type { OpenClawConfig } from "../types.openclaw.js";
+} from "../../shared/transcript-only-grokbot-assistant.js";
+import type { OpenClawConfig } from "../types.grokbot.js";
 import {
   resolveDefaultSessionStorePath,
   resolveSessionFilePath,
@@ -403,7 +403,7 @@ export async function readTailAssistantTextFromSessionTranscript(
   for await (const line of streamSessionTranscriptLinesReverse(sessionFile)) {
     try {
       const parsed = JSON.parse(line) as { message?: unknown };
-      // Skip non-message entries (e.g. `openclaw.cache-ttl` custom events) so
+      // Skip non-message entries (e.g. `grokbot.cache-ttl` custom events) so
       // a metadata line emitted after the canonical assistant turn doesn't
       // make the tail reader fall through to "no assistant tail" and cause
       // persistTextTurnTranscript to append a duplicate. Stop at any real

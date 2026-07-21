@@ -1,5 +1,5 @@
-// Document Extract plugin entrypoint registers its OpenClaw integration.
-import { definePluginEntry } from "openclaw/plugin-sdk/plugin-entry";
+// Document Extract plugin entrypoint registers its GrokBot integration.
+import { definePluginEntry } from "grokbot/plugin-sdk/plugin-entry";
 
 export default definePluginEntry({
   id: "document-extract",

@@ -2,26 +2,26 @@
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { encodePngRgba, fillPixel } from "openclaw/plugin-sdk/media-runtime";
-import type { OpenClawPluginToolFactory } from "openclaw/plugin-sdk/plugin-entry";
-import { createTestPluginApi } from "openclaw/plugin-sdk/plugin-test-api";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { encodePngRgba, fillPixel } from "grokbot/plugin-sdk/media-runtime";
+import type { OpenClawPluginToolFactory } from "grokbot/plugin-sdk/plugin-entry";
+import { createTestPluginApi } from "grokbot/plugin-sdk/plugin-test-api";
 import {
   createCapturedPluginRegistration,
   registerProviderPlugin,
   requireRegisteredProvider,
-} from "openclaw/plugin-sdk/plugin-test-runtime";
+} from "grokbot/plugin-sdk/plugin-test-runtime";
 import {
   expectOpenClawLiveTranscriptMarker,
   runRealtimeSttLiveTest,
-} from "openclaw/plugin-sdk/provider-test-contracts";
+} from "grokbot/plugin-sdk/provider-test-contracts";
 import {
   REALTIME_VOICE_AUDIO_FORMAT_PCM16_24KHZ,
   type RealtimeVoiceBridge,
   type RealtimeVoiceBridgeEvent,
-} from "openclaw/plugin-sdk/realtime-voice";
-import { getRuntimeConfig } from "openclaw/plugin-sdk/runtime-config-snapshot";
-import { isBillingErrorMessage } from "openclaw/plugin-sdk/test-live";
+} from "grokbot/plugin-sdk/realtime-voice";
+import { getRuntimeConfig } from "grokbot/plugin-sdk/runtime-config-snapshot";
+import { isBillingErrorMessage } from "grokbot/plugin-sdk/test-live";
 import { describe, expect, it } from "vitest";
 import { createCodeExecutionTool } from "./code-execution.js";
 import plugin from "./index.js";
@@ -285,7 +285,7 @@ describeLive("xai plugin live", () => {
       expect(voices?.some((voice) => voice.id === "altair")).toBe(true);
 
       const audioFile = await speechProvider.synthesize({
-        text: "OpenClaw xAI text to speech integration test OK.",
+        text: "GrokBot xAI text to speech integration test OK.",
         cfg,
         providerConfig: {
           apiKey: XAI_API_KEY,
@@ -302,7 +302,7 @@ describeLive("xai plugin live", () => {
       expect(audioFile.audioBuffer.byteLength).toBeGreaterThan(512);
 
       const streaming = await speechProvider.streamSynthesize?.({
-        text: "OpenClaw xAI streaming text to speech integration test OK.",
+        text: "GrokBot xAI streaming text to speech integration test OK.",
         cfg,
         providerConfig: {
           apiKey: XAI_API_KEY,
@@ -334,7 +334,7 @@ describeLive("xai plugin live", () => {
       }
 
       const telephony = await speechProvider.synthesizeTelephony?.({
-        text: "OpenClaw xAI telephony check OK.",
+        text: "GrokBot xAI telephony check OK.",
         cfg,
         providerConfig: {
           apiKey: XAI_API_KEY,
@@ -358,7 +358,7 @@ describeLive("xai plugin live", () => {
       const mediaProvider = requireRegisteredProvider(mediaProviders, "xai");
       const speechProvider = requireRegisteredProvider(speechProviders, "xai");
       const cfg = createLiveConfig();
-      const phrase = "OpenClaw xAI speech to text integration test OK.";
+      const phrase = "GrokBot xAI speech to text integration test OK.";
 
       const audioFile = await speechProvider.synthesize({
         text: phrase,
@@ -438,7 +438,7 @@ describeLive("xai plugin live", () => {
       const realtimeProvider = requireRegisteredProvider(realtimeTranscriptionProviders, "xai");
       const speechProvider = requireRegisteredProvider(speechProviders, "xai");
       const cfg = createLiveConfig();
-      const phrase = "OpenClaw xAI realtime transcription integration test OK.";
+      const phrase = "GrokBot xAI realtime transcription integration test OK.";
 
       const telephony = await speechProvider.synthesizeTelephony?.({
         text: phrase,

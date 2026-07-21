@@ -130,7 +130,7 @@ beforeEach(() => {
     selection: {
       provider: "openai",
       modelId: "gpt-5.5",
-      agentDir: "/tmp/openclaw-agent",
+      agentDir: "/tmp/grokbot-agent",
     },
     model: {
       provider: "openai",
@@ -158,7 +158,7 @@ beforeEach(() => {
   completionMocks.resolveSimpleCompletionSelectionForAgent.mockReturnValue({
     provider: "openai",
     modelId: "gpt-5.5",
-    agentDir: "/tmp/openclaw-agent",
+    agentDir: "/tmp/grokbot-agent",
   });
   setActivePluginRegistry(
     createTestRegistry([
@@ -1314,7 +1314,7 @@ describe("registerPluginCommand", () => {
       senderId: "U123",
       isAuthorizedSender: true,
       agentId: "codex",
-      sessionKey: "plugin-binding:openclaw-codex-app-server:dm",
+      sessionKey: "plugin-binding:grokbot-codex-app-server:dm",
       authProfileId: "openai:owner@example.com",
       commandBody: "/runtimecheck",
       config: {} as never,

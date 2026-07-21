@@ -4,8 +4,8 @@ import path from "node:path";
 import type { DatabaseSync } from "node:sqlite";
 import { StringDecoder } from "node:string_decoder";
 import { gunzipSync, gzipSync } from "node:zlib";
-import { normalizeNullableString as normalizeObservedValue } from "@openclaw/normalization-core/string-coerce";
-import { normalizeUniqueStringEntries } from "@openclaw/normalization-core/string-normalization";
+import { normalizeNullableString as normalizeObservedValue } from "@grokbot/normalization-core/string-coerce";
+import { normalizeUniqueStringEntries } from "@grokbot/normalization-core/string-normalization";
 import { sha256Hex } from "../infra/crypto-digest.js";
 import { requireNodeSqlite } from "../infra/node-sqlite.js";
 import { applyPrivateModeSync } from "../infra/private-mode.js";
@@ -17,7 +17,7 @@ import {
   registerSqliteCacheExitClose,
   type SqliteWalMaintenance,
 } from "../infra/sqlite-wal.js";
-import { openOpenClawStateDatabase } from "../state/openclaw-state-db.js";
+import { openOpenClawStateDatabase } from "../state/grokbot-state-db.js";
 import type {
   CaptureBlobRecord,
   CaptureEventRecord,

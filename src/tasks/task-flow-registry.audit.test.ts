@@ -1,7 +1,7 @@
 // Covers managed task-flow audit summaries and stale-flow classification.
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { captureEnv } from "../test-utils/env.js";
-import { withOpenClawTestState } from "../test-utils/openclaw-test-state.js";
+import { withOpenClawTestState } from "../test-utils/grokbot-test-state.js";
 import { SUBAGENT_KILL_TASK_ERROR } from "./detached-task-runtime-contract.js";
 import {
   createRunningTaskRun as createRunningTaskRunOrNull,
@@ -67,7 +67,7 @@ async function withTaskFlowAuditStateDir(run: (root: string) => Promise<void>): 
   await withOpenClawTestState(
     {
       layout: "state-only",
-      prefix: "openclaw-task-flow-audit-",
+      prefix: "grokbot-task-flow-audit-",
     },
     async (state) => {
       resetTaskRegistryDeliveryRuntimeForTests();

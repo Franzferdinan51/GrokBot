@@ -22,13 +22,13 @@ function quote(value: string): string {
 
 function resolveHelpCommand(argv: string[] | undefined, options?: { root?: boolean }): string {
   if (options?.root || !argv) {
-    return formatCliCommand("openclaw --help");
+    return formatCliCommand("grokbot --help");
   }
   const commandPath = getCommandPathWithRootOptions(argv, 2);
   if (commandPath.length === 0) {
-    return formatCliCommand("openclaw --help");
+    return formatCliCommand("grokbot --help");
   }
-  return formatCliCommand(`openclaw ${commandPath.join(" ")} --help`);
+  return formatCliCommand(`grokbot ${commandPath.join(" ")} --help`);
 }
 
 function lines(...items: Array<string | undefined>): string {
@@ -40,10 +40,10 @@ function formatHelpHint(argv: string[] | undefined, options?: { root?: boolean }
 }
 
 function formatDocsHint(): string {
-  return `${theme.muted("Docs:")} ${formatDocsLink("/cli", "docs.openclaw.ai/cli")}`;
+  return `${theme.muted("Docs:")} ${formatDocsLink("/cli", "docs.grokbot.ai/cli")}`;
 }
 
-/** Convert Commander parse errors into OpenClaw-specific help and docs guidance. */
+/** Convert Commander parse errors into GrokBot-specific help and docs guidance. */
 export function formatCliParseErrorOutput(
   raw: string,
   options: FormatCliParseErrorOptions = {},
@@ -53,10 +53,10 @@ export function formatCliParseErrorOutput(
   if (unknownCommand) {
     const command = unknownCommand[1] ?? "";
     return lines(
-      theme.error(`OpenClaw does not know the command ${quote(command)}.`),
+      theme.error(`GrokBot does not know the command ${quote(command)}.`),
       formatCliCommandSuggestions(command),
       formatHelpHint(options.argv, { root: true }),
-      `${theme.muted("Plugin command?")} ${theme.command(formatCliCommand("openclaw plugins list"))}`,
+      `${theme.muted("Plugin command?")} ${theme.command(formatCliCommand("grokbot plugins list"))}`,
       formatDocsHint(),
     );
   }
@@ -65,7 +65,7 @@ export function formatCliParseErrorOutput(
   if (unknownOption) {
     const option = unknownOption[1] ?? "";
     return lines(
-      theme.error(`OpenClaw does not recognize option ${quote(option)}.`),
+      theme.error(`GrokBot does not recognize option ${quote(option)}.`),
       formatHelpHint(options.argv),
     );
   }
@@ -93,7 +93,7 @@ export function formatCliParseErrorOutput(
   }
 
   return lines(
-    theme.error(`OpenClaw could not parse this command: ${message}`),
+    theme.error(`GrokBot could not parse this command: ${message}`),
     formatHelpHint(options.argv),
   );
 }

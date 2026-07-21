@@ -2,7 +2,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { uniqueStrings } from "@openclaw/normalization-core/string-normalization";
+import { uniqueStrings } from "@grokbot/normalization-core/string-normalization";
 import { loadBundledPluginPublicSurfaceModule } from "../plugin-sdk/facade-loader.js";
 import { resolveBundledPluginsDir } from "../plugins/bundled-dir.js";
 import { findBundledPluginMetadataById } from "../plugins/bundled-plugin-metadata.js";
@@ -25,7 +25,7 @@ function isSafeBundledPluginDirName(pluginId: string): boolean {
 
 function readPluginManifestId(pluginDir: string): string | undefined {
   try {
-    const manifestPath = path.join(pluginDir, "openclaw.plugin.json");
+    const manifestPath = path.join(pluginDir, "grokbot.plugin.json");
     const parsed = JSON.parse(fs.readFileSync(manifestPath, "utf-8")) as { id?: unknown };
     return typeof parsed.id === "string" ? parsed.id : undefined;
   } catch {

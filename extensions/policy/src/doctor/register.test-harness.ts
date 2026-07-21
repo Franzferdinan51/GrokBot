@@ -9,8 +9,8 @@ import {
   type HealthFinding,
   type HealthRepairContext,
   type OpenClawConfig,
-} from "openclaw/plugin-sdk/health";
-import { clearHealthChecksForTest } from "openclaw/plugin-sdk/plugin-test-runtime";
+} from "grokbot/plugin-sdk/health";
+import { clearHealthChecksForTest } from "grokbot/plugin-sdk/plugin-test-runtime";
 import { registerPolicyDoctorChecks } from "./register.js";
 
 export let workspaceDir: string;
@@ -110,18 +110,18 @@ export const describe0BeforeEach0 = async () => {
   workspaceDir = await fs.mkdtemp(join(tmpdir(), "policy-doctor-"));
   process.env.OPENCLAW_HOME = workspaceDir;
   delete process.env.OPENCLAW_STATE_DIR;
-  await fs.mkdir(join(workspaceDir, ".openclaw"), { recursive: true });
+  await fs.mkdir(join(workspaceDir, ".grokbot"), { recursive: true });
   try {
     await fs.symlink(
       "../exec-approvals.json",
-      join(workspaceDir, ".openclaw", "exec-approvals.json"),
+      join(workspaceDir, ".grokbot", "exec-approvals.json"),
     );
   } catch (err) {
     if (typeof err !== "object" || err === null || !("code" in err) || err.code !== "EPERM") {
       throw err;
     }
-    await fs.rm(join(workspaceDir, ".openclaw"), { recursive: true, force: true });
-    await fs.symlink(workspaceDir, join(workspaceDir, ".openclaw"), "junction");
+    await fs.rm(join(workspaceDir, ".grokbot"), { recursive: true, force: true });
+    await fs.symlink(workspaceDir, join(workspaceDir, ".grokbot"), "junction");
   }
 };
 

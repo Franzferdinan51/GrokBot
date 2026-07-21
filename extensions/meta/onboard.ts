@@ -4,7 +4,7 @@
 import {
   createModelCatalogPresetAppliers,
   type OpenClawConfig,
-} from "openclaw/plugin-sdk/provider-onboard";
+} from "grokbot/plugin-sdk/provider-onboard";
 import { buildMetaModelDefinition, META_BASE_URL, META_MODEL_CATALOG } from "./models.js";
 
 /** Default Meta model reference used after onboarding. */

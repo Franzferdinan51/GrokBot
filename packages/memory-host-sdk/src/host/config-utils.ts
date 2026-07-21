@@ -2,19 +2,19 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { normalizeAgentId } from "@openclaw/normalization-core/agent-id";
+import { normalizeAgentId } from "@grokbot/normalization-core/agent-id";
 import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalString,
-} from "@openclaw/normalization-core/string-coerce";
+} from "@grokbot/normalization-core/string-coerce";
 import {
   normalizeStringEntries,
   uniqueStrings,
-} from "@openclaw/normalization-core/string-normalization";
+} from "@grokbot/normalization-core/string-normalization";
 export { normalizeAgentId };
-export { splitShellArgs } from "./openclaw-runtime-io.js";
+export { splitShellArgs } from "./grokbot-runtime-io.js";
 
-// Shared OpenClaw config helpers used by memory host, QMD, and agent context code.
+// Shared GrokBot config helpers used by memory host, QMD, and agent context code.
 
 /** Chat shape used by memory send-policy matching. */
 type ChatType = "direct" | "group" | "channel";
@@ -147,7 +147,7 @@ type AgentConfig = {
   contextLimits?: AgentContextLimitsConfig;
 };
 
-/** Narrow OpenClaw config shape consumed by memory host utilities. */
+/** Narrow GrokBot config shape consumed by memory host utilities. */
 export type OpenClawConfig = {
   agents?: {
     defaults?: {
@@ -204,7 +204,7 @@ export const MEMORY_HOST_ROOT_FILENAME = "MEMORY.md";
 
 const DEFAULT_AGENT_ID = "main";
 const LEGACY_STATE_DIRNAMES = [".clawdbot"] as const;
-const NEW_STATE_DIRNAME = ".openclaw";
+const NEW_STATE_DIRNAME = ".grokbot";
 /** Treat shell-placeholder home values as absent. */
 function normalizeHomeValue(value: string | undefined): string | undefined {
   const trimmed = normalizeOptionalString(value);
@@ -214,7 +214,7 @@ function normalizeHomeValue(value: string | undefined): string | undefined {
   return trimmed;
 }
 
-/** Resolve the underlying OS home before applying OpenClaw-specific overrides. */
+/** Resolve the underlying OS home before applying GrokBot-specific overrides. */
 function resolveRawOsHomeDir(env: NodeJS.ProcessEnv, homedir: () => string): string | undefined {
   return (
     normalizeHomeValue(env.HOME) ??
@@ -270,7 +270,7 @@ function resolveStateDir(
   if (env.OPENCLAW_TEST_FAST === "1" || fs.existsSync(nextDir)) {
     return nextDir;
   }
-  // Existing legacy state remains authoritative until an explicit migration creates .openclaw.
+  // Existing legacy state remains authoritative until an explicit migration creates .grokbot.
   const existingLegacy = legacyStateDirs(effectiveHome).find((dir) => {
     try {
       return fs.existsSync(dir);
@@ -286,9 +286,9 @@ function resolveDefaultAgentWorkspaceDir(env: NodeJS.ProcessEnv = process.env): 
   const home = resolveRequiredHomeDir(env, os.homedir);
   const profile = env.OPENCLAW_PROFILE?.trim();
   if (profile && normalizeLowercaseStringOrEmpty(profile) !== "default") {
-    return path.join(home, ".openclaw", `workspace-${profile}`);
+    return path.join(home, ".grokbot", `workspace-${profile}`);
   }
-  return path.join(home, ".openclaw", "workspace");
+  return path.join(home, ".grokbot", "workspace");
 }
 
 /** Return configured agent entries after dropping nullish placeholders. */

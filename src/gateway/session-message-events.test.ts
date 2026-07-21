@@ -16,7 +16,7 @@ import {
   persistSessionTranscriptTurn,
 } from "../config/sessions/session-accessor.js";
 import { appendAssistantMessageToSessionTranscript } from "../config/sessions/transcript.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import {
   claimAgentRunContext,
   clearAgentRunContext,
@@ -78,7 +78,7 @@ afterEach(async () => {
 });
 
 async function createSessionStoreFile(): Promise<string> {
-  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-session-message-"));
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-session-message-"));
   cleanupDirs.push(dir);
   const storePath = path.join(dir, "sessions.json");
   testState.sessionStorePath = storePath;
@@ -833,7 +833,7 @@ describe("session.message websocket events", () => {
             messageSeq: 1,
             message: {
               role: "custom",
-              customType: "openclaw.runtime-context",
+              customType: "grokbot.runtime-context",
               content: "secret runtime context",
               display: false,
             },

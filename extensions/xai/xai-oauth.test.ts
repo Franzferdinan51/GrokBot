@@ -1,10 +1,10 @@
 // Xai tests cover xai oauth plugin behavior.
-import type { ProviderAuthContext } from "openclaw/plugin-sdk/plugin-entry";
+import type { ProviderAuthContext } from "grokbot/plugin-sdk/plugin-entry";
 import {
   createRuntimeEnv,
   createTestWizardPrompter,
-} from "openclaw/plugin-sdk/plugin-test-runtime";
-import type { OAuthCredential } from "openclaw/plugin-sdk/provider-auth";
+} from "grokbot/plugin-sdk/plugin-test-runtime";
+import type { OAuthCredential } from "grokbot/plugin-sdk/provider-auth";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   createXaiDeviceCodeAuthMethod,
@@ -104,7 +104,7 @@ describe("xAI OAuth", () => {
       expect(body).toContain(`client_id=${encodeURIComponent(XAI_OAUTH_CLIENT_ID)}`);
       expect(body).toContain("refresh_token=refresh-1");
       const headers = new Headers(init?.headers ?? {});
-      expect(headers.get("user-agent")).toBe("openclaw/2026.3.22");
+      expect(headers.get("user-agent")).toBe("grokbot/2026.3.22");
       return jsonResponse({
         access_token: "access-2",
         expires_in: 120,

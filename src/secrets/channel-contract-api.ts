@@ -3,7 +3,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from "../agents/agent-scope.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { openRootFileSync } from "../infra/boundary-file-read.js";
 import { shouldRejectHardlinkedPluginFiles } from "../plugins/hardlink-policy.js";
 import type { PluginManifestRecord } from "../plugins/manifest-registry.js";
@@ -74,8 +74,8 @@ function orderedContractApiExtensions(): readonly string[] {
 
 function resolvePluginContractApiPath(rootDir: string): string | null {
   // Compiled npm-published plugins place their public artifacts under <rootDir>/dist/
-  // (per package.json `openclaw.runtimeExtensions`), while flat-layout plugins keep
-  // them at <rootDir>/. Search both, preferring dist/ when running from built openclaw
+  // (per package.json `grokbot.runtimeExtensions`), while flat-layout plugins keep
+  // them at <rootDir>/. Search both, preferring dist/ when running from built grokbot
   // artifacts and rootDir/ when running from source.
   const searchDirs = RUNNING_FROM_BUILT_ARTIFACT
     ? [path.join(rootDir, "dist"), rootDir]

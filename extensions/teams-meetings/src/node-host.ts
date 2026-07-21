@@ -1,5 +1,5 @@
 import { spawnSync } from "node:child_process";
-import { createMeetingNodeHost } from "openclaw/plugin-sdk/meeting-runtime";
+import { createMeetingNodeHost } from "grokbot/plugin-sdk/meeting-runtime";
 import {
   DEFAULT_TEAMS_MEETINGS_AUDIO_INPUT_COMMAND,
   DEFAULT_TEAMS_MEETINGS_AUDIO_OUTPUT_COMMAND,
@@ -84,7 +84,7 @@ const teamsMeetingsNodeHost = createMeetingNodeHost({
     buildProfileArgs: (profile) => ["--args", `--profile-directory=${profile}`],
     openedStatus: "chrome-opened",
     openedNotes: [
-      "Teams page control is handled by OpenClaw browser automation when using chrome-node.",
+      "Teams page control is handled by GrokBot browser automation when using chrome-node.",
     ],
   },
 });

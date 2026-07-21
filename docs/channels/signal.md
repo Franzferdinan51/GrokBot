@@ -6,7 +6,7 @@ read_when:
 title: "Signal"
 ---
 
-Signal is a downloadable channel plugin (`@openclaw/signal`). The gateway talks to `signal-cli` over HTTP: either the native daemon (JSON-RPC + SSE) or the [bbernhard/signal-cli-rest-api](https://github.com/bbernhard/signal-cli-rest-api) container (REST + WebSocket). OpenClaw does not embed libsignal.
+Signal is a downloadable channel plugin (`@grokbot/signal`). The gateway talks to `signal-cli` over HTTP: either the native daemon (JSON-RPC + SSE) or the [bbernhard/signal-cli-rest-api](https://github.com/bbernhard/signal-cli-rest-api) container (REST + WebSocket). GrokBot does not embed libsignal.
 
 ## The number model (read this first)
 
@@ -17,10 +17,10 @@ Signal is a downloadable channel plugin (`@openclaw/signal`). The gateway talks 
 ## Install
 
 ```bash
-openclaw plugins install @openclaw/signal
+grokbot plugins install @grokbot/signal
 ```
 
-Bare plugin specs try ClawHub first, then npm fallback. Force a source with `openclaw plugins install clawhub:@openclaw/signal` or `npm:@openclaw/signal`. `plugins install` registers and enables the plugin; no separate `enable` step is needed. See [Plugins](/tools/plugin) for general install rules.
+Bare plugin specs try ClawHub first, then npm fallback. Force a source with `grokbot plugins install clawhub:@grokbot/signal` or `npm:@grokbot/signal`. `plugins install` registers and enables the plugin; no separate `enable` step is needed. See [Plugins](/tools/plugin) for general install rules.
 
 ## Quick setup
 
@@ -30,28 +30,28 @@ Bare plugin specs try ClawHub first, then npm fallback. Force a source with `ope
   </Step>
   <Step title="Install the plugin">
     ```bash
-    openclaw plugins install @openclaw/signal
+    grokbot plugins install @grokbot/signal
     ```
   </Step>
   <Step title="Run the guided setup">
     ```bash
-    openclaw channels add
+    grokbot channels add
     ```
     The wizard detects whether `signal-cli` is on `PATH` and, when missing, offers to install it: downloads the official native GraalVM build on Linux x86-64, or installs via Homebrew on macOS and other architectures. It then prompts for the bot number and `signal-cli` path.
 
-    For non-interactive setup, `openclaw channels add --channel signal` also accepts `--signal-number <e164>` for the bot phone number, plus `--http-host <host>` and `--http-port <port>` for the Signal daemon endpoint (default `127.0.0.1:8080`).
+    For non-interactive setup, `grokbot channels add --channel signal` also accepts `--signal-number <e164>` for the bot phone number, plus `--http-host <host>` and `--http-port <port>` for the Signal daemon endpoint (default `127.0.0.1:8080`).
 
   </Step>
   <Step title="Link or register the account">
-    - **QR link (fastest):** `signal-cli link -n "OpenClaw"`, then scan with Signal. See [Path A](#setup-path-a-link-existing-signal-account-qr).
+    - **QR link (fastest):** `signal-cli link -n "GrokBot"`, then scan with Signal. See [Path A](#setup-path-a-link-existing-signal-account-qr).
     - **SMS registration:** dedicated number with captcha + SMS verification. See [Path B](#setup-path-b-register-dedicated-bot-number-sms-linux).
 
   </Step>
   <Step title="Verify and pair">
     ```bash
-    openclaw gateway call channels.status --params '{"probe":true}'
+    grokbot gateway call channels.status --params '{"probe":true}'
     ```
-    Send a first DM and approve pairing: `openclaw pairing approve signal <CODE>`.
+    Send a first DM and approve pairing: `grokbot pairing approve signal <CODE>`.
   </Step>
 </Steps>
 
@@ -89,8 +89,8 @@ Multi-account support: use `channels.signal.accounts` with per-account config an
 
 ## Setup path A: link existing Signal account (QR)
 
-1. Install `signal-cli` (JVM or native build), or let `openclaw channels add` install it for you.
-2. Link a bot account: `signal-cli link -n "OpenClaw"`, then scan the QR in Signal.
+1. Install `signal-cli` (JVM or native build), or let `grokbot channels add` install it for you.
+2. Link a bot account: `signal-cli link -n "GrokBot"`, then scan the QR in Signal.
 3. Configure Signal and start the gateway.
 
 ## Setup path B: register dedicated bot number (SMS, Linux)
@@ -128,20 +128,20 @@ signal-cli -a +<BOT_PHONE_NUMBER> register --captcha '<SIGNALCAPTCHA_URL>'
 signal-cli -a +<BOT_PHONE_NUMBER> verify <VERIFICATION_CODE>
 ```
 
-4. Configure OpenClaw, restart the gateway, verify the channel:
+4. Configure GrokBot, restart the gateway, verify the channel:
 
 ```bash
 # If you run the gateway as a user systemd service:
-systemctl --user restart openclaw-gateway.service
+systemctl --user restart grokbot-gateway.service
 
 # Then verify:
-openclaw doctor
-openclaw channels status --probe
+grokbot doctor
+grokbot channels status --probe
 ```
 
 5. Pair your DM sender:
    - Send any message to the bot number.
-   - Approve on the server: `openclaw pairing approve signal <PAIRING_CODE>`.
+   - Approve on the server: `grokbot pairing approve signal <PAIRING_CODE>`.
    - Save the bot number as a contact on your phone to avoid "Unknown contact".
 
 <Warning>
@@ -156,7 +156,7 @@ Upstream references:
 
 ## External daemon mode (httpUrl)
 
-To manage `signal-cli` yourself (slow JVM cold starts, container init, shared CPUs), run the daemon separately and point OpenClaw at it:
+To manage `signal-cli` yourself (slow JVM cold starts, container init, shared CPUs), run the daemon separately and point GrokBot at it:
 
 ```json5
 {
@@ -169,7 +169,7 @@ To manage `signal-cli` yourself (slow JVM cold starts, container init, shared CP
 }
 ```
 
-This skips auto-spawn and OpenClaw's startup wait. For slow auto-spawned starts, set `channels.signal.startupTimeoutMs`.
+This skips auto-spawn and GrokBot's startup wait. For slow auto-spawned starts, set `channels.signal.startupTimeoutMs`.
 
 ## Container mode (bbernhard/signal-cli-rest-api)
 
@@ -178,7 +178,7 @@ Instead of running `signal-cli` natively, use the [bbernhard/signal-cli-rest-api
 Requirements:
 
 - The container **must** run with `MODE=json-rpc` for real-time message receiving.
-- Register or link your Signal account inside the container before connecting OpenClaw.
+- Register or link your Signal account inside the container before connecting GrokBot.
 
 Example `docker-compose.yml` service:
 
@@ -193,7 +193,7 @@ signal-cli:
     - signal-cli-data:/home/.local/share/signal-cli
 ```
 
-OpenClaw config:
+GrokBot config:
 
 ```json5
 {
@@ -209,7 +209,7 @@ OpenClaw config:
 }
 ```
 
-`apiMode` controls which protocol OpenClaw uses:
+`apiMode` controls which protocol GrokBot uses:
 
 | Value         | Behavior                                                                             |
 | ------------- | ------------------------------------------------------------------------------------ |
@@ -217,14 +217,14 @@ OpenClaw config:
 | `"native"`    | Force native signal-cli (JSON-RPC at `/api/v1/rpc`, SSE at `/api/v1/events`)         |
 | `"container"` | Force bbernhard container (REST at `/v2/send`, WebSocket at `/v1/receive/{account}`) |
 
-When `apiMode` is `"auto"`, OpenClaw caches the detected mode for 30 seconds per daemon URL to avoid repeated probes (native wins when both transports are healthy). Container receive is only selected for streaming after `/v1/receive/{account}` upgrades to WebSocket, which requires `MODE=json-rpc`.
+When `apiMode` is `"auto"`, GrokBot caches the detected mode for 30 seconds per daemon URL to avoid repeated probes (native wins when both transports are healthy). Container receive is only selected for streaming after `/v1/receive/{account}` upgrades to WebSocket, which requires `MODE=json-rpc`.
 
-Container mode supports the same Signal operations as native mode where the container exposes matching APIs: sends, receives, attachments, typing indicators, read/viewed receipts, reactions, groups, and styled text. OpenClaw translates native Signal RPC calls into the container's REST payloads, including `group.{base64(internal_id)}` group IDs and `text_mode: "styled"` for formatted text.
+Container mode supports the same Signal operations as native mode where the container exposes matching APIs: sends, receives, attachments, typing indicators, read/viewed receipts, reactions, groups, and styled text. GrokBot translates native Signal RPC calls into the container's REST payloads, including `group.{base64(internal_id)}` group IDs and `text_mode: "styled"` for formatted text.
 
 Operational notes:
 
-- Use `autoStart: false` with container mode; OpenClaw should not spawn a native daemon when `apiMode: "container"` is selected.
-- Use `MODE=json-rpc` for receiving. `MODE=normal` can make `/v1/about` look healthy, but `/v1/receive/{account}` will not WebSocket-upgrade, so OpenClaw will not select container receive streaming in `auto` mode.
+- Use `autoStart: false` with container mode; GrokBot should not spawn a native daemon when `apiMode: "container"` is selected.
+- Use `MODE=json-rpc` for receiving. `MODE=normal` can make `/v1/about` look healthy, but `/v1/receive/{account}` will not WebSocket-upgrade, so GrokBot will not select container receive streaming in `auto` mode.
 - Set `apiMode: "container"` when `httpUrl` points at the bbernhard REST API, `"native"` when it points at native `signal-cli` JSON-RPC/SSE, and `"auto"` when the deployment may vary.
 - Container attachment downloads honor the same media byte limits as native mode. Oversized responses are rejected before being fully buffered when the server sends `Content-Length`, and while streaming otherwise.
 
@@ -234,7 +234,7 @@ DMs:
 
 - Default: `channels.signal.dmPolicy = "pairing"`.
 - Unknown senders get a pairing code; messages are ignored until approved (codes expire after 1 hour).
-- Approve via `openclaw pairing list signal` and `openclaw pairing approve signal <CODE>`.
+- Approve via `grokbot pairing list signal` and `grokbot pairing approve signal <CODE>`.
 - Pairing is the default token exchange for Signal DMs. Details: [Pairing](/channels/pairing)
 - UUID-only senders (from `sourceUuid`) are stored as `uuid:<id>` in `channels.signal.allowFrom`.
 
@@ -272,7 +272,7 @@ Mention-gated group with bounded context:
 }
 ```
 
-Allowed group messages that do not mention the bot stay silent and are kept only in the bounded pending history window. When a later native @mention or fallback text mention triggers the bot, OpenClaw includes that recent context and replies to the same group. Skipped attachment bodies are not downloaded; they may appear only as compact media placeholders in the pending context.
+Allowed group messages that do not mention the bot stay silent and are kept only in the bounded pending history window. When a later native @mention or fallback text mention triggers the bot, GrokBot includes that recent context and replies to the same group. Skipped attachment bodies are not downloaded; they may appear only as compact media placeholders in the pending context.
 
 ## How it works (behavior)
 
@@ -280,7 +280,7 @@ Allowed group messages that do not mention the bot stay silent and are kept only
 - Container mode: the gateway sends via REST API and receives via WebSocket.
 - Inbound messages are normalized into the shared channel envelope.
 - Replies always route back to the same number or group.
-- Replies to inbound messages include native Signal quote metadata when the backend accepts the inbound timestamp and author; if quote metadata is missing or rejected, OpenClaw sends the reply as a normal message.
+- Replies to inbound messages include native Signal quote metadata when the backend accepts the inbound timestamp and author; if quote metadata is missing or rejected, GrokBot sends the reply as a normal message.
 - Configure native quote use with `channels.signal.replyToMode = off | first | all | batched`, or `channels.signal.replyToModeByChatType.direct/group` for per-chat-type overrides. Account-level values under `channels.signal.accounts.<id>` take precedence.
 
 ## Media + limits
@@ -295,8 +295,8 @@ Allowed group messages that do not mention the bot stay silent and are kept only
 
 ## Typing + read receipts
 
-- **Typing indicators**: OpenClaw sends typing signals via `signal-cli sendTyping` and refreshes them while a reply is running.
-- **Read receipts**: when `channels.signal.sendReadReceipts` is true, OpenClaw forwards read receipts for allowed DMs.
+- **Typing indicators**: GrokBot sends typing signals via `signal-cli sendTyping` and refreshes them while a reply is running.
+- **Read receipts**: when `channels.signal.sendReadReceipts` is true, GrokBot forwards read receipts for allowed DMs.
 - `signal-cli` does not expose read receipts for groups.
 
 ## Lifecycle status reactions
@@ -341,7 +341,7 @@ Approval reaction resolution requires explicit Signal approvers from `channels.s
 
 ## Question reactions
 
-For an `ask_user` prompt with one non-secret, single-select question and one to four options, Signal shows `1️⃣` through `4️⃣` beside the option labels. React to the delivered prompt with the matching number to answer it. OpenClaw verifies the reaction targets the bot-authored message, then maps the number to the canonical option through the Gateway. Stale or duplicate taps are ignored. Multi-question, multi-select, and free-text prompts remain text-reply-only; normal Signal DM/group admission rules authorize the sender.
+For an `ask_user` prompt with one non-secret, single-select question and one to four options, Signal shows `1️⃣` through `4️⃣` beside the option labels. React to the delivered prompt with the matching number to answer it. GrokBot verifies the reaction targets the bot-authored message, then maps the number to the canonical option through the Gateway. Stale or duplicate taps are ignored. Multi-question, multi-select, and free-text prompts remain text-reply-only; normal Signal DM/group admission rules authorize the sender.
 
 ## Delivery targets (CLI/cron)
 
@@ -352,7 +352,7 @@ For an `ask_user` prompt with one non-secret, single-select question and one to 
 
 ## Aliases
 
-Configure aliases for stable names on recurring Signal targets. Aliases are OpenClaw-side config only; they do not create or edit Signal contacts.
+Configure aliases for stable names on recurring Signal targets. Aliases are GrokBot-side config only; they do not create or edit Signal contacts.
 
 ```json5
 {
@@ -372,7 +372,7 @@ Configure aliases for stable names on recurring Signal targets. Aliases are Open
 Use aliases anywhere Signal delivery targets are accepted:
 
 ```bash
-openclaw message send --channel signal --target signal:ops --message "Deployment is complete"
+grokbot message send --channel signal --target signal:ops --message "Deployment is complete"
 ```
 
 Per-account aliases inherit the top-level aliases and can add or override names:
@@ -396,24 +396,24 @@ Per-account aliases inherit the top-level aliases and can add or override names:
 }
 ```
 
-`openclaw directory peers list --channel signal` and `openclaw directory groups list --channel signal` list configured aliases. The Signal directory is config-backed; it does not live-query Signal contacts or mutate the Signal account.
+`grokbot directory peers list --channel signal` and `grokbot directory groups list --channel signal` list configured aliases. The Signal directory is config-backed; it does not live-query Signal contacts or mutate the Signal account.
 
 ## Troubleshooting
 
 Run this ladder first:
 
 ```bash
-openclaw status
-openclaw gateway status
-openclaw logs --follow
-openclaw doctor
-openclaw channels status --probe
+grokbot status
+grokbot gateway status
+grokbot logs --follow
+grokbot doctor
+grokbot channels status --probe
 ```
 
 Then confirm DM pairing state if needed:
 
 ```bash
-openclaw pairing list signal
+grokbot pairing list signal
 ```
 
 Common failures:
@@ -421,15 +421,15 @@ Common failures:
 - Daemon reachable but no replies: verify account/daemon settings (`httpUrl`, `account`) and receive mode.
 - DMs ignored: sender is pending pairing approval.
 - Group messages ignored: group sender/mention gating blocks delivery.
-- Config validation errors after edits: run `openclaw doctor --fix`.
+- Config validation errors after edits: run `grokbot doctor --fix`.
 - Signal missing from diagnostics: confirm `channels.signal.enabled: true`.
 
 Extra checks:
 
 ```bash
-openclaw pairing list signal
+grokbot pairing list signal
 pgrep -af signal-cli
-grep -i "signal" "/tmp/openclaw/openclaw-$(date +%Y-%m-%d).log" | tail -20
+grep -i "signal" "/tmp/grokbot/grokbot-$(date +%Y-%m-%d).log" | tail -20
 ```
 
 For triage flow: [Channels Troubleshooting](/channels/troubleshooting).
@@ -463,7 +463,7 @@ Provider options:
 - `channels.signal.sendReadReceipts`: forward read receipts.
 - `channels.signal.dmPolicy`: `pairing | allowlist | open | disabled` (default: pairing).
 - `channels.signal.allowFrom`: DM allowlist (E.164 or `uuid:<id>`). `open` requires `"*"`. Signal has no usernames; use phone/UUID IDs.
-- `channels.signal.aliases`: OpenClaw-side aliases for DM or group delivery targets.
+- `channels.signal.aliases`: GrokBot-side aliases for DM or group delivery targets.
 - `channels.signal.groupPolicy`: `open | allowlist | disabled` (default: allowlist).
 - `channels.signal.groupAllowFrom`: group allowlist; accepts Signal group IDs (raw, `group:<id>`, or `signal:group:<id>`), sender E.164 numbers, or `uuid:<id>` values.
 - `channels.signal.groups`: per-group overrides keyed by Signal group ID (or `"*"`). Supported fields: `requireMention`, `tools`, `toolsBySender`.

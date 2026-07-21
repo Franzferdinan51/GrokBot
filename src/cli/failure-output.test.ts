@@ -7,16 +7,16 @@ describe("formatCliFailureLines", () => {
     const lines = formatCliFailureLines({
       title: "Could not start the CLI.",
       error: new Error("config file is invalid"),
-      argv: ["node", "openclaw", "status"],
+      argv: ["node", "grokbot", "status"],
       env: {},
     });
 
     expect(lines).toEqual([
-      "[openclaw] Could not start the CLI.",
-      "[openclaw] Reason: config file is invalid",
-      "[openclaw] Debug: set OPENCLAW_DEBUG=1 to include the stack trace.",
-      "[openclaw] Try: openclaw doctor",
-      "[openclaw] Help: openclaw --help",
+      "[grokbot] Could not start the CLI.",
+      "[grokbot] Reason: config file is invalid",
+      "[grokbot] Debug: set OPENCLAW_DEBUG=1 to include the stack trace.",
+      "[grokbot] Try: grokbot doctor",
+      "[grokbot] Help: grokbot --help",
     ]);
   });
 
@@ -28,10 +28,10 @@ describe("formatCliFailureLines", () => {
     });
 
     expect(lines.slice(0, 4)).toEqual([
-      "[openclaw] The CLI command failed.",
-      "[openclaw] Reason: boom",
-      "[openclaw] Stack:",
-      "[openclaw] Error: boom",
+      "[grokbot] The CLI command failed.",
+      "[grokbot] Reason: boom",
+      "[grokbot] Stack:",
+      "[grokbot] Error: boom",
     ]);
     expect(lines.join("\n")).toContain("Error: boom");
   });

@@ -92,7 +92,7 @@ export function buildContextEngineRuntimeSettings(params: {
   return {
     schemaVersion: 1,
     runtime: {
-      host: "openclaw",
+      host: "grokbot",
       mode,
       harnessId: normalizeNullableString(params.harnessId),
       runtimeId: normalizeNullableString(params.runtimeId),

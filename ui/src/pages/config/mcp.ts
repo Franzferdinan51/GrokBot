@@ -51,16 +51,16 @@ export function renderMcp(props: McpViewProps) {
           <div class="settings-group">
             <div class="settings-row settings-row--stacked">
               <div class="mcp-command-card__grid">
-                <code>openclaw mcp status --verbose</code>
-                <code>openclaw mcp doctor --probe</code>
-                <code>openclaw mcp login &lt;name&gt;</code>
-                <code>openclaw mcp reload</code>
+                <code>grokbot mcp status --verbose</code>
+                <code>grokbot mcp doctor --probe</code>
+                <code>grokbot mcp login &lt;name&gt;</code>
+                <code>grokbot mcp reload</code>
               </div>
             </div>
           </div>
         </section>
 
-        <openclaw-mcp-servers-card .pluginsHref=${props.pluginsHref}></openclaw-mcp-servers-card>
+        <grokbot-mcp-servers-card .pluginsHref=${props.pluginsHref}></grokbot-mcp-servers-card>
       </div>
 
       ${props.editor}

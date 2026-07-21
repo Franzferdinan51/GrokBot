@@ -1,7 +1,7 @@
 // Models method tests cover slow catalog timeouts, configured/all views,
 // validation errors, and protocol response shapes.
 
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { describe, expect, it, vi } from "vitest";
 import { ErrorCodes } from "../../../packages/gateway-protocol/src/index.js";
 import {
@@ -9,10 +9,10 @@ import {
   replaceRuntimeAuthProfileStoreSnapshots,
 } from "../../agents/auth-profiles.js";
 import { clearRuntimeConfigSnapshot, setRuntimeConfigSnapshot } from "../../config/config.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import { createDeferred } from "../../test-utils/deferred.js";
 import { withEnvAsync } from "../../test-utils/env.js";
-import { withOpenClawTestState } from "../../test-utils/openclaw-test-state.js";
+import { withOpenClawTestState } from "../../test-utils/grokbot-test-state.js";
 import { expectGatewayErrorResponse } from "./gateway-response.test-helpers.js";
 import { modelsHandlers } from "./models.js";
 import type { RespondFn } from "./types.js";
@@ -162,7 +162,7 @@ describe("models.list", () => {
         providers: {
           "mounted-json": {
             source: "file",
-            path: "/tmp/openclaw-test-secrets.json",
+            path: "/tmp/grokbot-test-secrets.json",
             mode: "json",
           },
         },
@@ -228,7 +228,7 @@ describe("models.list", () => {
         providers: {
           "mounted-json": {
             source: "file",
-            path: "/tmp/openclaw-test-secrets.json",
+            path: "/tmp/grokbot-test-secrets.json",
             mode: "json",
           },
         },
@@ -318,7 +318,7 @@ describe("models.list", () => {
                 id: "gpt-test",
                 name: "GPT Test",
                 provider: "openai",
-                agentRuntime: { id: "openclaw", source: "implicit" },
+                agentRuntime: { id: "grokbot", source: "implicit" },
                 available: false,
               },
             ],
@@ -342,7 +342,7 @@ describe("models.list", () => {
         providers: {
           "mounted-json": {
             source: "file",
-            path: "/tmp/openclaw-test-secrets.json",
+            path: "/tmp/grokbot-test-secrets.json",
             mode: "json",
           },
         },
@@ -577,7 +577,7 @@ describe("models.list", () => {
       await withOpenClawTestState(
         {
           layout: "state-only",
-          prefix: "openclaw-models-list-local-wildcard-",
+          prefix: "grokbot-models-list-local-wildcard-",
           agentEnv: "main",
           env: { VLLM_API_KEY: undefined },
         },
@@ -647,7 +647,7 @@ describe("models.list", () => {
       await withOpenClawTestState(
         {
           layout: "state-only",
-          prefix: "openclaw-models-list-codex-alias-",
+          prefix: "grokbot-models-list-codex-alias-",
           agentEnv: "main",
         },
         async (state) => {
@@ -706,7 +706,7 @@ describe("models.list", () => {
       await withOpenClawTestState(
         {
           layout: "state-only",
-          prefix: "openclaw-models-list-cli-runtime-",
+          prefix: "grokbot-models-list-cli-runtime-",
           agentEnv: "main",
         },
         async (state) => {
@@ -777,7 +777,7 @@ describe("models.list", () => {
         providers: {
           "mounted-json": {
             source: "file",
-            path: "/tmp/openclaw-test-secrets.json",
+            path: "/tmp/grokbot-test-secrets.json",
             mode: "json",
           },
         },
@@ -863,7 +863,7 @@ describe("models.list", () => {
         providers: {
           "mounted-json": {
             source: "file",
-            path: "/tmp/openclaw-test-secrets.json",
+            path: "/tmp/grokbot-test-secrets.json",
             mode: "json",
           },
         },
@@ -925,7 +925,7 @@ describe("models.list", () => {
     await withOpenClawTestState(
       {
         layout: "state-only",
-        prefix: "openclaw-models-list-expired-profile-",
+        prefix: "grokbot-models-list-expired-profile-",
         agentEnv: "main",
       },
       async (state) => {
@@ -967,7 +967,7 @@ describe("models.list", () => {
     await withOpenClawTestState(
       {
         layout: "state-only",
-        prefix: "openclaw-models-list-stale-runtime-profile-",
+        prefix: "grokbot-models-list-stale-runtime-profile-",
         agentEnv: "main",
       },
       async (state) => {
@@ -1025,7 +1025,7 @@ describe("models.list", () => {
     await withOpenClawTestState(
       {
         layout: "state-only",
-        prefix: "openclaw-models-list-env-profile-",
+        prefix: "grokbot-models-list-env-profile-",
         agentEnv: "main",
         env: {
           DEMO_PROVIDER_TOKEN: "test-token",
@@ -1079,7 +1079,7 @@ describe("models.list", () => {
     await withOpenClawTestState(
       {
         layout: "state-only",
-        prefix: "openclaw-models-list-file-profile-",
+        prefix: "grokbot-models-list-file-profile-",
         agentEnv: "main",
       },
       async (state) => {
@@ -1106,7 +1106,7 @@ describe("models.list", () => {
               providers: {
                 "mounted-json": {
                   source: "file",
-                  path: "/tmp/openclaw-test-secrets.json",
+                  path: "/tmp/grokbot-test-secrets.json",
                   mode: "json",
                 },
               },
@@ -1141,7 +1141,7 @@ describe("models.list", () => {
     await withOpenClawTestState(
       {
         layout: "state-only",
-        prefix: "openclaw-models-list-hydrated-file-profile-",
+        prefix: "grokbot-models-list-hydrated-file-profile-",
         agentEnv: "main",
       },
       async (state) => {
@@ -1184,7 +1184,7 @@ describe("models.list", () => {
                 providers: {
                   "mounted-json": {
                     source: "file",
-                    path: "/tmp/openclaw-test-secrets.json",
+                    path: "/tmp/grokbot-test-secrets.json",
                     mode: "json",
                   },
                 },
@@ -1235,7 +1235,7 @@ describe("models.list", () => {
       await withOpenClawTestState(
         {
           layout: "state-only",
-          prefix: `openclaw-models-list-provider-${fixture.name}-profile-`,
+          prefix: `grokbot-models-list-provider-${fixture.name}-profile-`,
           agentEnv: "main",
           env: {
             OPENCLAW_TEST_PROFILE_API_KEY: "test-token",

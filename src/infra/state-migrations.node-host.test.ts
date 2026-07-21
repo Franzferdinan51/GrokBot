@@ -5,11 +5,11 @@ import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import { useAutoCleanupTempDirTracker } from "../../test/helpers/temp-dir.js";
 import { loadNodeHostConfig } from "../node-host/config.js";
-import type { DB as OpenClawStateKyselyDatabase } from "../state/openclaw-state-db.generated.js";
+import type { DB as OpenClawStateKyselyDatabase } from "../state/grokbot-state-db.generated.js";
 import {
   closeOpenClawStateDatabaseForTest,
   openOpenClawStateDatabase,
-} from "../state/openclaw-state-db.js";
+} from "../state/grokbot-state-db.js";
 import { acquireGatewayLock } from "./gateway-lock.js";
 import {
   executeSqliteQuerySync,
@@ -33,7 +33,7 @@ describe("legacy node-host Doctor migration", () => {
   });
 
   function useStateDir(): { env: NodeJS.ProcessEnv; stateDir: string } {
-    const stateDir = tempDirs.make("openclaw-node-host-migration-");
+    const stateDir = tempDirs.make("grokbot-node-host-migration-");
     return { env: { ...process.env, OPENCLAW_STATE_DIR: stateDir }, stateDir };
   }
 
@@ -48,7 +48,7 @@ describe("legacy node-host Doctor migration", () => {
         port: 18443,
         tls: false,
         tlsFingerprint: fixtureDigest,
-        contextPath: "/openclaw-gw",
+        contextPath: "/grokbot-gw",
       },
       ...overrides,
     };
@@ -86,7 +86,7 @@ describe("legacy node-host Doctor migration", () => {
           gateway_port: 18443,
           gateway_tls: 0,
           gateway_tls_fingerprint: fixtureDigest,
-          gateway_context_path: "/openclaw-gw",
+          gateway_context_path: "/grokbot-gw",
           updated_at_ms: params.updatedAtMs,
         }),
     );
@@ -137,7 +137,7 @@ describe("legacy node-host Doctor migration", () => {
         port: 18443,
         tls: false,
         tlsFingerprint: fixtureDigest,
-        contextPath: "/openclaw-gw",
+        contextPath: "/grokbot-gw",
       },
       installedAppsSharing: false,
     });
@@ -414,6 +414,6 @@ describe("legacy node-host Doctor migration", () => {
 
     expect(result.warnings[0]).toContain("source or Doctor claim remains after cleanup");
     expect(fs.existsSync(sourcePath)).toBe(true);
-    await expect(loadNodeHostConfig(env)).rejects.toThrow("openclaw doctor --fix");
+    await expect(loadNodeHostConfig(env)).rejects.toThrow("grokbot doctor --fix");
   });
 });

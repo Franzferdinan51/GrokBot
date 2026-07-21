@@ -1,7 +1,7 @@
 // Reads provider ids selected by auth, model, channel, and media configuration.
-import { collectConfiguredModelRefs } from "@openclaw/model-catalog-core/configured-model-refs";
-import { normalizeNullableString as normalizeId } from "@openclaw/normalization-core/string-coerce";
-import type { OpenClawConfig } from "../../../config/types.openclaw.js";
+import { collectConfiguredModelRefs } from "@grokbot/model-catalog-core/configured-model-refs";
+import { normalizeNullableString as normalizeId } from "@grokbot/normalization-core/string-coerce";
+import type { OpenClawConfig } from "../../../config/types.grokbot.js";
 import { asObjectRecord } from "./object.js";
 
 function collectConfiguredProviderIds(cfg: OpenClawConfig): Set<string> {

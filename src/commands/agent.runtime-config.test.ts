@@ -1,10 +1,10 @@
 // Agent runtime config tests cover agent-specific runtime config resolution from temp homes.
 import path from "node:path";
-import { withTempHome as withTempHomeBase } from "openclaw/plugin-sdk/test-env";
+import { withTempHome as withTempHomeBase } from "grokbot/plugin-sdk/test-env";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { resolveAgentRuntimeConfig } from "../agents/agent-runtime-config.js";
 import { resolveSession } from "../agents/command/session.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import type { RuntimeEnv } from "../runtime.js";
 import { createThrowingTestRuntime } from "./test-runtime-config-helpers.js";
 
@@ -122,7 +122,7 @@ vi.mock("../cli/command-config-resolution.runtime.js", () => ({
 const runtime = createThrowingTestRuntime();
 
 async function withTempHome<T>(fn: (home: string) => Promise<T>): Promise<T> {
-  return withTempHomeBase(fn, { prefix: "openclaw-agent-" });
+  return withTempHomeBase(fn, { prefix: "grokbot-agent-" });
 }
 
 function requireResolveCommandConfigParams(callIndex = 0): ResolveCommandConfigParams {
@@ -140,7 +140,7 @@ function mockConfig(home: string, storePath: string): OpenClawConfig {
       defaults: {
         model: { primary: "anthropic/claude-opus-4-6" },
         models: { "anthropic/claude-opus-4-6": {} },
-        workspace: path.join(home, "openclaw"),
+        workspace: path.join(home, "grokbot"),
       },
     },
     session: { store: storePath, mainKey: "main" },
@@ -192,7 +192,7 @@ describe("agentCommand runtime config", () => {
           defaults: {
             model: { primary: "anthropic/claude-opus-4-6" },
             models: { "anthropic/claude-opus-4-6": {} },
-            workspace: path.join(home, "openclaw"),
+            workspace: path.join(home, "grokbot"),
           },
         },
         session: { store, mainKey: "main" },

@@ -28,7 +28,7 @@ type NodeHostRunOptions = {
   gatewayPort: number;
   gatewayTls?: boolean;
   gatewayTlsFingerprint?: string;
-  /** Optional WebSocket context path (e.g. "/openclaw-gw"). */
+  /** Optional WebSocket context path (e.g. "/grokbot-gw"). */
   gatewayContextPath?: string;
   nodeId?: string;
   displayName?: string;

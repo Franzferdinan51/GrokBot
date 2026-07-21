@@ -1,20 +1,20 @@
-// SQLite query-plan tests pin hot OpenClaw state indexes used by perf proof.
+// SQLite query-plan tests pin hot GrokBot state indexes used by perf proof.
 import type { DatabaseSync } from "node:sqlite";
 import { afterAll, afterEach, describe, expect, it } from "vitest";
 import { cleanupTempDirs, makeTempDir } from "../../test/helpers/temp-dir.js";
 import {
   closeOpenClawAgentDatabasesForTest,
   openOpenClawAgentDatabase,
-} from "./openclaw-agent-db.js";
+} from "./grokbot-agent-db.js";
 import {
   closeOpenClawStateDatabaseForTest,
   openOpenClawStateDatabase,
-} from "./openclaw-state-db.js";
+} from "./grokbot-state-db.js";
 
 const planTempDirs: string[] = [];
 
 function createTempStateDir(): string {
-  return makeTempDir(planTempDirs, "openclaw-sqlite-plan-");
+  return makeTempDir(planTempDirs, "grokbot-sqlite-plan-");
 }
 
 function explainQueryPlan(

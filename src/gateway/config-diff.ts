@@ -1,6 +1,6 @@
 // Config path diff helper used by gateway mutation diagnostics.
 import { isDeepStrictEqual } from "node:util";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { isPlainObject } from "../utils.js";
 
 /** Return dotted config paths whose values differ between two config snapshots. */

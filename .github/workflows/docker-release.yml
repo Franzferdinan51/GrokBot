@@ -27,7 +27,7 @@ env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
   DOCKERHUB_REGISTRY: docker.io
-  DOCKERHUB_IMAGE_NAME: openclaw/openclaw
+  DOCKERHUB_IMAGE_NAME: grokbot/grokbot
 
 jobs:
   validate_manual_backfill:
@@ -307,7 +307,7 @@ jobs:
             AWS_EC2_METADATA_DISABLED=true \
             AWS_SHARED_CREDENTIALS_FILE="${temp_root}/home/.aws/credentials" \
             AWS_CONFIG_FILE="${temp_root}/home/.aws/config" \
-              node /app/openclaw.mjs agent --message "workspace bootstrap smoke" --session-id "workspace-bootstrap-smoke" --local --timeout 1 --json \
+              node /app/grokbot.mjs agent --message "workspace bootstrap smoke" --session-id "workspace-bootstrap-smoke" --local --timeout 1 --json \
               >"${temp_root}/out.log" 2>&1
             status="$?"
             set -e
@@ -315,7 +315,7 @@ jobs:
               cat "${temp_root}/out.log"
               exit 1
             fi
-            test -f "${temp_root}/home/.openclaw/workspace/HEARTBEAT.md"
+            test -f "${temp_root}/home/.grokbot/workspace/HEARTBEAT.md"
             if [ "${status}" -ne 0 ]; then
               cat "${temp_root}/out.log"
             fi
@@ -516,7 +516,7 @@ jobs:
             AWS_EC2_METADATA_DISABLED=true \
             AWS_SHARED_CREDENTIALS_FILE="${temp_root}/home/.aws/credentials" \
             AWS_CONFIG_FILE="${temp_root}/home/.aws/config" \
-              node /app/openclaw.mjs agent --message "workspace bootstrap smoke" --session-id "workspace-bootstrap-smoke" --local --timeout 1 --json \
+              node /app/grokbot.mjs agent --message "workspace bootstrap smoke" --session-id "workspace-bootstrap-smoke" --local --timeout 1 --json \
               >"${temp_root}/out.log" 2>&1
             status="$?"
             set -e
@@ -524,7 +524,7 @@ jobs:
               cat "${temp_root}/out.log"
               exit 1
             fi
-            test -f "${temp_root}/home/.openclaw/workspace/HEARTBEAT.md"
+            test -f "${temp_root}/home/.grokbot/workspace/HEARTBEAT.md"
             if [ "${status}" -ne 0 ]; then
               cat "${temp_root}/out.log"
             fi

@@ -324,7 +324,7 @@ beforeAll(async () => {
   ]);
   setActivePluginRegistry(testRegistry);
 
-  fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-heartbeat-suite-"));
+  fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-heartbeat-suite-"));
 });
 
 beforeEach(() => {
@@ -1376,7 +1376,7 @@ describe("runHeartbeatOnce", () => {
   });
 
   it("loads the default agent session from templated stores", async () => {
-    const tmpDir = await createCaseDir("openclaw-hb");
+    const tmpDir = await createCaseDir("grokbot-hb");
     const storeTemplate = path.join(tmpDir, "agents", "{agentId}", "sessions.json");
     const replySpy = vi.fn();
     try {
@@ -1440,7 +1440,7 @@ describe("runHeartbeatOnce", () => {
     queueSystemEvent?: boolean;
     replyText?: string;
   }) {
-    const tmpDir = await createCaseDir("openclaw-hb");
+    const tmpDir = await createCaseDir("grokbot-hb");
     const storePath = path.join(tmpDir, "sessions.json");
     const workspaceDir = path.join(tmpDir, "workspace");
     await fs.mkdir(workspaceDir, { recursive: true });
@@ -1563,7 +1563,7 @@ describe("runHeartbeatOnce", () => {
   });
 
   it("keeps non-task HEARTBEAT.md context while stripping blank-line-separated task blocks", async () => {
-    const tmpDir = await createCaseDir("openclaw-hb-tasks-context");
+    const tmpDir = await createCaseDir("grokbot-hb-tasks-context");
     const storePath = path.join(tmpDir, "sessions.json");
     const workspaceDir = path.join(tmpDir, "workspace");
     await fs.mkdir(workspaceDir, { recursive: true });
@@ -1628,7 +1628,7 @@ Some global directive after tasks.
   });
 
   it("strips documented unindented task entries while keeping following top-level bullets", async () => {
-    const tmpDir = await createCaseDir("openclaw-hb-unindented-tasks-context");
+    const tmpDir = await createCaseDir("grokbot-hb-unindented-tasks-context");
     const storePath = path.join(tmpDir, "sessions.json");
     const workspaceDir = path.join(tmpDir, "workspace");
     await fs.mkdir(workspaceDir, { recursive: true });

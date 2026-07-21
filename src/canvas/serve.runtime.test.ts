@@ -15,7 +15,7 @@ afterEach(async () => {
 });
 
 async function createStateDir(): Promise<string> {
-  const stateDir = await mkdtemp(path.join(tmpdir(), "openclaw-canvas-serve-"));
+  const stateDir = await mkdtemp(path.join(tmpdir(), "grokbot-canvas-serve-"));
   tempDirs.push(stateDir);
   vi.stubEnv("OPENCLAW_STATE_DIR", stateDir);
   return stateDir;

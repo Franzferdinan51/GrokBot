@@ -1,6 +1,6 @@
 // Feishu type declarations define plugin contracts.
-import type { MessageReceipt } from "openclaw/plugin-sdk/channel-outbound";
-import type { BaseProbeResult } from "openclaw/plugin-sdk/core";
+import type { MessageReceipt } from "grokbot/plugin-sdk/channel-outbound";
+import type { BaseProbeResult } from "grokbot/plugin-sdk/core";
 import type { FeishuConfigSchema, FeishuAccountConfigSchema, z } from "./config-schema.js";
 import type { MentionTarget } from "./mention-target.types.js";
 

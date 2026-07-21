@@ -1,5 +1,5 @@
 // Slack tests cover action runtime plugin behavior.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { SlackActionContext } from "./action-runtime.js";
 import { handleSlackAction, slackActionRuntime } from "./action-runtime.js";
@@ -494,7 +494,7 @@ describe("handleSlackAction", () => {
 
   it("returns non-image downloadFile results as file metadata instead of image content", async () => {
     downloadSlackFile.mockResolvedValueOnce({
-      path: "/tmp/openclaw-media/report.pdf",
+      path: "/tmp/grokbot-media/report.pdf",
       contentType: "application/pdf",
       placeholder: "[Slack file: report.pdf (fileId: F123)]",
     });
@@ -511,17 +511,17 @@ describe("handleSlackAction", () => {
     expect(result.content).toHaveLength(1);
     const firstContent = requireRecord(result.content[0], "first content item");
     expect(firstContent.type).toBe("text");
-    expect(String(firstContent.text)).toContain("/tmp/openclaw-media/report.pdf");
+    expect(String(firstContent.text)).toContain("/tmp/grokbot-media/report.pdf");
     expect(result.content.map((entry) => entry.type)).not.toContain("image");
     const details = requireDetails(result);
     expectRecordFields(details, {
       ok: true,
       fileId: "F123",
-      path: "/tmp/openclaw-media/report.pdf",
+      path: "/tmp/grokbot-media/report.pdf",
       contentType: "application/pdf",
     });
     expect(details.media).toEqual({
-      mediaUrl: "/tmp/openclaw-media/report.pdf",
+      mediaUrl: "/tmp/grokbot-media/report.pdf",
       outbound: false,
       contentType: "application/pdf",
     });

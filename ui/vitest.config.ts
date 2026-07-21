@@ -15,15 +15,15 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 const repoRoot = path.resolve(here, "..");
 const workspaceSourceAliases = [
   {
-    find: "@openclaw/gateway-client/browser",
+    find: "@grokbot/gateway-client/browser",
     replacement: path.resolve(repoRoot, "packages/gateway-client/src/browser.ts"),
   },
   {
-    find: /^@openclaw\/gateway-protocol\/(.+)$/u,
+    find: /^@grokbot\/gateway-protocol\/(.+)$/u,
     replacement: path.resolve(repoRoot, "packages/gateway-protocol/src/$1.ts"),
   },
   {
-    find: /^@openclaw\/(gateway-protocol|retry)$/u,
+    find: /^@grokbot\/(gateway-protocol|retry)$/u,
     replacement: path.resolve(repoRoot, "packages/$1/src/index.ts"),
   },
   {
@@ -31,43 +31,43 @@ const workspaceSourceAliases = [
     replacement: path.resolve(here, "src/lib/browser-redact.ts"),
   },
   {
-    find: "openclaw/plugin-sdk/test-fixtures",
+    find: "grokbot/plugin-sdk/test-fixtures",
     replacement: path.resolve(repoRoot, "src/plugin-sdk/test-fixtures.ts"),
   },
   {
-    find: /^@openclaw\/model-catalog-core\/(.+)$/u,
+    find: /^@grokbot\/model-catalog-core\/(.+)$/u,
     replacement: path.resolve(repoRoot, "packages/model-catalog-core/src/$1.ts"),
   },
   {
-    find: "@openclaw/model-catalog-core",
+    find: "@grokbot/model-catalog-core",
     replacement: path.resolve(repoRoot, "packages/model-catalog-core/src/index.ts"),
   },
   {
-    find: /^@openclaw\/normalization-core\/(.+)$/u,
+    find: /^@grokbot\/normalization-core\/(.+)$/u,
     replacement: path.resolve(repoRoot, "packages/normalization-core/src/$1"),
   },
   {
-    find: "@openclaw/normalization-core",
+    find: "@grokbot/normalization-core",
     replacement: path.resolve(repoRoot, "packages/normalization-core/src/index.ts"),
   },
   {
-    find: /^@openclaw\/media-core\/(.+)$/u,
+    find: /^@grokbot\/media-core\/(.+)$/u,
     replacement: path.resolve(repoRoot, "packages/media-core/src/$1"),
   },
   {
-    find: "@openclaw/media-core",
+    find: "@grokbot/media-core",
     replacement: path.resolve(repoRoot, "packages/media-core/src/index.ts"),
   },
   {
-    find: "@openclaw/workboard-contract",
+    find: "@grokbot/workboard-contract",
     replacement: path.resolve(repoRoot, "packages/workboard-contract/src/index.ts"),
   },
   {
-    find: /^@openclaw\/net-policy\/(.+)$/u,
+    find: /^@grokbot\/net-policy\/(.+)$/u,
     replacement: path.resolve(repoRoot, "packages/net-policy/src/$1"),
   },
   {
-    find: "@openclaw/net-policy",
+    find: "@grokbot/net-policy",
     replacement: path.resolve(repoRoot, "packages/net-policy/src/index.ts"),
   },
 ];

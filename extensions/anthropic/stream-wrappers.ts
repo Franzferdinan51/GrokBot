@@ -2,26 +2,26 @@
  * Anthropic stream wrappers. They add beta headers, service tier/fast-mode
  * payload fields, and thinking-prefill cleanup around provider stream functions.
  */
-import type { StreamFn } from "openclaw/plugin-sdk/agent-core";
-import { streamSimple } from "openclaw/plugin-sdk/llm";
-import type { ProviderWrapStreamFnContext } from "openclaw/plugin-sdk/plugin-entry";
+import type { StreamFn } from "grokbot/plugin-sdk/agent-core";
+import { streamSimple } from "grokbot/plugin-sdk/llm";
+import type { ProviderWrapStreamFnContext } from "grokbot/plugin-sdk/plugin-entry";
 import {
   resolveClaudeFable5ModelIdentity,
   resolveClaudeSonnet5ModelIdentity,
-} from "openclaw/plugin-sdk/provider-model-shared";
+} from "grokbot/plugin-sdk/provider-model-shared";
 import {
   applyAnthropicPayloadPolicyToParams,
   composeProviderStreamWrappers,
   createAnthropicThinkingPrefillPayloadWrapper,
   resolveAnthropicPayloadPolicy,
   streamWithPayloadPatch,
-} from "openclaw/plugin-sdk/provider-stream-shared";
-import { createSubsystemLogger } from "openclaw/plugin-sdk/runtime-env";
+} from "grokbot/plugin-sdk/provider-stream-shared";
+import { createSubsystemLogger } from "grokbot/plugin-sdk/runtime-env";
 import {
   normalizeFastMode,
   normalizeLowercaseStringOrEmpty,
   readStringValue,
-} from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/string-coerce-runtime";
 
 const log = createSubsystemLogger("anthropic-stream");
 
@@ -143,7 +143,7 @@ export function resolveAnthropicBetas(
   return betas.size > 0 ? [...betas] : undefined;
 }
 
-/** Wrap a stream function to merge OpenClaw and configured Anthropic beta headers. */
+/** Wrap a stream function to merge GrokBot and configured Anthropic beta headers. */
 export function createAnthropicBetaHeadersWrapper(
   baseStreamFn: StreamFn | undefined,
   betas: string[],

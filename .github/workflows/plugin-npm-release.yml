@@ -37,7 +37,7 @@ on:
         required: false
         type: string
       release_publish_run_id:
-        description: Approved OpenClaw Release Publish workflow run id
+        description: Approved GrokBot Release Publish workflow run id
         required: false
         type: string
       preflight_only:
@@ -429,7 +429,7 @@ jobs:
           packed_package_json="${RUNNER_TEMP}/${EXTENSION_ID}-packed-package.json"
           packed_plugin_json="${RUNNER_TEMP}/${EXTENSION_ID}-packed-plugin.json"
           tar -xOf "${tarball_path}" package/package.json > "${packed_package_json}"
-          tar -xOf "${tarball_path}" package/openclaw.plugin.json > "${packed_plugin_json}"
+          tar -xOf "${tarball_path}" package/grokbot.plugin.json > "${packed_plugin_json}"
           source_package_json="${PACKAGE_DIR}/package.json"
           [[ -f "${source_package_json}" ]] || {
             echo "Source package.json is missing: ${source_package_json}." >&2
@@ -478,10 +478,10 @@ jobs:
           ) {
             fail(`Packed package version mismatch: expected ${process.env.PACKAGE_VERSION}.`);
           }
-          if (packageJson.openclaw?.install?.npmSpec !== process.env.INSTALL_NPM_SPEC) {
+          if (packageJson.grokbot?.install?.npmSpec !== process.env.INSTALL_NPM_SPEC) {
             fail(`Packed npm install route mismatch: expected ${process.env.INSTALL_NPM_SPEC}.`);
           }
-          if (repositoryUrl !== "https://github.com/openclaw/openclaw") {
+          if (repositoryUrl !== "https://github.com/grokbot/grokbot") {
             fail(`Packed repository route mismatch: ${JSON.stringify(repositoryUrl)}.`);
           }
           if (typeof pluginManifest.id !== "string" || pluginManifest.id.length === 0) {
@@ -493,7 +493,7 @@ jobs:
 
           const manifest = {
             schemaVersion: 1,
-            kind: "openclaw-plugin-npm-preflight",
+            kind: "grokbot-plugin-npm-preflight",
             mode: "preflight-only",
             repository: process.env.REPOSITORY,
             workflow: {
@@ -693,7 +693,7 @@ jobs:
 
           const expectedManifest = {
             schemaVersion: 1,
-            kind: "openclaw-plugin-npm-preflight",
+            kind: "grokbot-plugin-npm-preflight",
             mode: "preflight-only",
             repository: process.env.REPOSITORY,
             workflow: {
@@ -763,7 +763,7 @@ jobs:
             .digest("hex");
           const packageJson = JSON.parse(packedPackageJson.toString("utf8"));
           const pluginManifest = JSON.parse(
-            execFileSync("tar", ["-xOf", tarballPath, "package/openclaw.plugin.json"], {
+            execFileSync("tar", ["-xOf", tarballPath, "package/grokbot.plugin.json"], {
               encoding: "utf8",
             }),
           );
@@ -778,10 +778,10 @@ jobs:
             packageJson.version !== process.env.PACKAGE_VERSION ||
             manifest.package.name !== process.env.PACKAGE_NAME ||
             manifest.package.version !== process.env.PACKAGE_VERSION ||
-            packageJson.openclaw?.install?.npmSpec !== process.env.INSTALL_NPM_SPEC ||
+            packageJson.grokbot?.install?.npmSpec !== process.env.INSTALL_NPM_SPEC ||
             manifest.package.installNpmSpec !== process.env.INSTALL_NPM_SPEC ||
             manifest.package.publishTag !== process.env.PUBLISH_TAG ||
-            repositoryUrl !== "https://github.com/openclaw/openclaw" ||
+            repositoryUrl !== "https://github.com/grokbot/grokbot" ||
             typeof pluginManifest.id !== "string" ||
             pluginManifest.id.length === 0 ||
             manifest.package.pluginId !== pluginManifest.id ||
@@ -949,7 +949,7 @@ jobs:
             --publication-reason "Stable npm registry preflight selected ${PUBLISH_ROUTE}." \
             --publish-tag "$PUBLISH_TAG" \
             --publisher-policy-id plugin-npm-release-workflow \
-            --publisher-policy-schema openclaw.plugin-npm-publisher-policy/v1 \
+            --publisher-policy-schema grokbot.plugin-npm-publisher-policy/v1 \
             --publisher-policy-sha256 "$policy_sha256" \
             --route "$PUBLISH_ROUTE" \
             --source-package-json-sha256 "$SOURCE_PACKAGE_JSON_SHA256" \
@@ -1162,7 +1162,7 @@ jobs:
             --publication-reason "Stable npm registry preflight selected ${publish_route}." \
             --publish-tag "$PUBLISH_TAG" \
             --publisher-policy-id plugin-npm-release-workflow \
-            --publisher-policy-schema openclaw.plugin-npm-publisher-policy/v1 \
+            --publisher-policy-schema grokbot.plugin-npm-publisher-policy/v1 \
             --publisher-policy-sha256 "$policy_sha256" \
             --repository "$GITHUB_REPOSITORY" \
             --route "$publish_route" \

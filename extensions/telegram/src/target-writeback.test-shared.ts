@@ -1,5 +1,5 @@
 // Telegram plugin module implements target writeback shared behavior.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import { beforeAll, beforeEach, describe, expect, it, vi, type Mock } from "vitest";
 
 type UnknownMock = Mock<(...args: unknown[]) => unknown>;
@@ -29,9 +29,9 @@ type CronStoreWrite = {
   jobs: Array<{ id: string; delivery: { channel: string; to: string } }>;
 };
 
-vi.mock("openclaw/plugin-sdk/config-mutation", async () => {
-  const actual = await vi.importActual<typeof import("openclaw/plugin-sdk/config-mutation")>(
-    "openclaw/plugin-sdk/config-mutation",
+vi.mock("grokbot/plugin-sdk/config-mutation", async () => {
+  const actual = await vi.importActual<typeof import("grokbot/plugin-sdk/config-mutation")>(
+    "grokbot/plugin-sdk/config-mutation",
   );
   return {
     ...actual,
@@ -41,9 +41,9 @@ vi.mock("openclaw/plugin-sdk/config-mutation", async () => {
   };
 });
 
-vi.mock("openclaw/plugin-sdk/cron-store-runtime", async () => {
-  const actual = await vi.importActual<typeof import("openclaw/plugin-sdk/cron-store-runtime")>(
-    "openclaw/plugin-sdk/cron-store-runtime",
+vi.mock("grokbot/plugin-sdk/cron-store-runtime", async () => {
+  const actual = await vi.importActual<typeof import("grokbot/plugin-sdk/cron-store-runtime")>(
+    "grokbot/plugin-sdk/cron-store-runtime",
   );
   return {
     ...actual,
@@ -217,7 +217,7 @@ export function installMaybePersistResolvedTelegramTargetTests(params?: {
             },
           },
         },
-        writeOptions: { expectedConfigPath: "/tmp/openclaw.json" },
+        writeOptions: { expectedConfigPath: "/tmp/grokbot.json" },
       });
       loadCronStore.mockResolvedValue({
         version: 1,
@@ -241,7 +241,7 @@ export function installMaybePersistResolvedTelegramTargetTests(params?: {
       const [writtenConfig, writeOptions] = requireWriteConfigCall();
       expect(writtenConfig.channels?.telegram?.defaultTo).toBe("-100123");
       expect(writtenConfig.channels?.telegram?.accounts?.alerts?.defaultTo).toBe("-100123");
-      expect(writeOptions.expectedConfigPath).toBe("/tmp/openclaw.json");
+      expect(writeOptions.expectedConfigPath).toBe("/tmp/grokbot.json");
       expect(saveCronStore).toHaveBeenCalledTimes(1);
       const [cronPath, cronStore] = requireSaveCronStoreCall();
       expect(cronPath).toBe("/tmp/cron/jobs.json");

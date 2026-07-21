@@ -7,9 +7,9 @@ import type { PluginRuntime } from "../plugins/runtime/types.js";
 import {
   closeOpenClawAgentDatabasesForTest,
   openOpenClawAgentDatabase,
-} from "../state/openclaw-agent-db.js";
-import { openOpenClawStateDatabase } from "../state/openclaw-state-db.js";
-import { withOpenClawTestState } from "../test-utils/openclaw-test-state.js";
+} from "../state/grokbot-agent-db.js";
+import { openOpenClawStateDatabase } from "../state/grokbot-state-db.js";
+import { withOpenClawTestState } from "../test-utils/grokbot-test-state.js";
 import { resetPluginBlobStoreForTests, type OpenBlobStoreOptions } from "./plugin-blob-store.js";
 import { resetPluginStateStoreForTests } from "./plugin-state-store.js";
 

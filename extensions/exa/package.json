@@ -1,22 +1,22 @@
 {
-  "name": "@openclaw/exa-plugin",
+  "name": "@grokbot/exa-plugin",
   "version": "2026.7.2",
-  "description": "OpenClaw Exa plugin.",
+  "description": "GrokBot Exa plugin.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/openclaw/openclaw"
+    "url": "https://github.com/grokbot/grokbot"
   },
   "type": "module",
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@grokbot/plugin-sdk": "workspace:*"
   },
-  "openclaw": {
+  "grokbot": {
     "extensions": [
       "./index.ts"
     ],
     "install": {
-      "clawhubSpec": "clawhub:@openclaw/exa-plugin",
-      "npmSpec": "@openclaw/exa-plugin",
+      "clawhubSpec": "clawhub:@grokbot/exa-plugin",
+      "npmSpec": "@grokbot/exa-plugin",
       "defaultChoice": "npm",
       "minHostVersion": ">=2026.6.8"
     },

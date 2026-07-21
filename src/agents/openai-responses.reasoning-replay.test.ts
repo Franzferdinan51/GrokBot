@@ -1,6 +1,6 @@
 // Verifies OpenAI Responses replay preserves reasoning and response item ids.
-import type { AssistantMessage, Model, ToolResultMessage } from "openclaw/plugin-sdk/llm";
-import { stream } from "openclaw/plugin-sdk/llm";
+import type { AssistantMessage, Model, ToolResultMessage } from "grokbot/plugin-sdk/llm";
+import { stream } from "grokbot/plugin-sdk/llm";
 import { Type } from "typebox";
 import { describe, expect, it } from "vitest";
 import { resolveReplayableResponsesMessageId } from "./openai-responses-replay.js";

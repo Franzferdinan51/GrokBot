@@ -90,11 +90,11 @@ describe("scripts/run-vitest", () => {
     expect(
       resolveVitestCliEntry({
         baseDir: "/repo",
-        env: { PNPM_CONFIG_MODULES_DIR: "/runner/openclaw-pnpm-node-modules" },
+        env: { PNPM_CONFIG_MODULES_DIR: "/runner/grokbot-pnpm-node-modules" },
         fsImpl: {
           existsSync: (filePath: string) =>
             filePath.replaceAll("\\", "/") ===
-            "/runner/openclaw-pnpm-node-modules/vitest/package.json",
+            "/runner/grokbot-pnpm-node-modules/vitest/package.json",
           symlinkSync: (target: string, path: string, type: string) => {
             symlinks.push({ target, path, type });
           },
@@ -107,12 +107,12 @@ describe("scripts/run-vitest", () => {
     ).toBe("/repo/node_modules/vitest/vitest.mjs");
     expect(symlinks).toEqual([
       {
-        target: "/runner/openclaw-pnpm-node-modules",
-        path: "/runner/openclaw-pnpm-node-modules/node_modules",
+        target: "/runner/grokbot-pnpm-node-modules",
+        path: "/runner/grokbot-pnpm-node-modules/node_modules",
         type: "junction",
       },
       {
-        target: "/runner/openclaw-pnpm-node-modules",
+        target: "/runner/grokbot-pnpm-node-modules",
         path: "/repo/node_modules",
         type: "junction",
       },
@@ -125,27 +125,27 @@ describe("scripts/run-vitest", () => {
     expect(
       resolveVitestCliEntry({
         baseDir: "/repo",
-        env: { npm_config_modules_dir: "/runner/openclaw-pnpm-node-modules" },
+        env: { npm_config_modules_dir: "/runner/grokbot-pnpm-node-modules" },
         fsImpl: {
           existsSync: (filePath: string) =>
             filePath.replaceAll("\\", "/") ===
-            "/runner/openclaw-pnpm-node-modules/vitest/package.json",
+            "/runner/grokbot-pnpm-node-modules/vitest/package.json",
           symlinkSync: (target: string, path: string, type: string) => {
             symlinks.push({ target, path, type });
           },
         },
         platform: "win32",
-        requireResolve: () => "/runner/openclaw-pnpm-node-modules/vitest/package.json",
+        requireResolve: () => "/runner/grokbot-pnpm-node-modules/vitest/package.json",
       }),
     ).toBe("/repo/node_modules/vitest/vitest.mjs");
     expect(symlinks).toEqual([
       {
-        target: "/runner/openclaw-pnpm-node-modules",
-        path: "/runner/openclaw-pnpm-node-modules/node_modules",
+        target: "/runner/grokbot-pnpm-node-modules",
+        path: "/runner/grokbot-pnpm-node-modules/node_modules",
         type: "junction",
       },
       {
-        target: "/runner/openclaw-pnpm-node-modules",
+        target: "/runner/grokbot-pnpm-node-modules",
         path: "/repo/node_modules",
         type: "junction",
       },
@@ -204,7 +204,7 @@ describe("scripts/run-vitest", () => {
 
   it.each([
     "test/plugins/bundled-provider-auth-literal-parity.test.ts",
-    "test/scripts/openclaw-e2e-instance.test.ts",
+    "test/scripts/grokbot-e2e-instance.test.ts",
   ])("keeps tooling-excluded explicit test %s on existing routing", (testFile) => {
     const argv = ["run", testFile];
     expect(resolveImplicitVitestArgs(argv)).toBe(argv);
@@ -674,15 +674,15 @@ describe("scripts/run-vitest", () => {
   posixIt("cleans delegated test-project children when the wrapper is signaled", async () => {
     const fixturePath = nodePath.join(
       os.tmpdir(),
-      `openclaw-run-vitest-delegated-signal-${process.pid}-${Date.now()}.mjs`,
+      `grokbot-run-vitest-delegated-signal-${process.pid}-${Date.now()}.mjs`,
     );
     const childPidPath = nodePath.join(
       os.tmpdir(),
-      `openclaw-run-vitest-delegated-child-${process.pid}-${Date.now()}.pid`,
+      `grokbot-run-vitest-delegated-child-${process.pid}-${Date.now()}.pid`,
     );
     const descendantPidPath = nodePath.join(
       os.tmpdir(),
-      `openclaw-run-vitest-delegated-descendant-${process.pid}-${Date.now()}.pid`,
+      `grokbot-run-vitest-delegated-descendant-${process.pid}-${Date.now()}.pid`,
     );
 
     fs.writeFileSync(

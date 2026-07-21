@@ -26,7 +26,7 @@ describe("loader", () => {
   let envSnapshot: ReturnType<typeof captureEnv>;
 
   beforeAll(async () => {
-    fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-hooks-loader-"));
+    fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-hooks-loader-"));
   });
 
   beforeEach(async () => {
@@ -64,7 +64,7 @@ describe("loader", () => {
         "---",
         `name: ${params.hookName}`,
         `description: ${params.hookName} test hook`,
-        `metadata: {"openclaw":{"events":${JSON.stringify(events)}}}`,
+        `metadata: {"grokbot":{"events":${JSON.stringify(events)}}}`,
         "---",
         "",
         `# ${params.hookName}`,
@@ -457,7 +457,7 @@ describe("loader", () => {
           "---",
           "name: symlink-hook",
           "description: symlink test",
-          'metadata: {"openclaw":{"events":["command:new"]}}',
+          'metadata: {"grokbot":{"events":["command:new"]}}',
           "---",
           "",
           "# Symlink Hook",
@@ -502,7 +502,7 @@ describe("loader", () => {
           "---",
           "name: hardlink-hook",
           "description: hardlink test",
-          'metadata: {"openclaw":{"events":["command:new"]}}',
+          'metadata: {"grokbot":{"events":["command:new"]}}',
           "---",
           "",
           "# Hardlink Hook",

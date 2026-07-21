@@ -2,7 +2,7 @@ import { randomUUID } from "node:crypto";
 import {
   normalizeOptionalLowercaseString,
   normalizeOptionalString,
-} from "@openclaw/normalization-core/string-coerce";
+} from "@grokbot/normalization-core/string-coerce";
 import {
   ErrorCodes,
   type ErrorShape,
@@ -34,7 +34,7 @@ import {
   resolveSessionEntryAccessTarget,
 } from "../config/sessions/session-accessor.js";
 import { inheritSessionSelection } from "../config/sessions/session-entry-selection.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import {
   createInternalHookEvent,
   hasInternalHookListeners,

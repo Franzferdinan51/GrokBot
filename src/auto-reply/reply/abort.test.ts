@@ -1,6 +1,6 @@
 // Tests abort request handling, cutoff persistence, and active run cleanup.
 import path from "node:path";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import type { SubagentRunRecord } from "../../agents/subagent-registry.js";
 import type { OpenClawConfig } from "../../config/config.js";
@@ -82,7 +82,7 @@ vi.mock("../../acp/control-plane/manager.js", () => ({
   }),
 }));
 
-const suiteTempDirs = createSuiteTempRootTracker({ prefix: "openclaw-abort-" });
+const suiteTempDirs = createSuiteTempRootTracker({ prefix: "grokbot-abort-" });
 
 describe("abort detection", () => {
   const trackedAbortMemoryKeys = new Set<string>();
@@ -265,8 +265,8 @@ describe("abort detection", () => {
       "abort",
       "exit",
       "interrupt",
-      "stop openclaw",
-      "openclaw stop",
+      "stop grokbot",
+      "grokbot stop",
       "stop action",
       "stop current action",
       "stop run",
@@ -281,7 +281,7 @@ describe("abort detection", () => {
       "please stop",
       "stop please",
       "STOP OPENCLAW",
-      "stop openclaw!!!",
+      "stop grokbot!!!",
       "stop don’t do anything",
       "detente",
       "detén",
@@ -327,7 +327,7 @@ describe("abort detection", () => {
     expect(isAbortRequestText("Stop")).toBe(true);
     expect(isAbortRequestText("STOP")).toBe(true);
     expect(isAbortRequestText("stop action")).toBe(true);
-    expect(isAbortRequestText("stop openclaw!!!")).toBe(true);
+    expect(isAbortRequestText("stop grokbot!!!")).toBe(true);
     expect(isAbortRequestText("停下来")).toBe(true);
     expect(isAbortRequestText("暂停")).toBe(true);
     expect(isAbortRequestText("やめて")).toBe(true);

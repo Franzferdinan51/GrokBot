@@ -4,7 +4,7 @@ import { constants as fsConstants } from "node:fs";
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { resolveDateTimestampMs } from "@openclaw/normalization-core/number-coercion";
+import { resolveDateTimestampMs } from "@grokbot/normalization-core/number-coercion";
 import {
   buildBackupArchiveBasename,
   buildBackupArchivePath,
@@ -14,11 +14,11 @@ import {
 } from "../commands/backup-shared.js";
 import { isPathWithin } from "../commands/cleanup-utils.js";
 import { createLazyRuntimeModule } from "../shared/lazy-runtime.js";
-import { resolveOpenClawStateSqlitePath } from "../state/openclaw-state-db.paths.js";
+import { resolveOpenClawStateSqlitePath } from "../state/grokbot-state-db.paths.js";
 import {
   sanitizeOpenClawGlobalStateSnapshot,
   sanitizeOpenClawStateLeaseRows,
-} from "../state/openclaw-state-snapshot-sanitizer.js";
+} from "../state/grokbot-state-snapshot-sanitizer.js";
 import { resolveHomeDir, resolveUserPath } from "../utils.js";
 import { resolveRuntimeServiceVersion } from "../version.js";
 import { writeArchiveStreamToFile } from "./backup-create-stream.js";
@@ -442,7 +442,7 @@ function isCanonicalAgentSqlitePathOrAncestor(sourcePath: string, stateDir: stri
     return false;
   }
   return SQLITE_BACKUP_SOURCE_SUFFIXES.some(
-    (suffix) => segments[3] === `openclaw-agent.sqlite${suffix}`,
+    (suffix) => segments[3] === `grokbot-agent.sqlite${suffix}`,
   );
 }
 
@@ -454,7 +454,7 @@ function isCanonicalAgentSqliteDatabasePath(sourcePath: string, stateDir: string
     segments[0] === "agents" &&
     Boolean(segments[1]) &&
     segments[2] === "agent" &&
-    segments[3] === "openclaw-agent.sqlite"
+    segments[3] === "grokbot-agent.sqlite"
   );
 }
 
@@ -677,7 +677,7 @@ async function createStateSqliteBackupPlan(params: {
     const sourceDatabasePath = isGlobalStateDatabase
       ? canonicalGlobalSourcePath
       : (canonicalAgentSource?.sourcePath ?? archiveSourcePath);
-    const sourcePath = path.join(params.tempDir, `openclaw-state-db-${snapshots.length}.sqlite`);
+    const sourcePath = path.join(params.tempDir, `grokbot-state-db-${snapshots.length}.sqlite`);
     try {
       await createVerifiedSqliteSnapshot({
         sourcePath: sourceDatabasePath,
@@ -730,8 +730,8 @@ export async function createBackupArchive(
   if (plan.included.length === 0) {
     throw new Error(
       onlyConfig
-        ? "No OpenClaw config file was found to back up."
-        : "No local OpenClaw state was found to back up.",
+        ? "No GrokBot config file was found to back up."
+        : "No local GrokBot state was found to back up.",
     );
   }
 
@@ -770,7 +770,7 @@ export async function createBackupArchive(
   await fs.mkdir(path.dirname(outputPath), { recursive: true });
   const tempRoot = await chooseBackupTempRoot({ assets: result.assets, outputPath });
   await fs.mkdir(tempRoot, { recursive: true });
-  const tempDir = await fs.mkdtemp(path.join(tempRoot, "openclaw-backup-"));
+  const tempDir = await fs.mkdtemp(path.join(tempRoot, "grokbot-backup-"));
   const manifestPath = path.join(tempDir, "manifest.json");
   const tempArchivePath = buildTempArchivePath(outputPath);
   const tempArchiveCleanupPaths = resolveBackupTarAttemptTempPaths(tempArchivePath);

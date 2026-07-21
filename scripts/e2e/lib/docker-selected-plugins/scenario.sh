@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-export HOME=/tmp/openclaw-docker-selected-plugins
-export OPENCLAW_STATE_DIR="$HOME/.openclaw"
-export OPENCLAW_CONFIG_PATH="$OPENCLAW_STATE_DIR/openclaw.json"
+export HOME=/tmp/grokbot-docker-selected-plugins
+export OPENCLAW_STATE_DIR="$HOME/.grokbot"
+export OPENCLAW_CONFIG_PATH="$OPENCLAW_STATE_DIR/grokbot.json"
 export OPENCLAW_DISABLE_BUNDLED_SOURCE_OVERLAYS=1
 
 mkdir -p "$OPENCLAW_STATE_DIR"
@@ -21,8 +21,8 @@ fs.writeFileSync(
 NODE
 
 for plugin_id in clickclack slack msteams clawrouter; do
-  node /app/openclaw.mjs plugins inspect "$plugin_id" --runtime --json \
-    >"/tmp/openclaw-${plugin_id}-inspect.json"
+  node /app/grokbot.mjs plugins inspect "$plugin_id" --runtime --json \
+    >"/tmp/grokbot-${plugin_id}-inspect.json"
 done
 
-node /openclaw-e2e/assertions.mjs
+node /grokbot-e2e/assertions.mjs

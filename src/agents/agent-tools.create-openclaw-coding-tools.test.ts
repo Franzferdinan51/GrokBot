@@ -9,7 +9,7 @@ import path from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { replaceSessionEntry } from "../config/sessions/session-accessor.js";
 import type { SessionEntry } from "../config/sessions/types.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import {
   findUnsupportedSchemaKeywords,
   GEMINI_UNSUPPORTED_SCHEMA_KEYWORDS,
@@ -21,15 +21,15 @@ import {
 import { createMockPluginRegistry } from "../plugins/hooks.test-fixtures.js";
 import "./test-helpers/fast-bash-tools.js";
 import "./test-helpers/fast-coding-tools.js";
-import "./test-helpers/fast-openclaw-tools.js";
+import "./test-helpers/fast-grokbot-tools.js";
 import { isPluginToolAllowed } from "../plugins/tool-grant-allowlist.js";
 import { wrapToolWithBeforeToolCallHook } from "./agent-tools.before-tool-call.js";
 import { createOpenClawCodingTools } from "./agent-tools.js";
 import { runWithAgentRingZeroTools } from "./agent-tools.ring-zero-context.js";
 import type { AuthProfileStore } from "./auth-profiles/types.js";
 import { resolveConversationCapabilityProfile } from "./conversation-capability-profile.js";
-import * as openClawPluginTools from "./openclaw-plugin-tools.js";
-import { createOpenClawTools } from "./openclaw-tools.js";
+import * as openClawPluginTools from "./grokbot-plugin-tools.js";
+import { createOpenClawTools } from "./grokbot-tools.js";
 import { expectReadWriteEditTools } from "./test-helpers/agent-tools-fs-helpers.js";
 import { createAgentToolsSandboxContext } from "./test-helpers/agent-tools-sandbox-context.js";
 import { stubTool } from "./test-helpers/fast-tool-stubs.js";
@@ -174,9 +174,9 @@ describe("createOpenClawCodingTools", () => {
             filePath: locator,
             baseDir: "node://node-1/skills/pond",
             readContent: "# Pond\nassembled-marker",
-            source: "openclaw-node",
+            source: "grokbot-node",
             sourceInfo: {
-              source: "openclaw-node",
+              source: "grokbot-node",
               path: locator,
               scope: "temporary",
               origin: "top-level",
@@ -237,7 +237,7 @@ describe("createOpenClawCodingTools", () => {
     initializeGlobalHookRunner(
       createMockPluginRegistry([{ hookName: "before_tool_call", handler: beforeToolCall }]),
     );
-    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-hook-channel-"));
+    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-hook-channel-"));
     await fs.writeFile(path.join(tmpDir, "note.txt"), "hello");
     const memberRoleIds = ["maintainer-role"];
     const tools = createOpenClawCodingTools({
@@ -372,7 +372,7 @@ describe("createOpenClawCodingTools", () => {
     expect(names.has("read")).toBe(true);
   });
 
-  it("keeps Tool Search controls when core OpenClaw tools are not materialized", () => {
+  it("keeps Tool Search controls when core GrokBot tools are not materialized", () => {
     const createOpenClawToolsMock = vi.mocked(createOpenClawTools);
     createOpenClawToolsMock.mockClear();
 
@@ -434,14 +434,14 @@ describe("createOpenClawCodingTools", () => {
 
   it("keeps the injected ring-zero tool under policy and rejects a same-name replacement", () => {
     const injectedTool = {
-      ...stubTool("openclaw"),
-      label: "OpenClaw",
+      ...stubTool("grokbot"),
+      label: "GrokBot",
       description: "trusted ring-zero tool",
       execute: async () => ({ content: [], details: {} }),
     };
     const duplicateTool = {
-      ...stubTool("openclaw"),
-      label: "OpenClaw",
+      ...stubTool("grokbot"),
+      label: "GrokBot",
       description: "duplicate plugin tool",
       execute: async () => ({ content: [], details: {} }),
     };
@@ -449,8 +449,8 @@ describe("createOpenClawCodingTools", () => {
 
     const tools = runWithAgentRingZeroTools([injectedTool], () =>
       createOpenClawCodingTools({
-        config: { tools: { allow: ["read"], deny: ["openclaw"] } },
-        runtimeToolAllowlist: ["openclaw"],
+        config: { tools: { allow: ["read"], deny: ["grokbot"] } },
+        runtimeToolAllowlist: ["grokbot"],
         toolConstructionPlan: {
           includeBaseCodingTools: false,
           includeShellTools: false,
@@ -462,7 +462,7 @@ describe("createOpenClawCodingTools", () => {
     );
 
     expect(tools).toHaveLength(1);
-    expect(tools[0]?.name).toBe("openclaw");
+    expect(tools[0]?.name).toBe("grokbot");
     expect(tools[0]?.description).toBe("trusted ring-zero tool");
   });
 
@@ -649,7 +649,7 @@ describe("createOpenClawCodingTools", () => {
   });
 
   it("preserves runtime allowlist groups containing message through restrictive profiles", () => {
-    for (const runtimeToolAllowlist of [["group:messaging"], ["group:openclaw"], ["*"]]) {
+    for (const runtimeToolAllowlist of [["group:messaging"], ["group:grokbot"], ["*"]]) {
       const tools = createOpenClawCodingTools({
         config: { tools: { profile: "minimal" } },
         runtimeToolAllowlist,
@@ -666,7 +666,7 @@ describe("createOpenClawCodingTools", () => {
     }
   });
 
-  it("passes source reply delivery mode to OpenClaw tool construction", () => {
+  it("passes source reply delivery mode to GrokBot tool construction", () => {
     const createOpenClawToolsMock = vi.mocked(createOpenClawTools);
     createOpenClawToolsMock.mockClear();
 
@@ -680,7 +680,7 @@ describe("createOpenClawCodingTools", () => {
     expect(latestCreateOpenClawToolsOptions().sourceReplyDeliveryMode).toBe("message_tool_only");
   });
 
-  it("passes configured filesystem policy to OpenClaw tool construction", () => {
+  it("passes configured filesystem policy to GrokBot tool construction", () => {
     const createOpenClawToolsMock = vi.mocked(createOpenClawTools);
     createOpenClawToolsMock.mockClear();
 
@@ -753,7 +753,7 @@ describe("createOpenClawCodingTools", () => {
     expect(names.has("message")).toBe(false);
   });
 
-  it("passes plugin suppression into OpenClaw tool construction plans", () => {
+  it("passes plugin suppression into GrokBot tool construction plans", () => {
     const createOpenClawToolsMock = vi.mocked(createOpenClawTools);
     createOpenClawToolsMock.mockClear();
 
@@ -772,7 +772,7 @@ describe("createOpenClawCodingTools", () => {
     expect(latestCreateOpenClawToolsOptions().disablePluginTools).toBe(true);
   });
 
-  it("forwards trusted conversation recall to OpenClaw tool construction", () => {
+  it("forwards trusted conversation recall to GrokBot tool construction", () => {
     const createOpenClawToolsMock = vi.mocked(createOpenClawTools);
     createOpenClawToolsMock.mockClear();
     const conversationRecall = {
@@ -796,7 +796,7 @@ describe("createOpenClawCodingTools", () => {
     expect(latestCreateOpenClawToolsOptions().conversationRecall).toEqual(conversationRecall);
   });
 
-  it("keeps plugin-only construction off the OpenClaw core factory", () => {
+  it("keeps plugin-only construction off the GrokBot core factory", () => {
     const createOpenClawToolsMock = vi.mocked(createOpenClawTools);
     createOpenClawToolsMock.mockClear();
 
@@ -1051,7 +1051,7 @@ describe("createOpenClawCodingTools", () => {
     expectListIncludes(latestCreateOpenClawToolsOptions().pluginToolDenylist, ["workboard_block"]);
   });
 
-  it("passes explicit denylist entries to OpenClaw tool factory planning", () => {
+  it("passes explicit denylist entries to GrokBot tool factory planning", () => {
     const createOpenClawToolsMock = vi.mocked(createOpenClawTools);
     createOpenClawToolsMock.mockClear();
 
@@ -1063,13 +1063,13 @@ describe("createOpenClawCodingTools", () => {
     expectListIncludes(latestCreateOpenClawToolsOptions().pluginToolDenylist, ["pdf"]);
   });
 
-  it("passes inherited allowlist entries to OpenClaw plugin discovery", async () => {
+  it("passes inherited allowlist entries to GrokBot plugin discovery", async () => {
     const createOpenClawToolsMock = vi.mocked(createOpenClawTools);
     createOpenClawToolsMock.mockClear();
     const agentId = `inherited-allow-${Date.now()}-${Math.random().toString(16).slice(2)}`;
     const storeTemplate = path.join(
       os.tmpdir(),
-      `openclaw-session-store-${agentId}-{agentId}.json`,
+      `grokbot-session-store-${agentId}-{agentId}.json`,
     );
     await writeSessionStore(storeTemplate, agentId, {
       [`agent:${agentId}:subagent:limited`]: {
@@ -1208,8 +1208,8 @@ describe("createOpenClawCodingTools", () => {
       "workspace-policy",
       "base-coding-tools",
       "shell-tools",
-      "openclaw-tools:test-helper",
-      "openclaw-tools",
+      "grokbot-tools:test-helper",
+      "grokbot-tools",
       "message-provider-policy",
       "model-provider-policy",
       "authorization-policy",
@@ -1220,8 +1220,8 @@ describe("createOpenClawCodingTools", () => {
     ]);
     expect(stages.indexOf("tool-policy")).toBeLessThan(stages.indexOf("workspace-policy"));
     expect(stages.indexOf("workspace-policy")).toBeLessThan(stages.indexOf("base-coding-tools"));
-    expect(stages.indexOf("openclaw-tools:test-helper")).toBeLessThan(
-      stages.indexOf("openclaw-tools"),
+    expect(stages.indexOf("grokbot-tools:test-helper")).toBeLessThan(
+      stages.indexOf("grokbot-tools"),
     );
     expect(stages.indexOf("schema-normalization")).toBeLessThan(stages.indexOf("tool-hooks"));
   });
@@ -1393,7 +1393,7 @@ describe("createOpenClawCodingTools", () => {
   });
 
   it("uses stored spawnDepth to apply leaf tool policy for flat depth-2 session keys", async () => {
-    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-depth-policy-"));
+    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-depth-policy-"));
     try {
       const storeTemplate = path.join(tmpDir, "sessions-{agentId}.json");
       await writeSessionStore(storeTemplate, "main", {
@@ -1412,7 +1412,7 @@ describe("createOpenClawCodingTools", () => {
   });
 
   it("applies subagent tool policy to ACP children spawned under a subagent envelope", async () => {
-    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-acp-subagent-policy-"));
+    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-acp-subagent-policy-"));
     try {
       const storeTemplate = path.join(tmpDir, "sessions-{agentId}.json");
       await writeSessionStore(storeTemplate, "main", {
@@ -1462,7 +1462,7 @@ describe("createOpenClawCodingTools", () => {
   });
 
   it("applies leaf tool policy for cross-agent subagent sessions when spawnDepth is missing", async () => {
-    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-cross-agent-subagent-"));
+    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-cross-agent-subagent-"));
     try {
       const storeTemplate = path.join(tmpDir, "sessions-{agentId}.json");
       await writeSessionStore(storeTemplate, "main", {
@@ -1746,7 +1746,7 @@ describe("createOpenClawCodingTools", () => {
     const readTool = requireTool(defaultTools, "read");
     const readExecute = requireToolExecute(readTool);
 
-    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-read-"));
+    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-read-"));
     try {
       const imagePath = path.join(tmpDir, "sample.png");
       await fs.writeFile(imagePath, tinyPngBuffer);
@@ -1770,7 +1770,7 @@ describe("createOpenClawCodingTools", () => {
       }
 
       const textPath = path.join(tmpDir, "sample.txt");
-      const contents = "Hello from openclaw read tool.";
+      const contents = "Hello from grokbot read tool.";
       await fs.writeFile(textPath, contents, "utf8");
 
       const textResult = await readExecute("tool-2", {
@@ -1784,10 +1784,10 @@ describe("createOpenClawCodingTools", () => {
   });
 
   it("filters tools by sandbox policy", () => {
-    const sandboxDir = path.join(os.tmpdir(), "openclaw-sandbox");
+    const sandboxDir = path.join(os.tmpdir(), "grokbot-sandbox");
     const sandbox = createAgentToolsSandboxContext({
       workspaceDir: sandboxDir,
-      agentWorkspaceDir: path.join(os.tmpdir(), "openclaw-workspace"),
+      agentWorkspaceDir: path.join(os.tmpdir(), "grokbot-workspace"),
       workspaceAccess: "none" as const,
       fsBridge: createHostSandboxFsBridge(sandboxDir),
       tools: {
@@ -1802,10 +1802,10 @@ describe("createOpenClawCodingTools", () => {
   });
 
   it("hard-disables write/edit when sandbox workspaceAccess is ro", () => {
-    const sandboxDir = path.join(os.tmpdir(), "openclaw-sandbox");
+    const sandboxDir = path.join(os.tmpdir(), "grokbot-sandbox");
     const sandbox = createAgentToolsSandboxContext({
       workspaceDir: sandboxDir,
-      agentWorkspaceDir: path.join(os.tmpdir(), "openclaw-workspace"),
+      agentWorkspaceDir: path.join(os.tmpdir(), "grokbot-workspace"),
       workspaceAccess: "ro" as const,
       fsBridge: createHostSandboxFsBridge(sandboxDir),
       tools: {
@@ -1820,7 +1820,7 @@ describe("createOpenClawCodingTools", () => {
   });
 
   it("accepts canonical parameters for read/write/edit", async () => {
-    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-canonical-"));
+    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-canonical-"));
     try {
       const tools = createOpenClawCodingTools({ workspaceDir: tmpDir });
       const { readTool, writeTool, editTool } = expectReadWriteEditTools(tools);
@@ -1851,8 +1851,8 @@ describe("createOpenClawCodingTools", () => {
   });
 
   it("roots memory flush append-only writes in the workspace when cwd differs", async () => {
-    const workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-memory-workspace-"));
-    const taskCwd = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-memory-cwd-"));
+    const workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-memory-workspace-"));
+    const taskCwd = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-memory-cwd-"));
     const memoryRelativePath = "memory/2026-03-24.md";
     const workspaceMemoryFile = path.join(workspaceDir, memoryRelativePath);
     const taskMemoryFile = path.join(taskCwd, memoryRelativePath);
@@ -1885,7 +1885,7 @@ describe("createOpenClawCodingTools", () => {
   });
 
   it("rejects legacy alias parameters", async () => {
-    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-legacy-alias-"));
+    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-legacy-alias-"));
     try {
       const tools = createOpenClawCodingTools({ workspaceDir: tmpDir });
       const { readTool, writeTool, editTool } = expectReadWriteEditTools(tools);
@@ -1916,7 +1916,7 @@ describe("createOpenClawCodingTools", () => {
   });
 
   it("rejects structured content blocks for write", async () => {
-    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-structured-write-"));
+    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-structured-write-"));
     try {
       const tools = createOpenClawCodingTools({ workspaceDir: tmpDir });
       const writeTool = requireTool(tools, "write");
@@ -1937,7 +1937,7 @@ describe("createOpenClawCodingTools", () => {
   });
 
   it("rejects structured edit payloads", async () => {
-    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-structured-edit-"));
+    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-structured-edit-"));
     try {
       const filePath = path.join(tmpDir, "structured-edit.js");
       await fs.writeFile(filePath, "const value = 'old';\n", "utf8");

@@ -21,7 +21,7 @@ serving real traffic (yours or another operator's):
   dev instance with an isolated state dir (`OPENCLAW_STATE_DIR=<scratch>`) and a
   free port. Do not bind the default gateway port (18789) while a real gateway
   is running on it.
-- Do not `openclaw gateway stop`/`restart` (or `launchctl`/`systemctl`/tmux
+- Do not `grokbot gateway stop`/`restart` (or `launchctl`/`systemctl`/tmux
   equivalents) a service you did not start in this session — that is the
   operator's live instance. Get explicit approval first.
 - Need realistic data? Copy the live state/DB into your dev state dir and test
@@ -36,16 +36,16 @@ checks.
 Safe media smoke:
 
 ```bash
-pnpm openclaw infer tts convert --local --json \
-  --text "OpenClaw live smoke." \
-  --output /tmp/openclaw-live-smoke.mp3
+pnpm grokbot infer tts convert --local --json \
+  --text "GrokBot live smoke." \
+  --output /tmp/grokbot-live-smoke.mp3
 ```
 
 Safe voice-call readiness smoke:
 
 ```bash
-pnpm openclaw voicecall setup --json
-pnpm openclaw voicecall smoke --to "+15555550123"
+pnpm grokbot voicecall setup --json
+pnpm grokbot voicecall smoke --to "+15555550123"
 ```
 
 `voicecall smoke` is a dry run unless `--yes` is also present; use `--yes` only
@@ -111,7 +111,7 @@ MiniMax M3 uses `minimax/MiniMax-M3` as its default provider/model reference.
   - Separates "provider API is broken / key is invalid" from "gateway agent pipeline is broken"
   - Contains small, isolated regressions (example: OpenAI Responses/Codex Responses reasoning replay + tool-call flows)
 
-### Layer 2: Gateway + dev agent smoke (what "@openclaw" actually does)
+### Layer 2: Gateway + dev agent smoke (what "@grokbot" actually does)
 
 - Test: `src/gateway/gateway-models.profiles.live.test.ts`
 - Goal:
@@ -151,8 +151,8 @@ MiniMax M3 uses `minimax/MiniMax-M3` as its default provider/model reference.
 To see what you can test on your machine (and the exact `provider/model` ids), run:
 
 ```bash
-openclaw models list
-openclaw models list --json
+grokbot models list
+grokbot models list --json
 ```
 
 </Tip>
@@ -195,7 +195,7 @@ OPENCLAW_LIVE_TEST=1 \
 ```
 
 This does not ask Gemini to generate a response. It writes the same system
-settings OpenClaw gives Gemini, then runs `gemini --debug mcp list` to prove a
+settings GrokBot gives Gemini, then runs `gemini --debug mcp list` to prove a
 saved `transport: "streamable-http"` server is normalized to Gemini's HTTP MCP
 shape and can connect to a local streamable-HTTP MCP server.
 
@@ -217,9 +217,9 @@ Notes:
 
 - The Docker runner lives at `scripts/test-live-cli-backend-docker.sh`.
 - It runs the live CLI-backend smoke inside the repo Docker image as the non-root `node` user.
-- It resolves CLI smoke metadata from the owning plugin, then installs the matching Linux CLI package (`@anthropic-ai/claude-code` or `@google/gemini-cli`) into a cached writable prefix at `OPENCLAW_DOCKER_CLI_TOOLS_DIR` (default: `~/.cache/openclaw/docker-cli-tools`).
+- It resolves CLI smoke metadata from the owning plugin, then installs the matching Linux CLI package (`@anthropic-ai/claude-code` or `@google/gemini-cli`) into a cached writable prefix at `OPENCLAW_DOCKER_CLI_TOOLS_DIR` (default: `~/.cache/grokbot/docker-cli-tools`).
 - `codex-cli` is no longer a bundled CLI backend; use `openai/*` with the Codex app-server runtime instead (see [Live: Codex app-server harness smoke](#live-codex-app-server-harness-smoke)).
-- `pnpm test:docker:live-cli-backend:claude-subscription` requires portable Claude Code subscription OAuth through either `~/.claude/.credentials.json` with `claudeAiOauth.subscriptionType` or `CLAUDE_CODE_OAUTH_TOKEN` from `claude setup-token`. It first proves direct `claude -p` in Docker, then runs two Gateway CLI-backend turns without preserving Anthropic API-key env vars. This subscription lane disables the Claude MCP/tool and image probes by default because it consumes the signed-in subscription's usage limits and Anthropic can change Claude Agent SDK / `claude -p` billing and rate-limit behavior without an OpenClaw release.
+- `pnpm test:docker:live-cli-backend:claude-subscription` requires portable Claude Code subscription OAuth through either `~/.claude/.credentials.json` with `claudeAiOauth.subscriptionType` or `CLAUDE_CODE_OAUTH_TOKEN` from `claude setup-token`. It first proves direct `claude -p` in Docker, then runs two Gateway CLI-backend turns without preserving Anthropic API-key env vars. This subscription lane disables the Claude MCP/tool and image probes by default because it consumes the signed-in subscription's usage limits and Anthropic can change Claude Agent SDK / `claude -p` billing and rate-limit behavior without an GrokBot release.
 - Claude and Gemini support the same probe set (text turn, image classification, MCP `cron` tool call, model-switch continuity) through the flags above, but none of those probes run by default - opt in per flag as needed.
 
 ## Live: APNs HTTP/2 proxy reachability
@@ -297,7 +297,7 @@ Docker notes:
 - It stages the matching CLI auth material into the container, then installs the requested live CLI (`@anthropic-ai/claude-code`, `@openai/codex`, Factory Droid via `https://app.factory.ai/cli`, `@google/gemini-cli`, or `opencode-ai`) if missing. The ACP backend itself is the embedded `acpx/runtime` package from the official `acpx` plugin.
 - The Droid Docker variant stages `~/.factory` for settings, forwards `FACTORY_API_KEY`, and requires that API key because local Factory OAuth/keyring auth is not portable into the container. It uses ACPX's built-in `droid exec --output-format acp` registry entry.
 - The OpenCode Docker variant is a strict single-agent regression lane. It writes a temporary `OPENCODE_CONFIG_CONTENT` default model from `OPENCLAW_LIVE_ACP_BIND_OPENCODE_MODEL` (default `opencode/kimi-k2.6`).
-- Direct `acpx` CLI calls are only a manual/workaround path for comparing behavior outside the Gateway. The Docker ACP bind smoke exercises OpenClaw's embedded `acpx` runtime backend.
+- Direct `acpx` CLI calls are only a manual/workaround path for comparing behavior outside the Gateway. The Docker ACP bind smoke exercises GrokBot's embedded `acpx` runtime backend.
 
 ## Live: Codex app-server harness smoke
 
@@ -306,7 +306,7 @@ Docker notes:
   - load the bundled `codex` plugin
   - select an OpenAI model through `/model <ref> --runtime codex`
   - send a first gateway agent turn with the requested thinking level
-  - send a second turn to the same OpenClaw session and verify the app-server
+  - send a second turn to the same GrokBot session and verify the app-server
     thread can resume
   - run `/codex status` and `/codex models` through the same gateway command
     path
@@ -352,7 +352,7 @@ Docker notes:
 - Known Codex catalog models derive that exact native effort automatically.
   Unknown model overrides must state the expected mapped effort.
 - The smoke forces provider/model `agentRuntime.id: "codex"` so a broken Codex
-  harness cannot pass by silently falling back to OpenClaw.
+  harness cannot pass by silently falling back to GrokBot.
 - Auth: Codex app-server auth from the local Codex subscription login, or
   `OPENAI_API_KEY` when `OPENCLAW_LIVE_CODEX_HARNESS_AUTH=api-key`. Docker can
   copy `~/.codex/auth.json` and `~/.codex/config.toml` for subscription runs.
@@ -413,7 +413,7 @@ This proof leaves `OPENCLAW_LIVE_GATEWAY_MODELS` unset, resolves the model throu
 the fresh onboarding inference-selection seam, asserts `openai/gpt-5.6`, and then
 runs a real gateway turn with that resolved model.
 
-GPT-5.6 embedded OpenClaw matrix:
+GPT-5.6 embedded GrokBot matrix:
 
 ```bash
 OPENCLAW_LIVE_GATEWAY_THINKING=ultra \
@@ -433,7 +433,7 @@ Docker notes:
   `OPENCLAW_LIVE_CODEX_HARNESS_MCP_PROBE=0` or
   `OPENCLAW_LIVE_CODEX_HARNESS_GUARDIAN_PROBE=0` when you need a narrower debug
   run.
-- Docker uses the same explicit Codex runtime config, so legacy aliases or OpenClaw
+- Docker uses the same explicit Codex runtime config, so legacy aliases or GrokBot
   fallback cannot hide a Codex harness regression.
 - Matrix targets run sequentially in one container. The Docker script scales its
   default 35-minute timeout by target count; any outer shell or CI timeout must
@@ -469,8 +469,8 @@ Narrow, explicit allowlists are fastest and least flaky:
   - Antigravity (OAuth): `OPENCLAW_LIVE_GATEWAY_MODELS="google-antigravity/claude-opus-4-6-thinking,google-antigravity/gemini-3-pro-high" pnpm test:live src/gateway/gateway-models.profiles.live.test.ts`
 
 - Google adaptive thinking smoke (`qa manual` from the private QA CLI - requires `OPENCLAW_ENABLE_PRIVATE_QA_CLI=1` and a source checkout; see [QA overview](/concepts/qa-e2e-automation)):
-  - Gemini 3 dynamic default: `OPENCLAW_ENABLE_PRIVATE_QA_CLI=1 pnpm openclaw qa manual --provider-mode live-frontier --model google/gemini-3.1-pro-preview --alt-model google/gemini-3.1-pro-preview --message '/think adaptive Reply exactly: GEMINI_ADAPTIVE_OK' --timeout-ms 180000`
-  - Gemini 2.5 dynamic budget: `OPENCLAW_ENABLE_PRIVATE_QA_CLI=1 pnpm openclaw qa manual --provider-mode live-frontier --model google/gemini-2.5-flash --alt-model google/gemini-2.5-flash --message '/think adaptive Reply exactly: GEMINI25_ADAPTIVE_OK' --timeout-ms 180000`
+  - Gemini 3 dynamic default: `OPENCLAW_ENABLE_PRIVATE_QA_CLI=1 pnpm grokbot qa manual --provider-mode live-frontier --model google/gemini-3.1-pro-preview --alt-model google/gemini-3.1-pro-preview --message '/think adaptive Reply exactly: GEMINI_ADAPTIVE_OK' --timeout-ms 180000`
+  - Gemini 2.5 dynamic budget: `OPENCLAW_ENABLE_PRIVATE_QA_CLI=1 pnpm grokbot qa manual --provider-mode live-frontier --model google/gemini-2.5-flash --alt-model google/gemini-2.5-flash --message '/think adaptive Reply exactly: GEMINI25_ADAPTIVE_OK' --timeout-ms 180000`
 
 Notes:
 
@@ -478,8 +478,8 @@ Notes:
 - `google-antigravity/...` uses the Antigravity OAuth bridge (Cloud Code Assist-style agent endpoint).
 - `google-gemini-cli/...` uses the local Gemini CLI on your machine (separate auth + tooling quirks).
 - Gemini API vs Gemini CLI:
-  - API: OpenClaw calls Google's hosted Gemini API over HTTP (API key / profile auth); this is what most users mean by "Gemini".
-  - CLI: OpenClaw shells out to a local `gemini` binary; it has its own auth and can behave differently (streaming/tool support/version skew).
+  - API: GrokBot calls Google's hosted Gemini API over HTTP (API key / profile auth); this is what most users mean by "Gemini".
+  - CLI: GrokBot shells out to a local `gemini` binary; it has its own auth and can behave differently (streaming/tool support/version skew).
 
 ## Live: model matrix (what we cover)
 
@@ -545,7 +545,7 @@ Optional additional coverage outside the curated lists (nice to have, pick a "to
 
 If you have keys enabled, you can also test via:
 
-- OpenRouter: `openrouter/...` (hundreds of models; use `openclaw models scan` to find tool+image capable candidates)
+- OpenRouter: `openrouter/...` (hundreds of models; use `grokbot models scan` to find tool+image capable candidates)
 - OpenCode: `opencode/...` for Zen and `opencode-go/...` for Go (auth via `OPENCODE_API_KEY` / `OPENCODE_ZEN_API_KEY`)
 
 More providers you can include in the live matrix (if you have creds/config):
@@ -562,11 +562,11 @@ Do not hardcode "all models" in docs. The authoritative list is whatever `discov
 Live tests discover credentials the same way the CLI does. Practical implications:
 
 - If the CLI works, live tests should find the same keys.
-- If a live test says "no creds", debug the same way you'd debug `openclaw models list` / model selection.
+- If a live test says "no creds", debug the same way you'd debug `grokbot models list` / model selection.
 
-- Per-agent auth profiles: `~/.openclaw/agents/<agentId>/agent/auth-profiles.json` (this is what "profile keys" means in the live tests)
-- Config: `~/.openclaw/openclaw.json` (or `OPENCLAW_CONFIG_PATH`)
-- Legacy OAuth dir: `~/.openclaw/credentials/` (copied into the staged live home when present, but not the main profile-key store)
+- Per-agent auth profiles: `~/.grokbot/agents/<agentId>/agent/auth-profiles.json` (this is what "profile keys" means in the live tests)
+- Config: `~/.grokbot/grokbot.json` (or `OPENCLAW_CONFIG_PATH`)
+- Legacy OAuth dir: `~/.grokbot/credentials/` (copied into the staged live home when present, but not the main profile-key store)
 - Local live runs copy the active config (with `agents.*.workspace` / `agentDir` overrides stripped) and each agent's `auth-profiles.json` - not the rest of that agent's directory, so `workspace/` and `sandboxes/` data never reaches the staged home - plus the legacy `credentials/` dir and supported external CLI auth files/dirs (`.claude.json`, `.claude/.credentials.json`, `.claude/settings*.json`, `.claude/backups`, `.codex/auth.json`, `.codex/config.toml`, `.gemini`, `.minimax`) into a temp test home.
 
 If you want to rely on env keys, export them before local tests or use the
@@ -627,11 +627,11 @@ test passes:
 
 ```bash
 OPENCLAW_LIVE_TEST=1 OPENCLAW_LIVE_INFER_CLI_TEST=1 pnpm test:live -- test/image-generation.infer-cli.live.test.ts
-openclaw infer image providers --json
-openclaw infer image generate \
+grokbot infer image providers --json
+grokbot infer image generate \
   --model google/gemini-3.1-flash-image \
   --prompt "Minimal flat test image: one blue square on a white background, no text." \
-  --output ./openclaw-infer-image-smoke.png \
+  --output ./grokbot-infer-image-smoke.png \
   --json
 ```
 

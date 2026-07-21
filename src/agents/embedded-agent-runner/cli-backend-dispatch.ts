@@ -2,7 +2,7 @@
  * Opt-in CLI-backend dispatch for one-shot embedded runs.
  *
  * Embedded runs targeting a CLI runtime provider normally fall through to the
- * openclaw harness and call the provider API directly with that runtime's
+ * grokbot harness and call the provider API directly with that runtime's
  * credentials (`cli_runtime_passthrough_openclaw`). Anthropic routes direct
  * anthropic-messages calls on subscription OAuth tokens to metered "extra
  * usage" billing: without extra-usage balance the passthrough fails closed
@@ -11,7 +11,7 @@
  * tolerate CLI latency opt in via `cliBackendDispatch: "subscription-auth"`
  * to run through the CLI backend on plan limits instead.
  */
-import { isRecord } from "@openclaw/normalization-core/record-coerce";
+import { isRecord } from "@grokbot/normalization-core/record-coerce";
 import { onAgentEvent } from "../../infra/agent-events.js";
 import { createSubsystemLogger } from "../../logging/subsystem.js";
 import { OPENCLAW_MCP_TOOL_PREFIX, stripOpenClawMcpToolPrefix } from "../cli-runner/tool-policy.js";
@@ -102,7 +102,7 @@ async function runEmbeddedAgentViaCliBackend(
     mcp: dispatch.toolsAllow.map((name) => `${OPENCLAW_MCP_TOOL_PREFIX}${name}`),
   };
   const onAgentToolResult = params.onAgentToolResult;
-  // The CLI backend writes no OpenClaw session records; mirror the run into
+  // The CLI backend writes no GrokBot session records; mirror the run into
   // the caller-owned session file so transcript consumers (persistTranscripts,
   // timeout partial-text salvage, the live terminal-search watcher) keep
   // working at parity with embedded runs.

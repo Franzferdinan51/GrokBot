@@ -1,18 +1,18 @@
 ---
-summary: "Use xAI Grok models in OpenClaw"
+summary: "Use xAI Grok models in GrokBot"
 read_when:
-  - You want to use Grok models in OpenClaw
+  - You want to use Grok models in GrokBot
   - You are configuring xAI auth or model ids
 title: "xAI"
 ---
 
-OpenClaw ships a bundled `xai` provider plugin for Grok models. The
+GrokBot ships a bundled `xai` provider plugin for Grok models. The
 recommended path is Grok OAuth with an eligible SuperGrok or X Premium
 subscription. Gateway, config, routing, and tools stay local; only Grok
 requests go to xAI's API.
 
 OAuth does not require an xAI API key or the Grok Build app. xAI may still
-show Grok Build on the consent screen because OpenClaw uses xAI's shared
+show Grok Build on the consent screen because GrokBot uses xAI's shared
 OAuth client.
 
 ## Setup
@@ -23,14 +23,14 @@ OAuth client.
     model/auth step:
 
     ```bash
-    openclaw onboard --install-daemon
+    grokbot onboard --install-daemon
     ```
 
     On a VPS or over SSH, select xAI OAuth directly; it uses device-code
     verification and does not need a localhost callback:
 
     ```bash
-    openclaw onboard --install-daemon --auth-choice xai-oauth
+    grokbot onboard --install-daemon --auth-choice xai-oauth
     ```
 
   </Step>
@@ -38,13 +38,13 @@ OAuth client.
     Sign in to xAI only; do not rerun full onboarding just to connect Grok:
 
     ```bash
-    openclaw models auth login --provider xai --method oauth
+    grokbot models auth login --provider xai --method oauth
     ```
 
     Apply Grok as the default model separately:
 
     ```bash
-    openclaw models set xai/grok-4.3
+    grokbot models set xai/grok-4.3
     ```
 
     Rerun full onboarding only if you intentionally want to change Gateway,
@@ -56,7 +56,7 @@ OAuth client.
     that need key-backed provider config:
 
     ```bash
-    openclaw models auth login --provider xai --method api-key
+    grokbot models auth login --provider xai --method api-key
     export XAI_API_KEY=xai-...
     ```
 
@@ -71,8 +71,8 @@ OAuth client.
 </Steps>
 
 <Note>
-OpenClaw uses the xAI Responses API as the bundled xAI transport. The same
-credential from `openclaw models auth login --provider xai --method oauth` or
+GrokBot uses the xAI Responses API as the bundled xAI transport. The same
+credential from `grokbot models auth login --provider xai --method oauth` or
 `--method api-key` also powers `web_search` (provider id `grok`), `x_search`,
 `code_execution`, speech/transcription, and xAI image/video generation. If you
 store an xAI key under `plugins.entries.xai.config.webSearch.apiKey`, the
@@ -82,22 +82,22 @@ bundled xAI model provider reuses it as a fallback too.
 ## OAuth troubleshooting
 
 - For SSH, Docker, VPS, or other remote setups, use
-  `openclaw models auth login --provider xai --method oauth`; it uses
+  `grokbot models auth login --provider xai --method oauth`; it uses
   device-code verification, not a localhost callback.
 - If sign-in succeeds but Grok is not the default model, run
-  `openclaw models set xai/grok-4.3`.
+  `grokbot models set xai/grok-4.3`.
 - Inspect saved xAI auth profiles:
 
   ```bash
-  openclaw models auth list --provider xai
-  openclaw models status
+  grokbot models auth list --provider xai
+  grokbot models status
   ```
 
 - xAI decides which accounts can receive OAuth API tokens. If an account is
   not eligible, use the API-key path or check the subscription on xAI's side.
 
 <Tip>
-Use `xai-oauth` when signing in from SSH, Docker, or a VPS. OpenClaw prints a
+Use `xai-oauth` when signing in from SSH, Docker, or a VPS. GrokBot prints a
 URL and short code; finish sign-in in any local browser while the remote
 process polls xAI for the completed token exchange.
 </Tip>
@@ -124,18 +124,18 @@ dated Grok 4.20 variants remain selectable.
 Catalog context and token-cost metadata follows xAI's live
 [model pages](https://docs.x.ai/developers/models) and
 [pricing page](https://docs.x.ai/developers/pricing). xAI applies higher rates
-when a request crosses its documented long-context threshold; OpenClaw's flat
+when a request crosses its documented long-context threshold; GrokBot's flat
 catalog cost fields record the short-context rates. Grok Build, xAI's separate
 coding-agent CLI, is available at [x.ai/cli](https://x.ai/cli) and currently
 uses Grok 4.5.
 
 ## Feature coverage
 
-The bundled plugin maps supported xAI APIs onto OpenClaw's shared provider and
+The bundled plugin maps supported xAI APIs onto GrokBot's shared provider and
 tool contracts. Capabilities that do not fit the shared contract are listed
 below or under known limits.
 
-| xAI capability             | OpenClaw surface                        | Status                                               |
+| xAI capability             | GrokBot surface                        | Status                                               |
 | -------------------------- | --------------------------------------- | ---------------------------------------------------- |
 | Chat / Responses           | `xai/<model>` model provider            | Yes                                                  |
 | Server-side web search     | `web_search` provider `grok`            | Yes                                                  |
@@ -148,10 +148,10 @@ below or under known limits.
 | Batch speech-to-text       | `tools.media.audio` media understanding | Yes                                                  |
 | Streaming speech-to-text   | Voice Call `streaming.provider: "xai"`  | Yes                                                  |
 | Realtime voice             | Talk `talk.realtime.provider: "xai"`    | Yes; gateway-relay for native Talk nodes             |
-| Files / batches            | Generic model API compatibility only    | Not a first-class OpenClaw tool                      |
+| Files / batches            | Generic model API compatibility only    | Not a first-class GrokBot tool                      |
 
 <Note>
-OpenClaw uses xAI's REST image/video/TTS/STT APIs for media generation and
+GrokBot uses xAI's REST image/video/TTS/STT APIs for media generation and
 batch transcription, xAI's streaming STT WebSocket for live voice-call
 transcription, xAI's Grok Voice Agent WebSocket for Talk realtime sessions,
 and the Responses API for chat, search, and code-execution tools.
@@ -179,12 +179,12 @@ Older aliases normalize as follows:
 | ------------------------------------------------------------- | ---------------- |
 | `grok-code-fast-1`, `grok-code-fast`, `grok-code-fast-1-0825` | `grok-build-0.1` |
 
-The dated 0309 ids are the selectable catalog entries. OpenClaw sends all other
+The dated 0309 ids are the selectable catalog entries. GrokBot sends all other
 current Grok 4.20 aliases verbatim so xAI retains control of stable, latest,
 beta, experimental, and dated alias semantics. The global `grok-latest` alias is
 also preserved verbatim.
 
-xAI retired the following exact ids. OpenClaw keeps them as hidden compatibility
+xAI retired the following exact ids. GrokBot keeps them as hidden compatibility
 rows for shipped configurations, with the limits and pricing of their current
 redirect targets:
 
@@ -195,7 +195,7 @@ redirect targets:
 | `grok-code-fast-1`                                                   | Grok Build 0.1                   |
 | `grok-imagine-image-pro`                                             | Grok Imagine Image Quality       |
 
-`openclaw doctor --fix` updates persisted xAI server-tool defaults and the
+`grokbot doctor --fix` updates persisted xAI server-tool defaults and the
 retired quality image slug, removes stale generated catalog rows, and repairs
 stale context metadata on active 4.20 rows. It does not pin active 4.20
 `beta-latest` aliases to a dated snapshot.
@@ -205,7 +205,7 @@ stale context metadata on active 4.20 rows. It does not pin active 4.20
 <Warning>
   `x_search` and `code_execution` run on xAI's servers. xAI bills $5 per 1,000
   tool calls, plus the model's input and output tokens. With each tool's
-  `enabled` setting omitted, OpenClaw exposes it only for an active xAI model.
+  `enabled` setting omitted, GrokBot exposes it only for an active xAI model.
   A known non-xAI model provider requires an explicit per-tool `enabled: true`;
   a missing or unresolved provider fails closed. xAI auth is always required,
   and `enabled: false` disables the tool for every provider.
@@ -217,8 +217,8 @@ stale context metadata on active 4.20 rows. It does not pin active 4.20
     to `XAI_API_KEY` or a plugin web-search key:
 
     ```bash
-    openclaw models auth login --provider xai --method oauth
-    openclaw config set tools.web.search.provider grok
+    grokbot models auth login --provider xai --method oauth
+    grokbot config set tools.web.search.provider grok
     ```
 
   </Accordion>
@@ -249,11 +249,11 @@ stale context metadata on active 4.20 rows. It does not pin active 4.20
     <Warning>
     Local video buffers are not accepted. Use remote `http(s)` URLs for video
     edit/extend inputs. Image-to-video accepts local image buffers because
-    OpenClaw encodes those as data URLs for xAI.
+    GrokBot encodes those as data URLs for xAI.
     </Warning>
 
     Video 1.5 also recognizes xAI's `grok-imagine-video-1.5-preview` and
-    `grok-imagine-video-1.5-2026-05-30` identifiers. OpenClaw forwards the
+    `grok-imagine-video-1.5-2026-05-30` identifiers. GrokBot forwards the
     selected identifier unchanged, but applies the same image-only validation.
 
     To use xAI as the default video provider:
@@ -292,7 +292,7 @@ stale context metadata on active 4.20 rows. It does not pin active 4.20
     - Default operation timeout: 600 seconds unless `image_generate.timeoutMs`
       or `agents.defaults.imageGenerationModel.timeoutMs` is set
 
-    OpenClaw asks xAI for `b64_json` image responses so generated media can be
+    GrokBot asks xAI for `b64_json` image responses so generated media can be
     stored and delivered through the normal channel attachment path. Local
     reference images are converted to data URLs; remote `http(s)` references
     pass through unchanged.
@@ -313,7 +313,7 @@ stale context metadata on active 4.20 rows. It does not pin active 4.20
 
     <Note>
     xAI also documents `quality`, `mask`, `user`, and an `auto` aspect ratio.
-    OpenClaw forwards only the shared cross-provider image controls today;
+    GrokBot forwards only the shared cross-provider image controls today;
     these native-only knobs are not exposed through `image_generate`.
     </Note>
 
@@ -324,7 +324,7 @@ stale context metadata on active 4.20 rows. It does not pin active 4.20
     provider surface.
 
     - Voices: authenticated live catalog from xAI; list it with
-      `openclaw infer tts voices --provider xai`
+      `grokbot infer tts voices --provider xai`
     - Offline fallback voices: `ara`, `eve`, `leo`, `rex`, `sal`
     - Default voice: `eve`
     - Account custom voice IDs are forwarded even when they are absent from the
@@ -352,7 +352,7 @@ stale context metadata on active 4.20 rows. It does not pin active 4.20
     ```
 
     <Note>
-    OpenClaw uses xAI's batch `/v1/tts` endpoint for buffered synthesis,
+    GrokBot uses xAI's batch `/v1/tts` endpoint for buffered synthesis,
     authenticated `/v1/tts/voices` catalog discovery, and native
     `wss://api.x.ai/v1/tts` for streaming synthesis. Streaming is restricted to
     the native `api.x.ai` host, so custom `baseUrl` values are rejected on this
@@ -369,7 +369,7 @@ stale context metadata on active 4.20 rows. It does not pin active 4.20
   </Accordion>
 
   <Accordion title="Speech-to-text">
-    The bundled `xai` plugin registers batch speech-to-text through OpenClaw's
+    The bundled `xai` plugin registers batch speech-to-text through GrokBot's
     media-understanding transcription surface.
 
     - Endpoint: xAI REST `/v1/stt`
@@ -399,7 +399,7 @@ stale context metadata on active 4.20 rows. It does not pin active 4.20
     ```
 
     Language can be supplied through the shared audio media config or per-call
-    transcription request. Prompt hints are accepted by the shared OpenClaw
+    transcription request. Prompt hints are accepted by the shared GrokBot
     surface, but the xAI REST STT integration forwards only file and language
     because those map to the current public xAI endpoint.
 
@@ -464,7 +464,7 @@ stale context metadata on active 4.20 rows. It does not pin active 4.20
     - Default voice: `eve`
     - Transport: `gateway-relay` (iOS, Android, and Control UI relay paths)
     - Audio: PCM16 24 kHz or G.711 µ-law 8 kHz
-    - Barge-in: xAI server VAD interrupts the response; OpenClaw clears queued playback
+    - Barge-in: xAI server VAD interrupts the response; GrokBot clears queued playback
       and truncates unplayed provider history
 
     Configure Talk on the Gateway:
@@ -509,7 +509,7 @@ stale context metadata on active 4.20 rows. It does not pin active 4.20
     </Note>
 
     <Note>
-    `sessionResumption` defaults to `false`. When set to `true`, OpenClaw asks
+    `sessionResumption` defaults to `false`. When set to `true`, GrokBot asks
     xAI to retain enough session state to resume the same conversation after a
     reconnect and then reconnects with the returned conversation id. Leave it
     disabled when provider-side replay/retention is not acceptable; interrupted
@@ -519,7 +519,7 @@ stale context metadata on active 4.20 rows. It does not pin active 4.20
   </Accordion>
 
   <Accordion title="x_search configuration">
-    The bundled xAI plugin exposes `x_search` as an OpenClaw tool for
+    The bundled xAI plugin exposes `x_search` as an GrokBot tool for
     searching X (formerly Twitter) content via Grok.
 
     Config path: `plugins.entries.xai.config.xSearch`
@@ -556,7 +556,7 @@ stale context metadata on active 4.20 rows. It does not pin active 4.20
   </Accordion>
 
   <Accordion title="Code execution configuration">
-    The bundled xAI plugin exposes `code_execution` as an OpenClaw tool for
+    The bundled xAI plugin exposes `code_execution` as an GrokBot tool for
     remote code execution in xAI's sandbox environment.
 
     Config path: `plugins.entries.xai.config.codeExecution`
@@ -596,10 +596,10 @@ stale context metadata on active 4.20 rows. It does not pin active 4.20
       fallback, or OAuth with an eligible xAI account. OAuth uses device-code
       verification without a localhost callback. xAI decides which accounts
       can receive OAuth API tokens, and the consent page may show Grok Build
-      even though OpenClaw does not require the Grok Build app.
-    - OpenClaw does not currently expose the xAI multi-agent model family. xAI
+      even though GrokBot does not require the Grok Build app.
+    - GrokBot does not currently expose the xAI multi-agent model family. xAI
       serves these models through the Responses API, but they do not accept
-      the client-side or custom tools used by OpenClaw's shared agent loop.
+      the client-side or custom tools used by GrokBot's shared agent loop.
       See the
       [xAI multi-agent limitations](https://docs.x.ai/developers/model-capabilities/text/multi-agent#limitations).
     - xAI Realtime voice currently exposes gateway-relay Talk transport only.
@@ -611,7 +611,7 @@ stale context metadata on active 4.20 rows. It does not pin active 4.20
   </Accordion>
 
   <Accordion title="Advanced notes">
-    - OpenClaw applies xAI-specific tool-schema and tool-call compatibility
+    - GrokBot applies xAI-specific tool-schema and tool-call compatibility
       fixes automatically on the shared runner path.
     - Native xAI requests default `tool_stream: true`. Set
       `agents.defaults.models["xai/<model>"].params.tool_stream` to `false`
@@ -624,8 +624,8 @@ stale context metadata on active 4.20 rows. It does not pin active 4.20
       configurable effort control, but still request
       `include: ["reasoning.encrypted_content"]` so prior encrypted reasoning
       can be replayed on follow-up turns.
-    - `web_search`, `x_search`, and `code_execution` are exposed as OpenClaw
-      tools. OpenClaw attaches only the specific xAI built-in each tool needs
+    - `web_search`, `x_search`, and `code_execution` are exposed as GrokBot
+      tools. GrokBot attaches only the specific xAI built-in each tool needs
       to that tool's request instead of attaching every native tool to every
       chat turn.
     - Grok `web_search` reads `plugins.entries.xai.config.webSearch.baseUrl`.
@@ -656,7 +656,7 @@ OPENCLAW_LIVE_TEST=1 OPENCLAW_LIVE_TEST_QUIET=1 OPENCLAW_LIVE_IMAGE_GENERATION_P
 The provider-specific live file synthesizes normal TTS, telephony-friendly PCM
 TTS, transcribes audio through xAI batch STT, streams the same PCM through xAI
 realtime STT, generates text-to-image output, and edits a reference image.
-The shared image live file verifies the same xAI provider through OpenClaw's
+The shared image live file verifies the same xAI provider through GrokBot's
 runtime selection, fallback, normalization, and media attachment path. The
 opt-in Video 1.5 case submits one generated first-frame image at 1080P and
 verifies the completed video download.

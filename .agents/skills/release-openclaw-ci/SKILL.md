@@ -1,11 +1,11 @@
 ---
-name: release-openclaw-ci
-description: "Run, watch, debug, and summarize OpenClaw full release CI, release checks, live provider gates, install/update proofs, and release-secret preflights."
+name: release-grokbot-ci
+description: "Run, watch, debug, and summarize GrokBot full release CI, release checks, live provider gates, install/update proofs, and release-secret preflights."
 ---
 
-# OpenClaw Release CI
+# GrokBot Release CI
 
-Use this with `$release-openclaw-maintainer` and `$openclaw-testing` when a release candidate needs full validation, install/update proof, live provider checks, or CI recovery.
+Use this with `$release-grokbot-maintainer` and `$grokbot-testing` when a release candidate needs full validation, install/update proof, live provider checks, or CI recovery.
 
 ## Guardrails
 
@@ -91,7 +91,7 @@ workflow SHA before watching or recovering Full Release Validation.
 Before full release validation:
 
 ```bash
-node .agents/skills/release-openclaw-ci/scripts/verify-provider-secrets.mjs --required openai,anthropic,fireworks
+node .agents/skills/release-grokbot-ci/scripts/verify-provider-secrets.mjs --required openai,anthropic,fireworks
 gh api rate_limit --jq '.resources.core'
 git status --short --branch
 git rev-parse HEAD
@@ -110,8 +110,8 @@ Start product performance evidence as early as the Code SHA exists, in
 parallel with other release work:
 
 ```bash
-gh workflow run openclaw-performance.yml \
-  --repo openclaw/openclaw \
+gh workflow run grokbot-performance.yml \
+  --repo grokbot/grokbot \
   --ref main \
   -f target_ref=<code-sha> \
   -f profile=release \
@@ -166,7 +166,7 @@ for stable/correction versions. Pass `release_profile=full` only when the
 operator explicitly asks for the broad advisory provider/media matrix. Stable
 and full profiles force the release soak; the beta profile may opt in with
 `run_release_soak=true`. Use narrow `rerun_group` after focused fixes.
-Publish with `openclaw-release-publish.yml` using `release_profile=from-validation`
+Publish with `grokbot-release-publish.yml` using `release_profile=from-validation`
 unless a maintainer intentionally wants to cross-check a specific profile; the
 publish workflow reads the effective profile from the full-validation manifest.
 
@@ -191,7 +191,7 @@ Stop watchers before ending the turn or switching strategy.
 1. Confirm parent SHA and child run IDs.
 2. List failed jobs only:
    ```bash
-   gh run view <child-run-id> --repo openclaw/openclaw --json jobs \
+   gh run view <child-run-id> --repo grokbot/grokbot --json jobs \
      --jq '.jobs[] | select(.conclusion=="failure" or .conclusion=="timed_out" or .conclusion=="cancelled") | [.databaseId,.name,.conclusion,.url] | @tsv'
    ```
 3. Fetch one failed job log. If rate-limited, note reset time and avoid more REST calls.
@@ -216,12 +216,12 @@ Stop watchers before ending the turn or switching strategy.
 7. If a required PR CI run is capacity-stalled with queued jobs and no active
    jobs, do not cancel unrelated work or accept a generic manual dispatch.
    First verify the PR head carries the current fallback schema:
-   `gh api 'repos/openclaw/openclaw/contents/.github/workflows/ci.yml?ref=<pr-head-branch>'
+   `gh api 'repos/grokbot/grokbot/contents/.github/workflows/ci.yml?ref=<pr-head-branch>'
 --jq .content | base64 --decode | rg -q 'pull_request_number:'`. If absent,
    refresh the PR head from `main` and use the new head SHA; let normal CI run
    before considering another fallback.
    From the PR head branch, dispatch the explicit exact-SHA fallback:
-   `gh workflow run ci.yml --repo openclaw/openclaw --ref <pr-head-branch> -f
+   `gh workflow run ci.yml --repo grokbot/grokbot --ref <pr-head-branch> -f
 target_ref=<full-pr-sha> -f pull_request_number=<pr-number> -f
 include_android=true -f release_gate=true`.
    It runs on GitHub-hosted runners and is accepted only when its run title is

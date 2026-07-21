@@ -1,4 +1,4 @@
-name: OpenClaw Live And E2E Checks (Reusable)
+name: GrokBot Live And E2E Checks (Reusable)
 
 on:
   workflow_dispatch:
@@ -33,9 +33,9 @@ on:
         default: 1
         type: number
       published_upgrade_survivor_baseline:
-        description: Published OpenClaw package baseline for the published-upgrade-survivor/update-migration Docker lanes
+        description: Published GrokBot package baseline for the published-upgrade-survivor/update-migration Docker lanes
         required: false
-        default: openclaw@latest
+        default: grokbot@latest
         type: string
       published_upgrade_survivor_baselines:
         description: Optional exact baseline list for published-upgrade-survivor/update-migration lane expansion
@@ -230,9 +230,9 @@ on:
         default: 1
         type: number
       published_upgrade_survivor_baseline:
-        description: Published OpenClaw package baseline for the published-upgrade-survivor/update-restart-auth/update-migration Docker lanes
+        description: Published GrokBot package baseline for the published-upgrade-survivor/update-restart-auth/update-migration Docker lanes
         required: false
-        default: openclaw@latest
+        default: grokbot@latest
         type: string
       published_upgrade_survivor_baselines:
         description: Optional exact baseline list for published-upgrade-survivor/update-migration lane expansion
@@ -250,7 +250,7 @@ on:
         default: false
         type: boolean
       package_artifact_name:
-        description: Existing workflow artifact containing openclaw-current.tgz; blank packs the selected ref
+        description: Existing workflow artifact containing grokbot-current.tgz; blank packs the selected ref
         required: false
         default: ""
         type: string
@@ -285,12 +285,12 @@ on:
         default: ""
         type: string
       package_sha256:
-        description: Exact root OpenClaw package SHA-256 for no-push image artifacts
+        description: Exact root GrokBot package SHA-256 for no-push image artifacts
         required: false
         default: ""
         type: string
       package_version:
-        description: Exact OpenClaw package version for no-push image artifacts
+        description: Exact GrokBot package version for no-push image artifacts
         required: false
         default: ""
         type: string
@@ -578,7 +578,7 @@ jobs:
 
           if [[ -z "$trusted_reason" ]]; then
             echo "Ref '${INPUT_REF}' resolved to $selected_sha, which is not trusted for secret-bearing live/E2E checks." >&2
-            echo "Allowed refs must be reachable from an OpenClaw branch or release tag." >&2
+            echo "Allowed refs must be reachable from an GrokBot branch or release tag." >&2
             exit 1
           fi
 
@@ -1145,7 +1145,7 @@ jobs:
       OPENCLAW_DOCKER_E2E_SELECTED_SHA: ${{ needs.validate_selected_ref.outputs.selected_sha }}
       OPENCLAW_DOCKER_ALL_RELEASE_PROFILE: ${{ inputs.release_test_profile }}
       OPENCLAW_CODEX_NPM_PLUGIN_SPEC: ${{ inputs.codex_plugin_spec }}
-      OPENCLAW_CURRENT_PACKAGE_TGZ: .artifacts/docker-e2e-package/openclaw-current.tgz
+      OPENCLAW_CURRENT_PACKAGE_TGZ: .artifacts/docker-e2e-package/grokbot-current.tgz
       OPENCLAW_UPGRADE_SURVIVOR_BASELINE_SPEC: ${{ inputs.published_upgrade_survivor_baseline }}
       OPENCLAW_UPGRADE_SURVIVOR_BASELINE_SPECS: ${{ inputs.published_upgrade_survivor_baselines }}
       OPENCLAW_UPGRADE_SURVIVOR_SCENARIOS: ${{ inputs.published_upgrade_survivor_scenarios }}
@@ -1216,7 +1216,7 @@ jobs:
           node .release-harness/scripts/docker-e2e.mjs github-outputs "$plan_path" >> "$GITHUB_OUTPUT"
           echo "plan_json=$plan_path" >> "$GITHUB_OUTPUT"
 
-      - name: Download OpenClaw Docker E2E package
+      - name: Download GrokBot Docker E2E package
         if: contains(matrix.profiles, inputs.release_test_profile) && steps.plan.outputs.needs_package == '1'
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
         with:
@@ -1473,7 +1473,7 @@ jobs:
       OPENCLAW_DOCKER_E2E_REPO_ROOT: ${{ github.workspace }}
       OPENCLAW_DOCKER_E2E_SELECTED_SHA: ${{ needs.validate_selected_ref.outputs.selected_sha }}
       OPENCLAW_CODEX_NPM_PLUGIN_SPEC: ${{ inputs.codex_plugin_spec }}
-      OPENCLAW_CURRENT_PACKAGE_TGZ: .artifacts/docker-e2e-package/openclaw-current.tgz
+      OPENCLAW_CURRENT_PACKAGE_TGZ: .artifacts/docker-e2e-package/grokbot-current.tgz
       OPENCLAW_UPGRADE_SURVIVOR_BASELINE_SPEC: ${{ inputs.published_upgrade_survivor_baseline }}
       OPENCLAW_UPGRADE_SURVIVOR_BASELINE_SPECS: ${{ matrix.group.published_upgrade_survivor_baselines || inputs.published_upgrade_survivor_baselines }}
       OPENCLAW_UPGRADE_SURVIVOR_SCENARIOS: ${{ inputs.published_upgrade_survivor_scenarios }}
@@ -1543,7 +1543,7 @@ jobs:
           echo "artifact_suffix=${suffix:-targeted}" >> "$GITHUB_OUTPUT"
           echo "plan_json=$plan_path" >> "$GITHUB_OUTPUT"
 
-      - name: Download OpenClaw Docker E2E package
+      - name: Download GrokBot Docker E2E package
         if: steps.plan.outputs.needs_package == '1'
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
         with:
@@ -1717,7 +1717,7 @@ jobs:
       OPENCLAW_DOCKER_E2E_PACKAGE_ARTIFACT_NAME: ${{ inputs.package_artifact_name || 'docker-e2e-package' }}
       OPENCLAW_DOCKER_E2E_REPO_ROOT: ${{ github.workspace }}
       OPENCLAW_DOCKER_E2E_SELECTED_SHA: ${{ needs.validate_selected_ref.outputs.selected_sha }}
-      OPENCLAW_CURRENT_PACKAGE_TGZ: .artifacts/docker-e2e-package/openclaw-current.tgz
+      OPENCLAW_CURRENT_PACKAGE_TGZ: .artifacts/docker-e2e-package/grokbot-current.tgz
       OPENCLAW_DOCKER_ALL_RELEASE_PROFILE: ${{ inputs.release_test_profile }}
       OPENCLAW_DOCKER_E2E_REQUIRE_LOCAL_IMAGE: ${{ inputs.shared_image_policy == 'no-push-artifact' && '1' || '0' }}
       OPENCLAW_SKIP_DOCKER_BUILD: "1"
@@ -1777,7 +1777,7 @@ jobs:
           node .release-harness/scripts/docker-e2e.mjs github-outputs "$plan_path" >> "$GITHUB_OUTPUT"
           echo "plan_json=$plan_path" >> "$GITHUB_OUTPUT"
 
-      - name: Download OpenClaw Docker E2E package
+      - name: Download GrokBot Docker E2E package
         if: steps.plan.outputs.needs_package == '1'
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
         with:
@@ -1998,7 +1998,7 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           install-bun: "true"
 
-      - name: Validate OpenClaw package artifact identity
+      - name: Validate GrokBot package artifact identity
         id: input_package_artifact
         if: steps.plan.outputs.needs_package == '1' && inputs.package_artifact_id != ''
         env:
@@ -2016,11 +2016,11 @@ jobs:
             -n "${ARTIFACT_NAME// }" &&
             "$ARTIFACT_RUN_ATTEMPT" =~ ^[1-9][0-9]*$ &&
             "$ARTIFACT_RUN_ID" =~ ^[1-9][0-9]*$ ]] || {
-            echo "OpenClaw package artifact identity tuple is incomplete." >&2
+            echo "GrokBot package artifact identity tuple is incomplete." >&2
             exit 1
           }
           [[ "$ARTIFACT_NAME" == *"-${ARTIFACT_RUN_ID}-${ARTIFACT_RUN_ATTEMPT}" ]] || {
-            echo "OpenClaw package artifact name does not bind the declared producer run attempt." >&2
+            echo "GrokBot package artifact name does not bind the declared producer run attempt." >&2
             exit 1
           }
           artifact_json="$(gh api "repos/${GITHUB_REPOSITORY}/actions/artifacts/${ARTIFACT_ID}")"
@@ -2036,7 +2036,7 @@ jobs:
               .digest == $digest and
               (.workflow_run.id | tostring) == $run_id
             ' <<< "$artifact_json" >/dev/null || {
-              echo "OpenClaw package artifact identity does not match the requested immutable tuple." >&2
+              echo "GrokBot package artifact identity does not match the requested immutable tuple." >&2
               exit 1
             }
           attempt_json="$(
@@ -2048,7 +2048,7 @@ jobs:
             --arg run_id "$ARTIFACT_RUN_ID" \
             '(.id | tostring) == $run_id and (.run_attempt | tostring) == $attempt' \
             <<< "$attempt_json" >/dev/null || {
-            echo "OpenClaw package artifact producer run attempt does not match the requested tuple." >&2
+            echo "GrokBot package artifact producer run attempt does not match the requested tuple." >&2
             exit 1
           }
           {
@@ -2057,7 +2057,7 @@ jobs:
             echo "run_attempt=$ARTIFACT_RUN_ATTEMPT"
           } >> "$GITHUB_OUTPUT"
 
-      - name: Download current-run OpenClaw Docker E2E package
+      - name: Download current-run GrokBot Docker E2E package
         if: steps.plan.outputs.needs_package == '1' && inputs.package_artifact_id != '' && inputs.package_artifact_run_id == github.run_id
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
         with:
@@ -2066,7 +2066,7 @@ jobs:
           run-id: ${{ inputs.package_artifact_run_id }}
           github-token: ${{ github.token }}
 
-      - name: Download previous-run OpenClaw Docker E2E package
+      - name: Download previous-run GrokBot Docker E2E package
         if: steps.plan.outputs.needs_package == '1' && inputs.package_artifact_id != '' && inputs.package_artifact_run_id != github.run_id
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
         with:
@@ -2075,7 +2075,7 @@ jobs:
           run-id: ${{ inputs.package_artifact_run_id }}
           github-token: ${{ github.token }}
 
-      - name: Pack OpenClaw package for Docker E2E
+      - name: Pack GrokBot package for Docker E2E
         if: steps.plan.outputs.needs_package == '1' && inputs.package_artifact_name == '' && inputs.package_artifact_run_id == ''
         env:
           ALLOW_UNRELEASED_CHANGELOG: ${{ inputs.allow_unreleased_changelog }}
@@ -2085,16 +2085,16 @@ jobs:
           mkdir -p .artifacts/docker-e2e-package
           package_args=(
             --output-dir .artifacts/docker-e2e-package
-            --output-name openclaw-current.tgz
+            --output-name grokbot-current.tgz
           )
           # Frozen targets that predate the opt-in flag still strict-pack against their versioned changelog.
           if [[ "$ALLOW_UNRELEASED_CHANGELOG" == "true" ]] && \
-            grep -Fq -- '--allow-unreleased-changelog' scripts/package-openclaw-for-docker.mjs; then
+            grep -Fq -- '--allow-unreleased-changelog' scripts/package-grokbot-for-docker.mjs; then
             package_args+=(--allow-unreleased-changelog)
           fi
-          node scripts/package-openclaw-for-docker.mjs "${package_args[@]}"
+          node scripts/package-grokbot-for-docker.mjs "${package_args[@]}"
 
-      - name: Validate OpenClaw Docker E2E package
+      - name: Validate GrokBot Docker E2E package
         id: package
         if: steps.plan.outputs.needs_package == '1'
         env:
@@ -2108,7 +2108,7 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p .artifacts/docker-e2e-package
-          target=".artifacts/docker-e2e-package/openclaw-current.tgz"
+          target=".artifacts/docker-e2e-package/grokbot-current.tgz"
           if [[ -n "${EXPECTED_PACKAGE_FILE_NAME// }" ]]; then
             input_target=".artifacts/docker-e2e-package/${EXPECTED_PACKAGE_FILE_NAME}"
             [[ -f "$input_target" ]] || {
@@ -2135,7 +2135,7 @@ jobs:
           fi
           echo "Validating Docker E2E package tarball: $target"
           started_at="$(date +%s)"
-          timeout --foreground 5m node scripts/check-openclaw-package-tarball.mjs "$target"
+          timeout --foreground 5m node scripts/check-grokbot-package-tarball.mjs "$target"
           finished_at="$(date +%s)"
           echo "Docker E2E package tarball validation finished in $((finished_at - started_at))s."
           digest="$(sha256sum "$target" | awk '{print $1}')"
@@ -2147,7 +2147,7 @@ jobs:
           )"
           if [[ -n "${EXPECTED_PACKAGE_SOURCE_SHA// }" ]]; then
             [[ "$digest" == "$EXPECTED_PACKAGE_SHA256" &&
-              "$name" == "openclaw" &&
+              "$name" == "grokbot" &&
               "$package_source_sha" == "$EXPECTED_PACKAGE_SOURCE_SHA" &&
               "$version" == "$EXPECTED_PACKAGE_VERSION" ]] || {
               echo "Resolved package identity differs from the declared immutable tuple." >&2
@@ -2159,7 +2159,7 @@ jobs:
               echo "Exact-target package SHA-256 differs from package_sha256." >&2
               exit 1
             fi
-            if [[ "$name" != "openclaw" || ( -n "$EXPECTED_PACKAGE_VERSION" && "$version" != "$EXPECTED_PACKAGE_VERSION" ) ]]; then
+            if [[ "$name" != "grokbot" || ( -n "$EXPECTED_PACKAGE_VERSION" && "$version" != "$EXPECTED_PACKAGE_VERSION" ) ]]; then
               echo "Exact-target package name/version differs from declared package identity." >&2
               exit 1
             fi
@@ -2174,7 +2174,7 @@ jobs:
                 --arg digest "$digest" \
                 --arg version "$version" \
                 '
-                  .name == "openclaw" and
+                  .name == "grokbot" and
                   .packageSourceSha == $sha and
                   .sha256 == $digest and
                   .version == $version
@@ -2187,7 +2187,7 @@ jobs:
           tag="pkg-${digest:0:32}"
           echo "sha256=$digest" >> "$GITHUB_OUTPUT"
           echo "version=$version" >> "$GITHUB_OUTPUT"
-          echo "file_name=openclaw-current.tgz" >> "$GITHUB_OUTPUT"
+          echo "file_name=grokbot-current.tgz" >> "$GITHUB_OUTPUT"
           echo "source_sha=$package_source_sha" >> "$GITHUB_OUTPUT"
           echo "tag=$tag" >> "$GITHUB_OUTPUT"
           {
@@ -2195,13 +2195,13 @@ jobs:
             echo "Docker E2E package SHA-256: \`$digest\`"
           } >> "$GITHUB_STEP_SUMMARY"
 
-      - name: Upload OpenClaw Docker E2E package
+      - name: Upload GrokBot Docker E2E package
         id: upload_package
         if: steps.plan.outputs.needs_package == '1' && inputs.package_artifact_id == ''
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
           name: docker-e2e-package-${{ github.run_id }}-${{ github.run_attempt }}
-          path: .artifacts/docker-e2e-package/openclaw-current.tgz
+          path: .artifacts/docker-e2e-package/grokbot-current.tgz
           if-no-files-found: error
 
       - name: Resolve shared Docker E2E image tags
@@ -2221,9 +2221,9 @@ jobs:
             sed '/^FROM bare AS build$/,$d' scripts/e2e/Dockerfile | sha256sum | awk '{print $1}'
           )"
           if [[ "$SHARED_IMAGE_POLICY" == "no-push-artifact" ]]; then
-            bare_image="openclaw-docker-e2e-bare:base-${bare_context_sha:0:32}"
+            bare_image="grokbot-docker-e2e-bare:base-${bare_context_sha:0:32}"
             bare_cache_image="ghcr.io/${repository}-docker-e2e-bare:base-${bare_context_sha:0:32}"
-            functional_image="openclaw-docker-e2e-functional:${image_tag}"
+            functional_image="grokbot-docker-e2e-functional:${image_tag}"
           else
             bare_image="${PROVIDED_BARE_IMAGE:-ghcr.io/${repository}-docker-e2e-bare:${image_tag}}"
             bare_cache_image=""
@@ -2487,7 +2487,7 @@ jobs:
           live_image_extensions="matrix,acpx"
           live_image_tag_suffix="${live_image_extensions//,/-}"
           if [[ "$SHARED_IMAGE_POLICY" == "no-push-artifact" ]]; then
-            live_image="openclaw-live-test:${SELECTED_SHA}-${live_image_tag_suffix}"
+            live_image="grokbot-live-test:${SELECTED_SHA}-${live_image_tag_suffix}"
           else
             live_image="ghcr.io/${repository}-live-test:${SELECTED_SHA}-${live_image_tag_suffix}"
           fi
@@ -3676,7 +3676,7 @@ jobs:
     continue-on-error: ${{ inputs.advisory || inputs.live_advisory }}
     runs-on: ${{ inputs.use_github_hosted_runners && 'ubuntu-24.04' || 'blacksmith-8vcpu-ubuntu-2404' }}
     container:
-      image: ghcr.io/openclaw/openclaw-live-media-runner:ubuntu-24.04
+      image: ghcr.io/grokbot/grokbot-live-media-runner:ubuntu-24.04
       credentials:
         username: ${{ github.actor }}
         password: ${{ github.token }}

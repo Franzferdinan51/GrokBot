@@ -19,7 +19,7 @@ const previousEnv = {
 };
 
 async function makeTempDir(): Promise<string> {
-  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-acpx-codex-auth-"));
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-acpx-codex-auth-"));
   tempDirs.push(dir);
   return dir;
 }
@@ -111,7 +111,7 @@ async function captureGeneratedCodexWrapperStderr(
     process.execPath,
     [
       generated.wrapperPath,
-      "--openclaw-run-configured",
+      "--grokbot-run-configured",
       process.execPath,
       stderrScript,
       OPENCLAW_ACPX_LEASE_ID_ARG,
@@ -143,7 +143,7 @@ afterEach(async () => {
 });
 
 describe("prepareAcpxCodexAuthConfig", () => {
-  it("installs an isolated Codex ACP wrapper without synthesizing auth from canonical OpenClaw OAuth", async () => {
+  it("installs an isolated Codex ACP wrapper without synthesizing auth from canonical GrokBot OAuth", async () => {
     const root = await makeTempDir();
     const agentDir = path.join(root, "agent");
     const stateDir = path.join(root, "state");
@@ -352,9 +352,9 @@ describe("prepareAcpxCodexAuthConfig", () => {
       process.execPath,
       [
         generated.wrapperPath,
-        "--openclaw-acpx-lease-id",
+        "--grokbot-acpx-lease-id",
         "lease-1",
-        "--openclaw-gateway-instance-id",
+        "--grokbot-gateway-instance-id",
         "gateway-1",
         OPENCLAW_CODEX_CONFIG_ARG,
         JSON.stringify({ model_providers: { custom: { wire_api: "responses" } } }),
@@ -752,7 +752,7 @@ describe("prepareAcpxCodexAuthConfig", () => {
     ];
     await execFileAsync(process.execPath, [
       generated.wrapperPath,
-      "--openclaw-run-configured",
+      "--grokbot-run-configured",
       process.execPath,
       noisyScript,
       ...wrapperArgs,
@@ -762,7 +762,7 @@ describe("prepareAcpxCodexAuthConfig", () => {
 
     await execFileAsync(process.execPath, [
       generated.wrapperPath,
-      "--openclaw-run-configured",
+      "--grokbot-run-configured",
       process.execPath,
       quietScript,
       ...wrapperArgs,
@@ -791,7 +791,7 @@ describe("prepareAcpxCodexAuthConfig", () => {
     await expect(
       execFileAsync(process.execPath, [
         generated.wrapperPath,
-        "--openclaw-run-configured",
+        "--grokbot-run-configured",
         process.execPath,
         quietScript,
         OPENCLAW_ACPX_LEASE_ID_ARG,

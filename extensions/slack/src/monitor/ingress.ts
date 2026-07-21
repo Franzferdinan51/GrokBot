@@ -4,14 +4,14 @@ import {
   createChannelIngressMonitor,
   type ChannelIngressQueue,
   type ChannelIngressMonitorLifecycle,
-} from "openclaw/plugin-sdk/channel-outbound";
+} from "grokbot/plugin-sdk/channel-outbound";
 import {
   collectErrorGraphCandidates,
   extractErrorCode,
   formatErrorMessage,
-} from "openclaw/plugin-sdk/error-runtime";
-import type { PluginJsonValue } from "openclaw/plugin-sdk/plugin-entry";
-import { asOptionalRecord } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/error-runtime";
+import type { PluginJsonValue } from "grokbot/plugin-sdk/plugin-entry";
+import { asOptionalRecord } from "grokbot/plugin-sdk/string-coerce-runtime";
 import { getSlackRuntime } from "../runtime.js";
 import { isNonRecoverableSlackAuthError } from "./reconnect-policy.js";
 

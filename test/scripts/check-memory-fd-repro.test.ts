@@ -4,7 +4,7 @@ import fs from "node:fs";
 import { createServer, type Server } from "node:http";
 import os from "node:os";
 import path from "node:path";
-import { MAX_TIMER_TIMEOUT_MS } from "@openclaw/normalization-core/number-coercion";
+import { MAX_TIMER_TIMEOUT_MS } from "@grokbot/normalization-core/number-coercion";
 import { describe, expect, it, vi } from "vitest";
 import {
   GATEWAY_READY_OUTPUT_MAX_CHARS,
@@ -185,7 +185,7 @@ describe("check-memory-fd-repro", () => {
   });
 
   it("writes an offline FTS-only memory search config for repro indexing", () => {
-    const root = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-memory-fd-config-"));
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-memory-fd-config-"));
     try {
       const homeDir = path.join(root, "home");
       const workspaceDir = path.join(root, "workspace");

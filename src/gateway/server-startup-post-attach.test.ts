@@ -15,7 +15,7 @@ import {
   getActiveGatewayRootWorkCount,
   resetGatewayWorkAdmission,
 } from "../process/gateway-work-admission.js";
-import { closeOpenClawStateDatabaseForTest } from "../state/openclaw-state-db.js";
+import { closeOpenClawStateDatabaseForTest } from "../state/grokbot-state-db.js";
 import { withEnvAsync } from "../test-utils/env.js";
 
 const hoisted = vi.hoisted(() => {
@@ -135,11 +135,11 @@ vi.mock("../config/paths.js", async () => {
   const actual = await vi.importActual<typeof import("../config/paths.js")>("../config/paths.js");
   return {
     ...actual,
-    STATE_DIR: "/tmp/openclaw-state",
-    resolveConfigPath: vi.fn(() => "/tmp/openclaw-state/openclaw.json"),
+    STATE_DIR: "/tmp/grokbot-state",
+    resolveConfigPath: vi.fn(() => "/tmp/grokbot-state/grokbot.json"),
     resolveGatewayPort: vi.fn(() => 18789),
     resolveStateDir: vi.fn((env: NodeJS.ProcessEnv = process.env) =>
-      env.OPENCLAW_STATE_DIR?.trim() ? actual.resolveStateDir(env) : "/tmp/openclaw-state",
+      env.OPENCLAW_STATE_DIR?.trim() ? actual.resolveStateDir(env) : "/tmp/grokbot-state",
     ),
   };
 });
@@ -679,7 +679,7 @@ describe("startGatewayPostAttachRuntime", () => {
   });
 
   it("skips heavy restart sentinel refresh when no sentinel file exists", async () => {
-    const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-no-sentinel-"));
+    const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-no-sentinel-"));
     try {
       await withEnvAsync({ OPENCLAW_STATE_DIR: stateDir }, async () => {
         hoisted.refreshLatestUpdateRestartSentinel.mockClear();
@@ -696,7 +696,7 @@ describe("startGatewayPostAttachRuntime", () => {
   });
 
   it("refreshes the restart sentinel when the sentinel row exists", async () => {
-    const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-sentinel-"));
+    const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-sentinel-"));
     try {
       await writeRestartSentinel(
         {
@@ -723,7 +723,7 @@ describe("startGatewayPostAttachRuntime", () => {
   });
 
   it("detects restart sentinel rows in explicit state directories", async () => {
-    const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-sentinel-state-"));
+    const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-sentinel-state-"));
     try {
       await writeRestartSentinel(
         {
@@ -746,7 +746,7 @@ describe("startGatewayPostAttachRuntime", () => {
   });
 
   it("avoids sync filesystem probes while checking restart sentinel presence", async () => {
-    const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-async-sentinel-"));
+    const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-async-sentinel-"));
     try {
       await writeRestartSentinel(
         {
@@ -962,7 +962,7 @@ describe("startGatewayPostAttachRuntime", () => {
           memory: { backend: "qmd", qmd: { update: { startup: "idle", startupDelayMs: 25 } } },
         } as never,
         pluginRegistry: createPostAttachParams().pluginRegistry,
-        defaultWorkspaceDir: "/tmp/openclaw-workspace",
+        defaultWorkspaceDir: "/tmp/grokbot-workspace",
         deps: {} as never,
         startChannels: vi.fn(async () => {}),
         log: { warn: vi.fn() },
@@ -994,7 +994,7 @@ describe("startGatewayPostAttachRuntime", () => {
     let active = 0;
     let maxActive = 0;
     const cleanedLock = {
-      lockPath: "/tmp/openclaw-state/agents/main/sessions/a.jsonl.lock",
+      lockPath: "/tmp/grokbot-state/agents/main/sessions/a.jsonl.lock",
       pid: null,
       pidAlive: false,
       createdAt: null,
@@ -1054,7 +1054,7 @@ describe("startGatewayPostAttachRuntime", () => {
   it("marks cleaned startup session locks even when cleanup is stopped after removal", async () => {
     let stopped = false;
     const cleanedLock = {
-      lockPath: "/tmp/openclaw-state/agents/main/sessions/a.jsonl.lock",
+      lockPath: "/tmp/grokbot-state/agents/main/sessions/a.jsonl.lock",
       pid: null,
       pidAlive: false,
       createdAt: null,
@@ -1215,7 +1215,7 @@ describe("startGatewayPostAttachRuntime", () => {
     await waitForGatewayTestState(() => {
       expect(hoisted.ensureRuntimePluginsLoaded).toHaveBeenCalledWith({
         config: currentConfig,
-        workspaceDir: "/tmp/openclaw-workspace",
+        workspaceDir: "/tmp/grokbot-workspace",
         allowGatewaySubagentBinding: true,
       });
     });
@@ -1481,7 +1481,7 @@ describe("startGatewayPostAttachRuntime", () => {
             agents: { defaults: { model: "openai/gpt-5.4" } },
           } as never,
           pluginRegistry: createPostAttachParams().pluginRegistry,
-          defaultWorkspaceDir: "/tmp/openclaw-workspace",
+          defaultWorkspaceDir: "/tmp/grokbot-workspace",
           deps: {} as never,
           startChannels,
           log: { warn: vi.fn() },
@@ -1626,7 +1626,7 @@ describe("startGatewayPostAttachRuntime", () => {
         const sidecarsPromise = startGatewaySidecars({
           cfg: { hooks: { internal: { enabled: false } } } as never,
           pluginRegistry: createPostAttachParams().pluginRegistry,
-          defaultWorkspaceDir: "/tmp/openclaw-workspace",
+          defaultWorkspaceDir: "/tmp/grokbot-workspace",
           deps: {} as never,
           startChannels: vi.fn(async () => {}),
           shouldStartPluginServices: () => shouldStartPluginServices,
@@ -1736,7 +1736,7 @@ describe("startGatewayPostAttachRuntime", () => {
             agents: { defaults: { model: "openai/gpt-5.6" } },
           } as never,
           pluginRegistry: createPostAttachParams().pluginRegistry,
-          defaultWorkspaceDir: "/tmp/openclaw-workspace",
+          defaultWorkspaceDir: "/tmp/grokbot-workspace",
           deps: {} as never,
           startChannels: vi.fn(async () => {}),
           log: { warn: vi.fn() },
@@ -1782,7 +1782,7 @@ describe("startGatewayPostAttachRuntime", () => {
     const sidecars = startGatewaySidecars({
       cfg: { hooks: { internal: { enabled: false } } } as never,
       pluginRegistry: createPostAttachParams().pluginRegistry,
-      defaultWorkspaceDir: "/tmp/openclaw-workspace",
+      defaultWorkspaceDir: "/tmp/grokbot-workspace",
       deps: {} as never,
       startChannels,
       log: { warn: vi.fn() },
@@ -1823,7 +1823,7 @@ describe("startGatewayPostAttachRuntime", () => {
     await startGatewaySidecars({
       cfg: { hooks: { internal: { enabled: false } } } as never,
       pluginRegistry: createPostAttachParams().pluginRegistry,
-      defaultWorkspaceDir: "/tmp/openclaw-workspace",
+      defaultWorkspaceDir: "/tmp/grokbot-workspace",
       deps: {} as never,
       startChannels,
       log,
@@ -1905,7 +1905,7 @@ describe("startGatewayPostAttachRuntime", () => {
         hooks: { enabled: true, internal: { enabled: false }, gmail: { account: "me" } },
       } as never,
       pluginRegistry: createPostAttachParams().pluginRegistry,
-      defaultWorkspaceDir: "/tmp/openclaw-workspace",
+      defaultWorkspaceDir: "/tmp/grokbot-workspace",
       deps: {} as never,
       startChannels: vi.fn(async () => {}),
       log,
@@ -1948,7 +1948,7 @@ describe("startGatewayPostAttachRuntime", () => {
         hooks: { enabled: true, internal: { enabled: false }, gmail: { account: "me" } },
       } as never,
       pluginRegistry: createPostAttachParams().pluginRegistry,
-      defaultWorkspaceDir: "/tmp/openclaw-workspace",
+      defaultWorkspaceDir: "/tmp/grokbot-workspace",
       deps: {} as never,
       startChannels: vi.fn(async () => {}),
       log,
@@ -1977,7 +1977,7 @@ describe("startGatewayPostAttachRuntime", () => {
         hooks: { enabled: true, internal: { enabled: false }, gmail: { account: "me" } },
       } as never,
       pluginRegistry: createPostAttachParams().pluginRegistry,
-      defaultWorkspaceDir: "/tmp/openclaw-workspace",
+      defaultWorkspaceDir: "/tmp/grokbot-workspace",
       deps: {} as never,
       startChannels: vi.fn(async () => {}),
       log: { warn: vi.fn() },
@@ -2021,7 +2021,7 @@ describe("startGatewayPostAttachRuntime", () => {
           hooks: { enabled: true, internal: { enabled: false }, gmail: { account: "me" } },
         } as never,
         pluginRegistry: createPostAttachParams().pluginRegistry,
-        defaultWorkspaceDir: "/tmp/openclaw-workspace",
+        defaultWorkspaceDir: "/tmp/grokbot-workspace",
         deps: {} as never,
         startChannels: vi.fn(async () => {}),
         log: { warn: vi.fn() },
@@ -2104,7 +2104,7 @@ describe("startGatewayPostAttachRuntime", () => {
         hooks: { internal: { enabled: false }, gmail: { model: "openai/gpt-5.4" } },
       } as never,
       pluginRegistry: createPostAttachParams().pluginRegistry,
-      defaultWorkspaceDir: "/tmp/openclaw-workspace",
+      defaultWorkspaceDir: "/tmp/grokbot-workspace",
       deps: {} as never,
       startChannels: vi.fn(async () => {}),
       log: { warn: vi.fn() },
@@ -2341,7 +2341,7 @@ describe("startGatewayPostAttachRuntime", () => {
       await startGatewaySidecars({
         cfg,
         pluginRegistry: createPostAttachParams().pluginRegistry,
-        defaultWorkspaceDir: "/tmp/openclaw-workspace",
+        defaultWorkspaceDir: "/tmp/grokbot-workspace",
         deps,
         startChannels: vi.fn(async () => {}),
         log: { warn: vi.fn() },
@@ -2368,7 +2368,7 @@ describe("startGatewayPostAttachRuntime", () => {
         {
           cfg,
           deps,
-          workspaceDir: "/tmp/openclaw-workspace",
+          workspaceDir: "/tmp/grokbot-workspace",
         },
       );
       expect(hoisted.triggerInternalHook).toHaveBeenCalledWith(hoisted.startupHookEvent);
@@ -2396,7 +2396,7 @@ describe("startGatewayPostAttachRuntime", () => {
         acp: { enabled: true, backend: "acpx" },
       } as never,
       pluginRegistry: createPostAttachParams().pluginRegistry,
-      defaultWorkspaceDir: "/tmp/openclaw-workspace",
+      defaultWorkspaceDir: "/tmp/grokbot-workspace",
       deps: {} as never,
       startChannels: vi.fn(async () => {}),
       log: { warn: vi.fn() },
@@ -2468,7 +2468,7 @@ describe("startGatewayPostAttachRuntime", () => {
     expect(event).toEqual({ port: 18789 });
     expect(ctx.port).toBe(18789);
     expect(ctx.config).toBe(params.gatewayPluginConfigAtStart);
-    expect(ctx.workspaceDir).toBe("/tmp/openclaw-workspace");
+    expect(ctx.workspaceDir).toBe("/tmp/grokbot-workspace");
     const getCron = ctx.getCron;
     if (!getCron) {
       throw new Error("gateway_start context did not expose getCron");
@@ -2583,7 +2583,7 @@ function createPostAttachParams(overrides: Partial<PostAttachParams> = {}): Post
       ],
       typedHooks: [],
     } as never,
-    defaultWorkspaceDir: "/tmp/openclaw-workspace",
+    defaultWorkspaceDir: "/tmp/grokbot-workspace",
     deps: {} as never,
     startChannels: vi.fn(async () => {}),
     recoveryRuntime: {

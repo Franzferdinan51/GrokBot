@@ -44,7 +44,7 @@ describe("gateway startup benchmark script", () => {
 
   it("prints help without running benchmark cases", () => {
     expect(helpResult.status).toBe(0);
-    expect(helpResult.stdout).toContain("OpenClaw Gateway startup benchmark");
+    expect(helpResult.stdout).toContain("GrokBot Gateway startup benchmark");
     expect(helpResult.stdout).toContain("--case <id>");
     expect(helpResult.stdout).toContain("--cpu-prof-dir <dir>");
     expect(helpResult.stdout).toContain("default (gateway default)");
@@ -140,7 +140,7 @@ describe("gateway startup benchmark script", () => {
   });
 
   it("does not disable local-check policy in the child gateway environment", () => {
-    const env = testing.sanitizedEnv("/tmp/openclaw-bench", "/tmp/openclaw-bench/config.json", {
+    const env = testing.sanitizedEnv("/tmp/grokbot-bench", "/tmp/grokbot-bench/config.json", {
       config: {},
       id: "default",
       name: "gateway default",
@@ -422,7 +422,7 @@ describe("gateway startup benchmark script", () => {
   });
 
   it("writes 50-plugin fixtures as a parent load path with explicit startup activation", () => {
-    const root = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-bench-config-test-"));
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-bench-config-test-"));
     try {
       const configPath = testing.writeConfig(root, {
         config: {},
@@ -439,7 +439,7 @@ describe("gateway startup benchmark script", () => {
       expect(config.plugins?.allow).toEqual(["bench-plugin-01", "bench-plugin-02"]);
       const manifest = JSON.parse(
         fs.readFileSync(
-          path.join(root, "plugins", "bench-plugin-01", "openclaw.plugin.json"),
+          path.join(root, "plugins", "bench-plugin-01", "grokbot.plugin.json"),
           "utf8",
         ),
       ) as { activation?: { onStartup?: boolean } };
@@ -450,7 +450,7 @@ describe("gateway startup benchmark script", () => {
   });
 
   it("keeps startup-lazy plugin fixtures opted out of startup activation", () => {
-    const root = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-bench-config-test-"));
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-bench-config-test-"));
     try {
       testing.writeConfig(root, {
         config: {},
@@ -461,7 +461,7 @@ describe("gateway startup benchmark script", () => {
       });
       const manifest = JSON.parse(
         fs.readFileSync(
-          path.join(root, "plugins", "bench-plugin-01", "openclaw.plugin.json"),
+          path.join(root, "plugins", "bench-plugin-01", "grokbot.plugin.json"),
           "utf8",
         ),
       ) as { activation?: { onStartup?: boolean } };

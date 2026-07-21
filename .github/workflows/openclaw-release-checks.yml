@@ -1,6 +1,6 @@
-name: OpenClaw Release Checks
+name: GrokBot Release Checks
 
-run-name: ${{ inputs.dispatch_id != '' && format('OpenClaw Release Checks {0}', inputs.dispatch_id) || 'OpenClaw Release Checks' }}
+run-name: ${{ inputs.dispatch_id != '' && format('GrokBot Release Checks {0}', inputs.dispatch_id) || 'GrokBot Release Checks' }}
 
 on:
   workflow_dispatch:
@@ -112,7 +112,7 @@ on:
         type: string
 
 concurrency:
-  group: openclaw-release-checks-${{ inputs.expected_sha || inputs.ref }}-${{ inputs.rerun_group }}
+  group: grokbot-release-checks-${{ inputs.expected_sha || inputs.ref }}-${{ inputs.rerun_group }}
   cancel-in-progress: ${{ startsWith(github.ref, 'refs/heads/tideclaw/alpha/') }}
 
 env:
@@ -194,7 +194,7 @@ jobs:
           RELEASE_REF: ${{ inputs.ref }}
           EXPECTED_SHA: ${{ inputs.expected_sha }}
         run: |
-          bash workflow/scripts/github/resolve-openclaw-ref.sh \
+          bash workflow/scripts/github/resolve-grokbot-ref.sh \
             --ref "$RELEASE_REF" \
             --expected-sha "$EXPECTED_SHA" \
             --fallback-ok \
@@ -247,7 +247,7 @@ jobs:
             exit 0
           fi
 
-          echo "Ref '${RELEASE_REF}' resolved to ${SELECTED_SHA}, but that commit is not reachable from an OpenClaw branch or release tag." >&2
+          echo "Ref '${RELEASE_REF}' resolved to ${SELECTED_SHA}, but that commit is not reachable from an GrokBot branch or release tag." >&2
           echo "Secret-bearing release checks only run repository-owned branch/tag history, not arbitrary unreferenced commits." >&2
           exit 1
 
@@ -384,8 +384,8 @@ jobs:
             allow_unreleased_changelog=false
           fi
           codex_plugin_spec="$RELEASE_CODEX_PLUGIN_SPEC_INPUT"
-          if [[ -z "${codex_plugin_spec// }" && "$RELEASE_PACKAGE_SPEC_INPUT" =~ ^openclaw@(.+)$ ]]; then
-            codex_plugin_spec="npm:@openclaw/codex@${BASH_REMATCH[1]}"
+          if [[ -z "${codex_plugin_spec// }" && "$RELEASE_PACKAGE_SPEC_INPUT" =~ ^grokbot@(.+)$ ]]; then
+            codex_plugin_spec="npm:@grokbot/codex@${BASH_REMATCH[1]}"
           fi
 
           filter="$(printf '%s' "$RELEASE_LIVE_SUITE_FILTER_INPUT" | tr '[:upper:]' '[:lower:]')"
@@ -580,7 +580,7 @@ jobs:
         if: inputs.candidate_artifact_json == ''
         run: |
           {
-            echo "file_name=openclaw-current.tgz"
+            echo "file_name=grokbot-current.tgz"
             echo "name=release-package-under-test-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
             echo "run_attempt=${GITHUB_RUN_ATTEMPT}"
             echo "run_id=${GITHUB_RUN_ID}"
@@ -609,10 +609,10 @@ jobs:
             source_args=(--source npm --package-spec "$RELEASE_PACKAGE_SPEC")
             package_label="$RELEASE_PACKAGE_SPEC"
           fi
-          node scripts/resolve-openclaw-package-candidate.mjs \
+          node scripts/resolve-grokbot-package-candidate.mjs \
             "${source_args[@]}" \
             --output-dir .artifacts/docker-e2e-package \
-            --output-name openclaw-current.tgz \
+            --output-name grokbot-current.tgz \
             --metadata .artifacts/docker-e2e-package/package-candidate.json \
             --github-output "$GITHUB_OUTPUT"
           digest="$(node -p "JSON.parse(require('fs').readFileSync('.artifacts/docker-e2e-package/package-candidate.json', 'utf8')).sha256")"
@@ -673,7 +673,7 @@ jobs:
             exit 1
           }
           [[ "$ARTIFACT_NAME" == "release-package-under-test-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}" &&
-            "$PACKAGE_FILE_NAME" == "openclaw-current.tgz" ]] || {
+            "$PACKAGE_FILE_NAME" == "grokbot-current.tgz" ]] || {
             echo "Release package artifact name or tarball filename is invalid." >&2
             exit 1
           }
@@ -731,7 +731,7 @@ jobs:
     needs: [resolve_target, prepare_release_package]
     if: contains(fromJSON('["all","cross-os"]'), needs.resolve_target.outputs.rerun_group)
     permissions: read-all
-    uses: ./.github/workflows/openclaw-cross-os-release-checks-reusable.yml
+    uses: ./.github/workflows/grokbot-cross-os-release-checks-reusable.yml
     with:
       advisory: ${{ startsWith(github.ref, 'refs/heads/tideclaw/alpha/') }}
       ref: ${{ needs.resolve_target.outputs.revision }}
@@ -768,7 +768,7 @@ jobs:
       contents: read
       packages: read
       pull-requests: read
-    uses: ./.github/workflows/openclaw-live-and-e2e-checks-reusable.yml
+    uses: ./.github/workflows/grokbot-live-and-e2e-checks-reusable.yml
     with:
       advisory: ${{ startsWith(github.ref, 'refs/heads/tideclaw/alpha/') }}
       allow_frozen_target_scenario_omissions: ${{ inputs.allow_frozen_target_scenario_omissions }}
@@ -843,7 +843,7 @@ jobs:
       contents: read
       packages: read
       pull-requests: read
-    uses: ./.github/workflows/openclaw-live-and-e2e-checks-reusable.yml
+    uses: ./.github/workflows/grokbot-live-and-e2e-checks-reusable.yml
     with:
       advisory: ${{ startsWith(github.ref, 'refs/heads/tideclaw/alpha/') }}
       allow_frozen_target_scenario_omissions: ${{ inputs.allow_frozen_target_scenario_omissions }}
@@ -889,7 +889,7 @@ jobs:
       allow_frozen_target_scenario_omissions: ${{ inputs.allow_frozen_target_scenario_omissions }}
       workflow_ref: ${{ github.sha }}
       source: ${{ (needs.resolve_target.outputs.package_acceptance_package_spec != '' || needs.resolve_target.outputs.release_package_spec != '') && 'npm' || 'artifact' }}
-      package_spec: ${{ needs.resolve_target.outputs.package_acceptance_package_spec || needs.resolve_target.outputs.release_package_spec || 'openclaw@beta' }}
+      package_spec: ${{ needs.resolve_target.outputs.package_acceptance_package_spec || needs.resolve_target.outputs.release_package_spec || 'grokbot@beta' }}
       artifact_digest: ${{ needs.prepare_release_package.outputs.artifact_digest }}
       artifact_id: ${{ needs.prepare_release_package.outputs.artifact_id }}
       artifact_name: ${{ needs.prepare_release_package.outputs.artifact_name }}
@@ -1042,7 +1042,7 @@ jobs:
               ;;
           esac
 
-          pnpm openclaw qa suite \
+          pnpm grokbot qa suite \
             --provider-mode mock-openai \
             --parity-pack agentic \
             --concurrency "${QA_PARITY_CONCURRENCY}" \
@@ -1156,7 +1156,7 @@ jobs:
       - name: Generate parity report
         id: generate_report
         run: |
-          pnpm openclaw qa parity-report \
+          pnpm grokbot qa parity-report \
             --repo-root . \
             --candidate-summary .artifacts/qa-e2e/openai-candidate/qa-suite-summary.json \
             --baseline-summary .artifacts/qa-e2e/anthropic-baseline/qa-suite-summary.json \
@@ -1258,13 +1258,13 @@ jobs:
               ;;
           esac
 
-          pnpm openclaw qa suite \
+          pnpm grokbot qa suite \
             --provider-mode mock-openai \
             "${tier_args[@]}" \
             --concurrency "${QA_PARITY_CONCURRENCY}" \
             --model "${OPENCLAW_CI_OPENAI_MODEL}" \
             --alt-model "openai/gpt-5.6-luna-alt" \
-            --runtime-pair openclaw,codex \
+            --runtime-pair grokbot,codex \
             --output-dir ".artifacts/qa-e2e/${output_dir}"
 
       - name: Generate runtime parity tier report
@@ -1285,7 +1285,7 @@ jobs:
             echo "No soak runtime parity summary was produced."
             exit 0
           fi
-          pnpm openclaw qa parity-report \
+          pnpm grokbot qa parity-report \
             --repo-root . \
             --runtime-axis \
             --summary "$summary" \
@@ -1513,7 +1513,7 @@ jobs:
         if: steps.verify_runtime_parity_status.outputs.ready == 'true'
         run: |
           set -euo pipefail
-          pnpm openclaw qa coverage \
+          pnpm grokbot qa coverage \
             --repo-root . \
             --tools \
             --summary .artifacts/qa-e2e/runtime-parity-standard/qa-suite-summary.json \
@@ -1568,7 +1568,7 @@ jobs:
         run: |
           set -euo pipefail
 
-          workflow="openclaw-release-telegram-qa.yml"
+          workflow="grokbot-release-telegram-qa.yml"
           run_id=""
           run_name=""
 
@@ -1614,7 +1614,7 @@ jobs:
               gh api "repos/${GITHUB_REPOSITORY}/commits/main" --jq .sha
             )"
             dispatch_id="release-checks-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}-${dispatch_attempt}-$(openssl rand -hex 16)"
-            run_name="OpenClaw Release Telegram QA ${dispatch_id}"
+            run_name="GrokBot Release Telegram QA ${dispatch_id}"
             run_id=""
             child_head_sha=""
 
@@ -1742,7 +1742,7 @@ jobs:
 
           for attempt in 1 2; do
             attempt_output_dir="${output_dir}/attempt-${attempt}"
-            if pnpm openclaw qa discord \
+            if pnpm grokbot qa discord \
               --repo-root . \
               --output-dir "${attempt_output_dir}" \
               --provider-mode mock-openai \
@@ -1841,7 +1841,7 @@ jobs:
 
           for attempt in 1 2; do
             attempt_output_dir="${output_dir}/attempt-${attempt}"
-            if pnpm openclaw qa whatsapp \
+            if pnpm grokbot qa whatsapp \
               --repo-root . \
               --output-dir "${attempt_output_dir}" \
               --provider-mode mock-openai \
@@ -1937,7 +1937,7 @@ jobs:
 
           for attempt in 1 2; do
             attempt_output_dir="${output_dir}/attempt-${attempt}"
-            if pnpm openclaw qa slack \
+            if pnpm grokbot qa slack \
               --repo-root . \
               --output-dir "${attempt_output_dir}" \
               --provider-mode mock-openai \

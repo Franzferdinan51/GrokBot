@@ -1,17 +1,17 @@
 {
-  "name": "@openclaw/google-plugin",
+  "name": "@grokbot/google-plugin",
   "version": "2026.7.2",
   "private": true,
-  "description": "OpenClaw Google plugin",
+  "description": "GrokBot Google plugin",
   "type": "module",
   "dependencies": {
     "@google/genai": "2.10.0",
     "google-auth-library": "10.9.0"
   },
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@grokbot/plugin-sdk": "workspace:*"
   },
-  "openclaw": {
+  "grokbot": {
     "extensions": [
       "./index.ts"
     ]

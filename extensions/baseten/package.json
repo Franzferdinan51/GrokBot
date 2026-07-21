@@ -1,22 +1,22 @@
 {
-  "name": "@openclaw/baseten-provider",
+  "name": "@grokbot/baseten-provider",
   "version": "2026.7.2",
-  "description": "OpenClaw Baseten provider plugin.",
+  "description": "GrokBot Baseten provider plugin.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/openclaw/openclaw"
+    "url": "https://github.com/grokbot/grokbot"
   },
   "type": "module",
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@grokbot/plugin-sdk": "workspace:*"
   },
-  "openclaw": {
+  "grokbot": {
     "extensions": [
       "./index.ts"
     ],
     "install": {
-      "clawhubSpec": "clawhub:@openclaw/baseten-provider",
-      "npmSpec": "@openclaw/baseten-provider",
+      "clawhubSpec": "clawhub:@grokbot/baseten-provider",
+      "npmSpec": "@grokbot/baseten-provider",
       "defaultChoice": "npm",
       "minHostVersion": ">=2026.7.2"
     },

@@ -6,5 +6,5 @@ export {
   type OpenClawConfig,
   type OpenClawPluginApi,
   type OpenClawPluginConfigSchema,
-} from "openclaw/plugin-sdk/plugin-entry";
+} from "grokbot/plugin-sdk/plugin-entry";
 export { z } from "zod";

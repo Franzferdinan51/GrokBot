@@ -1,4 +1,4 @@
-import type { DiscordAccountConfig, OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { DiscordAccountConfig, OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import type { APIVoiceState, Client } from "../internal/discord.js";
 import type { GatewayPlugin } from "../internal/gateway.js";
 import { type DiscordVoiceIngressContext, resolveDiscordVoiceIngressContext } from "./ingress.js";

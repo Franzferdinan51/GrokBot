@@ -1,16 +1,16 @@
 // Session attachment contract tests cover plugin session attachment metadata and storage.
 import * as fs from "node:fs/promises";
 import path from "node:path";
-import { FILE_TYPE_SNIFF_MAX_BYTES } from "@openclaw/media-core/mime";
+import { FILE_TYPE_SNIFF_MAX_BYTES } from "@grokbot/media-core/mime";
 import {
   createPluginRegistryFixture,
   registerTestPlugin,
-} from "openclaw/plugin-sdk/plugin-test-contracts";
+} from "grokbot/plugin-sdk/plugin-test-contracts";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import type { SessionEntry } from "../../config/sessions.js";
 import { replaceSessionEntry } from "../../config/sessions/session-accessor.js";
 import { withTempConfig } from "../../gateway/test-temp-config.js";
-import { resolvePreferredOpenClawTmpDir } from "../../infra/tmp-openclaw-dir.js";
+import { resolvePreferredOpenClawTmpDir } from "../../infra/tmp-grokbot-dir.js";
 import { createOutboundTestPlugin, createTestRegistry } from "../../test-utils/channel-plugins.js";
 import { sendPluginSessionAttachment } from "../host-hook-attachments.js";
 import { clearPluginLoaderCache } from "../loader.test-fixtures.js";
@@ -69,7 +69,7 @@ async function withSessionStore(
   run: (params: { stateDir: string; storePath: string; filePath: string }) => Promise<void>,
 ) {
   const stateDir = await fs.mkdtemp(
-    path.join(resolvePreferredOpenClawTmpDir(), "openclaw-session-attachments-"),
+    path.join(resolvePreferredOpenClawTmpDir(), "grokbot-session-attachments-"),
   );
   const storePath = path.join(stateDir, "sessions.json");
   const filePath = path.join(stateDir, "x.txt");

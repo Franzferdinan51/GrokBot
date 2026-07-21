@@ -1,6 +1,6 @@
 import { afterEach, expect, test } from "vitest";
 import { installSessionPlacementResetGuard } from "../agents/session-placement-admission.js";
-import { closeOpenClawStateDatabaseForTest } from "../state/openclaw-state-db.js";
+import { closeOpenClawStateDatabaseForTest } from "../state/grokbot-state-db.js";
 import { loadSessionEntry } from "./session-utils.js";
 import { embeddedRunMock, writeSessionStore } from "./test-helpers.js";
 import {

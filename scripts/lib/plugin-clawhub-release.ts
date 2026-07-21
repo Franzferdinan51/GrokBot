@@ -1,4 +1,4 @@
-// Plugin Clawhub Release script supports OpenClaw repository automation.
+// Plugin Clawhub Release script supports GrokBot repository automation.
 import { execFileSync } from "node:child_process";
 import { resolve } from "node:path";
 import { truncateUtf16Safe } from "../../packages/normalization-core/src/utf16-slice.js";
@@ -35,7 +35,7 @@ type PluginPackageJson = {
   name?: string;
   version?: string;
   private?: boolean;
-  openclaw?: {
+  grokbot?: {
     extensions?: string[];
     install?: {
       npmSpec?: string;
@@ -106,7 +106,7 @@ const CLAWHUB_ERROR_BODY_MAX_CHARS = 400;
 // All-publishable releases query dozens of packages. Bound registry pressure while
 // allowing independent package state reads to leave the core publish critical path quickly.
 const CLAWHUB_RELEASE_PLAN_CONCURRENCY = 8;
-const OPENCLAW_PLUGIN_CLAWHUB_REPOSITORY = "openclaw/openclaw";
+const OPENCLAW_PLUGIN_CLAWHUB_REPOSITORY = "grokbot/grokbot";
 const OPENCLAW_PLUGIN_CLAWHUB_WORKFLOW_FILENAME = "plugin-clawhub-release.yml";
 const SAFE_EXTENSION_ID_RE = /^[a-z0-9][a-z0-9._-]*$/;
 const CLAWHUB_SHARED_RELEASE_INPUT_PATHS = [
@@ -119,7 +119,7 @@ const CLAWHUB_SHARED_RELEASE_INPUT_PATHS = [
   "scripts/lib/npm-publish-plan.mjs",
   "scripts/lib/plugin-npm-release.ts",
   "scripts/lib/plugin-clawhub-release.ts",
-  "scripts/openclaw-npm-release-check.ts",
+  "scripts/grokbot-npm-release-check.ts",
   "scripts/plugin-clawhub-publish.sh",
   "scripts/plugin-clawhub-release-check.ts",
   "scripts/plugin-clawhub-release-plan.ts",
@@ -281,7 +281,7 @@ export function collectClawHubPublishablePluginPackages(
     if (hasSelectedPackageNames && !selectedPackageNames.has(packageName)) {
       continue;
     }
-    if (packageJson.openclaw?.release?.publishToClawHub !== true) {
+    if (packageJson.grokbot?.release?.publishToClawHub !== true) {
       continue;
     }
     if (!SAFE_EXTENSION_ID_RE.test(extensionId)) {
@@ -461,7 +461,7 @@ export function collectClawHubVersionGateErrors(params: {
       ref: params.gitRange.baseRef,
       packageDir: plugin.packageDir,
     });
-    if (baseManifest?.openclaw?.release?.publishToClawHub !== true) {
+    if (baseManifest?.grokbot?.release?.publishToClawHub !== true) {
       continue;
     }
     const baseVersion =

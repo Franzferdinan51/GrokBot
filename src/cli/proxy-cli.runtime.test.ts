@@ -50,7 +50,7 @@ describe("proxy cli runtime", () => {
   let tempDir = "";
 
   beforeEach(() => {
-    tempDir = mkdtempSync(path.join(os.tmpdir(), "openclaw-proxy-cli-runtime-"));
+    tempDir = mkdtempSync(path.join(os.tmpdir(), "grokbot-proxy-cli-runtime-"));
     process.env.OPENCLAW_STATE_DIR = tempDir;
     process.env.OPENCLAW_DEBUG_PROXY_CERT_DIR = path.join(tempDir, "certs");
     delete process.env.OPENCLAW_DEBUG_PROXY_ENABLED;
@@ -90,7 +90,7 @@ describe("proxy cli runtime", () => {
 
   afterEach(async () => {
     const { closeDebugProxyCaptureStore } = await import("../proxy-capture/store.sqlite.js");
-    const { closeOpenClawStateDatabaseForTest } = await import("../state/openclaw-state-db.js");
+    const { closeOpenClawStateDatabaseForTest } = await import("../state/grokbot-state-db.js");
     closeDebugProxyCaptureStore();
     closeOpenClawStateDatabaseForTest();
     vi.restoreAllMocks();

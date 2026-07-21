@@ -1,10 +1,10 @@
 /**
  * Resolves fast-mode state from agent config and runtime defaults.
  */
-import type { FastMode } from "@openclaw/normalization-core/string-coerce";
+import type { FastMode } from "@grokbot/normalization-core/string-coerce";
 import { normalizeFastMode } from "../auto-reply/thinking.shared.js";
 import type { SessionEntry } from "../config/sessions.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import {
   type FastModeSource,
   resolveFastModeModelAutoOnSeconds,

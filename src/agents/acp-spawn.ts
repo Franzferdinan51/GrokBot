@@ -4,9 +4,9 @@ import fs from "node:fs/promises";
 import {
   resolveAcpSessionCwd,
   resolveAcpThreadSessionDetailLines,
-} from "@openclaw/acp-core/runtime/session-identifiers";
-import type { AcpRuntimeSessionMode } from "@openclaw/acp-core/runtime/types";
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+} from "@grokbot/acp-core/runtime/session-identifiers";
+import type { AcpRuntimeSessionMode } from "@grokbot/acp-core/runtime/types";
+import { normalizeOptionalString } from "@grokbot/normalization-core/string-coerce";
 import { getAcpSessionManager } from "../acp/control-plane/manager.js";
 import type { AcpTurnAttachment } from "../acp/control-plane/manager.types.js";
 import {
@@ -39,7 +39,7 @@ import {
   resolveSessionTranscriptRuntimeTarget,
 } from "../config/sessions/session-accessor.js";
 import type { SessionAcpMeta, SessionEntry } from "../config/sessions/types.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { callGateway } from "../gateway/call.js";
 import { formatErrorMessage } from "../infra/errors.js";
 import { resolveEventSessionRoutingPolicy } from "../infra/event-session-routing.js";
@@ -446,8 +446,8 @@ function resolveTargetAcpAgentId(params: {
       return {
         ok: false,
         error:
-          `agentId "${requested}" is an OpenClaw config agent, not an ACP harness. ` +
-          'Use runtime="subagent" or omit runtime for OpenClaw config agents. ' +
+          `agentId "${requested}" is an GrokBot config agent, not an ACP harness. ` +
+          'Use runtime="subagent" or omit runtime for GrokBot config agents. ' +
           'Use runtime="acp" only with external ACP harness ids such as codex, claude, droid, gemini, or opencode, or configure agents.list[].runtime.type="acp" with runtime.acp.agent.',
       };
     }

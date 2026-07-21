@@ -70,11 +70,11 @@ export function assignModelCallSizeTimingAttrs(
     timeToFirstByteMs?: number;
   },
 ): void {
-  assignPositiveNumberAttr(attrs, "openclaw.model_call.request_bytes", evt.requestPayloadBytes);
-  assignPositiveNumberAttr(attrs, "openclaw.model_call.response_bytes", evt.responseStreamBytes);
+  assignPositiveNumberAttr(attrs, "grokbot.model_call.request_bytes", evt.requestPayloadBytes);
+  assignPositiveNumberAttr(attrs, "grokbot.model_call.response_bytes", evt.responseStreamBytes);
   assignPositiveNumberAttr(
     attrs,
-    "openclaw.model_call.time_to_first_byte_ms",
+    "grokbot.model_call.time_to_first_byte_ms",
     evt.timeToFirstByteMs,
   );
 }
@@ -114,12 +114,12 @@ export function assignModelCallPromptStatsAttrs(
     return;
   }
   for (const [key, value] of [
-    ["openclaw.model_call.prompt.input_messages_count", stats.inputMessagesCount],
-    ["openclaw.model_call.prompt.input_messages_chars", stats.inputMessagesChars],
-    ["openclaw.model_call.prompt.system_prompt_chars", stats.systemPromptChars],
-    ["openclaw.model_call.prompt.tool_definitions_count", stats.toolDefinitionsCount],
-    ["openclaw.model_call.prompt.tool_definitions_chars", stats.toolDefinitionsChars],
-    ["openclaw.model_call.prompt.total_chars", stats.totalChars],
+    ["grokbot.model_call.prompt.input_messages_count", stats.inputMessagesCount],
+    ["grokbot.model_call.prompt.input_messages_chars", stats.inputMessagesChars],
+    ["grokbot.model_call.prompt.system_prompt_chars", stats.systemPromptChars],
+    ["grokbot.model_call.prompt.tool_definitions_count", stats.toolDefinitionsCount],
+    ["grokbot.model_call.prompt.tool_definitions_chars", stats.toolDefinitionsChars],
+    ["grokbot.model_call.prompt.total_chars", stats.totalChars],
   ] as const) {
     assignNumberAttr(attrs, key, value);
   }
@@ -135,13 +135,13 @@ export function assignModelCallUsageAttrs(
   }
   const promptTokens = modelCallPromptTokens(usage);
   for (const [key, value] of [
-    ["openclaw.model_call.usage.input_tokens", usage.input],
-    ["openclaw.model_call.usage.output_tokens", usage.output],
-    ["openclaw.model_call.usage.cache_read_input_tokens", usage.cacheRead],
-    ["openclaw.model_call.usage.cache_creation_input_tokens", usage.cacheWrite],
-    ["openclaw.model_call.usage.reasoning_output_tokens", usage.reasoningTokens],
-    ["openclaw.model_call.usage.prompt_tokens", promptTokens],
-    ["openclaw.model_call.usage.total_tokens", usage.total],
+    ["grokbot.model_call.usage.input_tokens", usage.input],
+    ["grokbot.model_call.usage.output_tokens", usage.output],
+    ["grokbot.model_call.usage.cache_read_input_tokens", usage.cacheRead],
+    ["grokbot.model_call.usage.cache_creation_input_tokens", usage.cacheWrite],
+    ["grokbot.model_call.usage.reasoning_output_tokens", usage.reasoningTokens],
+    ["grokbot.model_call.usage.prompt_tokens", promptTokens],
+    ["grokbot.model_call.usage.total_tokens", usage.total],
     ["gen_ai.usage.input_tokens", promptTokens],
     ["gen_ai.usage.output_tokens", usage.output],
     ["gen_ai.usage.cache_read.input_tokens", usage.cacheRead],
@@ -186,7 +186,7 @@ export function assignGenAiModelCallAttrs(
   },
 ): void {
   assignGenAiSpanIdentityAttrs(attrs, evt);
-  attrs["openclaw.model_call.observation_unit"] = modelCallObservationUnit(evt);
+  attrs["grokbot.model_call.observation_unit"] = modelCallObservationUnit(evt);
 }
 
 export function modelCallObservationUnit(evt: {
@@ -201,7 +201,7 @@ export function modelCallSpanName(evt: {
   observationUnit?: "request" | "turn";
 }): string {
   if (!emitLatestGenAiSemconv()) {
-    return "openclaw.model.call";
+    return "grokbot.model.call";
   }
   const operationName = genAiOperationName(evt.api, evt.observationUnit);
   return operationName === GEN_AI_OPERATION_NAME_VALUE_INVOKE_AGENT
@@ -224,7 +224,7 @@ export function addUpstreamRequestIdSpanEvent(
   if (boundedHash === "unknown") {
     return;
   }
-  span.addEvent?.("openclaw.provider.request", {
-    "openclaw.upstreamRequestIdHash": boundedHash,
+  span.addEvent?.("grokbot.provider.request", {
+    "grokbot.upstreamRequestIdHash": boundedHash,
   });
 }

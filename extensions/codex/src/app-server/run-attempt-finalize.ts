@@ -8,7 +8,7 @@ import {
   runAgentHarnessLlmOutputHook,
   runHarnessContextEngineMaintenance,
   type EmbeddedRunAttemptResult,
-} from "openclaw/plugin-sdk/agent-harness-runtime";
+} from "grokbot/plugin-sdk/agent-harness-runtime";
 import { readMirroredSessionHistoryMessages } from "./attempt-context.js";
 import { classifyCodexModelCallFailureKind } from "./attempt-diagnostics.js";
 import {

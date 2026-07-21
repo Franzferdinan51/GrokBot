@@ -2,7 +2,7 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createSolidPngBuffer } from "../../test/helpers/image-fixtures.js";
 import { useAutoCleanupTempDirTracker } from "../../test/helpers/temp-dir.js";
@@ -12,7 +12,7 @@ import { testing as replyRunTesting } from "../auto-reply/reply/reply-run-regist
 import { SILENT_REPLY_TOKEN } from "../auto-reply/tokens.js";
 import { loadTranscriptEvents, upsertSessionEntry } from "../config/sessions/session-accessor.js";
 import { CURRENT_SESSION_VERSION } from "../config/sessions/version.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import {
   markMcpLoopbackRequestClassified,
   markMcpLoopbackRequestFinished,
@@ -96,7 +96,7 @@ vi.mock("../tts/tts-settings.js", () => ({
 
 const mockGetGlobalHookRunner = vi.mocked(getGlobalHookRunner);
 const mockAutoCapture = vi.mocked(runSkillResearchAutoCapture);
-const hookRunnerGlobalStateKey = Symbol.for("openclaw.plugins.hook-runner-global-state");
+const hookRunnerGlobalStateKey = Symbol.for("grokbot.plugins.hook-runner-global-state");
 const autoCleanupTempDirs = useAutoCleanupTempDirTracker(afterEach);
 let sessionFileEnvSnapshot: ReturnType<typeof captureEnv> | undefined;
 
@@ -123,7 +123,7 @@ function setHookRunnerForTest(hookRunner: unknown): void {
 function createSessionFile(params?: { history?: Array<{ role: "user"; content: string }> }) {
   // Session files use the real JSONL shape so transcript/history readers stay
   // covered without spinning up a full CLI process.
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-cli-hooks-"));
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-cli-hooks-"));
   sessionFileEnvSnapshot ??= captureEnv(["OPENCLAW_STATE_DIR"]);
   setTestEnvValue("OPENCLAW_STATE_DIR", dir);
   const sessionFile = path.join(dir, "agents", "main", "sessions", "s1.jsonl");
@@ -351,7 +351,7 @@ function createCliUserTurnRecorder(params: {
 }
 
 const CLI_RESEED_PROMPT =
-  "Continue this conversation using the OpenClaw transcript below as prior session history.\n\n<conversation_history>\nUser: earlier context\n</conversation_history>\n\n<next_user_message>\nhi\n</next_user_message>";
+  "Continue this conversation using the GrokBot transcript below as prior session history.\n\n<conversation_history>\nUser: earlier context\n</conversation_history>\n\n<next_user_message>\nhi\n</next_user_message>";
 
 describe("runCliAgent reliability", () => {
   beforeEach(() => {
@@ -662,7 +662,7 @@ describe("runCliAgent reliability", () => {
       imageArg: "--image",
       imageMode: "repeat",
     };
-    const stateDir = autoCleanupTempDirs.make("openclaw-cli-retry-images-");
+    const stateDir = autoCleanupTempDirs.make("grokbot-cli-retry-images-");
     const workspaceDir = path.join(stateDir, "workspace");
     const inboundDir = path.join(stateDir, "media", "inbound");
     const mediaId = "offloaded.png";
@@ -913,7 +913,7 @@ describe("runCliAgent reliability", () => {
     expect(supervisorSpawnMock).toHaveBeenCalledTimes(1);
   });
 
-  it("preserves first-turn delivery through cleanup without binding the OpenClaw session id", async () => {
+  it("preserves first-turn delivery through cleanup without binding the GrokBot session id", async () => {
     supervisorSpawnMock.mockClear();
     supervisorSpawnMock.mockImplementationOnce(async (...args: unknown[]) => {
       const input = args[0] as Parameters<ReturnType<typeof getProcessSupervisor>["spawn"]>[0];
@@ -1768,7 +1768,7 @@ describe("runCliAgent reliability", () => {
     supervisorSpawnMock.mockClear();
     const transcriptProbe = vi.fn(async () => false);
     setCliRunnerTestDeps({ claudeCliSessionTranscriptHasContent: transcriptProbe });
-    const artifactDir = autoCleanupTempDirs.make("openclaw-live-retry-artifacts-");
+    const artifactDir = autoCleanupTempDirs.make("grokbot-live-retry-artifacts-");
     const mcpConfigPath = path.join(artifactDir, "mcp.json");
     const skillsDir = path.join(artifactDir, "skills-plugin");
     fs.writeFileSync(mcpConfigPath, "{}\n", "utf-8");
@@ -2336,7 +2336,7 @@ describe("runCliAgent reliability", () => {
     });
   });
 
-  it("seeds fresh CLI sessions from the OpenClaw transcript", async () => {
+  it("seeds fresh CLI sessions from the GrokBot transcript", async () => {
     supervisorSpawnMock.mockResolvedValueOnce(
       createManagedRun({
         reason: "exit",
@@ -2353,7 +2353,7 @@ describe("runCliAgent reliability", () => {
     const result = await runPreparedCliAgent(
       buildPreparedContext({
         openClawHistoryPrompt:
-          "Continue this conversation using the OpenClaw transcript below.\n\nUser: earlier ask\n\nAssistant: earlier answer\n\n<next_user_message>\nhi\n</next_user_message>",
+          "Continue this conversation using the GrokBot transcript below.\n\nUser: earlier ask\n\nAssistant: earlier answer\n\n<next_user_message>\nhi\n</next_user_message>",
       }),
     );
 
@@ -3013,7 +3013,7 @@ describe("runCliAgent reliability", () => {
     );
     const { dir, sessionFile } = createSessionFile();
     const historyPrompt = [
-      "Continue this conversation using the OpenClaw transcript below as prior session history.",
+      "Continue this conversation using the GrokBot transcript below as prior session history.",
       "Treat it as authoritative context for this fresh CLI session.",
       "",
       "<conversation_history>",
@@ -3504,7 +3504,7 @@ describe("runCliAgent reliability", () => {
       }),
     );
     const { dir, sessionFile } = createSessionFile();
-    const taskDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-cli-persist-cwd-"));
+    const taskDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-cli-persist-cwd-"));
     let capturedCwd: unknown;
     const recorder = {
       message: undefined,
@@ -3732,7 +3732,7 @@ describe("runCliAgent reliability", () => {
 
   it("does not execute the CLI when approved user turn persistence fails", async () => {
     supervisorSpawnMock.mockClear();
-    const dir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-cli-persist-fail-"));
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-cli-persist-fail-"));
     const onUserMessagePersisted = vi.fn();
     // SQLite-backed persistence no longer fails via blocked transcript
     // directories; a rejecting recorder models the same persistence failure.
@@ -4239,7 +4239,7 @@ describe("runCliAgent reliability", () => {
       runId: "run-retry-success",
       cliSessionId: "thread-123",
       openClawHistoryPrompt:
-        "Continue this conversation using the OpenClaw transcript below.\n\nUser: recovered history\n\n<next_user_message>\nhi\n</next_user_message>",
+        "Continue this conversation using the GrokBot transcript below.\n\nUser: recovered history\n\n<next_user_message>\nhi\n</next_user_message>",
     });
     const clearBeforeRetry = vi.fn(async () => true);
 

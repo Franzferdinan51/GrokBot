@@ -633,7 +633,7 @@ describe("loadGatewayPlugins", () => {
               hooks: [],
               rootDir: "/tmp/qa-lab",
               source: "/tmp/qa-lab/index.js",
-              manifestPath: "/tmp/qa-lab/openclaw.plugin.json",
+              manifestPath: "/tmp/qa-lab/grokbot.plugin.json",
               contracts: { workerProviders: ["static-ssh"] },
             },
           ],
@@ -1625,7 +1625,7 @@ describe("loadGatewayPlugins", () => {
         }),
       ),
     ).rejects.toThrow(
-      'plugin "voice-call" is not trusted for fallback provider/model override requests. See https://docs.openclaw.ai/plugins/sdk-runtime#api-runtime-subagent and search for: plugins.entries.<id>.subagent.allowModelOverride',
+      'plugin "voice-call" is not trusted for fallback provider/model override requests. See https://docs.grokbot.ai/plugins/sdk-runtime#api-runtime-subagent and search for: plugins.entries.<id>.subagent.allowModelOverride',
     );
   });
 

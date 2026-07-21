@@ -1,8 +1,8 @@
-import type { PluginRuntime, RuntimeLogger } from "openclaw/plugin-sdk/plugin-runtime";
+import type { PluginRuntime, RuntimeLogger } from "grokbot/plugin-sdk/plugin-runtime";
 import type {
   RealtimeVoiceBridgeSession,
   TalkEventInput,
-} from "openclaw/plugin-sdk/realtime-voice";
+} from "grokbot/plugin-sdk/realtime-voice";
 import { describe, expect, it, vi } from "vitest";
 import { handleGoogleMeetRealtimeConsultToolCall } from "./agent-consult.js";
 import { resolveGoogleMeetConfig } from "./config.js";

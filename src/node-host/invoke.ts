@@ -2,9 +2,9 @@
 import fs from "node:fs";
 import path from "node:path";
 import type { ContentBlock } from "@modelcontextprotocol/sdk/types.js";
-import { normalizeLowercaseStringOrEmpty } from "@openclaw/normalization-core/string-coerce";
-import { normalizeStringEntries } from "@openclaw/normalization-core/string-normalization";
-import { sliceUtf16Safe, truncateUtf16Safe } from "@openclaw/normalization-core/utf16-slice";
+import { normalizeLowercaseStringOrEmpty } from "@grokbot/normalization-core/string-coerce";
+import { normalizeStringEntries } from "@grokbot/normalization-core/string-normalization";
+import { sliceUtf16Safe, truncateUtf16Safe } from "@grokbot/normalization-core/utf16-slice";
 import { mcpContentBlockToAgentContent } from "../agents/mcp-content.js";
 import {
   analyzeArgvCommand,
@@ -1099,7 +1099,7 @@ const testing = {
 } as const;
 
 if (process.env.VITEST || process.env.NODE_ENV === "test") {
-  (globalThis as Record<PropertyKey, unknown>)[Symbol.for("openclaw.nodeHostInvokeTestApi")] =
+  (globalThis as Record<PropertyKey, unknown>)[Symbol.for("grokbot.nodeHostInvokeTestApi")] =
     testing;
 }
 /* oxlint-disable max-lines -- TODO: split this grandfathered oversized file. */

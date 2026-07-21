@@ -285,7 +285,7 @@ describe("resolveEmbeddedAttemptToolConstructionPlan", () => {
     );
   });
 
-  it("materializes OpenClaw tools when a plugin-only allowlist forces message", () => {
+  it("materializes GrokBot tools when a plugin-only allowlist forces message", () => {
     expectConstructionPlan(
       resolveEmbeddedAttemptToolConstructionPlan({
         toolsAllow: ["memory_search"],

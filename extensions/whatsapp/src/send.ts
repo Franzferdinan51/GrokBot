@@ -1,17 +1,17 @@
 // Whatsapp plugin module implements send behavior.
-import { formatCliCommand } from "openclaw/plugin-sdk/cli-runtime";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { generateSecureUuid } from "openclaw/plugin-sdk/core";
-import { PlatformMessageNotDispatchedError } from "openclaw/plugin-sdk/error-runtime";
-import { redactIdentifier } from "openclaw/plugin-sdk/logging-core";
+import { formatCliCommand } from "grokbot/plugin-sdk/cli-runtime";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { generateSecureUuid } from "grokbot/plugin-sdk/core";
+import { PlatformMessageNotDispatchedError } from "grokbot/plugin-sdk/error-runtime";
+import { redactIdentifier } from "grokbot/plugin-sdk/logging-core";
 import {
   convertMarkdownTables,
   resolveMarkdownTableMode,
-} from "openclaw/plugin-sdk/markdown-table-runtime";
-import { loadOutboundMediaFromUrl } from "openclaw/plugin-sdk/outbound-media";
-import { requireRuntimeConfig } from "openclaw/plugin-sdk/plugin-config-runtime";
-import { normalizePollInput, type PollInput } from "openclaw/plugin-sdk/poll-runtime";
-import { createSubsystemLogger, getChildLogger } from "openclaw/plugin-sdk/runtime-env";
+} from "grokbot/plugin-sdk/markdown-table-runtime";
+import { loadOutboundMediaFromUrl } from "grokbot/plugin-sdk/outbound-media";
+import { requireRuntimeConfig } from "grokbot/plugin-sdk/plugin-config-runtime";
+import { normalizePollInput, type PollInput } from "grokbot/plugin-sdk/poll-runtime";
+import { createSubsystemLogger, getChildLogger } from "grokbot/plugin-sdk/runtime-env";
 import {
   resolveDefaultWhatsAppAccountId,
   resolveWhatsAppAccount,
@@ -97,7 +97,7 @@ function requireOutboundActiveWebListener(params: { cfg: OpenClawConfig; account
   const listener = getWhatsAppConnectionController(resolvedAccountId)?.getActiveListener() ?? null;
   if (!listener) {
     const cause = new Error(
-      `No active WhatsApp Web listener (account: ${resolvedAccountId}). Start the gateway, then link WhatsApp with: ${formatCliCommand(`openclaw channels login --channel whatsapp --account ${resolvedAccountId}`)}.`,
+      `No active WhatsApp Web listener (account: ${resolvedAccountId}). Start the gateway, then link WhatsApp with: ${formatCliCommand(`grokbot channels login --channel whatsapp --account ${resolvedAccountId}`)}.`,
     );
     throw new PlatformMessageNotDispatchedError(cause.message, { cause });
   }
@@ -148,7 +148,7 @@ export async function sendMessageWhatsApp(
       fromMe: boolean;
       participant?: string;
       messageText?: string;
-      media?: import("openclaw/plugin-sdk/channel-inbound").MediaPlaceholderTextFact;
+      media?: import("grokbot/plugin-sdk/channel-inbound").MediaPlaceholderTextFact;
     };
     preserveLeadingWhitespace?: boolean;
     /** Report each accepted internal platform send before the next fallible send. */

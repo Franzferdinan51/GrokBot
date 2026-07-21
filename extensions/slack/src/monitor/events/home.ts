@@ -1,24 +1,24 @@
 // Slack plugin module implements home behavior.
 import type { SlackEventMiddlewareArgs } from "@slack/bolt";
 import type { HomeView } from "@slack/types";
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
-import { danger } from "openclaw/plugin-sdk/runtime-env";
+import { formatErrorMessage } from "grokbot/plugin-sdk/error-runtime";
+import { danger } from "grokbot/plugin-sdk/runtime-env";
 import type { SlackMonitorContext } from "../context.js";
 import type { SlackAppHomeOpenedEvent } from "../types.js";
 
 function buildSlackHomeView(slashCommandName?: string): HomeView {
   const startSessionText = slashCommandName
-    ? `Send a DM, mention OpenClaw in a channel, or use \`/${slashCommandName}\` to start a session.`
-    : "Send a DM or mention OpenClaw in a channel to start a session.";
+    ? `Send a DM, mention GrokBot in a channel, or use \`/${slashCommandName}\` to start a session.`
+    : "Send a DM or mention GrokBot in a channel to start a session.";
   return {
     type: "home",
-    callback_id: "openclaw:home",
+    callback_id: "grokbot:home",
     blocks: [
       {
         type: "header",
         text: {
           type: "plain_text",
-          text: "OpenClaw",
+          text: "GrokBot",
         },
       },
       {

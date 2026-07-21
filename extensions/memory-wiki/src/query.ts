@@ -1,23 +1,23 @@
 // Memory Wiki plugin module implements query behavior.
 import fs from "node:fs/promises";
 import path from "node:path";
-import type { MemorySearchResult } from "openclaw/plugin-sdk/memory-core-host-runtime-files";
-import { resolveDefaultAgentId, resolveSessionAgentId } from "openclaw/plugin-sdk/memory-host-core";
-import { getActiveMemorySearchManager } from "openclaw/plugin-sdk/memory-host-search";
+import type { MemorySearchResult } from "grokbot/plugin-sdk/memory-core-host-runtime-files";
+import { resolveDefaultAgentId, resolveSessionAgentId } from "grokbot/plugin-sdk/memory-host-core";
+import { getActiveMemorySearchManager } from "grokbot/plugin-sdk/memory-host-search";
 import {
   extractTranscriptIdentityFromSessionsMemoryHit,
   loadCombinedSessionStoreForGateway,
   resolveTranscriptStemToSessionKeys,
-} from "openclaw/plugin-sdk/session-transcript-hit";
+} from "grokbot/plugin-sdk/session-transcript-hit";
 import {
   createAgentToAgentPolicy,
   createSessionVisibilityGuard,
   resolveEffectiveSessionToolsVisibility,
-} from "openclaw/plugin-sdk/session-visibility";
+} from "grokbot/plugin-sdk/session-visibility";
 import {
   normalizeLowercaseStringOrEmpty,
   uniqueStrings,
-} from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/string-coerce-runtime";
 import pMap, { pMapSkip } from "p-map";
 import type { OpenClawConfig } from "../api.js";
 import { assessClaimFreshness, isClaimContestedStatus } from "./claim-health.js";
@@ -38,7 +38,7 @@ import { initializeMemoryWikiVault } from "./vault.js";
 const QUERY_DIRS = ["entities", "concepts", "sources", "syntheses", "reports"] as const;
 const QUERY_PAGE_READ_CONCURRENCY = 16;
 const RELATED_BLOCK_PATTERN =
-  /<!-- openclaw:wiki:related:start -->[\s\S]*?<!-- openclaw:wiki:related:end -->/g;
+  /<!-- grokbot:wiki:related:start -->[\s\S]*?<!-- grokbot:wiki:related:end -->/g;
 const MARKDOWN_FRONTMATTER_PATTERN = /^\s*---\r?\n[\s\S]*?\r?\n---\r?\n?/;
 const ROUTE_QUESTION_STOP_WORDS = new Set([
   "a",

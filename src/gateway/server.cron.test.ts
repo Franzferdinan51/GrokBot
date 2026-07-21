@@ -4,7 +4,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { setImmediate as setImmediatePromise } from "node:timers/promises";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { afterAll, beforeAll, beforeEach, describe, expect, test, vi } from "vitest";
 import type WebSocket from "ws";
 import { resetConfigRuntimeState } from "../config/config.js";
@@ -67,7 +67,7 @@ let cronSuiteCaseId = 0;
 
 async function getCronSuiteTempRoot(): Promise<string> {
   if (!cronSuiteTempRootPromise) {
-    cronSuiteTempRootPromise = fs.mkdtemp(path.join(os.tmpdir(), "openclaw-gw-cron-suite-"));
+    cronSuiteTempRootPromise = fs.mkdtemp(path.join(os.tmpdir(), "grokbot-gw-cron-suite-"));
   }
   return await cronSuiteTempRootPromise;
 }
@@ -166,7 +166,7 @@ async function setupCronTestRun(params: {
 }
 
 type DirectCronState = GatewayCronState & {
-  getRuntimeConfig: () => import("../config/types.openclaw.js").OpenClawConfig;
+  getRuntimeConfig: () => import("../config/types.grokbot.js").OpenClawConfig;
 };
 
 type CronBroadcast = (event: string, payload: unknown) => void;
@@ -455,7 +455,7 @@ describe("gateway server cron", () => {
 
   test("handles cron CRUD, normalization, and patch semantics", { timeout: 45_000 }, async () => {
     const { prevSkipCron } = await setupCronTestRun({
-      tempPrefix: "openclaw-gw-cron-",
+      tempPrefix: "grokbot-gw-cron-",
       sessionConfig: { mainKey: "primary" },
       cronEnabled: false,
     });
@@ -590,7 +590,7 @@ describe("gateway server cron", () => {
 
   test("routes forced cron runs to the configured session", async () => {
     const { prevSkipCron } = await setupCronTestRun({
-      tempPrefix: "openclaw-gw-cron-route-",
+      tempPrefix: "grokbot-gw-cron-route-",
       sessionConfig: { mainKey: "primary" },
       cronEnabled: false,
     });
@@ -631,7 +631,7 @@ describe("gateway server cron", () => {
 
   test("returns INVALID_REQUEST when cron trigger authoring is disabled", async () => {
     const { prevSkipCron } = await setupCronTestRun({
-      tempPrefix: "openclaw-gw-cron-trigger-gate-",
+      tempPrefix: "grokbot-gw-cron-trigger-gate-",
       cronEnabled: false,
     });
     const cronState = await createDirectCronState();
@@ -657,7 +657,7 @@ describe("gateway server cron", () => {
 
   test("cron.add leaves legacy top-level array stores for doctor migration", async () => {
     const { prevSkipCron } = await setupCronTestRun({
-      tempPrefix: "openclaw-gw-cron-legacy-array-",
+      tempPrefix: "grokbot-gw-cron-legacy-array-",
       cronEnabled: false,
     });
     const storePath = testState.cronStorePath;
@@ -729,7 +729,7 @@ describe("gateway server cron", () => {
 
   test("handles cron patch merge and validation semantics", { timeout: 45_000 }, async () => {
     const { prevSkipCron } = await setupCronTestRun({
-      tempPrefix: "openclaw-gw-cron-patch-",
+      tempPrefix: "grokbot-gw-cron-patch-",
       sessionConfig: { mainKey: "primary" },
       cronEnabled: false,
     });
@@ -969,7 +969,7 @@ describe("gateway server cron", () => {
 
   test("atomically rejects stale config revisions without conflicting on runtime state", async () => {
     const { prevSkipCron } = await setupCronTestRun({
-      tempPrefix: "openclaw-gw-cron-update-revision-",
+      tempPrefix: "grokbot-gw-cron-update-revision-",
       cronEnabled: false,
     });
     const cronState = await createDirectCronState();
@@ -1038,7 +1038,7 @@ describe("gateway server cron", () => {
 
   test("accepts opaque custom session ids on add and update", async () => {
     const { prevSkipCron } = await setupCronTestRun({
-      tempPrefix: "openclaw-gw-cron-opaque-session-target-",
+      tempPrefix: "grokbot-gw-cron-opaque-session-target-",
       cronEnabled: false,
     });
 
@@ -1085,7 +1085,7 @@ describe("gateway server cron", () => {
 
   test("keeps delivery updates valid for main jobs owned by an explicit default agent", async () => {
     const { prevSkipCron } = await setupCronTestRun({
-      tempPrefix: "openclaw-gw-cron-main-default-agent-delivery-",
+      tempPrefix: "grokbot-gw-cron-main-default-agent-delivery-",
       cronEnabled: false,
     });
 
@@ -1137,7 +1137,7 @@ describe("gateway server cron", () => {
 
   test("accepts implicit announce delivery when extra configured channels are disabled", async () => {
     const { prevSkipCron } = await setupCronTestRun({
-      tempPrefix: "openclaw-gw-cron-disabled-channel-ambiguity-",
+      tempPrefix: "grokbot-gw-cron-disabled-channel-ambiguity-",
       cronEnabled: false,
     });
 
@@ -1181,7 +1181,7 @@ describe("gateway server cron", () => {
 
   test("keeps delivery updates valid after gateway config changes the default agent", async () => {
     const { prevSkipCron } = await setupCronTestRun({
-      tempPrefix: "openclaw-gw-cron-main-default-agent-drift-",
+      tempPrefix: "grokbot-gw-cron-main-default-agent-drift-",
       cronEnabled: false,
     });
 
@@ -1259,7 +1259,7 @@ describe("gateway server cron", () => {
     vi.stubEnv("SLACK_BOT_TOKEN", "xoxb-ambient");
     vi.stubEnv("TELEGRAM_BOT_TOKEN", "ambient-telegram");
     const { prevSkipCron } = await setupCronTestRun({
-      tempPrefix: "openclaw-gw-cron-ambient-disabled-delivery-",
+      tempPrefix: "grokbot-gw-cron-ambient-disabled-delivery-",
       cronEnabled: false,
     });
 
@@ -1293,7 +1293,7 @@ describe("gateway server cron", () => {
 
   test("writes cron run history and auto-runs due jobs", async () => {
     const { prevSkipCron } = await setupCronTestRun({
-      tempPrefix: "openclaw-gw-cron-log-",
+      tempPrefix: "grokbot-gw-cron-log-",
       cronEnabled: true,
     });
     await writeCronConfig({
@@ -1398,7 +1398,7 @@ describe("gateway server cron", () => {
         | undefined;
       expect(statusPayload?.enabled).toBe(true);
       const storePath = typeof statusPayload?.storePath === "string" ? statusPayload.storePath : "";
-      expect(storePath).toContain("openclaw.sqlite");
+      expect(storePath).toContain("grokbot.sqlite");
 
       const autoRes = await directCronReq(cronState, "cron.add", {
         name: "auto run test",
@@ -1433,7 +1433,7 @@ describe("gateway server cron", () => {
     const now = Date.now();
     const sessionTarget = "session:agent:main:dingtalk:group:cid3tmd4xb19xjfk/wogxwy2a==";
     const { prevSkipCron } = await setupCronTestRun({
-      tempPrefix: "openclaw-gw-cron-persisted-opaque-session-target-",
+      tempPrefix: "grokbot-gw-cron-persisted-opaque-session-target-",
       cronEnabled: false,
       jobs: [
         {
@@ -1478,7 +1478,7 @@ describe("gateway server cron", () => {
 
   test("returns from cron.run immediately while isolated work continues in background", async () => {
     const { prevSkipCron } = await setupCronTestRun({
-      tempPrefix: "openclaw-gw-cron-run-detached-",
+      tempPrefix: "grokbot-gw-cron-run-detached-",
       cronEnabled: false,
     });
 
@@ -1546,7 +1546,7 @@ describe("gateway server cron", () => {
     );
 
     const { prevSkipCron } = await setupCronTestRun({
-      tempPrefix: "openclaw-gw-cron-run-busy-",
+      tempPrefix: "grokbot-gw-cron-run-busy-",
       cronEnabled: false,
       jobs: [
         {
@@ -1605,7 +1605,7 @@ describe("gateway server cron", () => {
   test("returns not-due without starting background work", async () => {
     const now = Date.now();
     const { prevSkipCron } = await setupCronTestRun({
-      tempPrefix: "openclaw-gw-cron-run-not-due-",
+      tempPrefix: "grokbot-gw-cron-run-not-due-",
       cronEnabled: false,
       jobs: [
         {
@@ -1647,7 +1647,7 @@ describe("gateway server cron", () => {
 
   test("posts webhooks for delivery and completion destinations only when summary exists", async () => {
     const { prevSkipCron } = await setupCronTestRun({
-      tempPrefix: "openclaw-gw-cron-webhook-",
+      tempPrefix: "grokbot-gw-cron-webhook-",
       cronEnabled: false,
     });
 
@@ -1810,7 +1810,7 @@ describe("gateway server cron", () => {
 
   test("omits raw summaries from failed cron webhook payloads", async () => {
     const { prevSkipCron } = await setupCronTestRun({
-      tempPrefix: "openclaw-gw-cron-webhook-failure-summary-",
+      tempPrefix: "grokbot-gw-cron-webhook-failure-summary-",
       cronEnabled: false,
     });
 
@@ -1914,7 +1914,7 @@ describe("gateway server cron", () => {
 
   test("falls back to the primary delivery channel on job failure and preserves sessionKey", async () => {
     const { prevSkipCron } = await setupCronTestRun({
-      tempPrefix: "openclaw-gw-cron-failure-primary-fallback-",
+      tempPrefix: "grokbot-gw-cron-failure-primary-fallback-",
       cronEnabled: false,
     });
 
@@ -1961,7 +1961,7 @@ describe("gateway server cron", () => {
 
   test("announces channel-shaped failure destinations without mode under a global webhook default (#102235)", async () => {
     const { prevSkipCron } = await setupCronTestRun({
-      tempPrefix: "openclaw-gw-cron-fd-channel-no-mode-",
+      tempPrefix: "grokbot-gw-cron-fd-channel-no-mode-",
       cronEnabled: false,
     });
 
@@ -2018,7 +2018,7 @@ describe("gateway server cron", () => {
 
   test("prefers sessionTarget session context for failure announcements over creator sessionKey", async () => {
     const { prevSkipCron } = await setupCronTestRun({
-      tempPrefix: "openclaw-gw-cron-failure-session-target-",
+      tempPrefix: "grokbot-gw-cron-failure-session-target-",
       cronEnabled: false,
     });
 
@@ -2069,7 +2069,7 @@ describe("gateway server cron", () => {
 
   test("rejects malformed cron.webhookToken objects at startup", async () => {
     const { prevSkipCron } = await setupCronTestRun({
-      tempPrefix: "openclaw-gw-cron-webhook-secretinput-",
+      tempPrefix: "grokbot-gw-cron-webhook-secretinput-",
       cronEnabled: false,
     });
 

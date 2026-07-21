@@ -3,10 +3,10 @@
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { expectDefined } from "@openclaw/normalization-core";
-import type { AgentMessage } from "openclaw/plugin-sdk/agent-core";
-import { SessionManager } from "openclaw/plugin-sdk/agent-sessions";
-import type { AssistantMessage, ToolResultMessage, UserMessage } from "openclaw/plugin-sdk/llm";
+import { expectDefined } from "@grokbot/normalization-core";
+import type { AgentMessage } from "grokbot/plugin-sdk/agent-core";
+import { SessionManager } from "grokbot/plugin-sdk/agent-sessions";
+import type { AssistantMessage, ToolResultMessage, UserMessage } from "grokbot/plugin-sdk/llm";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { convertToLlm } from "../../../packages/agent-core/src/harness/messages.js";
 import {

@@ -1,5 +1,5 @@
 #!/usr/bin/env -S node --import tsx
-// Test Force script supports OpenClaw repository automation.
+// Test Force script supports GrokBot repository automation.
 import { spawnSync } from "node:child_process";
 import os from "node:os";
 import path from "node:path";
@@ -13,7 +13,7 @@ function usage(): string {
   return [
     "Usage: node --import tsx scripts/test-force.ts",
     "",
-    "Clears the configured OpenClaw gateway port, then runs the local test suite.",
+    "Clears the configured GrokBot gateway port, then runs the local test suite.",
     "",
     "Options:",
     "  -h, --help    Show this help.",
@@ -57,7 +57,7 @@ function killGatewayListeners(port: number): PortProcess[] {
 function runTests() {
   const isolatedLock =
     process.env.OPENCLAW_GATEWAY_LOCK ??
-    path.join(os.tmpdir(), `openclaw-gateway.lock.test.${Date.now()}`);
+    path.join(os.tmpdir(), `grokbot-gateway.lock.test.${Date.now()}`);
   const result = spawnSync(process.execPath, ["scripts/test-projects.mjs"], {
     stdio: "inherit",
     env: {

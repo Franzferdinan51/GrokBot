@@ -13,7 +13,7 @@ import {
 const tempDirs: string[] = [];
 
 async function makeTempDir() {
-  const dir = await fs.mkdtemp(path.join(tmpdir(), "openclaw-native-a2ui-"));
+  const dir = await fs.mkdtemp(path.join(tmpdir(), "grokbot-native-a2ui-"));
   tempDirs.push(dir);
   return dir;
 }

@@ -4,8 +4,8 @@ import type {
   DmPolicy,
   OpenClawConfig,
   TelegramAccountConfig,
-} from "openclaw/plugin-sdk/config-contracts";
-import { logVerbose } from "openclaw/plugin-sdk/runtime-env";
+} from "grokbot/plugin-sdk/config-contracts";
+import { logVerbose } from "grokbot/plugin-sdk/runtime-env";
 import { expandTelegramAllowFromWithAccessGroups } from "./access-groups.js";
 import { resolveTelegramAccount } from "./accounts.js";
 import {

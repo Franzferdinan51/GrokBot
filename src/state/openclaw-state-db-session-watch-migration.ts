@@ -5,8 +5,8 @@ import {
   executeSqliteQueryTakeFirstSync,
   getNodeSqliteKysely,
 } from "../infra/kysely-sync.js";
-import { ensureColumn, tableExists, tableHasColumn } from "./openclaw-state-db-schema-helpers.js";
-import type { DB as OpenClawStateKyselyDatabase } from "./openclaw-state-db.generated.js";
+import { ensureColumn, tableExists, tableHasColumn } from "./grokbot-state-db-schema-helpers.js";
+import type { DB as OpenClawStateKyselyDatabase } from "./grokbot-state-db.generated.js";
 import {
   SESSION_WATCH_PROVENANCE_AMBIENT_GROUP,
   SESSION_WATCH_PROVENANCE_EXPLICIT,

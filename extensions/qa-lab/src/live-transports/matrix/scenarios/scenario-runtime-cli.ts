@@ -4,9 +4,9 @@ import { randomUUID } from "node:crypto";
 import { chmod, mkdir, mkdtemp, rm, stat, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { setTimeout as sleep } from "node:timers/promises";
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
-import { redactSensitiveText } from "openclaw/plugin-sdk/logging-core";
-import { resolvePreferredOpenClawTmpDir } from "openclaw/plugin-sdk/temp-path";
+import { formatErrorMessage } from "grokbot/plugin-sdk/error-runtime";
+import { redactSensitiveText } from "grokbot/plugin-sdk/logging-core";
+import { resolvePreferredOpenClawTmpDir } from "grokbot/plugin-sdk/temp-path";
 import {
   killMatrixQaCliChild,
   resolveMatrixQaOpenClawCliEntryPath,
@@ -64,7 +64,7 @@ export function redactMatrixQaCliOutput(text: string): string {
 }
 
 export function formatMatrixQaCliCommand(args: string[]) {
-  return `openclaw ${redactMatrixQaCliArgs(args).join(" ")}`;
+  return `grokbot ${redactMatrixQaCliArgs(args).join(" ")}`;
 }
 
 function buildMatrixQaCliResult(params: {
@@ -377,7 +377,7 @@ export async function createMatrixQaOpenClawCliRuntime(params: {
   userId: string;
 }) {
   const rootDir = await mkdtemp(
-    path.join(resolvePreferredOpenClawTmpDir(), "openclaw-matrix-cli-qa-"),
+    path.join(resolvePreferredOpenClawTmpDir(), "grokbot-matrix-cli-qa-"),
   );
   const artifactDir = path.join(
     params.outputDir,

@@ -11,7 +11,7 @@ import type {
 } from "../config/sessions/session-accessor.js";
 import { loadSessionEntry, replaceSessionEntry } from "../config/sessions/session-accessor.js";
 import type { SessionEntry } from "../config/sessions/types.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import type { CallGatewayOptions } from "../gateway/call.js";
 import { SUBAGENT_KILL_TASK_ERROR } from "../tasks/detached-task-runtime-contract.js";
 import {
@@ -187,7 +187,7 @@ let tempRoot = "";
 let tempStoreIndex = 0;
 
 beforeAll(() => {
-  tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-subagent-control-"));
+  tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-subagent-control-"));
 });
 
 afterAll(() => {

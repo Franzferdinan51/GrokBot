@@ -1,15 +1,15 @@
 /** Tests ACP session manager resolution, turn execution, state transitions, and cleanup. */
 import { setTimeout as scheduleNativeTimeout } from "node:timers";
 import { setTimeout as sleep } from "node:timers/promises";
-import { expectDefined } from "@openclaw/normalization-core";
-import { MAX_TIMER_TIMEOUT_MS } from "@openclaw/normalization-core/number-coercion";
+import { expectDefined } from "@grokbot/normalization-core";
+import { MAX_TIMER_TIMEOUT_MS } from "@grokbot/normalization-core/number-coercion";
 import { describe, expect, it, vi } from "vitest";
 import {
   requireTaskByRunId,
   withAcpManagerTaskStateDir,
 } from "../../../test/helpers/acp-manager-task-state.js";
 import { listSessionStateEventsSince } from "../../sessions/session-state-events.js";
-import { closeOpenClawStateDatabaseForTest } from "../../state/openclaw-state-db.js";
+import { closeOpenClawStateDatabaseForTest } from "../../state/grokbot-state-db.js";
 import { isAcpTurnActive } from "./active-turns.js";
 import {
   AcpRuntimeError,
@@ -339,7 +339,7 @@ describe("AcpSessionManager", () => {
         label: "Korean path",
         task: "Print the current directory in Korean",
         status: "succeeded",
-        progressSummary: "현재 작업 디렉토리는 /home/bykim0119/.openclaw/workspace 입니다",
+        progressSummary: "현재 작업 디렉토리는 /home/bykim0119/.grokbot/workspace 입니다",
       });
     });
   }, 300_000);
@@ -1042,17 +1042,17 @@ describe("AcpSessionManager", () => {
       runtime: runtimeState.runtime,
     });
     hoisted.readAcpSessionEntryMock.mockReturnValue({
-      sessionKey: "agent:openclaw:acp:session-1",
-      storeSessionKey: "agent:openclaw:acp:session-1",
+      sessionKey: "agent:grokbot:acp:session-1",
+      storeSessionKey: "agent:grokbot:acp:session-1",
       acp: readySessionMeta({
-        agent: "openclaw",
+        agent: "grokbot",
       }),
     });
 
     const manager = new AcpSessionManager();
     const closeResult = await manager.closeSession({
       cfg: baseCfg,
-      sessionKey: "agent:openclaw:acp:session-1",
+      sessionKey: "agent:grokbot:acp:session-1",
       reason: "terminal-task-cleanup",
       allowBackendUnavailable: true,
       discardPersistentState: true,
@@ -1063,7 +1063,7 @@ describe("AcpSessionManager", () => {
     expect(closeResult.runtimeNotice).toContain("does not support session/close");
     expect(closeResult.metaCleared).toBe(true);
     expect(runtimeState.prepareFreshSession).toHaveBeenCalledWith({
-      sessionKey: "agent:openclaw:acp:session-1",
+      sessionKey: "agent:grokbot:acp:session-1",
     });
   });
 

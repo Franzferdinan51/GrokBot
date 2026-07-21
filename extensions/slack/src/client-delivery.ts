@@ -5,11 +5,11 @@ import {
   extractErrorCode,
   PlatformMessageNotDispatchedError,
   readErrorName,
-} from "openclaw/plugin-sdk/error-runtime";
-import { buildTimeoutAbortSignal } from "openclaw/plugin-sdk/extension-shared";
-import { withTrustedEnvProxyGuardedFetchMode } from "openclaw/plugin-sdk/fetch-runtime";
-import { logVerbose } from "openclaw/plugin-sdk/runtime-env";
-import { fetchWithSsrFGuard, type SsrFPolicy } from "openclaw/plugin-sdk/ssrf-runtime";
+} from "grokbot/plugin-sdk/error-runtime";
+import { buildTimeoutAbortSignal } from "grokbot/plugin-sdk/extension-shared";
+import { withTrustedEnvProxyGuardedFetchMode } from "grokbot/plugin-sdk/fetch-runtime";
+import { logVerbose } from "grokbot/plugin-sdk/runtime-env";
+import { fetchWithSsrFGuard, type SsrFPolicy } from "grokbot/plugin-sdk/ssrf-runtime";
 import {
   postSlackMessageWithIdentityFallback,
   type SlackPostMessageIdentity,

@@ -1,8 +1,8 @@
 // Zalouser plugin module implements tool behavior.
-import { stringEnum } from "openclaw/plugin-sdk/channel-actions";
-import type { AnyAgentTool, OpenClawPluginToolContext } from "openclaw/plugin-sdk/core";
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
-import { jsonResult as json, type AgentToolResult } from "openclaw/plugin-sdk/tool-results";
+import { stringEnum } from "grokbot/plugin-sdk/channel-actions";
+import type { AnyAgentTool, OpenClawPluginToolContext } from "grokbot/plugin-sdk/core";
+import { formatErrorMessage } from "grokbot/plugin-sdk/error-runtime";
+import { jsonResult as json, type AgentToolResult } from "grokbot/plugin-sdk/tool-results";
 import { Type } from "typebox";
 import { sendImageZalouser, sendLinkZalouser, sendMessageZalouser } from "./send.js";
 import { parseZalouserOutboundTarget } from "./session-route.js";

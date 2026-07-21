@@ -1,20 +1,20 @@
 ---
-summary: "Reference catalog of checkIds emitted by openclaw security audit"
+summary: "Reference catalog of checkIds emitted by grokbot security audit"
 read_when:
-  - You saw a specific `checkId` in `openclaw security audit` output and want to know what it means
+  - You saw a specific `checkId` in `grokbot security audit` output and want to know what it means
   - You need the fix key/path for a given finding
   - You are triaging severity across a security audit run
 title: "Security audit checks"
 ---
 
-`openclaw security audit` emits structured findings keyed by `checkId`. This
+`grokbot security audit` emits structured findings keyed by `checkId`. This
 page is the reference catalog for those IDs. For the high-level threat model
 and hardening guidance, see [Security](/gateway/security).
 
-Some checks only run with `openclaw security audit --deep`: plugin/skill code
+Some checks only run with `grokbot security audit --deep`: plugin/skill code
 scans (`plugins.code_safety*`, `skills.code_safety*`) and live Gateway probe
 checks (`gateway.probe_*`). Everything else in this table runs on a plain
-`openclaw security audit`.
+`grokbot security audit`.
 
 A severity like `warn/critical` means the same `checkId` can be emitted at
 either level depending on config (for example, whether the Gateway is remotely
@@ -23,21 +23,21 @@ exhaustive):
 
 | `checkId`                                                       | Severity           | Why it matters                                                                          | Primary fix key/path                                                                                 | Auto-fix |
 | --------------------------------------------------------------- | ------------------ | --------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- | -------- |
-| `fs.state_dir.perms_world_writable`                             | critical           | Other users/processes can modify full OpenClaw state                                    | filesystem perms on `~/.openclaw`                                                                    | yes      |
-| `fs.state_dir.perms_group_writable`                             | warn               | Group users can modify full OpenClaw state                                              | filesystem perms on `~/.openclaw`                                                                    | yes      |
-| `fs.state_dir.perms_readable`                                   | warn               | State dir is readable by others                                                         | filesystem perms on `~/.openclaw`                                                                    | yes      |
+| `fs.state_dir.perms_world_writable`                             | critical           | Other users/processes can modify full GrokBot state                                    | filesystem perms on `~/.grokbot`                                                                    | yes      |
+| `fs.state_dir.perms_group_writable`                             | warn               | Group users can modify full GrokBot state                                              | filesystem perms on `~/.grokbot`                                                                    | yes      |
+| `fs.state_dir.perms_readable`                                   | warn               | State dir is readable by others                                                         | filesystem perms on `~/.grokbot`                                                                    | yes      |
 | `fs.state_dir.symlink`                                          | warn               | State dir target becomes another trust boundary                                         | state dir filesystem layout                                                                          | no       |
-| `fs.config.perms_writable`                                      | critical           | Others can change auth/tool policy/config                                               | filesystem perms on `~/.openclaw/openclaw.json`                                                      | yes      |
+| `fs.config.perms_writable`                                      | critical           | Others can change auth/tool policy/config                                               | filesystem perms on `~/.grokbot/grokbot.json`                                                      | yes      |
 | `fs.config.symlink`                                             | warn               | Symlinked config files are unsupported for writes and add another trust boundary        | replace with a regular config file or point `OPENCLAW_CONFIG_PATH` at the real file                  | no       |
 | `fs.config.perms_group_readable`                                | warn               | Group users can read config tokens/settings                                             | filesystem perms on config file                                                                      | yes      |
 | `fs.config.perms_world_readable`                                | critical           | Config can expose tokens/settings                                                       | filesystem perms on config file                                                                      | yes      |
-| `fs.config_include.perms_writable`                              | critical           | Config include file can be modified by others                                           | include-file perms referenced from `openclaw.json`                                                   | yes      |
-| `fs.config_include.perms_group_readable`                        | warn               | Group users can read included secrets/settings                                          | include-file perms referenced from `openclaw.json`                                                   | yes      |
-| `fs.config_include.perms_world_readable`                        | critical           | Included secrets/settings are world-readable                                            | include-file perms referenced from `openclaw.json`                                                   | yes      |
+| `fs.config_include.perms_writable`                              | critical           | Config include file can be modified by others                                           | include-file perms referenced from `grokbot.json`                                                   | yes      |
+| `fs.config_include.perms_group_readable`                        | warn               | Group users can read included secrets/settings                                          | include-file perms referenced from `grokbot.json`                                                   | yes      |
+| `fs.config_include.perms_world_readable`                        | critical           | Included secrets/settings are world-readable                                            | include-file perms referenced from `grokbot.json`                                                   | yes      |
 | `fs.auth_profiles.perms_writable`                               | critical           | Others can inject or replace stored model credentials                                   | `agents/<agentId>/agent/auth-profiles.json` perms                                                    | yes      |
 | `fs.auth_profiles.perms_readable`                               | warn               | Others can read API keys and OAuth tokens                                               | `agents/<agentId>/agent/auth-profiles.json` perms                                                    | yes      |
-| `fs.credentials_dir.perms_writable`                             | critical           | Others can modify channel pairing/credential state                                      | filesystem perms on `~/.openclaw/credentials`                                                        | yes      |
-| `fs.credentials_dir.perms_readable`                             | warn               | Others can read channel credential state                                                | filesystem perms on `~/.openclaw/credentials`                                                        | yes      |
+| `fs.credentials_dir.perms_writable`                             | critical           | Others can modify channel pairing/credential state                                      | filesystem perms on `~/.grokbot/credentials`                                                        | yes      |
+| `fs.credentials_dir.perms_readable`                             | warn               | Others can read channel credential state                                                | filesystem perms on `~/.grokbot/credentials`                                                        | yes      |
 | `fs.sessions_store.perms_readable`                              | warn               | Others can read session transcripts/metadata                                            | session store perms                                                                                  | yes      |
 | `fs.log_file.perms_readable`                                    | warn               | Others can read redacted-but-still-sensitive logs                                       | gateway log file perms                                                                               | yes      |
 | `fs.synced_dir`                                                 | warn               | State/config in iCloud/Dropbox/Drive broadens token/transcript exposure                 | move config/state off synced folders                                                                 | no       |
@@ -94,8 +94,8 @@ exhaustive):
 | `sandbox.dangerous_apparmor_profile`                            | critical           | Sandbox AppArmor profile weakens container isolation                                    | `agents.*.sandbox.docker.securityOpt`                                                                | no       |
 | `sandbox.browser_cdp_bridge_unrestricted`                       | warn               | Sandbox browser bridge is exposed without source-range restriction                      | `sandbox.browser.cdpSourceRange`                                                                     | no       |
 | `sandbox.browser_container.non_loopback_publish`                | critical           | Existing browser container publishes CDP on non-loopback interfaces                     | browser sandbox container publish config                                                             | no       |
-| `sandbox.browser_container.hash_label_missing`                  | warn               | Existing browser container predates current config-hash labels                          | `openclaw sandbox recreate --browser --all`                                                          | no       |
-| `sandbox.browser_container.hash_epoch_stale`                    | warn               | Existing browser container predates current browser config epoch                        | `openclaw sandbox recreate --browser --all`                                                          | no       |
+| `sandbox.browser_container.hash_label_missing`                  | warn               | Existing browser container predates current config-hash labels                          | `grokbot sandbox recreate --browser --all`                                                          | no       |
+| `sandbox.browser_container.hash_epoch_stale`                    | warn               | Existing browser container predates current browser config epoch                        | `grokbot sandbox recreate --browser --all`                                                          | no       |
 | `sandbox.browser_container.docker_probe_timeout`                | warn               | Docker label probe for the browser container timed out                                  | Docker daemon reachability                                                                           | no       |
 | `tools.exec.host_sandbox_no_sandbox_defaults`                   | warn               | `exec host=sandbox` fails closed when sandbox is off                                    | `tools.exec.host`, `agents.defaults.sandbox.mode`                                                    | no       |
 | `tools.exec.host_sandbox_no_sandbox_agents`                     | warn               | Per-agent `exec host=sandbox` fails closed when sandbox is off                          | `agents.list[].tools.exec.host`, `agents.list[].sandbox.mode`                                        | no       |
@@ -109,7 +109,7 @@ exhaustive):
 | `tools.exec.safe_bin_trusted_dirs_risky`                        | warn               | `safeBinTrustedDirs` includes mutable or risky directories                              | `tools.exec.safeBinTrustedDirs`, `agents.list[].tools.exec.safeBinTrustedDirs`                       | no       |
 | `tools.elevated.allowFrom.<provider>.wildcard`                  | critical           | `tools.elevated.allowFrom.<provider>` includes `"*"`, approving every sender            | `tools.elevated.allowFrom.<provider>`                                                                | no       |
 | `tools.elevated.allowFrom.<provider>.large`                     | warn               | Elevated allowlist for `<provider>` has more than 25 entries                            | `tools.elevated.allowFrom.<provider>`                                                                | no       |
-| `agents.claude_cli.permission_mode_overridden_by_yolo`          | warn               | Claude CLI `--permission-mode` is ignored because OpenClaw exec is fully unattended     | `tools.exec.security`, `tools.exec.ask`, `cliBackends.claude-cli` args                               | no       |
+| `agents.claude_cli.permission_mode_overridden_by_yolo`          | warn               | Claude CLI `--permission-mode` is ignored because GrokBot exec is fully unattended     | `tools.exec.security`, `tools.exec.ask`, `cliBackends.claude-cli` args                               | no       |
 | `skills.workspace.symlink_escape`                               | warn               | Workspace `skills/**/SKILL.md` resolves outside workspace root (symlink-chain drift)    | workspace `skills/**` filesystem state                                                               | no       |
 | `skills.workspace.scan_truncated`                               | warn               | Workspace skill scan hit its directory-visit cap before finishing                       | flatten/simplify the workspace `skills/` directory tree                                              | no       |
 | `plugins.extensions_no_allowlist`                               | warn               | Plugins are installed without an explicit plugin allowlist                              | `plugins.allowlist`                                                                                  | no       |

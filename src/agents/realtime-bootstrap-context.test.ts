@@ -3,13 +3,13 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { resolveRealtimeBootstrapContextInstructions } from "./realtime-bootstrap-context.js";
 
 const tempDirs: string[] = [];
 
 async function makeWorkspace(): Promise<string> {
-  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-realtime-bootstrap-"));
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-realtime-bootstrap-"));
   tempDirs.push(dir);
   return dir;
 }
@@ -42,7 +42,7 @@ describe("resolveRealtimeBootstrapContextInstructions", () => {
       sessionKey: "agent:main:discord:channel:1001",
     });
 
-    expect(instructions).toContain("OpenClaw realtime voice profile context");
+    expect(instructions).toContain("GrokBot realtime voice profile context");
     expect(instructions).toContain("### IDENTITY.md");
     expect(instructions).toContain("Name: Wilfred");
     expect(instructions).toContain("### USER.md");

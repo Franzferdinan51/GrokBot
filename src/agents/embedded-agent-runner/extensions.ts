@@ -2,7 +2,7 @@
  * Builds extension factories available to embedded-agent runtime sessions.
  */
 import { randomUUID } from "node:crypto";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import type { ProviderRuntimeModel } from "../../plugins/provider-runtime-model.types.js";
 import { normalizeAcceptedSessionSpawnResult } from "../accepted-session-spawn.js";
 import { setCompactionSafeguardRuntime } from "../agent-hooks/compaction-safeguard-runtime.js";
@@ -54,7 +54,7 @@ function buildAgentToolResultMiddlewareFactory(
   sessionManager: SessionManager,
   runId?: string,
 ): ExtensionFactory {
-  const runner = createAgentToolResultMiddlewareRunner({ runtime: "openclaw" });
+  const runner = createAgentToolResultMiddlewareRunner({ runtime: "grokbot" });
   return (agent) => {
     agent.on("tool_result", async (rawEvent: unknown, ctx: { cwd?: string }) => {
       const event = recordFromUnknown(rawEvent) as AgentToolResultEvent;
@@ -65,7 +65,7 @@ function buildAgentToolResultMiddlewareFactory(
         typeof event.toolCallId === "string" && event.toolCallId.trim()
           ? event.toolCallId
           : undefined;
-      const toolCallId = eventToolCallId ?? `openclaw-${randomUUID()}`;
+      const toolCallId = eventToolCallId ?? `grokbot-${randomUUID()}`;
       const content = Array.isArray(event.content) ? event.content : [];
       const current = {
         content,

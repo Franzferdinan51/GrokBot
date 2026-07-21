@@ -5,7 +5,7 @@ import path from "node:path";
 import {
   closeOpenClawStateDatabaseForTest,
   createChannelIngressQueueForTests,
-} from "openclaw/plugin-sdk/plugin-state-test-runtime";
+} from "grokbot/plugin-sdk/plugin-state-test-runtime";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { PluginRuntime } from "../runtime-api.js";
 import { startNostrBus } from "./nostr-bus.js";
@@ -146,7 +146,7 @@ function startTestNostrBus(options: Parameters<typeof startNostrBus>[0]) {
 
 describe("startNostrBus inbound guards", () => {
   beforeEach(async () => {
-    const created = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-nostr-ingress-"));
+    const created = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-nostr-ingress-"));
     stateDir = await fs.realpath(created);
     ingressQueue = createChannelIngressQueueForTests<Record<string, unknown>>({
       channelId: "nostr",

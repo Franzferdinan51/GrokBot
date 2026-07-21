@@ -1,5 +1,5 @@
 // Microsoft Foundry image provider tests cover MAI request construction.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { buildMicrosoftFoundryImageGenerationProvider } from "./image-generation-provider.js";
 import { PROVIDER_ID } from "./shared.js";
@@ -41,17 +41,17 @@ const {
   sanitizeConfiguredModelProviderRequestMock: vi.fn((request) => request),
 }));
 
-vi.mock("openclaw/plugin-sdk/provider-auth", () => ({
+vi.mock("grokbot/plugin-sdk/provider-auth", () => ({
   isProviderApiKeyConfigured: isProviderApiKeyConfiguredMock,
 }));
 
-vi.mock("openclaw/plugin-sdk/provider-auth-runtime", () => ({
+vi.mock("grokbot/plugin-sdk/provider-auth-runtime", () => ({
   resolveApiKeyForProvider: resolveApiKeyForProviderMock,
 }));
 
-vi.mock("openclaw/plugin-sdk/provider-http", async () => {
-  const actual = await vi.importActual<typeof import("openclaw/plugin-sdk/provider-http")>(
-    "openclaw/plugin-sdk/provider-http",
+vi.mock("grokbot/plugin-sdk/provider-http", async () => {
+  const actual = await vi.importActual<typeof import("grokbot/plugin-sdk/provider-http")>(
+    "grokbot/plugin-sdk/provider-http",
   );
   return {
     assertOkOrThrowHttpError: assertOkOrThrowHttpErrorMock,

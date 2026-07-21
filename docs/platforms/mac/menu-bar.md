@@ -16,7 +16,7 @@ title: "Menu bar"
 
 ## State model
 
-- Source: `WorkActivityStore` (`apps/macos/Sources/OpenClaw/WorkActivityStore.swift`).
+- Source: `WorkActivityStore` (`apps/macos/Sources/GrokBot/WorkActivityStore.swift`).
 - Events arrive as `ControlAgentEvent` with a `runId`; the handler (`ControlChannel.routeWorkActivity`) reads `sessionKey` from the event payload and defaults to `"main"` if absent.
 - Priority: the main session (`sessionKey == "main"` by default) always wins. If main is active, its state shows immediately. If main is idle, the most recently active non-main session shows instead. The store does not flip mid-activity; it only switches when the current session goes idle or main becomes active.
 - Activity kinds:
@@ -77,7 +77,7 @@ title: "Menu bar"
   - `System (auto)` (default)
   - `Working: main` / `Working: other` (per tool kind: bash, read, write, edit, other)
   - `Idle`
-- Stored under `UserDefaults` key `openclaw.iconOverride`; mapped to `IconState.overridden`.
+- Stored under `UserDefaults` key `grokbot.iconOverride`; mapped to `IconState.overridden`.
 
 ## Testing checklist
 

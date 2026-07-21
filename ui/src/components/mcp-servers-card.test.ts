@@ -1,6 +1,6 @@
 /* @vitest-environment jsdom */
 
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { ApplicationContext, ApplicationGateway } from "../app/context.ts";
 import { i18n } from "../i18n/index.ts";
@@ -11,7 +11,7 @@ import {
 import { waitForFast } from "../test-helpers/wait-for.ts";
 import "./mcp-servers-card.ts";
 
-type McpServersCard = HTMLElementTagNameMap["openclaw-mcp-servers-card"];
+type McpServersCard = HTMLElementTagNameMap["grokbot-mcp-servers-card"];
 
 type RuntimeConfigHarness = {
   runtimeConfig: ApplicationContext["runtimeConfig"];
@@ -111,7 +111,7 @@ async function mountCard(
     basePath: "",
   } as unknown as ApplicationContext;
   const provider = createApplicationContextProvider(context);
-  const card = document.createElement("openclaw-mcp-servers-card");
+  const card = document.createElement("grokbot-mcp-servers-card");
   card.pluginsHref = "/settings/plugins";
   provider.append(card);
   document.body.append(provider);
@@ -155,7 +155,7 @@ function firstPatchCall(harness: RuntimeConfigHarness) {
   );
 }
 
-describe("openclaw-mcp-servers-card", () => {
+describe("grokbot-mcp-servers-card", () => {
   beforeEach(async () => {
     await i18n.setLocale("en");
   });
@@ -199,13 +199,13 @@ describe("openclaw-mcp-servers-card", () => {
     const docs = expectDefined(card.querySelector('[data-mcp-name="docs"]'), "docs row");
     expect(docs.textContent).toContain("https://mcp.example.com/mcp?keep=visible&token=***");
     expect(docs.textContent).toContain("sse · oauth · tool filter · TLS verify off");
-    expect(docs.textContent).toContain("openclaw mcp login docs");
+    expect(docs.textContent).toContain("grokbot mcp login docs");
     expect(docs.textContent).not.toContain("test-token");
 
     const local = expectDefined(card.querySelector('[data-mcp-name="local"]'), "local row");
     expect(local.textContent).toContain("node");
     expect(local.textContent).toContain("stdio · parallel · mTLS");
-    expect(local.textContent).toContain("openclaw mcp probe local");
+    expect(local.textContent).toContain("grokbot mcp probe local");
     expect(local.textContent).not.toContain("server.js");
     expect(local.textContent).not.toContain("test-token");
 
@@ -219,7 +219,7 @@ describe("openclaw-mcp-servers-card", () => {
       card.querySelector('[data-mcp-name="docs; echo unsafe"]'),
       "hostile-name row",
     );
-    expect(hostile.textContent).toContain("openclaw mcp probe 'docs; echo unsafe'");
+    expect(hostile.textContent).toContain("grokbot mcp probe 'docs; echo unsafe'");
   });
 
   it("renders the empty state when no servers are configured", async () => {

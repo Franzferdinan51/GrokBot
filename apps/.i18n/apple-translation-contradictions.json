@@ -798,31 +798,31 @@
     },
     {
       "locale": "fr",
-      "source": "Asking OpenClaw",
+      "source": "Asking GrokBot",
       "translations": [
-        "Demande à OpenClaw",
-        "Interrogation d’OpenClaw"
+        "Demande à GrokBot",
+        "Interrogation d’GrokBot"
       ]
     },
     {
       "locale": "id",
-      "source": "Asking OpenClaw",
+      "source": "Asking GrokBot",
       "translations": [
-        "Bertanya kepada OpenClaw",
-        "Meminta OpenClaw"
+        "Bertanya kepada GrokBot",
+        "Meminta GrokBot"
       ]
     },
     {
       "locale": "ja-JP",
-      "source": "Asking OpenClaw",
+      "source": "Asking GrokBot",
       "translations": [
-        "OpenClaw に問い合わせ中",
+        "GrokBot に問い合わせ中",
         "OpenClawに問い合わせ中"
       ]
     },
     {
       "locale": "ko",
-      "source": "Asking OpenClaw",
+      "source": "Asking GrokBot",
       "translations": [
         "OpenClaw에 문의 중",
         "OpenClaw에 요청 중"
@@ -830,18 +830,18 @@
     },
     {
       "locale": "pl",
-      "source": "Asking OpenClaw",
+      "source": "Asking GrokBot",
       "translations": [
-        "Pytanie OpenClaw",
-        "Pytanie do OpenClaw"
+        "Pytanie GrokBot",
+        "Pytanie do GrokBot"
       ]
     },
     {
       "locale": "tr",
-      "source": "Asking OpenClaw",
+      "source": "Asking GrokBot",
       "translations": [
-        "OpenClaw'a soruluyor",
-        "OpenClaw’a soruluyor"
+        "GrokBot'a soruluyor",
+        "GrokBot’a soruluyor"
       ]
     },
     {
@@ -6303,79 +6303,79 @@
     },
     {
       "locale": "ar",
-      "source": "OpenClaw cannot determine the current iOS location permission.",
+      "source": "GrokBot cannot determine the current iOS location permission.",
       "translations": [
-        "لا يستطيع OpenClaw تحديد إذن الموقع الحالي في iOS.",
-        "يتعذّر على OpenClaw تحديد إذن الموقع الحالي في iOS."
+        "لا يستطيع GrokBot تحديد إذن الموقع الحالي في iOS.",
+        "يتعذّر على GrokBot تحديد إذن الموقع الحالي في iOS."
       ]
     },
     {
       "locale": "fr",
-      "source": "OpenClaw cannot determine the current iOS location permission.",
+      "source": "GrokBot cannot determine the current iOS location permission.",
       "translations": [
-        "OpenClaw ne peut pas déterminer l'autorisation de localisation iOS actuelle.",
-        "OpenClaw ne peut pas déterminer l’autorisation de localisation iOS actuelle."
+        "GrokBot ne peut pas déterminer l'autorisation de localisation iOS actuelle.",
+        "GrokBot ne peut pas déterminer l’autorisation de localisation iOS actuelle."
       ]
     },
     {
       "locale": "hi",
-      "source": "OpenClaw cannot determine the current iOS location permission.",
+      "source": "GrokBot cannot determine the current iOS location permission.",
       "translations": [
-        "OpenClaw वर्तमान iOS लोकेशन अनुमति निर्धारित नहीं कर सकता।",
-        "OpenClaw वर्तमान iOS स्थान अनुमति निर्धारित नहीं कर सकता।"
+        "GrokBot वर्तमान iOS लोकेशन अनुमति निर्धारित नहीं कर सकता।",
+        "GrokBot वर्तमान iOS स्थान अनुमति निर्धारित नहीं कर सकता।"
       ]
     },
     {
       "locale": "it",
-      "source": "OpenClaw cannot determine the current iOS location permission.",
+      "source": "GrokBot cannot determine the current iOS location permission.",
       "translations": [
-        "OpenClaw non può determinare l’autorizzazione alla posizione iOS attuale.",
-        "OpenClaw non riesce a determinare l'attuale autorizzazione alla posizione di iOS."
+        "GrokBot non può determinare l’autorizzazione alla posizione iOS attuale.",
+        "GrokBot non riesce a determinare l'attuale autorizzazione alla posizione di iOS."
       ]
     },
     {
       "locale": "ja-JP",
-      "source": "OpenClaw cannot determine the current iOS location permission.",
+      "source": "GrokBot cannot determine the current iOS location permission.",
       "translations": [
-        "OpenClaw は現在の iOS 位置情報の権限を確認できません。",
-        "OpenClaw は現在の iOS 位置情報許可を判別できません。"
+        "GrokBot は現在の iOS 位置情報の権限を確認できません。",
+        "GrokBot は現在の iOS 位置情報許可を判別できません。"
       ]
     },
     {
       "locale": "ru",
-      "source": "OpenClaw cannot determine the current iOS location permission.",
+      "source": "GrokBot cannot determine the current iOS location permission.",
       "translations": [
-        "OpenClaw не может определить текущее разрешение iOS на доступ к местоположению.",
-        "OpenClaw не удается определить текущее разрешение iOS на доступ к геопозиции."
+        "GrokBot не может определить текущее разрешение iOS на доступ к местоположению.",
+        "GrokBot не удается определить текущее разрешение iOS на доступ к геопозиции."
       ]
     },
     {
       "locale": "th",
-      "source": "OpenClaw cannot determine the current iOS location permission.",
+      "source": "GrokBot cannot determine the current iOS location permission.",
       "translations": [
-        "OpenClaw ไม่สามารถระบุการอนุญาตตำแหน่งที่ตั้งของ iOS ในปัจจุบันได้",
-        "OpenClaw ไม่สามารถระบุการอนุญาตตำแหน่งที่ตั้งปัจจุบันของ iOS ได้"
+        "GrokBot ไม่สามารถระบุการอนุญาตตำแหน่งที่ตั้งของ iOS ในปัจจุบันได้",
+        "GrokBot ไม่สามารถระบุการอนุญาตตำแหน่งที่ตั้งปัจจุบันของ iOS ได้"
       ]
     },
     {
       "locale": "tr",
-      "source": "OpenClaw cannot determine the current iOS location permission.",
+      "source": "GrokBot cannot determine the current iOS location permission.",
       "translations": [
-        "OpenClaw geçerli iOS konum iznini belirleyemiyor.",
-        "OpenClaw mevcut iOS konum iznini belirleyemiyor."
+        "GrokBot geçerli iOS konum iznini belirleyemiyor.",
+        "GrokBot mevcut iOS konum iznini belirleyemiyor."
       ]
     },
     {
       "locale": "uk",
-      "source": "OpenClaw cannot determine the current iOS location permission.",
+      "source": "GrokBot cannot determine the current iOS location permission.",
       "translations": [
-        "OpenClaw не може визначити поточний дозвіл iOS на геолокацію.",
-        "OpenClaw не може визначити поточний дозвіл iOS на доступ до геолокації."
+        "GrokBot не може визначити поточний дозвіл iOS на геолокацію.",
+        "GrokBot не може визначити поточний дозвіл iOS на доступ до геолокації."
       ]
     },
     {
       "locale": "ko",
-      "source": "OpenClaw unavailable",
+      "source": "GrokBot unavailable",
       "translations": [
         "OpenClaw를 사용할 수 없습니다",
         "OpenClaw을 사용할 수 없습니다"
@@ -9593,17 +9593,17 @@
     },
     {
       "locale": "hi",
-      "source": "Updating OpenClaw",
+      "source": "Updating GrokBot",
       "translations": [
-        "OpenClaw अपडेट किया जा रहा है",
-        "OpenClaw को अपडेट किया जा रहा है"
+        "GrokBot अपडेट किया जा रहा है",
+        "GrokBot को अपडेट किया जा रहा है"
       ]
     },
     {
       "locale": "ja-JP",
-      "source": "Updating OpenClaw",
+      "source": "Updating GrokBot",
       "translations": [
-        "OpenClaw を更新中",
+        "GrokBot を更新中",
         "OpenClawを更新中"
       ]
     },

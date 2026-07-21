@@ -6,15 +6,15 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 source "$ROOT_DIR/scripts/lib/docker-e2e-image.sh"
 
-IMAGE_NAME="$(docker_e2e_resolve_image "openclaw-mcp-code-mode-gateway-live-e2e" OPENCLAW_IMAGE)"
+IMAGE_NAME="$(docker_e2e_resolve_image "grokbot-mcp-code-mode-gateway-live-e2e" OPENCLAW_IMAGE)"
 PORT="$(docker_e2e_read_tcp_port_env OPENCLAW_MCP_CODE_MODE_LIVE_GATEWAY_PORT 18789)"
 CLIENT_TIMEOUT_MS="$(docker_e2e_read_positive_int_env OPENCLAW_MCP_CODE_MODE_CLIENT_TIMEOUT_MS 300000)"
 CLIENT_BODY_MAX_BYTES="$(docker_e2e_read_positive_int_env OPENCLAW_MCP_CODE_MODE_CLIENT_BODY_MAX_BYTES 1048576)"
 TOKEN="mcp-code-mode-live-e2e-$(date +%s)-$$"
-CONTAINER_NAME="openclaw-mcp-code-mode-live-e2e-$$"
-PROFILE_FILE="${OPENCLAW_MCP_CODE_MODE_LIVE_PROFILE_FILE:-${OPENCLAW_TESTBOX_PROFILE_FILE:-$HOME/.openclaw-testbox-live.profile}}"
+CONTAINER_NAME="grokbot-mcp-code-mode-live-e2e-$$"
+PROFILE_FILE="${OPENCLAW_MCP_CODE_MODE_LIVE_PROFILE_FILE:-${OPENCLAW_TESTBOX_PROFILE_FILE:-$HOME/.grokbot-testbox-live.profile}}"
 
-CLIENT_LOG="$(mktemp -t openclaw-mcp-code-mode-live-log.XXXXXX)"
+CLIENT_LOG="$(mktemp -t grokbot-mcp-code-mode-live-log.XXXXXX)"
 
 cleanup() {
   docker_e2e_docker_cmd rm -f "$CONTAINER_NAME" >/dev/null 2>&1 || true
@@ -44,7 +44,7 @@ fi
 docker_e2e_build_or_reuse "$IMAGE_NAME" mcp-code-mode-gateway-live
 OPENCLAW_TEST_STATE_SCRIPT_B64="$(docker_e2e_test_state_shell_b64 mcp-code-mode-gateway-live empty)"
 
-# The profile is only a credential source. Keep this lane's OpenClaw runtime
+# The profile is only a credential source. Keep this lane's GrokBot runtime
 # isolated from host/testbox mode flags that can change packaged behavior.
 unset OPENCLAW_TESTBOX
 
@@ -70,11 +70,11 @@ docker_e2e_run_with_harness \
   -e "OPENCLAW_MCP_CODE_MODE_CLIENT_TIMEOUT_MS=$CLIENT_TIMEOUT_MS" \
   -e "OPENCLAW_MCP_CODE_MODE_CLIENT_BODY_MAX_BYTES=$CLIENT_BODY_MAX_BYTES" \
   -e "OPENCLAW_ALLOW_INSECURE_PRIVATE_WS=1" \
-  -e "OPENCLAW_MCP_CODE_MODE_MODEL=${OPENCLAW_MCP_CODE_MODE_LIVE_MODEL:-openclaw/main}" \
+  -e "OPENCLAW_MCP_CODE_MODE_MODEL=${OPENCLAW_MCP_CODE_MODE_LIVE_MODEL:-grokbot/main}" \
   "${PROFILE_MOUNT[@]}" \
   "$IMAGE_NAME" \
   bash -lc "set -euo pipefail
-    source scripts/lib/openclaw-e2e-instance.sh
+    source scripts/lib/grokbot-e2e-instance.sh
     for profile_path in \"\$HOME/.profile\" /home/appuser/.profile; do
       if [ -f \"\$profile_path\" ] && [ -r \"\$profile_path\" ]; then
         set +e +u

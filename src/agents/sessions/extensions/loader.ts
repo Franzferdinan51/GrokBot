@@ -9,7 +9,7 @@ import * as os from "node:os";
 import * as path from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import type { createJiti } from "jiti/static";
-import * as bundledLlm from "openclaw/plugin-sdk/llm";
+import * as bundledLlm from "grokbot/plugin-sdk/llm";
 // Static imports of packages that extensions may use.
 // These MUST be static so Bun bundles them into the compiled binary.
 // The virtualModules option then makes them available to extensions.
@@ -106,12 +106,12 @@ const VIRTUAL_MODULES: Record<string, unknown> = {
   "@sinclair/typebox/compile": bundledTypeboxCompile,
   "@sinclair/typebox/format": bundledTypeboxFormat,
   "@sinclair/typebox/value": bundledTypeboxValue,
-  "openclaw/plugin-sdk/agent-core": bundledAgentCore,
-  "@openclaw/plugin-sdk/agent-core": bundledAgentCore,
-  "openclaw/plugin-sdk/llm": bundledLlm,
-  "@openclaw/plugin-sdk/llm": bundledLlm,
-  "openclaw/plugin-sdk/agent-sessions": bundledAgentSessions,
-  "@openclaw/plugin-sdk/agent-sessions": bundledAgentSessions,
+  "grokbot/plugin-sdk/agent-core": bundledAgentCore,
+  "@grokbot/plugin-sdk/agent-core": bundledAgentCore,
+  "grokbot/plugin-sdk/llm": bundledLlm,
+  "@grokbot/plugin-sdk/llm": bundledLlm,
+  "grokbot/plugin-sdk/agent-sessions": bundledAgentSessions,
+  "@grokbot/plugin-sdk/agent-sessions": bundledAgentSessions,
 };
 
 const require = createRequire(import.meta.url);
@@ -125,7 +125,7 @@ let extensionCacheCwd: string | undefined;
 let extensionCacheGeneration = 0;
 const extensionFactoryCache = new Map<string, ExtensionFactory>();
 const EXTENSION_LOADER_ALIAS_IMPORT_PATTERN =
-  /(?:@openclaw\/plugin-sdk|openclaw\/plugin-sdk|@sinclair\/typebox|typebox)(?:\/[A-Za-z0-9_-]+)?/u;
+  /(?:@grokbot\/plugin-sdk|grokbot\/plugin-sdk|@sinclair\/typebox|typebox)(?:\/[A-Za-z0-9_-]+)?/u;
 const RELATIVE_EXTENSION_IMPORT_PATTERN =
   /(?:import\s*(?:[^'"]*?\s*from\s*)?["']\.{1,2}\/|export\s*(?:[^'"]*?\s*from\s*)["']\.{1,2}\/|import\s*\(\s*["']\.{1,2}\/|require\s*\(\s*["']\.{1,2}\/)/u;
 const COMMONJS_EXTENSION_EXPORT_PATTERN = /\b(?:module\.exports|exports\.)/u;
@@ -164,8 +164,8 @@ function getExtensionLoaderAliases(): Record<string, string> {
     ...buildPluginLoaderAliasMap(loaderModulePath, process.argv[1], import.meta.url),
     // The public agent-sessions export includes the resource loader. Extensions
     // load through the resource loader, so use the cycle-safe SDK barrel here.
-    "openclaw/plugin-sdk/agent-sessions": agentSessionsEntry,
-    "@openclaw/plugin-sdk/agent-sessions": agentSessionsEntry,
+    "grokbot/plugin-sdk/agent-sessions": agentSessionsEntry,
+    "@grokbot/plugin-sdk/agent-sessions": agentSessionsEntry,
     typebox: typeboxEntry,
     "typebox/compile": typeboxCompileEntry,
     "typebox/format": typeboxFormatEntry,

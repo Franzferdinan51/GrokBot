@@ -9,13 +9,13 @@ The WhatsApp channel runs on Baileys Web. This page covers media handling rules 
 
 ## Goals
 
-- Send media with an optional caption via `openclaw message send --media`.
+- Send media with an optional caption via `grokbot message send --media`.
 - Allow auto-replies from the web inbox to include media alongside text.
 - Keep per-type limits sane and predictable.
 
 ## CLI Surface
 
-`openclaw message send --target <dest> --media <path-or-url> [--message <caption>]`
+`grokbot message send --target <dest> --media <path-or-url> [--message <caption>]`
 
 - `--media <path-or-url>` — attach media (image/audio/video/document); accepts local paths or URLs. Optional; caption can be empty for media-only sends.
 - `--gif-playback` — treat video media as GIF playback (WhatsApp only).
@@ -44,19 +44,19 @@ The 16MB audio/video and 100MB document figures above are the shared per-kind me
 ## Auto-Reply Pipeline
 
 - `getReplyFromConfig` returns a reply payload (or array of payloads) with `text?`, `mediaUrl?`, and `mediaUrls?` among other fields.
-- When media is present, the web sender resolves local paths or URLs using the same pipeline as `openclaw message send`.
+- When media is present, the web sender resolves local paths or URLs using the same pipeline as `grokbot message send`.
 - Multiple media entries are sent sequentially if provided.
 
 ## Inbound Media To Commands
 
-- When inbound web messages include media, OpenClaw downloads it to a temp file and exposes templating variables:
+- When inbound web messages include media, GrokBot downloads it to a temp file and exposes templating variables:
   - `{{MediaUrl}}` — pseudo-URL for the inbound media.
   - `{{MediaPath}}` — local temp path written before running the command.
 - When a per-session Docker sandbox is enabled, inbound media is copied into the sandbox workspace and `MediaPath`/`MediaUrl` are rewritten to a sandbox-relative path like `media/inbound/<filename>`.
 - Media understanding (configured via `tools.media.*` or shared `tools.media.models`) runs before templating and can insert `[Image]`, `[Audio]`, and `[Video]` blocks into `Body`.
   - Audio sets `{{Transcript}}` and uses the transcript for command parsing so slash commands still work.
   - Video and image descriptions preserve any caption text for command parsing.
-  - If the active primary model already supports vision natively, OpenClaw skips the `[Image]` summary block and passes the original image to the model instead.
+  - If the active primary model already supports vision natively, GrokBot skips the `[Image]` summary block and passes the original image to the model instead.
 - By default only the first matching image/audio/video attachment is processed; set `tools.media.<capability>.attachments` to process multiple attachments.
 
 ## Limits and errors

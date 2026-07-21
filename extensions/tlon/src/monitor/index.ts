@@ -1,11 +1,11 @@
-import { resolveHumanDelayConfig } from "openclaw/plugin-sdk/agent-runtime";
-import { createChannelInboundEnvelopeBuilder } from "openclaw/plugin-sdk/channel-inbound";
-import { bindIngressLifecycleToReplyOptions } from "openclaw/plugin-sdk/channel-outbound";
-import type { ReplyPayload } from "openclaw/plugin-sdk/reply-runtime";
-import type { RuntimeEnv } from "openclaw/plugin-sdk/runtime";
-import { sleepWithAbort } from "openclaw/plugin-sdk/runtime-env";
-import { asFiniteNumber } from "openclaw/plugin-sdk/string-coerce-runtime";
-import { sliceUtf16Safe } from "openclaw/plugin-sdk/text-utility-runtime";
+import { resolveHumanDelayConfig } from "grokbot/plugin-sdk/agent-runtime";
+import { createChannelInboundEnvelopeBuilder } from "grokbot/plugin-sdk/channel-inbound";
+import { bindIngressLifecycleToReplyOptions } from "grokbot/plugin-sdk/channel-outbound";
+import type { ReplyPayload } from "grokbot/plugin-sdk/reply-runtime";
+import type { RuntimeEnv } from "grokbot/plugin-sdk/runtime";
+import { sleepWithAbort } from "grokbot/plugin-sdk/runtime-env";
+import { asFiniteNumber } from "grokbot/plugin-sdk/string-coerce-runtime";
+import { sliceUtf16Safe } from "grokbot/plugin-sdk/text-utility-runtime";
 import type { OpenClawConfig } from "../../runtime-api.js";
 import { createLoggerBackedRuntime } from "../../runtime-api.js";
 import { getTlonRuntime } from "../runtime.js";
@@ -440,7 +440,7 @@ export async function monitorTlonProvider(opts: MonitorTlonOpts = {}): Promise<v
       if (senders.size > 0 && !senders.has(senderShip)) {
         runtime.log?.(
           `[tlon] ⚠️ SECURITY: Multiple users sharing DM session. ` +
-            `Configure "session.dmScope: per-channel-peer" in OpenClaw config.`,
+            `Configure "session.dmScope: per-channel-peer" in GrokBot config.`,
         );
 
         if (!sharedSessionWarningSent && effectiveOwnerShip) {
@@ -448,9 +448,9 @@ export async function monitorTlonProvider(opts: MonitorTlonOpts = {}): Promise<v
           const warningMsg =
             `⚠️ Security Warning: Multiple users are sharing a DM session with this bot. ` +
             `This can leak conversation context between users.\n\n` +
-            `Fix: Add to your OpenClaw config:\n` +
+            `Fix: Add to your GrokBot config:\n` +
             `session:\n  dmScope: "per-channel-peer"\n\n` +
-            `Docs: https://docs.openclaw.ai/concepts/session#secure-dm-mode`;
+            `Docs: https://docs.grokbot.ai/concepts/session#secure-dm-mode`;
 
           sendDm({
             api,

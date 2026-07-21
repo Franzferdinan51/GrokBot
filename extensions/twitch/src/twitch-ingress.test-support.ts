@@ -4,8 +4,8 @@ import path from "node:path";
 import {
   closeOpenClawStateDatabaseForTest,
   createChannelIngressQueueForTests,
-} from "openclaw/plugin-sdk/plugin-state-test-runtime";
-import { resolvePreferredOpenClawTmpDir } from "openclaw/plugin-sdk/temp-path";
+} from "grokbot/plugin-sdk/plugin-state-test-runtime";
+import { resolvePreferredOpenClawTmpDir } from "grokbot/plugin-sdk/temp-path";
 import { expect, vi } from "vitest";
 import { createTwitchIngress } from "./twitch-ingress.js";
 import type { TwitchChatMessage } from "./types.js";
@@ -36,7 +36,7 @@ export async function withTwitchIngressTestQueue<T>(
   fn: (queue: TwitchIngressTestQueue) => Promise<T>,
 ): Promise<T> {
   const createdDir = await fs.mkdtemp(
-    path.join(resolvePreferredOpenClawTmpDir(), "openclaw-twitch-ingress-"),
+    path.join(resolvePreferredOpenClawTmpDir(), "grokbot-twitch-ingress-"),
   );
   const stateDir = await fs.realpath(createdDir);
   const previousStateDir = process.env.OPENCLAW_STATE_DIR;

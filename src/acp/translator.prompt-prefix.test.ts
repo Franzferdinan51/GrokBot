@@ -2,7 +2,7 @@
 import os from "node:os";
 import path from "node:path";
 import type { PromptRequest } from "@agentclientprotocol/sdk";
-import { createInMemorySessionStore } from "@openclaw/acp-core/session";
+import { createInMemorySessionStore } from "@grokbot/acp-core/session";
 import { describe, expect, it, vi } from "vitest";
 import type { GatewayClient } from "../gateway/client.js";
 import { withEnvAsync } from "../test-utils/env.js";
@@ -48,7 +48,7 @@ describe("acp prompt cwd prefix", () => {
     sessionStore.createSession({
       sessionId: TEST_SESSION_ID,
       sessionKey: TEST_SESSION_KEY,
-      cwd: options.cwd ?? path.join(os.homedir(), "openclaw-test"),
+      cwd: options.cwd ?? path.join(os.homedir(), "grokbot-test"),
     });
 
     const requestSpy = createStopAfterSendSpy();
@@ -80,16 +80,16 @@ describe("acp prompt cwd prefix", () => {
   }
 
   it("redacts home directory in prompt prefix", async () => {
-    const requestSpy = await runPromptWithCwd(path.join(os.homedir(), "openclaw-test"));
+    const requestSpy = await runPromptWithCwd(path.join(os.homedir(), "grokbot-test"));
     const payload = chatSendPayload(requestSpy);
     expect(typeof payload.message).toBe("string");
-    expect(payload.message).toMatch(/\[Working directory: ~[\\/]openclaw-test\]/);
+    expect(payload.message).toMatch(/\[Working directory: ~[\\/]grokbot-test\]/);
   });
 
   it("keeps backslash separators when cwd uses them", async () => {
-    const requestSpy = await runPromptWithCwd(`${os.homedir()}\\openclaw-test`);
+    const requestSpy = await runPromptWithCwd(`${os.homedir()}\\grokbot-test`);
     const payload = chatSendPayload(requestSpy);
-    expect(payload.message).toContain("[Working directory: ~\\openclaw-test]");
+    expect(payload.message).toContain("[Working directory: ~\\grokbot-test]");
   });
 
   it("injects system provenance metadata when enabled", async () => {
@@ -116,7 +116,7 @@ describe("acp prompt cwd prefix", () => {
     expect(typeof payload.systemProvenanceReceipt).toBe("string");
     const receipt = payload.systemProvenanceReceipt as string;
     expect(receipt).toContain("[Source Receipt]");
-    expect(receipt).toContain("bridge=openclaw-acp");
+    expect(receipt).toContain("bridge=grokbot-acp");
     expect(receipt).toContain(`originSessionId=${TEST_SESSION_ID}`);
     expect(receipt).toContain(`targetSession=${TEST_SESSION_KEY}`);
   });
@@ -143,7 +143,7 @@ describe("acp prompt cwd prefix", () => {
     sessionStore.createSession({
       sessionId: TEST_SESSION_ID,
       sessionKey: TEST_SESSION_KEY,
-      cwd: path.join(os.homedir(), "openclaw-test"),
+      cwd: path.join(os.homedir(), "grokbot-test"),
     });
     const agent = new AcpGatewayAgent(
       createAcpConnection(),

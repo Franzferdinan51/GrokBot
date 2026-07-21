@@ -1,16 +1,16 @@
 // Covers the promotions feed cache: refresh cadence, 304 revalidation,
 // sequence monotonicity, notified markers, and claim provenance.
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import type { DB as OpenClawStateKyselyDatabase } from "../state/openclaw-state-db.generated.js";
+import type { DB as OpenClawStateKyselyDatabase } from "../state/grokbot-state-db.generated.js";
 import {
   closeOpenClawStateDatabaseForTest,
   runOpenClawStateWriteTransaction,
-} from "../state/openclaw-state-db.js";
+} from "../state/grokbot-state-db.js";
 import { useMockHttp } from "../test-utils/mock-http.js";
 import {
   createOpenClawTestState,
   type OpenClawTestState,
-} from "../test-utils/openclaw-test-state.js";
+} from "../test-utils/grokbot-test-state.js";
 import { executeSqliteQuerySync, getNodeSqliteKysely } from "./kysely-sync.js";
 import {
   listLivePromotionEntries,
@@ -54,7 +54,7 @@ describe("promotions feed state", () => {
   beforeEach(async () => {
     testState = await createOpenClawTestState({
       layout: "state-only",
-      prefix: "openclaw-promotions-feed-",
+      prefix: "grokbot-promotions-feed-",
     });
   });
 

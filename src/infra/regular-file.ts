@@ -7,4 +7,4 @@ export {
   appendRegularFileSync,
   readRegularFile,
   readRegularFileSync,
-} from "@openclaw/fs-safe/advanced";
+} from "@grokbot/fs-safe/advanced";

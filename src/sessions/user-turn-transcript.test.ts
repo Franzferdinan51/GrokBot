@@ -2,7 +2,7 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { castAgentMessage } from "openclaw/plugin-sdk/test-fixtures";
+import { castAgentMessage } from "grokbot/plugin-sdk/test-fixtures";
 import { afterEach, describe, expect, it } from "vitest";
 import { loadTranscriptEvents } from "../config/sessions/session-accessor.js";
 import { formatSqliteSessionFileMarker } from "../config/sessions/sqlite-marker.js";
@@ -22,7 +22,7 @@ describe("user turn transcript persistence", () => {
     sessionEntry: undefined,
     sessionId: "unused-session",
     sessionKey: "agent:main:unused",
-    storePath: "/tmp/openclaw-unused-sessions.json",
+    storePath: "/tmp/grokbot-unused-sessions.json",
   };
 
   afterEach(() => {
@@ -131,7 +131,7 @@ describe("user turn transcript persistence", () => {
     });
 
     it("resolves staged relative media paths against the media workspace", () => {
-      const workspaceDir = createTempDir("openclaw-user-turn-media-");
+      const workspaceDir = createTempDir("grokbot-user-turn-media-");
 
       expect(
         buildPersistedUserTurnMediaInputsFromFields({
@@ -148,7 +148,7 @@ describe("user turn transcript persistence", () => {
     });
 
     it("does not rewrite absolute or URL-like media paths", () => {
-      const workspaceDir = createTempDir("openclaw-user-turn-media-");
+      const workspaceDir = createTempDir("grokbot-user-turn-media-");
       const absolutePath = path.join(workspaceDir, "media/inbound/a.png");
 
       expect(
@@ -338,7 +338,7 @@ describe("user turn transcript persistence", () => {
 
   describe("persistUserTurnTranscript", () => {
     it("resolves the session file and persists the user turn", async () => {
-      const dir = createTempDir("openclaw-user-turn-persist-");
+      const dir = createTempDir("grokbot-user-turn-persist-");
       const target = createSqliteTranscriptTarget({ dir });
       const sessionStore = {
         [target.sessionKey]: {
@@ -375,7 +375,7 @@ describe("user turn transcript persistence", () => {
 
   describe("createUserTurnTranscriptRecorder", () => {
     it("persists fallback user turns only once", async () => {
-      const dir = createTempDir("openclaw-user-turn-recorder-fallback-");
+      const dir = createTempDir("grokbot-user-turn-recorder-fallback-");
       const target = createSqliteTranscriptTarget({ dir });
       const recorder = createUserTurnTranscriptRecorder({
         input: {
@@ -408,7 +408,7 @@ describe("user turn transcript persistence", () => {
     });
 
     it("notifies once after fallback user-turn persistence", async () => {
-      const dir = createTempDir("openclaw-user-turn-recorder-notify-");
+      const dir = createTempDir("grokbot-user-turn-recorder-notify-");
       const target = createSqliteTranscriptTarget({ dir });
       const persistedMessages: unknown[] = [];
       const recorder = createUserTurnTranscriptRecorder({
@@ -444,7 +444,7 @@ describe("user turn transcript persistence", () => {
     });
 
     it("resolves media lazily at persistence time", async () => {
-      const dir = createTempDir("openclaw-user-turn-recorder-lazy-media-");
+      const dir = createTempDir("grokbot-user-turn-recorder-lazy-media-");
       const target = createSqliteTranscriptTarget({ dir });
       let resolverCalled = false;
       const recorder = createUserTurnTranscriptRecorder({
@@ -498,7 +498,7 @@ describe("user turn transcript persistence", () => {
     });
 
     it("appends #99495 media that resolves after the admitted turn reached the provider", async () => {
-      const dir = createTempDir("openclaw-user-turn-recorder-late-media-");
+      const dir = createTempDir("grokbot-user-turn-recorder-late-media-");
       const target = createSqliteTranscriptTarget({ dir });
       const admittedInput = {
         text: "describe this",
@@ -561,7 +561,7 @@ describe("user turn transcript persistence", () => {
     });
 
     it("preserves distinct text supplied with late-resolved media", async () => {
-      const dir = createTempDir("openclaw-user-turn-recorder-late-caption-");
+      const dir = createTempDir("grokbot-user-turn-recorder-late-caption-");
       const target = createSqliteTranscriptTarget({ dir });
       const admittedInput = {
         text: "describe this",
@@ -607,7 +607,7 @@ describe("user turn transcript persistence", () => {
     });
 
     it("keeps #99495 media inline when it resolves before first serialization", async () => {
-      const dir = createTempDir("openclaw-user-turn-recorder-early-media-");
+      const dir = createTempDir("grokbot-user-turn-recorder-early-media-");
       const target = createSqliteTranscriptTarget({ dir });
       const recorder = createUserTurnTranscriptRecorder({
         input: {
@@ -639,7 +639,7 @@ describe("user turn transcript persistence", () => {
     });
 
     it("falls back to the admitted text message when lazy media resolution fails", async () => {
-      const dir = createTempDir("openclaw-user-turn-recorder-lazy-failed-");
+      const dir = createTempDir("grokbot-user-turn-recorder-lazy-failed-");
       const target = createSqliteTranscriptTarget({ dir });
       const errors: unknown[] = [];
       const recorder = createUserTurnTranscriptRecorder({
@@ -677,7 +677,7 @@ describe("user turn transcript persistence", () => {
     });
 
     it("does not fallback-persist after runtime persistence is marked", async () => {
-      const dir = createTempDir("openclaw-user-turn-recorder-runtime-");
+      const dir = createTempDir("grokbot-user-turn-recorder-runtime-");
       const target = createSqliteTranscriptTarget({ dir });
       const recorder = createUserTurnTranscriptRecorder({
         input: {
@@ -701,7 +701,7 @@ describe("user turn transcript persistence", () => {
     });
 
     it("approved persistence skips file targets after runtime persistence is marked", async () => {
-      const dir = createTempDir("openclaw-user-turn-recorder-runtime-approved-");
+      const dir = createTempDir("grokbot-user-turn-recorder-runtime-approved-");
       const target = createSqliteTranscriptTarget({ dir });
       const recorder = createUserTurnTranscriptRecorder({
         input: {
@@ -725,7 +725,7 @@ describe("user turn transcript persistence", () => {
     });
 
     it("approved persistence does not duplicate runtime-owned SQLite turns", async () => {
-      const dir = createTempDir("openclaw-user-turn-recorder-runtime-canonical-");
+      const dir = createTempDir("grokbot-user-turn-recorder-runtime-canonical-");
       const storePath = path.join(dir, "sessions.json");
       const sessionStore = {};
       const recorder = createUserTurnTranscriptRecorder({
@@ -761,7 +761,7 @@ describe("user turn transcript persistence", () => {
     });
 
     it("does not fallback-persist after before_agent_run blocks the turn", async () => {
-      const dir = createTempDir("openclaw-user-turn-recorder-blocked-");
+      const dir = createTempDir("grokbot-user-turn-recorder-blocked-");
       const target = createSqliteTranscriptTarget({ dir });
       const recorder = createUserTurnTranscriptRecorder({
         input: {
@@ -781,7 +781,7 @@ describe("user turn transcript persistence", () => {
     });
 
     it("uses the runtime target supplied at approved persistence time", async () => {
-      const dir = createTempDir("openclaw-user-turn-recorder-target-");
+      const dir = createTempDir("grokbot-user-turn-recorder-target-");
       const staleTarget = createSqliteTranscriptTarget({ dir, sessionId: "stale-session" });
       const admittedTarget = createSqliteTranscriptTarget({ dir, sessionId: "admitted-session" });
       const recorder = createUserTurnTranscriptRecorder({
@@ -812,7 +812,7 @@ describe("user turn transcript persistence", () => {
     });
 
     it("waits for runtime persistence before deciding fallback ownership", async () => {
-      const dir = createTempDir("openclaw-user-turn-recorder-pending-");
+      const dir = createTempDir("grokbot-user-turn-recorder-pending-");
       const target = createSqliteTranscriptTarget({ dir });
       let releaseRuntimePersistence!: () => void;
       const runtimePersistenceStarted = new Promise<void>((resolve) => {
@@ -854,7 +854,7 @@ describe("user turn transcript persistence", () => {
     });
 
     it("fallback-persists when pending runtime persistence fails", async () => {
-      const dir = createTempDir("openclaw-user-turn-recorder-pending-failed-");
+      const dir = createTempDir("grokbot-user-turn-recorder-pending-failed-");
       const target = createSqliteTranscriptTarget({ dir });
       const errors: unknown[] = [];
       let rejectRuntimePersistence!: (error: unknown) => void;

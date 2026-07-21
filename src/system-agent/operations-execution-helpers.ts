@@ -153,7 +153,7 @@ export async function resolveChannelSetupState(deps: SystemAgentCommandDeps | un
 }
 
 export function formatChannelDocsUrl(docsPath: string): string {
-  return `https://docs.openclaw.ai${docsPath.startsWith("/") ? docsPath : `/${docsPath}`}`;
+  return `https://docs.grokbot.ai${docsPath.startsWith("/") ? docsPath : `/${docsPath}`}`;
 }
 
 export function formatConfigValidationLine(snapshot: ConfigFileSnapshot): string {
@@ -228,7 +228,7 @@ export type ExecuteOptions = {
 /**
  * One persistent operation = one audited apply. The shared wrapper owns the
  * approval gate, before/after config hashes, the audit record, and the
- * `[openclaw] running/done` markers the e2e lanes assert on; each spec only
+ * `[grokbot] running/done` markers the e2e lanes assert on; each spec only
  * describes what to run and what to record.
  */
 type PersistentApplyContext = {
@@ -260,7 +260,7 @@ export async function applyPersistentOperation(params: {
     runtime.log(message);
     return { applied: false, message };
   }
-  runtime.log(`[openclaw] running: ${auditOperation}`);
+  runtime.log(`[grokbot] running: ${auditOperation}`);
   const { readConfigFileSnapshot } = await loadConfigModule();
   const before = await readConfigFileSnapshot();
   const commit: PersistentApplyContext["commit"] = async (effect) => {
@@ -282,10 +282,10 @@ export async function applyPersistentOperation(params: {
     // The mutation already committed. Keep success truthful while making the
     // missing audit record visible to every CLI/chat capture surface.
     runtime.error(
-      `${outcome.summary}, but OpenClaw could not record its audit entry: ${formatErrorMessage(error)}`,
+      `${outcome.summary}, but GrokBot could not record its audit entry: ${formatErrorMessage(error)}`,
     );
   }
-  runtime.log(`[openclaw] done: ${auditOperation}`);
+  runtime.log(`[grokbot] done: ${auditOperation}`);
   return {
     applied: true,
     ...(outcome.bootstrapPending === undefined
@@ -380,7 +380,7 @@ export async function assertConfigWriteDoesNotBypassInferenceVerification(
       return;
     }
     throw new Error(
-      `Direct config writes cannot change plugin "${pluginId}" because it may back OpenClaw's own active inference route. Exit OpenClaw and edit it from a terminal.`,
+      `Direct config writes cannot change plugin "${pluginId}" because it may back GrokBot's own active inference route. Exit GrokBot and edit it from a terminal.`,
     );
   }
   const deniedRoot = segments[0]?.trim().toLowerCase() ?? "";
@@ -388,7 +388,7 @@ export async function assertConfigWriteDoesNotBypassInferenceVerification(
   throw new Error(
     denialReason
       ? `Direct config writes cannot change \`${deniedRoot}\` (${denialReason}).`
-      : "Direct config writes cannot change the default inference route or include alternate config. Use `set_default_model` (optionally with agentId) for an already configured route, or exit OpenClaw and run `openclaw onboard` to change provider/auth access.",
+      : "Direct config writes cannot change the default inference route or include alternate config. Use `set_default_model` (optionally with agentId) for an already configured route, or exit GrokBot and run `grokbot onboard` to change provider/auth access.",
   );
 }
 
@@ -404,14 +404,14 @@ async function verifyCurrentSetupInference(
   const before = await readConfigFileSnapshot();
   if (!before.exists || !before.valid) {
     throw new Error(
-      "OpenClaw setup requires a valid configured inference route. Exit OpenClaw and run `openclaw onboard`, then retry.",
+      "GrokBot setup requires a valid configured inference route. Exit GrokBot and run `grokbot onboard`, then retry.",
     );
   }
   const beforeConfig = before.runtimeConfig ?? before.config;
   const beforeRoute = await projectDefaultInferenceRoute(beforeConfig);
   if (!beforeRoute.route) {
     throw new Error(
-      "OpenClaw setup requires working inference first. Exit OpenClaw and run `openclaw onboard`, then retry.",
+      "GrokBot setup requires working inference first. Exit GrokBot and run `grokbot onboard`, then retry.",
     );
   }
   const verifyInferenceConfig =
@@ -420,7 +420,7 @@ async function verifyCurrentSetupInference(
   const verification = await verifyInferenceConfig({ config: beforeConfig, runtime });
   if (!verification.ok) {
     throw new Error(
-      `OpenClaw setup requires working inference first. The configured route failed a live check: ${verification.error} Exit OpenClaw and run \`openclaw onboard\`, then retry.`,
+      `GrokBot setup requires working inference first. The configured route failed a live check: ${verification.error} Exit GrokBot and run \`grokbot onboard\`, then retry.`,
     );
   }
 
@@ -456,13 +456,13 @@ export async function executeSetup(
   const defaultModel = overview.defaultModel?.trim();
   if (!defaultModel) {
     throw new Error(
-      "OpenClaw setup requires working inference first. Run `openclaw onboard` to configure and verify a default model, then start OpenClaw again.",
+      "GrokBot setup requires working inference first. Run `grokbot onboard` to configure and verify a default model, then start GrokBot again.",
     );
   }
   const requestedModel = operation.model?.trim();
   if (requestedModel && requestedModel !== defaultModel) {
     throw new Error(
-      `OpenClaw setup will preserve the verified default model ${defaultModel}. Exit OpenClaw and run \`openclaw onboard\` to stage, live-test, and save a different inference route.`,
+      `GrokBot setup will preserve the verified default model ${defaultModel}. Exit GrokBot and run \`grokbot onboard\` to stage, live-test, and save a different inference route.`,
     );
   }
   if (!opts.approved) {
@@ -476,12 +476,12 @@ export async function executeSetup(
   const verified = await verifyCurrentSetupInference(runtime, opts.deps);
   if (requestedModel && requestedModel !== verified.modelRef) {
     throw new Error(
-      `The verified default model is now ${verified.modelRef}, not ${requestedModel}. Review the current route or exit OpenClaw and run \`openclaw onboard\` before retrying setup.`,
+      `The verified default model is now ${verified.modelRef}, not ${requestedModel}. Review the current route or exit GrokBot and run \`grokbot onboard\` before retrying setup.`,
     );
   }
   const workspace = resolveUserPath(operation.workspace ?? process.cwd());
   return await applyPersistentOperation({
-    auditOperation: "openclaw.setup",
+    auditOperation: "grokbot.setup",
     operation,
     runtime,
     opts,
@@ -622,7 +622,7 @@ export async function executeSetDefaultModel(
                 "The final live inference test did not return a reusable session binding, so the requested model was not saved. Retry the model change.",
               );
             }
-            // The live probe can outlive the original OpenClaw authority.
+            // The live probe can outlive the original GrokBot authority.
             // Re-check it last, immediately before the writer crosses to disk.
             await opts.beforePersistentApply?.();
             persistedVerification = latestVerification;

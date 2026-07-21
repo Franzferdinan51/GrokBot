@@ -21,7 +21,7 @@ const {
   })),
 }));
 
-vi.mock("openclaw/plugin-sdk/provider-http", () => ({
+vi.mock("grokbot/plugin-sdk/provider-http", () => ({
   assertOkOrThrowHttpError: assertOkOrThrowHttpErrorMock,
   postJsonRequest: postJsonRequestMock,
   readProviderBinaryResponse: readProviderBinaryResponseMock,
@@ -152,8 +152,8 @@ describe("openrouter speech provider", () => {
       defaultHeaders: {
         Authorization: "Bearer sk-openrouter",
         "Content-Type": "application/json",
-        "HTTP-Referer": "https://openclaw.ai",
-        "X-OpenRouter-Title": "OpenClaw",
+        "HTTP-Referer": "https://grokbot.ai",
+        "X-OpenRouter-Title": "GrokBot",
       },
       provider: "openrouter",
       capability: "audio",
@@ -165,8 +165,8 @@ describe("openrouter speech provider", () => {
     expect(Object.fromEntries(headers.entries())).toEqual({
       authorization: "Bearer sk-openrouter",
       "content-type": "application/json",
-      "http-referer": "https://openclaw.ai",
-      "x-openrouter-title": "OpenClaw",
+      "http-referer": "https://grokbot.ai",
+      "x-openrouter-title": "GrokBot",
     });
     expect(request).toEqual({
       url: "https://openrouter.ai/api/v1/audio/speech",

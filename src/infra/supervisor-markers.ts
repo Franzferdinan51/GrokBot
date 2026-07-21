@@ -38,7 +38,7 @@ function hasAnyHint(env: NodeJS.ProcessEnv, keys: readonly string[]): boolean {
 
 function hasOpenClawGatewayServiceMarker(env: NodeJS.ProcessEnv): boolean {
   return (
-    env.OPENCLAW_SERVICE_MARKER?.trim() === "openclaw" &&
+    env.OPENCLAW_SERVICE_MARKER?.trim() === "grokbot" &&
     env.OPENCLAW_SERVICE_KIND?.trim() === "gateway"
   );
 }

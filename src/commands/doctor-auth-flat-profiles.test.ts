@@ -6,13 +6,13 @@ import {
   clearRuntimeAuthProfileStoreSnapshots,
   saveAuthProfileStore,
 } from "../agents/auth-profiles/store.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
-import { closeOpenClawAgentDatabasesForTest } from "../state/openclaw-agent-db.js";
-import { closeOpenClawStateDatabaseForTest } from "../state/openclaw-state-db.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
+import { closeOpenClawAgentDatabasesForTest } from "../state/grokbot-agent-db.js";
+import { closeOpenClawStateDatabaseForTest } from "../state/grokbot-state-db.js";
 import {
   createOpenClawTestState,
   type OpenClawTestState,
-} from "../test-utils/openclaw-test-state.js";
+} from "../test-utils/grokbot-test-state.js";
 import {
   collectOpenAICodexAuthProfileStoreIdMap,
   maybeMigrateAuthProfileJsonStoresToSqlite,
@@ -46,7 +46,7 @@ function makePrompter(shouldRepair: boolean): DoctorPrompter {
 async function makeTestState(): Promise<OpenClawTestState> {
   const state = await createOpenClawTestState({
     layout: "state-only",
-    prefix: "openclaw-doctor-flat-auth-",
+    prefix: "grokbot-doctor-flat-auth-",
     env: {
       OPENCLAW_AGENT_DIR: undefined,
     },

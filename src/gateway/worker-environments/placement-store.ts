@@ -5,7 +5,7 @@ import {
   openOpenClawStateDatabase,
   runOpenClawStateWriteTransaction,
   type OpenClawStateDatabase,
-} from "../../state/openclaw-state-db.js";
+} from "../../state/grokbot-state-db.js";
 import {
   assertRecordShape,
   nextGeneration,
@@ -161,7 +161,7 @@ export function createWorkerSessionPlacementStore(
       const stagedResultRef = required(conflict.stagedResultRef, "staged result ref");
       if (
         paths.length === 0 ||
-        !/^refs\/openclaw\/worker-results\/[A-Za-z0-9-]+$/u.test(stagedResultRef)
+        !/^refs\/grokbot\/worker-results\/[A-Za-z0-9-]+$/u.test(stagedResultRef)
       ) {
         throw new Error("Cloud workspace result conflict projection is invalid");
       }

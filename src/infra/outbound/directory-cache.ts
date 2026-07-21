@@ -1,8 +1,8 @@
 // Directory cache stores short-lived channel directory lookups and invalidates
 // them on config-object changes or resolver signature updates.
-import { resolveNonNegativeIntegerOption } from "@openclaw/normalization-core/number-coercion";
+import { resolveNonNegativeIntegerOption } from "@grokbot/normalization-core/number-coercion";
 import type { ChannelDirectoryEntryKind, ChannelId } from "../../channels/plugins/types.public.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 
 type CacheEntry<T> = {
   value: T;

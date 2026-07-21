@@ -9,7 +9,7 @@ const triggerOpenClawRestartMock = vi.hoisted(() => vi.fn());
 const isContainerEnvironmentMock = vi.hoisted(() => vi.fn(() => false));
 
 vi.mock("node:child_process", async () => {
-  const { mockNodeBuiltinModule } = await import("openclaw/plugin-sdk/test-node-mocks");
+  const { mockNodeBuiltinModule } = await import("grokbot/plugin-sdk/test-node-mocks");
   return mockNodeBuiltinModule(
     () => vi.importActual<typeof import("node:child_process")>("node:child_process"),
     {
@@ -68,7 +68,7 @@ function expectLaunchdSupervisedWithoutKickstart(params?: { launchJobLabel?: str
   if (params?.launchJobLabel) {
     process.env.LAUNCH_JOB_LABEL = params.launchJobLabel;
   }
-  process.env.OPENCLAW_LAUNCHD_LABEL = "ai.openclaw.gateway";
+  process.env.OPENCLAW_LAUNCHD_LABEL = "ai.grokbot.gateway";
   const result = restartGatewayProcessWithFreshPid();
   expect(result).toEqual({ mode: "supervised" });
   expect(triggerOpenClawRestartMock).not.toHaveBeenCalled();
@@ -87,7 +87,7 @@ describe("restartGatewayProcessWithFreshPid", () => {
     clearSupervisorHints();
     setPlatform("darwin");
     process.env.OPENCLAW_NO_RESPAWN = "1";
-    process.env.LAUNCH_JOB_LABEL = "ai.openclaw.gateway";
+    process.env.LAUNCH_JOB_LABEL = "ai.grokbot.gateway";
 
     const result = restartGatewayProcessWithFreshPid();
 
@@ -96,15 +96,15 @@ describe("restartGatewayProcessWithFreshPid", () => {
     expect(spawnMock).not.toHaveBeenCalled();
   });
 
-  it("returns supervised when OpenClaw launchd markers are present on macOS (no kickstart)", () => {
+  it("returns supervised when GrokBot launchd markers are present on macOS (no kickstart)", () => {
     clearSupervisorHints();
-    expectLaunchdSupervisedWithoutKickstart({ launchJobLabel: "ai.openclaw.gateway" });
+    expectLaunchdSupervisedWithoutKickstart({ launchJobLabel: "ai.grokbot.gateway" });
   });
 
   it("returns supervised for a real gateway launchd job without the injected marker", () => {
     clearSupervisorHints();
     setPlatform("darwin");
-    process.env.LAUNCH_JOB_LABEL = "ai.openclaw.gateway";
+    process.env.LAUNCH_JOB_LABEL = "ai.grokbot.gateway";
 
     const result = restartGatewayProcessWithFreshPid();
 
@@ -116,7 +116,7 @@ describe("restartGatewayProcessWithFreshPid", () => {
   it("returns supervised for a real gateway XPC launchd job without the injected marker", () => {
     clearSupervisorHints();
     setPlatform("darwin");
-    process.env.XPC_SERVICE_NAME = "ai.openclaw.gateway";
+    process.env.XPC_SERVICE_NAME = "ai.grokbot.gateway";
 
     const result = restartGatewayProcessWithFreshPid();
 
@@ -126,13 +126,13 @@ describe("restartGatewayProcessWithFreshPid", () => {
   });
 
   it("returns supervised on macOS when launchd label is set (no kickstart)", () => {
-    expectLaunchdSupervisedWithoutKickstart({ launchJobLabel: "ai.openclaw.gateway" });
+    expectLaunchdSupervisedWithoutKickstart({ launchJobLabel: "ai.grokbot.gateway" });
   });
 
   it("launchd supervisor never returns failed regardless of triggerOpenClawRestart outcome", () => {
     clearSupervisorHints();
     setPlatform("darwin");
-    process.env.OPENCLAW_LAUNCHD_LABEL = "ai.openclaw.gateway";
+    process.env.OPENCLAW_LAUNCHD_LABEL = "ai.grokbot.gateway";
     // Even if triggerOpenClawRestart *would* fail, launchd path must not call it.
     triggerOpenClawRestartMock.mockReturnValue({
       ok: false,
@@ -148,7 +148,7 @@ describe("restartGatewayProcessWithFreshPid", () => {
   it("does not schedule kickstart on non-darwin platforms", () => {
     setPlatform("linux");
     process.env.INVOCATION_ID = "abc123";
-    process.env.OPENCLAW_LAUNCHD_LABEL = "ai.openclaw.gateway";
+    process.env.OPENCLAW_LAUNCHD_LABEL = "ai.grokbot.gateway";
 
     const result = restartGatewayProcessWithFreshPid();
 
@@ -160,7 +160,7 @@ describe("restartGatewayProcessWithFreshPid", () => {
   it("does not treat inherited XPC_SERVICE_NAME as launchd supervision", () => {
     clearSupervisorHints();
     setPlatform("darwin");
-    process.env.XPC_SERVICE_NAME = "ai.openclaw.mac";
+    process.env.XPC_SERVICE_NAME = "ai.grokbot.mac";
     process.env.OPENCLAW_PROFILE = "mac";
 
     const result = restartGatewayProcessWithFreshPid();
@@ -198,7 +198,7 @@ describe("restartGatewayProcessWithFreshPid", () => {
   it("returns supervised when OPENCLAW_SYSTEMD_UNIT is set", () => {
     clearSupervisorHints();
     setPlatform("linux");
-    process.env.OPENCLAW_SYSTEMD_UNIT = "openclaw-gateway.service";
+    process.env.OPENCLAW_SYSTEMD_UNIT = "grokbot-gateway.service";
     const result = restartGatewayProcessWithFreshPid();
     expect(result.mode).toBe("supervised");
     expect(spawnMock).not.toHaveBeenCalled();
@@ -208,7 +208,7 @@ describe("restartGatewayProcessWithFreshPid", () => {
     clearSupervisorHints();
     setPlatform("win32");
     process.env.OPENCLAW_SUPERVISOR_MODE = "external";
-    process.env.OPENCLAW_WINDOWS_TASK_NAME = "OpenClaw Gateway";
+    process.env.OPENCLAW_WINDOWS_TASK_NAME = "GrokBot Gateway";
 
     const result = restartGatewayProcessWithFreshPid();
 
@@ -217,10 +217,10 @@ describe("restartGatewayProcessWithFreshPid", () => {
     expect(spawnMock).not.toHaveBeenCalled();
   });
 
-  it("returns supervised when OpenClaw gateway task markers are set on Windows", () => {
+  it("returns supervised when GrokBot gateway task markers are set on Windows", () => {
     clearSupervisorHints();
     setPlatform("win32");
-    process.env.OPENCLAW_SERVICE_MARKER = "openclaw";
+    process.env.OPENCLAW_SERVICE_MARKER = "grokbot";
     process.env.OPENCLAW_SERVICE_KIND = "gateway";
     triggerOpenClawRestartMock.mockReturnValue({ ok: true, method: "schtasks" });
     const result = restartGatewayProcessWithFreshPid();
@@ -232,7 +232,7 @@ describe("restartGatewayProcessWithFreshPid", () => {
   it("keeps generic service markers out of non-Windows supervisor detection", () => {
     clearSupervisorHints();
     setPlatform("linux");
-    process.env.OPENCLAW_SERVICE_MARKER = "openclaw";
+    process.env.OPENCLAW_SERVICE_MARKER = "grokbot";
     process.env.OPENCLAW_SERVICE_KIND = "gateway";
 
     const result = restartGatewayProcessWithFreshPid();
@@ -274,9 +274,9 @@ describe("restartGatewayProcessWithFreshPid", () => {
   it("ignores node task script hints for gateway restart detection on Windows", () => {
     clearSupervisorHints();
     setPlatform("win32");
-    process.env.OPENCLAW_TASK_SCRIPT = "C:\\openclaw\\node.cmd";
+    process.env.OPENCLAW_TASK_SCRIPT = "C:\\grokbot\\node.cmd";
     process.env.OPENCLAW_TASK_SCRIPT_NAME = "node.cmd";
-    process.env.OPENCLAW_SERVICE_MARKER = "openclaw";
+    process.env.OPENCLAW_SERVICE_MARKER = "grokbot";
     process.env.OPENCLAW_SERVICE_KIND = "node";
 
     const result = restartGatewayProcessWithFreshPid();
@@ -320,7 +320,7 @@ describe("respawnGatewayProcessForUpdate", () => {
     process.execArgv = [];
     process.argv = [
       "C:\\Program Files\\node.exe",
-      "C:\\openclaw\\node_modules\\.pnpm\\openclaw@2026.6.5\\node_modules\\openclaw\\dist\\index.js",
+      "C:\\grokbot\\node_modules\\.pnpm\\grokbot@2026.6.5\\node_modules\\grokbot\\dist\\index.js",
       "gateway",
       "run",
     ];
@@ -332,7 +332,7 @@ describe("respawnGatewayProcessForUpdate", () => {
     expect(result.pid).toBe(5151);
     expect(spawnMock).toHaveBeenCalledWith(
       process.execPath,
-      ["C:\\openclaw\\node_modules\\openclaw\\openclaw.mjs", "gateway", "run"],
+      ["C:\\grokbot\\node_modules\\grokbot\\grokbot.mjs", "gateway", "run"],
       {
         detached: true,
         env: process.env,
@@ -353,13 +353,13 @@ describe("respawnGatewayProcessForUpdate", () => {
     expect(triggerOpenClawRestartMock).not.toHaveBeenCalled();
   });
 
-  it("rewrites a pnpm-versioned OpenClaw entry before detached update respawn", () => {
+  it("rewrites a pnpm-versioned GrokBot entry before detached update respawn", () => {
     clearSupervisorHints();
     setPlatform("linux");
     process.execArgv = [];
     process.argv = [
       "/usr/local/bin/node",
-      "/app/node_modules/.pnpm/openclaw@2026.6.5/node_modules/openclaw/dist/entry.js",
+      "/app/node_modules/.pnpm/grokbot@2026.6.5/node_modules/grokbot/dist/entry.js",
       "gateway",
       "run",
     ];
@@ -370,7 +370,7 @@ describe("respawnGatewayProcessForUpdate", () => {
     expect(result.mode).toBe("spawned");
     expect(spawnMock).toHaveBeenCalledWith(
       process.execPath,
-      ["/app/node_modules/openclaw/openclaw.mjs", "gateway", "run"],
+      ["/app/node_modules/grokbot/grokbot.mjs", "gateway", "run"],
       {
         detached: true,
         env: process.env,
@@ -400,7 +400,7 @@ describe("respawnGatewayProcessForUpdate", () => {
   it("spawns a detached update process when macOS only has inherited XPC state", () => {
     clearSupervisorHints();
     setPlatform("darwin");
-    process.env.XPC_SERVICE_NAME = "ai.openclaw.mac";
+    process.env.XPC_SERVICE_NAME = "ai.grokbot.mac";
     process.execArgv = [];
     process.argv = ["/usr/local/bin/node", "/repo/dist/index.js", "gateway", "run"];
     spawnMock.mockReturnValue(mockDetachedChild(6161));
@@ -445,7 +445,7 @@ describe("respawnGatewayProcessForUpdate", () => {
     clearSupervisorHints();
     setPlatform("linux");
     process.env.OPENCLAW_NO_RESPAWN = "1";
-    process.env.OPENCLAW_SERVICE_MARKER = "openclaw";
+    process.env.OPENCLAW_SERVICE_MARKER = "grokbot";
     process.env.OPENCLAW_SERVICE_KIND = "gateway";
 
     const result = respawnGatewayProcessForUpdate();

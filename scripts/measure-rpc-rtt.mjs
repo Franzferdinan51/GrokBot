@@ -31,7 +31,7 @@ function usage() {
   return [
     "Usage: node --import tsx scripts/measure-rpc-rtt.mjs",
     "  --output-dir <dir>",
-    "  [--repo-root <openclaw-repo>]",
+    "  [--repo-root <grokbot-repo>]",
     "  [--iterations <count>]",
     "  [--methods <comma-separated-methods>]",
     "  [--help, -h]",
@@ -290,7 +290,7 @@ function resolveOpenClawLaunchArgs(repoRoot, sourceEntryExists = existsSync) {
   if (sourceEntryExists(sourceEntry)) {
     return ["--import", "tsx", sourceEntry];
   }
-  return [path.join(repoRoot, "openclaw.mjs")];
+  return [path.join(repoRoot, "grokbot.mjs")];
 }
 
 /**
@@ -889,7 +889,7 @@ async function main() {
   const startedAt = new Date();
   const token = `rpc-rtt-${randomUUID()}`;
   const port = await getFreePort();
-  const configPath = path.join(tempRoot, "openclaw.json");
+  const configPath = path.join(tempRoot, "grokbot.json");
   const stdoutPath = path.join(tempRoot, "gateway.stdout.log");
   const stderrPath = path.join(tempRoot, "gateway.stderr.log");
   let gatewayChild;
@@ -945,14 +945,14 @@ async function main() {
         maxProtocol: protocol.PROTOCOL_VERSION,
         client: {
           id: "gateway-client",
-          displayName: "openclaw-rtt rpc probe",
+          displayName: "grokbot-rtt rpc probe",
           version: "rtt",
           platform: process.platform,
           mode: "backend",
-          instanceId: `openclaw-rtt-rpc-${randomUUID()}`,
+          instanceId: `grokbot-rtt-rpc-${randomUUID()}`,
         },
         locale: "en-US",
-        userAgent: "openclaw-rtt-rpc",
+        userAgent: "grokbot-rtt-rpc",
         role: "operator",
         scopes: ["operator.admin"],
         caps: [],

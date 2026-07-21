@@ -1,5 +1,5 @@
 // Telegram plugin module implements bot native commands.fixture test support behavior.
-import type { RuntimeEnv } from "openclaw/plugin-sdk/runtime-env";
+import type { RuntimeEnv } from "grokbot/plugin-sdk/runtime-env";
 import { vi } from "vitest";
 import type { OpenClawConfig, TelegramAccountConfig } from "../runtime-api.js";
 import type { registerTelegramNativeCommands } from "./bot-native-commands.js";
@@ -106,7 +106,7 @@ export function createTelegramGroupCommandContext(params?: {
       chat: {
         id: params?.chatId ?? -1001234567890,
         type: "supergroup" as const,
-        title: params?.title ?? "OpenClaw",
+        title: params?.title ?? "GrokBot",
       },
       from: { id: params?.userId ?? 200, username: params?.username ?? "bob" },
     },
@@ -131,7 +131,7 @@ export function createTelegramTopicCommandContext(params?: {
       chat: {
         id: params?.chatId ?? -1001234567890,
         type: "supergroup" as const,
-        title: params?.title ?? "OpenClaw",
+        title: params?.title ?? "GrokBot",
         is_forum: true,
       },
       message_thread_id: params?.threadId ?? 42,

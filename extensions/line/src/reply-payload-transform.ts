@@ -1,11 +1,11 @@
 // Line plugin module implements reply payload transform behavior.
-import { expectDefined } from "openclaw/plugin-sdk/expect-runtime";
-import { parseStrictFiniteNumber } from "openclaw/plugin-sdk/number-runtime";
-import type { ReplyPayload } from "openclaw/plugin-sdk/reply-runtime";
+import { expectDefined } from "grokbot/plugin-sdk/expect-runtime";
+import { parseStrictFiniteNumber } from "grokbot/plugin-sdk/number-runtime";
+import type { ReplyPayload } from "grokbot/plugin-sdk/reply-runtime";
 import {
   normalizeLowercaseStringOrEmpty,
   normalizeStringEntries,
-} from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/string-coerce-runtime";
 import {
   createAgendaCard,
   createAppleTvRemoteCard,

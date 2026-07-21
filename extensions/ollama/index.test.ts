@@ -1,11 +1,11 @@
 // Ollama tests cover index plugin behavior.
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import {
   describeImageWithModel,
   describeImagesWithModel,
-} from "openclaw/plugin-sdk/media-understanding";
-import { createTestPluginApi } from "openclaw/plugin-sdk/plugin-test-api";
-import { clearLiveCatalogCacheForTests } from "openclaw/plugin-sdk/provider-catalog-shared";
+} from "grokbot/plugin-sdk/media-understanding";
+import { createTestPluginApi } from "grokbot/plugin-sdk/plugin-test-api";
+import { clearLiveCatalogCacheForTests } from "grokbot/plugin-sdk/provider-catalog-shared";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import plugin from "./index.js";
 import { OLLAMA_DEFAULT_API_KEY } from "./src/discovery-shared.js";

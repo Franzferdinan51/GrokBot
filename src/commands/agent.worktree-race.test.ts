@@ -3,7 +3,7 @@ import fsSync from "node:fs";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { promisify } from "node:util";
-import { withTempHome } from "openclaw/plugin-sdk/test-env";
+import { withTempHome } from "grokbot/plugin-sdk/test-env";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import "./agent-command.test-mocks.js";
 import { ensureAgentWorkspace } from "../agents/workspace.js";
@@ -11,8 +11,8 @@ import { getRegistryWorktree } from "../agents/worktrees/registry.js";
 import { managedWorktrees } from "../agents/worktrees/service.js";
 import { upsertSqliteSessionEntry } from "../config/sessions/session-accessor.sqlite.js";
 import { clearSessionStoreCacheForTest } from "../config/sessions/store.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
-import { closeOpenClawStateDatabaseForTest } from "../state/openclaw-state-db.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
+import { closeOpenClawStateDatabaseForTest } from "../state/grokbot-state-db.js";
 import { testing as agentCommandTesting } from "./agent.js";
 import { createThrowingTestRuntime } from "./test-runtime-config-helpers.js";
 
@@ -46,8 +46,8 @@ async function initializeRepository(root: string): Promise<string> {
   const repo = path.join(root, "repo");
   await fs.mkdir(repo, { recursive: true });
   await git(repo, "init", "-b", "main");
-  await git(repo, "config", "user.name", "OpenClaw Test");
-  await git(repo, "config", "user.email", "openclaw-test@example.invalid");
+  await git(repo, "config", "user.name", "GrokBot Test");
+  await git(repo, "config", "user.email", "grokbot-test@example.invalid");
   await fs.writeFile(path.join(repo, "README.md"), "base\n");
   await git(repo, "add", "README.md");
   await git(repo, "commit", "-m", "initial");
@@ -60,7 +60,7 @@ function mockConfig(home: string, storePath: string): OpenClawConfig {
       defaults: {
         model: { primary: "anthropic/claude-opus-4-6" },
         models: { "anthropic/claude-opus-4-6": {} },
-        workspace: path.join(home, "openclaw"),
+        workspace: path.join(home, "grokbot"),
       },
     },
     session: { store: storePath, mainKey: "main" },

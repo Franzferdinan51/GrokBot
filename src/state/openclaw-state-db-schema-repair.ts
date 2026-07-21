@@ -5,21 +5,21 @@ import { readSqliteUserVersion } from "../infra/sqlite-user-version.js";
 import {
   canRepairLegacyAuditEventsSchema,
   hasCanonicalAuditEventsSchema,
-} from "./openclaw-state-db-audit-migration.js";
+} from "./grokbot-state-db-audit-migration.js";
 import {
   OPENCLAW_STATE_SCHEMA_VERSION,
   OPENCLAW_STATE_STRICT_SCHEMA_VERSION,
   type OpenClawStateDatabaseOptions,
   type OpenClawStateDatabaseSchemaMigration,
-} from "./openclaw-state-db-contract.js";
-import { resolveDatabasePath } from "./openclaw-state-db-maintenance.js";
-import * as operatorApprovalMigration from "./openclaw-state-db-operator-approval-migration.js";
+} from "./grokbot-state-db-contract.js";
+import { resolveDatabasePath } from "./grokbot-state-db-maintenance.js";
+import * as operatorApprovalMigration from "./grokbot-state-db-operator-approval-migration.js";
 import {
   tableExists,
   tableHasColumn,
   tablePrimaryKeyColumns,
-} from "./openclaw-state-db-schema-helpers.js";
-import * as sessionWatchMigration from "./openclaw-state-db-session-watch-migration.js";
+} from "./grokbot-state-db-schema-helpers.js";
+import * as sessionWatchMigration from "./grokbot-state-db-session-watch-migration.js";
 
 export function dropLegacyStateTables(db: DatabaseSync): void {
   // Unreleased transient history; drop, do not migrate.
@@ -130,17 +130,17 @@ export function assertCanonicalStateSchemaShape(db: DatabaseSync, pathname: stri
   operatorApprovalMigration.assertCanonicalOperatorApprovalKinds(db, pathname);
   if (!hasCanonicalAgentDatabasesPrimaryKey(db)) {
     throw new Error(
-      `OpenClaw state database ${pathname} has a legacy agent database registry schema; run openclaw doctor --fix to migrate it.`,
+      `GrokBot state database ${pathname} has a legacy agent database registry schema; run grokbot doctor --fix to migrate it.`,
     );
   }
   if (!hasCanonicalAuditEventsSchema(db)) {
     if (canRepairLegacyAuditEventsSchema(db)) {
       throw new Error(
-        `OpenClaw state database ${pathname} has a legacy audit event schema; run openclaw doctor --fix to migrate it.`,
+        `GrokBot state database ${pathname} has a legacy audit event schema; run grokbot doctor --fix to migrate it.`,
       );
     }
     throw new Error(
-      `OpenClaw state database ${pathname} has a noncanonical audit event schema that cannot be repaired automatically; restore the canonical audit_events shape before retrying.`,
+      `GrokBot state database ${pathname} has a noncanonical audit event schema that cannot be repaired automatically; restore the canonical audit_events shape before retrying.`,
     );
   }
 }

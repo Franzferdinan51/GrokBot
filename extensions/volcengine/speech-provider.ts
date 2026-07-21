@@ -1,18 +1,18 @@
 // Volcengine provider module implements model/runtime integration.
-import { normalizeResolvedSecretInputString } from "openclaw/plugin-sdk/secret-input";
+import { normalizeResolvedSecretInputString } from "grokbot/plugin-sdk/secret-input";
 import type {
   SpeechDirectiveTokenParseContext,
   SpeechProviderConfig,
   SpeechProviderOverrides,
   SpeechProviderPlugin,
-} from "openclaw/plugin-sdk/speech-core";
+} from "grokbot/plugin-sdk/speech-core";
 import {
   asObject,
   parseSpeechDirectiveNumberOverride,
   resolveSpeechProviderApiKey,
   trimToUndefined,
-} from "openclaw/plugin-sdk/speech-core";
-import { asFiniteNumberInRange } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/speech-core";
+import { asFiniteNumberInRange } from "grokbot/plugin-sdk/string-coerce-runtime";
 import { volcengineTTS, type VolcengineTtsEncoding } from "./tts.js";
 
 const DEFAULT_VOICE = "en_female_anna_mars_bigtts";

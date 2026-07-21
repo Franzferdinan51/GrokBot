@@ -1,12 +1,12 @@
 // Nostr plugin module implements channel.setup behavior.
-import { describeAccountSnapshot } from "openclaw/plugin-sdk/account-helpers";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import { describeAccountSnapshot } from "grokbot/plugin-sdk/account-helpers";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import {
   createDelegatedSetupWizardProxy,
   createStandardChannelSetupStatus,
   DEFAULT_ACCOUNT_ID,
   createSetupTranslator,
-} from "openclaw/plugin-sdk/setup-runtime";
+} from "grokbot/plugin-sdk/setup-runtime";
 import { buildChannelConfigSchema, type ChannelPlugin } from "./channel-api.js";
 import { NostrConfigSchema } from "./config-schema.js";
 import { DEFAULT_RELAYS } from "./default-relays.js";

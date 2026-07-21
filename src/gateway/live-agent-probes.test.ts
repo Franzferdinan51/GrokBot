@@ -20,7 +20,7 @@ describe("live-agent-probes", () => {
       "list",
     ]);
     expect(resolveOpenClawCliProcessArgs(["cron", "list"], true)).toEqual([
-      "openclaw.mjs",
+      "grokbot.mjs",
       "cron",
       "list",
     ]);
@@ -67,10 +67,10 @@ describe("live-agent-probes", () => {
     expect(claudeRetryPrompt).toContain(
       "Preserve job.sessionTarget and job.sessionKey exactly as provided.",
     );
-    expect(claudeRetryPrompt).toContain("search/load MCP tools for `openclaw cron` or `cron`");
+    expect(claudeRetryPrompt).toContain("search/load MCP tools for `grokbot cron` or `cron`");
     expect(claudeRetryPrompt).toContain("mcp__openclaw__cron");
     expect(claudeRetryPrompt).toContain("Do not use Claude native `CronCreate`");
-    expect(claudeRetryPrompt).not.toContain("openclaw-tools");
+    expect(claudeRetryPrompt).not.toContain("grokbot-tools");
     expect(
       buildLiveCronProbeMessage({
         agent: "future-agent",
@@ -86,7 +86,7 @@ describe("live-agent-probes", () => {
         attempt: 1,
         exactReply: spec.name,
       }),
-    ).toContain("previous OpenClaw cron MCP tool call was cancelled");
+    ).toContain("previous GrokBot cron MCP tool call was cancelled");
     const args = JSON.parse(spec.argsJson) as {
       job?: {
         sessionTarget?: string;

@@ -3,7 +3,7 @@
  */
 import fsSync from "node:fs";
 import fs from "node:fs/promises";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { OpenClawConfig } from "../../config/config.js";
 import { withTempDir } from "../../test-helpers/temp-dir.js";
@@ -657,7 +657,7 @@ describe("gateway usage helpers", () => {
   });
 
   it("does not project local avatar bytes for usage-only agent enumeration", async () => {
-    await withTempDir({ prefix: "openclaw-usage-avatar-" }, async (workspace) => {
+    await withTempDir({ prefix: "grokbot-usage-avatar-" }, async (workspace) => {
       await fs.writeFile(`${workspace}/avatar.png`, "avatar");
       const config: OpenClawConfig = {
         agents: {

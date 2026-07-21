@@ -3,12 +3,12 @@ import { createHash } from "node:crypto";
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { resolveTimerTimeoutMs } from "@openclaw/normalization-core/number-coercion";
+import { resolveTimerTimeoutMs } from "@grokbot/normalization-core/number-coercion";
 import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalString,
-} from "@openclaw/normalization-core/string-coerce";
-import { normalizeStringEntries } from "@openclaw/normalization-core/string-normalization";
+} from "@grokbot/normalization-core/string-coerce";
+import { normalizeStringEntries } from "@grokbot/normalization-core/string-normalization";
 import { prerelease as parseSemverPrerelease, satisfies as satisfiesSemver } from "semver";
 import { hasValidIsoCalendarComponents } from "../shared/iso-time.js";
 import { retryClawHubRead } from "./clawhub-retry.js";
@@ -37,7 +37,7 @@ const CLAWHUB_ERROR_BODY_MAX_CHARS = 400;
 
 export type ClawHubPackageFamily = "skill" | "code-plugin" | "bundle-plugin";
 export type ClawHubPackageChannel = "official" | "community" | "private";
-// Keep aligned with @openclaw/plugin-package-contract ExternalPluginCompatibility.
+// Keep aligned with @grokbot/plugin-package-contract ExternalPluginCompatibility.
 export type ClawHubPackageCompatibility = {
   pluginApiRange?: string;
   builtWithOpenClawVersion?: string;
@@ -1409,7 +1409,7 @@ export async function downloadClawHubPackageArchive(params: {
     const rawSpecVersion = response.headers.get("X-ClawHub-ClawPack-Spec-Version");
     const specVersion = parseStrictPositiveInteger(rawSpecVersion);
     const target = await createTempDownloadTarget({
-      prefix: "openclaw-clawhub-clawpack",
+      prefix: "grokbot-clawhub-clawpack",
       fileName: npmTarballName,
     });
     await fs.writeFile(target.path, bytes);
@@ -1451,7 +1451,7 @@ export async function downloadClawHubPackageArchive(params: {
   });
   const sha256Hex = formatSha256Hex(bytes);
   const target = await createTempDownloadTarget({
-    prefix: "openclaw-clawhub-package",
+    prefix: "grokbot-clawhub-package",
     fileName: `${params.name}.zip`,
   });
   await fs.writeFile(target.path, bytes);
@@ -1497,7 +1497,7 @@ export async function downloadClawHubSkillArchive(params: {
   });
   const sha256Hex = formatSha256Hex(bytes);
   const target = await createTempDownloadTarget({
-    prefix: "openclaw-clawhub-skill",
+    prefix: "grokbot-clawhub-skill",
     fileName: `${params.slug}.zip`,
   });
   await fs.writeFile(target.path, bytes);
@@ -1539,7 +1539,7 @@ export async function downloadClawHubSkillArchiveUrl(params: {
   });
   const sha256Hex = formatSha256Hex(bytes);
   const target = await createTempDownloadTarget({
-    prefix: "openclaw-clawhub-skill",
+    prefix: "grokbot-clawhub-skill",
     fileName: "skill.zip",
   });
   await fs.writeFile(target.path, bytes);
@@ -1575,7 +1575,7 @@ export async function downloadClawHubGitHubSkillArchive(params: {
   });
   const sha256Hex = formatSha256Hex(bytes);
   const target = await createTempDownloadTarget({
-    prefix: "openclaw-clawhub-github-skill",
+    prefix: "grokbot-clawhub-github-skill",
     fileName: `${params.commit}.zip`,
   });
   await fs.writeFile(target.path, bytes);

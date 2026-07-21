@@ -13,8 +13,8 @@ import {
   DEFAULT_ACCOUNT_ID,
   normalizeAccountId,
   resolveNormalizedAccountEntry,
-} from "openclaw/plugin-sdk/account-resolution";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+} from "grokbot/plugin-sdk/account-resolution";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 
 type TwitchTokenSource = "env" | "config" | "none";
 
@@ -48,7 +48,7 @@ function normalizeTwitchToken(raw?: string | null): string | undefined {
  * The getAccountConfig function handles merging base-level config with accounts.default,
  * so this logic works for both simplified and multi-account patterns.
  *
- * @param cfg - OpenClaw config
+ * @param cfg - GrokBot config
  * @param opts - Options including accountId and optional envToken override
  * @returns Token resolution with source
  */

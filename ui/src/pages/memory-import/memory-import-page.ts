@@ -9,7 +9,7 @@ import type { GatewayBrowserClient } from "../../api/gateway.ts";
 import { titleForRoute } from "../../app-navigation.ts";
 import { applicationContext, type ApplicationContext } from "../../app/context.ts";
 import { renderSettingsWorkspace } from "../../components/settings-workspace.ts";
-import { OpenClawLightDomElement } from "../../lit/openclaw-element.ts";
+import { OpenClawLightDomElement } from "../../lit/grokbot-element.ts";
 import { SubscriptionsController } from "../../lit/subscriptions-controller.ts";
 import { renderMemoryImport } from "./view.ts";
 
@@ -353,6 +353,6 @@ export class MemoryImportPage extends OpenClawLightDomElement {
   }
 }
 
-if (!customElements.get("openclaw-memory-import-page")) {
-  customElements.define("openclaw-memory-import-page", MemoryImportPage);
+if (!customElements.get("grokbot-memory-import-page")) {
+  customElements.define("grokbot-memory-import-page", MemoryImportPage);
 }

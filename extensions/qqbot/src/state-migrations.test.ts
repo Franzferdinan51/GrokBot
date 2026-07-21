@@ -1,16 +1,16 @@
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import {
   createPluginStateKeyedStoreForTests,
   resetPluginStateStoreForTests,
-} from "openclaw/plugin-sdk/plugin-state-test-runtime";
+} from "grokbot/plugin-sdk/plugin-state-test-runtime";
 import type {
   OpenKeyedStoreOptions,
   PluginDoctorStateMigrationContext,
   PluginStateKeyedStore,
-} from "openclaw/plugin-sdk/runtime-doctor";
+} from "grokbot/plugin-sdk/runtime-doctor";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { stateMigrations } from "../doctor-contract-api.js";
 import { buildQQBotStateKey } from "./engine/utils/state-keys.js";
@@ -206,7 +206,7 @@ describe("qqbot doctor state migration", () => {
     const homeDir = await createTempDir("qqbot-home-");
     env.HOME = homeDir;
     await writeJson(
-      path.join(homeDir, ".openclaw", "qqbot", "data", "credential-backup-default.json"),
+      path.join(homeDir, ".grokbot", "qqbot", "data", "credential-backup-default.json"),
       {
         accountId: "default",
         appId: "other-state-app",

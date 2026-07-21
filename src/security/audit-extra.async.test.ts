@@ -53,7 +53,7 @@ describe("audit-extra async code safety", () => {
       path.join(pluginDir, "package.json"),
       JSON.stringify({
         name: "evil-plugin",
-        openclaw: { extensions: [".hidden/index.js"] },
+        grokbot: { extensions: [".hidden/index.js"] },
       }),
     );
 
@@ -74,7 +74,7 @@ description: test skill
   };
 
   beforeAll(async () => {
-    fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-security-audit-async-"));
+    fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-security-audit-async-"));
     const codeSafetyFixture = await createSharedCodeSafetyFixture();
     sharedCodeSafetyStateDir = codeSafetyFixture.stateDir;
     sharedCodeSafetyWorkspaceDir = codeSafetyFixture.workspaceDir;
@@ -206,7 +206,7 @@ Read the requested file and summarize it.
       path.join(pluginDir, "package.json"),
       JSON.stringify({
         name: "escape-plugin",
-        openclaw: { extensions: ["../outside.js"] },
+        grokbot: { extensions: ["../outside.js"] },
       }),
     );
     await fs.writeFile(path.join(pluginDir, "index.js"), "export {};");
@@ -244,7 +244,7 @@ Read the requested file and summarize it.
       const tmpDir = await makeTmpDir("audit-scanner-install-debris");
       for (const name of [
         "demo",
-        ".openclaw-install-backups",
+        ".grokbot-install-backups",
         "node_modules",
         "old-plugin.backup-20260502",
         "old-plugin.disabled.20260502",
@@ -264,7 +264,7 @@ Read the requested file and summarize it.
         "plugin code-safety",
       );
       expect(codeSafetyFinding.title).toContain('Plugin "demo"');
-      expect(findings.map((f) => f.title).join("\n")).not.toContain(".openclaw-install-backups");
+      expect(findings.map((f) => f.title).join("\n")).not.toContain(".grokbot-install-backups");
     } finally {
       scanSpy.mockRestore();
     }
@@ -327,7 +327,7 @@ Read the requested file and summarize it.
         path.join(pluginDir, "package.json"),
         JSON.stringify({
           name: "scanfail-plugin",
-          openclaw: { extensions: ["index.js"] },
+          grokbot: { extensions: ["index.js"] },
         }),
       );
       await fs.writeFile(path.join(pluginDir, "index.js"), "export {};");
@@ -345,7 +345,7 @@ Read the requested file and summarize it.
     const stateDir = await makeTmpDir("audit-auth-sqlite-perms");
     const agentDir = path.join(stateDir, "agents", "main", "agent");
     await fs.mkdir(agentDir, { recursive: true });
-    const databasePath = path.join(agentDir, "openclaw-agent.sqlite");
+    const databasePath = path.join(agentDir, "grokbot-agent.sqlite");
     for (const targetPath of [
       databasePath,
       `${databasePath}-wal`,
@@ -368,10 +368,10 @@ Read the requested file and summarize it.
       .map((finding) => finding.detail);
     expect(readableAuthTargets).toEqual(
       expect.arrayContaining([
-        expect.stringContaining("openclaw-agent.sqlite"),
-        expect.stringContaining("openclaw-agent.sqlite-wal"),
-        expect.stringContaining("openclaw-agent.sqlite-shm"),
-        expect.stringContaining("openclaw-agent.sqlite-journal"),
+        expect.stringContaining("grokbot-agent.sqlite"),
+        expect.stringContaining("grokbot-agent.sqlite-wal"),
+        expect.stringContaining("grokbot-agent.sqlite-shm"),
+        expect.stringContaining("grokbot-agent.sqlite-journal"),
       ]),
     );
   });

@@ -1,13 +1,13 @@
-# Fireworks OpenClaw provider
+# Fireworks GrokBot provider
 
-Official OpenClaw provider plugin for Fireworks.
+Official GrokBot provider plugin for Fireworks.
 
 ## Install
 
 ```sh
-openclaw plugins install @openclaw/fireworks-provider
+grokbot plugins install @grokbot/fireworks-provider
 ```
 
 ## Docs
 
-See `docs/providers/fireworks.md` in the OpenClaw repository, or the published docs at `https://docs.openclaw.ai/providers/fireworks`.
+See `docs/providers/fireworks.md` in the GrokBot repository, or the published docs at `https://docs.grokbot.ai/providers/fireworks`.

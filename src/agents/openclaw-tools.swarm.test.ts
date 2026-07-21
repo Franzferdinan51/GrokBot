@@ -1,7 +1,7 @@
 // Verifies Swarm tools remain absent by default and appear only for gated runs.
 import { describe, expect, it } from "vitest";
 import { createOpenClawCodingTools } from "./agent-tools.js";
-import { createOpenClawTools } from "./openclaw-tools.js";
+import { createOpenClawTools } from "./grokbot-tools.js";
 
 function toolNames(options: NonNullable<Parameters<typeof createOpenClawTools>[0]>) {
   return createOpenClawTools({
@@ -12,7 +12,7 @@ function toolNames(options: NonNullable<Parameters<typeof createOpenClawTools>[0
   }).map((tool) => tool.name);
 }
 
-describe("openclaw-tools Swarm gating", () => {
+describe("grokbot-tools Swarm gating", () => {
   it("registers agents_wait only when tools.swarm is enabled", () => {
     const base = { agentSessionKey: "agent:main:main" };
     expect(toolNames(base)).not.toContain("agents_wait");

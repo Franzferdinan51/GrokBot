@@ -2,14 +2,14 @@
 import fs from "node:fs/promises";
 import type { IncomingMessage, ServerResponse } from "node:http";
 import path from "node:path";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import type {
   PluginBlobEntry,
   PluginBlobEntryInfo,
   PluginBlobStore,
-} from "openclaw/plugin-sdk/plugin-state-runtime";
-import { createTestPluginApi } from "openclaw/plugin-sdk/plugin-test-api";
-import { createMockServerResponse } from "openclaw/plugin-sdk/test-env";
+} from "grokbot/plugin-sdk/plugin-state-runtime";
+import { createTestPluginApi } from "grokbot/plugin-sdk/plugin-test-api";
+import { createMockServerResponse } from "grokbot/plugin-sdk/test-env";
 import { afterAll, afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { OpenClawConfig } from "../api.js";
 import type { OpenClawPluginApi, OpenClawPluginToolContext } from "../api.js";
@@ -53,7 +53,7 @@ describe("PlaywrightDiffScreenshotter", () => {
     vi.useFakeTimers();
     vi.resetModules();
     ({ PlaywrightDiffScreenshotter } = await import("./browser.js"));
-    ({ rootDir, cleanup: cleanupRootDir } = await createTempDiffRoot("openclaw-diffs-browser-"));
+    ({ rootDir, cleanup: cleanupRootDir } = await createTempDiffRoot("grokbot-diffs-browser-"));
     outputPath = path.join(rootDir, "preview.png");
     launchMock.mockReset();
   });
@@ -309,7 +309,7 @@ describe("diffs plugin registration", () => {
         entries: {
           diffs: {
             config: {
-              viewerBaseUrl: "https://startup.example.com/openclaw",
+              viewerBaseUrl: "https://startup.example.com/grokbot",
               defaults: {
                 mode: "view",
                 theme: "light",
@@ -338,7 +338,7 @@ describe("diffs plugin registration", () => {
         },
       },
       pluginConfig: {
-        viewerBaseUrl: "https://startup.example.com/openclaw",
+        viewerBaseUrl: "https://startup.example.com/grokbot",
         defaults: {
           mode: "view",
           theme: "light",

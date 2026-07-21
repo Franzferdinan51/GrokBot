@@ -1,29 +1,29 @@
 /**
  * Browser-local SDK config bridge plus Browser-specific default port helpers.
  */
-import { normalizeOptionalLowercaseString } from "openclaw/plugin-sdk/string-coerce-runtime";
+import { normalizeOptionalLowercaseString } from "grokbot/plugin-sdk/string-coerce-runtime";
 
 export {
   getRuntimeConfig,
   getRuntimeConfigSourceSnapshot,
-} from "openclaw/plugin-sdk/runtime-config-snapshot";
-export { mutateConfigFile } from "openclaw/plugin-sdk/config-mutation";
+} from "grokbot/plugin-sdk/runtime-config-snapshot";
+export { mutateConfigFile } from "grokbot/plugin-sdk/config-mutation";
 export {
   type BrowserConfig,
   type BrowserProfileConfig,
   type OpenClawConfig,
-} from "openclaw/plugin-sdk/config-contracts";
+} from "grokbot/plugin-sdk/config-contracts";
 export {
   normalizePluginsConfig,
   resolveEffectiveEnableState,
-} from "openclaw/plugin-sdk/plugin-config-runtime";
-export { resolveGatewayPort } from "openclaw/plugin-sdk/core";
+} from "grokbot/plugin-sdk/plugin-config-runtime";
+export { resolveGatewayPort } from "grokbot/plugin-sdk/core";
 export {
   CONFIG_DIR,
   escapeRegExp,
   resolveUserPath,
   shortenHomePath,
-} from "openclaw/plugin-sdk/text-utility-runtime";
+} from "grokbot/plugin-sdk/text-utility-runtime";
 type PortRange = { start: number; end: number };
 
 const DEFAULT_BROWSER_CDP_PORT_RANGE_START = 18800;

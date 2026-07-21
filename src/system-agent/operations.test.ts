@@ -1,4 +1,4 @@
-// OpenClaw operation tests cover rescue operation planning and execution.
+// GrokBot operation tests cover rescue operation planning and execution.
 import fs from "node:fs/promises";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
@@ -60,7 +60,7 @@ function expectRuntimeArg(value: unknown) {
 const mockConfig = vi.hoisted(() => {
   const initial = {};
   const state = {
-    path: "/tmp/openclaw.json",
+    path: "/tmp/grokbot.json",
     exists: true,
     config: initial as TestConfig,
     hash: "mock-hash-0" as string | undefined,
@@ -86,7 +86,7 @@ const mockConfig = vi.hoisted(() => {
   };
   return {
     reset() {
-      state.path = "/tmp/openclaw.json";
+      state.path = "/tmp/grokbot.json";
       state.exists = true;
       state.config = {};
       state.hash = "mock-hash-0";
@@ -151,7 +151,7 @@ vi.mock("./overview.js", () => ({
       { id: "main", isDefault: true },
       { id: "work", isDefault: false, model: "openai/gpt-5.2" },
     ],
-    config: { path: "/tmp/openclaw.json", exists: true, valid: true, issues: [], hash: null },
+    config: { path: "/tmp/grokbot.json", exists: true, valid: true, issues: [], hash: null },
     tools: {
       codex: { command: "codex", found: false, error: "not found" },
       claude: { command: "claude", found: false, error: "not found" },
@@ -165,8 +165,8 @@ vi.mock("./overview.js", () => ({
       error: "offline",
     },
     references: {
-      docsUrl: "https://docs.openclaw.ai",
-      sourceUrl: "https://github.com/openclaw/openclaw",
+      docsUrl: "https://docs.grokbot.ai",
+      sourceUrl: "https://github.com/grokbot/grokbot",
     },
   })),
 }));
@@ -265,22 +265,22 @@ describe("parseSystemAgentOperation", () => {
       kind: "plugin-search",
       query: "calendar sync",
     });
-    expect(parseSystemAgentOperation("install npm plugin @openclaw/discord")).toEqual({
+    expect(parseSystemAgentOperation("install npm plugin @grokbot/discord")).toEqual({
       kind: "plugin-install",
-      spec: "npm:@openclaw/discord",
+      spec: "npm:@grokbot/discord",
     });
-    expect(parseSystemAgentOperation("plugin install clawhub:openclaw-demo")).toEqual({
+    expect(parseSystemAgentOperation("plugin install clawhub:grokbot-demo")).toEqual({
       kind: "plugin-install",
-      spec: "clawhub:openclaw-demo",
+      spec: "clawhub:grokbot-demo",
     });
-    expect(parseSystemAgentOperation("plugin uninstall openclaw-demo")).toEqual({
+    expect(parseSystemAgentOperation("plugin uninstall grokbot-demo")).toEqual({
       kind: "plugin-uninstall",
-      pluginId: "openclaw-demo",
+      pluginId: "grokbot-demo",
     });
     expect(parseSystemAgentOperation("plugin install npm:@example/plugin")).toEqual({
       kind: "none",
       message:
-        "OpenClaw installs only ClawHub, bundled, or official-catalog plugins. Use `openclaw plugins install <spec>` in a trusted shell to review an arbitrary executable source.",
+        "GrokBot installs only ClawHub, bundled, or official-catalog plugins. Use `grokbot plugins install <spec>` in a trusted shell to review an arbitrary executable source.",
     });
   });
 
@@ -400,19 +400,19 @@ describe("parseSystemAgentOperation", () => {
     }
 
     const output = lines.join("\n");
-    expect(output).toContain("openclaw onboard`");
-    expect(output).toContain("openclaw onboard --classic");
-    expect(output).toContain("openclaw channels add --channel slack");
+    expect(output).toContain("grokbot onboard`");
+    expect(output).toContain("grokbot onboard --classic");
+    expect(output).toContain("grokbot channels add --channel slack");
   });
 
-  it("routes one-shot model setup through the verified OpenClaw flow", async () => {
+  it("routes one-shot model setup through the verified GrokBot flow", async () => {
     const { runtime, lines } = createSystemAgentTestRuntime();
 
     const result = await executeSystemAgentOperation({ kind: "model-setup" }, runtime);
 
     expect(result.applied).toBe(false);
-    expect(lines.join("\n")).toContain("Exit OpenClaw and run `openclaw onboard`");
-    expect(lines.join("\n")).not.toContain("openclaw configure --section model");
+    expect(lines.join("\n")).toContain("Exit GrokBot and run `grokbot onboard`");
+    expect(lines.join("\n")).not.toContain("grokbot configure --section model");
   });
 
   it("prints discovered channel metadata and sorted unknown-channel choices", async () => {
@@ -455,7 +455,7 @@ describe("parseSystemAgentOperation", () => {
     expect(knownOutput).toContain("Slack app messaging.");
     expect(knownOutput).toContain("Configured: yes");
     expect(knownOutput).toContain("Installed: yes");
-    expect(knownOutput).toContain("https://docs.openclaw.ai/channels/slack");
+    expect(knownOutput).toContain("https://docs.grokbot.ai/channels/slack");
     expect(knownOutput).toContain("open channel wizard for slack");
 
     lines.length = 0;
@@ -490,7 +490,7 @@ describe("parseSystemAgentOperation", () => {
   });
 
   it("rejects an explicit new-agent model before any config write or audit", async () => {
-    const tempDir = opTempDirs.make("openclaw-agent-model-rejected-");
+    const tempDir = opTempDirs.make("grokbot-agent-model-rejected-");
     setTestEnvValue("OPENCLAW_STATE_DIR", tempDir);
     const { runtime, lines } = createSystemAgentTestRuntime();
     const createAgent = vi.fn();
@@ -517,18 +517,18 @@ describe("parseSystemAgentOperation", () => {
     ).rejects.toThrow("Retry without `model`; the new agent inherits");
 
     expect(createAgent).not.toHaveBeenCalled();
-    expect(lines.join("\n")).not.toContain("[openclaw] running: agents.create");
+    expect(lines.join("\n")).not.toContain("[grokbot] running: agents.create");
     await expect(fs.access(path.join(tempDir, "audit", "system-agent.jsonl"))).rejects.toThrow();
   });
 
-  it("reserves the normalized OpenClaw agent identity before any write or audit", async () => {
-    const tempDir = opTempDirs.make("openclaw-agent-id-reserved-");
+  it("reserves the normalized GrokBot agent identity before any write or audit", async () => {
+    const tempDir = opTempDirs.make("grokbot-agent-id-reserved-");
     setTestEnvValue("OPENCLAW_STATE_DIR", tempDir);
     const { runtime, lines } = createSystemAgentTestRuntime();
     const createAgent = vi.fn();
     const operation = {
       kind: "create-agent" as const,
-      agentId: "OpenClaw",
+      agentId: "GrokBot",
       workspace: "/tmp/work",
     };
 
@@ -538,10 +538,10 @@ describe("parseSystemAgentOperation", () => {
         approved: true,
         deps: { createAgent },
       }),
-    ).rejects.toThrow('Agent id "openclaw" is reserved');
+    ).rejects.toThrow('Agent id "grokbot" is reserved');
 
     expect(createAgent).not.toHaveBeenCalled();
-    expect(lines.join("\n")).not.toContain("[openclaw] running: agents.create");
+    expect(lines.join("\n")).not.toContain("[grokbot] running: agents.create");
     await expect(fs.access(path.join(tempDir, "audit", "system-agent.jsonl"))).rejects.toThrow();
   });
 
@@ -581,7 +581,7 @@ describe("parseSystemAgentOperation", () => {
   });
 
   it("does not report or audit a gateway restart that returned false", async () => {
-    const tempDir = opTempDirs.make("openclaw-restart-failed-");
+    const tempDir = opTempDirs.make("grokbot-restart-failed-");
     setTestEnvValue("OPENCLAW_STATE_DIR", tempDir);
     const { runtime, lines } = createSystemAgentTestRuntime();
     const runGatewayRestart = vi.fn(async () => false);
@@ -593,13 +593,13 @@ describe("parseSystemAgentOperation", () => {
       }),
     ).rejects.toThrow("Gateway restart did not complete");
 
-    expect(lines.join("\n")).toContain("[openclaw] running: gateway.restart");
-    expect(lines.join("\n")).not.toContain("[openclaw] done: gateway.restart");
+    expect(lines.join("\n")).toContain("[grokbot] running: gateway.restart");
+    expect(lines.join("\n")).not.toContain("[grokbot] done: gateway.restart");
     await expect(fs.access(path.join(tempDir, "audit", "system-agent.jsonl"))).rejects.toThrow();
   });
 
   it("validates missing config without exiting the process", async () => {
-    mockConfig.missing("/tmp/openclaw.json");
+    mockConfig.missing("/tmp/grokbot.json");
     const { runtime, lines } = createSystemAgentTestRuntime();
 
     const result = await executeSystemAgentOperation({ kind: "config-validate" }, runtime);
@@ -609,7 +609,7 @@ describe("parseSystemAgentOperation", () => {
   });
 
   it("applies config set through typed deps and writes an audit entry", async () => {
-    const tempDir = opTempDirs.make("openclaw-config-set-");
+    const tempDir = opTempDirs.make("grokbot-config-set-");
     setTestEnvValue("OPENCLAW_STATE_DIR", tempDir);
     const { runtime, lines } = createSystemAgentTestRuntime();
     const runConfigSet = vi.fn(async () => {});
@@ -630,7 +630,7 @@ describe("parseSystemAgentOperation", () => {
       value: "19001",
       cliOptions: {},
     });
-    expect(lines.join("\n")).toContain("[openclaw] done: config.set");
+    expect(lines.join("\n")).toContain("[grokbot] done: config.set");
     const audit = readLastAuditEntry();
     expectAuditRecord(
       audit,
@@ -644,7 +644,7 @@ describe("parseSystemAgentOperation", () => {
   });
 
   it("records SQLite audit state despite a retired audit-directory symlink", async () => {
-    const tempDir = opTempDirs.make("openclaw-audit-warning-");
+    const tempDir = opTempDirs.make("grokbot-audit-warning-");
     setTestEnvValue("OPENCLAW_STATE_DIR", tempDir);
     const redirectedAuditDir = path.join(tempDir, "redirected-audit");
     await fs.mkdir(redirectedAuditDir);
@@ -661,11 +661,11 @@ describe("parseSystemAgentOperation", () => {
     expect(result.applied).toBe(true);
     expect(runConfigSet).toHaveBeenCalledOnce();
     expect(readLastAuditEntry()).toMatchObject({ operation: "config.set" });
-    expect(lines.join("\n")).toContain("[openclaw] done: config.set");
+    expect(lines.join("\n")).toContain("[grokbot] done: config.set");
   });
 
   it("applies SecretRef config set through typed deps and writes an audit entry", async () => {
-    const tempDir = opTempDirs.make("openclaw-config-ref-");
+    const tempDir = opTempDirs.make("grokbot-config-ref-");
     setTestEnvValue("OPENCLAW_STATE_DIR", tempDir);
     const { runtime, lines } = createSystemAgentTestRuntime();
     const runConfigSet = vi.fn(async () => {});
@@ -694,7 +694,7 @@ describe("parseSystemAgentOperation", () => {
         refId: "OPENCLAW_GATEWAY_TOKEN",
       },
     });
-    expect(lines.join("\n")).toContain("[openclaw] done: config.setRef");
+    expect(lines.join("\n")).toContain("[grokbot] done: config.setRef");
     const audit = readLastAuditEntry();
     expectAuditRecord(
       audit,
@@ -788,7 +788,7 @@ describe("parseSystemAgentOperation", () => {
       id: "OPENAI_API_KEY",
     },
   ])("rejects unverified inference-route write $path", async (operation) => {
-    const tempDir = opTempDirs.make("openclaw-route-write-refused-");
+    const tempDir = opTempDirs.make("grokbot-route-write-refused-");
     setTestEnvValue("OPENCLAW_STATE_DIR", tempDir);
     const { runtime, lines } = createSystemAgentTestRuntime();
     const runConfigSet = vi.fn(async () => {});
@@ -800,10 +800,10 @@ describe("parseSystemAgentOperation", () => {
       }),
       // Denylisted roots cite their documented escalation; route paths point
       // at the verified set_default_model/onboard flows.
-    ).rejects.toThrow(/openclaw onboard|trusted shell/);
+    ).rejects.toThrow(/grokbot onboard|trusted shell/);
 
     expect(runConfigSet).not.toHaveBeenCalled();
-    expect(lines.join("\n")).not.toContain("[openclaw] running:");
+    expect(lines.join("\n")).not.toContain("[grokbot] running:");
     await expect(fs.access(path.join(tempDir, "audit", "system-agent.jsonl"))).rejects.toThrow();
   });
 
@@ -820,7 +820,7 @@ describe("parseSystemAgentOperation", () => {
       value: "false",
     },
   ])("allows approved operator-parity write $path", async (operation) => {
-    const tempDir = opTempDirs.make("openclaw-parity-write-");
+    const tempDir = opTempDirs.make("grokbot-parity-write-");
     setTestEnvValue("OPENCLAW_STATE_DIR", tempDir);
     const { runtime } = createSystemAgentTestRuntime();
     const runConfigSet = vi.fn(async () => {});
@@ -837,7 +837,7 @@ describe("parseSystemAgentOperation", () => {
   it("fails closed on plugin-entry writes when route ownership cannot be proven", async () => {
     // Same invariant as plugin_uninstall: without a readable config the entry
     // cannot be proven off the active inference route.
-    mockConfig.missing("/tmp/openclaw.json");
+    mockConfig.missing("/tmp/grokbot.json");
     const { runtime } = createSystemAgentTestRuntime();
     const runConfigSet = vi.fn(async () => {});
 
@@ -852,7 +852,7 @@ describe("parseSystemAgentOperation", () => {
   });
 
   it("still blocks per-agent routing writes that hit the default agent", async () => {
-    const tempDir = opTempDirs.make("openclaw-default-agent-route-");
+    const tempDir = opTempDirs.make("grokbot-default-agent-route-");
     setTestEnvValue("OPENCLAW_STATE_DIR", tempDir);
     mockConfig.setConfig({
       agents: { list: [{ id: "main", default: true }, { id: "helper" }] },
@@ -866,7 +866,7 @@ describe("parseSystemAgentOperation", () => {
         runtime,
         { approved: true, deps: { runConfigSet } },
       ),
-    ).rejects.toThrow("openclaw onboard");
+    ).rejects.toThrow("grokbot onboard");
     expect(runConfigSet).not.toHaveBeenCalled();
 
     // The same routing field on a non-default agent is an approved write.
@@ -908,7 +908,7 @@ describe("parseSystemAgentOperation", () => {
   });
 
   it("installs plugins only after approval and audits the write", async () => {
-    const tempDir = opTempDirs.make("openclaw-plugin-install-");
+    const tempDir = opTempDirs.make("grokbot-plugin-install-");
     setTestEnvValue("OPENCLAW_STATE_DIR", tempDir);
     const { runtime, lines } = createSystemAgentTestRuntime();
     const runPluginInstall = vi.fn(async (spec: string, pluginRuntime: RuntimeEnv) => {
@@ -916,18 +916,18 @@ describe("parseSystemAgentOperation", () => {
     });
 
     const plan = await executeSystemAgentOperation(
-      { kind: "plugin-install", spec: "clawhub:openclaw-demo" },
+      { kind: "plugin-install", spec: "clawhub:grokbot-demo" },
       runtime,
       { deps: { runPluginInstall } },
     );
     expectRecordFields(plan as unknown as Record<string, unknown>, {
       applied: false,
-      message: "Plan: install plugin clawhub:openclaw-demo. Say yes to apply.",
+      message: "Plan: install plugin clawhub:grokbot-demo. Say yes to apply.",
     });
     expect(runPluginInstall).not.toHaveBeenCalled();
 
     const result = await executeSystemAgentOperation(
-      { kind: "plugin-install", spec: "clawhub:openclaw-demo" },
+      { kind: "plugin-install", spec: "clawhub:grokbot-demo" },
       runtime,
       {
         approved: true,
@@ -938,17 +938,17 @@ describe("parseSystemAgentOperation", () => {
     expect(result.applied).toBe(true);
 
     const installCall = requireFirstMockCall(runPluginInstall, "runPluginInstall");
-    expect(installCall[0]).toBe("clawhub:openclaw-demo");
+    expect(installCall[0]).toBe("clawhub:grokbot-demo");
     expectRuntimeArg(installCall[1]);
-    expect(lines.join("\n")).toContain("[openclaw] done: plugin.install");
+    expect(lines.join("\n")).toContain("[grokbot] done: plugin.install");
     const audit = readLastAuditEntry();
     expectAuditRecord(
       audit,
       {
         operation: "plugin.install",
-        summary: "Installed plugin clawhub:openclaw-demo",
+        summary: "Installed plugin clawhub:grokbot-demo",
       },
-      { rescue: true, spec: "clawhub:openclaw-demo" },
+      { rescue: true, spec: "clawhub:grokbot-demo" },
     );
   });
 
@@ -992,7 +992,7 @@ describe("parseSystemAgentOperation", () => {
   });
 
   it("uninstalls a non-route plugin only after approval and audits the write", async () => {
-    const tempDir = opTempDirs.make("openclaw-plugin-uninstall-");
+    const tempDir = opTempDirs.make("grokbot-plugin-uninstall-");
     setTestEnvValue("OPENCLAW_STATE_DIR", tempDir);
     const { runtime, lines } = createSystemAgentTestRuntime();
     const runPluginUninstall = vi.fn(async (pluginId: string, pluginRuntime: RuntimeEnv) => {
@@ -1000,37 +1000,37 @@ describe("parseSystemAgentOperation", () => {
     });
 
     const plan = await executeSystemAgentOperation(
-      { kind: "plugin-uninstall", pluginId: "openclaw-demo" },
+      { kind: "plugin-uninstall", pluginId: "grokbot-demo" },
       runtime,
       { deps: { runPluginUninstall } },
     );
     expectRecordFields(plan as unknown as Record<string, unknown>, {
       applied: false,
-      message: "Plan: uninstall plugin openclaw-demo. Say yes to apply.",
+      message: "Plan: uninstall plugin grokbot-demo. Say yes to apply.",
     });
     expect(runPluginUninstall).not.toHaveBeenCalled();
 
     const result = await executeSystemAgentOperation(
-      { kind: "plugin-uninstall", pluginId: "openclaw-demo" },
+      { kind: "plugin-uninstall", pluginId: "grokbot-demo" },
       runtime,
       { approved: true, deps: { runPluginUninstall } },
     );
     expect(result.applied).toBe(true);
     const uninstallCall = requireFirstMockCall(runPluginUninstall, "runPluginUninstall");
-    expect(uninstallCall[0]).toBe("openclaw-demo");
+    expect(uninstallCall[0]).toBe("grokbot-demo");
     expectRuntimeArg(uninstallCall[1]);
-    expect(lines.join("\n")).toContain("[openclaw] done: plugin.uninstall");
+    expect(lines.join("\n")).toContain("[grokbot] done: plugin.uninstall");
     expect(lines.join("\n")).toContain("Restart the Gateway to apply plugin changes.");
   });
 
   it("refuses plugin uninstall when it cannot prove inference survives", async () => {
     // Fail closed: without a readable config the route cannot be proven safe.
-    mockConfig.missing("/tmp/openclaw.json");
+    mockConfig.missing("/tmp/grokbot.json");
     const { runtime, lines } = createSystemAgentTestRuntime();
     const runPluginUninstall = vi.fn();
 
     const result = await executeSystemAgentOperation(
-      { kind: "plugin-uninstall", pluginId: "openclaw-demo" },
+      { kind: "plugin-uninstall", pluginId: "grokbot-demo" },
       runtime,
       { approved: true, deps: { runPluginUninstall } },
     );
@@ -1039,6 +1039,6 @@ describe("parseSystemAgentOperation", () => {
     });
     expect(runPluginUninstall).not.toHaveBeenCalled();
     expect(lines.join("\n")).toContain("could remove the provider behind");
-    expect(lines.join("\n")).toContain("openclaw plugins uninstall openclaw-demo");
+    expect(lines.join("\n")).toContain("grokbot plugins uninstall grokbot-demo");
   });
 });

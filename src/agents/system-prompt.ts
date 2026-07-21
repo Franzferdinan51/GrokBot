@@ -1,5 +1,5 @@
 /**
- * OpenClaw system prompt renderer.
+ * GrokBot system prompt renderer.
  *
  * Assembles runtime, workspace, tooling, memory, delegation, channel, and cache-boundary prompt sections.
  */
@@ -8,16 +8,16 @@ import {
   normalizePromptCapabilityIds,
   normalizeStructuredPromptSection,
   SYSTEM_PROMPT_CACHE_BOUNDARY,
-} from "@openclaw/ai/internal/shared";
+} from "@grokbot/ai/internal/shared";
 import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalLowercaseString,
-} from "@openclaw/normalization-core/string-coerce";
+} from "@grokbot/normalization-core/string-coerce";
 import {
   normalizeStringEntries,
   normalizeStringEntriesLower,
   normalizeUniqueStringEntries,
-} from "@openclaw/normalization-core/string-normalization";
+} from "@grokbot/normalization-core/string-normalization";
 import type { SourceReplyDeliveryMode } from "../auto-reply/get-reply-options.types.js";
 import type { ReasoningLevel, ThinkLevel } from "../auto-reply/thinking.js";
 import { SILENT_REPLY_TOKEN } from "../auto-reply/tokens.js";
@@ -544,7 +544,7 @@ function buildMessagingSection(params: {
     "- Cross-session: `sessions_send(sessionKey, message)`.",
     subagentOrchestrationGuidance,
     completionEventGuidance,
-    "- Provider messaging: never exec/curl; OpenClaw routes.",
+    "- Provider messaging: never exec/curl; GrokBot routes.",
     params.availableTools.has("message")
       ? [
           "",
@@ -617,17 +617,17 @@ function buildDocsSection(params: {
   }
   const lines = [
     "## Documentation",
-    docsPath ? `Docs: ${docsPath}` : "Docs: https://docs.openclaw.ai",
-    docsPath ? "Mirror: https://docs.openclaw.ai" : undefined,
-    sourcePath ? `Source: ${sourcePath}` : "Source: https://github.com/openclaw/openclaw",
+    docsPath ? `Docs: ${docsPath}` : "Docs: https://docs.grokbot.ai",
+    docsPath ? "Mirror: https://docs.grokbot.ai" : undefined,
+    sourcePath ? `Source: ${sourcePath}` : "Source: https://github.com/grokbot/grokbot",
     docsPath
-      ? `OpenClaw behavior questions: docs first via \`${params.readToolName}\`/local search. AGENTS/project/workspace/profile/memory = instructions/user memory, not product design truth.`
-      : "OpenClaw behavior questions: docs mirror first when web exists. AGENTS/project/workspace/profile/memory = instructions/user memory, not product design truth.",
+      ? `GrokBot behavior questions: docs first via \`${params.readToolName}\`/local search. AGENTS/project/workspace/profile/memory = instructions/user memory, not product design truth.`
+      : "GrokBot behavior questions: docs mirror first when web exists. AGENTS/project/workspace/profile/memory = instructions/user memory, not product design truth.",
     "Config field: `gateway(config.schema.lookup)` exact path. Broader: `docs/gateway/configuration.md`, `docs/gateway/configuration-reference.md`.",
     sourcePath
       ? "If docs are silent/stale, say so and inspect local source."
       : "If docs are silent/stale, say so and inspect GitHub source.",
-    "Diagnosis: run `openclaw status` when possible; ask only if blocked.",
+    "Diagnosis: run `grokbot status` when possible; ask only if blocked.",
     "",
   ];
   return lines.filter((line): line is string => line !== undefined);
@@ -728,7 +728,7 @@ export function buildAgentSystemPrompt(params: {
   proactiveSubagentOrchestration?: boolean;
   /** Whether ACP-specific routing guidance should be included. Defaults to true. */
   acpEnabled?: boolean;
-  /** Prompt surface controls runtime-specific fallback fragments. Defaults to OpenClaw main. */
+  /** Prompt surface controls runtime-specific fallback fragments. Defaults to GrokBot main. */
   promptSurface?: AgentPromptSurfaceKind;
   /** Registered runtime slash/native command names such as `codex`. */
   nativeCommandNames?: string[];
@@ -799,10 +799,10 @@ export function buildAgentSystemPrompt(params: {
     conversations_list: "List exact external conversation addresses",
     conversations_send: "Send directly to an external conversation",
     conversations_turn: "Send and wait for one correlated external reply",
-    openclaw: "System setup/config expert; writes need human approval",
+    grokbot: "System setup/config expert; writes need human approval",
     gateway: "Read gateway config/schema",
     agents_list: acpSpawnRuntimeEnabled
-      ? "List allowed OpenClaw subagent ids; not ACP ids"
+      ? "List allowed GrokBot subagent ids; not ACP ids"
       : "List allowed subagent ids",
     sessions_list: "List other sessions/subagents; filters/last",
     sessions_history: "Read other session/subagent history",
@@ -841,7 +841,7 @@ export function buildAgentSystemPrompt(params: {
     "conversations_list",
     "conversations_send",
     "conversations_turn",
-    "openclaw",
+    "grokbot",
     "gateway",
     "agents_list",
     "sessions_list",
@@ -910,7 +910,7 @@ export function buildAgentSystemPrompt(params: {
   });
 
   const hasGateway = availableTools.has("gateway");
-  const hasOpenClaw = availableTools.has("openclaw");
+  const hasOpenClaw = availableTools.has("grokbot");
   const readToolName = resolveToolName("read");
   const execToolName = resolveToolName("exec");
   const processToolName = resolveToolName("process");
@@ -985,7 +985,7 @@ export function buildAgentSystemPrompt(params: {
       : "Single global file workspace unless explicitly told otherwise.";
   const workspaceOnlyGuidance =
     params.fsWorkspaceOnly === true
-      ? "tools.fs.workspaceOnly ON: file-tool scratch/temp/meta stays in workspace, preferably `.openclaw/tmp/`. If file tools need it later, never exec-write `/tmp`; use workspace path."
+      ? "tools.fs.workspaceOnly ON: file-tool scratch/temp/meta stays in workspace, preferably `.grokbot/tmp/`. If file tools need it later, never exec-write `/tmp`; use workspace path."
       : "";
   const safetySection = [
     "## Safety",
@@ -1023,7 +1023,7 @@ export function buildAgentSystemPrompt(params: {
 
   // For "none" mode, return just the basic identity line
   if (promptMode === "none") {
-    return ["You are a personal assistant running inside OpenClaw.", modelIdentityLine]
+    return ["You are a personal assistant running inside GrokBot.", modelIdentityLine]
       .filter(Boolean)
       .join("\n");
   }
@@ -1078,7 +1078,7 @@ export function buildAgentSystemPrompt(params: {
   });
   const stablePrefix = cacheStablePromptPrefix(stablePrefixCacheKey, () => {
     const lines = [
-      "You are a personal assistant running inside OpenClaw.",
+      "You are a personal assistant running inside GrokBot.",
       "",
       "## Tooling",
       "Tools policy-filtered. Names case-sensitive; call exact.",
@@ -1170,11 +1170,11 @@ export function buildAgentSystemPrompt(params: {
         fallback: [],
       }),
       ...safetySection,
-      "## OpenClaw Control",
+      "## GrokBot Control",
       "Do not invent commands.",
       ...(hasOpenClaw
         ? [
-            "Config, channels, plugins, new agents, model/provider, updates: ask `openclaw`. Never write own config; OpenClaw is system expert.",
+            "Config, channels, plugins, new agents, model/provider, updates: ask `grokbot`. Never write own config; GrokBot is system expert.",
           ]
         : [
             "Config read: `gateway` (`config.get|config.schema.lookup`). Write/restart unavailable; ask human.",
@@ -1268,7 +1268,7 @@ export function buildAgentSystemPrompt(params: {
       }),
       ...bootstrapSystemPromptSections,
       "## Workspace Files (injected)",
-      "User-editable; OpenClaw loads below as Project Context.",
+      "User-editable; GrokBot loads below as Project Context.",
       "",
       ...buildAssistantOutputDirectivesSection({ isMinimal, sourceMessageToolOnly }),
     ];

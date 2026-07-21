@@ -4,15 +4,15 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-source "$ROOT_DIR/scripts/lib/openclaw-e2e-instance.sh"
+source "$ROOT_DIR/scripts/lib/grokbot-e2e-instance.sh"
 source "$ROOT_DIR/scripts/lib/docker-e2e-image.sh"
 source "$ROOT_DIR/scripts/lib/docker-e2e-package.sh"
 
-IMAGE_NAME="$(docker_e2e_resolve_image "openclaw-live-plugin-tool-e2e" OPENCLAW_LIVE_PLUGIN_TOOL_E2E_IMAGE)"
+IMAGE_NAME="$(docker_e2e_resolve_image "grokbot-live-plugin-tool-e2e" OPENCLAW_LIVE_PLUGIN_TOOL_E2E_IMAGE)"
 DOCKER_TARGET="${OPENCLAW_LIVE_PLUGIN_TOOL_DOCKER_TARGET:-bare}"
 HOST_BUILD="${OPENCLAW_LIVE_PLUGIN_TOOL_HOST_BUILD:-1}"
 PACKAGE_TGZ="${OPENCLAW_CURRENT_PACKAGE_TGZ:-}"
-PROFILE_FILE="${OPENCLAW_LIVE_PLUGIN_TOOL_PROFILE_FILE:-${OPENCLAW_TESTBOX_PROFILE_FILE:-$HOME/.openclaw-testbox-live.profile}}"
+PROFILE_FILE="${OPENCLAW_LIVE_PLUGIN_TOOL_PROFILE_FILE:-${OPENCLAW_TESTBOX_PROFILE_FILE:-$HOME/.grokbot-testbox-live.profile}}"
 AGENT_TURN_TIMEOUT_SECONDS="$(openclaw_e2e_read_positive_int_env OPENCLAW_LIVE_PLUGIN_TOOL_TIMEOUT_SECONDS 300)"
 AGENT_OUTPUT_MAX_BYTES="$(openclaw_e2e_read_positive_int_env OPENCLAW_LIVE_PLUGIN_TOOL_AGENT_OUTPUT_MAX_BYTES 1048576)"
 AGENT_OUTPUT_DUMP_BYTES="$(openclaw_e2e_read_nonnegative_int_env OPENCLAW_LIVE_PLUGIN_TOOL_AGENT_OUTPUT_DUMP_BYTES 16384)"
@@ -84,7 +84,7 @@ if ! docker_e2e_run_with_harness \
   -i "$IMAGE_NAME" bash -s >"$run_log" 2>&1 <<'EOF'; then
 set -euo pipefail
 
-source scripts/lib/openclaw-e2e-instance.sh
+source scripts/lib/grokbot-e2e-instance.sh
 openclaw_e2e_eval_test_state_from_b64 "${OPENCLAW_TEST_STATE_SCRIPT_B64:?missing OPENCLAW_TEST_STATE_SCRIPT_B64}"
 export NPM_CONFIG_PREFIX="$HOME/.npm-global"
 export npm_config_prefix="$NPM_CONFIG_PREFIX"
@@ -113,10 +113,10 @@ fi
 
 MODEL_REF="${OPENCLAW_LIVE_PLUGIN_TOOL_MODEL:?missing OPENCLAW_LIVE_PLUGIN_TOOL_MODEL}"
 PLUGIN_ID="e2e-slug-tool"
-PLUGIN_NAME="@openclaw/e2e-slug-tool"
+PLUGIN_NAME="@grokbot/e2e-slug-tool"
 PLUGIN_VERSION="0.0.0-e2e.1"
 TOOL_NAME="e2e_slug_probe"
-SEED="OpenClaw E2E Plugin Tool $(date +%s)-$RANDOM"
+SEED="GrokBot E2E Plugin Tool $(date +%s)-$RANDOM"
 EXPECTED_SLUG="$(printf '%s' "$SEED" | tr '[:upper:]' '[:lower:]' | sed -E 's/[^a-z0-9]+/-/g; s/^-+//; s/-+$//')"
 export MODEL_REF PLUGIN_ID PLUGIN_NAME PLUGIN_VERSION TOOL_NAME SEED EXPECTED_SLUG
 
@@ -124,63 +124,63 @@ dump_debug_logs() {
   local status="$1"
   local agent_output_dump_bytes="${OPENCLAW_LIVE_PLUGIN_TOOL_AGENT_OUTPUT_DUMP_BYTES:-16384}"
   echo "Live plugin tool scenario failed with exit code $status" >&2
-  if [ -f /tmp/openclaw-agent.json ]; then
-    echo "--- /tmp/openclaw-agent.json (last ${agent_output_dump_bytes} bytes) ---" >&2
-    tail -c "$agent_output_dump_bytes" /tmp/openclaw-agent.json >&2 || true
+  if [ -f /tmp/grokbot-agent.json ]; then
+    echo "--- /tmp/grokbot-agent.json (last ${agent_output_dump_bytes} bytes) ---" >&2
+    tail -c "$agent_output_dump_bytes" /tmp/grokbot-agent.json >&2 || true
     echo >&2
   fi
   openclaw_e2e_dump_logs \
-    /tmp/openclaw-install.log \
-    /tmp/openclaw-plugin-install.log \
-    /tmp/openclaw-plugin-enable.log \
-    /tmp/openclaw-plugins-list.json \
-    /tmp/openclaw-plugin-inspect.json \
-    /tmp/openclaw-live-plugin-tool-pack.log \
-    /tmp/openclaw-agent.err
+    /tmp/grokbot-install.log \
+    /tmp/grokbot-plugin-install.log \
+    /tmp/grokbot-plugin-enable.log \
+    /tmp/grokbot-plugins-list.json \
+    /tmp/grokbot-plugin-inspect.json \
+    /tmp/grokbot-live-plugin-tool-pack.log \
+    /tmp/grokbot-agent.err
 }
 trap 'status=$?; dump_debug_logs "$status"; exit "$status"' ERR
 
 mkdir -p "$NPM_CONFIG_PREFIX" "$XDG_CACHE_HOME" "$NPM_CONFIG_CACHE"
 chmod 700 "$XDG_CACHE_HOME" "$NPM_CONFIG_CACHE" || true
 
-openclaw_e2e_install_package /tmp/openclaw-install.log
-command -v openclaw >/dev/null
+openclaw_e2e_install_package /tmp/grokbot-install.log
+command -v grokbot >/dev/null
 openclaw_e2e_enable_openclaw_cli_timeout
 
-fixture_dir="$(mktemp -d /tmp/openclaw-live-plugin-tool.XXXXXX)"
+fixture_dir="$(mktemp -d /tmp/grokbot-live-plugin-tool.XXXXXX)"
 plugin_dir="$fixture_dir/package"
 mkdir -p "$plugin_dir"
 node --disable-warning=ExperimentalWarning scripts/e2e/lib/live-plugin-tool/assertions.mjs write-fixture "$plugin_dir"
 (cd "$plugin_dir" && npm pack --pack-destination "$fixture_dir" --silent) \
-  >/tmp/openclaw-live-plugin-tool-pack.log 2>&1
+  >/tmp/grokbot-live-plugin-tool-pack.log 2>&1
 plugin_tgzs=()
 while IFS= read -r packed_file; do
   plugin_tgzs+=("$packed_file")
 done < <(find "$fixture_dir" -maxdepth 1 -type f -name '*.tgz' | sort)
 if [ "${#plugin_tgzs[@]}" -ne 1 ]; then
   echo "Expected one packed fixture plugin tarball; found ${#plugin_tgzs[@]}." >&2
-  openclaw_e2e_dump_logs /tmp/openclaw-live-plugin-tool-pack.log
+  openclaw_e2e_dump_logs /tmp/grokbot-live-plugin-tool-pack.log
   exit 1
 fi
 plugin_tgz="${plugin_tgzs[0]}"
 
 echo "Installing fixture plugin from npm-pack: $plugin_tgz"
-openclaw plugins install "npm-pack:$plugin_tgz" --force >/tmp/openclaw-plugin-install.log 2>&1
+grokbot plugins install "npm-pack:$plugin_tgz" --force >/tmp/grokbot-plugin-install.log 2>&1
 node --disable-warning=ExperimentalWarning scripts/e2e/lib/live-plugin-tool/assertions.mjs configure
-openclaw plugins enable "$PLUGIN_ID" >/tmp/openclaw-plugin-enable.log 2>&1
-openclaw plugins list --json >/tmp/openclaw-plugins-list.json
-openclaw plugins inspect "$PLUGIN_ID" --runtime --json >/tmp/openclaw-plugin-inspect.json
+grokbot plugins enable "$PLUGIN_ID" >/tmp/grokbot-plugin-enable.log 2>&1
+grokbot plugins list --json >/tmp/grokbot-plugins-list.json
+grokbot plugins inspect "$PLUGIN_ID" --runtime --json >/tmp/grokbot-plugin-inspect.json
 node --disable-warning=ExperimentalWarning scripts/e2e/lib/live-plugin-tool/assertions.mjs assert-installed
 
 echo "Running live OpenAI agent turn that must call $TOOL_NAME..."
-openclaw agent --local \
+grokbot agent --local \
   --agent main \
   --session-id live-plugin-tool \
   --model "$MODEL_REF" \
   --message "Call the tool named ${TOOL_NAME}. Reply with only the exact text returned by that tool. Do not compute, transform, or explain it." \
   --thinking off \
   --timeout "${OPENCLAW_LIVE_PLUGIN_TOOL_TIMEOUT_SECONDS:-300}" \
-  --json >/tmp/openclaw-agent.json 2>/tmp/openclaw-agent.err
+  --json >/tmp/grokbot-agent.json 2>/tmp/grokbot-agent.err
 
 node --disable-warning=ExperimentalWarning scripts/e2e/lib/live-plugin-tool/assertions.mjs assert-agent-turn
 

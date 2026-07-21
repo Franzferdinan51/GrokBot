@@ -1,9 +1,9 @@
-import type { WorkboardCard } from "@openclaw/workboard-contract";
+import type { WorkboardCard } from "@grokbot/workboard-contract";
 // Workboard plugin module implements tools behavior.
-import { jsonResult, readStringParam } from "openclaw/plugin-sdk/core";
-import type { AnyAgentTool, OpenClawPluginApi } from "openclaw/plugin-sdk/plugin-entry";
-import type { OpenClawPluginToolContext } from "openclaw/plugin-sdk/plugin-entry";
-import { safeEqualSecret } from "openclaw/plugin-sdk/security-runtime";
+import { jsonResult, readStringParam } from "grokbot/plugin-sdk/core";
+import type { AnyAgentTool, OpenClawPluginApi } from "grokbot/plugin-sdk/plugin-entry";
+import type { OpenClawPluginToolContext } from "grokbot/plugin-sdk/plugin-entry";
+import { safeEqualSecret } from "grokbot/plugin-sdk/security-runtime";
 import { Type } from "typebox";
 import { WorkboardStore } from "./store.js";
 import { cardIdField, claimTokenField, createWorkboardMoveTool } from "./tools-card-mutations.js";

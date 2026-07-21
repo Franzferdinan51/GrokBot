@@ -14,8 +14,8 @@ const buildGatewayInstallPlanMock = vi.hoisted(() =>
       const preservedFileValue =
         params.existingEnvironmentValueSources?.TELEGRAM_DEFAULT_BOTTOKEN === "file";
       return {
-        programArguments: ["/usr/bin/openclaw", "gateway", "run"],
-        workingDirectory: "/tmp/openclaw",
+        programArguments: ["/usr/bin/grokbot", "gateway", "run"],
+        workingDirectory: "/tmp/grokbot",
         environment: {
           TELEGRAM_DEFAULT_BOTTOKEN: preservedFileValue
             ? params.existingEnvironment?.TELEGRAM_DEFAULT_BOTTOKEN
@@ -94,9 +94,9 @@ describe("repairLoadedGatewayServiceForStart", () => {
     });
     readConfigFileSnapshotForWriteMock.mockResolvedValue({
       snapshot: { exists: true, valid: true, sourceConfig: {}, config: {} },
-      writeOptions: { expectedConfigPath: "/tmp/openclaw.json" },
+      writeOptions: { expectedConfigPath: "/tmp/grokbot.json" },
     });
-    resolveOpenClawWrapperPathMock.mockResolvedValue("/usr/bin/openclaw");
+    resolveOpenClawWrapperPathMock.mockResolvedValue("/usr/bin/grokbot");
     formatGatewayServiceStartRepairIssuesMock.mockReturnValue(
       "service was installed by an older version",
     );
@@ -123,7 +123,7 @@ describe("repairLoadedGatewayServiceForStart", () => {
       running: false,
       env: {},
       command: {
-        programArguments: ["/usr/bin/openclaw", "gateway", "run"],
+        programArguments: ["/usr/bin/grokbot", "gateway", "run"],
         environment: existingEnvironment,
         environmentValueSources: existingEnvironmentValueSources,
       },

@@ -1,5 +1,5 @@
 // Control UI view renders agents utils screen content.
-import { formatByteSize } from "@openclaw/normalization-core";
+import { formatByteSize } from "@grokbot/normalization-core";
 import { html, nothing } from "lit";
 import {
   expandToolGroups,

@@ -23,7 +23,7 @@ afterEach(async () => {
 });
 
 async function createStateDir(): Promise<string> {
-  const stateDir = await mkdtemp(path.join(tmpdir(), "openclaw-widget-tool-"));
+  const stateDir = await mkdtemp(path.join(tmpdir(), "grokbot-widget-tool-"));
   tempDirs.push(stateDir);
   return stateDir;
 }
@@ -99,10 +99,10 @@ describe("show_widget", () => {
     expect(createHash("sha256").update(html).digest("hex")).toBe(
       "3dd21b774b05d53d12088018babfc82604cc098fcacb1cca48dff5be7e7f8812",
     );
-    expect(html).toContain("openclaw:widget-host-init-ack");
+    expect(html).toContain("grokbot:widget-host-init-ack");
     expect(html).toContain("else push.call(waiting,{send,reject})");
     expect(html).toContain("else push.call(promptWaiting,{send,inline,reject})");
-    expect(html).toContain("openclaw:widget-prompt-host-ready");
+    expect(html).toContain("grokbot:widget-prompt-host-ready");
     expect(html).toContain("widget host capabilities unavailable");
     expect(html).toContain("widget prompt host unavailable");
     expect(html).not.toContain("widget is not hosted on a board");
@@ -226,7 +226,7 @@ describe("show_widget", () => {
     expect(html).toContain("--accent:#ff5c5c");
     expect(html).toContain("--accent-fill:#d13c3c");
     expect(html).toContain('<body class="svg-widget"><script>');
-    expect(html).toContain("openclaw:widget-size");
+    expect(html).toContain("grokbot:widget-size");
     const manifest = JSON.parse(
       await readFile(
         path.join(resolveCanvasDocumentDir(stateDir, viewId), "manifest.json"),
@@ -451,13 +451,13 @@ describe("show_widget", () => {
 
     expect(html).not.toContain('<body class="svg-widget">');
     expect(html.indexOf("window.sendPrompt")).toBeLessThan(html.indexOf("<section>"));
-    expect(html).toContain("openclaw:widget-theme");
-    expect(html.indexOf("openclaw:widget-theme")).toBeLessThan(html.indexOf("<section>"));
-    expect(html).toContain("openclaw:widget-snapshot-request");
-    expect(html.indexOf("openclaw:widget-theme")).toBeLessThan(
-      html.indexOf("openclaw:widget-snapshot-request"),
+    expect(html).toContain("grokbot:widget-theme");
+    expect(html.indexOf("grokbot:widget-theme")).toBeLessThan(html.indexOf("<section>"));
+    expect(html).toContain("grokbot:widget-snapshot-request");
+    expect(html.indexOf("grokbot:widget-theme")).toBeLessThan(
+      html.indexOf("grokbot:widget-snapshot-request"),
     );
-    expect(html.indexOf("openclaw:widget-snapshot-request")).toBeLessThan(
+    expect(html.indexOf("grokbot:widget-snapshot-request")).toBeLessThan(
       html.indexOf("<section>"),
     );
     const bridgeKeys = JSON.parse(html.match(/const keys=(\[[^\]]+\])/)?.[1] ?? "[]") as string[];
@@ -481,9 +481,9 @@ describe("show_widget", () => {
       "font-body",
       "font-mono",
     ]);
-    expect(html).toContain("openclaw:widget-prompt-offer");
-    expect(html).toContain("openclaw:widget-bridge-port-offer");
-    expect(html).toContain("openclaw:widget-bridge-request");
+    expect(html).toContain("grokbot:widget-prompt-offer");
+    expect(html).toContain("grokbot:widget-bridge-port-offer");
+    expect(html).toContain("grokbot:widget-bridge-request");
     expect(html).toContain("prompt:freeze({send:sendPrompt})");
     expect(html).toContain('state:freeze({emit:payload=>request("state.emit"');
     expect(html).toContain('data:freeze({read:(bindingId,params)=>request("data.read"');
@@ -491,12 +491,12 @@ describe("show_widget", () => {
     expect(html).toContain("navigator.userActivation");
     expect(html).toContain("c.port1.postMessage.bind(c.port1)");
     expect(html).toContain("b.port1.postMessage.bind(b.port1)");
-    expect(html).toContain('bridgePost({type:"openclaw:widget-bridge-request"');
+    expect(html).toContain('bridgePost({type:"grokbot:widget-bridge-request"');
     expect(html).not.toContain(
-      'post({type:"openclaw:widget-bridge-request",id,method,params,ticket},"*")',
+      'post({type:"grokbot:widget-bridge-request",id,method,params,ticket},"*")',
     );
-    expect(html).toContain('promptPost({type:"openclaw:widget-prompt"');
-    expect(html).not.toContain('window.parent.postMessage({type:"openclaw:widget-prompt",');
+    expect(html).toContain('promptPost({type:"grokbot:widget-prompt"');
+    expect(html).not.toContain('window.parent.postMessage({type:"grokbot:widget-prompt",');
     expect(html).toContain("const post=(message,origin)=>parent.postMessage(message,origin)");
     expect(html).toContain('query.call(root,"script")');
     expect(html).toContain('queryDocument("canvas")');

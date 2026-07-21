@@ -3,9 +3,9 @@ import {
   DEFAULT_TIMING,
   logAckFailure,
   removeAckReactionAfterReply,
-} from "openclaw/plugin-sdk/channel-feedback";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { logVerbose, sleepWithAbort } from "openclaw/plugin-sdk/runtime-env";
+} from "grokbot/plugin-sdk/channel-feedback";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { logVerbose, sleepWithAbort } from "grokbot/plugin-sdk/runtime-env";
 import type { TelegramMessageContext } from "./bot-message-context.js";
 
 export function createTelegramDispatchStatus(params: {

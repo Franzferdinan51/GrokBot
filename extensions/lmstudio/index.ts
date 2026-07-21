@@ -1,4 +1,4 @@
-// Lmstudio plugin entrypoint registers its OpenClaw integration.
+// Lmstudio plugin entrypoint registers its GrokBot integration.
 import {
   definePluginEntry,
   type OpenClawPluginApi,
@@ -6,9 +6,9 @@ import {
   type ProviderAuthMethodNonInteractiveContext,
   type ProviderAuthResult,
   type ProviderRuntimeModel,
-} from "openclaw/plugin-sdk/plugin-entry";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/plugin-entry";
-import { CUSTOM_LOCAL_AUTH_MARKER } from "openclaw/plugin-sdk/provider-auth";
+} from "grokbot/plugin-sdk/plugin-entry";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/plugin-entry";
+import { CUSTOM_LOCAL_AUTH_MARKER } from "grokbot/plugin-sdk/provider-auth";
 import { lmstudioMemoryEmbeddingProviderAdapter } from "./memory-embedding-adapter.js";
 import {
   LMSTUDIO_DEFAULT_API_KEY_ENV_VAR,

@@ -1,4 +1,4 @@
-// Implements `openclaw dashboard` URL resolution, readiness check, clipboard, and browser launch.
+// Implements `grokbot dashboard` URL resolution, readiness check, clipboard, and browser launch.
 import { readConfigFileSnapshot, resolveGatewayPort } from "../config/config.js";
 import { resolveSecretInputRef } from "../config/types.secrets.js";
 import { resolveGatewayAuthToken } from "../gateway/auth-token-resolution.js";
@@ -254,7 +254,7 @@ export async function dashboardCommand(
     runtime.error(
       "Dashboard loopback listener could not be verified as the configured Gateway; refusing to copy or open an authenticated URL.",
     );
-    runtime.log("Restart the Gateway, then run `openclaw gateway status --deep` for details.");
+    runtime.log("Restart the Gateway, then run `grokbot gateway status --deep` for details.");
     return;
   }
   const { port, basePath, links, resolvedToken, token, includeTokenInUrl, dashboardUrl } = target;
@@ -271,7 +271,7 @@ export async function dashboardCommand(
   if (resolvedToken.unresolvedRefReason) {
     runtime.log(`Token auto-auth unavailable: ${resolvedToken.unresolvedRefReason}`);
     runtime.log(
-      "Set OPENCLAW_GATEWAY_TOKEN in this shell or resolve your secret provider, then rerun `openclaw dashboard`.",
+      "Set OPENCLAW_GATEWAY_TOKEN in this shell or resolve your secret provider, then rerun `grokbot dashboard`.",
     );
   }
 
@@ -302,7 +302,7 @@ export async function dashboardCommand(
   const suppressNoOpenHint = options.noOpen === true && fallbackToManualAuth;
 
   if (opened) {
-    runtime.log("Opened in your browser. Keep that tab to control OpenClaw.");
+    runtime.log("Opened in your browser. Keep that tab to control GrokBot.");
   } else if (hint && !suppressNoOpenHint) {
     runtime.log(hint);
   }

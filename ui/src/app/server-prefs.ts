@@ -5,7 +5,7 @@
 // (viewer scope, offline). Sync policy: a server-side *change* wins over the
 // local mirror; an unchanged server value never reverts local edits, so a
 // failed push degrades to device-local behavior instead of flip-flopping.
-import { asNullableRecord as asRecord } from "@openclaw/normalization-core/record-coerce";
+import { asNullableRecord as asRecord } from "@grokbot/normalization-core/record-coerce";
 import type { GatewayBrowserClient } from "../api/gateway.ts";
 import { normalizeSidebarEntries } from "../app-navigation.ts";
 import { isSupportedLocale } from "../i18n/index.ts";
@@ -192,7 +192,7 @@ export function changedServerUiPrefs(previous: UiSettings, next: UiSettings): Se
 // scope. Applying only on a server *delta* keeps an unpushable local edit
 // (viewer scope) from being reverted by every later snapshot — including the
 // first snapshot after a reload or reconnect — carrying the same old value.
-const LAST_SEEN_STORAGE_KEY = "openclaw.control.serverPrefs.v1";
+const LAST_SEEN_STORAGE_KEY = "grokbot.control.serverPrefs.v1";
 
 let lastSeenScope = "";
 let lastSeenServerPrefsKey: string | null = null;

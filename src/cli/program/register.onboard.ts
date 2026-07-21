@@ -186,7 +186,7 @@ export function registerOnboardCommand(program: Command): void {
     .addHelpText(
       "after",
       () =>
-        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/onboard", "docs.openclaw.ai/cli/onboard")}\n`,
+        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/onboard", "docs.grokbot.ai/cli/onboard")}\n`,
     )
     .option(
       "--workspace <dir>",
@@ -198,7 +198,7 @@ export function registerOnboardCommand(program: Command): void {
     )
     .option("--reset-scope <scope>", "Reset scope: config|config+creds+sessions|full")
     .option("--non-interactive", "Run without prompts", false)
-    .option("--modern", "Open inference-gated OpenClaw (kept for compatibility)", false)
+    .option("--modern", "Open inference-gated GrokBot (kept for compatibility)", false)
     .option("--classic", "Use the classic multi-step setup wizard", false)
     .option("--tui", "Use the terminal hatch instead of the browser handoff", false)
     .option(
@@ -296,7 +296,7 @@ export function registerOnboardCommand(program: Command): void {
           defaultRuntime.error(
             [
               `--modern cannot be combined with: ${unsupportedOptions.join(", ")}.`,
-              "Run those setup options without --modern, or remove them to open OpenClaw.",
+              "Run those setup options without --modern, or remove them to open GrokBot.",
             ].join("\n"),
           );
           defaultRuntime.exit(1);
@@ -306,8 +306,8 @@ export function registerOnboardCommand(program: Command): void {
           defaultRuntime.error(
             [
               "Non-interactive setup requires explicit risk acknowledgement.",
-              "Read: https://docs.openclaw.ai/security",
-              `Re-run with: ${formatCliCommand("openclaw onboard --modern --non-interactive --accept-risk ...")}`,
+              "Read: https://docs.grokbot.ai/security",
+              `Re-run with: ${formatCliCommand("grokbot onboard --modern --non-interactive --accept-risk ...")}`,
             ].join("\n"),
           );
           defaultRuntime.exit(1);

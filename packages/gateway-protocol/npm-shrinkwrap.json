@@ -1,11 +1,11 @@
 {
-  "name": "@openclaw/gateway-protocol",
+  "name": "@grokbot/gateway-protocol",
   "version": "2026.7.2",
   "lockfileVersion": 3,
   "requires": true,
   "packages": {
     "": {
-      "name": "@openclaw/gateway-protocol",
+      "name": "@grokbot/gateway-protocol",
       "version": "2026.7.2",
       "license": "MIT",
       "dependencies": {

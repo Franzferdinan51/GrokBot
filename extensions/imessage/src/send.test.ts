@@ -905,7 +905,7 @@ describe("sendMessageIMessage receipts", () => {
   });
 
   it("does not persist caption text when the caption follow-up send fails", async () => {
-    const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-imessage-send-"));
+    const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-imessage-send-"));
     vi.stubEnv("OPENCLAW_STATE_DIR", stateDir);
     const client = createRejectingClient(new Error("caption failed"));
     const runCliJson = vi.fn().mockResolvedValueOnce({ messageId: "p:0/dm-media-guid" });
@@ -1242,7 +1242,7 @@ describe("sendMessageIMessage receipts", () => {
           },
         },
         client,
-        cliPath: "/Users/me/.openclaw/scripts/imsg",
+        cliPath: "/Users/me/.grokbot/scripts/imsg",
         runCliJson,
         resolveSentMessageGuidImpl,
       }),
@@ -1262,7 +1262,7 @@ describe("sendMessageIMessage receipts", () => {
   it("does not use the local default chat.db path for auto-detected ssh wrappers", async () => {
     vi.useFakeTimers({ now: 1_000 });
     vi.stubEnv("HOME", "/Users/me");
-    const wrapperDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-imsg-wrapper-"));
+    const wrapperDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-imsg-wrapper-"));
     const wrapperPath = path.join(wrapperDir, "imsg");
     fs.writeFileSync(wrapperPath, '#!/bin/sh\nexec ssh -T gateway-host imsg "$@"\n');
     const client = createRejectingClient(new Error("imsg rpc timeout (send)"));

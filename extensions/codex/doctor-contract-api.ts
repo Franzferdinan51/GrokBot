@@ -2,8 +2,8 @@
  * Doctor contract hooks for Codex plugin config migrations and session-route
  * ownership warnings.
  */
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import type { DoctorSessionRouteStateOwner } from "openclaw/plugin-sdk/runtime-doctor";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import type { DoctorSessionRouteStateOwner } from "grokbot/plugin-sdk/runtime-doctor";
 
 type LegacyConfigRule = {
   path: string[];
@@ -44,19 +44,19 @@ export const legacyConfigRules: LegacyConfigRule[] = [
   {
     path: ["plugins", "entries", "codex", "config"],
     message:
-      'plugins.entries.codex.config.codexDynamicToolsProfile is retired; Codex app-server always keeps Codex-native workspace tools native. Run "openclaw doctor --fix".',
+      'plugins.entries.codex.config.codexDynamicToolsProfile is retired; Codex app-server always keeps Codex-native workspace tools native. Run "grokbot doctor --fix".',
     match: hasRetiredDynamicToolsProfile,
   },
   {
     path: ["plugins", "entries", "codex", "config", "codexPlugins"],
     message:
-      'plugins.entries.codex.config.codexPlugins.allow_destructive_actions="on-request" was renamed to "auto". Run "openclaw doctor --fix".',
+      'plugins.entries.codex.config.codexPlugins.allow_destructive_actions="on-request" was renamed to "auto". Run "grokbot doctor --fix".',
     match: hasLegacyPluginDestructivePolicy,
   },
   {
     path: ["plugins", "entries", "codex", "config", "appServer"],
     message:
-      'plugins.entries.codex.config.appServer.approvalPolicy="on-failure" was retired by Codex 0.143; use "on-request". Run "openclaw doctor --fix".',
+      'plugins.entries.codex.config.appServer.approvalPolicy="on-failure" was retired by Codex 0.143; use "on-request". Run "grokbot doctor --fix".',
     match: hasRetiredOnFailureApprovalPolicy,
   },
 ];

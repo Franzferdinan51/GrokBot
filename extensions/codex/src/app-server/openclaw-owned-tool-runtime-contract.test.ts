@@ -1,13 +1,13 @@
-// Codex tests cover openclaw owned tool runtime contract plugin behavior.
-import type { AnyAgentTool } from "openclaw/plugin-sdk/agent-harness";
-import { wrapToolWithBeforeToolCallHook } from "openclaw/plugin-sdk/agent-harness-runtime";
+// Codex tests cover grokbot owned tool runtime contract plugin behavior.
+import type { AnyAgentTool } from "grokbot/plugin-sdk/agent-harness";
+import { wrapToolWithBeforeToolCallHook } from "grokbot/plugin-sdk/agent-harness-runtime";
 import {
   installCodexToolResultMiddleware,
   installOpenClawOwnedToolHooks,
   mediaToolResult,
   resetOpenClawOwnedToolHooks,
   textToolResult,
-} from "openclaw/plugin-sdk/agent-runtime-test-contracts";
+} from "grokbot/plugin-sdk/agent-runtime-test-contracts";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { createCodexDynamicToolBridge } from "./dynamic-tools.js";
 
@@ -79,7 +79,7 @@ function expectAfterToolCall(
   expectHookContext(call[1], contextFields);
 }
 
-describe("OpenClaw-owned tool runtime contract — Codex app-server adapter", () => {
+describe("GrokBot-owned tool runtime contract — Codex app-server adapter", () => {
   afterEach(() => {
     resetOpenClawOwnedToolHooks();
   });

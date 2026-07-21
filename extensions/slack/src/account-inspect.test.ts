@@ -1,5 +1,5 @@
 // Slack tests cover account inspection and credential status reporting.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import { describe, expect, it } from "vitest";
 import { inspectSlackAccount } from "./account-inspect.js";
 

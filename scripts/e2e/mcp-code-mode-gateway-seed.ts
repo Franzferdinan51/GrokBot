@@ -1,4 +1,4 @@
-// Mcp Code Mode Gateway Seed script supports OpenClaw repository automation.
+// Mcp Code Mode Gateway Seed script supports GrokBot repository automation.
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
@@ -6,9 +6,9 @@ import { applyDockerOpenAiProviderConfig, type OpenClawConfig } from "./docker-o
 import { writeProbeMcpServer } from "./lib/mcp-code-mode-probe-server.ts";
 
 async function main() {
-  const stateDir = process.env.OPENCLAW_STATE_DIR?.trim() || path.join(os.homedir(), ".openclaw");
+  const stateDir = process.env.OPENCLAW_STATE_DIR?.trim() || path.join(os.homedir(), ".grokbot");
   const configPath =
-    process.env.OPENCLAW_CONFIG_PATH?.trim() || path.join(stateDir, "openclaw.json");
+    process.env.OPENCLAW_CONFIG_PATH?.trim() || path.join(stateDir, "grokbot.json");
   const workspaceDir = path.join(stateDir, "workspace");
   const serverPath = path.join(stateDir, "mcp-code-mode-fixture", "fixture-server.mjs");
   const apiKey =

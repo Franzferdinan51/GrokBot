@@ -1,13 +1,13 @@
 // Provider catalog helpers normalize, hash, and expose model catalogs for provider plugins.
 import { createHash } from "node:crypto";
-import { normalizeModelCatalog } from "@openclaw/model-catalog-core/model-catalog-normalize";
+import { normalizeModelCatalog } from "@grokbot/model-catalog-core/model-catalog-normalize";
 import type {
   ModelCatalogCost,
   ModelCatalogMediaInputConfig,
   ModelCatalogModel,
   ModelCatalogTieredCost,
-} from "@openclaw/model-catalog-core/model-catalog-types";
-import { findNormalizedProviderKey } from "@openclaw/model-catalog-core/provider-id";
+} from "@grokbot/model-catalog-core/model-catalog-types";
+import { findNormalizedProviderKey } from "@grokbot/model-catalog-core/provider-id";
 import {
   isFutureDateTimestampMs,
   resolveExpiresAtMsFromDurationMs,
@@ -15,7 +15,7 @@ import {
 import { normalizeConfiguredProviderCatalogModelId } from "../agents/model-ref-shared.js";
 import { resolveProviderRequestCapabilities } from "../agents/provider-attribution.js";
 import type { ModelDefinitionConfig } from "../config/types.models.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import type { ModelProviderConfig } from "./provider-model-shared.js";
 
 export type { ProviderCatalogContext, ProviderCatalogResult } from "../plugins/types.js";

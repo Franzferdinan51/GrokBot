@@ -1,6 +1,6 @@
 // Exercises agent harness registration, ownership metadata, and selection handoff.
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import {
   clearAgentHarnesses,
   disposeRegisteredAgentHarnesses,
@@ -56,7 +56,7 @@ function providerRuntimeConfig(provider: string, runtime: string): OpenClawConfi
     models: {
       providers: {
         [provider]: {
-          baseUrl: "https://api.openclaw.test/v1",
+          baseUrl: "https://api.grokbot.test/v1",
           agentRuntime: { id: runtime },
           models: [],
         },
@@ -131,7 +131,7 @@ describe("agent harness registry", () => {
     process.env.OPENCLAW_AGENT_RUNTIME = "auto";
 
     expect(selectAgentHarness({ provider: "plugin-models", modelId: "custom-1" }).id).toBe(
-      "openclaw",
+      "grokbot",
     );
 
     registerAgentHarness(makeHarness("custom", { providers: ["plugin-models"] }), {
@@ -143,11 +143,11 @@ describe("agent harness registry", () => {
     );
   });
 
-  it("falls back to OpenClaw for other models", () => {
+  it("falls back to GrokBot for other models", () => {
     process.env.OPENCLAW_AGENT_RUNTIME = "auto";
 
     expect(selectAgentHarness({ provider: "anthropic", modelId: "sonnet-4.6" }).id).toBe(
-      "openclaw",
+      "grokbot",
     );
   });
 
@@ -160,7 +160,7 @@ describe("agent harness registry", () => {
     expect(selectAgentHarness({ provider: "codex", modelId: "gpt-5.4" }).id).toBe("plugin-harness");
   });
 
-  it("honors explicit provider OpenClaw runtime policy", () => {
+  it("honors explicit provider GrokBot runtime policy", () => {
     registerAgentHarness(makeHarness("plugin-harness", { priority: 200 }), {
       ownerPluginId: "plugin-a",
     });
@@ -169,9 +169,9 @@ describe("agent harness registry", () => {
       selectAgentHarness({
         provider: "codex",
         modelId: "gpt-5.4",
-        config: providerRuntimeConfig("codex", "openclaw"),
+        config: providerRuntimeConfig("codex", "grokbot"),
       }).id,
-    ).toBe("openclaw");
+    ).toBe("grokbot");
   });
 
   it("honors explicit provider plugin runtime policy when the plugin harness is registered", () => {

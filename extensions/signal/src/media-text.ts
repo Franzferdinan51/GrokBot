@@ -1,8 +1,8 @@
 import {
   formatMediaPlaceholderText,
   type MediaPlaceholderTextFact,
-} from "openclaw/plugin-sdk/channel-inbound";
-import { kindFromMime } from "openclaw/plugin-sdk/media-runtime";
+} from "grokbot/plugin-sdk/channel-inbound";
+import { kindFromMime } from "grokbot/plugin-sdk/media-runtime";
 
 function formatAttachmentKindCount(kind: string, count: number): string {
   if (kind === "attachment") {

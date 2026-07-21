@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Creates isolated OpenClaw test HOME/state directories and shell snippets.
+// Creates isolated GrokBot test HOME/state directories and shell snippets.
 import { randomBytes } from "node:crypto";
 import fs from "node:fs/promises";
 import os from "node:os";
@@ -20,9 +20,9 @@ const SCENARIOS = new Set([
 
 function usage() {
   return `Usage:
-  node scripts/lib/openclaw-test-state.mjs -- create [--label <name>] [--scenario <name>] [--env-file <path>] [--json]
-  node scripts/lib/openclaw-test-state.mjs shell [--label <name>] [--scenario <name>]
-  node scripts/lib/openclaw-test-state.mjs shell-function
+  node scripts/lib/grokbot-test-state.mjs -- create [--label <name>] [--scenario <name>] [--env-file <path>] [--json]
+  node scripts/lib/grokbot-test-state.mjs shell [--label <name>] [--scenario <name>]
+  node scripts/lib/grokbot-test-state.mjs shell-function
 
 Scenarios: ${[...SCENARIOS].join(", ")}
 `;
@@ -149,7 +149,7 @@ function scenarioConfig(scenario, options = {}) {
         ],
       },
       skills: {
-        allowBundled: ["memory", "openclaw-testing"],
+        allowBundled: ["memory", "grokbot-testing"],
         limits: {
           maxSkillsInPrompt: 8,
           maxSkillsPromptChars: 30000,
@@ -224,7 +224,7 @@ function scenarioConfig(scenario, options = {}) {
         port: Number(options.port || 18789),
         auth: {
           mode: "token",
-          token: options.token || "openclaw-test-token",
+          token: options.token || "grokbot-test-token",
         },
         controlUi: {
           enabled: false,
@@ -260,7 +260,7 @@ function generateAuthProfileSecretKey() {
 
 function renderAuthProfileSecretKeyExport() {
   return [
-    'OPENCLAW_AUTH_PROFILE_SECRET_KEY_FILE="$OPENCLAW_TEST_STATE_HOME/.openclaw-test-auth-profile-secret-key"',
+    'OPENCLAW_AUTH_PROFILE_SECRET_KEY_FILE="$OPENCLAW_TEST_STATE_HOME/.grokbot-test-auth-profile-secret-key"',
     'if [ -s "$OPENCLAW_AUTH_PROFILE_SECRET_KEY_FILE" ]; then',
     '  OPENCLAW_AUTH_PROFILE_SECRET_KEY="$(cat "$OPENCLAW_AUTH_PROFILE_SECRET_KEY_FILE")"',
     "else",
@@ -295,8 +295,8 @@ function buildCreatePlan(options = {}) {
   }
   const root = options.root;
   const home = path.join(root, "home");
-  const stateDir = path.join(home, ".openclaw");
-  const configPath = path.join(stateDir, "openclaw.json");
+  const stateDir = path.join(home, ".grokbot");
+  const configPath = path.join(stateDir, "grokbot.json");
   const workspaceDir = path.join(home, "workspace");
   const config = scenarioConfig(scenario, options);
   const env = {
@@ -322,10 +322,10 @@ function buildCreatePlan(options = {}) {
   };
 }
 
-/** Create an isolated OpenClaw test state directory and optional scenario config. */
+/** Create an isolated GrokBot test state directory and optional scenario config. */
 async function createState(options = {}) {
   const label = normalizeLabel(options.label);
-  const root = await fs.mkdtemp(path.join(os.tmpdir(), `openclaw-${label}-`));
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), `grokbot-${label}-`));
   const plan = buildCreatePlan({ ...options, root });
   await fs.mkdir(plan.stateDir, { recursive: true });
   await fs.mkdir(plan.workspaceDir, { recursive: true });
@@ -340,13 +340,13 @@ function renderEnvFile(plan) {
   return `${renderExports(plan.env)}\n`;
 }
 
-/** Render shell commands that create and export an isolated OpenClaw test state. */
+/** Render shell commands that create and export an isolated GrokBot test state. */
 function renderShellSnippet(options = {}) {
   const label = normalizeLabel(options.label);
   const scenario = requireScenario(options.scenario);
   const config = scenarioConfig(scenario, options);
   const env = scenarioEnv(scenario);
-  const homeTemplate = `openclaw-${label}-${scenario}-home.XXXXXX`;
+  const homeTemplate = `grokbot-${label}-${scenario}-home.XXXXXX`;
   const lines = [
     'OPENCLAW_TEST_STATE_TMP_ROOT="${OPENCLAW_TEST_STATE_TMPDIR:-${TMPDIR:-/tmp}}"',
     'OPENCLAW_TEST_STATE_TMP_ROOT="${OPENCLAW_TEST_STATE_TMP_ROOT%/}"',
@@ -357,8 +357,8 @@ function renderShellSnippet(options = {}) {
     'export HOME="$OPENCLAW_TEST_STATE_HOME"',
     'export USERPROFILE="$OPENCLAW_TEST_STATE_HOME"',
     'export OPENCLAW_HOME="$OPENCLAW_TEST_STATE_HOME"',
-    'export OPENCLAW_STATE_DIR="$OPENCLAW_TEST_STATE_HOME/.openclaw"',
-    'export OPENCLAW_CONFIG_PATH="$OPENCLAW_STATE_DIR/openclaw.json"',
+    'export OPENCLAW_STATE_DIR="$OPENCLAW_TEST_STATE_HOME/.grokbot"',
+    'export OPENCLAW_CONFIG_PATH="$OPENCLAW_STATE_DIR/grokbot.json"',
     ...renderAuthProfileSecretKeyExport(),
     'export OPENCLAW_TEST_WORKSPACE_DIR="$OPENCLAW_TEST_STATE_HOME/workspace"',
     'mkdir -p "$OPENCLAW_STATE_DIR" "$OPENCLAW_TEST_WORKSPACE_DIR"',
@@ -373,7 +373,7 @@ function renderShellSnippet(options = {}) {
   return `${lines.join("\n")}\n`;
 }
 
-/** Render a reusable shell function for creating isolated OpenClaw test state. */
+/** Render a reusable shell function for creating isolated GrokBot test state. */
 function renderShellFunction() {
   return `openclaw_test_state_create() {
   local raw_label="\${1:-state}"
@@ -382,7 +382,7 @@ function renderShellFunction() {
   case "$scenario" in
     empty|minimal|update-stable|upgrade-survivor|gateway-loopback|external-service) ;;
     *)
-      echo "unknown OpenClaw test-state scenario: $scenario" >&2
+      echo "unknown GrokBot test-state scenario: $scenario" >&2
       return 1
       ;;
   esac
@@ -398,14 +398,14 @@ function renderShellFunction() {
       tmp_root="\${tmp_root%/}"
       [ -n "$tmp_root" ] || tmp_root="/tmp"
       mkdir -p "$tmp_root"
-      OPENCLAW_TEST_STATE_HOME="$(mktemp -d "$tmp_root/openclaw-$label-$scenario-home.XXXXXX")"
+      OPENCLAW_TEST_STATE_HOME="$(mktemp -d "$tmp_root/grokbot-$label-$scenario-home.XXXXXX")"
       ;;
   esac
   export HOME="$OPENCLAW_TEST_STATE_HOME"
   export USERPROFILE="$OPENCLAW_TEST_STATE_HOME"
   export OPENCLAW_HOME="$OPENCLAW_TEST_STATE_HOME"
-  export OPENCLAW_STATE_DIR="$OPENCLAW_TEST_STATE_HOME/.openclaw"
-  export OPENCLAW_CONFIG_PATH="$OPENCLAW_STATE_DIR/openclaw.json"
+  export OPENCLAW_STATE_DIR="$OPENCLAW_TEST_STATE_HOME/.grokbot"
+  export OPENCLAW_CONFIG_PATH="$OPENCLAW_STATE_DIR/grokbot.json"
   ${renderAuthProfileSecretKeyExport().join("\n  ")}
   export OPENCLAW_TEST_WORKSPACE_DIR="$OPENCLAW_TEST_STATE_HOME/workspace"
   unset OPENCLAW_AGENT_DIR
@@ -502,7 +502,7 @@ OPENCLAW_TEST_STATE_JSON
   "skills": {
     "allowBundled": [
       "memory",
-      "openclaw-testing"
+      "grokbot-testing"
     ],
     "limits": {
       "maxSkillsInPrompt": 8,
@@ -609,7 +609,7 @@ OPENCLAW_TEST_STATE_JSON
     "port": 18789,
     "auth": {
       "mode": "token",
-      "token": "openclaw-test-token"
+      "token": "grokbot-test-token"
     },
     "controlUi": {
       "enabled": false

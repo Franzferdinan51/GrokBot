@@ -167,7 +167,7 @@ function registerCodexDiagnosticsCommandForTest(
         text: [
           "Codex runtime thread detected.",
           "Approving diagnostics will also send this thread's feedback bundle to OpenAI servers.",
-          "The completed diagnostics reply will list the OpenClaw session ids and Codex thread ids that were sent.",
+          "The completed diagnostics reply will list the GrokBot session ids and Codex thread ids that were sent.",
           "Included: Codex logs and spawned Codex subthreads when available.",
         ].join("\n"),
       };
@@ -178,7 +178,7 @@ function registerCodexDiagnosticsCommandForTest(
           "Codex diagnostics sent to OpenAI servers:",
           "Session 1",
           "Channel: whatsapp",
-          "OpenClaw session id: `session-1`",
+          "GrokBot session id: `session-1`",
           "Codex thread id: `codex-thread-1`",
           "Inspect locally: `codex resume codex-thread-1`",
           "Included Codex logs and spawned Codex subthreads when available.",
@@ -263,7 +263,7 @@ function createDiagnosticsHandlerForTest(
             expiresAtMs: Date.now() + 60_000,
             allowedDecisions: ["allow-once", "deny"] as const,
             host: "gateway" as const,
-            command: "openclaw gateway diagnostics export --json",
+            command: "grokbot gateway diagnostics export --json",
             cwd: "/tmp",
           },
         }
@@ -314,7 +314,7 @@ describe("diagnostics command", () => {
       "Diagnostics can include sensitive local logs and host-level runtime metadata.",
     );
     expect(execCall.defaults.approvalWarningText).toContain(
-      "https://docs.openclaw.ai/gateway/diagnostics",
+      "https://docs.grokbot.ai/gateway/diagnostics",
     );
     expect(execCall.params.security).toBe("allowlist");
     expect(execCall.params.ask).toBe("always");
@@ -323,7 +323,7 @@ describe("diagnostics command", () => {
     expect(command).toContain("diagnostics");
     expect(command).toContain("export");
     expect(command).toContain("--json");
-    expect(command).not.toBe("openclaw gateway diagnostics export --json");
+    expect(command).not.toBe("grokbot gateway diagnostics export --json");
   });
 
   it("uses the originating Telegram route for native diagnostics followups", async () => {
@@ -385,7 +385,7 @@ describe("diagnostics command", () => {
     expect(result?.reply?.text).toContain(
       "Diagnostics can include sensitive local logs and host-level runtime metadata.",
     );
-    expect(result?.reply?.text).toContain("https://docs.openclaw.ai/gateway/diagnostics");
+    expect(result?.reply?.text).toContain("https://docs.grokbot.ai/gateway/diagnostics");
     expect(result?.reply?.text).toContain("no interactive approval client");
     expect(execCalls).toHaveLength(1);
   });
@@ -489,7 +489,7 @@ describe("diagnostics command", () => {
       ownership: "reserved",
       handler: vi.fn(async () => ({
         text: [
-          "No Codex thread is attached to this OpenClaw session yet.",
+          "No Codex thread is attached to this GrokBot session yet.",
           "Use /codex threads to find a thread, then /codex resume <thread-id> before sending diagnostics.",
         ].join("\n"),
       })),
@@ -582,7 +582,7 @@ describe("diagnostics command", () => {
     const commandHandler = vi.fn(async () => ({
       text: [
         "Codex diagnostics sent to OpenAI servers:",
-        "- channel whatsapp, OpenClaw session session-1, Codex thread codex-thread-1",
+        "- channel whatsapp, GrokBot session session-1, Codex thread codex-thread-1",
       ].join("\n"),
     }));
     registerHostTrustedReservedCommandForTest({

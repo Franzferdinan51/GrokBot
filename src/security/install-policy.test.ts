@@ -3,7 +3,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import {
   killPidIfAlive,
   readPidFile,
@@ -17,7 +17,7 @@ type InstallPolicyRequest = Parameters<typeof runInstallPolicy>[0]["request"];
 const tempDirs: string[] = [];
 
 async function makeTempDir(): Promise<string> {
-  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-install-policy-"));
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-install-policy-"));
   tempDirs.push(dir);
   return dir;
 }
@@ -81,7 +81,7 @@ function baseRequest(sourcePath: string): InstallPolicyRequest {
     targetName: "weather",
     sourcePath,
     sourcePathKind: "directory",
-    source: { kind: "clawhub", authority: "openclaw", mutable: false, network: true },
+    source: { kind: "clawhub", authority: "grokbot", mutable: false, network: true },
     origin: { type: "clawhub", slug: "weather", version: "1.0.0" },
     request: {
       kind: "skill-install",
@@ -169,7 +169,7 @@ describe("runInstallPolicy", () => {
     expect(captured.sourcePath).toBe(sourceDir);
     expect(captured.source).toEqual({
       kind: "clawhub",
-      authority: "openclaw",
+      authority: "grokbot",
       mutable: false,
       network: true,
     });
@@ -340,7 +340,7 @@ describe("runInstallPolicy", () => {
       reason: "blocked by install policy: unapproved registry",
     });
     expect(warnings.join("\n")).toContain("target=skill:weather");
-    expect(warnings.join("\n")).toContain("source=clawhub/openclaw");
+    expect(warnings.join("\n")).toContain("source=clawhub/grokbot");
     expect(warnings.join("\n")).toContain("blocked by install policy");
   });
 

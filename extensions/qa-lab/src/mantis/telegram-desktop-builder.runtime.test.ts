@@ -27,7 +27,7 @@ describe("mantis Telegram desktop builder runtime", () => {
     await fs.rm(repoRoot, { force: true, recursive: true });
   });
 
-  it("leases a desktop box, installs Telegram Desktop, configures OpenClaw, and keeps the gateway lease", async () => {
+  it("leases a desktop box, installs Telegram Desktop, configures GrokBot, and keeps the gateway lease", async () => {
     const commands: { args: readonly string[]; command: string; env?: NodeJS.ProcessEnv }[] = [];
     const runner = vi.fn(
       async (command: string, args: readonly string[], options: { env?: NodeJS.ProcessEnv }) => {
@@ -129,7 +129,7 @@ describe("mantis Telegram desktop builder runtime", () => {
     );
     expect(remoteScript).not.toContain("groupAllowFrom");
     expect(remoteScript).not.toContain("allowFrom:");
-    expect(remoteScript).toContain("openclaw gateway run");
+    expect(remoteScript).toContain("grokbot gateway run");
     expect(remoteScript).toContain("telegram-ready-message.json");
     expect(remoteScript).toContain("telegram-desktop-builder.mp4");
     expect(remoteScript).toContain(

@@ -1,13 +1,13 @@
 ---
-summary: "Export OpenClaw diagnostics to OpenTelemetry collectors or stdout JSONL via the diagnostics-otel plugin"
+summary: "Export GrokBot diagnostics to OpenTelemetry collectors or stdout JSONL via the diagnostics-otel plugin"
 title: "OpenTelemetry export"
 read_when:
-  - You want to send OpenClaw model usage, message flow, or session metrics to an OpenTelemetry collector
+  - You want to send GrokBot model usage, message flow, or session metrics to an OpenTelemetry collector
   - You are wiring traces, metrics, or logs into Grafana, Datadog, Honeycomb, New Relic, Tempo, or another OTLP backend
   - You need the exact metric names, span names, or attribute shapes to build dashboards or alerts
 ---
 
-OpenClaw exports diagnostics through the official `diagnostics-otel` plugin
+GrokBot exports diagnostics through the official `diagnostics-otel` plugin
 using **OTLP/HTTP (protobuf)**. Logs can also be written as stdout JSONL for
 container and sandbox log pipelines. Any collector or backend that accepts
 OTLP/HTTP works without code changes. For local file logs, see
@@ -19,7 +19,7 @@ OTLP/HTTP works without code changes. For local file logs, see
 - **`diagnostics-otel`** subscribes to those events and exports them as
   OpenTelemetry **metrics**, **traces**, and **logs** over OTLP/HTTP, and can
   mirror log records to stdout JSONL.
-- **Provider calls** receive a W3C `traceparent` header from OpenClaw's
+- **Provider calls** receive a W3C `traceparent` header from GrokBot's
   trusted model-call span context when the provider transport accepts custom
   headers. Plugin-emitted trace context is not propagated.
 - Exporters attach only when both the diagnostics surface and the plugin are
@@ -28,7 +28,7 @@ OTLP/HTTP works without code changes. For local file logs, see
 ## Quick start
 
 ```bash
-openclaw plugins install clawhub:@openclaw/diagnostics-otel
+grokbot plugins install clawhub:@grokbot/diagnostics-otel
 ```
 
 ```json5
@@ -45,7 +45,7 @@ openclaw plugins install clawhub:@openclaw/diagnostics-otel
       enabled: true,
       endpoint: "http://otel-collector:4318",
       protocol: "http/protobuf",
-      serviceName: "openclaw-gateway",
+      serviceName: "grokbot-gateway",
       traces: true,
       metrics: true,
       logs: true,
@@ -56,7 +56,7 @@ openclaw plugins install clawhub:@openclaw/diagnostics-otel
 }
 ```
 
-Or enable the plugin from the CLI: `openclaw plugins enable diagnostics-otel`.
+Or enable the plugin from the CLI: `grokbot plugins enable diagnostics-otel`.
 
 <Note>
 `protocol` supports `http/protobuf` only. Since `traces` and `metrics` default to enabled, any other value (including `grpc`) aborts the entire diagnostics-otel subscription with an `unsupported protocol` warning - this also stops stdout log export. Explicitly set `traces: false` and `metrics: false` if you only want `logsExporter: "stdout"` with a non-OTLP protocol value.
@@ -89,7 +89,7 @@ stdout, or `both` for both.
       metricsEndpoint: "http://otel-collector:4318/v1/metrics",
       logsEndpoint: "http://otel-collector:4318/v1/logs",
       protocol: "http/protobuf", // grpc disables OTLP export
-      serviceName: "openclaw-gateway", // unset falls back to OTEL_SERVICE_NAME, then "openclaw"
+      serviceName: "grokbot-gateway", // unset falls back to OTEL_SERVICE_NAME, then "grokbot"
       headers: { "x-collector-token": "..." },
       traces: true,
       metrics: true,
@@ -117,7 +117,7 @@ stdout, or `both` for both.
 | ----------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `OTEL_EXPORTER_OTLP_ENDPOINT`                                                                                     | Fallback for `diagnostics.otel.endpoint` when the config key is unset.                                                                                                                                                                                                                                         |
 | `OTEL_EXPORTER_OTLP_TRACES_ENDPOINT` / `OTEL_EXPORTER_OTLP_METRICS_ENDPOINT` / `OTEL_EXPORTER_OTLP_LOGS_ENDPOINT` | Signal-specific endpoint fallbacks used when the matching `diagnostics.otel.*Endpoint` config key is unset. Signal-specific config wins over signal-specific env, which wins over the shared endpoint.                                                                                                         |
-| `OTEL_SERVICE_NAME`                                                                                               | Fallback for `diagnostics.otel.serviceName` when the config key is unset. Default service name is `openclaw`.                                                                                                                                                                                                  |
+| `OTEL_SERVICE_NAME`                                                                                               | Fallback for `diagnostics.otel.serviceName` when the config key is unset. Default service name is `grokbot`.                                                                                                                                                                                                  |
 | `OTEL_EXPORTER_OTLP_PROTOCOL`                                                                                     | Fallback for the wire protocol when `diagnostics.otel.protocol` is unset. Only `http/protobuf` enables export.                                                                                                                                                                                                 |
 | `OTEL_SEMCONV_STABILITY_OPT_IN`                                                                                   | Set to `gen_ai_latest_experimental` to emit the latest GenAI inference span shape: `{gen_ai.operation.name} {gen_ai.request.model}` span names, `CLIENT` span kind, and `gen_ai.provider.name` instead of the legacy `gen_ai.system`. GenAI metrics always use bounded, low-cardinality attributes regardless. |
 | `OPENCLAW_OTEL_PRELOADED`                                                                                         | Set to `1` when another preload or host process already registered the global OpenTelemetry SDK. The plugin then skips its own NodeSDK lifecycle but still wires diagnostic listeners and honors `traces`/`metrics`/`logs`.                                                                                    |
@@ -139,7 +139,7 @@ transcripts, audio payloads, session ids, turn ids, call ids, room ids, or
 handoff tokens.
 
 Outbound model requests may include a W3C `traceparent` header generated only
-from OpenClaw-owned diagnostic trace context for the active model call.
+from GrokBot-owned diagnostic trace context for the active model call.
 Existing caller-supplied `traceparent` headers are replaced, so plugins or
 custom provider options cannot spoof cross-service trace ancestry.
 
@@ -155,17 +155,17 @@ system-prompt text. Each subkey is independent:
 - `toolDefinitions` - model tool names, descriptions, and schemas.
 
 When any subkey is enabled, model and tool spans get bounded, redacted
-`openclaw.content.*` attributes for that class only.
+`grokbot.content.*` attributes for that class only.
 
 <Note>
 Boolean `captureContent: true` enables `inputMessages`, `outputMessages`, `toolInputs`, `toolOutputs`, `toolDefinitions`, and OTLP log bodies together, but **not** `systemPrompt` - set `captureContent.systemPrompt: true` explicitly if you also need the assembled system prompt.
 </Note>
 
 `toolInputs`/`toolOutputs` content is captured for the built-in agent
-runtime's tool executions (`openclaw.content.tool_input` and
+runtime's tool executions (`grokbot.content.tool_input` and
 `gen_ai.tool.call.arguments` on completed/error spans;
-`openclaw.content.tool_output` and `gen_ai.tool.call.result` on completed
-spans). The `openclaw.content.*` names remain the stable OpenClaw attribute
+`grokbot.content.tool_output` and `gen_ai.tool.call.result` on completed
+spans). The `grokbot.content.*` names remain the stable GrokBot attribute
 names; the `gen_ai.tool.call.*` copies mirror them for semconv-native viewers.
 External harness tool calls (Codex, Claude CLI) emit
 `tool.execution.*` spans without content payloads. Captured content travels on a
@@ -196,17 +196,17 @@ bus.
   scope inherit the request trace by default, while agent run and model-call
   spans are created as children so provider `traceparent` headers stay on the
   same trace.
-- **Model-call correlation:** `openclaw.model.call` spans include safe prompt
+- **Model-call correlation:** `grokbot.model.call` spans include safe prompt
   component sizes by default and per-call token attributes when the provider
-  result exposes usage. `openclaw.model.usage` remains the run-level
+  result exposes usage. `grokbot.model.usage` remains the run-level
   accounting span for aggregate cost, context, and channel dashboards, and
   stays on the same diagnostic trace when the emitting runtime has trusted
   trace context.
 
 ### Model-call observation units
 
-Every `openclaw.model.call` span identifies what its lifecycle measures through
-`openclaw.model_call.observation_unit`:
+Every `grokbot.model.call` span identifies what its lifecycle measures through
+`grokbot.model_call.observation_unit`:
 
 - `request` - one observable model/provider request. Native embedded model
   calls use this unit, and exporters treat a missing value as `request` for
@@ -220,18 +220,18 @@ output, usage, and hierarchy. Request spans use the API-derived GenAI operation
 (`chat`, `generate_content`, or `text_completion`), while turn spans use
 `gen_ai.operation.name = invoke_agent`. Both contribute to
 `gen_ai.client.operation.duration`, where the operation name keeps direct
-request latency separate from full-turn latency. OpenClaw's OTEL model-call
-metrics also include `openclaw.model_call.observation_unit`; the Prometheus
+request latency separate from full-turn latency. GrokBot's OTEL model-call
+metrics also include `grokbot.model_call.observation_unit`; the Prometheus
 model-call metrics expose the equivalent `observation_unit` label.
 
 ### Claude Code CLI model-call fidelity
 
-Claude Code CLI turns emit one synthetic, turn-level `openclaw.model.call`
-span. These are not Anthropic HTTP request spans. They use `openclaw.api =
-claude-code`, `openclaw.model_call.observation_unit = turn`, and identify
+Claude Code CLI turns emit one synthetic, turn-level `grokbot.model.call`
+span. These are not Anthropic HTTP request spans. They use `grokbot.api =
+claude-code`, `grokbot.model_call.observation_unit = turn`, and identify
 the operation as `gen_ai.operation.name = invoke_agent`. They identify
-OpenClaw's CLI boundary through
-`openclaw.transport`:
+GrokBot's CLI boundary through
+`grokbot.transport`:
 
 - `stdio` - one-shot local Claude Code process.
 - `stdio-live` - one turn on a managed persistent Claude stdio session.
@@ -247,43 +247,43 @@ are capped at 128 KiB each; assistant output is capped at 128 KiB across at
 most 200 envelopes, with 16 KiB and one item reserved for a final visible
 fallback response. A marker records truncation when the limit is reached.
 
-OpenClaw gives Claude CLI turns the same ownership hierarchy used by other
-agent runtimes: `openclaw.harness.run` (`openclaw.harness.id = claude-cli`)
-contains `openclaw.run`, which contains the Claude `openclaw.model.call`
-span. The harness and run spans are synthetic OpenClaw turn boundaries, not
+GrokBot gives Claude CLI turns the same ownership hierarchy used by other
+agent runtimes: `grokbot.harness.run` (`grokbot.harness.id = claude-cli`)
+contains `grokbot.run`, which contains the Claude `grokbot.model.call`
+span. The harness and run spans are synthetic GrokBot turn boundaries, not
 Claude Code internal phases. One-shot and managed stdio turns use the same
 hierarchy; a real fresh-session retry creates another model-call child inside
-the same OpenClaw run.
+the same GrokBot run.
 
-The span starts when OpenClaw admits the prepared CLI turn and ends only after
+The span starts when GrokBot admits the prepared CLI turn and ends only after
 that turn succeeds or fails. For managed sessions, an interim success result
 does not end the span while Claude reports result-holding background agents or
 workflows; the final post-drain result does. Abort, timeout, process failure,
 output/parse failure, and other turn failures end the same span with an error.
 
 Claude Code reports per-assistant-message usage and may also report cumulative
-usage on its terminal result. OpenClaw reply accounting continues to use the
+usage on its terminal result. GrokBot reply accounting continues to use the
 last assistant message so existing cost semantics do not change; the
 turn-level model-call span uses terminal cumulative usage when available,
 including cache-read and cache-creation tokens.
 
-For these CLI spans, byte and timing fields describe the observable OpenClaw
+For these CLI spans, byte and timing fields describe the observable GrokBot
 CLI boundary:
 
-- `openclaw.model_call.request_bytes` is the UTF-8 size of the prompt value
+- `grokbot.model_call.request_bytes` is the UTF-8 size of the prompt value
   sent over one-shot stdin/argv, or the managed stdio JSONL user envelope. It
   is not the size of Claude Code's hidden model request.
-- `openclaw.model_call.response_bytes` is the UTF-8 size of Claude CLI stdout
+- `grokbot.model_call.response_bytes` is the UTF-8 size of Claude CLI stdout
   observed during the turn. It is not Anthropic HTTP response size.
-- `openclaw.model_call.time_to_first_byte_ms` is time to the first observable
+- `grokbot.model_call.time_to_first_byte_ms` is time to the first observable
   Claude CLI stdout or stderr output. It is not network TTFB.
 
 With the matching granular `captureContent` fields enabled, the span exports
-the effective prompt OpenClaw sends to Claude Code, OpenClaw's appended system
+the effective prompt GrokBot sends to Claude Code, GrokBot's appended system
 prompt, and visible assistant text/reasoning/tool-call identity through
 `gen_ai.input.messages`, `gen_ai.output.messages`, and
 `gen_ai.system_instructions`. Tool arguments, opaque thinking signatures, and
-tool results are omitted from the Claude assistant envelope. OpenClaw does not
+tool results are omitted from the Claude assistant envelope. GrokBot does not
 claim access to Claude Code's private system prompt, hidden resumed or
 compacted request payload, native internal tool schemas, raw Anthropic HTTP
 request, internal retries, upstream request id, or true network TTFB. Because
@@ -299,60 +299,60 @@ bounds; content remains off by default.
 
 ### Model usage
 
-- `openclaw.tokens` (counter, attrs: `openclaw.token`, `openclaw.channel`, `openclaw.provider`, `openclaw.model`, `openclaw.agent`)
-- `openclaw.cost.usd` (counter, attrs: `openclaw.channel`, `openclaw.provider`, `openclaw.model`)
-- `openclaw.run.duration_ms` (histogram, attrs: `openclaw.channel`, `openclaw.provider`, `openclaw.model`)
-- `openclaw.context.tokens` (histogram, attrs: `openclaw.context`, `openclaw.channel`, `openclaw.provider`, `openclaw.model`)
+- `grokbot.tokens` (counter, attrs: `grokbot.token`, `grokbot.channel`, `grokbot.provider`, `grokbot.model`, `grokbot.agent`)
+- `grokbot.cost.usd` (counter, attrs: `grokbot.channel`, `grokbot.provider`, `grokbot.model`)
+- `grokbot.run.duration_ms` (histogram, attrs: `grokbot.channel`, `grokbot.provider`, `grokbot.model`)
+- `grokbot.context.tokens` (histogram, attrs: `grokbot.context`, `grokbot.channel`, `grokbot.provider`, `grokbot.model`)
 - `gen_ai.client.token.usage` (histogram, GenAI semantic-conventions metric, attrs: `gen_ai.token.type` = `input`/`output`, `gen_ai.provider.name`, `gen_ai.operation.name`, `gen_ai.request.model`)
 - `gen_ai.client.operation.duration` (histogram, seconds, GenAI semantic-conventions metric for model requests and synthetic agent turns; attrs: `gen_ai.provider.name`, `gen_ai.operation.name`, `gen_ai.request.model`, optional `error.type`; turn observations use `gen_ai.operation.name = invoke_agent`)
-- `openclaw.model_call.duration_ms` (histogram, attrs: `openclaw.provider`, `openclaw.model`, `openclaw.api`, `openclaw.transport`, `openclaw.model_call.observation_unit`, plus `openclaw.errorCategory` and `openclaw.failureKind` on classified errors)
-- `openclaw.model_call.request_bytes` (histogram, UTF-8 byte size of the final model request payload; for Claude Code CLI, the observable prompt input/envelope described above; no raw payload content)
-- `openclaw.model_call.response_bytes` (histogram, UTF-8 byte size of streamed response chunk payloads; high-frequency text, thinking, and tool-call deltas count only incremental `delta` bytes; for Claude Code CLI, observed stdout bytes; no raw response content)
-- `openclaw.model_call.time_to_first_byte_ms` (histogram, elapsed time before the first streamed response event; for Claude Code CLI, first observable CLI output rather than network TTFB)
-- `openclaw.model.failover` (counter, attrs: `openclaw.provider`, `openclaw.model`, `openclaw.failover.to_provider`, `openclaw.failover.to_model`, `openclaw.failover.reason`, `openclaw.failover.suspended`, `openclaw.lane`)
-- `openclaw.skill.used` (counter, attrs: `openclaw.skill.name`, `openclaw.skill.source`, `openclaw.skill.activation`, optional `openclaw.agent`, optional `openclaw.toolName`)
+- `grokbot.model_call.duration_ms` (histogram, attrs: `grokbot.provider`, `grokbot.model`, `grokbot.api`, `grokbot.transport`, `grokbot.model_call.observation_unit`, plus `grokbot.errorCategory` and `grokbot.failureKind` on classified errors)
+- `grokbot.model_call.request_bytes` (histogram, UTF-8 byte size of the final model request payload; for Claude Code CLI, the observable prompt input/envelope described above; no raw payload content)
+- `grokbot.model_call.response_bytes` (histogram, UTF-8 byte size of streamed response chunk payloads; high-frequency text, thinking, and tool-call deltas count only incremental `delta` bytes; for Claude Code CLI, observed stdout bytes; no raw response content)
+- `grokbot.model_call.time_to_first_byte_ms` (histogram, elapsed time before the first streamed response event; for Claude Code CLI, first observable CLI output rather than network TTFB)
+- `grokbot.model.failover` (counter, attrs: `grokbot.provider`, `grokbot.model`, `grokbot.failover.to_provider`, `grokbot.failover.to_model`, `grokbot.failover.reason`, `grokbot.failover.suspended`, `grokbot.lane`)
+- `grokbot.skill.used` (counter, attrs: `grokbot.skill.name`, `grokbot.skill.source`, `grokbot.skill.activation`, optional `grokbot.agent`, optional `grokbot.toolName`)
 
 ### Message flow
 
-- `openclaw.webhook.received` (counter, attrs: `openclaw.channel`, `openclaw.webhook`)
-- `openclaw.webhook.error` (counter, attrs: `openclaw.channel`, `openclaw.webhook`)
-- `openclaw.webhook.duration_ms` (histogram, attrs: `openclaw.channel`, `openclaw.webhook`)
-- `openclaw.message.queued` (counter, attrs: `openclaw.channel`, `openclaw.source`)
-- `openclaw.message.received` (counter, attrs: `openclaw.channel`, `openclaw.source`)
-- `openclaw.message.dispatch.started` (counter, attrs: `openclaw.channel`, `openclaw.source`)
-- `openclaw.message.dispatch.completed` (counter, attrs: `openclaw.channel`, `openclaw.outcome`, `openclaw.reason`, `openclaw.source`)
-- `openclaw.message.dispatch.duration_ms` (histogram, attrs: `openclaw.channel`, `openclaw.outcome`, `openclaw.reason`, `openclaw.source`)
-- `openclaw.message.processed` (counter, attrs: `openclaw.channel`, `openclaw.outcome`)
-- `openclaw.message.duration_ms` (histogram, attrs: `openclaw.channel`, `openclaw.outcome`)
-- `openclaw.message.delivery.started` (counter, attrs: `openclaw.channel`, `openclaw.delivery.kind`)
-- `openclaw.message.delivery.duration_ms` (histogram, attrs: `openclaw.channel`, `openclaw.delivery.kind`, `openclaw.outcome`, `openclaw.errorCategory`)
+- `grokbot.webhook.received` (counter, attrs: `grokbot.channel`, `grokbot.webhook`)
+- `grokbot.webhook.error` (counter, attrs: `grokbot.channel`, `grokbot.webhook`)
+- `grokbot.webhook.duration_ms` (histogram, attrs: `grokbot.channel`, `grokbot.webhook`)
+- `grokbot.message.queued` (counter, attrs: `grokbot.channel`, `grokbot.source`)
+- `grokbot.message.received` (counter, attrs: `grokbot.channel`, `grokbot.source`)
+- `grokbot.message.dispatch.started` (counter, attrs: `grokbot.channel`, `grokbot.source`)
+- `grokbot.message.dispatch.completed` (counter, attrs: `grokbot.channel`, `grokbot.outcome`, `grokbot.reason`, `grokbot.source`)
+- `grokbot.message.dispatch.duration_ms` (histogram, attrs: `grokbot.channel`, `grokbot.outcome`, `grokbot.reason`, `grokbot.source`)
+- `grokbot.message.processed` (counter, attrs: `grokbot.channel`, `grokbot.outcome`)
+- `grokbot.message.duration_ms` (histogram, attrs: `grokbot.channel`, `grokbot.outcome`)
+- `grokbot.message.delivery.started` (counter, attrs: `grokbot.channel`, `grokbot.delivery.kind`)
+- `grokbot.message.delivery.duration_ms` (histogram, attrs: `grokbot.channel`, `grokbot.delivery.kind`, `grokbot.outcome`, `grokbot.errorCategory`)
 
 ### Talk
 
-- `openclaw.talk.event` (counter, attrs: `openclaw.talk.event_type`, `openclaw.talk.mode`, `openclaw.talk.transport`, `openclaw.talk.brain`, `openclaw.talk.provider`)
-- `openclaw.talk.event.duration_ms` (histogram, attrs: same as `openclaw.talk.event`; emitted when a Talk event reports duration)
-- `openclaw.talk.audio.bytes` (histogram, attrs: same as `openclaw.talk.event`; emitted for Talk audio frame events that report byte length)
+- `grokbot.talk.event` (counter, attrs: `grokbot.talk.event_type`, `grokbot.talk.mode`, `grokbot.talk.transport`, `grokbot.talk.brain`, `grokbot.talk.provider`)
+- `grokbot.talk.event.duration_ms` (histogram, attrs: same as `grokbot.talk.event`; emitted when a Talk event reports duration)
+- `grokbot.talk.audio.bytes` (histogram, attrs: same as `grokbot.talk.event`; emitted for Talk audio frame events that report byte length)
 
 ### Queues and sessions
 
-- `openclaw.queue.lane.enqueue` (counter, attrs: `openclaw.lane`)
-- `openclaw.queue.lane.dequeue` (counter, attrs: `openclaw.lane`)
-- `openclaw.queue.depth` (histogram, attrs: `openclaw.lane` or `openclaw.channel=heartbeat`)
-- `openclaw.queue.wait_ms` (histogram, attrs: `openclaw.lane`)
-- `openclaw.session.state` (counter, attrs: `openclaw.state`, `openclaw.reason`)
-- `openclaw.session.stuck` (counter, attrs: `openclaw.state`; emitted for recoverable stale session bookkeeping)
-- `openclaw.session.stuck_age_ms` (histogram, attrs: `openclaw.state`; emitted for recoverable stale session bookkeeping)
-- `openclaw.session.turn.created` (counter, attrs: `openclaw.agent`, `openclaw.channel`, `openclaw.trigger`)
-- `openclaw.session.recovery.requested` (counter, attrs: `openclaw.state`, `openclaw.action`, `openclaw.active_work_kind`, `openclaw.reason`)
-- `openclaw.session.recovery.completed` (counter, attrs: `openclaw.state`, `openclaw.action`, `openclaw.status`, `openclaw.active_work_kind`, `openclaw.reason`)
-- `openclaw.session.recovery.age_ms` (histogram, attrs: same as the matching recovery counter)
-- `openclaw.run.attempt` (counter, attrs: `openclaw.attempt`)
+- `grokbot.queue.lane.enqueue` (counter, attrs: `grokbot.lane`)
+- `grokbot.queue.lane.dequeue` (counter, attrs: `grokbot.lane`)
+- `grokbot.queue.depth` (histogram, attrs: `grokbot.lane` or `grokbot.channel=heartbeat`)
+- `grokbot.queue.wait_ms` (histogram, attrs: `grokbot.lane`)
+- `grokbot.session.state` (counter, attrs: `grokbot.state`, `grokbot.reason`)
+- `grokbot.session.stuck` (counter, attrs: `grokbot.state`; emitted for recoverable stale session bookkeeping)
+- `grokbot.session.stuck_age_ms` (histogram, attrs: `grokbot.state`; emitted for recoverable stale session bookkeeping)
+- `grokbot.session.turn.created` (counter, attrs: `grokbot.agent`, `grokbot.channel`, `grokbot.trigger`)
+- `grokbot.session.recovery.requested` (counter, attrs: `grokbot.state`, `grokbot.action`, `grokbot.active_work_kind`, `grokbot.reason`)
+- `grokbot.session.recovery.completed` (counter, attrs: `grokbot.state`, `grokbot.action`, `grokbot.status`, `grokbot.active_work_kind`, `grokbot.reason`)
+- `grokbot.session.recovery.age_ms` (histogram, attrs: same as the matching recovery counter)
+- `grokbot.run.attempt` (counter, attrs: `grokbot.attempt`)
 
 ### Session liveness telemetry
 
-A `processing` session does not age toward the built-in liveness threshold while OpenClaw observes reply, tool, status, block, or ACP runtime progress. Typing keepalives do not count as progress, so a silent model or harness can still be detected.
+A `processing` session does not age toward the built-in liveness threshold while GrokBot observes reply, tool, status, block, or ACP runtime progress. Typing keepalives do not count as progress, so a silent model or harness can still be detected.
 
-OpenClaw classifies sessions by the work it can still observe:
+GrokBot classifies sessions by the work it can still observe:
 
 - `session.long_running`: active embedded work, model calls, or tool calls
   are still making progress. Owned silent model calls also report as long-running before the built-in abort threshold, so slow or non-streaming model providers do not look like stalled gateway sessions while abort-observable.
@@ -371,8 +371,8 @@ Recovery emits structured `session.recovery.requested` and
 only after a mutating recovery outcome (`aborted` or `released`) and only if
 the same processing generation is still current.
 
-Only `session.stuck` emits the `openclaw.session.stuck` counter, the
-`openclaw.session.stuck_age_ms` histogram, and the `openclaw.session.stuck`
+Only `session.stuck` emits the `grokbot.session.stuck` counter, the
+`grokbot.session.stuck_age_ms` histogram, and the `grokbot.session.stuck`
 span. Repeated `session.stuck` diagnostics back off while the session remains
 unchanged, so dashboards should alert on sustained increases rather than
 every heartbeat tick. For the config knob and defaults, see
@@ -380,81 +380,81 @@ every heartbeat tick. For the config knob and defaults, see
 
 Liveness warnings also emit:
 
-- `openclaw.liveness.warning` (counter, attrs: `openclaw.liveness.reason`)
-- `openclaw.liveness.event_loop_delay_p99_ms` (histogram, attrs: `openclaw.liveness.reason`)
-- `openclaw.liveness.event_loop_delay_max_ms` (histogram, attrs: `openclaw.liveness.reason`)
-- `openclaw.liveness.event_loop_utilization` (histogram, attrs: `openclaw.liveness.reason`)
-- `openclaw.liveness.cpu_core_ratio` (histogram, attrs: `openclaw.liveness.reason`)
+- `grokbot.liveness.warning` (counter, attrs: `grokbot.liveness.reason`)
+- `grokbot.liveness.event_loop_delay_p99_ms` (histogram, attrs: `grokbot.liveness.reason`)
+- `grokbot.liveness.event_loop_delay_max_ms` (histogram, attrs: `grokbot.liveness.reason`)
+- `grokbot.liveness.event_loop_utilization` (histogram, attrs: `grokbot.liveness.reason`)
+- `grokbot.liveness.cpu_core_ratio` (histogram, attrs: `grokbot.liveness.reason`)
 
 ### Harness lifecycle
 
-- `openclaw.harness.duration_ms` (histogram, attrs: `openclaw.harness.id`, `openclaw.harness.plugin`, `openclaw.outcome`, `openclaw.harness.phase` on errors)
+- `grokbot.harness.duration_ms` (histogram, attrs: `grokbot.harness.id`, `grokbot.harness.plugin`, `grokbot.outcome`, `grokbot.harness.phase` on errors)
 
 ### Tool execution and loop detection
 
-- `openclaw.tool.execution.duration_ms` (histogram, attrs: `gen_ai.tool.name`, `openclaw.toolName`, `openclaw.tool.source`, `openclaw.tool.owner`, `openclaw.tool.params.kind`, plus `openclaw.errorCategory` on errors)
-- `openclaw.tool.execution.blocked` (counter, attrs: `gen_ai.tool.name`, `openclaw.toolName`, `openclaw.tool.source`, `openclaw.tool.owner`, `openclaw.tool.params.kind`, `openclaw.deniedReason`)
-- `openclaw.tool.loop` (counter, attrs: `openclaw.toolName`, `openclaw.loop.level`, `openclaw.loop.action`, `openclaw.loop.detector`, `openclaw.loop.count`, optional `openclaw.loop.paired_tool`; emitted when a repetitive tool-call loop is detected)
+- `grokbot.tool.execution.duration_ms` (histogram, attrs: `gen_ai.tool.name`, `grokbot.toolName`, `grokbot.tool.source`, `grokbot.tool.owner`, `grokbot.tool.params.kind`, plus `grokbot.errorCategory` on errors)
+- `grokbot.tool.execution.blocked` (counter, attrs: `gen_ai.tool.name`, `grokbot.toolName`, `grokbot.tool.source`, `grokbot.tool.owner`, `grokbot.tool.params.kind`, `grokbot.deniedReason`)
+- `grokbot.tool.loop` (counter, attrs: `grokbot.toolName`, `grokbot.loop.level`, `grokbot.loop.action`, `grokbot.loop.detector`, `grokbot.loop.count`, optional `grokbot.loop.paired_tool`; emitted when a repetitive tool-call loop is detected)
 
 ### Exec
 
-- `openclaw.exec.duration_ms` (histogram, attrs: `openclaw.exec.target`, `openclaw.exec.mode`, `openclaw.outcome`, `openclaw.failureKind`)
+- `grokbot.exec.duration_ms` (histogram, attrs: `grokbot.exec.target`, `grokbot.exec.mode`, `grokbot.outcome`, `grokbot.failureKind`)
 
 ### Diagnostics internals (memory, payloads, exporter health)
 
-- `openclaw.payload.large` (counter, attrs: `openclaw.payload.surface`, `openclaw.payload.action`, `openclaw.channel`, `openclaw.plugin`, `openclaw.reason`)
-- `openclaw.payload.large_bytes` (histogram, attrs: same as `openclaw.payload.large`)
-- `openclaw.memory.rss_bytes` / `openclaw.memory.heap_used_bytes` / `openclaw.memory.heap_total_bytes` / `openclaw.memory.external_bytes` / `openclaw.memory.array_buffers_bytes` (histograms, no attrs; process memory samples)
-- `openclaw.memory.pressure` (counter, attrs: `openclaw.memory.level`, `openclaw.memory.reason`)
-- `openclaw.diagnostic.async_queue.dropped` (counter, attrs: `openclaw.diagnostic.async_queue.drop_class`; internal diagnostic-queue backpressure drops)
-- `openclaw.telemetry.exporter.events` (counter, attrs: `openclaw.exporter`, `openclaw.signal`, `openclaw.status`, optional `openclaw.reason`, optional `openclaw.errorCategory`; exporter lifecycle/failure self-telemetry)
+- `grokbot.payload.large` (counter, attrs: `grokbot.payload.surface`, `grokbot.payload.action`, `grokbot.channel`, `grokbot.plugin`, `grokbot.reason`)
+- `grokbot.payload.large_bytes` (histogram, attrs: same as `grokbot.payload.large`)
+- `grokbot.memory.rss_bytes` / `grokbot.memory.heap_used_bytes` / `grokbot.memory.heap_total_bytes` / `grokbot.memory.external_bytes` / `grokbot.memory.array_buffers_bytes` (histograms, no attrs; process memory samples)
+- `grokbot.memory.pressure` (counter, attrs: `grokbot.memory.level`, `grokbot.memory.reason`)
+- `grokbot.diagnostic.async_queue.dropped` (counter, attrs: `grokbot.diagnostic.async_queue.drop_class`; internal diagnostic-queue backpressure drops)
+- `grokbot.telemetry.exporter.events` (counter, attrs: `grokbot.exporter`, `grokbot.signal`, `grokbot.status`, optional `grokbot.reason`, optional `grokbot.errorCategory`; exporter lifecycle/failure self-telemetry)
 
 ## Exported spans
 
-- `openclaw.model.usage`
-  - `openclaw.channel`, `openclaw.provider`, `openclaw.model`
-  - `openclaw.tokens.*` (input/output/cache_read/cache_write/total)
+- `grokbot.model.usage`
+  - `grokbot.channel`, `grokbot.provider`, `grokbot.model`
+  - `grokbot.tokens.*` (input/output/cache_read/cache_write/total)
   - `gen_ai.system` by default, or `gen_ai.provider.name` when the latest GenAI semantic conventions are opted in
   - `gen_ai.request.model`, `gen_ai.operation.name`, `gen_ai.usage.*`
-- `openclaw.run`
-  - `openclaw.outcome`, `openclaw.channel`, `openclaw.provider`, `openclaw.model`, `openclaw.errorCategory`
-- `openclaw.model.call`
+- `grokbot.run`
+  - `grokbot.outcome`, `grokbot.channel`, `grokbot.provider`, `grokbot.model`, `grokbot.errorCategory`
+- `grokbot.model.call`
   - `gen_ai.system` by default, or `gen_ai.provider.name` when the latest GenAI semantic conventions are opted in
-  - `gen_ai.request.model`, `gen_ai.operation.name`, `openclaw.provider`, `openclaw.model`, `openclaw.api`, `openclaw.transport`, `openclaw.model_call.observation_unit` (`request` or `turn`)
-  - `openclaw.errorCategory`, `error.type`, and optional `openclaw.failureKind` on errors
-  - `openclaw.model_call.request_bytes`, `openclaw.model_call.response_bytes`, `openclaw.model_call.time_to_first_byte_ms`
-  - `openclaw.model_call.prompt.input_messages_count`, `openclaw.model_call.prompt.input_messages_chars`, `openclaw.model_call.prompt.system_prompt_chars`, `openclaw.model_call.prompt.tool_definitions_count`, `openclaw.model_call.prompt.tool_definitions_chars`, `openclaw.model_call.prompt.total_chars` (safe component sizes only, no prompt text)
-  - `openclaw.model_call.usage.*` and `gen_ai.usage.*` when the result carries usage for that request or aggregate turn
-  - Span event `openclaw.provider.request` with attribute `openclaw.upstreamRequestIdHash` (bounded, hash-based) when the upstream provider result exposes a request id; raw ids are never exported
-  - With `OTEL_SEMCONV_STABILITY_OPT_IN=gen_ai_latest_experimental`, request spans use the latest GenAI inference span name `{gen_ai.operation.name} {gen_ai.request.model}`. Turn spans use `invoke_agent` because OpenClaw does not claim a native agent name from the opaque CLI boundary. Both use `CLIENT` span kind instead of `openclaw.model.call`.
-- `openclaw.harness.run`
-  - `openclaw.harness.id`, `openclaw.harness.plugin`, `openclaw.outcome`, `openclaw.provider`, `openclaw.model`, `openclaw.channel`
-  - On completion: `openclaw.harness.result_classification`, `openclaw.harness.yield_detected`, `openclaw.harness.items.started`, `openclaw.harness.items.completed`, `openclaw.harness.items.active`
-  - On error: `openclaw.harness.phase`, `openclaw.errorCategory`, optional `openclaw.harness.cleanup_failed`
-- `openclaw.tool.execution`
-  - `gen_ai.tool.name`, `gen_ai.operation.name` (`execute_tool`), `openclaw.toolName`, `openclaw.tool.source`, optional `gen_ai.tool.call.id`, `openclaw.tool.owner`, `openclaw.tool.params.*`
-  - Optional `openclaw.errorCategory`/`openclaw.errorCode` on errors, `openclaw.deniedReason` and `openclaw.outcome=blocked` when denied by policy or sandbox
-- `openclaw.exec`
-  - `openclaw.exec.target`, `openclaw.exec.mode`, `openclaw.outcome`, `openclaw.failureKind`, `openclaw.exec.command_length`, `openclaw.exec.exit_code`, `openclaw.exec.exit_signal`, `openclaw.exec.timed_out`
-- `openclaw.webhook.processed`
-  - `openclaw.channel`, `openclaw.webhook`
-- `openclaw.webhook.error`
-  - `openclaw.channel`, `openclaw.webhook`, `openclaw.error`
-- `openclaw.message.processed`
-  - `openclaw.channel`, `openclaw.outcome`, `openclaw.reason`
-- `openclaw.message.delivery`
-  - `openclaw.channel`, `openclaw.delivery.kind`, `openclaw.outcome`, `openclaw.errorCategory`, `openclaw.delivery.result_count`
-- `openclaw.session.stuck`
-  - `openclaw.state`, `openclaw.ageMs`, `openclaw.queueDepth`
-- `openclaw.context.assembled`
-  - `openclaw.prompt.size`, `openclaw.history.size`, `openclaw.context.tokens`, `openclaw.errorCategory` (no prompt, history, response, or session-key content)
-- `openclaw.tool.loop`
-  - `openclaw.toolName`, `openclaw.loop.level`, `openclaw.loop.action`, `openclaw.loop.detector`, `openclaw.loop.count`, optional `openclaw.loop.paired_tool` (no loop messages, params, or tool output)
-- `openclaw.memory.pressure`
-  - `openclaw.memory.level`, `openclaw.memory.reason`, `openclaw.memory.rss_bytes`, `openclaw.memory.heap_used_bytes`, `openclaw.memory.heap_total_bytes`, `openclaw.memory.external_bytes`, `openclaw.memory.array_buffers_bytes`, optional `openclaw.memory.threshold_bytes`/`openclaw.memory.rss_growth_bytes`/`openclaw.memory.window_ms`
+  - `gen_ai.request.model`, `gen_ai.operation.name`, `grokbot.provider`, `grokbot.model`, `grokbot.api`, `grokbot.transport`, `grokbot.model_call.observation_unit` (`request` or `turn`)
+  - `grokbot.errorCategory`, `error.type`, and optional `grokbot.failureKind` on errors
+  - `grokbot.model_call.request_bytes`, `grokbot.model_call.response_bytes`, `grokbot.model_call.time_to_first_byte_ms`
+  - `grokbot.model_call.prompt.input_messages_count`, `grokbot.model_call.prompt.input_messages_chars`, `grokbot.model_call.prompt.system_prompt_chars`, `grokbot.model_call.prompt.tool_definitions_count`, `grokbot.model_call.prompt.tool_definitions_chars`, `grokbot.model_call.prompt.total_chars` (safe component sizes only, no prompt text)
+  - `grokbot.model_call.usage.*` and `gen_ai.usage.*` when the result carries usage for that request or aggregate turn
+  - Span event `grokbot.provider.request` with attribute `grokbot.upstreamRequestIdHash` (bounded, hash-based) when the upstream provider result exposes a request id; raw ids are never exported
+  - With `OTEL_SEMCONV_STABILITY_OPT_IN=gen_ai_latest_experimental`, request spans use the latest GenAI inference span name `{gen_ai.operation.name} {gen_ai.request.model}`. Turn spans use `invoke_agent` because GrokBot does not claim a native agent name from the opaque CLI boundary. Both use `CLIENT` span kind instead of `grokbot.model.call`.
+- `grokbot.harness.run`
+  - `grokbot.harness.id`, `grokbot.harness.plugin`, `grokbot.outcome`, `grokbot.provider`, `grokbot.model`, `grokbot.channel`
+  - On completion: `grokbot.harness.result_classification`, `grokbot.harness.yield_detected`, `grokbot.harness.items.started`, `grokbot.harness.items.completed`, `grokbot.harness.items.active`
+  - On error: `grokbot.harness.phase`, `grokbot.errorCategory`, optional `grokbot.harness.cleanup_failed`
+- `grokbot.tool.execution`
+  - `gen_ai.tool.name`, `gen_ai.operation.name` (`execute_tool`), `grokbot.toolName`, `grokbot.tool.source`, optional `gen_ai.tool.call.id`, `grokbot.tool.owner`, `grokbot.tool.params.*`
+  - Optional `grokbot.errorCategory`/`grokbot.errorCode` on errors, `grokbot.deniedReason` and `grokbot.outcome=blocked` when denied by policy or sandbox
+- `grokbot.exec`
+  - `grokbot.exec.target`, `grokbot.exec.mode`, `grokbot.outcome`, `grokbot.failureKind`, `grokbot.exec.command_length`, `grokbot.exec.exit_code`, `grokbot.exec.exit_signal`, `grokbot.exec.timed_out`
+- `grokbot.webhook.processed`
+  - `grokbot.channel`, `grokbot.webhook`
+- `grokbot.webhook.error`
+  - `grokbot.channel`, `grokbot.webhook`, `grokbot.error`
+- `grokbot.message.processed`
+  - `grokbot.channel`, `grokbot.outcome`, `grokbot.reason`
+- `grokbot.message.delivery`
+  - `grokbot.channel`, `grokbot.delivery.kind`, `grokbot.outcome`, `grokbot.errorCategory`, `grokbot.delivery.result_count`
+- `grokbot.session.stuck`
+  - `grokbot.state`, `grokbot.ageMs`, `grokbot.queueDepth`
+- `grokbot.context.assembled`
+  - `grokbot.prompt.size`, `grokbot.history.size`, `grokbot.context.tokens`, `grokbot.errorCategory` (no prompt, history, response, or session-key content)
+- `grokbot.tool.loop`
+  - `grokbot.toolName`, `grokbot.loop.level`, `grokbot.loop.action`, `grokbot.loop.detector`, `grokbot.loop.count`, optional `grokbot.loop.paired_tool` (no loop messages, params, or tool output)
+- `grokbot.memory.pressure`
+  - `grokbot.memory.level`, `grokbot.memory.reason`, `grokbot.memory.rss_bytes`, `grokbot.memory.heap_used_bytes`, `grokbot.memory.heap_total_bytes`, `grokbot.memory.external_bytes`, `grokbot.memory.array_buffers_bytes`, optional `grokbot.memory.threshold_bytes`/`grokbot.memory.rss_growth_bytes`/`grokbot.memory.window_ms`
 
 When content capture is explicitly enabled, model and tool spans can also
-include bounded, redacted `openclaw.content.*` attributes for the specific
+include bounded, redacted `grokbot.content.*` attributes for the specific
 content classes you opted into.
 
 ## Diagnostic event catalog
@@ -532,7 +532,7 @@ flags. Flags are case-insensitive and support wildcards (`telegram.*` or
 Or as a one-off env override:
 
 ```bash
-OPENCLAW_DIAGNOSTICS=telegram.http,telegram.payload openclaw gateway
+OPENCLAW_DIAGNOSTICS=telegram.http,telegram.payload grokbot gateway
 ```
 
 Flag output goes to the standard log file (`logging.file`) and is still
@@ -548,7 +548,7 @@ redacted by `logging.redactSensitive`. Full guide:
 ```
 
 Or leave `diagnostics-otel` out of `plugins.allow`, or run
-`openclaw plugins disable diagnostics-otel`.
+`grokbot plugins disable diagnostics-otel`.
 
 ## Related
 

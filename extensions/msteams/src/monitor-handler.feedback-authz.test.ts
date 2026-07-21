@@ -14,8 +14,8 @@ const channelInboundMockState = vi.hoisted(() => ({
   recordChannelFeedbackEvent: vi.fn(async () => true),
 }));
 
-vi.mock("openclaw/plugin-sdk/channel-inbound", async (importOriginal) => ({
-  ...(await importOriginal<typeof import("openclaw/plugin-sdk/channel-inbound")>()),
+vi.mock("grokbot/plugin-sdk/channel-inbound", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("grokbot/plugin-sdk/channel-inbound")>()),
   recordChannelFeedbackEvent: channelInboundMockState.recordChannelFeedbackEvent,
 }));
 

@@ -120,7 +120,7 @@ describe("telegram user credential path handling", () => {
   });
 
   it("writes private JSON files", async () => {
-    const dir = makeTempDir("openclaw-telegram-credential-");
+    const dir = makeTempDir("grokbot-telegram-credential-");
     await writePrivateJson(path.join(dir, "payload.json"), { status: "ok" });
     await expect(readFile(path.join(dir, "payload.json"), "utf8")).resolves.toBe(
       '{\n  "status": "ok"\n}\n',
@@ -306,7 +306,7 @@ describe("telegram user credential IO", () => {
   it.runIf(process.platform !== "win32")(
     "waits for timed-out child processes to exit before rejecting",
     async () => {
-      const dir = makeTempDir("openclaw-telegram-credential-timeout-");
+      const dir = makeTempDir("grokbot-telegram-credential-timeout-");
       const terminatedPath = path.join(dir, "terminated.txt");
       const scriptPath = path.join(dir, "ignore-term.cjs");
       writeFileSync(
@@ -345,7 +345,7 @@ setInterval(() => {}, 1000);
   it.runIf(process.platform !== "win32")(
     "rejects timed-out commands when descendant processes exit cleanly",
     async () => {
-      const dir = makeTempDir("openclaw-telegram-credential-tree-timeout-clean-");
+      const dir = makeTempDir("grokbot-telegram-credential-tree-timeout-clean-");
       const childPidPath = path.join(dir, "child.pid");
       const readyPath = path.join(dir, "child.ready");
       const cleanupPath = path.join(dir, "child.cleanup");
@@ -396,7 +396,7 @@ setInterval(() => {}, 1000);
   );
 
   it.runIf(process.platform !== "win32")("kills timed-out child process groups", async () => {
-    const dir = makeTempDir("openclaw-telegram-credential-tree-timeout-");
+    const dir = makeTempDir("grokbot-telegram-credential-tree-timeout-");
     const childPidPath = path.join(dir, "child.pid");
     let childPid: number | undefined;
 
@@ -502,7 +502,7 @@ setInterval(() => {}, 1000);
   it.runIf(process.platform !== "win32")(
     "exits promptly after forwarded SIGTERM children exit cleanly",
     async () => {
-      const dir = makeTempDir("openclaw-telegram-credential-signal-");
+      const dir = makeTempDir("grokbot-telegram-credential-signal-");
       const runnerPath = path.join(dir, "runner.mjs");
       const readyPath = path.join(dir, "ready.txt");
       const childPidPath = path.join(dir, "child.pid");
@@ -555,7 +555,7 @@ setInterval(() => {}, 1000);
   it.runIf(process.platform !== "win32")(
     "keeps the forwarded signal force-kill armed while grandchildren survive",
     async () => {
-      const dir = makeTempDir("openclaw-telegram-credential-grandchild-signal-");
+      const dir = makeTempDir("grokbot-telegram-credential-grandchild-signal-");
       const runnerPath = path.join(dir, "runner.mjs");
       const readyPath = path.join(dir, "ready.txt");
       const grandchildPidPath = path.join(dir, "grandchild.pid");

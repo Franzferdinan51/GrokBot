@@ -41,8 +41,8 @@ function expectRuntimeLogIncludes(fragment: string) {
 
 const installWriteOptions = {
   assertConfigPathForWrite: () => {},
-  expectedConfigPath: "/tmp/openclaw.json",
-  ownedConfigPathForWrite: "/tmp/openclaw.json",
+  expectedConfigPath: "/tmp/grokbot.json",
+  ownedConfigPathForWrite: "/tmp/grokbot.json",
 };
 
 describe("persistPluginInstall", () => {
@@ -55,13 +55,13 @@ describe("persistPluginInstall", () => {
 
     expect(
       selectInstallMutationWriteOptions({
-        expectedConfigPath: "/tmp/openclaw.json",
-        ownedConfigPathForWrite: "/tmp/openclaw.json",
+        expectedConfigPath: "/tmp/grokbot.json",
+        ownedConfigPathForWrite: "/tmp/grokbot.json",
       }),
     ).toMatchObject({
       auditOrigin: "plugin-install",
-      expectedConfigPath: "/tmp/openclaw.json",
-      ownedConfigPathForWrite: "/tmp/openclaw.json",
+      expectedConfigPath: "/tmp/grokbot.json",
+      ownedConfigPathForWrite: "/tmp/grokbot.json",
     });
   });
 
@@ -93,8 +93,8 @@ describe("persistPluginInstall", () => {
         baseHash: "config-1",
         writeOptions: {
           assertConfigPathForWrite: installWriteOptions.assertConfigPathForWrite,
-          expectedConfigPath: "/tmp/openclaw.json",
-          ownedConfigPathForWrite: "/tmp/openclaw.json",
+          expectedConfigPath: "/tmp/grokbot.json",
+          ownedConfigPathForWrite: "/tmp/grokbot.json",
           includeFileHashesForWrite: { "/tmp/plugins.json5": "include-1" },
           includeFileTargetsForWrite: { "/tmp/plugins.json5": "/tmp/plugins.json5" },
         },
@@ -124,8 +124,8 @@ describe("persistPluginInstall", () => {
       baseHash: "config-1",
       writeOptions: {
         assertConfigPathForWrite: installWriteOptions.assertConfigPathForWrite,
-        expectedConfigPath: "/tmp/openclaw.json",
-        ownedConfigPathForWrite: "/tmp/openclaw.json",
+        expectedConfigPath: "/tmp/grokbot.json",
+        ownedConfigPathForWrite: "/tmp/grokbot.json",
         includeFileHashesForWrite: { "/tmp/plugins.json5": "include-1" },
         includeFileTargetsForWrite: { "/tmp/plugins.json5": "/tmp/plugins.json5" },
         afterWrite: { mode: "restart", reason: "plugin source changed" },
@@ -200,8 +200,8 @@ describe("persistPluginInstall", () => {
     setInstalledPluginIndexInstallRecords({
       codex: {
         source: "clawhub",
-        spec: "clawhub:@openclaw/codex",
-        installPath: "/tmp/openclaw/extensions/codex",
+        spec: "clawhub:@grokbot/codex",
+        installPath: "/tmp/grokbot/extensions/codex",
       },
     });
     planPluginUninstall.mockReturnValueOnce({
@@ -220,7 +220,7 @@ describe("persistPluginInstall", () => {
         directory: false,
       },
       directoryRemoval: {
-        target: "/tmp/openclaw/extensions/codex",
+        target: "/tmp/grokbot/extensions/codex",
       },
     });
     applyPluginUninstallDirectoryRemoval.mockResolvedValueOnce({
@@ -237,8 +237,8 @@ describe("persistPluginInstall", () => {
       pluginId: "codex",
       install: {
         source: "npm",
-        spec: "@openclaw/codex",
-        installPath: "/tmp/openclaw/npm/node_modules/@openclaw/codex",
+        spec: "@grokbot/codex",
+        installPath: "/tmp/grokbot/npm/node_modules/@grokbot/codex",
       },
     });
 
@@ -248,8 +248,8 @@ describe("persistPluginInstall", () => {
           installs: {
             codex: {
               source: "clawhub",
-              spec: "clawhub:@openclaw/codex",
-              installPath: "/tmp/openclaw/extensions/codex",
+              spec: "clawhub:@grokbot/codex",
+              installPath: "/tmp/grokbot/extensions/codex",
             },
           },
         },
@@ -258,14 +258,14 @@ describe("persistPluginInstall", () => {
       deleteFiles: true,
     });
     expect(applyPluginUninstallDirectoryRemoval).toHaveBeenCalledWith({
-      target: "/tmp/openclaw/extensions/codex",
+      target: "/tmp/grokbot/extensions/codex",
     });
     const cleanupOrder =
       applyPluginUninstallDirectoryRemoval.mock.invocationCallOrder[0] ?? Number.MAX_SAFE_INTEGER;
     const refreshOrder = refreshPluginRegistry.mock.invocationCallOrder[0] ?? 0;
     expect(cleanupOrder).toBeLessThan(refreshOrder);
     expect(runtimeLogs.join("\n")).toContain(
-      "Removed previous plugin install directory: /tmp/openclaw/extensions/codex",
+      "Removed previous plugin install directory: /tmp/grokbot/extensions/codex",
     );
   });
 
@@ -287,8 +287,8 @@ describe("persistPluginInstall", () => {
     setInstalledPluginIndexInstallRecords({
       codex: {
         source: "npm",
-        spec: "@openclaw/codex",
-        installPath: "/tmp/openclaw/npm/node_modules/@openclaw/codex",
+        spec: "@grokbot/codex",
+        installPath: "/tmp/grokbot/npm/node_modules/@grokbot/codex",
       },
     });
 
@@ -301,8 +301,8 @@ describe("persistPluginInstall", () => {
       pluginId: "codex",
       install: {
         source: "npm",
-        spec: "@openclaw/codex@latest",
-        installPath: "/tmp/openclaw/npm/node_modules/@openclaw/codex",
+        spec: "@grokbot/codex@latest",
+        installPath: "/tmp/grokbot/npm/node_modules/@grokbot/codex",
       },
     });
 
@@ -325,12 +325,12 @@ describe("persistPluginInstall", () => {
       },
     } as OpenClawConfig;
     enablePluginInConfig.mockReturnValue({ config: enabledConfig });
-    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-plugin-persist-"));
+    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-plugin-persist-"));
     const previousProjectRoot = path.join(tempRoot, "npm", "projects", "codex-v1");
     const previousInstallPath = path.join(
       previousProjectRoot,
       "node_modules",
-      "@openclaw",
+      "@grokbot",
       "codex",
     );
     const nextInstallPath = path.join(
@@ -339,14 +339,14 @@ describe("persistPluginInstall", () => {
       "projects",
       "codex-v2",
       "node_modules",
-      "@openclaw",
+      "@grokbot",
       "codex",
     );
     fs.mkdirSync(previousInstallPath, { recursive: true });
     setInstalledPluginIndexInstallRecords({
       codex: {
         source: "npm",
-        spec: "@openclaw/codex@1.0.0",
+        spec: "@grokbot/codex@1.0.0",
         installPath: previousInstallPath,
       },
     });
@@ -370,7 +370,7 @@ describe("persistPluginInstall", () => {
         cleanup: {
           kind: "npm",
           npmRoot: previousProjectRoot,
-          packageName: "@openclaw/codex",
+          packageName: "@grokbot/codex",
         },
       },
     });
@@ -385,7 +385,7 @@ describe("persistPluginInstall", () => {
         pluginId: "codex",
         install: {
           source: "npm",
-          spec: "@openclaw/codex@2.0.0",
+          spec: "@grokbot/codex@2.0.0",
           installPath: nextInstallPath,
         },
       });
@@ -396,7 +396,7 @@ describe("persistPluginInstall", () => {
             installs: {
               codex: {
                 source: "npm",
-                spec: "@openclaw/codex@1.0.0",
+                spec: "@grokbot/codex@1.0.0",
                 installPath: previousInstallPath,
               },
             },
@@ -432,7 +432,7 @@ describe("persistPluginInstall", () => {
         {
           id: "discord",
           origin: "config",
-          source: "/tmp/openclaw-upstream/extensions/discord/index.ts",
+          source: "/tmp/grokbot-upstream/extensions/discord/index.ts",
           status: "error",
         },
       ],
@@ -448,8 +448,8 @@ describe("persistPluginInstall", () => {
       pluginId: "discord",
       install: {
         source: "npm",
-        spec: "@openclaw/discord",
-        installPath: "/tmp/openclaw/npm/node_modules/@openclaw/discord/index.ts",
+        spec: "@grokbot/discord",
+        installPath: "/tmp/grokbot/npm/node_modules/@grokbot/discord/index.ts",
       },
     });
 
@@ -463,12 +463,12 @@ describe("persistPluginInstall", () => {
       'Warning: installed plugin "discord" is not the active source',
     );
     expect(runtimeLogs.join("\n")).toContain(
-      "active config source: /tmp/openclaw-upstream/extensions/discord/index.ts",
+      "active config source: /tmp/grokbot-upstream/extensions/discord/index.ts",
     );
     expect(runtimeLogs.join("\n")).toContain(
-      "installed npm source: /tmp/openclaw/npm/node_modules/@openclaw/discord/index.ts",
+      "installed npm source: /tmp/grokbot/npm/node_modules/@grokbot/discord/index.ts",
     );
-    expect(runtimeLogs.join("\n")).toContain("openclaw plugins doctor");
+    expect(runtimeLogs.join("\n")).toContain("grokbot plugins doctor");
   });
 
   it("does not warn when the config-selected source is inside the npm install path", async () => {
@@ -491,7 +491,7 @@ describe("persistPluginInstall", () => {
         {
           id: "discord",
           origin: "config",
-          source: "/tmp/openclaw/npm/node_modules/@openclaw/discord/dist/index.js",
+          source: "/tmp/grokbot/npm/node_modules/@grokbot/discord/dist/index.js",
           status: "loaded",
         },
       ],
@@ -507,8 +507,8 @@ describe("persistPluginInstall", () => {
       pluginId: "discord",
       install: {
         source: "npm",
-        spec: "@openclaw/discord",
-        installPath: "/tmp/openclaw/npm/node_modules/@openclaw/discord",
+        spec: "@grokbot/discord",
+        installPath: "/tmp/grokbot/npm/node_modules/@grokbot/discord",
       },
     });
 

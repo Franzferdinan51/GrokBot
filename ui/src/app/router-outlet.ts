@@ -1,11 +1,11 @@
-import type { Router } from "@openclaw/uirouter";
+import type { Router } from "@grokbot/uirouter";
 import { html, nothing } from "lit";
 import type { ReactiveController, ReactiveControllerHost } from "lit";
 import { property } from "lit/decorators.js";
 import { icon } from "../components/icons.ts";
 import { McpAppUnmountGate } from "../components/mcp-app-unmount.ts";
 import { t } from "../i18n/index.ts";
-import { OpenClawLightDomElement } from "../lit/openclaw-element.ts";
+import { OpenClawLightDomElement } from "../lit/grokbot-element.ts";
 import {
   RouterOutletController,
   selectRenderedRouteMatch,
@@ -41,7 +41,7 @@ function measureRoutedRender<T>(routeId: string, render: () => T): T {
   const result = render();
   const durationMs = Math.round((globalThis.performance?.now() ?? startedAt) - startedAt);
   if (durationMs >= 16) {
-    console.debug("[openclaw] routed render", { routeId, durationMs });
+    console.debug("[grokbot] routed render", { routeId, durationMs });
   }
   return result;
 }
@@ -269,6 +269,6 @@ class OpenClawRouterOutlet<
   }
 }
 
-if (!customElements.get("openclaw-router-outlet")) {
-  customElements.define("openclaw-router-outlet", OpenClawRouterOutlet);
+if (!customElements.get("grokbot-router-outlet")) {
+  customElements.define("grokbot-router-outlet", OpenClawRouterOutlet);
 }

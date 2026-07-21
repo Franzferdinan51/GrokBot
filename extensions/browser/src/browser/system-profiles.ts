@@ -5,7 +5,7 @@ import path from "node:path";
 import { DatabaseSync } from "node:sqlite";
 import type { OpenClawConfig } from "../config/config.js";
 import { getRuntimeConfig } from "../config/config.js";
-import { resolvePreferredOpenClawTmpDir } from "../infra/tmp-openclaw-dir.js";
+import { resolvePreferredOpenClawTmpDir } from "../infra/tmp-grokbot-dir.js";
 import { resolveOpenClawUserDataDir } from "./chrome.js";
 import { usesOpenClawMockKeychain } from "./chrome.profile-decoration.js";
 import { BrowserProfileUnavailableError } from "./errors.js";
@@ -42,7 +42,7 @@ export type ImportSystemProfileResult = {
   domains: string[];
 };
 
-type CreateProfile = (params: { name: string; driver?: "openclaw" }) => Promise<unknown>;
+type CreateProfile = (params: { name: string; driver?: "grokbot" }) => Promise<unknown>;
 
 type SystemProfileDeps = {
   platform?: NodeJS.Platform;
@@ -140,7 +140,7 @@ function snapshotCookieDatabase(source: string): {
 } {
   const tmpRoot = resolvePreferredOpenClawTmpDir();
   fs.mkdirSync(tmpRoot, { recursive: true });
-  const tempDir = fs.mkdtempSync(path.join(tmpRoot, "openclaw-system-cookies-"));
+  const tempDir = fs.mkdtempSync(path.join(tmpRoot, "grokbot-system-cookies-"));
   const databasePath = path.join(tempDir, "Cookies");
   const sourceDatabase = new DatabaseSync(source, { readOnly: true });
   try {
@@ -158,7 +158,7 @@ function snapshotCookieDatabase(source: string): {
   };
 }
 
-/** Import decrypted system-profile cookies into one managed OpenClaw profile. */
+/** Import decrypted system-profile cookies into one managed GrokBot profile. */
 export async function importSystemProfileCookies(
   params: ImportSystemProfileParams,
   runtime: {
@@ -192,16 +192,16 @@ export async function importSystemProfileCookies(
   }
 
   if (!(into in runtime.ctx.state().resolved.profiles)) {
-    await runtime.createProfile({ name: into, driver: "openclaw" });
+    await runtime.createProfile({ name: into, driver: "grokbot" });
   }
   const profileCtx = runtime.ctx.forProfile(into);
   if (
-    profileCtx.profile.driver !== "openclaw" ||
+    profileCtx.profile.driver !== "grokbot" ||
     !profileCtx.profile.cdpIsLoopback ||
     profileCtx.profile.attachOnly
   ) {
     throw new Error(
-      `profile "${into}" is not a locally managed OpenClaw profile; import into a fresh profile name`,
+      `profile "${into}" is not a locally managed GrokBot profile; import into a fresh profile name`,
     );
   }
   for (let attempt = 0; attempt < 2; attempt += 1) {
@@ -218,12 +218,12 @@ export async function importSystemProfileCookies(
             path.resolve(runningUserDataDir) !== path.resolve(userDataDir)
           ) {
             throw new Error(
-              `managed profile "${into}" is not owned by this OpenClaw browser runtime; stop it and import into a fresh profile name`,
+              `managed profile "${into}" is not owned by this GrokBot browser runtime; stop it and import into a fresh profile name`,
             );
           }
           if (!usesOpenClawMockKeychain(userDataDir)) {
             throw new Error(
-              `managed profile "${into}" does not use the OpenClaw mock keychain; import into a fresh profile name`,
+              `managed profile "${into}" does not use the GrokBot mock keychain; import into a fresh profile name`,
             );
           }
 

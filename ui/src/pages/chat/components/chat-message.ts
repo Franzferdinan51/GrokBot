@@ -182,7 +182,7 @@ function renderChatTimestamp(timestamp: number, interactive = false) {
   if (interactive) {
     return timeEl;
   }
-  return html`<openclaw-tooltip content=${display.label}>${timeEl}</openclaw-tooltip>`;
+  return html`<grokbot-tooltip content=${display.label}>${timeEl}</grokbot-tooltip>`;
 }
 
 function resolveMessageMetaDetails(target: EventTarget | null): HTMLDetailsElement | null {
@@ -1176,8 +1176,8 @@ function renderMessageMeta(timestamp: number, meta: GroupMeta | null) {
   `;
 }
 
-const SKIP_DELETE_CONFIRM_PREFERENCE = "openclaw:skipDeleteConfirm";
-const SKIP_REWIND_CONFIRM_PREFERENCE = "openclaw:skip-rewind-confirm";
+const SKIP_DELETE_CONFIRM_PREFERENCE = "grokbot:skipDeleteConfirm";
+const SKIP_REWIND_CONFIRM_PREFERENCE = "grokbot:skip-rewind-confirm";
 const DELETE_CONFIRM_VIEWPORT_MARGIN_PX = 8;
 const DELETE_CONFIRM_TRIGGER_GAP_PX = 6;
 
@@ -1400,7 +1400,7 @@ function openConfirmedActionPopover(
 function renderConfirmedActionButton(params: ConfirmedActionParams) {
   return html`
     <span class="chat-delete-wrap ${params.wrapClass ?? ""}">
-      <openclaw-tooltip .content=${params.tooltip}>
+      <grokbot-tooltip .content=${params.tooltip}>
         <button
           class=${params.buttonClass ?? ""}
           aria-label=${params.ariaLabel}
@@ -1410,7 +1410,7 @@ function renderConfirmedActionButton(params: ConfirmedActionParams) {
         >
           ${params.icon}
         </button>
-      </openclaw-tooltip>
+      </grokbot-tooltip>
     </span>
   `;
 }
@@ -1756,7 +1756,7 @@ async function resolveManagedOutgoingImageBlobUrl(
         headers.set("Authorization", `Bearer ${authToken}`);
       }
       if (requesterSessionKey) {
-        headers.set("x-openclaw-requester-session-key", requesterSessionKey);
+        headers.set("x-grokbot-requester-session-key", requesterSessionKey);
       }
       const controller = new AbortController();
       const timeout = setTimeout(() => {
@@ -2202,7 +2202,7 @@ function renderExpandButton(
   },
 ) {
   return html`
-    <openclaw-tooltip .content=${t("chat.messages.openInCanvas")}>
+    <grokbot-tooltip .content=${t("chat.messages.openInCanvas")}>
       <button
         class="chat-expand-btn"
         type="button"
@@ -2225,7 +2225,7 @@ function renderExpandButton(
       >
         <span class="chat-expand-btn__icon" aria-hidden="true">${icons.panelRightOpen}</span>
       </button>
-    </openclaw-tooltip>
+    </grokbot-tooltip>
   `;
 }
 

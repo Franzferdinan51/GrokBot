@@ -13,8 +13,8 @@ import {
   type ChannelSetupWizard,
   type DmPolicy,
   type OpenClawConfig,
-} from "openclaw/plugin-sdk/setup";
-import { normalizeStringEntries } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/setup";
+import { normalizeStringEntries } from "grokbot/plugin-sdk/string-coerce-runtime";
 import {
   checkZcaAuthenticated,
   listZalouserAccountIds,
@@ -166,7 +166,7 @@ async function promptZalouserAllowFrom(params: {
           t("wizard.zalouser.noDmAllowlist"),
           t("wizard.zalouser.directChatsBlocked"),
           t("wizard.zalouser.peersLookupTip", {
-            command: formatCliCommand("openclaw directory peers list --channel zalouser"),
+            command: formatCliCommand("grokbot directory peers list --channel zalouser"),
           }),
         ].join("\n"),
         ZALOUSER_ALLOWLIST_TITLE,
@@ -450,7 +450,7 @@ export const zalouserSetupWizard: ChannelSetupWizard = {
             t("wizard.zalouser.noGroupAllowlist"),
             t("wizard.zalouser.groupChatsBlocked"),
             t("wizard.zalouser.groupsLookupTip", {
-              command: formatCliCommand("openclaw directory groups list --channel zalouser"),
+              command: formatCliCommand("grokbot directory groups list --channel zalouser"),
             }),
             t("wizard.zalouser.groupMentionRequirement"),
           ].join("\n"),

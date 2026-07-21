@@ -25,7 +25,7 @@ import {
 } from "../commands/channel-setup/trusted-catalog.js";
 import type { ChannelChoice } from "../commands/onboard-types.js";
 import { isChannelConfigured } from "../config/channel-configured.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { formatErrorMessage } from "../infra/errors.js";
 import { resolveBundledPluginSources } from "../plugins/bundled-sources.js";
 import { enableExplicitlySelectedPluginInConfig } from "../plugins/enable.js";
@@ -377,7 +377,7 @@ export async function setupChannels(
         t("wizard.channels.disabledDuringSetup", {
           channel,
           hint: disabledHint,
-          command: formatCliCommand("openclaw channels add"),
+          command: formatCliCommand("grokbot channels add"),
         }),
         t("wizard.channels.setupTitle"),
       );
@@ -390,7 +390,7 @@ export async function setupChannels(
         t("wizard.channels.pluginEnableFailed", {
           channel,
           reason: result.reason ?? "plugin disabled",
-          command: formatCliCommand("openclaw plugins list"),
+          command: formatCliCommand("grokbot plugins list"),
         }),
         t("wizard.channels.setupTitle"),
       );
@@ -403,8 +403,8 @@ export async function setupChannels(
         await prompter.note(
           t("wizard.channels.pluginMissingRecoverable", {
             channel,
-            listCommand: formatCliCommand("openclaw plugins list"),
-            enableCommand: formatCliCommand("openclaw plugins enable " + channel),
+            listCommand: formatCliCommand("grokbot plugins list"),
+            enableCommand: formatCliCommand("grokbot plugins enable " + channel),
           }),
           t("wizard.channels.setupTitle"),
         );
@@ -482,7 +482,7 @@ export async function setupChannels(
       await prompter.note(
         t("wizard.channels.noInteractiveSetup", {
           channel,
-          command: formatCliCommand(`openclaw channels add --channel ${channel} --help`),
+          command: formatCliCommand(`grokbot channels add --channel ${channel} --help`),
         }),
         t("wizard.channels.setupTitle"),
       );
@@ -832,7 +832,7 @@ export async function setupChannels(
             value: skipValue,
             label: t("common.skipForNow"),
             hint: t("wizard.channels.skipLaterHint", {
-              command: formatCliCommand("openclaw channels add"),
+              command: formatCliCommand("grokbot channels add"),
             }),
           },
           ...resolveChannelSetupSelectionContributions({

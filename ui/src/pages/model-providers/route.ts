@@ -1,4 +1,4 @@
-import { definePage } from "@openclaw/uirouter";
+import { definePage } from "@grokbot/uirouter";
 import { html } from "lit";
 import type { ApplicationContext } from "../../app/context.ts";
 import type { ModelProvidersRouteData } from "./model-providers-page.ts";
@@ -24,6 +24,6 @@ export const page = definePage({
     import("./model-providers-page.ts").then(() => ({
       header: true,
       render: (data: ModelProvidersRouteData | undefined) =>
-        html`<openclaw-model-providers-page .routeData=${data}></openclaw-model-providers-page>`,
+        html`<grokbot-model-providers-page .routeData=${data}></grokbot-model-providers-page>`,
     })),
 });

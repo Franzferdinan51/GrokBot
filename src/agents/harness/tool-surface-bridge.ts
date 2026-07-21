@@ -1,4 +1,4 @@
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import type { HookContext } from "../agent-tools.before-tool-call.js";
 import { getActiveAgentRingZeroTools } from "../agent-tools.ring-zero-context.js";
 import {

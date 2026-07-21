@@ -93,7 +93,7 @@ function createRoundTripProbe(
       senderId: "qa-rtt-driver",
       senderName: "QA RTT Driver",
     },
-    textPrefix: "@openclaw Telegram RTT check. Reply exactly: ",
+    textPrefix: "@grokbot Telegram RTT check. Reply exactly: ",
     chainReplies: true,
   };
 }
@@ -118,14 +118,14 @@ async function resolveTrustedOpenClawCommand(
     throw new Error("OPENCLAW_NPM_TELEGRAM_SUT_COMMAND must be an absolute path.");
   }
   const commandName = path.basename(rawCommand);
-  if (commandName !== "openclaw" && commandName !== "openclaw.cmd") {
+  if (commandName !== "grokbot" && commandName !== "grokbot.cmd") {
     throw new Error(
-      `OPENCLAW_NPM_TELEGRAM_SUT_COMMAND must point to openclaw; got: ${commandName}`,
+      `OPENCLAW_NPM_TELEGRAM_SUT_COMMAND must point to grokbot; got: ${commandName}`,
     );
   }
   const npmPrefix = env.NPM_CONFIG_PREFIX?.trim();
   if (!npmPrefix) {
-    throw new Error("Missing NPM_CONFIG_PREFIX for installed openclaw command validation.");
+    throw new Error("Missing NPM_CONFIG_PREFIX for installed grokbot command validation.");
   }
   const [realCommand, realPrefix] = await Promise.all([
     fs.realpath(rawCommand),

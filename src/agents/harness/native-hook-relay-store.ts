@@ -3,12 +3,12 @@ import {
   executeSqliteQueryTakeFirstSync,
   getNodeSqliteKysely,
 } from "../../infra/kysely-sync.js";
-import { withOpenClawStateDatabaseReadOnly } from "../../state/openclaw-state-db-readonly.js";
-import type { DB as OpenClawStateKyselyDatabase } from "../../state/openclaw-state-db.generated.js";
+import { withOpenClawStateDatabaseReadOnly } from "../../state/grokbot-state-db-readonly.js";
+import type { DB as OpenClawStateKyselyDatabase } from "../../state/grokbot-state-db.generated.js";
 import {
   openOpenClawStateDatabase,
   runOpenClawStateWriteTransaction,
-} from "../../state/openclaw-state-db.js";
+} from "../../state/grokbot-state-db.js";
 
 export type NativeHookRelayBridgeRecord = {
   relayId: string;

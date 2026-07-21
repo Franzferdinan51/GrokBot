@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import { readSecretFileSync } from "@openclaw/fs-safe/secret";
+import { readSecretFileSync } from "@grokbot/fs-safe/secret";
 import { parseVaultSecretId } from "./vault-secret-id.js";
 
 const KUBERNETES_SERVICE_ACCOUNT_TOKEN_PATH = "/var/run/secrets/kubernetes.io/serviceaccount/token";
@@ -375,7 +375,7 @@ async function resolveFromVault(ids) {
     return response;
   }
   // Address and authentication are provider-wide. Let those failures terminate the
-  // subprocess so OpenClaw fans one provider diagnostic out to every affected owner.
+  // subprocess so GrokBot fans one provider diagnostic out to every affected owner.
   const baseUrl = normalizeVaultAddress();
   const vaultToken = await resolveVaultClientToken(baseUrl);
   const results = await Promise.all(

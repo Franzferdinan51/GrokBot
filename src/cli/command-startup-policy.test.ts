@@ -100,21 +100,21 @@ describe("command-startup-policy", () => {
     ).toBe(false);
     expect(
       resolvePolicy({
-        argv: ["node", "openclaw", "agent", "--json"],
+        argv: ["node", "grokbot", "agent", "--json"],
         commandPath: ["agent"],
         jsonOutputMode: true,
       }).loadPlugins,
     ).toBe(false);
     expect(
       resolvePolicy({
-        argv: ["node", "openclaw", "agent", "--json", "--local"],
+        argv: ["node", "grokbot", "agent", "--json", "--local"],
         commandPath: ["agent"],
         jsonOutputMode: true,
       }).loadPlugins,
     ).toBe(true);
     expect(
       resolvePolicy({
-        argv: ["node", "openclaw", "agent"],
+        argv: ["node", "grokbot", "agent"],
         commandPath: ["agent"],
       }).loadPlugins,
     ).toBe(true);

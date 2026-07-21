@@ -7,13 +7,13 @@ import {
   MIGRATION_REASON_TARGET_EXISTS,
   readMigrationConfigPath,
   summarizeMigrationItems,
-} from "openclaw/plugin-sdk/migration";
+} from "grokbot/plugin-sdk/migration";
 import type {
   MigrationItem,
   MigrationPlan,
   MigrationProviderContext,
-} from "openclaw/plugin-sdk/plugin-entry";
-import { asBoolean, isRecord } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/plugin-entry";
+import { asBoolean, isRecord } from "grokbot/plugin-sdk/string-coerce-runtime";
 import { CODEX_PLUGINS_MARKETPLACE_NAME } from "../app-server/config.js";
 import { buildCodexAuthItems } from "./auth.js";
 import { sanitizeName } from "./helpers.js";
@@ -181,7 +181,7 @@ function buildPluginItems(
           reason: conflict ? MIGRATION_REASON_PLUGIN_EXISTS : undefined,
           source: plugin.source,
           target: `plugins.entries.codex.config.codexPlugins.plugins.${configKey}`,
-          message: `Install Codex plugin "${plugin.pluginName}" in the OpenClaw-managed Codex app-server runtime.`,
+          message: `Install Codex plugin "${plugin.pluginName}" in the GrokBot-managed Codex app-server runtime.`,
           details: {
             configKey,
             marketplaceName: CODEX_PLUGINS_MARKETPLACE_NAME,
@@ -233,7 +233,7 @@ function buildPluginItems(
           plugin.message ??
           `Codex native plugin "${plugin.name}" was found but not activated automatically.`,
         recommendation:
-          "Review the plugin bundle first, then install trusted compatible plugins with openclaw plugins install <path> --force.",
+          "Review the plugin bundle first, then install trusted compatible plugins with grokbot plugins install <path> --force.",
       }),
     );
   }
@@ -426,7 +426,7 @@ function buildPluginConfigItem(
     status: conflict ? "conflict" : "planned",
     reason: conflict ? MIGRATION_REASON_TARGET_EXISTS : undefined,
     message:
-      "Enable OpenClaw's Codex plugin integration and record migrated source-installed curated plugins.",
+      "Enable GrokBot's Codex plugin integration and record migrated source-installed curated plugins.",
     details: {
       path: [...CODEX_PLUGIN_CONFIG_PATH],
       value,
@@ -523,8 +523,8 @@ export async function buildCodexMigrationPlan(
     nextSteps: memoryOnly
       ? []
       : [
-          "Run openclaw doctor after applying the migration.",
-          "Review skipped or auth-required Codex plugin/config/hook items before exposing them in OpenClaw sessions.",
+          "Run grokbot doctor after applying the migration.",
+          "Review skipped or auth-required Codex plugin/config/hook items before exposing them in GrokBot sessions.",
         ],
     metadata: {
       agentDir: targets.agentDir,

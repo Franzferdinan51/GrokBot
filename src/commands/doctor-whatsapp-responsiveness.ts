@@ -3,7 +3,7 @@ import { spawnSync } from "node:child_process";
 import path from "node:path";
 import { note } from "../../packages/terminal-core/src/note.js";
 import { formatCliCommand } from "../cli/command-format.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import type { HealthFinding } from "../flows/health-checks.js";
 import { sleep } from "../utils/sleep.js";
 import type { StatusSummary } from "./status.types.js";
@@ -34,10 +34,10 @@ function normalizeExecutableName(value: string | undefined): string {
 function isLocalTuiCommand(command: string): boolean {
   const argv = tokenizeCommandLine(command);
   const executable = normalizeExecutableName(argv[0]);
-  if (executable === "openclaw-tui") {
+  if (executable === "grokbot-tui") {
     return true;
   }
-  return executable === "openclaw" && LOCAL_TUI_SUBCOMMANDS.has(argv[1] ?? "");
+  return executable === "grokbot" && LOCAL_TUI_SUBCOMMANDS.has(argv[1] ?? "");
 }
 
 function parsePsPidLine(line: string): LocalTuiProcess | null {
@@ -56,7 +56,7 @@ function parsePsPidLine(line: string): LocalTuiProcess | null {
   return { pid, command };
 }
 
-/** Lists local OpenClaw TUI processes that can contend with gateway responsiveness. */
+/** Lists local GrokBot TUI processes that can contend with gateway responsiveness. */
 function listLocalTuiProcesses(): LocalTuiProcess[] {
   if (process.platform === "win32") {
     return [];
@@ -129,7 +129,7 @@ export function collectWhatsappResponsivenessHealthFindings(params: {
       target: pids,
       requirement: "local-tui-event-loop-pressure",
       fixHint: `Close local TUI sessions (${pids}), or run ${formatCliCommand(
-        "openclaw doctor --fix",
+        "grokbot doctor --fix",
       )}.`,
     },
   ];
@@ -186,7 +186,7 @@ async function terminateLocalTuiProcesses(params: {
 
 if (process.env.VITEST || process.env.NODE_ENV === "test") {
   (globalThis as Record<PropertyKey, unknown>)[
-    Symbol.for("openclaw.doctorWhatsappResponsivenessTestApi")
+    Symbol.for("grokbot.doctorWhatsappResponsivenessTestApi")
   ] = {
     listLocalTuiProcesses,
     terminateLocalTuiProcesses,
@@ -234,7 +234,7 @@ export async function noteWhatsappResponsivenessHealth(params: {
       }
     } else {
       warnings.push(
-        `Fix: close those TUI sessions, or run ${formatCliCommand("openclaw doctor --fix")}.`,
+        `Fix: close those TUI sessions, or run ${formatCliCommand("grokbot doctor --fix")}.`,
       );
     }
   }

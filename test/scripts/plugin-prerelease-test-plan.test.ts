@@ -127,15 +127,15 @@ describe("scripts/lib/plugin-prerelease-test-plan.mjs", () => {
       stateScenario: "empty",
       weight: 3,
     });
-    expect(script).toContain("npm:@openclaw/kitchen-sink@latest");
+    expect(script).toContain("npm:@grokbot/kitchen-sink@latest");
     expect(script).toContain("npm-latest-conformance");
     expect(script).toContain("npm-latest-adversarial");
-    expect(script).toContain("npm:@openclaw/kitchen-sink@beta");
-    expect(script).toContain("clawhub:@openclaw/kitchen-sink@latest");
-    expect(script).toContain("clawhub:@openclaw/kitchen-sink@beta");
+    expect(script).toContain("npm:@grokbot/kitchen-sink@beta");
+    expect(script).toContain("clawhub:@grokbot/kitchen-sink@latest");
+    expect(script).toContain("clawhub:@grokbot/kitchen-sink@beta");
     expect(script).toContain("OPENCLAW_KITCHEN_SINK_PLUGIN_MAX_MEMORY_MIB");
     expect(script).toContain(
-      "npm-to-clawhub|clawhub:@openclaw/kitchen-sink@latest|openclaw-kitchen-sink-fixture|clawhub|success|basic||${KITCHEN_SINK_NPM_SPEC}",
+      "npm-to-clawhub|clawhub:@grokbot/kitchen-sink@latest|grokbot-kitchen-sink-fixture|clawhub|success|basic||${KITCHEN_SINK_NPM_SPEC}",
     );
     expect(script).toContain("scripts/e2e/lib/kitchen-sink-plugin/sweep.sh");
     expect(sweepScript).toContain('plugins install "$KITCHEN_SINK_SPEC" --force');
@@ -171,7 +171,7 @@ describe("scripts/lib/plugin-prerelease-test-plan.mjs", () => {
     );
     expect(assertionsScript).toContain("!INVALID_PROBE_DIAGNOSTIC_SURFACE_MODES.has(surfaceMode)");
     expect(readFileSync("scripts/e2e/lib/clawhub-fixture-server.cjs", "utf8")).toContain(
-      'from "openclaw/plugin-sdk/plugin-entry"',
+      'from "grokbot/plugin-sdk/plugin-entry"',
     );
     expect(readFileSync("scripts/e2e/lib/clawhub-fixture-server.cjs", "utf8")).toContain(
       "X-ClawHub-Artifact-Sha256",
@@ -198,7 +198,7 @@ describe("scripts/lib/plugin-prerelease-test-plan.mjs", () => {
       timeoutMs: 1_500_000,
       weight: 3,
     });
-    expect(script).toContain("OPENCLAW_ENTRY=/app/openclaw.mjs");
+    expect(script).toContain("OPENCLAW_ENTRY=/app/grokbot.mjs");
     expect(script).toContain("OPENCLAW_KITCHEN_SINK_COMMAND_MAX_RSS_MIB");
     expect(script).toContain("docker_e2e_sample_stats_until_exit");
     expect(script).toContain("scripts/e2e/lib/docker-stats/assert-resource-ceiling.mjs");
@@ -239,9 +239,9 @@ describe("scripts/lib/plugin-prerelease-test-plan.mjs", () => {
     expect(sweepScript).toContain("run_plugins_clawhub_scenario");
     expect(clawhubScript).toContain('plugins install "$CLAWHUB_PLUGIN_SPEC"');
     expect(assertionsScript).toContain("assertClawHubExternalInstallContract");
-    expect(assertionsScript).toContain('node_modules", "openclaw');
+    expect(assertionsScript).toContain('node_modules", "grokbot');
     expect(fixtureServer).toContain('"is-number": "7.0.0"');
-    expect(fixtureServer).toContain('openclaw: ">=2026.4.11"');
+    expect(fixtureServer).toContain('grokbot: ">=2026.4.11"');
     expect(fixtureServer).toContain("/versions/${fixture.version}/artifact");
   });
 
@@ -530,7 +530,7 @@ describe("scripts/lib/plugin-prerelease-test-plan.mjs", () => {
     });
     expect(inspectorRun.run).toContain("extensions/");
     expect(inspectorRun.run).toContain(
-      'npm exec --yes "@openclaw/plugin-inspector@${OPENCLAW_PLUGIN_INSPECTOR_VERSION}" -- ci',
+      'npm exec --yes "@grokbot/plugin-inspector@${OPENCLAW_PLUGIN_INSPECTOR_VERSION}" -- ci',
     );
     expect(inspectorRun.run).toContain("This job is informational");
     expect(
@@ -562,7 +562,7 @@ describe("scripts/lib/plugin-prerelease-test-plan.mjs", () => {
         packages: "read",
         "pull-requests": "read",
       },
-      uses: "./.github/workflows/openclaw-live-and-e2e-checks-reusable.yml",
+      uses: "./.github/workflows/grokbot-live-and-e2e-checks-reusable.yml",
       with: {
         docker_lanes: "${{ needs.preflight.outputs.plugin_prerelease_docker_lanes }}",
         include_live_suites: false,
@@ -593,13 +593,13 @@ describe("scripts/lib/plugin-prerelease-test-plan.mjs", () => {
 
   it("keeps release-check reruns independent while cancelling superseded umbrella runs", () => {
     const releaseChecksWorkflow = parse(
-      readFileSync(".github/workflows/openclaw-release-checks.yml", "utf8"),
+      readFileSync(".github/workflows/grokbot-release-checks.yml", "utf8"),
     );
     const fullReleaseWorkflow = readFullReleaseValidationWorkflow();
 
     expect(releaseChecksWorkflow.concurrency).toEqual({
       group:
-        "openclaw-release-checks-${{ inputs.expected_sha || inputs.ref }}-${{ inputs.rerun_group }}",
+        "grokbot-release-checks-${{ inputs.expected_sha || inputs.ref }}-${{ inputs.rerun_group }}",
       "cancel-in-progress": "${{ startsWith(github.ref, 'refs/heads/tideclaw/alpha/') }}",
     });
     expect(fullReleaseWorkflow.concurrency).toEqual({
@@ -667,7 +667,7 @@ describe("scripts/lib/plugin-prerelease-test-plan.mjs", () => {
   });
 
   it("allows Unreleased notes only for current-tree release checks", () => {
-    const workflow = parse(readFileSync(".github/workflows/openclaw-release-checks.yml", "utf8"));
+    const workflow = parse(readFileSync(".github/workflows/grokbot-release-checks.yml", "utf8"));
     const fullReleaseWorkflow = readFullReleaseValidationWorkflow();
     const resolveTarget = workflow.jobs.resolve_target;
     const captureInputs = resolveTarget.steps.find(
@@ -722,7 +722,7 @@ describe("scripts/lib/plugin-prerelease-test-plan.mjs", () => {
 
   it("keeps runtime tool coverage blocking in release checks", () => {
     const releaseChecksSource = readFileSync(
-      ".github/workflows/openclaw-release-checks.yml",
+      ".github/workflows/grokbot-release-checks.yml",
       "utf8",
     );
     const releaseChecksWorkflow = parse(releaseChecksSource);
@@ -737,7 +737,7 @@ describe("scripts/lib/plugin-prerelease-test-plan.mjs", () => {
       expect.arrayContaining([
         expect.objectContaining({
           name: "Enforce standard runtime tool coverage",
-          run: expect.stringContaining("pnpm openclaw qa coverage"),
+          run: expect.stringContaining("pnpm grokbot qa coverage"),
         }),
       ]),
     );

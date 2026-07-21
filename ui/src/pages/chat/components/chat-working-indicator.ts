@@ -48,10 +48,10 @@ export function renderChatWorkingIndicator(
           ? html`<span>${t("chat.waitingForApproval")}</span>`
           : html`
               <span class="agent-chat__sr-only">${t("common.working")}</span>
-              <openclaw-elapsed-time
+              <grokbot-elapsed-time
                 class="chat-working-indicator__elapsed"
                 .startMs=${part.startedAt}
-              ></openclaw-elapsed-time>
+              ></grokbot-elapsed-time>
             `}
       </span>
     </div>

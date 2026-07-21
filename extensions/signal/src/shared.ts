@@ -1,14 +1,14 @@
 // Signal plugin module implements shared behavior.
-import { describeAccountSnapshot } from "openclaw/plugin-sdk/account-helpers";
+import { describeAccountSnapshot } from "grokbot/plugin-sdk/account-helpers";
 import {
   adaptScopedAccountAccessor,
   createScopedChannelConfigAdapter,
-} from "openclaw/plugin-sdk/channel-config-helpers";
-import { createRestrictSendersChannelSecurity } from "openclaw/plugin-sdk/channel-policy";
-import { createChannelPluginBase, getChatChannelMeta } from "openclaw/plugin-sdk/core";
-import type { ChannelPlugin } from "openclaw/plugin-sdk/core";
-import { normalizeStringifiedEntries } from "openclaw/plugin-sdk/string-coerce-runtime";
-import { normalizeE164 } from "openclaw/plugin-sdk/text-utility-runtime";
+} from "grokbot/plugin-sdk/channel-config-helpers";
+import { createRestrictSendersChannelSecurity } from "grokbot/plugin-sdk/channel-policy";
+import { createChannelPluginBase, getChatChannelMeta } from "grokbot/plugin-sdk/core";
+import type { ChannelPlugin } from "grokbot/plugin-sdk/core";
+import { normalizeStringifiedEntries } from "grokbot/plugin-sdk/string-coerce-runtime";
+import { normalizeE164 } from "grokbot/plugin-sdk/text-utility-runtime";
 import {
   listSignalAccountIds,
   resolveDefaultSignalAccountId,

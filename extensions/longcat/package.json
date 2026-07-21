@@ -1,22 +1,22 @@
 {
-  "name": "@openclaw/longcat-provider",
+  "name": "@grokbot/longcat-provider",
   "version": "2026.7.2",
-  "description": "OpenClaw LongCat provider plugin.",
+  "description": "GrokBot LongCat provider plugin.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/openclaw/openclaw"
+    "url": "https://github.com/grokbot/grokbot"
   },
   "type": "module",
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@grokbot/plugin-sdk": "workspace:*"
   },
-  "openclaw": {
+  "grokbot": {
     "extensions": [
       "./index.ts"
     ],
     "install": {
-      "clawhubSpec": "clawhub:@openclaw/longcat-provider",
-      "npmSpec": "@openclaw/longcat-provider",
+      "clawhubSpec": "clawhub:@grokbot/longcat-provider",
+      "npmSpec": "@grokbot/longcat-provider",
       "defaultChoice": "npm",
       "minHostVersion": ">=2026.6.8"
     },

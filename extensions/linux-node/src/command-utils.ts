@@ -1,6 +1,6 @@
-import type { OpenClawPluginNodeHostCommandAvailabilityContext } from "openclaw/plugin-sdk/plugin-entry";
-import type { CommandOptions, SpawnResult } from "openclaw/plugin-sdk/process-runtime";
-import { truncateUtf16Safe } from "openclaw/plugin-sdk/text-utility-runtime";
+import type { OpenClawPluginNodeHostCommandAvailabilityContext } from "grokbot/plugin-sdk/plugin-entry";
+import type { CommandOptions, SpawnResult } from "grokbot/plugin-sdk/process-runtime";
+import { truncateUtf16Safe } from "grokbot/plugin-sdk/text-utility-runtime";
 import {
   resolveLinuxNodePluginConfigFromHost,
   type ResolvedLinuxNodePluginConfig,

@@ -4,7 +4,7 @@ import {
   FULL_ACCESS_PAIRING_SETUP_BOOTSTRAP_PROFILE,
   PAIRING_SETUP_BOOTSTRAP_PROFILE,
 } from "../shared/device-bootstrap-profile.js";
-import { closeOpenClawStateDatabaseForTest } from "../state/openclaw-state-db.js";
+import { closeOpenClawStateDatabaseForTest } from "../state/grokbot-state-db.js";
 import { createSuiteTempRootTracker } from "../test-helpers/temp-dir.js";
 import { issueDeviceBootstrapToken, verifyDeviceBootstrapToken } from "./device-bootstrap.js";
 import {
@@ -64,7 +64,7 @@ async function setupPairedBrowserOperatorDevice(baseDir: string) {
     {
       deviceId: "browser-device-1",
       publicKey: "public-key-browser-1",
-      clientId: "openclaw-control-ui",
+      clientId: "grokbot-control-ui",
       clientMode: "webchat",
       role: "operator",
       scopes: ["operator.read"],
@@ -190,7 +190,7 @@ async function clearPairedOperatorApprovalBaseline(baseDir: string) {
   });
 }
 
-const suiteRootTracker = createSuiteTempRootTracker({ prefix: "openclaw-device-pairing-" });
+const suiteRootTracker = createSuiteTempRootTracker({ prefix: "grokbot-device-pairing-" });
 let suiteBaseDir = "";
 
 async function makeDevicePairingDir(): Promise<string> {

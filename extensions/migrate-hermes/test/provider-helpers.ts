@@ -1,12 +1,12 @@
 // Migrate Hermes provider module implements model/runtime integration.
 import fs from "node:fs/promises";
 import path from "node:path";
-import type { MigrationProviderContext } from "openclaw/plugin-sdk/plugin-entry";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/provider-auth";
-import { resolvePreferredOpenClawTmpDir } from "openclaw/plugin-sdk/temp-path";
+import type { MigrationProviderContext } from "grokbot/plugin-sdk/plugin-entry";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/provider-auth";
+import { resolvePreferredOpenClawTmpDir } from "grokbot/plugin-sdk/temp-path";
 
 const tempRoots = new Set<string>();
-const TEMP_ROOT_PREFIX = "openclaw-migrate-hermes-";
+const TEMP_ROOT_PREFIX = "grokbot-migrate-hermes-";
 
 function noop() {}
 

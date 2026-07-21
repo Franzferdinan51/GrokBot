@@ -1,14 +1,14 @@
-// Openclaw Cross Os Release Workflow tests cover openclaw cross os release workflow script behavior.
+// Openclaw Cross Os Release Workflow tests cover grokbot cross os release workflow script behavior.
 import { spawnSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { parse } from "yaml";
 
-const WORKFLOW_PATH = ".github/workflows/openclaw-cross-os-release-checks-reusable.yml";
-const RELEASE_CHECKS_PATH = ".github/workflows/openclaw-release-checks.yml";
-const WRAPPER_PATH = "scripts/github/run-openclaw-cross-os-release-checks.sh";
-const SCRIPT_PATH = "scripts/openclaw-cross-os-release-checks.ts";
-const HARNESS = "bash workflow/scripts/github/run-openclaw-cross-os-release-checks.sh";
+const WORKFLOW_PATH = ".github/workflows/grokbot-cross-os-release-checks-reusable.yml";
+const RELEASE_CHECKS_PATH = ".github/workflows/grokbot-release-checks.yml";
+const WRAPPER_PATH = "scripts/github/run-grokbot-cross-os-release-checks.sh";
+const SCRIPT_PATH = "scripts/grokbot-cross-os-release-checks.ts";
+const HARNESS = "bash workflow/scripts/github/run-grokbot-cross-os-release-checks.sh";
 const BASH_BIN = process.platform === "win32" ? "bash" : "/bin/bash";
 
 type WorkflowStep = {
@@ -111,7 +111,7 @@ describe("cross-OS release checks workflow", () => {
     expect(metadata.run).toContain(
       "name=release-package-under-test-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}",
     );
-    expect(metadata.run).toContain("file_name=openclaw-current.tgz");
+    expect(metadata.run).toContain("file_name=grokbot-current.tgz");
     expect(metadata.run).toContain("run_attempt=${GITHUB_RUN_ATTEMPT}");
     expect(metadata.run).toContain("run_id=${GITHUB_RUN_ID}");
 
@@ -261,7 +261,7 @@ describe("cross-OS release checks workflow", () => {
     );
 
     const resolve = step(prepare, "Resolve provided candidate package");
-    expect(resolve.run).toContain("resolve-openclaw-package-candidate.mjs");
+    expect(resolve.run).toContain("resolve-grokbot-package-candidate.mjs");
     expect(resolve.run).toContain("--source artifact");
     expect(resolve.run).toContain('--package-sha256 "$INPUT_CANDIDATE_SHA256"');
     expect(resolve.run).toContain('"$actual_sha256" == "$INPUT_CANDIDATE_SHA256"');
@@ -271,12 +271,12 @@ describe("cross-OS release checks workflow", () => {
     const upload = step(prepare, "Upload candidate artifact");
     expect(upload.id).toBe("upload_candidate");
     expect(upload.with?.name).toBe(
-      "openclaw-cross-os-release-checks-candidate-${{ github.run_id }}-${{ github.run_attempt }}",
+      "grokbot-cross-os-release-checks-candidate-${{ github.run_id }}-${{ github.run_attempt }}",
     );
     const baselineUpload = step(prepare, "Upload baseline artifact");
     expect(baselineUpload.id).toBe("upload_baseline");
     expect(baselineUpload.with?.name).toBe(
-      "openclaw-cross-os-release-checks-baseline-${{ github.run_id }}-${{ github.run_attempt }}",
+      "grokbot-cross-os-release-checks-baseline-${{ github.run_id }}-${{ github.run_attempt }}",
     );
 
     const consumer = job(workflow, "cross_os_release_checks");
@@ -285,13 +285,13 @@ describe("cross-OS release checks workflow", () => {
       ARTIFACT_DIGEST: "${{ needs.prepare.outputs.candidate_artifact_digest }}",
       ARTIFACT_ID: "${{ needs.prepare.outputs.candidate_artifact_id }}",
       ARTIFACT_NAME:
-        "${{ format('openclaw-cross-os-release-checks-candidate-{0}-{1}', needs.prepare.outputs.candidate_artifact_run_id, needs.prepare.outputs.candidate_artifact_run_attempt) }}",
+        "${{ format('grokbot-cross-os-release-checks-candidate-{0}-{1}', needs.prepare.outputs.candidate_artifact_run_id, needs.prepare.outputs.candidate_artifact_run_attempt) }}",
       ARTIFACT_RUN_ATTEMPT: "${{ needs.prepare.outputs.candidate_artifact_run_attempt }}",
       ARTIFACT_RUN_ID: "${{ needs.prepare.outputs.candidate_artifact_run_id }}",
       BASELINE_ARTIFACT_DIGEST: "${{ needs.prepare.outputs.baseline_artifact_digest }}",
       BASELINE_ARTIFACT_ID: "${{ needs.prepare.outputs.baseline_artifact_id }}",
       BASELINE_ARTIFACT_NAME:
-        "${{ format('openclaw-cross-os-release-checks-baseline-{0}-{1}', needs.prepare.outputs.baseline_artifact_run_id, needs.prepare.outputs.baseline_artifact_run_attempt) }}",
+        "${{ format('grokbot-cross-os-release-checks-baseline-{0}-{1}', needs.prepare.outputs.baseline_artifact_run_id, needs.prepare.outputs.baseline_artifact_run_attempt) }}",
       BASELINE_ARTIFACT_RUN_ATTEMPT: "${{ needs.prepare.outputs.baseline_artifact_run_attempt }}",
       BASELINE_ARTIFACT_RUN_ID: "${{ needs.prepare.outputs.baseline_artifact_run_id }}",
       BASELINE_SHA256: "${{ needs.prepare.outputs.baseline_sha256 }}",
@@ -356,7 +356,7 @@ describe("cross-OS release checks workflow", () => {
     expect(script).toMatch(/^#!\/usr\/bin\/env node$/mu);
     expect(script).not.toContain("--import tsx");
     expect(packageJson.scripts["test:windows:ci"]).toContain(
-      "test/scripts/openclaw-cross-os-release-workflow.test.ts",
+      "test/scripts/grokbot-cross-os-release-workflow.test.ts",
     );
     const result = spawnSync(
       BASH_BIN,

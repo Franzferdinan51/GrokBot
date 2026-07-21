@@ -1,4 +1,4 @@
-// Host Command script supports OpenClaw repository automation.
+// Host Command script supports GrokBot repository automation.
 import { spawn, spawnSync, type SpawnOptions, type SpawnSyncReturns } from "node:child_process";
 import { createWriteStream } from "node:fs";
 import path from "node:path";
@@ -7,7 +7,7 @@ import { fileURLToPath } from "node:url";
 import {
   addTimerTimeoutGraceMs,
   clampTimerTimeoutMs,
-} from "@openclaw/normalization-core/number-coercion";
+} from "@grokbot/normalization-core/number-coercion";
 import { resolveNpmRunner } from "../../npm-runner.mjs";
 import { resolvePnpmRunner } from "../../pnpm-runner.mjs";
 import { buildCmdExeCommandLine, resolveWindowsCmdExePath } from "../../windows-cmd-helpers.mjs";

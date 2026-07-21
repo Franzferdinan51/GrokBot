@@ -93,7 +93,7 @@ describe("resolveSessionKeyForRequest", () => {
   });
 
   it("uses an agent-scoped --to value as the requested session key", () => {
-    const sessionKey = "agent:main:openclaw-weixin:direct:o9cq802hhmfc@im.wechat";
+    const sessionKey = "agent:main:grokbot-weixin:direct:o9cq802hhmfc@im.wechat";
     mocks.resolveStorePath.mockReturnValue(MAIN_STORE_PATH);
     mockStoresByPath({
       [MAIN_STORE_PATH]: {

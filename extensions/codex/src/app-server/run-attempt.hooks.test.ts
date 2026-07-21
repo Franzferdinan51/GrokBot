@@ -5,20 +5,20 @@ import {
   onAgentEvent,
   resolveActiveEmbeddedRunSessionId,
   type AgentEventPayload,
-} from "openclaw/plugin-sdk/agent-harness-runtime";
-import { SessionManager } from "openclaw/plugin-sdk/agent-sessions";
+} from "grokbot/plugin-sdk/agent-harness-runtime";
+import { SessionManager } from "grokbot/plugin-sdk/agent-sessions";
 import {
   onInternalDiagnosticEvent,
   waitForDiagnosticEventsDrained,
   type DiagnosticEventPayload,
   type DiagnosticEventPrivateData,
-} from "openclaw/plugin-sdk/diagnostic-runtime";
-import { initializeGlobalHookRunner } from "openclaw/plugin-sdk/hook-runtime";
+} from "grokbot/plugin-sdk/diagnostic-runtime";
+import { initializeGlobalHookRunner } from "grokbot/plugin-sdk/hook-runtime";
 import {
   createMockPluginRegistry,
   onTrustedInternalDiagnosticEvent,
-} from "openclaw/plugin-sdk/plugin-test-runtime";
-import { GPT5_BEHAVIOR_CONTRACT as CODEX_GPT5_BEHAVIOR_CONTRACT } from "openclaw/plugin-sdk/provider-model-shared";
+} from "grokbot/plugin-sdk/plugin-test-runtime";
+import { GPT5_BEHAVIOR_CONTRACT as CODEX_GPT5_BEHAVIOR_CONTRACT } from "grokbot/plugin-sdk/provider-model-shared";
 import { describe, expect, it, vi } from "vitest";
 import {
   assistantMessage,
@@ -149,7 +149,7 @@ describe("runCodexAppServerAttempt hooks and model diagnostics", () => {
     expect(llmInputPayload.imagesCount).toBe(0);
     expect(llmInputPayload.historyMessages).toEqual([]);
     expect(llmInputPayload.systemPrompt).toContain(
-      "You are a personal agent running inside OpenClaw.",
+      "You are a personal agent running inside GrokBot.",
     );
     expect(llmInputPayload.systemPrompt).not.toContain(CODEX_GPT5_BEHAVIOR_CONTRACT);
     expect(llmInputContext.runId).toBe("run-1");
@@ -355,7 +355,7 @@ describe("runCodexAppServerAttempt hooks and model diagnostics", () => {
       expect(JSON.stringify(startedContent?.inputMessages)).toContain("hello");
       expect(JSON.stringify(startedContent?.inputMessages)).not.toContain("existing context");
       expect(startedContent?.systemPrompt).toContain(
-        "You are a personal agent running inside OpenClaw.",
+        "You are a personal agent running inside GrokBot.",
       );
       expect(completed).toMatchObject({ callId: expectedCallId, observationUnit: "turn" });
       expect(JSON.stringify(completed)).not.toContain("hello back");

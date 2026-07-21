@@ -1150,7 +1150,7 @@ describe("gateway sessions patch", () => {
     expect(entry.thinkingLevel).toBe("xhigh");
   });
 
-  test("persists OpenClaw Luna Ultra through the runtime-aware provider profile", async () => {
+  test("persists GrokBot Luna Ultra through the runtime-aware provider profile", async () => {
     const entry = expectPatchOk(
       await runPatch({
         cfg: {
@@ -1158,7 +1158,7 @@ describe("gateway sessions patch", () => {
             defaults: {
               model: { primary: "openai/gpt-5.6-luna" },
               models: {
-                "openai/gpt-5.6-luna": { agentRuntime: { id: "openclaw" } },
+                "openai/gpt-5.6-luna": { agentRuntime: { id: "grokbot" } },
               },
             },
           },
@@ -1193,14 +1193,14 @@ describe("gateway sessions patch", () => {
     expect(entry.thinkingLevel).toBe("max");
   });
 
-  test("honors an explicit OpenClaw session runtime override for Luna Ultra", async () => {
+  test("honors an explicit GrokBot session runtime override for Luna Ultra", async () => {
     const entry = expectPatchOk(
       await runPatch({
         cfg: {
           agents: { defaults: { model: { primary: "openai/gpt-5.6-luna" } } },
         } as OpenClawConfig,
         store: mainStoreEntry({
-          agentRuntimeOverride: "openclaw",
+          agentRuntimeOverride: "grokbot",
           agentHarnessId: "codex",
         }),
         patch: { key: MAIN_SESSION_KEY, thinkingLevel: "ultra" },
@@ -1227,7 +1227,7 @@ describe("gateway sessions patch", () => {
           defaults: {
             model: { primary: "openai/gpt-5.6-luna" },
             models: {
-              "openai/gpt-5.6-luna": { agentRuntime: { id: "openclaw" } },
+              "openai/gpt-5.6-luna": { agentRuntime: { id: "grokbot" } },
             },
           },
         },
@@ -1249,7 +1249,7 @@ describe("gateway sessions patch", () => {
       cfg: {
         agents: { defaults: { model: { primary: "openai/gpt-5.6-luna" } } },
       } as OpenClawConfig,
-      store: mainStoreEntry({ agentHarnessId: "openclaw" }),
+      store: mainStoreEntry({ agentHarnessId: "grokbot" }),
       patch: { key: MAIN_SESSION_KEY, thinkingLevel: "ultra" },
       loadGatewayModelCatalog: async () => [],
     });

@@ -1,12 +1,12 @@
 /** Doctor diagnostics for pending, paired, and locally cached device auth state. */
 import path from "node:path";
-import { normalizeUniqueSingleOrTrimmedStringList } from "@openclaw/normalization-core/string-normalization";
+import { normalizeUniqueSingleOrTrimmedStringList } from "@grokbot/normalization-core/string-normalization";
 import { note } from "../../packages/terminal-core/src/note.js";
 import { sanitizeTerminalText } from "../../packages/terminal-core/src/safe-text.js";
 import { formatCliCommand } from "../cli/command-format.js";
 import { quoteCliArg } from "../cli/quote-cli-arg.js";
 import { resolveStateDir } from "../config/paths.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import type { HealthFinding } from "../flows/health-checks.js";
 import { callGateway } from "../gateway/call.js";
 import { loadDeviceIdentityIfPresent } from "../infra/device-identity.js";
@@ -245,8 +245,8 @@ function resolvePendingPairingIssue(
     displayName: pending.displayName,
     clientId: pending.clientId,
   });
-  const approveCommand = formatCliArgs(["openclaw", "devices", "approve", pending.requestId]);
-  const inspectCommand = formatCliArgs(["openclaw", "devices", "list"]);
+  const approveCommand = formatCliArgs(["grokbot", "devices", "approve", pending.requestId]);
+  const inspectCommand = formatCliArgs(["grokbot", "devices", "list"]);
   if (!paired) {
     return {
       kind: "first-time",
@@ -263,7 +263,7 @@ function resolvePendingPairingIssue(
       deviceLabel,
       approveCommand,
       inspectCommand,
-      removeCommand: formatCliArgs(["openclaw", "devices", "remove", pending.deviceId]),
+      removeCommand: formatCliArgs(["grokbot", "devices", "remove", pending.deviceId]),
     };
   }
   const requestedRoles = normalizeUniqueSingleOrTrimmedStringList(
@@ -354,7 +354,7 @@ function collectPairedRecordIssues(snapshot: DoctorPairingSnapshot): PairedRecor
     for (const role of approvedRoles) {
       const token = findTokenSummary(device, role);
       const rotateCommand = formatCliArgs([
-        "openclaw",
+        "grokbot",
         "devices",
         "rotate",
         "--device",
@@ -480,7 +480,7 @@ function collectLocalDeviceAuthIssues(snapshot: DoctorPairingSnapshot): LocalDev
       continue;
     }
     const rotateCommand = formatCliArgs([
-      "openclaw",
+      "grokbot",
       "devices",
       "rotate",
       "--device",
@@ -522,7 +522,7 @@ function formatLocalDeviceAuthIssue(issue: LocalDeviceAuthIssue): string {
 }
 
 function formatLegacyPairingStoreIssue(filePath: string): string {
-  return `- Legacy device pairing store ${filePath} has not been imported into the SQLite state store yet. The gateway imports and archives it at startup, so restart the gateway. If the file persists across restarts it is likely unreadable; OpenClaw refused to treat it as empty to avoid dropping approved pairings, so fix or move it aside, then restart.`;
+  return `- Legacy device pairing store ${filePath} has not been imported into the SQLite state store yet. The gateway imports and archives it at startup, so restart the gateway. If the file persists across restarts it is likely unreadable; GrokBot refused to treat it as empty to avoid dropping approved pairings, so fix or move it aside, then restart.`;
 }
 
 /** Warn about legacy devices/*.json files the startup SQLite import has not archived. */

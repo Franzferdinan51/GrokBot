@@ -1,5 +1,5 @@
 // Chat-owned composer, queue, status, context, and run controls.
-import { truncateUtf16Safe } from "@openclaw/normalization-core/utf16-slice";
+import { truncateUtf16Safe } from "@grokbot/normalization-core/utf16-slice";
 import { html, nothing, type TemplateResult } from "lit";
 import { ifDefined } from "lit/directives/if-defined.js";
 import { ref } from "lit/directives/ref.js";
@@ -498,7 +498,7 @@ function renderChatGoalActionButton(options: {
   onClick: () => void;
 }): TemplateResult {
   return html`
-    <openclaw-tooltip content=${options.label}>
+    <grokbot-tooltip content=${options.label}>
       <button
         class="agent-chat__goal-action ${options.className}"
         type="button"
@@ -507,7 +507,7 @@ function renderChatGoalActionButton(options: {
       >
         ${options.icon}
       </button>
-    </openclaw-tooltip>
+    </grokbot-tooltip>
   `;
 }
 
@@ -1151,7 +1151,7 @@ function renderChatQueueItem(item: ChatQueueItem, props: ChatQueueProps) {
         ${busy
           ? nothing
           : html`
-              <openclaw-tooltip .content=${t("chat.queue.removeQueuedMessage")}>
+              <grokbot-tooltip .content=${t("chat.queue.removeQueuedMessage")}>
                 <button
                   class="chat-queue__remove"
                   type="button"
@@ -1160,7 +1160,7 @@ function renderChatQueueItem(item: ChatQueueItem, props: ChatQueueProps) {
                 >
                   ${icons.x}
                 </button>
-              </openclaw-tooltip>
+              </grokbot-tooltip>
             `}
       </span>
       ${
@@ -1266,11 +1266,11 @@ function renderFallbackIndicator(status: FallbackStatus | null | undefined) {
       : "compaction-indicator compaction-indicator--fallback";
   const icon = phase === "cleared" ? icons.check : icons.brain;
   return html`
-    <openclaw-tooltip .content=${details}>
+    <grokbot-tooltip .content=${details}>
       <div class=${className} role="status" aria-live="polite" aria-label=${details}>
         ${icon} ${message}
       </div>
-    </openclaw-tooltip>
+    </grokbot-tooltip>
   `;
 }
 
@@ -1903,7 +1903,7 @@ function renderComposerVoiceButton(props: ChatRunControlsProps) {
   // or replacing the button releases capture and cancels the active hold.
   return html`
     <span class="chat-talk-control">
-      <openclaw-tooltip .content=${label}>
+      <grokbot-tooltip .content=${label}>
         <button
           class=${active
             ? `chat-send-btn chat-send-btn--dictating${finalizing ? " chat-send-btn--dictation-finalizing" : ""}`
@@ -1932,7 +1932,7 @@ function renderComposerVoiceButton(props: ChatRunControlsProps) {
                   <span class="agent-chat__control-label">${label}</span>
                 `}
         </button>
-      </openclaw-tooltip>
+      </grokbot-tooltip>
       ${holding ? nothing : props.microphonePicker}
     </span>
   `;
@@ -1966,7 +1966,7 @@ function renderChatPrimaryActions(props: ChatRunControlsProps) {
   };
   const abortAction = props.canAbort
     ? html`
-        <openclaw-tooltip .content=${t("chat.runControls.stop")}>
+        <grokbot-tooltip .content=${t("chat.runControls.stop")}>
           <button
             class="chat-send-btn chat-send-btn--stop"
             @click=${props.onAbort}
@@ -1975,7 +1975,7 @@ function renderChatPrimaryActions(props: ChatRunControlsProps) {
             ${icons.stop}
             <span class="agent-chat__control-label">${t("chat.runControls.stop")}</span>
           </button>
-        </openclaw-tooltip>
+        </grokbot-tooltip>
       `
     : nothing;
 
@@ -1986,7 +1986,7 @@ function renderChatPrimaryActions(props: ChatRunControlsProps) {
   const voiceErrored = props.voiceStatus === "error";
   const voiceButton = renderComposerVoiceButton(props);
   const sendAction = html`
-    <openclaw-tooltip
+    <grokbot-tooltip
       .content=${props.isBusy ? t("chat.runControls.queue") : t("chat.runControls.send")}
     >
       <button
@@ -2002,7 +2002,7 @@ function renderChatPrimaryActions(props: ChatRunControlsProps) {
           >${props.isBusy ? t("chat.runControls.queue") : t("chat.runControls.send")}</span
         >
       </button>
-    </openclaw-tooltip>
+    </grokbot-tooltip>
   `;
   const dictationPrimaryAction = html`
     ${props.dictation?.active || !hasComposedContent ? nothing : sendAction} ${voiceButton}
@@ -2011,7 +2011,7 @@ function renderChatPrimaryActions(props: ChatRunControlsProps) {
     ${props.voiceActive && props.onToggleVoice
       ? html`
           <span class="chat-talk-control chat-talk-control--active">
-            <openclaw-tooltip .content=${t("chat.composer.stopVoiceInput")}>
+            <grokbot-tooltip .content=${t("chat.composer.stopVoiceInput")}>
               <button
                 class="chat-send-btn chat-send-btn--voice-live${voiceErrored
                   ? " chat-send-btn--voice-error"
@@ -2027,7 +2027,7 @@ function renderChatPrimaryActions(props: ChatRunControlsProps) {
                     })}
                 <span class="chat-send-btn__voice-stop-glyph">${icons.stop}</span>
               </button>
-            </openclaw-tooltip>
+            </grokbot-tooltip>
             ${props.microphonePicker}
           </span>
           ${voiceErrored
@@ -2043,7 +2043,7 @@ function renderChatPrimaryActions(props: ChatRunControlsProps) {
               `}
           ${props.voiceVideoCapable && props.onToggleCamera
             ? html`
-                <openclaw-tooltip
+                <grokbot-tooltip
                   .content=${props.voiceVideoEnabled
                     ? t("chat.composer.turnCameraOff")
                     : t("chat.composer.turnCameraOn")}
@@ -2066,7 +2066,7 @@ function renderChatPrimaryActions(props: ChatRunControlsProps) {
                         : t("chat.composer.turnCameraOn")}</span
                     >
                   </button>
-                </openclaw-tooltip>
+                </grokbot-tooltip>
               `
             : nothing}
           ${abortAction}
@@ -2075,7 +2075,7 @@ function renderChatPrimaryActions(props: ChatRunControlsProps) {
         ? html`
             ${hasComposedContent
               ? html`
-                  <openclaw-tooltip .content=${activeRunActionLabel}>
+                  <grokbot-tooltip .content=${activeRunActionLabel}>
                     <button
                       class="chat-send-btn"
                       @click=${storeDraftAndSend}
@@ -2085,10 +2085,10 @@ function renderChatPrimaryActions(props: ChatRunControlsProps) {
                       ${icons.arrowUp}
                       <span class="agent-chat__control-label">${activeRunActionLabel}</span>
                     </button>
-                  </openclaw-tooltip>
+                  </grokbot-tooltip>
                 `
               : nothing}
-            <openclaw-tooltip .content=${t("chat.runControls.stop")}>
+            <grokbot-tooltip .content=${t("chat.runControls.stop")}>
               <button
                 class="chat-send-btn chat-send-btn--stop"
                 @click=${props.onAbort}
@@ -2097,7 +2097,7 @@ function renderChatPrimaryActions(props: ChatRunControlsProps) {
                 ${icons.stop}
                 <span class="agent-chat__control-label">${t("chat.runControls.stop")}</span>
               </button>
-            </openclaw-tooltip>
+            </grokbot-tooltip>
           `
         : props.dictation
           ? dictationPrimaryAction
@@ -2173,7 +2173,7 @@ export function renderChatComposer(props: ChatComposerProps) {
     },
   );
   const composerControls = props.composerControls ?? nothing;
-  const assistantName = props.assistantName || "OpenClaw";
+  const assistantName = props.assistantName || "GrokBot";
   const inProgressLabel = props.waitingApproval
     ? t("chat.waitingForApproval")
     : submittedProgress?.sendState === "waiting-model"
@@ -2695,9 +2695,9 @@ export function renderChatComposer(props: ChatComposerProps) {
                 }
               })}
             >
-              <openclaw-chat-question-panel
+              <grokbot-chat-question-panel
                 .props=${questionPanelProps}
-              ></openclaw-chat-question-panel>
+              ></grokbot-chat-question-panel>
             </div>
           `
         : nothing}
@@ -2804,7 +2804,7 @@ export function renderChatComposer(props: ChatComposerProps) {
                     props.realtimeTalkCameraDevices.length >= 2 &&
                     props.onSwitchRealtimeCamera
                       ? html`
-                          <openclaw-tooltip
+                          <grokbot-tooltip
                             class="agent-chat__video-preview-switch-tooltip"
                             .content=${t("chat.composer.switchCamera")}
                           >
@@ -2817,7 +2817,7 @@ export function renderChatComposer(props: ChatComposerProps) {
                             >
                               ${icons.switchCamera}
                             </button>
-                          </openclaw-tooltip>
+                          </grokbot-tooltip>
                         `
                       : nothing}
                   </div>

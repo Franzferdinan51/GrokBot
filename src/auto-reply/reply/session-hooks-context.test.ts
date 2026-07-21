@@ -68,7 +68,7 @@ vi.mock("../../agents/session-write-lock.js", async () => {
   };
 });
 
-const suiteTempDirs = createSuiteTempRootTracker({ prefix: "openclaw-session-hooks-" });
+const suiteTempDirs = createSuiteTempRootTracker({ prefix: "grokbot-session-hooks-" });
 
 async function createStorePath(prefix: string): Promise<string> {
   const root = await suiteTempDirs.make(prefix);
@@ -210,7 +210,7 @@ describe("session hook context wiring", () => {
 
   it("passes sessionKey to session_start hook context", async () => {
     const sessionKey = "agent:main:telegram:direct:123";
-    const storePath = await createStorePath("openclaw-session-hook-start");
+    const storePath = await createStorePath("grokbot-session-hook-start");
     await writeStore(storePath, {});
     const cfg = { session: { store: storePath } } as OpenClawConfig;
 
@@ -229,7 +229,7 @@ describe("session hook context wiring", () => {
   it("passes sessionKey to session_end hook context on reset", async () => {
     const sessionKey = "agent:main:telegram:direct:123";
     const { storePath } = await createStoredSession({
-      prefix: "openclaw-session-hook-end",
+      prefix: "grokbot-session-hook-end",
       sessionKey,
       sessionId: "old-session",
     });
@@ -277,7 +277,7 @@ describe("session hook context wiring", () => {
     );
     const sessionKey = "agent:main:telegram:direct:held-rollover";
     const { storePath } = await createStoredSession({
-      prefix: "openclaw-session-hook-held-rollover",
+      prefix: "grokbot-session-hook-held-rollover",
       sessionKey,
       sessionId: "old-held-session",
     });
@@ -312,7 +312,7 @@ describe("session hook context wiring", () => {
     );
     const sessionKey = "agent:main:telegram:direct:restart-handoff";
     const { storePath } = await createStoredSession({
-      prefix: "openclaw-session-hook-restart-handoff",
+      prefix: "grokbot-session-hook-restart-handoff",
       sessionKey,
       sessionId: "old-restart-session",
     });
@@ -343,7 +343,7 @@ describe("session hook context wiring", () => {
   it("marks explicit /reset rollovers with reason reset", async () => {
     const sessionKey = "agent:main:telegram:direct:456";
     const { storePath } = await createStoredSession({
-      prefix: "openclaw-session-hook-explicit-reset",
+      prefix: "grokbot-session-hook-explicit-reset",
       sessionKey,
       sessionId: "reset-session",
       text: "reset me",
@@ -363,7 +363,7 @@ describe("session hook context wiring", () => {
   it("maps custom reset trigger aliases to the new-session reason", async () => {
     const sessionKey = "agent:main:telegram:direct:alias";
     const { storePath } = await createStoredSession({
-      prefix: "openclaw-session-hook-reset-alias",
+      prefix: "grokbot-session-hook-reset-alias",
       sessionKey,
       sessionId: "alias-session",
       text: "alias me",
@@ -391,7 +391,7 @@ describe("session hook context wiring", () => {
       vi.setSystemTime(new Date(2026, 0, 18, 5, 0, 0));
       const sessionKey = "agent:main:telegram:direct:daily";
       await initStoredSessionState({
-        prefix: "openclaw-session-hook-daily",
+        prefix: "grokbot-session-hook-daily",
         sessionKey,
         sessionId: "daily-session",
         text: "daily",
@@ -418,7 +418,7 @@ describe("session hook context wiring", () => {
       vi.setSystemTime(new Date(2026, 0, 18, 5, 0, 0));
       const sessionKey = "agent:main:telegram:direct:idle";
       await initStoredSessionState({
-        prefix: "openclaw-session-hook-idle",
+        prefix: "grokbot-session-hook-idle",
         sessionKey,
         sessionId: "idle-session",
         text: "idle",
@@ -442,7 +442,7 @@ describe("session hook context wiring", () => {
       vi.setSystemTime(new Date(2026, 0, 18, 5, 30, 0));
       const sessionKey = "agent:main:telegram:direct:overlap";
       await initStoredSessionState({
-        prefix: "openclaw-session-hook-overlap",
+        prefix: "grokbot-session-hook-overlap",
         sessionKey,
         sessionId: "overlap-session",
         text: "overlap",

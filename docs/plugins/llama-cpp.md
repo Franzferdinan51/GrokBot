@@ -1,10 +1,10 @@
 ---
-summary: "Run local GGUF text inference and memory embeddings in OpenClaw with llama.cpp"
+summary: "Run local GGUF text inference and memory embeddings in GrokBot with llama.cpp"
 read_when:
   - You want local text inference without an API key or model server
   - You want memory search embeddings from a local GGUF model
   - You are configuring memorySearch.provider = "local"
-  - You need the OpenClaw plugin that owns the node-llama-cpp runtime
+  - You need the GrokBot plugin that owns the node-llama-cpp runtime
 title: "llama.cpp Provider"
 sidebarTitle: "llama.cpp Provider"
 ---
@@ -16,22 +16,22 @@ embedding provider `local`, and owns the `node-llama-cpp` native runtime.
 Install it before using either local inference or local memory embeddings:
 
 ```bash
-openclaw plugins install @openclaw/llama-cpp-provider
+grokbot plugins install @grokbot/llama-cpp-provider
 ```
 
-The main `openclaw` npm package does not include `node-llama-cpp`. Keeping the
-native dependency in this plugin prevents normal OpenClaw npm updates from
-deleting a manually installed runtime inside the OpenClaw package directory.
+The main `grokbot` npm package does not include `node-llama-cpp`. Keeping the
+native dependency in this plugin prevents normal GrokBot npm updates from
+deleting a manually installed runtime inside the GrokBot package directory.
 
 ## Local text inference
 
-Choose **Local model (llama.cpp)** during interactive onboarding. OpenClaw asks
+Choose **Local model (llama.cpp)** during interactive onboarding. GrokBot asks
 before downloading the default model:
 
 `hf:bartowski/Qwen_Qwen3-4B-Instruct-2507-GGUF/Qwen_Qwen3-4B-Instruct-2507-Q4_K_M.gguf`
 
 The Qwen3 4B Instruct 2507 Q4_K_M file is about 2.5 GB. Budget roughly 3 GB of
-RAM for model weights, plus context and OpenClaw runtime overhead. The default
+RAM for model weights, plus context and GrokBot runtime overhead. The default
 context is automatically sized with an 8,192-token cap so it remains practical
 on 8 GB machines. Configure a larger context only when the machine has enough
 memory.
@@ -44,7 +44,7 @@ is the path that prompts for the default model download.
 
 The provider uses the GGUF model's embedded chat template and native
 node-llama-cpp function calling. Text streams token by token. Tool calls return
-to OpenClaw for execution rather than running inside node-llama-cpp.
+to GrokBot for execution rather than running inside node-llama-cpp.
 
 ### Use another GGUF model
 
@@ -135,22 +135,22 @@ pnpm rebuild node-llama-cpp
 
 ## Memory runtime diagnostics
 
-Run `openclaw memory status --deep` after the provider has loaded to inspect
+Run `grokbot memory status --deep` after the provider has loaded to inspect
 the selected backend and build, device names, GPU offloaded layers, requested
 context size, and the last observed VRAM or unified-memory snapshot. The VRAM
 values include an observation timestamp because passive status reads do not
 reload the model or poll the device.
 
-The same last-known facts can appear in `openclaw doctor` when the running
+The same last-known facts can appear in `grokbot doctor` when the running
 Gateway has already used the local provider. A normal status or doctor command
 does not load a model just to collect diagnostics.
 
 ## Troubleshooting
 
-If `node-llama-cpp` is missing or fails to load, OpenClaw reports the failure
+If `node-llama-cpp` is missing or fails to load, GrokBot reports the failure
 with:
 
-1. Install the plugin: `openclaw plugins install @openclaw/llama-cpp-provider`.
+1. Install the plugin: `grokbot plugins install @grokbot/llama-cpp-provider`.
 2. Use Node 24 for native installs/updates.
 3. From a pnpm source checkout: `pnpm approve-builds`, then `pnpm rebuild node-llama-cpp`.
 

@@ -1,4 +1,4 @@
-// QA OTEL Smoke runtime supports OpenClaw repository automation.
+// QA OTEL Smoke runtime supports GrokBot repository automation.
 
 import { spawn } from "node:child_process";
 /* oxlint-disable typescript/unbound-method -- the original stream method is invoked with process.stdout through Reflect.apply below. */
@@ -15,7 +15,7 @@ import {
   emitTrustedDiagnosticEvent,
   emitTrustedDiagnosticEventWithPrivateData,
   waitForDiagnosticEventsDrained,
-} from "openclaw/plugin-sdk/diagnostic-runtime";
+} from "grokbot/plugin-sdk/diagnostic-runtime";
 import {
   createDiagnosticsOtelService,
   type OpenClawPluginServiceContext,
@@ -99,7 +99,7 @@ type CapturedLogRecord = {
 };
 
 type StdoutDiagnosticLogRecord = {
-  signal: "openclaw.diagnostic.log";
+  signal: "grokbot.diagnostic.log";
   ts?: unknown;
   "service.name"?: unknown;
   severityText?: unknown;
@@ -120,31 +120,31 @@ const OTLP_SIGNAL_PATHS = new Map<string, OtlpSignal>([
   ["/v1/logs", "logs"],
 ]);
 const REQUIRED_SPAN_NAMES = [
-  "openclaw.run",
-  "openclaw.harness.run",
-  "openclaw.context.assembled",
-  "openclaw.message.delivery",
+  "grokbot.run",
+  "grokbot.harness.run",
+  "grokbot.context.assembled",
+  "grokbot.message.delivery",
 ] as const;
-const REQUIRED_METRIC_NAMES = ["openclaw.harness.duration_ms"] as const;
+const REQUIRED_METRIC_NAMES = ["grokbot.harness.duration_ms"] as const;
 const DIRECT_RUN_ID = "qa-otel-direct-run";
 const DIRECT_CALL_ID = "qa-otel-direct-call";
 const DIRECT_ERROR_MESSAGE = "QA OTEL provider stream failed";
 const DIRECT_ERROR_SECRET = "sk-1234567890abcdef";
 const DISALLOWED_ATTRIBUTE_KEYS = new Set([
-  "openclaw.runId",
-  "openclaw.chatId",
-  "openclaw.messageId",
-  "openclaw.sessionKey",
-  "openclaw.sessionId",
-  "openclaw.callId",
-  "openclaw.toolCallId",
-  "openclaw.run_id",
-  "openclaw.chat_id",
-  "openclaw.message_id",
-  "openclaw.session_key",
-  "openclaw.session_id",
-  "openclaw.call_id",
-  "openclaw.tool_call_id",
+  "grokbot.runId",
+  "grokbot.chatId",
+  "grokbot.messageId",
+  "grokbot.sessionKey",
+  "grokbot.sessionId",
+  "grokbot.callId",
+  "grokbot.toolCallId",
+  "grokbot.run_id",
+  "grokbot.chat_id",
+  "grokbot.message_id",
+  "grokbot.session_key",
+  "grokbot.session_id",
+  "grokbot.call_id",
+  "grokbot.tool_call_id",
 ]);
 const DISALLOWED_BODY_NEEDLES = [
   "OTEL-QA-SECRET",
@@ -1030,7 +1030,7 @@ function isStdoutDiagnosticLogRecord(value: unknown): value is StdoutDiagnosticL
     typeof value === "object" &&
     value !== null &&
     !Array.isArray(value) &&
-    objectValue(value, "signal") === "openclaw.diagnostic.log"
+    objectValue(value, "signal") === "grokbot.diagnostic.log"
   );
 }
 
@@ -1126,9 +1126,9 @@ async function startDockerOtelCollector(
   if (collectorTelemetryPort === collectorPort) {
     throw new Error("OpenTelemetry collector telemetry port matched receiver port after retries.");
   }
-  const tempDir = await makeTempDir(path.join(osTmpdir(), "openclaw-otel-collector-"));
+  const tempDir = await makeTempDir(path.join(osTmpdir(), "grokbot-otel-collector-"));
   const configPath = path.join(tempDir, "collector.yaml");
-  const containerName = `openclaw-otel-smoke-${makeUuid()}`;
+  const containerName = `grokbot-otel-smoke-${makeUuid()}`;
   const useHostNetwork = (deps.platform ?? process.platform) === "linux";
   const collectorEndpoint = useHostNetwork ? `127.0.0.1:${collectorPort}` : "0.0.0.0:4318";
   const receiverEndpoint = useHostNetwork
@@ -1140,7 +1140,7 @@ async function startDockerOtelCollector(
       http:
         endpoint: ${collectorEndpoint}
 exporters:
-  otlphttp/openclaw:
+  otlphttp/grokbot:
     endpoint: ${receiverEndpoint}
 service:
   telemetry:
@@ -1149,13 +1149,13 @@ service:
   pipelines:
     traces:
       receivers: [otlp]
-      exporters: [otlphttp/openclaw]
+      exporters: [otlphttp/grokbot]
     metrics:
       receivers: [otlp]
-      exporters: [otlphttp/openclaw]
+      exporters: [otlphttp/grokbot]
     logs:
       receivers: [otlp]
-      exporters: [otlphttp/openclaw]
+      exporters: [otlphttp/grokbot]
 `;
   await writeConfigFile(configPath, config, "utf8");
 
@@ -1257,8 +1257,8 @@ function isLatestGenAiModelCallSpan(span: CapturedSpan): boolean {
   }
   return (
     span.name === `${operationName} ${modelName}` &&
-    typeof span.attributes["openclaw.provider"] === "string" &&
-    typeof span.attributes["openclaw.model"] === "string"
+    typeof span.attributes["grokbot.provider"] === "string" &&
+    typeof span.attributes["grokbot.model"] === "string"
   );
 }
 
@@ -1318,7 +1318,7 @@ async function runDirectTelemetryProducer(params: {
   }
   previousEnv.set("OTEL_SERVICE_NAME", process.env.OTEL_SERVICE_NAME);
   previousEnv.set("OTEL_SEMCONV_STABILITY_OPT_IN", process.env.OTEL_SEMCONV_STABILITY_OPT_IN);
-  process.env.OTEL_SERVICE_NAME = "openclaw-qa-lab-otel-smoke";
+  process.env.OTEL_SERVICE_NAME = "grokbot-qa-lab-otel-smoke";
   process.env.OTEL_SEMCONV_STABILITY_OPT_IN = "gen_ai_latest_experimental";
   const traceId = "4bf92f3577b34da6a3ce929d0e0e4736";
   const harnessTrace = createDiagnosticTraceContext({
@@ -1582,8 +1582,8 @@ function assertSmoke(params: {
   if (modelSpans.length === 0) {
     failures.push("missing required GenAI model-call span");
   }
-  if (spanNames.has("openclaw.model.call")) {
-    failures.push("legacy openclaw.model.call span exported with GenAI semconv opt-in");
+  if (spanNames.has("grokbot.model.call")) {
+    failures.push("legacy grokbot.model.call span exported with GenAI semconv opt-in");
   }
   const metricNames = new Set(params.metrics.map((metric) => metric.name));
   for (const name of REQUIRED_METRIC_NAMES) {
@@ -1624,7 +1624,7 @@ function assertSmoke(params: {
 
   const attributeKeys = collectAttributeKeys(params.spans);
   const disallowed = [...DISALLOWED_ATTRIBUTE_KEYS].filter((key) => attributeKeys.has(key));
-  const contentKeys = [...attributeKeys].filter((key) => key.startsWith("openclaw.content."));
+  const contentKeys = [...attributeKeys].filter((key) => key.startsWith("grokbot.content."));
   if (disallowed.length > 0) {
     failures.push(`raw diagnostic id attributes exported: ${disallowed.join(", ")}`);
   }
@@ -1639,7 +1639,7 @@ function assertSmoke(params: {
     const serialized = JSON.stringify(span.attributes);
     return (
       Object.hasOwn(span.attributes, "error.type") ||
-      Object.hasOwn(span.attributes, "openclaw.errorCategory") ||
+      Object.hasOwn(span.attributes, "grokbot.errorCategory") ||
       serialized.includes("StreamAbandoned")
     );
   });
@@ -1649,13 +1649,13 @@ function assertSmoke(params: {
 
   const failedRunSpans = params.spans.filter(
     (span) =>
-      (span.name === "openclaw.run" || span.name === "openclaw.harness.run") &&
-      span.attributes["openclaw.error"] === `${DIRECT_ERROR_MESSAGE} OPENAI_API_KEY=***`,
+      (span.name === "grokbot.run" || span.name === "grokbot.harness.run") &&
+      span.attributes["grokbot.error"] === `${DIRECT_ERROR_MESSAGE} OPENAI_API_KEY=***`,
   );
   if (failedRunSpans.length !== 2) {
     const observed = params.spans
-      .filter((span) => span.name === "openclaw.run" || span.name === "openclaw.harness.run")
-      .map((span) => ({ name: span.name, error: span.attributes["openclaw.error"] }));
+      .filter((span) => span.name === "grokbot.run" || span.name === "grokbot.harness.run")
+      .map((span) => ({ name: span.name, error: span.attributes["grokbot.error"] }));
     failures.push(
       `run and harness spans did not export the redacted failure message: ${JSON.stringify(observed)}`,
     );

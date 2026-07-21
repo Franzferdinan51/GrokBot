@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import { normalizeOptionalString } from "@grokbot/normalization-core/string-coerce";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import { readLocalFileSafely, root, walkDirectory } from "../../infra/fs-safe.js";
 import {
   buildWorkspaceSkillStatus,
@@ -80,7 +80,7 @@ function proposalStoreOptions(env?: NodeJS.ProcessEnv) {
   return env ? { env } : {};
 }
 
-const WRITABLE_WORKSPACE_SOURCES = new Set(["openclaw-workspace", "agents-skills-project"]);
+const WRITABLE_WORKSPACE_SOURCES = new Set(["grokbot-workspace", "agents-skills-project"]);
 const MAX_PROPOSAL_DRAFT_BYTES = 1024 * 1024;
 const MAX_PROPOSAL_DIRECTORY_ENTRIES = MAX_PROPOSAL_SUPPORT_FILES * 4;
 const MAX_SKILL_PROPOSAL_DESCRIPTION_BYTES = 160;
@@ -253,7 +253,7 @@ export async function proposeCreateSkill(
       skillKey: target.skillKey,
       skillDir: target.skillDir,
       skillFile: target.skillFile,
-      source: "openclaw-workspace",
+      source: "grokbot-workspace",
     },
     scan,
     ...(supportFiles.length > 0

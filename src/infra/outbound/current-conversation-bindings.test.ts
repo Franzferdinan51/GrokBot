@@ -5,12 +5,12 @@ import os from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { setActivePluginRegistry } from "../../plugins/runtime.js";
-import type { DB as OpenClawStateKyselyDatabase } from "../../state/openclaw-state-db.generated.js";
+import type { DB as OpenClawStateKyselyDatabase } from "../../state/grokbot-state-db.generated.js";
 import {
   closeOpenClawStateDatabaseForTest,
   openOpenClawStateDatabase,
   runOpenClawStateWriteTransaction,
-} from "../../state/openclaw-state-db.js";
+} from "../../state/grokbot-state-db.js";
 import { createTestRegistry } from "../../test-utils/channel-plugins.js";
 import { executeSqliteQuerySync, getNodeSqliteKysely } from "../kysely-sync.js";
 import {
@@ -176,7 +176,7 @@ describe("generic current-conversation bindings", () => {
 
   beforeEach(async () => {
     previousStateDir = process.env.OPENCLAW_STATE_DIR;
-    testStateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-current-bindings-"));
+    testStateDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-current-bindings-"));
     process.env.OPENCLAW_STATE_DIR = testStateDir;
     setMinimalCurrentConversationRegistry();
     testing.resetCurrentConversationBindingsForTests({

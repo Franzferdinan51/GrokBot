@@ -5,7 +5,7 @@ import {
   loadSessionEntry,
   upsertSessionEntry,
 } from "../config/sessions/session-accessor.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import {
   onTrustedInternalDiagnosticEvent,
   onTrustedToolExecutionEvent,
@@ -16,7 +16,7 @@ import { resolveSessionDeliveryTarget } from "../infra/outbound/targets-session.
 import {
   openOpenClawAgentDatabase,
   runOpenClawAgentWriteTransaction,
-} from "../state/openclaw-agent-db.js";
+} from "../state/grokbot-agent-db.js";
 import { truncateUtf16Safe } from "../utils.js";
 import {
   deactivateClientVoiceConfirmationSession,
@@ -727,6 +727,6 @@ const clientVoiceSessionTesting = {
 };
 
 if (process.env.VITEST || process.env.NODE_ENV === "test") {
-  (globalThis as Record<PropertyKey, unknown>)[Symbol.for("openclaw.clientVoiceSessionTestApi")] =
+  (globalThis as Record<PropertyKey, unknown>)[Symbol.for("grokbot.clientVoiceSessionTestApi")] =
     clientVoiceSessionTesting;
 }

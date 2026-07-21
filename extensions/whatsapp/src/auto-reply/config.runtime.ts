@@ -1,7 +1,7 @@
 // Whatsapp helper module supports config behavior.
-export { resolveStorePath, updateLastRoute } from "openclaw/plugin-sdk/session-store-runtime";
+export { resolveStorePath, updateLastRoute } from "grokbot/plugin-sdk/session-store-runtime";
 export {
   getRuntimeConfig,
   getRuntimeConfigSourceSnapshot,
-} from "openclaw/plugin-sdk/runtime-config-snapshot";
-export { resolveChannelContextVisibilityMode } from "openclaw/plugin-sdk/context-visibility-runtime";
+} from "grokbot/plugin-sdk/runtime-config-snapshot";
+export { resolveChannelContextVisibilityMode } from "grokbot/plugin-sdk/context-visibility-runtime";

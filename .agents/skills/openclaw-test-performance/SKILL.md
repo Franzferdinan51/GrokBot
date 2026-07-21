@@ -1,9 +1,9 @@
 ---
-name: openclaw-test-performance
-description: Benchmark, diagnose, and optimize OpenClaw test and plugin-suite runtime, import hotspots, CPU/RSS, heap growth, and slow coverage paths.
+name: grokbot-test-performance
+description: Benchmark, diagnose, and optimize GrokBot test and plugin-suite runtime, import hotspots, CPU/RSS, heap growth, and slow coverage paths.
 ---
 
-# OpenClaw Test Performance
+# GrokBot Test Performance
 
 Use evidence first. The goal is real `pnpm test`, plugin-suite, and
 plugin-inspector speed/RSS improvement with coverage intact, not runner tuning by
@@ -98,7 +98,7 @@ barrels, package-boundary tests, or extension suites.
    - add `--keep`/`--id <id-or-slug>` only when several commands must share one
      warmed box; stop it with `pnpm crabbox:stop -- <id-or-slug>`.
 5. If plugin performance is package-artifact sensitive, switch to
-   `release-openclaw-plugin-testing` and Package Acceptance rather than
+   `release-grokbot-plugin-testing` and Package Acceptance rather than
    trusting source-only timing.
 
 ## Metric Collection
@@ -113,7 +113,7 @@ same command. For Testbox comparisons, use the same `tbx_...` id when possible.
 | import duration | broad barrel/runtime loads         | `OPENCLAW_VITEST_IMPORT_DURATIONS=1`                                        |
 | max RSS         | memory pressure and OOM risk       | `/usr/bin/time -l`, `pnpm test:extensions:memory`, wrapper memory summaries |
 | CPU/user/sys    | CPU-bound vs wait-bound split      | `/usr/bin/time -l` locally, Testbox job timing when local CPU is noisy      |
-| heap snapshots  | real leak vs retained module graph | `openclaw-test-heap-leaks` workflow                                         |
+| heap snapshots  | real leak vs retained module graph | `grokbot-test-heap-leaks` workflow                                         |
 
 Local scoped command with CPU/RSS:
 
@@ -145,7 +145,7 @@ OPENCLAW_TEST_MAX_OLD_SPACE_SIZE_MB=6144 \
 pnpm test
 ```
 
-Use `openclaw-test-heap-leaks` when RSS keeps growing across intervals, workers
+Use `grokbot-test-heap-leaks` when RSS keeps growing across intervals, workers
 OOM, or the suspect command has app-object retention. Do not call RSS growth a
 leak until snapshots or retainers support it.
 

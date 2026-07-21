@@ -241,7 +241,7 @@ describe("overflow compaction in run loop", () => {
   it("persists the canonical user turn when the embedded runtime writes its prompt file", async () => {
     const persistedMessage = makeUserMessage();
     const persistApproved = vi.fn(async () => ({
-      sessionFile: "/tmp/openclaw-transcript.jsonl",
+      sessionFile: "/tmp/grokbot-transcript.jsonl",
       sessionEntry: undefined,
       messageId: "msg-user-1",
       message: persistedMessage,
@@ -342,13 +342,13 @@ describe("overflow compaction in run loop", () => {
       },
     };
     const persistBlocked = vi.fn(async (message: unknown) => ({
-      sessionFile: "/tmp/openclaw-transcript.jsonl",
+      sessionFile: "/tmp/grokbot-transcript.jsonl",
       sessionEntry: undefined,
       messageId: "msg-user-1",
       message: message as typeof blockedMessage,
     }));
     const persistApproved = vi.fn(async () => ({
-      sessionFile: "/tmp/openclaw-transcript.jsonl",
+      sessionFile: "/tmp/grokbot-transcript.jsonl",
       sessionEntry: undefined,
       messageId: "msg-user-1",
       message: makeUserMessage(),
@@ -517,7 +517,7 @@ describe("overflow compaction in run loop", () => {
     expect(mockedCompactDirect).not.toHaveBeenCalled();
 
     resolvePersistApproved?.({
-      sessionFile: "/tmp/openclaw-transcript.jsonl",
+      sessionFile: "/tmp/grokbot-transcript.jsonl",
       sessionEntry: undefined,
       messageId: "msg-user-delayed",
       message: persistedMessage,

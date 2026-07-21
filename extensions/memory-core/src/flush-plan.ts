@@ -6,7 +6,7 @@ import {
   SILENT_REPLY_TOKEN,
   type MemoryFlushPlan,
   type OpenClawConfig,
-} from "openclaw/plugin-sdk/memory-core-host-runtime-core";
+} from "grokbot/plugin-sdk/memory-core-host-runtime-core";
 import { resolveMemoryCoreNowMs } from "./time.js";
 
 const DEFAULT_MEMORY_FLUSH_SOFT_TOKENS = 4000;

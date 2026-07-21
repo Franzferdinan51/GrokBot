@@ -1,4 +1,4 @@
-// OpenClaw agent database tests cover agent-scoped DB storage and migrations.
+// GrokBot agent database tests cover agent-scoped DB storage and migrations.
 import { execFileSync, spawn } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
@@ -26,13 +26,13 @@ import {
   assertNoOpenClawAgentDatabaseLeases,
   claimOpenClawAgentDatabaseLease,
   releaseOpenClawAgentDatabaseLease,
-} from "./openclaw-agent-db-lease.js";
-import { withOpenClawAgentDatabaseReadOnly } from "./openclaw-agent-db-readonly.js";
+} from "./grokbot-agent-db-lease.js";
+import { withOpenClawAgentDatabaseReadOnly } from "./grokbot-agent-db-readonly.js";
 import {
   registerOpenClawAgentDatabase,
   unregisterOpenClawAgentDatabase,
-} from "./openclaw-agent-db-registry.js";
-import type { DB as OpenClawAgentKyselyDatabase } from "./openclaw-agent-db.generated.js";
+} from "./grokbot-agent-db-registry.js";
+import type { DB as OpenClawAgentKyselyDatabase } from "./grokbot-agent-db.generated.js";
 import {
   assertOpenClawAgentDatabaseForMaintenance,
   clearOpenClawAgentDatabaseOpenFailure,
@@ -46,14 +46,14 @@ import {
   openOpenClawAgentDatabase,
   resolveOpenClawAgentSqlitePath,
   runOpenClawAgentWriteTransaction,
-} from "./openclaw-agent-db.js";
+} from "./grokbot-agent-db.js";
 import {
   closeOpenClawStateDatabaseForTest,
   OPENCLAW_SQLITE_BUSY_TIMEOUT_MS,
   openOpenClawStateDatabase,
   runOpenClawStateWriteTransaction,
-} from "./openclaw-state-db.js";
-import { resolveOpenClawStateSqlitePath } from "./openclaw-state-db.paths.js";
+} from "./grokbot-state-db.js";
+import { resolveOpenClawStateSqlitePath } from "./grokbot-state-db.paths.js";
 import {
   collectSqliteSchemaShape,
   createSqliteSchemaShapeFromSql,
@@ -67,7 +67,7 @@ type AgentDbTestDatabase = Pick<
 const agentDbTempDirs: string[] = [];
 
 function createTempStateDir(): string {
-  return makeTempDir(agentDbTempDirs, "openclaw-agent-db-");
+  return makeTempDir(agentDbTempDirs, "grokbot-agent-db-");
 }
 
 function readRegisteredAgentDatabaseLastSeenAt(params: {
@@ -278,8 +278,8 @@ function launchAgentSchemaOpener(params: {
   databasePath: string;
   stateDir: string;
 }) {
-  const agentModuleUrl = new URL("./openclaw-agent-db.ts", import.meta.url).href;
-  const stateModuleUrl = new URL("./openclaw-state-db.ts", import.meta.url).href;
+  const agentModuleUrl = new URL("./grokbot-agent-db.ts", import.meta.url).href;
+  const stateModuleUrl = new URL("./grokbot-state-db.ts", import.meta.url).href;
   const child = spawn(
     process.execPath,
     [
@@ -420,7 +420,7 @@ afterEach(() => {
   closeOpenClawStateDatabaseForTest();
 });
 
-describe("openclaw agent database", () => {
+describe("grokbot agent database", () => {
   it("uses the canonical state schema for deletion journal reads and updates", () => {
     const stateDir = createTempStateDir();
     const env = { OPENCLAW_STATE_DIR: stateDir };
@@ -429,7 +429,7 @@ describe("openclaw agent database", () => {
     const { DatabaseSync } = requireNodeSqlite();
     const stateDatabase = new DatabaseSync(stateDatabasePath);
     stateDatabase.exec(
-      fs.readFileSync(new URL("./openclaw-state-schema.sql", import.meta.url), "utf8"),
+      fs.readFileSync(new URL("./grokbot-state-schema.sql", import.meta.url), "utf8"),
     );
     stateDatabase.close();
 
@@ -440,7 +440,7 @@ describe("openclaw agent database", () => {
       sessionsDir: path.join(stateDir, "sessions-deleted"),
     };
     const deletion = beginAgentDeletion(entry, { env });
-    const databasePaths = [path.join(entry.agentDir, "openclaw-agent.sqlite")];
+    const databasePaths = [path.join(entry.agentDir, "grokbot-agent.sqlite")];
     const cleanupPaths = [
       {
         path: entry.agentDir,
@@ -581,7 +581,7 @@ describe("openclaw agent database", () => {
         agentId: "Worker-1",
         env: { OPENCLAW_STATE_DIR: stateDir },
       }),
-    ).toBe(path.join(stateDir, "agents", "worker-1", "agent", "openclaw-agent.sqlite"));
+    ).toBe(path.join(stateDir, "agents", "worker-1", "agent", "grokbot-agent.sqlite"));
   });
 
   it("keeps test default state under a worker-sharded temp directory", () => {
@@ -596,12 +596,12 @@ describe("openclaw agent database", () => {
     ).toBe(
       path.join(
         os.tmpdir(),
-        "openclaw-test-state",
+        "grokbot-test-state",
         `${process.pid}-7`,
         "agents",
         "main",
         "agent",
-        "openclaw-agent.sqlite",
+        "grokbot-agent.sqlite",
       ),
     );
   });
@@ -663,7 +663,7 @@ describe("openclaw agent database", () => {
   it("lists a missing registry without creating the shared state database", () => {
     const stateDir = createTempStateDir();
     const env = { OPENCLAW_STATE_DIR: stateDir };
-    const stateDatabasePath = path.join(stateDir, "state", "openclaw.sqlite");
+    const stateDatabasePath = path.join(stateDir, "state", "grokbot.sqlite");
 
     expect(listOpenClawRegisteredAgentDatabases({ env })).toEqual([]);
     expect(fs.existsSync(stateDatabasePath)).toBe(false);
@@ -704,7 +704,7 @@ describe("openclaw agent database", () => {
     });
 
     expect(collectSqliteSchemaShape(database.db)).toEqual(
-      createSqliteSchemaShapeFromSql(new URL("./openclaw-agent-schema.sql", import.meta.url)),
+      createSqliteSchemaShapeFromSql(new URL("./grokbot-agent-schema.sql", import.meta.url)),
     );
     expect(
       database.db
@@ -724,7 +724,7 @@ describe("openclaw agent database", () => {
     ).toThrow();
     expect(database.agentId).toBe("worker-1");
     expect(database.path).toBe(
-      path.join(stateDir, "agents", "worker-1", "agent", "openclaw-agent.sqlite"),
+      path.join(stateDir, "agents", "worker-1", "agent", "grokbot-agent.sqlite"),
     );
 
     const registered = listOpenClawRegisteredAgentDatabases({
@@ -1076,7 +1076,7 @@ describe("openclaw agent database", () => {
       "agents",
       "worker-1",
       "agent",
-      "openclaw-agent.sqlite",
+      "grokbot-agent.sqlite",
     );
     seedVersion1MemoryAgentDatabase(databasePath);
 
@@ -1140,7 +1140,7 @@ describe("openclaw agent database", () => {
       "agents",
       "worker-1",
       "agent",
-      "openclaw-agent.sqlite",
+      "grokbot-agent.sqlite",
     );
     seedVersion1MemoryAgentDatabase(databasePath, { malformedPathFts: true });
 
@@ -1291,7 +1291,7 @@ describe("openclaw agent database", () => {
   it("rejects the legacy agent registry primary key with a doctor repair hint", () => {
     const stateDir = createTempStateDir();
     const env = { OPENCLAW_STATE_DIR: stateDir };
-    const stateDatabasePath = path.join(stateDir, "state", "openclaw.sqlite");
+    const stateDatabasePath = path.join(stateDir, "state", "grokbot.sqlite");
     fs.mkdirSync(path.dirname(stateDatabasePath), { recursive: true });
     const { DatabaseSync } = requireNodeSqlite();
     const legacyDb = new DatabaseSync(stateDatabasePath);
@@ -1311,7 +1311,7 @@ describe("openclaw agent database", () => {
         size_bytes
       ) VALUES (
         'worker-1',
-        '/legacy/worker-1/openclaw-agent.sqlite',
+        '/legacy/worker-1/grokbot-agent.sqlite',
         1,
         10,
         20
@@ -1320,7 +1320,7 @@ describe("openclaw agent database", () => {
     legacyDb.close();
 
     expect(() => listOpenClawRegisteredAgentDatabases({ env })).toThrow(
-      /run openclaw doctor --fix/,
+      /run grokbot doctor --fix/,
     );
 
     expect(() =>
@@ -1328,7 +1328,7 @@ describe("openclaw agent database", () => {
         agentId: "worker-1",
         env,
       }),
-    ).toThrow(/run openclaw doctor --fix/);
+    ).toThrow(/run grokbot doctor --fix/);
 
     fs.rmSync(stateDatabasePath);
     const reopened = openOpenClawAgentDatabase({
@@ -1345,8 +1345,8 @@ describe("openclaw agent database", () => {
   });
 
   it("keys explicit relative paths by resolved database pathname", () => {
-    const agentModuleUrl = new URL("./openclaw-agent-db.ts", import.meta.url).href;
-    const stateModuleUrl = new URL("./openclaw-state-db.ts", import.meta.url).href;
+    const agentModuleUrl = new URL("./grokbot-agent-db.ts", import.meta.url).href;
+    const stateModuleUrl = new URL("./grokbot-state-db.ts", import.meta.url).href;
     const output = execFileSync(
       process.execPath,
       [
@@ -1367,9 +1367,9 @@ describe("openclaw agent database", () => {
             closeOpenClawStateDatabaseForTest,
           } from ${JSON.stringify(stateModuleUrl)};
 
-          const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-agent-db-state-"));
+          const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-agent-db-state-"));
           const env = { OPENCLAW_STATE_DIR: stateDir };
-          const root = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-agent-db-relative-"));
+          const root = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-agent-db-relative-"));
           const firstDir = path.join(root, "first");
           const secondDir = path.join(root, "second");
           fs.mkdirSync(firstDir);
@@ -1556,7 +1556,7 @@ describe("openclaw agent database", () => {
       const recreated = openOpenClawAgentDatabase({ agentId: "worker-1", env });
       expect(recreated.db.isOpen).toBe(true);
       expect(fs.statSync(recreated.path).ino).not.toBe(originalInode);
-      expect(fs.existsSync(path.join(archivedDir, "openclaw-agent.sqlite"))).toBe(true);
+      expect(fs.existsSync(path.join(archivedDir, "grokbot-agent.sqlite"))).toBe(true);
       expect(listOpenClawRegisteredAgentDatabases({ env })).toEqual([
         expect.objectContaining({ agentId: "worker-1", path: recreated.path }),
       ]);
@@ -1569,7 +1569,7 @@ describe("openclaw agent database", () => {
     const stateDir = createTempStateDir();
     const env = { OPENCLAW_STATE_DIR: stateDir };
     const agentDir = path.join(stateDir, "agents", "worker-1", "agent");
-    const databasePath = path.join(agentDir, "openclaw-agent.sqlite");
+    const databasePath = path.join(agentDir, "grokbot-agent.sqlite");
     const deletion = beginAgentDeletion(
       {
         agentId: "worker-1",
@@ -1599,7 +1599,7 @@ describe("openclaw agent database", () => {
   it("serializes database leases with the durable deletion fence", () => {
     const stateDir = createTempStateDir();
     const env = { OPENCLAW_STATE_DIR: stateDir };
-    const databasePath = path.join(stateDir, "agents", "worker-1", "openclaw-agent.sqlite");
+    const databasePath = path.join(stateDir, "agents", "worker-1", "grokbot-agent.sqlite");
     const leaseId = claimOpenClawAgentDatabaseLease({
       agentId: "worker-1",
       path: databasePath,
@@ -1719,7 +1719,7 @@ describe("openclaw agent database", () => {
       } finally {
         db.close();
       }
-      expect(fs.existsSync(path.join(stateDir, "state", "openclaw.sqlite"))).toBe(false);
+      expect(fs.existsSync(path.join(stateDir, "state", "grokbot.sqlite"))).toBe(false);
       expect(
         listOpenClawRegisteredAgentDatabases({ env: { OPENCLAW_STATE_DIR: stateDir } }),
       ).toEqual([]);
@@ -1739,7 +1739,7 @@ describe("openclaw agent database", () => {
   it("rejects explicit paths that point at the global state database", () => {
     const stateDir = createTempStateDir();
     const env = { OPENCLAW_STATE_DIR: stateDir };
-    const databasePath = path.join(stateDir, "state", "openclaw.sqlite");
+    const databasePath = path.join(stateDir, "state", "grokbot.sqlite");
     const stateDatabase = openOpenClawStateDatabase({
       env,
       path: databasePath,
@@ -2030,11 +2030,11 @@ describe("openclaw agent database", () => {
       "agents",
       "worker-1",
       "agent",
-      "openclaw-agent.sqlite",
+      "grokbot-agent.sqlite",
     );
     fs.mkdirSync(path.dirname(databasePath), { recursive: true });
     const currentSchema = fs.readFileSync(
-      new URL("./openclaw-agent-schema.sql", import.meta.url),
+      new URL("./grokbot-agent-schema.sql", import.meta.url),
       "utf8",
     );
     const previousSchema = currentSchema.replace(
@@ -2137,11 +2137,11 @@ describe("openclaw agent database", () => {
       "agents",
       "worker-1",
       "agent",
-      "openclaw-agent.sqlite",
+      "grokbot-agent.sqlite",
     );
     fs.mkdirSync(path.dirname(databasePath), { recursive: true });
     const currentSchema = fs.readFileSync(
-      new URL("./openclaw-agent-schema.sql", import.meta.url),
+      new URL("./grokbot-agent-schema.sql", import.meta.url),
       "utf8",
     );
     const v7Schema = currentSchema
@@ -2215,11 +2215,11 @@ describe("openclaw agent database", () => {
       "agents",
       "worker-1",
       "agent",
-      "openclaw-agent.sqlite",
+      "grokbot-agent.sqlite",
     );
     fs.mkdirSync(path.dirname(databasePath), { recursive: true });
     const currentSchema = fs.readFileSync(
-      new URL("./openclaw-agent-schema.sql", import.meta.url),
+      new URL("./grokbot-agent-schema.sql", import.meta.url),
       "utf8",
     );
     const { DatabaseSync } = requireNodeSqlite();
@@ -2294,11 +2294,11 @@ describe("openclaw agent database", () => {
       "agents",
       "worker-1",
       "agent",
-      "openclaw-agent.sqlite",
+      "grokbot-agent.sqlite",
     );
     fs.mkdirSync(path.dirname(databasePath), { recursive: true });
     const currentSchema = fs.readFileSync(
-      new URL("./openclaw-agent-schema.sql", import.meta.url),
+      new URL("./grokbot-agent-schema.sql", import.meta.url),
       "utf8",
     );
     const { DatabaseSync } = requireNodeSqlite();
@@ -2370,7 +2370,7 @@ describe("openclaw agent database", () => {
       "agents",
       "worker-1",
       "agent",
-      "openclaw-agent.sqlite",
+      "grokbot-agent.sqlite",
     );
     fs.mkdirSync(path.dirname(databasePath), { recursive: true });
     const { DatabaseSync } = requireNodeSqlite();
@@ -2669,7 +2669,7 @@ describe("openclaw agent database", () => {
     }
     expect(firstFailure).toMatchObject({
       name: "SqliteSchemaVersionError",
-      message: expect.stringContaining("https://docs.openclaw.ai/reference/database-schemas"),
+      message: expect.stringContaining("https://docs.grokbot.ai/reference/database-schemas"),
     });
 
     for (const candidate of [databasePath, `${databasePath}-wal`, `${databasePath}-shm`]) {
@@ -2689,7 +2689,7 @@ describe("openclaw agent database", () => {
 
   it("closes cached handles on normal process exit so no stale WAL remains", () => {
     const stateDir = createTempStateDir();
-    const agentModuleUrl = new URL("./openclaw-agent-db.ts", import.meta.url).href;
+    const agentModuleUrl = new URL("./grokbot-agent-db.ts", import.meta.url).href;
     const output = execFileSync(
       process.execPath,
       [

@@ -19,7 +19,7 @@ import {
   setActivePluginRegistry,
 } from "../plugins/runtime.js";
 import type { OpenClawPluginNodeInvokePolicyContext } from "../plugins/types.js";
-import { closeOpenClawStateDatabaseForTest } from "../state/openclaw-state-db.js";
+import { closeOpenClawStateDatabaseForTest } from "../state/grokbot-state-db.js";
 import { ExecApprovalManager } from "./exec-approval-manager.js";
 import { applyPluginNodeInvokePolicy } from "./node-invoke-plugin-policy.js";
 import type { NodeSession } from "./node-registry.js";
@@ -621,7 +621,7 @@ describe("applyPluginNodeInvokePolicy", () => {
   });
 
   it("fails closed before routing an unrenderable persistent policy approval", async () => {
-    const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-node-policy-approval-"));
+    const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-node-policy-approval-"));
     tempDirs.push(stateDir);
     const databaseOptions = { path: path.join(stateDir, "state.sqlite") };
     const manager = new ExecApprovalManager<PluginApprovalRequestPayload>({

@@ -1,4 +1,4 @@
-/** Summarizes installed service command paths and OpenClaw package layout. */
+/** Summarizes installed service command paths and GrokBot package layout. */
 import fs from "node:fs/promises";
 import path from "node:path";
 import { pathExists } from "../infra/fs-safe.js";
@@ -105,7 +105,7 @@ async function resolveOpenClawPackageRoot(entrypoint: string): Promise<string | 
     const packageJson = path.join(current, "package.json");
     if (await pathExists(packageJson)) {
       const name = await readPackageName(current);
-      if (name === "openclaw") {
+      if (name === "grokbot") {
         return current;
       }
     }

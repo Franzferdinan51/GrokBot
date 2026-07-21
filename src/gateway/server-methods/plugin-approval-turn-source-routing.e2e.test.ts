@@ -49,9 +49,9 @@ describe("plugin.approval.request delivery routing (real gateway)", () => {
     deleteTestEnvValue("OPENCLAW_GATEWAY_PASSWORD");
 
     tempHome = await fs.mkdtemp(
-      path.join(os.tmpdir(), "openclaw-plugin-approval-turn-source-e2e-"),
+      path.join(os.tmpdir(), "grokbot-plugin-approval-turn-source-e2e-"),
     );
-    const stateDir = path.join(tempHome, ".openclaw");
+    const stateDir = path.join(tempHome, ".grokbot");
     await fs.mkdir(stateDir, { recursive: true });
     setTestEnvValue("HOME", tempHome);
     setTestEnvValue("OPENCLAW_STATE_DIR", stateDir);

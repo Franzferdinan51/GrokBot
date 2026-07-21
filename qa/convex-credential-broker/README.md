@@ -58,17 +58,17 @@ Client URL policy:
 Maintainers can manage rows without using the Convex dashboard:
 
 ```bash
-pnpm openclaw qa credentials add \
+pnpm grokbot qa credentials add \
   --kind telegram \
   --payload-file qa/telegram-credential.json
 
-pnpm openclaw qa credentials add \
+pnpm grokbot qa credentials add \
   --kind discord \
   --payload-file qa/discord-credential.json
 
-pnpm openclaw qa credentials list --kind telegram
+pnpm grokbot qa credentials list --kind telegram
 
-pnpm openclaw qa credentials remove --credential-id <credential-id>
+pnpm grokbot qa credentials remove --credential-id <credential-id>
 ```
 
 Admin endpoints require `OPENCLAW_QA_CONVEX_SECRET_MAINTAINER`.

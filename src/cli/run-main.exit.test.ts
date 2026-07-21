@@ -3,7 +3,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import process from "node:process";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { CommanderError } from "commander";
 import { afterAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { GATEWAY_SERVICE_RUNTIME_PID_ENV } from "../daemon/constants.js";
@@ -459,10 +459,10 @@ describe("runCli exit behavior", () => {
       throw new Error(`unexpected process.exit(${String(code)})`);
     }) as typeof process.exit);
 
-    await runCli(["node", "openclaw", "status"]);
+    await runCli(["node", "grokbot", "status"]);
 
-    expect(maybeRunCliInContainerMock).toHaveBeenCalledWith(["node", "openclaw", "status"]);
-    expect(tryRouteCliMock).toHaveBeenCalledWith(["node", "openclaw", "status"]);
+    expect(maybeRunCliInContainerMock).toHaveBeenCalledWith(["node", "grokbot", "status"]);
+    expect(tryRouteCliMock).toHaveBeenCalledWith(["node", "grokbot", "status"]);
     expect(closeActiveMemorySearchManagersMock).not.toHaveBeenCalled();
     expect(disposeRegisteredAgentHarnessesMock).not.toHaveBeenCalled();
     expect(ensureTaskRegistryReadyMock).not.toHaveBeenCalled();
@@ -480,9 +480,9 @@ describe("runCli exit behavior", () => {
       parseAsync,
     });
 
-    await runCli(["node", "openclaw", "agent", "--local"]);
+    await runCli(["node", "grokbot", "agent", "--local"]);
 
-    expect(parseAsync).toHaveBeenCalledWith(["node", "openclaw", "agent", "--local"]);
+    expect(parseAsync).toHaveBeenCalledWith(["node", "grokbot", "agent", "--local"]);
     expect(disposeRegisteredAgentHarnessesMock).toHaveBeenCalledTimes(1);
   });
 
@@ -501,7 +501,7 @@ describe("runCli exit behavior", () => {
     });
     tryRouteCliMock.mockResolvedValueOnce(true);
 
-    await runCli(["node", "openclaw", "models", "status", "--probe"]);
+    await runCli(["node", "grokbot", "models", "status", "--probe"]);
 
     expect(order).toEqual(["harnesses", "memory", "exit"]);
   });
@@ -514,10 +514,10 @@ describe("runCli exit behavior", () => {
       parseAsync,
     });
 
-    await runCli(["node", "openclaw", "config"]);
+    await runCli(["node", "grokbot", "config"]);
 
     expect(createCliProgressMock).toHaveBeenCalledWith({
-      label: "Loading OpenClaw CLI…",
+      label: "Loading GrokBot CLI…",
       indeterminate: true,
       delayMs: 0,
     });
@@ -532,17 +532,17 @@ describe("runCli exit behavior", () => {
       parseAsync,
     });
 
-    await runCli(["node", "openclaw", "sessions", "--json", "--limit", "all"]);
+    await runCli(["node", "grokbot", "sessions", "--json", "--limit", "all"]);
 
     expect(createCliProgressMock).toHaveBeenCalledWith({
-      label: "Loading OpenClaw CLI…",
+      label: "Loading GrokBot CLI…",
       indeterminate: true,
       delayMs: 0,
       enabled: false,
     });
     expect(parseAsync).toHaveBeenCalledWith([
       "node",
-      "openclaw",
+      "grokbot",
       "sessions",
       "--json",
       "--limit",
@@ -563,9 +563,9 @@ describe("runCli exit behavior", () => {
     const pauseSpy = vi.spyOn(process.stdin, "pause").mockImplementation(() => process.stdin);
 
     try {
-      await runCli(["node", "openclaw", "channels"]);
+      await runCli(["node", "grokbot", "channels"]);
 
-      expect(parseAsync).toHaveBeenCalledWith(["node", "openclaw", "channels"]);
+      expect(parseAsync).toHaveBeenCalledWith(["node", "grokbot", "channels"]);
       expect(pauseSpy).toHaveBeenCalledTimes(1);
     } finally {
       pauseSpy.mockRestore();
@@ -578,23 +578,23 @@ describe("runCli exit behavior", () => {
   });
 
   it("emits the startup banner before gateway foreground fast-path startup", async () => {
-    await runCli(["node", "openclaw", "gateway", "--force"]);
+    await runCli(["node", "grokbot", "gateway", "--force"]);
 
     expect(tryRouteCliMock).not.toHaveBeenCalled();
     expect(emitCliBannerMock).toHaveBeenCalledWith("9.9.9-test", {
-      argv: ["node", "openclaw", "gateway", "--force"],
+      argv: ["node", "grokbot", "gateway", "--force"],
     });
     expect(addGatewayRunCommandMock).toHaveBeenCalledTimes(2);
     expect(commanderParseAsyncMock).toHaveBeenCalledWith([
       "node",
-      "openclaw",
+      "grokbot",
       "gateway",
       "--force",
     ]);
   });
 
   it("installs console capture before parsing the gateway foreground fast path", async () => {
-    await runCli(["node", "openclaw", "gateway", "--force"]);
+    await runCli(["node", "grokbot", "gateway", "--force"]);
 
     expect(enableConsoleCaptureMock).toHaveBeenCalledTimes(1);
     expect(commanderParseAsyncMock).toHaveBeenCalledTimes(1);
@@ -605,7 +605,7 @@ describe("runCli exit behavior", () => {
   });
 
   it("configures the gateway foreground fast path with the standard CLI bootstrap", async () => {
-    await runCli(["node", "openclaw", "gateway", "--force"]);
+    await runCli(["node", "grokbot", "gateway", "--force"]);
 
     expect(readConfigFileSnapshotMock.mock.calls).toEqual([[{ isolateEnv: true, observe: false }]]);
     const hooks = addGatewayRunCommandMock.mock.calls[0]?.[1] as
@@ -635,7 +635,7 @@ describe("runCli exit behavior", () => {
     readConfigFileSnapshotMock.mockResolvedValue({
       exists: true,
       hash: "guarded",
-      path: "/tmp/openclaw.json",
+      path: "/tmp/grokbot.json",
       raw: "{}",
       valid: true,
       sourceConfig: {
@@ -643,7 +643,7 @@ describe("runCli exit behavior", () => {
         gateway: { mode: "local" },
       },
     });
-    await runCli(["node", "openclaw", "gateway"]);
+    await runCli(["node", "grokbot", "gateway"]);
     const hooks = addGatewayRunCommandMock.mock.calls[0]?.[1] as
       | { beforeRun?: (opts: { reset?: boolean }) => Promise<void> }
       | undefined;
@@ -656,7 +656,7 @@ describe("runCli exit behavior", () => {
     readConfigFileSnapshotMock.mockResolvedValue({
       exists: true,
       hash: "guarded",
-      path: "/tmp/openclaw.json",
+      path: "/tmp/grokbot.json",
       raw: "{}",
       valid: true,
       sourceConfig: {
@@ -685,12 +685,12 @@ describe("runCli exit behavior", () => {
     readConfigFileSnapshotMock.mockResolvedValue({
       exists: true,
       hash: "guarded",
-      path: "/tmp/openclaw.json",
+      path: "/tmp/grokbot.json",
       raw: "{}",
       valid: true,
       sourceConfig: { gateway: { mode: "local" } },
     });
-    await runCli(["node", "openclaw", "gateway"]);
+    await runCli(["node", "grokbot", "gateway"]);
     const hooks = addGatewayRunCommandMock.mock.calls[0]?.[1] as
       | { beforeRun?: (opts: { reset?: boolean }) => Promise<void> }
       | undefined;
@@ -712,7 +712,7 @@ describe("runCli exit behavior", () => {
             beforeStateMigrations?.({
               exists: true,
               hash: "future",
-              path: "/tmp/openclaw.json",
+              path: "/tmp/grokbot.json",
               raw: "{}",
               valid: true,
               sourceConfig: {
@@ -798,7 +798,7 @@ describe("runCli exit behavior", () => {
       throw new Error(`exit:${String(code)}`);
     }) as typeof process.exit);
     try {
-      await expect(runCli(["node", "openclaw", "gateway", ...params.flags])).rejects.toThrow(
+      await expect(runCli(["node", "grokbot", "gateway", ...params.flags])).rejects.toThrow(
         `exit:${params.expectedExitCode}`,
       );
       expect(errorSpy).toHaveBeenCalledWith(expect.stringContaining(params.expectedAction));
@@ -845,7 +845,7 @@ describe("runCli exit behavior", () => {
           OPENCLAW_SERVICE_MARKER: undefined,
         },
         async () => {
-          await expect(runCli(["node", "openclaw", "gateway"])).rejects.toThrow("exit:78");
+          await expect(runCli(["node", "grokbot", "gateway"])).rejects.toThrow("exit:78");
           expect(process.env.OPENCLAW_SERVICE_MARKER).toBeUndefined();
           expect(process.env.OPENCLAW_ALLOW_OLDER_BINARY_DESTRUCTIVE_ACTIONS).toBeUndefined();
           expect(ensureCliExecutionBootstrapMock).not.toHaveBeenCalled();
@@ -873,7 +873,7 @@ describe("runCli exit behavior", () => {
         OPENCLAW_SERVICE_MARKER: undefined,
       },
       async () => {
-        await runCli(["node", "openclaw", "gateway"]);
+        await runCli(["node", "grokbot", "gateway"]);
 
         expect(process.env.OPENCLAW_SERVICE_MARKER).toBeUndefined();
         expect(process.env.OPENCLAW_ALLOW_OLDER_BINARY_DESTRUCTIVE_ACTIONS).toBe("1");
@@ -882,8 +882,8 @@ describe("runCli exit behavior", () => {
   });
 
   it("guards the config selected by trusted global dotenv before the default config", async () => {
-    const homeDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-gateway-global-selection-"));
-    const stateDir = path.join(homeDir, ".openclaw");
+    const homeDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-gateway-global-selection-"));
+    const stateDir = path.join(homeDir, ".grokbot");
     const selectedConfigPath = path.join(stateDir, "selected.json");
     await fs.mkdir(stateDir, { recursive: true });
     await fs.writeFile(
@@ -918,7 +918,7 @@ describe("runCli exit behavior", () => {
                 },
           );
 
-          await runCli(["node", "openclaw", "gateway"]);
+          await runCli(["node", "grokbot", "gateway"]);
 
           expect(process.env.OPENCLAW_CONFIG_PATH).toBe(selectedConfigPath);
           expect(process.env.OPENCLAW_ALLOW_OLDER_BINARY_DESTRUCTIVE_ACTIONS).toBeUndefined();
@@ -931,10 +931,10 @@ describe("runCli exit behavior", () => {
   });
 
   it("loads state dotenv before a custom config-root fallback", async () => {
-    const homeDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-gateway-config-env-"));
-    const stateDir = path.join(homeDir, ".openclaw");
+    const homeDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-gateway-config-env-"));
+    const stateDir = path.join(homeDir, ".grokbot");
     const configDir = path.join(homeDir, "profile");
-    const configPath = path.join(configDir, "openclaw.json");
+    const configPath = path.join(configDir, "grokbot.json");
     await fs.mkdir(stateDir, { recursive: true });
     await fs.mkdir(configDir, { recursive: true });
     await fs.writeFile(path.join(stateDir, ".env"), "OPENCLAW_GATEWAY_TOKEN=state-token\n");
@@ -957,7 +957,7 @@ describe("runCli exit behavior", () => {
           OPENCLAW_STATE_DIR: undefined,
         },
         async () => {
-          await runCli(["node", "openclaw", "gateway"]);
+          await runCli(["node", "grokbot", "gateway"]);
 
           expect(process.env.OPENCLAW_GATEWAY_TOKEN).toBe("state-token");
           expect(process.env.OPENCLAW_GATEWAY_PASSWORD).toBe("config-root-password");
@@ -969,9 +969,9 @@ describe("runCli exit behavior", () => {
   });
 
   it("loads and repins a legacy state dotenv after automatic state migration", async () => {
-    const homeDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-gateway-legacy-env-"));
+    const homeDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-gateway-legacy-env-"));
     const legacyStateDir = path.join(homeDir, ".clawdbot");
-    const newStateDir = path.join(homeDir, ".openclaw");
+    const newStateDir = path.join(homeDir, ".grokbot");
     await fs.mkdir(legacyStateDir, { recursive: true });
     await fs.writeFile(path.join(legacyStateDir, ".env"), "OPENCLAW_GATEWAY_TOKEN=legacy-token\n");
     try {
@@ -988,7 +988,7 @@ describe("runCli exit behavior", () => {
           ensureCliExecutionBootstrapMock.mockImplementationOnce(async () => {
             await fs.rename(legacyStateDir, newStateDir);
           });
-          await runCli(["node", "openclaw", "gateway"]);
+          await runCli(["node", "grokbot", "gateway"]);
           const hooks = addGatewayRunCommandMock.mock.calls[0]?.[1] as
             | { beforeRun?: (opts: { reset?: boolean }) => Promise<void> }
             | undefined;
@@ -1029,7 +1029,7 @@ describe("runCli exit behavior", () => {
       throw new Error(`exit:${String(code)}`);
     }) as typeof process.exit);
     try {
-      await runCli(["node", "openclaw", "gateway", "--dev", "--reset"]);
+      await runCli(["node", "grokbot", "gateway", "--dev", "--reset"]);
       const hooks = addGatewayRunCommandMock.mock.calls[0]?.[1] as
         | { beforeRun?: (opts: { reset?: boolean }) => Promise<void> }
         | undefined;
@@ -1067,7 +1067,7 @@ describe("runCli exit behavior", () => {
       throw new Error(`exit:${String(code)}`);
     }) as typeof process.exit);
     try {
-      await runCli(["node", "openclaw", "gateway"]);
+      await runCli(["node", "grokbot", "gateway"]);
       const hooks = addGatewayRunCommandMock.mock.calls[0]?.[1] as
         | { beforeRun?: (opts: { force?: boolean }) => Promise<void> }
         | undefined;
@@ -1112,7 +1112,7 @@ describe("runCli exit behavior", () => {
           OPENCLAW_SERVICE_MARKER: undefined,
         },
         async () => {
-          await runCli(["node", "openclaw", "gateway"]);
+          await runCli(["node", "grokbot", "gateway"]);
           const hooks = addGatewayRunCommandMock.mock.calls[0]?.[1] as
             | { beforeRun?: (opts: { force?: boolean }) => Promise<void> }
             | undefined;
@@ -1128,7 +1128,7 @@ describe("runCli exit behavior", () => {
   });
 
   it("re-guards config env path selection until the gateway config is stable", async () => {
-    const homeDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-gateway-selection-"));
+    const homeDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-gateway-selection-"));
     try {
       await withEnvAsync(
         {
@@ -1139,19 +1139,19 @@ describe("runCli exit behavior", () => {
         },
         async () => {
           readConfigFileSnapshotMock.mockImplementation(async () => {
-            if (process.env.OPENCLAW_CONFIG_PATH === "/tmp/openclaw-chain-c.json") {
+            if (process.env.OPENCLAW_CONFIG_PATH === "/tmp/grokbot-chain-c.json") {
               return {
                 exists: true,
                 valid: true,
                 sourceConfig: { meta: { lastTouchedVersion: "9999.1.1" } },
               };
             }
-            if (process.env.OPENCLAW_STATE_DIR === "/tmp/openclaw-chain-b") {
+            if (process.env.OPENCLAW_STATE_DIR === "/tmp/grokbot-chain-b") {
               return {
                 exists: true,
                 valid: true,
                 sourceConfig: {
-                  env: { vars: { OPENCLAW_CONFIG_PATH: "/tmp/openclaw-chain-c.json" } },
+                  env: { vars: { OPENCLAW_CONFIG_PATH: "/tmp/grokbot-chain-c.json" } },
                   gateway: { mode: "local" },
                 },
               };
@@ -1160,7 +1160,7 @@ describe("runCli exit behavior", () => {
               exists: true,
               valid: true,
               sourceConfig: {
-                env: { vars: { OPENCLAW_STATE_DIR: "/tmp/openclaw-chain-b" } },
+                env: { vars: { OPENCLAW_STATE_DIR: "/tmp/grokbot-chain-b" } },
                 gateway: { mode: "local" },
               },
             };
@@ -1170,7 +1170,7 @@ describe("runCli exit behavior", () => {
             throw new Error(`exit:${String(code)}`);
           }) as typeof process.exit);
           try {
-            await expect(runCli(["node", "openclaw", "gateway"])).rejects.toThrow("exit:1");
+            await expect(runCli(["node", "grokbot", "gateway"])).rejects.toThrow("exit:1");
             expect(errorSpy).toHaveBeenCalledWith(
               expect.stringContaining("run automatic gateway startup migrations"),
             );
@@ -1216,7 +1216,7 @@ describe("runCli exit behavior", () => {
         throw new Error(`exit:${String(code)}`);
       }) as typeof process.exit);
       try {
-        await expect(runCli(["node", "openclaw", "gateway"])).rejects.toThrow("exit:1");
+        await expect(runCli(["node", "grokbot", "gateway"])).rejects.toThrow("exit:1");
         expect(errorSpy).toHaveBeenCalledWith(
           expect.stringContaining("run automatic gateway startup migrations"),
         );
@@ -1237,7 +1237,7 @@ describe("runCli exit behavior", () => {
       },
       async () => {
         readConfigFileSnapshotMock.mockImplementation(async () =>
-          process.env.OPENCLAW_STATE_DIR === "/tmp/openclaw-selected-state"
+          process.env.OPENCLAW_STATE_DIR === "/tmp/grokbot-selected-state"
             ? {
                 exists: true,
                 valid: true,
@@ -1253,21 +1253,21 @@ describe("runCli exit behavior", () => {
                   env: {
                     vars: {
                       OPENCLAW_GATEWAY_TOKEN: "superseded-token",
-                      OPENCLAW_STATE_DIR: "/tmp/openclaw-selected-state",
+                      OPENCLAW_STATE_DIR: "/tmp/grokbot-selected-state",
                     },
                   },
                   gateway: { mode: "local" },
                 },
               },
         );
-        await runCli(["node", "openclaw", "gateway"]);
+        await runCli(["node", "grokbot", "gateway"]);
 
         const hooks = addGatewayRunCommandMock.mock.calls[0]?.[1] as
           | { beforeRun?: (opts: { force?: boolean }) => Promise<void> }
           | undefined;
         await hooks?.beforeRun?.({});
 
-        expect(process.env.OPENCLAW_STATE_DIR).toBe("/tmp/openclaw-selected-state");
+        expect(process.env.OPENCLAW_STATE_DIR).toBe("/tmp/grokbot-selected-state");
         expect(process.env.OPENCLAW_GATEWAY_TOKEN).toBe("selected-token");
         expect(ensureCliExecutionBootstrapMock).toHaveBeenCalledOnce();
       },
@@ -1275,7 +1275,7 @@ describe("runCli exit behavior", () => {
   });
 
   it("re-guards config selection from a newly selected state dotenv", async () => {
-    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-gateway-dotenv-"));
+    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-gateway-dotenv-"));
     const futureConfigPath = path.join(stateDir, "future.json");
     await fs.writeFile(
       path.join(stateDir, ".env"),
@@ -1316,7 +1316,7 @@ describe("runCli exit behavior", () => {
             throw new Error(`exit:${String(code)}`);
           }) as typeof process.exit);
           try {
-            await expect(runCli(["node", "openclaw", "gateway"])).rejects.toThrow("exit:1");
+            await expect(runCli(["node", "grokbot", "gateway"])).rejects.toThrow("exit:1");
             expect(errorSpy).toHaveBeenCalledWith(
               expect.stringContaining("run automatic gateway startup migrations"),
             );
@@ -1336,7 +1336,7 @@ describe("runCli exit behavior", () => {
 
   it("re-inspects recovery after recovery changes config selection", async () => {
     await withEnvAsync({ OPENCLAW_CONFIG_PATH: undefined }, async () => {
-      const selectedConfigPath = "/tmp/openclaw-recovered-selection.json";
+      const selectedConfigPath = "/tmp/grokbot-recovered-selection.json";
       const currentSnapshot = {
         exists: true,
         valid: true,
@@ -1377,7 +1377,7 @@ describe("runCli exit behavior", () => {
         throw new Error(`exit:${String(code)}`);
       }) as typeof process.exit);
       try {
-        await runCli(["node", "openclaw", "gateway"]);
+        await runCli(["node", "grokbot", "gateway"]);
         const hooks = addGatewayRunCommandMock.mock.calls[0]?.[1] as
           | { beforeRun?: (opts: { force?: boolean }) => Promise<void> }
           | undefined;
@@ -1406,21 +1406,21 @@ describe("runCli exit behavior", () => {
             gateway: { mode: "local" },
           },
           hash: "clobbered",
-          path: "/tmp/openclaw.json",
+          path: "/tmp/grokbot.json",
         };
         const recoveredSnapshot = {
           exists: true,
           valid: true,
           sourceConfig: { gateway: { mode: "local" } },
           hash: "recovered",
-          path: "/tmp/openclaw.json",
+          path: "/tmp/grokbot.json",
         };
         const initialSnapshot = {
           exists: true,
           valid: true,
           sourceConfig: { gateway: { mode: "local" } },
           hash: "initial",
-          path: "/tmp/openclaw.json",
+          path: "/tmp/grokbot.json",
         };
         let currentSnapshot = initialSnapshot;
         let recovered = false;
@@ -1435,7 +1435,7 @@ describe("runCli exit behavior", () => {
           );
           return recoveredSnapshot;
         });
-        await runCli(["node", "openclaw", "gateway"]);
+        await runCli(["node", "grokbot", "gateway"]);
 
         currentSnapshot = clobberedSnapshot;
         process.env.OPENCLAW_PROXY_ACTIVE = "1";
@@ -1457,12 +1457,12 @@ describe("runCli exit behavior", () => {
         exists: true,
         valid: false,
         sourceConfig: {
-          env: { vars: { OPENCLAW_INCLUDE_ROOTS: "/tmp/openclaw-includes" } },
+          env: { vars: { OPENCLAW_INCLUDE_ROOTS: "/tmp/grokbot-includes" } },
           gateway: { mode: "local" },
         },
       });
 
-      await runCli(["node", "openclaw", "gateway"]);
+      await runCli(["node", "grokbot", "gateway"]);
       const hooks = addGatewayRunCommandMock.mock.calls[0]?.[1] as
         | { beforeRun?: (opts: { force?: boolean }) => Promise<void> }
         | undefined;
@@ -1478,7 +1478,7 @@ describe("runCli exit behavior", () => {
   });
 
   it("loads selected state dotenv before config env and environment normalization", async () => {
-    const homeDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-gateway-selected-env-"));
+    const homeDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-gateway-selected-env-"));
     const stateDir = path.join(homeDir, "state");
     await fs.mkdir(stateDir, { recursive: true });
     await fs.writeFile(path.join(stateDir, ".env"), "OPENCLAW_GATEWAY_TOKEN=state-token\n");
@@ -1510,7 +1510,7 @@ describe("runCli exit behavior", () => {
             tokenAtNormalize = process.env.OPENCLAW_GATEWAY_TOKEN;
           });
 
-          await runCli(["node", "openclaw", "gateway"]);
+          await runCli(["node", "grokbot", "gateway"]);
 
           expect(process.env.OPENCLAW_GATEWAY_TOKEN).toBe("state-token");
           expect(tokenAtNormalize).toBe("state-token");
@@ -1522,8 +1522,8 @@ describe("runCli exit behavior", () => {
   });
 
   it("drops credentials from a trusted dotenv superseded by state selection", async () => {
-    const homeDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-gateway-dotenv-hop-"));
-    const defaultStateDir = path.join(homeDir, ".openclaw");
+    const homeDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-gateway-dotenv-hop-"));
+    const defaultStateDir = path.join(homeDir, ".grokbot");
     const selectedStateDir = path.join(homeDir, "selected-state");
     await fs.mkdir(defaultStateDir, { recursive: true });
     await fs.mkdir(selectedStateDir, { recursive: true });
@@ -1548,7 +1548,7 @@ describe("runCli exit behavior", () => {
           OPENCLAW_STATE_DIR: undefined,
         },
         async () => {
-          await runCli(["node", "openclaw", "gateway"]);
+          await runCli(["node", "grokbot", "gateway"]);
 
           expect(process.env.OPENCLAW_STATE_DIR).toBe(selectedStateDir);
           expect(process.env.OPENCLAW_GATEWAY_TOKEN).toBe("selected-token");
@@ -1560,10 +1560,10 @@ describe("runCli exit behavior", () => {
   });
 
   it("drops gateway.env selectors when the default state dotenv selects a custom state", async () => {
-    const homeDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-gateway-fallback-hop-"));
-    const defaultStateDir = path.join(homeDir, ".openclaw");
+    const homeDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-gateway-fallback-hop-"));
+    const defaultStateDir = path.join(homeDir, ".grokbot");
     const selectedStateDir = path.join(homeDir, "selected-state");
-    const gatewayEnvDir = path.join(homeDir, ".config", "openclaw");
+    const gatewayEnvDir = path.join(homeDir, ".config", "grokbot");
     await fs.mkdir(defaultStateDir, { recursive: true });
     await fs.mkdir(selectedStateDir, { recursive: true });
     await fs.mkdir(gatewayEnvDir, { recursive: true });
@@ -1574,7 +1574,7 @@ describe("runCli exit behavior", () => {
     await fs.writeFile(
       path.join(gatewayEnvDir, "gateway.env"),
       [
-        "OPENCLAW_CONFIG_PATH=/tmp/wrong-openclaw.json",
+        "OPENCLAW_CONFIG_PATH=/tmp/wrong-grokbot.json",
         "OPENCLAW_GATEWAY_TOKEN=fallback-token",
         "",
       ].join("\n"),
@@ -1599,7 +1599,7 @@ describe("runCli exit behavior", () => {
           NODE_OPTIONS: undefined,
         },
         async () => {
-          await runCli(["node", "openclaw", "gateway"]);
+          await runCli(["node", "grokbot", "gateway"]);
 
           expect(process.env.OPENCLAW_STATE_DIR).toBe(selectedStateDir);
           expect(process.env.OPENCLAW_CONFIG_PATH).toBeUndefined();
@@ -1612,9 +1612,9 @@ describe("runCli exit behavior", () => {
   });
 
   it("preserves gateway.env selectors when the compatibility fallback selects the target", async () => {
-    const homeDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-gateway-fallback-select-"));
+    const homeDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-gateway-fallback-select-"));
     const selectedStateDir = path.join(homeDir, "selected-state");
-    const gatewayEnvDir = path.join(homeDir, ".config", "openclaw");
+    const gatewayEnvDir = path.join(homeDir, ".config", "grokbot");
     await fs.mkdir(selectedStateDir, { recursive: true });
     await fs.mkdir(gatewayEnvDir, { recursive: true });
     await fs.writeFile(
@@ -1638,7 +1638,7 @@ describe("runCli exit behavior", () => {
           NODE_OPTIONS: undefined,
         },
         async () => {
-          await runCli(["node", "openclaw", "gateway"]);
+          await runCli(["node", "grokbot", "gateway"]);
 
           expect(process.env.OPENCLAW_STATE_DIR).toBe(selectedStateDir);
           expect(process.env.OPENCLAW_GATEWAY_TOKEN).toBe("selected-token");
@@ -1652,8 +1652,8 @@ describe("runCli exit behavior", () => {
   });
 
   it("drops old state dotenv credentials when config selects another state", async () => {
-    const homeDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-gateway-config-state-hop-"));
-    const defaultStateDir = path.join(homeDir, ".openclaw");
+    const homeDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-gateway-config-state-hop-"));
+    const defaultStateDir = path.join(homeDir, ".grokbot");
     const selectedStateDir = path.join(homeDir, "selected-state");
     await fs.mkdir(defaultStateDir, { recursive: true });
     await fs.mkdir(selectedStateDir, { recursive: true });
@@ -1686,7 +1686,7 @@ describe("runCli exit behavior", () => {
                   },
           }));
 
-          await runCli(["node", "openclaw", "gateway"]);
+          await runCli(["node", "grokbot", "gateway"]);
 
           expect(process.env.OPENCLAW_STATE_DIR).toBe(selectedStateDir);
           expect(process.env.OPENCLAW_GATEWAY_TOKEN).toBe("selected-token");
@@ -1698,8 +1698,8 @@ describe("runCli exit behavior", () => {
   });
 
   it("drops early target credentials when a later guard selects another state", async () => {
-    const homeDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-gateway-late-state-hop-"));
-    const defaultStateDir = path.join(homeDir, ".openclaw");
+    const homeDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-gateway-late-state-hop-"));
+    const defaultStateDir = path.join(homeDir, ".grokbot");
     const selectedStateDir = path.join(homeDir, "selected-state");
     await fs.mkdir(defaultStateDir, { recursive: true });
     await fs.mkdir(selectedStateDir, { recursive: true });
@@ -1730,7 +1730,7 @@ describe("runCli exit behavior", () => {
                 : { gateway: { mode: "local" } },
           }));
 
-          await runCli(["node", "openclaw", "gateway"]);
+          await runCli(["node", "grokbot", "gateway"]);
           expect(process.env.OPENCLAW_GATEWAY_TOKEN).toBe("early-token");
 
           selectLateState = true;
@@ -1770,7 +1770,7 @@ describe("runCli exit behavior", () => {
         }
       });
 
-      await runCli(["node", "openclaw", "gateway"]);
+      await runCli(["node", "grokbot", "gateway"]);
       expect(process.env.ZAI_API_KEY).toBe("superseded-key");
 
       useReplacement = true;
@@ -1785,8 +1785,8 @@ describe("runCli exit behavior", () => {
   });
 
   it("does not let gateway.env authorize automatic mutations of a selected future config", async () => {
-    const homeDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-gateway-global-env-"));
-    const gatewayEnvDir = path.join(homeDir, ".config", "openclaw");
+    const homeDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-gateway-global-env-"));
+    const gatewayEnvDir = path.join(homeDir, ".config", "grokbot");
     const futureConfigPath = path.join(homeDir, "future.json");
     await fs.mkdir(gatewayEnvDir, { recursive: true });
     await fs.writeFile(
@@ -1824,7 +1824,7 @@ describe("runCli exit behavior", () => {
             throw new Error(`exit:${String(code)}`);
           }) as typeof process.exit);
           try {
-            await expect(runCli(["node", "openclaw", "gateway"])).rejects.toThrow("exit:1");
+            await expect(runCli(["node", "grokbot", "gateway"])).rejects.toThrow("exit:1");
             expect(errorSpy).toHaveBeenCalledWith(
               expect.stringContaining("run automatic gateway startup migrations"),
             );
@@ -1841,7 +1841,7 @@ describe("runCli exit behavior", () => {
   });
 
   it("does not treat gateway option values as bootstrap command paths", async () => {
-    await runCli(["node", "openclaw", "gateway", "--raw-stream-path", "status"]);
+    await runCli(["node", "grokbot", "gateway", "--raw-stream-path", "status"]);
 
     const hooks = addGatewayRunCommandMock.mock.calls[0]?.[1] as
       | { beforeRun?: (opts: { reset?: boolean }) => Promise<void> }
@@ -1857,7 +1857,7 @@ describe("runCli exit behavior", () => {
   });
 
   it("guards then skips state migration before destructive gateway dev resets", async () => {
-    await runCli(["node", "openclaw", "gateway", "--dev", "--reset"]);
+    await runCli(["node", "grokbot", "gateway", "--dev", "--reset"]);
 
     const hooks = addGatewayRunCommandMock.mock.calls[0]?.[1] as
       | { beforeRun?: (opts: { reset?: boolean }) => Promise<void> }
@@ -1871,14 +1871,14 @@ describe("runCli exit behavior", () => {
   it("retains selected config paths and invocation reset targets", async () => {
     await withEnvAsync(
       {
-        OPENCLAW_CONFIG_PATH: "/tmp/openclaw-invocation/openclaw.json",
+        OPENCLAW_CONFIG_PATH: "/tmp/grokbot-invocation/grokbot.json",
         OPENCLAW_GATEWAY_TOKEN: undefined,
-        OPENCLAW_HOME: "/tmp/openclaw-invocation-home",
+        OPENCLAW_HOME: "/tmp/grokbot-invocation-home",
         OPENCLAW_INCLUDE_ROOTS: undefined,
         OPENCLAW_PROFILE: undefined,
-        OPENCLAW_STATE_DIR: "/tmp/openclaw-invocation-state",
+        OPENCLAW_STATE_DIR: "/tmp/grokbot-invocation-state",
         OPENCLAW_TEST_FAST: "1",
-        OPENCLAW_WORKSPACE_DIR: "/tmp/openclaw-invocation-workspace",
+        OPENCLAW_WORKSPACE_DIR: "/tmp/grokbot-invocation-workspace",
       },
       async () => {
         readConfigFileSnapshotMock.mockResolvedValue({
@@ -1887,32 +1887,32 @@ describe("runCli exit behavior", () => {
           sourceConfig: {
             env: {
               vars: {
-                OPENCLAW_CONFIG_PATH: "/tmp/openclaw-reset/openclaw.json",
+                OPENCLAW_CONFIG_PATH: "/tmp/grokbot-reset/grokbot.json",
                 OPENCLAW_GATEWAY_TOKEN: "old-token",
-                OPENCLAW_HOME: "/tmp/openclaw-reset-home",
-                OPENCLAW_INCLUDE_ROOTS: "/tmp/openclaw-reset-includes",
+                OPENCLAW_HOME: "/tmp/grokbot-reset-home",
+                OPENCLAW_INCLUDE_ROOTS: "/tmp/grokbot-reset-includes",
                 OPENCLAW_PROFILE: "config-dev",
-                OPENCLAW_STATE_DIR: "/tmp/openclaw-reset",
+                OPENCLAW_STATE_DIR: "/tmp/grokbot-reset",
                 OPENCLAW_TEST_FAST: "0",
-                OPENCLAW_WORKSPACE_DIR: "/tmp/openclaw-reset-workspace",
+                OPENCLAW_WORKSPACE_DIR: "/tmp/grokbot-reset-workspace",
               },
             },
             gateway: { mode: "local" },
           },
         });
-        await runCli(["node", "openclaw", "gateway", "--dev", "--reset"]);
+        await runCli(["node", "grokbot", "gateway", "--dev", "--reset"]);
 
         const hooks = addGatewayRunCommandMock.mock.calls[0]?.[1] as
           | { beforeRun?: (opts: { reset?: boolean }) => Promise<void> }
           | undefined;
         await hooks?.beforeRun?.({ reset: true });
 
-        expect(process.env.OPENCLAW_CONFIG_PATH).toBe("/tmp/openclaw-invocation/openclaw.json");
-        expect(process.env.OPENCLAW_HOME).toBe("/tmp/openclaw-invocation-home");
+        expect(process.env.OPENCLAW_CONFIG_PATH).toBe("/tmp/grokbot-invocation/grokbot.json");
+        expect(process.env.OPENCLAW_HOME).toBe("/tmp/grokbot-invocation-home");
         expect(process.env.OPENCLAW_PROFILE).toBeUndefined();
-        expect(process.env.OPENCLAW_STATE_DIR).toBe("/tmp/openclaw-invocation-state");
+        expect(process.env.OPENCLAW_STATE_DIR).toBe("/tmp/grokbot-invocation-state");
         expect(process.env.OPENCLAW_TEST_FAST).toBe("1");
-        expect(process.env.OPENCLAW_WORKSPACE_DIR).toBe("/tmp/openclaw-invocation-workspace");
+        expect(process.env.OPENCLAW_WORKSPACE_DIR).toBe("/tmp/grokbot-invocation-workspace");
         expect(process.env.OPENCLAW_GATEWAY_TOKEN).toBeUndefined();
         expect(process.env.OPENCLAW_INCLUDE_ROOTS).toBeUndefined();
         expect(ensureCliExecutionBootstrapMock).not.toHaveBeenCalled();
@@ -1931,14 +1931,14 @@ describe("runCli exit behavior", () => {
             env: {
               vars: {
                 OPENCLAW_PROFILE: "dev",
-                OPENCLAW_WORKSPACE_DIR: "/tmp/openclaw-config-workspace",
+                OPENCLAW_WORKSPACE_DIR: "/tmp/grokbot-config-workspace",
               },
             },
             gateway: { mode: "local" },
           },
         });
 
-        await runCli(["node", "openclaw", "gateway", "--reset"]);
+        await runCli(["node", "grokbot", "gateway", "--reset"]);
 
         expect(process.env.OPENCLAW_PROFILE).toBeUndefined();
         expect(process.env.OPENCLAW_WORKSPACE_DIR).toBeUndefined();
@@ -1949,11 +1949,11 @@ describe("runCli exit behavior", () => {
   it("honors banner suppression on the gateway foreground fast path", async () => {
     process.env.OPENCLAW_HIDE_BANNER = "1";
 
-    await runCli(["node", "openclaw", "gateway"]);
+    await runCli(["node", "grokbot", "gateway"]);
 
     expect(tryRouteCliMock).not.toHaveBeenCalled();
     expect(emitCliBannerMock).not.toHaveBeenCalled();
-    expect(commanderParseAsyncMock).toHaveBeenCalledWith(["node", "openclaw", "gateway"]);
+    expect(commanderParseAsyncMock).toHaveBeenCalledWith(["node", "grokbot", "gateway"]);
   });
 
   it("renders browser help from startup metadata without building the full program", async () => {
@@ -1962,11 +1962,11 @@ describe("runCli exit behavior", () => {
       throw new Error(`unexpected process.exit(${String(code)})`);
     }) as typeof process.exit);
 
-    await runCli(["node", "openclaw", "browser", "--help"]);
+    await runCli(["node", "grokbot", "browser", "--help"]);
 
     expect(maybeRunCliInContainerMock).toHaveBeenCalledWith([
       "node",
-      "openclaw",
+      "grokbot",
       "browser",
       "--help",
     ]);
@@ -1982,7 +1982,7 @@ describe("runCli exit behavior", () => {
   it("renders secrets help from startup metadata without building the full program", async () => {
     outputPrecomputedSecretsHelpTextMock.mockReturnValueOnce(true);
 
-    await runCli(["node", "openclaw", "secrets", "--help"]);
+    await runCli(["node", "grokbot", "secrets", "--help"]);
 
     expect(tryRouteCliMock).not.toHaveBeenCalled();
     expect(outputPrecomputedSecretsHelpTextMock).toHaveBeenCalledTimes(1);
@@ -1993,7 +1993,7 @@ describe("runCli exit behavior", () => {
   it("renders nodes help from startup metadata without building the full program", async () => {
     outputPrecomputedNodesHelpTextMock.mockReturnValueOnce(true);
 
-    await runCli(["node", "openclaw", "nodes", "--help"]);
+    await runCli(["node", "grokbot", "nodes", "--help"]);
 
     expect(tryRouteCliMock).not.toHaveBeenCalled();
     expect(outputPrecomputedNodesHelpTextMock).toHaveBeenCalledTimes(1);
@@ -2002,7 +2002,7 @@ describe("runCli exit behavior", () => {
   });
 
   it("defers nodes help startup metadata when plugin config can change command metadata", async () => {
-    const argv = ["node", "openclaw", "nodes", "--help"];
+    const argv = ["node", "grokbot", "nodes", "--help"];
     const parseAsync = vi.fn().mockResolvedValueOnce(undefined);
     const program = {
       commands: [{ name: () => "nodes", aliases: () => [] }],
@@ -2023,7 +2023,7 @@ describe("runCli exit behavior", () => {
   it("renders selected subcommand help from startup metadata without building the full program", async () => {
     outputPrecomputedSubcommandHelpTextMock.mockReturnValueOnce(true);
 
-    await runCli(["node", "openclaw", "doctor", "--help"]);
+    await runCli(["node", "grokbot", "doctor", "--help"]);
 
     expect(outputPrecomputedSubcommandHelpTextMock).toHaveBeenCalledWith("doctor");
     expect(tryRouteCliMock).not.toHaveBeenCalled();
@@ -2036,7 +2036,7 @@ describe("runCli exit behavior", () => {
       throw new Error("startup metadata failed");
     });
 
-    await expect(runCli(["node", "openclaw", "secrets", "--help"])).rejects.toThrow(
+    await expect(runCli(["node", "grokbot", "secrets", "--help"])).rejects.toThrow(
       "startup metadata failed",
     );
   });
@@ -2046,7 +2046,7 @@ describe("runCli exit behavior", () => {
       new Error("live config failed"),
     );
 
-    await expect(runCli(["node", "openclaw", "nodes", "--help"])).rejects.toThrow(
+    await expect(runCli(["node", "grokbot", "nodes", "--help"])).rejects.toThrow(
       "live config failed",
     );
   });
@@ -2054,7 +2054,7 @@ describe("runCli exit behavior", () => {
   it("keeps root help on the precomputed path without proxy bootstrap", async () => {
     outputPrecomputedRootHelpTextMock.mockReturnValueOnce(true);
 
-    await runCli(["node", "openclaw", "--help"]);
+    await runCli(["node", "grokbot", "--help"]);
 
     expect(loadRootHelpRenderOptionsForConfigSensitivePluginsMock).toHaveBeenCalledTimes(1);
     expect(outputPrecomputedRootHelpTextMock).toHaveBeenCalledTimes(1);
@@ -2063,11 +2063,11 @@ describe("runCli exit behavior", () => {
   });
 
   it("renders setup/onboard/configure help without building the full program", async () => {
-    await runCli(["node", "openclaw", "setup", "--help"]);
+    await runCli(["node", "grokbot", "setup", "--help"]);
 
     expect(tryOutputSetupOnboardConfigureHelpMock).toHaveBeenCalledWith([
       "node",
-      "openclaw",
+      "grokbot",
       "setup",
       "--help",
     ]);
@@ -2081,9 +2081,9 @@ describe("runCli exit behavior", () => {
       throw new Error(`unexpected process.exit(${String(code)})`);
     }) as typeof process.exit);
 
-    await runCli(["node", "openclaw", "--help"]);
+    await runCli(["node", "grokbot", "--help"]);
 
-    expect(maybeRunCliInContainerMock).toHaveBeenCalledWith(["node", "openclaw", "--help"]);
+    expect(maybeRunCliInContainerMock).toHaveBeenCalledWith(["node", "grokbot", "--help"]);
     expect(tryRouteCliMock).not.toHaveBeenCalled();
     expect(loadRootHelpRenderOptionsForConfigSensitivePluginsMock).toHaveBeenCalledTimes(1);
     expect(outputPrecomputedRootHelpTextMock).toHaveBeenCalledTimes(1);
@@ -2108,7 +2108,7 @@ describe("runCli exit behavior", () => {
     loadRootHelpRenderOptionsForConfigSensitivePluginsMock.mockResolvedValueOnce(liveOptions);
     outputPrecomputedRootHelpTextMock.mockReturnValueOnce(true);
 
-    await runCli(["node", "openclaw", "--help"]);
+    await runCli(["node", "grokbot", "--help"]);
 
     expect(loadRootHelpRenderOptionsForConfigSensitivePluginsMock).toHaveBeenCalledTimes(1);
     expect(outputPrecomputedRootHelpTextMock).not.toHaveBeenCalled();
@@ -2119,57 +2119,57 @@ describe("runCli exit behavior", () => {
   it("does not start the managed proxy for local gateway client commands", async () => {
     tryRouteCliMock.mockResolvedValueOnce(true);
 
-    await runCli(["node", "openclaw", "status"]);
+    await runCli(["node", "grokbot", "status"]);
 
     expect(startProxyMock).not.toHaveBeenCalled();
     expect(stopProxyMock).not.toHaveBeenCalled();
   });
 
   it.each([
-    ["gateway runtime", ["node", "openclaw", "gateway", "run"]],
-    ["bare gateway runtime", ["node", "openclaw", "gateway"]],
-    ["node runtime", ["node", "openclaw", "node", "run"]],
-    ["local agent runtime", ["node", "openclaw", "agent", "--local"]],
-    ["provider inference", ["node", "openclaw", "infer", "web", "fetch", "https://example.com"]],
-    ["model command", ["node", "openclaw", "models", "auth", "login", "openai"]],
-    ["plugin command", ["node", "openclaw", "plugins", "marketplace", "list"]],
-    ["skill command", ["node", "openclaw", "skills", "search", "browser"]],
-    ["update command", ["node", "openclaw", "update", "check"]],
-    ["channel probe", ["node", "openclaw", "channels", "status", "--probe"]],
-    ["channel capabilities probe", ["node", "openclaw", "channels", "capabilities"]],
-    ["directory plugin command", ["node", "openclaw", "directory", "peers", "list"]],
-    ["message plugin command", ["node", "openclaw", "message", "send", "--to", "demo"]],
-    ["metadata-owned plugin command", ["node", "openclaw", "googlemeet", "login"]],
+    ["gateway runtime", ["node", "grokbot", "gateway", "run"]],
+    ["bare gateway runtime", ["node", "grokbot", "gateway"]],
+    ["node runtime", ["node", "grokbot", "node", "run"]],
+    ["local agent runtime", ["node", "grokbot", "agent", "--local"]],
+    ["provider inference", ["node", "grokbot", "infer", "web", "fetch", "https://example.com"]],
+    ["model command", ["node", "grokbot", "models", "auth", "login", "openai"]],
+    ["plugin command", ["node", "grokbot", "plugins", "marketplace", "list"]],
+    ["skill command", ["node", "grokbot", "skills", "search", "browser"]],
+    ["update command", ["node", "grokbot", "update", "check"]],
+    ["channel probe", ["node", "grokbot", "channels", "status", "--probe"]],
+    ["channel capabilities probe", ["node", "grokbot", "channels", "capabilities"]],
+    ["directory plugin command", ["node", "grokbot", "directory", "peers", "list"]],
+    ["message plugin command", ["node", "grokbot", "message", "send", "--to", "demo"]],
+    ["metadata-owned plugin command", ["node", "grokbot", "googlemeet", "login"]],
   ])("starts managed proxy routing for %s", (_name, argv) => {
     expect(shouldStartProxyForCli(argv)).toBe(true);
   });
 
   it.each([
-    ["root help", ["node", "openclaw", "--help"]],
-    ["root version", ["node", "openclaw", "--version"]],
-    ["gateway help", ["node", "openclaw", "gateway", "--help"]],
-    ["gateway run help", ["node", "openclaw", "gateway", "run", "--help"]],
-    ["status", ["node", "openclaw", "status"]],
-    ["health", ["node", "openclaw", "health"]],
-    ["gateway status", ["node", "openclaw", "gateway", "status"]],
-    ["gateway health", ["node", "openclaw", "gateway", "health"]],
-    ["remote agent control-plane", ["node", "openclaw", "agent", "run"]],
-    ["chat control-plane", ["node", "openclaw", "chat"]],
-    ["terminal control-plane", ["node", "openclaw", "terminal"]],
-    ["config", ["node", "openclaw", "config", "get", "proxy.enabled"]],
-    ["channels parent help", ["node", "openclaw", "channels"]],
-    ["completion", ["node", "openclaw", "completion", "zsh"]],
-    ["debug proxy cli", ["node", "openclaw", "proxy", "start"]],
-    ["agents list", ["node", "openclaw", "agents", "list"]],
-    ["models list", ["node", "openclaw", "models", "list"]],
-    ["models status without live probe", ["node", "openclaw", "models", "status"]],
-    ["skills check", ["node", "openclaw", "skills", "check"]],
-    ["skills info", ["node", "openclaw", "skills", "info", "weather"]],
-    ["skills list", ["node", "openclaw", "skills", "list"]],
-    ["tasks list", ["node", "openclaw", "tasks", "list"]],
-    ["legacy singular tool namespace", ["node", "openclaw", "tool", "image_generate"]],
-    ["gateway tools namespace typo", ["node", "openclaw", "tools", "effective"]],
-    ["migrate", ["node", "openclaw", "migrate"]],
+    ["root help", ["node", "grokbot", "--help"]],
+    ["root version", ["node", "grokbot", "--version"]],
+    ["gateway help", ["node", "grokbot", "gateway", "--help"]],
+    ["gateway run help", ["node", "grokbot", "gateway", "run", "--help"]],
+    ["status", ["node", "grokbot", "status"]],
+    ["health", ["node", "grokbot", "health"]],
+    ["gateway status", ["node", "grokbot", "gateway", "status"]],
+    ["gateway health", ["node", "grokbot", "gateway", "health"]],
+    ["remote agent control-plane", ["node", "grokbot", "agent", "run"]],
+    ["chat control-plane", ["node", "grokbot", "chat"]],
+    ["terminal control-plane", ["node", "grokbot", "terminal"]],
+    ["config", ["node", "grokbot", "config", "get", "proxy.enabled"]],
+    ["channels parent help", ["node", "grokbot", "channels"]],
+    ["completion", ["node", "grokbot", "completion", "zsh"]],
+    ["debug proxy cli", ["node", "grokbot", "proxy", "start"]],
+    ["agents list", ["node", "grokbot", "agents", "list"]],
+    ["models list", ["node", "grokbot", "models", "list"]],
+    ["models status without live probe", ["node", "grokbot", "models", "status"]],
+    ["skills check", ["node", "grokbot", "skills", "check"]],
+    ["skills info", ["node", "grokbot", "skills", "info", "weather"]],
+    ["skills list", ["node", "grokbot", "skills", "list"]],
+    ["tasks list", ["node", "grokbot", "tasks", "list"]],
+    ["legacy singular tool namespace", ["node", "grokbot", "tool", "image_generate"]],
+    ["gateway tools namespace typo", ["node", "grokbot", "tools", "effective"]],
+    ["migrate", ["node", "grokbot", "migrate"]],
   ])("skips managed proxy routing for %s", (_name, argv) => {
     expect(shouldStartProxyForCli(argv)).toBe(false);
   });
@@ -2177,16 +2177,16 @@ describe("runCli exit behavior", () => {
   it("starts the managed proxy for network-capable commands by default", async () => {
     tryRouteCliMock.mockResolvedValueOnce(true);
 
-    await runCli(["node", "openclaw", "plugins", "marketplace", "list"]);
+    await runCli(["node", "grokbot", "plugins", "marketplace", "list"]);
 
     expect(startProxyMock).toHaveBeenCalledWith(undefined);
   });
 
   it.each([
-    ["fast path", ["node", "openclaw", "gateway", "run"]],
+    ["fast path", ["node", "grokbot", "gateway", "run"]],
     [
       "full Commander path with root options",
-      ["node", "openclaw", "--log-level", "debug", "gateway", "run"],
+      ["node", "grokbot", "--log-level", "debug", "gateway", "run"],
     ],
   ])("loads trusted dotenv and isolates %s gateway proxy config reads", async (_name, argv) => {
     if (_name === "full Commander path with root options") {
@@ -2200,7 +2200,7 @@ describe("runCli exit behavior", () => {
   });
 
   it("validates the runtime before selecting gateway config", async () => {
-    await runCli(["node", "openclaw", "gateway", "run"]);
+    await runCli(["node", "grokbot", "gateway", "run"]);
 
     const runtimeGuardOrder = assertRuntimeMock.mock.invocationCallOrder[0] ?? 0;
     const configReadOrder = readConfigFileSnapshotMock.mock.invocationCallOrder[0] ?? 0;
@@ -2209,7 +2209,7 @@ describe("runCli exit behavior", () => {
   });
 
   it("re-pins runtime paths after selecting gateway config", async () => {
-    await runCli(["node", "openclaw", "gateway", "run"]);
+    await runCli(["node", "grokbot", "gateway", "run"]);
 
     expect(pinRuntimePathsMock).toHaveBeenCalledWith(process.env);
     expect(pinConfigDirMock).toHaveBeenCalledWith(process.env);
@@ -2232,7 +2232,7 @@ describe("runCli exit behavior", () => {
         proxy: { selected: process.env.OPENCLAW_TEST_PROXY_SELECTION },
       }));
 
-      await runCli(["node", "openclaw", "gateway", "run"]);
+      await runCli(["node", "grokbot", "gateway", "run"]);
 
       expect(startProxyMock).toHaveBeenCalledWith({ selected: "selected" });
     });
@@ -2253,7 +2253,7 @@ describe("runCli exit behavior", () => {
       await getGatewayRunRuntimeHooks().refreshManagedProxy?.(finalProxy);
     });
 
-    await runCli(["node", "openclaw", "gateway", "run"]);
+    await runCli(["node", "grokbot", "gateway", "run"]);
 
     expect(startProxyMock).toHaveBeenNthCalledWith(1, earlyProxy);
     expect(startProxyMock).toHaveBeenNthCalledWith(2, finalProxy);
@@ -2287,7 +2287,7 @@ describe("runCli exit behavior", () => {
     });
 
     try {
-      await runCli(["node", "openclaw", "gateway", "run"]);
+      await runCli(["node", "grokbot", "gateway", "run"]);
     } finally {
       processOffSpy.mockRestore();
       processOnceSpy.mockRestore();
@@ -2302,13 +2302,13 @@ describe("runCli exit behavior", () => {
   it("starts the managed proxy for metadata-owned plugin commands by default", async () => {
     tryRouteCliMock.mockResolvedValueOnce(true);
 
-    await runCli(["node", "openclaw", "googlemeet", "login"]);
+    await runCli(["node", "grokbot", "googlemeet", "login"]);
 
     expect(startProxyMock).toHaveBeenCalledWith(undefined);
   });
 
   it("rejects unowned command roots before proxy and plugin runtime registration", async () => {
-    await expect(runCli(["node", "openclaw", "foo"])).rejects.toThrow(
+    await expect(runCli(["node", "grokbot", "foo"])).rejects.toThrow(
       'No built-in command or plugin CLI metadata owns "foo"',
     );
 
@@ -2319,8 +2319,8 @@ describe("runCli exit behavior", () => {
   });
 
   it("suggests close known commands for unowned command roots before proxy startup", async () => {
-    await expect(runCli(["node", "openclaw", "upate"])).rejects.toThrow(
-      "Did you mean this?\n  openclaw update",
+    await expect(runCli(["node", "grokbot", "upate"])).rejects.toThrow(
+      "Did you mean this?\n  grokbot update",
     );
 
     expect(startProxyMock).not.toHaveBeenCalled();
@@ -2338,7 +2338,7 @@ describe("runCli exit behavior", () => {
 
     let error: unknown;
     try {
-      await runCli(["node", "openclaw", "codex"]);
+      await runCli(["node", "grokbot", "codex"]);
     } catch (caught) {
       error = caught;
     }
@@ -2354,7 +2354,7 @@ describe("runCli exit behavior", () => {
   });
 
   it("rejects unowned command roots even when --help is appended (regression for #81077)", async () => {
-    await expect(runCli(["node", "openclaw", "foo", "--help"])).rejects.toThrow(
+    await expect(runCli(["node", "grokbot", "foo", "--help"])).rejects.toThrow(
       'No built-in command or plugin CLI metadata owns "foo"',
     );
 
@@ -2365,7 +2365,7 @@ describe("runCli exit behavior", () => {
   });
 
   it("rejects unowned command roots even when --version is appended", async () => {
-    await expect(runCli(["node", "openclaw", "foo", "--version"])).rejects.toThrow(
+    await expect(runCli(["node", "grokbot", "foo", "--version"])).rejects.toThrow(
       'No built-in command or plugin CLI metadata owns "foo"',
     );
 
@@ -2382,7 +2382,7 @@ describe("runCli exit behavior", () => {
 
     let error: unknown;
     try {
-      await runCli(["node", "openclaw", "totally-unknown"]);
+      await runCli(["node", "grokbot", "totally-unknown"]);
     } catch (caught) {
       error = caught;
     }
@@ -2412,7 +2412,7 @@ describe("runCli exit behavior", () => {
       }) => (primaryCommand === "qa" && cfg?.plugins?.allow?.length === 0 ? ["qa-lab"] : []),
     );
 
-    await expect(runCli(["node", "openclaw", "qa"])).rejects.toThrow(
+    await expect(runCli(["node", "grokbot", "qa"])).rejects.toThrow(
       'Add "qa-lab" to `plugins.allow` instead of "qa"',
     );
     expect(startProxyMock).not.toHaveBeenCalled();
@@ -2427,7 +2427,7 @@ describe("runCli exit behavior", () => {
       availability: "loaded",
     });
 
-    await expect(runCli(["node", "openclaw", "lcm_recent"])).rejects.toThrow(
+    await expect(runCli(["node", "grokbot", "lcm_recent"])).rejects.toThrow(
       '"lcm_recent" is an agent tool available from the "lossless-claw" plugin',
     );
 
@@ -2440,16 +2440,16 @@ describe("runCli exit behavior", () => {
     hasEnvHttpProxyAgentConfiguredMock.mockReturnValue(true);
     tryRouteCliMock.mockResolvedValueOnce(true);
 
-    await runCli(["node", "openclaw", "skills", "check"]);
+    await runCli(["node", "grokbot", "skills", "check"]);
 
     expect(hasEnvHttpProxyAgentConfiguredMock).not.toHaveBeenCalled();
     expect(ensureGlobalUndiciEnvProxyDispatcherMock).not.toHaveBeenCalled();
   });
 
   it.each([
-    ["auth", ["node", "openclaw", "auth", "--help"]],
-    ["tool", ["node", "openclaw", "tool", "image_generate"]],
-    ["tools", ["node", "openclaw", "tools", "effective"]],
+    ["auth", ["node", "grokbot", "auth", "--help"]],
+    ["tool", ["node", "grokbot", "tool", "image_generate"]],
+    ["tools", ["node", "grokbot", "tools", "effective"]],
   ])("keeps reserved %s command roots out of plugin command discovery", async (_name, argv) => {
     const parseAsync = vi.fn().mockResolvedValueOnce(undefined);
     const program = {
@@ -2486,7 +2486,7 @@ describe("runCli exit behavior", () => {
       parseAsync,
     });
 
-    await runCli(["node", "openclaw", "memory", "search", "query", "--json"]);
+    await runCli(["node", "grokbot", "memory", "search", "query", "--json"]);
 
     expect(registerPluginCliCommandsFromValidatedConfigMock).toHaveBeenCalledWith(
       expect.anything(),
@@ -2516,7 +2516,7 @@ describe("runCli exit behavior", () => {
       parseAsync,
     });
 
-    await runCli(["node", "openclaw", "memory", "--", "--json"]);
+    await runCli(["node", "grokbot", "memory", "--", "--json"]);
 
     expect(registerPluginCliCommandsFromValidatedConfigMock).toHaveBeenCalledWith(
       expect.anything(),
@@ -2531,7 +2531,7 @@ describe("runCli exit behavior", () => {
   it("fails protected commands when managed proxy activation fails", async () => {
     startProxyMock.mockRejectedValueOnce(new Error("proxy: enabled but no HTTP proxy URL"));
 
-    await expect(runCli(["node", "openclaw", "gateway", "run"])).rejects.toThrow(
+    await expect(runCli(["node", "grokbot", "gateway", "run"])).rejects.toThrow(
       "proxy: enabled but no HTTP proxy URL",
     );
 
@@ -2544,7 +2544,7 @@ describe("runCli exit behavior", () => {
       throw new Error("config parse failed");
     });
 
-    await expect(runCli(["node", "openclaw", "gateway", "run"])).rejects.toThrow(
+    await expect(runCli(["node", "grokbot", "gateway", "run"])).rejects.toThrow(
       "config parse failed",
     );
 
@@ -2556,7 +2556,7 @@ describe("runCli exit behavior", () => {
     const handle = makeProxyHandle();
     startProxyMock.mockResolvedValueOnce(handle);
 
-    await runCli(["node", "openclaw", "gateway", "run"]);
+    await runCli(["node", "grokbot", "gateway", "run"]);
 
     expect(startProxyMock).toHaveBeenCalledWith(undefined);
     expect(stopProxyMock).toHaveBeenCalledOnce();
@@ -2587,7 +2587,7 @@ describe("runCli exit behavior", () => {
     );
 
     try {
-      const runPromise = runCli(["node", "openclaw", "plugins", "marketplace", "list"]);
+      const runPromise = runCli(["node", "grokbot", "plugins", "marketplace", "list"]);
       await vi.waitFor(() => {
         expect(
           processOnceSpy.mock.calls.some(
@@ -2636,7 +2636,7 @@ describe("runCli exit behavior", () => {
 
     const processOnceSpy = vi.spyOn(process, "once");
     try {
-      const runPromise = runCli(["node", "openclaw", "plugins", "marketplace", "list"]);
+      const runPromise = runCli(["node", "grokbot", "plugins", "marketplace", "list"]);
       await vi.waitFor(() => {
         expect(
           processOnceSpy.mock.calls.reduce(
@@ -2669,7 +2669,7 @@ describe("runCli exit behavior", () => {
     });
 
     await withInteractiveTty(async () => {
-      await runCli(["node", "openclaw"]);
+      await runCli(["node", "grokbot"]);
     });
 
     expect(readConfigFileSnapshotMock).toHaveBeenCalledTimes(1);
@@ -2686,7 +2686,7 @@ describe("runCli exit behavior", () => {
     });
 
     await withInteractiveTty(async () => {
-      await runCli(["node", "openclaw"]);
+      await runCli(["node", "grokbot"]);
     });
 
     expect(readConfigFileSnapshotMock).toHaveBeenCalledTimes(1);
@@ -2700,13 +2700,13 @@ describe("runCli exit behavior", () => {
       exists: true,
       valid: true,
       sourceConfig: {
-        $schema: "https://openclaw.ai/config.json",
+        $schema: "https://grokbot.ai/config.json",
         meta: { updatedBy: "fixture" },
       },
     });
 
     await withInteractiveTty(async () => {
-      await runCli(["node", "openclaw"]);
+      await runCli(["node", "grokbot"]);
     });
 
     expect(readConfigFileSnapshotMock).toHaveBeenCalledTimes(1);
@@ -2726,7 +2726,7 @@ describe("runCli exit behavior", () => {
     });
 
     await withInteractiveTty(async () => {
-      await runCli(["node", "openclaw"]);
+      await runCli(["node", "grokbot"]);
     });
 
     expect(setupWizardCommandMock).toHaveBeenCalledWith({});
@@ -2749,11 +2749,11 @@ describe("runCli exit behavior", () => {
     Object.defineProperty(process.stdout, "isTTY", { configurable: true, value: false });
 
     try {
-      await runCli(["node", "openclaw"]);
+      await runCli(["node", "grokbot"]);
 
       expect(process.exitCode).toBe(1);
       expect(errorSpy).toHaveBeenCalledWith(
-        "Onboarding needs an interactive TTY. Use `openclaw onboard --non-interactive --accept-risk ...` for automation.",
+        "Onboarding needs an interactive TTY. Use `grokbot onboard --non-interactive --accept-risk ...` for automation.",
       );
       expect(setupWizardCommandMock).not.toHaveBeenCalled();
       expect(tryRouteCliMock).not.toHaveBeenCalled();
@@ -2795,7 +2795,7 @@ describe("runCli exit behavior", () => {
 
     await withEnvAsync({ OPENCLAW_GATEWAY_PASSWORD: "gateway-ref-password" }, async () => {
       await withInteractiveTty(async () => {
-        await runCli(["node", "openclaw"]);
+        await runCli(["node", "grokbot"]);
       });
     });
 
@@ -2835,7 +2835,7 @@ describe("runCli exit behavior", () => {
     });
 
     await withInteractiveTty(async () => {
-      await runCli(["node", "openclaw"]);
+      await runCli(["node", "grokbot"]);
     });
 
     expect(setupWizardCommandMock).not.toHaveBeenCalled();
@@ -2862,7 +2862,7 @@ describe("runCli exit behavior", () => {
     });
 
     await withInteractiveTty(async () => {
-      await runCli(["node", "openclaw"]);
+      await runCli(["node", "grokbot"]);
     });
 
     expect(setupWizardCommandMock).toHaveBeenCalledWith({});
@@ -2893,11 +2893,11 @@ describe("runCli exit behavior", () => {
     Object.defineProperty(process.stdout, "isTTY", { configurable: true, value: false });
 
     try {
-      await runCli(["node", "openclaw"]);
+      await runCli(["node", "grokbot"]);
 
       expect(process.exitCode).toBe(1);
       expect(errorSpy).toHaveBeenCalledWith(
-        "Remote Gateway inference setup needs an interactive TTY. Re-run `openclaw` in a terminal connected to this Gateway.",
+        "Remote Gateway inference setup needs an interactive TTY. Re-run `grokbot` in a terminal connected to this Gateway.",
       );
       expect(setupWizardCommandMock).not.toHaveBeenCalled();
       expect(runRemoteGatewayInferenceOnboardingMock).not.toHaveBeenCalled();
@@ -2932,7 +2932,7 @@ describe("runCli exit behavior", () => {
     readActiveGatewayLockPortMock.mockResolvedValueOnce(48789);
 
     await withInteractiveTty(async () => {
-      await runCli(["node", "openclaw"]);
+      await runCli(["node", "grokbot"]);
     });
 
     expect(probeGatewayConfiguredModelMock).toHaveBeenCalledWith({
@@ -2961,7 +2961,7 @@ describe("runCli exit behavior", () => {
 
     await withEnvAsync({ OPENCLAW_GATEWAY_PORT: "19001" }, async () => {
       await withInteractiveTty(async () => {
-        await runCli(["node", "openclaw"]);
+        await runCli(["node", "grokbot"]);
       });
     });
 
@@ -2991,7 +2991,7 @@ describe("runCli exit behavior", () => {
     });
 
     await withInteractiveTty(async () => {
-      await runCli(["node", "openclaw"]);
+      await runCli(["node", "grokbot"]);
     });
 
     expect(probeGatewayConfiguredModelMock).toHaveBeenCalledWith({
@@ -3019,7 +3019,7 @@ describe("runCli exit behavior", () => {
 
     await withEnvAsync({ OPENCLAW_GATEWAY_TOKEN: "env-token" }, async () => {
       await withInteractiveTty(async () => {
-        await runCli(["node", "openclaw"]);
+        await runCli(["node", "grokbot"]);
       });
     });
 
@@ -3034,7 +3034,7 @@ describe("runCli exit behavior", () => {
   });
 
   it("resolves only the configured auth-mode SecretRef for bare root preflight", async () => {
-    const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-bare-auth-mode-"));
+    const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-bare-auth-mode-"));
     const tokenMarker = path.join(tempDir, "token-provider-ran");
     const passwordMarker = path.join(tempDir, "password-provider-ran");
     const tokenProgram = [
@@ -3084,7 +3084,7 @@ describe("runCli exit behavior", () => {
 
     try {
       await withInteractiveTty(async () => {
-        await runCli(["node", "openclaw"]);
+        await runCli(["node", "grokbot"]);
       });
 
       expect(probeGatewayConfiguredModelMock).toHaveBeenCalledWith({
@@ -3119,7 +3119,7 @@ describe("runCli exit behavior", () => {
     });
 
     await withInteractiveTty(async () => {
-      await runCli(["node", "openclaw"]);
+      await runCli(["node", "grokbot"]);
     });
 
     expect(readActiveGatewayLockPortMock).toHaveBeenCalledTimes(1);
@@ -3164,7 +3164,7 @@ describe("runCli exit behavior", () => {
       .mockResolvedValueOnce({ kind: "configured" });
 
     await withInteractiveTty(async () => {
-      await runCli(["node", "openclaw"]);
+      await runCli(["node", "grokbot"]);
     });
 
     expect(probeGatewayConfiguredModelMock).toHaveBeenNthCalledWith(1, {
@@ -3206,7 +3206,7 @@ describe("runCli exit behavior", () => {
       .mockResolvedValueOnce({ kind: "configured" });
 
     await withInteractiveTty(async () => {
-      await runCli(["node", "openclaw"]);
+      await runCli(["node", "grokbot"]);
     });
 
     expect(setupWizardCommandMock).not.toHaveBeenCalled();
@@ -3245,7 +3245,7 @@ describe("runCli exit behavior", () => {
       });
 
     await withInteractiveTty(async () => {
-      await runCli(["node", "openclaw"]);
+      await runCli(["node", "grokbot"]);
     });
 
     expect(setupWizardCommandMock).toHaveBeenCalledWith({});
@@ -3268,7 +3268,7 @@ describe("runCli exit behavior", () => {
     });
 
     await withInteractiveTty(async () => {
-      await runCli(["node", "openclaw"]);
+      await runCli(["node", "grokbot"]);
     });
 
     expect(setupWizardCommandMock).not.toHaveBeenCalled();
@@ -3293,7 +3293,7 @@ describe("runCli exit behavior", () => {
     });
 
     await withInteractiveTty(async () => {
-      await runCli(["node", "openclaw"]);
+      await runCli(["node", "grokbot"]);
     });
 
     expect(setupWizardCommandMock).not.toHaveBeenCalled();
@@ -3318,7 +3318,7 @@ describe("runCli exit behavior", () => {
     });
 
     await withInteractiveTty(async () => {
-      await runCli(["node", "openclaw"]);
+      await runCli(["node", "grokbot"]);
     });
 
     expect(setupWizardCommandMock).not.toHaveBeenCalled();
@@ -3342,7 +3342,7 @@ describe("runCli exit behavior", () => {
     });
 
     await withInteractiveTty(async () => {
-      await runCli(["node", "openclaw"]);
+      await runCli(["node", "grokbot"]);
     });
 
     expect(launchTuiCliMock).toHaveBeenCalledWith({ deliver: false, local: true }, {});
@@ -3369,7 +3369,7 @@ describe("runCli exit behavior", () => {
 
     await withEnvAsync({ OPENCLAW_ALLOW_INSECURE_PRIVATE_WS: undefined }, async () => {
       await withInteractiveTty(async () => {
-        await runCli(["node", "openclaw"]);
+        await runCli(["node", "grokbot"]);
       });
     });
 
@@ -3396,7 +3396,7 @@ describe("runCli exit behavior", () => {
 
     await withEnvAsync({ OPENCLAW_ALLOW_INSECURE_PRIVATE_WS: undefined }, async () => {
       await withInteractiveTty(async () => {
-        await runCli(["node", "openclaw"]);
+        await runCli(["node", "grokbot"]);
       });
     });
 
@@ -3429,7 +3429,7 @@ describe("runCli exit behavior", () => {
 
     await withEnvAsync({ OPENCLAW_GATEWAY_PASSWORD: "stale-env-password" }, async () => {
       await withInteractiveTty(async () => {
-        await runCli(["node", "openclaw"]);
+        await runCli(["node", "grokbot"]);
       });
     });
 
@@ -3477,7 +3477,7 @@ describe("runCli exit behavior", () => {
       },
       async () => {
         await withInteractiveTty(async () => {
-          await runCli(["node", "openclaw"]);
+          await runCli(["node", "grokbot"]);
         });
       },
     );
@@ -3509,7 +3509,7 @@ describe("runCli exit behavior", () => {
 
     await withEnvAsync({ OPENCLAW_ALLOW_INSECURE_PRIVATE_WS: "1" }, async () => {
       await withInteractiveTty(async () => {
-        await runCli(["node", "openclaw"]);
+        await runCli(["node", "grokbot"]);
       });
     });
 
@@ -3541,7 +3541,7 @@ describe("runCli exit behavior", () => {
     });
 
     await withInteractiveTty(async () => {
-      await runCli(["node", "openclaw"]);
+      await runCli(["node", "grokbot"]);
     });
 
     expect(probeGatewayConfiguredModelMock).toHaveBeenCalledWith({
@@ -3572,7 +3572,7 @@ describe("runCli exit behavior", () => {
 
     await withEnvAsync({ OPENCLAW_ALLOW_INSECURE_PRIVATE_WS: undefined }, async () => {
       await withInteractiveTty(async () => {
-        await runCli(["node", "openclaw"]);
+        await runCli(["node", "grokbot"]);
       });
     });
 
@@ -3591,11 +3591,11 @@ describe("runCli exit behavior", () => {
     Object.defineProperty(process.stdout, "isTTY", { configurable: true, value: false });
 
     try {
-      await runCli(["node", "openclaw"]);
+      await runCli(["node", "grokbot"]);
 
       expect(process.exitCode).toBe(1);
       expect(errorSpy).toHaveBeenCalledWith(
-        "OpenClaw TUI needs an interactive TTY. Use `openclaw agent --local ...` for automation.",
+        "GrokBot TUI needs an interactive TTY. Use `grokbot agent --local ...` for automation.",
       );
       expect(launchTuiCliMock).not.toHaveBeenCalled();
     } finally {
@@ -3622,7 +3622,7 @@ describe("runCli exit behavior", () => {
     });
 
     await withInteractiveTty(async () => {
-      await runCli(["node", "openclaw"]);
+      await runCli(["node", "grokbot"]);
     });
 
     expect(setupWizardCommandMock).toHaveBeenCalledWith({ classic: true });
@@ -3644,11 +3644,11 @@ describe("runCli exit behavior", () => {
     Object.defineProperty(process.stdout, "isTTY", { configurable: true, value: false });
 
     try {
-      await runCli(["node", "openclaw"]);
+      await runCli(["node", "grokbot"]);
 
       expect(process.exitCode).toBe(1);
       expect(errorSpy).toHaveBeenCalledWith(
-        "OpenClaw config is invalid. Run `openclaw doctor --fix` before onboarding.",
+        "GrokBot config is invalid. Run `grokbot doctor --fix` before onboarding.",
       );
       expect(setupWizardCommandMock).not.toHaveBeenCalled();
     } finally {
@@ -3675,7 +3675,7 @@ describe("runCli exit behavior", () => {
     Object.defineProperty(process.stdout, "isTTY", { configurable: true, value: true });
 
     try {
-      await runCli(["node", "openclaw"]);
+      await runCli(["node", "grokbot"]);
     } finally {
       if (stdinTty) {
         Object.defineProperty(process.stdin, "isTTY", stdinTty);
@@ -3709,7 +3709,7 @@ describe("runCli exit behavior", () => {
     tryRouteCliMock.mockResolvedValueOnce(true);
     hasMemoryRuntimeMock.mockReturnValue(true);
 
-    await runCli(["node", "openclaw", "status"]);
+    await runCli(["node", "grokbot", "status"]);
 
     expect(closeActiveMemorySearchManagersMock).toHaveBeenCalledTimes(1);
   });
@@ -3720,7 +3720,7 @@ describe("runCli exit behavior", () => {
       throw new Error("stale memory-state chunk");
     });
 
-    await expect(runCli(["node", "openclaw", "status"])).resolves.toBeUndefined();
+    await expect(runCli(["node", "grokbot", "status"])).resolves.toBeUndefined();
 
     expect(closeActiveMemorySearchManagersMock).not.toHaveBeenCalled();
   });
@@ -3728,11 +3728,11 @@ describe("runCli exit behavior", () => {
   it("returns after a handled container-target invocation", async () => {
     maybeRunCliInContainerMock.mockReturnValueOnce({ handled: true, exitCode: 0 });
 
-    await runCli(["node", "openclaw", "--container", "demo", "status"]);
+    await runCli(["node", "grokbot", "--container", "demo", "status"]);
 
     expect(maybeRunCliInContainerMock).toHaveBeenCalledWith([
       "node",
-      "openclaw",
+      "grokbot",
       "--container",
       "demo",
       "status",
@@ -3746,7 +3746,7 @@ describe("runCli exit behavior", () => {
     const exitCode = process.exitCode;
     maybeRunCliInContainerMock.mockReturnValueOnce({ handled: true, exitCode: 7 });
 
-    await runCli(["node", "openclaw", "--container", "demo", "status"]);
+    await runCli(["node", "grokbot", "--container", "demo", "status"]);
 
     expect(process.exitCode).toBe(7);
     process.exitCode = exitCode;
@@ -3764,10 +3764,10 @@ describe("runCli exit behavior", () => {
     };
     buildProgramMock.mockReturnValueOnce(program);
 
-    await expect(runCli(["node", "openclaw", "status"])).resolves.toBeUndefined();
+    await expect(runCli(["node", "grokbot", "status"])).resolves.toBeUndefined();
 
     expect(registerSubCliByNameMock.mock.calls).toEqual([
-      [program, "status", ["node", "openclaw", "status"]],
+      [program, "status", ["node", "grokbot", "status"]],
     ]);
     expect(process.exitCode).toBe(1);
     process.exitCode = exitCode;
@@ -3783,7 +3783,7 @@ describe("runCli exit behavior", () => {
     };
     buildProgramMock.mockReturnValueOnce(program);
 
-    await runCli(["node", "openclaw", "security", "--help"]);
+    await runCli(["node", "grokbot", "security", "--help"]);
 
     expect(requestExitAfterOneShotOutputMock).toHaveBeenCalledOnce();
     expect(flushExitAfterOneShotOutputMock).toHaveBeenCalledOnce();
@@ -3799,7 +3799,7 @@ describe("runCli exit behavior", () => {
     buildProgramMock.mockReturnValueOnce(program);
     resolvePluginCliRootOwnerIdsMock.mockReturnValueOnce(["memory-core"]);
 
-    await runCli(["node", "openclaw", "memory", "--help"]);
+    await runCli(["node", "grokbot", "memory", "--help"]);
 
     expect(requestExitAfterOneShotOutputMock).toHaveBeenCalledOnce();
     expect(flushExitAfterOneShotOutputMock).toHaveBeenCalledOnce();
@@ -3814,13 +3814,13 @@ describe("runCli exit behavior", () => {
     const ctx = { programVersion: "0.0.0-test" };
     getProgramContextMock.mockReturnValueOnce(ctx as never);
 
-    await runCli(["node", "openclaw", "doctor", "--help"]);
+    await runCli(["node", "grokbot", "doctor", "--help"]);
 
     expect(registerCoreCliByNameMock.mock.calls).toEqual([
-      [program, ctx, "doctor", ["node", "openclaw", "doctor", "--help"]],
+      [program, ctx, "doctor", ["node", "grokbot", "doctor", "--help"]],
     ]);
     expect(registerSubCliByNameMock.mock.calls).toEqual([
-      [program, "doctor", ["node", "openclaw", "doctor", "--help"]],
+      [program, "doctor", ["node", "grokbot", "doctor", "--help"]],
     ]);
   });
 
@@ -3836,7 +3836,7 @@ describe("runCli exit behavior", () => {
       throw new Error(`process.exit(${String(code)})`);
     }) as typeof process.exit);
 
-    await runCli(["node", "openclaw", "status"]);
+    await runCli(["node", "grokbot", "status"]);
 
     const handler = processOnSpy.mock.calls.find(([event]) => event === "uncaughtException")?.[1];
     if (typeof handler !== "function") {
@@ -3846,9 +3846,9 @@ describe("runCli exit behavior", () => {
     try {
       expect(() => handler(new Error("boom"))).toThrow("process.exit(1)");
       expect(consoleErrorSpy).toHaveBeenCalledWith(
-        "[openclaw] OpenClaw hit an unexpected runtime error.",
+        "[grokbot] GrokBot hit an unexpected runtime error.",
       );
-      expect(consoleErrorSpy).toHaveBeenCalledWith("[openclaw] Reason: boom");
+      expect(consoleErrorSpy).toHaveBeenCalledWith("[grokbot] Reason: boom");
       expect(restoreTerminalStateMock).toHaveBeenCalledWith("uncaught exception", {
         resumeStdinIfPaused: false,
       });
@@ -3874,7 +3874,7 @@ describe("runCli exit behavior", () => {
       throw new Error(`process.exit(${String(code)})`);
     }) as typeof process.exit);
 
-    await runCli(["node", "openclaw", "status"]);
+    await runCli(["node", "grokbot", "status"]);
 
     const handler = processOnSpy.mock.calls.find(([event]) => event === "uncaughtException")?.[1];
     if (typeof handler !== "function") {
@@ -3887,7 +3887,7 @@ describe("runCli exit behavior", () => {
       });
       expect(handler(hostUnreachable)).toBeUndefined();
       expect(consoleWarnSpy.mock.calls).toEqual([
-        ["[openclaw] Non-fatal uncaught exception (continuing):", hostUnreachable.stack],
+        ["[grokbot] Non-fatal uncaught exception (continuing):", hostUnreachable.stack],
       ]);
       expect(restoreTerminalStateMock).not.toHaveBeenCalled();
       expect(exitSpy).not.toHaveBeenCalled();

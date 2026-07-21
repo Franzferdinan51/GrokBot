@@ -2,7 +2,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import { withTempDir } from "../../test-helpers/temp-dir.js";
 import { deleteTestEnvValue, setTestEnvValue } from "../../test-utils/env.js";
 import type { MsgContext } from "../templating.js";
@@ -25,7 +25,7 @@ describe("resolveCurrentTurnImages", () => {
   });
 
   it("hydrates Telegram-style state-relative media into native prompt images", async () => {
-    await withTempDir({ prefix: "openclaw-current-turn-images-" }, async (base) => {
+    await withTempDir({ prefix: "grokbot-current-turn-images-" }, async (base) => {
       const stateDir = path.join(base, "state");
       const cwd = path.join(base, "cwd");
       const relativePath = "media/inbound/telegram.jpg";
@@ -62,7 +62,7 @@ describe("resolveCurrentTurnImages", () => {
   });
 
   it("does not duplicate a prepared host-staged image during runner hydration", async () => {
-    await withTempDir({ prefix: "openclaw-current-turn-staged-image-" }, async (base) => {
+    await withTempDir({ prefix: "grokbot-current-turn-staged-image-" }, async (base) => {
       const stagingRoot = path.join(base, "media", "inbound", "staged");
       const imagePath = path.join(stagingRoot, "photo.png");
       const imageBytes = Buffer.from("host-staged-image");
@@ -94,7 +94,7 @@ describe("resolveCurrentTurnImages", () => {
   });
 
   it("does not let a staging root expose sibling workspace images", async () => {
-    await withTempDir({ prefix: "openclaw-current-turn-staged-image-" }, async (base) => {
+    await withTempDir({ prefix: "grokbot-current-turn-staged-image-" }, async (base) => {
       const stagingRoot = path.join(base, "media", "inbound", "staged");
       const rejectedPath = path.join(base, "private.png");
       await fs.mkdir(stagingRoot, { recursive: true });
@@ -170,7 +170,7 @@ describe("resolveCurrentTurnImages", () => {
   });
 
   it("appends extracted PDF page images without dropping current image attachments", async () => {
-    await withTempDir({ prefix: "openclaw-current-turn-pdf-images-" }, async (base) => {
+    await withTempDir({ prefix: "grokbot-current-turn-pdf-images-" }, async (base) => {
       const imagePath = path.join(base, "photo.png");
       const imageBytes = Buffer.from("current-photo");
       await fs.writeFile(imagePath, imageBytes);
@@ -210,7 +210,7 @@ describe("resolveCurrentTurnImages", () => {
   });
 
   it("orders extracted PDF page images before later current image attachments", async () => {
-    await withTempDir({ prefix: "openclaw-current-turn-pdf-order-" }, async (base) => {
+    await withTempDir({ prefix: "grokbot-current-turn-pdf-order-" }, async (base) => {
       const imagePath = path.join(base, "photo.png");
       await fs.writeFile(imagePath, "current-photo");
       const pdfPage = {

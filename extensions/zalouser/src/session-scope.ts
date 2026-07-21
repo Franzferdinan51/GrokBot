@@ -1,4 +1,4 @@
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 
 export function resolveZalouserDmSessionScope(config: OpenClawConfig) {
   const configured = config.session?.dmScope;

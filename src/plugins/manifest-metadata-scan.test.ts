@@ -9,7 +9,7 @@ import { listOpenClawPluginManifestMetadata } from "./manifest-metadata-scan.js"
 const tempRoots: string[] = [];
 
 function createTempRoot(): string {
-  const root = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-manifest-metadata-"));
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-manifest-metadata-"));
   tempRoots.push(root);
   return root;
 }
@@ -32,11 +32,11 @@ describe("listOpenClawPluginManifestMetadata", () => {
     const bundledRoot = path.join(root, "extensions");
     const staleBundledRoot = path.join(root, "stale", "extensions");
 
-    writeJson(path.join(bundledRoot, "openai", "openclaw.plugin.json"), {
+    writeJson(path.join(bundledRoot, "openai", "grokbot.plugin.json"), {
       id: "openai",
       providerEndpoints: [{ endpointClass: "openai-public", hosts: ["api.openai.com"] }],
     });
-    writeJson(path.join(staleBundledRoot, "openai", "openclaw.plugin.json"), {
+    writeJson(path.join(staleBundledRoot, "openai", "grokbot.plugin.json"), {
       id: "openai",
       providers: ["openai"],
     });
@@ -52,7 +52,7 @@ describe("listOpenClawPluginManifestMetadata", () => {
         plugins: [
           {
             pluginId: "openai",
-            manifestPath: path.join(staleBundledRoot, "openai", "openclaw.plugin.json"),
+            manifestPath: path.join(staleBundledRoot, "openai", "grokbot.plugin.json"),
             manifestHash: "stale-openai",
             rootDir: path.join(staleBundledRoot, "openai"),
             origin: "bundled",
@@ -68,7 +68,7 @@ describe("listOpenClawPluginManifestMetadata", () => {
         ],
         diagnostics: [],
       },
-      { stateDir: path.join(home, ".openclaw") },
+      { stateDir: path.join(home, ".grokbot") },
     );
 
     const records = listOpenClawPluginManifestMetadata({
@@ -88,7 +88,7 @@ describe("listOpenClawPluginManifestMetadata", () => {
     const home = path.join(root, "home");
     const partialBundledRoot = path.join(root, "dist", "extensions");
 
-    writeJson(path.join(partialBundledRoot, "qa-lab", "openclaw.plugin.json"), {
+    writeJson(path.join(partialBundledRoot, "qa-lab", "grokbot.plugin.json"), {
       id: "qa-lab",
       providers: ["qa-lab"],
     });
@@ -108,11 +108,11 @@ describe("listOpenClawPluginManifestMetadata", () => {
     });
   });
 
-  it("falls through a blank OpenClaw home when scanning global manifests", () => {
+  it("falls through a blank GrokBot home when scanning global manifests", () => {
     const root = createTempRoot();
     const home = path.join(root, "home");
-    const pluginDir = path.join(home, ".openclaw", "extensions", "example");
-    writeJson(path.join(pluginDir, "openclaw.plugin.json"), { id: "example" });
+    const pluginDir = path.join(home, ".grokbot", "extensions", "example");
+    writeJson(path.join(pluginDir, "grokbot.plugin.json"), { id: "example" });
 
     const records = listOpenClawPluginManifestMetadata({
       OPENCLAW_HOME: "   ",
@@ -131,11 +131,11 @@ describe("listOpenClawPluginManifestMetadata", () => {
     const root = createTempRoot();
     const home = path.join(root, "home");
 
-    const goodPluginDir = path.join(home, ".openclaw", "extensions", "good-plugin");
-    writeJson(path.join(goodPluginDir, "openclaw.plugin.json"), { id: "good-plugin" });
+    const goodPluginDir = path.join(home, ".grokbot", "extensions", "good-plugin");
+    writeJson(path.join(goodPluginDir, "grokbot.plugin.json"), { id: "good-plugin" });
 
-    const oversizedDir = path.join(home, ".openclaw", "extensions", "big-plugin");
-    const oversizedPath = path.join(oversizedDir, "openclaw.plugin.json");
+    const oversizedDir = path.join(home, ".grokbot", "extensions", "big-plugin");
+    const oversizedPath = path.join(oversizedDir, "grokbot.plugin.json");
     fs.mkdirSync(oversizedDir, { recursive: true });
     fs.writeFileSync(
       oversizedPath,
@@ -158,11 +158,11 @@ describe("listOpenClawPluginManifestMetadata", () => {
     const root = createTempRoot();
     const home = path.join(root, "home");
 
-    const exactDir = path.join(home, ".openclaw", "extensions", "exact-plugin");
+    const exactDir = path.join(home, ".grokbot", "extensions", "exact-plugin");
     fs.mkdirSync(exactDir, { recursive: true });
 
     // Write a compact JSON manifest padded to exactly the byte limit.
-    const exactPath = path.join(exactDir, "openclaw.plugin.json");
+    const exactPath = path.join(exactDir, "grokbot.plugin.json");
     const exactManifest = { id: "exact-plugin", pad: "" };
     const compactJson = JSON.stringify(exactManifest);
     const requiredPadding = 256 * 1024 - Buffer.byteLength(compactJson, "utf8");

@@ -1,11 +1,11 @@
 ---
-name: openclaw-ghsa-maintainer
-description: "Inspect, patch, validate, publish, or confirm OpenClaw GHSA security advisories and private-fork state."
+name: grokbot-ghsa-maintainer
+description: "Inspect, patch, validate, publish, or confirm GrokBot GHSA security advisories and private-fork state."
 ---
 
-# OpenClaw GHSA Maintainer
+# GrokBot GHSA Maintainer
 
-Use this skill for repo security advisory workflow only. Keep general release work in `release-openclaw-maintainer`.
+Use this skill for repo security advisory workflow only. Keep general release work in `release-grokbot-maintainer`.
 
 ## Respect advisory guardrails
 
@@ -18,8 +18,8 @@ Use this skill for repo security advisory workflow only. Keep general release wo
 Fetch the current advisory and the latest published npm version:
 
 ```bash
-gh api /repos/openclaw/openclaw/security-advisories/<GHSA>
-npm view openclaw version --userconfig "$(mktemp)"
+gh api /repos/grokbot/grokbot/security-advisories/<GHSA>
+npm view grokbot version --userconfig "$(mktemp)"
 ```
 
 Use the fetch output to confirm the advisory state, linked private fork, and vulnerability payload shape before patching.
@@ -29,7 +29,7 @@ Use the fetch output to confirm the advisory state, linked private fork, and vul
 Before publishing, verify that the advisory's private fork has no open PRs:
 
 ```bash
-fork=$(gh api /repos/openclaw/openclaw/security-advisories/<GHSA> | jq -r .private_fork.full_name)
+fork=$(gh api /repos/grokbot/grokbot/security-advisories/<GHSA> | jq -r .private_fork.full_name)
 gh pr list -R "$fork" --state open
 ```
 
@@ -61,7 +61,7 @@ jq -n --rawfile desc /tmp/ghsa.desc.md \
 Example shape:
 
 ```bash
-gh api -X PATCH /repos/openclaw/openclaw/security-advisories/<GHSA> \
+gh api -X PATCH /repos/grokbot/grokbot/security-advisories/<GHSA> \
   --input /tmp/ghsa.patch.json
 ```
 
@@ -76,7 +76,7 @@ After publish, re-fetch the advisory and confirm:
 Verification pattern:
 
 ```bash
-gh api /repos/openclaw/openclaw/security-advisories/<GHSA>
+gh api /repos/grokbot/grokbot/security-advisories/<GHSA>
 jq -r .description < /tmp/ghsa.refetch.json | rg '\\\\n'
 ```
 

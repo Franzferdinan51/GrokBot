@@ -3,14 +3,14 @@ import {
   applyChannelMatchMeta,
   buildChannelKeyCandidates,
   type ChannelMatchSource,
-} from "openclaw/plugin-sdk/channel-targets";
+} from "grokbot/plugin-sdk/channel-targets";
 import type {
   ChannelBotLoopProtectionConfig,
   ReplyToMode,
   SlackChannelConfig,
-} from "openclaw/plugin-sdk/config-contracts";
-import { mergePairLoopGuardConfig } from "openclaw/plugin-sdk/pair-loop-guard-runtime";
-import { normalizeLowercaseStringOrEmpty } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/config-contracts";
+import { mergePairLoopGuardConfig } from "grokbot/plugin-sdk/pair-loop-guard-runtime";
+import { normalizeLowercaseStringOrEmpty } from "grokbot/plugin-sdk/string-coerce-runtime";
 import { buildSlackChannelPolicyScope } from "../group-policy.js";
 import { normalizeSlackSlug } from "./allow-list.js";
 

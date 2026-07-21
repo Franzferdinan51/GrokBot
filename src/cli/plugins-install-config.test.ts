@@ -2,12 +2,12 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { bundledPluginRootAt, repoInstallSpec } from "openclaw/plugin-sdk/test-fixtures";
+import { bundledPluginRootAt, repoInstallSpec } from "grokbot/plugin-sdk/test-fixtures";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { OpenClawConfig } from "../config/config.js";
 import { hashConfigIncludeRaw } from "../config/includes.js";
 import type { ConfigWriteOptions } from "../config/io.js";
-import type { ConfigFileSnapshot } from "../config/types.openclaw.js";
+import type { ConfigFileSnapshot } from "../config/types.grokbot.js";
 import {
   resolvePluginInstallRequestContext,
   type PluginInstallRequestContext,
@@ -92,8 +92,8 @@ function makeSnapshot(overrides: Partial<ConfigFileSnapshot> = {}): ConfigFileSn
 
 describe("loadConfigForInstall", () => {
   const discordNpmRequest = {
-    rawSpec: "@openclaw/discord",
-    normalizedSpec: "@openclaw/discord",
+    rawSpec: "@grokbot/discord",
+    normalizedSpec: "@grokbot/discord",
     installKind: "plugin",
     bundledPluginId: "discord",
     allowInvalidConfigRecovery: true,
@@ -195,7 +195,7 @@ describe("loadConfigForInstall", () => {
     );
 
     const request = resolvePluginInstallRequestContext({
-      rawSpec: "npm:@openclaw/discord@2026.5.22",
+      rawSpec: "npm:@grokbot/discord@2026.5.22",
     });
     if (!request.ok) {
       throw new Error(request.error);
@@ -213,7 +213,7 @@ describe("loadConfigForInstall", () => {
     });
   });
 
-  it.each(["file:@openclaw/discord", "FILE:@openclaw/discord"])(
+  it.each(["file:@grokbot/discord", "FILE:@grokbot/discord"])(
     "does not treat %s as an official plugin recovery request",
     (rawSpec) => {
       const request = resolvePluginInstallRequestContext({ rawSpec });
@@ -258,7 +258,7 @@ describe("loadConfigForInstall", () => {
     );
 
     const request = resolvePluginInstallRequestContext({
-      rawSpec: "@openclaw/discord@2026.5.22",
+      rawSpec: "@grokbot/discord@2026.5.22",
     });
     if (!request.ok) {
       throw new Error(request.error);
@@ -442,7 +442,7 @@ describe("loadConfigForInstall", () => {
     );
 
     const request = resolvePluginInstallRequestContext({
-      rawSpec: "npm:@openclaw/discord",
+      rawSpec: "npm:@grokbot/discord",
     });
     if (!request.ok) {
       throw new Error(request.error);
@@ -470,14 +470,14 @@ describe("loadConfigForInstall", () => {
           {
             path: "tools.web.search.provider",
             message:
-              'web_search provider is not available: brave (install or enable plugin "brave", then run openclaw doctor --fix)',
+              'web_search provider is not available: brave (install or enable plugin "brave", then run grokbot doctor --fix)',
           },
         ],
       }),
     );
 
     const request = resolvePluginInstallRequestContext({
-      rawSpec: "@openclaw/brave-plugin",
+      rawSpec: "@grokbot/brave-plugin",
     });
     if (!request.ok) {
       throw new Error(request.error);
@@ -518,7 +518,7 @@ describe("loadConfigForInstall", () => {
   });
 
   it("allows recovery through an exact single-file top-level plugins include", async () => {
-    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-plugin-include-"));
+    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-plugin-include-"));
     const configPath = path.join(tempRoot, "config.json5");
     const pluginsPath = path.join(tempRoot, "plugins.json5");
     const pluginsRaw = `${JSON.stringify({ entries: {} }, null, 2)}\n`;
@@ -550,7 +550,7 @@ describe("loadConfigForInstall", () => {
   it("rejects recovery installs through an external plugins include", async () => {
     const externalPluginsPath = path.join(
       path.parse(process.cwd()).root,
-      "external-openclaw",
+      "external-grokbot",
       "plugins.json5",
     );
     const snapshotCfg = { plugins: {} } as OpenClawConfig;
@@ -575,7 +575,7 @@ describe("loadConfigForInstall", () => {
     const configPath = path.join(process.cwd(), "config.json5");
     const externalPluginsPath = path.join(
       path.parse(process.cwd()).root,
-      "external-openclaw",
+      "external-grokbot",
       "plugins.json5",
     );
     includeFileTargetsForWriteMock.mockReturnValue({
@@ -598,7 +598,7 @@ describe("loadConfigForInstall", () => {
   it("carries a plugin-mutation block for ambiguous installs through external plugin includes", async () => {
     const externalPluginsPath = path.join(
       path.parse(process.cwd()).root,
-      "external-openclaw",
+      "external-grokbot",
       "plugins.json5",
     );
     const snapshotCfg = { plugins: {} } as OpenClawConfig;
@@ -631,7 +631,7 @@ describe("loadConfigForInstall", () => {
   it("blocks known plugins through external includes", async () => {
     const externalPluginsPath = path.join(
       path.parse(process.cwd()).root,
-      "external-openclaw",
+      "external-grokbot",
       "plugins.json5",
     );
     const snapshotCfg = { plugins: {} } as OpenClawConfig;
@@ -656,7 +656,7 @@ describe("loadConfigForInstall", () => {
   it("carries a hook-mutation block through an external hooks include", async () => {
     const externalHooksPath = path.join(
       path.parse(process.cwd()).root,
-      "external-openclaw",
+      "external-grokbot",
       "hooks.json5",
     );
     const snapshotCfg = { hooks: { internal: {} } } as OpenClawConfig;
@@ -687,7 +687,7 @@ describe("loadConfigForInstall", () => {
   });
 
   it("blocks config mutations when plugins and hooks share one canonical include target", async () => {
-    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-shared-include-"));
+    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-shared-include-"));
     const configPath = path.join(tempRoot, "config.json5");
     const sharedPath = path.join(tempRoot, "shared.json5");
     const sharedRaw = "{}\n";
@@ -733,12 +733,12 @@ describe("loadConfigForInstall", () => {
   });
 
   it("blocks both mutations when an external include aliases the other section target", async () => {
-    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-aliased-include-"));
+    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-aliased-include-"));
     const configPath = path.join(tempRoot, "config.json5");
     const sharedPath = path.join(tempRoot, "shared.json5");
     const externalHooksPath = path.join(
       path.parse(process.cwd()).root,
-      "external-openclaw",
+      "external-grokbot",
       "hooks.json5",
     );
     const sharedRaw = "{}\n";
@@ -785,7 +785,7 @@ describe("loadConfigForInstall", () => {
   });
 
   it("blocks nested plugins includes before plugin installation", async () => {
-    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-plugin-nested-include-"));
+    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-plugin-nested-include-"));
     const configPath = path.join(tempRoot, "config.json5");
     const pluginsPath = path.join(tempRoot, "plugins.json5");
     const pluginsRaw = `${JSON.stringify({ entries: { $include: "./entries.json5" } }, null, 2)}\n`;
@@ -936,7 +936,7 @@ describe("loadConfigForInstall", () => {
         rawSpec: "alpha",
         normalizedSpec: "alpha",
       }),
-    ).rejects.toThrow("Config invalid; run `openclaw doctor --fix` before installing plugins.");
+    ).rejects.toThrow("Config invalid; run `grokbot doctor --fix` before installing plugins.");
   });
 
   it("throws when invalid snapshot parsed is empty", async () => {
@@ -948,7 +948,7 @@ describe("loadConfigForInstall", () => {
     );
 
     await expect(loadConfigForInstall(discordNpmRequest)).rejects.toThrow(
-      "Config file could not be parsed; run `openclaw doctor` to repair it.",
+      "Config file could not be parsed; run `grokbot doctor` to repair it.",
     );
   });
 
@@ -956,7 +956,7 @@ describe("loadConfigForInstall", () => {
     readConfigFileSnapshotMock.mockResolvedValue(makeSnapshot({ exists: false, parsed: {} }));
 
     await expect(loadConfigForInstall(discordNpmRequest)).rejects.toThrow(
-      "Config file could not be parsed; run `openclaw doctor` to repair it.",
+      "Config file could not be parsed; run `grokbot doctor` to repair it.",
     );
   });
 });

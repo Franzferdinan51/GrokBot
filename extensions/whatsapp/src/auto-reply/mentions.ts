@@ -2,8 +2,8 @@
 import {
   buildMentionRegexes,
   normalizeMentionText,
-} from "openclaw/plugin-sdk/channel-mention-gating";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+} from "grokbot/plugin-sdk/channel-mention-gating";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import {
   getComparableIdentityValues,
   getMentionIdentities,

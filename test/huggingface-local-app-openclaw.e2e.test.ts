@@ -1,12 +1,12 @@
 import fs from "node:fs/promises";
-// Hugging Face local-app CLI contract tests cover OpenClaw's snippet-facing commands.
+// Hugging Face local-app CLI contract tests cover GrokBot's snippet-facing commands.
 import { createServer, type IncomingMessage, type ServerResponse } from "node:http";
 import type { AddressInfo } from "node:net";
 import { afterEach, describe, expect, it } from "vitest";
 import {
   createOpenClawTestInstance,
   type OpenClawTestInstance,
-} from "./helpers/openclaw-test-instance.js";
+} from "./helpers/grokbot-test-instance.js";
 
 type CapturedChatRequest = {
   path: string;
@@ -42,7 +42,7 @@ afterEach(async () => {
   await Promise.allSettled(fakeServers.splice(0).map((server) => server.close()));
 });
 
-describe("Hugging Face OpenClaw local-app CLI contract", () => {
+describe("Hugging Face GrokBot local-app CLI contract", () => {
   it.each(HF_LOCAL_APP_CASES)(
     "runs onboard and local agent commands for $name",
     async ({ providerId, modelId }) => {
@@ -214,7 +214,7 @@ async function handleFakeOpenAiRequest(
   const providerId = modelId.startsWith("mlx-community/") ? "mlx-lm" : "llama-cpp";
   const created = Math.floor(Date.now() / 1000);
   writeSse(res, {
-    id: "chatcmpl-hf-openclaw-contract",
+    id: "chatcmpl-hf-grokbot-contract",
     object: "chat.completion.chunk",
     created,
     model: modelId,
@@ -227,7 +227,7 @@ async function handleFakeOpenAiRequest(
     ],
   });
   writeSse(res, {
-    id: "chatcmpl-hf-openclaw-contract",
+    id: "chatcmpl-hf-grokbot-contract",
     object: "chat.completion.chunk",
     created,
     model: modelId,

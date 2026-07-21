@@ -1,8 +1,8 @@
 // Thread Ownership API module exposes the plugin public contract.
-export type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-export { definePluginEntry, type OpenClawPluginApi } from "openclaw/plugin-sdk/plugin-entry";
-export { readProviderJsonResponse } from "openclaw/plugin-sdk/provider-http";
+export type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+export { definePluginEntry, type OpenClawPluginApi } from "grokbot/plugin-sdk/plugin-entry";
+export { readProviderJsonResponse } from "grokbot/plugin-sdk/provider-http";
 export {
   fetchWithSsrFGuard,
   ssrfPolicyFromDangerouslyAllowPrivateNetwork,
-} from "openclaw/plugin-sdk/ssrf-runtime";
+} from "grokbot/plugin-sdk/ssrf-runtime";

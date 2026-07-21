@@ -424,7 +424,7 @@ describe("web search runtime", () => {
   });
 
   it("auto-detects a provider from a model-provider auth profile", async () => {
-    const agentDir = mkdtempSync(path.join(os.tmpdir(), "openclaw-web-search-auth-"));
+    const agentDir = mkdtempSync(path.join(os.tmpdir(), "grokbot-web-search-auth-"));
     tempDirs.push(agentDir);
     replaceRuntimeAuthProfileStoreSnapshots([
       {
@@ -466,8 +466,8 @@ describe("web search runtime", () => {
   });
 
   it("auto-detects a provider from the active agent auth profile", async () => {
-    const defaultAgentDir = mkdtempSync(path.join(os.tmpdir(), "openclaw-web-search-default-"));
-    const activeAgentDir = mkdtempSync(path.join(os.tmpdir(), "openclaw-web-search-active-"));
+    const defaultAgentDir = mkdtempSync(path.join(os.tmpdir(), "grokbot-web-search-default-"));
+    const activeAgentDir = mkdtempSync(path.join(os.tmpdir(), "grokbot-web-search-active-"));
     tempDirs.push(defaultAgentDir, activeAgentDir);
     replaceRuntimeAuthProfileStoreSnapshots([
       {
@@ -522,7 +522,7 @@ describe("web search runtime", () => {
   });
 
   it("passes the active agentDir into selected provider tools", async () => {
-    const activeAgentDir = mkdtempSync(path.join(os.tmpdir(), "openclaw-web-search-tool-agent-"));
+    const activeAgentDir = mkdtempSync(path.join(os.tmpdir(), "grokbot-web-search-tool-agent-"));
     tempDirs.push(activeAgentDir);
     const provider = createCustomSearchProvider({
       credentialPath: "",

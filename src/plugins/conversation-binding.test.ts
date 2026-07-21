@@ -6,19 +6,19 @@ import type {
   SessionBindingAdapter,
   SessionBindingRecord,
 } from "../infra/outbound/session-binding-service.js";
-import type { DB as OpenClawStateKyselyDatabase } from "../state/openclaw-state-db.generated.js";
+import type { DB as OpenClawStateKyselyDatabase } from "../state/grokbot-state-db.generated.js";
 import {
   closeOpenClawStateDatabaseForTest,
   openOpenClawStateDatabase,
   runOpenClawStateWriteTransaction,
-} from "../state/openclaw-state-db.js";
+} from "../state/grokbot-state-db.js";
 import { resetPluginConversationBindingStateForTest } from "./conversation-binding.test-fixtures.js";
 import { createEmptyPluginRegistry } from "./registry-empty.js";
 import type { PluginRegistry } from "./registry.js";
 import { cleanupTrackedTempDirs, makeTrackedTempDir } from "./test-helpers/fs-fixtures.js";
 
 const tempDirs: string[] = [];
-const tempRoot = makeTrackedTempDir("openclaw-plugin-binding", tempDirs);
+const tempRoot = makeTrackedTempDir("grokbot-plugin-binding", tempDirs);
 const previousStateDir = process.env.OPENCLAW_STATE_DIR;
 
 type PluginBindingApprovalsDatabase = Pick<OpenClawStateKyselyDatabase, "plugin_binding_approvals">;
@@ -820,8 +820,8 @@ describe("plugin conversation binding approvals", () => {
     const data = {
       kind: "codex-app-server-session",
       version: 1,
-      sessionFile: "/tmp/openclaw/session.jsonl",
-      workspaceDir: "/workspace/openclaw",
+      sessionFile: "/tmp/grokbot/session.jsonl",
+      workspaceDir: "/workspace/grokbot",
     };
     const binding = await requestResolvedBinding(
       createCodexBindRequest({
@@ -1122,7 +1122,7 @@ describe("plugin conversation binding approvals", () => {
       name: "migrates a legacy codex thread binding session key through the new approval flow",
       existingRecord: {
         bindingId: "binding-legacy-codex-thread",
-        targetSessionKey: "openclaw-app-server:thread:019ce411-6322-7db2-a821-1a61c530e7d9",
+        targetSessionKey: "grokbot-app-server:thread:019ce411-6322-7db2-a821-1a61c530e7d9",
         targetKind: "session" as const,
         conversation: {
           channel: "telegram",
@@ -1139,10 +1139,10 @@ describe("plugin conversation binding approvals", () => {
         accountId: "default",
         conversationId: "8460800771",
         summary: "Bind this conversation to Codex thread 019ce411-6322-7db2-a821-1a61c530e7d9.",
-        pluginId: "openclaw-codex-app-server",
+        pluginId: "grokbot-codex-app-server",
       }),
       expectedBinding: {
-        pluginId: "openclaw-codex-app-server",
+        pluginId: "grokbot-codex-app-server",
         pluginRoot: "/plugins/codex-a",
         conversationId: "8460800771",
       },

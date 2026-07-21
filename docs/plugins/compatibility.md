@@ -2,12 +2,12 @@
 summary: "Plugin compatibility contracts, deprecation metadata, and migration expectations"
 title: "Plugin compatibility"
 read_when:
-  - You maintain an OpenClaw plugin
+  - You maintain an GrokBot plugin
   - You see a plugin compatibility warning
   - You are planning a plugin SDK or manifest migration
 ---
 
-OpenClaw keeps older plugin contracts wired through named compatibility
+GrokBot keeps older plugin contracts wired through named compatibility
 adapters before removing them. This protects existing bundled and external
 plugins while the SDK, manifest, setup, config, and agent runtime contracts
 evolve.
@@ -43,7 +43,7 @@ and channels move out of core.
 
 ## Deprecation policy
 
-OpenClaw should not remove a documented plugin contract in the same release
+GrokBot should not remove a documented plugin contract in the same release
 that introduces its replacement. Migration sequence:
 
 1. Add the new contract.
@@ -72,7 +72,7 @@ The remaining dated compatibility areas are:
 - `api.on("deactivate", ...)` and `api.on("subagent_spawning", ...)` hook aliases
 - memory-specific embedding registration and the beta.5 session-store bridge
 - WhatsApp inbound callback aliases described below
-- explicit channel target parsing and `openclaw/plugin-sdk/messaging-targets`
+- explicit channel target parsing and `grokbot/plugin-sdk/messaging-targets`
 - embedded Pi agent aliases
 - the shipped agent-harness SDK aliases, whose removal is pending a new
   externally documented migration decision
@@ -128,31 +128,31 @@ TypeScript `@deprecated` annotation names its replacement:
 
 ## Plugin inspector package
 
-The plugin inspector should live outside the core OpenClaw repo as a
+The plugin inspector should live outside the core GrokBot repo as a
 separate package/repository backed by the versioned compatibility and
 manifest contracts. The day-one CLI should be:
 
 ```sh
-openclaw-plugin-inspector ./my-plugin
+grokbot-plugin-inspector ./my-plugin
 ```
 
 It should emit manifest/schema validation, the contract compatibility
 version being checked, install/source metadata checks, cold-path import
 checks, and deprecation/compatibility warnings. Use `--json` for stable
-machine-readable output in CI annotations. OpenClaw core should expose
+machine-readable output in CI annotations. GrokBot core should expose
 contracts and fixtures the inspector can consume, but should not publish the
-inspector binary from the main `openclaw` package.
+inspector binary from the main `grokbot` package.
 
 ### Maintainer acceptance lane
 
 Use Crabbox-backed Blacksmith Testbox for the installable-package acceptance
-lane when validating the external inspector against OpenClaw plugin
-packages. Run it from a clean OpenClaw checkout after the package is built:
+lane when validating the external inspector against GrokBot plugin
+packages. Run it from a clean GrokBot checkout after the package is built:
 
 ```sh
-pnpm crabbox:run -- --provider blacksmith-testbox --timing-json --shell -- "pnpm install && pnpm build && npm exec --yes @openclaw/plugin-inspector@0.1.0 -- ./extensions/telegram --json"
-pnpm crabbox:run -- --provider blacksmith-testbox --timing-json --shell -- "npm exec --yes @openclaw/plugin-inspector@0.1.0 -- ./extensions/discord --json"
-pnpm crabbox:run -- --provider blacksmith-testbox --timing-json --shell -- "npm exec --yes @openclaw/plugin-inspector@0.1.0 -- <clawhub-plugin-dir> --json"
+pnpm crabbox:run -- --provider blacksmith-testbox --timing-json --shell -- "pnpm install && pnpm build && npm exec --yes @grokbot/plugin-inspector@0.1.0 -- ./extensions/telegram --json"
+pnpm crabbox:run -- --provider blacksmith-testbox --timing-json --shell -- "npm exec --yes @grokbot/plugin-inspector@0.1.0 -- ./extensions/discord --json"
+pnpm crabbox:run -- --provider blacksmith-testbox --timing-json --shell -- "npm exec --yes @grokbot/plugin-inspector@0.1.0 -- <clawhub-plugin-dir> --json"
 ```
 
 Keep this lane opt-in for maintainers, since it installs an external npm

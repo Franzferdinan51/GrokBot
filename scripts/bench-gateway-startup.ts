@@ -1,4 +1,4 @@
-// Bench Gateway Startup script supports OpenClaw repository automation.
+// Bench Gateway Startup script supports GrokBot repository automation.
 import { spawn } from "node:child_process";
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -327,7 +327,7 @@ function parseOptions(argv: string[] = process.argv.slice(2)): CliOptions {
 }
 
 function printUsage(): void {
-  console.log(`OpenClaw Gateway startup benchmark
+  console.log(`GrokBot Gateway startup benchmark
 
 Usage:
   pnpm test:startup:gateway -- [options]
@@ -624,7 +624,7 @@ function writePluginFixtures(
     const entry = path.join(pluginDir, "index.cjs");
     writeFileSync(entry, `module.exports = { id: ${JSON.stringify(id)}, register() {} };\n`);
     writeFileSync(
-      path.join(pluginDir, "openclaw.plugin.json"),
+      path.join(pluginDir, "grokbot.plugin.json"),
       `${JSON.stringify(
         {
           id,
@@ -657,7 +657,7 @@ function writeConfig(root: string, benchCase: GatewayBenchCase): string {
         : {}),
     },
   };
-  const configPath = path.join(root, "openclaw.json");
+  const configPath = path.join(root, "grokbot.json");
   writeFileSync(configPath, `${JSON.stringify(config, null, 2)}\n`);
   return configPath;
 }
@@ -671,12 +671,12 @@ function sanitizedEnv(
     CI: process.env.CI ?? "1",
     HOME: root,
     LANG: process.env.LANG ?? "en_US.UTF-8",
-    LOGNAME: process.env.LOGNAME ?? "openclaw-bench",
+    LOGNAME: process.env.LOGNAME ?? "grokbot-bench",
     NO_COLOR: "1",
     PATH: process.env.PATH,
     SHELL: process.env.SHELL,
     TMPDIR: process.env.TMPDIR,
-    USER: process.env.USER ?? "openclaw-bench",
+    USER: process.env.USER ?? "grokbot-bench",
     npm_config_update_notifier: "false",
     OPENCLAW_CONFIG: configPath,
     OPENCLAW_CONFIG_PATH: configPath,
@@ -754,7 +754,7 @@ async function runGatewaySample(options: {
   sampleIndex: number;
   timeoutMs: number;
 }): Promise<GatewaySample> {
-  const root = mkdtempSync(path.join(tmpdir(), "openclaw-gateway-bench-"));
+  const root = mkdtempSync(path.join(tmpdir(), "grokbot-gateway-bench-"));
   const port = await getFreePort();
   const configPath = writeConfig(root, options.benchCase);
   const env = sanitizedEnv(root, configPath, options.benchCase);
@@ -777,7 +777,7 @@ async function runGatewaySample(options: {
           "--cpu-prof-dir",
           options.cpuProfDir,
           "--cpu-prof-name",
-          `openclaw-gateway-${options.benchCase.id}-${options.sampleIndex}-${Date.now()}.cpuprofile`,
+          `grokbot-gateway-${options.benchCase.id}-${options.sampleIndex}-${Date.now()}.cpuprofile`,
         ]
       : []),
     options.entry,

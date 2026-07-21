@@ -519,7 +519,7 @@ describe("callGateway url resolution", () => {
     getRuntimeConfig.mockReturnValue({
       gateway: {
         mode: "remote",
-        remote: { url: "wss://openclaw.example.test" },
+        remote: { url: "wss://grokbot.example.test" },
         auth: { mode: "token", allowTailscale: true },
       },
     });
@@ -527,7 +527,7 @@ describe("callGateway url resolution", () => {
 
     await callGateway({ method: "sessions.list" });
 
-    expect(lastClientOptions?.url).toBe("wss://openclaw.example.test");
+    expect(lastClientOptions?.url).toBe("wss://grokbot.example.test");
     expect(lastClientOptions?.token).toBeUndefined();
     expect(lastClientOptions?.password).toBeUndefined();
   });
@@ -536,7 +536,7 @@ describe("callGateway url resolution", () => {
     getRuntimeConfig.mockReturnValue({
       gateway: {
         mode: "remote",
-        remote: { url: "wss://openclaw.example.test" },
+        remote: { url: "wss://grokbot.example.test" },
         auth: { mode: "token" },
         tailscale: { mode: "serve" },
       },
@@ -545,7 +545,7 @@ describe("callGateway url resolution", () => {
 
     await callGateway({ method: "sessions.list" });
 
-    expect(lastClientOptions?.url).toBe("wss://openclaw.example.test");
+    expect(lastClientOptions?.url).toBe("wss://grokbot.example.test");
     expect(lastClientOptions?.token).toBeUndefined();
     expect(lastClientOptions?.password).toBeUndefined();
   });
@@ -1360,7 +1360,7 @@ describe("buildGatewayConnectionDetails", () => {
   });
 
   it("falls back to the default config loader when test deps drift", () => {
-    const tempStateDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-gateway-call-"));
+    const tempStateDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-gateway-call-"));
     setTestEnvValue("OPENCLAW_STATE_DIR", tempStateDir);
     setTestEnvValue("OPENCLAW_CONFIG_PATH", path.join(tempStateDir, "missing-config.json"));
     try {
@@ -1402,7 +1402,7 @@ describe("buildGatewayConnectionDetails", () => {
     expect((thrown as Error).message).toContain("plaintext ws://");
     expect((thrown as Error).message).toContain("wss://");
     expect((thrown as Error).message).toContain("Tailscale Serve/Funnel");
-    expect((thrown as Error).message).toContain("openclaw doctor --fix");
+    expect((thrown as Error).message).toContain("grokbot doctor --fix");
   });
 
   it("redacts credential-bearing target URLs from insecure ws:// errors", () => {
@@ -1449,14 +1449,14 @@ describe("buildGatewayConnectionDetails", () => {
       gateway: {
         mode: "remote",
         bind: "loopback",
-        remote: { url: "ws://openclaw-gateway.ai:18789" },
+        remote: { url: "ws://grokbot-gateway.ai:18789" },
       },
     });
     resolveGatewayPort.mockReturnValue(18789);
 
     const details = buildGatewayConnectionDetails();
 
-    expect(details.url).toBe("ws://openclaw-gateway.ai:18789");
+    expect(details.url).toBe("ws://grokbot-gateway.ai:18789");
     expect(details.urlSource).toBe("config gateway.remote.url");
   });
 
@@ -1683,7 +1683,7 @@ describe("callGateway error details", () => {
       "Connection dropped without a close frame (retry; check network and gateway load)",
     );
     expect(message).not.toContain("crashed or was terminated unexpectedly");
-    expect(message).toContain("Run `openclaw doctor`");
+    expect(message).toContain("Run `grokbot doctor`");
   });
 
   it("formats typed request errors for CLI JSON output", () => {

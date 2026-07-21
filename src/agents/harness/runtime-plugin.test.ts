@@ -1,6 +1,6 @@
 // Verifies plugin loading needed before agent harness selection.
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 
 const mocks = vi.hoisted(() => ({
   ensurePluginRegistryLoaded: vi.fn(),
@@ -566,7 +566,7 @@ describe("ensureSelectedAgentHarnessPlugin", () => {
     );
   });
 
-  it("keeps custom OpenAI-compatible providers on embedded OpenClaw when no runtime override is set", async () => {
+  it("keeps custom OpenAI-compatible providers on embedded GrokBot when no runtime override is set", async () => {
     await ensureSelectedAgentHarnessPlugin({
       provider: "openai",
       modelId: "gpt-5.5",
@@ -587,7 +587,7 @@ describe("ensureSelectedAgentHarnessPlugin", () => {
     expect(mocks.resolveOwningPluginIdsForProvider).not.toHaveBeenCalled();
   });
 
-  it("keeps official OpenAI providers on embedded OpenClaw when explicitly configured", async () => {
+  it("keeps official OpenAI providers on embedded GrokBot when explicitly configured", async () => {
     await ensureSelectedAgentHarnessPlugin({
       provider: "openai",
       modelId: "gpt-5.2",
@@ -596,7 +596,7 @@ describe("ensureSelectedAgentHarnessPlugin", () => {
           providers: {
             openai: {
               baseUrl: "https://api.openai.com/v1",
-              agentRuntime: { id: "openclaw" },
+              agentRuntime: { id: "grokbot" },
               models: [],
             },
           },

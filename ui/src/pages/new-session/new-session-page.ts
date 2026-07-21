@@ -13,7 +13,7 @@ import { t } from "../../i18n/index.ts";
 import { searchForSession } from "../../lib/sessions/index.ts";
 import { buildAgentMainSessionKey, normalizeAgentId } from "../../lib/sessions/session-key.ts";
 import { normalizeOptionalString } from "../../lib/string-coerce.ts";
-import { OpenClawLightDomElement } from "../../lit/openclaw-element.ts";
+import { OpenClawLightDomElement } from "../../lit/grokbot-element.ts";
 import { SubscriptionsController } from "../../lit/subscriptions-controller.ts";
 import "../../styles/chat.css";
 import "../../styles/new-session.css";
@@ -595,7 +595,7 @@ class NewSessionPage extends OpenClawLightDomElement {
       agent: this.selectedAgent(),
       context: this.context,
     });
-    return runtime && runtime !== "openclaw"
+    return runtime && runtime !== "grokbot"
       ? t("newSession.cloudRequiresOpenClawRuntime", { runtime })
       : undefined;
   }
@@ -1409,8 +1409,8 @@ class NewSessionPage extends OpenClawLightDomElement {
   }
 }
 
-if (!customElements.get("openclaw-new-session-page")) {
-  customElements.define("openclaw-new-session-page", NewSessionPage);
+if (!customElements.get("grokbot-new-session-page")) {
+  customElements.define("grokbot-new-session-page", NewSessionPage);
 }
 
 export type { NewSessionPage };

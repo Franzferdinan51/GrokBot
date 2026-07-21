@@ -1,4 +1,4 @@
-// Anthropic Prompt Probe script supports OpenClaw repository automation.
+// Anthropic Prompt Probe script supports GrokBot repository automation.
 import { spawn } from "node:child_process";
 // Live prompt probe for Anthropic setup-token and Claude CLI prompt-path debugging.
 // Usage:
@@ -486,7 +486,7 @@ async function runDirectPrompt(
   } = {},
 ): Promise<PromptResult> {
   const timeoutMs = options.timeoutMs ?? TIMEOUT_MS;
-  const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-direct-prompt-probe-"));
+  const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-direct-prompt-probe-"));
   const proxyPort = ENABLE_CAPTURE ? await getFreePort() : undefined;
   const proxy =
     ENABLE_CAPTURE && proxyPort
@@ -583,7 +583,7 @@ async function startGatewayProcess(params: {
   const logFile = await fs.open(params.logPath, "a");
   const child = spawn(
     NODE_BIN,
-    ["openclaw.mjs", "gateway", "--port", String(params.port), "--bind", "loopback", "--force"],
+    ["grokbot.mjs", "gateway", "--port", String(params.port), "--bind", "loopback", "--force"],
     {
       cwd: process.cwd(),
       env: {
@@ -820,11 +820,11 @@ async function runGatewayPrompt(prompt: string): Promise<PromptResult> {
     import("../src/gateway/call.js"),
     import("../src/gateway/test-helpers.agent-results.js"),
   ]);
-  const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-gateway-prompt-probe-"));
+  const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-gateway-prompt-probe-"));
   const stateDir = path.join(tmpDir, "state");
   const agentDir = path.join(stateDir, "agents", "main", "agent");
   const bundledPluginsDir = path.join(tmpDir, "bundled-plugins-empty");
-  const configPath = path.join(tmpDir, "openclaw.json");
+  const configPath = path.join(tmpDir, "grokbot.json");
   const logPath = path.join(tmpDir, "gateway.log");
   const gatewayToken = `gw-${randomUUID()}`;
   const port = await getFreePort();

@@ -3,13 +3,13 @@
  *
  * Prompts account ids, credentials, allowlists, and account-scoped setup config updates.
  */
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+import { normalizeOptionalString } from "@grokbot/normalization-core/string-coerce";
 import {
   normalizeStringEntries,
   uniqueStrings,
-} from "@openclaw/normalization-core/string-normalization";
+} from "@grokbot/normalization-core/string-normalization";
 import type { DmPolicy, GroupPolicy } from "../../config/types.base.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import type { SecretInput } from "../../config/types.secrets.js";
 import { resolveSecretInputModeForEnvSelection } from "../../plugins/provider-auth-mode.js";
 import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "../../routing/session-key.js";
@@ -952,7 +952,7 @@ async function promptSingleChannelToken(params: {
     (
       await params.prompter.text({
         message: params.inputPrompt,
-        // Credential input: masked in terminal prompts, and the OpenClaw
+        // Credential input: masked in terminal prompts, and the GrokBot
         // chat bridge relies on this flag to refuse plain-text secret entry.
         sensitive: true,
         validate: (value) => (value?.trim() ? undefined : "Required"),
@@ -1084,7 +1084,7 @@ export async function promptSingleChannelSecretInput(params: {
     copy: {
       modeMessage: `How do you want to provide this ${params.credentialLabel}?`,
       plaintextLabel: `Enter ${params.credentialLabel}`,
-      plaintextHint: "Stores the credential directly in OpenClaw config",
+      plaintextHint: "Stores the credential directly in GrokBot config",
       refLabel: "Use external secret provider",
       refHint: "Stores a reference to env or configured external secret providers",
     },

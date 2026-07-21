@@ -3,10 +3,10 @@
  *
  * Builds agent tool schema contributions from loaded or bundled channel action hooks.
  */
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
-import { uniqueStrings } from "@openclaw/normalization-core/string-normalization";
+import { normalizeOptionalString } from "@grokbot/normalization-core/string-coerce";
+import { uniqueStrings } from "@grokbot/normalization-core/string-normalization";
 import { Type, type TSchema } from "typebox";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import { formatErrorMessage } from "../../infra/errors.js";
 import { defaultRuntime } from "../../runtime.js";
 import { normalizeAnyChannelId } from "../registry.js";

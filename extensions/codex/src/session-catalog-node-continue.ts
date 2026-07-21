@@ -1,6 +1,6 @@
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import type { OpenClawPluginApi } from "openclaw/plugin-sdk/plugin-entry";
-import type { PluginRuntime } from "openclaw/plugin-sdk/plugin-runtime";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import type { OpenClawPluginApi } from "grokbot/plugin-sdk/plugin-entry";
+import type { PluginRuntime } from "grokbot/plugin-sdk/plugin-runtime";
 import type { CodexThread } from "./app-server/protocol.js";
 import { withTimeout } from "./app-server/timeout.js";
 import { createCodexCliNodeConversationBindingData } from "./conversation-binding-data.js";
@@ -219,7 +219,7 @@ function requireContinuableNodeRecord(record: CodexSessionCatalogSession): void 
   }
   if (record.status === "idle" || record.status === "notLoaded") {
     // The node App Server is a passive catalog reader, so stored native Codex
-    // sessions normally report notLoaded. Node resume serializes OpenClaw turns.
+    // sessions normally report notLoaded. Node resume serializes GrokBot turns.
     return;
   }
   if (record.status === "active") {

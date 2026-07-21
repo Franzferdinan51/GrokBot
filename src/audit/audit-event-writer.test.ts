@@ -3,7 +3,7 @@ import { cleanupTempDirs, makeTempDir } from "../../test/helpers/temp-dir.js";
 import {
   closeOpenClawStateDatabaseForTest,
   openOpenClawStateDatabase,
-} from "../state/openclaw-state-db.js";
+} from "../state/grokbot-state-db.js";
 import { listAuditEvents } from "./audit-event-store.js";
 import type { AuditEventInput } from "./audit-event-types.js";
 import { createAuditEventWriter } from "./audit-event-writer.js";
@@ -35,7 +35,7 @@ afterAll(() => {
 
 describe("audit event worker", () => {
   it("returns immediately under SQLite contention and flushes before stop", async () => {
-    const stateDir = makeTempDir(tempDirs, "openclaw-audit-writer-");
+    const stateDir = makeTempDir(tempDirs, "grokbot-audit-writer-");
     const database = { env: { OPENCLAW_STATE_DIR: stateDir } };
     const errors: string[] = [];
     const writer = createAuditEventWriter({ stateDir, onError: (error) => errors.push(error) });

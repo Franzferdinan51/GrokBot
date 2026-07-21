@@ -1,21 +1,21 @@
 {
-  "name": "@openclaw/brave-plugin",
+  "name": "@grokbot/brave-plugin",
   "version": "2026.7.2",
-  "description": "OpenClaw Brave Search provider plugin for web search.",
+  "description": "GrokBot Brave Search provider plugin for web search.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/openclaw/openclaw"
+    "url": "https://github.com/grokbot/grokbot"
   },
   "type": "module",
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@grokbot/plugin-sdk": "workspace:*"
   },
-  "openclaw": {
+  "grokbot": {
     "extensions": [
       "./index.ts"
     ],
     "install": {
-      "npmSpec": "@openclaw/brave-plugin",
+      "npmSpec": "@grokbot/brave-plugin",
       "defaultChoice": "npm",
       "minHostVersion": ">=2026.4.10",
       "allowInvalidConfigRecovery": true

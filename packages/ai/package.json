@@ -1,7 +1,7 @@
 {
-  "name": "@openclaw/ai",
+  "name": "@grokbot/ai",
   "version": "2026.7.2",
-  "description": "Reusable model provider adapters and streaming runtime from OpenClaw",
+  "description": "Reusable model provider adapters and streaming runtime from GrokBot",
   "keywords": [
     "ai",
     "anthropic",
@@ -11,14 +11,14 @@
     "openai",
     "streaming"
   ],
-  "homepage": "https://github.com/openclaw/openclaw#readme",
+  "homepage": "https://github.com/grokbot/grokbot#readme",
   "bugs": {
-    "url": "https://github.com/openclaw/openclaw/issues"
+    "url": "https://github.com/grokbot/grokbot/issues"
   },
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/openclaw/openclaw.git",
+    "url": "git+https://github.com/grokbot/grokbot.git",
     "directory": "packages/ai"
   },
   "files": [
@@ -81,7 +81,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "openclaw": {
+  "grokbot": {
     "release": {
       "publishToNpm": true
     }

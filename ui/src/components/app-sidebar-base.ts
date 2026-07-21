@@ -10,7 +10,7 @@ import {
 } from "../app/context.ts";
 import type { CatalogOpenTarget } from "../app/settings.ts";
 import type { ThemeMode } from "../app/theme.ts";
-import { OpenClawLightDomContentsElement } from "../lit/openclaw-element.ts";
+import { OpenClawLightDomContentsElement } from "../lit/grokbot-element.ts";
 import type { NewSessionTarget } from "../pages/new-session/location.ts";
 
 /** Stable custom-element inputs. Behavior is layered in focused sidebar modules. */

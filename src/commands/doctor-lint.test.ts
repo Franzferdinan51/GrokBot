@@ -1,6 +1,6 @@
 // Doctor lint tests cover health-check registry integration and lint warning output.
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { resetCoreHealthChecksForTest } from "../flows/doctor-core-checks.js";
 import { clearHealthChecksForTest, registerHealthCheck } from "../flows/health-check-registry.js";
 import { runDoctorLintCli } from "./doctor-lint.js";
@@ -32,7 +32,7 @@ describe("runDoctorLintCli", () => {
       exists: true,
       valid: true,
       config: {},
-      path: "/tmp/openclaw.json",
+      path: "/tmp/grokbot.json",
     });
 
     const stdout = vi.spyOn(process.stdout, "write").mockImplementation(() => true);
@@ -56,7 +56,7 @@ describe("runDoctorLintCli", () => {
       exists: true,
       valid: true,
       config: {},
-      path: "/tmp/openclaw.json",
+      path: "/tmp/grokbot.json",
     });
 
     const stdout = vi.spyOn(process.stdout, "write").mockImplementation(() => true);
@@ -82,7 +82,7 @@ describe("runDoctorLintCli", () => {
       exists: true,
       valid: true,
       config: {},
-      path: "/tmp/openclaw.json",
+      path: "/tmp/grokbot.json",
     });
     const detect = vi.fn(async (_ctx: unknown) => []);
     registerHealthCheck({
@@ -115,7 +115,7 @@ describe("runDoctorLintCli", () => {
       exists: true,
       valid: false,
       config: {},
-      path: "/tmp/openclaw.json",
+      path: "/tmp/grokbot.json",
       issues: [{ path: "gateway.mode", message: "Required" }],
     });
 
@@ -148,7 +148,7 @@ describe("runDoctorLintCli", () => {
       exists: true,
       valid: true,
       config: {},
-      path: "/tmp/openclaw.json",
+      path: "/tmp/grokbot.json",
     });
 
     const stdout = vi.spyOn(process.stdout, "write").mockImplementation(() => true);
@@ -194,7 +194,7 @@ describe("runDoctorLintCli", () => {
           },
         },
       } as unknown as OpenClawConfig,
-      path: "/tmp/openclaw.json",
+      path: "/tmp/grokbot.json",
     });
 
     const stdout = vi.spyOn(process.stdout, "write").mockImplementation(() => true);
@@ -232,7 +232,7 @@ describe("runDoctorLintCli", () => {
       exists: true,
       valid: true,
       config: {},
-      path: "/tmp/openclaw.json",
+      path: "/tmp/grokbot.json",
     });
     registerHealthCheck({
       id: "plugin/example/lint",
@@ -272,7 +272,7 @@ describe("runDoctorLintCli", () => {
       exists: true,
       valid: true,
       config: {},
-      path: "/tmp/openclaw.json",
+      path: "/tmp/grokbot.json",
     });
     registerHealthCheck({
       id: "plugin/example/lint",
@@ -319,7 +319,7 @@ describe("runDoctorLintCli", () => {
       exists: true,
       valid: true,
       config: {},
-      path: "/tmp/openclaw.json",
+      path: "/tmp/grokbot.json",
     });
     registerHealthCheck({
       id: "core/doctor/final-config-validation",
@@ -340,7 +340,7 @@ describe("runDoctorLintCli", () => {
       exists: true,
       valid: true,
       config: {},
-      path: "/tmp/openclaw.json",
+      path: "/tmp/grokbot.json",
     });
     registerHealthCheck({
       id: "core/doctor/final-config-validation",
@@ -361,7 +361,7 @@ describe("runDoctorLintCli", () => {
       exists: true,
       valid: true,
       config: {},
-      path: "/tmp/openclaw.json",
+      path: "/tmp/grokbot.json",
     });
     registerHealthCheck({
       id: "core/doctor/not-yet-owned",
@@ -382,7 +382,7 @@ describe("runDoctorLintCli", () => {
       exists: true,
       valid: true,
       config: {},
-      path: "/tmp/openclaw.json",
+      path: "/tmp/grokbot.json",
     });
     registerHealthCheck({
       id: "core/doctor/not-yet-owned",

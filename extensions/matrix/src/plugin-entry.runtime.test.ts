@@ -37,7 +37,7 @@ function writeOpenClawPackageFixture(fixtureRoot: string) {
     "package.json",
     JSON.stringify(
       {
-        name: "openclaw",
+        name: "grokbot",
         type: "module",
         exports: {
           "./plugin-sdk/core": "./dist/plugin-sdk/core.js",
@@ -47,7 +47,7 @@ function writeOpenClawPackageFixture(fixtureRoot: string) {
       2,
     ) + "\n",
   );
-  writeFixtureFile(fixtureRoot, "openclaw.mjs", "export {};\n");
+  writeFixtureFile(fixtureRoot, "grokbot.mjs", "export {};\n");
   writeFixtureFile(fixtureRoot, "dist/plugin-sdk/core.js", "export {};\n");
 }
 

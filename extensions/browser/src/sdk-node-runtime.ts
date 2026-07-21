@@ -14,20 +14,20 @@ export {
   resolveGatewayAuth,
   resolveNodeCommandAllowlist,
   safeParseJson,
-} from "openclaw/plugin-sdk/gateway-runtime";
+} from "grokbot/plugin-sdk/gateway-runtime";
 export type {
   GatewayRequestHandlers,
   GatewayRpcOpts,
   NodeSession,
-} from "openclaw/plugin-sdk/gateway-runtime";
-export { runCommandWithRuntime } from "openclaw/plugin-sdk/cli-runtime";
-export type { OpenClawPluginService } from "openclaw/plugin-sdk/plugin-entry";
+} from "grokbot/plugin-sdk/gateway-runtime";
+export { runCommandWithRuntime } from "grokbot/plugin-sdk/cli-runtime";
+export type { OpenClawPluginService } from "grokbot/plugin-sdk/plugin-entry";
 export {
   startLazyPluginServiceModule,
   type LazyPluginServiceHandle,
-} from "openclaw/plugin-sdk/plugin-runtime";
-export { defaultRuntime } from "openclaw/plugin-sdk/runtime-env";
-import { clampTimerTimeoutMs } from "openclaw/plugin-sdk/number-runtime";
+} from "grokbot/plugin-sdk/plugin-runtime";
+export { defaultRuntime } from "grokbot/plugin-sdk/runtime-env";
+import { clampTimerTimeoutMs } from "grokbot/plugin-sdk/number-runtime";
 
 function normalizeTimeoutMs(timeoutMs: number | undefined): number | undefined {
   return clampTimerTimeoutMs(timeoutMs);

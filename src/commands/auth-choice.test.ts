@@ -93,9 +93,9 @@ const detectZaiEndpoint = vi.hoisted(() => vi.fn<DetectZaiEndpoint>(async () => 
 vi.mock("../agents/agent-scope.js", () => ({
   resolveDefaultAgentId: () => "main",
   resolveAgentDir: (configForTest: unknown, agentId: string) =>
-    `${process.env.OPENCLAW_STATE_DIR ?? "/tmp/openclaw-state"}/agents/${agentId}/agent`,
+    `${process.env.OPENCLAW_STATE_DIR ?? "/tmp/grokbot-state"}/agents/${agentId}/agent`,
   resolveAgentWorkspaceDir: (configForTest: unknown, agentId: string) =>
-    `/tmp/openclaw-workspaces/${agentId}`,
+    `/tmp/grokbot-workspaces/${agentId}`,
   // Required by src/agents/model-runtime-policy.ts, which is transitively
   // imported through provider-auth-choice -> copilot-runtime-plugin-install ->
   // copilot-routing -> model-runtime-policy.
@@ -104,7 +104,7 @@ vi.mock("../agents/agent-scope.js", () => ({
 }));
 
 vi.mock("../agents/workspace.js", () => ({
-  resolveDefaultAgentWorkspaceDir: () => "/tmp/openclaw-workspace",
+  resolveDefaultAgentWorkspaceDir: () => "/tmp/grokbot-workspace",
 }));
 
 vi.mock("../infra/browser-open.js", () => ({
@@ -676,7 +676,7 @@ describe("applyAuthChoice", () => {
   let defaultProviderPlugins: ProviderPlugin[] = [];
 
   beforeAll(async () => {
-    authTestRoot = (await setupAuthTestEnv("openclaw-auth-")).stateDir;
+    authTestRoot = (await setupAuthTestEnv("grokbot-auth-")).stateDir;
     defaultProviderPlugins = await createDefaultProviderPlugins();
     resolvePluginProviders.mockReturnValue(defaultProviderPlugins);
   });
@@ -771,7 +771,7 @@ describe("applyAuthChoice", () => {
           setDefaultModel: true,
         }),
       ).rejects.toThrow(
-        'Auth choice "openai-chatgpt-import" is no longer supported. Use "openai" instead, or run openclaw onboard to choose interactively.',
+        'Auth choice "openai-chatgpt-import" is no longer supported. Use "openai" instead, or run grokbot onboard to choose interactively.',
       );
     } finally {
       spy.mockRestore();
@@ -794,7 +794,7 @@ describe("applyAuthChoice", () => {
           setDefaultModel: true,
         }),
       ).rejects.toThrow(
-        'Auth choice "legacy\\u001b[31mchoice" is no longer supported. Use "modern\\nchoice" instead, or run openclaw onboard to choose interactively.',
+        'Auth choice "legacy\\u001b[31mchoice" is no longer supported. Use "modern\\nchoice" instead, or run grokbot onboard to choose interactively.',
       );
     } finally {
       spy.mockRestore();
@@ -818,7 +818,7 @@ describe("applyAuthChoice", () => {
           setDefaultModel: true,
         }),
       ).rejects.toThrow(
-        'Auth choice "modelstudio-api-key" is no longer supported. Use "qwen-api-key" instead, or run openclaw onboard to choose interactively.',
+        'Auth choice "modelstudio-api-key" is no longer supported. Use "qwen-api-key" instead, or run grokbot onboard to choose interactively.',
       );
     } finally {
       deprecatedChoiceSpy.mockRestore();

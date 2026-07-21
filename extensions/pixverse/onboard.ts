@@ -3,7 +3,7 @@ import type {
   ProviderAuthContext,
   ProviderAuthMethod,
   ProviderAuthMethodNonInteractiveContext,
-} from "openclaw/plugin-sdk/plugin-entry";
+} from "grokbot/plugin-sdk/plugin-entry";
 import {
   applyAuthProfileConfig,
   buildApiKeyCredential,
@@ -14,9 +14,9 @@ import {
   type SecretInput,
   upsertAuthProfileWithLock,
   validateApiKeyInput,
-} from "openclaw/plugin-sdk/provider-auth-api-key";
-import type { ModelProviderConfig } from "openclaw/plugin-sdk/provider-onboard";
-import { normalizeOptionalString } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/provider-auth-api-key";
+import type { ModelProviderConfig } from "grokbot/plugin-sdk/provider-onboard";
+import { normalizeOptionalString } from "grokbot/plugin-sdk/string-coerce-runtime";
 import {
   DEFAULT_PIXVERSE_REGION,
   PIXVERSE_BASE_URL_BY_REGION,

@@ -2,7 +2,7 @@
  * Transcript recorder for CLI-dispatched embedded runs.
  *
  * The CLI backend runs its tool loop inside the external process and writes
- * no OpenClaw transcript records, but one-shot callers (e.g. active-memory
+ * no GrokBot transcript records, but one-shot callers (e.g. active-memory
  * recall) read the run's transcript for timeout partial-text salvage,
  * tool-result evidence, and a live terminal-search watcher that polls
  * mid-run. Mirror the run into canonical transcript records through the
@@ -10,7 +10,7 @@
  * stream, and the final assistant snapshot at run end.
  */
 import { appendTranscriptMessage } from "../../config/sessions/session-accessor.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import { createSubsystemLogger } from "../../logging/subsystem.js";
 import type { AgentMessage } from "../runtime/index.js";
 import { buildAssistantMessage, buildUsageWithNoCost } from "../stream-message-shared.js";

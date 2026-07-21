@@ -2,9 +2,9 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { resolveStorePath } from "openclaw/plugin-sdk/session-store-runtime";
-import { captureEnv } from "openclaw/plugin-sdk/test-env";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { resolveStorePath } from "grokbot/plugin-sdk/session-store-runtime";
+import { captureEnv } from "grokbot/plugin-sdk/test-env";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { handleTelegramAction, telegramActionRuntime } from "./action-runtime.js";
 import { beginTelegramInboundEventDeliveryCorrelation } from "./inbound-event-delivery.js";
@@ -678,13 +678,13 @@ describe("handleTelegramAction", () => {
   });
 
   it("persists sendMessage action deliveries before Telegram platform send", async () => {
-    const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-telegram-action-durable-"));
+    const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-telegram-action-durable-"));
     const {
       createOutboundTestPlugin,
       createTestRegistry,
       readQueuedDeliveryEntriesForTest,
       setActivePluginRegistry,
-    } = await import("openclaw/plugin-sdk/plugin-test-runtime");
+    } = await import("grokbot/plugin-sdk/plugin-test-runtime");
     const readDurableQueueEntries = () => readQueuedDeliveryEntriesForTest(stateDir);
     const sendText = vi
       .fn()
@@ -1312,7 +1312,7 @@ describe("handleTelegramAction", () => {
     });
     const cfg = {
       ...telegramConfig({ actions: { createForumTopic: true } }),
-      session: { store: path.join(os.tmpdir(), "openclaw-telegram-action-sessions.json") },
+      session: { store: path.join(os.tmpdir(), "grokbot-telegram-action-sessions.json") },
     } as OpenClawConfig;
 
     await handleTelegramAction(
@@ -1334,7 +1334,7 @@ describe("handleTelegramAction", () => {
     });
     const cfg = {
       ...telegramConfig({ actions: { editForumTopic: true } }),
-      session: { store: path.join(os.tmpdir(), "openclaw-telegram-action-sessions.json") },
+      session: { store: path.join(os.tmpdir(), "grokbot-telegram-action-sessions.json") },
     } as OpenClawConfig;
 
     await handleTelegramAction(

@@ -8,13 +8,13 @@ import {
   createChannelIngressResolver,
   defineStableChannelIngressIdentity,
   readChannelIngressStoreAllowFromForDmPolicy,
-} from "openclaw/plugin-sdk/channel-ingress-runtime";
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
+} from "grokbot/plugin-sdk/channel-ingress-runtime";
+import { formatErrorMessage } from "grokbot/plugin-sdk/error-runtime";
 import {
   asDateTimestampMs,
   resolveExpiresAtMsFromDurationMs,
-} from "openclaw/plugin-sdk/number-runtime";
-import { logVerbose } from "openclaw/plugin-sdk/runtime-env";
+} from "grokbot/plugin-sdk/number-runtime";
+import { logVerbose } from "grokbot/plugin-sdk/runtime-env";
 import {
   allowListMatches,
   normalizeAllowList,

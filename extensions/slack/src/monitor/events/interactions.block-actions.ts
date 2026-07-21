@@ -1,20 +1,20 @@
 // Slack plugin module implements interactions.block actions behavior.
 import type { SlackActionMiddlewareArgs } from "@slack/bolt";
 import type { Block, KnownBlock } from "@slack/web-api";
-import { resolveApprovalOverGateway } from "openclaw/plugin-sdk/approval-gateway-runtime";
-import { parseExecApprovalCommandText } from "openclaw/plugin-sdk/approval-reply-runtime";
-import { resolveCommandAuthorization } from "openclaw/plugin-sdk/command-auth-native";
-import { isApprovalNotFoundError } from "openclaw/plugin-sdk/error-runtime";
-import { requestHeartbeat } from "openclaw/plugin-sdk/heartbeat-runtime";
+import { resolveApprovalOverGateway } from "grokbot/plugin-sdk/approval-gateway-runtime";
+import { parseExecApprovalCommandText } from "grokbot/plugin-sdk/approval-reply-runtime";
+import { resolveCommandAuthorization } from "grokbot/plugin-sdk/command-auth-native";
+import { isApprovalNotFoundError } from "grokbot/plugin-sdk/error-runtime";
+import { requestHeartbeat } from "grokbot/plugin-sdk/heartbeat-runtime";
 import {
   parseStrictFiniteNumber,
   timestampMsToIsoString,
-} from "openclaw/plugin-sdk/number-runtime";
+} from "grokbot/plugin-sdk/number-runtime";
 import {
   normalizeOptionalString,
   normalizeUniqueTrimmedStringList,
-} from "openclaw/plugin-sdk/string-coerce-runtime";
-import { enqueueSystemEvent } from "openclaw/plugin-sdk/system-event-runtime";
+} from "grokbot/plugin-sdk/string-coerce-runtime";
+import { enqueueSystemEvent } from "grokbot/plugin-sdk/system-event-runtime";
 import { decodeSlackApprovalAction, type SlackApprovalAction } from "../../approval-actions.js";
 import { isSlackApprovalAuthorizedSender } from "../../approval-auth.js";
 import { isSlackExecApprovalAuthorizedSender } from "../../exec-approvals.js";

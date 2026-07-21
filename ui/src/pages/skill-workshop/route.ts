@@ -1,4 +1,4 @@
-import { definePage } from "@openclaw/uirouter";
+import { definePage } from "@grokbot/uirouter";
 import { html } from "lit";
 import type { ApplicationContext } from "../../app/context.ts";
 import type { SkillWorkshopRouteData } from "./proposals.ts";
@@ -9,9 +9,9 @@ export const page = definePage({
   component: () =>
     import("./skill-workshop-page.ts").then(() => ({
       render: (data: unknown) => html`
-        <openclaw-skill-workshop-page
+        <grokbot-skill-workshop-page
           .data=${data as SkillWorkshopRouteData | undefined}
-        ></openclaw-skill-workshop-page>
+        ></grokbot-skill-workshop-page>
       `,
     })),
   loader: async (context: ApplicationContext) => {

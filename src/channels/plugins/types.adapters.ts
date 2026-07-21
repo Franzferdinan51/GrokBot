@@ -6,7 +6,7 @@
 import type { ReplyPayload } from "../../auto-reply/reply-payload.js";
 import type { LegacyConfigRule } from "../../config/legacy.shared.js";
 import type { AgentBinding } from "../../config/types.agents.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import type { GroupToolPolicyConfig } from "../../config/types.tools.js";
 import type { ChannelApprovalNativeRuntimeAdapter } from "../../infra/approval-handler-runtime-types.js";
 import type { ChannelApprovalKind } from "../../infra/approval-types.js";
@@ -309,7 +309,7 @@ export type ChannelGatewayContext<ResolvedAccount = unknown> = {
    * - External plugins should check for undefined before using
    *
    * @since Plugin SDK 2026.2.19
-   * @see {@link https://docs.openclaw.ai/plugins/building-plugins | Plugin SDK documentation}
+   * @see {@link https://docs.grokbot.ai/plugins/building-plugins | Plugin SDK documentation}
    */
   channelRuntime?: ChannelRuntimeSurface;
 };

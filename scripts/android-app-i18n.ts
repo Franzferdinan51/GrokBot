@@ -25,7 +25,7 @@ const TOOL_DISPLAY_PATH = path.join(
 const GENERATED_KOTLIN_PATH = path.join(
   SOURCE_ROOT,
   "ai",
-  "openclaw",
+  "grokbot",
   "app",
   "i18n",
   "NativeStringResources.kt",
@@ -444,7 +444,7 @@ const ALLOWED_UI_LITERALS = new Map<string, ReadonlySet<string>>([
       "OC",
       "OK",
       "OPENCLAW",
-      "OpenClaw",
+      "GrokBot",
       "U",
       "e.g. America/New_York",
       "current-step-alpha",
@@ -452,41 +452,41 @@ const ALLOWED_UI_LITERALS = new Map<string, ReadonlySet<string>>([
       "iMessage",
       "main, isolated, current, or session:<id>",
       "n/a",
-      "openclaw gateway",
-      "openclaw qr",
+      "grokbot gateway",
+      "grokbot qr",
       "PTT_BUSY: previous push-to-talk turn is still finishing",
       "WhatsApp",
     ]),
   ],
-  ["apps/android/app/src/main/java/ai/openclaw/app/chat/ChatController.kt", new Set(["Off"])],
+  ["apps/android/app/src/main/java/ai/grokbot/app/chat/ChatController.kt", new Set(["Off"])],
   [
-    "apps/android/app/src/main/java/ai/openclaw/app/ui/SkillWorkshopSettingsScreen.kt",
+    "apps/android/app/src/main/java/ai/grokbot/app/ui/SkillWorkshopSettingsScreen.kt",
     new Set(["all", "applied", "held", "pending", "rejected"]),
   ],
   [
-    "apps/android/app/src/main/java/ai/openclaw/app/ui/GatewayDiagnostics.kt",
+    "apps/android/app/src/main/java/ai/grokbot/app/ui/GatewayDiagnostics.kt",
     new Set(["$versionName-dev"]),
   ],
   [
-    "apps/android/app/src/main/java/ai/openclaw/app/ui/chat/ChatScreen.kt",
+    "apps/android/app/src/main/java/ai/grokbot/app/ui/chat/ChatScreen.kt",
     // Plan checklist chrome: numeric done-counter and checkmark glyph.
     new Set(["$completedCount/${steps.size}", "✓"]),
   ],
   [
-    "apps/android/app/src/main/java/ai/openclaw/app/ui/SettingsScreens.kt",
+    "apps/android/app/src/main/java/ai/grokbot/app/ui/SettingsScreens.kt",
     // Discovered-gateway subtitles are host:port endpoints, not translatable copy.
     new Set(["${endpoint.host}:${endpoint.port}"]),
   ],
   [
-    "apps/android/app/src/main/java/ai/openclaw/app/ui/VoiceScreen.kt",
+    "apps/android/app/src/main/java/ai/grokbot/app/ui/VoiceScreen.kt",
     new Set(["${normalized.takeUtf16Safe(87)}..."]),
   ],
   [
-    "apps/android/app/src/main/java/ai/openclaw/app/ui/chat/ChatCommandControls.kt",
+    "apps/android/app/src/main/java/ai/grokbot/app/ui/chat/ChatCommandControls.kt",
     new Set(["/$name", "help"]),
   ],
   [
-    "apps/android/app/src/main/java/ai/openclaw/app/ui/chat/ChatMessageActions.kt",
+    "apps/android/app/src/main/java/ai/grokbot/app/ui/chat/ChatMessageActions.kt",
     new Set([">", "> $line"]),
   ],
 ]);
@@ -1080,9 +1080,9 @@ function renderKotlin(sourceToKey: ReadonlyMap<string, string>): string {
   const entries = [...sourceToKey].toSorted(([left], [right]) => compareText(left, right));
   return [
     GENERATED_KOTLIN_HEADER,
-    "package ai.openclaw.app.i18n",
+    "package ai.grokbot.app.i18n",
     "",
-    "import ai.openclaw.app.R",
+    "import ai.grokbot.app.R",
     "",
     "internal val nativeStringResourceIds: Map<String, Int> =",
     "  mapOf(",

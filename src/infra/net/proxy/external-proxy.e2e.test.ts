@@ -1,4 +1,4 @@
-// End-to-end proxy smoke tests run child OpenClaw modules through a local
+// End-to-end proxy smoke tests run child GrokBot modules through a local
 // HTTP/HTTPS forward proxy, including Discord-style HTTP, TLS, and WebSocket paths.
 import { execFileSync, spawn } from "node:child_process";
 import { readFileSync, writeFileSync } from "node:fs";
@@ -12,7 +12,7 @@ import { WebSocketServer } from "ws";
 import { withTempDir } from "../../../test-helpers/temp-dir.js";
 import { createNodeEvalArgs } from "../../../test-utils/node-process.js";
 import { resolveSystemBin } from "../../resolve-system-bin.js";
-import { resolvePreferredOpenClawTmpDir } from "../../tmp-openclaw-dir.js";
+import { resolvePreferredOpenClawTmpDir } from "../../tmp-grokbot-dir.js";
 
 const CHILD_PROCESS_TIMEOUT_MS = process.env.CI ? 45_000 : 15_000;
 const PROBE_TIMEOUT_MS = process.env.CI ? 15_000 : 5_000;
@@ -50,7 +50,7 @@ function createDiscordTlsFixture(dir: string): DiscordTlsFixture {
       "-days",
       "1",
       "-subj",
-      "/CN=OpenClaw Proxy Test CA",
+      "/CN=GrokBot Proxy Test CA",
     ],
     { stdio: "ignore" },
   );
@@ -106,7 +106,7 @@ async function withDiscordTlsFixture<T>(
 ): Promise<T> {
   return await withTempDir(
     {
-      prefix: "openclaw-discord-tls-",
+      prefix: "grokbot-discord-tls-",
       parentDir: resolvePreferredOpenClawTmpDir(),
     },
     async (dir) => {

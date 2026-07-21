@@ -3,13 +3,13 @@ import { mkdir, mkdtemp, rm, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import type { Message } from "grammy/types";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { resolvePersistentDedupePluginStateNamespace } from "openclaw/plugin-sdk/persistent-dedupe";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { resolvePersistentDedupePluginStateNamespace } from "grokbot/plugin-sdk/persistent-dedupe";
 import {
   createPluginStateSyncKeyedStoreForTests,
   resetPluginStateStoreForTests,
-} from "openclaw/plugin-sdk/plugin-state-test-runtime";
-import { resolveStorePath } from "openclaw/plugin-sdk/session-store-runtime";
+} from "grokbot/plugin-sdk/plugin-state-test-runtime";
+import { resolveStorePath } from "grokbot/plugin-sdk/session-store-runtime";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { resolveTelegramBotInfoCachePath } from "./bot-info-cache.js";
 import { resolveTelegramMessageCachePath } from "./message-cache.js";
@@ -58,7 +58,7 @@ afterEach(() => {
 
 describe("telegram state migrations", () => {
   it("detects legacy bot-info cache import", async () => {
-    const dir = await mkdtemp(path.join(os.tmpdir(), "openclaw-telegram-state-migration-"));
+    const dir = await mkdtemp(path.join(os.tmpdir(), "grokbot-telegram-state-migration-"));
     const env = { ...process.env, OPENCLAW_STATE_DIR: dir };
     const persistedPath = resolveTelegramBotInfoCachePath("ops", env);
     try {
@@ -72,7 +72,7 @@ describe("telegram state migrations", () => {
           botInfo: {
             id: 123456,
             is_bot: true,
-            first_name: "OpenClaw",
+            first_name: "GrokBot",
             username: "openclaw_bot",
           },
         }),
@@ -126,7 +126,7 @@ describe("telegram state migrations", () => {
   });
 
   it("detects legacy message-cache import for the runtime sidecar path", async () => {
-    const dir = await mkdtemp(path.join(os.tmpdir(), "openclaw-telegram-state-migration-"));
+    const dir = await mkdtemp(path.join(os.tmpdir(), "grokbot-telegram-state-migration-"));
     const env = { ...process.env, OPENCLAW_STATE_DIR: dir };
     const storePath = resolveStorePath(undefined, { env });
     const persistedPath = resolveTelegramMessageCachePath(storePath);
@@ -206,7 +206,7 @@ describe("telegram state migrations", () => {
   });
 
   it("detects legacy topic-name cache import for an account-scoped runtime sidecar path", async () => {
-    const dir = await mkdtemp(path.join(os.tmpdir(), "openclaw-telegram-state-migration-"));
+    const dir = await mkdtemp(path.join(os.tmpdir(), "grokbot-telegram-state-migration-"));
     const env = { ...process.env, OPENCLAW_STATE_DIR: dir };
     const storePath = resolveStorePath(undefined, { env, agentId: "ops" });
     const persistedPath = resolveTopicNameCachePath(storePath);
@@ -270,7 +270,7 @@ describe("telegram state migrations", () => {
   });
 
   it("detects legacy topic-name cache import for the global sidecar path", async () => {
-    const dir = await mkdtemp(path.join(os.tmpdir(), "openclaw-telegram-state-migration-"));
+    const dir = await mkdtemp(path.join(os.tmpdir(), "grokbot-telegram-state-migration-"));
     const env = { ...process.env, OPENCLAW_STATE_DIR: dir };
     const legacyStorePath = path.join(dir, "sessions", "sessions.json");
     const persistedPath = resolveTopicNameCachePath(legacyStorePath);
@@ -337,7 +337,7 @@ describe("telegram state migrations", () => {
   });
 
   it("detects remaining Telegram JSON sidecars for plugin-state import", async () => {
-    const dir = await mkdtemp(path.join(os.tmpdir(), "openclaw-telegram-state-migration-"));
+    const dir = await mkdtemp(path.join(os.tmpdir(), "grokbot-telegram-state-migration-"));
     const env = { ...process.env, OPENCLAW_STATE_DIR: dir };
     const storePath = resolveStorePath(undefined, { env });
     const now = Date.now();
@@ -481,7 +481,7 @@ describe("telegram state migrations", () => {
   it("cleans up expired and boundary Telegram TTL cache sidecars", async () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date("2026-07-15T12:00:00.000Z"));
-    const dir = await mkdtemp(path.join(os.tmpdir(), "openclaw-telegram-state-migration-"));
+    const dir = await mkdtemp(path.join(os.tmpdir(), "grokbot-telegram-state-migration-"));
     const env = { ...process.env, OPENCLAW_STATE_DIR: dir };
     const storePath = resolveStorePath(undefined, { env });
     const sentMessagePath = `${storePath}.telegram-sent-messages.json`;
@@ -532,7 +532,7 @@ describe("telegram state migrations", () => {
   });
 
   it("migrates shipped Telegram message dispatch plugin-state buckets", async () => {
-    const dir = await mkdtemp(path.join(os.tmpdir(), "openclaw-telegram-state-migration-"));
+    const dir = await mkdtemp(path.join(os.tmpdir(), "grokbot-telegram-state-migration-"));
     const env = { ...process.env, OPENCLAW_STATE_DIR: dir };
     const now = Date.now();
     const replayKey = JSON.stringify(["message", "7", 42]);
@@ -648,7 +648,7 @@ describe("telegram state migrations", () => {
   });
 
   it("detects Telegram account sidecars even after the account was removed from config", async () => {
-    const dir = await mkdtemp(path.join(os.tmpdir(), "openclaw-telegram-state-migration-"));
+    const dir = await mkdtemp(path.join(os.tmpdir(), "grokbot-telegram-state-migration-"));
     const env = { ...process.env, OPENCLAW_STATE_DIR: dir };
     const updateOffsetPath = path.join(dir, "telegram", "update-offset-oldbot.json");
     const threadBindingsPath = path.join(dir, "telegram", "thread-bindings-oldbot.json");
@@ -709,7 +709,7 @@ describe("telegram state migrations", () => {
   });
 
   it("imports legacy session-store sidecars into the current runtime scope", async () => {
-    const dir = await mkdtemp(path.join(os.tmpdir(), "openclaw-telegram-state-migration-"));
+    const dir = await mkdtemp(path.join(os.tmpdir(), "grokbot-telegram-state-migration-"));
     const env = { ...process.env, OPENCLAW_STATE_DIR: dir };
     const storePath = resolveStorePath(undefined, { env });
     const legacyStorePath = path.join(dir, "sessions", "sessions.json");

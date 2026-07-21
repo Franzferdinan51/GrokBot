@@ -196,7 +196,7 @@ describe("plugins Docker assertions", () => {
       encoding: "utf8",
       env: {
         ...process.env,
-        CLAWHUB_PLUGIN_SPEC: "clawhub:@openclaw/kitchen-sink",
+        CLAWHUB_PLUGIN_SPEC: "clawhub:@grokbot/kitchen-sink",
         OPENCLAW_PLUGINS_E2E_CLAWHUB_PREFLIGHT_TIMEOUT_MS: "1e3",
       },
     });
@@ -209,7 +209,7 @@ describe("plugins Docker assertions", () => {
       encoding: "utf8",
       env: {
         ...process.env,
-        CLAWHUB_PLUGIN_SPEC: "clawhub:@openclaw/kitchen-sink",
+        CLAWHUB_PLUGIN_SPEC: "clawhub:@grokbot/kitchen-sink",
         OPENCLAW_PLUGINS_E2E_CLAWHUB_PREFLIGHT_BODY_MAX_BYTES: "1000bytes",
       },
     });
@@ -238,18 +238,18 @@ describe("plugins Docker assertions", () => {
     for (const scriptPath of scripts) {
       const script = readFileSync(scriptPath, "utf8");
       const scriptWithoutDefaultScratch = script.replace(
-        'mktemp -d "/tmp/openclaw-plugins.XXXXXX"',
+        'mktemp -d "/tmp/grokbot-plugins.XXXXXX"',
         "",
       );
       expect(script).toContain("OPENCLAW_PLUGINS_TMP_DIR");
       expect(scriptWithoutDefaultScratch).not.toMatch(
-        /\/tmp\/(?:plugins|marketplace|demo-plugin|is-number|openclaw-plugin|openclaw-clawhub)/,
+        /\/tmp\/(?:plugins|marketplace|demo-plugin|is-number|grokbot-plugin|grokbot-clawhub)/,
       );
     }
   });
 
   it("cleans the default plugin sweep scratch root", () => {
-    const root = mkdtempSync(path.join(tmpdir(), "openclaw-plugin-sweep-cleanup-"));
+    const root = mkdtempSync(path.join(tmpdir(), "grokbot-plugin-sweep-cleanup-"));
     const marker = path.join(root, "scratch-path.txt");
     try {
       const result = runPluginsSweepShell(
@@ -269,7 +269,7 @@ test ! -e "$OPENCLAW_PLUGINS_TMP_DIR"
       expect(result.stderr).toBe("");
       expect(result.status).toBe(0);
       const scratchRoot = readFileSync(marker, "utf8").trim();
-      expect(scratchRoot).toContain("/tmp/openclaw-plugins.");
+      expect(scratchRoot).toContain("/tmp/grokbot-plugins.");
       expect(existsSync(scratchRoot)).toBe(false);
     } finally {
       rmSync(root, { force: true, recursive: true });
@@ -277,7 +277,7 @@ test ! -e "$OPENCLAW_PLUGINS_TMP_DIR"
   });
 
   it("preserves caller-provided plugin sweep scratch roots", () => {
-    const root = mkdtempSync(path.join(tmpdir(), "openclaw-plugin-sweep-caller-"));
+    const root = mkdtempSync(path.join(tmpdir(), "grokbot-plugin-sweep-caller-"));
     const scratchRoot = path.join(root, "scratch");
     try {
       const result = runPluginsSweepShell(
@@ -303,7 +303,7 @@ test -d "$OPENCLAW_PLUGINS_TMP_DIR"
   });
 
   it("scans plugin assertion logs without echoing whole files on failure", async () => {
-    const root = mkdtempSync(path.join(tmpdir(), "openclaw-plugin-update-log-"));
+    const root = mkdtempSync(path.join(tmpdir(), "grokbot-plugin-update-log-"));
     try {
       const passRoot = path.join(root, "pass");
       mkdirSync(passRoot, { recursive: true });
@@ -337,14 +337,14 @@ test -d "$OPENCLAW_PLUGINS_TMP_DIR"
       mkdirSync(invalidRoot, { recursive: true });
       mkdirSync(invalidHome, { recursive: true });
       writeFileSync(
-        path.join(invalidRoot, "plugins-invalid-openclaw-extensions.log"),
-        `openclaw.extensions[1]\n${"x".repeat(256 * 1024)}\nmissing validation tail`,
+        path.join(invalidRoot, "plugins-invalid-grokbot-extensions.log"),
+        `grokbot.extensions[1]\n${"x".repeat(256 * 1024)}\nmissing validation tail`,
         "utf8",
       );
-      writeJson(path.join(invalidRoot, "plugins-invalid-openclaw-extensions-list.json"), {
+      writeJson(path.join(invalidRoot, "plugins-invalid-grokbot-extensions-list.json"), {
         plugins: [],
       });
-      const invalid = await runAssertionAsync(["invalid-openclaw-extensions"], {
+      const invalid = await runAssertionAsync(["invalid-grokbot-extensions"], {
         HOME: invalidHome,
         OPENCLAW_PLUGINS_TMP_DIR: invalidRoot,
       });
@@ -358,7 +358,7 @@ test -d "$OPENCLAW_PLUGINS_TMP_DIR"
   });
 
   it("cleans npm fixture registry children when readiness times out", () => {
-    const root = mkdtempSync(path.join(tmpdir(), "openclaw-plugin-npm-fixture-cleanup-"));
+    const root = mkdtempSync(path.join(tmpdir(), "grokbot-plugin-npm-fixture-cleanup-"));
     try {
       const binDir = path.join(root, "bin");
       const fixtureDir = path.join(root, "fixture");
@@ -403,7 +403,7 @@ test -d "$OPENCLAW_PLUGINS_TMP_DIR"
   });
 
   it("force-kills stubborn npm fixture registry children during cleanup", () => {
-    const root = mkdtempSync(path.join(tmpdir(), "openclaw-plugin-npm-fixture-kill-"));
+    const root = mkdtempSync(path.join(tmpdir(), "grokbot-plugin-npm-fixture-kill-"));
     try {
       const binDir = path.join(root, "bin");
       const fixtureDir = path.join(root, "fixture");
@@ -515,7 +515,7 @@ test -d "$OPENCLAW_PLUGINS_TMP_DIR"
   });
 
   it("bounds npm fixture registry logs when readiness fails", () => {
-    const root = mkdtempSync(path.join(tmpdir(), "openclaw-plugin-npm-fixture-log-"));
+    const root = mkdtempSync(path.join(tmpdir(), "grokbot-plugin-npm-fixture-log-"));
     try {
       const binDir = path.join(root, "bin");
       const fixtureDir = path.join(root, "fixture");
@@ -558,7 +558,7 @@ test -d "$OPENCLAW_PLUGINS_TMP_DIR"
   });
 
   it("keeps npm fixture registry alive after malformed package paths", async () => {
-    const root = autoCleanupTempDirs.make("openclaw-plugin-npm-fixture-request-");
+    const root = autoCleanupTempDirs.make("grokbot-plugin-npm-fixture-request-");
     const portFile = path.join(root, "port");
     const tarballPath = path.join(root, "demo-plugin.tgz");
     writeFileSync(tarballPath, "fixture package archive", "utf8");
@@ -568,7 +568,7 @@ test -d "$OPENCLAW_PLUGINS_TMP_DIR"
       [
         "scripts/e2e/lib/plugins/npm-registry-server.mjs",
         portFile,
-        "@openclaw/demo-plugin-npm",
+        "@grokbot/demo-plugin-npm",
         "1.0.0",
         tarballPath,
       ],
@@ -591,11 +591,11 @@ test -d "$OPENCLAW_PLUGINS_TMP_DIR"
       expect(malformed.body).toContain("not found");
       expect(child.exitCode, stderr.text()).toBeNull();
 
-      const valid = await requestFixtureRegistry(port, "/@openclaw%2Fdemo-plugin-npm");
+      const valid = await requestFixtureRegistry(port, "/@grokbot%2Fdemo-plugin-npm");
 
       expect(valid.statusCode, stderr.text()).toBe(200);
       expect(JSON.parse(valid.body)).toMatchObject({
-        name: "@openclaw/demo-plugin-npm",
+        name: "@grokbot/demo-plugin-npm",
         "dist-tags": { latest: "1.0.0" },
       });
     } finally {
@@ -609,16 +609,16 @@ test -d "$OPENCLAW_PLUGINS_TMP_DIR"
   });
 
   it("serves tarball dependencies using the request-visible registry origin", async () => {
-    const root = autoCleanupTempDirs.make("openclaw-plugin-npm-fixture-package-");
+    const root = autoCleanupTempDirs.make("grokbot-plugin-npm-fixture-package-");
     const packageDir = path.join(root, "package");
     const portFile = path.join(root, "port");
-    const tarballPath = path.join(root, "openclaw.tgz");
+    const tarballPath = path.join(root, "grokbot.tgz");
     mkdirSync(packageDir);
     writeJson(path.join(packageDir, "package.json"), {
-      name: "openclaw",
+      name: "grokbot",
       version: "2026.7.1-beta.3",
       dependencies: {
-        "@openclaw/ai": "2026.7.1-beta.3",
+        "@grokbot/ai": "2026.7.1-beta.3",
         zod: "4.3.6",
       },
       optionalDependencies: {
@@ -635,7 +635,7 @@ test -d "$OPENCLAW_PLUGINS_TMP_DIR"
       [
         "scripts/e2e/lib/plugins/npm-registry-server.mjs",
         portFile,
-        "openclaw",
+        "grokbot",
         "2026.7.1-beta.3",
         tarballPath,
       ],
@@ -647,21 +647,21 @@ test -d "$OPENCLAW_PLUGINS_TMP_DIR"
 
     try {
       const port = await waitForPortFile(portFile);
-      const response = await requestFixtureRegistry(port, "/openclaw", {
+      const response = await requestFixtureRegistry(port, "/grokbot", {
         host: `192.0.2.2:${port}`,
       });
       const metadata = JSON.parse(response.body);
 
       expect(response.statusCode).toBe(200);
       expect(metadata.versions["2026.7.1-beta.3"].dependencies).toEqual({
-        "@openclaw/ai": "2026.7.1-beta.3",
+        "@grokbot/ai": "2026.7.1-beta.3",
         zod: "4.3.6",
       });
       expect(metadata.versions["2026.7.1-beta.3"].optionalDependencies).toEqual({
         "sqlite-vec": "0.1.7-alpha.2",
       });
       expect(metadata.versions["2026.7.1-beta.3"].dist.tarball).toBe(
-        `http://192.0.2.2:${port}/openclaw/-/openclaw.tgz`,
+        `http://192.0.2.2:${port}/grokbot/-/grokbot.tgz`,
       );
     } finally {
       if (child.exitCode === null) {
@@ -674,7 +674,7 @@ test -d "$OPENCLAW_PLUGINS_TMP_DIR"
   });
 
   it("recomputes proxied content length after fetch decodes the response", async () => {
-    const root = autoCleanupTempDirs.make("openclaw-plugin-npm-fixture-proxy-");
+    const root = autoCleanupTempDirs.make("grokbot-plugin-npm-fixture-proxy-");
     const portFile = path.join(root, "port");
     const tarballPath = path.join(root, "demo-plugin.tgz");
     const upstreamBody = JSON.stringify({ payload: "x".repeat(1_000) });
@@ -702,7 +702,7 @@ test -d "$OPENCLAW_PLUGINS_TMP_DIR"
       [
         "scripts/e2e/lib/plugins/npm-registry-server.mjs",
         portFile,
-        "@openclaw/demo-plugin-npm",
+        "@grokbot/demo-plugin-npm",
         "1.0.0",
         tarballPath,
       ],
@@ -737,7 +737,7 @@ test -d "$OPENCLAW_PLUGINS_TMP_DIR"
   });
 
   it("rejects oversized upstream bodies without stopping the fixture registry", async () => {
-    const root = autoCleanupTempDirs.make("openclaw-plugin-npm-fixture-proxy-limit-");
+    const root = autoCleanupTempDirs.make("grokbot-plugin-npm-fixture-proxy-limit-");
     const portFile = path.join(root, "port");
     const tarballPath = path.join(root, "demo-plugin.tgz");
     writeFileSync(tarballPath, "fixture package archive", "utf8");
@@ -762,7 +762,7 @@ test -d "$OPENCLAW_PLUGINS_TMP_DIR"
       [
         "scripts/e2e/lib/plugins/npm-registry-server.mjs",
         portFile,
-        "@openclaw/demo-plugin-npm",
+        "@grokbot/demo-plugin-npm",
         "1.0.0",
         tarballPath,
       ],
@@ -790,7 +790,7 @@ test -d "$OPENCLAW_PLUGINS_TMP_DIR"
         "npm registry upstream response body exceeded 67108864 bytes",
       );
 
-      const local = await requestFixtureRegistry(port, "/@openclaw%2Fdemo-plugin-npm");
+      const local = await requestFixtureRegistry(port, "/@grokbot%2Fdemo-plugin-npm");
 
       expect(local.statusCode, stderr.text()).toBe(200);
       expect(child.exitCode, stderr.text()).toBeNull();
@@ -809,7 +809,7 @@ test -d "$OPENCLAW_PLUGINS_TMP_DIR"
   });
 
   it("times out stalled upstream response bodies without stopping the fixture registry", async () => {
-    const root = autoCleanupTempDirs.make("openclaw-plugin-npm-fixture-proxy-timeout-");
+    const root = autoCleanupTempDirs.make("grokbot-plugin-npm-fixture-proxy-timeout-");
     const portFile = path.join(root, "port");
     const preloadPath = path.join(root, "shorten-abort-timeout.mjs");
     const tarballPath = path.join(root, "demo-plugin.tgz");
@@ -872,7 +872,7 @@ test -d "$OPENCLAW_PLUGINS_TMP_DIR"
         pathToFileURL(preloadPath).href,
         "scripts/e2e/lib/plugins/npm-registry-server.mjs",
         portFile,
-        "@openclaw/demo-plugin-npm",
+        "@grokbot/demo-plugin-npm",
         "1.0.0",
         tarballPath,
       ],
@@ -899,7 +899,7 @@ test -d "$OPENCLAW_PLUGINS_TMP_DIR"
       expect(stalled.body).toContain("upstream registry request failed");
       expect(upstreamHits).toBe(1);
 
-      const local = await requestFixtureRegistry(port, "/@openclaw%2Fdemo-plugin-npm");
+      const local = await requestFixtureRegistry(port, "/@grokbot%2Fdemo-plugin-npm");
 
       expect(local.statusCode, stderr.text()).toBe(200);
       expect(child.exitCode, stderr.text()).toBeNull();
@@ -918,7 +918,7 @@ test -d "$OPENCLAW_PLUGINS_TMP_DIR"
   });
 
   it("does not let absolute-form request targets escape the configured upstream", async () => {
-    const root = autoCleanupTempDirs.make("openclaw-plugin-npm-fixture-proxy-origin-");
+    const root = autoCleanupTempDirs.make("grokbot-plugin-npm-fixture-proxy-origin-");
     const portFile = path.join(root, "port");
     const tarballPath = path.join(root, "demo-plugin.tgz");
     let configuredUpstreamHits = 0;
@@ -961,7 +961,7 @@ test -d "$OPENCLAW_PLUGINS_TMP_DIR"
       [
         "scripts/e2e/lib/plugins/npm-registry-server.mjs",
         portFile,
-        "@openclaw/demo-plugin-npm",
+        "@grokbot/demo-plugin-npm",
         "1.0.0",
         tarballPath,
       ],
@@ -1013,7 +1013,7 @@ test -d "$OPENCLAW_PLUGINS_TMP_DIR"
   });
 
   it("rejects invalid plugin fixture log byte limits before npm fixture setup", () => {
-    const root = mkdtempSync(path.join(tmpdir(), "openclaw-plugin-npm-fixture-log-invalid-"));
+    const root = mkdtempSync(path.join(tmpdir(), "grokbot-plugin-npm-fixture-log-invalid-"));
     try {
       const binDir = path.join(root, "bin");
       const fixtureDir = path.join(root, "fixture");
@@ -1059,7 +1059,7 @@ test -d "$OPENCLAW_PLUGINS_TMP_DIR"
   });
 
   it("cleans ClawHub fixture children when readiness times out", () => {
-    const root = mkdtempSync(path.join(tmpdir(), "openclaw-plugin-clawhub-fixture-cleanup-"));
+    const root = mkdtempSync(path.join(tmpdir(), "grokbot-plugin-clawhub-fixture-cleanup-"));
     try {
       const binDir = path.join(root, "bin");
       const cleanupPath = path.join(root, "caller-cleanup");
@@ -1107,7 +1107,7 @@ test -d "$OPENCLAW_PLUGINS_TMP_DIR"
   });
 
   it("rejects invalid plugin fixture log byte limits before ClawHub fixture setup", () => {
-    const root = mkdtempSync(path.join(tmpdir(), "openclaw-plugin-clawhub-fixture-log-invalid-"));
+    const root = mkdtempSync(path.join(tmpdir(), "grokbot-plugin-clawhub-fixture-log-invalid-"));
     try {
       const binDir = path.join(root, "bin");
       const tmpDir = path.join(root, "scratch");
@@ -1156,7 +1156,7 @@ test -d "$OPENCLAW_PLUGINS_TMP_DIR"
   });
 
   it("bounds ClawHub fixture server logs when readiness fails", () => {
-    const root = mkdtempSync(path.join(tmpdir(), "openclaw-plugin-clawhub-fixture-log-"));
+    const root = mkdtempSync(path.join(tmpdir(), "grokbot-plugin-clawhub-fixture-log-"));
     try {
       const binDir = path.join(root, "bin");
       const tmpDir = path.join(root, "scratch");
@@ -1202,7 +1202,7 @@ test -d "$OPENCLAW_PLUGINS_TMP_DIR"
   });
 
   it("uses the configured scratch root and resolves Windows home-relative install paths", () => {
-    const root = mkdtempSync(path.join(tmpdir(), "openclaw-plugins-assertions-"));
+    const root = mkdtempSync(path.join(tmpdir(), "grokbot-plugins-assertions-"));
     const home = path.join(root, "home");
     const scratchRoot = path.join(root, "scratch");
     const installPath = path.join(home, "managed-plugin");
@@ -1215,7 +1215,7 @@ test -d "$OPENCLAW_PLUGINS_TMP_DIR"
       writeJson(path.join(scratchRoot, "plugins2-inspect.json"), {
         gatewayMethods: ["demo.tgz"],
       });
-      writeJson(path.join(home, ".openclaw", "plugins", "installs.json"), {
+      writeJson(path.join(home, ".grokbot", "plugins", "installs.json"), {
         installRecords: {
           "demo-plugin-tgz": {
             source: "archive",
@@ -1241,13 +1241,13 @@ test -d "$OPENCLAW_PLUGINS_TMP_DIR"
   });
 
   it("compares local plugin source paths by canonical path", () => {
-    const root = mkdtempSync(path.join(tmpdir(), "openclaw-plugins-assertions-"));
+    const root = mkdtempSync(path.join(tmpdir(), "grokbot-plugins-assertions-"));
     const home = path.join(root, "home");
     const scratchRoot = path.join(root, "scratch");
     const sourceParent = path.join(root, "source");
     const sourcePath = `${sourceParent}//plugin`;
     const normalizedSourcePath = path.join(sourceParent, "plugin");
-    const installPath = path.join(home, ".openclaw", "extensions", "demo-plugin-dir");
+    const installPath = path.join(home, ".grokbot", "extensions", "demo-plugin-dir");
     mkdirSync(sourcePath, { recursive: true });
     mkdirSync(installPath, { recursive: true });
 
@@ -1258,7 +1258,7 @@ test -d "$OPENCLAW_PLUGINS_TMP_DIR"
       writeJson(path.join(scratchRoot, "plugins3-inspect.json"), {
         gatewayMethods: ["demo.dir"],
       });
-      writeJson(path.join(home, ".openclaw", "plugins", "installs.json"), {
+      writeJson(path.join(home, ".grokbot", "plugins", "installs.json"), {
         installRecords: {
           "demo-plugin-dir": {
             source: "path",
@@ -1284,16 +1284,16 @@ test -d "$OPENCLAW_PLUGINS_TMP_DIR"
   });
 
   it("still requires archive managed install directories to be removed", () => {
-    const root = mkdtempSync(path.join(tmpdir(), "openclaw-plugins-assertions-"));
+    const root = mkdtempSync(path.join(tmpdir(), "grokbot-plugins-assertions-"));
     const home = path.join(root, "home");
     const scratchRoot = path.join(root, "scratch");
-    const installPath = path.join(home, ".openclaw", "extensions", "demo-plugin-tgz");
+    const installPath = path.join(home, ".grokbot", "extensions", "demo-plugin-tgz");
     mkdirSync(installPath, { recursive: true });
 
     try {
       writeJson(path.join(scratchRoot, "plugins2-uninstalled.json"), { plugins: [] });
       writeFileSync(path.join(scratchRoot, "plugins2-install-path.txt"), installPath, "utf8");
-      writeJson(path.join(home, ".openclaw", "plugins", "installs.json"), {
+      writeJson(path.join(home, ".grokbot", "plugins", "installs.json"), {
         installRecords: {},
       });
 
@@ -1314,10 +1314,10 @@ test -d "$OPENCLAW_PLUGINS_TMP_DIR"
   });
 
   it("rejects unreadable config during plugin uninstall proof", () => {
-    const root = mkdtempSync(path.join(tmpdir(), "openclaw-plugins-assertions-"));
+    const root = mkdtempSync(path.join(tmpdir(), "grokbot-plugins-assertions-"));
     const home = path.join(root, "home");
     const scratchRoot = path.join(root, "scratch");
-    const removedInstallPath = path.join(home, ".openclaw", "extensions", "demo-plugin-tgz");
+    const removedInstallPath = path.join(home, ".grokbot", "extensions", "demo-plugin-tgz");
 
     try {
       writeJson(path.join(scratchRoot, "plugins2-uninstalled.json"), { plugins: [] });
@@ -1326,10 +1326,10 @@ test -d "$OPENCLAW_PLUGINS_TMP_DIR"
         removedInstallPath,
         "utf8",
       );
-      writeJson(path.join(home, ".openclaw", "plugins", "installs.json"), {
+      writeJson(path.join(home, ".grokbot", "plugins", "installs.json"), {
         installRecords: {},
       });
-      writeFileSync(path.join(home, ".openclaw", "openclaw.json"), "{ malformed\n", "utf8");
+      writeFileSync(path.join(home, ".grokbot", "grokbot.json"), "{ malformed\n", "utf8");
 
       const result = spawnSync(process.execPath, [ASSERTIONS_SCRIPT, "plugin-tgz-removed"], {
         encoding: "utf8",
@@ -1341,37 +1341,37 @@ test -d "$OPENCLAW_PLUGINS_TMP_DIR"
       });
 
       expect(result.status).not.toBe(0);
-      expect(result.stderr).toContain("failed to read OpenClaw config");
+      expect(result.stderr).toContain("failed to read GrokBot config");
     } finally {
       rmSync(root, { force: true, recursive: true });
     }
   });
 
   it("rejects ClawHub install paths that resolve outside the managed extensions root", () => {
-    const root = autoCleanupTempDirs.make("openclaw-plugins-clawhub-path-");
+    const root = autoCleanupTempDirs.make("grokbot-plugins-clawhub-path-");
     const home = path.join(root, "home");
     const scratchRoot = path.join(root, "scratch");
-    const extensionsRoot = path.join(home, ".openclaw", "extensions");
+    const extensionsRoot = path.join(home, ".grokbot", "extensions");
     const escapedInstallPath = `${extensionsRoot}${path.sep}..${path.sep}escaped-clawhub`;
     mkdirSync(extensionsRoot, { recursive: true });
     mkdirSync(escapedInstallPath, { recursive: true });
 
     writeJson(path.join(scratchRoot, "plugins-clawhub-installed.json"), {
-      plugins: [{ id: "openclaw-kitchen-sink-fixture", status: "loaded" }],
+      plugins: [{ id: "grokbot-kitchen-sink-fixture", status: "loaded" }],
     });
     writeJson(path.join(scratchRoot, "plugins-clawhub-inspect.json"), {
-      plugin: { id: "openclaw-kitchen-sink-fixture" },
+      plugin: { id: "grokbot-kitchen-sink-fixture" },
     });
-    writeJson(path.join(home, ".openclaw", "plugins", "installs.json"), {
+    writeJson(path.join(home, ".grokbot", "plugins", "installs.json"), {
       installRecords: {
-        "openclaw-kitchen-sink-fixture": {
+        "grokbot-kitchen-sink-fixture": {
           artifactFormat: "zip",
           artifactKind: "legacy-zip",
           clawhubFamily: "code-plugin",
-          clawhubPackage: "@openclaw/kitchen-sink",
+          clawhubPackage: "@grokbot/kitchen-sink",
           installPath: escapedInstallPath,
           source: "clawhub",
-          spec: "clawhub:@openclaw/kitchen-sink",
+          spec: "clawhub:@grokbot/kitchen-sink",
         },
       },
     });
@@ -1380,8 +1380,8 @@ test -d "$OPENCLAW_PLUGINS_TMP_DIR"
       encoding: "utf8",
       env: {
         ...process.env,
-        CLAWHUB_PLUGIN_ID: "openclaw-kitchen-sink-fixture",
-        CLAWHUB_PLUGIN_SPEC: "clawhub:@openclaw/kitchen-sink",
+        CLAWHUB_PLUGIN_ID: "grokbot-kitchen-sink-fixture",
+        CLAWHUB_PLUGIN_SPEC: "clawhub:@grokbot/kitchen-sink",
         HOME: home,
         OPENCLAW_PLUGINS_TMP_DIR: scratchRoot,
       },
@@ -1403,15 +1403,15 @@ test -d "$OPENCLAW_PLUGINS_TMP_DIR"
         throw new Error("expected TCP server address");
       }
       const result = await runAssertionAsync(["clawhub-preflight"], {
-        CLAWHUB_PLUGIN_ID: "openclaw-kitchen-sink-fixture",
-        CLAWHUB_PLUGIN_SPEC: "clawhub:@openclaw/kitchen-sink",
+        CLAWHUB_PLUGIN_ID: "grokbot-kitchen-sink-fixture",
+        CLAWHUB_PLUGIN_SPEC: "clawhub:@grokbot/kitchen-sink",
         OPENCLAW_CLAWHUB_URL: `http://127.0.0.1:${address.port}`,
         OPENCLAW_PLUGINS_E2E_CLAWHUB_PREFLIGHT_TIMEOUT_MS: "25",
       });
 
       expect(result.status).not.toBe(0);
       expect(result.stderr).toContain(
-        "ClawHub package preflight for @openclaw/kitchen-sink timed out after 25ms",
+        "ClawHub package preflight for @grokbot/kitchen-sink timed out after 25ms",
       );
     } finally {
       await new Promise<void>((resolve) => {
@@ -1436,15 +1436,15 @@ test -d "$OPENCLAW_PLUGINS_TMP_DIR"
         throw new Error("expected TCP server address");
       }
       const result = await runAssertionAsync(["clawhub-preflight"], {
-        CLAWHUB_PLUGIN_ID: "openclaw-kitchen-sink-fixture",
-        CLAWHUB_PLUGIN_SPEC: "clawhub:@openclaw/kitchen-sink",
+        CLAWHUB_PLUGIN_ID: "grokbot-kitchen-sink-fixture",
+        CLAWHUB_PLUGIN_SPEC: "clawhub:@grokbot/kitchen-sink",
         OPENCLAW_CLAWHUB_URL: `http://127.0.0.1:${address.port}`,
         OPENCLAW_PLUGINS_E2E_CLAWHUB_PREFLIGHT_TIMEOUT_MS: "75",
       });
 
       expect(result.status).not.toBe(0);
       expect(result.stderr).toContain(
-        "ClawHub package preflight response for @openclaw/kitchen-sink timed out after 75ms",
+        "ClawHub package preflight response for @grokbot/kitchen-sink timed out after 75ms",
       );
     } finally {
       await new Promise<void>((resolve) => {
@@ -1468,8 +1468,8 @@ test -d "$OPENCLAW_PLUGINS_TMP_DIR"
         throw new Error("expected TCP server address");
       }
       const result = await runAssertionAsync(["clawhub-preflight"], {
-        CLAWHUB_PLUGIN_ID: "openclaw-kitchen-sink-fixture",
-        CLAWHUB_PLUGIN_SPEC: "clawhub:@openclaw/kitchen-sink",
+        CLAWHUB_PLUGIN_ID: "grokbot-kitchen-sink-fixture",
+        CLAWHUB_PLUGIN_SPEC: "clawhub:@grokbot/kitchen-sink",
         OPENCLAW_CLAWHUB_URL: `http://127.0.0.1:${address.port}`,
         OPENCLAW_PLUGINS_E2E_CLAWHUB_PREFLIGHT_BODY_MAX_BYTES: "16",
         OPENCLAW_PLUGINS_E2E_CLAWHUB_PREFLIGHT_TIMEOUT_MS: "1000",
@@ -1477,7 +1477,7 @@ test -d "$OPENCLAW_PLUGINS_TMP_DIR"
 
       expect(result.status).not.toBe(0);
       expect(result.stderr).toContain(
-        "ClawHub package preflight response for @openclaw/kitchen-sink response body exceeded 16 bytes",
+        "ClawHub package preflight response for @grokbot/kitchen-sink response body exceeded 16 bytes",
       );
       expect(result.stderr).not.toContain("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
     } finally {

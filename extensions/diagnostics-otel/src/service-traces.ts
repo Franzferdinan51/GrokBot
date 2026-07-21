@@ -5,7 +5,7 @@ import {
   type SpanKind,
   type Tracer,
 } from "@opentelemetry/api";
-import { waitForDiagnosticEventsDrained } from "openclaw/plugin-sdk/diagnostic-runtime";
+import { waitForDiagnosticEventsDrained } from "grokbot/plugin-sdk/diagnostic-runtime";
 import type {
   DiagnosticEventMetadata,
   DiagnosticEventPayload,
@@ -365,16 +365,16 @@ export function createDiagnosticsTraceRuntime(tracer: Tracer) {
     },
   ) => {
     if (evt.provider) {
-      spanAttrs["openclaw.provider"] = evt.provider;
+      spanAttrs["grokbot.provider"] = evt.provider;
     }
     if (evt.model) {
-      spanAttrs["openclaw.model"] = evt.model;
+      spanAttrs["grokbot.model"] = evt.model;
     }
     if (evt.channel) {
-      spanAttrs["openclaw.channel"] = evt.channel;
+      spanAttrs["grokbot.channel"] = evt.channel;
     }
     if (evt.trigger) {
-      spanAttrs["openclaw.trigger"] = evt.trigger;
+      spanAttrs["grokbot.trigger"] = evt.trigger;
     }
   };
 
@@ -385,8 +385,8 @@ export function createDiagnosticsTraceRuntime(tracer: Tracer) {
       return {};
     }
     return {
-      "openclaw.tool.params.kind": summary.kind,
-      ...("length" in summary ? { "openclaw.tool.params.length": summary.length } : {}),
+      "grokbot.tool.params.kind": summary.kind,
+      ...("length" in summary ? { "grokbot.tool.params.length": summary.length } : {}),
     };
   };
   return {

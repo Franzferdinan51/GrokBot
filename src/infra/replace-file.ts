@@ -1,4 +1,4 @@
-// Wraps fs-safe atomic replacement and move helpers for OpenClaw install flows.
+// Wraps fs-safe atomic replacement and move helpers for GrokBot install flows.
 import "./fs-safe-defaults.js";
 import fs from "node:fs/promises";
 import path from "node:path";
@@ -6,9 +6,9 @@ import {
   movePathWithCopyFallback as movePathWithCopyFallbackBase,
   replaceFileAtomic as replaceFileAtomicBase,
   type MovePathWithCopyFallbackOptions as BaseMovePathWithCopyFallbackOptions,
-} from "@openclaw/fs-safe/atomic";
+} from "@grokbot/fs-safe/atomic";
 
-export { replaceDirectoryAtomic, replaceFileAtomicSync } from "@openclaw/fs-safe/atomic";
+export { replaceDirectoryAtomic, replaceFileAtomicSync } from "@grokbot/fs-safe/atomic";
 
 /** Atomic file replacement primitive re-exported through the fs-safe defaults shim. */
 export const replaceFileAtomic = replaceFileAtomicBase;
@@ -19,7 +19,7 @@ type MovePathWithCopyFallbackOptions = BaseMovePathWithCopyFallbackOptions & {
 };
 
 /**
- * Moves a path using fs-safe's copy fallback, with an OpenClaw hardlink guard
+ * Moves a path using fs-safe's copy fallback, with an GrokBot hardlink guard
  * for install/update flows that must not preserve package-manager links.
  */
 export async function movePathWithCopyFallback(

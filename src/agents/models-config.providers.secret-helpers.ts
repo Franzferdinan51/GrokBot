@@ -1,8 +1,8 @@
 /**
  * Resolves configured provider secrets from env, profiles, and SecretRefs.
  */
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import { normalizeOptionalString } from "@grokbot/normalization-core/string-coerce";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { coerceSecretRef, resolveSecretInputRef } from "../config/types.secrets.js";
 import { normalizeOptionalSecretInput } from "../utils/normalize-secret-input.js";
 import type { AuthProfileStore } from "./auth-profiles/types.js";
@@ -24,7 +24,7 @@ import { resolveProviderIdForAuth } from "./provider-auth-aliases.js";
  * markers for secrets managed outside plain environment variables.
  */
 type ModelsConfig = NonNullable<OpenClawConfig["models"]>;
-/** Provider config entry from the canonical OpenClaw models config. */
+/** Provider config entry from the canonical GrokBot models config. */
 export type ProviderConfig = NonNullable<ModelsConfig["providers"]>[string];
 
 /** Default secret reference sources applied when config omits an explicit source. */

@@ -1,5 +1,5 @@
-import type { RouteLocation } from "@openclaw/uirouter";
-import { definePage, notFound } from "@openclaw/uirouter";
+import type { RouteLocation } from "@grokbot/uirouter";
+import { definePage, notFound } from "@grokbot/uirouter";
 import { html } from "lit";
 import type { ApplicationContext } from "../../app/context.ts";
 
@@ -31,6 +31,6 @@ export const page = definePage({
   component: () =>
     import("./chat-page.ts").then(() => ({
       header: true,
-      render: (data: unknown) => html`<openclaw-chat-page .data=${data}></openclaw-chat-page>`,
+      render: (data: unknown) => html`<grokbot-chat-page .data=${data}></grokbot-chat-page>`,
     })),
 });

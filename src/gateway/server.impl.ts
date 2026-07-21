@@ -1,6 +1,6 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
 import { monitorEventLoopDelay, performance } from "node:perf_hooks";
-import { uniqueStrings } from "@openclaw/normalization-core/string-normalization";
+import { uniqueStrings } from "@grokbot/normalization-core/string-normalization";
 import { getActiveBackgroundExecSessionCount } from "../agents/bash-process-registry.js";
 import {
   getActiveEmbeddedRunCount,
@@ -37,7 +37,7 @@ import { isNixMode, normalizeStateDirEnv } from "../config/paths.js";
 import { captureConfigOverrideApplier } from "../config/runtime-overrides.js";
 import { resolveMainSessionKey } from "../config/sessions.js";
 import type { GatewayAuthConfig } from "../config/types.gateway.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { isSecretRef } from "../config/types.secrets.js";
 import { getActiveCronJobCount } from "../cron/active-jobs.js";
 import {
@@ -474,12 +474,12 @@ function formatRuntimeGatewayAuthTokenWarning(): string {
   const base =
     "Gateway auth token was missing. Generated a runtime token for this startup without changing config; restart will generate a different token.";
   if (!isNixMode) {
-    return `${base} Persist one with \`openclaw config set gateway.auth.mode token\` and \`openclaw config set gateway.auth.token <token>\`.`;
+    return `${base} Persist one with \`grokbot config set gateway.auth.mode token\` and \`grokbot config set gateway.auth.token <token>\`.`;
   }
   return [
     base,
-    "In Nix mode, set gateway.auth.token in your Nix-managed OpenClaw config and rebuild.",
-    "For the first-party Nix flow, see https://github.com/openclaw/nix-openclaw#quick-start and https://docs.openclaw.ai/install/nix.",
+    "In Nix mode, set gateway.auth.token in your Nix-managed GrokBot config and rebuild.",
+    "For the first-party Nix flow, see https://github.com/grokbot/nix-grokbot#quick-start and https://docs.grokbot.ai/install/nix.",
   ].join(" ");
 }
 
@@ -564,7 +564,7 @@ export type GatewayServerOptions = {
   startupStartedAt?: number;
   /**
    * Config snapshot already read by the CLI gateway preflight. Passing it avoids
-   * reparsing openclaw.json during server startup.
+   * reparsing grokbot.json during server startup.
    */
   startupConfigSnapshotRead?: ReadConfigFileSnapshotWithPluginMetadataResult;
   /** Restart request override; direct servers fail closed on restart-required reloads. */
@@ -585,9 +585,9 @@ export async function startGatewayServer(
     agentDatabase,
     stateDatabase,
   ] = await Promise.all([
-    import("../state/openclaw-database-preflight.js"),
-    import("../state/openclaw-agent-db.js"),
-    import("../state/openclaw-state-db.js"),
+    import("../state/grokbot-database-preflight.js"),
+    import("../state/grokbot-agent-db.js"),
+    import("../state/grokbot-state-db.js"),
   ]);
   const databaseSchemas = preflightOpenClawDatabaseSchemas({
     env: process.env,
@@ -2293,7 +2293,7 @@ export async function startGatewayServer(
     finishGatewayRestartTrace("restart.ready", collectGatewayProcessMemoryUsageMb());
     if (!minimalTestGateway) {
       const { startOpenClawDatabaseIntegrityVerifier } =
-        await import("../state/openclaw-database-verify.js");
+        await import("../state/grokbot-database-verify.js");
       runtimeState.gatewayLifetimeSidecars.push(
         startOpenClawDatabaseIntegrityVerifier({ env: process.env }),
       );

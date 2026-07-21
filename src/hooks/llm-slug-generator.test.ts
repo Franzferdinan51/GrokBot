@@ -1,13 +1,13 @@
 // LLM slug generator tests cover generated hook names and collision behavior.
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 
 const runEmbeddedAgentMock = vi.fn();
 
 vi.mock("../agents/agent-scope.js", () => ({
   resolveDefaultAgentId: vi.fn(() => "main"),
-  resolveAgentWorkspaceDir: vi.fn(() => "/tmp/openclaw-agent"),
-  resolveAgentDir: vi.fn(() => "/tmp/openclaw-agent/.openclaw-agent"),
+  resolveAgentWorkspaceDir: vi.fn(() => "/tmp/grokbot-agent"),
+  resolveAgentDir: vi.fn(() => "/tmp/grokbot-agent/.grokbot-agent"),
 }));
 
 vi.mock("../agents/embedded-agent.js", () => ({
@@ -19,11 +19,11 @@ import { generateSlugViaLLM } from "./llm-slug-generator.js";
 function requireFirstRunOptions(): Record<string, unknown> {
   const [call] = runEmbeddedAgentMock.mock.calls;
   if (!call) {
-    throw new Error("expected embedded OpenClaw agent run");
+    throw new Error("expected embedded GrokBot agent run");
   }
   const [options] = call;
   if (!options || typeof options !== "object") {
-    throw new Error("expected embedded OpenClaw agent run options");
+    throw new Error("expected embedded GrokBot agent run options");
   }
   return options as Record<string, unknown>;
 }

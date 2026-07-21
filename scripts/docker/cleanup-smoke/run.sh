@@ -3,8 +3,8 @@ set -euo pipefail
 
 cd /repo
 
-export OPENCLAW_STATE_DIR="/tmp/openclaw-test"
-export OPENCLAW_CONFIG_PATH="${OPENCLAW_STATE_DIR}/openclaw.json"
+export OPENCLAW_STATE_DIR="/tmp/grokbot-test"
+export OPENCLAW_CONFIG_PATH="${OPENCLAW_STATE_DIR}/grokbot.json"
 
 read_positive_int_env() {
   local name="${1:?missing environment variable name}"
@@ -57,8 +57,8 @@ ensure_cleanup_smoke_node_options() {
 ensure_cleanup_smoke_node_options
 
 echo "==> Build"
-if ! pnpm build >/tmp/openclaw-cleanup-build.log 2>&1; then
-  print_log_tail /tmp/openclaw-cleanup-build.log
+if ! pnpm build >/tmp/grokbot-cleanup-build.log 2>&1; then
+  print_log_tail /tmp/grokbot-cleanup-build.log
   exit 1
 fi
 
@@ -70,8 +70,8 @@ echo 'creds' >"${OPENCLAW_STATE_DIR}/credentials/marker.txt"
 echo 'session' >"${OPENCLAW_STATE_DIR}/agents/main/sessions/sessions.json"
 
 echo "==> Reset (config+creds+sessions)"
-if ! pnpm openclaw reset --scope config+creds+sessions --yes --non-interactive >/tmp/openclaw-cleanup-reset.log 2>&1; then
-  print_log_tail /tmp/openclaw-cleanup-reset.log
+if ! pnpm grokbot reset --scope config+creds+sessions --yes --non-interactive >/tmp/grokbot-cleanup-reset.log 2>&1; then
+  print_log_tail /tmp/grokbot-cleanup-reset.log
   exit 1
 fi
 
@@ -84,8 +84,8 @@ mkdir -p "${OPENCLAW_STATE_DIR}/credentials"
 echo '{}' >"${OPENCLAW_CONFIG_PATH}"
 
 echo "==> Uninstall (state only)"
-if ! pnpm openclaw uninstall --state --yes --non-interactive >/tmp/openclaw-cleanup-uninstall.log 2>&1; then
-  print_log_tail /tmp/openclaw-cleanup-uninstall.log
+if ! pnpm grokbot uninstall --state --yes --non-interactive >/tmp/grokbot-cleanup-uninstall.log 2>&1; then
+  print_log_tail /tmp/grokbot-cleanup-uninstall.log
   exit 1
 fi
 

@@ -1,13 +1,13 @@
 // Memory Wiki doctor contract owns legacy state cleanup and migrations.
 import fs from "node:fs/promises";
 import path from "node:path";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/plugin-entry";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/plugin-entry";
 import {
   archiveLegacyStateSource,
   legacyStateFileExists,
   type PluginDoctorStateMigration,
-} from "openclaw/plugin-sdk/runtime-doctor";
-import { FsSafeError, root as fsRoot } from "openclaw/plugin-sdk/security-runtime";
+} from "grokbot/plugin-sdk/runtime-doctor";
+import { FsSafeError, root as fsRoot } from "grokbot/plugin-sdk/security-runtime";
 import { LEGACY_MEMORY_WIKI_COMPILED_CACHE_PATHS } from "./src/compiled-cache.js";
 import {
   resolveMemoryWikiAgentConfig,
@@ -16,7 +16,7 @@ import {
   type MemoryWikiPluginConfig,
 } from "./src/config.js";
 export { legacyConfigRules, normalizeCompatibilityConfig } from "./src/config-compat.js";
-import { isRecord } from "openclaw/plugin-sdk/string-coerce-runtime";
+import { isRecord } from "grokbot/plugin-sdk/string-coerce-runtime";
 import {
   countMemoryWikiImportRunStateRows,
   createMemoryWikiImportRunStateStore,

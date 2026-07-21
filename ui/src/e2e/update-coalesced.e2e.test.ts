@@ -9,7 +9,7 @@ import {
   type ControlUiE2eServer,
 } from "../test-helpers/control-ui-e2e.ts";
 
-const NATIVE_UPDATE_AVAILABILITY_CHANGED_EVENT = "openclaw:native-update-availability-changed";
+const NATIVE_UPDATE_AVAILABILITY_CHANGED_EVENT = "grokbot:native-update-availability-changed";
 
 const chromiumExecutablePath = resolvePlaywrightChromiumExecutablePath(chromium.executablePath());
 const chromiumAvailable = canRunPlaywrightChromium(chromiumExecutablePath);

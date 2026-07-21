@@ -1,5 +1,5 @@
 // Telegram tests cover channel actions plugin behavior.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { telegramMessageActions } from "./channel-actions.js";
 

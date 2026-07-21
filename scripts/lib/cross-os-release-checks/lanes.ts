@@ -628,7 +628,7 @@ export async function runDevUpdateSuite(
     const updatedShell = await verifyFreshShellCommand({
       lane,
       env,
-      expectedNeedle: "OpenClaw",
+      expectedNeedle: "GrokBot",
       logPath: join(params.logsDir, "dev-update-shell.log"),
     });
 
@@ -738,10 +738,10 @@ export async function runDevUpdateSuite(
 }
 
 function createLaneState(name: string): LaneState {
-  const rootDir = mkdtempSync(join(tmpdir(), `openclaw-${name}-`));
+  const rootDir = mkdtempSync(join(tmpdir(), `grokbot-${name}-`));
   const prefixDir = join(rootDir, "prefix");
   const homeDir = join(rootDir, "home");
-  const stateDir = join(homeDir, ".openclaw");
+  const stateDir = join(homeDir, ".grokbot");
   const appDataDir = process.platform === "win32" ? join(homeDir, "AppData", "Roaming") : stateDir;
   mkdirSync(prefixDir, { recursive: true });
   mkdirSync(homeDir, { recursive: true });
@@ -777,7 +777,7 @@ function buildLaneEnv(
     LOCALAPPDATA: join(lane.homeDir, "AppData", "Local"),
     OPENCLAW_HOME: lane.homeDir,
     OPENCLAW_STATE_DIR: lane.stateDir,
-    OPENCLAW_CONFIG_PATH: join(lane.stateDir, "openclaw.json"),
+    OPENCLAW_CONFIG_PATH: join(lane.stateDir, "grokbot.json"),
     OPENCLAW_DISABLE_BONJOUR: "1",
     OPENCLAW_DISABLE_BUNDLED_PLUGIN_POSTINSTALL: "1",
     NPM_CONFIG_PREFIX: lane.prefixDir,
@@ -801,7 +801,7 @@ function buildInstallerEnv(
     LOCALAPPDATA: localAppData,
     OPENCLAW_HOME: lane.homeDir,
     OPENCLAW_STATE_DIR: lane.stateDir,
-    OPENCLAW_CONFIG_PATH: join(lane.stateDir, "openclaw.json"),
+    OPENCLAW_CONFIG_PATH: join(lane.stateDir, "grokbot.json"),
     OPENCLAW_DISABLE_BONJOUR: "1",
     OPENCLAW_NO_ONBOARD: "1",
     OPENCLAW_NO_PROMPT: "1",

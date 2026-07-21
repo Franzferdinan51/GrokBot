@@ -1,13 +1,13 @@
 ---
-summary: "Run OpenClaw with Ollama (cloud and local models)"
+summary: "Run GrokBot with Ollama (cloud and local models)"
 read_when:
-  - You want to run OpenClaw with cloud or local models via Ollama
+  - You want to run GrokBot with cloud or local models via Ollama
   - You need Ollama setup and configuration guidance
   - You want Ollama vision models for image understanding
 title: "Ollama"
 ---
 
-OpenClaw talks to Ollama's native API (`/api/chat`), not the OpenAI-compatible
+GrokBot talks to Ollama's native API (`/api/chat`), not the OpenAI-compatible
 `/v1` endpoint. Three modes are supported:
 
 | Mode          | What it uses                                                                     |
@@ -31,7 +31,7 @@ OpenAI-SDK-style examples, but new config should use `baseUrl`.
 
 <AccordionGroup>
   <Accordion title="Local and LAN hosts">
-    Loopback, private-network, `.local`, and bare-hostname Ollama URLs do not need a real bearer token. OpenClaw uses the `ollama-local` marker for these.
+    Loopback, private-network, `.local`, and bare-hostname Ollama URLs do not need a real bearer token. GrokBot uses the `ollama-local` marker for these.
   </Accordion>
   <Accordion title="Remote and Ollama Cloud hosts">
     Public remote hosts and `https://ollama.com` require a real credential: `OLLAMA_API_KEY`, an auth profile, or the provider's `apiKey`. For direct hosted use, prefer the `ollama-cloud` provider.
@@ -40,7 +40,7 @@ OpenAI-SDK-style examples, but new config should use `baseUrl`.
     A custom provider with `api: "ollama"` follows the same rules. For example, an `ollama-remote` provider pointed at a private LAN host can use `apiKey: "ollama-local"`; sub-agents resolve that marker through the Ollama provider hook instead of treating it as a missing credential. `agents.defaults.memorySearch.provider` can also point at a custom provider id so embeddings use that Ollama endpoint.
   </Accordion>
   <Accordion title="Auth profiles">
-    `auth-profiles.json` stores the credential for a provider id; put endpoint settings (`baseUrl`, `api`, models, headers, timeouts) in `models.providers.<id>`. Older flat files such as `{ "ollama-windows": { "apiKey": "ollama-local" } }` are not a runtime format; `openclaw doctor --fix` rewrites them into a canonical `ollama-windows:default` API-key profile with a backup. A `baseUrl` value in that legacy file is noise and should move to provider config.
+    `auth-profiles.json` stores the credential for a provider id; put endpoint settings (`baseUrl`, `api`, models, headers, timeouts) in `models.providers.<id>`. Older flat files such as `{ "ollama-windows": { "apiKey": "ollama-local" } }` are not a runtime format; `grokbot doctor --fix` rewrites them into a canonical `ollama-windows:default` API-key profile with a backup. A `baseUrl` value in that legacy file is noise and should move to provider config.
   </Accordion>
   <Accordion title="Memory embedding scope">
     Bearer auth for Ollama memory embeddings is scoped to the host it was declared for:
@@ -59,12 +59,12 @@ OpenAI-SDK-style examples, but new config should use `baseUrl`.
     <Steps>
       <Step title="Run onboarding">
         ```bash
-        openclaw onboard
+        grokbot onboard
         ```
 
         Select **Ollama**, then pick a mode: **Cloud + Local**, **Cloud only**, or **Local only**.
 
-        On a fresh guided setup, OpenClaw first checks the default or configured
+        On a fresh guided setup, GrokBot first checks the default or configured
         Ollama host. If an installed model advertises tool support, the shared
         CLI/macOS setup ladder offers it immediately and verifies it with a real
         completion. This automatic check never pulls a model; if no suitable
@@ -75,7 +75,7 @@ OpenAI-SDK-style examples, but new config should use `baseUrl`.
       </Step>
       <Step title="Verify">
         ```bash
-        openclaw models list --provider ollama
+        grokbot models list --provider ollama
         ```
       </Step>
     </Steps>
@@ -83,7 +83,7 @@ OpenAI-SDK-style examples, but new config should use `baseUrl`.
     Non-interactive:
 
     ```bash
-    openclaw onboard --non-interactive \
+    grokbot onboard --non-interactive \
       --auth-choice ollama \
       --custom-base-url "http://ollama-host:11434" \
       --custom-model-id "qwen3.5:27b" \
@@ -111,12 +111,12 @@ OpenAI-SDK-style examples, but new config should use `baseUrl`.
         export OLLAMA_API_KEY="your-real-key"   # https://ollama.com only
         ```
 
-        Or in config: `openclaw config set models.providers.ollama.apiKey "OLLAMA_API_KEY"`.
+        Or in config: `grokbot config set models.providers.ollama.apiKey "OLLAMA_API_KEY"`.
       </Step>
       <Step title="Select the model">
         ```bash
-        openclaw models list
-        openclaw models set ollama/gemma4
+        grokbot models list
+        grokbot models set ollama/gemma4
         ```
 
         Or in config:
@@ -142,29 +142,29 @@ OpenAI-SDK-style examples, but new config should use `baseUrl`.
 Ollama host — this is Ollama's hybrid flow and the mode to pick during setup
 when you want both.
 
-OpenClaw prompts for the base URL, discovers local models, and checks
+GrokBot prompts for the base URL, discovers local models, and checks
 `ollama signin` status. When signed in, it suggests hosted defaults
 (`kimi-k2.5:cloud`, `minimax-m2.7:cloud`, `glm-5.1:cloud`, `glm-5.2:cloud`). If
 not signed in, setup stays local-only until you run `ollama signin`.
 
-For cloud-only access without a local daemon, use `openclaw onboard --auth-choice ollama-cloud` and see [Ollama Cloud](/providers/ollama-cloud) — that path does not need `ollama signin` or a running server:
+For cloud-only access without a local daemon, use `grokbot onboard --auth-choice ollama-cloud` and see [Ollama Cloud](/providers/ollama-cloud) — that path does not need `ollama signin` or a running server:
 
 ```bash
-openclaw onboard --auth-choice ollama-cloud
-openclaw models set ollama-cloud/kimi-k2.5:cloud
+grokbot onboard --auth-choice ollama-cloud
+grokbot models set ollama-cloud/kimi-k2.5:cloud
 ```
 
-The cloud model list shown during `openclaw onboard` is populated live from
+The cloud model list shown during `grokbot onboard` is populated live from
 `https://ollama.com/api/tags`, capped at 500 entries, so the picker reflects
 the current hosted catalog. If `ollama.com` is unreachable or returns no
-models at setup time, OpenClaw falls back to its hardcoded suggested list so
+models at setup time, GrokBot falls back to its hardcoded suggested list so
 onboarding still completes.
 
 ## Model discovery (implicit provider)
 
 When `OLLAMA_API_KEY` (or an auth profile) is set and neither
 `models.providers.ollama` nor another custom provider with `api: "ollama"` is
-defined, OpenClaw discovers models from `http://127.0.0.1:11434`:
+defined, GrokBot discovers models from `http://127.0.0.1:11434`:
 
 | Behavior             | Detail                                                                                                                                                                                                                                                                                        |
 | -------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -172,12 +172,12 @@ defined, OpenClaw discovers models from `http://127.0.0.1:11434`:
 | Capability detection | Best-effort `/api/show` reads `contextWindow`, `num_ctx` Modelfile parameters, and capabilities (vision/tools/thinking)                                                                                                                                                                       |
 | Vision models        | A `vision` capability from `/api/show` marks the model image-capable (`input: ["text", "image"]`)                                                                                                                                                                                             |
 | Reasoning detection  | Uses the `thinking` capability from `/api/show` when available; falls back to a name heuristic (`r1`, `reason`, `reasoning`, `think`) when Ollama omits capabilities. `glm-5.2:cloud` and `deepseek-v4-flash\|pro:cloud` are always treated as reasoning regardless of reported capabilities. |
-| Token limits         | `maxTokens` defaults to OpenClaw's Ollama max-token cap                                                                                                                                                                                                                                       |
+| Token limits         | `maxTokens` defaults to GrokBot's Ollama max-token cap                                                                                                                                                                                                                                       |
 | Costs                | All costs are `0`                                                                                                                                                                                                                                                                             |
 
 ```bash
 ollama list
-openclaw models list
+grokbot models list
 ```
 
 Setting `models.providers.ollama` with an explicit `models` array, or a
@@ -189,7 +189,7 @@ are provider-managed. Loopback custom providers such as
 `http://127.0.0.2:11434` still count as local and keep auto-discovery.
 
 You can use a full ref such as `ollama/<pulled-model>:latest` without a
-hand-written `models.json` entry; OpenClaw resolves it live. For signed-in
+hand-written `models.json` entry; GrokBot resolves it live. For signed-in
 hosts, selecting an unlisted `ollama/<model>:cloud` ref validates that exact
 model with `/api/show` and adds it to the runtime catalog only if Ollama
 confirms metadata — typos still fail as unknown models.
@@ -200,7 +200,7 @@ For a narrow text probe that skips the full agent tool surface:
 
 ```bash
 OLLAMA_API_KEY=ollama-local \
-  openclaw infer model run \
+  grokbot infer model run \
     --local \
     --model ollama/llama3.2:latest \
     --prompt "Reply with exactly: pong" \
@@ -209,11 +209,11 @@ OLLAMA_API_KEY=ollama-local \
 
 Add `--file` with an image for a lean vision-model probe (accepts PNG/JPEG/WebP;
 non-image files are rejected before Ollama is called — use
-`openclaw infer audio transcribe` for audio):
+`grokbot infer audio transcribe` for audio):
 
 ```bash
 OLLAMA_API_KEY=ollama-local \
-  openclaw infer model run \
+  grokbot infer model run \
     --local \
     --model ollama/qwen2.5vl:7b \
     --prompt "Describe this image in one sentence." \
@@ -231,7 +231,7 @@ error instead of silently falling back to another configured model.
 
 Isolated cron jobs add one local safety check before starting the agent turn:
 if the selected model resolves to a local/private-network/`.local` Ollama
-provider and `/api/tags` is unreachable, OpenClaw records that run as
+provider and `/api/tags` is unreachable, GrokBot records that run as
 `skipped` with the model in the error text. This endpoint check is cached for
 5 minutes per host, so repeated cron jobs against a stopped daemon do not all
 launch failing requests.
@@ -278,7 +278,7 @@ endpoint (`http://127.0.0.1:11434`).
   </Step>
   <Step title="Connect the node host">
     ```bash
-    openclaw node run \
+    grokbot node run \
       --host <gateway-host> \
       --port 18789 \
       --display-name "Local inference"
@@ -287,16 +287,16 @@ endpoint (`http://127.0.0.1:11434`).
     Approve the device and its node commands on the Gateway host, then verify:
 
     ```bash
-    openclaw devices list
-    openclaw devices approve <deviceRequestId>
-    openclaw nodes pending
-    openclaw nodes approve <nodeRequestId>
-    openclaw nodes status --connected
+    grokbot devices list
+    grokbot devices approve <deviceRequestId>
+    grokbot nodes pending
+    grokbot nodes approve <nodeRequestId>
+    grokbot nodes status --connected
     ```
 
     A first connection, or an upgrade that adds Ollama commands, can trigger
     node-command approval. If the node connects without advertising
-    `ollama.models` and `ollama.chat`, check `openclaw nodes pending` again.
+    `ollama.models` and `ollama.chat`, check `grokbot nodes pending` again.
 
   </Step>
   <Step title="Use it from an agent">
@@ -319,26 +319,26 @@ do not support disabling thinking and may still emit reasoning tokens.
 To keep Ollama running on a node without exposing it to agents:
 
 ```bash
-openclaw config set plugins.entries.ollama.config.nodeInference.enabled false
+grokbot config set plugins.entries.ollama.config.nodeInference.enabled false
 ```
 
-Restart the node (`openclaw node restart`, or stop/rerun `openclaw node run`
+Restart the node (`grokbot node restart`, or stop/rerun `grokbot node run`
 for a foreground session). The node stops advertising `ollama.models` and
 `ollama.chat`; Ollama itself and the Gateway's Ollama provider are unaffected.
 Set the value back to `true` and restart to re-enable; a changed command
-surface may need `openclaw nodes pending` approval again after reconnect.
+surface may need `grokbot nodes pending` approval again after reconnect.
 
 Verify the node commands directly, without an agent turn:
 
 ```bash
-openclaw nodes invoke \
+grokbot nodes invoke \
   --node "Local inference" \
   --command ollama.models \
   --params '{}' \
   --invoke-timeout 90000 \
   --timeout 100000
 
-openclaw nodes invoke \
+grokbot nodes invoke \
   --node "Local inference" \
   --command ollama.chat \
   --params '{"model":"qwen3:0.6b","prompt":"Reply with exactly: pong","maxTokens":32,"timeoutMs":120000}' \
@@ -357,21 +357,21 @@ hosts and remain subject to normal node pairing/command policy.
 ## Vision and image description
 
 The bundled Ollama plugin registers Ollama as an image-capable
-media-understanding provider, so OpenClaw can route explicit image-description
+media-understanding provider, so GrokBot can route explicit image-description
 requests and configured image-model defaults through local or hosted Ollama
 vision models.
 
 ```bash
 ollama pull qwen2.5vl:7b
 export OLLAMA_API_KEY="ollama-local"
-openclaw infer image describe --file ./photo.jpg --model ollama/qwen2.5vl:7b --json
+grokbot infer image describe --file ./photo.jpg --model ollama/qwen2.5vl:7b --json
 ```
 
 `--model` must be a full `<provider/model>` ref; when set, `infer image
 describe` tries that model first instead of skipping description for models
-that already support native vision. If the call fails, OpenClaw can continue
+that already support native vision. If the call fails, GrokBot can continue
 through `agents.defaults.imageModel.fallbacks`; file/URL preparation errors
-fail before fallback is attempted. Use `infer image describe` for OpenClaw's
+fail before fallback is attempted. Use `infer image describe` for GrokBot's
 image-understanding flow and configured `imageModel`; use `infer model run
 --file` for a raw multimodal probe with a custom prompt.
 
@@ -451,7 +451,7 @@ explicitly:
 }
 ```
 
-OpenClaw rejects image-description requests for models not marked
+GrokBot rejects image-description requests for models not marked
 image-capable. With implicit discovery, this comes from `/api/show`'s vision
 capability.
 
@@ -464,7 +464,7 @@ capability.
     ```
 
     <Tip>
-    If `OLLAMA_API_KEY` is set, you can omit `apiKey` in the provider entry; OpenClaw fills it in for availability checks.
+    If `OLLAMA_API_KEY` is set, you can omit `apiKey` in the provider entry; GrokBot fills it in for availability checks.
     </Tip>
 
   </Tab>
@@ -537,7 +537,7 @@ capability.
 ## Common recipes
 
 Replace model IDs with exact names from `ollama list` or
-`openclaw models list --provider ollama`.
+`grokbot models list --provider ollama`.
 
 <AccordionGroup>
   <Accordion title="Local model with auto-discovery">
@@ -547,8 +547,8 @@ Replace model IDs with exact names from `ollama list` or
     ollama serve
     ollama pull gemma4
     export OLLAMA_API_KEY="ollama-local"
-    openclaw models list --provider ollama
-    openclaw models set ollama/gemma4
+    grokbot models list --provider ollama
+    grokbot models set ollama/gemma4
     ```
 
     Do not add a `models.providers.ollama` block unless you need manual models.
@@ -591,7 +591,7 @@ Replace model IDs with exact names from `ollama list` or
     }
     ```
 
-    `contextWindow` is OpenClaw's context budget; `params.num_ctx` is sent to
+    `contextWindow` is GrokBot's context budget; `params.num_ctx` is sent to
     Ollama. Keep them aligned when hardware cannot run the model's full
     advertised context.
 
@@ -710,7 +710,7 @@ Replace model IDs with exact names from `ollama list` or
     }
     ```
 
-    OpenClaw strips the active provider prefix (falling back to a bare
+    GrokBot strips the active provider prefix (falling back to a bare
     `ollama/` prefix) before calling Ollama, so `ollama-large/qwen3.5:27b`
     reaches Ollama as `qwen3.5:27b`.
 
@@ -784,7 +784,7 @@ Replace model IDs with exact names from `ollama list` or
 ```
 
 Custom provider ids work the same way: for a ref using the active provider
-prefix, such as `ollama-spark/qwen3:32b`, OpenClaw strips that prefix before
+prefix, such as `ollama-spark/qwen3:32b`, GrokBot strips that prefix before
 calling Ollama, sending `qwen3:32b`.
 
 For slow local models, prefer provider-scoped tuning before raising the whole
@@ -820,23 +820,23 @@ model when first-turn load time is the bottleneck.
 # Ollama daemon visible to this machine
 curl http://127.0.0.1:11434/api/tags
 
-# OpenClaw catalog and selected model
-openclaw models list --provider ollama
-openclaw models status
+# GrokBot catalog and selected model
+grokbot models list --provider ollama
+grokbot models status
 
 # Direct model smoke
-openclaw infer model run \
+grokbot infer model run \
   --model ollama/gemma4 \
   --prompt "Reply with exactly: ok"
 ```
 
 For remote hosts, replace `127.0.0.1` with the `baseUrl` host. If `curl`
-works but OpenClaw does not, check whether the Gateway runs on a different
+works but GrokBot does not, check whether the Gateway runs on a different
 machine, container, or service account.
 
 ## Ollama Web Search
 
-OpenClaw bundles **Ollama Web Search** as a `web_search` provider.
+GrokBot bundles **Ollama Web Search** as a `web_search` provider.
 
 | Property    | Detail                                                                                                                                                     |
 | ----------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -844,7 +844,7 @@ OpenClaw bundles **Ollama Web Search** as a `web_search` provider.
 | Auth        | Key-free for a signed-in local host; `OLLAMA_API_KEY` or configured provider auth for direct `https://ollama.com` search or auth-protected hosts           |
 | Requirement | Local/self-hosted hosts must be running and signed in with `ollama signin`; direct hosted search needs `baseUrl: "https://ollama.com"` plus a real API key |
 
-Choose it during `openclaw onboard` or `openclaw configure --section web`, or set:
+Choose it during `grokbot onboard` or `grokbot configure --section web`, or set:
 
 ```json5
 {
@@ -880,7 +880,7 @@ For direct hosted search through Ollama Cloud:
 }
 ```
 
-For a self-hosted host, OpenClaw first tries the local `/api/experimental/web_search`
+For a self-hosted host, GrokBot first tries the local `/api/experimental/web_search`
 proxy, then falls back to the hosted `/api/web_search` path on the same host; a
 signed-in local daemon normally answers through the local proxy. Direct
 `https://ollama.com` calls always use the hosted `/api/web_search` endpoint.
@@ -919,7 +919,7 @@ For full setup and behavior, see [Ollama Web Search](/tools/ollama-search).
     This mode may not support streaming and tool calling simultaneously; you
     may need `params: { streaming: false }` on the model.
 
-    OpenClaw injects `options.num_ctx` by default in this mode so Ollama does
+    GrokBot injects `options.num_ctx` by default in this mode so Ollama does
     not silently fall back to a 4096-token context. If your proxy rejects
     unknown `options` fields, disable it:
 
@@ -942,20 +942,20 @@ For full setup and behavior, see [Ollama Web Search](/tools/ollama-search).
   </Accordion>
 
   <Accordion title="Context windows">
-    For auto-discovered models, OpenClaw uses the context window `/api/show`
+    For auto-discovered models, GrokBot uses the context window `/api/show`
     reports, including larger `PARAMETER num_ctx` values from custom
-    Modelfiles; otherwise it falls back to OpenClaw's default Ollama context
+    Modelfiles; otherwise it falls back to GrokBot's default Ollama context
     window.
 
     Provider-level `contextWindow`, `contextTokens`, and `maxTokens` set
     defaults for every model under that provider and can be overridden per
-    model. `contextWindow` is OpenClaw's own prompt/compaction budget. Native
+    model. `contextWindow` is GrokBot's own prompt/compaction budget. Native
     `/api/chat` requests leave `options.num_ctx` unset unless you set
     `params.num_ctx` explicitly, so Ollama applies its own model,
     `OLLAMA_CONTEXT_LENGTH`, or VRAM-based default; invalid, zero, negative,
     or non-finite `params.num_ctx` values are ignored. If an older config used
     only `contextWindow`/`maxTokens` to force native request context, run
-    `openclaw doctor --fix` to copy those into `params.num_ctx`. The
+    `grokbot doctor --fix` to copy those into `params.num_ctx`. The
     OpenAI-compatible adapter still injects `options.num_ctx` by default from
     the configured `params.num_ctx` or `contextWindow`; disable with
     `injectNumCtxForOpenAICompat: false` if the upstream rejects `options`.
@@ -966,7 +966,7 @@ For full setup and behavior, see [Ollama Web Search](/tools/ollama-search).
     `temperature`, `repeat_penalty`, `presence_penalty`, `frequency_penalty`,
     `stop`, `num_batch`, `num_gpu`, `main_gpu`, `use_mmap`, and `num_thread`.
     A few keys (`format`, `keep_alive`, `truncate`, `shift`) are forwarded as
-    top-level request fields instead of nested `options`. OpenClaw only
+    top-level request fields instead of nested `options`. GrokBot only
     forwards these Ollama request keys, so runtime-only params such as
     `streaming` are never sent to Ollama. Use `params.think` (or
     `params.thinking`) to set top-level `think`; `false` disables API-level
@@ -1003,14 +1003,14 @@ For full setup and behavior, see [Ollama Web Search](/tools/ollama-search).
   </Accordion>
 
   <Accordion title="Thinking control">
-    OpenClaw forwards thinking as Ollama expects it: top-level `think`, not
+    GrokBot forwards thinking as Ollama expects it: top-level `think`, not
     `options.think`. Auto-discovered models whose `/api/show` reports a
     `thinking` capability expose `/think low`, `/think medium`, `/think high`,
     and `/think max`; non-thinking models expose only `/think off`.
 
     ```bash
-    openclaw agent --model ollama/gemma4 --thinking off
-    openclaw agent --model ollama/gemma4 --thinking low
+    grokbot agent --model ollama/gemma4 --thinking off
+    grokbot agent --model ollama/gemma4 --thinking low
     ```
 
     Or set a model default:
@@ -1030,7 +1030,7 @@ For full setup and behavior, see [Ollama Web Search](/tools/ollama-search).
     ```
 
     Per-model `params.think`/`params.thinking` can disable or force API
-    thinking for a specific model. OpenClaw preserves that explicit config
+    thinking for a specific model. GrokBot preserves that explicit config
     when the active run only has the implicit `off` default; a non-off
     runtime command such as `/think medium` still overrides it. A truthy
     thinking request is never sent to a model explicitly marked
@@ -1060,7 +1060,7 @@ For full setup and behavior, see [Ollama Web Search](/tools/ollama-search).
     one `input` request when possible.
 
     When `proxy.enabled=true`, embedding requests to the exact host-local
-    loopback origin derived from the configured `baseUrl` use OpenClaw's
+    loopback origin derived from the configured `baseUrl` use GrokBot's
     guarded direct path instead of the managed forward proxy. The configured
     hostname must itself be `localhost` or a loopback IP literal — DNS names
     that merely resolve to loopback still use the managed proxy path. LAN,
@@ -1124,7 +1124,7 @@ For full setup and behavior, see [Ollama Web Search](/tools/ollama-search).
     streaming and tool calling together — no special config needed.
 
     For native requests, thinking control is forwarded directly: `/think off`
-    and `openclaw agent --thinking off` send top-level `think: false` unless
+    and `grokbot agent --thinking off` send top-level `think: false` unless
     an explicit `params.think`/`params.thinking` is configured; `/think
     low|medium|high` send the matching effort string; `/think max` maps to
     Ollama's highest effort, `think: "high"`.
@@ -1151,7 +1151,7 @@ For full setup and behavior, see [Ollama Web Search](/tools/ollama-search).
     `ollama.service` right after WSL2 startup, and SIGTERM from systemd rather
     than the Linux OOM killer.
 
-    OpenClaw logs a startup warning when it detects WSL2, `ollama.service`
+    GrokBot logs a startup warning when it detects WSL2, `ollama.service`
     enabled with `Restart=always`, and visible CUDA markers.
 
     Mitigation:
@@ -1214,11 +1214,11 @@ For full setup and behavior, see [Ollama Web Search](/tools/ollama-search).
 
   </Accordion>
 
-  <Accordion title="Remote host works with curl but not OpenClaw">
+  <Accordion title="Remote host works with curl but not GrokBot">
     Verify from the same machine and runtime that runs the Gateway:
 
     ```bash
-    openclaw gateway status --deep
+    grokbot gateway status --deep
     curl http://ollama-host:11434/api/tags
     ```
 
@@ -1264,8 +1264,8 @@ For full setup and behavior, see [Ollama Web Search](/tools/ollama-search).
     session and a fallback model:
 
     ```bash
-    openclaw infer model run --model ollama/kimi-k2.5:cloud --prompt "Reply with exactly: ok" --json
-    openclaw models set ollama/gemma4
+    grokbot infer model run --model ollama/kimi-k2.5:cloud --prompt "Reply with exactly: ok" --json
+    grokbot models set ollama/gemma4
     ```
 
   </Accordion>
@@ -1301,7 +1301,7 @@ For full setup and behavior, see [Ollama Web Search](/tools/ollama-search).
   <Accordion title="Large-context model is too slow or runs out of memory">
     Many models advertise contexts larger than your hardware can run
     comfortably. Native Ollama uses its own runtime default unless
-    `params.num_ctx` is set. Cap both OpenClaw's budget and Ollama's request
+    `params.num_ctx` is set. Cap both GrokBot's budget and Ollama's request
     context for predictable first-token latency:
 
     ```json5
@@ -1324,7 +1324,7 @@ For full setup and behavior, see [Ollama Web Search](/tools/ollama-search).
     }
     ```
 
-    Lower `contextWindow` if OpenClaw sends too much prompt. Lower
+    Lower `contextWindow` if GrokBot sends too much prompt. Lower
     `params.num_ctx` if Ollama's runtime context is too large for the machine.
     Lower `maxTokens` if generation runs too long.
 

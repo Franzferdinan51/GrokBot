@@ -5,12 +5,12 @@ import {
   embeddedAgentLog,
   invokeNativeHookRelay,
   nativeHookRelayTesting,
-} from "openclaw/plugin-sdk/agent-harness-runtime";
+} from "grokbot/plugin-sdk/agent-harness-runtime";
 import {
   onInternalDiagnosticEvent,
   type DiagnosticEventPayload,
-} from "openclaw/plugin-sdk/diagnostic-runtime";
-import * as mediaStore from "openclaw/plugin-sdk/media-store";
+} from "grokbot/plugin-sdk/diagnostic-runtime";
+import * as mediaStore from "grokbot/plugin-sdk/media-store";
 import { describe, expect, it, vi } from "vitest";
 import { buildCodexAppServerPromptTimeoutOutcome } from "./attempt-results.js";
 import { createCodexAttemptTurnWatchController } from "./attempt-turn-watches.js";
@@ -345,7 +345,7 @@ describe("runCodexAppServerAttempt turn watches", () => {
     expect(toolResult.success).toBe(false);
     expect(toolResult.contentItems?.[0]?.type).toBe("inputText");
     expect(toolResult.contentItems?.[0]?.text).toMatch(
-      /^(Unknown OpenClaw tool: message|Action send requires a target\.)$/u,
+      /^(Unknown GrokBot tool: message|Action send requires a target\.)$/u,
     );
 
     const result = await run;
@@ -1810,7 +1810,7 @@ describe("runCodexAppServerAttempt turn watches", () => {
     expect(request.mock.calls.some(([method]) => method === "turn/interrupt")).toBe(false);
   });
 
-  it("keeps waiting after an OpenClaw dynamic tool response before final synthesis", async () => {
+  it("keeps waiting after an GrokBot dynamic tool response before final synthesis", async () => {
     let notify: (notification: CodexServerNotification) => Promise<void> = async () => undefined;
     let handleRequest:
       | ((request: { id: string; method: string; params?: unknown }) => Promise<unknown>)
@@ -3219,7 +3219,7 @@ describe("runCodexAppServerAttempt turn watches", () => {
   });
 
   it("clears the thread binding after a completion-idle timeout so the next turn starts fresh", async () => {
-    // Regression for openclaw#89974. Codex writes a generic <turn_aborted>
+    // Regression for grokbot#89974. Codex writes a generic <turn_aborted>
     // marker for every interrupted turn. Clearing the timed-out binding keeps
     // that marker out of the next turn by starting a fresh thread.
     vi.spyOn(embeddedAgentLog, "warn").mockImplementation(() => undefined);
@@ -3251,7 +3251,7 @@ describe("runCodexAppServerAttempt turn watches", () => {
     // The timed-out thread's binding is gone, so it cannot be resumed.
     expect(await readCodexAppServerBinding(sessionFile)).toBeUndefined();
 
-    // Turn 2: with no binding, OpenClaw starts a brand-new thread instead of
+    // Turn 2: with no binding, GrokBot starts a brand-new thread instead of
     // resuming the timed-out one, so Codex's interrupt marker never replays.
     const secondHarness = createStartedThreadHarness();
     const secondRun = runCodexAppServerAttempt(createParams(sessionFile, workspaceDir));
@@ -5372,7 +5372,7 @@ describe("runCodexAppServerAttempt turn watches", () => {
   });
 
   it("releases completion when a projector callback throws during turn/completed", async () => {
-    // Regression for openclaw/openclaw#67996: a throw inside the projector's
+    // Regression for grokbot/grokbot#67996: a throw inside the projector's
     // turn/completed handler must not strand resolveCompletion, otherwise the
     // gateway session lane stays locked and every follow-up message queues
     // behind a run that will never resolve.

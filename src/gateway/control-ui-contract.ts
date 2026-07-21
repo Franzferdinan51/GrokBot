@@ -19,12 +19,12 @@ export const CONTROL_UI_PLUGIN_AUTH_PROBE_QUERY = "__openclaw_plugin_frame_auth_
 export const CONTROL_UI_PLUGIN_AUTH_PROBE_ORIGIN_QUERY = "__openclaw_plugin_frame_auth_origin";
 
 /** Message emitted only by a successful sandbox cookie capability probe. */
-export const CONTROL_UI_PLUGIN_AUTH_PROBE_MESSAGE = "openclaw-plugin-frame-auth-probe";
+export const CONTROL_UI_PLUGIN_AUTH_PROBE_MESSAGE = "grokbot-plugin-frame-auth-probe";
 
 /** Extracts the same-origin route pathname from a tab descriptor URL. */
 export function resolveControlUiPluginTabPathname(path: string): string | undefined {
   try {
-    const baseUrl = new URL("http://openclaw.invalid");
+    const baseUrl = new URL("http://grokbot.invalid");
     const tabUrl = new URL(path, baseUrl);
     return tabUrl.origin === baseUrl.origin ? tabUrl.pathname : undefined;
   } catch {
@@ -33,10 +33,10 @@ export function resolveControlUiPluginTabPathname(path: string): string | undefi
 }
 
 /** Carries the gateway-configured Control UI mount path into browser bootstrap. */
-export const CONTROL_UI_BASE_PATH_ATTRIBUTE = "data-openclaw-control-ui-base-path";
+export const CONTROL_UI_BASE_PATH_ATTRIBUTE = "data-grokbot-control-ui-base-path";
 
 /** Marks whether the served document CSP permits the terminal WASM runtime. */
-export const CONTROL_UI_TERMINAL_ENABLED_ATTRIBUTE = "data-openclaw-terminal-enabled";
+export const CONTROL_UI_TERMINAL_ENABLED_ATTRIBUTE = "data-grokbot-terminal-enabled";
 
 /** Sandbox policy for assistant-provided embed surfaces inside Control UI. */
 export type ControlUiEmbedSandboxMode = "strict" | "scripts" | "trusted";

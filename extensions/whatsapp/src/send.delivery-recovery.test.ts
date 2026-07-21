@@ -1,16 +1,16 @@
 // Whatsapp tests cover the durable outbound handoff across startup recovery.
-import { sendDurableMessageBatch } from "openclaw/plugin-sdk/channel-outbound";
+import { sendDurableMessageBatch } from "grokbot/plugin-sdk/channel-outbound";
 import {
   createEmptyPluginRegistry,
   createOutboundTestPlugin,
   createTestRegistry,
   releasePinnedPluginChannelRegistry,
   setActivePluginRegistry,
-} from "openclaw/plugin-sdk/channel-test-helpers";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { drainPendingDeliveries } from "openclaw/plugin-sdk/delivery-queue-runtime";
-import { PlatformMessageNotDispatchedError } from "openclaw/plugin-sdk/error-runtime";
-import { withStateDirEnv } from "openclaw/plugin-sdk/test-env";
+} from "grokbot/plugin-sdk/channel-test-helpers";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { drainPendingDeliveries } from "grokbot/plugin-sdk/delivery-queue-runtime";
+import { PlatformMessageNotDispatchedError } from "grokbot/plugin-sdk/error-runtime";
+import { withStateDirEnv } from "grokbot/plugin-sdk/test-env";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { whatsappChannelOutbound } from "./channel-outbound.js";
 import { createAcceptedWhatsAppSendResult } from "./inbound/send-result.test-helper.js";
@@ -75,7 +75,7 @@ describe("WhatsApp delivery recovery", () => {
   });
 
   it("keeps pre-connect recovery replayable, then sends exactly once after connect", async () => {
-    await withStateDirEnv("openclaw-whatsapp-delivery-recovery-", async ({ stateDir }) => {
+    await withStateDirEnv("grokbot-whatsapp-delivery-recovery-", async ({ stateDir }) => {
       const initialResult = await sendDurableMessageBatch({
         cfg,
         channel: "whatsapp",

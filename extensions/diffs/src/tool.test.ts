@@ -1,7 +1,7 @@
 // Diffs tests cover tool plugin behavior.
 import fs from "node:fs/promises";
 import path from "node:path";
-import { createTestPluginApi } from "openclaw/plugin-sdk/plugin-test-api";
+import { createTestPluginApi } from "grokbot/plugin-sdk/plugin-test-api";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { OpenClawPluginApi, OpenClawPluginToolContext } from "../api.js";
 import type { DiffScreenshotter } from "./browser.js";
@@ -23,7 +23,7 @@ describe("diffs tool", () => {
       rootDir,
       store,
       cleanup: cleanupRootDir,
-    } = await createDiffStoreHarness("openclaw-diffs-tool-"));
+    } = await createDiffStoreHarness("grokbot-diffs-tool-"));
   });
 
   afterEach(async () => {
@@ -80,11 +80,11 @@ describe("diffs tool", () => {
   it("uses configured viewerBaseUrl when tool input omits baseUrl", async () => {
     const tool = createDiffsTool({
       api: createApi({
-        viewerBaseUrl: "https://example.com/openclaw/",
+        viewerBaseUrl: "https://example.com/grokbot/",
       }),
       store,
       defaults: DEFAULT_DIFFS_TOOL_DEFAULTS,
-      viewerBaseUrl: "https://example.com/openclaw",
+      viewerBaseUrl: "https://example.com/grokbot",
     });
 
     const result = await tool.execute?.("tool-viewer-config", {
@@ -95,21 +95,21 @@ describe("diffs tool", () => {
     });
 
     expect(readTextContent(result, 0)).toContain(
-      "https://example.com/openclaw/plugins/diffs/view/",
+      "https://example.com/grokbot/plugins/diffs/view/",
     );
     expect(String((result.details as Record<string, unknown>).viewerUrl)).toContain(
-      "https://example.com/openclaw/plugins/diffs/view/",
+      "https://example.com/grokbot/plugins/diffs/view/",
     );
   });
 
   it("prefers per-call baseUrl over configured viewerBaseUrl", async () => {
     const tool = createDiffsTool({
       api: createApi({
-        viewerBaseUrl: "https://example.com/openclaw",
+        viewerBaseUrl: "https://example.com/grokbot",
       }),
       store,
       defaults: DEFAULT_DIFFS_TOOL_DEFAULTS,
-      viewerBaseUrl: "https://example.com/openclaw",
+      viewerBaseUrl: "https://example.com/grokbot",
     });
 
     const result = await tool.execute?.("tool-viewer-override", {

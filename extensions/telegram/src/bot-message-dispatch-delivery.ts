@@ -6,17 +6,17 @@ import {
   deriveDurableFinalDeliveryRequirements,
   projectOutboundPayloadPlanForDelivery,
   resolveTranscriptBackedChannelFinalText,
-} from "openclaw/plugin-sdk/channel-outbound";
+} from "grokbot/plugin-sdk/channel-outbound";
 import type {
   OpenClawConfig,
   ReplyToMode,
   TelegramAccountConfig,
-} from "openclaw/plugin-sdk/config-contracts";
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
-import type { ReplyPayload } from "openclaw/plugin-sdk/reply-payload";
-import { isSingleUseReplyToMode } from "openclaw/plugin-sdk/reply-reference";
-import type { RuntimeEnv } from "openclaw/plugin-sdk/runtime-env";
-import { logVerbose } from "openclaw/plugin-sdk/runtime-env";
+} from "grokbot/plugin-sdk/config-contracts";
+import { formatErrorMessage } from "grokbot/plugin-sdk/error-runtime";
+import type { ReplyPayload } from "grokbot/plugin-sdk/reply-payload";
+import { isSingleUseReplyToMode } from "grokbot/plugin-sdk/reply-reference";
+import type { RuntimeEnv } from "grokbot/plugin-sdk/runtime-env";
+import { logVerbose } from "grokbot/plugin-sdk/runtime-env";
 import type { TelegramBotDeps } from "./bot-deps.js";
 import type { TelegramMessageContext } from "./bot-message-context.js";
 import type { TelegramDraftController } from "./bot-message-dispatch-draft.js";

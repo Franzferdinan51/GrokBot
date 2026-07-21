@@ -9,7 +9,7 @@ import { maybeCreateDynamicAgent } from "./dynamic-agent.js";
 let tempRoot: string;
 
 beforeEach(async () => {
-  tempRoot = await fs.promises.mkdtemp(path.join(os.tmpdir(), "openclaw-feishu-agent-"));
+  tempRoot = await fs.promises.mkdtemp(path.join(os.tmpdir(), "grokbot-feishu-agent-"));
 });
 
 afterEach(async () => {

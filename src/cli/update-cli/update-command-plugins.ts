@@ -1,13 +1,13 @@
 // Plugin synchronization and convergence after the core update.
 import path from "node:path";
 import { confirm, isCancel, text } from "@clack/prompts";
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+import { normalizeOptionalString } from "@grokbot/normalization-core/string-coerce";
 import { stripAnsi } from "../../../packages/terminal-core/src/ansi.js";
 import { stylePromptMessage } from "../../../packages/terminal-core/src/prompt-style.js";
 import { sanitizeTerminalText } from "../../../packages/terminal-core/src/safe-text.js";
 import { theme } from "../../../packages/terminal-core/src/theme.js";
 import { readConfigFileSnapshot } from "../../config/config.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import type { PluginInstallRecord } from "../../config/types.plugins.js";
 import type { ClawHubRiskAcknowledgementRequest } from "../../infra/clawhub-install-trust.js";
 import { pathExists } from "../../infra/fs-safe.js";
@@ -47,7 +47,7 @@ import {
 import { readPackageVersion, type UpdateCommandOptions } from "./shared.js";
 
 const POST_UPDATE_PLUGIN_REPAIR_GUIDANCE =
-  "Run openclaw update repair to retry post-update plugin repair.";
+  "Run grokbot update repair to retry post-update plugin repair.";
 
 export type PostCorePluginUpdateResult = NonNullable<
   NonNullable<UpdateRunResult["postUpdate"]>["plugins"]
@@ -223,7 +223,7 @@ function formatMissingPluginPayloadReason(entry: MissingPluginInstallPayload): s
 }
 
 function formatPostUpdatePluginInspectGuidance(pluginId: string): string {
-  return `Run openclaw plugins inspect ${pluginId} --runtime --json for details.`;
+  return `Run grokbot plugins inspect ${pluginId} --runtime --json for details.`;
 }
 
 function createPostUpdatePluginWarning(params: {
@@ -309,8 +309,8 @@ function buildInvalidConfigPostCoreUpdateResult(): {
   result: PostCorePluginUpdateResult;
 } {
   const guidance = [
-    "Run `openclaw doctor` to inspect the config validation errors.",
-    "Once the config parses, rerun `openclaw update repair`.",
+    "Run `grokbot doctor` to inspect the config validation errors.",
+    "Once the config parses, rerun `grokbot update repair`.",
   ];
   const message =
     "Plugin post-update convergence skipped because the config is invalid; refusing to restart the gateway with an unverified plugin set.";
@@ -339,7 +339,7 @@ function buildInvalidConfigPostCoreUpdateResult(): {
 }
 
 if (process.env.VITEST || process.env.NODE_ENV === "test") {
-  (globalThis as Record<PropertyKey, unknown>)[Symbol.for("openclaw.updateCommandPluginsTestApi")] =
+  (globalThis as Record<PropertyKey, unknown>)[Symbol.for("grokbot.updateCommandPluginsTestApi")] =
     {
       buildInvalidConfigPostCoreUpdateResult,
       collectMissingPluginInstallPayloads,

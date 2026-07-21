@@ -3,16 +3,16 @@
  *
  * Fetches HTTP(S) content through SSRF guards, provider config, caching, and bounded extraction.
  */
-import { resolveIntegerOption } from "@openclaw/normalization-core/number-coercion";
+import { resolveIntegerOption } from "@grokbot/normalization-core/number-coercion";
 import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalLowercaseString,
   normalizeOptionalString,
-} from "@openclaw/normalization-core/string-coerce";
-import { truncateUtf16Safe } from "@openclaw/normalization-core/utf16-slice";
+} from "@grokbot/normalization-core/string-coerce";
+import { truncateUtf16Safe } from "@grokbot/normalization-core/utf16-slice";
 import { Type } from "typebox";
 import { resolveWebProviderConfig } from "../../../packages/web-content-core/src/provider-runtime-shared.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import { SsrFBlockedError, type LookupFn, type SsrFPolicy } from "../../infra/net/ssrf.js";
 import { logDebug } from "../../logger.js";
 import { assertSecretOwnerAvailable } from "../../secrets/runtime-degraded-state.js";
@@ -362,7 +362,7 @@ async function spillWebFetchContent(
   const content = truncateUtf16Safe(value, WEB_FETCH_SPILL_MAX_CHARS);
   const spillChars = content.length;
   const spillPath = await writePrivateTempFile(
-    "openclaw-web-fetch",
+    "grokbot-web-fetch",
     wrapWebContent(content, "web_fetch"),
   );
   const spillCapped = value.length > WEB_FETCH_SPILL_MAX_CHARS;
@@ -475,7 +475,7 @@ function throwIfFetchAborted(signal: AbortSignal | undefined): void {
  * Sanitize a web_fetch URL parameter that may contain LLM-injected whitespace.
  *
  * Fixes the reported case where a model emits a space between the scheme and
- * authority (e.g. `https:// docs.openclaw.ai`), which causes `new URL()` to
+ * authority (e.g. `https:// docs.grokbot.ai`), which causes `new URL()` to
  * throw. Path and query whitespace is intentionally preserved — the WHATWG URL
  * parser percent-encodes those characters correctly per RFC 3986.
  */
@@ -490,7 +490,7 @@ function sanitizeWebFetchUrl(raw: string): string {
 }
 
 if (process.env.VITEST || process.env.NODE_ENV === "test") {
-  (globalThis as Record<PropertyKey, unknown>)[Symbol.for("openclaw.webFetchTestApi")] = {
+  (globalThis as Record<PropertyKey, unknown>)[Symbol.for("grokbot.webFetchTestApi")] = {
     sanitizeWebFetchUrl,
   };
 }

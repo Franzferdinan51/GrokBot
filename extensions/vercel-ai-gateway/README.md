@@ -1,13 +1,13 @@
-# Vercel AI Gateway OpenClaw provider
+# Vercel AI Gateway GrokBot provider
 
-Official OpenClaw provider plugin for Vercel AI Gateway.
+Official GrokBot provider plugin for Vercel AI Gateway.
 
 ## Install
 
 ```sh
-openclaw plugins install @openclaw/vercel-ai-gateway-provider
+grokbot plugins install @grokbot/vercel-ai-gateway-provider
 ```
 
 ## Docs
 
-See `docs/providers/vercel-ai-gateway.md` in the OpenClaw repository, or the published docs at `https://docs.openclaw.ai/providers/vercel-ai-gateway`.
+See `docs/providers/vercel-ai-gateway.md` in the GrokBot repository, or the published docs at `https://docs.grokbot.ai/providers/vercel-ai-gateway`.

@@ -89,7 +89,7 @@ fi
 if [[ "${packed_mode}" == "true" ]]; then
   package_name="${EXPECTED_CLAWHUB_PACKAGE_NAME:-}"
   package_version="${EXPECTED_CLAWHUB_PACKAGE_VERSION:-}"
-  if [[ ! "${package_name}" =~ ^@openclaw/[a-z0-9][a-z0-9._-]*$ ]]; then
+  if [[ ! "${package_name}" =~ ^@grokbot/[a-z0-9][a-z0-9._-]*$ ]]; then
     echo "EXPECTED_CLAWHUB_PACKAGE_NAME is invalid." >&2
     exit 2
   fi
@@ -102,7 +102,7 @@ else
   package_version="$(node -e 'const pkg = require(require("node:path").resolve(process.argv[1], "package.json")); console.log(pkg.version)' "${package_source}")"
 fi
 publish_tag="${PACKAGE_TAG:-latest}"
-source_repo="${SOURCE_REPO:-${GITHUB_REPOSITORY:-openclaw/openclaw}}"
+source_repo="${SOURCE_REPO:-${GITHUB_REPOSITORY:-grokbot/grokbot}}"
 source_commit="${SOURCE_COMMIT:-$(git -C "${invocation_root}" rev-parse HEAD)}"
 source_ref="${SOURCE_REF:-$(git -C "${invocation_root}" symbolic-ref -q HEAD || true)}"
 clawhub_workdir="${CLAWDHUB_WORKDIR:-${CLAWHUB_WORKDIR:-${invocation_root}}}"
@@ -127,7 +127,7 @@ if [[ "${release_binding_count}" == "3" ]]; then
   fi
 fi
 
-pack_dir="$(mktemp -d "${RUNNER_TEMP:-/tmp}/openclaw-clawhub-pack.XXXXXX")"
+pack_dir="$(mktemp -d "${RUNNER_TEMP:-/tmp}/grokbot-clawhub-pack.XXXXXX")"
 cleanup() {
   rm -rf "${pack_dir}"
 }

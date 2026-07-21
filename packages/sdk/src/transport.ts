@@ -1,5 +1,5 @@
-// OpenClaw SDK module implements transport behavior.
-import { GatewayClient } from "@openclaw/gateway-client";
+// GrokBot SDK module implements transport behavior.
+import { GatewayClient } from "@grokbot/gateway-client";
 import { EventHub } from "./event-hub.js";
 import type {
   ConnectableOpenClawTransport,
@@ -69,7 +69,7 @@ function toGatewayEvent(event: unknown): GatewayEvent {
   };
 }
 
-/** Connectable SDK transport backed by @openclaw/gateway-client. */
+/** Connectable SDK transport backed by @grokbot/gateway-client. */
 export class GatewayClientTransport implements ConnectableOpenClawTransport {
   private readonly eventsHub = new EventHub<GatewayEvent>({
     replayLimit: RAW_EVENT_REPLAY_LIMIT,

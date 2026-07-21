@@ -1,4 +1,4 @@
-// Runtime implementations for `openclaw plugins` subcommands. Heavy plugin modules stay
+// Runtime implementations for `grokbot plugins` subcommands. Heavy plugin modules stay
 // lazy-loaded so the base CLI can start without activating the plugin registry.
 import { formatDocsLink } from "../../packages/terminal-core/src/links.js";
 import { theme } from "../../packages/terminal-core/src/theme.js";
@@ -12,7 +12,7 @@ import {
   readConfigFileSnapshot,
   replaceConfigFile,
 } from "../config/config.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { emitDiagnosticsTimelineEvent } from "../infra/diagnostics-timeline.js";
 import { tracePluginLifecyclePhaseAsync } from "../plugins/plugin-lifecycle-trace.js";
 import { defaultRuntime } from "../runtime.js";
@@ -119,7 +119,7 @@ function formatBlockedRuntimePluginGuidance(params: {
   const alternative =
     pluginId === "acpx"
       ? "disable ACP/acpx in acp config"
-      : 'change the runtime policy to "openclaw"';
+      : 'change the runtime policy to "grokbot"';
   if (params.cfg.plugins?.enabled === false) {
     return `Enable plugin loading and the "${pluginId}" plugin, or ${alternative}.`;
   }
@@ -140,7 +140,7 @@ function formatDisabledRuntimePluginGuidance(params: {
   const alternative =
     params.pluginId === "acpx"
       ? "disable ACP/acpx in acp config"
-      : 'change the runtime policy to "openclaw"';
+      : 'change the runtime policy to "grokbot"';
   if (Array.isArray(allow) && allow.length > 0 && !allow.includes(params.pluginId)) {
     return `Add "${params.pluginId}" to plugins.allow and enable the plugin, or ${alternative}.`;
   }
@@ -181,7 +181,7 @@ function collectConfiguredRuntimePluginWarnings(params: {
     }
     const installSpec = formatConfiguredRuntimePluginInstallSpec(candidate);
     return [
-      `- Configured runtime "${runtimeId}" requires the ${candidate.label} plugin, but no enabled "${runtimeId}" plugin was found. Run "openclaw doctor --fix" to install ${installSpec}, or install it manually with "openclaw plugins install ${installSpec}".`,
+      `- Configured runtime "${runtimeId}" requires the ${candidate.label} plugin, but no enabled "${runtimeId}" plugin was found. Run "grokbot doctor --fix" to install ${installSpec}, or install it manually with "grokbot plugins install ${installSpec}".`,
     ];
   });
 }
@@ -330,7 +330,7 @@ export async function runPluginsRegistryCommand(opts: PluginRegistryOptions): Pr
   ];
   if (inspection.refreshReasons.length > 0) {
     lines.push(`${theme.muted("Refresh reasons:")} ${inspection.refreshReasons.join(", ")}`);
-    lines.push(`${theme.muted("Repair:")} ${theme.command("openclaw plugins registry --refresh")}`);
+    lines.push(`${theme.muted("Repair:")} ${theme.command("grokbot plugins registry --refresh")}`);
   }
   defaultRuntime.log(lines.join("\n"));
 }
@@ -362,7 +362,7 @@ export async function runPluginsDoctorCommand(): Promise<void> {
   const stalePluginConfigHits = scanStalePluginConfig(sourceCfg ?? cfg, process.env);
   const stalePluginConfigWarnings = collectStalePluginConfigWarnings({
     hits: stalePluginConfigHits,
-    doctorFixCommand: "openclaw doctor --fix",
+    doctorFixCommand: "grokbot doctor --fix",
     autoRepairBlocked: isStalePluginAutoRepairBlocked(sourceCfg ?? cfg, process.env),
   });
   const configuredRuntimePluginWarnings = collectConfiguredRuntimePluginWarnings({
@@ -416,10 +416,10 @@ export async function runPluginsDoctorCommand(): Promise<void> {
         lines.push(`  shadowed: ${shortenHomeInString(diag.source)}`);
       }
       lines.push("  repair:");
-      lines.push("    openclaw plugins inspect " + (diag.pluginId ?? "<plugin-id>"));
+      lines.push("    grokbot plugins inspect " + (diag.pluginId ?? "<plugin-id>"));
       lines.push("    edit or remove the config-selected plugin source");
-      lines.push("    openclaw plugins registry --refresh");
-      lines.push("    openclaw gateway restart --force");
+      lines.push("    grokbot plugins registry --refresh");
+      lines.push("    grokbot gateway restart --force");
     }
   }
   if (compatibility.length > 0) {
@@ -445,7 +445,7 @@ export async function runPluginsDoctorCommand(): Promise<void> {
     }
     lines.push("No plugin install-tree issues detected; configuration warnings remain.");
   }
-  const docs = formatDocsLink("/plugin", "docs.openclaw.ai/plugin");
+  const docs = formatDocsLink("/plugin", "docs.grokbot.ai/plugin");
   lines.push("");
   lines.push(`${theme.muted("Docs:")} ${docs}`);
   defaultRuntime.log(lines.join("\n"));
@@ -737,7 +737,7 @@ function formatPinnedMarketplaceRefreshFailure(payload: MarketplaceRefreshPayloa
   return `Pinned marketplace feed refresh did not accept a fresh hosted payload (source: ${payload.source}).`;
 }
 
-/** List entries from the configured OpenClaw marketplace feed. */
+/** List entries from the configured GrokBot marketplace feed. */
 export async function runPluginMarketplaceEntriesCommand(
   opts: PluginMarketplaceEntriesOptions,
 ): Promise<void> {
@@ -821,7 +821,7 @@ export async function runPluginMarketplaceEntriesCommand(
   defaultRuntime.log(lines.join("\n"));
 }
 
-/** Refresh the configured OpenClaw marketplace feed snapshot. */
+/** Refresh the configured GrokBot marketplace feed snapshot. */
 export async function runPluginMarketplaceRefreshCommand(
   opts: PluginMarketplaceRefreshOptions,
 ): Promise<void> {

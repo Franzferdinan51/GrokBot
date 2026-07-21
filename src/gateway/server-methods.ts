@@ -372,7 +372,7 @@ export const coreGatewayHandlers: GatewayRequestHandlers = {
     loadHandlers: loadLogsHandlers,
   }),
   ...createLazyCoreHandlers({
-    methods: ["openclaw.changes.list"],
+    methods: ["grokbot.changes.list"],
     loadHandlers: loadSystemChangesHandlers,
   }),
   ...createLazyCoreHandlers({
@@ -576,14 +576,14 @@ export const coreGatewayHandlers: GatewayRequestHandlers = {
   }),
   ...createLazyCoreHandlers({
     methods: [
-      "openclaw.chat",
-      "openclaw.chat.history",
-      "openclaw.approval.list",
-      "openclaw.setup.detect",
-      "openclaw.setup.verify",
-      "openclaw.setup.activate",
-      "openclaw.setup.auth.start",
-      "openclaw.setup.prepare.start",
+      "grokbot.chat",
+      "grokbot.chat.history",
+      "grokbot.approval.list",
+      "grokbot.setup.detect",
+      "grokbot.setup.verify",
+      "grokbot.setup.activate",
+      "grokbot.setup.auth.start",
+      "grokbot.setup.prepare.start",
     ],
     loadHandlers: loadSystemAgentHandlers,
   }),

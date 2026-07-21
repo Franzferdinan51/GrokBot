@@ -10,9 +10,9 @@ export function buildPairingReply(params: {
   code: string;
 }): string {
   const { channel, idLine, code } = params;
-  const approveCommand = formatCliCommand(`openclaw pairing approve ${channel} ${code}`);
+  const approveCommand = formatCliCommand(`grokbot pairing approve ${channel} ${code}`);
   return [
-    "OpenClaw: access not configured.",
+    "GrokBot: access not configured.",
     "",
     idLine,
     "Pairing code:",

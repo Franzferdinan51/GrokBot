@@ -4,11 +4,11 @@ import os from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { executeSqliteQuerySync, getNodeSqliteKysely } from "../infra/kysely-sync.js";
-import type { DB as OpenClawStateKyselyDatabase } from "../state/openclaw-state-db.generated.js";
+import type { DB as OpenClawStateKyselyDatabase } from "../state/grokbot-state-db.generated.js";
 import {
   closeOpenClawStateDatabaseForTest,
   openOpenClawStateDatabase,
-} from "../state/openclaw-state-db.js";
+} from "../state/grokbot-state-db.js";
 import { withEnvAsync } from "../test-utils/env.js";
 import {
   loadSubagentRegistryFromSqlite,
@@ -62,7 +62,7 @@ describe("subagent registry sqlite store", () => {
   let tempStateDir: string | null = null;
 
   beforeEach(async () => {
-    tempStateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-subagent-sqlite-"));
+    tempStateDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-subagent-sqlite-"));
   });
 
   afterEach(async () => {
@@ -122,7 +122,7 @@ describe("subagent registry sqlite store", () => {
         delivery: run.delivery,
         requesterSettleWake: run.requesterSettleWake,
       });
-      expect(await fs.stat(path.join(tempStateDir!, "state", "openclaw.sqlite"))).toBeTruthy();
+      expect(await fs.stat(path.join(tempStateDir!, "state", "grokbot.sqlite"))).toBeTruthy();
       await expect(fs.stat(path.join(tempStateDir!, "subagents", "runs.json"))).rejects.toThrow();
     });
   });

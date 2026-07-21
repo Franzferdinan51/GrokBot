@@ -1,6 +1,6 @@
 // Package script tests validate root package script invariants.
 import fs from "node:fs";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { describe, expect, it } from "vitest";
 
 type RootPackageJson = {
@@ -153,7 +153,7 @@ describe("package scripts", () => {
   });
 
   it("uses the shipped package launcher for npm start", () => {
-    expect(readPackageJson().scripts.start).toBe("node openclaw.mjs");
+    expect(readPackageJson().scripts.start).toBe("node grokbot.mjs");
   });
 
   it("builds iOS against a generic simulator by default", () => {
@@ -177,7 +177,7 @@ describe("package scripts", () => {
 
   it("runs cross-OS installer behavior coverage in Windows CI", () => {
     expect(readPackageJson().scripts["test:windows:ci"]).toContain(
-      "test/scripts/openclaw-cross-os-installer.windows.test.ts",
+      "test/scripts/grokbot-cross-os-installer.windows.test.ts",
     );
   });
 

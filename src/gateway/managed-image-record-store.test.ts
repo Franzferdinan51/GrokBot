@@ -12,7 +12,7 @@ import {
 import {
   closeOpenClawStateDatabaseForTest,
   openOpenClawStateDatabase,
-} from "../state/openclaw-state-db.js";
+} from "../state/grokbot-state-db.js";
 import {
   attachManagedImageRecordToMessage,
   claimManagedImageRecordCleanupIfCurrent,

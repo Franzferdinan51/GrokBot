@@ -1,4 +1,4 @@
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import { shouldPreferProviderRuntimeResolvedModel } from "../../plugins/provider-runtime.js";
 import {
   resolveProviderModelMaterializationAuthMode,

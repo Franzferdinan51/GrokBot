@@ -45,9 +45,9 @@ let clearRuntimeConfigSnapshot: typeof import("../config/config.js").clearRuntim
 let setRuntimeConfigSnapshot: typeof import("../config/config.js").setRuntimeConfigSnapshot;
 let getReplyPayloadMetadata: typeof import("../auto-reply/reply-payload.js").getReplyPayloadMetadata;
 
-vi.mock("openclaw/plugin-sdk/llm", async () => {
+vi.mock("grokbot/plugin-sdk/llm", async () => {
   const actual =
-    await vi.importActual<typeof import("openclaw/plugin-sdk/llm")>("openclaw/plugin-sdk/llm");
+    await vi.importActual<typeof import("grokbot/plugin-sdk/llm")>("grokbot/plugin-sdk/llm");
 
   const buildAssistantMessage = (model: { api: string; provider: string; id: string }) => ({
     role: "assistant" as const,
@@ -170,7 +170,7 @@ const installRunEmbeddedMocks = () => {
 };
 
 let runEmbeddedAgent: typeof import("./embedded-agent-runner/run.js").runEmbeddedAgent;
-let SessionManager: typeof import("openclaw/plugin-sdk/agent-sessions").SessionManager;
+let SessionManager: typeof import("grokbot/plugin-sdk/agent-sessions").SessionManager;
 let e2eWorkspace: EmbeddedAgentRunnerTestWorkspace | undefined;
 let agentDir: string;
 let workspaceDir: string;
@@ -185,9 +185,9 @@ beforeAll(async () => {
   ({ clearRuntimeConfigSnapshot, setRuntimeConfigSnapshot } = await import("../config/config.js"));
   ({ runEmbeddedAgent } = await import("./embedded-agent-runner/run.js"));
   const { SessionManager: LoadedSessionManager } =
-    await import("openclaw/plugin-sdk/agent-sessions");
+    await import("grokbot/plugin-sdk/agent-sessions");
   SessionManager = LoadedSessionManager;
-  e2eWorkspace = await createEmbeddedAgentRunnerTestWorkspace("openclaw-embedded-agent-");
+  e2eWorkspace = await createEmbeddedAgentRunnerTestWorkspace("grokbot-embedded-agent-");
   ({ agentDir, workspaceDir } = e2eWorkspace);
 }, 180_000);
 
@@ -580,7 +580,7 @@ describe("runEmbeddedAgent", () => {
     expect(ensureOpenClawModelsJsonMock).toHaveBeenCalledTimes(1);
   });
 
-  it("resolves explicit OpenAI OpenClaw runs through Codex when auth order starts with Codex OAuth", async () => {
+  it("resolves explicit OpenAI GrokBot runs through Codex when auth order starts with Codex OAuth", async () => {
     const sessionFile = nextSessionFile();
     const baseConfig = createEmbeddedAgentRunnerOpenAiConfig(["mock-1"]);
     const openAIProvider = baseConfig.models?.providers?.openai;
@@ -601,7 +601,7 @@ describe("runEmbeddedAgent", () => {
         defaults: {
           models: {
             "openai/mock-1": {
-              agentRuntime: { id: "openclaw" },
+              agentRuntime: { id: "grokbot" },
             },
           },
         },
@@ -622,7 +622,7 @@ describe("runEmbeddedAgent", () => {
     );
 
     await runEmbeddedAgent({
-      sessionId: "codex-first-openclaw",
+      sessionId: "codex-first-grokbot",
       sessionFile,
       workspaceDir,
       config: cfg,
@@ -631,7 +631,7 @@ describe("runEmbeddedAgent", () => {
       model: "mock-1",
       timeoutMs: 5_000,
       agentDir,
-      runId: nextRunId("codex-first-openclaw"),
+      runId: nextRunId("codex-first-grokbot"),
       enqueue: immediateEnqueue,
     });
 

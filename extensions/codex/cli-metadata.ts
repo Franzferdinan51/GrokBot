@@ -1,5 +1,5 @@
 // Codex CLI metadata stays lightweight until the command runs.
-import { definePluginEntry, type OpenClawPluginApi } from "openclaw/plugin-sdk/plugin-entry";
+import { definePluginEntry, type OpenClawPluginApi } from "grokbot/plugin-sdk/plugin-entry";
 
 export function registerCodexCliMetadata(api: OpenClawPluginApi): void {
   api.registerCli(

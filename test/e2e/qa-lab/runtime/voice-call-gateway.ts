@@ -3,8 +3,8 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { formatErrorMessage } from "grokbot/plugin-sdk/error-runtime";
 import { WebSocket } from "ws";
 import {
   QA_EVIDENCE_FILENAME,
@@ -167,7 +167,7 @@ async function openRealtimeMediaStream(params: {
 }
 
 async function runVoiceCallProof(options: ProducerOptions): Promise<string> {
-  const fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-voice-call-gateway-"));
+  const fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-voice-call-gateway-"));
   const fixture = createFixturePlugin(options.repoRoot, fixtureRoot);
   const mock = await startQaMockOpenAiServer();
   const servePort = await getFreePort();

@@ -1,8 +1,8 @@
-// OpenClaw gateway tests cover activation serialization and chat sessions.
+// GrokBot gateway tests cover activation serialization and chat sessions.
 
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import type { SystemAgentApprovalRequestPayload } from "../../infra/system-agent-approvals.js";
 import { getCommandLaneSnapshot } from "../../process/command-queue.js";
 import { resetCommandQueueStateForTest } from "../../process/command-queue.test-support.js";
@@ -140,7 +140,7 @@ function requireVerifiedInferenceDeps(): SystemAgentVerifiedInferenceDeps {
       ({
         exists: true,
         valid: true,
-        path: "/tmp/openclaw.json",
+        path: "/tmp/grokbot.json",
         hash: "verified-config",
         config: verifiedConfig,
         runtimeConfig: verifiedConfig,
@@ -159,7 +159,7 @@ function makeVerifiedEngine(): SystemAgentChatEngine {
 
 function stubEngineOverview() {
   return vi.spyOn(SystemAgentChatEngine.prototype, "loadOverview").mockResolvedValue({
-    config: { path: "/tmp/openclaw.json", exists: true, valid: true, issues: [], hash: null },
+    config: { path: "/tmp/grokbot.json", exists: true, valid: true, issues: [], hash: null },
     agents: [],
     defaultAgentId: "main",
     defaultModel: "openai/gpt-5.5",
@@ -171,8 +171,8 @@ function stubEngineOverview() {
     },
     gateway: { url: "ws://127.0.0.1:18789", source: "test", reachable: true },
     references: {
-      docsUrl: "https://docs.openclaw.ai",
-      sourceUrl: "https://github.com/openclaw/openclaw",
+      docsUrl: "https://docs.grokbot.ai",
+      sourceUrl: "https://github.com/grokbot/grokbot",
     },
   } as never);
 }
@@ -200,7 +200,7 @@ beforeEach(async () => {
   setupSharedMocks.readSetupConfigFileSnapshot.mockResolvedValue({
     exists: true,
     valid: true,
-    path: "/tmp/openclaw.json",
+    path: "/tmp/grokbot.json",
     hash: "prepare-base-hash",
     sourceConfig: verifiedConfig,
     config: verifiedConfig,
@@ -218,7 +218,7 @@ beforeEach(async () => {
     auditSequence: 0,
   });
   greetingMocks.resolveSystemAgentGreeting.mockReset().mockResolvedValue({
-    text: "I'm OpenClaw. All systems nominal.",
+    text: "I'm GrokBot. All systems nominal.",
     source: "model",
   });
   onboardingWelcomeMocks.buildOnboardingWelcome.mockReset().mockResolvedValue({
@@ -251,8 +251,8 @@ async function callChat(
 ): Promise<RespondCall> {
   const { calls, respond } = makeRespond();
   await expectDefined(
-    systemAgentHandlers["openclaw.chat"],
-    'systemAgentHandlers["openclaw.chat"] test invariant',
+    systemAgentHandlers["grokbot.chat"],
+    'systemAgentHandlers["grokbot.chat"] test invariant',
   )({
     params,
     respond,
@@ -266,7 +266,7 @@ async function callChat(
   return call;
 }
 
-describe("openclaw.setup.activate", () => {
+describe("grokbot.setup.activate", () => {
   it("rejects a concurrent activation instead of queueing stale work", async () => {
     const firstStarted = createDeferred();
     const releaseFirst = createDeferred();
@@ -311,8 +311,8 @@ describe("openclaw.setup.activate", () => {
     try {
       const { calls, respond } = makeRespond();
       await expectDefined(
-        systemAgentHandlers["openclaw.setup.activate"],
-        'systemAgentHandlers["openclaw.setup.activate"] test invariant',
+        systemAgentHandlers["grokbot.setup.activate"],
+        'systemAgentHandlers["grokbot.setup.activate"] test invariant',
       )({
         params: { kind: "claude-cli" },
         respond,
@@ -324,7 +324,7 @@ describe("openclaw.setup.activate", () => {
           payload: undefined,
           error: {
             code: "UNAVAILABLE",
-            message: "OpenClaw setup is already in progress; try again when it finishes.",
+            message: "GrokBot setup is already in progress; try again when it finishes.",
             retryable: true,
           },
         },
@@ -348,7 +348,7 @@ describe("openclaw.setup.activate", () => {
   });
 });
 
-describe("openclaw.setup.auth.start", () => {
+describe("grokbot.setup.auth.start", () => {
   it("starts provider auth as an interactive wizard session", async () => {
     const wizardSessions = new Map();
     const context = {
@@ -363,8 +363,8 @@ describe("openclaw.setup.auth.start", () => {
     const { calls, respond } = makeRespond();
 
     await expectDefined(
-      systemAgentHandlers["openclaw.setup.auth.start"],
-      'systemAgentHandlers["openclaw.setup.auth.start"] test invariant',
+      systemAgentHandlers["grokbot.setup.auth.start"],
+      'systemAgentHandlers["grokbot.setup.auth.start"] test invariant',
     )({
       params: { sessionId: "auth-session-1", authChoice: "github-copilot" },
       respond,
@@ -393,7 +393,7 @@ describe("openclaw.setup.auth.start", () => {
   });
 });
 
-describe("openclaw.setup.prepare.start", () => {
+describe("grokbot.setup.prepare.start", () => {
   it("runs the selected provider method in a shared wizard session and commits its config", async () => {
     const preparedConfig: OpenClawConfig = {
       ...verifiedConfig,
@@ -415,8 +415,8 @@ describe("openclaw.setup.prepare.start", () => {
     const { calls, respond } = makeRespond();
 
     await expectDefined(
-      systemAgentHandlers["openclaw.setup.prepare.start"],
-      'systemAgentHandlers["openclaw.setup.prepare.start"] test invariant',
+      systemAgentHandlers["grokbot.setup.prepare.start"],
+      'systemAgentHandlers["grokbot.setup.prepare.start"] test invariant',
     )({
       params: {
         sessionId: "prepare-session-1",
@@ -459,7 +459,7 @@ describe("openclaw.setup.prepare.start", () => {
   });
 });
 
-describe("openclaw.chat", () => {
+describe("grokbot.chat", () => {
   it("refuses to create a session before inference is available", async () => {
     setupInferenceMocks.verifySetupInference.mockResolvedValueOnce({
       ok: false,
@@ -474,7 +474,7 @@ describe("openclaw.chat", () => {
       ok: false,
       error: {
         code: "UNAVAILABLE",
-        message: "OpenClaw requires working inference: no configured model",
+        message: "GrokBot requires working inference: no configured model",
       },
     });
     expect(call.error).not.toHaveProperty("details");
@@ -532,8 +532,8 @@ describe("openclaw.chat", () => {
     const activeAtResponse: number[] = [];
 
     const pending = expectDefined(
-      systemAgentHandlers["openclaw.setup.detect"],
-      'systemAgentHandlers["openclaw.setup.detect"] test invariant',
+      systemAgentHandlers["grokbot.setup.detect"],
+      'systemAgentHandlers["grokbot.setup.detect"] test invariant',
     )({
       params: {},
       respond: () => {
@@ -568,8 +568,8 @@ describe("openclaw.chat", () => {
     const { calls, respond } = makeRespond();
 
     await expectDefined(
-      systemAgentHandlers["openclaw.setup.verify"],
-      'systemAgentHandlers["openclaw.setup.verify"] test invariant',
+      systemAgentHandlers["grokbot.setup.verify"],
+      'systemAgentHandlers["grokbot.setup.verify"] test invariant',
     )({ params: {}, respond } as never);
 
     expect(setupInferenceMocks.verifySetupInference).toHaveBeenCalledWith({
@@ -582,8 +582,8 @@ describe("openclaw.chat", () => {
     const { calls, respond } = makeRespond();
 
     await expectDefined(
-      systemAgentHandlers["openclaw.setup.verify"],
-      'systemAgentHandlers["openclaw.setup.verify"] test invariant',
+      systemAgentHandlers["grokbot.setup.verify"],
+      'systemAgentHandlers["grokbot.setup.verify"] test invariant',
     )({
       params: { modelRef: "openai/gpt-5.5" },
       respond,
@@ -611,8 +611,8 @@ describe("openclaw.chat", () => {
     const activeAtResponse: number[] = [];
 
     const pending = expectDefined(
-      systemAgentHandlers["openclaw.setup.activate"],
-      'systemAgentHandlers["openclaw.setup.activate"] test invariant',
+      systemAgentHandlers["grokbot.setup.activate"],
+      'systemAgentHandlers["grokbot.setup.activate"] test invariant',
     )({
       params: {
         kind: "api-key",
@@ -738,8 +738,8 @@ describe("openclaw.chat", () => {
     const invoke = async (params: Record<string, unknown>) => {
       const { calls, respond } = makeRespond();
       await expectDefined(
-        systemAgentHandlers["openclaw.chat.history"],
-        'systemAgentHandlers["openclaw.chat.history"] test invariant',
+        systemAgentHandlers["grokbot.chat.history"],
+        'systemAgentHandlers["grokbot.chat.history"] test invariant',
       )({ params, respond } as never);
       return calls[0];
     };
@@ -806,7 +806,7 @@ describe("openclaw.chat", () => {
     });
     expect(manager.getSnapshot(proposalId!)?.decision).toBeUndefined();
     expect(broadcast).toHaveBeenCalledWith(
-      "openclaw.approval.requested",
+      "grokbot.approval.requested",
       expect.objectContaining({ id: proposalId }),
       { dropIfSlow: true },
     );
@@ -891,8 +891,8 @@ describe("openclaw.chat", () => {
     const activeAtResponse: number[] = [];
 
     const first = expectDefined(
-      systemAgentHandlers["openclaw.chat"],
-      'systemAgentHandlers["openclaw.chat"] test invariant',
+      systemAgentHandlers["grokbot.chat"],
+      'systemAgentHandlers["grokbot.chat"] test invariant',
     )({
       params: { sessionId: "s1", message: "yes" },
       client: defaultClient,
@@ -902,8 +902,8 @@ describe("openclaw.chat", () => {
       },
     } as never);
     const second = expectDefined(
-      systemAgentHandlers["openclaw.chat"],
-      'systemAgentHandlers["openclaw.chat"] test invariant',
+      systemAgentHandlers["grokbot.chat"],
+      'systemAgentHandlers["grokbot.chat"] test invariant',
     )({
       params: { sessionId: "s2", message: "yes" },
       client: defaultClient,
@@ -977,8 +977,8 @@ describe("openclaw.chat", () => {
     const { calls, respond } = makeRespond();
     const context = makeContext(sessions);
     const pending = expectDefined(
-      systemAgentHandlers["openclaw.chat"],
-      'systemAgentHandlers["openclaw.chat"] test invariant',
+      systemAgentHandlers["grokbot.chat"],
+      'systemAgentHandlers["grokbot.chat"] test invariant',
     )({
       params: { sessionId: "s1", reset: true },
       client: defaultClient,

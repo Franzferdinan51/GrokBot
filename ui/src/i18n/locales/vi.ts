@@ -273,14 +273,14 @@ export const vi: TranslationMap = {
     genericSubtitle: "Đã xảy ra lỗi khi tải bảng điều khiển này.",
     staleTitle: "Đã có phiên bản mới",
     staleSubtitle:
-      "OpenClaw đã được cập nhật trong nền. Hãy tải lại để xem bảng điều khiển mới nhất.",
+      "GrokBot đã được cập nhật trong nền. Hãy tải lại để xem bảng điều khiển mới nhất.",
     retry: "Thử lại",
   },
   nodes: {
     pairing: {
       button: "Ghép nối thiết bị di động",
       adminRequired: "Cần quyền truy cập quản trị viên để tạo mã thiết lập.",
-      title: "OpenClaw di động",
+      title: "GrokBot di động",
       subtitle: "Quét mã QR này trong ứng dụng di động để kết nối điện thoại mới.",
       generating: "Đang tạo mã thiết lập bảo mật…",
       accessTitle: "Truy cập trên thiết bị di động",
@@ -295,14 +295,14 @@ export const vi: TranslationMap = {
       transportLimitedHint:
         "URL Gateway này sử dụng ws:// dạng văn bản thuần. Hãy sử dụng wss:// hoặc Tailscale Serve, sau đó tạo mã mới để có toàn quyền truy cập.",
       failed: "Không thể tạo mã thiết lập.",
-      qrAlt: "Mã QR ghép nối OpenClaw di động",
+      qrAlt: "Mã QR ghép nối GrokBot di động",
       qrUnavailable: "Không có mã QR. Hãy sao chép mã thiết lập thay thế.",
       copySetupCode: "Sao chép mã thiết lập",
       newCode: "Mã mới",
       showSetupCode: "Hiển thị mã thiết lập",
       pending: "Yêu cầu thiết bị đang chờ xem xét: {count}",
       review: "Đánh giá",
-      waiting: "Các ứng dụng di động OpenClaw chính thức sẽ tự động kết nối sau khi quét.",
+      waiting: "Các ứng dụng di động GrokBot chính thức sẽ tự động kết nối sau khi quét.",
       help: "Trợ giúp ghép nối",
       manageDevices: "Quản lý thiết bị",
     },
@@ -447,11 +447,11 @@ export const vi: TranslationMap = {
     ownerSession: "Phiên",
     ownerWorkboard: "Workboard",
     title: "Worktree được quản lý",
-    subtitle: "Các bản checkout kho lưu trữ được cô lập do OpenClaw sở hữu.",
+    subtitle: "Các bản checkout kho lưu trữ được cô lập do GrokBot sở hữu.",
     cleanNow: "Dọn dẹp ngay",
     cleanupTitle: "Dọn dẹp",
     cleanupSubtitle:
-      "OpenClaw định kỳ xóa các worktree cũ để giải phóng dung lượng ổ đĩa. Điều chỉnh mức độ dọn dẹp.",
+      "GrokBot định kỳ xóa các worktree cũ để giải phóng dung lượng ổ đĩa. Điều chỉnh mức độ dọn dẹp.",
     cleanupMaxCount: "Số worktree tối đa",
     cleanupMaxCountHelp:
       "Số lượng worktree được quản lý tối đa cần giữ lại trên tất cả kho lưu trữ. Các worktree cũ hơn sẽ được tạo bản chụp nhanh và xóa trước. Đặt thành 0 để tắt giới hạn số lượng.",
@@ -1341,7 +1341,7 @@ export const vi: TranslationMap = {
     autoSaveFailed: "Lưu thất bại",
     autoSaveConflict: "Cài đặt đã được thay đổi ở nơi khác",
     retry: "Thử lại",
-    applyBannerText: "Đã lưu vào openclaw.json — khởi động lại gateway để áp dụng.",
+    applyBannerText: "Đã lưu vào grokbot.json — khởi động lại gateway để áp dụng.",
     applyBannerAction: "Khởi động lại & áp dụng",
     rawDiscard: "Loại bỏ",
     rawDraftBlocksApply:
@@ -1397,7 +1397,7 @@ export const vi: TranslationMap = {
     },
   },
   approvalPage: {
-    brandName: "OpenClaw",
+    brandName: "GrokBot",
     eyebrow: "Operator approval",
     loadingTitle: "Loading approval",
     loadingDescription: "Checking the current approval state with the Gateway.",
@@ -1406,7 +1406,7 @@ export const vi: TranslationMap = {
       "This approval could not be found or this device is not authorized to review it.",
     connectionErrorTitle: "Connection interrupted",
     connectionErrorDescription:
-      "OpenClaw cannot confirm or record a decision while disconnected. Reconnect to check the current status.",
+      "GrokBot cannot confirm or record a decision while disconnected. Reconnect to check the current status.",
     retry: "Retry",
     execTitle: "Command approval",
     pending: "Waiting for your decision",
@@ -1734,7 +1734,7 @@ export const vi: TranslationMap = {
       "Xem xét, tinh chỉnh và áp dụng các đề xuất trước khi chúng trở thành kỹ năng đang hoạt động.",
     nodes: "Thiết bị đã ghép nối và lệnh.",
     chat: "Trò chuyện Gateway để can thiệp nhanh.",
-    config: "Chỉnh sửa openclaw.json.",
+    config: "Chỉnh sửa grokbot.json.",
     profile: "Thống kê, chuỗi hoạt động và cuộc sống trong rạn san hô của agent của bạn.",
     communications: "Kênh, tin nhắn và cài đặt âm thanh.",
     appearance: "Giao diện, UI và cài đặt trình hướng dẫn thiết lập.",
@@ -1753,7 +1753,7 @@ export const vi: TranslationMap = {
   modelSetup: {
     heading: "Kết nối AI của bạn",
     intro:
-      "OpenClaw sử dụng lại quyền truy cập AI mà bạn đã có — thông tin đăng nhập CLI, khóa API hoặc thông tin đăng nhập nhà cung cấp.",
+      "GrokBot sử dụng lại quyền truy cập AI mà bạn đã có — thông tin đăng nhập CLI, khóa API hoặc thông tin đăng nhập nhà cung cấp.",
     loading: "Đang kiểm tra quyền truy cập AI khả dụng trên Gateway này…",
     retry: "Thử lại",
     checkAgain: "Kiểm tra lại",
@@ -1766,7 +1766,7 @@ export const vi: TranslationMap = {
     },
     access: {
       adminRequired: "Việc thiết lập mô hình yêu cầu quyền operator.admin.",
-      gatewayTooOld: "Gateway đang chạy một phiên bản OpenClaw cũ hơn",
+      gatewayTooOld: "Gateway đang chạy một phiên bản GrokBot cũ hơn",
     },
     candidates: {
       title: "Tìm thấy trên Gateway này",
@@ -1867,12 +1867,12 @@ export const vi: TranslationMap = {
       "Sao chép {count} tệp bộ nhớ đã chọn vào không gian làm việc của tác nhân này.",
     confirmReplace:
       "Các tệp hiện có tại đích sẽ được sao lưu trong báo cáo di chuyển trước khi bị thay thế.",
-    confirmBackup: "OpenClaw tạo bản sao lưu đã xác minh trước khi nhập rồi mới sao chép bộ nhớ.",
+    confirmBackup: "GrokBot tạo bản sao lưu đã xác minh trước khi nhập rồi mới sao chép bộ nhớ.",
     confirmImport: "Nhập bộ nhớ",
     disconnected: "Kết nối với Gateway để nhập bộ nhớ.",
     title: "Nhập bộ nhớ của trợ lý",
     subtitle:
-      "Xem lại bộ nhớ hợp nhất của Codex và bộ nhớ tự động của Claude Code trước khi sao chép vào OpenClaw.",
+      "Xem lại bộ nhớ hợp nhất của Codex và bộ nhớ tự động của Claude Code trước khi sao chép vào GrokBot.",
     agent: "Tác nhân đích",
     replaceExisting: "Thay thế các mục đã nhập hiện có",
     replaceHint:
@@ -1881,7 +1881,7 @@ export const vi: TranslationMap = {
   onboarding: {
     memoryImport: {
       title: "Mang theo bộ nhớ của trợ lý",
-      body: "OpenClaw đã tìm thấy bộ nhớ từ các trợ lý lập trình khác. Nhập bộ nhớ đó vào không gian làm việc của tác nhân?",
+      body: "GrokBot đã tìm thấy bộ nhớ từ các trợ lý lập trình khác. Nhập bộ nhớ đó vào không gian làm việc của tác nhân?",
       plannedCount: "{count} mục sẵn sàng để nhập",
       alreadyImported: "Đã nhập: {count}",
       sourceUnavailable: "Đường dẫn nguồn không khả dụng",
@@ -1897,7 +1897,7 @@ export const vi: TranslationMap = {
       unknownError: "Yêu cầu thất bại",
       doneTitle: "Đã hoàn tất nhập bộ nhớ",
       doneBody:
-        "Đã di chuyển {migrated}, bỏ qua {skipped}. Bạn có thể tiếp tục thiết lập OpenClaw.",
+        "Đã di chuyển {migrated}, bỏ qua {skipped}. Bạn có thể tiếp tục thiết lập GrokBot.",
     },
   },
   mcpPage: {
@@ -1986,7 +1986,7 @@ export const vi: TranslationMap = {
       notes: "Ghi chú vào Markdown, Obsidian, Notion hoặc Bear.",
     },
     noInstalledTitle: "Chưa cài đặt plugin tùy chọn nào",
-    noInstalledBody: "Khám phá một plugin nổi bật hoặc tìm kiếm trên ClawHub để mở rộng OpenClaw.",
+    noInstalledBody: "Khám phá một plugin nổi bật hoặc tìm kiếm trên ClawHub để mở rộng GrokBot.",
     noInstalledMatchTitle: "Không có plugin đã cài đặt nào khớp",
     noMatchBody: "Thử tìm kiếm khác.",
     filterAll: "Tất cả",
@@ -2032,7 +2032,7 @@ export const vi: TranslationMap = {
     detailPluginId: "ID plugin",
     offlineTitle: "Gateway ngoại tuyến",
     offlineBody: "Kết nối để duyệt các plugin đã cài đặt và được đề xuất.",
-    optionalCapability: "Khả năng OpenClaw tùy chọn.",
+    optionalCapability: "Khả năng GrokBot tùy chọn.",
     enabled: "Đã bật",
     disabled: "Đã tắt",
     available: "Có sẵn",
@@ -2064,7 +2064,7 @@ export const vi: TranslationMap = {
     disabledRestart: "Đã tắt {name}. Cần khởi động lại Gateway để áp dụng thay đổi.",
   },
   aboutPage: {
-    productName: "OpenClaw",
+    productName: "GrokBot",
     tagline: "Trợ lý AI cá nhân của bạn, chạy trên chính thiết bị của bạn.",
     waveHello: "Vẫy tay chào Clawd",
     linksLabel: "Cộng đồng và tài nguyên",
@@ -2073,7 +2073,7 @@ export const vi: TranslationMap = {
     linkGitHub: "GitHub",
     linkDiscord: "Discord",
     linkChangelog: "Nhật ký thay đổi",
-    license: "© 2026 OpenClaw Foundation — Giấy phép MIT.",
+    license: "© 2026 GrokBot Foundation — Giấy phép MIT.",
     artifactTitle: "Control UI",
     artifactSubtitle: "Danh tính được nhúng khi artifact trình duyệt này được xây dựng.",
     artifactDetails: "Chi tiết bản dựng Control UI",
@@ -2255,7 +2255,7 @@ export const vi: TranslationMap = {
     selfLearning: {
       pitchTitle: "Bật tính năng tự học",
       pitchBody:
-        "OpenClaw xem xét các chỉnh sửa và những lượt chạy quan trọng đã hoàn thành, sau đó soạn thảo các đề xuất kỹ năng cho bảng này. Tính năng này sử dụng thêm token nền và các bản nháp sẽ xuất hiện dưới dạng đề xuất đang chờ xử lý.",
+        "GrokBot xem xét các chỉnh sửa và những lượt chạy quan trọng đã hoàn thành, sau đó soạn thảo các đề xuất kỹ năng cho bảng này. Tính năng này sử dụng thêm token nền và các bản nháp sẽ xuất hiện dưới dạng đề xuất đang chờ xử lý.",
       enable: "Bật tính năng tự học",
       enabling: "Đang bật…",
       updateError: "Không thể cập nhật cài đặt tự học.",
@@ -2450,7 +2450,7 @@ export const vi: TranslationMap = {
       onboardingTitle: "No workspaces yet",
       onboardingSubtitle:
         "Ask your agent to build a workspace, or create one from the command line.",
-      onboardingCommand: "openclaw workspaces tabs create --title Main",
+      onboardingCommand: "grokbot workspaces tabs create --title Main",
       tabTitle: "This workspace is empty",
       tabSubtitle: "Ask your agent to add a widget, or add one yourself.",
       noVisibleTabs: "Every workspace tab is hidden. Restore one from the hidden menu.",
@@ -3462,16 +3462,16 @@ export const vi: TranslationMap = {
         title: "Cần xác thực",
         summary:
           "Gateway có thể truy cập được, nhưng cần token hoặc mật khẩu khớp trước khi trình duyệt này có thể kết nối.",
-        stepPaste: "Dán token từ openclaw dashboard --no-open hoặc nhập mật khẩu đã cấu hình.",
+        stepPaste: "Dán token từ grokbot dashboard --no-open hoặc nhập mật khẩu đã cấu hình.",
         stepGenerate:
-          "Nếu chưa cấu hình token, hãy chạy openclaw doctor --generate-gateway-token trên máy chủ Gateway.",
+          "Nếu chưa cấu hình token, hãy chạy grokbot doctor --generate-gateway-token trên máy chủ Gateway.",
         stepConnect: "Nhấp Connect lần nữa sau khi cập nhật thông tin xác thực.",
       },
       authFailed: {
         title: "Xác thực không khớp",
         summary:
           "Thông tin xác thực đã cung cấp bị từ chối. Nguyên nhân phổ biến nhất là token cũ hoặc token sao chép từ một Gateway URL khác.",
-        stepDashboard: "Chạy openclaw dashboard --no-open rồi mở URL mới hoặc dán token của nó.",
+        stepDashboard: "Chạy grokbot dashboard --no-open rồi mở URL mới hoặc dán token của nó.",
         stepReplace:
           "Thay các giá trị token/mật khẩu cũ; không dùng lại token từ Gateway URL khác.",
         stepMode:
@@ -3494,8 +3494,8 @@ export const vi: TranslationMap = {
           "Trình duyệt này cần phê duyệt một lần từ máy chủ Gateway trước khi dùng Control UI.",
         upgradeSummary:
           "Trình duyệt này đã được biết đến, nhưng quyền truy cập yêu cầu đã thay đổi và cần phê duyệt mới.",
-        stepList: "Chạy openclaw devices list trên máy chủ Gateway.",
-        stepApproveId: "Phê duyệt yêu cầu này: openclaw devices approve {requestId}.",
+        stepList: "Chạy grokbot devices list trên máy chủ Gateway.",
+        stepApproveId: "Phê duyệt yêu cầu này: grokbot devices approve {requestId}.",
         stepApprove: "Phê duyệt yêu cầu trình duyệt/thiết bị đang chờ trong danh sách đó.",
         stepReconnect: "Kết nối lại sau khi phê duyệt hoàn tất.",
       },
@@ -3521,20 +3521,20 @@ export const vi: TranslationMap = {
         summary:
           "Control UI được phục vụ và Gateway đang chạy không thống nhất về giao thức kết nối được hỗ trợ.",
         stepDashboard:
-          "Mở lại dashboard được phục vụ bằng openclaw dashboard để UI và Gateway đến từ cùng một bản cài đặt.",
+          "Mở lại dashboard được phục vụ bằng grokbot dashboard để UI và Gateway đến từ cùng một bản cài đặt.",
         stepDevUi:
           "Nếu dùng pnpm ui:dev, hãy build lại hoặc khởi động lại UI dev theo checkout hiện tại.",
         stepRestart:
-          "Khởi động lại Gateway sau khi cập nhật OpenClaw để nó phục vụ giao thức hiện tại.",
+          "Khởi động lại Gateway sau khi cập nhật GrokBot để nó phục vụ giao thức hiện tại.",
       },
       network: {
         title: "Không thể kết nối",
         summary:
           "Trình duyệt không thể hoàn tất kết nối Gateway. Kiểm tra đích và transport trước khi thử lại thông tin xác thực.",
-        stepGateway: "Xác nhận Gateway đang chạy bằng openclaw status hoặc openclaw gateway run.",
+        stepGateway: "Xác nhận Gateway đang chạy bằng grokbot status hoặc grokbot gateway run.",
         stepUrl: "Kiểm tra WebSocket URL và dùng wss:// khi Gateway nằm sau HTTPS/Tailscale Serve.",
         stepDashboard:
-          "Mở lại dashboard bằng openclaw dashboard --no-open để sao chép lại URL và chi tiết auth hiện tại.",
+          "Mở lại dashboard bằng grokbot dashboard --no-open để sao chép lại URL và chi tiết auth hiện tại.",
       },
     },
   },
@@ -3559,7 +3559,7 @@ export const vi: TranslationMap = {
       remoteViewOnly: "Phiên này nằm trên một nút đã ghép nối và chỉ có thể xem.",
       unsupportedViewOnly: "Nguồn phiên bên ngoài này chỉ có thể xem.",
       sessionMenu: "External session actions",
-      openInOpenClaw: "Open in OpenClaw",
+      openInOpenClaw: "Open in GrokBot",
       openInTerminal: "Open in terminal",
       terminalUnavailable: "Terminal opening is unavailable for this session.",
     },
@@ -3614,7 +3614,7 @@ export const vi: TranslationMap = {
     followUpModeOverriding: "Đang ghi đè mặc định của máy chủ ({mode})",
     followUpModeReset: "Đặt lại về mặc định máy chủ",
     catalogOpenTarget: "Open Codex/Claude sessions in",
-    catalogOpenTargetViewer: "OpenClaw viewer",
+    catalogOpenTargetViewer: "GrokBot viewer",
     catalogOpenTargetTerminal: "Terminal",
     onboardingDisabled: "Đã tắt trong quá trình thiết lập",
     gatewayStatus: "Trạng thái Gateway: {status}",
@@ -4053,7 +4053,7 @@ export const vi: TranslationMap = {
       filters: "Bộ lọc",
       shownOf: "{shown} trên {total}",
       emptyTitle: "Chưa có tác vụ theo lịch nào",
-      emptyHint: "Mô tả những gì OpenClaw nên làm và khi nào — nó sẽ chạy theo lịch.",
+      emptyHint: "Mô tả những gì GrokBot nên làm và khi nào — nó sẽ chạy theo lịch.",
       noMatching: "Không có tác vụ nào khớp với bộ lọc hiện tại.",
       loadMore: "Tải thêm",
       loading: "Đang tải...",
@@ -4120,7 +4120,7 @@ export const vi: TranslationMap = {
     detail: {
       tabsLabel: "Chi tiết tự động hóa",
       newTitle: "Tác vụ theo lịch mới",
-      newSubtitle: "Mô tả những gì OpenClaw nên làm, sau đó chọn thời điểm chạy.",
+      newSubtitle: "Mô tả những gì GrokBot nên làm, sau đó chọn thời điểm chạy.",
       back: "Tất cả tác vụ tự động",
       settingsTab: "Cài đặt",
       historyTitle: "Lịch sử chạy",
@@ -4193,7 +4193,7 @@ export const vi: TranslationMap = {
       descriptionPlaceholder: "Ngữ cảnh tùy chọn cho tác vụ này",
       agentPlaceholder: "main hoặc ops",
       agentHelp: "Bắt đầu nhập để chọn agent đã biết, hoặc nhập agent tùy chỉnh.",
-      promptPlaceholder: "Mô tả những gì OpenClaw nên làm...",
+      promptPlaceholder: "Mô tả những gì GrokBot nên làm...",
       repeat: "Lặp lại",
       repeatInterval: "Khoảng thời gian",
       repeatOnce: "Một lần",

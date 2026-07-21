@@ -1,12 +1,12 @@
-# OpenClaw Inworld Plugin
+# GrokBot Inworld Plugin
 
-Official OpenClaw plugin for Inworld.
+Official GrokBot plugin for Inworld.
 
-Install from OpenClaw:
+Install from GrokBot:
 
 ```bash
-openclaw plugins install @openclaw/inworld-speech
-openclaw gateway restart
+grokbot plugins install @grokbot/inworld-speech
+grokbot gateway restart
 ```
 
-See <https://docs.openclaw.ai/providers/inworld> for setup and configuration.
+See <https://docs.grokbot.ai/providers/inworld> for setup and configuration.

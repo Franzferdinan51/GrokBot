@@ -77,19 +77,19 @@ Profiler flags gate lightweight timing spans; they add no overhead when off.
 Enable all profiler-gated spans for one gateway run:
 
 ```bash
-OPENCLAW_DIAGNOSTICS=profiler openclaw gateway run
+OPENCLAW_DIAGNOSTICS=profiler grokbot gateway run
 ```
 
 Enable only reply-dispatch profiler spans:
 
 ```bash
-OPENCLAW_DIAGNOSTICS=reply.profiler openclaw gateway run
+OPENCLAW_DIAGNOSTICS=reply.profiler grokbot gateway run
 ```
 
 Enable only Codex app-server startup/tool/thread profiler spans:
 
 ```bash
-OPENCLAW_DIAGNOSTICS=codex.profiler openclaw gateway run
+OPENCLAW_DIAGNOSTICS=codex.profiler grokbot gateway run
 ```
 
 `profiler` enables both the reply profiler and the Codex profiler; use the
@@ -116,8 +116,8 @@ and runtime timing events as JSONL, for external QA harnesses:
 
 ```bash
 OPENCLAW_DIAGNOSTICS=timeline \
-OPENCLAW_DIAGNOSTICS_TIMELINE_PATH=/tmp/openclaw-timeline.jsonl \
-openclaw gateway run
+OPENCLAW_DIAGNOSTICS_TIMELINE_PATH=/tmp/grokbot-timeline.jsonl \
+grokbot gateway run
 ```
 
 Or enable it in config:
@@ -133,7 +133,7 @@ Or enable it in config:
 The output path always comes from `OPENCLAW_DIAGNOSTICS_TIMELINE_PATH`, even
 when the flag itself is set in config; there is no config key for the path.
 When `timeline` is enabled only from config, the earliest config-loading spans
-are missing because OpenClaw has not read config yet; subsequent startup spans
+are missing because GrokBot has not read config yet; subsequent startup spans
 are captured normally.
 
 `OPENCLAW_DIAGNOSTICS=1`, `=all`, and `=*` also enable the timeline, since they
@@ -144,7 +144,7 @@ Event-loop delay samples in the timeline need one more opt-in beyond
 `timeline`: set `OPENCLAW_DIAGNOSTICS_EVENT_LOOP=1` (or `on`/`true`/`yes`) on
 top of enabling the timeline.
 
-Timeline records use the `openclaw.diagnostics.v1` envelope and can include
+Timeline records use the `grokbot.diagnostics.v1` envelope and can include
 process ids, phase names, span names, durations, plugin ids, dependency
 counts, event-loop delay samples, provider operation names, child-process exit
 state, and startup error names/messages. Treat timeline files as local
@@ -155,7 +155,7 @@ diagnostics artifacts; review before sharing them outside your machine.
 Flags emit logs into the standard diagnostics log file. By default:
 
 ```
-/tmp/openclaw/openclaw-YYYY-MM-DD.log
+/tmp/grokbot/grokbot-YYYY-MM-DD.log
 ```
 
 If you set `logging.file`, use that path instead. Logs are JSONL (one JSON
@@ -168,28 +168,28 @@ redaction model.
 Pick the latest log file:
 
 ```bash
-ls -t /tmp/openclaw/openclaw-*.log | head -n 1
+ls -t /tmp/grokbot/grokbot-*.log | head -n 1
 ```
 
 Filter for Telegram HTTP diagnostics:
 
 ```bash
-rg "telegram http error" /tmp/openclaw/openclaw-*.log
+rg "telegram http error" /tmp/grokbot/grokbot-*.log
 ```
 
 Filter for Brave Search HTTP diagnostics:
 
 ```bash
-rg "brave http" /tmp/openclaw/openclaw-*.log
+rg "brave http" /tmp/grokbot/grokbot-*.log
 ```
 
 Or tail while reproducing:
 
 ```bash
-tail -f /tmp/openclaw/openclaw-$(date +%F).log | rg "telegram http error"
+tail -f /tmp/grokbot/grokbot-$(date +%F).log | rg "telegram http error"
 ```
 
-For remote gateways, use `openclaw logs --follow` instead (see
+For remote gateways, use `grokbot logs --follow` instead (see
 [/cli/logs](/cli/logs)).
 
 ## Notes

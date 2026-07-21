@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { OpenClawConfig } from "../../config/types.js";
 import {
@@ -13,7 +13,7 @@ import {
   closeOpenClawStateDatabaseForTest,
   openOpenClawStateDatabase,
   type OpenClawStateDatabase,
-} from "../../state/openclaw-state-db.js";
+} from "../../state/grokbot-state-db.js";
 import type { WorkerInstallationArtifact } from "./bundle.js";
 import type { WorkerConnectionIdentity } from "./connection-identity.js";
 import { hashWorkerCredential } from "./credential.js";
@@ -35,7 +35,7 @@ type WorkerEnvironmentServiceError = Error & { code: string };
 const SSH_ENDPOINT: WorkerSshEndpoint = {
   host: "worker.example.test",
   port: 22,
-  user: "openclaw",
+  user: "grokbot",
   hostKey: HOST_KEY,
   keyRef: { source: "file", provider: "worker-keys", id: "/development-key" },
 };
@@ -54,7 +54,7 @@ const NPM_ARTIFACT: WorkerInstallationArtifact = {
   openclawVersion: "2026.7.2",
   packageIntegrity: `sha512-${Buffer.alloc(64).toString("base64")}`,
   protocolFeatures: [],
-  packageSpec: "openclaw@2026.7.2",
+  packageSpec: "grokbot@2026.7.2",
 };
 const BOOTSTRAP_RECEIPT = {
   bundleHash: BUNDLE_HASH,
@@ -85,7 +85,7 @@ describe("worker environment service", () => {
   let bootstrapWorker: WorkerEnvironmentServiceOptions["bootstrapWorker"];
 
   beforeEach(async () => {
-    root = await fs.mkdtemp(path.join(await fs.realpath(os.tmpdir()), "openclaw-worker-service-"));
+    root = await fs.mkdtemp(path.join(await fs.realpath(os.tmpdir()), "grokbot-worker-service-"));
     database = openOpenClawStateDatabase({ env: { OPENCLAW_STATE_DIR: root } });
     nowMs = 1_000;
     providersEnabled = true;

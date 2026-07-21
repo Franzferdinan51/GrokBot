@@ -30,15 +30,15 @@ import type {
   ToolCallLocation,
   ToolKind,
 } from "@agentclientprotocol/sdk";
-import { readBool, readNonNegativeInteger, readString } from "@openclaw/acp-core/meta";
-import { defaultAcpSessionStore, type AcpSessionStore } from "@openclaw/acp-core/session";
-import { toAcpSessionLineageMeta } from "@openclaw/acp-core/session-lineage-meta";
-import type { AcpServerOptions } from "@openclaw/acp-core/types";
-import { timestampMsToIsoString } from "@openclaw/normalization-core/number-coercion";
+import { readBool, readNonNegativeInteger, readString } from "@grokbot/acp-core/meta";
+import { defaultAcpSessionStore, type AcpSessionStore } from "@grokbot/acp-core/session";
+import { toAcpSessionLineageMeta } from "@grokbot/acp-core/session-lineage-meta";
+import type { AcpServerOptions } from "@grokbot/acp-core/types";
+import { timestampMsToIsoString } from "@grokbot/normalization-core/number-coercion";
 import {
   normalizeFastMode,
   normalizeOptionalString,
-} from "@openclaw/normalization-core/string-coerce";
+} from "@grokbot/normalization-core/string-coerce";
 import type { EventFrame } from "../../packages/gateway-protocol/src/index.js";
 import type { GatewayClient } from "../gateway/client.js";
 import type { GatewaySessionRow, SessionsListResult } from "../gateway/session-utils.js";
@@ -219,7 +219,7 @@ function buildSystemProvenanceReceipt(params: {
 }) {
   return [
     "[Source Receipt]",
-    "bridge=openclaw-acp",
+    "bridge=grokbot-acp",
     `originHost=${os.hostname()}`,
     `originCwd=${shortenHomePath(params.cwd)}`,
     `acpSessionId=${params.sessionId}`,
@@ -238,7 +238,7 @@ function hasExplicitSessionRouting(
   );
 }
 
-/** ACP Agent implementation backed by the OpenClaw Gateway and replay ledger. */
+/** ACP Agent implementation backed by the GrokBot Gateway and replay ledger. */
 export class AcpGatewayAgent implements Agent {
   private connection: AgentSideConnection;
   private gateway: GatewayClient;
@@ -1324,8 +1324,8 @@ export class AcpGatewayAgent implements Agent {
     try {
       if (options.recordDisconnectNotice) {
         const text = pending.sendAccepted
-          ? "[OpenClaw interruption] The Gateway disconnected after accepting this message, so its final outcome is unknown. Check the session before retrying."
-          : "[OpenClaw interruption] The Gateway disconnected before OpenClaw could confirm whether this message was accepted, so its final outcome is unknown. Check the session before retrying.";
+          ? "[GrokBot interruption] The Gateway disconnected after accepting this message, so its final outcome is unknown. Check the session before retrying."
+          : "[GrokBot interruption] The Gateway disconnected before GrokBot could confirm whether this message was accepted, so its final outcome is unknown. Check the session before retrying.";
         // Make replay durable before rejecting, but do not let ACP client backpressure
         // extend the disconnect deadline indefinitely.
         await this.sessionUpdates.emit({
@@ -1774,7 +1774,7 @@ export class AcpGatewayAgent implements Agent {
       return;
     }
     throw new Error(
-      "ACP bridge mode does not support per-session MCP servers. Configure MCP on the OpenClaw gateway or agent instead.",
+      "ACP bridge mode does not support per-session MCP servers. Configure MCP on the GrokBot gateway or agent instead.",
     );
   }
 

@@ -4,8 +4,8 @@
 // security-critical host allowlist (`normalizeGithubCopilotDomain`). The
 // env/config precedence below is GitHub Copilot provider policy, not a
 // plugin-SDK contract, so it is intentionally not part of the SDK surface.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { normalizeGithubCopilotDomain } from "openclaw/plugin-sdk/provider-auth";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { normalizeGithubCopilotDomain } from "grokbot/plugin-sdk/provider-auth";
 
 /** Public GitHub Copilot host used when no data-residency domain is configured. */
 export const PUBLIC_GITHUB_COPILOT_DOMAIN = "github.com";

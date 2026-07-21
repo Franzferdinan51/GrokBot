@@ -1,11 +1,11 @@
 /**
  * Resolves CLI runtime backends registered by plugins or setup metadata.
  */
-import { normalizeProviderId } from "@openclaw/model-catalog-core/provider-id";
-import { normalizeOptionalLowercaseString } from "@openclaw/normalization-core/string-coerce";
-import { uniqueStrings } from "@openclaw/normalization-core/string-normalization";
+import { normalizeProviderId } from "@grokbot/model-catalog-core/provider-id";
+import { normalizeOptionalLowercaseString } from "@grokbot/normalization-core/string-coerce";
+import { uniqueStrings } from "@grokbot/normalization-core/string-normalization";
 import type { CliBackendConfig } from "../config/types.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import type { ContextEngineHostCapability } from "../context-engine/types.js";
 import type { CliBackendRuntimeArtifactPolicy } from "../plugins/cli-backend.types.js";
 import { resolveRuntimeCliBackends } from "../plugins/cli-backends.runtime.js";
@@ -524,5 +524,5 @@ const testing = {
 } as const;
 
 if (process.env.VITEST || process.env.NODE_ENV === "test") {
-  (globalThis as Record<PropertyKey, unknown>)[Symbol.for("openclaw.cliBackendsTestApi")] = testing;
+  (globalThis as Record<PropertyKey, unknown>)[Symbol.for("grokbot.cliBackendsTestApi")] = testing;
 }

@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { createWizardPrompter } from "../../test/helpers/wizard-prompter.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import type { CallGatewayCliOptions } from "../gateway/call.js";
 import { createSuiteLogPathTracker } from "../logging/log-test-helpers.js";
 import { resetLogger, setLoggerOverride } from "../logging/logger.js";
@@ -40,18 +40,18 @@ const readConfigFileSnapshot = vi.hoisted(() =>
   vi.fn(async () => ({
     exists: false,
     valid: true,
-    path: "/tmp/openclaw.json",
+    path: "/tmp/grokbot.json",
     issues: [] as Array<{ path?: string; message: string }>,
     config: {},
   })),
 );
 
-const logPathTracker = createSuiteLogPathTracker("openclaw-guided-onboard-log-");
+const logPathTracker = createSuiteLogPathTracker("grokbot-guided-onboard-log-");
 
 vi.mock("../config/config.js", () => ({ readConfigFileSnapshot }));
 
 vi.mock("./onboard-helpers.js", () => ({
-  DEFAULT_WORKSPACE: "/tmp/openclaw-workspace",
+  DEFAULT_WORKSPACE: "/tmp/grokbot-workspace",
   printWizardHeader: vi.fn(),
 }));
 
@@ -94,7 +94,7 @@ function detection(
     manualProviders: [],
     authOptions: [],
     recommendedInstalls: [],
-    workspace: "/tmp/openclaw-workspace",
+    workspace: "/tmp/grokbot-workspace",
     setupComplete: false,
     ...overrides,
   };
@@ -102,7 +102,7 @@ function detection(
 
 function setupApplyResult() {
   return {
-    configPath: "/tmp/openclaw.json",
+    configPath: "/tmp/grokbot.json",
     configHashBefore: null,
     configHashAfter: null,
     bootstrapPending: false,
@@ -139,7 +139,7 @@ function setupDeps(params: {
     listManualOptions: vi.fn(async () => ({
       manualProviders: [],
       authOptions: [],
-      workspace: "/tmp/openclaw-workspace",
+      workspace: "/tmp/grokbot-workspace",
       setupComplete: false,
     })),
     detect: params.detect ?? vi.fn(async () => detection()),
@@ -183,7 +183,7 @@ describe("runGuidedOnboarding", () => {
     readConfigFileSnapshot.mockResolvedValue({
       exists: false,
       valid: true,
-      path: "/tmp/openclaw.json",
+      path: "/tmp/grokbot.json",
       issues: [],
       config: {},
     });
@@ -210,21 +210,21 @@ describe("runGuidedOnboarding", () => {
       .mockResolvedValueOnce({
         exists: false,
         valid: true,
-        path: "/tmp/openclaw.json",
+        path: "/tmp/grokbot.json",
         issues: [],
         config: {},
       })
       .mockResolvedValueOnce({
         exists: true,
         valid: true,
-        path: "/tmp/openclaw.json",
+        path: "/tmp/grokbot.json",
         issues: [],
         config: persistedConfig,
       })
       .mockResolvedValueOnce({
         exists: true,
         valid: true,
-        path: "/tmp/openclaw.json",
+        path: "/tmp/grokbot.json",
         issues: [],
         config: appliedConfig,
       });
@@ -376,14 +376,14 @@ describe("runGuidedOnboarding", () => {
       .mockResolvedValueOnce({
         exists: false,
         valid: true,
-        path: "/tmp/openclaw.json",
+        path: "/tmp/grokbot.json",
         issues: [],
         config: {},
       })
       .mockResolvedValueOnce({
         exists: true,
         valid: true,
-        path: "/tmp/openclaw.json",
+        path: "/tmp/grokbot.json",
         issues: [],
         config: persistedConfig,
       });
@@ -440,11 +440,11 @@ describe("runGuidedOnboarding", () => {
     );
   });
 
-  it("uses the configured workspace only as inference and OpenClaw context", async () => {
+  it("uses the configured workspace only as inference and GrokBot context", async () => {
     readConfigFileSnapshot.mockResolvedValueOnce({
       exists: true,
       valid: true,
-      path: "/tmp/openclaw.json",
+      path: "/tmp/grokbot.json",
       issues: [],
       config: { agents: { defaults: { workspace: "/tmp/configured" } } },
     });
@@ -472,9 +472,9 @@ describe("runGuidedOnboarding", () => {
 
     expect(text).not.toHaveBeenCalled();
     expect(deps.activate).toHaveBeenCalledWith(
-      expect.objectContaining({ workspace: "/tmp/openclaw-workspace" }),
+      expect.objectContaining({ workspace: "/tmp/grokbot-workspace" }),
     );
-    expect(deps.launchHatchTui).toHaveBeenCalledWith("/tmp/openclaw-workspace");
+    expect(deps.launchHatchTui).toHaveBeenCalledWith("/tmp/grokbot-workspace");
   });
 
   it("live-tests an unverified CLI before automatic setup", async () => {
@@ -844,7 +844,7 @@ describe("runGuidedOnboarding", () => {
     );
   });
 
-  it("keeps OpenClaw unavailable until a manual key passes", async () => {
+  it("keeps GrokBot unavailable until a manual key passes", async () => {
     promptAuthChoiceGrouped.mockResolvedValue("openai-api-key");
     const text = vi.fn().mockResolvedValueOnce("bad-key").mockResolvedValueOnce("good-key");
     const prompter = createWizardPrompter({
@@ -923,7 +923,7 @@ describe("runGuidedOnboarding", () => {
     readConfigFileSnapshot.mockResolvedValueOnce({
       exists: true,
       valid: false,
-      path: "/tmp/broken-openclaw.json",
+      path: "/tmp/broken-grokbot.json",
       issues: [{ path: "agents.defaults.model", message: "Expected a model reference" }],
       config: {},
     });
@@ -934,11 +934,11 @@ describe("runGuidedOnboarding", () => {
     await runGuidedOnboarding({ workspace: "/tmp/repair" }, runtime, deps);
 
     const notes = JSON.stringify((prompter.note as ReturnType<typeof vi.fn>).mock.calls);
-    expect(notes).toContain("/tmp/broken-openclaw.json");
+    expect(notes).toContain("/tmp/broken-grokbot.json");
     expect(notes).toContain("agents.defaults.model: Expected a model reference");
-    expect(prompter.outro).toHaveBeenCalledWith(expect.stringContaining("openclaw doctor --fix"));
+    expect(prompter.outro).toHaveBeenCalledWith(expect.stringContaining("grokbot doctor --fix"));
     expect(prompter.outro).toHaveBeenCalledWith(
-      expect.stringContaining("openclaw config validate"),
+      expect.stringContaining("grokbot config validate"),
     );
     expect(runtime.exit).toHaveBeenCalledWith(1);
     expect(deps.runSystemAgentChat).not.toHaveBeenCalled();
@@ -946,7 +946,7 @@ describe("runGuidedOnboarding", () => {
     expect(deps.activate).not.toHaveBeenCalled();
   });
 
-  it("converges remote inference before remote OpenClaw without mutating local config", async () => {
+  it("converges remote inference before remote GrokBot without mutating local config", async () => {
     const localConfig = {
       wizard: { securityAcknowledgedAt: "2026-07-11T00:00:00.000Z" },
       agents: {
@@ -964,7 +964,7 @@ describe("runGuidedOnboarding", () => {
     readConfigFileSnapshot.mockResolvedValueOnce({
       exists: true,
       valid: true,
-      path: "/tmp/openclaw.json",
+      path: "/tmp/grokbot.json",
       issues: [],
       config: localConfig,
     });
@@ -978,7 +978,7 @@ describe("runGuidedOnboarding", () => {
       expect(options.ignoreEnvUrlOverride).toBe(true);
       expect(options.config?.gateway?.remote?.url).toBe("wss://selected.example/ws");
       order.push(options.method);
-      if (options.method === "openclaw.setup.detect") {
+      if (options.method === "grokbot.setup.detect") {
         return {
           candidates: [
             {
@@ -1006,7 +1006,7 @@ describe("runGuidedOnboarding", () => {
           setupComplete: false,
         };
       }
-      if (options.method === "openclaw.setup.activate") {
+      if (options.method === "grokbot.setup.activate") {
         expect(options.params).toEqual({
           kind: "claude-cli",
           modelRef: "claude-cli/opus",
@@ -1020,11 +1020,11 @@ describe("runGuidedOnboarding", () => {
           lines: ["Default model: claude-cli/opus"],
         };
       }
-      if (options.method === "openclaw.setup.verify") {
+      if (options.method === "grokbot.setup.verify") {
         expect(remoteConfig.modelRef).toBe("claude-cli/opus");
         return { ok: true, modelRef: remoteConfig.modelRef, latencyMs: 100 };
       }
-      if (options.method === "openclaw.chat") {
+      if (options.method === "grokbot.chat") {
         expect(remoteConfig.modelRef).toBe("claude-cli/opus");
         expect(options.params).toEqual({
           sessionId: expect.any(String),
@@ -1077,10 +1077,10 @@ describe("runGuidedOnboarding", () => {
     );
 
     expect(order).toEqual([
-      "openclaw.setup.detect",
-      "openclaw.setup.activate",
-      "openclaw.setup.verify",
-      "openclaw.chat",
+      "grokbot.setup.detect",
+      "grokbot.setup.activate",
+      "grokbot.setup.verify",
+      "grokbot.chat",
       "tui",
     ]);
     expect(remoteConfig.modelRef).toBe("claude-cli/opus");

@@ -98,7 +98,7 @@ import {
 describe("prepared model runtime snapshots", () => {
   const getTesting = () =>
     (globalThis as Record<PropertyKey, unknown>)[
-      Symbol.for("openclaw.preparedModelRuntimeTestApi")
+      Symbol.for("grokbot.preparedModelRuntimeTestApi")
     ] as {
       resetPreparedModelRuntimeSnapshotsForTest: () => void;
       setModelRuntimeBuildTimeoutMsForTest: (timeoutMs: number) => void;

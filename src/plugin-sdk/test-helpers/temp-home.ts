@@ -1,8 +1,8 @@
-// Temp home test helpers create isolated OpenClaw home directories for plugin tests.
+// Temp home test helpers create isolated GrokBot home directories for plugin tests.
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { deleteTestEnvValue, setTestEnvValue } from "../../test-utils/env.js";
 import { cleanupSessionStateForTest } from "../../test-utils/session-state-cleanup.js";
 
@@ -74,7 +74,7 @@ function setTempHome(base: string) {
   setTestEnvValue("USERPROFILE", base);
   // Ensure tests using HOME isolation aren't affected by leaked OPENCLAW_HOME.
   deleteTestEnvValue("OPENCLAW_HOME");
-  setTestEnvValue("OPENCLAW_STATE_DIR", path.join(base, ".openclaw"));
+  setTestEnvValue("OPENCLAW_STATE_DIR", path.join(base, ".grokbot"));
 
   if (process.platform !== "win32") {
     return;
@@ -111,7 +111,7 @@ export async function withTempHome<T>(
     skipSessionCleanup?: boolean;
   } = {},
 ): Promise<T> {
-  const prefix = opts.prefix ?? "openclaw-test-home-";
+  const prefix = opts.prefix ?? "grokbot-test-home-";
   const base = await allocateTempHomeBase(prefix);
   const snapshot = snapshotEnv();
   const envKeys = Object.keys(opts.env ?? {});
@@ -123,7 +123,7 @@ export async function withTempHome<T>(
   const envSnapshot = snapshotExtraEnv(envKeys);
 
   setTempHome(base);
-  await fs.mkdir(path.join(base, ".openclaw", "agents", "main", "sessions"), { recursive: true });
+  await fs.mkdir(path.join(base, ".grokbot", "agents", "main", "sessions"), { recursive: true });
   if (opts.env) {
     for (const [key, raw] of Object.entries(opts.env)) {
       const value = typeof raw === "function" ? raw(base) : raw;

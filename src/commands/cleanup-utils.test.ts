@@ -2,7 +2,7 @@
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { afterEach, beforeEach, describe, expect, it, test, vi } from "vitest";
 import { useAutoCleanupTempDirTracker } from "../../test/helpers/temp-dir.js";
 import type { OpenClawConfig } from "../config/config.js";
@@ -34,8 +34,8 @@ import {
 describe("buildCleanupPlan", () => {
   test("resolves inside-state flags and workspace dirs", () => {
     const tmpRoot = path.join(path.parse(process.cwd()).root, "tmp");
-    const defaultWorkspace = path.join(tmpRoot, "openclaw-workspace-default");
-    const opsWorkspace = path.join(tmpRoot, "openclaw-workspace-ops");
+    const defaultWorkspace = path.join(tmpRoot, "grokbot-workspace-default");
+    const opsWorkspace = path.join(tmpRoot, "grokbot-workspace-ops");
     const cfg = {
       agents: {
         defaults: { workspace: defaultWorkspace },
@@ -44,9 +44,9 @@ describe("buildCleanupPlan", () => {
     };
     const plan = buildCleanupPlan({
       cfg: cfg as unknown as OpenClawConfig,
-      stateDir: path.join(tmpRoot, "openclaw-state"),
-      configPath: path.join(tmpRoot, "openclaw-state", "openclaw.json"),
-      oauthDir: path.join(tmpRoot, "openclaw-oauth"),
+      stateDir: path.join(tmpRoot, "grokbot-state"),
+      configPath: path.join(tmpRoot, "grokbot-state", "grokbot.json"),
+      oauthDir: path.join(tmpRoot, "grokbot-oauth"),
     });
 
     expect(plan.configInsideState).toBe(true);
@@ -55,9 +55,9 @@ describe("buildCleanupPlan", () => {
   });
 
   test("includes implicit per-agent workspaces under the state dir", () => {
-    const tmpRoot = path.join(path.parse(process.cwd()).root, "tmp", "openclaw-cleanup-plan");
+    const tmpRoot = path.join(path.parse(process.cwd()).root, "tmp", "grokbot-cleanup-plan");
     const home = path.join(tmpRoot, "home");
-    const stateDir = path.join(home, ".openclaw");
+    const stateDir = path.join(home, ".grokbot");
     const cfg = {
       agents: {
         list: [{ id: "main" }, { id: "work" }],
@@ -74,7 +74,7 @@ describe("buildCleanupPlan", () => {
         const plan = buildCleanupPlan({
           cfg: cfg as unknown as OpenClawConfig,
           stateDir,
-          configPath: path.join(stateDir, "openclaw.json"),
+          configPath: path.join(stateDir, "grokbot.json"),
           oauthDir: path.join(stateDir, "credentials"),
         });
 
@@ -103,11 +103,11 @@ describe("cleanup path removals", () => {
 
   it("removes state and only linked paths outside state", async () => {
     const runtime = createRuntimeMock();
-    const tmpRoot = path.join(path.parse(process.cwd()).root, "tmp", "openclaw-cleanup");
+    const tmpRoot = path.join(path.parse(process.cwd()).root, "tmp", "grokbot-cleanup");
     const stateRemoved = await removeStateAndLinkedPaths(
       {
         stateDir: path.join(tmpRoot, "state"),
-        configPath: path.join(tmpRoot, "state", "openclaw.json"),
+        configPath: path.join(tmpRoot, "state", "grokbot.json"),
         oauthDir: path.join(tmpRoot, "oauth"),
         configInsideState: true,
         oauthInsideState: false,
@@ -117,8 +117,8 @@ describe("cleanup path removals", () => {
     );
 
     expect(runtime.log.mock.calls.map(([line]) => line.replaceAll("\\", "/"))).toEqual([
-      "[dry-run] remove /tmp/openclaw-cleanup/state",
-      "[dry-run] remove /tmp/openclaw-cleanup/oauth",
+      "[dry-run] remove /tmp/grokbot-cleanup/state",
+      "[dry-run] remove /tmp/grokbot-cleanup/oauth",
     ]);
     expect(stateRemoved).toBe(true);
   });
@@ -130,9 +130,9 @@ describe("cleanup path removals", () => {
     try {
       const stateRemoved = await removeStateAndLinkedPaths(
         {
-          stateDir: "/tmp/openclaw-cleanup-state-failure",
-          configPath: "/tmp/openclaw-cleanup-state-failure/openclaw.json",
-          oauthDir: "/tmp/openclaw-cleanup-state-failure/credentials",
+          stateDir: "/tmp/grokbot-cleanup-state-failure",
+          configPath: "/tmp/grokbot-cleanup-state-failure/grokbot.json",
+          oauthDir: "/tmp/grokbot-cleanup-state-failure/credentials",
           configInsideState: true,
           oauthInsideState: true,
         },
@@ -146,11 +146,11 @@ describe("cleanup path removals", () => {
 
   it("preserves nested workspace paths during state-only removal", async () => {
     const runtime = createRuntimeMock();
-    const tmpRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-cleanup-"));
-    const stateDir = path.join(tmpRoot, ".openclaw");
+    const tmpRoot = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-cleanup-"));
+    const stateDir = path.join(tmpRoot, ".grokbot");
     const workspaceDir = path.join(stateDir, "workspace");
     const workspaceFile = path.join(workspaceDir, "project.txt");
-    const configPath = path.join(stateDir, "openclaw.json");
+    const configPath = path.join(stateDir, "grokbot.json");
     const cacheFile = path.join(stateDir, "cache.json");
 
     try {
@@ -181,20 +181,20 @@ describe("cleanup path removals", () => {
 
   it("removes every workspace directory", async () => {
     const runtime = createRuntimeMock();
-    const workspaces = ["/tmp/openclaw-workspace-1", "/tmp/openclaw-workspace-2"];
+    const workspaces = ["/tmp/grokbot-workspace-1", "/tmp/grokbot-workspace-2"];
 
     await removeWorkspaceDirs(workspaces, runtime, { dryRun: true });
 
     const logs = runtime.log.mock.calls.map(([line]) => line);
     expect(logs).toEqual([
-      "[dry-run] remove /tmp/openclaw-workspace-1",
-      "[dry-run] remove /tmp/openclaw-workspace-2",
+      "[dry-run] remove /tmp/grokbot-workspace-1",
+      "[dry-run] remove /tmp/grokbot-workspace-2",
     ]);
   });
 
   it("deletes workspace state only after workspace removal succeeds", async () => {
     const runtime = createRuntimeMock();
-    const tmpRoot = tempDirs.make("openclaw-cleanup-workspace-");
+    const tmpRoot = tempDirs.make("grokbot-cleanup-workspace-");
     const workspaceDir = path.join(tmpRoot, "workspace");
 
     try {
@@ -211,14 +211,14 @@ describe("cleanup path removals", () => {
 
   it("cleans workspace state when the workspace directory is already missing", async () => {
     const runtime = createRuntimeMock();
-    const tmpRoot = tempDirs.make("openclaw-cleanup-missing-workspace-");
+    const tmpRoot = tempDirs.make("grokbot-cleanup-missing-workspace-");
     const workspaceDir = path.join(tmpRoot, "workspace");
     const siblingMarker = `${workspaceDir}.attested`;
 
     try {
       await fs.writeFile(
         siblingMarker,
-        "openclaw-workspace-attestation:v1\n2026-07-15T11:00:00.000Z\n",
+        "grokbot-workspace-attestation:v1\n2026-07-15T11:00:00.000Z\n",
       );
 
       await removeWorkspaceDirs([workspaceDir], runtime, { removeStateRows: true });
@@ -232,7 +232,7 @@ describe("cleanup path removals", () => {
 
   it("removes a retired sibling marker after workspace removal without opening SQLite", async () => {
     const runtime = createRuntimeMock();
-    const tmpRoot = tempDirs.make("openclaw-cleanup-legacy-");
+    const tmpRoot = tempDirs.make("grokbot-cleanup-legacy-");
     const workspaceDir = path.join(tmpRoot, "workspace");
     const siblingMarker = `${workspaceDir}.attested`;
 
@@ -240,7 +240,7 @@ describe("cleanup path removals", () => {
       await fs.mkdir(workspaceDir, { recursive: true });
       await fs.writeFile(
         siblingMarker,
-        "openclaw-workspace-attestation:v1\n2026-07-15T11:00:00.000Z\n",
+        "grokbot-workspace-attestation:v1\n2026-07-15T11:00:00.000Z\n",
       );
 
       await removeWorkspaceDirs([workspaceDir], runtime);
@@ -256,7 +256,7 @@ describe("cleanup path removals", () => {
   it("does not delete workspace state during dry-run", async () => {
     const runtime = createRuntimeMock();
 
-    await removeWorkspaceDirs(["/tmp/openclaw-workspace"], runtime, {
+    await removeWorkspaceDirs(["/tmp/grokbot-workspace"], runtime, {
       dryRun: true,
       removeStateRows: true,
     });
@@ -266,7 +266,7 @@ describe("cleanup path removals", () => {
 
   it("previews retired sibling-marker cleanup during workspace dry-run", async () => {
     const runtime = createRuntimeMock();
-    const tmpRoot = tempDirs.make("openclaw-cleanup-dry-run-legacy-");
+    const tmpRoot = tempDirs.make("grokbot-cleanup-dry-run-legacy-");
     const workspaceDir = path.join(tmpRoot, "workspace");
     const siblingMarker = `${workspaceDir}.attested`;
 
@@ -274,7 +274,7 @@ describe("cleanup path removals", () => {
       await fs.mkdir(workspaceDir, { recursive: true });
       await fs.writeFile(
         siblingMarker,
-        "openclaw-workspace-attestation:v1\n2026-07-15T11:00:00.000Z\n",
+        "grokbot-workspace-attestation:v1\n2026-07-15T11:00:00.000Z\n",
       );
 
       await removeWorkspaceDirs([workspaceDir], runtime, { dryRun: true });
@@ -291,7 +291,7 @@ describe("cleanup path removals", () => {
     const rmSpy = vi.spyOn(fs, "rm").mockRejectedValueOnce(new Error("permission denied"));
 
     try {
-      await removeWorkspaceDirs(["/tmp/openclaw-workspace"], runtime, {
+      await removeWorkspaceDirs(["/tmp/grokbot-workspace"], runtime, {
         removeStateRows: true,
       });
     } finally {
@@ -316,7 +316,7 @@ describe("cleanup path removals", () => {
 
   it("refuses to remove a directory containing the current working directory", async () => {
     const runtime = createRuntimeMock();
-    const tmpRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-cleanup-cwd-"));
+    const tmpRoot = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-cleanup-cwd-"));
     const nestedCwd = path.join(tmpRoot, "nested");
     const cwdSpy = vi.spyOn(process, "cwd");
 

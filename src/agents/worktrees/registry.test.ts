@@ -6,7 +6,7 @@ import { requireNodeSqlite } from "../../infra/node-sqlite.js";
 import {
   closeOpenClawStateDatabaseForTest,
   openOpenClawStateDatabase,
-} from "../../state/openclaw-state-db.js";
+} from "../../state/grokbot-state-db.js";
 import {
   deleteRegistryWorktree,
   getRegistryWorktreeProvisionedChunk,
@@ -29,7 +29,7 @@ describe("managed worktree registry", () => {
 
   beforeEach(async () => {
     const tempRoot = await fs.realpath(os.tmpdir());
-    root = await fs.mkdtemp(path.join(tempRoot, "openclaw-worktree-registry-"));
+    root = await fs.mkdtemp(path.join(tempRoot, "grokbot-worktree-registry-"));
     env = { ...process.env, OPENCLAW_STATE_DIR: path.join(root, "state") };
   });
 
@@ -45,7 +45,7 @@ describe("managed worktree registry", () => {
       repoFingerprint: "0123456789abcdef",
       repoRoot: path.join(root, "repo"),
       path: path.join(root, "worktrees", "task"),
-      branch: "openclaw/task",
+      branch: "grokbot/task",
       baseRef: "HEAD",
       ownerKind: "workboard",
       ownerId: "card-1",
@@ -75,13 +75,13 @@ describe("managed worktree registry", () => {
     updateRegistryWorktree(env, "first", {
       lastActiveAt: 30,
       removedAt: 40,
-      snapshotRef: "refs/openclaw/snapshots/first",
+      snapshotRef: "refs/grokbot/snapshots/first",
       provisionedState: [{ path: ".env.local", mode: 0o600, chunks: 1 }],
     });
     expect(getRegistryWorktree(env, "first")).toMatchObject({
       lastActiveAt: 30,
       removedAt: 40,
-      snapshotRef: "refs/openclaw/snapshots/first",
+      snapshotRef: "refs/grokbot/snapshots/first",
     });
     expect(findLiveRegistryWorktreeByPath(env, record.path)).toBeUndefined();
     expect(findRegistryWorktreeByPath(env, record.path)?.id).toBe("first");

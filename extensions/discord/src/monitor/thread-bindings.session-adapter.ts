@@ -4,9 +4,9 @@ import {
   type BindingTargetKind,
   type SessionBindingAdapter,
   type SessionBindingRecord,
-} from "openclaw/plugin-sdk/conversation-runtime";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/runtime-config-snapshot";
-import { normalizeOptionalString } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/conversation-runtime";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/runtime-config-snapshot";
+import { normalizeOptionalString } from "grokbot/plugin-sdk/string-coerce-runtime";
 import { resolveDiscordChannelId } from "../target-parsing.js";
 import { resolveChannelIdForBinding } from "./thread-bindings.discord-api.js";
 import { resolveBindingRecordKey } from "./thread-bindings.state.js";

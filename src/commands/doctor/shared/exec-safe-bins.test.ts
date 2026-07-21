@@ -59,14 +59,14 @@ describe("doctor exec safe bin helpers", () => {
           isInterpreter: false,
         },
       ],
-      doctorFixCommand: "openclaw doctor --fix",
+      doctorFixCommand: "grokbot doctor --fix",
     });
 
     expect(warnings).toEqual([
       "- tools.exec.safeBins includes interpreter/runtime 'node' without profile.",
       "- tools.exec.safeBins entry 'myfilter' is missing safeBinProfiles.myfilter.",
       "- agents.list.runner.tools.exec.safeBins includes 'jq': jq can read environment data and load jq code from modules or startup files, so prefer explicit allowlist entries or approval-gated runs instead of safeBins.",
-      '- Run "openclaw doctor --fix" to scaffold missing custom safeBinProfiles entries.',
+      '- Run "grokbot doctor --fix" to scaffold missing custom safeBinProfiles entries.',
     ]);
   });
 
@@ -81,7 +81,7 @@ describe("doctor exec safe bin helpers", () => {
             "jq can read environment data and load jq code from modules or startup files, so prefer explicit allowlist entries or approval-gated runs instead of safeBins.",
         },
       ],
-      doctorFixCommand: "openclaw doctor --fix",
+      doctorFixCommand: "grokbot doctor --fix",
     });
 
     expect(warnings).toEqual([
@@ -188,7 +188,7 @@ describe("doctor exec safe bin helpers", () => {
   });
 
   it("flags safeBins that resolve outside trusted directories", () => {
-    const tempDir = mkdtempSync(join(tmpdir(), "openclaw-safe-bin-"));
+    const tempDir = mkdtempSync(join(tmpdir(), "grokbot-safe-bin-"));
     try {
       const binPath = join(tempDir, "custom-safe-bin");
       writeFileSync(binPath, "#!/bin/sh\nexit 0\n");

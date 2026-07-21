@@ -158,8 +158,8 @@ describe("fleet container runtime", () => {
           State: { Status: "running", Running: true },
           Config: {
             Env: ["OPENCLAW_GATEWAY_TOKEN=test-auth-token", "FEATURE=a=b"],
-            Image: "ghcr.io/openclaw/openclaw:latest",
-            Labels: { "openclaw.fleet.tenant": "acme" },
+            Image: "ghcr.io/grokbot/grokbot:latest",
+            Labels: { "grokbot.fleet.tenant": "acme" },
             User: "1000:1000",
           },
           HostConfig: {
@@ -181,7 +181,7 @@ describe("fleet container runtime", () => {
       containerId: "container-id",
       state: "running",
       running: true,
-      labels: { "openclaw.fleet.tenant": "acme" },
+      labels: { "grokbot.fleet.tenant": "acme" },
       environment: { OPENCLAW_GATEWAY_TOKEN: "test-auth-token", FEATURE: "a=b" },
       imageId: "sha256:old-image-id",
       memory: "2147483648",
@@ -250,8 +250,8 @@ describe("fleet container runtime", () => {
         stdout: JSON.stringify([
           {
             [labelsField]: {
-              "openclaw.fleet.tenant": "acme",
-              "openclaw.fleet.owner": "owner-id",
+              "grokbot.fleet.tenant": "acme",
+              "grokbot.fleet.owner": "owner-id",
             },
             [containersField]: {
               "container-b": { [nameField]: "peer-b" },
@@ -264,12 +264,12 @@ describe("fleet container runtime", () => {
       }));
 
       await expect(
-        createFleetContainerRuntime(executor).inspectNetwork(runtimeName, "openclaw-cell-acme-net"),
+        createFleetContainerRuntime(executor).inspectNetwork(runtimeName, "grokbot-cell-acme-net"),
       ).resolves.toEqual({
         kind: "ok",
         labels: {
-          "openclaw.fleet.tenant": "acme",
-          "openclaw.fleet.owner": "owner-id",
+          "grokbot.fleet.tenant": "acme",
+          "grokbot.fleet.owner": "owner-id",
         },
         attachedContainers: [
           { id: "container-a", name: "peer-a" },
@@ -279,7 +279,7 @@ describe("fleet container runtime", () => {
       });
       expect(executor).toHaveBeenCalledWith(
         runtimeName,
-        ["network", "inspect", "openclaw-cell-acme-net"],
+        ["network", "inspect", "grokbot-cell-acme-net"],
         { allowFailure: true },
       );
     },
@@ -293,14 +293,14 @@ describe("fleet container runtime", () => {
     }));
 
     await expect(
-      createFleetContainerRuntime(executor).inspectNetwork("docker", "openclaw-cell-acme-net"),
+      createFleetContainerRuntime(executor).inspectNetwork("docker", "grokbot-cell-acme-net"),
     ).resolves.toEqual({ kind: "ok", labels: {}, attachedContainers: [], internal: false });
   });
 
   it("distinguishes missing networks from unavailable runtimes", async () => {
     const missingExecutor = vi.fn<FleetContainerCommandExecutor>(async () => ({
       stdout: "",
-      stderr: "Error: network openclaw-cell-missing-net not found",
+      stderr: "Error: network grokbot-cell-missing-net not found",
       code: 1,
     }));
     const unavailableExecutor = vi.fn<FleetContainerCommandExecutor>(async () => ({
@@ -312,13 +312,13 @@ describe("fleet container runtime", () => {
     await expect(
       createFleetContainerRuntime(missingExecutor).inspectNetwork(
         "docker",
-        "openclaw-cell-missing-net",
+        "grokbot-cell-missing-net",
       ),
     ).resolves.toEqual({ kind: "missing" });
     await expect(
       createFleetContainerRuntime(unavailableExecutor).inspectNetwork(
         "docker",
-        "openclaw-cell-acme-net",
+        "grokbot-cell-acme-net",
       ),
     ).resolves.toEqual({
       kind: "unavailable",
@@ -328,13 +328,13 @@ describe("fleet container runtime", () => {
 
   it("treats malformed network inspect JSON as unavailable", async () => {
     const executor = vi.fn<FleetContainerCommandExecutor>(async () => ({
-      stdout: JSON.stringify([{ Labels: { "openclaw.fleet.tenant": 42 } }]),
+      stdout: JSON.stringify([{ Labels: { "grokbot.fleet.tenant": 42 } }]),
       stderr: "",
       code: 0,
     }));
 
     await expect(
-      createFleetContainerRuntime(executor).inspectNetwork("docker", "openclaw-cell-acme-net"),
+      createFleetContainerRuntime(executor).inspectNetwork("docker", "grokbot-cell-acme-net"),
     ).resolves.toEqual({
       kind: "unavailable",
       error: "network inspect returned an invalid response",
@@ -470,15 +470,15 @@ describe("fleet container runtime", () => {
 
     await runtime.createNetwork(
       "podman",
-      "openclaw-cell-acme-net",
+      "grokbot-cell-acme-net",
       {
-        "openclaw.fleet.tenant": "acme",
-        "openclaw.fleet.attempt": "attempt-id",
-        "openclaw.fleet.owner": "owner-id",
+        "grokbot.fleet.tenant": "acme",
+        "grokbot.fleet.attempt": "attempt-id",
+        "grokbot.fleet.owner": "owner-id",
       },
       { internal: false },
     );
-    await runtime.removeNetwork("podman", "openclaw-cell-acme-net");
+    await runtime.removeNetwork("podman", "grokbot-cell-acme-net");
 
     expect(executor.mock.calls.map(([, args]) => args)).toEqual([
       [
@@ -487,14 +487,14 @@ describe("fleet container runtime", () => {
         "--driver",
         "bridge",
         "--label",
-        "openclaw.fleet.attempt=attempt-id",
+        "grokbot.fleet.attempt=attempt-id",
         "--label",
-        "openclaw.fleet.owner=owner-id",
+        "grokbot.fleet.owner=owner-id",
         "--label",
-        "openclaw.fleet.tenant=acme",
-        "openclaw-cell-acme-net",
+        "grokbot.fleet.tenant=acme",
+        "grokbot-cell-acme-net",
       ],
-      ["network", "rm", "openclaw-cell-acme-net"],
+      ["network", "rm", "grokbot-cell-acme-net"],
     ]);
   });
 
@@ -504,7 +504,7 @@ describe("fleet container runtime", () => {
   ] as const)("sets internal=%s on network create", async (internal, expected) => {
     const executor = successfulExecutor();
     const runtime = createFleetContainerRuntime(executor);
-    await runtime.createNetwork("podman", "openclaw-cell-acme-net", {}, { internal });
+    await runtime.createNetwork("podman", "grokbot-cell-acme-net", {}, { internal });
     expect(executor.mock.calls[0]?.[1].includes("--internal")).toBe(expected);
   });
 

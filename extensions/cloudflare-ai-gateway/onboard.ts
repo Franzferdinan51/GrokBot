@@ -6,7 +6,7 @@ import {
   applyAgentDefaultModelPrimary,
   applyProviderConfigWithDefaultModel,
   type OpenClawConfig,
-} from "openclaw/plugin-sdk/provider-onboard";
+} from "grokbot/plugin-sdk/provider-onboard";
 import {
   buildCloudflareAiGatewayModelDefinition,
   CLOUDFLARE_AI_GATEWAY_DEFAULT_MODEL_REF,

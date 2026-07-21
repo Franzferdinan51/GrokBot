@@ -1,6 +1,6 @@
-// Github Copilot plugin entrypoint registers its OpenClaw integration.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { resolvePluginConfigObject } from "openclaw/plugin-sdk/plugin-config-runtime";
+// Github Copilot plugin entrypoint registers its GrokBot integration.
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { resolvePluginConfigObject } from "grokbot/plugin-sdk/plugin-config-runtime";
 import {
   definePluginEntry,
   type ProviderAuthContext,
@@ -8,8 +8,8 @@ import {
   type ProviderAuthMethodNonInteractiveContext,
   type UnifiedModelCatalogEntry,
   type UnifiedModelCatalogProviderContext,
-} from "openclaw/plugin-sdk/plugin-entry";
-import type { PluginStateSyncKeyedStore } from "openclaw/plugin-sdk/plugin-state-runtime";
+} from "grokbot/plugin-sdk/plugin-entry";
+import type { PluginStateSyncKeyedStore } from "grokbot/plugin-sdk/plugin-state-runtime";
 import {
   applyAuthProfileConfig,
   coerceSecretRef,
@@ -19,7 +19,7 @@ import {
   normalizeOptionalSecretInput,
   resolveDefaultSecretProviderAlias,
   upsertAuthProfileWithLock,
-} from "openclaw/plugin-sdk/provider-auth";
+} from "grokbot/plugin-sdk/provider-auth";
 import { PUBLIC_GITHUB_COPILOT_DOMAIN, resolveGithubCopilotDomain } from "./domain.js";
 import { createGithubCopilotDynamicModelHooks } from "./dynamic-models.js";
 import { githubCopilotMemoryEmbeddingProviderAdapter } from "./embeddings.js";

@@ -1,4 +1,4 @@
-import type { PluginCommandContext } from "openclaw/plugin-sdk/plugin-entry";
+import type { PluginCommandContext } from "grokbot/plugin-sdk/plugin-entry";
 
 type CodexHostMutationAuthContext = Pick<
   PluginCommandContext,

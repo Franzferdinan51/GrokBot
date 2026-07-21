@@ -3,8 +3,8 @@
  *
  * Bounds cleanup steps so run completion cannot hang forever while preserving late-failure diagnostics.
  */
-import { resolveOptionalIntegerOption } from "@openclaw/normalization-core/number-coercion";
-import { truncateUtf16Safe } from "@openclaw/normalization-core/utf16-slice";
+import { resolveOptionalIntegerOption } from "@grokbot/normalization-core/number-coercion";
+import { truncateUtf16Safe } from "@grokbot/normalization-core/utf16-slice";
 import { formatErrorMessage } from "../infra/errors.js";
 import { parseStrictPositiveInteger } from "../infra/parse-finite-number.js";
 
@@ -62,7 +62,7 @@ function resolveAgentCleanupStepTimeoutMs(params: {
   }
 
   const env = params.env ?? process.env;
-  if (params.step === "openclaw-trajectory-flush") {
+  if (params.step === "grokbot-trajectory-flush") {
     const trajectoryTimeoutMs = parseTimeoutEnvValue(env[TRAJECTORY_FLUSH_TIMEOUT_ENV]);
     if (trajectoryTimeoutMs !== undefined) {
       return trajectoryTimeoutMs;

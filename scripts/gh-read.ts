@@ -1,8 +1,8 @@
-// Gh Read script supports OpenClaw repository automation.
+// Gh Read script supports GrokBot repository automation.
 import { spawnSync } from "node:child_process";
 import { createPrivateKey, createSign } from "node:crypto";
 import { pathToFileURL } from "node:url";
-import { readSecretFileSync } from "@openclaw/fs-safe/secret";
+import { readSecretFileSync } from "@grokbot/fs-safe/secret";
 import { expectDefined } from "../packages/normalization-core/src/expect.js";
 import { truncateUtf16Safe } from "../packages/normalization-core/src/utf16-slice.js";
 import { readBoundedResponseText } from "./lib/bounded-response.ts";
@@ -292,7 +292,7 @@ export async function githubJson<T>(
           Accept: "application/vnd.github+json",
           Authorization: `Bearer ${bearerToken}`,
           "Content-Type": "application/json",
-          "User-Agent": "openclaw-gh-read",
+          "User-Agent": "grokbot-gh-read",
           "X-GitHub-Api-Version": API_VERSION,
         },
         body: init?.body === undefined ? undefined : JSON.stringify(init.body),

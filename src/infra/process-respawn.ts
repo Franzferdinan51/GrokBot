@@ -1,6 +1,6 @@
 // Respawns the gateway process when no supervisor handles restart.
 import { spawn, type ChildProcess } from "node:child_process";
-import { normalizeOptionalLowercaseString } from "@openclaw/normalization-core/string-coerce";
+import { normalizeOptionalLowercaseString } from "@grokbot/normalization-core/string-coerce";
 import { isContainerEnvironment } from "./container-environment.js";
 import { formatErrorMessage } from "./errors.js";
 import { triggerOpenClawRestart } from "./restart.js";
@@ -31,7 +31,7 @@ const PNPM_VERSIONED_OPENCLAW_ENTRY_PATTERN =
 
 function rewritePnpmVersionedOpenClawEntryPath(entryPath: string): string {
   // pnpm can expose argv[1] as a versioned realpath that self-update removes.
-  // Respawn through the stable OpenClaw package wrapper instead.
+  // Respawn through the stable GrokBot package wrapper instead.
   return entryPath.replace(
     PNPM_VERSIONED_OPENCLAW_ENTRY_PATTERN,
     "$1$2node_modules$2openclaw$2openclaw.mjs",

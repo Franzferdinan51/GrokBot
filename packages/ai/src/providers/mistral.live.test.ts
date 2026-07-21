@@ -27,7 +27,7 @@ describeLive("Mistral provider live", () => {
       {
         apiKey,
         maxTokens: 32,
-        sessionId: `openclaw-live-${Date.now()}`,
+        sessionId: `grokbot-live-${Date.now()}`,
       },
     ).result();
 

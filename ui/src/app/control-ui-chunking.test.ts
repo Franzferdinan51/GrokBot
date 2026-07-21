@@ -15,12 +15,12 @@ describe("Control UI build chunking", () => {
       "markdown-runtime",
     );
     expect(
-      controlUiStableChunkName("/tmp/openclaw-pnpm-node-modules/dompurify/dist/purify.es.mjs"),
+      controlUiStableChunkName("/tmp/grokbot-pnpm-node-modules/dompurify/dist/purify.es.mjs"),
     ).toBe("markdown-runtime");
-    expect(controlUiStableChunkName("/tmp/openclaw-pnpm-node-modules/zod/v4/core/schemas.js")).toBe(
+    expect(controlUiStableChunkName("/tmp/grokbot-pnpm-node-modules/zod/v4/core/schemas.js")).toBe(
       "config-runtime",
     );
-    expect(controlUiStableChunkName("/tmp/openclaw-pnpm-node-modules/json5/dist/index.js")).toBe(
+    expect(controlUiStableChunkName("/tmp/grokbot-pnpm-node-modules/json5/dist/index.js")).toBe(
       "config-runtime",
     );
     expect(controlUiStableChunkName("/repo/ui/src/components/config-form.shared.ts")).toBe(
@@ -32,7 +32,7 @@ describe("Control UI build chunking", () => {
       "control-ui-shared",
     );
     expect(
-      controlUiStableChunkName("/tmp/openclaw-pnpm-node-modules/@noble/ed25519/index.js"),
+      controlUiStableChunkName("/tmp/grokbot-pnpm-node-modules/@noble/ed25519/index.js"),
     ).toBe("gateway-runtime");
     expect(controlUiStableChunkName("/repo/ui/src/lib/gateway-methods.ts")).toBe("gateway-runtime");
     expect(controlUiStableChunkName("/repo/ui/src/app/app-host.ts")).toBeUndefined();

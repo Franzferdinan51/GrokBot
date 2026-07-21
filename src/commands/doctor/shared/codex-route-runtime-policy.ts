@@ -1,9 +1,9 @@
-import { AGENT_MODEL_CONFIG_KEYS } from "@openclaw/model-catalog-core/configured-model-refs";
-import { normalizeProviderId } from "@openclaw/model-catalog-core/provider-id";
-import { asOptionalRecord as asMutableRecord } from "@openclaw/normalization-core/record-coerce";
-import { normalizeOptionalLowercaseString as normalizeString } from "@openclaw/normalization-core/string-coerce";
+import { AGENT_MODEL_CONFIG_KEYS } from "@grokbot/model-catalog-core/configured-model-refs";
+import { normalizeProviderId } from "@grokbot/model-catalog-core/provider-id";
+import { asOptionalRecord as asMutableRecord } from "@grokbot/normalization-core/record-coerce";
+import { normalizeOptionalLowercaseString as normalizeString } from "@grokbot/normalization-core/string-coerce";
 import { resolveModelRuntimePolicy } from "../../../agents/model-runtime-policy.js";
-import type { OpenClawConfig } from "../../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../../config/types.grokbot.js";
 import { normalizeAgentId } from "../../../routing/session-key.js";
 import {
   canonicalOpenAIModelUsesCodexRuntime,

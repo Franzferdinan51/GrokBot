@@ -34,11 +34,11 @@ export type PluginInstallRuntime = Awaited<ReturnType<typeof loadPluginInstallRu
 export const defaultLogger: PluginInstallLogger = {};
 
 export function formatUnresolvedOpenClawPeerLinkError(packageName: string): string {
-  return `Installed plugin ${packageName} declares openclaw as a peer dependency, but OpenClaw could not create a plugin-local node_modules/openclaw link. Run from a packaged OpenClaw install or reinstall OpenClaw, then retry.`;
+  return `Installed plugin ${packageName} declares grokbot as a peer dependency, but GrokBot could not create a plugin-local node_modules/grokbot link. Run from a packaged GrokBot install or reinstall GrokBot, then retry.`;
 }
 
 const MISSING_EXTENSIONS_ERROR =
-  'package.json missing openclaw.extensions; update the plugin package to include openclaw.extensions (for example ["./dist/index.js"]). See https://docs.openclaw.ai/help/troubleshooting#plugin-install-fails-with-missing-openclaw-extensions';
+  'package.json missing grokbot.extensions; update the plugin package to include grokbot.extensions (for example ["./dist/index.js"]). See https://docs.grokbot.ai/help/troubleshooting#plugin-install-fails-with-missing-grokbot-extensions';
 function validateOpenClawPackageCompatibility(params: {
   pluginId: string;
   currentHostVersion: string;
@@ -48,7 +48,7 @@ function validateOpenClawPackageCompatibility(params: {
   if (!pluginApiRangeCheck.ok) {
     return {
       ok: false,
-      error: `invalid package.json openclaw.compat.pluginApi: ${pluginApiRangeCheck.error}`,
+      error: `invalid package.json grokbot.compat.pluginApi: ${pluginApiRangeCheck.error}`,
       code: PLUGIN_INSTALL_ERROR_CODE.INVALID_PLUGIN_API,
     };
   }
@@ -56,7 +56,7 @@ function validateOpenClawPackageCompatibility(params: {
   if (pluginApiRange && !satisfiesPluginApiRange(params.currentHostVersion, pluginApiRange)) {
     return {
       ok: false,
-      error: `plugin "${params.pluginId}" requires plugin API ${pluginApiRange}, but this OpenClaw runtime exposes ${params.currentHostVersion}. Upgrade OpenClaw or install a compatible plugin version and retry.`,
+      error: `plugin "${params.pluginId}" requires plugin API ${pluginApiRange}, but this GrokBot runtime exposes ${params.currentHostVersion}. Upgrade GrokBot or install a compatible plugin version and retry.`,
       code: PLUGIN_INSTALL_ERROR_CODE.INCOMPATIBLE_PLUGIN_API,
     };
   }
@@ -78,20 +78,20 @@ export function validateOpenClawPackageInstallCompatibility(params: {
     if (minHostVersionCheck.kind === "invalid") {
       return {
         ok: false,
-        error: `invalid package.json openclaw.install.minHostVersion: ${minHostVersionCheck.error}`,
+        error: `invalid package.json grokbot.install.minHostVersion: ${minHostVersionCheck.error}`,
         code: PLUGIN_INSTALL_ERROR_CODE.INVALID_MIN_HOST_VERSION,
       };
     }
     if (minHostVersionCheck.kind === "unknown_host_version") {
       return {
         ok: false,
-        error: `plugin "${params.pluginId}" requires OpenClaw >=${minHostVersionCheck.requirement.minimumLabel}, but this host version could not be determined. Re-run from a released build or set OPENCLAW_VERSION and retry.`,
+        error: `plugin "${params.pluginId}" requires GrokBot >=${minHostVersionCheck.requirement.minimumLabel}, but this host version could not be determined. Re-run from a released build or set OPENCLAW_VERSION and retry.`,
         code: PLUGIN_INSTALL_ERROR_CODE.UNKNOWN_HOST_VERSION,
       };
     }
     return {
       ok: false,
-      error: `plugin "${params.pluginId}" requires OpenClaw >=${minHostVersionCheck.requirement.minimumLabel}, but this host is ${minHostVersionCheck.currentVersion}. Upgrade OpenClaw and retry.`,
+      error: `plugin "${params.pluginId}" requires GrokBot >=${minHostVersionCheck.requirement.minimumLabel}, but this host is ${minHostVersionCheck.currentVersion}. Upgrade GrokBot and retry.`,
       code: PLUGIN_INSTALL_ERROR_CODE.INCOMPATIBLE_HOST_VERSION,
     };
   }
@@ -143,7 +143,7 @@ export function ensureOpenClawExtensions(params: { manifest: PackageManifest }):
   if (resolved.status === "empty") {
     return {
       ok: false,
-      error: "package.json openclaw.extensions is empty",
+      error: "package.json grokbot.extensions is empty",
       code: PLUGIN_INSTALL_ERROR_CODE.EMPTY_OPENCLAW_EXTENSIONS,
     };
   }
@@ -344,7 +344,7 @@ export async function runInstallSourceScan(params: {
     });
     return {
       ok: false,
-      error: `${params.subject} installation blocked: code safety scan failed (${String(err)}). Run "openclaw security audit --deep" for details.`,
+      error: `${params.subject} installation blocked: code safety scan failed (${String(err)}). Run "grokbot security audit --deep" for details.`,
       code: PLUGIN_INSTALL_ERROR_CODE.SECURITY_SCAN_FAILED,
     };
   }

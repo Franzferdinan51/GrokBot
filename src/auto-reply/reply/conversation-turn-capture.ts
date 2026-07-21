@@ -1,5 +1,5 @@
-import { asDateTimestampMs } from "@openclaw/normalization-core/number-coercion";
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+import { asDateTimestampMs } from "@grokbot/normalization-core/number-coercion";
+import { normalizeOptionalString } from "@grokbot/normalization-core/string-coerce";
 import { runAgentHarnessBeforeMessageWriteHook } from "../../agents/harness/hook-helpers.js";
 import { redactTranscriptMessage } from "../../agents/transcript-redact.js";
 import {
@@ -13,7 +13,7 @@ import {
   appendTranscriptEventSync,
   loadSessionEntry,
 } from "../../config/sessions/session-accessor.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import { logVerbose } from "../../globals.js";
 import { buildConversationRef } from "../../routing/conversation-ref.js";
 import { resolveAgentIdFromSessionKey } from "../../routing/session-key.js";
@@ -26,7 +26,7 @@ import {
 import type { FinalizedMsgContext } from "../templating.js";
 
 const EPOCH_MILLISECONDS_THRESHOLD = 1_000_000_000_000;
-const CONVERSATION_TURN_REPLY_CUSTOM_TYPE = "openclaw.conversation-turn-reply";
+const CONVERSATION_TURN_REPLY_CUSTOM_TYPE = "grokbot.conversation-turn-reply";
 
 function readPersistedReplyText(message: unknown): string | undefined {
   const content = (message as { content?: unknown } | undefined)?.content;

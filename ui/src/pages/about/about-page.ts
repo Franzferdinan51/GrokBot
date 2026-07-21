@@ -6,7 +6,7 @@ import { applicationContext, type ApplicationContext } from "../../app/context.t
 import { CONTROL_UI_BUILD_INFO } from "../../build-info.ts";
 import { renderSettingsWorkspace } from "../../components/settings-workspace.ts";
 import { copyToClipboard } from "../../lib/clipboard.ts";
-import { OpenClawLightDomElement } from "../../lit/openclaw-element.ts";
+import { OpenClawLightDomElement } from "../../lit/grokbot-element.ts";
 import { SubscriptionsController } from "../../lit/subscriptions-controller.ts";
 import { renderAbout, type AboutCommitCopyState } from "./view.ts";
 
@@ -97,6 +97,6 @@ class AboutPage extends OpenClawLightDomElement {
   }
 }
 
-if (!customElements.get("openclaw-about-page")) {
-  customElements.define("openclaw-about-page", AboutPage);
+if (!customElements.get("grokbot-about-page")) {
+  customElements.define("grokbot-about-page", AboutPage);
 }

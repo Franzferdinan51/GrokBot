@@ -3,7 +3,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { resolveDefaultModelForAgent } from "../../agents/model-selection-config.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import { CommandLane } from "../../process/lanes.js";
 import {
   buildSkillHistoryScanPrompt,
@@ -58,7 +58,7 @@ export async function runSkillHistoryScanReview(params: {
         recordProgress: params.onProgress,
       }
     : undefined;
-  const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-skill-history-scan-"));
+  const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-skill-history-scan-"));
   const runId = params.runId ?? `${HISTORY_SCAN_SESSION_SEGMENT}:${randomUUID()}`;
   let runError: unknown;
   try {
@@ -73,8 +73,8 @@ export async function runSkillHistoryScanReview(params: {
       agentId: params.agentId,
       trigger: "manual",
       lane: CommandLane.SkillWorkshopReview,
-      agentHarnessId: "openclaw",
-      agentHarnessRuntimeOverride: "openclaw",
+      agentHarnessId: "grokbot",
+      agentHarnessRuntimeOverride: "grokbot",
       workspaceDir: params.workspaceDir,
       config: params.config,
       prompt: buildSkillHistoryScanPrompt({

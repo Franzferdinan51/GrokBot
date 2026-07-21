@@ -1,9 +1,9 @@
-// Feishu plugin entrypoint registers its OpenClaw integration.
+// Feishu plugin entrypoint registers its GrokBot integration.
 import {
   defineBundledChannelEntry,
   loadBundledEntryExportSync,
-} from "openclaw/plugin-sdk/channel-entry-contract";
-import type { OpenClawPluginApi } from "openclaw/plugin-sdk/channel-entry-contract";
+} from "grokbot/plugin-sdk/channel-entry-contract";
+import type { OpenClawPluginApi } from "grokbot/plugin-sdk/channel-entry-contract";
 import { registerFeishuSubagentHooks } from "./subagent-hooks-api.js";
 
 function registerFeishuDocTools(api: OpenClawPluginApi) {

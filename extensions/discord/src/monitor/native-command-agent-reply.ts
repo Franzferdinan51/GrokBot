@@ -1,12 +1,12 @@
 // Discord plugin module implements native command agent reply behavior.
-import { resolveHumanDelayConfig } from "openclaw/plugin-sdk/agent-runtime";
-import { createChannelMessageReplyPipeline } from "openclaw/plugin-sdk/channel-outbound";
-import { resolveChannelStreamingBlockEnabled } from "openclaw/plugin-sdk/channel-outbound";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { getAgentScopedMediaLocalRoots } from "openclaw/plugin-sdk/media-runtime";
-import { resolveChunkMode, resolveTextChunkLimit } from "openclaw/plugin-sdk/reply-chunking";
-import type { createSubsystemLogger } from "openclaw/plugin-sdk/runtime-env";
-import { logVerbose } from "openclaw/plugin-sdk/runtime-env";
+import { resolveHumanDelayConfig } from "grokbot/plugin-sdk/agent-runtime";
+import { createChannelMessageReplyPipeline } from "grokbot/plugin-sdk/channel-outbound";
+import { resolveChannelStreamingBlockEnabled } from "grokbot/plugin-sdk/channel-outbound";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { getAgentScopedMediaLocalRoots } from "grokbot/plugin-sdk/media-runtime";
+import { resolveChunkMode, resolveTextChunkLimit } from "grokbot/plugin-sdk/reply-chunking";
+import type { createSubsystemLogger } from "grokbot/plugin-sdk/runtime-env";
+import { logVerbose } from "grokbot/plugin-sdk/runtime-env";
 import { resolveDiscordMaxLinesPerMessage } from "../accounts.js";
 import type {
   ButtonInteraction,

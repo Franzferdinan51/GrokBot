@@ -4,7 +4,7 @@
  */
 import { afterEach, beforeEach } from "vitest";
 import { clearConfigCache, clearRuntimeConfigSnapshot } from "../config/config.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { withTempHome as withTempHomeBase } from "../plugin-sdk/test-helpers/temp-home.js";
 import { resetPluginLoaderTestStateForTest } from "../plugins/loader.test-fixtures.js";
 import { resetModelsJsonReadyCacheForTest } from "./models-config-state.test-support.js";
@@ -14,7 +14,7 @@ export function withModelsTempHome<T>(fn: (home: string) => Promise<T>): Promise
   // Models-config tests do not exercise session persistence; skip draining
   // unrelated session lock state during temp-home teardown.
   return withTempHomeBase(fn, {
-    prefix: "openclaw-models-",
+    prefix: "grokbot-models-",
     skipSessionCleanup: true,
   });
 }

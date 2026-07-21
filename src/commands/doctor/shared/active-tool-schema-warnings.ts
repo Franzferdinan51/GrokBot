@@ -15,7 +15,7 @@ import {
 // Doctor warnings for active tools whose schemas cannot be projected to the selected runtime.
 import { buildReadableToolsByName } from "../../../agents/tools-effective-inventory-build.js";
 import type { AnyAgentTool } from "../../../agents/tools/common.js";
-import type { OpenClawConfig } from "../../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../../config/types.grokbot.js";
 import { formatErrorMessage } from "../../../infra/errors.js";
 import { extractModelCompat } from "../../../plugins/provider-model-compat.js";
 import type { ProviderRuntimeModel } from "../../../plugins/provider-runtime-model.types.js";
@@ -59,7 +59,7 @@ function formatDiagnostic(params: {
 }): string {
   const plugin = params.pluginId ? ` from plugin "${params.pluginId}"` : "";
   return sanitizeForLog(
-    `- agents.${params.agentId}: active tool "${params.diagnostic.toolName}"${plugin} has unsupported runtime input schema (${params.diagnostic.violations.join(", ")}). OpenClaw will quarantine this tool at runtime; fix or disable the plugin, or remove the tool from active allowlists.`,
+    `- agents.${params.agentId}: active tool "${params.diagnostic.toolName}"${plugin} has unsupported runtime input schema (${params.diagnostic.violations.join(", ")}). GrokBot will quarantine this tool at runtime; fix or disable the plugin, or remove the tool from active allowlists.`,
   );
 }
 

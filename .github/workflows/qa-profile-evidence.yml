@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       ref:
-        description: OpenClaw branch, tag, or SHA to run
+        description: GrokBot branch, tag, or SHA to run
         required: true
         default: main
         type: string
@@ -23,7 +23,7 @@ on:
   workflow_call:
     inputs:
       ref:
-        description: OpenClaw branch, tag, or SHA to run
+        description: GrokBot branch, tag, or SHA to run
         required: true
         type: string
       expected_sha:
@@ -59,7 +59,7 @@ on:
         description: Whether the QA profile command exited successfully
         value: ${{ jobs.run_qa_profile.outputs.qa_passed }}
       target_sha:
-        description: Resolved OpenClaw SHA that produced the evidence
+        description: Resolved GrokBot SHA that produced the evidence
         value: ${{ jobs.run_qa_profile.outputs.target_sha }}
       trusted_reason:
         description: Trust reason accepted before the secret-bearing QA job
@@ -300,7 +300,7 @@ jobs:
           echo "output_dir=${output_dir}" >> "$GITHUB_OUTPUT"
 
           qa_exit_code=0
-          pnpm openclaw qa run \
+          pnpm grokbot qa run \
             --repo-root . \
             --qa-profile "${QA_PROFILE}" \
             --output-dir "${output_dir}" || qa_exit_code=$?

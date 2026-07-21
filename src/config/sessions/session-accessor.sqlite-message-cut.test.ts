@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it } from "vitest";
 import { useAutoCleanupTempDirTracker } from "../../../test/helpers/temp-dir.js";
-import { closeOpenClawAgentDatabasesForTest } from "../../state/openclaw-agent-db.js";
-import { closeOpenClawStateDatabaseForTest } from "../../state/openclaw-state-db.js";
+import { closeOpenClawAgentDatabasesForTest } from "../../state/grokbot-agent-db.js";
+import { closeOpenClawStateDatabaseForTest } from "../../state/grokbot-state-db.js";
 import {
   appendTranscriptEvent,
   appendTranscriptMessage,
@@ -26,7 +26,7 @@ afterEach(() => {
 });
 
 async function createSession(options: { activeLeafTarget?: string } = {}) {
-  const stateDir = tempDirs.make("openclaw-message-cut-");
+  const stateDir = tempDirs.make("grokbot-message-cut-");
   const env = { ...process.env, OPENCLAW_STATE_DIR: stateDir };
   const sessionId = "message-cut-source";
   const scope = { agentId, env, sessionId, sessionKey };

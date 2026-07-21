@@ -1,4 +1,4 @@
 interface:
-  display_name: "OpenClaw CI Limits"
-  short_description: "Tune OpenClaw CI fanout and runner budgets"
-  default_prompt: "Use $openclaw-ci-limits to inspect OpenClaw CI pressure, tune runner-registration fanout safely, and document the exact validation before landing."
+  display_name: "GrokBot CI Limits"
+  short_description: "Tune GrokBot CI fanout and runner budgets"
+  default_prompt: "Use $grokbot-ci-limits to inspect GrokBot CI pressure, tune runner-registration fanout safely, and document the exact validation before landing."

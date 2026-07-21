@@ -3,7 +3,7 @@ import {
   openClawNpmPrepublishVerifyUsage,
   parseOpenClawNpmPrepublishVerifyArgs,
   usesPreparedLocalDependencyInstall,
-} from "../scripts/openclaw-npm-prepublish-verify.ts";
+} from "../scripts/grokbot-npm-prepublish-verify.ts";
 
 describe("parseOpenClawNpmPrepublishVerifyArgs", () => {
   it("supports help, optional versions, and package-manager separators", () => {
@@ -12,16 +12,16 @@ describe("parseOpenClawNpmPrepublishVerifyArgs", () => {
       help: true,
       tarballPath: "",
     });
-    expect(parseOpenClawNpmPrepublishVerifyArgs(["openclaw.tgz"])).toEqual({
+    expect(parseOpenClawNpmPrepublishVerifyArgs(["grokbot.tgz"])).toEqual({
       dependencyTarballPaths: [],
       help: false,
-      tarballPath: "openclaw.tgz",
+      tarballPath: "grokbot.tgz",
     });
-    expect(parseOpenClawNpmPrepublishVerifyArgs(["--", "openclaw.tgz", "2026.3.23"])).toEqual({
+    expect(parseOpenClawNpmPrepublishVerifyArgs(["--", "grokbot.tgz", "2026.3.23"])).toEqual({
       dependencyTarballPaths: [],
       expectedVersion: "2026.3.23",
       help: false,
-      tarballPath: "openclaw.tgz",
+      tarballPath: "grokbot.tgz",
     });
   });
 
@@ -30,21 +30,21 @@ describe("parseOpenClawNpmPrepublishVerifyArgs", () => {
       openClawNpmPrepublishVerifyUsage(),
     );
     expect(() => parseOpenClawNpmPrepublishVerifyArgs(["--tag"])).toThrow(
-      "Unknown openclaw npm prepublish verifier option: --tag",
+      "Unknown grokbot npm prepublish verifier option: --tag",
     );
-    expect(() => parseOpenClawNpmPrepublishVerifyArgs(["openclaw.tgz", "--tag"])).toThrow(
-      "Unknown openclaw npm prepublish verifier option: --tag",
+    expect(() => parseOpenClawNpmPrepublishVerifyArgs(["grokbot.tgz", "--tag"])).toThrow(
+      "Unknown grokbot npm prepublish verifier option: --tag",
     );
     expect(
-      parseOpenClawNpmPrepublishVerifyArgs(["openclaw.tgz", "2026.3.23", "llm-core.tgz", "ai.tgz"]),
+      parseOpenClawNpmPrepublishVerifyArgs(["grokbot.tgz", "2026.3.23", "llm-core.tgz", "ai.tgz"]),
     ).toEqual({
       dependencyTarballPaths: ["llm-core.tgz", "ai.tgz"],
       expectedVersion: "2026.3.23",
       help: false,
-      tarballPath: "openclaw.tgz",
+      tarballPath: "grokbot.tgz",
     });
     expect(() =>
-      parseOpenClawNpmPrepublishVerifyArgs(["openclaw.tgz", "2026.3.23", "--bad"]),
+      parseOpenClawNpmPrepublishVerifyArgs(["grokbot.tgz", "2026.3.23", "--bad"]),
     ).toThrow("Invalid dependency tarball path: --bad");
   });
 });

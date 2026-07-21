@@ -1,4 +1,4 @@
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import type {
   resolveAutoMediaKeyProviders,
   resolveDefaultMediaModel,
@@ -88,7 +88,7 @@ type ImageToolTestApi = {
 };
 
 function getTestApi(): ImageToolTestApi {
-  const api = (globalThis as Record<PropertyKey, unknown>)[Symbol.for("openclaw.imageToolTestApi")];
+  const api = (globalThis as Record<PropertyKey, unknown>)[Symbol.for("grokbot.imageToolTestApi")];
   if (!api) {
     throw new Error("image tool test API is unavailable");
   }

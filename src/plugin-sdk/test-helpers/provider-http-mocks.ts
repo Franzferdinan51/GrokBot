@@ -129,7 +129,7 @@ const providerHttpMocks = vi.hoisted(() => ({
     if (params.provider === "google") {
       return {
         ...params.defaultHeaders,
-        "x-goog-api-client": "openclaw/test",
+        "x-goog-api-client": "grokbot/test",
         ...params.callerHeaders,
       };
     }
@@ -277,11 +277,11 @@ providerHttpMocks.pollProviderOperationJsonMock.mockImplementation(
   },
 );
 
-vi.mock("openclaw/plugin-sdk/provider-auth-runtime", () => ({
+vi.mock("grokbot/plugin-sdk/provider-auth-runtime", () => ({
   resolveApiKeyForProvider: providerHttpMocks.resolveApiKeyForProviderMock,
 }));
 
-vi.mock("openclaw/plugin-sdk/provider-http", () => ({
+vi.mock("grokbot/plugin-sdk/provider-http", () => ({
   assertOkOrThrowHttpError: providerHttpMocks.assertOkOrThrowHttpErrorMock,
   assertOkOrThrowProviderError: providerHttpMocks.assertOkOrThrowProviderErrorMock,
   createProviderOperationDeadline: ({

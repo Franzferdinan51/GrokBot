@@ -1,8 +1,8 @@
 {
-  "name": "@openclaw/telegram",
+  "name": "@grokbot/telegram",
   "version": "2026.7.2",
   "private": true,
-  "description": "OpenClaw Telegram channel plugin",
+  "description": "GrokBot Telegram channel plugin",
   "type": "module",
   "dependencies": {
     "@grammyjs/runner": "2.0.3",
@@ -12,9 +12,9 @@
     "undici": "8.5.0"
   },
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@grokbot/plugin-sdk": "workspace:*"
   },
-  "openclaw": {
+  "grokbot": {
     "extensions": [
       "./index.ts"
     ],
@@ -43,7 +43,7 @@
       "selectionDocsPrefix": "",
       "selectionDocsOmitLabel": true,
       "selectionExtras": [
-        "https://openclaw.ai"
+        "https://grokbot.ai"
       ],
       "markdownCapable": true,
       "commands": {

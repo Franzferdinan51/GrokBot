@@ -1,6 +1,6 @@
 // Android node capability live tests verify paired node command allowlists and remote policy behavior.
 import { randomUUID } from "node:crypto";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import { unwrapRemoteConfigSnapshot } from "../../test/helpers/gateway/android-node-capabilities-policy-config.js";
 import { shouldFetchRemotePolicyConfig } from "../../test/helpers/gateway/android-node-capabilities-policy-source.js";
@@ -587,7 +587,7 @@ describeLive("android node capability integration (preconditioned)", () => {
         [
           `selected node is not ready (nodeId=${nodeId}, connected=${String(target.connected)}, paired=${String(target.paired)})`,
           pendingHint,
-          "precondition: open app, keep foreground, ensure pairing approved (`openclaw nodes pending` / `openclaw nodes approve <requestId>`)",
+          "precondition: open app, keep foreground, ensure pairing approved (`grokbot nodes pending` / `grokbot nodes approve <requestId>`)",
         ].join("\n"),
       );
     }

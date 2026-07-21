@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { loadOpenClawProviderIndex } from "./index.js";
 import { normalizeOpenClawProviderIndex } from "./normalize.js";
 
-describe("OpenClaw provider index", () => {
+describe("GrokBot provider index", () => {
   it("normalizes provider preview catalog rows through model catalog validation", () => {
     const index = normalizeOpenClawProviderIndex({
       version: 1,
@@ -13,10 +13,10 @@ describe("OpenClaw provider index", () => {
           name: "Moonshot AI",
           plugin: {
             id: "moonshot",
-            package: " @openclaw/plugin-moonshot ",
+            package: " @grokbot/plugin-moonshot ",
             install: {
-              clawhubSpec: " clawhub:openclaw/moonshot@2026.5.2 ",
-              npmSpec: " @openclaw/plugin-moonshot@1.2.3 ",
+              clawhubSpec: " clawhub:grokbot/moonshot@2026.5.2 ",
+              npmSpec: " @grokbot/plugin-moonshot@1.2.3 ",
               defaultChoice: "clawhub",
               expectedIntegrity: " sha512-moonshot ",
             },
@@ -64,10 +64,10 @@ describe("OpenClaw provider index", () => {
           name: "Moonshot AI",
           plugin: {
             id: "moonshot",
-            package: "@openclaw/plugin-moonshot",
+            package: "@grokbot/plugin-moonshot",
             install: {
-              clawhubSpec: "clawhub:openclaw/moonshot@2026.5.2",
-              npmSpec: "@openclaw/plugin-moonshot@1.2.3",
+              clawhubSpec: "clawhub:grokbot/moonshot@2026.5.2",
+              npmSpec: "@grokbot/plugin-moonshot@1.2.3",
               defaultChoice: "clawhub",
               expectedIntegrity: "sha512-moonshot",
             },

@@ -7,7 +7,7 @@ import {
   releasePinnedPluginChannelRegistry,
   setActivePluginRegistry,
 } from "../../plugins/runtime.js";
-import { closeOpenClawStateDatabaseForTest } from "../../state/openclaw-state-db.js";
+import { closeOpenClawStateDatabaseForTest } from "../../state/grokbot-state-db.js";
 import { createTestRegistry } from "../../test-utils/channel-plugins.js";
 import { createTrackedTempDirs } from "../../test-utils/tracked-temp-dirs.js";
 import {
@@ -129,7 +129,7 @@ describe("session binding service", () => {
 
   beforeEach(async () => {
     previousStateDir = process.env.OPENCLAW_STATE_DIR;
-    testStateDir = await tempDirs.make("openclaw-session-binding-");
+    testStateDir = await tempDirs.make("grokbot-session-binding-");
     process.env.OPENCLAW_STATE_DIR = testStateDir;
     testing.resetSessionBindingAdaptersForTests();
     setMinimalCurrentConversationRegistry();

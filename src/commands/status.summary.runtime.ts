@@ -5,7 +5,7 @@ import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalString,
   normalizeOptionalLowercaseString,
-} from "@openclaw/normalization-core/string-coerce";
+} from "@grokbot/normalization-core/string-coerce";
 import { readAcpSessionMeta } from "../acp/runtime/session-meta.js";
 import { resolveModelAgentRuntimeMetadata } from "../agents/agent-runtime-metadata.js";
 import { resolveConfiguredProviderFallback } from "../agents/configured-provider-fallback.js";
@@ -219,8 +219,8 @@ function resolveSessionRuntimeLabel(params: {
     acpBackend: acpMeta?.backend,
   });
   const id = normalizeOptionalLowercaseString(runtime.id);
-  // OpenClaw/auto are generic labels; concrete harness ids give better operator signal.
-  const resolvedHarness = id && id !== "openclaw" && id !== "auto" ? id : undefined;
+  // GrokBot/auto are generic labels; concrete harness ids give better operator signal.
+  const resolvedHarness = id && id !== "grokbot" && id !== "auto" ? id : undefined;
   return resolveAgentRuntimeLabel({
     config: params.cfg,
     sessionEntry: params.entry,

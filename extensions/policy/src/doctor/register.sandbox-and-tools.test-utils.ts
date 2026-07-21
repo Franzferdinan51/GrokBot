@@ -1,7 +1,7 @@
 // Imported by register.test.ts to keep its mocked suite in one Vitest module graph.
 import { promises as fs } from "node:fs";
 import { join } from "node:path";
-import { runDoctorLintChecks, type OpenClawConfig } from "openclaw/plugin-sdk/health";
+import { runDoctorLintChecks, type OpenClawConfig } from "grokbot/plugin-sdk/health";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { collectPolicyEvidence } from "../policy-state.js";
 import { registerPolicyDoctorChecks } from "./register.js";
@@ -66,22 +66,22 @@ describe("registerPolicyDoctorChecks", () => {
         expect.objectContaining({
           kind: "containerNetwork",
           value: "none",
-          source: "oc://openclaw.config/agents/defaults/sandbox/docker/network",
+          source: "oc://grokbot.config/agents/defaults/sandbox/docker/network",
         }),
         expect.objectContaining({
           kind: "browserCdpSourceRange",
           value: "172.21.0.1/32",
-          source: "oc://openclaw.config/agents/defaults/sandbox/browser/cdpSourceRange",
+          source: "oc://grokbot.config/agents/defaults/sandbox/browser/cdpSourceRange",
         }),
         expect.objectContaining({
           kind: "containerMount",
           bind: "/shared:/shared:ro",
-          source: "oc://openclaw.config/agents/defaults/sandbox/docker/binds/#0",
+          source: "oc://grokbot.config/agents/defaults/sandbox/docker/binds/#0",
         }),
         expect.objectContaining({
           kind: "containerMount",
           bind: "/browser-shared:/browser-shared:ro",
-          source: "oc://openclaw.config/agents/defaults/sandbox/browser/binds/#0",
+          source: "oc://grokbot.config/agents/defaults/sandbox/browser/binds/#0",
         }),
       ]),
     );
@@ -98,7 +98,7 @@ describe("registerPolicyDoctorChecks", () => {
   });
 
   it("treats blank agent browser CDP source range as an explicit clear", async () => {
-    const configPath = join(workspaceDir, "openclaw.jsonc");
+    const configPath = join(workspaceDir, "grokbot.jsonc");
     const cfg = {
       ...cfgWithPolicy(),
       agents: {
@@ -136,14 +136,14 @@ describe("registerPolicyDoctorChecks", () => {
       expect.arrayContaining([
         expect.objectContaining({
           checkId: "policy/sandbox-browser-cdp-source-range-missing",
-          ocPath: "oc://openclaw.config/agents/list/#0/sandbox/browser/cdpSourceRange",
+          ocPath: "oc://grokbot.config/agents/list/#0/sandbox/browser/cdpSourceRange",
         }),
       ]),
     );
   });
 
   it("reports enabled container posture rules that the backend cannot observe", async () => {
-    const configPath = join(workspaceDir, "openclaw.jsonc");
+    const configPath = join(workspaceDir, "grokbot.jsonc");
     const cfg = {
       ...cfgWithPolicy(),
       agents: {
@@ -198,17 +198,17 @@ describe("registerPolicyDoctorChecks", () => {
       expect.arrayContaining([
         expect.objectContaining({
           checkId: "policy/sandbox-container-posture-unobservable",
-          ocPath: "oc://openclaw.config/agents/defaults/sandbox/backend",
+          ocPath: "oc://grokbot.config/agents/defaults/sandbox/backend",
           requirement: "oc://policy.jsonc/sandbox/containers/denyHostNetwork",
         }),
         expect.objectContaining({
           checkId: "policy/sandbox-container-posture-unobservable",
-          ocPath: "oc://openclaw.config/agents/defaults/sandbox/backend",
+          ocPath: "oc://grokbot.config/agents/defaults/sandbox/backend",
           requirement: "oc://policy.jsonc/sandbox/containers/denyContainerRuntimeSocketMounts",
         }),
         expect.objectContaining({
           checkId: "policy/sandbox-container-posture-unobservable",
-          ocPath: "oc://openclaw.config/agents/defaults/sandbox/backend",
+          ocPath: "oc://grokbot.config/agents/defaults/sandbox/backend",
           requirement: "oc://policy.jsonc/sandbox/containers/denyUnconfinedProfiles",
         }),
       ]),
@@ -223,7 +223,7 @@ describe("registerPolicyDoctorChecks", () => {
   });
 
   it("evaluates inherited container mounts for browser containers on non-Docker backends", async () => {
-    const configPath = join(workspaceDir, "openclaw.jsonc");
+    const configPath = join(workspaceDir, "grokbot.jsonc");
     const cfg = {
       ...cfgWithPolicy(),
       agents: {
@@ -266,7 +266,7 @@ describe("registerPolicyDoctorChecks", () => {
           kind: "containerMount",
           bindSurface: "browser",
           bind: "/var/run/docker.sock:/var/run/docker.sock:rw",
-          source: "oc://openclaw.config/agents/defaults/sandbox/docker/binds/#0",
+          source: "oc://grokbot.config/agents/defaults/sandbox/docker/binds/#0",
         }),
       ]),
     );
@@ -274,18 +274,18 @@ describe("registerPolicyDoctorChecks", () => {
       expect.arrayContaining([
         expect.objectContaining({
           checkId: "policy/sandbox-container-mount-mode-required",
-          ocPath: "oc://openclaw.config/agents/defaults/sandbox/docker/binds/#0",
+          ocPath: "oc://grokbot.config/agents/defaults/sandbox/docker/binds/#0",
         }),
         expect.objectContaining({
           checkId: "policy/sandbox-container-runtime-socket-mount",
-          ocPath: "oc://openclaw.config/agents/defaults/sandbox/docker/binds/#0",
+          ocPath: "oc://grokbot.config/agents/defaults/sandbox/docker/binds/#0",
         }),
       ]),
     );
   });
 
   it("normalizes mixed-case Docker backend before collecting container posture", async () => {
-    const configPath = join(workspaceDir, "openclaw.jsonc");
+    const configPath = join(workspaceDir, "grokbot.jsonc");
     const cfg = {
       ...cfgWithPolicy(),
       agents: {
@@ -385,24 +385,24 @@ describe("registerPolicyDoctorChecks", () => {
         expect.objectContaining({
           kind: "containerNetwork",
           value: "host",
-          source: "oc://openclaw.config/agents/list/#0/sandbox/docker/network",
+          source: "oc://grokbot.config/agents/list/#0/sandbox/docker/network",
         }),
         expect.objectContaining({
           kind: "containerMount",
           bind: "/var/run/docker.sock:/var/run/docker.sock:rw",
-          source: "oc://openclaw.config/agents/list/#0/sandbox/docker/binds/#0",
+          source: "oc://grokbot.config/agents/list/#0/sandbox/docker/binds/#0",
         }),
         expect.objectContaining({
           kind: "containerMount",
           bind: "/browser:/browser:rw",
-          source: "oc://openclaw.config/agents/list/#0/sandbox/browser/binds/#0",
+          source: "oc://grokbot.config/agents/list/#0/sandbox/browser/binds/#0",
         }),
       ]),
     );
   });
 
   it("accepts configured sandbox posture that matches policy", async () => {
-    const configPath = join(workspaceDir, "openclaw.jsonc");
+    const configPath = join(workspaceDir, "grokbot.jsonc");
     const cfg = {
       ...cfgWithPolicy(),
       agents: {
@@ -446,7 +446,7 @@ describe("registerPolicyDoctorChecks", () => {
   });
 
   it("applies agent-scoped sandbox claims only to matching agents", async () => {
-    const configPath = join(workspaceDir, "openclaw.jsonc");
+    const configPath = join(workspaceDir, "grokbot.jsonc");
     const cfg = {
       ...cfgWithPolicy(),
       agents: {
@@ -481,12 +481,12 @@ describe("registerPolicyDoctorChecks", () => {
       expect.arrayContaining([
         expect.objectContaining({
           checkId: "policy/sandbox-mode-unapproved",
-          ocPath: "oc://openclaw.config/agents/list/#0/sandbox/mode",
+          ocPath: "oc://grokbot.config/agents/list/#0/sandbox/mode",
           requirement: "oc://policy.jsonc/sandbox/requireMode",
         }),
         expect.objectContaining({
           checkId: "policy/sandbox-backend-unapproved",
-          ocPath: "oc://openclaw.config/agents/list/#0/sandbox/backend",
+          ocPath: "oc://grokbot.config/agents/list/#0/sandbox/backend",
           requirement: "oc://policy.jsonc/scopes/sebby/sandbox/allowBackends",
         }),
       ]),
@@ -494,7 +494,7 @@ describe("registerPolicyDoctorChecks", () => {
     expect(result.findings).not.toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          ocPath: "oc://openclaw.config/agents/list/#1/sandbox/backend",
+          ocPath: "oc://grokbot.config/agents/list/#1/sandbox/backend",
           requirement: "oc://policy.jsonc/scopes/sebby/sandbox/allowBackends",
         }),
       ]),
@@ -502,7 +502,7 @@ describe("registerPolicyDoctorChecks", () => {
   });
 
   it("does not apply sandbox overlays from invalid scoped policy", async () => {
-    const configPath = join(workspaceDir, "openclaw.jsonc");
+    const configPath = join(workspaceDir, "grokbot.jsonc");
     const cfg = {
       ...cfgWithPolicy(),
       agents: {
@@ -547,7 +547,7 @@ describe("registerPolicyDoctorChecks", () => {
   });
 
   it("reports scoped container posture rules that a non-Docker agent group cannot observe", async () => {
-    const configPath = join(workspaceDir, "openclaw.jsonc");
+    const configPath = join(workspaceDir, "grokbot.jsonc");
     const cfg = {
       ...cfgWithPolicy(),
       agents: {
@@ -590,14 +590,14 @@ describe("registerPolicyDoctorChecks", () => {
     expect(result.findings).toEqual([
       expect.objectContaining({
         checkId: "policy/sandbox-container-posture-unobservable",
-        ocPath: "oc://openclaw.config/agents/list/#0/sandbox/backend",
+        ocPath: "oc://grokbot.config/agents/list/#0/sandbox/backend",
         requirement: "oc://policy.jsonc/scopes/release/sandbox/containers/requireReadOnlyMounts",
       }),
     ]);
   });
 
   it("allows scoped non-Docker agent groups when container posture rules are off", async () => {
-    const configPath = join(workspaceDir, "openclaw.jsonc");
+    const configPath = join(workspaceDir, "grokbot.jsonc");
     const cfg = {
       ...cfgWithPolicy(),
       agents: {
@@ -641,7 +641,7 @@ describe("registerPolicyDoctorChecks", () => {
   });
 
   it("does not fall back to default browser posture for scoped browser-disabled agents", async () => {
-    const configPath = join(workspaceDir, "openclaw.jsonc");
+    const configPath = join(workspaceDir, "grokbot.jsonc");
     const cfg = {
       ...cfgWithPolicy(),
       agents: {
@@ -698,7 +698,7 @@ describe("registerPolicyDoctorChecks", () => {
   });
 
   it("applies main-scoped sandbox claims to defaults when unrelated agents exist", async () => {
-    const configPath = join(workspaceDir, "openclaw.jsonc");
+    const configPath = join(workspaceDir, "grokbot.jsonc");
     const cfg = {
       ...cfgWithPolicy(),
       agents: {
@@ -733,7 +733,7 @@ describe("registerPolicyDoctorChecks", () => {
       expect.arrayContaining([
         expect.objectContaining({
           checkId: "policy/sandbox-mode-unapproved",
-          ocPath: "oc://openclaw.config/agents/defaults/sandbox/mode",
+          ocPath: "oc://grokbot.config/agents/defaults/sandbox/mode",
           requirement: "oc://policy.jsonc/scopes/mainSandbox/sandbox/requireMode",
         }),
       ]),
@@ -741,7 +741,7 @@ describe("registerPolicyDoctorChecks", () => {
   });
 
   it("reports tool posture denied by policy", async () => {
-    const configPath = join(workspaceDir, "openclaw.jsonc");
+    const configPath = join(workspaceDir, "grokbot.jsonc");
     const cfg = {
       ...cfgWithPolicy(),
       tools: {
@@ -795,19 +795,19 @@ describe("registerPolicyDoctorChecks", () => {
           id: "tools-profile",
           kind: "profile",
           value: "coding",
-          source: "oc://openclaw.config/tools/profile",
+          source: "oc://grokbot.config/tools/profile",
         }),
         expect.objectContaining({
           id: "reviewer-exec-security",
           kind: "execSecurity",
           value: "deny",
-          source: "oc://openclaw.config/agents/list/#0/tools/exec/security",
+          source: "oc://grokbot.config/agents/list/#0/tools/exec/security",
         }),
         expect.objectContaining({
           id: "tools-elevated-allow-from-whatsapp",
           kind: "elevatedAllowFrom",
           entries: ["+15550000001", "15550000002"],
-          source: "oc://openclaw.config/tools/elevated/allowFrom/whatsapp",
+          source: "oc://grokbot.config/tools/elevated/allowFrom/whatsapp",
         }),
       ]),
     );
@@ -816,37 +816,37 @@ describe("registerPolicyDoctorChecks", () => {
         expect.objectContaining({
           checkId: "policy/tools-profile-unapproved",
           severity: "error",
-          ocPath: "oc://openclaw.config/tools/profile",
+          ocPath: "oc://grokbot.config/tools/profile",
           requirement: "oc://policy.jsonc/tools/profiles/allow",
         }),
         expect.objectContaining({
           checkId: "policy/tools-fs-workspace-only-required",
-          ocPath: "oc://openclaw.config/tools/fs/workspaceOnly",
+          ocPath: "oc://grokbot.config/tools/fs/workspaceOnly",
           requirement: "oc://policy.jsonc/tools/fs/requireWorkspaceOnly",
         }),
         expect.objectContaining({
           checkId: "policy/tools-exec-security-unapproved",
-          ocPath: "oc://openclaw.config/tools/exec/security",
+          ocPath: "oc://grokbot.config/tools/exec/security",
           requirement: "oc://policy.jsonc/tools/exec/allowSecurity",
         }),
         expect.objectContaining({
           checkId: "policy/tools-exec-ask-unapproved",
-          ocPath: "oc://openclaw.config/tools/exec/ask",
+          ocPath: "oc://grokbot.config/tools/exec/ask",
           requirement: "oc://policy.jsonc/tools/exec/requireAsk",
         }),
         expect.objectContaining({
           checkId: "policy/tools-exec-host-unapproved",
-          ocPath: "oc://openclaw.config/tools/exec/host",
+          ocPath: "oc://grokbot.config/tools/exec/host",
           requirement: "oc://policy.jsonc/tools/exec/allowHosts",
         }),
         expect.objectContaining({
           checkId: "policy/tools-elevated-enabled",
-          ocPath: "oc://openclaw.config/tools/elevated/enabled",
+          ocPath: "oc://grokbot.config/tools/elevated/enabled",
           requirement: "oc://policy.jsonc/tools/elevated/allow",
         }),
         expect.objectContaining({
           checkId: "policy/tools-required-deny-missing",
-          ocPath: "oc://openclaw.config/tools/deny",
+          ocPath: "oc://grokbot.config/tools/deny",
           requirement: "oc://policy.jsonc/tools/denyTools",
         }),
       ]),
@@ -855,14 +855,14 @@ describe("registerPolicyDoctorChecks", () => {
       expect.arrayContaining([
         expect.objectContaining({
           checkId: "policy/tools-required-deny-missing",
-          ocPath: "oc://openclaw.config/agents/list/#0/tools/deny",
+          ocPath: "oc://grokbot.config/agents/list/#0/tools/deny",
         }),
       ]),
     );
   });
 
   it("accepts configured tool posture that matches policy", async () => {
-    const configPath = join(workspaceDir, "openclaw.jsonc");
+    const configPath = join(workspaceDir, "grokbot.jsonc");
     const cfg = {
       ...cfgWithPolicy(),
       tools: {
@@ -899,7 +899,7 @@ describe("registerPolicyDoctorChecks", () => {
   });
 
   it("reports global and agent-scoped tool claims independently", async () => {
-    const configPath = join(workspaceDir, "openclaw.jsonc");
+    const configPath = join(workspaceDir, "grokbot.jsonc");
     const cfg = {
       ...cfgWithPolicy(),
       tools: {
@@ -938,12 +938,12 @@ describe("registerPolicyDoctorChecks", () => {
       expect.arrayContaining([
         expect.objectContaining({
           checkId: "policy/tools-exec-host-unapproved",
-          ocPath: "oc://openclaw.config/agents/list/#0/tools/exec/host",
+          ocPath: "oc://grokbot.config/agents/list/#0/tools/exec/host",
           requirement: "oc://policy.jsonc/tools/exec/allowHosts",
         }),
         expect.objectContaining({
           checkId: "policy/tools-exec-host-unapproved",
-          ocPath: "oc://openclaw.config/agents/list/#0/tools/exec/host",
+          ocPath: "oc://grokbot.config/agents/list/#0/tools/exec/host",
           requirement: "oc://policy.jsonc/scopes/sebby/tools/exec/allowHosts",
         }),
       ]),
@@ -951,14 +951,14 @@ describe("registerPolicyDoctorChecks", () => {
     expect(result.findings).not.toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          ocPath: "oc://openclaw.config/agents/list/#1/tools/exec/host",
+          ocPath: "oc://grokbot.config/agents/list/#1/tools/exec/host",
         }),
       ]),
     );
   });
 
   it("does not apply agent-scoped tool claims to other agents", async () => {
-    const configPath = join(workspaceDir, "openclaw.jsonc");
+    const configPath = join(workspaceDir, "grokbot.jsonc");
     const cfg = {
       ...cfgWithPolicy(),
       agents: {
@@ -991,7 +991,7 @@ describe("registerPolicyDoctorChecks", () => {
   });
 
   it("reports global and agent-scoped alsoAllow drift", async () => {
-    const configPath = join(workspaceDir, "openclaw.jsonc");
+    const configPath = join(workspaceDir, "grokbot.jsonc");
     const cfg = {
       ...cfgWithPolicy(),
       tools: { alsoAllow: ["read", "cron"] },
@@ -1028,22 +1028,22 @@ describe("registerPolicyDoctorChecks", () => {
       expect.arrayContaining([
         expect.objectContaining({
           checkId: "policy/tools-also-allow-missing",
-          ocPath: "oc://openclaw.config/tools/alsoAllow",
+          ocPath: "oc://grokbot.config/tools/alsoAllow",
           requirement: "oc://policy.jsonc/tools/alsoAllow/expected",
         }),
         expect.objectContaining({
           checkId: "policy/tools-also-allow-unexpected",
-          ocPath: "oc://openclaw.config/tools/alsoAllow",
+          ocPath: "oc://grokbot.config/tools/alsoAllow",
           requirement: "oc://policy.jsonc/tools/alsoAllow/expected",
         }),
         expect.objectContaining({
           checkId: "policy/tools-also-allow-missing",
-          ocPath: "oc://openclaw.config/agents/list/#0/tools/alsoAllow",
+          ocPath: "oc://grokbot.config/agents/list/#0/tools/alsoAllow",
           requirement: "oc://policy.jsonc/scopes/sebby/tools/alsoAllow/expected",
         }),
         expect.objectContaining({
           checkId: "policy/tools-also-allow-unexpected",
-          ocPath: "oc://openclaw.config/agents/list/#0/tools/alsoAllow",
+          ocPath: "oc://grokbot.config/agents/list/#0/tools/alsoAllow",
           requirement: "oc://policy.jsonc/scopes/sebby/tools/alsoAllow/expected",
         }),
       ]),
@@ -1052,14 +1052,14 @@ describe("registerPolicyDoctorChecks", () => {
       expect.arrayContaining([
         expect.objectContaining({
           requirement: "oc://policy.jsonc/scopes/sebby/tools/alsoAllow/expected",
-          ocPath: "oc://openclaw.config/agents/list/#1/tools/alsoAllow",
+          ocPath: "oc://grokbot.config/agents/list/#1/tools/alsoAllow",
         }),
       ]),
     );
   });
 
   it("reports unexpected alsoAllow entries when policy expects none", async () => {
-    const configPath = join(workspaceDir, "openclaw.jsonc");
+    const configPath = join(workspaceDir, "grokbot.jsonc");
     const cfg = {
       ...cfgWithPolicy(),
       tools: { alsoAllow: ["read"] },
@@ -1081,14 +1081,14 @@ describe("registerPolicyDoctorChecks", () => {
     expect(result.findings).toEqual([
       expect.objectContaining({
         checkId: "policy/tools-also-allow-unexpected",
-        ocPath: "oc://openclaw.config/tools/alsoAllow",
+        ocPath: "oc://grokbot.config/tools/alsoAllow",
         requirement: "oc://policy.jsonc/tools/alsoAllow/expected",
       }),
     ]);
   });
 
   it("uses config-level exec defaults and normalizes required deny aliases", async () => {
-    const configPath = join(workspaceDir, "openclaw.jsonc");
+    const configPath = join(workspaceDir, "grokbot.jsonc");
     const cfg = {
       ...cfgWithPolicy(),
       tools: {
@@ -1118,11 +1118,11 @@ describe("registerPolicyDoctorChecks", () => {
       expect.arrayContaining([
         expect.objectContaining({
           checkId: "policy/tools-exec-security-unapproved",
-          ocPath: "oc://openclaw.config/tools/exec/security",
+          ocPath: "oc://grokbot.config/tools/exec/security",
         }),
         expect.objectContaining({
           checkId: "policy/tools-exec-ask-unapproved",
-          ocPath: "oc://openclaw.config/tools/exec/ask",
+          ocPath: "oc://grokbot.config/tools/exec/ask",
         }),
       ]),
     );
@@ -1136,7 +1136,7 @@ describe("registerPolicyDoctorChecks", () => {
   });
 
   it("accepts omitted exec defaults and individual denies for required deny groups", async () => {
-    const configPath = join(workspaceDir, "openclaw.jsonc");
+    const configPath = join(workspaceDir, "grokbot.jsonc");
     const cfg = {
       ...cfgWithPolicy(),
       tools: {
@@ -1166,7 +1166,7 @@ describe("registerPolicyDoctorChecks", () => {
   });
 
   it("accepts wildcard tool denies for required tool posture", async () => {
-    const configPath = join(workspaceDir, "openclaw.jsonc");
+    const configPath = join(workspaceDir, "grokbot.jsonc");
     const cfg = {
       ...cfgWithPolicy(),
       tools: {
@@ -1191,11 +1191,11 @@ describe("registerPolicyDoctorChecks", () => {
   });
 
   it("accepts canonical tool groups for required tool denies", async () => {
-    const configPath = join(workspaceDir, "openclaw.jsonc");
+    const configPath = join(workspaceDir, "grokbot.jsonc");
     const cfg = {
       ...cfgWithPolicy(),
       tools: {
-        deny: ["group:openclaw"],
+        deny: ["group:grokbot"],
       },
     } as unknown as OpenClawConfig;
     await fs.writeFile(configPath, "{}", "utf-8");
@@ -1218,8 +1218,8 @@ describe("registerPolicyDoctorChecks", () => {
         expect.objectContaining({
           id: "tools-deny",
           kind: "deny",
-          entries: ["group:openclaw"],
-          source: "oc://openclaw.config/tools/deny",
+          entries: ["group:grokbot"],
+          source: "oc://grokbot.config/tools/deny",
         }),
       ]),
     );
@@ -1227,7 +1227,7 @@ describe("registerPolicyDoctorChecks", () => {
   });
 
   it("treats globally disabled elevated mode as disabling per-agent elevated posture", async () => {
-    const configPath = join(workspaceDir, "openclaw.jsonc");
+    const configPath = join(workspaceDir, "grokbot.jsonc");
     const cfg = {
       ...cfgWithPolicy(),
       tools: {
@@ -1265,7 +1265,7 @@ describe("registerPolicyDoctorChecks", () => {
           id: "reviewer-elevated-enabled",
           kind: "elevatedEnabled",
           value: false,
-          source: "oc://openclaw.config/tools/elevated/enabled",
+          source: "oc://grokbot.config/tools/elevated/enabled",
         }),
       ]),
     );
@@ -1273,7 +1273,7 @@ describe("registerPolicyDoctorChecks", () => {
   });
 
   it("treats omitted tool profile as full posture for profile allow policy", async () => {
-    const configPath = join(workspaceDir, "openclaw.jsonc");
+    const configPath = join(workspaceDir, "grokbot.jsonc");
     const cfg = cfgWithPolicy();
     await fs.writeFile(configPath, "{}", "utf-8");
     await fs.writeFile(
@@ -1292,14 +1292,14 @@ describe("registerPolicyDoctorChecks", () => {
     expect(result.findings).toEqual([
       expect.objectContaining({
         checkId: "policy/tools-profile-unapproved",
-        ocPath: "oc://openclaw.config/tools/profile",
+        ocPath: "oc://grokbot.config/tools/profile",
         requirement: "oc://policy.jsonc/tools/profiles/allow",
       }),
     ]);
   });
 
   it("uses deny as the omitted exec security default for explicit sandbox host", async () => {
-    const configPath = join(workspaceDir, "openclaw.jsonc");
+    const configPath = join(workspaceDir, "grokbot.jsonc");
     const cfg = {
       ...cfgWithPolicy(),
       tools: {
@@ -1330,7 +1330,7 @@ describe("registerPolicyDoctorChecks", () => {
           id: "tools-exec-security",
           kind: "execSecurity",
           value: "deny",
-          source: "oc://openclaw.config/tools/exec/security",
+          source: "oc://grokbot.config/tools/exec/security",
         }),
       ]),
     );
@@ -1338,7 +1338,7 @@ describe("registerPolicyDoctorChecks", () => {
   });
 
   it("uses deny as the omitted exec security default for auto host when sandbox can apply", async () => {
-    const configPath = join(workspaceDir, "openclaw.jsonc");
+    const configPath = join(workspaceDir, "grokbot.jsonc");
     const cfg = {
       ...cfgWithPolicy(),
       agents: {
@@ -1371,7 +1371,7 @@ describe("registerPolicyDoctorChecks", () => {
           id: "tools-exec-security",
           kind: "execSecurity",
           value: "deny",
-          source: "oc://openclaw.config/tools/exec/security",
+          source: "oc://grokbot.config/tools/exec/security",
         }),
       ]),
     );
@@ -1379,7 +1379,7 @@ describe("registerPolicyDoctorChecks", () => {
   });
 
   it("keeps omitted auto-host exec security full when sandbox is non-main only", async () => {
-    const configPath = join(workspaceDir, "openclaw.jsonc");
+    const configPath = join(workspaceDir, "grokbot.jsonc");
     const cfg = {
       ...cfgWithPolicy(),
       agents: {
@@ -1412,21 +1412,21 @@ describe("registerPolicyDoctorChecks", () => {
           id: "tools-exec-security",
           kind: "execSecurity",
           value: "full",
-          source: "oc://openclaw.config/tools/exec/security",
+          source: "oc://grokbot.config/tools/exec/security",
         }),
       ]),
     );
     expect(result.findings).toEqual([
       expect.objectContaining({
         checkId: "policy/tools-exec-security-unapproved",
-        ocPath: "oc://openclaw.config/tools/exec/security",
+        ocPath: "oc://grokbot.config/tools/exec/security",
         requirement: "oc://policy.jsonc/tools/exec/allowSecurity",
       }),
     ]);
   });
 
   it("reports gateway exposure settings denied by policy", async () => {
-    const configPath = join(workspaceDir, "openclaw.jsonc");
+    const configPath = join(workspaceDir, "grokbot.jsonc");
     const cfg = {
       ...cfgWithPolicy(),
       gateway: {
@@ -1496,55 +1496,55 @@ describe("registerPolicyDoctorChecks", () => {
         expect.objectContaining({
           checkId: "policy/gateway-non-loopback-bind",
           severity: "error",
-          ocPath: "oc://openclaw.config/gateway/bind",
+          ocPath: "oc://grokbot.config/gateway/bind",
           requirement: "oc://policy.jsonc/gateway/exposure/allowNonLoopbackBind",
         }),
         expect.objectContaining({
           checkId: "policy/gateway-auth-disabled",
           severity: "error",
-          ocPath: "oc://openclaw.config/gateway/auth/mode",
+          ocPath: "oc://grokbot.config/gateway/auth/mode",
           requirement: "oc://policy.jsonc/gateway/auth/requireAuth",
         }),
         expect.objectContaining({
           checkId: "policy/gateway-rate-limit-missing",
           severity: "error",
-          ocPath: "oc://openclaw.config/gateway/auth/rateLimit",
+          ocPath: "oc://grokbot.config/gateway/auth/rateLimit",
           requirement: "oc://policy.jsonc/gateway/auth/requireExplicitRateLimit",
         }),
         expect.objectContaining({
           checkId: "policy/gateway-control-ui-insecure",
           severity: "error",
-          ocPath: "oc://openclaw.config/gateway/controlUi/allowInsecureAuth",
+          ocPath: "oc://grokbot.config/gateway/controlUi/allowInsecureAuth",
           requirement: "oc://policy.jsonc/gateway/controlUi/allowInsecure",
         }),
         expect.objectContaining({
           checkId: "policy/gateway-tailscale-funnel",
           severity: "error",
-          ocPath: "oc://openclaw.config/gateway/tailscale/mode",
+          ocPath: "oc://grokbot.config/gateway/tailscale/mode",
           requirement: "oc://policy.jsonc/gateway/exposure/allowTailscaleFunnel",
         }),
         expect.objectContaining({
           checkId: "policy/gateway-remote-enabled",
           severity: "error",
-          ocPath: "oc://openclaw.config/gateway/mode",
+          ocPath: "oc://grokbot.config/gateway/mode",
           requirement: "oc://policy.jsonc/gateway/remote/allow",
         }),
         expect.objectContaining({
           checkId: "policy/gateway-http-endpoint-enabled",
           severity: "error",
-          ocPath: "oc://openclaw.config/gateway/http/endpoints/chatCompletions/enabled",
+          ocPath: "oc://grokbot.config/gateway/http/endpoints/chatCompletions/enabled",
           requirement: "oc://policy.jsonc/gateway/http/denyEndpoints",
         }),
         expect.objectContaining({
           checkId: "policy/gateway-http-url-fetch-unrestricted",
           severity: "error",
-          ocPath: "oc://openclaw.config/gateway/http/endpoints/chatCompletions/images/allowUrl",
+          ocPath: "oc://grokbot.config/gateway/http/endpoints/chatCompletions/images/allowUrl",
           requirement: "oc://policy.jsonc/gateway/http/requireUrlAllowlists",
         }),
         expect.objectContaining({
           checkId: "policy/gateway-node-command-denied",
           severity: "error",
-          ocPath: "oc://openclaw.config/gateway/nodes/denyCommands",
+          ocPath: "oc://grokbot.config/gateway/nodes/denyCommands",
           requirement: "oc://policy.jsonc/gateway/nodes/denyCommands",
         }),
       ]),
@@ -1553,7 +1553,7 @@ describe("registerPolicyDoctorChecks", () => {
   });
 
   it("does not report gateway node commands denied by runtime config", async () => {
-    const configPath = join(workspaceDir, "openclaw.jsonc");
+    const configPath = join(workspaceDir, "grokbot.jsonc");
     const cfg = {
       ...cfgWithPolicy(),
       gateway: {
@@ -1583,7 +1583,7 @@ describe("registerPolicyDoctorChecks", () => {
   });
 
   it("reports gateway node commands denied by policy without explicit extra allows", async () => {
-    const configPath = join(workspaceDir, "openclaw.jsonc");
+    const configPath = join(workspaceDir, "grokbot.jsonc");
     const cfg = {
       ...cfgWithPolicy(),
       gateway: {
@@ -1610,14 +1610,14 @@ describe("registerPolicyDoctorChecks", () => {
       expect.objectContaining({
         checkId: "policy/gateway-node-command-denied",
         severity: "error",
-        ocPath: "oc://openclaw.config/gateway/nodes/denyCommands",
+        ocPath: "oc://grokbot.config/gateway/nodes/denyCommands",
         requirement: "oc://policy.jsonc/gateway/nodes/denyCommands",
       }),
     ]);
   });
 
   it("reports omitted gateway bind when non-loopback exposure is denied", async () => {
-    const configPath = join(workspaceDir, "openclaw.jsonc");
+    const configPath = join(workspaceDir, "grokbot.jsonc");
     const cfg = {
       ...cfgWithPolicy(),
       gateway: {},
@@ -1642,14 +1642,14 @@ describe("registerPolicyDoctorChecks", () => {
       expect.objectContaining({
         checkId: "policy/gateway-non-loopback-bind",
         severity: "error",
-        ocPath: "oc://openclaw.config/gateway/bind",
+        ocPath: "oc://grokbot.config/gateway/bind",
         requirement: "oc://policy.jsonc/gateway/exposure/allowNonLoopbackBind",
       }),
     ]);
   });
 
   it("does not report omitted gateway bind when Tailscale forces loopback", async () => {
-    const configPath = join(workspaceDir, "openclaw.jsonc");
+    const configPath = join(workspaceDir, "grokbot.jsonc");
     const cfg = {
       ...cfgWithPolicy(),
       gateway: {
@@ -1676,7 +1676,7 @@ describe("registerPolicyDoctorChecks", () => {
   });
 
   it("reports preserved Tailscale Funnel routes when policy denies Funnel exposure", async () => {
-    const configPath = join(workspaceDir, "openclaw.jsonc");
+    const configPath = join(workspaceDir, "grokbot.jsonc");
     const cfg = {
       ...cfgWithPolicy(),
       gateway: {
@@ -1703,14 +1703,14 @@ describe("registerPolicyDoctorChecks", () => {
       expect.objectContaining({
         checkId: "policy/gateway-tailscale-funnel",
         severity: "error",
-        ocPath: "oc://openclaw.config/gateway/tailscale/preserveFunnel",
+        ocPath: "oc://grokbot.config/gateway/tailscale/preserveFunnel",
         requirement: "oc://policy.jsonc/gateway/exposure/allowTailscaleFunnel",
       }),
     ]);
   });
 
   it("reports missing gateway rate limits when gateway config is omitted", async () => {
-    const configPath = join(workspaceDir, "openclaw.jsonc");
+    const configPath = join(workspaceDir, "grokbot.jsonc");
     await fs.writeFile(configPath, "{}", "utf-8");
     await fs.writeFile(
       join(workspaceDir, "policy.jsonc"),
@@ -1731,14 +1731,14 @@ describe("registerPolicyDoctorChecks", () => {
       expect.objectContaining({
         checkId: "policy/gateway-rate-limit-missing",
         severity: "error",
-        ocPath: "oc://openclaw.config/gateway/auth/rateLimit",
+        ocPath: "oc://grokbot.config/gateway/auth/rateLimit",
         requirement: "oc://policy.jsonc/gateway/auth/requireExplicitRateLimit",
       }),
     ]);
   });
 
   it("does not report inactive custom bind hosts", async () => {
-    const configPath = join(workspaceDir, "openclaw.jsonc");
+    const configPath = join(workspaceDir, "grokbot.jsonc");
     const cfg = {
       ...cfgWithPolicy(),
       gateway: {
@@ -1766,7 +1766,7 @@ describe("registerPolicyDoctorChecks", () => {
   });
 
   it("does not report loopback custom bind hosts", async () => {
-    const configPath = join(workspaceDir, "openclaw.jsonc");
+    const configPath = join(workspaceDir, "grokbot.jsonc");
     const cfg = {
       ...cfgWithPolicy(),
       gateway: {
@@ -1794,7 +1794,7 @@ describe("registerPolicyDoctorChecks", () => {
   });
 
   it("reports valid non-loopback custom bind hosts", async () => {
-    const configPath = join(workspaceDir, "openclaw.jsonc");
+    const configPath = join(workspaceDir, "grokbot.jsonc");
     const cfg = {
       ...cfgWithPolicy(),
       gateway: {
@@ -1822,14 +1822,14 @@ describe("registerPolicyDoctorChecks", () => {
       expect.objectContaining({
         checkId: "policy/gateway-non-loopback-bind",
         severity: "error",
-        ocPath: "oc://openclaw.config/gateway/customBindHost",
+        ocPath: "oc://grokbot.config/gateway/customBindHost",
         requirement: "oc://policy.jsonc/gateway/exposure/allowNonLoopbackBind",
       }),
     ]);
   });
 
   it("does not report blank custom bind config as active non-loopback exposure", async () => {
-    const configPath = join(workspaceDir, "openclaw.jsonc");
+    const configPath = join(workspaceDir, "grokbot.jsonc");
     const cfg = {
       ...cfgWithPolicy(),
       gateway: {
@@ -1859,7 +1859,7 @@ describe("registerPolicyDoctorChecks", () => {
   it.each(["localhost", "::1", "192.168.001.20"])(
     "does not report invalid custom bind host %s as active non-loopback exposure",
     async (customBindHost) => {
-      const configPath = join(workspaceDir, "openclaw.jsonc");
+      const configPath = join(workspaceDir, "grokbot.jsonc");
       const cfg = {
         ...cfgWithPolicy(),
         gateway: {
@@ -1888,7 +1888,7 @@ describe("registerPolicyDoctorChecks", () => {
   );
 
   it("reports configured gateway remote URLs when remote mode is active", async () => {
-    const configPath = join(workspaceDir, "openclaw.jsonc");
+    const configPath = join(workspaceDir, "grokbot.jsonc");
     const cfg = {
       ...cfgWithPolicy(),
       gateway: {
@@ -1918,20 +1918,20 @@ describe("registerPolicyDoctorChecks", () => {
       expect.objectContaining({
         checkId: "policy/gateway-remote-enabled",
         severity: "error",
-        ocPath: "oc://openclaw.config/gateway/mode",
+        ocPath: "oc://grokbot.config/gateway/mode",
         requirement: "oc://policy.jsonc/gateway/remote/allow",
       }),
       expect.objectContaining({
         checkId: "policy/gateway-remote-enabled",
         severity: "error",
-        ocPath: "oc://openclaw.config/gateway/remote/url",
+        ocPath: "oc://grokbot.config/gateway/remote/url",
         requirement: "oc://policy.jsonc/gateway/remote/allow",
       }),
     ]);
   });
 
   it("does not report inert remote config outside remote mode", async () => {
-    const configPath = join(workspaceDir, "openclaw.jsonc");
+    const configPath = join(workspaceDir, "grokbot.jsonc");
     const cfg = {
       ...cfgWithPolicy(),
       gateway: {
@@ -1960,7 +1960,7 @@ describe("registerPolicyDoctorChecks", () => {
   });
 
   it("reports default Responses URL fetching without allowlists", async () => {
-    const configPath = join(workspaceDir, "openclaw.jsonc");
+    const configPath = join(workspaceDir, "grokbot.jsonc");
     const cfg = {
       ...cfgWithPolicy(),
       gateway: {
@@ -1994,13 +1994,13 @@ describe("registerPolicyDoctorChecks", () => {
         expect.objectContaining({
           checkId: "policy/gateway-http-url-fetch-unrestricted",
           severity: "error",
-          ocPath: "oc://openclaw.config/gateway/http/endpoints/responses/files/allowUrl",
+          ocPath: "oc://grokbot.config/gateway/http/endpoints/responses/files/allowUrl",
           requirement: "oc://policy.jsonc/gateway/http/requireUrlAllowlists",
         }),
         expect.objectContaining({
           checkId: "policy/gateway-http-url-fetch-unrestricted",
           severity: "error",
-          ocPath: "oc://openclaw.config/gateway/http/endpoints/responses/images/allowUrl",
+          ocPath: "oc://grokbot.config/gateway/http/endpoints/responses/images/allowUrl",
           requirement: "oc://policy.jsonc/gateway/http/requireUrlAllowlists",
         }),
       ]),
@@ -2009,7 +2009,7 @@ describe("registerPolicyDoctorChecks", () => {
   });
 
   it("reports wildcard Responses URL allowlists as unrestricted", async () => {
-    const configPath = join(workspaceDir, "openclaw.jsonc");
+    const configPath = join(workspaceDir, "grokbot.jsonc");
     const cfg = {
       ...cfgWithPolicy(),
       gateway: {
@@ -2044,11 +2044,11 @@ describe("registerPolicyDoctorChecks", () => {
       expect.arrayContaining([
         expect.objectContaining({
           checkId: "policy/gateway-http-url-fetch-unrestricted",
-          ocPath: "oc://openclaw.config/gateway/http/endpoints/responses/files/allowUrl",
+          ocPath: "oc://grokbot.config/gateway/http/endpoints/responses/files/allowUrl",
         }),
         expect.objectContaining({
           checkId: "policy/gateway-http-url-fetch-unrestricted",
-          ocPath: "oc://openclaw.config/gateway/http/endpoints/responses/images/allowUrl",
+          ocPath: "oc://grokbot.config/gateway/http/endpoints/responses/images/allowUrl",
         }),
       ]),
     );

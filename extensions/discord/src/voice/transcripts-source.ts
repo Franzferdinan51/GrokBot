@@ -2,7 +2,7 @@
 import type {
   TranscriptSourceProvider,
   TranscriptStartRequest,
-} from "openclaw/plugin-sdk/transcripts";
+} from "grokbot/plugin-sdk/transcripts";
 import type { DiscordVoiceManager } from "./manager.js";
 
 const managersByAccountId = new Map<string, DiscordVoiceManager>();

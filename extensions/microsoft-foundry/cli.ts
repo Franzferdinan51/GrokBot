@@ -1,11 +1,11 @@
 // Microsoft Foundry plugin module implements cli behavior.
 import { execFileSync, spawn } from "node:child_process";
-import { runExec } from "openclaw/plugin-sdk/process-runtime";
+import { runExec } from "grokbot/plugin-sdk/process-runtime";
 import {
   normalizeOptionalString,
   normalizeStringifiedOptionalString,
-} from "openclaw/plugin-sdk/string-coerce-runtime";
-import { truncateUtf16Safe } from "openclaw/plugin-sdk/text-utility-runtime";
+} from "grokbot/plugin-sdk/string-coerce-runtime";
+import { truncateUtf16Safe } from "grokbot/plugin-sdk/text-utility-runtime";
 import type { AzAccessToken, AzAccount } from "./shared.js";
 import { COGNITIVE_SERVICES_RESOURCE } from "./shared.js";
 

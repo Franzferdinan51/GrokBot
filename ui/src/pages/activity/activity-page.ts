@@ -13,7 +13,7 @@ import { loadSettings } from "../../app/settings.ts";
 import { renderSettingsWorkspace } from "../../components/settings-workspace.ts";
 import { resolveSessionKey } from "../../lib/sessions/index.ts";
 import { uiSessionEventMatches } from "../../lib/sessions/session-key.ts";
-import { OpenClawLightDomElement } from "../../lit/openclaw-element.ts";
+import { OpenClawLightDomElement } from "../../lit/grokbot-element.ts";
 import { SubscriptionsController } from "../../lit/subscriptions-controller.ts";
 import {
   parseActivityEvent,
@@ -247,6 +247,6 @@ class ActivityPage extends OpenClawLightDomElement {
   }
 }
 
-if (!customElements.get("openclaw-activity-page")) {
-  customElements.define("openclaw-activity-page", ActivityPage);
+if (!customElements.get("grokbot-activity-page")) {
+  customElements.define("grokbot-activity-page", ActivityPage);
 }

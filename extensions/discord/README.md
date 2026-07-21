@@ -1,11 +1,11 @@
-# OpenClaw Discord
+# GrokBot Discord
 
-Official OpenClaw channel plugin for Discord servers, channels, DMs, slash commands, and app events.
+Official GrokBot channel plugin for Discord servers, channels, DMs, slash commands, and app events.
 
-Install from OpenClaw:
+Install from GrokBot:
 
 ```bash
-openclaw plugin add @openclaw/discord
+grokbot plugin add @grokbot/discord
 ```
 
-Configure a Discord bot token and the channels or servers OpenClaw should handle. The plugin lets OpenClaw agents receive Discord messages and respond through the configured Discord app.
+Configure a Discord bot token and the channels or servers GrokBot should handle. The plugin lets GrokBot agents receive Discord messages and respond through the configured Discord app.

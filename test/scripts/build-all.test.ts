@@ -3,7 +3,7 @@ import { spawnSync } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { describe, expect, it, vi } from "vitest";
 import {
   BUILD_ALL_PROFILES,
@@ -67,7 +67,7 @@ function withBuildCacheFixture(
     };
   }) => void,
 ) {
-  const rootDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-build-cache-"));
+  const rootDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-build-cache-"));
   try {
     const inputPath = path.join(rootDir, "src/input.ts");
     const outputPath = path.join(rootDir, "dist/output.js");
@@ -168,7 +168,7 @@ describe("resolveBuildAllStep", () => {
 
   it("routes pnpm steps through the npm_execpath pnpm runner on Windows", () => {
     const step = getBuildAllStep("plugins:assets:build");
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-pnpm-runner-"));
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-pnpm-runner-"));
     const npmExecPath = path.join(tempDir, "pnpm.cjs");
     fs.writeFileSync(npmExecPath, "console.log('pnpm');\n");
 
@@ -368,10 +368,10 @@ describe("resolveBuildAllSteps", () => {
 
     expect(ai.args).toEqual(["scripts/tsdown-build.mjs", "--config", "tsdown.ai.config.ts"]);
     expect(packages.args).toEqual(
-      expect.arrayContaining(["--config", "tsdown.config.ts", "--filter", "openclaw-packages"]),
+      expect.arrayContaining(["--config", "tsdown.config.ts", "--filter", "grokbot-packages"]),
     );
     expect(unified.args).toEqual(
-      expect.arrayContaining(["--config", "tsdown.config.ts", "--filter", "openclaw-unified"]),
+      expect.arrayContaining(["--config", "tsdown.config.ts", "--filter", "grokbot-unified"]),
     );
     for (const step of [ai, packages, unified]) {
       expect(step.cache?.restore).toBe("always");
@@ -737,7 +737,7 @@ describe("build-all timing output", () => {
 
 describe("resolveBuildAllStepCacheState", () => {
   it("invalidates only declaration groups that depend on the changed module", () => {
-    const rootDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-tsdown-group-cache-"));
+    const rootDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-tsdown-group-cache-"));
     const ai = getBuildAllStep("tsdown-ai");
     const packages = getBuildAllStep("tsdown-packages");
     const unified = getBuildAllStep("tsdown-unified");

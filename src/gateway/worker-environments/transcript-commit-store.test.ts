@@ -5,7 +5,7 @@ import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import {
   closeOpenClawStateDatabaseForTest,
   openOpenClawStateDatabase,
-} from "../../state/openclaw-state-db.js";
+} from "../../state/grokbot-state-db.js";
 import {
   createWorkerTranscriptCommitStore,
   type WorkerTranscriptCommitInput,
@@ -35,7 +35,7 @@ describe("worker transcript commit store", () => {
   let store: WorkerTranscriptCommitStore;
 
   beforeEach(async () => {
-    root = await fs.mkdtemp(path.join(await fs.realpath(os.tmpdir()), "openclaw-worker-commit-"));
+    root = await fs.mkdtemp(path.join(await fs.realpath(os.tmpdir()), "grokbot-worker-commit-"));
     nowMs = 1_000;
     const database = openOpenClawStateDatabase({ env: { OPENCLAW_STATE_DIR: root } });
     store = createWorkerTranscriptCommitStore({ database, now: () => nowMs });

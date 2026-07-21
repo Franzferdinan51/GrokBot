@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import { truncateUtf16Safe } from "@openclaw/normalization-core/utf16-slice";
+import { truncateUtf16Safe } from "@grokbot/normalization-core/utf16-slice";
 import { mapThinkingLevelForProvider } from "../../agents/embedded-agent-runner/utils.js";
 import type {
   LocalTurnPlacementClaim,
@@ -51,7 +51,7 @@ import {
   workerWorkspaceResultRef,
 } from "./workspace-result-staging.js";
 
-const WORKER_LAUNCH_SCRIPT = 'exec node "$HOME/.openclaw-worker/$1/openclaw.mjs" worker';
+const WORKER_LAUNCH_SCRIPT = 'exec node "$HOME/.grokbot-worker/$1/grokbot.mjs" worker';
 
 type WorkerTurnEnvironmentService = Pick<
   WorkerEnvironmentService,
@@ -326,7 +326,7 @@ async function executeWorkerTurn(params: {
   const handoffAbort = new AbortController();
   params.onHandoff();
   const processPromise = tunnel.runWorkspaceCommand({
-    argv: ["sh", "-c", WORKER_LAUNCH_SCRIPT, "openclaw-worker", placement.workerBundleHash],
+    argv: ["sh", "-c", WORKER_LAUNCH_SCRIPT, "grokbot-worker", placement.workerBundleHash],
     input: JSON.stringify(descriptor),
     timeoutMs: turn.timeoutMs,
     signal: turn.abortSignal

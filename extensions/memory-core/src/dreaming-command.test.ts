@@ -1,7 +1,7 @@
 // Memory Core tests cover dreaming command plugin behavior.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import type { PluginCommandContext } from "openclaw/plugin-sdk/core";
-import type { OpenClawPluginApi } from "openclaw/plugin-sdk/plugin-entry";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import type { PluginCommandContext } from "grokbot/plugin-sdk/core";
+import type { OpenClawPluginApi } from "grokbot/plugin-sdk/plugin-entry";
 import { describe, expect, it, vi } from "vitest";
 import { handleDreamingCommand } from "./dreaming-command.js";
 
@@ -30,7 +30,7 @@ function createHarness(initialConfig: OpenClawConfig = {}) {
         mutate(draft);
         runtimeConfig = draft;
         return {
-          path: "/tmp/openclaw.json",
+          path: "/tmp/grokbot.json",
           previousHash: null,
           persistedHash: null,
           snapshot: {},

@@ -1,5 +1,5 @@
 // Qa Lab plugin module implements auth behavior.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import {
   applyAuthProfileConfig,
   coerceSecretRef,
@@ -9,8 +9,8 @@ import {
   readCodexCliCredentialsCached,
   resolveEnvApiKey,
   validateAnthropicSetupToken,
-} from "openclaw/plugin-sdk/provider-auth";
-import { normalizeStringEntries, uniqueStrings } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/provider-auth";
+import { normalizeStringEntries, uniqueStrings } from "grokbot/plugin-sdk/string-coerce-runtime";
 import { resolveQaAgentAuthDir, writeQaAuthProfiles } from "../shared/auth-store.js";
 
 export const QA_LIVE_ANTHROPIC_SETUP_TOKEN_ENV = "OPENCLAW_QA_LIVE_ANTHROPIC_SETUP_TOKEN";
@@ -159,7 +159,7 @@ function qaLiveRequiresCodexAuth(params: {
     return false;
   }
   const forcedRuntime = params.env.OPENCLAW_QA_FORCE_RUNTIME?.trim().toLowerCase();
-  if (forcedRuntime === "openclaw") {
+  if (forcedRuntime === "grokbot") {
     return false;
   }
   if (forcedRuntime === "codex") {
@@ -298,7 +298,7 @@ export function assertQaLiveCodexAuthAvailable(params: {
     [
       "QA live-frontier cannot run Codex-backed OpenAI models inside an isolated QA agent because no portable Codex auth is available.",
       "Set OPENAI_API_KEY or OPENCLAW_LIVE_OPENAI_KEY for an API-key fallback, or set CODEX_HOME to a logged-in Codex CLI home.",
-      "Host OpenClaw OAuth refresh profiles are not copied into QA temp stores.",
+      "Host GrokBot OAuth refresh profiles are not copied into QA temp stores.",
     ].join(" "),
   );
 }

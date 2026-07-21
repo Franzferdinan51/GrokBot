@@ -17,16 +17,16 @@ import {
   resolveRetainedManagedNpmInstallPackageInfo,
 } from "../plugins/managed-npm-retention.js";
 import { writeManagedNpmPlugin } from "../plugins/test-helpers/managed-npm-plugin.js";
-import { closeOpenClawStateDatabaseForTest } from "../state/openclaw-state-db.js";
+import { closeOpenClawStateDatabaseForTest } from "../state/grokbot-state-db.js";
 import { maybeRepairStaleManagedNpmInstallGenerations } from "./doctor-plugin-generations.js";
 import { maybeRepairPluginRegistryState } from "./doctor-plugin-registry.js";
 
-const PACKAGE_NAME = "@proof/openclaw-generation";
+const PACKAGE_NAME = "@proof/grokbot-generation";
 const PLUGIN_ID = "generation-proof";
 const tempDirs = useAutoCleanupTempDirTracker(afterEach);
 
 function makeStateDir(): string {
-  return tempDirs.make("openclaw-doctor-plugin-generation-");
+  return tempDirs.make("grokbot-doctor-plugin-generation-");
 }
 
 function writeManagedFlat(stateDir: string, version: string): string {

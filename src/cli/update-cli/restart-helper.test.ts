@@ -31,7 +31,7 @@ const powerShellPath = findPowerShell();
 const itWithPowerShell = powerShellPath ? it : it.skip;
 
 vi.mock("node:child_process", async () => {
-  const { mockNodeBuiltinModule } = await import("openclaw/plugin-sdk/test-node-mocks");
+  const { mockNodeBuiltinModule } = await import("grokbot/plugin-sdk/test-node-mocks");
   return mockNodeBuiltinModule(
     () => vi.importActual<typeof import("node:child_process")>("node:child_process"),
     {
@@ -83,7 +83,7 @@ describe("restart-helper", () => {
     if (!powerShellPath) {
       throw new Error("PowerShell is unavailable");
     }
-    const scriptDir = await makeTempDir("openclaw-restart-policy-");
+    const scriptDir = await makeTempDir("grokbot-restart-policy-");
     const scriptPath = path.join(scriptDir, "policy-test.ps1");
     const policy = extractWindowsKillPolicy(content);
     await fs.writeFile(
@@ -162,7 +162,7 @@ exit 0
     const runningGuard = 'if ($taskState -eq "Running")';
     const endCommand =
       'Invoke-OpenClawSchtasksWithTimeout -Arguments @("/End", "/TN", $taskName) -TimeoutSeconds 10';
-    const skipEndLog = "openclaw restart skipped schtasks end";
+    const skipEndLog = "grokbot restart skipped schtasks end";
     const pollLoop = "for ($attempt = 1; $attempt -le 10; $attempt++)";
     const pollCall = `Get-OpenClawListenerSnapshot -Port $port`;
     const forceKillBranch = "if ($attempt -eq 10)";
@@ -221,7 +221,7 @@ exit 0
       });
       expect(scriptPath.endsWith(".sh")).toBe(true);
       expect(content).toContain("#!/bin/sh");
-      expect(content).toContain("systemctl --user restart 'openclaw-gateway.service'");
+      expect(content).toContain("systemctl --user restart 'grokbot-gateway.service'");
       // Script should self-cleanup
       expect(content).toContain('rm -f "$0"');
       expect(content).toContain('rmdir "$script_dir" 2>/dev/null || true');
@@ -231,8 +231,8 @@ exit 0
     it("creates restart scripts in a private temp directory with exclusive creation", async () => {
       Object.defineProperty(process, "platform", { value: "linux" });
       const timestamp = 1_727_201_234_567;
-      const oldCandidatePath = path.join(os.tmpdir(), `openclaw-restart-${timestamp}.sh`);
-      const victimDir = await makeTempDir("openclaw-restart-helper-victim-");
+      const oldCandidatePath = path.join(os.tmpdir(), `grokbot-restart-${timestamp}.sh`);
+      const victimDir = await makeTempDir("grokbot-restart-helper-victim-");
       const victimPath = path.join(victimDir, "restart.sh");
       await fs.rm(oldCandidatePath, { force: true });
       await fs.writeFile(victimPath, "preexisting script\n", "utf-8");
@@ -260,7 +260,7 @@ exit 0
         expect(relativeScriptDir).not.toBe("");
         expect(relativeScriptDir.startsWith("..")).toBe(false);
         expect(path.isAbsolute(relativeScriptDir)).toBe(false);
-        expect(path.basename(scriptDir)).toMatch(/^openclaw-restart-/);
+        expect(path.basename(scriptDir)).toMatch(/^grokbot-restart-/);
         expect(writeFileSpy).toHaveBeenLastCalledWith(
           scriptPath,
           expect.any(String),
@@ -293,7 +293,7 @@ exit 0
 
     it("fails with sudo systemd guidance when the gateway unit is system-scoped", async () => {
       Object.defineProperty(process, "platform", { value: "linux" });
-      const tmpDir = await makeTempDir("openclaw-restart-helper-");
+      const tmpDir = await makeTempDir("grokbot-restart-helper-");
       const fakeBinDir = path.join(tmpDir, "bin");
       const callsPath = path.join(tmpDir, "systemctl-calls.log");
       await fs.mkdir(fakeBinDir, { recursive: true });
@@ -324,11 +324,11 @@ exit 1
       const calls = await fs.readFile(callsPath, "utf-8");
 
       expect(result.code).toBe(78);
-      expect(result.stderr).toContain("system-scoped openclaw gateway unit detected");
-      expect(result.stderr).toContain("sudo systemctl restart openclaw-gateway.service");
-      expect(calls).toContain("--user is-active --quiet openclaw-gateway.service");
-      expect(calls).toContain("is-active --quiet openclaw-gateway.service");
-      expect(calls).not.toContain("--user restart openclaw-gateway.service");
+      expect(result.stderr).toContain("system-scoped grokbot gateway unit detected");
+      expect(result.stderr).toContain("sudo systemctl restart grokbot-gateway.service");
+      expect(calls).toContain("--user is-active --quiet grokbot-gateway.service");
+      expect(calls).toContain("is-active --quiet grokbot-gateway.service");
+      expect(calls).not.toContain("--user restart grokbot-gateway.service");
     });
 
     it("creates a launchd restart script on macOS", async () => {
@@ -340,9 +340,9 @@ exit 1
       });
       expect(scriptPath.endsWith(".sh")).toBe(true);
       expect(content).toContain("#!/bin/sh");
-      expect(content).toContain("launchctl kickstart -k 'gui/501/ai.openclaw.gateway'");
+      expect(content).toContain("launchctl kickstart -k 'gui/501/ai.grokbot.gateway'");
       // Should clear disabled state and fall back to bootstrap when kickstart fails.
-      expect(content).toContain("launchctl enable 'gui/501/ai.openclaw.gateway'");
+      expect(content).toContain("launchctl enable 'gui/501/ai.grokbot.gateway'");
       expect(content).toContain("launchctl bootstrap 'gui/501'");
       expect(content).toContain("Bootstrap loads RunAtLoad agents");
       expect(content).toContain('rm -f "$0"');
@@ -350,7 +350,7 @@ exit 1
       await cleanupScript(scriptPath);
     });
 
-    it("captures macOS launchctl stderr to ~/.openclaw/logs/gateway-restart.log (#68486)", async () => {
+    it("captures macOS launchctl stderr to ~/.grokbot/logs/gateway-restart.log (#68486)", async () => {
       // Silent failure in macOS update restart helper: previously every
       // launchctl call redirected stderr to /dev/null and the final kickstart
       // was chained with `|| true`, so bootstrap/kickstart failures were
@@ -364,7 +364,7 @@ exit 1
         OPENCLAW_PROFILE: "default",
         HOME: "/Users/testuser",
       });
-      expect(content).toContain("exec >>'/Users/testuser/.openclaw/logs/gateway-restart.log' 2>&1");
+      expect(content).toContain("exec >>'/Users/testuser/.grokbot/logs/gateway-restart.log' 2>&1");
       // Every launchctl call should allow output through now (no `2>/dev/null`)
       // and the final kickstart must not swallow its exit code.
       expect(content).not.toMatch(/launchctl[^\n]*2>\/dev\/null/);
@@ -379,20 +379,20 @@ exit 1
       const { scriptPath, content } = await prepareAndReadScript({
         OPENCLAW_PROFILE: "default",
         HOME: "/Users/testuser",
-        OPENCLAW_STATE_DIR: "/tmp/openclaw-state",
+        OPENCLAW_STATE_DIR: "/tmp/grokbot-state",
       });
 
       expect(content).toContain(
-        "if mkdir -p '/tmp/openclaw-state/logs' 2>/dev/null && : >>'/tmp/openclaw-state/logs/gateway-restart.log' 2>/dev/null; then",
+        "if mkdir -p '/tmp/grokbot-state/logs' 2>/dev/null && : >>'/tmp/grokbot-state/logs/gateway-restart.log' 2>/dev/null; then",
       );
-      expect(content).toContain("exec >>'/tmp/openclaw-state/logs/gateway-restart.log' 2>&1");
+      expect(content).toContain("exec >>'/tmp/grokbot-state/logs/gateway-restart.log' 2>&1");
       await cleanupScript(scriptPath);
     });
 
     it("returns the final macOS launchctl kickstart failure after logging cleanup", async () => {
       Object.defineProperty(process, "platform", { value: "darwin" });
       process.getuid = () => 501;
-      const tmpDir = await makeTempDir("openclaw-restart-helper-");
+      const tmpDir = await makeTempDir("grokbot-restart-helper-");
       const fakeBinDir = path.join(tmpDir, "bin");
       const stateDir = path.join(tmpDir, "state");
       await fs.mkdir(fakeBinDir, { recursive: true });
@@ -422,16 +422,16 @@ exit 0
       const log = await fs.readFile(path.join(stateDir, "logs", "gateway-restart.log"), "utf-8");
 
       expect(result.code).toBe(42);
-      expect(log).toContain("openclaw restart attempt source=update target=ai.openclaw.gateway");
-      expect(log).toContain("launchctl kickstart -k gui/501/ai.openclaw.gateway");
-      expect(log).toContain("openclaw restart failed source=update status=42");
-      expect(log).not.toContain("openclaw restart done source=update");
+      expect(log).toContain("grokbot restart attempt source=update target=ai.grokbot.gateway");
+      expect(log).toContain("launchctl kickstart -k gui/501/ai.grokbot.gateway");
+      expect(log).toContain("grokbot restart failed source=update status=42");
+      expect(log).not.toContain("grokbot restart done source=update");
     });
 
     it("continues the macOS restart path when log setup fails", async () => {
       Object.defineProperty(process, "platform", { value: "darwin" });
       process.getuid = () => 501;
-      const tmpDir = await makeTempDir("openclaw-restart-helper-");
+      const tmpDir = await makeTempDir("grokbot-restart-helper-");
       const fakeBinDir = path.join(tmpDir, "bin");
       const stateFile = path.join(tmpDir, "state-file");
       const markerPath = path.join(tmpDir, "launchctl-ran");
@@ -464,7 +464,7 @@ exit 0
     it("logs custom macOS launchd labels without shell expansion", async () => {
       Object.defineProperty(process, "platform", { value: "darwin" });
       process.getuid = () => 501;
-      const tmpDir = await makeTempDir("openclaw-restart-helper-");
+      const tmpDir = await makeTempDir("grokbot-restart-helper-");
       const fakeBinDir = path.join(tmpDir, "bin");
       const stateDir = path.join(tmpDir, "state");
       await fs.mkdir(fakeBinDir, { recursive: true });
@@ -472,7 +472,7 @@ exit 0
       await writeFakeLaunchctl(fakeBinDir);
 
       const { scriptPath } = await prepareAndReadScript({
-        OPENCLAW_LAUNCHD_LABEL: "ai.openclaw.$(echo injected)",
+        OPENCLAW_LAUNCHD_LABEL: "ai.grokbot.$(echo injected)",
         HOME: path.join(tmpDir, "home"),
         OPENCLAW_STATE_DIR: stateDir,
       });
@@ -483,8 +483,8 @@ exit 0
       const log = await fs.readFile(path.join(stateDir, "logs", "gateway-restart.log"), "utf-8");
 
       expect(result.code).toBeNull();
-      expect(log).toContain("target=ai.openclaw.$(echo injected)");
-      expect(log).not.toContain("target=ai.openclaw.injected");
+      expect(log).toContain("target=ai.grokbot.$(echo injected)");
+      expect(log).not.toContain("target=ai.grokbot.injected");
     });
 
     it("uses OPENCLAW_LAUNCHD_LABEL override on macOS", async () => {
@@ -493,9 +493,9 @@ exit 0
 
       const { scriptPath, content } = await prepareAndReadScript({
         OPENCLAW_PROFILE: "default",
-        OPENCLAW_LAUNCHD_LABEL: "com.custom.openclaw",
+        OPENCLAW_LAUNCHD_LABEL: "com.custom.grokbot",
       });
-      expect(content).toContain("launchctl kickstart -k 'gui/501/com.custom.openclaw'");
+      expect(content).toContain("launchctl kickstart -k 'gui/501/com.custom.grokbot'");
       await cleanupScript(scriptPath);
     });
 
@@ -511,17 +511,17 @@ exit 0
       expect(content).not.toContain("powershell -NoProfile -ExecutionPolicy Bypass -File");
       expect(content).toContain('$ErrorActionPreference = "Continue"');
       expect(content).toContain("gateway-restart.log");
-      expect(content).toContain("$taskName = 'OpenClaw Gateway'");
+      expect(content).toContain("$taskName = 'GrokBot Gateway'");
       expect(content).toContain("function Invoke-OpenClawSchtasksWithTimeout");
       expect(content).toContain("function Get-OpenClawScheduledTaskState");
       expect(content).toContain("function Get-OpenClawListenerKillDecision");
       expect(content).toContain("function Invoke-OpenClawVerifiedListenerKill");
       expect(content).toContain("function Invoke-OpenClawStartupLauncher");
       expect(content).toContain("Get-ScheduledTask -TaskName $TaskName");
-      expect(content).toContain("openclaw restart skipped schtasks end");
+      expect(content).toContain("grokbot restart skipped schtasks end");
       expect(content).toContain("$gatewayScriptPath = ");
       expect(content).toContain("$expectedGatewayArgv = @()");
-      expect(content).toContain("openclaw restart launched startup fallback");
+      expect(content).toContain("grokbot restart launched startup fallback");
       expectWindowsRestartWaitOrdering(content);
       expect(content).toContain('del "%~f0" >nul 2>&1');
       expect(content).toContain('rmdir "%OPENCLAW_RESTART_SCRIPT_DIR%" >nul 2>&1');
@@ -533,7 +533,7 @@ exit 0
 
       const expectedArgv = [
         "C:\\Program Files\\nodejs\\node.exe",
-        "C:\\Users\\O'Brien\\openclaw\\dist\\entry.js",
+        "C:\\Users\\O'Brien\\grokbot\\dist\\entry.js",
         "gateway",
         "--port",
         "18789",
@@ -545,7 +545,7 @@ exit 0
       );
 
       expect(content).toContain(
-        "$expectedGatewayArgv = @('C:\\Program Files\\nodejs\\node.exe', 'C:\\Users\\O''Brien\\openclaw\\dist\\entry.js', 'gateway', '--port', '18789')",
+        "$expectedGatewayArgv = @('C:\\Program Files\\nodejs\\node.exe', 'C:\\Users\\O''Brien\\grokbot\\dist\\entry.js', 'gateway', '--port', '18789')",
       );
       expect(content).toContain("CommandLineToArgvW");
       expect(content).toContain("PROCESS_QUERY_LIMITED_INFORMATION");
@@ -560,7 +560,7 @@ exit 0
       expect(content).toContain("$lease.Dispose()");
       expect(content).toContain('return "listener-query-unavailable"');
       expect(content).not.toContain("Stop-Process -Id");
-      expect(content).not.toContain("openclaw-gateway(\\.exe)?");
+      expect(content).not.toContain("grokbot-gateway(\\.exe)?");
       expect(content).not.toContain("Get-Content -LiteralPath $ScriptPath");
       await cleanupScript(scriptPath);
     });
@@ -572,7 +572,7 @@ exit 0
         const { scriptPath, content } = await prepareAndReadScript(
           { OPENCLAW_PROFILE: "default" },
           18789,
-          ["node", "C:\\openclaw\\dist\\entry.js", "gateway", "--port", "18789"],
+          ["node", "C:\\grokbot\\dist\\entry.js", "gateway", "--port", "18789"],
         );
         try {
           const result = await executeWindowsKillPolicy(
@@ -677,8 +677,8 @@ $snapshot = Get-OpenClawListenerSnapshot -Port 18789
 Assert-True (-not $snapshot.Known) "failed listener queries must remain unknown"
 
 $creation = "133987654321000000"
-$expected = @("node", "C:\openclaw\dist\entry.js", "gateway", "--port", "18789")
-$managed = New-ProcessFacts 4242 $creation @("node.exe", "C:\openclaw\dist\entry.js", "gateway", "--port", "18789")
+$expected = @("node", "C:\grokbot\dist\entry.js", "gateway", "--port", "18789")
+$managed = New-ProcessFacts 4242 $creation @("node.exe", "C:\grokbot\dist\entry.js", "gateway", "--port", "18789")
 $knownListener = [pscustomobject]@{ Known = $true; Pids = @(4242) }
 
 $script:RestartLogs.Clear()
@@ -736,9 +736,9 @@ Write-Output "OPENCLAW_RESTART_POLICY_OK"
 
       const { scriptPath, content } = await prepareAndReadScript({
         OPENCLAW_PROFILE: "default",
-        OPENCLAW_WINDOWS_TASK_NAME: "OpenClaw Gateway (custom)",
+        OPENCLAW_WINDOWS_TASK_NAME: "GrokBot Gateway (custom)",
       });
-      expect(content).toContain("$taskName = 'OpenClaw Gateway (custom)'");
+      expect(content).toContain("$taskName = 'GrokBot Gateway (custom)'");
       expect(content).toContain("Get-OpenClawScheduledTaskState -TaskName $taskName");
       expect(content).toContain(
         'Invoke-OpenClawSchtasksWithTimeout -Arguments @("/End", "/TN", $taskName) -TimeoutSeconds 10',
@@ -773,7 +773,7 @@ Write-Output "OPENCLAW_RESTART_POLICY_OK"
       const { scriptPath, content } = await prepareAndReadScript({
         OPENCLAW_PROFILE: "production",
       });
-      expect(content).toContain("openclaw-gateway-production.service");
+      expect(content).toContain("grokbot-gateway-production.service");
       await cleanupScript(scriptPath);
     });
 
@@ -784,7 +784,7 @@ Write-Output "OPENCLAW_RESTART_POLICY_OK"
       const { scriptPath, content } = await prepareAndReadScript({
         OPENCLAW_PROFILE: "staging",
       });
-      expect(content).toContain("gui/502/ai.openclaw.staging");
+      expect(content).toContain("gui/502/ai.grokbot.staging");
       await cleanupScript(scriptPath);
     });
 
@@ -794,7 +794,7 @@ Write-Output "OPENCLAW_RESTART_POLICY_OK"
       const { scriptPath, content } = await prepareAndReadScript({
         OPENCLAW_PROFILE: "production",
       });
-      expect(content).toContain("$taskName = 'OpenClaw Gateway (production)'");
+      expect(content).toContain("$taskName = 'GrokBot Gateway (production)'");
       expectWindowsRestartWaitOrdering(content);
       await cleanupScript(scriptPath);
     });
@@ -862,10 +862,10 @@ Write-Output "OPENCLAW_RESTART_POLICY_OK"
 
       const { scriptPath, content } = await prepareAndReadScript({
         HOME: "/Users/testuser",
-        OPENCLAW_LAUNCHD_LABEL: "ai.openclaw.it's-a-test",
+        OPENCLAW_LAUNCHD_LABEL: "ai.grokbot.it's-a-test",
       });
       // The plist path must also shell-escape the label to prevent injection
-      expect(content).toContain("ai.openclaw.it'\\''s-a-test.plist");
+      expect(content).toContain("ai.grokbot.it'\\''s-a-test.plist");
       await cleanupScript(scriptPath);
     });
 

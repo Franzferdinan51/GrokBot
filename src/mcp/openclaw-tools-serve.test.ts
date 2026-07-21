@@ -1,4 +1,4 @@
-// OpenClaw MCP tools tests cover core tool server startup and registration.
+// GrokBot MCP tools tests cover core tool server startup and registration.
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { hashSystemAgentOperation } from "../agents/tools/system-agent-tool.js";
 import {
@@ -9,19 +9,19 @@ import {
   OPENCLAW_TOOLS_MCP_TOOLS_ENV,
   resolveOpenClawToolsMcpSystemAgentSurface,
   resolveOpenClawToolsMcpToolSelection,
-} from "./openclaw-tools-serve-config.js";
+} from "./grokbot-tools-serve-config.js";
 import {
   OPENCLAW_TOOLS_MCP_AGENT_SESSION_KEY_ENV,
   resolveOpenClawToolsForMcp,
   resolveOpenClawToolsMcpAgentSessionKey,
-} from "./openclaw-tools-serve.js";
+} from "./grokbot-tools-serve.js";
 import { createPluginToolsMcpHandlers } from "./plugin-tools-handlers.js";
 
 afterEach(() => {
   vi.unstubAllEnvs();
 });
 
-describe("OpenClaw tools MCP server", () => {
+describe("GrokBot tools MCP server", () => {
   it("exposes cron", async () => {
     const handlers = createPluginToolsMcpHandlers(
       resolveOpenClawToolsForMcp({ agentSessionKey: "agent:worker:main" }),
@@ -45,13 +45,13 @@ describe("OpenClaw tools MCP server", () => {
     ).toBe("agent:worker:main");
   });
 
-  it("serves the ring-zero openclaw tool without an agent session key", async () => {
+  it("serves the ring-zero grokbot tool without an agent session key", async () => {
     const handlers = createPluginToolsMcpHandlers(
-      resolveOpenClawToolsForMcp({ tools: ["openclaw"], systemAgentSurface: "cli" }),
+      resolveOpenClawToolsForMcp({ tools: ["grokbot"], systemAgentSurface: "cli" }),
     );
 
     const listed = await handlers.listTools();
-    expect(listed.tools.map((tool) => tool.name)).toEqual(["openclaw"]);
+    expect(listed.tools.map((tool) => tool.name)).toEqual(["grokbot"]);
   });
 
   it("returns approved CLI MCP mutations to the host instead of applying them", async () => {
@@ -59,11 +59,11 @@ describe("OpenClaw tools MCP server", () => {
     vi.stubEnv(OPENCLAW_TOOLS_MCP_SYSTEM_AGENT_APPROVAL_ARMED_ENV, "1");
     vi.stubEnv(OPENCLAW_TOOLS_MCP_SYSTEM_AGENT_PROPOSAL_ENV, hashSystemAgentOperation(operation));
     const handlers = createPluginToolsMcpHandlers(
-      resolveOpenClawToolsForMcp({ tools: ["openclaw"], systemAgentSurface: "cli" }),
+      resolveOpenClawToolsForMcp({ tools: ["grokbot"], systemAgentSurface: "cli" }),
     );
 
     const result = await handlers.callTool({
-      name: "openclaw",
+      name: "grokbot",
       arguments: {
         action: "config_set",
         path: "gateway.port",
@@ -79,15 +79,15 @@ describe("OpenClaw tools MCP server", () => {
     expect(resolveOpenClawToolsMcpToolSelection({})).toEqual(["cron"]);
     expect(
       resolveOpenClawToolsMcpToolSelection({
-        [OPENCLAW_TOOLS_MCP_TOOLS_ENV]: " openclaw , cron ",
+        [OPENCLAW_TOOLS_MCP_TOOLS_ENV]: " grokbot , cron ",
       }),
-    ).toEqual(["openclaw", "cron"]);
+    ).toEqual(["grokbot", "cron"]);
     expect(() =>
       resolveOpenClawToolsMcpToolSelection({ [OPENCLAW_TOOLS_MCP_TOOLS_ENV]: "exec" }),
     ).toThrow(OPENCLAW_TOOLS_MCP_TOOLS_ENV);
   });
 
-  it("parses the openclaw surface from env and defaults to cli", () => {
+  it("parses the grokbot surface from env and defaults to cli", () => {
     expect(resolveOpenClawToolsMcpSystemAgentSurface({})).toBe("cli");
     expect(
       resolveOpenClawToolsMcpSystemAgentSurface({
@@ -101,19 +101,19 @@ describe("OpenClaw tools MCP server", () => {
     ).toThrow(OPENCLAW_TOOLS_MCP_SYSTEM_AGENT_SURFACE_ENV);
   });
 
-  it("builds a openclaw-only stdio server config under the openclaw name", () => {
+  it("builds a grokbot-only stdio server config under the grokbot name", () => {
     const config = buildSystemAgentToolsMcpServerConfig({ surface: "gateway" });
 
-    expect(Object.keys(config.mcpServers)).toEqual(["openclaw"]);
-    const server = config.mcpServers.openclaw as {
+    expect(Object.keys(config.mcpServers)).toEqual(["grokbot"]);
+    const server = config.mcpServers.grokbot as {
       command?: string;
       args?: string[];
       env?: Record<string, string>;
     };
     expect(server.command).toBe(process.execPath);
-    expect(server.args?.at(-1)).toMatch(/openclaw-tools-serve\.(js|ts)$/);
+    expect(server.args?.at(-1)).toMatch(/grokbot-tools-serve\.(js|ts)$/);
     expect(server.env).toEqual({
-      [OPENCLAW_TOOLS_MCP_TOOLS_ENV]: "openclaw",
+      [OPENCLAW_TOOLS_MCP_TOOLS_ENV]: "grokbot",
       [OPENCLAW_TOOLS_MCP_SYSTEM_AGENT_SURFACE_ENV]: "gateway",
     });
   });

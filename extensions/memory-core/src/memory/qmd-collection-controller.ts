@@ -1,9 +1,9 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
-import { createSubsystemLogger } from "openclaw/plugin-sdk/memory-core-host-engine-foundation";
-import type { ResolvedQmdConfig } from "openclaw/plugin-sdk/memory-core-host-engine-storage";
-import type { PluginStateLeaseContext } from "openclaw/plugin-sdk/plugin-state-runtime";
+import { formatErrorMessage } from "grokbot/plugin-sdk/error-runtime";
+import { createSubsystemLogger } from "grokbot/plugin-sdk/memory-core-host-engine-foundation";
+import type { ResolvedQmdConfig } from "grokbot/plugin-sdk/memory-core-host-engine-storage";
+import type { PluginStateLeaseContext } from "grokbot/plugin-sdk/plugin-state-runtime";
 import {
   canMigrateLegacyQmdCollection,
   deriveLegacyQmdCollectionName,

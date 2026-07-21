@@ -178,11 +178,11 @@ function ensureOpenClawExtensionAlias(params) {
     repoRoot: params.repoRoot,
     pluginSdkDir,
   });
-  const aliasDir = path.join(params.distExtensionsRoot, "node_modules", "openclaw");
+  const aliasDir = path.join(params.distExtensionsRoot, "node_modules", "grokbot");
   const pluginSdkAliasPath = path.join(aliasDir, "plugin-sdk");
   fs.mkdirSync(aliasDir, { recursive: true });
   writeJsonFile(path.join(aliasDir, "package.json"), {
-    name: "openclaw",
+    name: "grokbot",
     type: "module",
     exports: buildRuntimePluginSdkPackageExports(publicDistFileNames),
   });
@@ -222,7 +222,7 @@ function shouldCopyRuntimeFile(relativePath) {
   return (
     isBundledSkillRuntimePath(relativePath) ||
     isPathOrNestedPath(relativePath, "package.json") ||
-    isPathOrNestedPath(relativePath, "openclaw.plugin.json") ||
+    isPathOrNestedPath(relativePath, "grokbot.plugin.json") ||
     isPathOrNestedPath(relativePath, ".codex-plugin/plugin.json") ||
     isPathOrNestedPath(relativePath, ".claude-plugin/plugin.json") ||
     isPathOrNestedPath(relativePath, ".cursor-plugin/plugin.json") ||

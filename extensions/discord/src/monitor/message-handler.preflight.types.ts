@@ -1,9 +1,9 @@
 // Discord type declarations define plugin contracts.
-import type { InboundEventKind } from "openclaw/plugin-sdk/channel-inbound";
-import type { OpenClawConfig, ReplyToMode } from "openclaw/plugin-sdk/config-contracts";
-import type { SessionBindingRecord } from "openclaw/plugin-sdk/conversation-runtime";
-import type { HistoryEntry } from "openclaw/plugin-sdk/reply-history";
-import type { resolveAgentRoute } from "openclaw/plugin-sdk/routing";
+import type { InboundEventKind } from "grokbot/plugin-sdk/channel-inbound";
+import type { OpenClawConfig, ReplyToMode } from "grokbot/plugin-sdk/config-contracts";
+import type { SessionBindingRecord } from "grokbot/plugin-sdk/conversation-runtime";
+import type { HistoryEntry } from "grokbot/plugin-sdk/reply-history";
+import type { resolveAgentRoute } from "grokbot/plugin-sdk/routing";
 import type { ChannelType, Client, User } from "../internal/discord.js";
 import type { DiscordChannelConfigResolved, DiscordGuildEntryResolved } from "./allow-list.js";
 import type { DiscordIngressLifecycle } from "./ingress.js";
@@ -15,14 +15,14 @@ export type { DiscordSenderIdentity } from "./sender-identity.js";
 import type { DiscordThreadChannel } from "./threading.js";
 
 type LoadedConfig = OpenClawConfig;
-export type RuntimeEnv = import("openclaw/plugin-sdk/runtime-env").RuntimeEnv;
+export type RuntimeEnv = import("grokbot/plugin-sdk/runtime-env").RuntimeEnv;
 
 export type DiscordMessageEvent = import("./listeners.js").DiscordMessageEvent;
 
 type DiscordMessagePreflightSharedFields = {
   cfg: LoadedConfig;
   discordConfig: NonNullable<
-    import("openclaw/plugin-sdk/config-contracts").OpenClawConfig["channels"]
+    import("grokbot/plugin-sdk/config-contracts").OpenClawConfig["channels"]
   >["discord"];
   accountId: string;
   token: string;

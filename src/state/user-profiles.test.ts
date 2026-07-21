@@ -2,11 +2,11 @@ import { mkdtempSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { tableExists } from "./openclaw-state-db-schema-helpers.js";
+import { tableExists } from "./grokbot-state-db-schema-helpers.js";
 import {
   closeOpenClawStateDatabaseForTest,
   openOpenClawStateDatabase,
-} from "./openclaw-state-db.js";
+} from "./grokbot-state-db.js";
 import {
   ensureProfileForEmail,
   formatUserProfileAvatarEtag,
@@ -21,8 +21,8 @@ import {
 const statePaths: string[] = [];
 
 function stateOptions() {
-  const directory = mkdtempSync(join(tmpdir(), "openclaw-user-profiles-"));
-  const path = join(directory, "openclaw.sqlite");
+  const directory = mkdtempSync(join(tmpdir(), "grokbot-user-profiles-"));
+  const path = join(directory, "grokbot.sqlite");
   statePaths.push(path);
   return { path };
 }

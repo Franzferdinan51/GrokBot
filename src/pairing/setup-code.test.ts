@@ -853,13 +853,13 @@ describe("pairing setup code", () => {
       },
       config: {
         gateway: {
-          tailscale: { mode: "serve", serviceName: "svc:openclaw" },
+          tailscale: { mode: "serve", serviceName: "svc:grokbot" },
           auth: { mode: "password", password: "secret" },
         },
       } satisfies ResolveSetupConfig,
       expected: {
         authLabel: "password",
-        url: "wss://openclaw.tailnet.ts.net",
+        url: "wss://grokbot.tailnet.ts.net",
         urlSource: "gateway.tailscale.mode=serve",
       },
     },
@@ -904,7 +904,7 @@ describe("pairing setup code", () => {
     await expectResolvedSetupFailureCase({
       config: {
         gateway: {
-          tailscale: { mode: "serve", serviceName: "svc:openclaw" },
+          tailscale: { mode: "serve", serviceName: "svc:grokbot" },
           auth: { mode: "password", password: "secret" },
         },
       } satisfies ResolveSetupConfig,

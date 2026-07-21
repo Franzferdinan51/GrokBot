@@ -1,15 +1,15 @@
 ---
 title: "OpenProse"
 sidebarTitle: "OpenProse"
-summary: "OpenProse is a markdown-first workflow format for multi-agent AI sessions. In OpenClaw it ships as a plugin with a /prose slash command and a skill pack."
+summary: "OpenProse is a markdown-first workflow format for multi-agent AI sessions. In GrokBot it ships as a plugin with a /prose slash command and a skill pack."
 read_when:
   - You want to run or write .prose workflow files
   - You want to enable the OpenProse plugin
-  - You need to understand how OpenProse maps to OpenClaw primitives
+  - You need to understand how OpenProse maps to GrokBot primitives
 ---
 
 OpenProse is a portable, markdown-first workflow format for orchestrating AI
-sessions. In OpenClaw it ships as a plugin that installs an OpenProse skill
+sessions. In GrokBot it ships as a plugin that installs an OpenProse skill
 pack and a `/prose` slash command. Programs live in `.prose` files and can
 spawn multiple sub-agents with explicit control flow.
 
@@ -32,18 +32,18 @@ spawn multiple sub-agents with explicit control flow.
     OpenProse is bundled but disabled by default. Enable it:
 
     ```bash
-    openclaw plugins enable open-prose
+    grokbot plugins enable open-prose
     ```
 
   </Step>
   <Step title="Restart the Gateway">
     ```bash
-    openclaw gateway restart
+    grokbot gateway restart
     ```
   </Step>
   <Step title="Verify">
     ```bash
-    openclaw plugins list | grep prose
+    grokbot plugins list | grep prose
     ```
 
     You should see `open-prose` as enabled. The `/prose` skill command is now
@@ -53,7 +53,7 @@ spawn multiple sub-agents with explicit control flow.
 </Steps>
 
 From a repo checkout you can install the plugin directly:
-`openclaw plugins install ./extensions/open-prose`
+`grokbot plugins install ./extensions/open-prose`
 
 ## Slash command
 
@@ -108,11 +108,11 @@ session "Merge the findings + draft into a final answer."
   context: { findings, draft }
 ```
 
-## OpenClaw runtime mapping
+## GrokBot runtime mapping
 
-OpenProse programs map to OpenClaw primitives:
+OpenProse programs map to GrokBot primitives:
 
-| OpenProse concept         | OpenClaw tool                                   |
+| OpenProse concept         | GrokBot tool                                   |
 | ------------------------- | ----------------------------------------------- |
 | Spawn session / Task tool | `sessions_spawn`                                |
 | File read / write         | `read` / `write`                                |
@@ -180,7 +180,7 @@ User-level persistent agents (shared across projects) live at:
 Treat `.prose` files like code. Review them before running, including remote
 `use` imports. Top-level `/prose run https://...` requests are explicit, but
 transitive remote imports require per-run approval before they are fetched or
-executed. Use OpenClaw tool allowlists and approval gates to control side
+executed. Use GrokBot tool allowlists and approval gates to control side
 effects. For deterministic, approval-gated workflows, compare with
 [Lobster](/tools/lobster).
 
@@ -191,7 +191,7 @@ effects. For deterministic, approval-gated workflows, compare with
     How OpenProse's skill pack loads and what gates apply.
   </Card>
   <Card title="Subagents" href="/tools/subagents" icon="users">
-    OpenClaw's native multi-agent coordination layer.
+    GrokBot's native multi-agent coordination layer.
   </Card>
   <Card title="Text-to-speech" href="/tools/tts" icon="volume-high">
     Add audio output to your workflows.

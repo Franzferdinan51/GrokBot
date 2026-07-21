@@ -4,18 +4,18 @@
 import {
   getCachedLiveProviderModelRows,
   LiveModelCatalogHttpError,
-} from "openclaw/plugin-sdk/provider-catalog-live-runtime";
-import { buildManifestModelProviderConfig } from "openclaw/plugin-sdk/provider-catalog-shared";
-import type { ModelDefinitionConfig } from "openclaw/plugin-sdk/provider-model-shared";
-import { createSubsystemLogger } from "openclaw/plugin-sdk/runtime-env";
-import { ssrfPolicyFromHttpBaseUrlAllowedHostname } from "openclaw/plugin-sdk/ssrf-runtime";
+} from "grokbot/plugin-sdk/provider-catalog-live-runtime";
+import { buildManifestModelProviderConfig } from "grokbot/plugin-sdk/provider-catalog-shared";
+import type { ModelDefinitionConfig } from "grokbot/plugin-sdk/provider-model-shared";
+import { createSubsystemLogger } from "grokbot/plugin-sdk/runtime-env";
+import { ssrfPolicyFromHttpBaseUrlAllowedHostname } from "grokbot/plugin-sdk/ssrf-runtime";
 import {
   asPositiveSafeInteger,
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalString,
-} from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/string-coerce-runtime";
 import { isChutesModelDiscoveryTestEnvironment } from "./model-discovery-env.js";
-import manifest from "./openclaw.plugin.json" with { type: "json" };
+import manifest from "./grokbot.plugin.json" with { type: "json" };
 
 const log = createSubsystemLogger("chutes-models");
 

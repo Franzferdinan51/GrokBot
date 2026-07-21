@@ -1,16 +1,16 @@
 ---
-summary: "Build simple typed agent tools with defineToolPlugin and openclaw plugins init/build/validate"
+summary: "Build simple typed agent tools with defineToolPlugin and grokbot plugins init/build/validate"
 title: "Tool plugins"
 sidebarTitle: "Tool Plugins"
 read_when:
-  - You want to build a simple OpenClaw plugin that only adds agent tools
+  - You want to build a simple GrokBot plugin that only adds agent tools
   - You want to use defineToolPlugin instead of hand-writing plugin manifest metadata
   - You need to scaffold, generate, validate, test, or publish a tool-only plugin
 ---
 
 `defineToolPlugin` builds a plugin that only adds agent-callable tools: no
 channel, model provider, hook, service, or setup backend. It generates the
-manifest metadata OpenClaw needs to discover tools without loading plugin
+manifest metadata GrokBot needs to discover tools without loading plugin
 runtime code.
 
 For provider, channel, hook, service, or mixed-capability plugins, start with
@@ -23,15 +23,15 @@ or [Provider Plugins](/plugins/sdk-provider-plugins) instead.
 - TypeScript ESM package output.
 - `typebox` in `dependencies` (not just `devDependencies` - the generated
   plugin imports it at runtime).
-- `openclaw >=2026.5.17`, the first version that exports
-  `openclaw/plugin-sdk/tool-plugin`.
-- A package root that ships `dist/`, `openclaw.plugin.json`, and
+- `grokbot >=2026.5.17`, the first version that exports
+  `grokbot/plugin-sdk/tool-plugin`.
+- A package root that ships `dist/`, `grokbot.plugin.json`, and
   `package.json`.
 
 ## Quickstart
 
 ```bash
-openclaw plugins init stock-quotes --name "Stock Quotes"
+grokbot plugins init stock-quotes --name "Stock Quotes"
 cd stock-quotes
 npm install
 npm run plugin:build
@@ -47,19 +47,19 @@ npm test
 | `src/index.test.ts`    | Metadata test asserting the tool list                             |
 | `tsconfig.json`        | NodeNext TypeScript output to `dist/`                             |
 | `vitest.config.ts`     | Vitest config for `src/**/*.test.ts`                              |
-| `package.json`         | Scripts, runtime deps, `openclaw.extensions: ["./dist/index.js"]` |
-| `openclaw.plugin.json` | Generated manifest metadata for the initial tool                  |
+| `package.json`         | Scripts, runtime deps, `grokbot.extensions: ["./dist/index.js"]` |
+| `grokbot.plugin.json` | Generated manifest metadata for the initial tool                  |
 
 `npm run plugin:build` runs `npm run build` (tsc) then
-`openclaw plugins build --entry ./dist/index.js`. `npm run plugin:validate`
-rebuilds and runs `openclaw plugins validate --entry ./dist/index.js`.
+`grokbot plugins build --entry ./dist/index.js`. `npm run plugin:validate`
+rebuilds and runs `grokbot plugins validate --entry ./dist/index.js`.
 Successful validation prints:
 
 ```text
 Plugin stock-quotes is valid.
 ```
 
-`openclaw plugins init <id>` options:
+`grokbot plugins init <id>` options:
 
 | Flag                 | Default            | Effect                                 |
 | -------------------- | ------------------ | -------------------------------------- |
@@ -76,7 +76,7 @@ TypeBox schemas.
 
 ```typescript
 import { Type } from "typebox";
-import { defineToolPlugin } from "openclaw/plugin-sdk/tool-plugin";
+import { defineToolPlugin } from "grokbot/plugin-sdk/tool-plugin";
 
 export default defineToolPlugin({
   id: "stock-quotes",
@@ -121,8 +121,8 @@ specific enough to avoid collisions with core tools or other plugins.
 ## Optional and factory tools
 
 Set `optional: true` when users should explicitly allowlist the tool before it
-is sent to a model. `openclaw plugins build` writes the matching
-`toolMetadata.<tool>.optional` manifest entry, so OpenClaw can see that the
+is sent to a model. `grokbot plugins build` writes the matching
+`toolMetadata.<tool>.optional` manifest entry, so GrokBot can see that the
 tool is optional without loading plugin runtime code.
 
 ```typescript
@@ -161,12 +161,12 @@ with hooks, services, providers, or commands.
 
 ## Return values
 
-`defineToolPlugin` wraps plain return values into the OpenClaw tool-result
+`defineToolPlugin` wraps plain return values into the GrokBot tool-result
 format:
 
 - Return a string when the model should see that exact text.
 - Return a JSON-compatible value when you want the model to see formatted JSON
-  and OpenClaw to keep the original value in `details`.
+  and GrokBot to keep the original value in `details`.
 
 ```typescript
 tool({
@@ -226,7 +226,7 @@ schema into a bounded TypeScript-style output hint. That lets a model call and
 transform a known result in one program instead of spending another model turn
 observing its shape.
 
-OpenClaw compiles the schema before executing a catalog call, then validates the
+GrokBot compiles the schema before executing a catalog call, then validates the
 final `details` value after tool hooks before returning it through the bridge.
 An invalid schema cannot run the tool; a result mismatch fails the completed
 call. Include every non-throwing result variant, including structured error
@@ -243,7 +243,7 @@ output schema because it could drift from the runtime tool.
 
 ## Configuration
 
-`configSchema` is optional. Omit it and OpenClaw applies a strict empty object
+`configSchema` is optional. Omit it and GrokBot applies a strict empty object
 schema; the generated manifest still includes `configSchema`.
 
 ```typescript
@@ -278,21 +278,21 @@ export default defineToolPlugin({
 });
 ```
 
-OpenClaw reads plugin config from the plugin's entry in the Gateway config. Do
+GrokBot reads plugin config from the plugin's entry in the Gateway config. Do
 not hard-code secrets in source or docs examples; use config, environment
 variables, or SecretRefs per the plugin's security model.
 
 ## Generated metadata
 
-OpenClaw must read the plugin manifest before importing plugin runtime code.
+GrokBot must read the plugin manifest before importing plugin runtime code.
 `defineToolPlugin` exposes static metadata for this, and
-`openclaw plugins build` writes it into the package. Rerun the generator after
+`grokbot plugins build` writes it into the package. Rerun the generator after
 changing plugin id, name, description, config schema, activation, or tool
 names:
 
 ```bash
 npm run build
-openclaw plugins build --entry ./dist/index.js
+grokbot plugins build --entry ./dist/index.js
 ```
 
 Generated manifest for a one-tool plugin:
@@ -317,27 +317,27 @@ Generated manifest for a one-tool plugin:
 }
 ```
 
-`contracts.tools` is the important discovery contract: it tells OpenClaw which
+`contracts.tools` is the important discovery contract: it tells GrokBot which
 plugin owns each tool without loading every installed plugin's runtime. A
 stale manifest means a tool can go missing from discovery, or a registration
 error gets blamed on the wrong plugin.
 
 ## Package metadata
 
-`openclaw plugins build` also aligns `package.json` to the selected runtime
+`grokbot plugins build` also aligns `package.json` to the selected runtime
 entry:
 
 ```json
 {
   "type": "module",
-  "files": ["dist", "openclaw.plugin.json", "README.md"],
+  "files": ["dist", "grokbot.plugin.json", "README.md"],
   "dependencies": {
     "typebox": "^1.1.38"
   },
   "peerDependencies": {
-    "openclaw": ">=2026.5.17"
+    "grokbot": ">=2026.5.17"
   },
-  "openclaw": {
+  "grokbot": {
     "extensions": ["./dist/index.js"]
   }
 }
@@ -353,34 +353,34 @@ is stale:
 
 ```bash
 npm run build
-openclaw plugins build --entry ./dist/index.js --check
-openclaw plugins validate --entry ./dist/index.js
+grokbot plugins build --entry ./dist/index.js --check
+grokbot plugins validate --entry ./dist/index.js
 npm test
 ```
 
 `plugins validate` checks that:
 
-- `openclaw.plugin.json` exists and passes the normal manifest loader.
+- `grokbot.plugin.json` exists and passes the normal manifest loader.
 - The current entry exports `defineToolPlugin` metadata.
 - Generated manifest fields match the entry metadata.
 - `contracts.tools` matches the declared tool names.
-- `package.json` points `openclaw.extensions` at the selected runtime entry.
+- `package.json` points `grokbot.extensions` at the selected runtime entry.
 
 ## Install and inspect locally
 
-From a separate OpenClaw checkout or installed CLI, install the package path:
+From a separate GrokBot checkout or installed CLI, install the package path:
 
 ```bash
-openclaw plugins install ./stock-quotes
-openclaw plugins inspect stock-quotes --runtime
+grokbot plugins install ./stock-quotes
+grokbot plugins inspect stock-quotes --runtime
 ```
 
 For a packaged smoke test, pack first and install the tarball:
 
 ```bash
 npm pack
-openclaw plugins install npm-pack:./openclaw-plugin-stock-quotes-0.1.0.tgz
-openclaw plugins inspect stock-quotes --runtime --json
+grokbot plugins install npm-pack:./grokbot-plugin-stock-quotes-0.1.0.tgz
+grokbot plugins inspect stock-quotes --runtime --json
 ```
 
 After installing, restart or reload the Gateway and ask the agent to use the
@@ -401,11 +401,11 @@ clawhub package publish ./stock-quotes
 Install with an explicit ClawHub locator:
 
 ```bash
-openclaw plugins install clawhub:your-org/stock-quotes
+grokbot plugins install clawhub:your-org/stock-quotes
 ```
 
 Bare npm package specs still install from npm during the launch cutover, but
-ClawHub is the preferred discovery and distribution surface for OpenClaw
+ClawHub is the preferred discovery and distribution surface for GrokBot
 plugins. See [ClawHub publishing](/clawhub/publishing) for owner scope and
 release review.
 
@@ -414,8 +414,8 @@ release review.
 ### `plugin entry not found: ./dist/index.js`
 
 The selected entry file does not exist. Run `npm run build`, then rerun
-`openclaw plugins build --entry ./dist/index.js` or
-`openclaw plugins validate --entry ./dist/index.js`.
+`grokbot plugins build --entry ./dist/index.js` or
+`grokbot plugins validate --entry ./dist/index.js`.
 
 ### `plugin entry does not expose defineToolPlugin metadata`
 
@@ -423,21 +423,21 @@ The entry did not export a value created by `defineToolPlugin`. Confirm the
 module's default export is the `defineToolPlugin(...)` result, or pass the
 correct entry with `--entry`.
 
-### `openclaw.plugin.json generated metadata is stale`
+### `grokbot.plugin.json generated metadata is stale`
 
 The manifest no longer matches the entry metadata. Run:
 
 ```bash
 npm run build
-openclaw plugins build --entry ./dist/index.js
+grokbot plugins build --entry ./dist/index.js
 ```
 
-Commit both `openclaw.plugin.json` and `package.json` changes.
+Commit both `grokbot.plugin.json` and `package.json` changes.
 
-### `package.json openclaw.extensions must include ./dist/index.js`
+### `package.json grokbot.extensions must include ./dist/index.js`
 
 The package metadata points at a different runtime entry. Run
-`openclaw plugins build --entry ./dist/index.js` so the generator aligns
+`grokbot plugins build --entry ./dist/index.js` so the generator aligns
 package metadata with the entry you intend to ship.
 
 ### `Cannot find package 'typebox'`
@@ -449,10 +449,10 @@ reinstall, rebuild, and rerun validation.
 
 Check these in order:
 
-1. `openclaw plugins inspect <plugin-id> --runtime`
-2. `openclaw plugins validate --root <plugin-root> --entry ./dist/index.js`
-3. `openclaw.plugin.json` has `contracts.tools` with the expected tool names.
-4. `package.json` has `openclaw.extensions: ["./dist/index.js"]`.
+1. `grokbot plugins inspect <plugin-id> --runtime`
+2. `grokbot plugins validate --root <plugin-root> --entry ./dist/index.js`
+3. `grokbot.plugin.json` has `contracts.tools` with the expected tool names.
+4. `package.json` has `grokbot.extensions: ["./dist/index.js"]`.
 5. The Gateway was restarted or reloaded after installing the plugin.
 
 ## See also

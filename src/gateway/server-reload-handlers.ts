@@ -24,7 +24,7 @@ import {
   getRuntimeConfigSourceSnapshot,
   setRuntimeConfigAppliedHash,
 } from "../config/config.js";
-import type { ConfigFileSnapshot, OpenClawConfig } from "../config/types.openclaw.js";
+import type { ConfigFileSnapshot, OpenClawConfig } from "../config/types.grokbot.js";
 import { isSecretRef } from "../config/types.secrets.js";
 import { isTruthyEnvValue } from "../infra/env.js";
 import { formatErrorMessage } from "../infra/errors.js";

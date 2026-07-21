@@ -1,9 +1,9 @@
-import type { LlmRuntime } from "@openclaw/ai";
-import { defaultLlmRuntime, getApiProvider } from "@openclaw/ai/internal/runtime";
-import { SYSTEM_PROMPT_CACHE_BOUNDARY } from "@openclaw/ai/internal/shared";
+import type { LlmRuntime } from "@grokbot/ai";
+import { defaultLlmRuntime, getApiProvider } from "@grokbot/ai/internal/runtime";
+import { SYSTEM_PROMPT_CACHE_BOUNDARY } from "@grokbot/ai/internal/shared";
 // Stream resolution tests cover how embedded runs choose provider, boundary,
 // native Codex, or custom stream functions and pass auth/cache/signal options.
-import type { StreamFn } from "openclaw/plugin-sdk/agent-core";
+import type { StreamFn } from "grokbot/plugin-sdk/agent-core";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { bindStreamLlmRuntime } from "../../llm/model-runtime-binding.js";
 import { streamSimple } from "../../llm/stream.js";
@@ -136,7 +136,7 @@ describe("describeEmbeddedAgentStreamStrategy", () => {
     ).toBe("boundary-aware:openai-responses");
   });
 
-  it("describes default Codex fallback as OpenClaw native", () => {
+  it("describes default Codex fallback as GrokBot native", () => {
     expect(
       describeEmbeddedAgentStreamStrategy({
         currentStreamFn: undefined,
@@ -146,7 +146,7 @@ describe("describeEmbeddedAgentStreamStrategy", () => {
           id: "codex-mini-latest",
         } as never,
       }),
-    ).toBe("openclaw-native-codex-responses");
+    ).toBe("grokbot-native-codex-responses");
   });
 
   it("keeps custom session streams labeled as custom", () => {
@@ -240,8 +240,8 @@ describe("resolveEmbeddedAgentStreamFn", () => {
     expect(streamFn).not.toBe(streamSimple);
   });
 
-  it("routes Codex responses fallbacks through OpenClaw native transport", async () => {
-    // Codex OAuth models use the OpenClaw native transport, with prompt-cache
+  it("routes Codex responses fallbacks through GrokBot native transport", async () => {
+    // Codex OAuth models use the GrokBot native transport, with prompt-cache
     // markers stripped before the harness sees system prompt text.
     const nativeStreamFn = vi.fn(async (_model, context, options) => ({ context, options }));
     useNativeStreamFn(nativeStreamFn as never);
@@ -324,7 +324,7 @@ describe("resolveEmbeddedAgentStreamFn", () => {
     expect(innerStreamFn).toHaveBeenCalledTimes(2);
   });
 
-  it("routes OpenClaw native OpenAI-compatible provider streams through boundary-aware transports", async () => {
+  it("routes GrokBot native OpenAI-compatible provider streams through boundary-aware transports", async () => {
     const nativeStreamFn = getApiProvider("openai-completions")?.streamSimple;
     if (!nativeStreamFn) {
       throw new Error("expected native OpenAI-compatible stream function");
@@ -536,7 +536,7 @@ describe("resolveEmbeddedAgentStreamFn", () => {
     expect(result.signal).toBe(explicitSignal);
   });
 
-  it("injects the resolved run api key into the OpenClaw native Codex Responses fallback", async () => {
+  it("injects the resolved run api key into the GrokBot native Codex Responses fallback", async () => {
     const nativeStreamFn = vi.fn(async (_model, _context, options) => options);
     useNativeStreamFn(nativeStreamFn as never);
     const streamFn = resolveEmbeddedAgentStreamFn({
@@ -558,7 +558,7 @@ describe("resolveEmbeddedAgentStreamFn", () => {
     expect(nativeStreamFn).toHaveBeenCalledTimes(1);
   });
 
-  it("falls back to authStorage when no resolved api key is available for OpenClaw native fallback", async () => {
+  it("falls back to authStorage when no resolved api key is available for GrokBot native fallback", async () => {
     const nativeStreamFn = vi.fn(async (_model, _context, options) => options);
     const authStorage = {
       getApiKey: vi.fn(async () => "stored-bearer-token"),
@@ -583,7 +583,7 @@ describe("resolveEmbeddedAgentStreamFn", () => {
     expect(authStorage.getApiKey).toHaveBeenCalledWith("openai");
   });
 
-  it("forwards the run abort signal into the OpenClaw native fallback when callers omit one", async () => {
+  it("forwards the run abort signal into the GrokBot native fallback when callers omit one", async () => {
     const nativeStreamFn = vi.fn(async (_model, _context, options) => options);
     const runSignal = new AbortController().signal;
     useNativeStreamFn(nativeStreamFn as never);
@@ -607,7 +607,7 @@ describe("resolveEmbeddedAgentStreamFn", () => {
     expect(result.apiKey).toBe("oauth-bearer-token");
   });
 
-  it("does not overwrite an explicit signal on the OpenClaw native fallback path", async () => {
+  it("does not overwrite an explicit signal on the GrokBot native fallback path", async () => {
     const nativeStreamFn = vi.fn(async (_model, _context, options) => options);
     const runSignal = new AbortController().signal;
     const explicitSignal = new AbortController().signal;
@@ -633,7 +633,7 @@ describe("resolveEmbeddedAgentStreamFn", () => {
     expect(result.signal).toBe(explicitSignal);
   });
 
-  it("forwards the run signal on the sync OpenClaw native fallback path without auth credentials", async () => {
+  it("forwards the run signal on the sync GrokBot native fallback path without auth credentials", async () => {
     const nativeStreamFn = vi.fn(async (_model, _context, options) => options);
     const runSignal = new AbortController().signal;
     useNativeStreamFn(nativeStreamFn as never);
@@ -655,7 +655,7 @@ describe("resolveEmbeddedAgentStreamFn", () => {
     expect(result.signal).toBe(runSignal);
   });
 
-  it("strips cache boundary markers on the OpenClaw native fallback path", async () => {
+  it("strips cache boundary markers on the GrokBot native fallback path", async () => {
     const nativeStreamFn = vi.fn(async (_model, context, _options) => context);
     useNativeStreamFn(nativeStreamFn as never);
     const streamFn = resolveEmbeddedAgentStreamFn({

@@ -36,7 +36,7 @@ live vendor pages for [Kimi K3](https://platform.kimi.ai/docs/pricing/chat-k3),
 [Kimi K2.5](https://platform.kimi.ai/docs/pricing/chat-k25) before making cost
 decisions.
 
-Kimi K3 always reasons at `reasoning_effort: "max"`. OpenClaw exposes only
+Kimi K3 always reasons at `reasoning_effort: "max"`. GrokBot exposes only
 `/think max`, omits the K2-only `thinking` field, and removes sampling
 overrides (`temperature`, `top_p`, `n`, `presence_penalty`, and
 `frequency_penalty`) that K3 fixes to provider defaults. Kimi K2.7 Code also
@@ -57,8 +57,8 @@ onboarding.
     <Steps>
       <Step title="Install the plugin">
         ```bash
-        openclaw plugins install @openclaw/moonshot-provider
-        openclaw gateway restart
+        grokbot plugins install @grokbot/moonshot-provider
+        grokbot gateway restart
         ```
       </Step>
       <Step title="Choose your endpoint region">
@@ -69,13 +69,13 @@ onboarding.
       </Step>
       <Step title="Run onboarding">
         ```bash
-        openclaw onboard --auth-choice moonshot-api-key
+        grokbot onboard --auth-choice moonshot-api-key
         ```
 
         Or for the China endpoint:
 
         ```bash
-        openclaw onboard --auth-choice moonshot-api-key-cn
+        grokbot onboard --auth-choice moonshot-api-key-cn
         ```
       </Step>
       <Step title="Set Kimi K3 as the default model">
@@ -83,12 +83,12 @@ onboarding.
         when you want Kimi K3:
 
         ```bash
-        openclaw models set moonshot/kimi-k3
+        grokbot models set moonshot/kimi-k3
         ```
       </Step>
       <Step title="Verify models are available">
         ```bash
-        openclaw models list --provider moonshot
+        grokbot models list --provider moonshot
         ```
       </Step>
       <Step title="Run a live smoke test">
@@ -96,9 +96,9 @@ onboarding.
         tracking without touching your normal sessions:
 
         ```bash
-        OPENCLAW_CONFIG_PATH=/tmp/openclaw-kimi/openclaw.json \
-        OPENCLAW_STATE_DIR=/tmp/openclaw-kimi \
-        openclaw agent --local \
+        OPENCLAW_CONFIG_PATH=/tmp/grokbot-kimi/grokbot.json \
+        OPENCLAW_STATE_DIR=/tmp/grokbot-kimi \
+        grokbot agent --local \
           --session-id live-kimi-cost \
           --message 'Reply exactly: KIMI_LIVE_OK' \
           --thinking max \
@@ -225,13 +225,13 @@ onboarding.
     <Steps>
       <Step title="Install the plugin">
         ```bash
-        openclaw plugins install @openclaw/kimi-provider
-        openclaw gateway restart
+        grokbot plugins install @grokbot/kimi-provider
+        grokbot gateway restart
         ```
       </Step>
       <Step title="Run onboarding">
         ```bash
-        openclaw onboard --auth-choice kimi-code-api-key
+        grokbot onboard --auth-choice kimi-code-api-key
         ```
       </Step>
       <Step title="Set a default model">
@@ -247,7 +247,7 @@ onboarding.
       </Step>
       <Step title="Verify the model is available">
         ```bash
-        openclaw models list --provider kimi
+        grokbot models list --provider kimi
         ```
       </Step>
     </Steps>
@@ -286,7 +286,7 @@ The Moonshot plugin also registers **Kimi** as a `web_search` provider, backed b
 <Steps>
   <Step title="Run interactive web search setup">
     ```bash
-    openclaw configure --section web
+    grokbot configure --section web
     ```
 
     Choose **Kimi** in the web-search section to store
@@ -335,7 +335,7 @@ Config lives under `plugins.entries.moonshot.config.webSearch`:
 
 <AccordionGroup>
   <Accordion title="Native thinking mode">
-    Moonshot API Kimi K3 always reasons at maximum effort. OpenClaw exposes only
+    Moonshot API Kimi K3 always reasons at maximum effort. GrokBot exposes only
     `/think max`, sends `reasoning_effort: "max"`, and ignores stale lower or
     `off` settings.
 
@@ -344,14 +344,14 @@ Config lives under `plugins.entries.moonshot.config.webSearch`:
     `output_config.effort: "max"` for max. This applies to both `kimi/k3` and
     `kimi/k3[1m]`.
     Moonshot API K3 supports `auto`, `none`, `required`, and pinned tool choices,
-    so OpenClaw preserves the requested `tool_choice`. For multi-turn tool use,
-    OpenClaw preserves the assistant reasoning content required by Moonshot's
+    so GrokBot preserves the requested `tool_choice`. For multi-turn tool use,
+    GrokBot preserves the assistant reasoning content required by Moonshot's
     replay contract.
 
     Kimi K2.7 Code always uses native thinking. Moonshot requires clients to
-    omit the `thinking` field for this model, so OpenClaw exposes only `on` and
+    omit the `thinking` field for this model, so GrokBot exposes only `on` and
     ignores stale `off` settings. K2.7 also fixes `temperature`, `top_p`, `n`,
-    `presence_penalty`, and `frequency_penalty`; OpenClaw omits configured
+    `presence_penalty`, and `frequency_penalty`; GrokBot omits configured
     overrides for those fields.
 
     Other Moonshot Kimi models support binary native thinking:
@@ -377,7 +377,7 @@ Config lives under `plugins.entries.moonshot.config.webSearch`:
     }
     ```
 
-    OpenClaw maps runtime `/think` levels for those models:
+    GrokBot maps runtime `/think` levels for those models:
 
     | `/think` level       | Moonshot behavior          |
     | -------------------- | -------------------------- |
@@ -391,9 +391,9 @@ Config lives under `plugins.entries.moonshot.config.webSearch`:
     Kimi K2.6 also accepts an optional `thinking.keep` field that controls
     multi-turn retention of `reasoning_content`. Set it to `"all"` to keep full
     reasoning across turns; omit it (or leave it `null`) to use the server
-    default strategy. OpenClaw only forwards `thinking.keep` for
+    default strategy. GrokBot only forwards `thinking.keep` for
     `moonshot/kimi-k2.6` and strips it from other models. Kimi K2.7 Code
-    preserves full reasoning history by default while OpenClaw omits the entire
+    preserves full reasoning history by default while GrokBot omits the entire
     `thinking` field.
 
     ```json5
@@ -415,13 +415,13 @@ Config lives under `plugins.entries.moonshot.config.webSearch`:
   </Accordion>
 
   <Accordion title="Tool call id sanitization">
-    Moonshot Kimi serves native tool_call ids shaped like `functions.<name>:<index>`. OpenClaw preserves the first occurrence of each native Kimi id and rewrites later duplicates to deterministic OpenAI-style `call_*` ids. Matching tool results are remapped with the same id so replay remains unique without stripping Kimi's first native id. This behavior is wired into the bundled Moonshot provider and is not a user-configurable setting.
+    Moonshot Kimi serves native tool_call ids shaped like `functions.<name>:<index>`. GrokBot preserves the first occurrence of each native Kimi id and rewrites later duplicates to deterministic OpenAI-style `call_*` ids. Matching tool results are remapped with the same id so replay remains unique without stripping Kimi's first native id. This behavior is wired into the bundled Moonshot provider and is not a user-configurable setting.
   </Accordion>
 
   <Accordion title="Streaming usage compatibility">
     Native Moonshot endpoints (`https://api.moonshot.ai/v1` and
     `https://api.moonshot.cn/v1`) advertise streaming usage compatibility.
-    OpenClaw keys this off the endpoint host, not the provider id, so a custom
+    GrokBot keys this off the endpoint host, not the provider id, so a custom
     provider id pointed at the same native Moonshot host inherits the same
     streaming-usage behavior.
 

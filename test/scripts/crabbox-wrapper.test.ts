@@ -44,7 +44,7 @@ function makeFakeCrabbox(helpText: string): string {
   if (cached) {
     return cached;
   }
-  const binDir = mkdtempSync(path.join(tmpdir(), "openclaw-fake-crabbox-"));
+  const binDir = mkdtempSync(path.join(tmpdir(), "grokbot-fake-crabbox-"));
   tempDirs.push(binDir);
   writeFakeCrabbox(binDir, helpText);
   fakeCrabboxBinDirs.set(helpText, binDir);
@@ -177,7 +177,7 @@ function writeFakeCrabbox(binDir: string, helpText: string): string {
       'if [ -n "${OPENCLAW_FAKE_CRABBOX_EXPECT_CHANGED_GATE_BUNDLE+x}" ]; then',
       '  expected_bundle="$(mktemp)" || exit 67',
       '  printf "%s" "$OPENCLAW_FAKE_CRABBOX_EXPECT_CHANGED_GATE_BUNDLE" > "$expected_bundle"',
-      '  if [ ! -f .openclaw-crabbox-changed-gate.bundle ] || ! cmp -s .openclaw-crabbox-changed-gate.bundle "$expected_bundle"; then',
+      '  if [ ! -f .grokbot-crabbox-changed-gate.bundle ] || ! cmp -s .grokbot-crabbox-changed-gate.bundle "$expected_bundle"; then',
       '    rm -f "$expected_bundle"',
       '    printf "%s\\n" "changed-gate bundle mismatch" >&2',
       "    exit 67",
@@ -185,7 +185,7 @@ function writeFakeCrabbox(binDir: string, helpText: string): string {
       '  rm -f "$expected_bundle"',
       "fi",
       'if [ -n "${OPENCLAW_FAKE_CRABBOX_EXPECT_CHANGED_GATE_BUNDLE_BYTES:-}" ]; then',
-      '  actual_bundle_bytes="$(wc -c < .openclaw-crabbox-changed-gate.bundle 2>/dev/null | tr -d " ")"',
+      '  actual_bundle_bytes="$(wc -c < .grokbot-crabbox-changed-gate.bundle 2>/dev/null | tr -d " ")"',
       '  if [ "$actual_bundle_bytes" != "$OPENCLAW_FAKE_CRABBOX_EXPECT_CHANGED_GATE_BUNDLE_BYTES" ]; then',
       '    printf "%s\\n" "changed-gate bundle size mismatch" >&2',
       "    exit 67",
@@ -238,12 +238,12 @@ function writeFakeCrabbox(binDir: string, helpText: string): string {
     "  require('node:fs').writeFileSync('.crabbox/runs/run_fake/fake-artifacts.tgz', 'fake artifact\\n');",
     "}",
     "if (Object.hasOwn(process.env, 'OPENCLAW_FAKE_CRABBOX_EXPECT_CHANGED_GATE_BUNDLE')) {",
-    "  const bundlePath = '.openclaw-crabbox-changed-gate.bundle';",
+    "  const bundlePath = '.grokbot-crabbox-changed-gate.bundle';",
     "  const bundle = require('node:fs').existsSync(bundlePath) ? require('node:fs').readFileSync(bundlePath, 'utf8') : null;",
     "  if (bundle !== process.env.OPENCLAW_FAKE_CRABBOX_EXPECT_CHANGED_GATE_BUNDLE) { process.stderr.write('changed-gate bundle mismatch\\n'); process.exit(67); }",
     "}",
     "if (process.env.OPENCLAW_FAKE_CRABBOX_EXPECT_CHANGED_GATE_BUNDLE_BYTES) {",
-    "  const bundlePath = '.openclaw-crabbox-changed-gate.bundle';",
+    "  const bundlePath = '.grokbot-crabbox-changed-gate.bundle';",
     "  const size = require('node:fs').existsSync(bundlePath) ? require('node:fs').statSync(bundlePath).size : -1;",
     "  if (size !== Number(process.env.OPENCLAW_FAKE_CRABBOX_EXPECT_CHANGED_GATE_BUNDLE_BYTES)) { process.stderr.write('changed-gate bundle size mismatch\\n'); process.exit(67); }",
     "}",
@@ -277,7 +277,7 @@ function writeFakeCrabbox(binDir: string, helpText: string): string {
 }
 
 function makeSlowVersionCrabbox(helpText: string): string {
-  const binDir = mkdtempSync(path.join(tmpdir(), "openclaw-slow-crabbox-"));
+  const binDir = mkdtempSync(path.join(tmpdir(), "grokbot-slow-crabbox-"));
   tempDirs.push(binDir);
   const crabboxPath = path.join(binDir, "crabbox");
 
@@ -297,7 +297,7 @@ function makeSlowVersionCrabbox(helpText: string): string {
 // 0.36, renders the provider help to stderr. Used to prove the wrapper retries a
 // cold/slow metadata probe instead of hard-failing.
 function makeSlowHelpCrabbox(helpText: string, delayMs: number): string {
-  const binDir = mkdtempSync(path.join(tmpdir(), "openclaw-slow-help-crabbox-"));
+  const binDir = mkdtempSync(path.join(tmpdir(), "grokbot-slow-help-crabbox-"));
   tempDirs.push(binDir);
   const crabboxPath = path.join(binDir, "crabbox");
 
@@ -323,7 +323,7 @@ function testTimingPreload(options: { clockScale?: number; spawnTimeoutMs?: numb
   const key = JSON.stringify(options);
   let preloadPath = timingPreloads.get(key);
   if (!preloadPath) {
-    const dir = mkdtempSync(path.join(tmpdir(), "openclaw-crabbox-timing-"));
+    const dir = mkdtempSync(path.join(tmpdir(), "grokbot-crabbox-timing-"));
     tempDirs.push(dir);
     preloadPath = path.join(dir, "preload.cjs");
     const script: string[] = [];
@@ -386,7 +386,7 @@ function makeFakeGit(
   if (cached) {
     return cached;
   }
-  const binDir = mkdtempSync(path.join(tmpdir(), "openclaw-fake-git-"));
+  const binDir = mkdtempSync(path.join(tmpdir(), "grokbot-fake-git-"));
   tempDirs.push(binDir);
   const gitPath = path.join(binDir, "git");
   if (process.platform !== "win32") {
@@ -395,7 +395,7 @@ function makeFakeGit(
       'if [ "$1" = "worktree" ] && [ "$2" = "add" ]; then',
       '  mkdir -p "$4"',
       '  if [ -n "${OPENCLAW_FAKE_GIT_CHANGED_GATE_BUNDLE_SYMLINK_TARGET:-}" ]; then',
-      '    ln -s "$OPENCLAW_FAKE_GIT_CHANGED_GATE_BUNDLE_SYMLINK_TARGET" "$4/.openclaw-crabbox-changed-gate.bundle"',
+      '    ln -s "$OPENCLAW_FAKE_GIT_CHANGED_GATE_BUNDLE_SYMLINK_TARGET" "$4/.grokbot-crabbox-changed-gate.bundle"',
       "  fi",
       "  exit 0",
       "fi",
@@ -477,7 +477,7 @@ function makeFakeGit(
     "const fs = require('node:fs');",
     "const responses = new Map(Object.entries(JSON.parse(process.env.OPENCLAW_FAKE_GIT_RESPONSES || '{}')));",
     "const args = process.argv.slice(2);",
-    "if (args[0] === 'worktree' && args[1] === 'add') { fs.mkdirSync(args[3], { recursive: true }); if (process.env.OPENCLAW_FAKE_GIT_CHANGED_GATE_BUNDLE_SYMLINK_TARGET) fs.symlinkSync(process.env.OPENCLAW_FAKE_GIT_CHANGED_GATE_BUNDLE_SYMLINK_TARGET, require('node:path').join(args[3], '.openclaw-crabbox-changed-gate.bundle')); process.exit(0); }",
+    "if (args[0] === 'worktree' && args[1] === 'add') { fs.mkdirSync(args[3], { recursive: true }); if (process.env.OPENCLAW_FAKE_GIT_CHANGED_GATE_BUNDLE_SYMLINK_TARGET) fs.symlinkSync(process.env.OPENCLAW_FAKE_GIT_CHANGED_GATE_BUNDLE_SYMLINK_TARGET, require('node:path').join(args[3], '.grokbot-crabbox-changed-gate.bundle')); process.exit(0); }",
     "if (args[0] === '-C' && args[2] === 'sparse-checkout' && args[3] === 'disable') { process.exit(0); }",
     "if (args[0] === '-C' && args[2] === 'rev-parse') { const value = args[3] === 'HEAD' ? process.env.OPENCLAW_FAKE_GIT_HEAD_SHA || 'def456' : args[3] === 'HEAD^{tree}' ? process.env.OPENCLAW_FAKE_GIT_HEAD_TREE_SHA || 'tree456' : process.env.OPENCLAW_FAKE_GIT_BASE_SHA || 'abc123'; process.stdout.write(`${value}\\n`); process.exit(0); }",
     "if (args[0] === '-C' && args[2] === '-c' && args[6] === 'commit-tree') { if (process.env.OPENCLAW_FAKE_GIT_ROOT_COMMIT_MARKER) { if (args.includes('-p')) process.exit(68); fs.writeFileSync(process.env.OPENCLAW_FAKE_GIT_ROOT_COMMIT_MARKER, ''); } if (process.env.OPENCLAW_FAKE_GIT_SYNTHETIC_COMMIT_MARKER) fs.writeFileSync(process.env.OPENCLAW_FAKE_GIT_SYNTHETIC_COMMIT_MARKER, ''); process.stdout.write(`${process.env.OPENCLAW_FAKE_GIT_SYNTHETIC_COMMIT_SHA || 'synthetic789'}\\n`); process.exit(0); }",
@@ -640,7 +640,7 @@ function isProcessAlive(pid: number): boolean {
 }
 
 async function runSignalCleanupProof(sendSignals: (pid: number) => Promise<void>): Promise<void> {
-  const root = mkdtempSync(path.join(tmpdir(), "openclaw-crabbox-descendant-"));
+  const root = mkdtempSync(path.join(tmpdir(), "grokbot-crabbox-descendant-"));
   tempDirs.push(root);
   const descendantPidPath = path.join(root, "descendant.pid");
   let descendantPid = 0;
@@ -714,21 +714,21 @@ function expectChangedGateGitBootstrap(remoteCommand: string): void {
   expect(remoteCommand).toContain("command -v git");
   expect(remoteCommand).toContain("openclaw_changed_gate_base=abc123");
   expect(remoteCommand).toContain(
-    "openclaw_changed_gate_bundle=.openclaw-crabbox-changed-gate.bundle",
+    "openclaw_changed_gate_bundle=.grokbot-crabbox-changed-gate.bundle",
   );
-  expect(remoteCommand).toContain("mktemp /tmp/openclaw-changed-gate.XXXXXX");
+  expect(remoteCommand).toContain("mktemp /tmp/grokbot-changed-gate.XXXXXX");
   expect(remoteCommand).toContain('cp "$openclaw_changed_gate_bundle"');
   expect(remoteCommand).toContain("git init -q || exit 2");
   expect(remoteCommand).toContain(`${remoteChangedGateFetch} || exit 2`);
   expect(remoteCommand).toContain(
-    'git fetch -q "$openclaw_changed_gate_bundle_tmp" HEAD:refs/heads/openclaw-changed-gate-tree',
+    'git fetch -q "$openclaw_changed_gate_bundle_tmp" HEAD:refs/heads/grokbot-changed-gate-tree',
   );
-  expect(remoteCommand).toContain("git rev-parse refs/heads/openclaw-changed-gate-tree^{tree}");
+  expect(remoteCommand).toContain("git rev-parse refs/heads/grokbot-changed-gate-tree^{tree}");
   expect(remoteCommand).toContain(
     'commit-tree "$openclaw_changed_gate_tree" -p refs/remotes/origin/main',
   );
   expect(remoteCommand).toContain(
-    'git update-ref refs/heads/openclaw-changed-gate-head "$openclaw_changed_gate_head"',
+    'git update-ref refs/heads/grokbot-changed-gate-head "$openclaw_changed_gate_head"',
   );
   expect(remoteCommand).toContain(
     'git reset --hard --quiet "$openclaw_changed_gate_target" || exit 2',
@@ -882,7 +882,7 @@ describe("scripts/crabbox-wrapper", () => {
   });
 
   it("rejects reused Blacksmith Testboxes that were not created by Crabbox", () => {
-    const home = mkdtempSync(path.join(tmpdir(), "openclaw-crabbox-home-"));
+    const home = mkdtempSync(path.join(tmpdir(), "grokbot-crabbox-home-"));
     tempDirs.push(home);
 
     const result = runWrapper(
@@ -899,7 +899,7 @@ describe("scripts/crabbox-wrapper", () => {
   });
 
   it("allows reused Blacksmith Testboxes when the Crabbox SSH key exists", () => {
-    const home = mkdtempSync(path.join(tmpdir(), "openclaw-crabbox-home-"));
+    const home = mkdtempSync(path.join(tmpdir(), "grokbot-crabbox-home-"));
     tempDirs.push(home);
     const keyPath = path.join(testCrabboxConfigDir(home), "testboxes", "tbx_owned", "id_ed25519");
     mkdirSync(path.dirname(keyPath), { recursive: true });
@@ -926,7 +926,7 @@ describe("scripts/crabbox-wrapper", () => {
   });
 
   it("fails before reuse when a Blacksmith Testbox is claimed by another repo", () => {
-    const home = mkdtempSync(path.join(tmpdir(), "openclaw-crabbox-home-"));
+    const home = mkdtempSync(path.join(tmpdir(), "grokbot-crabbox-home-"));
     tempDirs.push(home);
     const id = "tbx_claimed";
     const keyPath = path.join(testCrabboxConfigDir(home), "testboxes", id, "id_ed25519");
@@ -965,7 +965,7 @@ describe("scripts/crabbox-wrapper", () => {
     { label: "successful", status: 0 },
     { label: "failed", status: 7 },
   ])("restores delegated Blacksmith claims after $label runs", ({ status }) => {
-    const home = mkdtempSync(path.join(tmpdir(), "openclaw-crabbox-home-"));
+    const home = mkdtempSync(path.join(tmpdir(), "grokbot-crabbox-home-"));
     tempDirs.push(home);
     const id = `tbx_restore_${status}`;
     const keyPath = path.join(testCrabboxConfigDir(home), "testboxes", id, "id_ed25519");
@@ -1004,7 +1004,7 @@ describe("scripts/crabbox-wrapper", () => {
   });
 
   it("restores a created delegated Blacksmith claim by captured timing lease id", () => {
-    const home = mkdtempSync(path.join(tmpdir(), "openclaw-crabbox-home-"));
+    const home = mkdtempSync(path.join(tmpdir(), "grokbot-crabbox-home-"));
     tempDirs.push(home);
     const stateRoot = path.join(home, ".local", "state");
     const claimsDir = path.join(stateRoot, "crabbox", "claims");
@@ -1044,7 +1044,7 @@ describe("scripts/crabbox-wrapper", () => {
   });
 
   it("restores created delegated Blacksmith claims from the temporary checkout fallback", () => {
-    const home = mkdtempSync(path.join(tmpdir(), "openclaw-crabbox-home-"));
+    const home = mkdtempSync(path.join(tmpdir(), "grokbot-crabbox-home-"));
     tempDirs.push(home);
     const stateRoot = path.join(home, ".local", "state");
     const claimsDir = path.join(stateRoot, "crabbox", "claims");
@@ -1086,7 +1086,7 @@ describe("scripts/crabbox-wrapper", () => {
   });
 
   it("restores a failed delegated Blacksmith claim kept on failure", () => {
-    const home = mkdtempSync(path.join(tmpdir(), "openclaw-crabbox-home-"));
+    const home = mkdtempSync(path.join(tmpdir(), "grokbot-crabbox-home-"));
     tempDirs.push(home);
     const stateRoot = path.join(home, ".local", "state");
     const claimPath = path.join(stateRoot, "crabbox", "claims", "tbx_created_failure.json");
@@ -1120,7 +1120,7 @@ describe("scripts/crabbox-wrapper", () => {
   });
 
   it("leaves genuinely foreign delegated Blacksmith claims untouched", () => {
-    const home = mkdtempSync(path.join(tmpdir(), "openclaw-crabbox-home-"));
+    const home = mkdtempSync(path.join(tmpdir(), "grokbot-crabbox-home-"));
     tempDirs.push(home);
     const id = "tbx_foreign_claim";
     const keyPath = path.join(testCrabboxConfigDir(home), "testboxes", id, "id_ed25519");
@@ -1158,7 +1158,7 @@ describe("scripts/crabbox-wrapper", () => {
   });
 
   it("lets Crabbox resolve reusable Testbox slugs", () => {
-    const home = mkdtempSync(path.join(tmpdir(), "openclaw-crabbox-home-"));
+    const home = mkdtempSync(path.join(tmpdir(), "grokbot-crabbox-home-"));
     tempDirs.push(home);
 
     const result = runWrapper(
@@ -1213,7 +1213,7 @@ describe("scripts/crabbox-wrapper", () => {
 
     expect(result.status).toBe(0);
     const expectedMessage =
-      "[crabbox] provider=docker using short host-visible work root for OpenClaw Docker tests";
+      "[crabbox] provider=docker using short host-visible work root for GrokBot Docker tests";
     if (process.platform === "linux") {
       expect(result.stderr).toContain(expectedMessage);
     } else {
@@ -1594,7 +1594,7 @@ describe("scripts/crabbox-wrapper", () => {
     expect(result.stdout).toBe("");
     expect(result.stderr).toContain("provider=aws requires a configured Crabbox broker");
     expect(result.stderr).toContain(
-      "crabbox login --url https://crabbox.openclaw.ai --provider aws",
+      "crabbox login --url https://crabbox.grokbot.ai --provider aws",
     );
   });
 
@@ -1603,7 +1603,7 @@ describe("scripts/crabbox-wrapper", () => {
       "provider: hetzner, aws, local-container, blacksmith-testbox, or cloudflare\n",
       ["run", "--provider", "aws", "--", "echo ok"],
       {
-        configJson: { coordinator: "https://crabbox.openclaw.ai", brokerAuth: "configured" },
+        configJson: { coordinator: "https://crabbox.grokbot.ai", brokerAuth: "configured" },
         env: { OPENCLAW_FAKE_CRABBOX_WHOAMI_STATUS: "1" },
       },
     );
@@ -1733,7 +1733,7 @@ describe("scripts/crabbox-wrapper", () => {
         "--package-path",
         "apps/macos",
         "--product",
-        "OpenClaw",
+        "GrokBot",
       ],
     );
 
@@ -1745,13 +1745,13 @@ describe("scripts/crabbox-wrapper", () => {
     expect(remoteCommand).toContain("/Applications/Xcode_26.1.app");
     expect(remoteCommand).toContain("/Applications/Xcode-26*.app");
     expect(remoteCommand).toContain('sudo xcode-select -s "$openclaw_developer"');
-    expect(remoteCommand).toContain("OpenClaw macOS app proof requires Swift tools 6.2+");
+    expect(remoteCommand).toContain("GrokBot macOS app proof requires Swift tools 6.2+");
     expect(remoteCommand).toContain("xcodebuild -version");
-    expect(remoteCommand).toContain("OpenClaw macOS app proof requires Xcode 26.x");
+    expect(remoteCommand).toContain("GrokBot macOS app proof requires Xcode 26.x");
     expect(remoteCommand).not.toContain("openclaw_crabbox_bootstrap_macos_js");
     expectGroupedShellCommand(
       remoteCommand,
-      "swift build --package-path apps/macos --product OpenClaw",
+      "swift build --package-path apps/macos --product GrokBot",
     );
   });
 
@@ -1768,8 +1768,8 @@ describe("scripts/crabbox-wrapper", () => {
     expect(remoteCommand).toContain("openclaw_crabbox_bootstrap_macos_js");
     expect(remoteCommand).toContain("pnpm --version >&2");
     expect(remoteCommand).toContain("openclaw_crabbox_require_macos_swift_62");
-    expect(remoteCommand).toContain("OpenClaw macOS app proof requires Swift tools 6.2+");
-    expect(remoteCommand).toContain("OpenClaw macOS app proof requires Xcode 26.x");
+    expect(remoteCommand).toContain("GrokBot macOS app proof requires Swift tools 6.2+");
+    expect(remoteCommand).toContain("GrokBot macOS app proof requires Xcode 26.x");
     expectGroupedShellCommand(remoteCommand, "pnpm mac:package");
   });
 
@@ -2304,7 +2304,7 @@ describe("scripts/crabbox-wrapper", () => {
       'curl -fsSL --connect-timeout 10 --max-time 60 --retry 2 --retry-delay 2 -o "$tmp_dir/SHASUMS256.txt"',
     );
     expect(remoteCommand).toContain("shasum -a 256 -c -");
-    expect(remoteCommand).toContain('ready_marker="$node_dir/.openclaw-crabbox-node-ready"');
+    expect(remoteCommand).toContain('ready_marker="$node_dir/.grokbot-crabbox-node-ready"');
     expect(remoteCommand).toContain(
       'if [ -x "$node_dir/bin/node" ] && [ -f "$ready_marker" ]; then break; fi;',
     );
@@ -2804,7 +2804,7 @@ describe("scripts/crabbox-wrapper", () => {
   it("preflights Swift for AWS macOS script-stdin Swift builds", () => {
     const script = [
       "set -euo pipefail",
-      "swift build --package-path apps/macos --product OpenClaw",
+      "swift build --package-path apps/macos --product GrokBot",
     ].join("\n");
     const result = runWrapper(
       "provider: hetzner, aws, local-container, blacksmith-testbox, or cloudflare\n",
@@ -2817,8 +2817,8 @@ describe("scripts/crabbox-wrapper", () => {
     expect(output.scriptContent).toContain("openclaw_crabbox_bootstrap_macos_js");
     expect(output.scriptContent).toContain("openclaw_crabbox_require_macos_swift_62");
     expect(output.scriptContent).toContain("openclaw_crabbox_require_macos_swift_62 || exit $?");
-    expect(output.scriptContent).toContain("OpenClaw macOS app proof requires Swift tools 6.2+");
-    expect(output.scriptContent).toContain("OpenClaw macOS app proof requires Xcode 26.x");
+    expect(output.scriptContent).toContain("GrokBot macOS app proof requires Swift tools 6.2+");
+    expect(output.scriptContent).toContain("GrokBot macOS app proof requires Xcode 26.x");
     expect(output.scriptContent).toContain(`\n${script}`);
   });
 
@@ -3406,7 +3406,7 @@ describe("scripts/crabbox-wrapper", () => {
       "--",
       "pnpm",
       "--filter",
-      "@openclaw/discord",
+      "@grokbot/discord",
       "test",
     ]);
 
@@ -3415,7 +3415,7 @@ describe("scripts/crabbox-wrapper", () => {
     expect(result.status).toBe(0);
     expect(output.args).toContain("--shell");
     expect(remoteCommand).toContain("$openclawModulesDir = $env:PNPM_CONFIG_MODULES_DIR");
-    expect(remoteCommand).toContain("pnpm --filter '@openclaw/discord' test");
+    expect(remoteCommand).toContain("pnpm --filter '@grokbot/discord' test");
   });
 
   const itWithPosixLinkedWorktreeFixture = process.platform === "win32" ? it.skip : it;
@@ -3423,9 +3423,9 @@ describe("scripts/crabbox-wrapper", () => {
   itWithPosixLinkedWorktreeFixture(
     "finds a Crabbox checkout next to the Git common dir in linked worktrees",
     () => {
-      const fakeWorkspaceParent = mkdtempSync(path.join(tmpdir(), "openclaw-linked-worktree-"));
+      const fakeWorkspaceParent = mkdtempSync(path.join(tmpdir(), "grokbot-linked-worktree-"));
       tempDirs.push(fakeWorkspaceParent);
-      const gitCommonDir = path.join(fakeWorkspaceParent, "openclaw", ".git");
+      const gitCommonDir = path.join(fakeWorkspaceParent, "grokbot", ".git");
       const crabboxBinDir = path.join(fakeWorkspaceParent, "crabbox", "bin");
       mkdirSync(gitCommonDir, { recursive: true });
       writeFakeCrabbox(crabboxBinDir, "provider: aws\n");
@@ -3497,7 +3497,7 @@ describe("scripts/crabbox-wrapper", () => {
 
   if (process.platform !== "win32") {
     it("keeps POSIX PATH lookup semantics for non-executable entries", () => {
-      const staleBinDir = mkdtempSync(path.join(tmpdir(), "openclaw-stale-crabbox-"));
+      const staleBinDir = mkdtempSync(path.join(tmpdir(), "grokbot-stale-crabbox-"));
       tempDirs.push(staleBinDir);
       writeFileSync(path.join(staleBinDir, "crabbox"), "not executable\n", "utf8");
       const result = runWrapper("provider: aws\n", ["run", "--provider", "aws", "--", "echo ok"], {
@@ -3631,7 +3631,7 @@ describe("scripts/crabbox-wrapper", () => {
     expect(result.status).toBe(0);
     expect(parseFakeCrabboxOutput(result).args).not.toContain("--no-sync");
     expect(result.stderr).toContain("syncing from temporary full checkout");
-    expect(parseFakeCrabboxOutput(result).cwd).toContain("openclaw-crabbox-sync-");
+    expect(parseFakeCrabboxOutput(result).cwd).toContain("grokbot-crabbox-sync-");
   });
 
   it("uses a temporary full checkout for clean sparse AWS syncs", () => {
@@ -3650,9 +3650,9 @@ describe("scripts/crabbox-wrapper", () => {
     expect(result.stderr).toContain("syncing from temporary full checkout");
     expect(result.stderr).toContain("overlaying local HEAD as worktree changes from abc123");
     expect(parseFakeCrabboxOutput(result).args.join(" ")).toContain(
-      "openclaw_changed_gate_bundle=.openclaw-crabbox-changed-gate.bundle",
+      "openclaw_changed_gate_bundle=.grokbot-crabbox-changed-gate.bundle",
     );
-    expect(parseFakeCrabboxOutput(result).cwd).toContain("openclaw-crabbox-sync-");
+    expect(parseFakeCrabboxOutput(result).cwd).toContain("grokbot-crabbox-sync-");
   });
 
   it("uses a temporary full checkout when clean sparse AWS syncs reuse a lease", () => {
@@ -3681,7 +3681,7 @@ describe("scripts/crabbox-wrapper", () => {
 
     expect(result.status).toBe(0);
     expect(result.stderr).toContain("syncing from temporary full checkout");
-    expect(parseFakeCrabboxOutput(result).cwd).toContain("openclaw-crabbox-sync-");
+    expect(parseFakeCrabboxOutput(result).cwd).toContain("grokbot-crabbox-sync-");
   });
 
   it("bootstraps Git metadata for sparse changed gates on remote raw syncs", () => {
@@ -3702,7 +3702,7 @@ describe("scripts/crabbox-wrapper", () => {
     expect(result.status).toBe(0);
     expect(output.args).toContain("--shell");
     expectChangedGateGitBootstrap(remoteCommand);
-    expect(remoteCommand).toContain("refs/heads/openclaw-changed-gate-head");
+    expect(remoteCommand).toContain("refs/heads/grokbot-changed-gate-head");
     expect(remoteCommand).toMatch(
       /&& env OPENCLAW_CHECK_CHANGED_REMOTE_CHILD=1 OPENCLAW_CHANGED_LANES_RAW_SYNC=1 CI=1 corepack pnpm check:changed$/u,
     );
@@ -3807,7 +3807,7 @@ describe("scripts/crabbox-wrapper", () => {
 
   it("materializes the changed-gate bundle in the temporary sync checkout", () => {
     const bundle = "synthetic-bundle";
-    const markerDir = makeTempDir(tempDirs, "openclaw-changed-gate-force-add-");
+    const markerDir = makeTempDir(tempDirs, "grokbot-changed-gate-force-add-");
     const forceAddMarker = path.join(markerDir, "force-added");
     const syntheticCommitMarker = path.join(markerDir, "synthetic-commit");
     const syntheticHeadMarker = path.join(markerDir, "synthetic-head");
@@ -3869,7 +3869,7 @@ describe("scripts/crabbox-wrapper", () => {
   it.skipIf(process.platform === "win32")(
     "does not follow a checkout-controlled changed-gate bundle symlink",
     () => {
-      const fixtureDir = makeTempDir(tempDirs, "openclaw-changed-gate-symlink-");
+      const fixtureDir = makeTempDir(tempDirs, "grokbot-changed-gate-symlink-");
       const victimPath = path.join(fixtureDir, "victim");
       const victimContents = "preserve-me\n";
       const bundle = "synthetic-bundle";
@@ -3914,7 +3914,7 @@ describe("scripts/crabbox-wrapper", () => {
     expect(result.status).toBe(0);
     expect(result.stderr).toContain("syncing from temporary full checkout");
     expect(result.stderr).toContain("overlaying local HEAD as worktree changes from abc123");
-    expect(output.cwd).toContain("openclaw-crabbox-sync-");
+    expect(output.cwd).toContain("grokbot-crabbox-sync-");
     expect(output.args).toContain("--shell");
     expect(remoteCommand).toContain("git init -q");
     expect(remoteCommand).toContain(remoteChangedGateFetch);
@@ -4630,7 +4630,7 @@ describe("scripts/crabbox-wrapper", () => {
 
     expect(result.status).toBe(0);
     expect(result.stderr).toContain("syncing from temporary full checkout");
-    expect(parseFakeCrabboxOutput(result).cwd).toContain("openclaw-crabbox-sync-");
+    expect(parseFakeCrabboxOutput(result).cwd).toContain("grokbot-crabbox-sync-");
   });
 
   it("creates sparse-sync temporary full checkouts under the durable cache root", () => {
@@ -4651,7 +4651,7 @@ describe("scripts/crabbox-wrapper", () => {
 
       const output = parseFakeCrabboxOutput(result);
       expect(result.status).toBe(0);
-      expect(output.cwd).toContain(`${syncRoot}${path.sep}openclaw-crabbox-sync-`);
+      expect(output.cwd).toContain(`${syncRoot}${path.sep}grokbot-crabbox-sync-`);
       expect(readdirSync(syncRoot)).toEqual([]);
     } finally {
       rmSync(syncRoot, { recursive: true, force: true });
@@ -4862,7 +4862,7 @@ describe("scripts/crabbox-wrapper", () => {
     expect(result.status).toBe(0);
     expect(result.stderr).toContain("syncing from temporary full checkout");
     expect(parseFakeCrabboxOutput(result).args).toContain("--reclaim");
-    expect(parseFakeCrabboxOutput(result).cwd).toContain("openclaw-crabbox-sync-");
+    expect(parseFakeCrabboxOutput(result).cwd).toContain("grokbot-crabbox-sync-");
   });
 
   it("uses a temporary full checkout when clean sparse branches differ from the Blacksmith ref", () => {
@@ -4880,7 +4880,7 @@ describe("scripts/crabbox-wrapper", () => {
     expect(result.status).toBe(0);
     expect(parseFakeCrabboxOutput(result).args).not.toContain("--no-sync");
     expect(result.stderr).toContain("syncing from temporary full checkout");
-    expect(parseFakeCrabboxOutput(result).cwd).toContain("openclaw-crabbox-sync-");
+    expect(parseFakeCrabboxOutput(result).cwd).toContain("grokbot-crabbox-sync-");
   });
 
   it("keeps sparse dirty worktrees on the original checkout", () => {
@@ -4927,7 +4927,7 @@ describe("scripts/crabbox-wrapper", () => {
 
     const output = parseFakeCrabboxOutput(result);
     expect(result.status).toBe(0);
-    expect(output.cwd).toContain("openclaw-crabbox-sync-");
+    expect(output.cwd).toContain("grokbot-crabbox-sync-");
     expect(output.args).toContain(
       `--capture-stdout=${path.join(repoRoot, ".artifacts/stdout.log")}`,
     );
@@ -4962,7 +4962,7 @@ describe("scripts/crabbox-wrapper", () => {
 
     const output = parseFakeCrabboxOutput(result);
     expect(result.status).toBe(0);
-    expect(output.cwd).toContain("openclaw-crabbox-sync-");
+    expect(output.cwd).toContain("grokbot-crabbox-sync-");
     expect(result.stderr).toContain("syncing from temporary full checkout");
     expect(result.stderr).toContain("preserved");
     expect(statSync(path.join(preservedDir, "fake-artifacts.tgz")).isFile()).toBe(true);
@@ -4990,6 +4990,6 @@ describe("scripts/crabbox-wrapper", () => {
 
     expect(result.status).toBe(0);
     expect(result.stderr).toContain("syncing from temporary full checkout");
-    expect(parseFakeCrabboxOutput(result).cwd).toContain("openclaw-crabbox-sync-");
+    expect(parseFakeCrabboxOutput(result).cwd).toContain("grokbot-crabbox-sync-");
   });
 });

@@ -170,11 +170,11 @@ describeControlUiE2e("native link routing", () => {
 
     await link.click({ button: "right" });
     const menu = page.getByRole("menu", { name: "Link actions" });
-    const menuHost = page.locator("openclaw-native-link-menu");
+    const menuHost = page.locator("grokbot-native-link-menu");
     await expect.poll(() => menu.isVisible()).toBe(true);
     await expect.poll(() => replyMenu.count()).toBe(0);
     await expect
-      .poll(() => page.locator("openclaw-native-link-menu .session-menu__text").allTextContents())
+      .poll(() => page.locator("grokbot-native-link-menu .session-menu__text").allTextContents())
       .toEqual(["Open in Sidebar", "Open in Default Browser", "Copy Link"]);
     await page.screenshot({
       path: path.join(artifactDir, "01-native-link-menu-page.jpg"),
@@ -210,8 +210,8 @@ describeControlUiE2e("native link routing", () => {
     await popup.close();
 
     await page.evaluate(async () => {
-      await customElements.whenDefined("openclaw-modal-dialog");
-      const dialog = document.createElement("openclaw-modal-dialog");
+      await customElements.whenDefined("grokbot-modal-dialog");
+      const dialog = document.createElement("grokbot-modal-dialog");
       dialog.id = "native-link-routing-modal";
       dialog.setAttribute("label", "Link routing test");
       const anchor = document.createElement("a");
@@ -260,7 +260,7 @@ describeControlUiE2e("native link routing", () => {
       .getByRole("paragraph")
       .getByRole("link", { name: "Usage" })
       .click({ button: "right" });
-    expect(await page.locator("openclaw-native-link-menu").count()).toBe(0);
+    expect(await page.locator("grokbot-native-link-menu").count()).toBe(0);
     const messageMenu = page.getByRole("menu", { name: "Message actions" });
     await expect.poll(() => messageMenu.isVisible()).toBe(true);
     await page.evaluate(() => new Promise(requestAnimationFrame));
@@ -269,7 +269,7 @@ describeControlUiE2e("native link routing", () => {
     await page.locator('a.markdown-file-link[data-file-path="README.md"]').click({
       button: "right",
     });
-    expect(await page.locator("openclaw-native-link-menu").count()).toBe(0);
+    expect(await page.locator("grokbot-native-link-menu").count()).toBe(0);
   });
 
   it("keeps ordinary browser navigation when the native bridge is absent", async () => {
@@ -291,7 +291,7 @@ describeControlUiE2e("native link routing", () => {
     const link = page.getByRole("link", { name: "report" });
 
     await link.click({ button: "right" });
-    expect(await page.locator("openclaw-native-link-menu").count()).toBe(0);
+    expect(await page.locator("grokbot-native-link-menu").count()).toBe(0);
     const popupPromise = page.waitForEvent("popup");
     await link.click();
     const popup = await popupPromise;

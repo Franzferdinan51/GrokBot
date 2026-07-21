@@ -1,8 +1,8 @@
-// Implements `openclaw channels capabilities` account capability/probe reporting.
+// Implements `grokbot channels capabilities` account capability/probe reporting.
 import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalString,
-} from "@openclaw/normalization-core/string-coerce";
+} from "@grokbot/normalization-core/string-coerce";
 import { theme } from "../../../packages/terminal-core/src/theme.js";
 import { resolveChannelDefaultAccountId } from "../../channels/plugins/helpers.js";
 import {
@@ -317,7 +317,7 @@ export async function channelsCapabilitiesCommand(
   if (opts.account && (!rawChannel || rawChannel === "all")) {
     runtime.error(
       danger(
-        `--account requires a specific --channel. Run ${formatCliCommand("openclaw channels list")} to choose one.`,
+        `--account requires a specific --channel. Run ${formatCliCommand("grokbot channels list")} to choose one.`,
       ),
     );
     runtime.exit(1);
@@ -326,7 +326,7 @@ export async function channelsCapabilitiesCommand(
   if (rawTarget && (!rawChannel || rawChannel === "all")) {
     runtime.error(
       danger(
-        `--target requires a specific --channel. Run ${formatCliCommand("openclaw channels list")} to choose one.`,
+        `--target requires a specific --channel. Run ${formatCliCommand("grokbot channels list")} to choose one.`,
       ),
     );
     runtime.exit(1);
@@ -365,7 +365,7 @@ export async function channelsCapabilitiesCommand(
       runtime.log(
         theme.muted(
           `No configured channel capabilities found. Run ${formatCliCommand(
-            "openclaw channels list --all",
+            "grokbot channels list --all",
           )} to see available channels.`,
         ),
       );

@@ -1,7 +1,7 @@
 /**
  * Applies final effective tool policy to embedded-agent runtime settings.
  */
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import { getPluginToolMeta } from "../../plugins/tools.js";
 import type { ResolvedConversationCapabilityProfile } from "../conversation-capability-profile.js";
 import { buildDeclaredToolAllowlistContext } from "../tool-policy-declared-context.js";

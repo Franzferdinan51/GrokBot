@@ -1,6 +1,6 @@
 // Slack tests cover send.unfurl plugin behavior.
 import type { WebClient } from "@slack/web-api";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import { describe, expect, it, vi } from "vitest";
 import { sendMessageSlack } from "./send.js";
 
@@ -159,7 +159,7 @@ describe("sendMessageSlack unfurl controls", () => {
       }),
       client,
       identity: {
-        username: "OpenClaw",
+        username: "GrokBot",
       },
     });
 

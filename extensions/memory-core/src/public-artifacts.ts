@@ -2,7 +2,7 @@
 import {
   listMemoryHostPublicArtifacts,
   type MemoryPluginPublicArtifact,
-} from "openclaw/plugin-sdk/memory-host-core";
+} from "grokbot/plugin-sdk/memory-host-core";
 import type { OpenClawConfig } from "../api.js";
 
 export async function listMemoryCorePublicArtifacts(params: {

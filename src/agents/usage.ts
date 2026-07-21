@@ -1,9 +1,9 @@
 /**
  * Token usage normalization helpers.
- * Converts provider-specific usage shapes into OpenClaw's normalized input,
+ * Converts provider-specific usage shapes into GrokBot's normalized input,
  * output, cache, reasoning, and total token accounting fields.
  */
-import { asFiniteNumber } from "@openclaw/normalization-core/number-coercion";
+import { asFiniteNumber } from "@grokbot/normalization-core/number-coercion";
 import type { Usage } from "../llm/types.js";
 
 export type ContextUsage = NonNullable<Usage["contextUsage"]>;
@@ -125,7 +125,7 @@ const normalizeTokenCount = (value: unknown): number | undefined => {
   return Math.min(Math.trunc(numeric), Number.MAX_SAFE_INTEGER);
 };
 
-/** Normalize provider-specific token usage fields into OpenClaw usage buckets. */
+/** Normalize provider-specific token usage fields into GrokBot usage buckets. */
 export function normalizeUsage(raw?: UsageLike | null): NormalizedUsage | undefined {
   if (!raw) {
     return undefined;

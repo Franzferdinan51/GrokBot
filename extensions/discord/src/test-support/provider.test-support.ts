@@ -1,6 +1,6 @@
 // Discord provider module implements model/runtime integration.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import type { RuntimeEnv } from "openclaw/plugin-sdk/runtime-env";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import type { RuntimeEnv } from "grokbot/plugin-sdk/runtime-env";
 import type { Mock } from "vitest";
 import { expect, vi } from "vitest";
 
@@ -352,9 +352,9 @@ vi.mock("../internal/voice.js", () => ({
   VoicePlugin: function VoicePlugin() {},
 }));
 
-vi.mock("openclaw/plugin-sdk/acp-runtime", async () => {
-  const actual = await vi.importActual<typeof import("openclaw/plugin-sdk/acp-runtime")>(
-    "openclaw/plugin-sdk/acp-runtime",
+vi.mock("grokbot/plugin-sdk/acp-runtime", async () => {
+  const actual = await vi.importActual<typeof import("grokbot/plugin-sdk/acp-runtime")>(
+    "grokbot/plugin-sdk/acp-runtime",
   );
   return {
     ...actual,
@@ -366,9 +366,9 @@ vi.mock("openclaw/plugin-sdk/acp-runtime", async () => {
   };
 });
 
-vi.mock("openclaw/plugin-sdk/command-auth-native", async () => {
-  const actual = await vi.importActual<typeof import("openclaw/plugin-sdk/command-auth-native")>(
-    "openclaw/plugin-sdk/command-auth-native",
+vi.mock("grokbot/plugin-sdk/command-auth-native", async () => {
+  const actual = await vi.importActual<typeof import("grokbot/plugin-sdk/command-auth-native")>(
+    "grokbot/plugin-sdk/command-auth-native",
   );
   return {
     ...actual,
@@ -376,9 +376,9 @@ vi.mock("openclaw/plugin-sdk/command-auth-native", async () => {
     listSkillCommandsForAgents: listSkillCommandsForAgentsMock,
   };
 });
-vi.mock("openclaw/plugin-sdk/reply-runtime", async () => {
-  const actual = await vi.importActual<typeof import("openclaw/plugin-sdk/reply-runtime")>(
-    "openclaw/plugin-sdk/reply-runtime",
+vi.mock("grokbot/plugin-sdk/reply-runtime", async () => {
+  const actual = await vi.importActual<typeof import("grokbot/plugin-sdk/reply-runtime")>(
+    "grokbot/plugin-sdk/reply-runtime",
   );
   return {
     ...actual,
@@ -386,10 +386,10 @@ vi.mock("openclaw/plugin-sdk/reply-runtime", async () => {
   };
 });
 
-vi.mock("openclaw/plugin-sdk/native-command-config-runtime", async () => {
+vi.mock("grokbot/plugin-sdk/native-command-config-runtime", async () => {
   const actual = await vi.importActual<
-    typeof import("openclaw/plugin-sdk/native-command-config-runtime")
-  >("openclaw/plugin-sdk/native-command-config-runtime");
+    typeof import("grokbot/plugin-sdk/native-command-config-runtime")
+  >("grokbot/plugin-sdk/native-command-config-runtime");
   return {
     ...actual,
     isNativeCommandsExplicitlyDisabled: isNativeCommandsExplicitlyDisabledMock,
@@ -398,19 +398,19 @@ vi.mock("openclaw/plugin-sdk/native-command-config-runtime", async () => {
   };
 });
 
-vi.mock("openclaw/plugin-sdk/runtime-config-snapshot", async () => {
+vi.mock("grokbot/plugin-sdk/runtime-config-snapshot", async () => {
   const actual = await vi.importActual<
-    typeof import("openclaw/plugin-sdk/runtime-config-snapshot")
-  >("openclaw/plugin-sdk/runtime-config-snapshot");
+    typeof import("grokbot/plugin-sdk/runtime-config-snapshot")
+  >("grokbot/plugin-sdk/runtime-config-snapshot");
   return {
     ...actual,
     getRuntimeConfig: () => ({}),
   };
 });
 
-vi.mock("openclaw/plugin-sdk/runtime-env", async () => {
-  const actual = await vi.importActual<typeof import("openclaw/plugin-sdk/runtime-env")>(
-    "openclaw/plugin-sdk/runtime-env",
+vi.mock("grokbot/plugin-sdk/runtime-env", async () => {
+  const actual = await vi.importActual<typeof import("grokbot/plugin-sdk/runtime-env")>(
+    "grokbot/plugin-sdk/runtime-env",
   );
   return {
     ...actual,
@@ -433,9 +433,9 @@ vi.mock("openclaw/plugin-sdk/runtime-env", async () => {
   };
 });
 
-vi.mock("openclaw/plugin-sdk/error-runtime", async () => {
-  const actual = await vi.importActual<typeof import("openclaw/plugin-sdk/error-runtime")>(
-    "openclaw/plugin-sdk/error-runtime",
+vi.mock("grokbot/plugin-sdk/error-runtime", async () => {
+  const actual = await vi.importActual<typeof import("grokbot/plugin-sdk/error-runtime")>(
+    "grokbot/plugin-sdk/error-runtime",
   );
   return {
     ...actual,

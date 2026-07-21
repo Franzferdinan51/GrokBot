@@ -4,7 +4,7 @@
  */
 import type { IncomingMessage, ServerResponse } from "node:http";
 import type { Duplex } from "node:stream";
-import { createLazyRuntimeModule } from "openclaw/plugin-sdk/lazy-runtime";
+import { createLazyRuntimeModule } from "grokbot/plugin-sdk/lazy-runtime";
 import type {
   AnyAgentTool,
   OpenClawPluginApi,
@@ -13,7 +13,7 @@ import type {
   OpenClawPluginService,
   OpenClawPluginToolContext,
   OpenClawPluginToolFactory,
-} from "openclaw/plugin-sdk/plugin-entry";
+} from "grokbot/plugin-sdk/plugin-entry";
 import {
   BROWSER_REQUEST_GATEWAY_METHOD,
   BROWSER_REQUEST_GATEWAY_SCOPE,
@@ -55,7 +55,7 @@ function deriveChatTypeFromSessionKey(
 
 const BROWSER_CLI_DESCRIPTOR = {
   name: "browser",
-  description: "Manage OpenClaw's dedicated browser (Chrome/Chromium)",
+  description: "Manage GrokBot's dedicated browser (Chrome/Chromium)",
   hasSubcommands: true,
 };
 
@@ -247,7 +247,7 @@ export function registerBrowserPlugin(api: OpenClawPluginApi) {
     match: "exact",
     handler: (_req: IncomingMessage, res: ServerResponse) => {
       res.writeHead(426, { "Content-Type": "text/plain" });
-      res.end("Upgrade Required: connect the OpenClaw Chrome extension over WebSocket.");
+      res.end("Upgrade Required: connect the GrokBot Chrome extension over WebSocket.");
     },
     handleUpgrade: async (req: IncomingMessage, socket: Duplex, head: Buffer) => {
       const { handleGatewayExtensionUpgrade } =

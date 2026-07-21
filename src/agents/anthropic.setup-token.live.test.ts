@@ -7,7 +7,7 @@ import { randomUUID } from "node:crypto";
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { completeSimple, type Model } from "openclaw/plugin-sdk/llm";
+import { completeSimple, type Model } from "grokbot/plugin-sdk/llm";
 import { describe, expect, it } from "vitest";
 import { validateAnthropicSetupToken } from "../commands/auth-token.js";
 import { getRuntimeConfig } from "../config/config.js";
@@ -77,7 +77,7 @@ async function resolveTokenSource(): Promise<TokenSource> {
     if (error) {
       throw new Error(`Invalid setup-token: ${error}`);
     }
-    const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-setup-token-"));
+    const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-setup-token-"));
     const profileId = `anthropic:setup-token-live-${randomUUID()}`;
     const store = ensureAuthProfileStore(tempDir, {
       allowKeychainPrompt: false,

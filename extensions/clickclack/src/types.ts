@@ -1,7 +1,7 @@
 /**
  * Shared ClickClack config, runtime account, API object, and target types.
  */
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 
 /** Session-linked ClickClack discussion settings for one account. */
 type ClickClackDiscussionsConfig = {
@@ -33,7 +33,7 @@ export type ClickClackAccountConfig = {
   agentActivity?: boolean;
   /** Publish the native command catalog to ClickClack composer autocomplete. */
   commandMenu?: boolean;
-  /** Create and synchronize one managed ClickClack channel per OpenClaw session. */
+  /** Create and synchronize one managed ClickClack channel per GrokBot session. */
   discussions?: ClickClackDiscussionsConfig;
 };
 
@@ -43,7 +43,7 @@ type ClickClackConfig = ClickClackAccountConfig & {
   defaultAccount?: string;
 };
 
-/** OpenClaw config narrowed to include ClickClack channel settings. */
+/** GrokBot config narrowed to include ClickClack channel settings. */
 export type CoreConfig = OpenClawConfig & {
   channels?: OpenClawConfig["channels"] & {
     clickclack?: ClickClackConfig;

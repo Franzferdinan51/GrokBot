@@ -87,7 +87,7 @@ function withManifestLoadPaths<T extends { id: string }>(
   return {
     rootDir: `/tmp/plugins/${plugin.id}`,
     source: `/tmp/plugins/${plugin.id}/index.ts`,
-    manifestPath: `/tmp/plugins/${plugin.id}/openclaw.plugin.json`,
+    manifestPath: `/tmp/plugins/${plugin.id}/grokbot.plugin.json`,
     skills: [],
     hooks: [],
     ...plugin,
@@ -2646,7 +2646,7 @@ describe("resolveGatewayStartupPluginIds", () => {
     expectStartupPluginIdsCase({
       config: {} as OpenClawConfig,
       env: createPluginPlanningTestEnv({
-        OPENCLAW_STATE_DIR: "/tmp/openclaw-with-persisted-demo-channel",
+        OPENCLAW_STATE_DIR: "/tmp/grokbot-with-persisted-demo-channel",
       }),
       expected: ["browser", "memory-core"],
     });
@@ -2670,7 +2670,7 @@ describe("resolveGatewayStartupPluginIds", () => {
           },
         } as OpenClawConfig,
         env: createPluginPlanningTestEnv({
-          OPENCLAW_STATE_DIR: "/tmp/openclaw-with-persisted-demo-channel",
+          OPENCLAW_STATE_DIR: "/tmp/grokbot-with-persisted-demo-channel",
         }),
       }),
     ).toStrictEqual([]);
@@ -2949,14 +2949,14 @@ describe("resolveGatewayStartupPluginIds", () => {
     });
   });
 
-  it("does not include Codex when an OpenAI model is manually pinned to OpenClaw", () => {
+  it("does not include Codex when an OpenAI model is manually pinned to GrokBot", () => {
     expectStartupPluginIdsCase({
       config: {
         agents: {
           defaults: {
             model: { primary: "openai/gpt-5.5" },
             models: {
-              "openai/gpt-5.5": { agentRuntime: { id: "openclaw" } },
+              "openai/gpt-5.5": { agentRuntime: { id: "grokbot" } },
             },
           },
         },
@@ -3550,7 +3550,7 @@ describe("listConfiguredChannelIdsForReadOnlyScope", () => {
         workspaceDir: "/tmp",
         env: {
           EXTERNAL_ENV_CHANNEL_HOST: "irc.example.com",
-          EXTERNAL_ENV_CHANNEL_NICK: "openclaw",
+          EXTERNAL_ENV_CHANNEL_NICK: "grokbot",
         } as NodeJS.ProcessEnv,
         includePersistedAuthState: false,
       }),

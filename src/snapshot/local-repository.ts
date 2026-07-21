@@ -28,12 +28,12 @@ import {
 import { readSqliteUserVersion } from "../infra/sqlite-user-version.js";
 import { runExec } from "../process/exec.js";
 import { isValidAgentId, normalizeAgentId } from "../routing/session-key.js";
-import { assertOpenClawAgentDatabaseForMaintenance } from "../state/openclaw-agent-db.js";
-import { assertOpenClawStateDatabaseForMaintenance } from "../state/openclaw-state-db.js";
+import { assertOpenClawAgentDatabaseForMaintenance } from "../state/grokbot-agent-db.js";
+import { assertOpenClawStateDatabaseForMaintenance } from "../state/grokbot-state-db.js";
 import {
   sanitizeOpenClawGlobalStateSnapshot,
   sanitizeOpenClawStateLeaseRows,
-} from "../state/openclaw-state-snapshot-sanitizer.js";
+} from "../state/grokbot-state-snapshot-sanitizer.js";
 import {
   containsAsciiControlCharacter,
   copySnapshotArtifact,

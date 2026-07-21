@@ -27,7 +27,7 @@ const canonicalMismatchMessage = (repo: string) =>
   ].join("\n");
 
 function makeMismatchedWrapperRepo() {
-  const root = realpathSync(mkdtempSync(join(realpathSync(tmpdir()), "openclaw-pr-dev-wrapper-")));
+  const root = realpathSync(mkdtempSync(join(realpathSync(tmpdir()), "grokbot-pr-dev-wrapper-")));
   const bin = join(root, "bin");
   const home = join(root, "home");
   const canonicalPath = join(root, "canonical");
@@ -70,7 +70,7 @@ function makeMismatchedWrapperRepo() {
   );
   chmodSync(join(canonical, "scripts", "pr"), 0o755);
 
-  git(canonical, ["config", "user.name", "OpenClaw Test"]);
+  git(canonical, ["config", "user.name", "GrokBot Test"]);
   git(canonical, ["config", "user.email", "test@example.invalid"]);
   git(canonical, ["config", "commit.gpgSign", "false"]);
   git(canonical, ["config", "core.hooksPath", "/dev/null"]);
@@ -81,7 +81,7 @@ function makeMismatchedWrapperRepo() {
   git(canonical, ["worktree", "add", "-b", "feature", linkedPath, "main"]);
 
   const linked = realpathSync(linkedPath);
-  git(linked, ["config", "user.name", "OpenClaw Test"]);
+  git(linked, ["config", "user.name", "GrokBot Test"]);
   git(linked, ["config", "user.email", "test@example.invalid"]);
   git(linked, ["config", "commit.gpgSign", "false"]);
   expect(git(linked, ["rev-parse", "refs/remotes/origin/main"]).stdout.trim()).toBe(
@@ -285,7 +285,7 @@ describe("scripts/pr wrappers", () => {
   });
 
   it("refuses to substitute a different canonical wrapper implementation", () => {
-    const dir = mkdtempSync(join(tmpdir(), "openclaw-pr-wrapper-revision-"));
+    const dir = mkdtempSync(join(tmpdir(), "grokbot-pr-wrapper-revision-"));
     const repo = join(dir, "repo");
     const linked = join(dir, "linked");
     mkdirSync(join(repo, "scripts", "lib"), { recursive: true });
@@ -298,7 +298,7 @@ describe("scripts/pr wrappers", () => {
     const git = (cwd: string, args: string[]) =>
       spawnSync("git", args, { cwd, encoding: "utf8", stdio: "pipe" });
     expect(git(repo, ["init", "-b", "main"]).status).toBe(0);
-    expect(git(repo, ["config", "user.name", "OpenClaw Test"]).status).toBe(0);
+    expect(git(repo, ["config", "user.name", "GrokBot Test"]).status).toBe(0);
     expect(git(repo, ["config", "user.email", "test@example.invalid"]).status).toBe(0);
     expect(git(repo, ["add", "scripts"]).status).toBe(0);
     expect(git(repo, ["commit", "-m", "test: canonical wrapper"]).status).toBe(0);
@@ -344,7 +344,7 @@ describe("scripts/pr wrappers", () => {
   });
 
   it("runs the local wrapper when it matches origin/main and the canonical checkout is parked elsewhere", () => {
-    const dir = mkdtempSync(join(tmpdir(), "openclaw-pr-wrapper-anchor-"));
+    const dir = mkdtempSync(join(tmpdir(), "grokbot-pr-wrapper-anchor-"));
     const repo = join(dir, "repo");
     const linked = join(dir, "linked");
     mkdirSync(join(repo, "scripts", "lib"), { recursive: true });
@@ -357,7 +357,7 @@ describe("scripts/pr wrappers", () => {
     const git = (cwd: string, args: string[]) =>
       spawnSync("git", args, { cwd, encoding: "utf8", stdio: "pipe" });
     expect(git(repo, ["init", "-b", "main"]).status).toBe(0);
-    expect(git(repo, ["config", "user.name", "OpenClaw Test"]).status).toBe(0);
+    expect(git(repo, ["config", "user.name", "GrokBot Test"]).status).toBe(0);
     expect(git(repo, ["config", "user.email", "test@example.invalid"]).status).toBe(0);
     expect(git(repo, ["add", "scripts"]).status).toBe(0);
     expect(git(repo, ["commit", "-m", "test: canonical wrapper"]).status).toBe(0);
@@ -398,7 +398,7 @@ describe("scripts/pr wrappers", () => {
   });
 
   it("verifies local GitHub auth through GraphQL when REST quota is unavailable", () => {
-    const dir = mkdtempSync(join(tmpdir(), "openclaw-pr-auth-"));
+    const dir = mkdtempSync(join(tmpdir(), "grokbot-pr-auth-"));
     const gh = join(dir, "gh");
     writeFileSync(
       gh,

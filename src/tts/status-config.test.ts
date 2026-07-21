@@ -11,7 +11,7 @@ let fixtureRoot = "";
 let fixtureId = 0;
 
 beforeAll(() => {
-  fixtureRoot = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-tts-status-"));
+  fixtureRoot = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-tts-status-"));
 });
 
 afterAll(() => {
@@ -28,7 +28,7 @@ async function withStatusTempHome(run: (home: string) => Promise<void>): Promise
       HOME: home,
       USERPROFILE: home,
       OPENCLAW_HOME: undefined,
-      OPENCLAW_STATE_DIR: path.join(home, ".openclaw"),
+      OPENCLAW_STATE_DIR: path.join(home, ".grokbot"),
     },
     async () => await run(home),
   );
@@ -37,7 +37,7 @@ async function withStatusTempHome(run: (home: string) => Promise<void>): Promise
 describe("resolveStatusTtsSnapshot", () => {
   it("treats null prefs as empty settings", async () => {
     await withStatusTempHome(async (home) => {
-      const prefsPath = path.join(home, ".openclaw", "settings", "tts.json");
+      const prefsPath = path.join(home, ".grokbot", "settings", "tts.json");
       fs.mkdirSync(path.dirname(prefsPath), { recursive: true });
       fs.writeFileSync(prefsPath, "null");
 
@@ -64,7 +64,7 @@ describe("resolveStatusTtsSnapshot", () => {
 
   it("uses prefs overrides without loading speech providers", async () => {
     await withStatusTempHome(async (home) => {
-      const prefsPath = path.join(home, ".openclaw", "settings", "tts.json");
+      const prefsPath = path.join(home, ".grokbot", "settings", "tts.json");
       fs.mkdirSync(path.dirname(prefsPath), { recursive: true });
       fs.writeFileSync(
         prefsPath,
@@ -361,7 +361,7 @@ describe("resolveStatusTtsSnapshot", () => {
 
   it("uses provider metadata for local provider prefs overrides", async () => {
     await withStatusTempHome(async (home) => {
-      const prefsPath = path.join(home, ".openclaw", "settings", "tts.json");
+      const prefsPath = path.join(home, ".grokbot", "settings", "tts.json");
       fs.mkdirSync(path.dirname(prefsPath), { recursive: true });
       fs.writeFileSync(
         prefsPath,
@@ -405,7 +405,7 @@ describe("resolveStatusTtsSnapshot", () => {
 
   it("derives the default prefs path from OPENCLAW_CONFIG_PATH when set", async () => {
     await withStatusTempHome(async (home) => {
-      const stateDir = path.join(home, ".openclaw-dev");
+      const stateDir = path.join(home, ".grokbot-dev");
       const prefsPath = path.join(stateDir, "settings", "tts.json");
       fs.mkdirSync(path.dirname(prefsPath), { recursive: true });
       fs.writeFileSync(
@@ -421,7 +421,7 @@ describe("resolveStatusTtsSnapshot", () => {
       await withEnvAsync(
         {
           OPENCLAW_STATE_DIR: undefined,
-          OPENCLAW_CONFIG_PATH: path.join(stateDir, "openclaw.json"),
+          OPENCLAW_CONFIG_PATH: path.join(stateDir, "grokbot.json"),
         },
         async () => {
           expect(

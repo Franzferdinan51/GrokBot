@@ -4,8 +4,8 @@ import fsSync from "node:fs";
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { isInboundPathAllowed } from "@openclaw/media-core/inbound-path-policy";
-import { expectDefined } from "@openclaw/normalization-core";
+import { isInboundPathAllowed } from "@grokbot/media-core/inbound-path-policy";
+import { expectDefined } from "@grokbot/normalization-core";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { OpenClawConfig } from "../../config/config.js";
 import type { ModelDefinitionConfig } from "../../config/types.models.js";
@@ -276,7 +276,7 @@ async function writeAuthProfiles(agentDir: string, profiles: unknown) {
 }
 
 async function withTempAgentDir<T>(run: (agentDir: string) => Promise<T>): Promise<T> {
-  const agentDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-image-"));
+  const agentDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-image-"));
   try {
     return await run(agentDir);
   } finally {
@@ -342,7 +342,7 @@ async function withTempWorkspacePng(
   options?: { parentDir?: string },
 ) {
   const parentDir = options?.parentDir ?? os.tmpdir();
-  const workspaceParent = await fs.mkdtemp(path.join(parentDir, "openclaw-workspace-image-"));
+  const workspaceParent = await fs.mkdtemp(path.join(parentDir, "grokbot-workspace-image-"));
   try {
     const workspaceDir = path.join(workspaceParent, "workspace");
     await fs.mkdir(workspaceDir, { recursive: true });
@@ -817,7 +817,7 @@ type ImageToolInstance = ReturnType<typeof createRequiredImageTool>;
 async function withTempSandboxState(
   run: (ctx: { stateDir: string; agentDir: string; sandboxRoot: string }) => Promise<void>,
 ) {
-  const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-image-sandbox-"));
+  const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-image-sandbox-"));
   const agentDir = path.join(stateDir, "agent");
   const sandboxRoot = path.join(stateDir, "sandbox");
   await fs.mkdir(agentDir, { recursive: true });
@@ -2080,7 +2080,7 @@ describe("image tool implicit imageModel config", () => {
         expect(fetch).toHaveBeenCalledTimes(1);
 
         // File outside workspace is rejected even without sandbox.
-        const outsideDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-outside-"));
+        const outsideDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-outside-"));
         const outsideImage = path.join(outsideDir, "secret.png");
         await fs.writeFile(outsideImage, Buffer.from(ONE_PIXEL_PNG_B64, "base64"));
         try {
@@ -2098,7 +2098,7 @@ describe("image tool implicit imageModel config", () => {
     const fetch = stubMinimaxOkFetch();
     await withTempAgentDir(async (agentDir) => {
       const cfg = createMinimaxImageConfig();
-      const outsideDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-image-outside-"));
+      const outsideDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-image-outside-"));
       const outsideImage = path.join(outsideDir, "secret.png");
       await fs.writeFile(outsideImage, Buffer.from(ONE_PIXEL_PNG_B64, "base64"));
       try {
@@ -2129,7 +2129,7 @@ describe("image tool implicit imageModel config", () => {
         capabilities: ["image"],
         describeImage,
       });
-      const attachmentRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-imessage-root-"));
+      const attachmentRoot = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-imessage-root-"));
       const imagePath = path.join(attachmentRoot, "photo.png");
       await fs.writeFile(imagePath, Buffer.from(ONE_PIXEL_PNG_B64, "base64"));
       try {
@@ -2199,7 +2199,7 @@ describe("image tool implicit imageModel config", () => {
         describeImage,
       });
       const attachmentRootParent = await fs.mkdtemp(
-        path.join(os.tmpdir(), "openclaw-imessage-wildcard-root-"),
+        path.join(os.tmpdir(), "grokbot-imessage-wildcard-root-"),
       );
       const attachmentRoot = path.join(attachmentRootParent, "work", "Attachments");
       const imagePath = path.join(attachmentRoot, "photo.png");
@@ -2410,7 +2410,7 @@ describe("image tool implicit imageModel config", () => {
 
       const res = await tool.execute("t1", {
         prompt: "Describe the image.",
-        image: "@/Users/steipete/.openclaw/media/inbound/photo.png",
+        image: "@/Users/steipete/.grokbot/media/inbound/photo.png",
       });
 
       expect(fetch).toHaveBeenCalledTimes(1);
@@ -2610,7 +2610,7 @@ describe("image tool MiniMax VLM routing", () => {
   async function createMinimaxVlmFixture(baseResp: { status_code: number; status_msg: string }) {
     const fetchMock = stubMinimaxFetch(baseResp, baseResp.status_code === 0 ? "ok" : "");
 
-    const agentDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-minimax-vlm-"));
+    const agentDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-minimax-vlm-"));
     vi.stubEnv("MINIMAX_API_KEY", "minimax-test");
     const cfg = createMinimaxImageConfig();
     const tool = createRequiredImageTool({ config: cfg, agentDir });
@@ -2763,7 +2763,7 @@ describe("image tool managed inbound media", () => {
   async function withManagedInboundPng(
     run: (params: { stateDir: string; mediaId: string; mediaPath: string }) => Promise<void>,
   ) {
-    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-image-managed-inbound-"));
+    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-image-managed-inbound-"));
     const inboundDir = path.join(stateDir, "media", "inbound");
     const mediaId = "claim-check-test.png";
     const mediaPath = path.join(inboundDir, mediaId);

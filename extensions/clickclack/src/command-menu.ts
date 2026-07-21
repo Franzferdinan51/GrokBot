@@ -1,8 +1,8 @@
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
+import { formatErrorMessage } from "grokbot/plugin-sdk/error-runtime";
 import {
   listNativeCommandSpecsForConfig,
   type NativeCommandSpec,
-} from "openclaw/plugin-sdk/native-command-registry";
+} from "grokbot/plugin-sdk/native-command-registry";
 import type { createClickClackClient } from "./http-client.js";
 import type { CoreConfig } from "./types.js";
 

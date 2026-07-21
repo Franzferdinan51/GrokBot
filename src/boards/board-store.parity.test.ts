@@ -8,8 +8,8 @@ import { requireNodeSqlite } from "../infra/node-sqlite.js";
 import {
   closeOpenClawAgentDatabasesForTest,
   openOpenClawAgentDatabase,
-} from "../state/openclaw-agent-db.js";
-import { closeOpenClawStateDatabaseForTest } from "../state/openclaw-state-db.js";
+} from "../state/grokbot-agent-db.js";
+import { closeOpenClawStateDatabaseForTest } from "../state/grokbot-state-db.js";
 import { InMemoryBoardStore, type BoardStore } from "./board-store.js";
 import { SqliteBoardStore } from "./sqlite-board-store.js";
 
@@ -26,7 +26,7 @@ function seedSession(env: NodeJS.ProcessEnv, agentId: string, sessionKey: string
 }
 
 function createSqliteStore(): BoardStore {
-  const stateDir = tempDirs.make("openclaw-board-parity-");
+  const stateDir = tempDirs.make("grokbot-board-parity-");
   const env = { OPENCLAW_STATE_DIR: stateDir };
   seedSession(env, "main", "agent:main:board");
   return new SqliteBoardStore({
@@ -357,7 +357,7 @@ describe.each([
 
 describe("SqliteBoardStore persistence", () => {
   it("drops MCP App rows without canonical authority provenance", () => {
-    const stateDir = tempDirs.make("openclaw-board-noncanonical-app-");
+    const stateDir = tempDirs.make("grokbot-board-noncanonical-app-");
     const env = { OPENCLAW_STATE_DIR: stateDir };
     const sessionKey = "agent:main:board";
     seedSession(env, "main", sessionKey);
@@ -391,7 +391,7 @@ describe("SqliteBoardStore persistence", () => {
   });
 
   it("lazily creates board tables for an existing v13 database", () => {
-    const stateDir = tempDirs.make("openclaw-board-lazy-schema-");
+    const stateDir = tempDirs.make("grokbot-board-lazy-schema-");
     const env = { OPENCLAW_STATE_DIR: stateDir };
     const sessionKey = "agent:main:board";
     seedSession(env, "main", sessionKey);
@@ -460,7 +460,7 @@ describe("SqliteBoardStore persistence", () => {
   });
 
   it("does not create an unregistered agent database during widget byte lookup", () => {
-    const stateDir = tempDirs.make("openclaw-board-no-create-");
+    const stateDir = tempDirs.make("grokbot-board-no-create-");
     const store = new SqliteBoardStore({
       resolveSession: () => ({
         agentId: "attacker-selected",
@@ -485,14 +485,14 @@ describe("SqliteBoardStore persistence", () => {
     ).toThrow("board session not found");
     expect(
       existsSync(
-        path.join(stateDir, "agents", "attacker-selected", "agent", "openclaw-agent.sqlite"),
+        path.join(stateDir, "agents", "attacker-selected", "agent", "grokbot-agent.sqlite"),
       ),
     ).toBe(false);
     expect(existsSync(path.join(stateDir, "agents", "attacker-selected"))).toBe(false);
   });
 
   it("canonicalizes aliases before reading and writing board rows", () => {
-    const stateDir = tempDirs.make("openclaw-board-alias-");
+    const stateDir = tempDirs.make("grokbot-board-alias-");
     const env = { OPENCLAW_STATE_DIR: stateDir };
     const canonicalSessionKey = "agent:main:main";
     seedSession(env, "main", canonicalSessionKey);
@@ -526,7 +526,7 @@ describe("SqliteBoardStore persistence", () => {
   });
 
   it("fails closed when reading a persisted unsafe capability manifest", () => {
-    const stateDir = tempDirs.make("openclaw-board-unsafe-manifest-");
+    const stateDir = tempDirs.make("grokbot-board-unsafe-manifest-");
     const env = { OPENCLAW_STATE_DIR: stateDir };
     const sessionKey = "agent:main:unsafe-manifest";
     seedSession(env, "main", sessionKey);
@@ -577,7 +577,7 @@ describe("SqliteBoardStore persistence", () => {
   });
 
   it("reads widget bytes only from the canonical per-agent database", () => {
-    const stateDir = tempDirs.make("openclaw-board-canonical-bytes-");
+    const stateDir = tempDirs.make("grokbot-board-canonical-bytes-");
     const env = { OPENCLAW_STATE_DIR: stateDir };
     const agentId = "worker-1";
     const sessionKey = "agent:worker-1:board";
@@ -616,7 +616,7 @@ describe("SqliteBoardStore persistence", () => {
   });
 
   it("purges board rows through the shared session deletion lifecycle", async () => {
-    const stateDir = tempDirs.make("openclaw-board-shared-delete-");
+    const stateDir = tempDirs.make("grokbot-board-shared-delete-");
     const env = { OPENCLAW_STATE_DIR: stateDir };
     const sessionKey = "agent:main:cleanup";
     const databasePath = seedSession(env, "main", sessionKey);
@@ -648,7 +648,7 @@ describe("SqliteBoardStore persistence", () => {
   });
 
   it("clears a frozen grant when the widget digest changes", () => {
-    const stateDir = tempDirs.make("openclaw-board-granted-digest-");
+    const stateDir = tempDirs.make("grokbot-board-granted-digest-");
     const env = { OPENCLAW_STATE_DIR: stateDir };
     const sessionKey = "agent:main:grant-digest";
     seedSession(env, "main", sessionKey);
@@ -685,7 +685,7 @@ describe("SqliteBoardStore persistence", () => {
   });
 
   it("requires reapproval for grants stored before byte-frozen semantics", () => {
-    const stateDir = tempDirs.make("openclaw-board-legacy-grant-");
+    const stateDir = tempDirs.make("grokbot-board-legacy-grant-");
     const env = { OPENCLAW_STATE_DIR: stateDir };
     const sessionKey = "agent:main:legacy-grant";
     seedSession(env, "main", sessionKey);
@@ -729,7 +729,7 @@ describe("SqliteBoardStore persistence", () => {
   });
 
   it("reopens durable boards and isolates owning agent databases", () => {
-    const stateDir = tempDirs.make("openclaw-board-durable-");
+    const stateDir = tempDirs.make("grokbot-board-durable-");
     const options = {
       resolveSession: (sessionKey: string) => ({
         agentId: sessionKey.split(":")[1] ?? "main",

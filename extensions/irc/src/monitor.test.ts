@@ -6,7 +6,7 @@ import path from "node:path";
 import {
   closeOpenClawStateDatabaseForTest,
   createChannelIngressQueueForTests,
-} from "openclaw/plugin-sdk/plugin-state-test-runtime";
+} from "grokbot/plugin-sdk/plugin-state-test-runtime";
 import { describe, expect, it, vi } from "vitest";
 import { createIrcIngressMonitor } from "./irc-ingress.js";
 import { monitorIrcProvider } from "./monitor.js";
@@ -37,7 +37,7 @@ type IrcIngressQueue = NonNullable<Parameters<typeof createIrcIngressMonitor>[0]
 type IrcIngressPayload = Parameters<IrcIngressQueue["enqueue"]>[1];
 
 async function withIngressQueue<T>(fn: (queue: IrcIngressQueue) => Promise<T>): Promise<T> {
-  const created = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-irc-monitor-"));
+  const created = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-irc-monitor-"));
   const stateDir = await fs.realpath(created);
   const queue = createChannelIngressQueueForTests<IrcIngressPayload>({
     channelId: "irc",
@@ -342,8 +342,8 @@ describe("irc monitor reconnect", () => {
             tls: false,
             nick: "bot",
             username: "bot",
-            realname: "OpenClaw",
-            channels: ["#openclaw"],
+            realname: "GrokBot",
+            channels: ["#grokbot"],
           },
         },
       } as CoreConfig;
@@ -354,7 +354,7 @@ describe("irc monitor reconnect", () => {
         await waitForIrcCondition(
           () =>
             server.connectionCount >= 2 &&
-            server.lines.filter((line) => line === "USER bot 0 * :OpenClaw").length >= 2,
+            server.lines.filter((line) => line === "USER bot 0 * :GrokBot").length >= 2,
           "expected IRC monitor to reconnect after the first socket closed",
         );
         expect(server.connectionCount).toBeGreaterThanOrEqual(2);
@@ -393,7 +393,7 @@ describe("irc monitor reconnect", () => {
                 tls: false,
                 nick: "receipt-bot",
                 username: "bot",
-                realname: "OpenClaw",
+                realname: "GrokBot",
                 dmPolicy: "pairing",
               },
             },
@@ -434,19 +434,19 @@ describe("irc monitor inbound target", () => {
   it.each([
     {
       label: "channel",
-      serverTarget: "#openclaw",
-      expected: { isGroup: true, target: "#openclaw", rawTarget: "#openclaw" },
+      serverTarget: "#grokbot",
+      expected: { isGroup: true, target: "#grokbot", rawTarget: "#grokbot" },
     },
     {
       label: "DM",
-      serverTarget: "openclaw-bot",
-      expected: { isGroup: false, target: "alice", rawTarget: "openclaw-bot" },
+      serverTarget: "grokbot-bot",
+      expected: { isGroup: false, target: "alice", rawTarget: "grokbot-bot" },
     },
     {
       label: "channel with a colonless body",
-      serverTarget: "#openclaw",
+      serverTarget: "#grokbot",
       colonlessBody: true,
-      expected: { isGroup: true, target: "#openclaw", rawTarget: "#openclaw" },
+      expected: { isGroup: true, target: "#grokbot", rawTarget: "#grokbot" },
     },
   ])(
     "maps $label targets through the monitor boundary",
@@ -466,7 +466,7 @@ describe("irc monitor inbound target", () => {
                   tls: false,
                   nick: "bot",
                   username: "bot",
-                  realname: "OpenClaw",
+                  realname: "GrokBot",
                 },
               },
             } as CoreConfig,
@@ -507,9 +507,9 @@ describe("irc monitor inbound target", () => {
           receivedAt,
           connectionEpoch: "previous-connection",
           connectedNick: "receipt-bot",
-          rawLine: ":receipt-bot!ident@example.org PRIVMSG #openclaw :echo",
+          rawLine: ":receipt-bot!ident@example.org PRIVMSG #grokbot :echo",
         },
-        { receivedAt, laneKey: "channel:#openclaw" },
+        { receivedAt, laneKey: "channel:#grokbot" },
       );
       const server = await startInboundIrcServer(undefined, "reconnected-bot");
       const onMessage = vi.fn();
@@ -524,7 +524,7 @@ describe("irc monitor inbound target", () => {
                 tls: false,
                 nick: "reconnected-bot",
                 username: "bot",
-                realname: "OpenClaw",
+                realname: "GrokBot",
               },
             },
           } as CoreConfig,
@@ -575,7 +575,7 @@ describe("irc monitor inbound target", () => {
                 tls: false,
                 nick: "receipt-bot",
                 username: "bot",
-                realname: "OpenClaw",
+                realname: "GrokBot",
               },
             },
           } as CoreConfig,
@@ -600,7 +600,7 @@ describe("irc monitor inbound target", () => {
     await withIngressQueue(async (ingressQueue) => {
       const activityRecord = installMonitorRuntime();
       const enqueueSpy = vi.spyOn(ingressQueue, "enqueue");
-      const server = await startInboundIrcServer("#openclaw", "bot", false, "bot");
+      const server = await startInboundIrcServer("#grokbot", "bot", false, "bot");
       const onMessage = vi.fn();
       let monitor: { stop: () => Promise<void> } | undefined;
       try {
@@ -613,7 +613,7 @@ describe("irc monitor inbound target", () => {
                 tls: false,
                 nick: "bot",
                 username: "bot",
-                realname: "OpenClaw",
+                realname: "GrokBot",
               },
             },
           } as CoreConfig,

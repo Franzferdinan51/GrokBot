@@ -1,12 +1,12 @@
 // Codex plugin module implements auth behavior.
-import { loadAuthProfileStoreWithoutExternalProfiles } from "openclaw/plugin-sdk/agent-runtime";
+import { loadAuthProfileStoreWithoutExternalProfiles } from "grokbot/plugin-sdk/agent-runtime";
 import {
   createMigrationItem,
   markMigrationItemConflict,
   markMigrationItemError,
   markMigrationItemSkipped,
-} from "openclaw/plugin-sdk/migration";
-import type { MigrationItem, MigrationProviderContext } from "openclaw/plugin-sdk/plugin-entry";
+} from "grokbot/plugin-sdk/migration";
+import type { MigrationItem, MigrationProviderContext } from "grokbot/plugin-sdk/plugin-entry";
 import {
   applyAuthProfileConfig,
   buildApiKeyCredential,
@@ -20,11 +20,11 @@ import {
   type OAuthCredential,
   type OpenClawConfig,
   type ProviderAuthResult,
-} from "openclaw/plugin-sdk/provider-auth";
+} from "grokbot/plugin-sdk/provider-auth";
 import {
   isRecord,
   normalizeOptionalString as readString,
-} from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/string-coerce-runtime";
 import { readJsonObject } from "./helpers.js";
 import type { CodexSource } from "./source.js";
 import type { resolveCodexMigrationTargets } from "./targets.js";

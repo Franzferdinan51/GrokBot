@@ -1,7 +1,7 @@
 {
-  "name": "@openclaw/reef",
+  "name": "@grokbot/reef",
   "version": "2026.7.2",
-  "description": "OpenClaw Reef channel plugin — guarded end-to-end encrypted claw-to-claw messaging",
+  "description": "GrokBot Reef channel plugin — guarded end-to-end encrypted claw-to-claw messaging",
   "type": "module",
   "dependencies": {
     "@noble/ciphers": "2.2.0",
@@ -10,7 +10,7 @@
     "ws": "8.21.0",
     "zod": "4.4.3"
   },
-  "openclaw": {
+  "grokbot": {
     "extensions": [
       "./index.ts"
     ],
@@ -30,6 +30,6 @@
     }
   },
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@grokbot/plugin-sdk": "workspace:*"
   }
 }

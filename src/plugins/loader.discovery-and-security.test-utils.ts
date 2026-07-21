@@ -150,7 +150,7 @@ describe("loadOpenClawPlugins", () => {
             body: memoryPluginBody("memory-b"),
           });
           fs.writeFileSync(
-            path.join(memoryADir, "openclaw.plugin.json"),
+            path.join(memoryADir, "grokbot.plugin.json"),
             JSON.stringify(
               {
                 id: "memory-a",
@@ -163,7 +163,7 @@ describe("loadOpenClawPlugins", () => {
             "utf-8",
           );
           fs.writeFileSync(
-            path.join(memoryBDir, "openclaw.plugin.json"),
+            path.join(memoryBDir, "grokbot.plugin.json"),
             JSON.stringify(
               {
                 id: "memory-b",
@@ -367,7 +367,7 @@ describe("loadOpenClawPlugins", () => {
           });
           const openSchema = { type: "object", additionalProperties: true };
           fs.writeFileSync(
-            path.join(memoryCoreDir, "openclaw.plugin.json"),
+            path.join(memoryCoreDir, "grokbot.plugin.json"),
             JSON.stringify(
               { id: "memory-core", kind: "memory", configSchema: EMPTY_PLUGIN_SCHEMA },
               null,
@@ -376,7 +376,7 @@ describe("loadOpenClawPlugins", () => {
             "utf-8",
           );
           fs.writeFileSync(
-            path.join(memoryLanceDir, "openclaw.plugin.json"),
+            path.join(memoryLanceDir, "grokbot.plugin.json"),
             JSON.stringify(
               { id: "memory-lancedb", kind: "memory", configSchema: openSchema },
               null,
@@ -430,7 +430,7 @@ describe("loadOpenClawPlugins", () => {
             body: memoryPluginBody("memory-lancedb"),
           });
           fs.writeFileSync(
-            path.join(memoryCoreDir, "openclaw.plugin.json"),
+            path.join(memoryCoreDir, "grokbot.plugin.json"),
             JSON.stringify(
               { id: "memory-core", kind: "memory", configSchema: EMPTY_PLUGIN_SCHEMA },
               null,
@@ -439,7 +439,7 @@ describe("loadOpenClawPlugins", () => {
             "utf-8",
           );
           fs.writeFileSync(
-            path.join(memoryLanceDir, "openclaw.plugin.json"),
+            path.join(memoryLanceDir, "grokbot.plugin.json"),
             JSON.stringify(
               { id: "memory-lancedb", kind: "memory", configSchema: EMPTY_PLUGIN_SCHEMA },
               null,
@@ -483,7 +483,7 @@ describe("loadOpenClawPlugins", () => {
             body: `throw new Error("memory-core should not load when memory slot is none");`,
           });
           fs.writeFileSync(
-            path.join(memoryCoreDir, "openclaw.plugin.json"),
+            path.join(memoryCoreDir, "grokbot.plugin.json"),
             JSON.stringify(
               { id: "memory-core", kind: "memory", configSchema: EMPTY_PLUGIN_SCHEMA },
               null,
@@ -747,7 +747,7 @@ describe("loadOpenClawPlugins", () => {
             body: memoryPluginBody("memory-lancedb"),
           });
           return withStateDir((stateDir) => {
-            const globalDir = path.join(stateDir, "node_modules", "@openclaw", "memory-lancedb");
+            const globalDir = path.join(stateDir, "node_modules", "@grokbot", "memory-lancedb");
             mkdirSafe(globalDir);
             const globalPlugin = writePlugin({
               id: "memory-lancedb",
@@ -774,9 +774,9 @@ describe("loadOpenClawPlugins", () => {
               path.join(globalDir, "package.json"),
               JSON.stringify(
                 {
-                  name: "@openclaw/memory-lancedb",
+                  name: "@grokbot/memory-lancedb",
                   version: "2026.5.12-beta.1",
-                  openclaw: { extensions: ["./index.cjs"] },
+                  grokbot: { extensions: ["./index.cjs"] },
                 },
                 null,
                 2,
@@ -796,8 +796,8 @@ describe("loadOpenClawPlugins", () => {
                   installs: {
                     "memory-lancedb": {
                       source: "npm",
-                      spec: "@openclaw/memory-lancedb",
-                      resolvedName: "@openclaw/memory-lancedb",
+                      spec: "@grokbot/memory-lancedb",
+                      resolvedName: "@grokbot/memory-lancedb",
                       resolvedVersion: "2026.5.12-beta.1",
                       installPath: globalDir,
                     },
@@ -1035,8 +1035,8 @@ describe("loadOpenClawPlugins", () => {
     expect(openAllowWarning).toBeDefined();
     expect(openAllowWarning).toContain('"warn-open-allow-remediation"');
     expect(openAllowWarning).toContain('"plugins": { "allow": [');
-    expect(openAllowWarning).toContain("openclaw plugins list --enabled --verbose");
-    expect(openAllowWarning).toContain("openclaw plugins inspect warn-open-allow-remediation");
+    expect(openAllowWarning).toContain("grokbot plugins list --enabled --verbose");
+    expect(openAllowWarning).toContain("grokbot plugins inspect warn-open-allow-remediation");
   });
 
   it("includes actionable plugins.allow remediation hints in the untracked-provenance warning", () => {
@@ -1070,7 +1070,7 @@ describe("loadOpenClawPlugins", () => {
       );
       expect(untrackedWarning).toBeDefined();
       expect(untrackedWarning).toContain('"warn-untracked-remediation"');
-      expect(untrackedWarning).toContain("openclaw plugins inspect warn-untracked-remediation");
+      expect(untrackedWarning).toContain("grokbot plugins inspect warn-untracked-remediation");
       expect(untrackedWarning).toContain("reinstall from a trusted source");
 
       const diagnostic = registry.diagnostics.find(
@@ -1079,7 +1079,7 @@ describe("loadOpenClawPlugins", () => {
           entry.message.includes("loaded without install/load-path provenance"),
       );
       expect(diagnostic?.message).toContain('"warn-untracked-remediation"');
-      expect(diagnostic?.message).toContain("openclaw plugins inspect warn-untracked-remediation");
+      expect(diagnostic?.message).toContain("grokbot plugins inspect warn-untracked-remediation");
       expect(diagnostic?.message).toContain("reinstall from a trusted source");
     });
   });
@@ -1111,8 +1111,8 @@ describe("loadOpenClawPlugins", () => {
     expect(message).toContain("plugins.allow is empty");
     expect(message).toContain("(+2 more)");
     expect(message).not.toContain('"plugins": { "allow": [');
-    expect(message).toContain("openclaw plugins list --enabled --verbose");
-    expect(message).toContain("openclaw plugins inspect <id>");
+    expect(message).toContain("grokbot plugins list --enabled --verbose");
+    expect(message).toContain("grokbot plugins inspect <id>");
   });
 
   it("handles workspace-discovered plugins according to trust and precedence", () => {
@@ -1225,7 +1225,7 @@ describe("loadOpenClawPlugins", () => {
       body: simplePluginBody("profile-aware"),
     });
     fs.writeFileSync(
-      path.join(plugin.dir, "openclaw.plugin.json"),
+      path.join(plugin.dir, "grokbot.plugin.json"),
       JSON.stringify(
         {
           id: "profile-aware",
@@ -1412,7 +1412,7 @@ describe("loadOpenClawPlugins", () => {
 
           const pluginDir = path.join(
             realHome,
-            ".openclaw",
+            ".grokbot",
             "npm",
             "node_modules",
             "@example",
@@ -1432,7 +1432,7 @@ describe("loadOpenClawPlugins", () => {
                 spec: "@example/tracked-symlink-install@1.0.0",
                 installPath: path.join(
                   linkedHome,
-                  ".openclaw",
+                  ".grokbot",
                   "npm",
                   "node_modules",
                   "@example",

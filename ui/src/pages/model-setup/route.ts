@@ -1,5 +1,5 @@
-import type { RouteLocation } from "@openclaw/uirouter";
-import { definePage } from "@openclaw/uirouter";
+import type { RouteLocation } from "@grokbot/uirouter";
+import { definePage } from "@grokbot/uirouter";
 import { html } from "lit";
 import type { ApplicationContext } from "../../app/context.ts";
 import { hasOperatorAdminAccess } from "../../app/operator-access.ts";
@@ -19,7 +19,7 @@ async function loadModelSetupRouteData(
   if (
     !client ||
     !hasOperatorAdminAccess(snapshot.hello?.auth ?? null) ||
-    isGatewayMethodAdvertised(snapshot, "openclaw.setup.detect") !== true
+    isGatewayMethodAdvertised(snapshot, "grokbot.setup.detect") !== true
   ) {
     return { state: { phase: "loading" }, client, firstRun };
   }
@@ -55,6 +55,6 @@ export const page = definePage({
     import("./model-setup-page.ts").then(() => ({
       header: true,
       render: (data: ModelSetupRouteData | undefined) =>
-        html`<openclaw-model-setup-page .routeData=${data}></openclaw-model-setup-page>`,
+        html`<grokbot-model-setup-page .routeData=${data}></grokbot-model-setup-page>`,
     })),
 });

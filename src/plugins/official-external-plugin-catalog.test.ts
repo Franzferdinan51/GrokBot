@@ -4,7 +4,7 @@ import os from "node:os";
 import path from "node:path";
 import { describe, expect, it, vi } from "vitest";
 import officialExternalPluginCatalog from "../../scripts/lib/official-external-plugin-catalog.json" with { type: "json" };
-import { closeOpenClawStateDatabaseForTest } from "../state/openclaw-state-db.js";
+import { closeOpenClawStateDatabaseForTest } from "../state/grokbot-state-db.js";
 import { createSqliteHostedOfficialExternalPluginCatalogSnapshotStore } from "./official-external-plugin-catalog-snapshot-store.js";
 import {
   type HostedOfficialExternalPluginCatalogSnapshot,
@@ -32,7 +32,7 @@ function expectCatalogEntry(id: string): OfficialExternalPluginCatalogEntry {
   return entry;
 }
 
-const HOSTED_CATALOG_PAYLOAD_TYPE = "openclaw.official-external-plugin-catalog-feed.v1";
+const HOSTED_CATALOG_PAYLOAD_TYPE = "grokbot.official-external-plugin-catalog-feed.v1";
 
 type HostedCatalogConfig = NonNullable<
   NonNullable<
@@ -80,14 +80,14 @@ function hostedCatalogFeed(params: {
   const pluginId = params.pluginName.replace(/^@[^/]+\//u, "");
   return {
     schemaVersion: 1,
-    id: "openclaw-official-external-plugins",
+    id: "grokbot-official-external-plugins",
     generatedAt: `2026-06-22T00:00:${String(params.sequence).padStart(2, "0")}.000Z`,
     sequence: params.sequence,
     entries: [
       {
         name: params.pluginName,
         kind: "plugin",
-        openclaw: {
+        grokbot: {
           plugin: { id: pluginId },
           install: { sourceRef: "acme-npm", npmSpec: params.pluginName },
         },
@@ -146,7 +146,7 @@ function signedCatalogConfig(publicKeyPem: string): HostedCatalogConfig {
   return {
     feeds: {
       acme: {
-        url: "https://packages.acme.example/openclaw/feed",
+        url: "https://packages.acme.example/grokbot/feed",
         verification: {
           mode: "signed",
           keys: [{ keyId: "acme-root", publicKey: publicKeyPem }],
@@ -168,7 +168,7 @@ function signedHostedCatalogSnapshot(params: {
   return {
     body: params.body,
     metadata: {
-      url: "https://packages.acme.example/openclaw/feed",
+      url: "https://packages.acme.example/grokbot/feed",
       status: 200,
       checksum: `sha256:${crypto.createHash("sha256").update(params.body).digest("hex")}`,
     },
@@ -206,7 +206,7 @@ describe("official external plugin catalog", () => {
     expect(isOfficialExternalPluginCatalogFeed(officialExternalPluginCatalog)).toBe(true);
     expect(officialExternalPluginCatalog).toMatchObject({
       schemaVersion: 1,
-      id: "openclaw-official-external-plugins",
+      id: "grokbot-official-external-plugins",
       sequence: 1,
     });
     expect(officialExternalPluginCatalog.entries.length).toBeGreaterThan(0);
@@ -219,17 +219,17 @@ describe("official external plugin catalog", () => {
     expect(entry.kind).toBe("plugin");
     expect(manifest?.providers).toBeUndefined();
     expect(resolveOfficialExternalPluginInstall(entry)).toMatchObject({
-      npmSpec: "@openclaw/codex",
+      npmSpec: "@grokbot/codex",
       defaultChoice: "npm",
     });
   });
 
   it("curates featured external plugins with ClawHub install alternatives", () => {
     const featured = [
-      ["diffs", "@openclaw/diffs", 40],
-      ["lobster", "@openclaw/lobster", 50],
-      ["tokenjuice", "@openclaw/tokenjuice", 60],
-      ["memory-lancedb", "@openclaw/memory-lancedb", 70],
+      ["diffs", "@grokbot/diffs", 40],
+      ["lobster", "@grokbot/lobster", 50],
+      ["tokenjuice", "@grokbot/tokenjuice", 60],
+      ["memory-lancedb", "@grokbot/memory-lancedb", 70],
     ] as const;
 
     for (const [id, npmSpec, order] of featured) {
@@ -259,7 +259,7 @@ describe("official external plugin catalog", () => {
     expect(
       isOfficialExternalPluginCatalogFeed({
         schemaVersion: 2,
-        id: "openclaw-official-external-plugins",
+        id: "grokbot-official-external-plugins",
         generatedAt: "2026-06-22T00:00:00.000Z",
         sequence: 1,
         entries: [],
@@ -268,7 +268,7 @@ describe("official external plugin catalog", () => {
     expect(
       isOfficialExternalPluginCatalogFeed({
         schemaVersion: 3,
-        id: "openclaw-official-external-plugins",
+        id: "grokbot-official-external-plugins",
         generatedAt: "2026-06-22T00:00:00.000Z",
         sequence: 1,
         entries: [],
@@ -282,7 +282,7 @@ describe("official external plugin catalog", () => {
       expect(
         isOfficialExternalPluginCatalogFeed({
           schemaVersion: 1,
-          id: "openclaw-official-external-plugins",
+          id: "grokbot-official-external-plugins",
           generatedAt,
           sequence: 2,
           entries: [],
@@ -293,7 +293,7 @@ describe("official external plugin catalog", () => {
       expect(
         isOfficialExternalPluginCatalogFeed({
           schemaVersion: 1,
-          id: "openclaw-official-external-plugins",
+          id: "grokbot-official-external-plugins",
           generatedAt: "2026-06-22T00:00:00.000Z",
           sequence,
           entries: [],
@@ -311,7 +311,7 @@ describe("official external plugin catalog", () => {
       expect(
         isOfficialExternalPluginCatalogFeed({
           schemaVersion: 1,
-          id: "openclaw-official-external-plugins",
+          id: "grokbot-official-external-plugins",
           generatedAt,
           sequence: 2,
           entries: [],
@@ -420,7 +420,7 @@ describe("official external plugin catalog", () => {
   });
 
   it("reads and updates hosted catalog snapshots in the SQLite store", async () => {
-    const stateDir = mkdtempSync(path.join(os.tmpdir(), "openclaw-hosted-store-"));
+    const stateDir = mkdtempSync(path.join(os.tmpdir(), "grokbot-hosted-store-"));
     try {
       const store = createSqliteHostedOfficialExternalPluginCatalogSnapshotStore({ stateDir });
       const url = "https://clawhub.ai/v1/feeds/plugins";
@@ -481,13 +481,13 @@ describe("official external plugin catalog", () => {
   });
 
   it("keeps signed SQLite snapshot writes monotonic when writes compete", async () => {
-    const stateDir = mkdtempSync(path.join(os.tmpdir(), "openclaw-signed-snapshot-race-"));
-    const url = "https://packages.acme.example/openclaw/feed";
+    const stateDir = mkdtempSync(path.join(os.tmpdir(), "grokbot-signed-snapshot-race-"));
+    const url = "https://packages.acme.example/grokbot/feed";
     const newer = signedHostedCatalogFeed({
-      feed: hostedCatalogFeed({ sequence: 10, pluginName: "@openclaw/signed-v10" }),
+      feed: hostedCatalogFeed({ sequence: 10, pluginName: "@grokbot/signed-v10" }),
     });
     const older = signedHostedCatalogFeed({
-      feed: hostedCatalogFeed({ sequence: 9, pluginName: "@openclaw/signed-v9" }),
+      feed: hostedCatalogFeed({ sequence: 9, pluginName: "@grokbot/signed-v9" }),
       privateKeyPem: newer.privateKeyPem,
     });
     const snapshotStore = createSqliteHostedOfficialExternalPluginCatalogSnapshotStore({
@@ -534,17 +534,17 @@ describe("official external plugin catalog", () => {
   });
 
   it("replaces malformed signed SQLite snapshot metadata with a valid snapshot", async () => {
-    const stateDir = mkdtempSync(path.join(os.tmpdir(), "openclaw-signed-snapshot-repair-"));
-    const url = "https://packages.acme.example/openclaw/feed";
+    const stateDir = mkdtempSync(path.join(os.tmpdir(), "grokbot-signed-snapshot-repair-"));
+    const url = "https://packages.acme.example/grokbot/feed";
     const malformed = signedHostedCatalogFeed({
       feed: {
-        ...hostedCatalogFeed({ sequence: 10, pluginName: "@openclaw/malformed-current" }),
+        ...hostedCatalogFeed({ sequence: 10, pluginName: "@grokbot/malformed-current" }),
         generatedAt: "2026-02-30T00:00:00.000Z",
       },
     });
     const validFeed = hostedCatalogFeed({
       sequence: 10,
-      pluginName: "@openclaw/repaired-current",
+      pluginName: "@grokbot/repaired-current",
     });
     const valid = signedHostedCatalogFeed({
       feed: validFeed,
@@ -552,7 +552,7 @@ describe("official external plugin catalog", () => {
     });
     const lowerFeed = hostedCatalogFeed({
       sequence: 9,
-      pluginName: "@openclaw/lower-current",
+      pluginName: "@grokbot/lower-current",
     });
     const lower = signedHostedCatalogFeed({
       feed: lowerFeed,
@@ -598,13 +598,13 @@ describe("official external plugin catalog", () => {
   });
 
   it("ignores an invalid recovered sequence when repairing a signed SQLite snapshot", async () => {
-    const stateDir = mkdtempSync(path.join(os.tmpdir(), "openclaw-signed-snapshot-sequence-"));
-    const url = "https://packages.acme.example/openclaw/feed";
+    const stateDir = mkdtempSync(path.join(os.tmpdir(), "grokbot-signed-snapshot-sequence-"));
+    const url = "https://packages.acme.example/grokbot/feed";
     const malformedBody =
-      '{"schemaVersion":1,"id":"openclaw-official-external-plugins","generatedAt":"not-a-date","sequence":1e999,"entries":[]}';
+      '{"schemaVersion":1,"id":"grokbot-official-external-plugins","generatedAt":"not-a-date","sequence":1e999,"entries":[]}';
     const validFeed = hostedCatalogFeed({
       sequence: 10,
-      pluginName: "@openclaw/repaired-sequence",
+      pluginName: "@grokbot/repaired-sequence",
     });
     const valid = signedHostedCatalogFeed({ feed: validFeed });
     const snapshotStore = createSqliteHostedOfficialExternalPluginCatalogSnapshotStore({
@@ -637,10 +637,10 @@ describe("official external plugin catalog", () => {
 
   it("verifies signed hosted feeds and rejects rollback before replacing snapshots", async () => {
     const newer = signedHostedCatalogFeed({
-      feed: hostedCatalogFeed({ sequence: 10, pluginName: "@openclaw/signed-v10" }),
+      feed: hostedCatalogFeed({ sequence: 10, pluginName: "@grokbot/signed-v10" }),
     });
     const older = signedHostedCatalogFeed({
-      feed: hostedCatalogFeed({ sequence: 9, pluginName: "@openclaw/signed-v9" }),
+      feed: hostedCatalogFeed({ sequence: 9, pluginName: "@grokbot/signed-v9" }),
       privateKeyPem: newer.privateKeyPem,
     });
     const snapshotStore = createInMemoryHostedCatalogSnapshotStore();
@@ -655,7 +655,7 @@ describe("official external plugin catalog", () => {
     });
 
     expect(accepted.source).toBe("hosted");
-    expect(accepted.entries.map((entry) => entry.name)).toEqual(["@openclaw/signed-v10"]);
+    expect(accepted.entries.map((entry) => entry.name)).toEqual(["@grokbot/signed-v10"]);
     if (accepted.source === "hosted") {
       expect(accepted.trust).toMatchObject({
         mode: "signed",
@@ -675,7 +675,7 @@ describe("official external plugin catalog", () => {
     });
 
     expect(rolledBack.source).toBe("hosted-snapshot");
-    expect(rolledBack.entries.map((entry) => entry.name)).toEqual(["@openclaw/signed-v10"]);
+    expect(rolledBack.entries.map((entry) => entry.name)).toEqual(["@grokbot/signed-v10"]);
     if (rolledBack.source === "hosted-snapshot") {
       expect(rolledBack.error).toContain("signed feed sequence is older");
     }
@@ -685,7 +685,7 @@ describe("official external plugin catalog", () => {
   it("rejects malformed feed timestamps before rollback handling", async () => {
     const malformed = signedHostedCatalogFeed({
       feed: {
-        ...hostedCatalogFeed({ sequence: 11, pluginName: "@openclaw/malformed-date" }),
+        ...hostedCatalogFeed({ sequence: 11, pluginName: "@grokbot/malformed-date" }),
         generatedAt: "not-a-date",
       },
     });
@@ -706,19 +706,19 @@ describe("official external plugin catalog", () => {
   it("replaces a signed snapshot with an invalid timestamp using a valid feed", async () => {
     const malformed = signedHostedCatalogFeed({
       feed: {
-        ...hostedCatalogFeed({ sequence: 10, pluginName: "@openclaw/malformed-current" }),
+        ...hostedCatalogFeed({ sequence: 10, pluginName: "@grokbot/malformed-current" }),
         generatedAt: "not-a-date",
       },
     });
     const valid = signedHostedCatalogFeed({
-      feed: hostedCatalogFeed({ sequence: 10, pluginName: "@openclaw/repaired-current" }),
+      feed: hostedCatalogFeed({ sequence: 10, pluginName: "@grokbot/repaired-current" }),
       privateKeyPem: malformed.privateKeyPem,
     });
     const lower = signedHostedCatalogFeed({
-      feed: hostedCatalogFeed({ sequence: 9, pluginName: "@openclaw/lower-current" }),
+      feed: hostedCatalogFeed({ sequence: 9, pluginName: "@grokbot/lower-current" }),
       privateKeyPem: malformed.privateKeyPem,
     });
-    const url = "https://packages.acme.example/openclaw/feed";
+    const url = "https://packages.acme.example/grokbot/feed";
     const snapshotStore = createInMemoryHostedCatalogSnapshotStore([
       signedHostedCatalogSnapshot({ body: malformed.body }),
     ]);
@@ -741,18 +741,18 @@ describe("official external plugin catalog", () => {
     });
 
     expect(result.source).toBe("hosted");
-    expect(result.entries.map((entry) => entry.name)).toEqual(["@openclaw/repaired-current"]);
+    expect(result.entries.map((entry) => entry.name)).toEqual(["@grokbot/repaired-current"]);
     await expect(snapshotStore.read(url)).resolves.toMatchObject({ body: valid.body });
   });
 
   it("does not replace a signed snapshot that fails current trust verification", async () => {
     const current = signedHostedCatalogFeed({
-      feed: hostedCatalogFeed({ sequence: 10, pluginName: "@openclaw/current-key" }),
+      feed: hostedCatalogFeed({ sequence: 10, pluginName: "@grokbot/current-key" }),
     });
     const candidate = signedHostedCatalogFeed({
-      feed: hostedCatalogFeed({ sequence: 9, pluginName: "@openclaw/new-key" }),
+      feed: hostedCatalogFeed({ sequence: 9, pluginName: "@grokbot/new-key" }),
     });
-    const url = "https://packages.acme.example/openclaw/feed";
+    const url = "https://packages.acme.example/grokbot/feed";
     const snapshotStore = createInMemoryHostedCatalogSnapshotStore([
       signedHostedCatalogSnapshot({ body: current.body }),
     ]);
@@ -775,11 +775,11 @@ describe("official external plugin catalog", () => {
 
   it("fails closed for unsigned signed-profile responses and re-verifies offline snapshots", async () => {
     const signed = signedHostedCatalogFeed({
-      feed: hostedCatalogFeed({ sequence: 8, pluginName: "@openclaw/signed-offline" }),
+      feed: hostedCatalogFeed({ sequence: 8, pluginName: "@grokbot/signed-offline" }),
     });
     const catalogConfig = signedCatalogConfig(signed.publicKeyPem);
     const unsignedBody = JSON.stringify(
-      hostedCatalogFeed({ sequence: 8, pluginName: "@openclaw/unsigned" }),
+      hostedCatalogFeed({ sequence: 8, pluginName: "@grokbot/unsigned" }),
     );
 
     const unsigned = await loadHostedCatalog({
@@ -809,13 +809,13 @@ describe("official external plugin catalog", () => {
     });
 
     expect(offline.source).toBe("hosted-snapshot");
-    expect(offline.entries.map((entry) => entry.name)).toEqual(["@openclaw/signed-offline"]);
+    expect(offline.entries.map((entry) => entry.name)).toEqual(["@grokbot/signed-offline"]);
 
     const unsignedSnapshot = createInMemoryHostedCatalogSnapshotStore([
       {
         body: unsignedBody,
         metadata: {
-          url: "https://packages.acme.example/openclaw/feed",
+          url: "https://packages.acme.example/grokbot/feed",
           status: 200,
           checksum: `sha256:${crypto.createHash("sha256").update(unsignedBody).digest("hex")}`,
         },
@@ -838,7 +838,7 @@ describe("official external plugin catalog", () => {
   it.each([
     [
       "off-allowlist hosts",
-      "https://packages.acme.example/openclaw/feed",
+      "https://packages.acme.example/grokbot/feed",
       "hostname is not allowed",
     ],
     [
@@ -869,10 +869,10 @@ describe("official external plugin catalog", () => {
 
   it("preserves signed profile verification for direct feed URL overrides", async () => {
     const signed = signedHostedCatalogFeed({
-      feed: hostedCatalogFeed({ sequence: 8, pluginName: "@openclaw/signed-override" }),
+      feed: hostedCatalogFeed({ sequence: 8, pluginName: "@grokbot/signed-override" }),
     });
     const unsignedBody = JSON.stringify(
-      hostedCatalogFeed({ sequence: 8, pluginName: "@openclaw/unsigned-override" }),
+      hostedCatalogFeed({ sequence: 8, pluginName: "@grokbot/unsigned-override" }),
     );
     const result = await loadHostedCatalog({
       feedProfile: "acme",
@@ -891,14 +891,14 @@ describe("official external plugin catalog", () => {
   it("filters hosted entries that reference unknown source profiles", async () => {
     const body = JSON.stringify({
       schemaVersion: 1,
-      id: "openclaw-official-external-plugins",
+      id: "grokbot-official-external-plugins",
       generatedAt: "2026-06-22T00:00:10.000Z",
       sequence: 10,
       entries: [
         {
           name: "@acme/known-source",
           kind: "plugin",
-          openclaw: {
+          grokbot: {
             plugin: { id: "known-source" },
             install: { sourceRef: "acme-npm", npmSpec: "@acme/known-source" },
           },
@@ -906,7 +906,7 @@ describe("official external plugin catalog", () => {
         {
           name: "@acme/unknown-source",
           kind: "plugin",
-          openclaw: {
+          grokbot: {
             plugin: { id: "unknown-source" },
             install: { sourceRef: "attacker-npm", npmSpec: "@acme/unknown-source" },
           },
@@ -916,7 +916,7 @@ describe("official external plugin catalog", () => {
     const result = await loadHostedCatalog({
       feedProfile: "acme",
       catalogConfig: {
-        feeds: { acme: { url: "https://packages.acme.example/openclaw/feed" } },
+        feeds: { acme: { url: "https://packages.acme.example/grokbot/feed" } },
         sources: {
           "acme-npm": { type: "npm", registry: "https://packages.acme.example/npm/" },
         },
@@ -932,7 +932,7 @@ describe("official external plugin catalog", () => {
   it("enforces hosted checksum and response-size limits", async () => {
     const validBody = JSON.stringify({
       schemaVersion: 1,
-      id: "openclaw-official-external-plugins",
+      id: "grokbot-official-external-plugins",
       generatedAt: "2026-06-22T00:00:01.000Z",
       sequence: 1,
       entries: [],
@@ -983,7 +983,7 @@ describe("official external plugin catalog", () => {
     const snapshotStore = createInMemoryHostedCatalogSnapshotStore();
     const body = JSON.stringify({
       schemaVersion: 1,
-      id: "openclaw-official-external-plugins",
+      id: "grokbot-official-external-plugins",
       generatedAt: "2026-06-22T00:00:01.000Z",
       sequence: 1,
       entries: [],
@@ -1020,18 +1020,18 @@ describe("official external plugin catalog", () => {
         name: "@legacy/plain-package",
         kind: "plugin",
         state: "available",
-        publisher: { id: "openclaw", trust: "official" },
+        publisher: { id: "grokbot", trust: "official" },
         install: {
           candidates: [
             {
               sourceRef: "public-clawhub",
-              package: "@openclaw/candidate-package",
+              package: "@grokbot/candidate-package",
               version: "1.2.3",
               integrity: "sha256:b355dda04403becaab8bbab069fd1e7b0578262e7459e598cc5b19615b5bdab9",
             },
           ],
         },
-        openclaw: {
+        grokbot: {
           plugin: { id: "candidate-package" },
           install: {
             npmSpec: "@legacy/plain-package",
@@ -1042,7 +1042,7 @@ describe("official external plugin catalog", () => {
         },
       }),
     ).toEqual({
-      clawhubSpec: "clawhub:@openclaw/candidate-package@1.2.3",
+      clawhubSpec: "clawhub:@grokbot/candidate-package@1.2.3",
       defaultChoice: "clawhub",
       expectedIntegrity: "sha256-s1XdoEQDvsqri7qwaf0eewV4Ji50WeWYzFsZYVtb2rk=",
       minHostVersion: ">=2026.6.1",
@@ -1138,43 +1138,43 @@ describe("official external plugin catalog", () => {
 
   it("lists the externalized provider and capability plugins with install metadata", () => {
     const providers = [
-      ["arcee", "@openclaw/arcee-provider"],
-      ["cerebras", "@openclaw/cerebras-provider"],
-      ["chutes", "@openclaw/chutes-provider"],
-      ["cloudflare-ai-gateway", "@openclaw/cloudflare-ai-gateway-provider"],
-      ["deepinfra", "@openclaw/deepinfra-provider"],
-      ["deepseek", "@openclaw/deepseek-provider"],
-      ["groq", "@openclaw/groq-provider"],
-      ["longcat", "@openclaw/longcat-provider"],
-      ["kilocode", "@openclaw/kilocode-provider"],
-      ["kimi", "@openclaw/kimi-provider"],
-      ["qianfan", "@openclaw/qianfan-provider"],
-      ["qwen", "@openclaw/qwen-provider"],
+      ["arcee", "@grokbot/arcee-provider"],
+      ["cerebras", "@grokbot/cerebras-provider"],
+      ["chutes", "@grokbot/chutes-provider"],
+      ["cloudflare-ai-gateway", "@grokbot/cloudflare-ai-gateway-provider"],
+      ["deepinfra", "@grokbot/deepinfra-provider"],
+      ["deepseek", "@grokbot/deepseek-provider"],
+      ["groq", "@grokbot/groq-provider"],
+      ["longcat", "@grokbot/longcat-provider"],
+      ["kilocode", "@grokbot/kilocode-provider"],
+      ["kimi", "@grokbot/kimi-provider"],
+      ["qianfan", "@grokbot/qianfan-provider"],
+      ["qwen", "@grokbot/qwen-provider"],
     ] as const;
     const plugins = [
-      ["exa", "@openclaw/exa-plugin"],
-      ["firecrawl", "@openclaw/firecrawl-plugin"],
-      ["gradium", "@openclaw/gradium-speech"],
-      ["inworld", "@openclaw/inworld-speech"],
-      ["parallel", "@openclaw/parallel-plugin"],
-      ["perplexity", "@openclaw/perplexity-plugin"],
+      ["exa", "@grokbot/exa-plugin"],
+      ["firecrawl", "@grokbot/firecrawl-plugin"],
+      ["gradium", "@grokbot/gradium-speech"],
+      ["inworld", "@grokbot/inworld-speech"],
+      ["parallel", "@grokbot/parallel-plugin"],
+      ["perplexity", "@grokbot/perplexity-plugin"],
     ] as const;
     const newlyExternalized = [
-      ["clickclack", "@openclaw/clickclack"],
-      ["fireworks", "@openclaw/fireworks-provider"],
-      ["irc", "@openclaw/irc"],
-      ["mattermost", "@openclaw/mattermost"],
-      ["moonshot", "@openclaw/moonshot-provider"],
-      ["searxng", "@openclaw/searxng-plugin"],
-      ["signal", "@openclaw/signal"],
-      ["sms", "@openclaw/sms"],
-      ["tavily", "@openclaw/tavily-plugin"],
-      ["tencent", "@openclaw/tencent-provider"],
-      ["venice", "@openclaw/venice-provider"],
-      ["vercel-ai-gateway", "@openclaw/vercel-ai-gateway-provider"],
-      ["zai", "@openclaw/zai-provider"],
+      ["clickclack", "@grokbot/clickclack"],
+      ["fireworks", "@grokbot/fireworks-provider"],
+      ["irc", "@grokbot/irc"],
+      ["mattermost", "@grokbot/mattermost"],
+      ["moonshot", "@grokbot/moonshot-provider"],
+      ["searxng", "@grokbot/searxng-plugin"],
+      ["signal", "@grokbot/signal"],
+      ["sms", "@grokbot/sms"],
+      ["tavily", "@grokbot/tavily-plugin"],
+      ["tencent", "@grokbot/tencent-provider"],
+      ["venice", "@grokbot/venice-provider"],
+      ["vercel-ai-gateway", "@grokbot/vercel-ai-gateway-provider"],
+      ["zai", "@grokbot/zai-provider"],
     ] as const;
-    const currentExternalized = [["featherless", "@openclaw/featherless-provider"]] as const;
+    const currentExternalized = [["featherless", "@grokbot/featherless-provider"]] as const;
 
     for (const [id, npmSpec] of [...providers, ...plugins]) {
       expect(resolveOfficialExternalPluginInstall(expectCatalogEntry(id))).toEqual({
@@ -1204,8 +1204,8 @@ describe("official external plugin catalog", () => {
 
   it("advertises StepFun with its ClawHub package and plugin API floor", () => {
     expect(resolveOfficialExternalPluginInstall(expectCatalogEntry("stepfun"))).toEqual({
-      clawhubSpec: "clawhub:@openclaw/stepfun-provider",
-      npmSpec: "@openclaw/stepfun-provider",
+      clawhubSpec: "clawhub:@grokbot/stepfun-provider",
+      npmSpec: "@grokbot/stepfun-provider",
       defaultChoice: "npm",
       minHostVersion: ">=2026.6.9",
     });
@@ -1213,40 +1213,40 @@ describe("official external plugin catalog", () => {
 
   it("resolves third-party channel lookup aliases to published plugin ids", () => {
     const wecomByChannel = expectCatalogEntry("wecom");
-    const wecomByPlugin = expectCatalogEntry("wecom-openclaw-plugin");
+    const wecomByPlugin = expectCatalogEntry("wecom-grokbot-plugin");
     const yuanbaoByChannel = expectCatalogEntry("yuanbao");
 
-    expect(resolveOfficialExternalPluginId(wecomByChannel)).toBe("wecom-openclaw-plugin");
-    expect(resolveOfficialExternalPluginId(wecomByPlugin)).toBe("wecom-openclaw-plugin");
+    expect(resolveOfficialExternalPluginId(wecomByChannel)).toBe("wecom-grokbot-plugin");
+    expect(resolveOfficialExternalPluginId(wecomByPlugin)).toBe("wecom-grokbot-plugin");
     expect(resolveOfficialExternalPluginInstall(wecomByChannel)?.npmSpec).toBe(
-      "@wecom/wecom-openclaw-plugin@2026.5.7",
+      "@wecom/wecom-grokbot-plugin@2026.5.7",
     );
-    expect(resolveOfficialExternalPluginId(yuanbaoByChannel)).toBe("openclaw-plugin-yuanbao");
+    expect(resolveOfficialExternalPluginId(yuanbaoByChannel)).toBe("grokbot-plugin-yuanbao");
     expect(resolveOfficialExternalPluginInstall(yuanbaoByChannel)?.npmSpec).toBe(
-      "openclaw-plugin-yuanbao@2.15.0",
+      "grokbot-plugin-yuanbao@2.15.0",
     );
   });
 
   it("keeps official launch package specs on the production package names", () => {
     expect(resolveOfficialExternalPluginInstall(expectCatalogEntry("acpx"))?.npmSpec).toBe(
-      "@openclaw/acpx",
+      "@grokbot/acpx",
     );
     expect(resolveOfficialExternalPluginInstall(expectCatalogEntry("googlechat"))?.npmSpec).toBe(
-      "@openclaw/googlechat",
+      "@grokbot/googlechat",
     );
     expect(resolveOfficialExternalPluginInstall(expectCatalogEntry("line"))?.npmSpec).toBe(
-      "@openclaw/line",
+      "@grokbot/line",
     );
     expect(resolveOfficialExternalPluginInstall(expectCatalogEntry("diffs-language-pack"))).toEqual(
       {
-        npmSpec: "@openclaw/diffs-language-pack",
-        clawhubSpec: "clawhub:@openclaw/diffs-language-pack",
+        npmSpec: "@grokbot/diffs-language-pack",
+        clawhubSpec: "clawhub:@grokbot/diffs-language-pack",
         defaultChoice: "npm",
         minHostVersion: ">=2026.5.27",
       },
     );
     expect(resolveOfficialExternalPluginInstall(expectCatalogEntry("llama-cpp"))?.npmSpec).toBe(
-      "@openclaw/llama-cpp-provider",
+      "@grokbot/llama-cpp-provider",
     );
   });
 
@@ -1256,8 +1256,8 @@ describe("official external plugin catalog", () => {
     expect(resolveOfficialExternalPluginId(gmi)).toBe("gmi");
     expect(getOfficialExternalPluginCatalogEntry("gmi-cloud")).toBe(gmi);
     expect(resolveOfficialExternalPluginInstall(gmi)).toEqual({
-      clawhubSpec: "clawhub:@openclaw/gmi-provider",
-      npmSpec: "@openclaw/gmi-provider",
+      clawhubSpec: "clawhub:@grokbot/gmi-provider",
+      npmSpec: "@grokbot/gmi-provider",
       defaultChoice: "npm",
       minHostVersion: ">=2026.6.8",
     });
@@ -1268,8 +1268,8 @@ describe("official external plugin catalog", () => {
 
     expect(resolveOfficialExternalPluginId(cohere)).toBe("cohere");
     expect(resolveOfficialExternalPluginInstall(cohere)).toEqual({
-      clawhubSpec: "clawhub:@openclaw/cohere-provider",
-      npmSpec: "@openclaw/cohere-provider",
+      clawhubSpec: "clawhub:@grokbot/cohere-provider",
+      npmSpec: "@grokbot/cohere-provider",
       defaultChoice: "npm",
       minHostVersion: ">=2026.6.8",
     });
@@ -1281,8 +1281,8 @@ describe("official external plugin catalog", () => {
     expect(resolveOfficialExternalPluginId(longcat)).toBe("longcat");
     expect(getOfficialExternalPluginCatalogEntry("meituan-longcat")).toBe(longcat);
     expect(resolveOfficialExternalPluginInstall(longcat)).toEqual({
-      clawhubSpec: "clawhub:@openclaw/longcat-provider",
-      npmSpec: "@openclaw/longcat-provider",
+      clawhubSpec: "clawhub:@grokbot/longcat-provider",
+      npmSpec: "@grokbot/longcat-provider",
       defaultChoice: "npm",
       minHostVersion: ">=2026.6.8",
     });
@@ -1401,10 +1401,10 @@ describe("official external plugin catalog", () => {
 
   it("keeps Tencent auth choices available through the cold-install auth catalog", () => {
     const tencent = expectCatalogEntry("tencent");
-    const tokenHub = tencent.openclaw?.providers?.find(
+    const tokenHub = tencent.grokbot?.providers?.find(
       (provider) => provider.id === "tencent-tokenhub",
     );
-    const tokenPlan = tencent.openclaw?.providers?.find(
+    const tokenPlan = tencent.grokbot?.providers?.find(
       (provider) => provider.id === "tencent-tokenplan",
     );
 
@@ -1426,7 +1426,7 @@ describe("official external plugin catalog", () => {
 
   it("keeps Groq available through the cold-install auth catalog", () => {
     const groq = expectCatalogEntry("groq");
-    const authChoice = groq.openclaw?.providers?.find((provider) => provider.id === "groq")
+    const authChoice = groq.grokbot?.providers?.find((provider) => provider.id === "groq")
       ?.authChoices?.[0];
 
     expect(authChoice).toMatchObject({
@@ -1439,23 +1439,23 @@ describe("official external plugin catalog", () => {
 
   it("allows invalid-config recovery for externalized stock plugins", () => {
     expect(resolveOfficialExternalPluginInstall(expectCatalogEntry("brave"))).toMatchObject({
-      npmSpec: "@openclaw/brave-plugin",
+      npmSpec: "@grokbot/brave-plugin",
       allowInvalidConfigRecovery: true,
     });
     expect(resolveOfficialExternalPluginInstall(expectCatalogEntry("slack"))).toMatchObject({
-      npmSpec: "@openclaw/slack",
+      npmSpec: "@grokbot/slack",
       allowInvalidConfigRecovery: true,
     });
     expect(resolveOfficialExternalPluginInstall(expectCatalogEntry("discord"))).toMatchObject({
-      npmSpec: "@openclaw/discord",
+      npmSpec: "@grokbot/discord",
       allowInvalidConfigRecovery: true,
     });
     expect(resolveOfficialExternalPluginInstall(expectCatalogEntry("mattermost"))).toMatchObject({
-      npmSpec: "@openclaw/mattermost",
+      npmSpec: "@grokbot/mattermost",
       allowInvalidConfigRecovery: true,
     });
     expect(resolveOfficialExternalPluginInstall(expectCatalogEntry("tavily"))).toMatchObject({
-      npmSpec: "@openclaw/tavily-plugin",
+      npmSpec: "@grokbot/tavily-plugin",
       allowInvalidConfigRecovery: true,
     });
   });
@@ -1472,8 +1472,8 @@ describe("official external plugin catalog", () => {
     expect(ids.has("matrix")).toBe(true);
     expect(ids.has("mattermost")).toBe(true);
     expect(resolveOfficialExternalPluginInstall(expectCatalogEntry("matrix"))).toEqual({
-      clawhubSpec: "clawhub:@openclaw/matrix",
-      npmSpec: "@openclaw/matrix",
+      clawhubSpec: "clawhub:@grokbot/matrix",
+      npmSpec: "@grokbot/matrix",
       defaultChoice: "clawhub",
       minHostVersion: ">=2026.4.10",
       allowInvalidConfigRecovery: true,

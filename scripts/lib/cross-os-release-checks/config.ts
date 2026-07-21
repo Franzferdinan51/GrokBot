@@ -27,7 +27,7 @@ export type PackageJson = {
   name?: string;
   version?: string;
   scripts?: Record<string, string>;
-  openclaw?: { commit?: string };
+  grokbot?: { commit?: string };
 };
 export type LaneState = {
   name: string;
@@ -96,7 +96,7 @@ export type SummaryPayload = {
   };
 };
 
-export const PUBLISHED_INSTALLER_BASE_URL = "https://openclaw.ai";
+export const PUBLISHED_INSTALLER_BASE_URL = "https://grokbot.ai";
 
 const SUPPORTED_MODES = new Set<CrossOsMode>(["fresh", "upgrade", "both"]);
 const SUPPORTED_SUITES = new Set<CrossOsSuite>([
@@ -184,7 +184,7 @@ export function buildReleaseProviderConfigOverride(providerMeta: ProviderConfig)
   }
   return {
     ...(typeof providerMeta.baseUrl === "string" ? { baseUrl: providerMeta.baseUrl } : {}),
-    ...(providerMeta.extensionId === "openai" ? { agentRuntime: { id: "openclaw" } } : {}),
+    ...(providerMeta.extensionId === "openai" ? { agentRuntime: { id: "grokbot" } } : {}),
     models: [],
     ...(typeof providerMeta.timeoutSeconds === "number"
       ? { timeoutSeconds: providerMeta.timeoutSeconds }
@@ -193,7 +193,7 @@ export function buildReleaseProviderConfigOverride(providerMeta: ProviderConfig)
 }
 
 export const PACKAGE_DIST_INVENTORY_RELATIVE_PATH = "dist/postinstall-inventory.json";
-export const INSTALL_STAGE_DEBRIS_DIR_PATTERN = /^\.openclaw-install-stage(?:-[^/]+)?$/iu;
+export const INSTALL_STAGE_DEBRIS_DIR_PATTERN = /^\.grokbot-install-stage(?:-[^/]+)?$/iu;
 export const OMITTED_QA_EXTENSION_PREFIXES = [
   "dist/extensions/qa-channel/",
   "dist/extensions/qa-lab/",
@@ -612,7 +612,7 @@ export function isRecoverableWindowsPackagedUpgradeSwapCleanupFailure(
     /\bglobal install swap\b/iu.test(output) &&
     /\bEPERM\b/iu.test(output) &&
     /\bunlink\b/iu.test(output) &&
-    /[/\\]\.openclaw-\d+-\d+[/\\]/u.test(output) &&
+    /[/\\]\.grokbot-\d+-\d+[/\\]/u.test(output) &&
     /\.node['"]?/iu.test(output)
   );
 }
@@ -627,7 +627,7 @@ export function isRecoverableWindowsPackagedUpgradeTimeoutError(
   const message = error instanceof Error ? error.message : String(error);
   return (
     /\bCommand timed out:/u.test(message) &&
-    /[/\\]openclaw\.mjs update --tag http:\/\/127\.0\.0\.1:\d+\/openclaw[^/\s]*\.tgz --yes --json(?: --no-restart)? --timeout \d+/u.test(
+    /[/\\]grokbot\.mjs update --tag http:\/\/127\.0\.0\.1:\d+\/grokbot[^/\s]*\.tgz --yes --json(?: --no-restart)? --timeout \d+/u.test(
       message,
     )
   );
@@ -656,11 +656,11 @@ export function verifyWindowsPackagedUpgradeFallbackInstall({
 
 export function resolveExplicitBaselineVersion(baselineSpec: string) {
   const trimmed = baselineSpec.trim();
-  if (!trimmed || trimmed === "openclaw@latest") {
+  if (!trimmed || trimmed === "grokbot@latest") {
     return "";
   }
-  if (trimmed.startsWith("openclaw@")) {
-    return trimmed.slice("openclaw@".length);
+  if (trimmed.startsWith("grokbot@")) {
+    return trimmed.slice("grokbot@".length);
   }
   return trimmed;
 }

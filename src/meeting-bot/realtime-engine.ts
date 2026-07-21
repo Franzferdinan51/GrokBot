@@ -1,5 +1,5 @@
 // Shared meeting bot realtime engines own provider and audio-transport orchestration.
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { formatErrorMessage } from "../infra/errors.js";
 import type { PluginRuntime, RuntimeLogger } from "../plugins/runtime/types.js";
 import type {
@@ -158,7 +158,7 @@ export function resolveMeetingRealtimeTranscriptionProvider(params: {
 
 function buildMeetingSpeakExactUserMessage(text: string): string {
   return [
-    "Speak this exact OpenClaw answer to the meeting, without adding, removing, or rephrasing words.",
+    "Speak this exact GrokBot answer to the meeting, without adding, removing, or rephrasing words.",
     `Answer: ${JSON.stringify(text)}`,
   ].join("\n");
 }

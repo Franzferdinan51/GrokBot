@@ -1,4 +1,4 @@
-import { onLlmRequestActivity } from "@openclaw/ai/internal/runtime";
+import { onLlmRequestActivity } from "@grokbot/ai/internal/runtime";
 /**
  * Wraps LLM streams with idle-timeout detection and diagnostics.
  */
@@ -6,8 +6,8 @@ import {
   finiteSecondsToTimerSafeMilliseconds,
   clampTimerTimeoutMs,
   MAX_TIMER_TIMEOUT_MS,
-} from "@openclaw/normalization-core/number-coercion";
-import type { OpenClawConfig } from "../../../config/types.openclaw.js";
+} from "@grokbot/normalization-core/number-coercion";
+import type { OpenClawConfig } from "../../../config/types.grokbot.js";
 import { toErrorObject } from "../../../infra/errors.js";
 import type { StreamFn } from "../../runtime/index.js";
 import type { MutableAssistantMessageEventStream } from "../../stream-compat.js";

@@ -3,14 +3,14 @@ import os from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { parseSqliteSessionFileMarker } from "../config/sessions/sqlite-marker.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { resolveAgentRunSessionTarget } from "./run-session-target.js";
 
 describe("agent run session target", () => {
   let tempDir: string;
 
   beforeEach(() => {
-    tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-run-session-target-"));
+    tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-run-session-target-"));
   });
 
   afterEach(() => {

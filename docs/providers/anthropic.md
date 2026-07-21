@@ -1,28 +1,28 @@
 ---
-summary: "Use Anthropic Claude via API keys or Claude CLI in OpenClaw"
+summary: "Use Anthropic Claude via API keys or Claude CLI in GrokBot"
 read_when:
-  - You want to use Anthropic models in OpenClaw
+  - You want to use Anthropic models in GrokBot
   - You want to browse Claude CLI or Claude Desktop sessions across paired computers
 title: "Anthropic"
 ---
 
-Anthropic builds the **Claude** model family. OpenClaw supports two auth routes:
+Anthropic builds the **Claude** model family. GrokBot supports two auth routes:
 
 - **API key** - direct Anthropic API access with usage-based billing (`anthropic/*` models)
 - **Claude CLI** - reuse an existing Claude Code login on the same host
 
 ## Usage and cost tracking
 
-OpenClaw detects the available Anthropic credential and selects the matching usage surface:
+GrokBot detects the available Anthropic credential and selects the matching usage surface:
 
 - Claude subscription/setup credentials show quota windows and optional extra-usage budget.
 - `ANTHROPIC_ADMIN_KEY` or `ANTHROPIC_ADMIN_API_KEY` shows 30 days of provider-reported organization cost and Messages API usage in Control UI **Usage**, including daily spend, token/cache totals, top models, and cost categories.
 - An `sk-ant-admin...` credential stored in the Anthropic provider profile is detected as an Admin API key automatically.
 
-Admin API cost history comes from Anthropic's [Usage and Cost API](https://platform.claude.com/docs/en/manage-claude/usage-cost-api). It is actual provider billing, separate from OpenClaw's session-derived estimated cost.
+Admin API cost history comes from Anthropic's [Usage and Cost API](https://platform.claude.com/docs/en/manage-claude/usage-cost-api). It is actual provider billing, separate from GrokBot's session-derived estimated cost.
 
 <Warning>
-OpenClaw's Claude CLI backend runs the installed Claude Code CLI in
+GrokBot's Claude CLI backend runs the installed Claude Code CLI in
 non-interactive print mode (`claude -p`). Anthropic's current Claude Code docs
 describe that mode as Agent SDK/programmatic usage. Anthropic's June 15, 2026
 support update paused the announced separate Agent SDK billing change: Claude
@@ -36,7 +36,7 @@ For long-lived gateway hosts, shared automation, and predictable production
 spend, use an Anthropic API key.
 
 Anthropic's current support articles can change this behavior without an
-OpenClaw release:
+GrokBot release:
 
 - [Claude Code CLI reference](https://code.claude.com/docs/en/cli-usage)
 - [Use the Claude Agent SDK with your Claude plan](https://support.claude.com/en/articles/15036540-use-the-claude-agent-sdk-with-your-claude-plan)
@@ -58,19 +58,19 @@ OpenClaw release:
       </Step>
       <Step title="Run onboarding">
         ```bash
-        openclaw onboard
+        grokbot onboard
         # choose: Anthropic API key
         ```
 
         Or pass the key directly:
 
         ```bash
-        openclaw onboard --anthropic-api-key "$ANTHROPIC_API_KEY"
+        grokbot onboard --anthropic-api-key "$ANTHROPIC_API_KEY"
         ```
       </Step>
       <Step title="Verify the model is available">
         ```bash
-        openclaw models list --provider anthropic
+        grokbot models list --provider anthropic
         ```
       </Step>
     </Steps>
@@ -99,15 +99,15 @@ OpenClaw release:
       </Step>
       <Step title="Run onboarding">
         ```bash
-        openclaw onboard
+        grokbot onboard
         # choose: Claude CLI
         ```
 
-        OpenClaw detects and reuses the existing Claude CLI credentials.
+        GrokBot detects and reuses the existing Claude CLI credentials.
       </Step>
       <Step title="Verify the model is available">
         ```bash
-        openclaw models list --provider anthropic
+        grokbot models list --provider anthropic
         ```
       </Step>
     </Steps>
@@ -117,13 +117,13 @@ OpenClaw release:
     </Note>
 
     <Warning>
-    Claude CLI reuse expects the OpenClaw process to run on the same host as the
+    Claude CLI reuse expects the GrokBot process to run on the same host as the
     Claude CLI login. Docker installs can persist a container home and log in to
     Claude Code there; see
     [Claude CLI backend in Docker](/install/docker#claude-cli-backend-in-docker).
     Other container installs such as [Podman](/install/podman) do not mount host
     `~/.claude` into setup or runtime; use an Anthropic API key there, or choose
-    a provider with OpenClaw-managed OAuth such as
+    a provider with GrokBot-managed OAuth such as
     [OpenAI Codex](/providers/openai).
     </Warning>
 
@@ -136,7 +136,7 @@ OpenClaw release:
     **Anthropic setup-token** under **Connect with an API key or token**, or use:
 
     ```bash
-    openclaw models auth login --provider anthropic --method setup-token
+    grokbot models auth login --provider anthropic --method setup-token
     ```
 
     ### Config example
@@ -164,7 +164,7 @@ OpenClaw release:
 
     ### Billing and `claude -p`
 
-    OpenClaw uses Claude Code's non-interactive `claude -p` path for Claude CLI
+    GrokBot uses Claude Code's non-interactive `claude -p` path for Claude CLI
     runs. Anthropic currently treats that path as Agent SDK/programmatic usage:
 
     - Anthropic's June 15, 2026 support update paused the previously announced
@@ -185,12 +185,12 @@ OpenClaw release:
     subscription behavior.
 
     Anthropic can change Claude Code billing and rate-limit behavior without an
-    OpenClaw release. Check `claude auth status`, `/status`, and
+    GrokBot release. Check `claude auth status`, `/status`, and
     Anthropic's linked docs when billing predictability matters.
 
     <Tip>
     For shared production automation, use an Anthropic API key instead of
-    Claude CLI. OpenClaw also supports subscription-style options from
+    Claude CLI. GrokBot also supports subscription-style options from
     [OpenAI Codex](/providers/openai), [Qwen Cloud](/providers/qwen),
     [MiniMax](/providers/minimax), and [Z.AI / GLM](/providers/zai).
     </Tip>
@@ -212,7 +212,7 @@ Code sessions on the Gateway and on connected node hosts:
 - A CLI-only session has no archive flag, so it remains visible while its
   transcript is present.
 
-No additional OpenClaw config is required for discovery. The Anthropic plugin
+No additional GrokBot config is required for discovery. The Anthropic plugin
 is bundled and enabled by default; a native macOS node advertises the read-only
 Claude session commands when the local `~/.claude/projects/` directory exists.
 Approve the node pairing upgrade when those commands first appear.
@@ -220,7 +220,7 @@ Approve the node pairing upgrade when those commands first appear.
 The sidebar groups rows by their Gateway or paired-node host and shows each
 host's newest bounded page as soon as that computer answers. It reconciles again
 after host-connectivity changes, when the page regains focus, and at most every
-30 seconds while visible, so Claude sessions created outside OpenClaw appear
+30 seconds while visible, so Claude sessions created outside GrokBot appear
 without a reload. A changed catalog gets a faster follow-up pass. Use **Load more
 sessions** below a catalog group to append the next page for every host that has
 more history; appended rows stay visible and are re-fetched to the same depth
@@ -238,7 +238,7 @@ reasoning, tool-call, and tool-result content is preserved. An individual item
 larger than the node/Gateway safety ceiling is clearly marked as truncated.
 
 For a Gateway-local `claude-cli` row, typing in the normal composer calls
-`sessions.catalog.continue`. OpenClaw re-resolves the local catalog record,
+`sessions.catalog.continue`. GrokBot re-resolves the local catalog record,
 creates or reuses a model-locked native session, imports at most 200 visible
 items or 512 KiB, and seeds the Claude CLI binding. The first turn resumes with
 `--fork-session`; Claude assigns the fork a new session ID, so later turns use
@@ -258,7 +258,7 @@ the node-local setting below and restarting the node host:
 ```
 
 The node advertises `agent.cli.claude.run.v1` only when the setting is enabled
-and its local `claude` executable resolves. OpenClaw re-resolves the catalog
+and its local `claude` executable resolves. GrokBot re-resolves the catalog
 record on that node, imports the same bounded history, and binds the adopted
 session to the node and catalog-reported working directory. Each turn runs the
 node's real `claude -p` process using that node's Claude files and login. The
@@ -271,7 +271,7 @@ macOS app nodes also remain view-only until the app advertises the run command.
 
 <Note>
 Paired-node Claude sessions remain read-only unless the headless node explicitly
-advertises `agent.cli.claude.run.v1`. OpenClaw never modifies Claude Desktop
+advertises `agent.cli.claude.run.v1`. GrokBot never modifies Claude Desktop
 metadata or archives Claude sessions. The page requires an operator connection
 with write scope because it uses authenticated `node.invoke`; list and read
 remain read-only even on a continuation-enabled node.
@@ -284,7 +284,7 @@ for the node command and security boundary.
 
 `anthropic/claude-sonnet-5` uses adaptive thinking at `high` effort by default.
 Use `/think off` to disable thinking, or `/think xhigh|max` for the model's
-higher native effort levels. OpenClaw omits manual thinking budgets, custom
+higher native effort levels. GrokBot omits manual thinking budgets, custom
 sampling parameters, assistant prefills, and Priority Tier for Sonnet 5 because
 Anthropic does not support those request features on this model.
 The catalog uses Anthropic's introductory `$2/$10` input/output pricing through
@@ -292,18 +292,18 @@ August 31, 2026; standard `$3/$15` pricing begins September 1, 2026.
 
 `anthropic/claude-fable-5` always uses adaptive thinking and defaults to `high`
 effort. Anthropic does not allow thinking to be disabled for this model, so
-`/think off` and `/think minimal` map to `low` effort instead. OpenClaw also
+`/think off` and `/think minimal` map to `low` effort instead. GrokBot also
 omits custom temperature values for Fable 5 requests, since Anthropic rejects
 a temperature override on any thinking-enabled request.
 
 `anthropic/claude-mythos-5` is a limited-access model with the same always-on
-adaptive-thinking contract. OpenClaw defaults to `high`, maps `/think off` and
+adaptive-thinking contract. GrokBot defaults to `high`, maps `/think off` and
 `/think minimal` to `low`, and omits caller-selected sampling parameters.
 The catalog publishes its 1,000,000-token context window, 128,000-token output
 limit, image input, and `$10/$50` input/output pricing.
 
-Claude Opus 4.8 keeps thinking off by default in OpenClaw. When you explicitly
-enable adaptive thinking with `/think high|xhigh|max`, OpenClaw sends
+Claude Opus 4.8 keeps thinking off by default in GrokBot. When you explicitly
+enable adaptive thinking with `/think high|xhigh|max`, GrokBot sends
 Anthropic's Opus 4.8 effort values; Claude 4.6 models (Opus 4.6 and Sonnet 4.6)
 default to `adaptive`.
 
@@ -335,7 +335,7 @@ Related Anthropic docs:
 <Warning>
 Using Claude Fable 5 means also using Claude Opus 4.8. Fable 5 ships with
 safety classifiers that can decline a request, and Anthropic's sanctioned
-recovery is to have `claude-opus-4-8` serve that turn. OpenClaw opts into this
+recovery is to have `claude-opus-4-8` serve that turn. GrokBot opts into this
 automatically for direct API-key requests, so some Fable turns are answered
 and billed as Claude Opus 4.8. If your policy or budget cannot accept
 Opus-served turns, do not select `anthropic/claude-fable-5`.
@@ -352,14 +352,14 @@ tells API integrators to configure a fallback model.
 
 ### How it works
 
-1. For every direct API-key request to `anthropic/claude-fable-5`, OpenClaw
+1. For every direct API-key request to `anthropic/claude-fable-5`, GrokBot
    sends Anthropic's server-side fallback opt-in: the
    `server-side-fallback-2026-06-01` beta header plus
    `fallbacks: [{"model": "claude-opus-4-8"}]`. Claude Opus 4.8 is the only
    fallback target Anthropic permits for Fable 5.
 2. Only a safety-classifier decline triggers the fallback. Rate limits,
    overloads, and server errors behave exactly as before and go through
-   OpenClaw's normal [model failover](/concepts/model-failover).
+   GrokBot's normal [model failover](/concepts/model-failover).
 3. The rescue happens inside the same call. A decline before any output is
    invisible apart from latency; the whole answer comes from Opus 4.8. On a
    mid-stream decline the partial text is kept as the prefix the fallback
@@ -379,11 +379,11 @@ API key can always serve Opus.
   assistant message naming `fromModel` and `toModel`, and the message's
   `responseModel` reports `claude-opus-4-8`.
 - Anthropic bills per attempt: a decline before output is free, and the rescue
-  bills at Claude Opus 4.8 rates (currently half of Fable 5 rates). OpenClaw's
+  bills at Claude Opus 4.8 rates (currently half of Fable 5 rates). GrokBot's
   per-turn cost estimate prices fallback-served turns at Opus rates to match.
 - A mid-stream decline additionally bills the already-streamed Fable partial
   on Anthropic's side; that portion is reported in the API's per-attempt
-  usage but not folded into OpenClaw's per-turn estimate.
+  usage but not folded into GrokBot's per-turn estimate.
 
 ### Scope
 
@@ -394,7 +394,7 @@ refusals as errors there.
 
 Verified live: a benign prompt asking Fable 5 to reproduce its raw chain of
 thought is declined with `category: "reasoning_extraction"` when sent without
-fallbacks, and the same prompt through OpenClaw returns a normal Opus-served
+fallbacks, and the same prompt through GrokBot returns a normal Opus-served
 answer with the `provider_fallback` diagnostic attached.
 
 See Anthropic's [refusals and fallback
@@ -403,7 +403,7 @@ for the underlying behavior.
 
 ## Prompt caching
 
-OpenClaw supports Anthropic's prompt caching feature for API-key auth.
+GrokBot supports Anthropic's prompt caching feature for API-key auth.
 
 | Value               | Cache duration | Description                            |
 | ------------------- | -------------- | -------------------------------------- |
@@ -469,7 +469,7 @@ OpenClaw supports Anthropic's prompt caching feature for API-key auth.
 
 <AccordionGroup>
   <Accordion title="Fast mode">
-    OpenClaw's shared `/fast` toggle sets Anthropic's `service_tier` field for direct API-key traffic to `api.anthropic.com`.
+    GrokBot's shared `/fast` toggle sets Anthropic's `service_tier` field for direct API-key traffic to `api.anthropic.com`.
 
     | Command | Maps to |
     |---------|---------|
@@ -500,7 +500,7 @@ OpenClaw supports Anthropic's prompt caching feature for API-key auth.
   </Accordion>
 
   <Accordion title="Media understanding (image and PDF)">
-    The bundled Anthropic plugin registers image and PDF understanding. OpenClaw
+    The bundled Anthropic plugin registers image and PDF understanding. GrokBot
     auto-resolves media capabilities from the configured Anthropic auth; no
     additional config is needed.
 
@@ -509,7 +509,7 @@ OpenClaw supports Anthropic's prompt caching feature for API-key auth.
     | Default model   | `claude-opus-4-8`     |
     | Supported input | Images, PDF documents |
 
-    When an image or PDF is attached to a conversation, OpenClaw automatically
+    When an image or PDF is attached to a conversation, GrokBot automatically
     routes it through the Anthropic media understanding provider.
 
   </Accordion>
@@ -518,7 +518,7 @@ OpenClaw supports Anthropic's prompt caching feature for API-key auth.
     Claude Sonnet 5, Mythos 5, and Fable 5 have an exact 1,000,000-token input
     window and support up to 128,000 output tokens. Anthropic's 1M context
     window is also GA on Claude 4.x models with adaptive thinking: Opus 4.8,
-    Opus 4.7, Opus 4.6, and Sonnet 4.6. OpenClaw sizes these models
+    Opus 4.7, Opus 4.6, and Sonnet 4.6. GrokBot sizes these models
     automatically, no `params.context1m` needed:
 
     ```json5
@@ -536,7 +536,7 @@ OpenClaw supports Anthropic's prompt caching feature for API-key auth.
     ```
 
     Older configs can keep `params.context1m: true`; it is a harmless no-op for
-    these models and OpenClaw no longer sends the retired
+    these models and GrokBot no longer sends the retired
     `context-1m-2025-08-07` beta header regardless. Older `anthropicBeta` config
     entries with that value are dropped during request header resolution, and
     unsupported older Claude models stay on their normal context window.
@@ -546,7 +546,7 @@ OpenClaw supports Anthropic's prompt caching feature for API-key auth.
     1M window automatically, so the param is optional there too.
 
     <Warning>
-    Requires long-context access on your Anthropic credential. OAuth/subscription token auth keeps its required Anthropic beta headers, but OpenClaw strips the retired 1M beta header if it remains in older config.
+    Requires long-context access on your Anthropic credential. OAuth/subscription token auth keeps its required Anthropic beta headers, but GrokBot strips the retired 1M beta header if it remains in older config.
     </Warning>
 
   </Accordion>
@@ -565,15 +565,15 @@ OpenClaw supports Anthropic's prompt caching feature for API-key auth.
   </Accordion>
 
   <Accordion title='No API key found for provider "anthropic"'>
-    Anthropic auth is **per agent**; new agents do not inherit the main agent's keys. Re-run onboarding for that agent (or configure an API key on the gateway host), then verify with `openclaw models status`.
+    Anthropic auth is **per agent**; new agents do not inherit the main agent's keys. Re-run onboarding for that agent (or configure an API key on the gateway host), then verify with `grokbot models status`.
   </Accordion>
 
   <Accordion title='No credentials found for profile "anthropic:default"'>
-    Run `openclaw models status` to see which auth profile is active. Re-run onboarding, or configure an API key for that profile path.
+    Run `grokbot models status` to see which auth profile is active. Re-run onboarding, or configure an API key for that profile path.
   </Accordion>
 
   <Accordion title="No available auth profile (all in cooldown)">
-    Check `openclaw models status --json` for `auth.unusableProfiles`. Anthropic rate-limit cooldowns can be model-scoped, so a sibling Anthropic model may still be usable. Add another Anthropic profile or wait for cooldown.
+    Check `grokbot models status --json` for `auth.unusableProfiles`. Anthropic rate-limit cooldowns can be model-scoped, so a sibling Anthropic model may still be usable. Add another Anthropic profile or wait for cooldown.
   </Accordion>
 </AccordionGroup>
 

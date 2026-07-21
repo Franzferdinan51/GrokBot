@@ -1,4 +1,4 @@
-import type { OpenClawPluginNodeHostCommand } from "openclaw/plugin-sdk/plugin-entry";
+import type { OpenClawPluginNodeHostCommand } from "grokbot/plugin-sdk/plugin-entry";
 import {
   clamp,
   formatToolError,

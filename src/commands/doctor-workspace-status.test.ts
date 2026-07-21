@@ -1,8 +1,8 @@
 // Doctor workspace status tests cover workspace inspection and status output.
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { describe, expect, it, vi } from "vitest";
 import * as noteModule from "../../packages/terminal-core/src/note.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import type { PluginVersionDriftReport } from "../plugins/plugin-version-drift.js";
 import {
   createPluginLoadResult,
@@ -210,7 +210,7 @@ describe("noteWorkspaceStatus", () => {
         target: "codex",
         requirement: "plugin-version-drift",
         message: expect.stringContaining("2026.5.30-beta.1"),
-        fixHint: expect.stringContaining("openclaw plugins update codex"),
+        fixHint: expect.stringContaining("grokbot plugins update codex"),
       }),
     ]);
   });
@@ -277,7 +277,7 @@ describe("noteWorkspaceStatus", () => {
         target: "flow-123",
         requirement: "taskflow-recovery",
         message: expect.stringContaining("task-missing"),
-        fixHint: expect.stringContaining("openclaw tasks flow show flow-123"),
+        fixHint: expect.stringContaining("grokbot tasks flow show flow-123"),
       }),
     ]);
   });
@@ -320,10 +320,10 @@ describe("noteWorkspaceStatus", () => {
       const driftCalls = noteSpy.mock.calls.filter(([, title]) => title === "Plugin version drift");
       expect(driftCalls).toHaveLength(1);
       const [body] = expectDefined(driftCalls[0], "(driftCalls)[0] test invariant");
-      expect(body).toContain("1 active official plugin not on OpenClaw 2026.6.1");
+      expect(body).toContain("1 active official plugin not on GrokBot 2026.6.1");
       expect(body).toContain("codex: 2026.5.30-beta.1 (npm) -> expected 2026.6.1");
-      expect(body).toContain("openclaw plugins update codex");
-      expect(body).toContain("openclaw gateway restart");
+      expect(body).toContain("grokbot plugins update codex");
+      expect(body).toContain("grokbot gateway restart");
     } finally {
       noteSpy.mockRestore();
     }
@@ -358,8 +358,8 @@ describe("noteWorkspaceStatus", () => {
               installedVersion: "2026.6.9",
               gatewayVersion: "2026.6.10-beta.1",
               source: "npm",
-              packageName: "@openclaw/brave-plugin",
-              spec: "@openclaw/brave-plugin@2026.6.9",
+              packageName: "@grokbot/brave-plugin",
+              spec: "@grokbot/brave-plugin@2026.6.9",
             },
           ],
         },
@@ -369,9 +369,9 @@ describe("noteWorkspaceStatus", () => {
       const driftCalls = noteSpy.mock.calls.filter(([, title]) => title === "Plugin version drift");
       expect(driftCalls).toHaveLength(1);
       const [body] = expectDefined(driftCalls[0], "(driftCalls)[0] test invariant");
-      expect(body).toContain("openclaw plugins update @openclaw/brave-plugin@2026.6.10-beta.1");
-      expect(body).not.toContain("openclaw plugins update brave");
-      expect(body).toContain("openclaw gateway restart");
+      expect(body).toContain("grokbot plugins update @grokbot/brave-plugin@2026.6.10-beta.1");
+      expect(body).not.toContain("grokbot plugins update brave");
+      expect(body).toContain("grokbot gateway restart");
     } finally {
       noteSpy.mockRestore();
     }
@@ -488,7 +488,7 @@ describe("noteWorkspaceStatus", () => {
       expect(recoveryCalls).toHaveLength(1);
       const [body] = expectDefined(recoveryCalls[0], "(recoveryCalls)[0] test invariant");
       expect(body).toContain("flow-123");
-      expect(body).toContain("openclaw tasks flow show <flow-id>");
+      expect(body).toContain("grokbot tasks flow show <flow-id>");
     } finally {
       noteSpy.mockRestore();
     }

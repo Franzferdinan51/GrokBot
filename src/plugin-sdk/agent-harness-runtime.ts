@@ -252,7 +252,7 @@ export async function detectAndLoadAgentHarnessPromptImages(params: {
   model: { input?: string[] };
   existingImages?: ImageContent[];
   imageOrder?: PromptImageOrderEntry[];
-  config?: import("../config/types.openclaw.js").OpenClawConfig;
+  config?: import("../config/types.grokbot.js").OpenClawConfig;
   workspaceOnly?: boolean;
   localRoots?: readonly string[];
   sandbox?: { root: string; bridge: SandboxFsBridge };
@@ -266,7 +266,7 @@ export async function detectAndLoadAgentHarnessPromptImages(params: {
     await Promise.all([
       import("../agents/image-sanitization.js"),
       import("../agents/embedded-agent-runner/run/images.js"),
-      import("@openclaw/media-core/constants"),
+      import("@grokbot/media-core/constants"),
     ]);
 
   return detectAndLoadPromptImages({
@@ -412,7 +412,7 @@ export {
 } from "../agents/harness/native-hook-relay.js";
 
 /**
- * Derive the same compact user-facing tool detail that embedded OpenClaw uses for progress logs.
+ * Derive the same compact user-facing tool detail that embedded GrokBot uses for progress logs.
  */
 export type ToolProgressDetailMode = "explain" | "raw";
 
@@ -464,7 +464,7 @@ export type AgentHarnessTerminalOutcomeClassification = NonNullable<
  * should advance fallback. Deliberate silent replies such as NO_REPLY count as
  * intentional output, while whitespace-only text remains fallback-eligible.
  * This is intentionally SDK-level so plugin harness adapters such as Codex
- * preserve the same OpenClaw-owned fallback signals as the built-in OpenClaw path
+ * preserve the same GrokBot-owned fallback signals as the built-in GrokBot path
  * without re-implementing terminal-result policy.
  */
 export function classifyAgentHarnessTerminalOutcome(

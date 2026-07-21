@@ -20,7 +20,7 @@ import {
   normalizeTasksListResult,
   type TaskSummary,
 } from "../../lib/tasks/data.ts";
-import { OpenClawLightDomElement } from "../../lit/openclaw-element.ts";
+import { OpenClawLightDomElement } from "../../lit/grokbot-element.ts";
 import { SubscriptionsController } from "../../lit/subscriptions-controller.ts";
 import { renderTasks } from "./view.ts";
 
@@ -318,6 +318,6 @@ class TasksPage extends OpenClawLightDomElement {
   }
 }
 
-if (!customElements.get("openclaw-tasks-page")) {
-  customElements.define("openclaw-tasks-page", TasksPage);
+if (!customElements.get("grokbot-tasks-page")) {
+  customElements.define("grokbot-tasks-page", TasksPage);
 }

@@ -36,15 +36,15 @@ describe("initializeMemoryWikiVault", () => {
       "Render mode: `obsidian`",
     );
     await expect(fs.readFile(path.join(rootDir, "WIKI.md"), "utf8")).resolves.toContain(
-      "snapshots live in OpenClaw plugin state",
+      "snapshots live in GrokBot plugin state",
     );
-    await expect(fs.access(path.join(rootDir, ".openclaw-wiki", "cache"))).rejects.toThrow(
+    await expect(fs.access(path.join(rootDir, ".grokbot-wiki", "cache"))).rejects.toThrow(
       /ENOENT/,
     );
-    await expect(fs.access(path.join(rootDir, ".openclaw-wiki", "state.json"))).rejects.toThrow(
+    await expect(fs.access(path.join(rootDir, ".grokbot-wiki", "state.json"))).rejects.toThrow(
       /ENOENT/,
     );
-    await expect(fs.access(path.join(rootDir, ".openclaw-wiki", "locks"))).rejects.toThrow(
+    await expect(fs.access(path.join(rootDir, ".grokbot-wiki", "locks"))).rejects.toThrow(
       /ENOENT/,
     );
   });

@@ -7,9 +7,9 @@ import path from "node:path";
 import { beforeAll, describe, expect, it, vi } from "vitest";
 import * as preparedModelCatalog from "../agents/prepared-model-catalog.js";
 import type { CliDeps } from "../cli/deps.types.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { getPluginRuntimeGatewayRequestScope } from "../plugins/runtime/gateway-request-scope.js";
-import { closeOpenClawStateDatabaseForTest } from "../state/openclaw-state-db.js";
+import { closeOpenClawStateDatabaseForTest } from "../state/grokbot-state-db.js";
 import { withLocalGatewayRequestScope } from "./local-request-context.js";
 import { dispatchGatewayMethodInProcessRaw } from "./server-plugins.js";
 
@@ -65,7 +65,7 @@ describe("local gateway request context", () => {
   });
 
   it("commits agent deletion through the canonical cron store", async () => {
-    const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-local-cron-delete-"));
+    const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-local-cron-delete-"));
     vi.stubEnv("OPENCLAW_STATE_DIR", stateDir);
     const cfg = {
       cron: { store: path.join(stateDir, "cron", "jobs.json") },

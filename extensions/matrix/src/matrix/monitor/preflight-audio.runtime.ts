@@ -1,9 +1,9 @@
-import { sendDurableMessageBatch as sendDurableMessageBatchImpl } from "openclaw/plugin-sdk/channel-outbound";
-import { transcribeFirstAudio as transcribeFirstAudioImpl } from "openclaw/plugin-sdk/media-runtime";
+import { sendDurableMessageBatch as sendDurableMessageBatchImpl } from "grokbot/plugin-sdk/channel-outbound";
+import { transcribeFirstAudio as transcribeFirstAudioImpl } from "grokbot/plugin-sdk/media-runtime";
 
-type TranscribeFirstAudio = typeof import("openclaw/plugin-sdk/media-runtime").transcribeFirstAudio;
+type TranscribeFirstAudio = typeof import("grokbot/plugin-sdk/media-runtime").transcribeFirstAudio;
 type SendDurableMessageBatch =
-  typeof import("openclaw/plugin-sdk/channel-outbound").sendDurableMessageBatch;
+  typeof import("grokbot/plugin-sdk/channel-outbound").sendDurableMessageBatch;
 
 export async function transcribeFirstAudio(
   ...args: Parameters<TranscribeFirstAudio>

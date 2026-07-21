@@ -1,6 +1,6 @@
 ---
 title: "Maturity taxonomy"
-summary: "Detailed reference for the product areas and checks behind the OpenClaw maturity scorecard."
+summary: "Detailed reference for the product areas and checks behind the GrokBot maturity scorecard."
 ---
 
 # Maturity taxonomy
@@ -104,8 +104,8 @@ A surface is a product area such as Gateway runtime, Discord, or the macOS app. 
       <span className="maturity-surface-meta"><span className="maturity-level-pill maturity-level-alpha"><span className="maturity-level-code">M2</span><span>Alpha</span></span><span>4 areas - 62% complete</span></span>
     </a>
 
-    <a className="maturity-surface-link" href="#openclaw-app-sdk">
-      <span className="maturity-surface-title">OpenClaw App SDK</span>
+    <a className="maturity-surface-link" href="#grokbot-app-sdk">
+      <span className="maturity-surface-title">GrokBot App SDK</span>
       <span className="maturity-surface-meta"><span className="maturity-level-pill maturity-level-alpha"><span className="maturity-level-code">M2</span><span>Alpha</span></span><span>6 areas - 53% complete</span></span>
     </a>
 
@@ -1871,10 +1871,10 @@ A surface is a product area such as Gateway runtime, Discord, or the macOS app. 
 
   </Accordion>
 
-  <Accordion title="OpenClaw App SDK - M2 Alpha - 6 areas">
-    <a id="openclaw-app-sdk" />
+  <Accordion title="GrokBot App SDK - M2 Alpha - 6 areas">
+    <a id="grokbot-app-sdk" />
 
-    OpenClaw App SDK is a distinct external app contract separate from Gateway runtime and Plugin SDK. Current scoring shows a real `@openclaw/sdk` path with gaps around public packaging, auto-discovery, approvals, helpers, and compatibility.
+    GrokBot App SDK is a distinct external app contract separate from Gateway runtime and Plugin SDK. Current scoring shows a real `@grokbot/sdk` path with gaps around public packaging, auto-discovery, approvals, helpers, and compatibility.
 
     <div className="maturity-surface-rollup"><span>Coverage Experimental - 3%</span><span>Quality Alpha - 54%</span><span>Completeness Alpha - 53%</span><span><span className="maturity-lts maturity-lts-none">None</span></span></div>
 
@@ -3140,7 +3140,7 @@ A surface is a product area such as Gateway runtime, Discord, or the macOS app. 
         <div><span className="maturity-score maturity-score-experimental"><span className="maturity-score-label"><span className="maturity-level-pill maturity-level-experimental">Experimental</span><span>21%</span></span><span className="maturity-meter" aria-hidden="true"><span style={{ width: "21%" }} /></span></span></div>
         <div className="maturity-category-docs">
 
-    [Linux](/platforms/linux), [OpenClaw](/start/openclaw), [Doctor](/gateway/doctor)
+    [Linux](/platforms/linux), [GrokBot](/start/grokbot), [Doctor](/gateway/doctor)
 
     </div>
       </div>

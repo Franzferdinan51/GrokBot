@@ -2,8 +2,8 @@
 import {
   applyProviderConfigWithModelCatalogPreset,
   type OpenClawConfig,
-} from "openclaw/plugin-sdk/provider-onboard";
-import { normalizeOptionalString } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/provider-onboard";
+import { normalizeOptionalString } from "grokbot/plugin-sdk/string-coerce-runtime";
 import {
   buildZaiCatalogModels,
   resolveZaiBaseUrl,

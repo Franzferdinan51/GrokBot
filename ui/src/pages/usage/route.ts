@@ -1,4 +1,4 @@
-import { definePage } from "@openclaw/uirouter";
+import { definePage } from "@grokbot/uirouter";
 import { html } from "lit";
 import type { CostUsageSummary } from "../../api/types.ts";
 import type { ApplicationContext } from "../../app/context.ts";
@@ -95,6 +95,6 @@ export const page = definePage({
     import("./usage-page.ts").then(() => ({
       header: true,
       render: (data: UsageRouteData | undefined) =>
-        html`<openclaw-usage-page .routeData=${data}></openclaw-usage-page>`,
+        html`<grokbot-usage-page .routeData=${data}></grokbot-usage-page>`,
     })),
 });

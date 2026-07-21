@@ -1,6 +1,6 @@
 // Discord plugin module implements setup account state behavior.
-import { normalizeAccountId } from "openclaw/plugin-sdk/account-id";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import { normalizeAccountId } from "grokbot/plugin-sdk/account-id";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import { inspectDiscordConfiguredToken } from "./account-token-inspect.js";
 import { resolveDefaultDiscordAccountId } from "./accounts.js";
 import { mergeDiscordAccountConfig, resolveDiscordAccountConfig } from "./accounts.js";

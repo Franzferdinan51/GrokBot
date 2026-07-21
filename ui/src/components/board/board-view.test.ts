@@ -23,7 +23,7 @@ afterEach(() => {
   vi.useRealTimers();
 });
 
-describe("openclaw-board-view", () => {
+describe("grokbot-board-view", () => {
   it("renders only the active tab widgets with sandboxed frames", async () => {
     const view = await mount();
     const cells = view.querySelectorAll('[data-test-id="board-widget"]');
@@ -146,7 +146,7 @@ describe("openclaw-board-view", () => {
       }),
       widgetFrameUrl: () => "/__openclaw__/board/session/alpha/index.html?bt=ticket",
     });
-    const cell = view.querySelector("openclaw-board-widget-cell")!;
+    const cell = view.querySelector("grokbot-board-widget-cell")!;
     const frame = cell.querySelector("iframe")!;
     const sandboxOrigin = new URL(frame.src).origin;
     const send = (data: unknown, ports: MessagePort[] = []) =>
@@ -167,12 +167,12 @@ describe("openclaw-board-view", () => {
     const bridgeChannel = new MessageChannel();
     const initialized = new Promise<void>((resolve) => {
       bridgeChannel.port2.addEventListener("message", (event) => {
-        if (event.data?.type !== "openclaw:widget-host-init") {
+        if (event.data?.type !== "grokbot:widget-host-init") {
           return;
         }
         bridgeChannel.port2.postMessage(
           {
-            type: "openclaw:widget-host-init-ack",
+            type: "grokbot:widget-host-init-ack",
             ticket: event.data.ticket,
           },
           [],
@@ -181,11 +181,11 @@ describe("openclaw-board-view", () => {
       });
     });
     bridgeChannel.port2.start();
-    send({ type: "openclaw:widget-bridge-port-offer" }, [bridgeChannel.port1]);
+    send({ type: "grokbot:widget-bridge-port-offer" }, [bridgeChannel.port1]);
     await initialized;
     bridgeChannel.port2.postMessage(
       {
-        type: "openclaw:widget-bridge-request",
+        type: "grokbot:widget-bridge-request",
         id: "before-reconnect",
         method: "state.emit",
         params: { payload: { status: "connecting" } },
@@ -205,7 +205,7 @@ describe("openclaw-board-view", () => {
     await cell.updateComplete;
     bridgeChannel.port2.postMessage(
       {
-        type: "openclaw:widget-bridge-request",
+        type: "grokbot:widget-bridge-request",
         id: "after-reconnect",
         method: "state.emit",
         params: { payload: { status: "online" } },
@@ -260,7 +260,7 @@ describe("openclaw-board-view", () => {
         ],
       }),
     });
-    const cell = view.querySelector("openclaw-board-widget-cell")!;
+    const cell = view.querySelector("grokbot-board-widget-cell")!;
 
     await vi.advanceTimersByTimeAsync(1_000);
     expect(frameLoadFailed).toHaveBeenCalledTimes(1);
@@ -340,7 +340,7 @@ describe("openclaw-board-view", () => {
         ],
       }),
     });
-    const cell = view.querySelector("openclaw-board-widget-cell")!;
+    const cell = view.querySelector("grokbot-board-widget-cell")!;
 
     await vi.advanceTimersByTimeAsync(1_000);
     await vi.advanceTimersByTimeAsync(1_000);
@@ -428,7 +428,7 @@ describe("openclaw-board-view", () => {
 
   it("preserves each widget cell and iframe identity when order changes", async () => {
     const view = await mount();
-    const before = [...view.querySelectorAll("openclaw-board-widget-cell")].find(
+    const before = [...view.querySelectorAll("grokbot-board-widget-cell")].find(
       (cell) => cell.widget?.name === "alpha",
     );
     const frame = before?.querySelector("iframe");
@@ -498,7 +498,7 @@ describe("openclaw-board-view", () => {
   it("calls applyOps from the kebab remove action", async () => {
     const applyOps = vi.fn(async () => undefined);
     const view = await mount({ callbacks: callbacks({ applyOps }) });
-    const firstCell = view.querySelector("openclaw-board-widget-cell");
+    const firstCell = view.querySelector("grokbot-board-widget-cell");
     firstCell?.querySelector<HTMLButtonElement>(".board-widget__menu-danger")?.click();
     await vi.waitFor(() => {
       expect(applyOps).toHaveBeenCalledWith([{ kind: "widget_remove", name: "alpha" }]);
@@ -528,7 +528,7 @@ describe("openclaw-board-view", () => {
     const pending = deferred();
     const applyOps = vi.fn(() => pending.promise);
     const view = await mount({ callbacks: callbacks({ applyOps }) });
-    const cells = [...view.querySelectorAll("openclaw-board-widget-cell")];
+    const cells = [...view.querySelectorAll("grokbot-board-widget-cell")];
     cells[0]?.querySelector<HTMLButtonElement>(".board-widget__menu-danger")?.click();
     await vi.waitFor(() => expect(applyOps).toHaveBeenCalledTimes(1));
     await settleCells(view);
@@ -626,7 +626,7 @@ describe("openclaw-board-view", () => {
     expect(view.querySelector('[data-test-id="board-pending"]')).not.toBeNull();
     expect(view.querySelector("iframe")).toBeNull();
     app?.dispatchEvent(
-      new CustomEvent("openclaw-mcp-app-view-expired", { bubbles: true, composed: true }),
+      new CustomEvent("grokbot-mcp-app-view-expired", { bubbles: true, composed: true }),
     );
     await vi.waitFor(() =>
       expect(view.querySelector<HTMLElement & { viewId: string }>("mcp-app-view")?.viewId).toBe(
@@ -797,7 +797,7 @@ describe("openclaw-board-view", () => {
     });
     const view = await mount({ snapshot: source });
     const chip = view.querySelector('[data-test-id="board-capabilities-granted"]');
-    const tooltip = chip?.closest("openclaw-tooltip") as
+    const tooltip = chip?.closest("grokbot-tooltip") as
       | (HTMLElement & { content?: string })
       | null;
 
@@ -821,7 +821,7 @@ describe("openclaw-board-view", () => {
     allow?.click();
     reject?.click();
     expect(grant).toHaveBeenCalledTimes(1);
-    const cell = view.querySelector("openclaw-board-widget-cell");
+    const cell = view.querySelector("grokbot-board-widget-cell");
     await cell?.updateComplete;
     expect(allow?.disabled).toBe(true);
     expect(reject?.disabled).toBe(true);
@@ -969,7 +969,7 @@ describe("openclaw-board-view", () => {
     await vi.waitFor(() => expect(applyOps).toHaveBeenCalledTimes(1));
     await view.updateComplete;
     const firstAnnouncement = view.querySelector(".board-announcer > span");
-    const cell = secondCell?.closest("openclaw-board-widget-cell");
+    const cell = secondCell?.closest("grokbot-board-widget-cell");
     await vi.waitFor(() => expect(Reflect.get(cell ?? {}, "actionPending")).toBe(false));
 
     move();

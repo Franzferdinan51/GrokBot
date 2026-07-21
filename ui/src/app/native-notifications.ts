@@ -23,7 +23,7 @@ type NativeNotificationsWindow = Window & {
 };
 
 // Wire contract with the Mac app's dashboard bridge (DashboardWindowController+Notifications.swift).
-const NATIVE_NOTIFICATIONS_STATUS_EVENT = "openclaw:native-notifications-status";
+const NATIVE_NOTIFICATIONS_STATUS_EVENT = "grokbot:native-notifications-status";
 
 export type NativeNotificationsCapability = {
   readonly snapshot: NativeNotificationsSnapshot;

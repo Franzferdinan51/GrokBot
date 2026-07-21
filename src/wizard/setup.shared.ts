@@ -2,7 +2,7 @@
 import { isDeepStrictEqual } from "node:util";
 import type { GatewayAuthChoice, OnboardOptions } from "../commands/onboard-types.js";
 import { createConfigIO, replaceConfigFile, resolveGatewayPort } from "../config/config.js";
-import type { ConfigFileSnapshot, OpenClawConfig } from "../config/types.openclaw.js";
+import type { ConfigFileSnapshot, OpenClawConfig } from "../config/types.grokbot.js";
 import {
   commitConfigWriteWithPendingPluginInstalls,
   hasPendingPluginInstallRecords,
@@ -124,7 +124,7 @@ export async function readSetupConfigFileSnapshot() {
 export async function readValidSetupConfigFile(): Promise<OpenClawConfig> {
   const snapshot = await readSetupConfigFileSnapshot();
   if (!snapshot.valid) {
-    throw new Error("Migration target config became invalid. Run `openclaw doctor`.");
+    throw new Error("Migration target config became invalid. Run `grokbot doctor`.");
   }
   return snapshot.exists ? (snapshot.sourceConfig ?? snapshot.config) : {};
 }

@@ -483,9 +483,9 @@
         "proposal_id"
       ]
     },
-    "openclaw": {
+    "grokbot": {
       "emoji": "🦀",
-      "title": "OpenClaw",
+      "title": "GrokBot",
       "detailKeys": [
         "action",
         "path",

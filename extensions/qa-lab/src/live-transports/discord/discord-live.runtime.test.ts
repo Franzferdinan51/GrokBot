@@ -1,5 +1,5 @@
 // Qa Lab tests cover discord live plugin behavior.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { discordQaScenarioSupport } from "./discord-live.runtime.js";
 
@@ -117,8 +117,8 @@ describe("discord live qa runtime", () => {
         "qa-channel": {
           enabled: true,
           baseUrl: "http://127.0.0.1:43123",
-          botUserId: "openclaw",
-          botDisplayName: "OpenClaw QA",
+          botUserId: "grokbot",
+          botDisplayName: "GrokBot QA",
           allowFrom: ["*"],
         },
       },

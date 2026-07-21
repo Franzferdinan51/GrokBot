@@ -2,12 +2,12 @@ import { AsyncLocalStorage } from "node:async_hooks";
 import {
   normalizeOptionalLowercaseString,
   normalizeOptionalString,
-} from "@openclaw/normalization-core/string-coerce";
+} from "@grokbot/normalization-core/string-coerce";
 import { resolveProviderIdForAuth } from "../agents/provider-auth-aliases.js";
 import { resolveSessionModelRef } from "../agents/session-model-ref.js";
 import type { SessionEntry } from "../config/sessions.js";
 import { createAgentPatchedSessionModelFallback } from "../config/sessions/session-model-fallback.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 
 const agentSessionModelPatch = new AsyncLocalStorage<boolean>();
 

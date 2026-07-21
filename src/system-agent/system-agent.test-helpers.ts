@@ -1,12 +1,12 @@
 import { resolveCliBackendConfig } from "../agents/cli-backends.js";
-// OpenClaw test helpers build runtime environments for rescue tests.
+// GrokBot test helpers build runtime environments for rescue tests.
 import {
   fingerprintAuthProfileOwnerShape,
   fingerprintOpaqueRuntimeOwner,
   fingerprintResolvedAuthProfileCredential,
   fingerprintResolvedProviderAuth,
 } from "../agents/execution-auth-binding.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import type { RuntimeEnv } from "../runtime.js";
 import { resolveSystemAgentConfiguredRouteFromConfig } from "./inference-route.js";
 import {
@@ -64,10 +64,10 @@ export async function createSystemAgentVerifiedInferenceTestFixture(
         pluginId,
         origin: "global",
         rootDir: `/plugins/${pluginId}`,
-        manifestPath: `/plugins/${pluginId}/openclaw.plugin.json`,
+        manifestPath: `/plugins/${pluginId}/grokbot.plugin.json`,
         manifestHash: `${pluginId}-manifest-v1`,
         source: `/plugins/${pluginId}/index.js`,
-        packageName: `@openclaw/${pluginId}`,
+        packageName: `@grokbot/${pluginId}`,
         packageVersion: "1.0.0",
         installRecordHash: `${pluginId}-install-v1`,
         packageJson: {
@@ -87,7 +87,7 @@ export async function createSystemAgentVerifiedInferenceTestFixture(
       : undefined;
     const resolveRuntimeOwnerFingerprint = (currentConfig: OpenClawConfig) => {
       const backend = resolveCliBackendConfig(configuredRoute.provider, currentConfig, {
-        agentId: "openclaw",
+        agentId: "grokbot",
       });
       if (!backend || backend.id !== runtimeArtifactId) {
         return undefined;
@@ -137,10 +137,10 @@ export async function createSystemAgentVerifiedInferenceTestFixture(
 
   const agentHarnessId =
     configuredRoute.agentHarnessRuntimeOverride === "auto"
-      ? "openclaw"
+      ? "grokbot"
       : configuredRoute.agentHarnessRuntimeOverride;
   const authFingerprint =
-    profileId && agentHarnessId !== "openclaw"
+    profileId && agentHarnessId !== "grokbot"
       ? fingerprintResolvedAuthProfileCredential({ profileId, credential, resolvedAuth })
       : fingerprintResolvedProviderAuth(resolvedAuth);
   if (!authFingerprint) {
@@ -154,7 +154,7 @@ export async function createSystemAgentVerifiedInferenceTestFixture(
       ...(profileId ? { authProfileId: profileId } : {}),
       authFingerprint,
       agentHarnessId,
-      ...(agentHarnessId === "openclaw"
+      ...(agentHarnessId === "grokbot"
         ? {}
         : {
             runtimeOwnerKind: "plugin-harness" as const,
@@ -169,7 +169,7 @@ export async function createSystemAgentVerifiedInferenceTestFixture(
 }
 
 /**
- * Test helpers for capturing OpenClaw runtime output.
+ * Test helpers for capturing GrokBot runtime output.
  *
  * Tests use this lightweight runtime instead of the real CLI runtime so exits
  * become thrown errors and logs are easy to assert.

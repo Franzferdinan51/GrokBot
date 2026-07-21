@@ -1,6 +1,6 @@
 // Covers plugin status reporting from config, discovery, and registry state.
 
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import type { PluginMemoryEmbeddingProviderRegistration } from "./registry.test-fixtures.js";
 import {
@@ -439,7 +439,7 @@ describe("plugin status reports", () => {
   });
 
   it("forwards an explicit env to plugin loading", () => {
-    const env = { HOME: "/tmp/openclaw-home" } as NodeJS.ProcessEnv;
+    const env = { HOME: "/tmp/grokbot-home" } as NodeJS.ProcessEnv;
 
     buildPluginSnapshotReport({
       config: {},
@@ -481,7 +481,7 @@ describe("plugin status reports", () => {
       snapshot: createInstalledPluginIndexSnapshot([
         {
           pluginId: "provider-env-plugin",
-          manifestPath: "/tmp/provider-env-plugin/openclaw.plugin.json",
+          manifestPath: "/tmp/provider-env-plugin/grokbot.plugin.json",
           manifestHash: "manifest-hash",
           rootDir: "/tmp/provider-env-plugin",
           origin: "workspace",

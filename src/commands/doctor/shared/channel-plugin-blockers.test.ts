@@ -1,8 +1,8 @@
 // Channel plugin blocker tests cover doctor diagnostics for blocked channel plugin setup.
 
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../../config/types.grokbot.js";
 import * as manifestRegistry from "../../../plugins/manifest-registry.js";
 import {
   channelPluginBlockerHitToHealthFinding,
@@ -1185,7 +1185,7 @@ describe("channel plugin blockers", () => {
           enabledByDefault: true,
         },
         {
-          id: "openclaw-lark",
+          id: "grokbot-lark",
           origin: "config",
           channels: ["feishu"],
           enabledByDefault: false,
@@ -1207,7 +1207,7 @@ describe("channel plugin blockers", () => {
           feishu: {
             enabled: false,
           },
-          "openclaw-lark": {
+          "grokbot-lark": {
             enabled: true,
           },
         },
@@ -1234,7 +1234,7 @@ describe("channel plugin blockers", () => {
           enabledByDefault: true,
         },
         {
-          id: "openclaw-lark",
+          id: "grokbot-lark",
           origin: "config",
           channels: ["feishu"],
           enabledByDefault: false,
@@ -1275,7 +1275,7 @@ describe("channel plugin blockers", () => {
       },
       {
         channelId: "feishu",
-        pluginId: "openclaw-lark",
+        pluginId: "grokbot-lark",
         reason: "missing explicit enablement",
       },
     ]);

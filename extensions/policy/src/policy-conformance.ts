@@ -2,9 +2,9 @@
 import { promises as fs } from "node:fs";
 import { basename, isAbsolute, resolve } from "node:path";
 import JSON5 from "json5";
-import type { HealthFinding } from "openclaw/plugin-sdk/health";
-import { normalizeAgentId } from "openclaw/plugin-sdk/routing";
-import { isRecord } from "openclaw/plugin-sdk/string-coerce-runtime";
+import type { HealthFinding } from "grokbot/plugin-sdk/health";
+import { normalizeAgentId } from "grokbot/plugin-sdk/routing";
+import { isRecord } from "grokbot/plugin-sdk/string-coerce-runtime";
 import {
   isPolicyValueAtLeastAsStrict,
   policyContainerShapeFindings,

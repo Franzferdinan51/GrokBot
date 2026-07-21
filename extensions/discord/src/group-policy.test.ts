@@ -1,5 +1,5 @@
 // Discord tests pin guild/channel ScopeTree policy precedence.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/core";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/core";
 import { describe, expect, it } from "vitest";
 import {
   resolveDiscordGroupRequireMention,

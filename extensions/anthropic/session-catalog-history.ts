@@ -1,6 +1,6 @@
-import type { AgentMessage } from "openclaw/plugin-sdk/agent-harness-runtime";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { withSessionTranscriptWriteLock } from "openclaw/plugin-sdk/session-transcript-runtime";
+import type { AgentMessage } from "grokbot/plugin-sdk/agent-harness-runtime";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { withSessionTranscriptWriteLock } from "grokbot/plugin-sdk/session-transcript-runtime";
 import { CLAUDE_CLI_BACKEND_ID } from "./cli-constants.js";
 import type { ClaudeTranscriptItem } from "./session-catalog-transcript.js";
 
@@ -12,7 +12,7 @@ function importedClaudeMessage(
   const timestamp = Number.isFinite(parsedTimestamp) ? parsedTimestamp : fallbackTimestamp;
   const text = item.text?.trim() || "[Unsupported Claude transcript item]";
   if (item.type === "userMessage") {
-    // Imported native rows are not OpenClaw-authored; mirrorOrigin excludes them
+    // Imported native rows are not GrokBot-authored; mirrorOrigin excludes them
     // from self-echo provenance so a repeated native prompt stays observable.
     return {
       role: "user",

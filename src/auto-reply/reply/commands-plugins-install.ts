@@ -7,7 +7,7 @@ import {
   parseNpmPackPrefixPath,
   resolveFileNpmSpecToLocalPath,
 } from "../../cli/plugins-command-helpers.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import type { PluginInstallRecord } from "../../config/types.plugins.js";
 import { resolveArchiveKind } from "../../infra/archive.js";
 import { parseClawHubPluginSpec } from "../../infra/clawhub.js";
@@ -234,7 +234,7 @@ export async function installPluginFromPluginsCommand(params: {
       if (result.code === CLAWHUB_INSTALL_ERROR_CODE.CLAWHUB_RISK_ACKNOWLEDGEMENT_REQUIRED) {
         return {
           ok: false,
-          error: `${warningPrefix}${result.error} The /plugins chat command cannot acknowledge ClawHub risk; run the local openclaw plugins install command with --acknowledge-clawhub-risk from a trusted shell after reviewing the warning.`,
+          error: `${warningPrefix}${result.error} The /plugins chat command cannot acknowledge ClawHub risk; run the local grokbot plugins install command with --acknowledge-clawhub-risk from a trusted shell after reviewing the warning.`,
         };
       }
       return { ok: false, error: `${warningPrefix}${result.error}` };

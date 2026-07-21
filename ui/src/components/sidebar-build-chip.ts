@@ -3,7 +3,7 @@ import { property } from "lit/decorators.js";
 import { pathForRoute } from "../app-route-paths.ts";
 import { CONTROL_UI_BUILD_INFO } from "../build-info.ts";
 import { t } from "../i18n/index.ts";
-import { OpenClawLightDomContentsElement } from "../lit/openclaw-element.ts";
+import { OpenClawLightDomContentsElement } from "../lit/grokbot-element.ts";
 import { formatBuildChipText } from "./sidebar-build-chip-format.ts";
 import "./tooltip.ts";
 
@@ -47,7 +47,7 @@ class SidebarBuildChip extends OpenClawLightDomContentsElement {
       .filter((line): line is string => Boolean(line))
       .join("\n");
     return html`
-      <openclaw-tooltip .content=${tooltip}>
+      <grokbot-tooltip .content=${tooltip}>
         <a
           class="sidebar-footer-build"
           href=${pathForRoute("about", this.basePath)}
@@ -61,11 +61,11 @@ class SidebarBuildChip extends OpenClawLightDomContentsElement {
           }}
           >${text}</a
         >
-      </openclaw-tooltip>
+      </grokbot-tooltip>
     `;
   }
 }
 
-if (globalThis.customElements && !customElements.get("openclaw-sidebar-build-chip")) {
-  customElements.define("openclaw-sidebar-build-chip", SidebarBuildChip);
+if (globalThis.customElements && !customElements.get("grokbot-sidebar-build-chip")) {
+  customElements.define("grokbot-sidebar-build-chip", SidebarBuildChip);
 }

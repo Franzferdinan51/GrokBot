@@ -3,13 +3,13 @@
  * Normalizes legacy JSON stores, SQLite/raw payloads, runtime state metadata,
  * legacy OAuth files, and merged main/agent stores.
  */
-import { normalizeProviderId } from "@openclaw/model-catalog-core/provider-id";
-import { isRecord } from "@openclaw/normalization-core/record-coerce";
-import { uniqueStrings } from "@openclaw/normalization-core/string-normalization";
+import { normalizeProviderId } from "@grokbot/model-catalog-core/provider-id";
+import { isRecord } from "@grokbot/normalization-core/record-coerce";
+import { uniqueStrings } from "@grokbot/normalization-core/string-normalization";
 import { resolveOAuthPath } from "../../config/paths.js";
 import { coerceSecretRef } from "../../config/types.secrets.js";
 import { loadJsonFile } from "../../infra/json-file.js";
-import type { OpenClawAgentDatabase } from "../../state/openclaw-agent-db.js";
+import type { OpenClawAgentDatabase } from "../../state/grokbot-agent-db.js";
 import { asBoolean } from "../../utils/boolean.js";
 import { AUTH_STORE_VERSION, log } from "./constants.js";
 import { isLegacyOAuthRef } from "./legacy-oauth-ref.js";

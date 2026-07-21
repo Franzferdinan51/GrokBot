@@ -1,5 +1,5 @@
 // Cloud-worker dispatch for managed-worktree sessions.
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+import { normalizeOptionalString } from "@grokbot/normalization-core/string-coerce";
 import {
   ErrorCodes,
   errorShape,
@@ -93,7 +93,7 @@ export const sessionDispatchHandlers: GatewayRequestHandlers = {
         undefined,
         errorShape(
           ErrorCodes.INVALID_REQUEST,
-          `cloud worker dispatch requires the OpenClaw runtime, not ${sessionRuntime}`,
+          `cloud worker dispatch requires the GrokBot runtime, not ${sessionRuntime}`,
         ),
       );
       return;

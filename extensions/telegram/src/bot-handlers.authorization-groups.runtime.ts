@@ -4,8 +4,8 @@ import type {
   TelegramAccountConfig,
   TelegramGroupConfig,
   TelegramTopicConfig,
-} from "openclaw/plugin-sdk/config-contracts";
-import { logVerbose } from "openclaw/plugin-sdk/runtime-env";
+} from "grokbot/plugin-sdk/config-contracts";
+import { logVerbose } from "grokbot/plugin-sdk/runtime-env";
 import type { NormalizedAllowFrom } from "./bot-access.js";
 import type { RegisterTelegramHandlerParams } from "./bot-native-commands.js";
 import {

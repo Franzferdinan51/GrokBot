@@ -10,7 +10,7 @@ import { readConfiguredLogTail } from "./log-tail.js";
 let tempDirs: string[] = [];
 
 async function makeTempDir(): Promise<string> {
-  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-log-tail-redaction-"));
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-log-tail-redaction-"));
   tempDirs.push(dir);
   return dir;
 }
@@ -25,8 +25,8 @@ afterEach(async () => {
 describe("readConfiguredLogTail redaction", () => {
   it("redacts raw auth headers before returning log lines", async () => {
     const dir = await makeTempDir();
-    const logFile = path.join(dir, "openclaw.log");
-    const configFile = path.join(dir, "openclaw.json");
+    const logFile = path.join(dir, "grokbot.log");
+    const configFile = path.join(dir, "grokbot.json");
     const basicSecret = "c2VjcmV0OnBhc3M=";
     const openClawToken = "supersecretgatewaytoken1234567890";
     const pomeriumJwt = "eyJheaderabcd.eyJpayloadabcd.signatureabcd123456";
@@ -40,7 +40,7 @@ describe("readConfiguredLogTail redaction", () => {
       logFile,
       [
         `Authorization: Basic ${basicSecret}`,
-        `X-OpenClaw-Token: ${openClawToken}`,
+        `X-GrokBot-Token: ${openClawToken}`,
         `x-pomerium-jwt-assertion: ${pomeriumJwt}`,
         "normal diagnostic line",
       ].join("\n"),
@@ -55,7 +55,7 @@ describe("readConfiguredLogTail redaction", () => {
     const text = payload.lines.join("\n");
 
     expect(text).toContain("Authorization: Basic ***");
-    expect(text).toContain("X-OpenClaw-Token: supers…7890");
+    expect(text).toContain("X-GrokBot-Token: supers…7890");
     expect(text).toContain("x-pomerium-jwt-assertion: eyJhea…3456");
     expect(text).toContain("normal diagnostic line");
     expect(text).not.toContain(basicSecret);

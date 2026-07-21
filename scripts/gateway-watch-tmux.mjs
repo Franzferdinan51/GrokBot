@@ -20,7 +20,7 @@ const GATEWAY_WATCH_TMUX_SCRIPT = "scripts/gateway-watch-tmux.mjs";
 const SERVICE_HANDOFF_ARG = "--handoff-managed-service";
 const DEFAULT_GATEWAY_PORT = "18789";
 const TMUX_CWD_ENV_KEY = "OPENCLAW_GATEWAY_WATCH_CWD";
-const TMUX_CWD_OPTION_KEY = "@openclaw.gateway_watch.cwd";
+const TMUX_CWD_OPTION_KEY = "@grokbot.gateway_watch.cwd";
 const TMUX_CHILD_ENV_KEYS = [
   "NODE_OPTIONS",
   "OPENCLAW_CONFIG_PATH",
@@ -197,7 +197,7 @@ export const resolveGatewayWatchTmuxSessionName = ({ args = [], env = process.en
   const profile = resolveGatewayWatchProfile({ args, env });
   const { port } = resolveGatewayWatchPort({ args, env });
   const parts = [
-    "openclaw",
+    "grokbot",
     "gateway",
     "watch",
     sanitizeSessionPart(profile ?? DEFAULT_PROFILE_NAME),
@@ -376,7 +376,7 @@ const runTmux = (spawnSyncImpl, args, options = {}) =>
   });
 
 const log = (stderr, message) => {
-  stderr.write(`[openclaw] ${message}\n`);
+  stderr.write(`[grokbot] ${message}\n`);
 };
 
 const getTmuxErrorText = (result) =>

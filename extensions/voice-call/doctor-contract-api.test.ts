@@ -3,16 +3,16 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { DatabaseSync } from "node:sqlite";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import {
   createPluginStateKeyedStoreForTests,
   createPluginStateSyncKeyedStoreForTests,
   resetPluginStateStoreForTests,
-} from "openclaw/plugin-sdk/plugin-state-test-runtime";
+} from "grokbot/plugin-sdk/plugin-state-test-runtime";
 import type {
   OpenKeyedStoreOptions,
   PluginDoctorStateMigrationContext,
-} from "openclaw/plugin-sdk/runtime-doctor";
+} from "grokbot/plugin-sdk/runtime-doctor";
 import { afterEach, beforeAll, beforeEach, describe, expect, it } from "vitest";
 import { resolveSessionStoreAgentIds, stateMigrations } from "./doctor-contract-api.js";
 import {
@@ -67,7 +67,7 @@ describe("voice-call doctor state migration", () => {
 
   beforeAll(async () => {
     resetPluginStateStoreForTests();
-    const warmStateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-voice-call-doctor-"));
+    const warmStateDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-voice-call-doctor-"));
     const warmStorePath = createTestStorePath();
     const warmEnv = {
       ...process.env,
@@ -86,7 +86,7 @@ describe("voice-call doctor state migration", () => {
       const config = {
         plugins: {
           entries: {
-            "@openclaw/voice-call": {
+            "@grokbot/voice-call": {
               config: { store: warmStorePath },
             },
           },
@@ -120,7 +120,7 @@ describe("voice-call doctor state migration", () => {
 
   beforeEach(async () => {
     resetPluginStateStoreForTests();
-    stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-voice-call-doctor-"));
+    stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-voice-call-doctor-"));
     storePath = createTestStorePath();
     env = { ...process.env, HOME: stateDir, OPENCLAW_STATE_DIR: stateDir };
     installStateRuntime();
@@ -155,7 +155,7 @@ describe("voice-call doctor state migration", () => {
     expect(
       resolveSessionStoreAgentIds({
         cfg: {
-          plugins: { entries: { "@openclaw/voice-call": { config: {} } } },
+          plugins: { entries: { "@grokbot/voice-call": { config: {} } } },
         },
       }),
     ).toEqual(["main"]);
@@ -188,7 +188,7 @@ describe("voice-call doctor state migration", () => {
     const config = {
       plugins: {
         entries: {
-          "@openclaw/voice-call": {
+          "@grokbot/voice-call": {
             config: { store: storePath },
           },
         },
@@ -271,7 +271,7 @@ describe("voice-call doctor state migration", () => {
   });
 
   it("repairs the plugin-local SQLite schema without a legacy call log", async () => {
-    const databasePath = path.join(storePath, "state", "openclaw.sqlite");
+    const databasePath = path.join(storePath, "state", "grokbot.sqlite");
     await fs.mkdir(path.dirname(databasePath), { recursive: true });
     const db = new DatabaseSync(databasePath);
     try {
@@ -365,7 +365,7 @@ describe("voice-call doctor state migration", () => {
     const config = {
       plugins: {
         entries: {
-          "@openclaw/voice-call": {
+          "@grokbot/voice-call": {
             config: { store: storePath },
           },
         },

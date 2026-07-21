@@ -361,21 +361,21 @@ describe("handleSlackMessageAction", () => {
     const presentationButtons = blockAt(controls, 0);
     expect(presentationButtons.block_id).toBe("openclaw_reply_buttons_1");
     expect(elementAt(presentationButtons, 0)).toMatchObject({
-      action_id: "openclaw:reply_button:1:1",
+      action_id: "grokbot:reply_button:1:1",
       value: "stage",
     });
     const presentationSelect = blockAt(controls, 1);
     expect(presentationSelect.block_id).toBe("openclaw_reply_select_1");
-    expect(elementAt(presentationSelect, 0).action_id).toBe("openclaw:reply_select:1");
+    expect(elementAt(presentationSelect, 0).action_id).toBe("grokbot:reply_select:1");
     const legacyButtons = blockAt(controls, 2);
     expect(legacyButtons.block_id).toBe("openclaw_reply_buttons_2");
     expect(elementAt(legacyButtons, 0)).toMatchObject({
-      action_id: "openclaw:reply_button:2:1",
+      action_id: "grokbot:reply_button:2:1",
       value: "refresh",
     });
     const legacySelect = blockAt(controls, 3);
     expect(legacySelect.block_id).toBe("openclaw_reply_select_2");
-    expect(elementAt(legacySelect, 0).action_id).toBe("openclaw:reply_select:2");
+    expect(elementAt(legacySelect, 0).action_id).toBe("grokbot:reply_select:2");
     expect(String(messages[1]?.text).length).toBeGreaterThan(8000);
   });
 
@@ -595,10 +595,10 @@ describe("handleSlackMessageAction", () => {
     const message = preparedMessages(invoke)[0]!;
     const firstButtons = blockAt(message, 1);
     expect(firstButtons.block_id).toBe("openclaw_reply_buttons_1");
-    expect(elementAt(firstButtons, 0).action_id).toBe("openclaw:reply_button:1:1");
+    expect(elementAt(firstButtons, 0).action_id).toBe("grokbot:reply_button:1:1");
     const secondButtons = blockAt(message, 2);
     expect(secondButtons.block_id).toBe("openclaw_reply_buttons_2");
-    expect(elementAt(secondButtons, 0).action_id).toBe("openclaw:reply_button:2:1");
+    expect(elementAt(secondButtons, 0).action_id).toBe("grokbot:reply_button:2:1");
   });
 
   it("passes media and rendered interactive blocks through for split Slack delivery", async () => {

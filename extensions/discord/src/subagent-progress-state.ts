@@ -1,5 +1,5 @@
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import type { PluginStateKeyedStore } from "openclaw/plugin-sdk/plugin-state-runtime";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import type { PluginStateKeyedStore } from "grokbot/plugin-sdk/plugin-state-runtime";
 
 export const PROGRESS_STORE_TTL_MS = 7 * 24 * 60 * 60_000;
 export const MAX_TRACKED_RUNS = 4_096;

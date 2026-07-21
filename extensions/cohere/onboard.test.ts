@@ -1,5 +1,5 @@
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { resolveAgentModelPrimaryValue } from "openclaw/plugin-sdk/provider-onboard";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { resolveAgentModelPrimaryValue } from "grokbot/plugin-sdk/provider-onboard";
 import { describe, expect, it } from "vitest";
 import { buildCohereCatalogModels, COHERE_BASE_URL, COHERE_MODEL_CATALOG } from "./models.js";
 import { applyCohereConfig, COHERE_DEFAULT_MODEL_REF } from "./onboard.js";

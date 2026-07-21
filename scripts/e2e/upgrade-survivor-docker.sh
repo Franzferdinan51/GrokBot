@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Installs the packed OpenClaw tarball over dirty old-user state. When
+# Installs the packed GrokBot tarball over dirty old-user state. When
 # OPENCLAW_UPGRADE_SURVIVOR_BASELINE_SPEC is set, installs that published
 # baseline first and upgrades it to the selected candidate.
 set -euo pipefail
@@ -7,9 +7,9 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 source "$ROOT_DIR/scripts/lib/docker-e2e-image.sh"
 source "$ROOT_DIR/scripts/lib/docker-e2e-package.sh"
-source "$ROOT_DIR/scripts/lib/openclaw-e2e-instance.sh"
+source "$ROOT_DIR/scripts/lib/grokbot-e2e-instance.sh"
 
-IMAGE_NAME="$(docker_e2e_resolve_image "openclaw-upgrade-survivor-e2e" OPENCLAW_UPGRADE_SURVIVOR_E2E_IMAGE)"
+IMAGE_NAME="$(docker_e2e_resolve_image "grokbot-upgrade-survivor-e2e" OPENCLAW_UPGRADE_SURVIVOR_E2E_IMAGE)"
 SKIP_BUILD="${OPENCLAW_UPGRADE_SURVIVOR_E2E_SKIP_BUILD:-0}"
 DOCKER_RUN_TIMEOUT="${OPENCLAW_UPGRADE_SURVIVOR_DOCKER_RUN_TIMEOUT:-1200s}"
 BASELINE_SPEC="${OPENCLAW_UPGRADE_SURVIVOR_BASELINE_SPEC:-}"
@@ -87,17 +87,17 @@ normalize_npm_candidate() {
   local raw="$1"
   case "$raw" in
     latest | beta)
-      printf 'openclaw@%s\n' "$raw"
+      printf 'grokbot@%s\n' "$raw"
       ;;
-    openclaw@*)
+    grokbot@*)
       printf '%s\n' "$raw"
       ;;
     *@*)
-      echo "OPENCLAW_UPGRADE_SURVIVOR_CANDIDATE must be current, latest, beta, openclaw@<version>, a bare version, or a .tgz path." >&2
+      echo "OPENCLAW_UPGRADE_SURVIVOR_CANDIDATE must be current, latest, beta, grokbot@<version>, a bare version, or a .tgz path." >&2
       return 1
       ;;
     *)
-      printf 'openclaw@%s\n' "$raw"
+      printf 'grokbot@%s\n' "$raw"
       ;;
   esac
 }
@@ -120,21 +120,21 @@ if [ "${OPENCLAW_UPGRADE_SURVIVOR_PUBLISHED_BASELINE:-0}" = "1" ]; then
     PACKAGE_TGZ="$(docker_e2e_prepare_package_tgz upgrade-survivor "$OPENCLAW_CURRENT_PACKAGE_TGZ")"
     docker_e2e_package_mount_args "$PACKAGE_TGZ"
     CANDIDATE_KIND="tarball"
-    CANDIDATE_SPEC="/tmp/openclaw-current.tgz"
+    CANDIDATE_SPEC="/tmp/grokbot-current.tgz"
   elif [ "$CANDIDATE_RAW" = "current" ]; then
     PACKAGE_TGZ="$(docker_e2e_prepare_package_tgz upgrade-survivor)"
     docker_e2e_package_mount_args "$PACKAGE_TGZ"
     CANDIDATE_KIND="tarball"
-    CANDIDATE_SPEC="/tmp/openclaw-current.tgz"
+    CANDIDATE_SPEC="/tmp/grokbot-current.tgz"
   elif [[ "$CANDIDATE_RAW" == *.tgz ]]; then
     if [ ! -f "$CANDIDATE_RAW" ]; then
-      echo "OpenClaw candidate tarball does not exist: $CANDIDATE_RAW" >&2
+      echo "GrokBot candidate tarball does not exist: $CANDIDATE_RAW" >&2
       exit 1
     fi
     PACKAGE_TGZ="$(docker_e2e_prepare_package_tgz upgrade-survivor "$CANDIDATE_RAW")"
     docker_e2e_package_mount_args "$PACKAGE_TGZ"
     CANDIDATE_KIND="tarball"
-    CANDIDATE_SPEC="/tmp/openclaw-current.tgz"
+    CANDIDATE_SPEC="/tmp/grokbot-current.tgz"
   else
     CANDIDATE_KIND="npm"
     CANDIDATE_SPEC="$(normalize_npm_candidate "$CANDIDATE_RAW")"
@@ -156,11 +156,11 @@ if [ "${OPENCLAW_UPGRADE_SURVIVOR_PUBLISHED_BASELINE:-0}" = "1" ]; then
     -e OPENCLAW_UPGRADE_SURVIVOR_COMMAND_TIMEOUT="$COMMAND_TIMEOUT" \
     -e OPENCLAW_UPGRADE_SURVIVOR_LEGACY_RUNTIME_DEPS_SYMLINK="${OPENCLAW_UPGRADE_SURVIVOR_LEGACY_RUNTIME_DEPS_SYMLINK:-}" \
     -e OPENCLAW_UPGRADE_SURVIVOR_ROOT_MANAGED_VPS="$ROOT_MANAGED_VPS" \
-    -e OPENCLAW_UPGRADE_SURVIVOR_SUMMARY_JSON=/tmp/openclaw-upgrade-survivor-artifacts/summary.json \
+    -e OPENCLAW_UPGRADE_SURVIVOR_SUMMARY_JSON=/tmp/grokbot-upgrade-survivor-artifacts/summary.json \
     -e OPENCLAW_UPGRADE_SURVIVOR_START_BUDGET_SECONDS="$START_BUDGET_SECONDS" \
     -e OPENCLAW_UPGRADE_SURVIVOR_STATUS_BUDGET_SECONDS="$STATUS_BUDGET_SECONDS" \
     "${PROBE_ENV_ARGS[@]}" \
-    -v "$ARTIFACT_DIR:/tmp/openclaw-upgrade-survivor-artifacts" \
+    -v "$ARTIFACT_DIR:/tmp/grokbot-upgrade-survivor-artifacts" \
     "${DOCKER_E2E_PACKAGE_ARGS[@]}" \
     "${DOCKER_RUN_USER_ARGS[@]}" \
     "$IMAGE_NAME" \
@@ -180,7 +180,7 @@ echo "Running upgrade survivor Docker E2E..."
 docker_e2e_run_with_harness \
   -e COREPACK_ENABLE_DOWNLOAD_PROMPT=0 \
   -e OPENCLAW_TEST_STATE_SCRIPT_B64="$OPENCLAW_TEST_STATE_SCRIPT_B64" \
-  -e OPENCLAW_UPGRADE_SURVIVOR_ARTIFACT_ROOT=/tmp/openclaw-upgrade-survivor-artifacts \
+  -e OPENCLAW_UPGRADE_SURVIVOR_ARTIFACT_ROOT=/tmp/grokbot-upgrade-survivor-artifacts \
   -e OPENCLAW_UPGRADE_SURVIVOR_ROOT_MANAGED_VPS="$ROOT_MANAGED_VPS" \
   -e OPENCLAW_UPGRADE_SURVIVOR_SCENARIO="$SCENARIO" \
   -e OPENCLAW_UPGRADE_SURVIVOR_UPDATE_RESTART_MODE="$UPDATE_RESTART_MODE" \
@@ -188,18 +188,18 @@ docker_e2e_run_with_harness \
   -e OPENCLAW_UPGRADE_SURVIVOR_START_BUDGET_SECONDS="$START_BUDGET_SECONDS" \
   -e OPENCLAW_UPGRADE_SURVIVOR_STATUS_BUDGET_SECONDS="$STATUS_BUDGET_SECONDS" \
   "${PROBE_ENV_ARGS[@]}" \
-  -v "$ARTIFACT_DIR:/tmp/openclaw-upgrade-survivor-artifacts" \
+  -v "$ARTIFACT_DIR:/tmp/grokbot-upgrade-survivor-artifacts" \
   "${DOCKER_E2E_PACKAGE_ARGS[@]}" \
   "${DOCKER_RUN_USER_ARGS[@]}" \
   "$IMAGE_NAME" \
   timeout --kill-after=30s "$DOCKER_RUN_TIMEOUT" bash -lc 'set -euo pipefail
-source scripts/lib/openclaw-e2e-instance.sh
+source scripts/lib/grokbot-e2e-instance.sh
 
 export npm_config_loglevel=error
 export npm_config_fund=false
 export npm_config_audit=false
-export OPENCLAW_UPGRADE_SURVIVOR_ARTIFACT_ROOT="${OPENCLAW_UPGRADE_SURVIVOR_ARTIFACT_ROOT:-/tmp/openclaw-upgrade-survivor-artifacts}"
-export OPENCLAW_UPGRADE_SURVIVOR_RUNTIME_ROOT="${OPENCLAW_UPGRADE_SURVIVOR_RUNTIME_ROOT:-/tmp/openclaw-upgrade-survivor-runtime}"
+export OPENCLAW_UPGRADE_SURVIVOR_ARTIFACT_ROOT="${OPENCLAW_UPGRADE_SURVIVOR_ARTIFACT_ROOT:-/tmp/grokbot-upgrade-survivor-artifacts}"
+export OPENCLAW_UPGRADE_SURVIVOR_RUNTIME_ROOT="${OPENCLAW_UPGRADE_SURVIVOR_RUNTIME_ROOT:-/tmp/grokbot-upgrade-survivor-runtime}"
 mkdir -p "$OPENCLAW_UPGRADE_SURVIVOR_ARTIFACT_ROOT"
 export TMPDIR="${OPENCLAW_UPGRADE_SURVIVOR_TMPDIR:-$OPENCLAW_UPGRADE_SURVIVOR_RUNTIME_ROOT/tmp}"
 export OPENCLAW_TEST_STATE_TMPDIR="${OPENCLAW_UPGRADE_SURVIVOR_TEST_STATE_TMPDIR:-$OPENCLAW_UPGRADE_SURVIVOR_RUNTIME_ROOT/state-tmp}"
@@ -218,7 +218,7 @@ export OPENCLAW_SKIP_PROVIDERS=1
 export OPENCLAW_SKIP_CHANNELS=1
 export OPENCLAW_DISABLE_BONJOUR=1
 export GATEWAY_AUTH_TOKEN_REF="upgrade-survivor-token"
-export OPENAI_API_KEY="sk-openclaw-upgrade-survivor"
+export OPENAI_API_KEY="sk-grokbot-upgrade-survivor"
 export DISCORD_BOT_TOKEN="upgrade-survivor-discord-token"
 export TELEGRAM_BOT_TOKEN="123456:upgrade-survivor-telegram-token"
 export FEISHU_APP_SECRET="upgrade-survivor-feishu-secret"
@@ -259,7 +259,7 @@ configure_configured_plugin_install_fixture_registry() {
 
   local fixture_root="$OPENCLAW_UPGRADE_SURVIVOR_ARTIFACT_ROOT/configured-plugin-installs-npm-fixture"
   local package_dir="$fixture_root/package"
-  local tarball="$fixture_root/openclaw-brave-plugin-2026.5.2.tgz"
+  local tarball="$fixture_root/grokbot-brave-plugin-2026.5.2.tgz"
   local port_file="$fixture_root/npm-registry-port"
   local log_file="$fixture_root/npm-registry.log"
   mkdir -p "$package_dir"
@@ -272,16 +272,16 @@ fs.writeFileSync(
   path.join(root, "package.json"),
   `${JSON.stringify(
     {
-      name: "@openclaw/brave-plugin",
+      name: "@grokbot/brave-plugin",
       version: "2026.5.2",
-      openclaw: { extensions: ["./index.js"] },
+      grokbot: { extensions: ["./index.js"] },
     },
     null,
     2,
   )}\n`,
 );
 fs.writeFileSync(
-  path.join(root, "openclaw.plugin.json"),
+  path.join(root, "grokbot.plugin.json"),
   `${JSON.stringify(
     {
       id: "brave",
@@ -317,7 +317,7 @@ NODE
   OPENCLAW_NPM_REGISTRY_UPSTREAM=https://registry.npmjs.org \
     node scripts/e2e/lib/plugins/npm-registry-server.mjs \
     "$port_file" \
-    "@openclaw/brave-plugin" \
+    "@grokbot/brave-plugin" \
     "2026.5.2" \
     "$tarball" \
     >"$log_file" 2>&1 &
@@ -345,8 +345,8 @@ openclaw_e2e_eval_test_state_from_b64 "${OPENCLAW_TEST_STATE_SCRIPT_B64:?missing
 node scripts/e2e/lib/upgrade-survivor/assertions.mjs seed
 
 openclaw_e2e_install_package "$OPENCLAW_UPGRADE_SURVIVOR_ARTIFACT_ROOT/install.log" "upgrade survivor package" "$npm_config_prefix"
-command -v openclaw >/dev/null
-package_version="$(node -p "JSON.parse(require(\"node:fs\").readFileSync(process.argv[1] + \"/lib/node_modules/openclaw/package.json\", \"utf8\")).version" "$npm_config_prefix")"
+command -v grokbot >/dev/null
+package_version="$(node -p "JSON.parse(require(\"node:fs\").readFileSync(process.argv[1] + \"/lib/node_modules/grokbot/package.json\", \"utf8\")).version" "$npm_config_prefix")"
 OPENCLAW_PACKAGE_ACCEPTANCE_LEGACY_COMPAT="$(
   node scripts/e2e/lib/package-compat.mjs "$package_version"
 )"
@@ -367,13 +367,13 @@ if [ "$UPDATE_RESTART_MODE" != "auto-auth" ]; then
   update_args+=(--no-restart)
 fi
 set +e
-openclaw_e2e_maybe_timeout "$command_timeout" env -u OPENCLAW_GATEWAY_TOKEN -u OPENCLAW_GATEWAY_PASSWORD OPENCLAW_ALLOW_ROOT=1 openclaw "${update_args[@]}" >/tmp/openclaw-upgrade-survivor-update.json 2>/tmp/openclaw-upgrade-survivor-update.err
+openclaw_e2e_maybe_timeout "$command_timeout" env -u OPENCLAW_GATEWAY_TOKEN -u OPENCLAW_GATEWAY_PASSWORD OPENCLAW_ALLOW_ROOT=1 grokbot "${update_args[@]}" >/tmp/grokbot-upgrade-survivor-update.json 2>/tmp/grokbot-upgrade-survivor-update.err
 update_status=$?
 set -e
 if [ "$update_status" -ne 0 ]; then
-  echo "openclaw update failed" >&2
-  openclaw_e2e_print_log /tmp/openclaw-upgrade-survivor-update.err >&2
-  openclaw_e2e_print_log /tmp/openclaw-upgrade-survivor-update.json >&2
+  echo "grokbot update failed" >&2
+  openclaw_e2e_print_log /tmp/grokbot-upgrade-survivor-update.err >&2
+  openclaw_e2e_print_log /tmp/grokbot-upgrade-survivor-update.json >&2
   exit "$update_status"
 fi
 
@@ -382,14 +382,14 @@ if [ "$UPDATE_RESTART_MODE" = "auto-auth" ]; then
 else
   echo "Running non-interactive doctor repair..."
   configure_configured_plugin_install_fixture_registry
-  if ! openclaw_e2e_maybe_timeout "$command_timeout" openclaw doctor --fix --non-interactive >/tmp/openclaw-upgrade-survivor-doctor.log 2>&1; then
-    echo "openclaw doctor failed" >&2
-    openclaw_e2e_print_log /tmp/openclaw-upgrade-survivor-doctor.log >&2
+  if ! openclaw_e2e_maybe_timeout "$command_timeout" grokbot doctor --fix --non-interactive >/tmp/grokbot-upgrade-survivor-doctor.log 2>&1; then
+    echo "grokbot doctor failed" >&2
+    openclaw_e2e_print_log /tmp/grokbot-upgrade-survivor-doctor.log >&2
     exit 1
   fi
-  if ! openclaw_e2e_maybe_timeout "$command_timeout" openclaw config validate >>/tmp/openclaw-upgrade-survivor-doctor.log 2>&1; then
+  if ! openclaw_e2e_maybe_timeout "$command_timeout" grokbot config validate >>/tmp/grokbot-upgrade-survivor-doctor.log 2>&1; then
     echo "post-doctor config validation failed" >&2
-    openclaw_e2e_print_log /tmp/openclaw-upgrade-survivor-doctor.log >&2
+    openclaw_e2e_print_log /tmp/grokbot-upgrade-survivor-doctor.log >&2
     exit 1
   fi
 fi
@@ -400,11 +400,11 @@ node scripts/e2e/lib/upgrade-survivor/assertions.mjs assert-state
 
 startup_summary="n/a"
 if [ "$UPDATE_RESTART_MODE" = "auto-auth" ]; then
-  echo "Gateway restart was handled by openclaw update."
+  echo "Gateway restart was handled by grokbot update."
 else
   echo "Starting gateway from upgraded state..."
   start_epoch="$(node -e "process.stdout.write(String(Date.now()))")"
-  openclaw gateway --port "$PORT" --bind loopback --allow-unconfigured >"$GATEWAY_LOG" 2>&1 &
+  grokbot gateway --port "$PORT" --bind loopback --allow-unconfigured >"$GATEWAY_LOG" 2>&1 &
   gateway_pid="$!"
   openclaw_e2e_wait_gateway_ready "$gateway_pid" "$GATEWAY_LOG" 360 "$PORT"
   ready_epoch="$(node -e "process.stdout.write(String(Date.now()))")"
@@ -422,7 +422,7 @@ node scripts/e2e/lib/upgrade-survivor/probe-gateway.mjs \
   --base-url "http://127.0.0.1:$PORT" \
   --path /healthz \
   --expect live \
-  --out /tmp/openclaw-upgrade-survivor-healthz.json
+  --out /tmp/grokbot-upgrade-survivor-healthz.json
 
 readyz_probe_args=(
   --base-url "http://127.0.0.1:$PORT"
@@ -435,14 +435,14 @@ fi
 if [ "${OPENCLAW_UPGRADE_SURVIVOR_READYZ_ALLOW_DEGRADED:-}" = "1" ]; then
   readyz_probe_args+=(--allow-degraded-ready)
 fi
-readyz_probe_args+=(--out /tmp/openclaw-upgrade-survivor-readyz.json)
+readyz_probe_args+=(--out /tmp/grokbot-upgrade-survivor-readyz.json)
 node scripts/e2e/lib/upgrade-survivor/probe-gateway.mjs "${readyz_probe_args[@]}"
 
 echo "Checking gateway RPC status..."
 status_start="$(node -e "process.stdout.write(String(Date.now()))")"
-if ! openclaw_e2e_maybe_timeout "$command_timeout" openclaw gateway status --url "ws://127.0.0.1:$PORT" --token "$GATEWAY_AUTH_TOKEN_REF" --require-rpc --timeout 30000 --json >/tmp/openclaw-upgrade-survivor-status.json 2>/tmp/openclaw-upgrade-survivor-status.err; then
+if ! openclaw_e2e_maybe_timeout "$command_timeout" grokbot gateway status --url "ws://127.0.0.1:$PORT" --token "$GATEWAY_AUTH_TOKEN_REF" --require-rpc --timeout 30000 --json >/tmp/grokbot-upgrade-survivor-status.json 2>/tmp/grokbot-upgrade-survivor-status.err; then
   echo "gateway status failed" >&2
-  openclaw_e2e_print_log /tmp/openclaw-upgrade-survivor-status.err >&2
+  openclaw_e2e_print_log /tmp/grokbot-upgrade-survivor-status.err >&2
   openclaw_e2e_print_log "$GATEWAY_LOG" >&2
   openclaw_e2e_print_log "$SYSTEMCTL_SHIM_DAEMON_LOG" >&2
   exit 1
@@ -451,10 +451,10 @@ status_end="$(node -e "process.stdout.write(String(Date.now()))")"
 status_seconds=$(((status_end - status_start + 999) / 1000))
 if [ "$status_seconds" -gt "$STATUS_BUDGET" ]; then
   echo "gateway status exceeded survivor budget: ${status_seconds}s > ${STATUS_BUDGET}s" >&2
-  openclaw_e2e_print_log /tmp/openclaw-upgrade-survivor-status.json >&2
+  openclaw_e2e_print_log /tmp/grokbot-upgrade-survivor-status.json >&2
   exit 1
 fi
-node scripts/e2e/lib/upgrade-survivor/assertions.mjs assert-status-json /tmp/openclaw-upgrade-survivor-status.json
+node scripts/e2e/lib/upgrade-survivor/assertions.mjs assert-status-json /tmp/grokbot-upgrade-survivor-status.json
 
 echo "Upgrade survivor Docker E2E passed scenario=${OPENCLAW_UPGRADE_SURVIVOR_SCENARIO:-base} updateRestartMode=${UPDATE_RESTART_MODE} startup=${startup_summary} status=${status_seconds}s."
 '

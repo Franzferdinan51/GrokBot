@@ -1,7 +1,7 @@
 // Gateway WebSocket connection handler owns pre-auth limits, handshake auth, presence, and message-handler attachment.
 import { randomUUID } from "node:crypto";
 import type { Socket } from "node:net";
-import { normalizeLowercaseStringOrEmpty } from "@openclaw/normalization-core/string-coerce";
+import { normalizeLowercaseStringOrEmpty } from "@grokbot/normalization-core/string-coerce";
 import type { RawData, WebSocket, WebSocketServer } from "ws";
 import { WORKER_PROTOCOL_MAX_PAYLOAD_BYTES } from "../../../packages/gateway-protocol/src/index.js";
 import { GATEWAY_STARTUP_PENDING_CLOSE_CAUSE } from "../../../packages/gateway-protocol/src/startup-unavailable.js";
@@ -466,7 +466,7 @@ export function attachGatewayWsConnectionHandler(params: AttachGatewayWsConnecti
       lastHandshakePhase === "ws_upgrade_started" &&
       !hasReceivedPreauthFrame &&
       lastFrameType === undefined &&
-      normalizeLowercaseStringOrEmpty(requestUserAgent).startsWith("openclaw/") &&
+      normalizeLowercaseStringOrEmpty(requestUserAgent).startsWith("grokbot/") &&
       isLoopbackAddress(remoteAddr);
 
     socket.once("close", (code, reason) => {

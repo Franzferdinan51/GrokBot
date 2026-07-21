@@ -6,8 +6,8 @@ import path from "node:path";
 import {
   resolveExpiresAtMsFromDurationSeconds,
   resolveTimestampMsToIsoString,
-} from "@openclaw/normalization-core/number-coercion";
-import { normalizeOptionalLowercaseString } from "@openclaw/normalization-core/string-coerce";
+} from "@grokbot/normalization-core/number-coercion";
+import { normalizeOptionalLowercaseString } from "@grokbot/normalization-core/string-coerce";
 import { runExec } from "../process/exec.js";
 
 const LIVE_CRON_PROBE_DELAY_SECONDS = 7 * 24 * 60 * 60;
@@ -40,7 +40,7 @@ export function resolveOpenClawCliProcessArgs(
   args: readonly string[],
   hasBuildOutput: boolean,
 ): string[] {
-  return [hasBuildOutput ? "openclaw.mjs" : "scripts/run-node.mjs", ...args];
+  return [hasBuildOutput ? "grokbot.mjs" : "scripts/run-node.mjs", ...args];
 }
 
 /** Return true for live agents that expose Claude-style MCP tool names. */
@@ -113,40 +113,40 @@ export function buildLiveCronProbeMessage(params: {
   const claudeLike = isClaudeLikeLiveAgent(params.agent);
   if (params.attempt === 0) {
     return (
-      "Use the OpenClaw MCP cron tool from server `openclaw`. " +
-      "If it is not already visible, search/load MCP tools for `openclaw cron` or `cron`, " +
-      "then call the matching OpenClaw MCP tool; Claude-style names may appear as `mcp__openclaw__cron`. " +
-      "Do not use Claude native `CronCreate`, `CronList`, or `CronDelete`; those are not OpenClaw proof. " +
+      "Use the GrokBot MCP cron tool from server `grokbot`. " +
+      "If it is not already visible, search/load MCP tools for `grokbot cron` or `cron`, " +
+      "then call the matching GrokBot MCP tool; Claude-style names may appear as `mcp__openclaw__cron`. " +
+      "Do not use Claude native `CronCreate`, `CronList`, or `CronDelete`; those are not GrokBot proof. " +
       `Call it with JSON arguments ${params.argsJson}. ` +
       "Preserve the JSON exactly, including job.sessionTarget and job.sessionKey; do not omit, rename, or flatten those fields. " +
-      "Do the actual tool call; I will verify externally with the OpenClaw cron CLI. " +
+      "Do the actual tool call; I will verify externally with the GrokBot cron CLI. " +
       `After the cron job is created, reply exactly: ${params.exactReply}`
     );
   }
   if (claudeLike) {
     return (
-      "Retry the OpenClaw MCP cron tool from server `openclaw` now. " +
-      "If it is not already visible, search/load MCP tools for `openclaw cron` or `cron`, " +
-      "then call the matching OpenClaw MCP tool; Claude-style names may appear as `mcp__openclaw__cron`. " +
-      "Do not use Claude native `CronCreate`, `CronList`, or `CronDelete`; those are not OpenClaw proof. " +
+      "Retry the GrokBot MCP cron tool from server `grokbot` now. " +
+      "If it is not already visible, search/load MCP tools for `grokbot cron` or `cron`, " +
+      "then call the matching GrokBot MCP tool; Claude-style names may appear as `mcp__openclaw__cron`. " +
+      "Do not use Claude native `CronCreate`, `CronList`, or `CronDelete`; those are not GrokBot proof. " +
       `Use these exact JSON arguments: ${params.argsJson}. ` +
       "Preserve job.sessionTarget and job.sessionKey exactly as provided. " +
       `If the cron job is created, reply exactly: ${params.exactReply}. ` +
       "If the tool call is cancelled, the job is not created, or you cannot confirm creation, " +
       "reply briefly saying that and ask me to retry. No markdown. " +
-      "I will verify externally with the OpenClaw cron CLI."
+      "I will verify externally with the GrokBot cron CLI."
     );
   }
   return (
-    "Your previous OpenClaw cron MCP tool call was cancelled before the job was created. " +
-    "Retry the OpenClaw MCP cron tool from server `openclaw` now. " +
+    "Your previous GrokBot cron MCP tool call was cancelled before the job was created. " +
+    "Retry the GrokBot MCP cron tool from server `grokbot` now. " +
     "If the harness shows Claude-style MCP names, use `mcp__openclaw__cron`. " +
     `Use these exact JSON arguments: ${params.argsJson}. ` +
     "Preserve job.sessionTarget and job.sessionKey exactly as provided. " +
     `If the cron job is created, reply exactly: ${params.exactReply}. ` +
     "If the tool call is cancelled, the job is not created, or you cannot confirm creation, " +
     "reply briefly saying that and ask me to retry. No markdown. " +
-    "I will verify externally with the OpenClaw cron CLI."
+    "I will verify externally with the GrokBot cron CLI."
   );
 }
 
@@ -177,7 +177,7 @@ export async function runOpenClawCliJson<T>(args: string[], env: NodeJS.ProcessE
   if (!trimmed) {
     throw new Error(
       [
-        `openclaw ${args.join(" ")} produced no JSON stdout`,
+        `grokbot ${args.join(" ")} produced no JSON stdout`,
         stderr.trim() ? `stderr: ${stderr.trim()}` : undefined,
       ]
         .filter(Boolean)
@@ -189,7 +189,7 @@ export async function runOpenClawCliJson<T>(args: string[], env: NodeJS.ProcessE
   } catch (error) {
     throw new Error(
       [
-        `openclaw ${args.join(" ")} returned invalid JSON`,
+        `grokbot ${args.join(" ")} returned invalid JSON`,
         `stdout: ${trimmed}`,
         stderr.trim() ? `stderr: ${stderr.trim()}` : undefined,
         error instanceof Error ? `cause: ${error.message}` : undefined,

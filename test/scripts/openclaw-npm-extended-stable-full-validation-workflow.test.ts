@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 import { parse } from "yaml";
 
 const fullValidationPath = ".github/workflows/full-release-validation.yml";
-const releaseChecksPath = ".github/workflows/openclaw-release-checks.yml";
+const releaseChecksPath = ".github/workflows/grokbot-release-checks.yml";
 
 type Step = { name?: string; run?: string };
 type Job = { steps?: Step[] };
@@ -58,13 +58,13 @@ describe("extended-stable Full Release Validation workflow", () => {
       {
         job: "release_checks",
         step: "Dispatch and monitor release checks",
-        workflow: "openclaw-release-checks.yml",
+        workflow: "grokbot-release-checks.yml",
         target: '-f expected_sha="$TARGET_SHA"',
       },
       {
         job: "performance",
-        step: "Dispatch and monitor OpenClaw Performance",
-        workflow: "openclaw-performance.yml",
+        step: "Dispatch and monitor GrokBot Performance",
+        workflow: "grokbot-performance.yml",
         target: '-f target_ref="$TARGET_SHA"',
       },
     ];

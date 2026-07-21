@@ -1,14 +1,14 @@
 {
-  "name": "@myorg/openclaw-my-plugin",
+  "name": "@myorg/grokbot-my-plugin",
   "version": "1.0.0",
   "type": "module",
   "dependencies": {
     "typebox": "1.1.39"
   },
   "peerDependencies": {
-    "openclaw": ">=2026.3.24-beta.2"
+    "grokbot": ">=2026.3.24-beta.2"
   },
-  "openclaw": {
+  "grokbot": {
     "extensions": ["./index.ts"],
     "compat": {
       "pluginApi": ">=2026.3.24-beta.2",

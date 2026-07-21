@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { streamOpenAICompletions, streamOpenAIResponses } from "@openclaw/ai/internal/openai";
+import { streamOpenAICompletions, streamOpenAIResponses } from "@grokbot/ai/internal/openai";
 /**
  * Cache-stability gate for the prompt-cache bust fix (issue #3658).
  *
@@ -370,7 +370,7 @@ describe("prompt-cache byte-identity (issue #3658)", () => {
 
 describe("append-only late media (issue #99495)", () => {
   it("keeps every sent fingerprint stable and appends one late-media turn", async () => {
-    const dir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-99495-boundary-"));
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-99495-boundary-"));
     const target = {
       agentId: "main",
       cwd: dir,
@@ -455,7 +455,7 @@ describe("append-only late media (issue #99495)", () => {
         sessionEntry: undefined,
         sessionId: "unused-session",
         sessionKey: "agent:main:unused",
-        storePath: "/tmp/openclaw-unused-sessions.json",
+        storePath: "/tmp/grokbot-unused-sessions.json",
       },
     });
     const resolved = await prepared.resolveMessage();
@@ -477,7 +477,7 @@ function runtimeCarrier(content: string, timestamp: number): AgentMsg {
     customType: OPENCLAW_RUNTIME_CONTEXT_CUSTOM_TYPE,
     content,
     display: false,
-    details: { source: "openclaw-runtime-context", runtimeContextCarrier: true },
+    details: { source: "grokbot-runtime-context", runtimeContextCarrier: true },
     timestamp,
   } as unknown as AgentMsg;
 }
@@ -580,7 +580,7 @@ describe("prompt-cache tail carrier for current-turn metadata (issue #100271)", 
     // (Conversation info / Reply target / …), which room events never carry. So
     // the inline form is byte-identical active vs historical.
     const roomText = [
-      "[OpenClaw room event]",
+      "[GrokBot room event]",
       "inbound_event_kind: room_event",
       "Room context:\n#1 Alice: hi",
     ].join("\n\n");

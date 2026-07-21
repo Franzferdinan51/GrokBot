@@ -51,9 +51,9 @@ describe("doctor browser facade", () => {
 
   it("delegates legacy clawd browser profile detection to the browser facade surface", async () => {
     const residue = {
-      legacyProfileDir: "/tmp/openclaw-home/browser/clawd",
-      legacyUserDataDir: "/tmp/openclaw-home/browser/clawd/user-data",
-      canonicalUserDataDir: "/tmp/openclaw-home/browser/openclaw/user-data",
+      legacyProfileDir: "/tmp/grokbot-home/browser/clawd",
+      legacyUserDataDir: "/tmp/grokbot-home/browser/clawd/user-data",
+      canonicalUserDataDir: "/tmp/grokbot-home/browser/grokbot/user-data",
     };
     const detect = vi.fn().mockReturnValue(residue);
     loadBundledPluginPublicSurfaceModuleSync.mockReturnValue({
@@ -63,13 +63,13 @@ describe("doctor browser facade", () => {
     const cfg: OpenClawConfig = {
       browser: {
         profiles: {
-          openclaw: { color: "#FF4500" },
+          grokbot: { color: "#FF4500" },
         },
       },
     };
     const deps = {
-      configDir: "/tmp/openclaw-home",
-      pathExists: (targetPath: string) => targetPath === "/tmp/openclaw-home/browser/clawd",
+      configDir: "/tmp/grokbot-home",
+      pathExists: (targetPath: string) => targetPath === "/tmp/grokbot-home/browser/clawd",
     };
 
     await expect(detectLegacyClawdBrowserProfileResidue(cfg, deps)).resolves.toEqual(residue);
@@ -90,13 +90,13 @@ describe("doctor browser facade", () => {
     const cfg: OpenClawConfig = {
       browser: {
         profiles: {
-          openclaw: { color: "#FF4500" },
+          grokbot: { color: "#FF4500" },
         },
       },
     };
     const deps = {
-      configDir: "/tmp/openclaw-home",
-      pathExists: (targetPath: string) => targetPath === "/tmp/openclaw-home/browser/clawd",
+      configDir: "/tmp/grokbot-home",
+      pathExists: (targetPath: string) => targetPath === "/tmp/grokbot-home/browser/clawd",
     };
 
     await expect(maybeArchiveLegacyClawdBrowserProfileResidue(cfg, deps)).resolves.toEqual({
@@ -119,8 +119,8 @@ describe("doctor browser facade", () => {
       maybeArchiveLegacyClawdBrowserProfileResidue(
         {},
         {
-          configDir: "/tmp/openclaw-home",
-          pathExists: (targetPath: string) => targetPath === "/tmp/openclaw-home/browser/clawd",
+          configDir: "/tmp/grokbot-home",
+          pathExists: (targetPath: string) => targetPath === "/tmp/grokbot-home/browser/clawd",
         },
       ),
     ).resolves.toEqual({
@@ -134,7 +134,7 @@ describe("doctor browser facade", () => {
       detectLegacyClawdBrowserProfileResidue(
         {},
         {
-          configDir: "/tmp/openclaw-home",
+          configDir: "/tmp/grokbot-home",
           pathExists: () => false,
         },
       ),
@@ -147,7 +147,7 @@ describe("doctor browser facade", () => {
       maybeArchiveLegacyClawdBrowserProfileResidue(
         {},
         {
-          configDir: "/tmp/openclaw-home",
+          configDir: "/tmp/grokbot-home",
           pathExists: () => false,
         },
       ),

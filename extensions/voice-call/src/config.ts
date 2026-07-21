@@ -1,19 +1,19 @@
 // Voice Call helper module supports config behavior.
-import { mergeDeep } from "openclaw/plugin-sdk/plugin-config-runtime";
-import { REALTIME_VOICE_AGENT_CONSULT_TOOL_POLICIES } from "openclaw/plugin-sdk/realtime-voice";
-import { normalizeAgentId, parseAgentSessionKey } from "openclaw/plugin-sdk/routing";
+import { mergeDeep } from "grokbot/plugin-sdk/plugin-config-runtime";
+import { REALTIME_VOICE_AGENT_CONSULT_TOOL_POLICIES } from "grokbot/plugin-sdk/realtime-voice";
+import { normalizeAgentId, parseAgentSessionKey } from "grokbot/plugin-sdk/routing";
 import {
   buildSecretInputSchema,
   hasConfiguredSecretInput,
   normalizeResolvedSecretInputString,
   type SecretInput,
-} from "openclaw/plugin-sdk/secret-input";
+} from "grokbot/plugin-sdk/secret-input";
 import {
   canonicalizeMainSessionAlias,
   type SessionScope,
-} from "openclaw/plugin-sdk/session-store-runtime";
-import { resolveSpeechProviderApiKey } from "openclaw/plugin-sdk/speech-core";
-import { normalizeWebhookPath } from "openclaw/plugin-sdk/webhook-ingress";
+} from "grokbot/plugin-sdk/session-store-runtime";
+import { resolveSpeechProviderApiKey } from "grokbot/plugin-sdk/speech-core";
+import { normalizeWebhookPath } from "grokbot/plugin-sdk/webhook-ingress";
 import { z } from "zod";
 import { TtsConfigSchema } from "../api.js";
 import { TWILIO_REGIONS } from "./providers/twilio-region.js";
@@ -313,9 +313,9 @@ const VoiceCallRealtimeConfigSchema = z
     streamPath: z.string().min(1).optional(),
     /** System instructions passed to the realtime provider. */
     instructions: z.string().default(DEFAULT_VOICE_CALL_REALTIME_INSTRUCTIONS),
-    /** Tool policy for the shared OpenClaw agent consult tool. */
+    /** Tool policy for the shared GrokBot agent consult tool. */
     toolPolicy: VoiceCallRealtimeToolPolicySchema.default("safe-read-only"),
-    /** Guidance for when the realtime model should call the OpenClaw agent consult tool. */
+    /** Guidance for when the realtime model should call the GrokBot agent consult tool. */
     consultPolicy: VoiceCallRealtimeConsultPolicySchema.default("auto"),
     /** Optional thinking level override for the regular agent behind realtime consults. */
     consultThinkingLevel: VoiceCallRealtimeConsultThinkingLevelSchema.optional(),

@@ -197,7 +197,7 @@ async function writeIpaFixture(root: string): Promise<string> {
   }
 
   addTree(path.join(root, "Payload"), "Payload");
-  const ipaPath = path.join(root, "OpenClaw.ipa");
+  const ipaPath = path.join(root, "GrokBot.ipa");
   const buffer = await zip.generateAsync({ type: "nodebuffer", compression: "DEFLATE" });
   writeFileSync(ipaPath, buffer);
   return ipaPath;
@@ -222,7 +222,7 @@ async function writeValidFixture(
 }> {
   const binDir = path.join(root, "bin");
   const payloadDir = path.join(root, "Payload");
-  const appDir = path.join(payloadDir, "OpenClaw.app");
+  const appDir = path.join(payloadDir, "GrokBot.app");
   const fixturesDir = path.join(root, "fixtures");
   mkdirSync(appDir, { recursive: true });
   mkdirSync(binDir, { recursive: true });
@@ -236,7 +236,7 @@ async function writeValidFixture(
     plistString("OpenClawPushRelayBaseURL", ""),
     plistString(
       "NSHealthShareUsageDescription",
-      "OpenClaw reads Health data for Health Summaries.",
+      "GrokBot reads Health data for Health Summaries.",
     ),
     options.healthUpdateUsage === null
       ? ""
@@ -244,7 +244,7 @@ async function writeValidFixture(
         ? plistBool("NSHealthUpdateUsageDescription", options.healthUpdateUsage)
         : plistString(
             "NSHealthUpdateUsageDescription",
-            options.healthUpdateUsage ?? "OpenClaw reads Health data for Health Summaries.",
+            options.healthUpdateUsage ?? "GrokBot reads Health data for Health Summaries.",
           ),
     options.legacyKey ? plistString("OpenClawPushRelayProfile", "production") : "",
   ].join("");
@@ -274,7 +274,7 @@ async function writeValidFixture(
     profilePath,
     plist(
       [
-        plistString("Name", "OpenClaw App Store ai.openclawfoundation.app"),
+        plistString("Name", "GrokBot App Store ai.openclawfoundation.app"),
         plistArray("TeamIdentifier", ["FWJYW4S8P8"]),
         plistDict(
           "Entitlements",
@@ -374,7 +374,7 @@ describe("scripts/ios-validate-app-store-ipa.sh", () => {
   });
 
   it("accepts an App Store IPA with appStore mode and production entitlements", async () => {
-    const root = mkdtempSync(path.join(os.tmpdir(), "openclaw-ios-ipa-"));
+    const root = mkdtempSync(path.join(os.tmpdir(), "grokbot-ios-ipa-"));
     tempDirs.push(root);
     const fixture = await writeValidFixture(root);
 
@@ -385,7 +385,7 @@ describe("scripts/ios-validate-app-store-ipa.sh", () => {
   });
 
   it("rejects an IPA that was exported with a non-App-Store push mode", async () => {
-    const root = mkdtempSync(path.join(os.tmpdir(), "openclaw-ios-ipa-"));
+    const root = mkdtempSync(path.join(os.tmpdir(), "grokbot-ios-ipa-"));
     tempDirs.push(root);
     const fixture = await writeValidFixture(root, { pushMode: "localProduction" });
 
@@ -396,7 +396,7 @@ describe("scripts/ios-validate-app-store-ipa.sh", () => {
   });
 
   it("rejects an IPA without the Health update purpose string required by App Store Connect", async () => {
-    const root = mkdtempSync(path.join(os.tmpdir(), "openclaw-ios-ipa-"));
+    const root = mkdtempSync(path.join(os.tmpdir(), "grokbot-ios-ipa-"));
     tempDirs.push(root);
     const fixture = await writeValidFixture(root, { healthUpdateUsage: null });
 
@@ -407,7 +407,7 @@ describe("scripts/ios-validate-app-store-ipa.sh", () => {
   });
 
   it("rejects a non-string Health update purpose value", async () => {
-    const root = mkdtempSync(path.join(os.tmpdir(), "openclaw-ios-ipa-"));
+    const root = mkdtempSync(path.join(os.tmpdir(), "grokbot-ios-ipa-"));
     tempDirs.push(root);
     const fixture = await writeValidFixture(root, { healthUpdateUsage: true });
 
@@ -418,7 +418,7 @@ describe("scripts/ios-validate-app-store-ipa.sh", () => {
   });
 
   it("rejects legacy independently selectable production push keys", async () => {
-    const root = mkdtempSync(path.join(os.tmpdir(), "openclaw-ios-ipa-"));
+    const root = mkdtempSync(path.join(os.tmpdir(), "grokbot-ios-ipa-"));
     tempDirs.push(root);
     const fixture = await writeValidFixture(root, { legacyKey: true });
 
@@ -429,8 +429,8 @@ describe("scripts/ios-validate-app-store-ipa.sh", () => {
   });
 
   it("rejects malformed or mismatched embedded build provenance", async () => {
-    const malformedRoot = mkdtempSync(path.join(os.tmpdir(), "openclaw-ios-ipa-"));
-    const mismatchRoot = mkdtempSync(path.join(os.tmpdir(), "openclaw-ios-ipa-"));
+    const malformedRoot = mkdtempSync(path.join(os.tmpdir(), "grokbot-ios-ipa-"));
+    const mismatchRoot = mkdtempSync(path.join(os.tmpdir(), "grokbot-ios-ipa-"));
     tempDirs.push(malformedRoot, mismatchRoot);
     const malformed = await writeValidFixture(malformedRoot, { buildCommit: "deadbeef" });
     const mismatch = await writeValidFixture(mismatchRoot);

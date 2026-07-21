@@ -1,4 +1,4 @@
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import { markReplyConfigRuntimeMode } from "./reply-config-runtime-mode.js";
 
 export function markCompleteReplyConfig<T extends OpenClawConfig>(

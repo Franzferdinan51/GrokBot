@@ -46,10 +46,10 @@ describe("convertToLlm runtime-context carrier marking", () => {
   it("marks a runtime-context carrier custom message so providers skip cache anchoring", () => {
     const [message] = convertToLlm([
       createCustomMessage(
-        "openclaw.runtime-context",
+        "grokbot.runtime-context",
         "current-turn metadata",
         false,
-        { source: "openclaw-runtime-context", runtimeContextCarrier: true },
+        { source: "grokbot-runtime-context", runtimeContextCarrier: true },
         timestamp,
       ),
     ]);

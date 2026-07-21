@@ -2,13 +2,13 @@
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import type { PluginRuntime } from "openclaw/plugin-sdk/core";
+import type { PluginRuntime } from "grokbot/plugin-sdk/core";
 import {
   closeOpenClawStateDatabaseForTest,
   createChannelIngressQueueForTests,
-} from "openclaw/plugin-sdk/plugin-state-test-runtime";
-import type { MockFn } from "openclaw/plugin-sdk/plugin-test-runtime";
-import { closeOpenClawAgentDatabasesForTest } from "openclaw/plugin-sdk/sqlite-runtime-testing";
+} from "grokbot/plugin-sdk/plugin-state-test-runtime";
+import type { MockFn } from "grokbot/plugin-sdk/plugin-test-runtime";
+import { closeOpenClawAgentDatabasesForTest } from "grokbot/plugin-sdk/sqlite-runtime-testing";
 import { afterEach, beforeEach, vi } from "vitest";
 import type { SignalDaemonHandle } from "./daemon.js";
 import { setSignalRuntime } from "./runtime.js";
@@ -132,19 +132,19 @@ export function createMockSignalDaemonHandle(
 
 // Use importActual so shared-worker mocks from earlier test files do not leak
 // into this harness's partial overrides.
-vi.mock("openclaw/plugin-sdk/runtime-config-snapshot", async () => {
+vi.mock("grokbot/plugin-sdk/runtime-config-snapshot", async () => {
   const actual = await vi.importActual<
-    typeof import("openclaw/plugin-sdk/runtime-config-snapshot")
-  >("openclaw/plugin-sdk/runtime-config-snapshot");
+    typeof import("grokbot/plugin-sdk/runtime-config-snapshot")
+  >("grokbot/plugin-sdk/runtime-config-snapshot");
   return {
     ...actual,
     getRuntimeConfig: () => config,
   };
 });
 
-vi.mock("openclaw/plugin-sdk/session-store-runtime", async () => {
-  const actual = await vi.importActual<typeof import("openclaw/plugin-sdk/session-store-runtime")>(
-    "openclaw/plugin-sdk/session-store-runtime",
+vi.mock("grokbot/plugin-sdk/session-store-runtime", async () => {
+  const actual = await vi.importActual<typeof import("grokbot/plugin-sdk/session-store-runtime")>(
+    "grokbot/plugin-sdk/session-store-runtime",
   );
   return {
     ...actual,
@@ -155,9 +155,9 @@ vi.mock("openclaw/plugin-sdk/session-store-runtime", async () => {
   };
 });
 
-vi.mock("openclaw/plugin-sdk/channel-inbound", async () => {
-  const actual = await vi.importActual<typeof import("openclaw/plugin-sdk/channel-inbound")>(
-    "openclaw/plugin-sdk/channel-inbound",
+vi.mock("grokbot/plugin-sdk/channel-inbound", async () => {
+  const actual = await vi.importActual<typeof import("grokbot/plugin-sdk/channel-inbound")>(
+    "grokbot/plugin-sdk/channel-inbound",
   );
   return {
     ...actual,
@@ -196,9 +196,9 @@ vi.mock("./send.js", async () => {
   };
 });
 
-vi.mock("openclaw/plugin-sdk/conversation-runtime", async () => {
-  const actual = await vi.importActual<typeof import("openclaw/plugin-sdk/conversation-runtime")>(
-    "openclaw/plugin-sdk/conversation-runtime",
+vi.mock("grokbot/plugin-sdk/conversation-runtime", async () => {
+  const actual = await vi.importActual<typeof import("grokbot/plugin-sdk/conversation-runtime")>(
+    "grokbot/plugin-sdk/conversation-runtime",
   );
   return {
     ...actual,
@@ -207,9 +207,9 @@ vi.mock("openclaw/plugin-sdk/conversation-runtime", async () => {
   };
 });
 
-vi.mock("openclaw/plugin-sdk/security-runtime", async () => {
-  const actual = await vi.importActual<typeof import("openclaw/plugin-sdk/security-runtime")>(
-    "openclaw/plugin-sdk/security-runtime",
+vi.mock("grokbot/plugin-sdk/security-runtime", async () => {
+  const actual = await vi.importActual<typeof import("grokbot/plugin-sdk/security-runtime")>(
+    "grokbot/plugin-sdk/security-runtime",
   );
   return {
     ...actual,
@@ -237,9 +237,9 @@ vi.mock("./daemon.js", async (importOriginal) => {
   };
 });
 
-vi.mock("openclaw/plugin-sdk/system-event-runtime", async () => {
-  const actual = await vi.importActual<typeof import("openclaw/plugin-sdk/system-event-runtime")>(
-    "openclaw/plugin-sdk/system-event-runtime",
+vi.mock("grokbot/plugin-sdk/system-event-runtime", async () => {
+  const actual = await vi.importActual<typeof import("grokbot/plugin-sdk/system-event-runtime")>(
+    "grokbot/plugin-sdk/system-event-runtime",
   );
   return {
     ...actual,
@@ -250,19 +250,19 @@ vi.mock("openclaw/plugin-sdk/system-event-runtime", async () => {
   };
 });
 
-vi.mock("openclaw/plugin-sdk/transport-ready-runtime", () => ({
+vi.mock("grokbot/plugin-sdk/transport-ready-runtime", () => ({
   waitForTransportReady: (...args: unknown[]) => waitForTransportReadyMock(...args),
 }));
 
 export function installSignalToolResultTestHooks() {
   beforeEach(async () => {
     const [{ resetInboundDedupe }, { resetSystemEventsForTest }] = await Promise.all([
-      import("openclaw/plugin-sdk/reply-runtime"),
-      import("openclaw/plugin-sdk/system-event-runtime"),
+      import("grokbot/plugin-sdk/reply-runtime"),
+      import("grokbot/plugin-sdk/system-event-runtime"),
     ]);
     resetInboundDedupe();
     const createdStateDir = await fs.mkdtemp(
-      path.join(os.tmpdir(), "openclaw-signal-tool-result-state-"),
+      path.join(os.tmpdir(), "grokbot-signal-tool-result-state-"),
     );
     const stateDir = await fs.realpath(createdStateDir);
     signalToolResultStateDir = stateDir;

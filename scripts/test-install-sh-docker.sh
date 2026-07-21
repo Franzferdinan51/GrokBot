@@ -178,20 +178,20 @@ process.stdout.write(filename);
 ' "$pack_json_file"
 }
 
-SMOKE_IMAGE="${OPENCLAW_INSTALL_SMOKE_IMAGE:-openclaw-install-smoke:local}"
-NONROOT_IMAGE="${OPENCLAW_INSTALL_NONROOT_IMAGE:-openclaw-install-nonroot:local}"
+SMOKE_IMAGE="${OPENCLAW_INSTALL_SMOKE_IMAGE:-grokbot-install-smoke:local}"
+NONROOT_IMAGE="${OPENCLAW_INSTALL_NONROOT_IMAGE:-grokbot-install-nonroot:local}"
 SMOKE_PLATFORM="$(resolve_default_smoke_platform)"
 NONROOT_PLATFORM="${OPENCLAW_INSTALL_NONROOT_PLATFORM:-$SMOKE_PLATFORM}"
-INSTALL_URL="${OPENCLAW_INSTALL_URL:-https://openclaw.bot/install.sh}"
-CLI_INSTALL_URL="${OPENCLAW_INSTALL_CLI_URL:-https://openclaw.bot/install-cli.sh}"
-PACKAGE_NAME="${OPENCLAW_INSTALL_PACKAGE:-openclaw}"
+INSTALL_URL="${OPENCLAW_INSTALL_URL:-https://grokbot.bot/install.sh}"
+CLI_INSTALL_URL="${OPENCLAW_INSTALL_CLI_URL:-https://grokbot.bot/install-cli.sh}"
+PACKAGE_NAME="${OPENCLAW_INSTALL_PACKAGE:-grokbot}"
 SKIP_NONROOT="${OPENCLAW_INSTALL_SMOKE_SKIP_NONROOT:-0}"
 SKIP_SMOKE_IMAGE_BUILD="${OPENCLAW_INSTALL_SMOKE_SKIP_IMAGE_BUILD:-0}"
 SKIP_NONROOT_IMAGE_BUILD="${OPENCLAW_INSTALL_NONROOT_SKIP_IMAGE_BUILD:-0}"
 SKIP_UPDATE="${OPENCLAW_INSTALL_SMOKE_SKIP_UPDATE:-0}"
 SKIP_NPM_GLOBAL="${OPENCLAW_INSTALL_SMOKE_SKIP_NPM_GLOBAL:-0}"
 SKIP_FRESHNESS="${OPENCLAW_INSTALL_SMOKE_SKIP_FRESHNESS:-0}"
-FRESHNESS_INSTALL_URL="${OPENCLAW_INSTALL_SMOKE_FRESHNESS_INSTALL_URL:-file:///tmp/openclaw-install.sh}"
+FRESHNESS_INSTALL_URL="${OPENCLAW_INSTALL_SMOKE_FRESHNESS_INSTALL_URL:-file:///tmp/grokbot-install.sh}"
 # npm min-release-age is days; 10000 keeps the control failure independent of normal release cadence.
 FRESHNESS_MIN_RELEASE_AGE="${OPENCLAW_INSTALL_FRESHNESS_MIN_RELEASE_AGE:-10000}"
 FRESHNESS_NPM_VERSION="${OPENCLAW_INSTALL_FRESHNESS_NPM_VERSION:-11.14.1}"
@@ -218,8 +218,8 @@ NPM_CACHE_OWNED=0
 NPM_CACHE_PREPARED=0
 NPM_CACHE_DOCKER_ARGS=()
 INSTALL_SCRIPT_DOCKER_ARGS=(
-  -v "$ROOT_DIR/scripts/install.sh:/tmp/openclaw-install.sh:ro"
-  -v "$ROOT_DIR/scripts/install-cli.sh:/tmp/openclaw-install-cli.sh:ro"
+  -v "$ROOT_DIR/scripts/install.sh:/tmp/grokbot-install.sh:ro"
+  -v "$ROOT_DIR/scripts/install-cli.sh:/tmp/grokbot-install-cli.sh:ro"
 )
 SMOKE_RUNNER_ENV_ARGS=()
 
@@ -333,12 +333,12 @@ prepare_update_tarball() {
       package_args+=(--allow-unreleased-changelog)
     fi
     package_tgz="$(
-      node "$HARNESS_ROOT/scripts/package-openclaw-for-docker.mjs" "${package_args[@]}"
+      node "$HARNESS_ROOT/scripts/package-grokbot-for-docker.mjs" "${package_args[@]}"
     )"
     UPDATE_TGZ_FILE="$(basename "$package_tgz")"
   fi
   if [[ -z "$UPDATE_PACKAGE_SPEC" ]]; then
-    node "$HARNESS_ROOT/scripts/check-openclaw-package-tarball.mjs" \
+    node "$HARNESS_ROOT/scripts/check-grokbot-package-tarball.mjs" \
       --require-bundled-workspace-deps \
       "${UPDATE_DIR}/${UPDATE_TGZ_FILE}"
   else

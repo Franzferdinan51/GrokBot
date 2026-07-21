@@ -5,7 +5,7 @@
  */
 import { resolve, isAbsolute } from "node:path";
 import { Type } from "typebox";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import type { MediaUnderstandingModelConfig } from "../../config/types.tools.js";
 import {
   DEFAULT_TIMEOUT_SECONDS,
@@ -395,7 +395,7 @@ function resolveImageModelConfigForTool(params: {
 }
 
 if (process.env.VITEST || process.env.NODE_ENV === "test") {
-  (globalThis as Record<PropertyKey, unknown>)[Symbol.for("openclaw.imageToolTestApi")] = {
+  (globalThis as Record<PropertyKey, unknown>)[Symbol.for("grokbot.imageToolTestApi")] = {
     ...testing,
     resolveImageModelConfigForTool,
   };

@@ -5,7 +5,7 @@ import type { RouteId } from "../../app-route-paths.ts";
 import { applicationContext, type ApplicationContext } from "../../app/context.ts";
 import { hasOperatorAdminAccess } from "../../app/operator-access.ts";
 import { renderSettingsWorkspace } from "../../components/settings-workspace.ts";
-import { OpenClawLightDomElement } from "../../lit/openclaw-element.ts";
+import { OpenClawLightDomElement } from "../../lit/grokbot-element.ts";
 import { SubscriptionsController } from "../../lit/subscriptions-controller.ts";
 import { renderApps } from "./view.ts";
 
@@ -46,6 +46,6 @@ class AppsPage extends OpenClawLightDomElement {
   }
 }
 
-if (!customElements.get("openclaw-apps-page")) {
-  customElements.define("openclaw-apps-page", AppsPage);
+if (!customElements.get("grokbot-apps-page")) {
+  customElements.define("grokbot-apps-page", AppsPage);
 }

@@ -2,7 +2,7 @@
  * Registers the `/codex` plugin command and lazy-loads the app-server command
  * handler implementation.
  */
-import type { OpenClawPluginCommandDefinition } from "openclaw/plugin-sdk/plugin-entry";
+import type { OpenClawPluginCommandDefinition } from "grokbot/plugin-sdk/plugin-entry";
 import { handleCodexCommand } from "./command-dispatch.js";
 import type { CodexCommandDepsOverride } from "./command-handlers.js";
 
@@ -20,7 +20,7 @@ export function createCodexCommand(options: CodexCommandOptions): OpenClawPlugin
     ownership: "reserved",
     agentPromptGuidance: [
       {
-        text: "Native Codex app-server plugin is available (`/codex ...`). For Codex bind/control/thread/resume/steer/stop requests, prefer `/codex bind`, `/codex threads`, `/codex resume`, `/codex steer`, and `/codex stop` over ACP. When OpenClaw sandboxing is active, native Codex execution modes are unavailable; use normal Codex harness turns.",
+        text: "Native Codex app-server plugin is available (`/codex ...`). For Codex bind/control/thread/resume/steer/stop requests, prefer `/codex bind`, `/codex threads`, `/codex resume`, `/codex steer`, and `/codex stop` over ACP. When GrokBot sandboxing is active, native Codex execution modes are unavailable; use normal Codex harness turns.",
         surfaces: ["openclaw_main"],
       },
       {

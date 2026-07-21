@@ -1,10 +1,10 @@
 /**
  * Resolves CLI runtime aliases to provider/model auth labels and execution ids.
  */
-import { parseModelCatalogRef } from "@openclaw/model-catalog-core/model-catalog-refs";
-import { normalizeProviderId } from "@openclaw/model-catalog-core/provider-id";
-import { normalizeOptionalLowercaseString } from "@openclaw/normalization-core/string-coerce";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import { parseModelCatalogRef } from "@grokbot/model-catalog-core/model-catalog-refs";
+import { normalizeProviderId } from "@grokbot/model-catalog-core/provider-id";
+import { normalizeOptionalLowercaseString } from "@grokbot/normalization-core/string-coerce";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import {
   isCliRuntimeModelBackendForProvider,
   listCliRuntimeModelBackendBindings,
@@ -234,7 +234,7 @@ export function resolveCliRuntimeExecutionProvider(params: {
 }): string | undefined {
   const provider = normalizeProviderId(params.provider);
   const { runtime, matchedProvider } = resolveConfiguredRuntime({ ...params, provider });
-  if (runtime === "openclaw") {
+  if (runtime === "grokbot") {
     return undefined;
   }
   if (!runtime || runtime === "auto") {

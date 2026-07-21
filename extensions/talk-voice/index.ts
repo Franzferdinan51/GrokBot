@@ -1,13 +1,13 @@
-// Talk Voice plugin entrypoint registers its OpenClaw integration.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
-import { parseStrictPositiveInteger } from "openclaw/plugin-sdk/number-runtime";
-import type { SpeechVoiceOption } from "openclaw/plugin-sdk/speech";
+// Talk Voice plugin entrypoint registers its GrokBot integration.
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { formatErrorMessage } from "grokbot/plugin-sdk/error-runtime";
+import { parseStrictPositiveInteger } from "grokbot/plugin-sdk/number-runtime";
+import type { SpeechVoiceOption } from "grokbot/plugin-sdk/speech";
 import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalLowercaseString,
-} from "openclaw/plugin-sdk/string-coerce-runtime";
-import { resolveActiveTalkProviderConfig } from "openclaw/plugin-sdk/talk-config-runtime";
+} from "grokbot/plugin-sdk/string-coerce-runtime";
+import { resolveActiveTalkProviderConfig } from "grokbot/plugin-sdk/talk-config-runtime";
 import { definePluginEntry, type OpenClawPluginApi } from "./api.js";
 
 function mask(s: string, keep = 6): string {

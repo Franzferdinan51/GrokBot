@@ -2,8 +2,8 @@
 import fs from "node:fs/promises";
 import type { IncomingMessage } from "node:http";
 import path from "node:path";
-import type { PluginBlobStore } from "openclaw/plugin-sdk/plugin-state-runtime";
-import { createMockServerResponse } from "openclaw/plugin-sdk/test-env";
+import type { PluginBlobStore } from "grokbot/plugin-sdk/plugin-state-runtime";
+import { createMockServerResponse } from "grokbot/plugin-sdk/test-env";
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { createDiffsHttpHandler } from "./http.js";
 import { DiffArtifactStore } from "./store.js";
@@ -28,7 +28,7 @@ describe("DiffArtifactStore", () => {
       blobStore,
       reopen: reopenStore,
       cleanup: cleanupRootDir,
-    } = await createDiffStoreHarness("openclaw-diffs-store-"));
+    } = await createDiffStoreHarness("grokbot-diffs-store-"));
   });
 
   afterEach(async () => {
@@ -327,7 +327,7 @@ describe("createDiffsHttpHandler", () => {
   }
 
   beforeEach(async () => {
-    ({ store, cleanup: cleanupRootDir } = await createDiffStoreHarness("openclaw-diffs-http-"));
+    ({ store, cleanup: cleanupRootDir } = await createDiffStoreHarness("grokbot-diffs-http-"));
   });
 
   afterEach(async () => {

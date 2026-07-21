@@ -1,4 +1,4 @@
-// OpenAI-compatible `/v1/models` HTTP route backed by configured OpenClaw agents.
+// OpenAI-compatible `/v1/models` HTTP route backed by configured GrokBot agents.
 import type { IncomingMessage, ServerResponse } from "node:http";
 import { listAgentIds, resolveDefaultAgentId } from "../agents/agent-scope.js";
 import { getRuntimeConfig } from "../config/io.js";
@@ -40,7 +40,7 @@ function toOpenAiModel(id: string): OpenAiModelObject {
     id,
     object: "model",
     created: 0,
-    owned_by: "openclaw",
+    owned_by: "grokbot",
     permission: [],
   };
 }
@@ -64,9 +64,9 @@ function loadAgentModelIds(): string[] {
   const cfg = getRuntimeConfig();
   const defaultAgentId = resolveDefaultAgentId(cfg);
   const ids = new Set<string>([OPENCLAW_MODEL_ID, OPENCLAW_DEFAULT_MODEL_ID]);
-  ids.add(`openclaw/${defaultAgentId}`);
+  ids.add(`grokbot/${defaultAgentId}`);
   for (const agentId of listAgentIds(cfg)) {
-    ids.add(`openclaw/${agentId}`);
+    ids.add(`grokbot/${agentId}`);
   }
   return Array.from(ids);
 }

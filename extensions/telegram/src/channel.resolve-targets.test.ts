@@ -1,5 +1,5 @@
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { createNonExitingRuntimeEnv } from "openclaw/plugin-sdk/plugin-test-runtime";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { createNonExitingRuntimeEnv } from "grokbot/plugin-sdk/plugin-test-runtime";
 import { describe, expect, it, vi } from "vitest";
 import { lookupTelegramChatId } from "./api-fetch.js";
 import { telegramPlugin } from "./channel.js";

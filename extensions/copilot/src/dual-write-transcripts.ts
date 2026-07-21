@@ -1,9 +1,9 @@
 /**
  * Mirrors the AgentMessages produced by the copilot agent runtime into the
- * OpenClaw audit transcript that sits next to (but is distinct from) the
+ * GrokBot audit transcript that sits next to (but is distinct from) the
  * SDK's own session storage.
  *
- * The OpenClaw shell (src/agents/command/attempt-execution.ts) already
+ * The GrokBot shell (src/agents/command/attempt-execution.ts) already
  * writes the user prompt and the terminal assistant text into the
  * transcript at the end of each attempt. That is the bare minimum to
  * keep `/history` working. It does NOT capture tool calls, tool
@@ -12,7 +12,7 @@
  *
  * For audit/compliance and for the codex-parity guarantees we promised
  * in the proposal, we mirror the full `messagesSnapshot` (user +
- * assistant + toolResult) into the OpenClaw transcript via the same
+ * assistant + toolResult) into the GrokBot transcript via the same
  * plugin-sdk primitives that the codex extension uses
  * (extensions/codex/src/app-server/transcript-mirror.ts). Both writers
  * cooperate via idempotency-key dedupe: user entries retain a gateway
@@ -32,13 +32,13 @@ import { createHash } from "node:crypto";
 import {
   runAgentHarnessBeforeMessageWriteHook,
   type AgentMessage,
-} from "openclaw/plugin-sdk/agent-harness-runtime";
+} from "grokbot/plugin-sdk/agent-harness-runtime";
 import {
   withSessionTranscriptWriteLock,
   type SessionTranscriptTargetParams,
   type SessionTranscriptWriteLockContext,
   type SessionTranscriptWriteLockParams,
-} from "openclaw/plugin-sdk/session-transcript-runtime";
+} from "grokbot/plugin-sdk/session-transcript-runtime";
 
 type MirroredAgentMessage = Extract<AgentMessage, { role: "user" | "assistant" | "toolResult" }>;
 
@@ -228,7 +228,7 @@ function readTranscriptIdempotencyKeys(events: unknown[]): Set<string> {
  * this so that a transient transcript-mirror failure (lock contention,
  * disk full, etc.) never breaks an otherwise-successful attempt. The
  * SDK's own session file remains the source of truth in that case;
- * the OpenClaw audit trail just misses the intermediate messages for
+ * the GrokBot audit trail just misses the intermediate messages for
  * this turn.
  */
 export async function dualWriteCopilotTranscriptBestEffort(

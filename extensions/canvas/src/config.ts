@@ -1,18 +1,18 @@
 /**
  * Canvas plugin config parsing, enablement, and schema metadata.
  */
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import {
   normalizePluginsConfig,
   resolveEffectiveEnableState,
   resolvePluginConfigObject,
-} from "openclaw/plugin-sdk/plugin-config-runtime";
-import { isTruthyEnvValue } from "openclaw/plugin-sdk/runtime-env";
+} from "grokbot/plugin-sdk/plugin-config-runtime";
+import { isTruthyEnvValue } from "grokbot/plugin-sdk/runtime-env";
 import {
   asBoolean as readBoolean,
   isRecord,
   readStringValue as readString,
-} from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/string-coerce-runtime";
 
 /** Host-server configuration for Canvas and A2UI assets. */
 export type CanvasHostConfig = {
@@ -112,7 +112,7 @@ export const canvasConfigSchema: CanvasPluginConfigSchema = {
     },
     "host.root": {
       label: "Canvas Host Root Directory",
-      help: "Directory to serve. Defaults to the OpenClaw state canvas directory.",
+      help: "Directory to serve. Defaults to the GrokBot state canvas directory.",
       advanced: true,
     },
     "host.port": {

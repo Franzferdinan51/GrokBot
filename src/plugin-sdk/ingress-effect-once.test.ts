@@ -18,7 +18,7 @@ let stateDir = "";
 beforeEach(async () => {
   resetPluginStateStoreForTests();
   stateDir = await fs.realpath(
-    await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-ingress-effect-once-")),
+    await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-ingress-effect-once-")),
   );
   vi.stubEnv("OPENCLAW_STATE_DIR", stateDir);
 });

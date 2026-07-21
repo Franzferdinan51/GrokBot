@@ -1,6 +1,6 @@
-// Openshell plugin entrypoint registers its OpenClaw integration.
-import { definePluginEntry } from "openclaw/plugin-sdk/plugin-entry";
-import { registerSandboxBackend } from "openclaw/plugin-sdk/sandbox";
+// Openshell plugin entrypoint registers its GrokBot integration.
+import { definePluginEntry } from "grokbot/plugin-sdk/plugin-entry";
+import { registerSandboxBackend } from "grokbot/plugin-sdk/sandbox";
 import {
   createOpenShellSandboxBackendFactory,
   createOpenShellSandboxBackendManager,

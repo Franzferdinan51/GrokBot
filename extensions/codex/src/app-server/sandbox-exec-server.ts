@@ -1,13 +1,13 @@
 /**
- * Hosts the local OpenClaw sandbox exec-server that Codex app-server native
+ * Hosts the local GrokBot sandbox exec-server that Codex app-server native
  * execution can register as an external environment.
  */
 import { createHash, randomUUID } from "node:crypto";
 import { once } from "node:events";
 import type { IncomingMessage } from "node:http";
 import { isIP, type AddressInfo } from "node:net";
-import { embeddedAgentLog } from "openclaw/plugin-sdk/agent-harness-runtime";
-import type { SandboxContext } from "openclaw/plugin-sdk/sandbox";
+import { embeddedAgentLog } from "grokbot/plugin-sdk/agent-harness-runtime";
+import type { SandboxContext } from "grokbot/plugin-sdk/sandbox";
 import { WebSocketServer, type RawData, type WebSocket } from "ws";
 import type { CodexAppServerClient } from "./client.js";
 import type { CodexAppServerStartOptions } from "./config.js";
@@ -62,7 +62,7 @@ export async function ensureCodexSandboxExecServerEnvironment(params: {
   }
   if (!canExposeLocalExecServerToAppServer(params.appServerStartOptions)) {
     throw new Error(
-      "OpenClaw Codex exec-server uses a local loopback URL and cannot be registered with a remote Codex app-server.",
+      "GrokBot Codex exec-server uses a local loopback URL and cannot be registered with a remote Codex app-server.",
     );
   }
   const execServer = await acquireOpenClawExecServer(params.sandbox);
@@ -173,10 +173,10 @@ async function startOpenClawExecServer(sandbox: SandboxContext): Promise<OpenCla
   await once(server, "listening");
   const address = server.address();
   if (!address || typeof address === "string") {
-    throw new Error("OpenClaw Codex exec-server did not bind to a TCP port.");
+    throw new Error("GrokBot Codex exec-server did not bind to a TCP port.");
   }
   const environmentId = buildEnvironmentId(sandbox);
-  const authPath = `/openclaw-${randomUUID()}`;
+  const authPath = `/grokbot-${randomUUID()}`;
   const url = `ws://127.0.0.1:${(address as AddressInfo).port}${authPath}`;
   const execServer: OpenClawExecServer = {
     authPath,
@@ -239,7 +239,7 @@ async function closeOpenClawExecServer(execServer: OpenClawExecServer): Promise<
 
 function buildEnvironmentId(sandbox: SandboxContext): string {
   const hash = createHash("sha256").update(sandbox.runtimeId).digest("hex").slice(0, 16);
-  return `openclaw-sandbox-${hash}`;
+  return `grokbot-sandbox-${hash}`;
 }
 
 function isAuthorizedExecServerRequest(
@@ -340,6 +340,6 @@ async function dispatchRequest(
     case "http/request":
       return await httpRequest(execServer, socket, request.params);
     default:
-      throw new Error(`Unsupported OpenClaw sandbox exec-server method: ${request.method}`);
+      throw new Error(`Unsupported GrokBot sandbox exec-server method: ${request.method}`);
   }
 }

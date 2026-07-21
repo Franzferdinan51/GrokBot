@@ -3,20 +3,20 @@ import {
   listNativeCommandSpecsForConfig,
   listSkillCommandsForAgents,
   type NativeCommandSpec,
-} from "openclaw/plugin-sdk/command-auth-native";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { createLazyRuntimeNamedExport } from "openclaw/plugin-sdk/lazy-runtime";
-import { danger, warn, type RuntimeEnv } from "openclaw/plugin-sdk/runtime-env";
+} from "grokbot/plugin-sdk/command-auth-native";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { createLazyRuntimeNamedExport } from "grokbot/plugin-sdk/lazy-runtime";
+import { danger, warn, type RuntimeEnv } from "grokbot/plugin-sdk/runtime-env";
 import {
   normalizeLowercaseStringOrEmpty,
   normalizeStringEntriesLower,
-} from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/string-coerce-runtime";
 
 export type GetPluginCommandSpecs =
-  typeof import("openclaw/plugin-sdk/plugin-runtime").getPluginCommandSpecs;
+  typeof import("grokbot/plugin-sdk/plugin-runtime").getPluginCommandSpecs;
 
 const loadPluginCommandSpecs = createLazyRuntimeNamedExport(
-  () => import("openclaw/plugin-sdk/plugin-runtime"),
+  () => import("grokbot/plugin-sdk/plugin-runtime"),
   "getPluginCommandSpecs",
 );
 

@@ -1,4 +1,4 @@
-// `openclaw plugins update` command implementation for tracked npm plugins and hook packs.
+// `grokbot plugins update` command implementation for tracked npm plugins and hook packs.
 import { isDeepStrictEqual } from "node:util";
 import { theme } from "../../packages/terminal-core/src/theme.js";
 import {
@@ -15,7 +15,7 @@ import type { ConfigWriteOptions } from "../config/io.js";
 import { createMergePatch } from "../config/io.write-prepare.js";
 import { applyMergePatch } from "../config/merge-patch.js";
 import { ConfigMutationConflictError } from "../config/mutate.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import type { PluginInstallRecord } from "../config/types.plugins.js";
 import { updateNpmInstalledHookPacks } from "../hooks/update.js";
 import { normalizeUpdateChannel } from "../infra/update-channels.js";

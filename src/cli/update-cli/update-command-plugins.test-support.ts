@@ -1,4 +1,4 @@
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import type { PluginInstallRecord } from "../../config/types.plugins.js";
 import type { PostCorePluginUpdateResult } from "./update-command-plugins.js";
 import "./update-command-plugins.js";
@@ -31,7 +31,7 @@ type UpdateCommandPluginsTestApi = {
 
 function getTestApi(): UpdateCommandPluginsTestApi {
   return (globalThis as Record<PropertyKey, unknown>)[
-    Symbol.for("openclaw.updateCommandPluginsTestApi")
+    Symbol.for("grokbot.updateCommandPluginsTestApi")
   ] as UpdateCommandPluginsTestApi;
 }
 

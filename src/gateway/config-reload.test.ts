@@ -79,7 +79,7 @@ beforeEach(() => {
   // so slot fixtures seeded via readSnapshot serve both accessors.
   configAuditMocks.readLatestSnapshot
     .mockReset()
-    .mockImplementation(() => configAuditMocks.readSnapshot({ configPath: "/tmp/openclaw.json" }));
+    .mockImplementation(() => configAuditMocks.readSnapshot({ configPath: "/tmp/grokbot.json" }));
   configAuditMocks.upsertSnapshot.mockReset();
 });
 
@@ -590,7 +590,7 @@ function createWatcherMock(effectiveUsePolling?: boolean) {
     },
     emit(event: WatcherEvent, value?: unknown) {
       const eventValue =
-        value ?? (WATCHER_PATH_EVENTS.has(event) ? "/tmp/openclaw.json" : undefined);
+        value ?? (WATCHER_PATH_EVENTS.has(event) ? "/tmp/grokbot.json" : undefined);
       for (const handler of handlers.get(event) ?? []) {
         handler(eventValue);
       }
@@ -607,7 +607,7 @@ function makeSnapshot(partial: Partial<ConfigFileSnapshot> = {}): ConfigFileSnap
     {}) as ConfigFileSnapshot["sourceConfig"];
   const runtimeConfig = partial.runtimeConfig ?? partial.config ?? {};
   return {
-    path: "/tmp/openclaw.json",
+    path: "/tmp/grokbot.json",
     includedPaths: [],
     exists: true,
     raw: "{}",
@@ -644,7 +644,7 @@ function makeZeroDebounceHookSnapshot(hash: string): ConfigFileSnapshot {
 
 function makeZeroDebounceHookWrite(persistedHash: string): ConfigWriteNotification {
   return {
-    configPath: "/tmp/openclaw.json",
+    configPath: "/tmp/grokbot.json",
     sourceConfig: { gateway: { reload: {} }, hooks: { enabled: true } },
     runtimeConfig: {
       gateway: { reload: {} },
@@ -806,7 +806,7 @@ function createReloaderHarness(
     onConfigCandidateCommitted,
     ...(options.runTransaction ? { runTransaction: options.runTransaction } : {}),
     log,
-    watchPath: "/tmp/openclaw.json",
+    watchPath: "/tmp/grokbot.json",
   });
   return {
     watcher,
@@ -854,9 +854,9 @@ describe("startGatewayConfigReloader include files", () => {
 
   it("reloads when an included config file changes", async () => {
     const rootDir = await realpath(
-      await mkdtemp(nodePath.join(tmpdir(), "openclaw-config-reload-")),
+      await mkdtemp(nodePath.join(tmpdir(), "grokbot-config-reload-")),
     );
-    const configPath = nodePath.join(rootDir, "openclaw.json5");
+    const configPath = nodePath.join(rootDir, "grokbot.json5");
     const includePath = nodePath.join(rootDir, "hooks.json5");
     const includeLinkPath = nodePath.join(rootDir, "hooks-link.json5");
     const nestedIncludePath = nodePath.join(rootDir, "hooks-enabled.json5");
@@ -923,12 +923,12 @@ describe("startGatewayConfigReloader include files", () => {
 
   it("keeps a lexically safe rejected include path watchable", async () => {
     const rootDir = await realpath(
-      await mkdtemp(nodePath.join(tmpdir(), "openclaw-config-reload-")),
+      await mkdtemp(nodePath.join(tmpdir(), "grokbot-config-reload-")),
     );
     const outsideDir = await realpath(
-      await mkdtemp(nodePath.join(tmpdir(), "openclaw-config-outside-")),
+      await mkdtemp(nodePath.join(tmpdir(), "grokbot-config-outside-")),
     );
-    const configPath = nodePath.join(rootDir, "openclaw.json5");
+    const configPath = nodePath.join(rootDir, "grokbot.json5");
     const includeLinkPath = nodePath.join(rootDir, "hooks-link.json5");
     const outsideIncludePath = nodePath.join(outsideDir, "hooks.json5");
     await writeFile(configPath, `${JSON.stringify({ $include: "./hooks-link.json5" })}\n`);
@@ -1003,7 +1003,7 @@ describe("startGatewayConfigReloader", () => {
     );
 
     expect(chokidar.watch).toHaveBeenCalledWith(
-      ["/tmp/openclaw.json", initialIncludePath, retainedIncludePath],
+      ["/tmp/grokbot.json", initialIncludePath, retainedIncludePath],
       expect.objectContaining({ ignoreInitial: true }),
     );
 
@@ -1014,7 +1014,7 @@ describe("startGatewayConfigReloader", () => {
     // then retires the old include in a second readiness-reconciled watcher.
     expect(harness.watcher.close).toHaveBeenCalledTimes(2);
     expect(chokidar.watch).toHaveBeenLastCalledWith(
-      ["/tmp/openclaw.json", retainedIncludePath, addedIncludePath],
+      ["/tmp/grokbot.json", retainedIncludePath, addedIncludePath],
       expect.objectContaining({ ignoreInitial: true }),
     );
     await harness.reloader.stop();
@@ -1050,7 +1050,7 @@ describe("startGatewayConfigReloader", () => {
     await vi.runAllTimersAsync();
     expect(harness.watcher.close).toHaveBeenCalledOnce();
     expect(chokidar.watch).toHaveBeenLastCalledWith(
-      ["/tmp/openclaw.json", acceptedIncludePath, firstCandidatePath],
+      ["/tmp/grokbot.json", acceptedIncludePath, firstCandidatePath],
       expect.objectContaining({ ignoreInitial: true }),
     );
 
@@ -1058,7 +1058,7 @@ describe("startGatewayConfigReloader", () => {
     await vi.runAllTimersAsync();
     expect(harness.watcher.close).toHaveBeenCalledTimes(2);
     expect(chokidar.watch).toHaveBeenLastCalledWith(
-      ["/tmp/openclaw.json", acceptedIncludePath, secondCandidatePath],
+      ["/tmp/grokbot.json", acceptedIncludePath, secondCandidatePath],
       expect.objectContaining({ ignoreInitial: true }),
     );
     await harness.reloader.stop();
@@ -1079,7 +1079,7 @@ describe("startGatewayConfigReloader", () => {
     });
 
     expect(chokidar.watch).toHaveBeenCalledWith(
-      ["/tmp/openclaw.json", rejectedIncludeDir],
+      ["/tmp/grokbot.json", rejectedIncludeDir],
       expect.objectContaining({ depth: 0 }),
     );
 
@@ -1112,7 +1112,7 @@ describe("startGatewayConfigReloader", () => {
     expect(configAuditMocks.append.mock.calls[0]?.[0]?.record).toMatchObject({
       event: "config.external",
       detectedBy: "watch",
-      configPath: "/tmp/openclaw.json",
+      configPath: "/tmp/grokbot.json",
       previousHash: "initial-raw-hash",
       nextHash: "next-raw-hash",
       valid: true,
@@ -1120,7 +1120,7 @@ describe("startGatewayConfigReloader", () => {
     });
     expect(configAuditMocks.upsertSnapshot).toHaveBeenLastCalledWith(
       expect.objectContaining({
-        configPath: "/tmp/openclaw.json",
+        configPath: "/tmp/grokbot.json",
         rawHash: "next-raw-hash",
         authoredConfig: nextConfig,
       }),
@@ -1128,7 +1128,7 @@ describe("startGatewayConfigReloader", () => {
     await harness.reloader.stop();
   });
 
-  it("does not duplicate another OpenClaw process's journaled write", async () => {
+  it("does not duplicate another GrokBot process's journaled write", async () => {
     const initialConfig: OpenClawConfig = {
       gateway: { reload: {}, port: 18789 },
     };
@@ -1142,7 +1142,7 @@ describe("startGatewayConfigReloader", () => {
       { initialConfig },
     );
     configAuditMocks.readSnapshot.mockReturnValue({
-      configPath: "/tmp/openclaw.json",
+      configPath: "/tmp/grokbot.json",
       rawHash: "other-write",
       fingerprintedAuthoredConfig: fingerprintConfigSnapshotAuthoredConfig(nextConfig),
     });
@@ -1154,7 +1154,7 @@ describe("startGatewayConfigReloader", () => {
     expect(configAuditMocks.append).not.toHaveBeenCalled();
     expect(configAuditMocks.upsertSnapshot).toHaveBeenLastCalledWith(
       expect.objectContaining({
-        configPath: "/tmp/openclaw.json",
+        configPath: "/tmp/grokbot.json",
         rawHash: "other-write",
         authoredConfig: nextConfig,
       }),
@@ -1305,7 +1305,7 @@ describe("startGatewayConfigReloader", () => {
       gateway: { reload: {}, port: 18789 },
     };
     configAuditMocks.readSnapshot.mockReturnValue({
-      configPath: "/tmp/openclaw.json",
+      configPath: "/tmp/grokbot.json",
       rawHash: "accepted-raw-hash",
       fingerprintedAuthoredConfig: fingerprintConfigSnapshotAuthoredConfig(acceptedConfig),
     });
@@ -1346,7 +1346,7 @@ describe("startGatewayConfigReloader", () => {
       gateway: { auth: { mode: "token", token: "beta" } },
     };
     configAuditMocks.readSnapshot.mockReturnValue({
-      configPath: "/tmp/openclaw.json",
+      configPath: "/tmp/grokbot.json",
       rawHash: "previous-raw-hash",
       fingerprintedAuthoredConfig: fingerprintConfigSnapshotAuthoredConfig(previousConfig),
     });
@@ -1368,7 +1368,7 @@ describe("startGatewayConfigReloader", () => {
     expect(configAuditMocks.append.mock.calls[0]?.[0]?.record).not.toHaveProperty("opaqueChange");
     expect(configAuditMocks.upsertSnapshot).toHaveBeenCalledWith(
       expect.objectContaining({
-        configPath: "/tmp/openclaw.json",
+        configPath: "/tmp/grokbot.json",
         rawHash: "current-raw-hash",
         authoredConfig: initialConfig,
       }),
@@ -1378,7 +1378,7 @@ describe("startGatewayConfigReloader", () => {
 
   it("journals invalid initial snapshots as rejected startup edits", async () => {
     configAuditMocks.readSnapshot.mockReturnValue({
-      configPath: "/tmp/openclaw.json",
+      configPath: "/tmp/grokbot.json",
       rawHash: "previous-raw-hash",
       fingerprintedAuthoredConfig: { gateway: { port: 18789 } },
     });
@@ -1410,7 +1410,7 @@ describe("startGatewayConfigReloader", () => {
       gateway: { auth: { mode: "token", token: "beta" }, port: 18790 },
     };
     configAuditMocks.readSnapshot.mockReturnValue({
-      configPath: "/tmp/openclaw.json",
+      configPath: "/tmp/grokbot.json",
       rawHash: "previous-raw-hash",
       fingerprintedAuthoredConfig: fingerprintConfigSnapshotAuthoredConfig(previousConfig),
     });
@@ -1432,7 +1432,7 @@ describe("startGatewayConfigReloader", () => {
 
   it("journals an offline config deletion without clearing the snapshot slot", async () => {
     configAuditMocks.readSnapshot.mockReturnValue({
-      configPath: "/tmp/openclaw.json",
+      configPath: "/tmp/grokbot.json",
       rawHash: "previous-raw-hash",
       fingerprintedAuthoredConfig: fingerprintConfigSnapshotAuthoredConfig({
         gateway: { port: 18789 },
@@ -1480,7 +1480,7 @@ describe("startGatewayConfigReloader", () => {
     expect(configAuditMocks.append).not.toHaveBeenCalled();
     expect(configAuditMocks.upsertSnapshot).toHaveBeenCalledWith(
       expect.objectContaining({
-        configPath: "/tmp/openclaw.json",
+        configPath: "/tmp/grokbot.json",
         rawHash: "path-b-raw-hash",
         authoredConfig: initialConfig,
         expectedSnapshot: storedSnapshot,
@@ -1501,7 +1501,7 @@ describe("startGatewayConfigReloader", () => {
     expect(configAuditMocks.append).not.toHaveBeenCalled();
     expect(configAuditMocks.upsertSnapshot).toHaveBeenLastCalledWith(
       expect.objectContaining({
-        configPath: "/tmp/openclaw.json",
+        configPath: "/tmp/grokbot.json",
         rawHash: "internal-write",
         authoredConfig: makeZeroDebounceHookSnapshot("internal-write").parsed,
       }),
@@ -1561,7 +1561,7 @@ describe("startGatewayConfigReloader", () => {
     expect(configAuditMocks.append.mock.calls[0]?.[0]?.record).not.toHaveProperty("changedPaths");
     expect(configAuditMocks.upsertSnapshot).toHaveBeenLastCalledWith(
       expect.objectContaining({
-        configPath: "/tmp/openclaw.json",
+        configPath: "/tmp/grokbot.json",
         rawHash: "comment-only-raw-hash",
         authoredConfig: initialConfig,
       }),
@@ -1610,7 +1610,7 @@ describe("startGatewayConfigReloader", () => {
 
     expect(harness.onConfigCandidateCommitted).toHaveBeenCalledOnce();
     expect(harness.onConfigCandidateCommitted).toHaveBeenCalledWith({
-      path: "/tmp/openclaw.json",
+      path: "/tmp/grokbot.json",
       persistedHash: "external-prefs-write",
       changedPaths: ["ui"],
     });
@@ -1733,7 +1733,7 @@ describe("startGatewayConfigReloader", () => {
     });
 
     harness.emitWrite({
-      configPath: "/tmp/openclaw.json",
+      configPath: "/tmp/grokbot.json",
       sourceConfig: initialConfig,
       runtimeConfig: initialConfig,
       persistedHash: "unchanged-root-hash",
@@ -1777,7 +1777,7 @@ describe("startGatewayConfigReloader", () => {
       terminalPolicy.prepareConfig(nextConfig, { restartPending: false });
       ownership.markRuntimeCommitted(nextConfig, plan);
       harness.emitWrite({
-        configPath: "/tmp/openclaw.json",
+        configPath: "/tmp/grokbot.json",
         sourceConfig: initialConfig,
         runtimeConfig: initialConfig,
         persistedHash: "baseline-only-b",
@@ -1804,7 +1804,7 @@ describe("startGatewayConfigReloader", () => {
     });
 
     harness.emitWrite({
-      configPath: "/tmp/openclaw.json",
+      configPath: "/tmp/grokbot.json",
       sourceConfig: appliedConfig,
       runtimeConfig: appliedConfig,
       persistedHash: "runtime-a",
@@ -1859,7 +1859,7 @@ describe("startGatewayConfigReloader", () => {
       );
 
       harness.emitWrite({
-        configPath: "/tmp/openclaw.json",
+        configPath: "/tmp/grokbot.json",
         sourceConfig: appliedConfig,
         runtimeConfig: appliedConfig,
         persistedHash: "runtime-a-before-rejected-b",
@@ -1903,7 +1903,7 @@ describe("startGatewayConfigReloader", () => {
       terminalPolicy.prepareConfig(nextConfig, { restartPending: false });
       ownership.markRuntimeCommitted(nextConfig, plan);
       harness.emitWrite({
-        configPath: "/tmp/openclaw.json",
+        configPath: "/tmp/grokbot.json",
         sourceConfig: restartConfig,
         runtimeConfig: restartConfig,
         persistedHash: "restart-b",
@@ -1932,7 +1932,7 @@ describe("startGatewayConfigReloader", () => {
     });
 
     harness.emitWrite({
-      configPath: "/tmp/openclaw.json",
+      configPath: "/tmp/grokbot.json",
       sourceConfig: appliedConfig,
       runtimeConfig: appliedConfig,
       persistedHash: "runtime-a-before-restart",
@@ -2165,7 +2165,7 @@ describe("startGatewayConfigReloader", () => {
     });
     const emitWrite = (config: OpenClawConfig, hash: string, revision: number) => {
       harness.emitWrite({
-        configPath: "/tmp/openclaw.json",
+        configPath: "/tmp/grokbot.json",
         sourceConfig: config,
         runtimeConfig: config,
         persistedHash: hash,
@@ -2205,7 +2205,7 @@ describe("startGatewayConfigReloader", () => {
     const harness = createReloaderHarness(readSnapshot, { initialConfig });
 
     harness.emitWrite({
-      configPath: "/tmp/openclaw.json",
+      configPath: "/tmp/grokbot.json",
       sourceConfig: queuedConfig,
       runtimeConfig: queuedConfig,
       persistedHash: "queued-in-process",
@@ -2623,7 +2623,7 @@ describe("startGatewayConfigReloader", () => {
       config: OpenClawConfig,
       persistedHash: string,
     ): ConfigWriteNotification => ({
-      configPath: "/tmp/openclaw.json",
+      configPath: "/tmp/grokbot.json",
       sourceConfig: config,
       runtimeConfig: config,
       persistedHash,
@@ -2674,7 +2674,7 @@ describe("startGatewayConfigReloader", () => {
       logging: { level: "info" },
     };
     const makeWrite = (config: OpenClawConfig, persistedHash: string): ConfigWriteNotification => ({
-      configPath: "/tmp/openclaw.json",
+      configPath: "/tmp/grokbot.json",
       sourceConfig: config,
       runtimeConfig: config,
       persistedHash,
@@ -3282,7 +3282,7 @@ describe("startGatewayConfigReloader", () => {
       const harness = createReloaderHarness(vi.fn(), { initialConfig });
 
       harness.emitWrite({
-        configPath: "/tmp/openclaw.json",
+        configPath: "/tmp/grokbot.json",
         sourceConfig: nextConfig,
         runtimeConfig: nextConfig,
         preparedCandidate: { runtimeConfig: nextConfig, compareConfig: nextConfig, runtimeEnv },
@@ -3340,7 +3340,7 @@ describe("startGatewayConfigReloader", () => {
     });
 
     harness.emitWrite({
-      configPath: "/tmp/openclaw.json",
+      configPath: "/tmp/grokbot.json",
       sourceConfig: nextConfig,
       runtimeConfig: nextConfig,
       preparedCandidate: { runtimeConfig: nextConfig, compareConfig, runtimeEnv },
@@ -3387,7 +3387,7 @@ describe("startGatewayConfigReloader", () => {
     );
 
     harness.emitWrite({
-      configPath: "/tmp/openclaw.json",
+      configPath: "/tmp/grokbot.json",
       sourceConfig: nextConfig,
       runtimeConfig: nextConfig,
       preparedCandidate: { runtimeConfig: nextConfig, compareConfig: nextConfig, runtimeEnv },
@@ -3453,7 +3453,7 @@ describe("startGatewayConfigReloader", () => {
     expect(targetEnv[envKey]).toBe("c");
 
     harness.emitWrite({
-      configPath: "/tmp/openclaw.json",
+      configPath: "/tmp/grokbot.json",
       sourceConfig: configB,
       runtimeConfig: configB,
       preparedCandidate: {
@@ -3670,7 +3670,7 @@ describe("startGatewayConfigReloader", () => {
     const harness = createReloaderHarness(readSnapshot);
 
     harness.emitWrite({
-      configPath: "/tmp/openclaw.json",
+      configPath: "/tmp/grokbot.json",
       sourceConfig,
       runtimeConfig,
       persistedHash: "secret-ref-write",
@@ -3710,7 +3710,7 @@ describe("startGatewayConfigReloader", () => {
     const harness = createReloaderHarness(vi.fn(), { initialConfig });
 
     harness.emitWrite({
-      configPath: "/tmp/openclaw.json",
+      configPath: "/tmp/grokbot.json",
       sourceConfig,
       runtimeConfig: sourceConfig,
       preparedCandidate: {
@@ -3753,7 +3753,7 @@ describe("startGatewayConfigReloader", () => {
     });
 
     harness.emitWrite({
-      configPath: "/tmp/openclaw.json",
+      configPath: "/tmp/grokbot.json",
       sourceConfig,
       runtimeConfig: sourceConfig,
       preparedCandidate: {
@@ -3819,7 +3819,7 @@ describe("startGatewayConfigReloader", () => {
     };
 
     harness.emitWrite({
-      configPath: "/tmp/openclaw.json",
+      configPath: "/tmp/grokbot.json",
       sourceConfig,
       runtimeConfig: sourceConfig,
       preparedCandidate: {
@@ -3932,7 +3932,7 @@ describe("startGatewayConfigReloader", () => {
     const harness = createReloaderHarness(vi.fn());
 
     harness.emitWrite({
-      configPath: "/tmp/openclaw.json",
+      configPath: "/tmp/grokbot.json",
       sourceConfig,
       runtimeConfig,
       persistedHash: "direct-secret-restart",
@@ -3993,7 +3993,7 @@ describe("startGatewayConfigReloader", () => {
     const harness = createReloaderHarness(readSnapshot, { readPluginInstallRecords });
 
     harness.emitWrite({
-      configPath: "/tmp/openclaw.json",
+      configPath: "/tmp/grokbot.json",
       sourceConfig,
       runtimeConfig,
       persistedHash: "replay-secret-restart",
@@ -4188,7 +4188,7 @@ describe("startGatewayConfigReloader", () => {
     const harness = createReloaderHarness(readSnapshot, { initialCompareConfig: sourceConfig });
 
     harness.emitWrite({
-      configPath: "/tmp/openclaw.json",
+      configPath: "/tmp/grokbot.json",
       sourceConfig: {
         ...sourceConfig,
         plugins: {
@@ -4276,7 +4276,7 @@ describe("startGatewayConfigReloader", () => {
     const harness = createReloaderHarness(readSnapshot, { initialCompareConfig: sourceConfig });
 
     harness.emitWrite({
-      configPath: "/tmp/openclaw.json",
+      configPath: "/tmp/grokbot.json",
       sourceConfig: nextSourceConfig,
       runtimeConfig: nextSourceConfig,
       persistedHash: "plugin-collision-1",
@@ -4325,7 +4325,7 @@ describe("startGatewayConfigReloader", () => {
       "lossless-claw": {
         source: "npm",
         spec: "@martian-engineering/lossless-claw",
-        installPath: "/tmp/openclaw/plugins/lossless-claw",
+        installPath: "/tmp/grokbot/plugins/lossless-claw",
         installedAt: "2026-04-22T00:00:00.000Z",
       },
     } satisfies Record<string, PluginInstallRecord>);
@@ -4363,8 +4363,8 @@ describe("startGatewayConfigReloader", () => {
     const readPluginInstallRecords = vi.fn(async () => ({
       brave: {
         source: "npm" as const,
-        spec: "@openclaw/brave",
-        installPath: "/tmp/openclaw/plugins/brave",
+        spec: "@grokbot/brave",
+        installPath: "/tmp/grokbot/plugins/brave",
       },
     }));
     const harness = createReloaderHarness(readSnapshot, {
@@ -4408,8 +4408,8 @@ describe("startGatewayConfigReloader", () => {
     const installRecords = {
       telegram: {
         source: "npm",
-        spec: "@openclaw/telegram",
-        installPath: "/tmp/openclaw/plugins/telegram",
+        spec: "@grokbot/telegram",
+        installPath: "/tmp/grokbot/plugins/telegram",
       },
     } satisfies Record<string, PluginInstallRecord>;
     const readSnapshot = vi.fn<() => Promise<ConfigFileSnapshot>>().mockResolvedValueOnce(
@@ -4469,7 +4469,7 @@ describe("startGatewayConfigReloader", () => {
       "lossless-claw": {
         source: "npm",
         spec: "@martian-engineering/lossless-claw",
-        installPath: "/tmp/openclaw/plugins/lossless-claw",
+        installPath: "/tmp/grokbot/plugins/lossless-claw",
         installedAt: "2026-04-22T00:00:00.000Z",
       },
     } satisfies Record<string, PluginInstallRecord>);
@@ -4646,7 +4646,7 @@ describe("startGatewayConfigReloader watcher error recovery", () => {
       onHotReload: vi.fn(async () => {}),
       onRestart: vi.fn(),
       log,
-      watchPath: "/tmp/openclaw.json",
+      watchPath: "/tmp/grokbot.json",
     });
     return { watchSpy, readSnapshot, log, reloader };
   }

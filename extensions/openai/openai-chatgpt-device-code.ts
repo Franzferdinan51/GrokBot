@@ -2,13 +2,13 @@
 import {
   shouldUseEnvHttpProxyForUrl,
   withTrustedEnvProxyGuardedFetchMode,
-} from "openclaw/plugin-sdk/fetch-runtime";
+} from "grokbot/plugin-sdk/fetch-runtime";
 import {
   positiveSecondsToSafeMilliseconds,
   resolveExpiresAtMsFromDurationSeconds,
-} from "openclaw/plugin-sdk/number-runtime";
-import { readResponseTextLimited } from "openclaw/plugin-sdk/provider-http";
-import { fetchWithSsrFGuard } from "openclaw/plugin-sdk/ssrf-runtime";
+} from "grokbot/plugin-sdk/number-runtime";
+import { readResponseTextLimited } from "grokbot/plugin-sdk/provider-http";
+import { fetchWithSsrFGuard } from "grokbot/plugin-sdk/ssrf-runtime";
 import { resolveCodexAccessTokenExpiry } from "./openai-chatgpt-auth-identity.js";
 import { trimNonEmptyString } from "./openai-chatgpt-shared.js";
 
@@ -26,9 +26,9 @@ function resolveOpenAICodexDeviceCodeHeaders(contentType: string): Record<string
   const version = process.env.OPENCLAW_VERSION?.trim();
   return {
     "Content-Type": contentType,
-    originator: "openclaw",
+    originator: "grokbot",
     ...(version ? { version } : {}),
-    "User-Agent": version ? `openclaw/${version}` : "openclaw",
+    "User-Agent": version ? `grokbot/${version}` : "grokbot",
   };
 }
 

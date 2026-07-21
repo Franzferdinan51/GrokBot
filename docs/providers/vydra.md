@@ -1,7 +1,7 @@
 ---
-summary: "Use Vydra image, video, and speech in OpenClaw"
+summary: "Use Vydra image, video, and speech in GrokBot"
 read_when:
-  - You want Vydra media generation in OpenClaw
+  - You want Vydra media generation in GrokBot
   - You need Vydra API key setup guidance
 title: "Vydra"
 ---
@@ -12,7 +12,7 @@ The bundled Vydra plugin adds:
 - Video generation via `vydra/veo3` (text-to-video) and `vydra/kling` (image-to-video)
 - Speech synthesis via Vydra's ElevenLabs-backed TTS route
 
-OpenClaw uses the same `VYDRA_API_KEY` for all three capabilities.
+GrokBot uses the same `VYDRA_API_KEY` for all three capabilities.
 
 | Property        | Value                                                                     |
 | --------------- | ------------------------------------------------------------------------- |
@@ -33,7 +33,7 @@ Use `https://www.vydra.ai/api/v1` as the base URL. Vydra's apex host (`https://v
 <Steps>
   <Step title="Run interactive onboarding">
     ```bash
-    openclaw onboard --auth-choice vydra-api-key
+    grokbot onboard --auth-choice vydra-api-key
     ```
 
     Or set the env var directly:

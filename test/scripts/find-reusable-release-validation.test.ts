@@ -3,7 +3,7 @@
 import { execFileSync, spawnSync } from "node:child_process";
 import { chmodSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { afterAll, afterEach, describe, expect, it } from "vitest";
 import { createTempDirTracker } from "../helpers/temp-dir.js";
 
@@ -11,7 +11,7 @@ const SCRIPT_PATH = join(process.cwd(), "scripts/github/find-reusable-release-va
 const tempDirs = createTempDirTracker();
 const sharedTempDirs = createTempDirTracker();
 
-const REPOSITORY = "openclaw/openclaw";
+const REPOSITORY = "grokbot/grokbot";
 const PRODUCER_SHA = "0".repeat(40);
 const VERIFIER_SHA = "c".repeat(40);
 const DEFAULT_INPUTS = {
@@ -157,9 +157,9 @@ function createRepo(options: { plistBuildVersion?: string } = {}, dirs = tempDir
     join(origin, "package.json"),
     `${JSON.stringify({ name: "x", version: "2026.7.1" }, null, 2)}\n`,
   );
-  mkdirSync(join(origin, "apps/macos/Sources/OpenClaw/Resources"), { recursive: true });
+  mkdirSync(join(origin, "apps/macos/Sources/GrokBot/Resources"), { recursive: true });
   writeFileSync(
-    join(origin, "apps/macos/Sources/OpenClaw/Resources/Info.plist"),
+    join(origin, "apps/macos/Sources/GrokBot/Resources/Info.plist"),
     plistFor("2026.7.1", options.plistBuildVersion ?? "2026070100"),
   );
   mkdirSync(join(origin, "docs/install"), { recursive: true });
@@ -285,11 +285,11 @@ function normalizedEvidence(options: {
       "203",
       1,
       2,
-      "OpenClaw Release Checks",
-      "openclaw-release-checks.yml",
+      "GrokBot Release Checks",
+      "grokbot-release-checks.yml",
       "-release-checks",
     ],
-    ["productPerformance", "204", 3, 2, "OpenClaw Performance", "openclaw-performance.yml", ""],
+    ["productPerformance", "204", 3, 2, "GrokBot Performance", "grokbot-performance.yml", ""],
   ] as const;
   const children = roles.map(
     ([role, childRunId, runAttempt, sourceParentAttempt, name, workflow, suffix]) => ({
@@ -331,7 +331,7 @@ function normalizedEvidence(options: {
     rerunGroup: "all",
     root,
     runReleaseSoak: soak,
-    schema: "openclaw.release-validation-evidence/v3",
+    schema: "grokbot.release-validation-evidence/v3",
     producerOnTrustedMainLineage: true,
     trustedWorkflowFullRef: "refs/heads/main",
     trustedWorkflowRef: "main",
@@ -378,7 +378,7 @@ if (
   runIndex < 0 ||
   repoIndex < 0 ||
   trustedRefIndex < 0 ||
-  process.argv[repoIndex + 1] !== "openclaw/openclaw" ||
+  process.argv[repoIndex + 1] !== "grokbot/grokbot" ||
   process.argv[trustedRefIndex + 1] !== "main"
 ) {
   console.error("validator invocation contract mismatch");
@@ -416,7 +416,7 @@ function setUpFixtures(runs: RunFixture[]): {
   writeFileSync(
     fixtureName(
       fixtures,
-      "repos/openclaw/openclaw/actions/workflows/full-release-validation.yml/runs",
+      "repos/grokbot/grokbot/actions/workflows/full-release-validation.yml/runs",
     ),
     JSON.stringify({ workflow_runs: runs.map(({ runId }) => ({ id: Number(runId) })) }),
   );

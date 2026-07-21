@@ -61,7 +61,7 @@ async function createSandboxFixtureDir(prefix: string): Promise<string> {
 }
 
 beforeAll(async () => {
-  sandboxFixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-sandbox-context-"));
+  sandboxFixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-sandbox-context-"));
 });
 
 afterAll(async () => {
@@ -82,7 +82,7 @@ describe("resolveSandboxContext", () => {
     const result = await resolveSandboxContext({
       config: cfg,
       sessionKey: "agent:main:main",
-      workspaceDir: "/tmp/openclaw-test",
+      workspaceDir: "/tmp/grokbot-test",
     });
 
     expect(result).toBeNull();
@@ -101,7 +101,7 @@ describe("resolveSandboxContext", () => {
     const result = await ensureSandboxWorkspaceForSession({
       config: cfg,
       sessionKey: "agent:main:main",
-      workspaceDir: "/tmp/openclaw-test",
+      workspaceDir: "/tmp/grokbot-test",
     });
 
     expect(result).toBeNull();
@@ -143,14 +143,14 @@ describe("resolveSandboxContext", () => {
         resolveSandboxContext({
           config: cfg,
           sessionKey: "agent:main:cron:job:run:uuid",
-          workspaceDir: "/tmp/openclaw-test",
+          workspaceDir: "/tmp/grokbot-test",
         }),
       ).resolves.toBeNull();
       await expect(
         resolveSandboxContext({
           config: cfg,
           sessionKey: "agent:main:subagent:child",
-          workspaceDir: "/tmp/openclaw-test",
+          workspaceDir: "/tmp/grokbot-test",
         }),
       ).resolves.toBeNull();
 
@@ -175,7 +175,7 @@ describe("resolveSandboxContext", () => {
       await resolveSandboxContext({
         config: cfg,
         sessionKey: "main",
-        workspaceDir: "/tmp/openclaw-test",
+        workspaceDir: "/tmp/grokbot-test",
       }),
     ).toBeNull();
 
@@ -183,7 +183,7 @@ describe("resolveSandboxContext", () => {
       await resolveSandboxContext({
         config: cfg,
         sessionKey: "agent:main:main",
-        workspaceDir: "/tmp/openclaw-test",
+        workspaceDir: "/tmp/grokbot-test",
       }),
     ).toBeNull();
 
@@ -191,7 +191,7 @@ describe("resolveSandboxContext", () => {
       await ensureSandboxWorkspaceForSession({
         config: cfg,
         sessionKey: "work",
-        workspaceDir: "/tmp/openclaw-test",
+        workspaceDir: "/tmp/grokbot-test",
       }),
     ).toBeNull();
 
@@ -199,7 +199,7 @@ describe("resolveSandboxContext", () => {
       await ensureSandboxWorkspaceForSession({
         config: cfg,
         sessionKey: "agent:main:main",
-        workspaceDir: "/tmp/openclaw-test",
+        workspaceDir: "/tmp/grokbot-test",
       }),
     ).toBeNull();
   }, 15_000);
@@ -244,7 +244,7 @@ describe("resolveSandboxContext", () => {
         config: cfg,
         execOverrides: { host: "node", node: "build-node", security: "allowlist" },
         sessionKey: "agent:worker:task",
-        workspaceDir: "/tmp/openclaw-test",
+        workspaceDir: "/tmp/grokbot-test",
       });
 
       expect(result?.backendId).toBe("test-backend");
@@ -260,7 +260,7 @@ describe("resolveSandboxContext", () => {
       const workspace = await ensureSandboxWorkspaceForSession({
         config: cfg,
         sessionKey: "agent:worker:task",
-        workspaceDir: "/tmp/openclaw-test",
+        workspaceDir: "/tmp/grokbot-test",
       });
       expect(workspace?.containerWorkdir).toBe("/runtime/workspace");
     } finally {
@@ -309,7 +309,7 @@ describe("resolveSandboxContext", () => {
       await resolveSandboxContext({
         config: cfg,
         sessionKey: "agent:worker:browser",
-        workspaceDir: "/tmp/openclaw-test",
+        workspaceDir: "/tmp/grokbot-test",
       });
 
       const browserCalls = ensureSandboxBrowserMock.mock.calls as unknown as Array<
@@ -387,7 +387,7 @@ describe("resolveSandboxContext", () => {
     const workspaceDir = await createSandboxFixtureDir("workspace");
     const userOwnedSandboxSkillsDir = path.join(
       workspaceDir,
-      ".openclaw",
+      ".grokbot",
       "sandbox-skills",
       "skills",
       "user-owned",
@@ -402,7 +402,7 @@ describe("resolveSandboxContext", () => {
             mode: "all",
             scope: "session",
             workspaceAccess: "rw",
-            workspaceRoot: path.join(workspaceDir, ".openclaw", "sandboxes"),
+            workspaceRoot: path.join(workspaceDir, ".grokbot", "sandboxes"),
           },
         },
       },
@@ -429,15 +429,15 @@ describe("resolveSandboxContext", () => {
     const [syncOptions] = syncCalls[0] ?? [];
     expect(syncOptions?.sourceWorkspaceDir).toBe(workspaceDir);
     expect(syncOptions?.targetWorkspaceDir).toContain(
-      path.join(".openclaw", "sandbox", "skills-workspaces"),
+      path.join(".grokbot", "sandbox", "skills-workspaces"),
     );
     expect(syncOptions?.targetWorkspaceDir).toMatch(
-      /[\\/]agent-main-main-[a-f0-9]{8}[\\/]\.openclaw[\\/]sandbox-skills$/,
+      /[\\/]agent-main-main-[a-f0-9]{8}[\\/]\.grokbot[\\/]sandbox-skills$/,
     );
     expect(syncOptions?.targetWorkspaceDir).not.toBe(
-      path.join(workspaceDir, ".openclaw", "sandbox-skills"),
+      path.join(workspaceDir, ".grokbot", "sandbox-skills"),
     );
-    expect(syncOptions?.targetWorkspaceDir?.startsWith(path.join(workspaceDir, ".openclaw"))).toBe(
+    expect(syncOptions?.targetWorkspaceDir?.startsWith(path.join(workspaceDir, ".grokbot"))).toBe(
       false,
     );
     expect(syncOptions?.config).toBe(cfg);
@@ -470,7 +470,7 @@ describe("resolveSandboxContext", () => {
             workspaceAccess: "rw",
             ssh: {
               target: "ssh.example.test",
-              workspaceRoot: "/remote/openclaw",
+              workspaceRoot: "/remote/grokbot",
             },
           },
         },
@@ -485,11 +485,11 @@ describe("resolveSandboxContext", () => {
 
     expect(result?.workspaceDir).toBe(workspaceDir);
     expect(result?.containerWorkdir).toMatch(
-      /^\/remote\/openclaw\/openclaw-ssh-agent-main-main-[a-f0-9]{8}\/workspace$/,
+      /^\/remote\/grokbot\/grokbot-ssh-agent-main-main-[a-f0-9]{8}\/workspace$/,
     );
     expect(result?.containerWorkdir).not.toBe("/workspace");
     expect(result?.skillsWorkspaceDir).toContain(
-      path.join(".openclaw", "sandbox", "skills-workspaces"),
+      path.join(".grokbot", "sandbox", "skills-workspaces"),
     );
   }, 15_000);
 
@@ -498,7 +498,7 @@ describe("resolveSandboxContext", () => {
     const workspaceDir = await createSandboxFixtureDir("shared-workspace");
     const userOwnedSandboxSkillsDir = path.join(
       workspaceDir,
-      ".openclaw",
+      ".grokbot",
       "sandbox-skills",
       "skills",
       "user-owned",
@@ -537,13 +537,13 @@ describe("resolveSandboxContext", () => {
     const [syncOptions] = syncCalls[0] ?? [];
     expect(syncOptions?.sourceWorkspaceDir).toBe(workspaceDir);
     expect(syncOptions?.targetWorkspaceDir).toContain(
-      path.join(".openclaw", "sandbox", "skills-workspaces"),
+      path.join(".grokbot", "sandbox", "skills-workspaces"),
     );
     expect(syncOptions?.targetWorkspaceDir).toMatch(
-      /[\\/]shared-[a-f0-9]{8}[\\/]\.openclaw[\\/]sandbox-skills$/,
+      /[\\/]shared-[a-f0-9]{8}[\\/]\.grokbot[\\/]sandbox-skills$/,
     );
     expect(syncOptions?.targetWorkspaceDir).not.toBe(
-      path.join(workspaceDir, ".openclaw", "sandbox-skills"),
+      path.join(workspaceDir, ".grokbot", "sandbox-skills"),
     );
     await expect(
       fs.readFile(path.join(userOwnedSandboxSkillsDir, "SKILL.md"), "utf8"),

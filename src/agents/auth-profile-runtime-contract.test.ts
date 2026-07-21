@@ -10,10 +10,10 @@ import {
   AUTH_PROFILE_RUNTIME_CONTRACT,
   createAuthAliasManifestRegistry,
   expectedForwardedAuthProfile,
-} from "openclaw/plugin-sdk/agent-runtime-test-contracts";
+} from "grokbot/plugin-sdk/agent-runtime-test-contracts";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { SessionEntry } from "../config/sessions.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import type * as ManifestRegistryModule from "../plugins/manifest-registry.js";
 import { runAgentAttempt as runAgentAttemptImpl } from "./command/attempt-execution.js";
 import type { RunEmbeddedAgentParams } from "./embedded-agent-runner/run/params.js";
@@ -166,7 +166,7 @@ function providerRuntimeConfig(provider: string, runtime: string): OpenClawConfi
     models: {
       providers: {
         [provider]: {
-          baseUrl: "https://api.openclaw.test/v1",
+          baseUrl: "https://api.grokbot.test/v1",
           agentRuntime: { id: runtime },
           models: [],
         },
@@ -234,12 +234,12 @@ async function runAuthContractAttempt(params: {
   };
 }
 
-describe("Auth profile runtime contract - embedded OpenClaw and CLI adapter", () => {
+describe("Auth profile runtime contract - embedded GrokBot and CLI adapter", () => {
   let tmpDir: string;
   let storePath: string;
 
   beforeEach(async () => {
-    tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-auth-contract-"));
+    tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-auth-contract-"));
     storePath = path.join(tmpDir, "sessions.json");
     loadPluginManifestRegistry.mockReset().mockReturnValue(createAuthAliasManifestRegistry());
     runCliAgentMock.mockReset();
@@ -355,7 +355,7 @@ describe("Auth profile runtime contract - embedded OpenClaw and CLI adapter", ()
         models: {
           providers: {
             [AUTH_PROFILE_RUNTIME_CONTRACT.openAiProvider]: {
-              baseUrl: "https://api.openclaw.test/v1",
+              baseUrl: "https://api.grokbot.test/v1",
               agentRuntime: { id: "codex" },
               models: [],
             },
@@ -367,7 +367,7 @@ describe("Auth profile runtime contract - embedded OpenClaw and CLI adapter", ()
     expect(capturedCliRunParams().authProfileId).toBeUndefined();
   });
 
-  it("forwards a legacy OpenAI Codex auth profile through the embedded OpenClaw path", async () => {
+  it("forwards a legacy OpenAI Codex auth profile through the embedded GrokBot path", async () => {
     await runAuthContractAttempt({
       tmpDir,
       storePath,
@@ -400,14 +400,14 @@ describe("Auth profile runtime contract - embedded OpenClaw and CLI adapter", ()
     );
   });
 
-  it("forwards an OpenAI auth profile through the explicit embedded OpenAI OpenClaw path", async () => {
+  it("forwards an OpenAI auth profile through the explicit embedded OpenAI GrokBot path", async () => {
     await runAuthContractAttempt({
       tmpDir,
       storePath,
       providerOverride: AUTH_PROFILE_RUNTIME_CONTRACT.openAiProvider,
       authProfileProvider: AUTH_PROFILE_RUNTIME_CONTRACT.openAiProvider,
       authProfileOverride: AUTH_PROFILE_RUNTIME_CONTRACT.openAiProfileId,
-      cfg: providerRuntimeConfig(AUTH_PROFILE_RUNTIME_CONTRACT.openAiProvider, "openclaw"),
+      cfg: providerRuntimeConfig(AUTH_PROFILE_RUNTIME_CONTRACT.openAiProvider, "grokbot"),
     });
 
     const params = capturedEmbeddedRunParams();
@@ -429,14 +429,14 @@ describe("Auth profile runtime contract - embedded OpenClaw and CLI adapter", ()
     );
   });
 
-  it("routes explicit OpenAI OpenClaw runs with legacy Codex OAuth through OpenAI transport", async () => {
+  it("routes explicit OpenAI GrokBot runs with legacy Codex OAuth through OpenAI transport", async () => {
     await runAuthContractAttempt({
       tmpDir,
       storePath,
       providerOverride: AUTH_PROFILE_RUNTIME_CONTRACT.openAiProvider,
       authProfileProvider: AUTH_PROFILE_RUNTIME_CONTRACT.openAiCodexProvider,
       authProfileOverride: AUTH_PROFILE_RUNTIME_CONTRACT.openAiCodexProfileId,
-      cfg: providerRuntimeConfig(AUTH_PROFILE_RUNTIME_CONTRACT.openAiProvider, "openclaw"),
+      cfg: providerRuntimeConfig(AUTH_PROFILE_RUNTIME_CONTRACT.openAiProvider, "grokbot"),
     });
 
     const params = capturedEmbeddedRunParams();

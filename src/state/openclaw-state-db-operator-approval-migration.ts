@@ -1,8 +1,8 @@
 // Doctor-only repair for the operator approval kind constraint.
 import type { DatabaseSync } from "node:sqlite";
 import { runSqliteImmediateTransactionSync } from "../infra/sqlite-transaction.js";
-import { tableExists } from "./openclaw-state-db-schema-helpers.js";
-import { OPENCLAW_STATE_SCHEMA_SQL } from "./openclaw-state-schema.generated.js";
+import { tableExists } from "./grokbot-state-db-schema-helpers.js";
+import { OPENCLAW_STATE_SCHEMA_SQL } from "./grokbot-state-schema.generated.js";
 
 const COLUMNS = [
   "approval_id",
@@ -53,7 +53,7 @@ function hasCanonicalOperatorApprovalKinds(db: DatabaseSync): boolean {
 export function assertCanonicalOperatorApprovalKinds(db: DatabaseSync, pathname: string): void {
   if (!hasCanonicalOperatorApprovalKinds(db)) {
     throw new Error(
-      `OpenClaw state database ${pathname} has a legacy operator approval schema; run openclaw doctor --fix to migrate it.`,
+      `GrokBot state database ${pathname} has a legacy operator approval schema; run grokbot doctor --fix to migrate it.`,
     );
   }
 }
@@ -183,6 +183,6 @@ function repairOperatorApprovalKinds(db: DatabaseSync): boolean {
 
 export function repairOperatorApprovalSchema(db: DatabaseSync): string[] {
   return repairOperatorApprovalKinds(db)
-    ? ["Migrated shared state operator approvals → OpenClaw system changes"]
+    ? ["Migrated shared state operator approvals → GrokBot system changes"]
     : [];
 }

@@ -1,13 +1,13 @@
 // Memory Core tests cover generic embedding provider.bridge plugin behavior.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import type {
   EmbeddingInput,
   EmbeddingProviderCallOptions,
-} from "openclaw/plugin-sdk/embedding-providers";
+} from "grokbot/plugin-sdk/embedding-providers";
 import {
   createPluginRegistryFixture,
   registerVirtualTestPlugin,
-} from "openclaw/plugin-sdk/plugin-test-contracts";
+} from "grokbot/plugin-sdk/plugin-test-contracts";
 import {
   clearEmbeddingProviders,
   getRegisteredEmbeddingProvider,
@@ -18,7 +18,7 @@ import {
   listRegisteredMemoryEmbeddingProviders,
   type RegisteredMemoryEmbeddingProvider,
   restoreRegisteredMemoryEmbeddingProviders,
-} from "openclaw/plugin-sdk/plugin-test-runtime";
+} from "grokbot/plugin-sdk/plugin-test-runtime";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { createEmbeddingProvider, resolveEmbeddingProviderIndexIdentity } from "./embeddings.js";
 
@@ -34,7 +34,7 @@ let memoryEmbeddingProvidersSnapshot: RegisteredMemoryEmbeddingProvider[];
 function createOptions(config: OpenClawConfig) {
   return {
     config,
-    agentDir: "/tmp/openclaw-agent",
+    agentDir: "/tmp/grokbot-agent",
     provider: "virtual-generic",
     fallback: "none",
     model: "virtual-model",

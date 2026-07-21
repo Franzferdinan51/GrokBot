@@ -1,11 +1,11 @@
-# OpenClaw Microsoft Teams
+# GrokBot Microsoft Teams
 
-Official OpenClaw channel plugin for Microsoft Teams bot conversations.
+Official GrokBot channel plugin for Microsoft Teams bot conversations.
 
-Install from OpenClaw:
+Install from GrokBot:
 
 ```bash
-openclaw plugin add @openclaw/msteams
+grokbot plugin add @grokbot/msteams
 ```
 
-Configure the Teams bot credentials and trusted service URLs in OpenClaw, then connect the bot to the teams or chats where agents should operate.
+Configure the Teams bot credentials and trusted service URLs in GrokBot, then connect the bot to the teams or chats where agents should operate.

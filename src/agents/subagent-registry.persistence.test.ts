@@ -3,14 +3,14 @@
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import "./subagent-registry.mocks.shared.js";
 import { replaceSessionEntry } from "../config/sessions/session-accessor.js";
 import type { SessionEntry } from "../config/sessions/types.js";
 import { callGateway } from "../gateway/call.js";
 import { onAgentEvent } from "../infra/agent-events.js";
-import { closeOpenClawStateDatabaseForTest } from "../state/openclaw-state-db.js";
+import { closeOpenClawStateDatabaseForTest } from "../state/grokbot-state-db.js";
 import { captureEnv, setTestEnvValue, withEnv } from "../test-utils/env.js";
 import { cleanupSessionStateForTest } from "../test-utils/session-state-cleanup.js";
 import { scheduleOrphanRecovery } from "./subagent-orphan-recovery.js";
@@ -129,14 +129,14 @@ describe("subagent registry persistence", () => {
   ) => {
     // Each persisted-registry fixture gets its own state dir so session and
     // subagent SQLite stores use the same production paths.
-    tempStateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-subagent-"));
+    tempStateDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-subagent-"));
     setTestEnvValue("OPENCLAW_STATE_DIR", tempStateDir);
     const runs = (persisted.runs ?? {}) as Record<string, SubagentRunRecord>;
     saveSubagentRegistryToSqlite(new Map(Object.entries(runs)));
     if (opts?.seedChildSessions !== false) {
       await seedChildSessionsForPersistedRuns(persisted);
     }
-    return path.join(tempStateDir, "state", "openclaw.sqlite");
+    return path.join(tempStateDir, "state", "grokbot.sqlite");
   };
 
   const readPersistedRun = async <T>(
@@ -257,7 +257,7 @@ describe("subagent registry persistence", () => {
   });
 
   it("persists completed subagent timing into the child session entry", async () => {
-    tempStateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-subagent-"));
+    tempStateDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-subagent-"));
     setTestEnvValue("OPENCLAW_STATE_DIR", tempStateDir);
 
     const now = Date.now();
@@ -294,7 +294,7 @@ describe("subagent registry persistence", () => {
   });
 
   it("rejects a stale timing write after session ownership changes", async () => {
-    tempStateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-subagent-"));
+    tempStateDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-subagent-"));
     setTestEnvValue("OPENCLAW_STATE_DIR", tempStateDir);
 
     const startedAt = Date.now();
@@ -332,7 +332,7 @@ describe("subagent registry persistence", () => {
   });
 
   it("does not overwrite durable completion with a provisional killed status", async () => {
-    tempStateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-subagent-"));
+    tempStateDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-subagent-"));
     setTestEnvValue("OPENCLAW_STATE_DIR", tempStateDir);
 
     const startedAt = Date.now();
@@ -377,7 +377,7 @@ describe("subagent registry persistence", () => {
   });
 
   it("skips cleanup when cleanupHandled was persisted", async () => {
-    tempStateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-subagent-"));
+    tempStateDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-subagent-"));
     setTestEnvValue("OPENCLAW_STATE_DIR", tempStateDir);
 
     const persisted = {
@@ -459,7 +459,7 @@ describe("subagent registry persistence", () => {
   });
 
   it("normalizes newly registered session keys to canonical trimmed values", async () => {
-    tempStateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-subagent-"));
+    tempStateDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-subagent-"));
     setTestEnvValue("OPENCLAW_STATE_DIR", tempStateDir);
 
     vi.mocked(callGateway).mockResolvedValueOnce({
@@ -490,7 +490,7 @@ describe("subagent registry persistence", () => {
   });
 
   it("reloads waitable swarm collector completions after a gateway restart", async () => {
-    tempStateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-subagent-"));
+    tempStateDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-subagent-"));
     setTestEnvValue("OPENCLAW_STATE_DIR", tempStateDir);
     const run: SubagentRunRecord = {
       runId: "run-swarm-restart",
@@ -562,7 +562,7 @@ describe("subagent registry persistence", () => {
   });
 
   it("reloads queued launch and in-flight structured state", async () => {
-    tempStateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-subagent-"));
+    tempStateDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-subagent-"));
     setTestEnvValue("OPENCLAW_STATE_DIR", tempStateDir);
     const run: SubagentRunRecord = {
       runId: "run-swarm-in-flight",
@@ -917,7 +917,7 @@ describe("subagent registry persistence", () => {
   });
 
   it("removes attachments when pruning orphaned restored runs", async () => {
-    tempStateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-subagent-"));
+    tempStateDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-subagent-"));
     setTestEnvValue("OPENCLAW_STATE_DIR", tempStateDir);
     const attachmentsRootDir = path.join(tempStateDir, "attachments");
     const attachmentsDir = path.join(attachmentsRootDir, "ghost");
@@ -1047,7 +1047,7 @@ describe("subagent registry persistence", () => {
   });
 
   it("resume guard prunes orphan runs before announce retry", async () => {
-    tempStateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-subagent-"));
+    tempStateDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-subagent-"));
     setTestEnvValue("OPENCLAW_STATE_DIR", tempStateDir);
     const runId = "run-orphan-resume-guard";
     const childSessionKey = "agent:main:subagent:ghost-resume";

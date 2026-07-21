@@ -4,7 +4,7 @@ import type { RequestPermissionRequest, RequestPermissionResponse } from "@agent
 import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalString,
-} from "@openclaw/normalization-core/string-coerce";
+} from "@grokbot/normalization-core/string-coerce";
 import { sanitizeTerminalText } from "../../packages/terminal-core/src/safe-text.js";
 import {
   materializeWindowsSpawnProgram,
@@ -227,7 +227,7 @@ export function resolveAcpClientSpawnInvocation(
     platform: runtime.platform,
     env: runtime.env,
     execPath: runtime.execPath,
-    packageName: "openclaw",
+    packageName: "grokbot",
   });
   const resolved = materializeWindowsSpawnProgram(program, params.serverArgs);
   return {

@@ -162,7 +162,7 @@ openclaw_download_node() {
   if command -v cygpath >/dev/null 2>&1; then
     temp_root="$(cygpath -u "$temp_root" 2>/dev/null || printf '%s\n' "$temp_root")"
   fi
-  install_root="${temp_root}/openclaw-node-${version}-${platform}"
+  install_root="${temp_root}/grokbot-node-${version}-${platform}"
   if [[ "$platform" == win-* ]]; then
     local ps_archive_path ps_install_root ps_bin_dir node_bin_dir
     archive_path="${temp_root}/node-${version}-${platform}.zip"

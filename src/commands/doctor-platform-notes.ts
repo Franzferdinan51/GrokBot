@@ -2,10 +2,10 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+import { normalizeOptionalString } from "@grokbot/normalization-core/string-coerce";
 import { note } from "../../packages/terminal-core/src/note.js";
 import { formatCliCommand } from "../cli/command-format.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { hasConfiguredSecretInput } from "../config/types.secrets.js";
 import { findStaleOpenClawUpdateLaunchdJobs } from "../daemon/launchd.js";
 import { resolveGatewayService, type GatewayService } from "../daemon/service.js";
@@ -28,7 +28,7 @@ function collectMacLaunchAgentOverrideWarning(deps?: {
     return null;
   }
   const home = deps?.homeDir ?? resolveHomeDir();
-  const markerCandidates = [path.join(home, ".openclaw", "disable-launchagent")];
+  const markerCandidates = [path.join(home, ".grokbot", "disable-launchagent")];
   const exists = deps?.exists ?? fs.existsSync;
   const markerPath = markerCandidates.find((candidate) => exists(candidate));
   if (!markerPath) {
@@ -51,7 +51,7 @@ export async function noteMacLaunchAgentOverrides() {
   }
 }
 
-/** Returns a warning for stale OpenClaw updater launchd jobs left after interrupted updates. */
+/** Returns a warning for stale GrokBot updater launchd jobs left after interrupted updates. */
 async function collectMacStaleOpenClawUpdateLaunchdJobsWarning(deps?: {
   platform?: NodeJS.Platform;
   findJobs?: typeof findStaleOpenClawUpdateLaunchdJobs;
@@ -70,7 +70,7 @@ async function collectMacStaleOpenClawUpdateLaunchdJobsWarning(deps?: {
   }
 
   return [
-    "- Stale OpenClaw updater launchd job(s) detected.",
+    "- Stale GrokBot updater launchd job(s) detected.",
     ...jobs.map((job) => {
       const exitStatus =
         job.lastExitStatus !== undefined ? `, last exit ${job.lastExitStatus}` : "";
@@ -79,7 +79,7 @@ async function collectMacStaleOpenClawUpdateLaunchdJobsWarning(deps?: {
     }),
     "- Fix after confirming no update is running:",
     "  launchctl remove <label>",
-    `  ${formatCliCommand("openclaw gateway restart")}`,
+    `  ${formatCliCommand("grokbot gateway restart")}`,
   ].join("\n");
 }
 
@@ -312,8 +312,8 @@ export function noteStartupOptimizationHints(
 
   const suggestions = [
     "- Suggested env for low-power hosts:",
-    "  export NODE_COMPILE_CACHE=/var/tmp/openclaw-compile-cache",
-    "  mkdir -p /var/tmp/openclaw-compile-cache",
+    "  export NODE_COMPILE_CACHE=/var/tmp/grokbot-compile-cache",
+    "  mkdir -p /var/tmp/grokbot-compile-cache",
     "  export OPENCLAW_NO_RESPAWN=1",
     isTruthyEnvValue(disableCompileCache) ? "  unset NODE_DISABLE_COMPILE_CACHE" : undefined,
   ].filter((line): line is string => Boolean(line));

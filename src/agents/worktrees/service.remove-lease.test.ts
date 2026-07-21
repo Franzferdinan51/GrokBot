@@ -4,7 +4,7 @@ import os from "node:os";
 import path from "node:path";
 import { promisify } from "node:util";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { closeOpenClawStateDatabaseForTest } from "../../state/openclaw-state-db.js";
+import { closeOpenClawStateDatabaseForTest } from "../../state/grokbot-state-db.js";
 import { getRegistryWorktree } from "./registry.js";
 import { acquireWorktreeRunLease } from "./run-lease.js";
 import { testing as runLeaseTesting } from "./run-lease.test-support.js";
@@ -21,8 +21,8 @@ async function initializeRepository(root: string): Promise<string> {
   const repo = path.join(root, "repo");
   await fs.mkdir(repo, { recursive: true });
   await git(repo, "init", "-b", "main");
-  await git(repo, "config", "user.name", "OpenClaw Test");
-  await git(repo, "config", "user.email", "openclaw-test@example.invalid");
+  await git(repo, "config", "user.name", "GrokBot Test");
+  await git(repo, "config", "user.email", "grokbot-test@example.invalid");
   await fs.writeFile(path.join(repo, "README.md"), "base\n");
   await git(repo, "add", "README.md");
   await git(repo, "commit", "-m", "initial");
@@ -38,9 +38,9 @@ describe("ManagedWorktreeService removal against a live run lease", () => {
 
   beforeEach(async () => {
     const tempRoot = await fs.realpath(os.tmpdir());
-    root = await fs.mkdtemp(path.join(tempRoot, "openclaw-remove-lease-"));
+    root = await fs.mkdtemp(path.join(tempRoot, "grokbot-remove-lease-"));
     repo = await initializeRepository(root);
-    env = { ...process.env, OPENCLAW_STATE_DIR: path.join(root, "openclaw-state") };
+    env = { ...process.env, OPENCLAW_STATE_DIR: path.join(root, "grokbot-state") };
     now = 1_700_000_000_000;
     service = new ManagedWorktreeService({ env, now: () => now });
   });

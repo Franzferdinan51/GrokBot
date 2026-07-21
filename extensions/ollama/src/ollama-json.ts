@@ -2,4 +2,4 @@
 export {
   parseJsonObjectPreservingUnsafeIntegers,
   parseJsonPreservingUnsafeIntegers,
-} from "openclaw/plugin-sdk/json-unsafe-integers";
+} from "grokbot/plugin-sdk/json-unsafe-integers";

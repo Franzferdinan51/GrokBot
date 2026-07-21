@@ -6,12 +6,12 @@ import {
   resolveSessionTranscriptsDirForAgent,
   type OpenClawConfig,
   type ResolvedMemorySearchConfig,
-} from "openclaw/plugin-sdk/memory-core-host-engine-foundation";
+} from "grokbot/plugin-sdk/memory-core-host-engine-foundation";
 import {
   ensureMemoryIndexSchema,
   requireNodeSqlite,
   type MemorySource,
-} from "openclaw/plugin-sdk/memory-core-host-engine-storage";
+} from "grokbot/plugin-sdk/memory-core-host-engine-storage";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const { buildSessionEntryMock } = vi.hoisted(() => ({
@@ -23,7 +23,7 @@ function setSyncYieldStateDir(): void {
   Reflect.set(
     process.env,
     "OPENCLAW_STATE_DIR",
-    path.join(os.tmpdir(), "openclaw-session-sync-yield"),
+    path.join(os.tmpdir(), "grokbot-session-sync-yield"),
   );
 }
 
@@ -48,9 +48,9 @@ vi.mock("undici", async () => {
   };
 });
 
-vi.mock("openclaw/plugin-sdk/memory-core-host-engine-qmd", async (importOriginal) => {
+vi.mock("grokbot/plugin-sdk/memory-core-host-engine-qmd", async (importOriginal) => {
   const actual =
-    await importOriginal<typeof import("openclaw/plugin-sdk/memory-core-host-engine-qmd")>();
+    await importOriginal<typeof import("grokbot/plugin-sdk/memory-core-host-engine-qmd")>();
   const basename = (filePath: string) => filePath.split(/[\\/]/).pop() ?? filePath;
   return {
     ...actual,
@@ -106,7 +106,7 @@ function createDbMock(): DatabaseSync {
 class SessionSyncYieldHarness extends MemoryManagerSyncOps {
   protected readonly cfg = {} as OpenClawConfig;
   protected readonly agentId = "main";
-  protected readonly workspaceDir = "/tmp/openclaw-test-workspace";
+  protected readonly workspaceDir = "/tmp/grokbot-test-workspace";
   protected readonly settings = {
     sync: {
       sessions: {

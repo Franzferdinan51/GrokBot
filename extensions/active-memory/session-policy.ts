@@ -1,13 +1,13 @@
 import crypto from "node:crypto";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { resolveRememberAcrossConversations } from "openclaw/plugin-sdk/memory-core-host-runtime-core";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { resolveRememberAcrossConversations } from "grokbot/plugin-sdk/memory-core-host-runtime-core";
 import {
   normalizePluginsConfig,
   resolvePluginConfigObject,
-} from "openclaw/plugin-sdk/plugin-config-runtime";
-import type { OpenClawPluginApi } from "openclaw/plugin-sdk/plugin-entry";
-import { parseAgentSessionKey, parseThreadSessionSuffix } from "openclaw/plugin-sdk/routing";
-import { asOptionalRecord as asRecord } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/plugin-config-runtime";
+import type { OpenClawPluginApi } from "grokbot/plugin-sdk/plugin-entry";
+import { parseAgentSessionKey, parseThreadSessionSuffix } from "grokbot/plugin-sdk/routing";
+import { asOptionalRecord as asRecord } from "grokbot/plugin-sdk/string-coerce-runtime";
 import { resolveCanonicalSessionKeyFromSessionId } from "./session.js";
 import {
   DEFAULT_AGENT_ID,

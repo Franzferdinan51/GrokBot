@@ -1,22 +1,22 @@
-import { jsonResult } from "openclaw/plugin-sdk/channel-actions";
+import { jsonResult } from "grokbot/plugin-sdk/channel-actions";
 // Ollama node inference exposes local models to agents through paired node hosts.
-import { expectDefined } from "openclaw/plugin-sdk/expect-runtime";
+import { expectDefined } from "grokbot/plugin-sdk/expect-runtime";
 import {
   readFiniteNumberParam,
   readPositiveIntegerParam,
   readStringParam,
-} from "openclaw/plugin-sdk/param-readers";
+} from "grokbot/plugin-sdk/param-readers";
 import type {
   AnyAgentTool,
   OpenClawPluginApi,
   OpenClawPluginNodeHostCommand,
   OpenClawPluginNodeInvokePolicy,
-} from "openclaw/plugin-sdk/plugin-entry";
+} from "grokbot/plugin-sdk/plugin-entry";
 import {
   readProviderJsonResponse,
   readResponseTextLimited,
-} from "openclaw/plugin-sdk/provider-http";
-import { fetchWithSsrFGuard } from "openclaw/plugin-sdk/ssrf-runtime";
+} from "grokbot/plugin-sdk/provider-http";
+import { fetchWithSsrFGuard } from "grokbot/plugin-sdk/ssrf-runtime";
 import { Type } from "typebox";
 import { OLLAMA_DEFAULT_BASE_URL } from "./defaults.js";
 import {
@@ -490,7 +490,7 @@ export function createOllamaNodeInferenceTool(api: OpenClawPluginApi): AnyAgentT
         return jsonResult({
           nodes,
           ...(modelNodes.length === 0 && {
-            hint: "No connected node advertises Ollama inference. Start Ollama and `openclaw node run` on the target machine, then approve any request shown by `openclaw nodes pending`.",
+            hint: "No connected node advertises Ollama inference. Start Ollama and `grokbot node run` on the target machine, then approve any request shown by `grokbot nodes pending`.",
           }),
         });
       }

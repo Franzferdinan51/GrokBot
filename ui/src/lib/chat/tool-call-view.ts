@@ -3,10 +3,10 @@
  *
  * Classifies a tool call into a small set of presentation kinds (command,
  * read, edit, write, search, fetch, generic) across the arg spellings used by
- * the OpenClaw session tools and foreign harnesses (Claude/Codex style).
+ * the GrokBot session tools and foreign harnesses (Claude/Codex style).
  */
 
-import { asNullableRecord as asRecord } from "@openclaw/normalization-core/record-coerce";
+import { asNullableRecord as asRecord } from "@grokbot/normalization-core/record-coerce";
 import {
   buildWriteDiffLines,
   computeLineDiff,

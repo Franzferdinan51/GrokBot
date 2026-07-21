@@ -1,4 +1,4 @@
-// Write Plugin Sdk Entry Dts script supports OpenClaw repository automation.
+// Write Plugin Sdk Entry Dts script supports GrokBot repository automation.
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -13,13 +13,13 @@ const USE_CANONICAL_DECLARATIONS = process.env.OPENCLAW_PLUGIN_SDK_CANONICAL_DTS
 
 function isBareImportSpecifier(id: string): boolean {
   if (
-    id === "@openclaw/llm-core" ||
-    id.startsWith("@openclaw/llm-core/") ||
-    id === "@openclaw/model-catalog-core/model-catalog-types" ||
-    id === "@openclaw/retry" ||
-    id.startsWith("@openclaw/normalization-core/") ||
-    id.startsWith("@openclaw/media-core/") ||
-    id.startsWith("@openclaw/acp-core/")
+    id === "@grokbot/llm-core" ||
+    id.startsWith("@grokbot/llm-core/") ||
+    id === "@grokbot/model-catalog-core/model-catalog-types" ||
+    id === "@grokbot/retry" ||
+    id.startsWith("@grokbot/normalization-core/") ||
+    id.startsWith("@grokbot/media-core/") ||
+    id.startsWith("@grokbot/acp-core/")
   ) {
     return false;
   }
@@ -65,7 +65,7 @@ if (USE_CANONICAL_DECLARATIONS) {
     }
   }
 } else {
-  const flatDeclarationTempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-plugin-sdk-dts-"));
+  const flatDeclarationTempDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-plugin-sdk-dts-"));
   try {
     await build({
       clean: true,

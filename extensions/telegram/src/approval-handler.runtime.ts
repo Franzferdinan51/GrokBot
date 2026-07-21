@@ -2,21 +2,21 @@
 import type {
   ChannelApprovalCapabilityHandlerContext,
   PendingApprovalView,
-} from "openclaw/plugin-sdk/approval-handler-runtime";
-import { createChannelApprovalNativeRuntimeAdapter } from "openclaw/plugin-sdk/approval-handler-runtime";
-import { buildChannelApprovalNativeTargetKey } from "openclaw/plugin-sdk/approval-native-runtime";
-import { buildPluginApprovalPendingReplyPayload } from "openclaw/plugin-sdk/approval-reply-runtime";
+} from "grokbot/plugin-sdk/approval-handler-runtime";
+import { createChannelApprovalNativeRuntimeAdapter } from "grokbot/plugin-sdk/approval-handler-runtime";
+import { buildChannelApprovalNativeTargetKey } from "grokbot/plugin-sdk/approval-native-runtime";
+import { buildPluginApprovalPendingReplyPayload } from "grokbot/plugin-sdk/approval-reply-runtime";
 import {
   buildApprovalPresentationFromActionDescriptors,
   buildExecApprovalPendingReplyPayload,
-} from "openclaw/plugin-sdk/approval-reply-runtime";
-import type { ExecApprovalPendingReplyParams } from "openclaw/plugin-sdk/approval-reply-runtime";
+} from "grokbot/plugin-sdk/approval-reply-runtime";
+import type { ExecApprovalPendingReplyParams } from "grokbot/plugin-sdk/approval-reply-runtime";
 import type {
   ExecApprovalRequest,
   PluginApprovalRequest,
-} from "openclaw/plugin-sdk/approval-runtime";
-import { createSubsystemLogger } from "openclaw/plugin-sdk/runtime-env";
-import { normalizeOptionalString } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/approval-runtime";
+import { createSubsystemLogger } from "grokbot/plugin-sdk/runtime-env";
+import { normalizeOptionalString } from "grokbot/plugin-sdk/string-coerce-runtime";
 import {
   buildTelegramNativeExpiredApprovalText,
   buildTelegramNativeResolvedApprovalText,

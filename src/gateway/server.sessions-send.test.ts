@@ -10,7 +10,7 @@ import {
   loadSessionEntry,
   persistSessionTranscriptTurn,
 } from "../config/sessions/session-accessor.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { emitAgentEvent } from "../infra/agent-events.js";
 import { createOutboundTestPlugin, createTestRegistry } from "../test-utils/channel-plugins.js";
 import { captureEnv } from "../test-utils/env.js";
@@ -24,7 +24,7 @@ import {
   writeSessionStore,
 } from "./test-helpers.js";
 
-const { createOpenClawTools } = await import("../agents/openclaw-tools.js");
+const { createOpenClawTools } = await import("../agents/grokbot-tools.js");
 
 installGatewayTestHooks({ scope: "suite" });
 
@@ -124,7 +124,7 @@ beforeAll(async () => {
   const pending = await requestDevicePairing({
     deviceId: identity.deviceId,
     publicKey: publicKeyRawBase64UrlFromPem(identity.publicKeyPem),
-    clientId: "openclaw-cli",
+    clientId: "grokbot-cli",
     clientMode: "cli",
     role: "operator",
     scopes: ["operator.admin", "operator.read", "operator.write", "operator.approvals"],
@@ -191,7 +191,7 @@ describe("sessions_send gateway loopback", () => {
     "announces through gateway send using external deliveryContext over stale webchat session fields",
     { timeout: SESSION_SEND_E2E_TIMEOUT_MS },
     async () => {
-      const dir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-sessions-send-route-"));
+      const dir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-sessions-send-route-"));
       const sendCalls: Array<{
         to?: string;
         text?: string;
@@ -299,7 +299,7 @@ describe("sessions_send gateway loopback", () => {
     "does not re-announce a trailing message-tool delivery mirror after a waited A2A run",
     { timeout: SESSION_SEND_E2E_TIMEOUT_MS },
     async () => {
-      const dir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-sessions-send-mirror-"));
+      const dir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-sessions-send-mirror-"));
       const sessionKey = "agent:main:whatsapp:direct:peer-1";
       const sessionId = "sess-whatsapp-mirror";
       const runId = `run-message-tool-mirror-${Date.now()}-${Math.random().toString(36).slice(2)}`;
@@ -405,7 +405,7 @@ describe("sessions_send gateway loopback", () => {
               {
                 message: {
                   role: "assistant",
-                  provider: "openclaw",
+                  provider: "grokbot",
                   model: "delivery-mirror",
                   content: [{ type: "text", text: deliveredReply }],
                   timestamp: 4,
@@ -543,7 +543,7 @@ describe("sessions_send agent targeting", () => {
       if (!configPath) {
         throw new Error("OPENCLAW_CONFIG_PATH missing in gateway test environment");
       }
-      const dir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-sessions-send-agent-"));
+      const dir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-sessions-send-agent-"));
       const config: OpenClawConfig = {
         tools: {
           sessions: {

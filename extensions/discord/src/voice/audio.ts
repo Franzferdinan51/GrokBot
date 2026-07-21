@@ -10,11 +10,11 @@ import {
   type OpusDecoderHandle as LibopusDecoder,
   type OpusEncoderHandle as LibopusEncoder,
 } from "libopus-wasm";
-import { resolveFfmpegBin } from "openclaw/plugin-sdk/media-runtime";
-import { resamplePcm } from "openclaw/plugin-sdk/realtime-voice";
-import { logVerbose, shouldLogVerbose } from "openclaw/plugin-sdk/runtime-env";
-import { formatErrorMessage } from "openclaw/plugin-sdk/ssrf-runtime";
-import { tempWorkspace, resolvePreferredOpenClawTmpDir } from "openclaw/plugin-sdk/temp-path";
+import { resolveFfmpegBin } from "grokbot/plugin-sdk/media-runtime";
+import { resamplePcm } from "grokbot/plugin-sdk/realtime-voice";
+import { logVerbose, shouldLogVerbose } from "grokbot/plugin-sdk/runtime-env";
+import { formatErrorMessage } from "grokbot/plugin-sdk/ssrf-runtime";
+import { tempWorkspace, resolvePreferredOpenClawTmpDir } from "grokbot/plugin-sdk/temp-path";
 
 const SAMPLE_RATE = 48_000;
 const CHANNELS = 2;

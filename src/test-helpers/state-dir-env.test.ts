@@ -10,17 +10,17 @@ import {
 } from "./state-dir-env.js";
 
 type EnvSnapshot = {
-  openclaw?: string;
+  grokbot?: string;
 };
 
 function snapshotCurrentStateDirVars(): EnvSnapshot {
   return {
-    openclaw: process.env.OPENCLAW_STATE_DIR,
+    grokbot: process.env.OPENCLAW_STATE_DIR,
   };
 }
 
 function expectStateDirVars(snapshot: EnvSnapshot) {
-  expect(process.env.OPENCLAW_STATE_DIR).toBe(snapshot.openclaw);
+  expect(process.env.OPENCLAW_STATE_DIR).toBe(snapshot.grokbot);
 }
 
 async function expectPathMissing(filePath: string) {
@@ -47,8 +47,8 @@ describe("state-dir-env helpers", () => {
     const prev = snapshotCurrentStateDirVars();
     const snapshot = snapshotStateDirEnv();
 
-    setStateDirEnv("/tmp/openclaw-state-dir-test");
-    expect(process.env.OPENCLAW_STATE_DIR).toBe("/tmp/openclaw-state-dir-test");
+    setStateDirEnv("/tmp/grokbot-state-dir-test");
+    expect(process.env.OPENCLAW_STATE_DIR).toBe("/tmp/grokbot-state-dir-test");
 
     restoreStateDirEnv(snapshot);
     expectStateDirVars(prev);
@@ -59,7 +59,7 @@ describe("state-dir-env helpers", () => {
 
     let capturedTempRoot = "";
     let capturedStateDir = "";
-    await withStateDirEnv("openclaw-state-dir-env-", async ({ tempRoot, stateDir }) => {
+    await withStateDirEnv("grokbot-state-dir-env-", async ({ tempRoot, stateDir }) => {
       capturedTempRoot = tempRoot;
       capturedStateDir = stateDir;
       expect(process.env.OPENCLAW_STATE_DIR).toBe(stateDir);
@@ -75,7 +75,7 @@ describe("state-dir-env helpers", () => {
     let capturedTempRoot = "";
     let capturedStateDir = "";
     await expect(
-      withStateDirEnv("openclaw-state-dir-env-", async ({ tempRoot, stateDir }) => {
+      withStateDirEnv("grokbot-state-dir-env-", async ({ tempRoot, stateDir }) => {
         capturedTempRoot = tempRoot;
         capturedStateDir = stateDir;
         throw new Error("boom");

@@ -83,7 +83,7 @@ function pruneVendoredPackageManifest(contents: Buffer): Buffer {
 }
 
 function normalizePortableMode(mode: number, relativePath: string): number {
-  return relativePath === "openclaw.mjs" || (mode & 0o111) !== 0 ? 0o700 : 0o600;
+  return relativePath === "grokbot.mjs" || (mode & 0o111) !== 0 ? 0o700 : 0o600;
 }
 
 type StagedFileSource = {
@@ -161,11 +161,11 @@ async function stageManifestEntry(
   });
 }
 
-// tsdown keeps some @openclaw workspace packages external of dist (never-bundle list),
+// tsdown keeps some @grokbot workspace packages external of dist (never-bundle list),
 // so shipped dist imports them at runtime; scan staged bytes for those specifiers to
 // know which workspace builds must ride along in the bundle.
 const OPENCLAW_IMPORT_SPECIFIER_PATTERN =
-  /["'`](@openclaw\/[a-z0-9-]+)(?:\/[A-Za-z0-9./_-]+)?["'`]/gu;
+  /["'`](@grokbot\/[a-z0-9-]+)(?:\/[A-Za-z0-9./_-]+)?["'`]/gu;
 
 function collectOpenclawImportSpecifiers(
   relativePath: string,
@@ -275,12 +275,12 @@ export async function collectWorkerBundleManifest(
   const distFiles = await collectPackageDistInventory(sourceRoot);
   if (distFiles.length === 0) {
     throw new Error(
-      `OpenClaw worker bundle has no packaged dist files; build the running package at ${sourceRoot}`,
+      `GrokBot worker bundle has no packaged dist files; build the running package at ${sourceRoot}`,
     );
   }
   const referencedPackages = new Set<string>();
   const entries: WorkerBundleManifestEntry[] = [];
-  for (const relativePath of ["openclaw.mjs", ...distFiles].toSorted(comparePaths)) {
+  for (const relativePath of ["grokbot.mjs", ...distFiles].toSorted(comparePaths)) {
     const { entry, contents } = await stageManifestEntry(
       sourceRoot,
       sourceRootRealPath,

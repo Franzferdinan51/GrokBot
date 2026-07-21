@@ -1,4 +1,4 @@
-import type { OpenClawPluginNodeInvokePolicyContext } from "openclaw/plugin-sdk/plugin-entry";
+import type { OpenClawPluginNodeInvokePolicyContext } from "grokbot/plugin-sdk/plugin-entry";
 import { describe, expect, it, vi } from "vitest";
 import { resolveZoomMeetingsConfig } from "./config.js";
 import { createZoomMeetingsNodeInvokePolicy } from "./node-invoke-policy.js";

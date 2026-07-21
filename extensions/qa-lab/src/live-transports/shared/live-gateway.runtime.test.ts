@@ -1,5 +1,5 @@
 // Qa Lab tests cover live gateway plugin behavior.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const { startQaGatewayChild, startQaProviderServer } = vi.hoisted(() => ({
@@ -33,15 +33,15 @@ function createStubTransport(baseUrl = "http://127.0.0.1:43123") {
         "qa-channel": {
           enabled: true,
           baseUrl,
-          botUserId: "openclaw",
-          botDisplayName: "OpenClaw QA",
+          botUserId: "grokbot",
+          botDisplayName: "GrokBot QA",
           allowFrom: ["*"],
           pollTimeoutMs: 250,
         },
       },
       messages: {
         groupChat: {
-          mentionPatterns: ["\\b@?openclaw\\b"],
+          mentionPatterns: ["\\b@?grokbot\\b"],
         },
       },
     }),
@@ -85,7 +85,7 @@ describe("startQaLiveLaneGateway", () => {
 
   it("threads the mock provider base url into the gateway child", async () => {
     const harness = await startQaLiveLaneGateway({
-      repoRoot: "/tmp/openclaw-repo",
+      repoRoot: "/tmp/grokbot-repo",
       transport: createStubTransport(),
       transportBaseUrl: "http://127.0.0.1:43123",
       providerMode: "mock-openai",
@@ -109,7 +109,7 @@ describe("startQaLiveLaneGateway", () => {
 
   it("forwards a scenario-selected agent runtime to the gateway child", async () => {
     await startQaLiveLaneGateway({
-      repoRoot: "/tmp/openclaw-repo",
+      repoRoot: "/tmp/grokbot-repo",
       transport: createStubTransport(),
       transportBaseUrl: "http://127.0.0.1:43123",
       providerMode: "live-frontier",
@@ -123,7 +123,7 @@ describe("startQaLiveLaneGateway", () => {
 
   it("disables memory search for transport-only live lanes", async () => {
     await startQaLiveLaneGateway({
-      repoRoot: "/tmp/openclaw-repo",
+      repoRoot: "/tmp/grokbot-repo",
       transport: createStubTransport(),
       transportBaseUrl: "http://127.0.0.1:43123",
       providerMode: "mock-openai",
@@ -175,7 +175,7 @@ describe("startQaLiveLaneGateway", () => {
 
   it("forwards gateway stop options to the child harness", async () => {
     const harness = await startQaLiveLaneGateway({
-      repoRoot: "/tmp/openclaw-repo",
+      repoRoot: "/tmp/grokbot-repo",
       transport: createStubTransport(),
       transportBaseUrl: "http://127.0.0.1:43123",
       providerMode: "mock-openai",
@@ -191,7 +191,7 @@ describe("startQaLiveLaneGateway", () => {
 
   it("skips mock bootstrap for live frontier runs", async () => {
     const harness = await startQaLiveLaneGateway({
-      repoRoot: "/tmp/openclaw-repo",
+      repoRoot: "/tmp/grokbot-repo",
       transport: createStubTransport(),
       transportBaseUrl: "http://127.0.0.1:43123",
       providerMode: "live-frontier",
@@ -217,7 +217,7 @@ describe("startQaLiveLaneGateway", () => {
 
     await expect(
       startQaLiveLaneGateway({
-        repoRoot: "/tmp/openclaw-repo",
+        repoRoot: "/tmp/grokbot-repo",
         transport: createStubTransport(),
         transportBaseUrl: "http://127.0.0.1:43123",
         providerMode: "mock-openai",
@@ -236,7 +236,7 @@ describe("startQaLiveLaneGateway", () => {
 
     await expect(
       startQaLiveLaneGateway({
-        repoRoot: "/tmp/openclaw-repo",
+        repoRoot: "/tmp/grokbot-repo",
         transport: createStubTransport(),
         transportBaseUrl: "http://127.0.0.1:43123",
         providerMode: "mock-openai",
@@ -254,7 +254,7 @@ describe("startQaLiveLaneGateway", () => {
   it("still stops the mock server when gateway shutdown fails", async () => {
     gatewayStop.mockRejectedValueOnce(new Error("gateway down"));
     const harness = await startQaLiveLaneGateway({
-      repoRoot: "/tmp/openclaw-repo",
+      repoRoot: "/tmp/grokbot-repo",
       transport: createStubTransport(),
       transportBaseUrl: "http://127.0.0.1:43123",
       providerMode: "mock-openai",
@@ -274,7 +274,7 @@ describe("startQaLiveLaneGateway", () => {
     gatewayStop.mockRejectedValueOnce(new Error("gateway down"));
     mockStop.mockRejectedValueOnce(new Error("mock down"));
     const harness = await startQaLiveLaneGateway({
-      repoRoot: "/tmp/openclaw-repo",
+      repoRoot: "/tmp/grokbot-repo",
       transport: createStubTransport(),
       transportBaseUrl: "http://127.0.0.1:43123",
       providerMode: "mock-openai",
@@ -291,7 +291,7 @@ describe("startQaLiveLaneGateway", () => {
   it("retries only mock cleanup after gateway preservation succeeds", async () => {
     mockStop.mockRejectedValueOnce(new Error("mock down"));
     const harness = await startQaLiveLaneGateway({
-      repoRoot: "/tmp/openclaw-repo",
+      repoRoot: "/tmp/grokbot-repo",
       transport: createStubTransport(),
       transportBaseUrl: "http://127.0.0.1:43123",
       providerMode: "mock-openai",
@@ -312,7 +312,7 @@ describe("startQaLiveLaneGateway", () => {
   it("retries only gateway cleanup after mock shutdown succeeds", async () => {
     gatewayStop.mockRejectedValueOnce(new Error("gateway down"));
     const harness = await startQaLiveLaneGateway({
-      repoRoot: "/tmp/openclaw-repo",
+      repoRoot: "/tmp/grokbot-repo",
       transport: createStubTransport(),
       transportBaseUrl: "http://127.0.0.1:43123",
       providerMode: "mock-openai",

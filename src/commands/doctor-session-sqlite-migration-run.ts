@@ -2,7 +2,7 @@
 import { randomUUID } from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
-import { truncateUtf16Safe } from "@openclaw/normalization-core/utf16-slice";
+import { truncateUtf16Safe } from "@grokbot/normalization-core/utf16-slice";
 import { z } from "zod";
 import { resolveStateDir } from "../config/paths.js";
 import * as replaceFile from "../infra/replace-file.js";
@@ -394,7 +394,7 @@ export function writeSessionSqliteMigrationFailureReports(
     generatedAt: new Date().toISOString(),
     manifestPath: sanitizeFailureReportText(shortenFailureReportPath(manifestPath)),
     reason: params.reason,
-    recoveryCommand: "openclaw doctor --session-sqlite recover --github-issue",
+    recoveryCommand: "grokbot doctor --session-sqlite recover --github-issue",
     restoreStatus: manifest?.restore?.status ?? "not_attempted",
     runId: manifest?.runId ?? path.basename(manifestPath, ".json"),
     targets:
@@ -439,7 +439,7 @@ export function createSessionSqliteMigrationFailureIssue(
     generatedAt: new Date().toISOString(),
     manifestPath: sanitizeFailureReportText(shortenFailureReportPath(manifestPath)),
     reason: "session SQLite migration failed",
-    recoveryCommand: "openclaw doctor --session-sqlite recover --github-issue",
+    recoveryCommand: "grokbot doctor --session-sqlite recover --github-issue",
     restoreStatus: manifest.restore?.status ?? "not_attempted",
     runId: manifest.runId,
     targets: targets.map((target) => ({
@@ -457,7 +457,7 @@ export function createSessionSqliteMigrationFailureIssue(
     version: VERSION,
   });
   const body = [
-    "OpenClaw doctor generated this sanitized report from a local session SQLite migration recovery.",
+    "GrokBot doctor generated this sanitized report from a local session SQLite migration recovery.",
     "",
     reportBody,
   ].join("\n");
@@ -868,7 +868,7 @@ function createPrefilledGithubIssueUrl(title: string, body: string): string {
     body: urlBody,
     title,
   });
-  return `https://github.com/openclaw/openclaw/issues/new?${params.toString()}`;
+  return `https://github.com/grokbot/grokbot/issues/new?${params.toString()}`;
 }
 
 function pruneCompletedSessionSqliteMigrationRuns(env: NodeJS.ProcessEnv): void {
@@ -916,7 +916,7 @@ function renderFailureMarkdown(payload: {
     "",
     `- Run: ${payload.runId}`,
     `- Generated: ${payload.generatedAt}`,
-    `- OpenClaw version: ${payload.version}`,
+    `- GrokBot version: ${payload.version}`,
     `- Reason: ${sanitizeFailureReportText(payload.reason)}`,
     `- Restore status: ${payload.restoreStatus}`,
     `- Recovery command: \`${payload.recoveryCommand}\``,

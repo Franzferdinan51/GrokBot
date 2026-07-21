@@ -1,9 +1,9 @@
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import type {
   OpenClawPluginCommandDefinition,
   PluginCommandContext,
-} from "openclaw/plugin-sdk/plugin-entry";
-import { createTestPluginApi } from "openclaw/plugin-sdk/plugin-test-api";
+} from "grokbot/plugin-sdk/plugin-entry";
+import { createTestPluginApi } from "grokbot/plugin-sdk/plugin-test-api";
 import { describe, expect, it, vi } from "vitest";
 
 const resolveTelegramMiniAppUrls = vi.hoisted(() => vi.fn());
@@ -70,7 +70,7 @@ describe("registerTelegramMiniAppCommand", () => {
   it("returns a web app button for owner DM invocations", async () => {
     resolveTelegramMiniAppUrls.mockResolvedValue({
       pageUrl: "https://host.tailnet.ts.net/__openclaw_tg_miniapp/",
-      controlUiUrl: "https://host.tailnet.ts.net/openclaw",
+      controlUiUrl: "https://host.tailnet.ts.net/grokbot",
       gatewayUrl: "wss://host.tailnet.ts.net",
     });
     const command = registerDashboardCommand(
@@ -96,7 +96,7 @@ describe("registerTelegramMiniAppCommand", () => {
       }),
     );
 
-    expect(result.text).toBe("Open OpenClaw dashboard.");
+    expect(result.text).toBe("Open GrokBot dashboard.");
     expect(result.presentation?.blocks).toEqual([
       {
         type: "buttons",

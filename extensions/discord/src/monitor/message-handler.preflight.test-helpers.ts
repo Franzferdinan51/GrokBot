@@ -1,5 +1,5 @@
 // Discord helper module supports message handler.preflight helpers behavior.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import { ChannelType } from "../internal/discord.js";
 import type { preflightDiscordMessage } from "./message-handler.preflight.js";
 import { createNoopThreadBindingManager } from "./thread-bindings.js";
@@ -96,8 +96,8 @@ export function createDiscordPreflightArgs(params: {
     discordConfig: params.discordConfig,
     accountId: "default",
     token: "token",
-    runtime: {} as import("openclaw/plugin-sdk/runtime-env").RuntimeEnv,
-    botUserId: params.botUserId ?? "openclaw-bot",
+    runtime: {} as import("grokbot/plugin-sdk/runtime-env").RuntimeEnv,
+    botUserId: params.botUserId ?? "grokbot-bot",
     guildHistories: new Map(),
     historyLimit: 0,
     mediaMaxBytes: 1_000_000,

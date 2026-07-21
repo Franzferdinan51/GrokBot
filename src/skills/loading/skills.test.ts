@@ -6,7 +6,7 @@ import {
   clearRuntimeConfigSnapshot,
   setRuntimeConfigSnapshot,
 } from "../../config/runtime-snapshot.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import { clearPluginMetadataLifecycleCaches } from "../../plugins/plugin-metadata-lifecycle.js";
 import { setActiveDegradedSecretOwners } from "../../secrets/runtime-degraded-state.js";
 import { captureEnv, withPathResolutionEnv } from "../../test-utils/env.js";
@@ -32,7 +32,7 @@ vi.mock("./plugin-skills.js", () => ({
   resolvePluginSkillDirs: () => [],
 }));
 
-const fixtureSuite = createFixtureSuite("openclaw-skills-suite-");
+const fixtureSuite = createFixtureSuite("grokbot-skills-suite-");
 let tempHome: TempHomeEnv | null = null;
 let skillsHomeEnv: SkillsHomeEnvSnapshot | null = null;
 const pluginEnvSnapshot = captureEnv(["OPENCLAW_DISABLE_BUNDLED_PLUGINS"]);
@@ -153,9 +153,9 @@ function resolvedSkillApiKeyConfig(skillName: string, apiKey: string): OpenClawC
 beforeAll(async () => {
   await fixtureSuite.setup();
   process.env.OPENCLAW_DISABLE_BUNDLED_PLUGINS = "1";
-  tempHome = await createTempHomeEnv("openclaw-skills-home-");
+  tempHome = await createTempHomeEnv("grokbot-skills-home-");
   skillsHomeEnv = setMockSkillsHomeEnv(tempHome.home);
-  await fs.mkdir(path.join(tempHome.home, ".openclaw", "agents", "main", "sessions"), {
+  await fs.mkdir(path.join(tempHome.home, ".grokbot", "agents", "main", "sessions"), {
     recursive: true,
   });
 });
@@ -281,7 +281,7 @@ describe("buildWorkspaceSkillCommandSpecs", () => {
     expect(commands.map((entry) => entry.skillName)).toEqual(["alpha-skill"]);
   });
 
-  it("includes enabled Claude bundle markdown commands as native OpenClaw slash commands", async () => {
+  it("includes enabled Claude bundle markdown commands as native GrokBot slash commands", async () => {
     const workspaceDir = await makeWorkspace();
     const config = {
       plugins: {
@@ -298,7 +298,7 @@ describe("buildWorkspaceSkillCommandSpecs", () => {
       config,
     });
 
-    const pluginRoot = path.join(workspaceDir, ".openclaw", "extensions", "compound-bundle");
+    const pluginRoot = path.join(workspaceDir, ".grokbot", "extensions", "compound-bundle");
     await fs.mkdir(path.join(pluginRoot, ".claude-plugin"), { recursive: true });
     await fs.mkdir(path.join(pluginRoot, "commands"), { recursive: true });
     await fs.writeFile(

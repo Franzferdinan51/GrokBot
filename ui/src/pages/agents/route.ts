@@ -1,5 +1,5 @@
-import type { RouteLocation } from "@openclaw/uirouter";
-import { definePage } from "@openclaw/uirouter";
+import type { RouteLocation } from "@grokbot/uirouter";
+import { definePage } from "@grokbot/uirouter";
 import { html } from "lit";
 import type { ApplicationContext } from "../../app/context.ts";
 import type { AgentsRouteData } from "./agents-page.ts";
@@ -34,6 +34,6 @@ export const page = definePage({
     import("./agents-page.ts").then(() => ({
       header: true,
       render: (data: AgentsRouteData | undefined) =>
-        html`<openclaw-agents-page .routeData=${data}></openclaw-agents-page>`,
+        html`<grokbot-agents-page .routeData=${data}></grokbot-agents-page>`,
     })),
 });

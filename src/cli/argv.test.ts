@@ -23,53 +23,53 @@ describe("argv helpers", () => {
   it.each([
     {
       name: "known command group help command help flag",
-      argv: ["node", "openclaw", "backup", "help", "--help"],
-      expected: ["node", "openclaw", "backup", "help"],
+      argv: ["node", "grokbot", "backup", "help", "--help"],
+      expected: ["node", "grokbot", "backup", "help"],
     },
     {
       name: "known command group help command short help flag",
-      argv: ["node", "openclaw", "--profile", "work", "backup", "help", "-h"],
-      expected: ["node", "openclaw", "--profile", "work", "backup", "help"],
+      argv: ["node", "grokbot", "--profile", "work", "backup", "help", "-h"],
+      expected: ["node", "grokbot", "--profile", "work", "backup", "help"],
     },
     {
       name: "leaf positional help remains untouched",
-      argv: ["node", "openclaw", "docs", "help", "--help"],
-      expected: ["node", "openclaw", "docs", "help", "--help"],
+      argv: ["node", "grokbot", "docs", "help", "--help"],
+      expected: ["node", "grokbot", "docs", "help", "--help"],
     },
     {
       name: "known command group help target",
-      argv: ["node", "openclaw", "plugins", "help", "list"],
-      expected: ["node", "openclaw", "plugins", "list", "--help"],
+      argv: ["node", "grokbot", "plugins", "help", "list"],
+      expected: ["node", "grokbot", "plugins", "list", "--help"],
     },
     {
       name: "known command group help target help flag",
-      argv: ["node", "openclaw", "plugins", "help", "list", "--help"],
-      expected: ["node", "openclaw", "plugins", "list", "--help"],
+      argv: ["node", "grokbot", "plugins", "help", "list", "--help"],
+      expected: ["node", "grokbot", "plugins", "list", "--help"],
     },
     {
       name: "unknown plugin command group help target",
-      argv: ["node", "openclaw", "external-plugin", "help", "inspect"],
-      expected: ["node", "openclaw", "external-plugin", "inspect", "--help"],
+      argv: ["node", "grokbot", "external-plugin", "help", "inspect"],
+      expected: ["node", "grokbot", "external-plugin", "inspect", "--help"],
     },
     {
       name: "unknown plugin command group help target help flag",
-      argv: ["node", "openclaw", "external-plugin", "help", "inspect", "--help"],
-      expected: ["node", "openclaw", "external-plugin", "inspect", "--help"],
+      argv: ["node", "grokbot", "external-plugin", "help", "inspect", "--help"],
+      expected: ["node", "grokbot", "external-plugin", "inspect", "--help"],
     },
     {
       name: "generated help target with trailing root option",
-      argv: ["node", "openclaw", "memory", "help", "status", "--no-color"],
-      expected: ["node", "openclaw", "--no-color", "memory", "status", "--help"],
+      argv: ["node", "grokbot", "memory", "help", "status", "--no-color"],
+      expected: ["node", "grokbot", "--no-color", "memory", "status", "--help"],
     },
     {
       name: "extra help positionals remain untouched",
-      argv: ["node", "openclaw", "backup", "help", "missing", "extra", "--help"],
-      expected: ["node", "openclaw", "backup", "help", "missing", "extra", "--help"],
+      argv: ["node", "grokbot", "backup", "help", "missing", "extra", "--help"],
+      expected: ["node", "grokbot", "backup", "help", "missing", "extra", "--help"],
     },
     {
       name: "terminator help flag remains untouched",
-      argv: ["node", "openclaw", "backup", "help", "--", "--help"],
-      expected: ["node", "openclaw", "backup", "help", "--", "--help"],
+      argv: ["node", "grokbot", "backup", "help", "--", "--help"],
+      expected: ["node", "grokbot", "backup", "help", "--", "--help"],
     },
   ])("normalizes generated help commands: $name", ({ argv, expected }) => {
     expect(normalizeGeneratedHelpCommandArgv(argv)).toEqual(expected);
@@ -78,43 +78,43 @@ describe("argv helpers", () => {
   it.each([
     {
       name: "root help target",
-      argv: ["node", "openclaw", "help", "plugins"],
-      expected: ["node", "openclaw", "plugins", "--help"],
+      argv: ["node", "grokbot", "help", "plugins"],
+      expected: ["node", "grokbot", "plugins", "--help"],
     },
     {
       name: "root help target with help flag",
-      argv: ["node", "openclaw", "help", "plugins", "--help"],
-      expected: ["node", "openclaw", "plugins", "--help"],
+      argv: ["node", "grokbot", "help", "plugins", "--help"],
+      expected: ["node", "grokbot", "plugins", "--help"],
     },
     {
       name: "root option before help target",
-      argv: ["node", "openclaw", "--profile", "work", "help", "memory"],
-      expected: ["node", "openclaw", "--profile", "work", "memory", "--help"],
+      argv: ["node", "grokbot", "--profile", "work", "help", "memory"],
+      expected: ["node", "grokbot", "--profile", "work", "memory", "--help"],
     },
     {
       name: "bare root help remains untouched",
-      argv: ["node", "openclaw", "help"],
-      expected: ["node", "openclaw", "help"],
+      argv: ["node", "grokbot", "help"],
+      expected: ["node", "grokbot", "help"],
     },
     {
       name: "root help self-help remains untouched",
-      argv: ["node", "openclaw", "help", "--help"],
-      expected: ["node", "openclaw", "help", "--help"],
+      argv: ["node", "grokbot", "help", "--help"],
+      expected: ["node", "grokbot", "help", "--help"],
     },
     {
       name: "nested root help target",
-      argv: ["node", "openclaw", "help", "plugins", "list"],
-      expected: ["node", "openclaw", "plugins", "list", "--help"],
+      argv: ["node", "grokbot", "help", "plugins", "list"],
+      expected: ["node", "grokbot", "plugins", "list", "--help"],
     },
     {
       name: "nested root help target with help flag",
-      argv: ["node", "openclaw", "help", "plugins", "list", "--help"],
-      expected: ["node", "openclaw", "plugins", "list", "--help"],
+      argv: ["node", "grokbot", "help", "plugins", "list", "--help"],
+      expected: ["node", "grokbot", "plugins", "list", "--help"],
     },
     {
       name: "nested root help target with trailing root option",
-      argv: ["node", "openclaw", "help", "memory", "status", "--no-color"],
-      expected: ["node", "openclaw", "--no-color", "memory", "status", "--help"],
+      argv: ["node", "grokbot", "help", "memory", "status", "--no-color"],
+      expected: ["node", "grokbot", "--no-color", "memory", "status", "--help"],
     },
   ])("normalizes root help targets: $name", ({ argv, expected }) => {
     expect(normalizeRootHelpTargetArgv(argv)).toEqual(expected);
@@ -123,15 +123,15 @@ describe("argv helpers", () => {
   it.each([
     {
       name: "subcommand trailing no-color",
-      argv: ["node", "openclaw", "doctor", "--no-color", "--post-upgrade", "--json"],
-      expected: ["node", "openclaw", "--no-color", "doctor", "--post-upgrade", "--json"],
+      argv: ["node", "grokbot", "doctor", "--no-color", "--post-upgrade", "--json"],
+      expected: ["node", "grokbot", "--no-color", "doctor", "--post-upgrade", "--json"],
     },
     {
       name: "keeps existing root options first",
-      argv: ["node", "openclaw", "--profile", "work", "doctor", "--no-color", "--lint", "--json"],
+      argv: ["node", "grokbot", "--profile", "work", "doctor", "--no-color", "--lint", "--json"],
       expected: [
         "node",
-        "openclaw",
+        "grokbot",
         "--profile",
         "work",
         "--no-color",
@@ -142,87 +142,87 @@ describe("argv helpers", () => {
     },
     {
       name: "keeps no-color after possible command option value",
-      argv: ["node", "openclaw", "doctor", "--lint", "--json", "--no-color"],
-      expected: ["node", "openclaw", "doctor", "--lint", "--json", "--no-color"],
+      argv: ["node", "grokbot", "doctor", "--lint", "--json", "--no-color"],
+      expected: ["node", "grokbot", "doctor", "--lint", "--json", "--no-color"],
     },
     {
       name: "flag terminator leaves no-color positional",
-      argv: ["node", "openclaw", "doctor", "--", "--no-color"],
-      expected: ["node", "openclaw", "doctor", "--", "--no-color"],
+      argv: ["node", "grokbot", "doctor", "--", "--no-color"],
+      expected: ["node", "grokbot", "doctor", "--", "--no-color"],
     },
     {
       name: "command option value remains literal",
-      argv: ["node", "openclaw", "agent", "--message", "--no-color"],
-      expected: ["node", "openclaw", "agent", "--message", "--no-color"],
+      argv: ["node", "grokbot", "agent", "--message", "--no-color"],
+      expected: ["node", "grokbot", "agent", "--message", "--no-color"],
     },
     {
       name: "assigned command option value does not block no-color",
-      argv: ["node", "openclaw", "agent", "--message=hello", "--no-color"],
-      expected: ["node", "openclaw", "--no-color", "agent", "--message=hello"],
+      argv: ["node", "grokbot", "agent", "--message=hello", "--no-color"],
+      expected: ["node", "grokbot", "--no-color", "agent", "--message=hello"],
     },
   ])("normalizes root --no-color before command parsing: $name", ({ argv, expected }) => {
     expect(normalizeRootNoColorArgv(argv)).toEqual(expected);
   });
 
   it("allows final command metadata to lift no-color after boolean command flags", () => {
-    const argv = ["node", "openclaw", "doctor", "--lint", "--json", "--no-color"];
+    const argv = ["node", "grokbot", "doctor", "--lint", "--json", "--no-color"];
 
     expect(
       normalizeRootNoColorArgv(argv, {
         shouldPreserveNoColor: ({ remainingArgs, noColorIndex }) =>
           remainingArgs[noColorIndex - 1] === "--message",
       }),
-    ).toEqual(["node", "openclaw", "--no-color", "doctor", "--lint", "--json"]);
+    ).toEqual(["node", "grokbot", "--no-color", "doctor", "--lint", "--json"]);
   });
 
   it.each([
     {
       name: "subcommand trailing log-level",
-      argv: ["node", "openclaw", "doctor", "--log-level", "debug", "--json"],
-      expected: ["node", "openclaw", "--log-level", "debug", "doctor", "--json"],
+      argv: ["node", "grokbot", "doctor", "--log-level", "debug", "--json"],
+      expected: ["node", "grokbot", "--log-level", "debug", "doctor", "--json"],
     },
     {
       name: "subcommand trailing log-level equals form",
-      argv: ["node", "openclaw", "doctor", "--log-level=trace", "--json"],
-      expected: ["node", "openclaw", "--log-level=trace", "doctor", "--json"],
+      argv: ["node", "grokbot", "doctor", "--log-level=trace", "--json"],
+      expected: ["node", "grokbot", "--log-level=trace", "doctor", "--json"],
     },
     {
       name: "keeps existing root options first",
-      argv: ["node", "openclaw", "--profile", "work", "doctor", "--log-level", "debug"],
-      expected: ["node", "openclaw", "--profile", "work", "--log-level", "debug", "doctor"],
+      argv: ["node", "grokbot", "--profile", "work", "doctor", "--log-level", "debug"],
+      expected: ["node", "grokbot", "--profile", "work", "--log-level", "debug", "doctor"],
     },
     {
       name: "keeps log-level after possible command option value",
-      argv: ["node", "openclaw", "agent", "--message", "--log-level", "debug"],
-      expected: ["node", "openclaw", "agent", "--message", "--log-level", "debug"],
+      argv: ["node", "grokbot", "agent", "--message", "--log-level", "debug"],
+      expected: ["node", "grokbot", "agent", "--message", "--log-level", "debug"],
     },
     {
       name: "flag terminator leaves log-level positional",
-      argv: ["node", "openclaw", "nodes", "run", "--", "--log-level", "debug"],
-      expected: ["node", "openclaw", "nodes", "run", "--", "--log-level", "debug"],
+      argv: ["node", "grokbot", "nodes", "run", "--", "--log-level", "debug"],
+      expected: ["node", "grokbot", "nodes", "run", "--", "--log-level", "debug"],
     },
     {
       name: "missing value remains command scoped",
-      argv: ["node", "openclaw", "doctor", "--log-level", "--json"],
-      expected: ["node", "openclaw", "doctor", "--log-level", "--json"],
+      argv: ["node", "grokbot", "doctor", "--log-level", "--json"],
+      expected: ["node", "grokbot", "doctor", "--log-level", "--json"],
     },
   ])("normalizes root --log-level before command parsing: $name", ({ argv, expected }) => {
     expect(normalizeRootLogLevelArgv(argv)).toEqual(expected);
   });
 
   it("allows final command metadata to lift log-level after boolean command flags", () => {
-    const argv = ["node", "openclaw", "doctor", "--lint", "--json", "--log-level", "debug"];
+    const argv = ["node", "grokbot", "doctor", "--lint", "--json", "--log-level", "debug"];
 
     expect(
       normalizeRootLogLevelArgv(argv, {
         shouldPreserveLogLevel: ({ remainingArgs, logLevelIndex }) =>
           remainingArgs[logLevelIndex - 1] === "--message",
       }),
-    ).toEqual(["node", "openclaw", "--log-level", "debug", "doctor", "--lint", "--json"]);
+    ).toEqual(["node", "grokbot", "--log-level", "debug", "doctor", "--lint", "--json"]);
   });
 
   it("preserves log-level when final command metadata owns the option", () => {
-    const argv = ["node", "openclaw", "plugin-cmd", "--log-level", "debug"];
+    const argv = ["node", "grokbot", "plugin-cmd", "--log-level", "debug"];
 
     expect(
       normalizeRootLogLevelArgv(argv, {
@@ -235,62 +235,62 @@ describe("argv helpers", () => {
   it.each([
     {
       name: "root help command",
-      argv: ["node", "openclaw", "help"],
+      argv: ["node", "grokbot", "help"],
       expected: true,
     },
     {
       name: "root help command with target",
-      argv: ["node", "openclaw", "help", "matrix"],
+      argv: ["node", "grokbot", "help", "matrix"],
       expected: true,
     },
     {
       name: "nested help command",
-      argv: ["node", "openclaw", "matrix", "encryption", "help"],
+      argv: ["node", "grokbot", "matrix", "encryption", "help"],
       expected: true,
     },
     {
       name: "known subcommand root help command",
-      argv: ["node", "openclaw", "config", "help"],
+      argv: ["node", "grokbot", "config", "help"],
       expected: true,
     },
     {
       name: "known leaf command positional help",
-      argv: ["node", "openclaw", "docs", "help"],
+      argv: ["node", "grokbot", "docs", "help"],
       expected: false,
     },
     {
       name: "known subcommand leaf positional help",
-      argv: ["node", "openclaw", "config", "set", "some.path", "help"],
+      argv: ["node", "grokbot", "config", "set", "some.path", "help"],
       expected: false,
     },
     {
       name: "unknown plugin command help",
-      argv: ["node", "openclaw", "external-plugin", "tools", "help"],
+      argv: ["node", "grokbot", "external-plugin", "tools", "help"],
       expected: true,
     },
     {
       name: "help flag",
-      argv: ["node", "openclaw", "matrix", "encryption", "--help"],
+      argv: ["node", "grokbot", "matrix", "encryption", "--help"],
       expected: true,
     },
     {
       name: "help as option value",
-      argv: ["node", "openclaw", "agent", "--message", "help"],
+      argv: ["node", "grokbot", "agent", "--message", "help"],
       expected: false,
     },
     {
       name: "help after terminator",
-      argv: ["node", "openclaw", "nodes", "invoke", "--", "help"],
+      argv: ["node", "grokbot", "nodes", "invoke", "--", "help"],
       expected: false,
     },
     {
       name: "help flag after terminator",
-      argv: ["node", "openclaw", "nodes", "invoke", "--", "--help"],
+      argv: ["node", "grokbot", "nodes", "invoke", "--", "--help"],
       expected: false,
     },
     {
       name: "version flag after terminator",
-      argv: ["node", "openclaw", "nodes", "invoke", "--", "--version"],
+      argv: ["node", "grokbot", "nodes", "invoke", "--", "--version"],
       expected: false,
     },
   ])("detects help/version invocations: $name", ({ argv, expected }) => {
@@ -300,27 +300,27 @@ describe("argv helpers", () => {
   it.each([
     {
       name: "root --version",
-      argv: ["node", "openclaw", "--version"],
+      argv: ["node", "grokbot", "--version"],
       expected: true,
     },
     {
       name: "root -V",
-      argv: ["node", "openclaw", "-V"],
+      argv: ["node", "grokbot", "-V"],
       expected: true,
     },
     {
       name: "root -v alias with profile",
-      argv: ["node", "openclaw", "--profile", "work", "-v"],
+      argv: ["node", "grokbot", "--profile", "work", "-v"],
       expected: true,
     },
     {
       name: "subcommand version flag",
-      argv: ["node", "openclaw", "status", "--version"],
+      argv: ["node", "grokbot", "status", "--version"],
       expected: false,
     },
     {
       name: "unknown root flag with version",
-      argv: ["node", "openclaw", "--unknown", "--version"],
+      argv: ["node", "grokbot", "--unknown", "--version"],
       expected: false,
     },
   ])("detects root-only version invocations: $name", ({ argv, expected }) => {
@@ -330,42 +330,42 @@ describe("argv helpers", () => {
   it.each([
     {
       name: "root --help",
-      argv: ["node", "openclaw", "--help"],
+      argv: ["node", "grokbot", "--help"],
       expected: true,
     },
     {
       name: "root -h",
-      argv: ["node", "openclaw", "-h"],
+      argv: ["node", "grokbot", "-h"],
       expected: true,
     },
     {
       name: "root --help with profile",
-      argv: ["node", "openclaw", "--profile", "work", "--help"],
+      argv: ["node", "grokbot", "--profile", "work", "--help"],
       expected: true,
     },
     {
       name: "subcommand --help",
-      argv: ["node", "openclaw", "status", "--help"],
+      argv: ["node", "grokbot", "status", "--help"],
       expected: false,
     },
     {
       name: "help before subcommand token",
-      argv: ["node", "openclaw", "--help", "status"],
+      argv: ["node", "grokbot", "--help", "status"],
       expected: false,
     },
     {
       name: "help after -- terminator",
-      argv: ["node", "openclaw", "nodes", "invoke", "--", "device.status", "--help"],
+      argv: ["node", "grokbot", "nodes", "invoke", "--", "device.status", "--help"],
       expected: false,
     },
     {
       name: "unknown root flag before help",
-      argv: ["node", "openclaw", "--unknown", "--help"],
+      argv: ["node", "grokbot", "--unknown", "--help"],
       expected: false,
     },
     {
       name: "unknown root flag after help",
-      argv: ["node", "openclaw", "--help", "--unknown"],
+      argv: ["node", "grokbot", "--help", "--unknown"],
       expected: false,
     },
   ])("detects root-only help invocations: $name", ({ argv, expected }) => {
@@ -375,17 +375,17 @@ describe("argv helpers", () => {
   it.each([
     {
       name: "single command with trailing flag",
-      argv: ["node", "openclaw", "status", "--json"],
+      argv: ["node", "grokbot", "status", "--json"],
       expected: ["status"],
     },
     {
       name: "two-part command",
-      argv: ["node", "openclaw", "agents", "list"],
+      argv: ["node", "grokbot", "agents", "list"],
       expected: ["agents", "list"],
     },
     {
       name: "terminator cuts parsing",
-      argv: ["node", "openclaw", "status", "--", "ignored"],
+      argv: ["node", "grokbot", "status", "--", "ignored"],
       expected: ["status"],
     },
   ])("extracts command path: $name", ({ argv, expected }) => {
@@ -397,7 +397,7 @@ describe("argv helpers", () => {
       getCommandPathWithRootOptions(
         [
           "node",
-          "openclaw",
+          "grokbot",
           "--profile",
           "work",
           "--container",
@@ -414,7 +414,7 @@ describe("argv helpers", () => {
   it("extracts routed config get positionals with interleaved root options", () => {
     expect(
       getCommandPositionalsWithRootOptions(
-        ["node", "openclaw", "config", "get", "--log-level", "debug", "update.channel", "--json"],
+        ["node", "grokbot", "config", "get", "--log-level", "debug", "update.channel", "--json"],
         {
           commandPath: ["config", "get"],
           booleanFlags: ["--json"],
@@ -426,7 +426,7 @@ describe("argv helpers", () => {
   it("extracts routed config unset positionals with interleaved root options", () => {
     expect(
       getCommandPositionalsWithRootOptions(
-        ["node", "openclaw", "config", "unset", "--profile", "work", "update.channel"],
+        ["node", "grokbot", "config", "unset", "--profile", "work", "update.channel"],
         {
           commandPath: ["config", "unset"],
         },
@@ -437,7 +437,7 @@ describe("argv helpers", () => {
   it("returns null when routed command sees unknown options", () => {
     expect(
       getCommandPositionalsWithRootOptions(
-        ["node", "openclaw", "config", "get", "--mystery", "value", "update.channel"],
+        ["node", "grokbot", "config", "get", "--mystery", "value", "update.channel"],
         {
           commandPath: ["config", "get"],
           booleanFlags: ["--json"],
@@ -449,17 +449,17 @@ describe("argv helpers", () => {
   it.each([
     {
       name: "returns first command token",
-      argv: ["node", "openclaw", "agents", "list"],
+      argv: ["node", "grokbot", "agents", "list"],
       expected: "agents",
     },
     {
       name: "returns null when no command exists",
-      argv: ["node", "openclaw"],
+      argv: ["node", "grokbot"],
       expected: null,
     },
     {
       name: "skips known root option values",
-      argv: ["node", "openclaw", "--log-level", "debug", "status"],
+      argv: ["node", "grokbot", "--log-level", "debug", "status"],
       expected: "status",
     },
   ])("returns primary command: $name", ({ argv, expected }) => {
@@ -469,13 +469,13 @@ describe("argv helpers", () => {
   it.each([
     {
       name: "detects flag before terminator",
-      argv: ["node", "openclaw", "status", "--json"],
+      argv: ["node", "grokbot", "status", "--json"],
       flag: "--json",
       expected: true,
     },
     {
       name: "ignores flag after terminator",
-      argv: ["node", "openclaw", "--", "--json"],
+      argv: ["node", "grokbot", "--", "--json"],
       flag: "--json",
       expected: false,
     },
@@ -486,37 +486,37 @@ describe("argv helpers", () => {
   it.each([
     {
       name: "value in next token",
-      argv: ["node", "openclaw", "status", "--timeout", "5000"],
+      argv: ["node", "grokbot", "status", "--timeout", "5000"],
       expected: "5000",
     },
     {
       name: "value in equals form",
-      argv: ["node", "openclaw", "status", "--timeout=2500"],
+      argv: ["node", "grokbot", "status", "--timeout=2500"],
       expected: "2500",
     },
     {
       name: "missing value",
-      argv: ["node", "openclaw", "status", "--timeout"],
+      argv: ["node", "grokbot", "status", "--timeout"],
       expected: null,
     },
     {
       name: "next token is another flag",
-      argv: ["node", "openclaw", "status", "--timeout", "--json"],
+      argv: ["node", "grokbot", "status", "--timeout", "--json"],
       expected: null,
     },
     {
       name: "flag appears after terminator",
-      argv: ["node", "openclaw", "--", "--timeout=99"],
+      argv: ["node", "grokbot", "--", "--timeout=99"],
       expected: undefined,
     },
     {
       name: "repeated flag uses final value",
-      argv: ["node", "openclaw", "status", "--timeout", "100", "--timeout=200"],
+      argv: ["node", "grokbot", "status", "--timeout", "100", "--timeout=200"],
       expected: "200",
     },
     {
       name: "missing repeated value remains invalid",
-      argv: ["node", "openclaw", "status", "--timeout", "--timeout", "200"],
+      argv: ["node", "grokbot", "status", "--timeout", "--timeout", "200"],
       expected: null,
     },
   ])("extracts flag values: $name", ({ argv, expected }) => {
@@ -524,9 +524,9 @@ describe("argv helpers", () => {
   });
 
   it("parses verbose flags", () => {
-    expect(getVerboseFlag(["node", "openclaw", "status", "--verbose"])).toBe(true);
-    expect(getVerboseFlag(["node", "openclaw", "status", "--debug"])).toBe(false);
-    expect(getVerboseFlag(["node", "openclaw", "status", "--debug"], { includeDebug: true })).toBe(
+    expect(getVerboseFlag(["node", "grokbot", "status", "--verbose"])).toBe(true);
+    expect(getVerboseFlag(["node", "grokbot", "status", "--debug"])).toBe(false);
+    expect(getVerboseFlag(["node", "grokbot", "status", "--debug"], { includeDebug: true })).toBe(
       true,
     );
   });
@@ -534,57 +534,57 @@ describe("argv helpers", () => {
   it.each([
     {
       name: "missing flag",
-      argv: ["node", "openclaw", "status"],
+      argv: ["node", "grokbot", "status"],
       expected: undefined,
     },
     {
       name: "missing value",
-      argv: ["node", "openclaw", "status", "--timeout"],
+      argv: ["node", "grokbot", "status", "--timeout"],
       expected: null,
     },
     {
       name: "valid positive integer",
-      argv: ["node", "openclaw", "status", "--timeout", "5000"],
+      argv: ["node", "grokbot", "status", "--timeout", "5000"],
       expected: 5000,
     },
     {
       name: "valid signed decimal positive integer",
-      argv: ["node", "openclaw", "status", "--timeout", "+5000"],
+      argv: ["node", "grokbot", "status", "--timeout", "+5000"],
       expected: 5000,
     },
     {
       name: "invalid integer",
-      argv: ["node", "openclaw", "status", "--timeout", "nope"],
+      argv: ["node", "grokbot", "status", "--timeout", "nope"],
       expected: null,
     },
     {
       name: "non-decimal integer",
-      argv: ["node", "openclaw", "status", "--timeout", "0x10"],
+      argv: ["node", "grokbot", "status", "--timeout", "0x10"],
       expected: null,
     },
     {
       name: "partial integer",
-      argv: ["node", "openclaw", "status", "--timeout", "5s"],
+      argv: ["node", "grokbot", "status", "--timeout", "5s"],
       expected: null,
     },
     {
       name: "zero",
-      argv: ["node", "openclaw", "status", "--timeout", "0"],
+      argv: ["node", "grokbot", "status", "--timeout", "0"],
       expected: null,
     },
     {
       name: "negative integer",
-      argv: ["node", "openclaw", "status", "--timeout", "-5"],
+      argv: ["node", "grokbot", "status", "--timeout", "-5"],
       expected: null,
     },
     {
       name: "repeated value uses final valid integer",
-      argv: ["node", "openclaw", "status", "--timeout", "nope", "--timeout", "5000"],
+      argv: ["node", "grokbot", "status", "--timeout", "nope", "--timeout", "5000"],
       expected: 5000,
     },
     {
       name: "repeated value rejects final invalid integer",
-      argv: ["node", "openclaw", "status", "--timeout", "5000", "--timeout", "nope"],
+      argv: ["node", "grokbot", "status", "--timeout", "5000", "--timeout", "nope"],
       expected: null,
     },
   ])("parses positive integer flag values: $name", ({ argv, expected }) => {
@@ -594,63 +594,63 @@ describe("argv helpers", () => {
   it.each([
     {
       name: "keeps plain node argv",
-      rawArgs: ["node", "openclaw", "status"],
-      expected: ["node", "openclaw", "status"],
+      rawArgs: ["node", "grokbot", "status"],
+      expected: ["node", "grokbot", "status"],
     },
     {
       name: "keeps version-suffixed node binary",
-      rawArgs: ["node-22", "openclaw", "status"],
-      expected: ["node-22", "openclaw", "status"],
+      rawArgs: ["node-22", "grokbot", "status"],
+      expected: ["node-22", "grokbot", "status"],
     },
     {
       name: "keeps windows versioned node exe",
-      rawArgs: ["node-22.2.0.exe", "openclaw", "status"],
-      expected: ["node-22.2.0.exe", "openclaw", "status"],
+      rawArgs: ["node-22.2.0.exe", "grokbot", "status"],
+      expected: ["node-22.2.0.exe", "grokbot", "status"],
     },
     {
       name: "keeps dotted node binary",
-      rawArgs: ["node-22.2", "openclaw", "status"],
-      expected: ["node-22.2", "openclaw", "status"],
+      rawArgs: ["node-22.2", "grokbot", "status"],
+      expected: ["node-22.2", "grokbot", "status"],
     },
     {
       name: "keeps dotted node exe",
-      rawArgs: ["node-22.2.exe", "openclaw", "status"],
-      expected: ["node-22.2.exe", "openclaw", "status"],
+      rawArgs: ["node-22.2.exe", "grokbot", "status"],
+      expected: ["node-22.2.exe", "grokbot", "status"],
     },
     {
       name: "keeps absolute versioned node path",
-      rawArgs: ["/usr/bin/node-22.2.0", "openclaw", "status"],
-      expected: ["/usr/bin/node-22.2.0", "openclaw", "status"],
+      rawArgs: ["/usr/bin/node-22.2.0", "grokbot", "status"],
+      expected: ["/usr/bin/node-22.2.0", "grokbot", "status"],
     },
     {
       name: "keeps node24 shorthand",
-      rawArgs: ["node24", "openclaw", "status"],
-      expected: ["node24", "openclaw", "status"],
+      rawArgs: ["node24", "grokbot", "status"],
+      expected: ["node24", "grokbot", "status"],
     },
     {
       name: "keeps absolute node24 shorthand",
-      rawArgs: ["/usr/bin/node24", "openclaw", "status"],
-      expected: ["/usr/bin/node24", "openclaw", "status"],
+      rawArgs: ["/usr/bin/node24", "grokbot", "status"],
+      expected: ["/usr/bin/node24", "grokbot", "status"],
     },
     {
       name: "keeps windows node24 exe",
-      rawArgs: ["node24.exe", "openclaw", "status"],
-      expected: ["node24.exe", "openclaw", "status"],
+      rawArgs: ["node24.exe", "grokbot", "status"],
+      expected: ["node24.exe", "grokbot", "status"],
     },
     {
       name: "keeps nodejs binary",
-      rawArgs: ["nodejs", "openclaw", "status"],
-      expected: ["nodejs", "openclaw", "status"],
+      rawArgs: ["nodejs", "grokbot", "status"],
+      expected: ["nodejs", "grokbot", "status"],
     },
     {
       name: "prefixes fallback when first arg is not a node launcher",
-      rawArgs: ["node-dev", "openclaw", "status"],
-      expected: ["node", "openclaw", "node-dev", "openclaw", "status"],
+      rawArgs: ["node-dev", "grokbot", "status"],
+      expected: ["node", "grokbot", "node-dev", "grokbot", "status"],
     },
     {
       name: "prefixes fallback when raw args start at program name",
-      rawArgs: ["openclaw", "status"],
-      expected: ["node", "openclaw", "status"],
+      rawArgs: ["grokbot", "status"],
+      expected: ["node", "grokbot", "status"],
     },
     {
       name: "keeps bun execution argv",
@@ -663,19 +663,19 @@ describe("argv helpers", () => {
   });
 
   it.each([
-    { argv: ["node", "openclaw", "status"], expected: true },
-    { argv: ["node", "openclaw", "health"], expected: false },
-    { argv: ["node", "openclaw", "sessions"], expected: false },
-    { argv: ["node", "openclaw", "--profile", "work", "status"], expected: true },
-    { argv: ["node", "openclaw", "--log-level=debug", "models", "list"], expected: true },
-    { argv: ["node", "openclaw", "config", "get", "update"], expected: false },
-    { argv: ["node", "openclaw", "config", "unset", "update"], expected: false },
-    { argv: ["node", "openclaw", "models", "list"], expected: true },
-    { argv: ["node", "openclaw", "models", "status"], expected: true },
-    { argv: ["node", "openclaw", "update", "status", "--json"], expected: false },
-    { argv: ["node", "openclaw", "agent", "--message", "hi"], expected: true },
-    { argv: ["node", "openclaw", "agents", "list"], expected: true },
-    { argv: ["node", "openclaw", "message", "send"], expected: true },
+    { argv: ["node", "grokbot", "status"], expected: true },
+    { argv: ["node", "grokbot", "health"], expected: false },
+    { argv: ["node", "grokbot", "sessions"], expected: false },
+    { argv: ["node", "grokbot", "--profile", "work", "status"], expected: true },
+    { argv: ["node", "grokbot", "--log-level=debug", "models", "list"], expected: true },
+    { argv: ["node", "grokbot", "config", "get", "update"], expected: false },
+    { argv: ["node", "grokbot", "config", "unset", "update"], expected: false },
+    { argv: ["node", "grokbot", "models", "list"], expected: true },
+    { argv: ["node", "grokbot", "models", "status"], expected: true },
+    { argv: ["node", "grokbot", "update", "status", "--json"], expected: false },
+    { argv: ["node", "grokbot", "agent", "--message", "hi"], expected: true },
+    { argv: ["node", "grokbot", "agents", "list"], expected: true },
+    { argv: ["node", "grokbot", "message", "send"], expected: true },
   ] as const)("decides when to migrate state: $argv", ({ argv, expected }) => {
     const commandPath = getCommandPathWithRootOptions([...argv], 2);
     expect(shouldMigrateStateFromPath(commandPath)).toBe(expected);

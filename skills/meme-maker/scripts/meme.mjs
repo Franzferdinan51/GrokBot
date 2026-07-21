@@ -146,7 +146,7 @@ function cacheRoot() {
     (process.platform === "darwin"
       ? path.join(homedir(), "Library", "Caches")
       : path.join(homedir(), ".cache"));
-  return path.join(root, "openclaw", "meme-maker");
+  return path.join(root, "grokbot", "meme-maker");
 }
 
 function extFromUrl(url) {
@@ -284,7 +284,7 @@ async function renderLocal(template, texts, flags) {
       sharp = (await import("sharp")).default;
     } catch {
       // Keep this message free of package-install advice: agents follow it
-      // literally and can corrupt pnpm-managed OpenClaw installs (see #109405).
+      // literally and can corrupt pnpm-managed GrokBot installs (see #109405).
       throw new Error("PNG output needs the optional sharp package. Use --out meme.svg instead.");
     }
     await sharp(Buffer.from(svg)).png().toFile(out);

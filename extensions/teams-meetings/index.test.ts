@@ -1,6 +1,6 @@
-import { ErrorCodes } from "openclaw/plugin-sdk/gateway-runtime";
-import type { OpenClawPluginApi } from "openclaw/plugin-sdk/plugin-entry";
-import { createTestPluginApi } from "openclaw/plugin-sdk/plugin-test-api";
+import { ErrorCodes } from "grokbot/plugin-sdk/gateway-runtime";
+import type { OpenClawPluginApi } from "grokbot/plugin-sdk/plugin-entry";
+import { createTestPluginApi } from "grokbot/plugin-sdk/plugin-test-api";
 import { describe, expect, it, vi } from "vitest";
 import plugin from "./index.js";
 

@@ -1,4 +1,4 @@
-// OpenClaw release ClawHub plan script supports release workflow routing.
+// GrokBot release ClawHub plan script supports release workflow routing.
 import { resolve } from "node:path";
 import {
   collectPluginClawHubReleasePlan,

@@ -5,9 +5,9 @@
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { OPENCLAW_TRANSCRIPT_ARTIFACT_API } from "../shared/transcript-only-openclaw-assistant.js";
+import { OPENCLAW_TRANSCRIPT_ARTIFACT_API } from "../shared/transcript-only-grokbot-assistant.js";
 import { repairSessionFileIfNeeded } from "./session-file-repair.js";
 
 const BLANK_USER_FALLBACK_TEXT = "(continue)";
@@ -45,7 +45,7 @@ async function readTrustedSnapshot(file: string) {
 }
 
 async function createTempSessionPath() {
-  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-session-repair-"));
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-session-repair-"));
   tempDirs.push(dir);
   return { dir, file: path.join(dir, "session.jsonl") };
 }
@@ -80,7 +80,7 @@ afterEach(async () => {
 describe("repairSessionFileIfNeeded", () => {
   it("skips SQLite transcript markers instead of treating them as file paths", async () => {
     const result = await repairSessionFileIfNeeded({
-      sessionFile: "sqlite:main:session-1:/tmp/openclaw/sessions.json",
+      sessionFile: "sqlite:main:session-1:/tmp/grokbot/sessions.json",
     });
 
     expect(result).toEqual({
@@ -848,7 +848,7 @@ describe("repairSessionFileIfNeeded", () => {
       timestamp: new Date().toISOString(),
       message: {
         role: "assistant",
-        provider: "openclaw",
+        provider: "grokbot",
         model: "delivery-mirror",
         api: OPENCLAW_TRANSCRIPT_ARTIFACT_API,
         content: [{ type: "text", text: "Process: `wild-wharf`" }],
@@ -908,7 +908,7 @@ describe("repairSessionFileIfNeeded", () => {
       timestamp: new Date().toISOString(),
       message: {
         role: "assistant",
-        provider: "openclaw",
+        provider: "grokbot",
         model: "delivery-mirror",
         api: OPENCLAW_TRANSCRIPT_ARTIFACT_API,
         content: [{ type: "text", text: "visible reply" }],

@@ -1,5 +1,5 @@
 import path from "node:path";
-import { uniqueStrings } from "@openclaw/normalization-core/string-normalization";
+import { uniqueStrings } from "@grokbot/normalization-core/string-normalization";
 import { resolveStoredSessionOwnerAgentId } from "../../gateway/session-store-key.js";
 import {
   resolveAgentHarnessSessionStoreError,
@@ -8,7 +8,7 @@ import {
 import {
   openOpenClawAgentDatabase,
   runOpenClawAgentWriteTransaction,
-} from "../../state/openclaw-agent-db.js";
+} from "../../state/grokbot-agent-db.js";
 import {
   materializeSqliteSessionStateDeletePlans,
   type MaterializedSqliteSessionStateDeletePlan,

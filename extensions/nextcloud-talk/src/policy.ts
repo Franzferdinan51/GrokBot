@@ -1,15 +1,15 @@
-import { resolveAllowlistMatchByCandidates } from "openclaw/plugin-sdk/allow-from";
+import { resolveAllowlistMatchByCandidates } from "grokbot/plugin-sdk/allow-from";
 import {
   resolveScopeRequireMention,
   resolveScopeToolsPolicy,
   type ScopeTree,
-} from "openclaw/plugin-sdk/channel-policy";
+} from "grokbot/plugin-sdk/channel-policy";
 // Nextcloud Talk plugin module implements policy behavior.
 import {
   buildChannelKeyCandidates,
   normalizeChannelSlug,
   resolveChannelEntryMatchWithFallback,
-} from "openclaw/plugin-sdk/channel-targets";
+} from "grokbot/plugin-sdk/channel-targets";
 import type { AllowlistMatch, ChannelGroupContext, GroupToolPolicyConfig } from "../runtime-api.js";
 import { resolveNextcloudTalkAccount } from "./accounts.js";
 import type { CoreConfig, NextcloudTalkRoomConfig } from "./types.js";

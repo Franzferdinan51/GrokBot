@@ -1,6 +1,6 @@
-// Comfy plugin entrypoint registers its OpenClaw integration.
-import { definePluginEntry } from "openclaw/plugin-sdk/plugin-entry";
-import { createProviderApiKeyAuthMethod } from "openclaw/plugin-sdk/provider-auth-api-key";
+// Comfy plugin entrypoint registers its GrokBot integration.
+import { definePluginEntry } from "grokbot/plugin-sdk/plugin-entry";
+import { createProviderApiKeyAuthMethod } from "grokbot/plugin-sdk/provider-auth-api-key";
 import { buildComfyImageGenerationProvider } from "./image-generation-provider.js";
 import { buildComfyMusicGenerationProvider } from "./music-generation-provider.js";
 import { buildComfyVideoGenerationProvider } from "./video-generation-provider.js";

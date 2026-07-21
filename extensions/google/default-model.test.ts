@@ -1,5 +1,5 @@
 // Google tests cover default model plugin behavior.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/provider-onboard";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/provider-onboard";
 import { describe, expect, it } from "vitest";
 import { applyGoogleGeminiModelDefault, GOOGLE_GEMINI_DEFAULT_MODEL } from "./api.js";
 

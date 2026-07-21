@@ -2,7 +2,7 @@
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import {
   cleanupLegacyPluginDependencyState,
@@ -29,7 +29,7 @@ describe("cleanupLegacyPluginDependencyState", () => {
   let tempDir: string;
 
   beforeEach(async () => {
-    tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-plugin-deps-cleanup-"));
+    tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-plugin-deps-cleanup-"));
   });
 
   afterEach(async () => {
@@ -38,7 +38,7 @@ describe("cleanupLegacyPluginDependencyState", () => {
 
   it("collects and removes legacy plugin dependency state roots", async () => {
     const stateDir = path.join(tempDir, "state");
-    const explicitStageDir = path.join(stateDir, ".openclaw-install-stage-explicit");
+    const explicitStageDir = path.join(stateDir, ".grokbot-install-stage-explicit");
     const stateDirectory = path.join(tempDir, "systemd-state");
     const packageRoot = path.join(tempDir, "package");
     const legacyRuntimeRoot = path.join(stateDir, "plugin-runtime-deps");
@@ -55,13 +55,13 @@ describe("cleanupLegacyPluginDependencyState", () => {
       "dist",
       "extensions",
       "demo",
-      ".openclaw-runtime-deps-stamp.json",
+      ".grokbot-runtime-deps-stamp.json",
     );
     const legacyManifest = path.join(
       packageRoot,
       "extensions",
       "demo",
-      ".openclaw-runtime-deps.json",
+      ".grokbot-runtime-deps.json",
     );
     const thirdPartyNodeModules = path.join(
       stateDir,
@@ -125,7 +125,7 @@ describe("cleanupLegacyPluginDependencyState", () => {
     await expectPathMissing(path.join(stateDirectory, "plugin-runtime-deps"));
   });
 
-  it("removes configured plugin stage roots outside OpenClaw roots", async () => {
+  it("removes configured plugin stage roots outside GrokBot roots", async () => {
     const stateDir = path.join(tempDir, "state");
     const packageRoot = path.join(tempDir, "package");
     const stageRoot = path.join(tempDir, "stage");
@@ -134,7 +134,7 @@ describe("cleanupLegacyPluginDependencyState", () => {
     await fs.mkdir(packageRoot, { recursive: true });
     await fs.mkdir(path.join(stageRoot, "node_modules", "ansi-escapes"), { recursive: true });
     await fs.writeFile(
-      path.join(stageRoot, "node_modules", "ansi-escapes", ".openclaw-rename-tmp"),
+      path.join(stageRoot, "node_modules", "ansi-escapes", ".grokbot-rename-tmp"),
       "corrupt rename residue\n",
     );
 
@@ -177,12 +177,12 @@ describe("cleanupLegacyPluginDependencyState", () => {
       target: legacyRuntimeRoot,
       path: legacyRuntimeRoot,
       requirement: "legacy-plugin-dependency-state-removed",
-      fixHint: "Run `openclaw doctor --fix` to remove legacy plugin dependency state.",
+      fixHint: "Run `grokbot doctor --fix` to remove legacy plugin dependency state.",
     });
     await expectDirectoryPresent(legacyRuntimeRoot);
   });
 
-  it("refuses arbitrary explicit plugin stage roots outside OpenClaw roots", async () => {
+  it("refuses arbitrary explicit plugin stage roots outside GrokBot roots", async () => {
     const stateDir = path.join(tempDir, "state");
     const packageRoot = path.join(tempDir, "package");
     const stageRoot = path.join(tempDir, "stage-without-marker");
@@ -209,7 +209,7 @@ describe("cleanupLegacyPluginDependencyState", () => {
   it("refuses explicit plugin stage paths with parent segments", async () => {
     const stateDir = path.join(tempDir, "state");
     const packageRoot = path.join(tempDir, "package");
-    const dotDotStage = `${stateDir}${path.sep}..${path.sep}.openclaw-install-stage-dotdot`;
+    const dotDotStage = `${stateDir}${path.sep}..${path.sep}.grokbot-install-stage-dotdot`;
     const resolvedDotDotStage = path.resolve(dotDotStage);
 
     await fs.mkdir(stateDir, { recursive: true });
@@ -231,7 +231,7 @@ describe("cleanupLegacyPluginDependencyState", () => {
     await expectDirectoryPresent(resolvedDotDotStage);
   });
 
-  it("does not follow symlinked extension roots outside OpenClaw roots", async () => {
+  it("does not follow symlinked extension roots outside GrokBot roots", async () => {
     const stateDir = path.join(tempDir, "state");
     const packageRoot = path.join(tempDir, "package");
     const extensionsRoot = path.join(packageRoot, "extensions");
@@ -242,7 +242,7 @@ describe("cleanupLegacyPluginDependencyState", () => {
     await fs.mkdir(stateDir, { recursive: true });
     await fs.mkdir(extensionsRoot, { recursive: true });
     await fs.mkdir(externalNodeModules, { recursive: true });
-    await fs.writeFile(path.join(externalPlugin, ".openclaw-runtime-deps.json"), "{}");
+    await fs.writeFile(path.join(externalPlugin, ".grokbot-runtime-deps.json"), "{}");
     await fs.symlink(externalPlugin, linkedPlugin, "dir");
 
     const targets = await collectLegacyPluginDependencyTargets(
@@ -260,7 +260,7 @@ describe("cleanupLegacyPluginDependencyState", () => {
     await expectDirectoryPresent(externalNodeModules);
   });
 
-  it("refuses legacy roots that resolve outside OpenClaw roots", async () => {
+  it("refuses legacy roots that resolve outside GrokBot roots", async () => {
     const stateDir = path.join(tempDir, "state");
     const packageRoot = path.join(tempDir, "package");
     const legacyRuntimeRoot = path.join(stateDir, "plugin-runtime-deps");
@@ -278,7 +278,7 @@ describe("cleanupLegacyPluginDependencyState", () => {
 
     expect(result.changes).toStrictEqual([]);
     expect(result.warnings).toContain(
-      `Skipped legacy plugin dependency state ${legacyRuntimeRoot}: resolved outside OpenClaw cleanup roots`,
+      `Skipped legacy plugin dependency state ${legacyRuntimeRoot}: resolved outside GrokBot cleanup roots`,
     );
     expect((await fs.lstat(legacyRuntimeRoot)).isSymbolicLink()).toBe(true);
     await expectDirectoryPresent(externalRuntimeRoot);
@@ -286,19 +286,19 @@ describe("cleanupLegacyPluginDependencyState", () => {
 
   it("does not unlink global runtime symlinks through unsafe cleanup roots", async () => {
     const stateDir = path.join(tempDir, "state");
-    const packageRoot = path.join(tempDir, "prefix", "lib", "node_modules", "openclaw");
+    const packageRoot = path.join(tempDir, "prefix", "lib", "node_modules", "grokbot");
     const nodeModulesRoot = path.dirname(packageRoot);
     const legacyRuntimeRoot = path.join(stateDir, "plugin-runtime-deps");
     const externalRuntimeRoot = path.join(tempDir, "external-runtime");
     const activeRuntimeTarget = path.join(
       externalRuntimeRoot,
-      "openclaw-external",
+      "grokbot-external",
       "node_modules",
       "left-pad",
     );
     const unsafeRuntimeTarget = path.join(
       legacyRuntimeRoot,
-      "openclaw-external",
+      "grokbot-external",
       "node_modules",
       "left-pad",
     );
@@ -317,7 +317,7 @@ describe("cleanupLegacyPluginDependencyState", () => {
 
     expect(result.changes).toStrictEqual([]);
     expect(result.warnings).toContain(
-      `Skipped legacy plugin dependency state ${legacyRuntimeRoot}: resolved outside OpenClaw cleanup roots`,
+      `Skipped legacy plugin dependency state ${legacyRuntimeRoot}: resolved outside GrokBot cleanup roots`,
     );
     expect((await fs.lstat(leftPadLink)).isSymbolicLink()).toBe(true);
     expect((await fs.lstat(legacyRuntimeRoot)).isSymbolicLink()).toBe(true);
@@ -326,12 +326,12 @@ describe("cleanupLegacyPluginDependencyState", () => {
 
   it("removes dangling global plugin-runtime symlinks that point at legacy runtime deps", async () => {
     const stateDir = path.join(tempDir, "state");
-    const packageRoot = path.join(tempDir, "prefix", "lib", "node_modules", "openclaw");
+    const packageRoot = path.join(tempDir, "prefix", "lib", "node_modules", "grokbot");
     const nodeModulesRoot = path.dirname(packageRoot);
     const legacyRuntimeRoot = path.join(stateDir, "plugin-runtime-deps");
     const legacyTarget = path.join(
       legacyRuntimeRoot,
-      "openclaw-2026.4.29-slack",
+      "grokbot-2026.4.29-slack",
       "node_modules",
       "@slack",
       "web-api",

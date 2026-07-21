@@ -23,7 +23,7 @@ import { resolveAgentHarnessOwnerPluginIds } from "../agents/harness/runtime-plu
 import type { AgentHarnessAuthBindingFingerprintParams } from "../agents/harness/types.js";
 import type { ResolvedProviderAuth } from "../agents/model-auth-runtime-shared.js";
 import { resolveApiKeyForProvider } from "../agents/model-auth.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { normalizePluginsConfig } from "../plugins/config-state.js";
 import { passesManifestOwnerBasePolicy } from "../plugins/manifest-owner-policy.js";
 import type { OpenClawPackageBuild } from "../plugins/manifest.js";
@@ -140,13 +140,13 @@ export type SystemAgentVerifiedInferenceDeps = SystemAgentConfiguredRouteDeps & 
   fingerprintPluginRuntimeArtifact?: (record: PluginRuntimeArtifactIdentitySource) => string;
 };
 
-/** Exact child harness artifact every verified embedded OpenClaw call must carry. */
+/** Exact child harness artifact every verified embedded GrokBot call must carry. */
 export function resolveSystemAgentExpectedAgentHarnessRuntimeArtifact(
   binding: SystemAgentVerifiedInferenceBinding,
 ): ExpectedAgentHarnessRuntimeArtifact | undefined {
   if (
     binding.execution.runner !== "embedded" ||
-    binding.execution.agentHarnessRuntimeOverride === "openclaw"
+    binding.execution.agentHarnessRuntimeOverride === "grokbot"
   ) {
     return undefined;
   }
@@ -228,7 +228,7 @@ async function resolveCurrentRuntimeOwnerFingerprint(params: {
       provider: params.route.provider,
       config: params.route.runConfig,
       agentDir: params.route.agentDir,
-      agentId: "openclaw",
+      agentId: "grokbot",
       runtimeOwnerId: params.runtimeOwnerId,
       ...(params.authProfileId ? { authProfileId: params.authProfileId } : {}),
       ...(params.skipLocalCredential ? { skipLocalCredential: true } : {}),
@@ -255,7 +255,7 @@ async function resolveCurrentRuntimeOwnerFingerprint(params: {
     }
   }
   if (params.kind === "plugin-harness") {
-    if (params.route.agentHarnessRuntimeOverride === "openclaw") {
+    if (params.route.agentHarnessRuntimeOverride === "grokbot") {
       return undefined;
     }
     return fingerprintOpaqueRuntimeOwner({
@@ -429,7 +429,7 @@ function resolveRouteHarnessOwnerPluginIds(
   config: OpenClawConfig,
   route: SystemAgentConfiguredRoute,
 ): string[] {
-  if (route.runner !== "embedded" || route.agentHarnessRuntimeOverride === "openclaw") {
+  if (route.runner !== "embedded" || route.agentHarnessRuntimeOverride === "grokbot") {
     return [];
   }
   const workspaceDir = resolveAgentWorkspaceDir(config, route.agentId, process.env);
@@ -556,7 +556,7 @@ async function resolveCurrentAuthFingerprint(params: {
     if (
       credential.type === "oauth" ||
       (params.route.runner === "embedded" &&
-        params.route.agentHarnessRuntimeOverride !== "openclaw")
+        params.route.agentHarnessRuntimeOverride !== "grokbot")
     ) {
       if (credential.type === "oauth") {
         return fingerprintAuthProfileCredential({
@@ -677,7 +677,7 @@ export async function createSystemAgentVerifiedInferenceBinding(params: {
     currentRuntimeArtifactFingerprint = await resolveArtifact({
       provider: execution.provider,
       config: execution.runConfig,
-      agentId: "openclaw",
+      agentId: "grokbot",
       runtimeArtifactId: params.auth.runtimeArtifactId.trim(),
     });
     if (currentRuntimeArtifactFingerprint !== params.auth.runtimeArtifactFingerprint) {
@@ -685,7 +685,7 @@ export async function createSystemAgentVerifiedInferenceBinding(params: {
     }
   }
   const pluginHarnessId =
-    execution.runner === "embedded" && successfulHarnessId !== "openclaw"
+    execution.runner === "embedded" && successfulHarnessId !== "grokbot"
       ? successfulHarnessId
       : undefined;
   if (pluginHarnessId) {
@@ -874,7 +874,7 @@ export async function resolveSystemAgentVerifiedInferenceRoute(
     currentRuntimeArtifactFingerprint = await resolveArtifact({
       provider: currentExecution.provider,
       config: currentExecution.runConfig,
-      agentId: "openclaw",
+      agentId: "grokbot",
       runtimeArtifactId: binding.auth.runtimeArtifactId,
     }).catch(() => undefined);
     if (currentRuntimeArtifactFingerprint !== binding.auth.runtimeArtifactFingerprint) {
@@ -882,7 +882,7 @@ export async function resolveSystemAgentVerifiedInferenceRoute(
     }
   } else if (
     binding.execution.runner === "embedded" &&
-    binding.execution.agentHarnessRuntimeOverride !== "openclaw"
+    binding.execution.agentHarnessRuntimeOverride !== "grokbot"
   ) {
     const harnessId = binding.execution.agentHarnessRuntimeOverride;
     const artifactId = binding.auth.runtimeArtifactId?.trim();

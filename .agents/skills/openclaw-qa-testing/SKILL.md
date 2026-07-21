@@ -1,9 +1,9 @@
 ---
-name: openclaw-qa-testing
-description: Run, watch, debug, extend, or explain OpenClaw qa-lab and qa-channel scenarios, artifacts, and live lanes.
+name: grokbot-qa-testing
+description: Run, watch, debug, extend, or explain GrokBot qa-lab and qa-channel scenarios, artifacts, and live lanes.
 ---
 
-# OpenClaw QA Testing
+# GrokBot QA Testing
 
 Use this skill for `qa-lab` / `qa-channel` work. Repo-local QA only.
 
@@ -36,7 +36,7 @@ Use this skill for `qa-lab` / `qa-channel` work. Repo-local QA only.
 
 ```bash
 OPENCLAW_LIVE_OPENAI_KEY="${OPENAI_API_KEY}" \
-pnpm openclaw qa suite \
+pnpm grokbot qa suite \
   --provider-mode live-frontier \
   --model openai/gpt-5.4 \
   --alt-model openai/gpt-5.4 \
@@ -46,7 +46,7 @@ pnpm openclaw qa suite \
 4. Watch outputs:
    - summary: `.artifacts/qa-e2e/run-all-live-frontier-<tag>/qa-suite-summary.json`
    - report: `.artifacts/qa-e2e/run-all-live-frontier-<tag>/qa-suite-report.md`
-5. If the user wants to watch the live UI, find the current `openclaw-qa` listen port and report `http://127.0.0.1:<port>`.
+5. If the user wants to watch the live UI, find the current `grokbot-qa` listen port and report `http://127.0.0.1:<port>`.
 6. If a scenario fails, fix the product or harness root cause, then rerun the full lane.
 
 ## OTEL smoke
@@ -64,11 +64,11 @@ Langfuse, or external collector credentials.
 
 ## Matrix live profiles
 
-`pnpm openclaw qa matrix` defaults to the full `all` profile. Use explicit
+`pnpm grokbot qa matrix` defaults to the full `all` profile. Use explicit
 profiles for faster CI/release proof:
 
 ```bash
-pnpm openclaw qa matrix --profile release
+pnpm grokbot qa matrix --profile release
 ```
 
 - `fast` and `release`: focused release-critical scenarios.
@@ -87,7 +87,7 @@ op account list
 ```
 
 - Direct Telegram npm live test secrets currently live in 1Password item:
-  - vault: `OpenClaw`
+  - vault: `GrokBot`
   - item: `Telegram E2E`
 - That item is the first place to look for:
   - `OPENCLAW_QA_TELEGRAM_DRIVER_BOT_TOKEN`
@@ -95,7 +95,7 @@ op account list
   - `OPENCLAW_QA_PROVIDER_MODE`
   - `OPENCLAW_NPM_TELEGRAM_PACKAGE_SPEC`
 - Convex QA secrets currently live in 1Password items:
-  - vault: `OpenClaw`
+  - vault: `GrokBot`
   - item: `OPENCLAW_QA_CONVEX_SITE_URL`
   - item: `OPENCLAW_QA_CONVEX_SECRET_MAINTAINER`
   - item: `OPENCLAW_QA_CONVEX_SECRET_CI`
@@ -107,7 +107,7 @@ op account list
   - ask the maintainer/operator for the current value or the current 1Password item name
   - for Telegram direct runs, `OPENCLAW_QA_TELEGRAM_GROUP_ID` may be stored separately from `Telegram E2E`
   - for Convex runs, the leased Telegram credential should provide the Telegram group id and bot tokens together; do not require a separate `OPENCLAW_QA_TELEGRAM_GROUP_ID`
-  - for Convex runs, prefer `OpenClaw/OPENCLAW_QA_CONVEX_SITE_URL`; if that is stale or unclear, ask for the active pool URL before running
+  - for Convex runs, prefer `GrokBot/OPENCLAW_QA_CONVEX_SITE_URL`; if that is stale or unclear, ask for the active pool URL before running
 - Prefer direct Telegram envs for the npm Telegram Docker lane when available:
 
 ```bash
@@ -115,7 +115,7 @@ OPENCLAW_QA_TELEGRAM_GROUP_ID="..." \
 OPENCLAW_QA_TELEGRAM_DRIVER_BOT_TOKEN="..." \
 OPENCLAW_QA_TELEGRAM_SUT_BOT_TOKEN="..." \
 OPENCLAW_QA_PROVIDER_MODE="mock-openai" \
-OPENCLAW_NPM_TELEGRAM_PACKAGE_SPEC="openclaw@beta" \
+OPENCLAW_NPM_TELEGRAM_PACKAGE_SPEC="grokbot@beta" \
 pnpm test:docker:npm-telegram-live
 ```
 
@@ -139,16 +139,16 @@ pnpm test:docker:npm-telegram-live
 - If direct Telegram env is missing locally and `op signin` blocks, prefer dispatching the manual GitHub lane because the `qa-live-shared` environment already has Convex CI credentials:
 
 ```bash
-gh workflow run "NPM Telegram Beta E2E" --repo openclaw/openclaw --ref main \
-  -f package_spec=openclaw@YYYY.M.D-beta.N \
-  -f package_label=openclaw@YYYY.M.D-beta.N \
+gh workflow run "NPM Telegram Beta E2E" --repo grokbot/grokbot --ref main \
+  -f package_spec=grokbot@YYYY.M.D-beta.N \
+  -f package_label=grokbot@YYYY.M.D-beta.N \
   -f provider_mode=mock-openai
 ```
 
 - Poll the exact run id from the dispatch URL. `gh run view --json artifacts` is not supported; list artifacts with:
 
 ```bash
-gh api repos/openclaw/openclaw/actions/runs/<run-id>/artifacts
+gh api repos/grokbot/grokbot/actions/runs/<run-id>/artifacts
 ```
 
 ## WhatsApp live credentials
@@ -156,13 +156,13 @@ gh api repos/openclaw/openclaw/actions/runs/<run-id>/artifacts
 Use this when setting up or replacing Convex `kind=whatsapp` credentials.
 
 - Treat WhatsApp QA credentials as operator-owned live accounts, not generated fixtures.
-- Use two dedicated WhatsApp-capable test numbers: one driver account and one SUT account. Do not use personal numbers or personal OpenClaw WhatsApp accounts in the shared pool.
+- Use two dedicated WhatsApp-capable test numbers: one driver account and one SUT account. Do not use personal numbers or personal GrokBot WhatsApp accounts in the shared pool.
 - Register and link each account manually with WhatsApp or WhatsApp Business, storing Web auth only in isolated local auth dirs outside the repo.
 - For group coverage, create a dedicated test group that includes both QA accounts and store its JID as `groupJid`; otherwise the group mention-gating scenario should be skipped by default and fail when explicitly requested.
 - Package the two Baileys auth dirs into base64 `.tgz` payload fields and add a new active Convex credential row. Prefer adding a fresh row and disabling stale/broken rows over overwriting credentials in place.
 - Expected payload fields: `driverPhoneE164`, `sutPhoneE164`, `driverAuthArchiveBase64`, `sutAuthArchiveBase64`, and optional `groupJid`.
 - Keep credential material out of the repo, logs, PRs, and screenshots. Redact phone numbers unless the operator explicitly asks for local debugging.
-- Validate with `pnpm openclaw qa whatsapp --credential-source convex --credential-role maintainer --provider-mode mock-openai` and preserve artifact paths plus redacted pass/fail summaries.
+- Validate with `pnpm grokbot qa whatsapp --credential-source convex --credential-role maintainer --provider-mode mock-openai` and preserve artifact paths plus redacted pass/fail summaries.
 - If WhatsApp expires or invalidates a linked Web session, relink locally, package fresh auth archives, add a new Convex row, then disable the stale row.
 
 ## Character evals
@@ -170,7 +170,7 @@ Use this when setting up or replacing Convex `kind=whatsapp` credentials.
 Use `qa character-eval` for style/persona/vibe checks across multiple live models.
 
 ```bash
-pnpm openclaw qa character-eval \
+pnpm grokbot qa character-eval \
   --model openai/gpt-5.4,thinking=xhigh \
   --model openai/gpt-5.2,thinking=xhigh \
   --model openai/gpt-5,thinking=xhigh \
@@ -198,7 +198,7 @@ pnpm openclaw qa character-eval \
 - Scenario source is YAML-only under `qa/scenarios/`: use `index.yaml` and
   per-scenario `*.yaml` files with top-level `title`, `scenario`, and optional
   `flow`. Never add fenced `qa-scenario` / `qa-flow` Markdown files.
-- For isolated character/persona evals, write the persona into `SOUL.md` and blank `IDENTITY.md` in the scenario flow. Use `SOUL.md + IDENTITY.md` only when intentionally testing how the normal OpenClaw identity combines with the character.
+- For isolated character/persona evals, write the persona into `SOUL.md` and blank `IDENTITY.md` in the scenario flow. Use `SOUL.md + IDENTITY.md` only when intentionally testing how the normal GrokBot identity combines with the character.
 - Keep prompts natural and task-shaped. The candidate model should receive character setup through `SOUL.md`, then normal user turns such as chat, workspace help, and small file tasks; do not ask "how would you react?" or tell the model it is in an eval.
 - Prefer at least one real task, such as creating or editing a tiny workspace artifact, so the transcript captures character under normal tool use instead of pure roleplay.
 
@@ -209,7 +209,7 @@ Use model refs shaped like `codex-cli/<codex-model>` whenever QA should exercise
 Examples:
 
 ```bash
-pnpm openclaw qa suite \
+pnpm grokbot qa suite \
   --provider-mode live-frontier \
   --model codex-cli/<codex-model> \
   --alt-model codex-cli/<codex-model> \
@@ -218,7 +218,7 @@ pnpm openclaw qa suite \
 ```
 
 ```bash
-pnpm openclaw qa manual \
+pnpm grokbot qa manual \
   --model codex-cli/<codex-model> \
   --message "Reply exactly: CODEX_OK"
 ```

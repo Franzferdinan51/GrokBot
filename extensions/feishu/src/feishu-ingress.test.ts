@@ -7,8 +7,8 @@ import type * as Lark from "@larksuiteoapi/node-sdk";
 import {
   closeOpenClawStateDatabaseForTest,
   createChannelIngressQueueForTests,
-} from "openclaw/plugin-sdk/plugin-state-test-runtime";
-import { createNonExitingRuntimeEnv } from "openclaw/plugin-sdk/plugin-test-runtime";
+} from "grokbot/plugin-sdk/plugin-state-test-runtime";
+import { createNonExitingRuntimeEnv } from "grokbot/plugin-sdk/plugin-test-runtime";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { feishuDedupeState } from "./dedup-state.js";
 import { claimUnprocessedFeishuMessage } from "./dedup.js";
@@ -101,7 +101,7 @@ function startIngress(params: {
 }
 
 async function withQueue<T>(fn: (queue: FeishuIngressQueue, stateDir: string) => Promise<T>) {
-  const created = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-feishu-ingress-"));
+  const created = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-feishu-ingress-"));
   const stateDir = await fs.realpath(created);
   const previousStateDir = process.env.OPENCLAW_STATE_DIR;
   process.env.OPENCLAW_STATE_DIR = stateDir;

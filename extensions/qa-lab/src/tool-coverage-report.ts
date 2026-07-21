@@ -1,9 +1,9 @@
 // Qa Lab plugin module implements tool coverage report behavior.
-import { expectDefined } from "openclaw/plugin-sdk/expect-runtime";
+import { expectDefined } from "grokbot/plugin-sdk/expect-runtime";
 import {
   isRecord,
   normalizeOptionalString as readString,
-} from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/string-coerce-runtime";
 import {
   isRuntimeParityCellPassable,
   type RuntimeId,
@@ -47,7 +47,7 @@ type QaToolCoverageRow = {
   fixtureCount: number;
   scenarios: string[];
   sourcePaths: string[];
-  openclaw: QaToolCoverageStatus;
+  grokbot: QaToolCoverageStatus;
   codex: QaToolCoverageStatus;
   drift: QaToolCoverageDrift;
   openclawToolCalls: number;
@@ -91,7 +91,7 @@ function normalizeRuntimePair(
   if (pair?.[0] && pair?.[1]) {
     return pair;
   }
-  return ["openclaw", "codex"];
+  return ["grokbot", "codex"];
 }
 
 function cellStatus(cell: RuntimeParityCell | undefined): QaToolCoverageStatus {
@@ -191,7 +191,7 @@ function countRuntimeToolCalls(
   if (!result || !toolName) {
     return 0;
   }
-  const cell = runtime === "openclaw" ? result.cells.openclaw : result.cells.codex;
+  const cell = runtime === "grokbot" ? result.cells.grokbot : result.cells.codex;
   return cell.toolCalls.filter((call) => call.tool === toolName).length;
 }
 
@@ -221,10 +221,10 @@ function buildRow(params: {
     fixtureCount: params.group.scenarios.length,
     scenarios: params.group.scenarios.map((scenario) => scenario.id),
     sourcePaths: params.group.scenarios.map((scenario) => scenario.sourcePath),
-    openclaw: result ? cellStatus(result.cells.openclaw) : "not-run",
+    grokbot: result ? cellStatus(result.cells.grokbot) : "not-run",
     codex: result ? cellStatus(result.cells.codex) : "not-run",
     drift: result?.drift ?? "not-run",
-    openclawToolCalls: countRuntimeToolCalls(result, "openclaw", runtimeToolName),
+    openclawToolCalls: countRuntimeToolCalls(result, "grokbot", runtimeToolName),
     codexToolCalls: countRuntimeToolCalls(result, "codex", runtimeToolName),
     ...(tracking ? { tracking } : {}),
     ...(rowMetadata.codexDefaultImpact
@@ -243,14 +243,14 @@ function coverageFailureForRow(row: QaToolCoverageRow): string | undefined {
   if (row.drift === "not-run") {
     return `${row.tool} drift=not-run`;
   }
-  if (row.openclaw !== "pass" || row.codex !== "pass") {
-    return `${row.tool} status openclaw=${row.openclaw} codex=${row.codex}`;
+  if (row.grokbot !== "pass" || row.codex !== "pass") {
+    return `${row.tool} status grokbot=${row.grokbot} codex=${row.codex}`;
   }
   if (row.drift === "failure-mode") {
     return `${row.tool} drift=failure-mode${row.details ? ` (${row.details})` : ""}`;
   }
   if (row.runtimeToolName && row.openclawToolCalls === 0) {
-    return `${row.tool} missing openclaw tool call ${row.runtimeToolName}`;
+    return `${row.tool} missing grokbot tool call ${row.runtimeToolName}`;
   }
   if (row.runtimeToolName && row.codexToolCalls === 0) {
     return `${row.tool} missing codex tool call ${row.runtimeToolName}`;
@@ -284,10 +284,10 @@ export function buildQaToolCoverageReport(params: {
     reportOnlyTools: rows.filter((row) => !row.required || Boolean(row.tracking)).length,
     trackedTools: rows.filter((row) => Boolean(row.tracking)).length,
     nativeWorkspaceTools: rows.filter((row) => row.bucket === "codex-native-workspace").length,
-    dynamicIntegrationTools: rows.filter((row) => row.bucket === "openclaw-dynamic-integration")
+    dynamicIntegrationTools: rows.filter((row) => row.bucket === "grokbot-dynamic-integration")
       .length,
     searchableDynamicTools: rows.filter(
-      (row) => row.capabilityLayer === "openclaw-dynamic-searchable",
+      (row) => row.capabilityLayer === "grokbot-dynamic-searchable",
     ).length,
     optionalTools: rows.filter((row) => row.bucket === "optional-profile-or-plugin").length,
     passingTools: evaluated
@@ -295,7 +295,7 @@ export function buildQaToolCoverageReport(params: {
           (row) =>
             row.required &&
             !row.tracking &&
-            row.openclaw === "pass" &&
+            row.grokbot === "pass" &&
             row.codex === "pass" &&
             (isPassingToolCoverageDrift(row.drift, true) || !coverageFailureForRow(row)),
         ).length
@@ -309,7 +309,7 @@ export function buildQaToolCoverageReport(params: {
 
 export function renderQaToolCoverageMarkdownReport(report: QaToolCoverageReport): string {
   const lines = [
-    `# OpenClaw Runtime Tool Coverage — ${report.runtimePair[0]} vs ${report.runtimePair[1]}`,
+    `# GrokBot Runtime Tool Coverage — ${report.runtimePair[0]} vs ${report.runtimePair[1]}`,
     "",
     `- Generated at: ${report.generatedAt}`,
     `- Mode: ${report.evaluated ? "runtime summary" : "catalog inventory"}`,
@@ -318,14 +318,14 @@ export function renderQaToolCoverageMarkdownReport(report: QaToolCoverageReport)
     `- Report-only tools: ${report.reportOnlyTools}`,
     `- Tracked issue rows: ${report.trackedTools}`,
     `- Codex-native workspace tools: ${report.nativeWorkspaceTools}`,
-    `- OpenClaw dynamic integration tools: ${report.dynamicIntegrationTools}`,
+    `- GrokBot dynamic integration tools: ${report.dynamicIntegrationTools}`,
     `- Searchable/deferred dynamic tools: ${report.searchableDynamicTools}`,
     `- Optional/profile/plugin-dependent tools: ${report.optionalTools}`,
     `- Passing tools: ${report.passingTools}`,
     `- Failing tools: ${report.failingTools}`,
     `- Verdict: ${report.pass ? "pass" : "fail"}`,
     "",
-    "| Tool | Bucket | Expected layer | Capability layer | Required | Fixtures | OpenClaw | Codex | Drift | Codex default impact | QA impact | Action | Tracking |",
+    "| Tool | Bucket | Expected layer | Capability layer | Required | Fixtures | GrokBot | Codex | Drift | Codex default impact | QA impact | Action | Tracking |",
     "| --- | --- | --- | --- | --- | ---: | --- | --- | --- | --- | --- | --- | --- |",
   ];
 
@@ -337,7 +337,7 @@ export function renderQaToolCoverageMarkdownReport(report: QaToolCoverageReport)
       row.capabilityLayer,
       row.required ? "yes" : "no",
       row.fixtureCount.toString(),
-      row.openclaw,
+      row.grokbot,
       row.codex,
       row.drift,
       row.codexDefaultImpact ?? "",

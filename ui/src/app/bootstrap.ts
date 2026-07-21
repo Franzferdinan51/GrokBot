@@ -1,4 +1,4 @@
-import type { RouteLocation } from "@openclaw/uirouter";
+import type { RouteLocation } from "@grokbot/uirouter";
 import type { GatewayBrowserClient } from "../api/gateway.ts";
 import {
   createApplicationRouter,
@@ -403,14 +403,14 @@ export function bootstrapApplication(): ApplicationRuntime {
       void router
         .navigate(routeId, context, { history: "push" }, routeLocation(routeId, options))
         .catch((error: unknown) => {
-          console.error("[openclaw] route navigation failed", error);
+          console.error("[grokbot] route navigation failed", error);
         });
     },
     replace: (routeId, options) => {
       void router
         .navigate(routeId, context, { history: "replace" }, routeLocation(routeId, options))
         .catch((error: unknown) => {
-          console.error("[openclaw] route replacement failed", error);
+          console.error("[grokbot] route replacement failed", error);
         });
     },
     revalidate: (routeId) => router.revalidate(context, routeId),

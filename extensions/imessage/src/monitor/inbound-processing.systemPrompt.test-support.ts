@@ -1,5 +1,5 @@
 // Imessage test support covers inbound processing.systemPrompt plugin behavior.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import { describe, expect, it } from "vitest";
 import {
   buildIMessageInboundContext,

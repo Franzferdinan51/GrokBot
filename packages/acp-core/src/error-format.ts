@@ -46,7 +46,7 @@ const SECRET_PATTERNS: RegExp[] = [
     "gi",
   ),
   new RegExp(CREDENTIAL_STYLE_HEADER_REDACT_PATTERN, "gi"),
-  /(?:X-OpenClaw-Token|x-pomerium-jwt-assertion|X-Api-Key|X-Auth-Token)\s*[:=]\s*([^\s"',;]+)/gi,
+  /(?:X-GrokBot-Token|x-pomerium-jwt-assertion|X-Api-Key|X-Auth-Token)\s*[:=]\s*([^\s"',;]+)/gi,
   /\bBearer\s+([-A-Za-z0-9._~+/=]{18,})(?![-A-Za-z0-9._~+/=])/g,
   /(^|[\s,;])(?:access_token|refresh_token|auth[-_]?token|api[-_]?key|client[-_]?secret|app[-_]?secret|token|secret|password|passwd|card[-_]?number|card[-_]?cvc|card[-_]?cvv|cvc|cvv|security[-_]?code|payment[-_]?credential|shared[-_]?payment[-_]?token)=([^\s&#]+)/gi,
   /-----BEGIN [A-Z ]*PRIVATE KEY-----[\s\S]+?-----END [A-Z ]*PRIVATE KEY-----/g,
@@ -130,4 +130,4 @@ export function redactSensitiveText(value: string): string {
   return redacted.replaceAll(structuredAuthMarker, "[REDACTED]");
 }
 
-export { stringifyNonErrorCause } from "@openclaw/normalization-core/error-coercion";
+export { stringifyNonErrorCause } from "@grokbot/normalization-core/error-coercion";

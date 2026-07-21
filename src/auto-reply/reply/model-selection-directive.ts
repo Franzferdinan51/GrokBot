@@ -1,7 +1,7 @@
 // Normalizes model selection directives into provider and model ids.
-import { normalizeProviderId } from "@openclaw/model-catalog-core/provider-id";
-import { expectDefined } from "@openclaw/normalization-core";
-import { normalizeLowercaseStringOrEmpty } from "@openclaw/normalization-core/string-coerce";
+import { normalizeProviderId } from "@grokbot/model-catalog-core/provider-id";
+import { expectDefined } from "@grokbot/normalization-core";
+import { normalizeLowercaseStringOrEmpty } from "@grokbot/normalization-core/string-coerce";
 import { modelKey } from "../../agents/model-ref-shared.js";
 import {
   isModelKeyAllowedBySet,
@@ -9,7 +9,7 @@ import {
   resolveConfiguredModelPolicyAllow,
   resolveModelRefFromString,
 } from "../../agents/model-selection-shared.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 export { modelKey };
 export type { ModelAliasIndex };
 
@@ -36,7 +36,7 @@ function formatNotAllowedError(params: {
     `Then retry: ${retryCommand}`,
   ];
   if (rawRuntime && normalizeProviderId(rawRuntime) === "codex") {
-    lines.push("If the Codex runtime is missing, run: openclaw plugins enable codex");
+    lines.push("If the Codex runtime is missing, run: grokbot plugins enable codex");
   }
   return lines.join("\n");
 }

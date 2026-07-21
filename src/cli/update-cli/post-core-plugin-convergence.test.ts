@@ -2,7 +2,7 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({
@@ -26,7 +26,7 @@ vi.mock("./plugin-payload-validation.js", () => ({
   runPluginPayloadSmokeCheck: mocks.runPluginPayloadSmokeCheck,
 }));
 
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import { VERSION } from "../../version.js";
 import {
   filterRecordsToActive,
@@ -66,7 +66,7 @@ describe("runPostCorePluginConvergence", () => {
   });
 
   function makeTempDir(): string {
-    const dir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-post-core-convergence-"));
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-post-core-convergence-"));
     tempDirs.push(dir);
     return dir;
   }
@@ -76,7 +76,7 @@ describe("runPostCorePluginConvergence", () => {
     fs.mkdirSync(pluginDir, { recursive: true });
     fs.writeFileSync(path.join(pluginDir, "index.js"), "export default {};\n", "utf8");
     fs.writeFileSync(
-      path.join(pluginDir, "openclaw.plugin.json"),
+      path.join(pluginDir, "grokbot.plugin.json"),
       JSON.stringify({
         id: pluginId,
         name: pluginId,
@@ -88,7 +88,7 @@ describe("runPostCorePluginConvergence", () => {
     fs.writeFileSync(
       path.join(pluginDir, "package.json"),
       JSON.stringify({
-        name: `@openclaw/${pluginId}`,
+        name: `@grokbot/${pluginId}`,
         version: "2026.5.20-beta.1",
       }),
       "utf8",
@@ -182,15 +182,15 @@ describe("runPostCorePluginConvergence", () => {
     });
   });
 
-  it("repairs managed npm openclaw peer links in every managed npm project before payload smoke checks", async () => {
+  it("repairs managed npm grokbot peer links in every managed npm project before payload smoke checks", async () => {
     mocks.repairMissingConfiguredPluginInstalls.mockResolvedValue({
       changes: [],
       warnings: [],
       records: { codex: { source: "npm", installPath: "/p/codex" } },
     });
     mocks.listManagedPluginNpmRoots.mockResolvedValue([
-      "/tmp/openclaw-state/npm",
-      "/tmp/openclaw-state/npm/projects/codex",
+      "/tmp/grokbot-state/npm",
+      "/tmp/grokbot-state/npm/projects/codex",
     ]);
     mocks.relinkOpenClawPeerDependenciesInManagedNpmRoot
       .mockResolvedValueOnce({
@@ -208,21 +208,21 @@ describe("runPostCorePluginConvergence", () => {
 
     const result = await runPostCorePluginConvergence({
       cfg: { plugins: { entries: { codex: { enabled: true } } } } as unknown as OpenClawConfig,
-      env: { OPENCLAW_STATE_DIR: "/tmp/openclaw-state" },
+      env: { OPENCLAW_STATE_DIR: "/tmp/grokbot-state" },
     });
 
     expect(mocks.relinkOpenClawPeerDependenciesInManagedNpmRoot).toHaveBeenNthCalledWith(1, {
-      npmRoot: "/tmp/openclaw-state/npm",
+      npmRoot: "/tmp/grokbot-state/npm",
       logger: {},
       onPackageReadError: expect.any(Function),
     });
     expect(mocks.relinkOpenClawPeerDependenciesInManagedNpmRoot).toHaveBeenNthCalledWith(2, {
-      npmRoot: "/tmp/openclaw-state/npm/projects/codex",
+      npmRoot: "/tmp/grokbot-state/npm/projects/codex",
       logger: {},
       onPackageReadError: expect.any(Function),
     });
     expect(result.changes).toEqual([
-      "Repaired OpenClaw host peer link(s) for 1 managed npm plugin package(s).",
+      "Repaired GrokBot host peer link(s) for 1 managed npm plugin package(s).",
     ]);
     expect(
       mocks.relinkOpenClawPeerDependenciesInManagedNpmRoot.mock.invocationCallOrder[0],
@@ -336,7 +336,7 @@ describe("runPostCorePluginConvergence", () => {
     mocks.repairMissingConfiguredPluginInstalls.mockResolvedValue({
       changes: [],
       warnings: [
-        'Failed to install missing configured plugin "discord" from @openclaw/discord: ENETUNREACH.',
+        'Failed to install missing configured plugin "discord" from @grokbot/discord: ENETUNREACH.',
       ],
       records: {},
     });
@@ -350,10 +350,10 @@ describe("runPostCorePluginConvergence", () => {
     expect(result.warnings).toStrictEqual([
       {
         reason:
-          'Failed to install missing configured plugin "discord" from @openclaw/discord: ENETUNREACH.',
+          'Failed to install missing configured plugin "discord" from @grokbot/discord: ENETUNREACH.',
         message:
-          'Failed to install missing configured plugin "discord" from @openclaw/discord: ENETUNREACH.',
-        guidance: ["Run `openclaw update repair` to retry plugin repair."],
+          'Failed to install missing configured plugin "discord" from @grokbot/discord: ENETUNREACH.',
+        guidance: ["Run `grokbot update repair` to retry plugin repair."],
       },
     ]);
   });
@@ -362,7 +362,7 @@ describe("runPostCorePluginConvergence", () => {
     mocks.repairMissingConfiguredPluginInstalls.mockResolvedValue({
       changes: [],
       warnings: [
-        'Failed to install missing configured plugin "matrix" from clawhub:@openclaw/matrix@beta: ClawHub ClawPack download for @openclaw/matrix@2026.6.1-beta.1 body stalled after 30000ms.',
+        'Failed to install missing configured plugin "matrix" from clawhub:@grokbot/matrix@beta: ClawHub ClawPack download for @grokbot/matrix@2026.6.1-beta.1 body stalled after 30000ms.',
       ],
       failedPluginIds: ["matrix"],
       records: {},
@@ -377,10 +377,10 @@ describe("runPostCorePluginConvergence", () => {
     expect(result.warnings).toStrictEqual([
       {
         reason:
-          'Failed to install missing configured plugin "matrix" from clawhub:@openclaw/matrix@beta: ClawHub ClawPack download for @openclaw/matrix@2026.6.1-beta.1 body stalled after 30000ms.',
+          'Failed to install missing configured plugin "matrix" from clawhub:@grokbot/matrix@beta: ClawHub ClawPack download for @grokbot/matrix@2026.6.1-beta.1 body stalled after 30000ms.',
         message:
-          'Failed to install missing configured plugin "matrix" from clawhub:@openclaw/matrix@beta: ClawHub ClawPack download for @openclaw/matrix@2026.6.1-beta.1 body stalled after 30000ms.',
-        guidance: ["Run `openclaw update repair` to retry plugin repair."],
+          'Failed to install missing configured plugin "matrix" from clawhub:@grokbot/matrix@beta: ClawHub ClawPack download for @grokbot/matrix@2026.6.1-beta.1 body stalled after 30000ms.',
+        guidance: ["Run `grokbot update repair` to retry plugin repair."],
       },
     ]);
     expect(mocks.runPluginPayloadSmokeCheck).toHaveBeenCalledWith({
@@ -393,7 +393,7 @@ describe("runPostCorePluginConvergence", () => {
     mocks.repairMissingConfiguredPluginInstalls.mockResolvedValue({
       changes: [],
       warnings: [
-        'Failed to install missing configured plugin "discord" from @openclaw/discord: ENETUNREACH.',
+        'Failed to install missing configured plugin "discord" from @grokbot/discord: ENETUNREACH.',
       ],
       failedPluginIds: ["discord"],
       records: {
@@ -424,7 +424,7 @@ describe("runPostCorePluginConvergence", () => {
     mocks.repairMissingConfiguredPluginInstalls.mockResolvedValue({
       changes: ['Installed missing configured plugin "discord".'],
       notices: [
-        'ClawHub trust warning for "@openclaw/discord@1.2.3": ClawHub has not completed a fresh clean security check for this release. Status: security scan is pending. Review the package before enabling it.',
+        'ClawHub trust warning for "@grokbot/discord@1.2.3": ClawHub has not completed a fresh clean security check for this release. Status: security scan is pending. Review the package before enabling it.',
       ],
       warnings: [],
       records: { discord: { source: "clawhub", installPath: "/p/discord" } },
@@ -440,9 +440,9 @@ describe("runPostCorePluginConvergence", () => {
     expect(result.notices).toStrictEqual([
       {
         reason:
-          'ClawHub trust warning for "@openclaw/discord@1.2.3": ClawHub has not completed a fresh clean security check for this release. Status: security scan is pending. Review the package before enabling it.',
+          'ClawHub trust warning for "@grokbot/discord@1.2.3": ClawHub has not completed a fresh clean security check for this release. Status: security scan is pending. Review the package before enabling it.',
         message:
-          'ClawHub trust warning for "@openclaw/discord@1.2.3": ClawHub has not completed a fresh clean security check for this release. Status: security scan is pending. Review the package before enabling it.',
+          'ClawHub trust warning for "@grokbot/discord@1.2.3": ClawHub has not completed a fresh clean security check for this release. Status: security scan is pending. Review the package before enabling it.',
         guidance: [],
       },
     ]);
@@ -485,8 +485,8 @@ describe("runPostCorePluginConvergence", () => {
         message:
           'Plugin "brave" failed post-core payload smoke check (missing-main-entry): Plugin main entry "dist/index.js" not found at /p/brave/dist/index.js',
         guidance: [
-          "Run `openclaw update repair` to retry plugin repair.",
-          "Run `openclaw plugins inspect brave --runtime --json` for details.",
+          "Run `grokbot update repair` to retry plugin repair.",
+          "Run `grokbot plugins inspect brave --runtime --json` for details.",
         ],
       },
     ]);
@@ -522,8 +522,8 @@ describe("runPostCorePluginConvergence", () => {
         message:
           'Plugin "brave" failed post-core payload smoke check (missing-install-path): Install path is missing from the plugin install record.',
         guidance: [
-          "Run `openclaw update repair` to retry plugin repair.",
-          "Run `openclaw plugins inspect brave --runtime --json` for details.",
+          "Run `grokbot update repair` to retry plugin repair.",
+          "Run `grokbot plugins inspect brave --runtime --json` for details.",
         ],
       },
     ]);
@@ -557,8 +557,8 @@ describe("runPostCorePluginConvergence", () => {
     const message =
       'Plugin "brave" failed post-core payload smoke check (unreadable-package-json): Could not read package.json at /p/brave/package.json: EACCES: permission denied';
     const guidance = [
-      "Fix file access for /p/brave/package.json so it is readable by the user running OpenClaw. For EACCES or EPERM, correct its ownership or permissions; otherwise resolve the reported filesystem I/O error, then retry.",
-      "Run `openclaw plugins inspect brave --runtime --json` for details.",
+      "Fix file access for /p/brave/package.json so it is readable by the user running GrokBot. For EACCES or EPERM, correct its ownership or permissions; otherwise resolve the reported filesystem I/O error, then retry.",
+      "Run `grokbot plugins inspect brave --runtime --json` for details.",
     ];
     expect(result.warnings).toStrictEqual([
       {
@@ -577,7 +577,7 @@ describe("runPostCorePluginConvergence", () => {
   });
 
   it("does not duplicate a package-scoped repair error owned by a smoke failure", async () => {
-    const installPath = "/tmp/openclaw-state/npm/projects/brave/node_modules/brave";
+    const installPath = "/tmp/grokbot-state/npm/projects/brave/node_modules/brave";
     mocks.repairMissingConfiguredPluginInstalls.mockResolvedValue({
       changes: [],
       warnings: [],
@@ -608,7 +608,7 @@ describe("runPostCorePluginConvergence", () => {
       cfg: {
         plugins: { entries: { brave: { enabled: true } } },
       } as unknown as OpenClawConfig,
-      env: { OPENCLAW_STATE_DIR: "/tmp/openclaw-state" },
+      env: { OPENCLAW_STATE_DIR: "/tmp/grokbot-state" },
     });
 
     expect(result.warnings).toHaveLength(1);
@@ -620,7 +620,7 @@ describe("runPostCorePluginConvergence", () => {
   });
 
   it("does not promote an inactive package read error into an ownerless blocker", async () => {
-    const installPath = "/tmp/openclaw-state/npm/projects/brave/node_modules/brave";
+    const installPath = "/tmp/grokbot-state/npm/projects/brave/node_modules/brave";
     mocks.repairMissingConfiguredPluginInstalls.mockResolvedValue({
       changes: [],
       warnings: [],
@@ -640,7 +640,7 @@ describe("runPostCorePluginConvergence", () => {
       cfg: {
         plugins: { entries: { brave: { enabled: false } } },
       } as unknown as OpenClawConfig,
-      env: { OPENCLAW_STATE_DIR: "/tmp/openclaw-state" },
+      env: { OPENCLAW_STATE_DIR: "/tmp/grokbot-state" },
     });
 
     expect(mocks.runPluginPayloadSmokeCheck).toHaveBeenCalledWith({
@@ -652,7 +652,7 @@ describe("runPostCorePluginConvergence", () => {
   });
 
   it("keeps an unowned package read error visible for startup to block", async () => {
-    const packageDir = "/tmp/openclaw-state/npm/node_modules/untracked";
+    const packageDir = "/tmp/grokbot-state/npm/node_modules/untracked";
     mocks.relinkOpenClawPeerDependenciesInManagedNpmRoot.mockImplementation(
       async (params: { onPackageReadError?: (error: unknown, packageDir: string) => void }) => {
         params.onPackageReadError?.(new Error("EACCES: permission denied"), packageDir);
@@ -662,14 +662,14 @@ describe("runPostCorePluginConvergence", () => {
 
     const result = await runPostCorePluginConvergence({
       cfg: { plugins: { entries: {} } } as unknown as OpenClawConfig,
-      env: { OPENCLAW_STATE_DIR: "/tmp/openclaw-state" },
+      env: { OPENCLAW_STATE_DIR: "/tmp/grokbot-state" },
     });
 
     expect(result.warnings).toStrictEqual([
       {
-        reason: "Failed to repair managed npm OpenClaw host peer links: EACCES: permission denied",
-        message: "Failed to repair managed npm OpenClaw host peer links: EACCES: permission denied",
-        guidance: ["Run `openclaw update repair` to retry plugin repair."],
+        reason: "Failed to repair managed npm GrokBot host peer links: EACCES: permission denied",
+        message: "Failed to repair managed npm GrokBot host peer links: EACCES: permission denied",
+        guidance: ["Run `grokbot update repair` to retry plugin repair."],
       },
     ]);
     expect(result.errored).toBe(false);
@@ -708,12 +708,12 @@ describe("convergenceWarningsToOutcomes", () => {
           pluginId: "brave",
           reason: "missing-main-entry: …",
           message: 'Plugin "brave" failed payload smoke check.',
-          guidance: ["Run `openclaw update repair`."],
+          guidance: ["Run `grokbot update repair`."],
         },
         {
           reason: "Failed install",
           message: "Failed install for some plugin.",
-          guidance: ["Run `openclaw update repair`."],
+          guidance: ["Run `grokbot update repair`."],
         },
       ],
       errored: true,
@@ -798,7 +798,7 @@ describe("filterRecordsToActive", () => {
     const records = {
       codex: {
         source: "npm" as const,
-        spec: "@openclaw/codex",
+        spec: "@grokbot/codex",
         installPath: "/p/codex",
         trustedSourceLinkedOfficial: true,
       },

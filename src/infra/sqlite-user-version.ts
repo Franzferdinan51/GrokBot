@@ -14,7 +14,7 @@ export function createNewerSqliteSchemaVersionError(
   supportedVersion: number,
 ): Error {
   const error = new Error(
-    `${databaseLabel} ${pathname} uses newer schema version ${schemaVersion}; this OpenClaw build supports ${supportedVersion}. Upgrade OpenClaw before opening this database. Do not downgrade OpenClaw or modify the database. To run this older build, use a separate state directory or restore a compatible backup. See https://docs.openclaw.ai/reference/database-schemas.`,
+    `${databaseLabel} ${pathname} uses newer schema version ${schemaVersion}; this GrokBot build supports ${supportedVersion}. Upgrade GrokBot before opening this database. Do not downgrade GrokBot or modify the database. To run this older build, use a separate state directory or restore a compatible backup. See https://docs.grokbot.ai/reference/database-schemas.`,
   );
   error.name = "SqliteSchemaVersionError";
   return error;

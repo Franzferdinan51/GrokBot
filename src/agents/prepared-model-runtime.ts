@@ -1,5 +1,5 @@
 /** Lifecycle-owned auth/model discovery snapshots for agent runs. */
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { createSubsystemLogger } from "../logging/subsystem.js";
 import { registerRuntimeAuthProfileStoreMutationListener } from "./auth-profiles/runtime-snapshots.js";
 import {
@@ -743,7 +743,7 @@ function resetPreparedModelRuntimeSnapshotsForTest(): void {
 }
 
 if (process.env.VITEST || process.env.NODE_ENV === "test") {
-  (globalThis as Record<PropertyKey, unknown>)[Symbol.for("openclaw.preparedModelRuntimeTestApi")] =
+  (globalThis as Record<PropertyKey, unknown>)[Symbol.for("grokbot.preparedModelRuntimeTestApi")] =
     {
       resetPreparedModelRuntimeSnapshotsForTest,
       setModelRuntimeBuildTimeoutMsForTest: (timeoutMs: number) => {

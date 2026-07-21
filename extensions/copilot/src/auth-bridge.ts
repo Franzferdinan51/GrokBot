@@ -25,7 +25,7 @@ import { join, resolve } from "node:path";
  *     non-reversible pool fingerprint so token rotation busts the
  *     client pool cleanly.
  *   - Computes a per-agent `copilotHome` default
- *     (`<openClawHome>/.openclaw/agents/<agentId>/copilot`, or
+ *     (`<openClawHome>/.grokbot/agents/<agentId>/copilot`, or
  *     `<agentDir>/copilot` when an agent directory is supplied) that
  *     respects `OPENCLAW_HOME` for the home directory root.
  *   - Defaults to `useLoggedInUser` when no token signal is available.
@@ -260,7 +260,7 @@ function resolveCopilotHome(args: {
   }
   // When the host hands us an agent directory we isolate the SDK CLI state
   // (config.json, logs/, session-store.db, session-state/) under a dedicated
-  // "copilot" subdir so it cannot collide with OpenClaw's own files
+  // "copilot" subdir so it cannot collide with GrokBot's own files
   // (models.json, auth-profiles.json, ...) in the same agent directory.
   // This matches the documented layout and mirrors how the codex harness
   // isolates `<agentDir>/codex-home/`.
@@ -271,8 +271,8 @@ function resolveCopilotHome(args: {
   const openClawHome = readString(args.env.OPENCLAW_HOME);
   const rootHome = openClawHome ? resolve(openClawHome) : safeHomeDir(args.homeDir);
   // Per-agent isolation per proposal section 3.6:
-  //   <openClawHome>/.openclaw/agents/<agentId>/copilot
-  return resolve(join(rootHome, ".openclaw", "agents", args.agentId, "copilot"));
+  //   <openClawHome>/.grokbot/agents/<agentId>/copilot
+  return resolve(join(rootHome, ".grokbot", "agents", args.agentId, "copilot"));
 }
 
 function safeHomeDir(homeDir: () => string): string {

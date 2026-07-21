@@ -16,7 +16,7 @@ import {
   registerMainSessionGroupWatch,
   registerSessionStateWatch,
 } from "../../sessions/session-state-events.js";
-import { closeOpenClawStateDatabaseForTest } from "../../state/openclaw-state-db.js";
+import { closeOpenClawStateDatabaseForTest } from "../../state/grokbot-state-db.js";
 import { resolveSandboxedSessionToolContext } from "./sessions-access.js";
 import { testing as sessionsResolutionTesting } from "./sessions-resolution.test-support.js";
 
@@ -234,7 +234,7 @@ describe("createAgentToAgentPolicy", () => {
 describe("createSessionVisibilityGuard", () => {
   it("allows watched group reads under tree while denying unwatched peers", () => {
     const tempDirs: string[] = [];
-    const stateDir = makeTempDir(tempDirs, "openclaw-session-visibility-");
+    const stateDir = makeTempDir(tempDirs, "grokbot-session-visibility-");
     closeOpenClawStateDatabaseForTest();
     vi.stubEnv("OPENCLAW_STATE_DIR", stateDir);
     try {

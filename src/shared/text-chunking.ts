@@ -1,4 +1,4 @@
-import { avoidTrailingHighSurrogateBreak } from "@openclaw/normalization-core/utf16-slice";
+import { avoidTrailingHighSurrogateBreak } from "@grokbot/normalization-core/utf16-slice";
 
 export { avoidTrailingHighSurrogateBreak };
 

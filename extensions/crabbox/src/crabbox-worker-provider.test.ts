@@ -1,6 +1,6 @@
 import path from "node:path";
-import type { WorkerProfile } from "openclaw/plugin-sdk/plugin-entry";
-import type { SpawnResult } from "openclaw/plugin-sdk/process-runtime";
+import type { WorkerProfile } from "grokbot/plugin-sdk/plugin-entry";
+import type { SpawnResult } from "grokbot/plugin-sdk/process-runtime";
 import { describe, expect, it, vi } from "vitest";
 import { resolveCrabboxBinary } from "./crabbox-worker-profile.js";
 import { createCrabboxWorkerProvider, resolveOpenClawRoot } from "./crabbox-worker-provider.js";
@@ -11,7 +11,7 @@ const TESTBOX_LEASE_ID = "tbx_Test-123";
 const HOST_KEY = [["ssh", "ed25519"].join("-"), "AAAA"].join(" ");
 const HOST_KEY_ERROR =
   "Crabbox inspect does not expose the SSH host key required by the worker provider contract";
-const OPENCLAW_ROOT = path.resolve(path.sep, "workspace", "openclaw");
+const OPENCLAW_ROOT = path.resolve(path.sep, "workspace", "grokbot");
 const SIBLING_BINARY = path.resolve(OPENCLAW_ROOT, "../crabbox/bin/crabbox");
 const INSPECT_FAILURE_PREFIX = "Crabbox inspect failed with exit code 2: ";
 const PROFILE = {
@@ -46,7 +46,7 @@ function inspectJson(overrides: Record<string, unknown> = {}): string {
     host: "fallback.example.test",
     sshHost: "worker.example.test",
     sshPort: "2222",
-    sshUser: "openclaw",
+    sshUser: "grokbot",
     sshKey: "/tmp/crabbox-worker-key",
     ready: true,
     ...overrides,
@@ -111,7 +111,7 @@ describe("Crabbox worker provider", () => {
       ssh: {
         host: "worker.example.test",
         port: 2222,
-        user: "openclaw",
+        user: "grokbot",
         hostKey: HOST_KEY,
         keyRef: {
           source: "file",
@@ -495,7 +495,7 @@ describe("Crabbox worker provider", () => {
       "--network",
       "public",
       "--id",
-      expect.stringMatching(/^openclaw-[a-f0-9]{32}$/u),
+      expect.stringMatching(/^grokbot-[a-f0-9]{32}$/u),
       "--json",
     ]);
     expect(calls[1]?.argv).toEqual([
@@ -513,7 +513,7 @@ describe("Crabbox worker provider", () => {
       "--idle-timeout",
       "60m",
       "--slug",
-      expect.stringMatching(/^openclaw-[a-f0-9]{32}$/u),
+      expect.stringMatching(/^grokbot-[a-f0-9]{32}$/u),
       "--keep=true",
     ]);
     expect(calls[1]?.options).toEqual({
@@ -563,7 +563,7 @@ describe("Crabbox worker provider", () => {
       "--provider",
       "aws",
       "--id",
-      expect.stringMatching(/^openclaw-[a-f0-9]{32}$/u),
+      expect.stringMatching(/^grokbot-[a-f0-9]{32}$/u),
     ]);
   });
 
@@ -588,7 +588,7 @@ describe("Crabbox worker provider", () => {
       "--network",
       "public",
       "--id",
-      expect.stringMatching(/^openclaw-[a-f0-9]{32}$/u),
+      expect.stringMatching(/^grokbot-[a-f0-9]{32}$/u),
       "--json",
     ]);
     expect(calls[1]).toEqual([SIBLING_BINARY, "stop", "--provider", "aws", "--id", LEASE_ID]);

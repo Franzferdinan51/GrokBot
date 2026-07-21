@@ -9,11 +9,11 @@ import path from "node:path";
 import type { Insertable, Selectable, Updateable } from "kysely";
 import { z } from "zod";
 import { executeSqliteQuerySync, getNodeSqliteKysely } from "../../infra/kysely-sync.js";
-import { withOpenClawStateDatabaseReadOnly } from "../../state/openclaw-state-db-readonly.js";
-import { tableExists } from "../../state/openclaw-state-db-schema-helpers.js";
-import type { DB as OpenClawStateKyselyDatabase } from "../../state/openclaw-state-db.generated.js";
-import { runOpenClawStateWriteTransaction } from "../../state/openclaw-state-db.js";
-import { resolveOpenClawStateSqlitePath } from "../../state/openclaw-state-db.paths.js";
+import { withOpenClawStateDatabaseReadOnly } from "../../state/grokbot-state-db-readonly.js";
+import { tableExists } from "../../state/grokbot-state-db-schema-helpers.js";
+import type { DB as OpenClawStateKyselyDatabase } from "../../state/grokbot-state-db.generated.js";
+import { runOpenClawStateWriteTransaction } from "../../state/grokbot-state-db.js";
+import { resolveOpenClawStateSqlitePath } from "../../state/grokbot-state-db.paths.js";
 import { safeParseJsonWithSchema } from "../../utils/zod-parse.js";
 import { acquireSessionWriteLock } from "../session-write-lock.js";
 import {

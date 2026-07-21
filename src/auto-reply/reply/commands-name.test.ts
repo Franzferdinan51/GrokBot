@@ -3,7 +3,7 @@ import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import { loadSessionEntry, upsertSessionEntry } from "../../config/sessions/session-accessor.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import { buildBuiltinChatCommands } from "../commands-registry.shared.js";
 import { takeCommandSessionMetadataChanges } from "./command-session-metadata.js";
 import { handleNameCommand } from "./commands-name.js";
@@ -18,7 +18,7 @@ afterEach(async () => {
 });
 
 async function createStorePath(): Promise<string> {
-  const root = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-name-command-"));
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-name-command-"));
   tempRoots.push(root);
   return path.join(root, "sessions.json");
 }

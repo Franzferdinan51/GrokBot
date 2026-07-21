@@ -1,10 +1,10 @@
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import {
   createPluginStateKeyedStoreForTests,
   createPluginStateSyncKeyedStoreForTests,
   resetPluginStateStoreForTests,
-} from "openclaw/plugin-sdk/plugin-state-test-runtime";
-import { resolveStorePath } from "openclaw/plugin-sdk/session-store-runtime";
+} from "grokbot/plugin-sdk/plugin-state-test-runtime";
+import { resolveStorePath } from "grokbot/plugin-sdk/session-store-runtime";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { createTelegramMessageCache, resolveTelegramMessageCacheScope } from "./message-cache.js";
 import { recordOutboundMessageForPromptContext } from "./outbound-message-context.js";
@@ -16,7 +16,7 @@ import {
 import type { TelegramRuntime } from "./runtime.types.js";
 
 const cfg = {
-  session: { store: "/tmp/openclaw-telegram-outbound-context-test.json" },
+  session: { store: "/tmp/grokbot-telegram-outbound-context-test.json" },
 } satisfies OpenClawConfig;
 
 function installTelegramStateRuntimeForTest(): void {
@@ -202,7 +202,7 @@ describe("recordOutboundMessageForPromptContext", () => {
       messageId: 1498,
       text: "Channel announcement",
     });
-    expect(initial).toMatchObject({ sender: "OpenClaw (you)", senderId: "0" });
+    expect(initial).toMatchObject({ sender: "GrokBot (you)", senderId: "0" });
 
     const cache = createPromptContextCache();
     await cache.record({
@@ -224,10 +224,10 @@ describe("recordOutboundMessageForPromptContext", () => {
       messageId: "1498",
     });
     expect(merged).toMatchObject({
-      sender: "OpenClaw (you)",
+      sender: "GrokBot (you)",
       senderId: "0",
       sourceMessage: {
-        from: { id: 0, is_bot: true, first_name: "OpenClaw (you)" },
+        from: { id: 0, is_bot: true, first_name: "GrokBot (you)" },
         sender_chat: { id: -1001, type: "channel", title: "Announcements" },
       },
     });

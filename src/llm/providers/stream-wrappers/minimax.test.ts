@@ -1,5 +1,5 @@
-import type { StreamFn } from "openclaw/plugin-sdk/agent-core";
-import type { Context, Model } from "openclaw/plugin-sdk/llm";
+import type { StreamFn } from "grokbot/plugin-sdk/agent-core";
+import type { Context, Model } from "grokbot/plugin-sdk/llm";
 import { describe, expect, it } from "vitest";
 import type { ThinkLevel } from "../../../auto-reply/thinking.js";
 import { createMinimaxFastModeWrapper, createMinimaxThinkingDisabledWrapper } from "./minimax.js";

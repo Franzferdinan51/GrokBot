@@ -25,8 +25,8 @@ export type ExternalCodePluginValidationResult = {
 
 /** Required package.json field paths for external code plugin packages. */
 export const EXTERNAL_CODE_PLUGIN_REQUIRED_FIELD_PATHS = [
-  "openclaw.compat.pluginApi",
-  "openclaw.build.openclawVersion",
+  "grokbot.compat.pluginApi",
+  "grokbot.build.openclawVersion",
 ] as const;
 
 /** Narrow unknown values to plain records. */
@@ -43,14 +43,14 @@ function normalizeOptionalString(value: unknown): string | undefined {
   return trimmed ? trimmed : undefined;
 }
 
-/** Read OpenClaw package.json blocks without trusting caller input shape. */
+/** Read GrokBot package.json blocks without trusting caller input shape. */
 function readOpenClawBlock(packageJson: unknown) {
   const root = isRecord(packageJson) ? packageJson : undefined;
-  const openclaw = isRecord(root?.openclaw) ? root.openclaw : undefined;
-  const compat = isRecord(openclaw?.compat) ? openclaw.compat : undefined;
-  const build = isRecord(openclaw?.build) ? openclaw.build : undefined;
-  const install = isRecord(openclaw?.install) ? openclaw.install : undefined;
-  return { root, openclaw, compat, build, install };
+  const grokbot = isRecord(root?.grokbot) ? root.grokbot : undefined;
+  const compat = isRecord(grokbot?.compat) ? grokbot.compat : undefined;
+  const build = isRecord(grokbot?.build) ? grokbot.build : undefined;
+  const install = isRecord(grokbot?.install) ? grokbot.install : undefined;
+  return { root, grokbot, compat, build, install };
 }
 
 /** Normalize compatibility metadata from an external plugin package.json. */
@@ -90,10 +90,10 @@ export function listMissingExternalCodePluginFieldPaths(packageJson: unknown): s
   const { compat, build } = readOpenClawBlock(packageJson);
   const missing: string[] = [];
   if (!normalizeOptionalString(compat?.pluginApi)) {
-    missing.push("openclaw.compat.pluginApi");
+    missing.push("grokbot.compat.pluginApi");
   }
   if (!normalizeOptionalString(build?.openclawVersion)) {
-    missing.push("openclaw.build.openclawVersion");
+    missing.push("grokbot.build.openclawVersion");
   }
   return missing;
 }

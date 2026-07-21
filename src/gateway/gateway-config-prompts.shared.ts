@@ -1,9 +1,9 @@
 // Gateway setup prompt shared constants.
 // Provides Tailscale copy and Control UI origin updates for CLI setup flows.
-import { isIpv6Address, parseCanonicalIpAddress } from "@openclaw/net-policy/ip";
-import { expectDefined } from "@openclaw/normalization-core";
-import { normalizeLowercaseStringOrEmpty } from "@openclaw/normalization-core/string-coerce";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import { isIpv6Address, parseCanonicalIpAddress } from "@grokbot/net-policy/ip";
+import { expectDefined } from "@grokbot/normalization-core";
+import { normalizeLowercaseStringOrEmpty } from "@grokbot/normalization-core/string-coerce";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { getTailnetHostname } from "../infra/tailscale.js";
 
 export const TAILSCALE_EXPOSURE_OPTIONS = [
@@ -30,8 +30,8 @@ export const TAILSCALE_MISSING_BIN_NOTE_LINES = [
 
 export const TAILSCALE_DOCS_LINES = [
   "Docs:",
-  "https://docs.openclaw.ai/gateway/tailscale",
-  "https://docs.openclaw.ai/web",
+  "https://docs.grokbot.ai/gateway/tailscale",
+  "https://docs.grokbot.ai/web",
 ] as const;
 
 function normalizeTailnetHostForUrl(rawHost: string): string | null {

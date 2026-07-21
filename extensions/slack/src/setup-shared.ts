@@ -1,20 +1,20 @@
 // Slack plugin module implements setup shared behavior.
-import { describeAccountSnapshot } from "openclaw/plugin-sdk/account-helpers";
-import { hasConfiguredSecretInput } from "openclaw/plugin-sdk/secret-input";
-import { patchChannelConfigForAccount } from "openclaw/plugin-sdk/setup-runtime";
-import { formatDocsLink } from "openclaw/plugin-sdk/setup-tools";
+import { describeAccountSnapshot } from "grokbot/plugin-sdk/account-helpers";
+import { hasConfiguredSecretInput } from "grokbot/plugin-sdk/secret-input";
+import { patchChannelConfigForAccount } from "grokbot/plugin-sdk/setup-runtime";
+import { formatDocsLink } from "grokbot/plugin-sdk/setup-tools";
 import { isSlackPluginAccountConfigured } from "./account-configured.js";
 import type { ResolvedSlackAccount } from "./accounts.js";
 import type { OpenClawConfig } from "./channel-api.js";
 
 export const SLACK_CHANNEL = "slack" as const;
 
-export function buildSlackManifest(botName = "OpenClaw") {
-  const safeName = botName.trim() || "OpenClaw";
+export function buildSlackManifest(botName = "GrokBot") {
+  const safeName = botName.trim() || "GrokBot";
   const manifest = {
     display_information: {
       name: safeName,
-      description: `${safeName} connector for OpenClaw`,
+      description: `${safeName} connector for GrokBot`,
     },
     features: {
       bot_user: {
@@ -27,7 +27,7 @@ export function buildSlackManifest(botName = "OpenClaw") {
         messages_tab_read_only_enabled: false,
       },
       assistant_view: {
-        assistant_description: `${safeName} connects Slack assistant threads to OpenClaw agents.`,
+        assistant_description: `${safeName} connects Slack assistant threads to GrokBot agents.`,
         suggested_prompts: [
           {
             title: "What can you do?",
@@ -45,8 +45,8 @@ export function buildSlackManifest(botName = "OpenClaw") {
       },
       slash_commands: [
         {
-          command: "/openclaw",
-          description: "Send a message to OpenClaw",
+          command: "/grokbot",
+          description: "Send a message to GrokBot",
           should_escape: false,
         },
       ],

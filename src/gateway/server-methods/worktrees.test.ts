@@ -1,4 +1,4 @@
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { describe, expect, it, vi } from "vitest";
 import { WorktreeSnapshotError } from "../../agents/worktrees/service.js";
 import type { ManagedWorktreeRecord } from "../../agents/worktrees/types.js";
@@ -10,7 +10,7 @@ const record: ManagedWorktreeRecord = {
   repoFingerprint: "0123456789abcdef",
   repoRoot: "/repo",
   path: "/state/worktrees/0123456789abcdef/task-one",
-  branch: "openclaw/task-one",
+  branch: "grokbot/task-one",
   baseRef: "HEAD",
   ownerKind: "manual",
   createdAt: 1,
@@ -122,7 +122,7 @@ describe("worktrees gateway methods", () => {
     const path = await import("node:path");
     const fs = await import("node:fs/promises");
     const workspace = await fs.mkdtemp(
-      path.join(await fs.realpath(os.tmpdir()), "openclaw-branches-scope-"),
+      path.join(await fs.realpath(os.tmpdir()), "grokbot-branches-scope-"),
     );
     try {
       const service = {

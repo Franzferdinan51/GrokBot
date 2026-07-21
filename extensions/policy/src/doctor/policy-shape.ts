@@ -1,5 +1,5 @@
-import type { HealthFinding } from "openclaw/plugin-sdk/health";
-import { isRecord } from "openclaw/plugin-sdk/string-coerce-runtime";
+import type { HealthFinding } from "grokbot/plugin-sdk/health";
+import { isRecord } from "grokbot/plugin-sdk/string-coerce-runtime";
 import {
   agentsPolicyShapeFinding,
   execApprovalsPolicyShapeFinding,

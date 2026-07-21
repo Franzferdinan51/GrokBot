@@ -1,5 +1,5 @@
 // Verifies provider auth resolution, synthetic auth, and auth header behavior.
-import type { Model } from "openclaw/plugin-sdk/llm";
+import type { Model } from "grokbot/plugin-sdk/llm";
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import type { ModelProviderConfig } from "../config/config.js";
 import { resolveAuthProfileSecretOwnerId } from "../secrets/runtime-auth-profile-owner.js";
@@ -986,7 +986,7 @@ describe("resolveApiKeyForProvider", () => {
   });
 
   it("keeps a failed profile ref terminal without cooling an unrelated profile", async () => {
-    const agentDir = "/tmp/openclaw-agent-profile-isolation";
+    const agentDir = "/tmp/grokbot-agent-profile-isolation";
     const coldProfileId = "openai:cold";
     const healthyProfileId = "anthropic:healthy";
     const store = {
@@ -1076,7 +1076,7 @@ describe("resolveApiKeyForProvider", () => {
 
   it("sentinelizes credentials resolved from auth-profile SecretRefs", async () => {
     const profileId = "openai:secretref";
-    const agentDir = "/tmp/openclaw-agent-secretref-sentinel";
+    const agentDir = "/tmp/grokbot-agent-secretref-sentinel";
     const store = {
       version: 1 as const,
       profiles: {
@@ -1116,7 +1116,7 @@ describe("resolveApiKeyForProvider", () => {
 
   it("keeps SecretRef profile credentials request-ready outside model sentinel mode", async () => {
     const profileId = "openai:non-model";
-    const agentDir = "/tmp/openclaw-agent-secretref-plain";
+    const agentDir = "/tmp/grokbot-agent-secretref-plain";
     const store = {
       version: 1 as const,
       profiles: {

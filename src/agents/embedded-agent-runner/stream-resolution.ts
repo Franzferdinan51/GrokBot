@@ -1,8 +1,8 @@
 /**
  * Resolves provider stream functions and API keys for embedded agents.
  */
-import type { LlmRuntime } from "@openclaw/ai";
-import { stripSystemPromptCacheBoundary } from "@openclaw/ai/internal/shared";
+import type { LlmRuntime } from "@grokbot/ai";
+import { stripSystemPromptCacheBoundary } from "@grokbot/ai/internal/shared";
 import { getStreamLlmRuntime } from "../../llm/model-runtime-binding.js";
 import { createAnthropicVertexStreamFnForModel } from "../anthropic-vertex-stream.js";
 import { createBoundaryAwareStreamFnForModel } from "../provider-transport-stream.js";
@@ -111,7 +111,7 @@ export function describeEmbeddedAgentStreamStrategy(
       llmRuntime,
     })
   ) {
-    return "openclaw-native-codex-responses";
+    return "grokbot-native-codex-responses";
   }
   if (isDefaultOpenClawStreamFnForModel(params.model, params.currentStreamFn, llmRuntime)) {
     return createBoundaryAwareStreamFnForModel(params.model)
@@ -216,9 +216,9 @@ export function resolveEmbeddedAgentStreamFn(
   ) {
     const boundaryAwareStreamFn = createBoundaryAwareStreamFnForModel(params.model);
     if (boundaryAwareStreamFn) {
-      // Some OpenClaw session factories return a provider-specific stream wrapper
+      // Some GrokBot session factories return a provider-specific stream wrapper
       // once runtime auth is resolved. Keep transport-supported APIs on
-      // OpenClaw's HTTP transport so provider-specific auth/header semantics
+      // GrokBot's HTTP transport so provider-specific auth/header semantics
       // are not lost behind that wrapper.
       // Boundary-aware transports read credentials from options.apiKey just
       // like provider-owned streams, but the embedded run layer never gets to

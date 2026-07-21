@@ -2,16 +2,16 @@
 import fs from "node:fs";
 import path from "node:path";
 import type { DatabaseSync } from "node:sqlite";
-import { isRecord } from "@openclaw/normalization-core/record-coerce";
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+import { isRecord } from "@grokbot/normalization-core/record-coerce";
+import { normalizeOptionalString } from "@grokbot/normalization-core/string-coerce";
 import { expandHomePrefix } from "../infra/home-dir.js";
 import { requireNodeSqlite } from "../infra/node-sqlite.js";
 import { replaceFileAtomic } from "../infra/replace-file.js";
 import {
   openOpenClawStateDatabase,
   runOpenClawStateWriteTransaction,
-} from "../state/openclaw-state-db.js";
-import { resolveOpenClawStateSqlitePath } from "../state/openclaw-state-db.paths.js";
+} from "../state/grokbot-state-db.js";
+import { resolveOpenClawStateSqlitePath } from "../state/grokbot-state-db.paths.js";
 import { resolveConfigDir } from "../utils.js";
 import { parseJsonWithJson5Fallback } from "../utils/parse-json-compat.js";
 import { cronStoreKey } from "./store/key.js";
@@ -151,7 +151,7 @@ async function atomicWrite(filePath: string, content: string, dirMode = 0o700): 
     content,
     dirMode,
     mode: 0o600,
-    tempPrefix: ".openclaw-cron",
+    tempPrefix: ".grokbot-cron",
     renameMaxRetries: 3,
     copyFallbackOnPermissionError: true,
   });

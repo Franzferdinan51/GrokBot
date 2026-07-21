@@ -1,6 +1,6 @@
 // Setup plugin config helpers build plugin config from onboarding answers.
-import { normalizeStringEntries } from "@openclaw/normalization-core/string-normalization";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import { normalizeStringEntries } from "@grokbot/normalization-core/string-normalization";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import type { PluginManifestRecord } from "../plugins/manifest-registry.js";
 import type { PluginConfigUiHint } from "../plugins/types.js";
 import { getPath, setPathCreateStrict } from "../secrets/path-utils.js";
@@ -197,7 +197,7 @@ async function promptPluginFields(params: {
     const helpSuffix = hint.help ? ` — ${hint.help}` : "";
 
     // Skip sensitive fields — WizardPrompter has no masked input;
-    // direct users to openclaw config set or the Web UI instead.
+    // direct users to grokbot config set or the Web UI instead.
     if (hint.sensitive) {
       await prompter.note(
         t("wizard.plugins.sensitiveField", {

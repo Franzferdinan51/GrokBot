@@ -1,4 +1,4 @@
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import type { PluginMetadataSnapshot } from "../plugins/plugin-metadata-snapshot.js";
 import "./models-config.providers.implicit.js";
 
@@ -22,7 +22,7 @@ type ModelsConfigImplicitProvidersTestApi = {
 
 function getTestApi(): ModelsConfigImplicitProvidersTestApi {
   return (globalThis as Record<PropertyKey, unknown>)[
-    Symbol.for("openclaw.modelsConfigImplicitProvidersTestApi")
+    Symbol.for("grokbot.modelsConfigImplicitProvidersTestApi")
   ] as ModelsConfigImplicitProvidersTestApi;
 }
 

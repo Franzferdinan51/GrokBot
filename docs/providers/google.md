@@ -2,7 +2,7 @@
 summary: "Google Gemini setup (API key + OAuth, image generation, media understanding, TTS, web search)"
 title: "Google (Gemini)"
 read_when:
-  - You want to use Google Gemini models with OpenClaw
+  - You want to use Google Gemini models with GrokBot
   - You need the API key or OAuth auth flow
 ---
 
@@ -27,13 +27,13 @@ Choose your preferred auth method and follow the setup steps.
       </Step>
       <Step title="Run onboarding">
         ```bash
-        openclaw onboard --auth-choice gemini-api-key
+        grokbot onboard --auth-choice gemini-api-key
         ```
 
         Or pass the key directly:
 
         ```bash
-        openclaw onboard --non-interactive \
+        grokbot onboard --non-interactive \
           --mode local \
           --auth-choice gemini-api-key \
           --gemini-api-key "$GEMINI_API_KEY"
@@ -52,7 +52,7 @@ Choose your preferred auth method and follow the setup steps.
       </Step>
       <Step title="Verify the model is available">
         ```bash
-        openclaw models list --provider google
+        grokbot models list --provider google
         ```
       </Step>
     </Steps>
@@ -83,17 +83,17 @@ Choose your preferred auth method and follow the setup steps.
         npm install -g @google/gemini-cli
         ```
 
-        OpenClaw supports both Homebrew installs and global npm installs, including
+        GrokBot supports both Homebrew installs and global npm installs, including
         common Windows/npm layouts.
       </Step>
       <Step title="Log in via OAuth">
         ```bash
-        openclaw models auth login --provider google-gemini-cli --set-default
+        grokbot models auth login --provider google-gemini-cli --set-default
         ```
       </Step>
       <Step title="Verify the model is available">
         ```bash
-        openclaw models list --provider google
+        grokbot models list --provider google
         ```
       </Step>
     </Steps>
@@ -102,7 +102,7 @@ Choose your preferred auth method and follow the setup steps.
     - Runtime: `google-gemini-cli`
     - Alias: `gemini-cli`
 
-    Gemini 3.1 Pro's Gemini API model id is `gemini-3.1-pro-preview`. OpenClaw accepts the shorter `google/gemini-3.1-pro` as a convenience alias and normalizes it before provider calls.
+    Gemini 3.1 Pro's Gemini API model id is `gemini-3.1-pro-preview`. GrokBot accepts the shorter `google/gemini-3.1-pro` as a convenience alias and normalizes it before provider calls.
 
     **Environment variables:**
 
@@ -131,7 +131,7 @@ Choose your preferred auth method and follow the setup steps.
 </Tabs>
 
 <Note>
-`google/gemini-3-pro-preview` was retired on 2026-03-09; use `google/gemini-3.1-pro-preview` instead. Re-running Gemini API key setup (`openclaw onboard --auth-choice gemini-api-key` or `openclaw models auth login --provider google`) rewrites a stale configured default to the current model.
+`google/gemini-3-pro-preview` was retired on 2026-03-09; use `google/gemini-3.1-pro-preview` instead. Re-running Gemini API key setup (`grokbot onboard --auth-choice gemini-api-key` or `grokbot models auth login --provider google`) rewrites a stale configured default to the current model.
 </Note>
 
 ## Capabilities
@@ -181,23 +181,23 @@ Gemini web search reuses `models.providers.google.baseUrl`. See
 [Gemini search](/tools/gemini-search) for the provider-specific tool behavior.
 
 <Tip>
-Gemini 3 models use `thinkingLevel` rather than `thinkingBudget`. OpenClaw maps
+Gemini 3 models use `thinkingLevel` rather than `thinkingBudget`. GrokBot maps
 Gemini 3, Gemini 3.1, and `gemini-*-latest` alias reasoning controls to
 `thinkingLevel` so default/low-latency runs do not send disabled
 `thinkingBudget` values.
 
 `/think adaptive` keeps Google's dynamic thinking semantics instead of choosing
-a fixed OpenClaw level. Gemini 3 and Gemini 3.1 omit a fixed `thinkingLevel` so
+a fixed GrokBot level. Gemini 3 and Gemini 3.1 omit a fixed `thinkingLevel` so
 Google can choose the level; Gemini 2.5 sends Google's dynamic sentinel
 `thinkingBudget: -1`.
 
-Gemma 4 models (for example `gemma-4-26b-a4b-it`) support thinking mode. OpenClaw
+Gemma 4 models (for example `gemma-4-26b-a4b-it`) support thinking mode. GrokBot
 rewrites `thinkingBudget` to a supported Google `thinkingLevel` for Gemma 4.
 Setting thinking to `off` preserves thinking disabled instead of mapping to
 `MINIMAL`.
 
 Gemini 2.5 Pro only works in thinking mode and rejects an explicit
-`thinkingBudget: 0`; OpenClaw strips that value for Gemini 2.5 Pro requests
+`thinkingBudget: 0`; GrokBot strips that value for Gemini 2.5 Pro requests
 instead of sending it.
 </Tip>
 
@@ -392,9 +392,9 @@ Example Voice Call realtime config:
 
 <Note>
 Google Live API uses bidirectional audio and function calling over a WebSocket.
-OpenClaw adapts telephony/Meet bridge audio to Gemini's PCM Live API stream and
+GrokBot adapts telephony/Meet bridge audio to Gemini's PCM Live API stream and
 keeps tool calls on the shared realtime voice contract. Leave `temperature`
-unset unless you need sampling changes; OpenClaw omits non-positive values
+unset unless you need sampling changes; GrokBot omits non-positive values
 because Google Live can return transcripts without audio for `temperature: 0`.
 Gemini API transcription is enabled without `languageCodes`; the current Google
 SDK rejects language-code hints on this API path.
@@ -402,7 +402,7 @@ SDK rejects language-code hints on this API path.
 
 <Note>
 Gemini 3.1 Live accepts conversational text through realtime input and uses
-sequential function calling. OpenClaw omits the older `NON_BLOCKING`, function
+sequential function calling. GrokBot omits the older `NON_BLOCKING`, function
 response scheduling, and affective-dialog fields for this model. Prefer
 `thinkingLevel`; configured positive `thinkingBudget` values are mapped to the
 nearest supported level, while `-1` leaves Google's default in place. See the
@@ -430,7 +430,7 @@ verifies a text response and `describe_view` function roundtrip.
 
 <AccordionGroup>
   <Accordion title="Direct Gemini cache reuse">
-    For direct Gemini API runs (`api: "google-generative-ai"`), OpenClaw
+    For direct Gemini API runs (`api: "google-generative-ai"`), GrokBot
     passes a configured `cachedContent` handle through to Gemini requests.
 
     - Configure per-model or global params with either
@@ -439,7 +439,7 @@ verifies a text response and `describe_view` function roundtrip.
       Within the same scope, if both keys are set, `cached_content` wins.
       Use only one key per scope to avoid surprises.
     - Example value: `cachedContents/prebuilt-context`
-    - Gemini cache-hit usage is normalized into OpenClaw `cacheRead` from
+    - Gemini cache-hit usage is normalized into GrokBot `cacheRead` from
       upstream `cachedContentTokenCount`
 
     ```json5
@@ -461,7 +461,7 @@ verifies a text response and `describe_view` function roundtrip.
   </Accordion>
 
   <Accordion title="Gemini CLI usage notes">
-    When using the `google-gemini-cli` OAuth provider, OpenClaw uses Gemini
+    When using the `google-gemini-cli` OAuth provider, GrokBot uses Gemini
     CLI `stream-json` output by default and normalizes usage from the final
     `stats` payload. Legacy `--output-format json` overrides still use the
     JSON parser.
@@ -469,15 +469,15 @@ verifies a text response and `describe_view` function roundtrip.
     - Streamed reply text comes from assistant `message` events.
     - For legacy JSON output, reply text comes from the CLI JSON `response` field.
     - Usage falls back to `stats` when the CLI leaves `usage` empty.
-    - `stats.cached` is normalized into OpenClaw `cacheRead`.
-    - If `stats.input` is missing, OpenClaw derives input tokens from
+    - `stats.cached` is normalized into GrokBot `cacheRead`.
+    - If `stats.input` is missing, GrokBot derives input tokens from
       `stats.input_tokens - stats.cached`.
 
   </Accordion>
 
   <Accordion title="Environment and daemon setup">
     If the Gateway runs as a daemon (launchd/systemd), make sure `GEMINI_API_KEY`
-    is available to that process (for example, in `~/.openclaw/.env` or via
+    is available to that process (for example, in `~/.grokbot/.env` or via
     `env.shellEnv`).
   </Accordion>
 </AccordionGroup>

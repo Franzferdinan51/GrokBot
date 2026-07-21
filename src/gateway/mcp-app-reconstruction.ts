@@ -8,12 +8,12 @@ import {
   getMcpAppViewLease,
   type McpAppViewLease,
 } from "../agents/mcp-ui-resource.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { resolveAgentIdFromSessionKey } from "../routing/session-key.js";
 import { visitSessionMessagesAsync } from "./session-transcript-readers.js";
 import { loadSessionEntry } from "./session-utils.js";
 
-const MCP_APP_RESTORE_IN_FLIGHT_KEY = Symbol.for("openclaw.mcpAppRestoreInFlight");
+const MCP_APP_RESTORE_IN_FLIGHT_KEY = Symbol.for("grokbot.mcpAppRestoreInFlight");
 
 type McpAppDescriptor = {
   viewId: string;

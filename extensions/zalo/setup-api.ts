@@ -1,5 +1,5 @@
 // Zalo API module exposes the plugin public contract.
-import { loadBundledEntryExportSync } from "openclaw/plugin-sdk/channel-entry-contract";
+import { loadBundledEntryExportSync } from "grokbot/plugin-sdk/channel-entry-contract";
 
 type SetupSurfaceModule = typeof import("./src/setup-surface.js");
 

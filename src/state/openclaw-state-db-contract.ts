@@ -8,7 +8,7 @@ export const OPENCLAW_STATE_STRICT_SCHEMA_VERSION = 3;
 export const OPENCLAW_SQLITE_BUSY_TIMEOUT_MS = 5_000;
 /** User-facing guide for schema refusals; lives here so error sites avoid import cycles. */
 export const OPENCLAW_DATABASE_SCHEMA_DOCS_URL =
-  "https://docs.openclaw.ai/reference/database-schemas";
+  "https://docs.grokbot.ai/reference/database-schemas";
 
 /** Open shared SQLite database handle plus WAL maintenance lifecycle. */
 export type OpenClawStateDatabase = {

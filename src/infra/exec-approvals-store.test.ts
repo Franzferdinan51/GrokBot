@@ -9,7 +9,7 @@ import {
   beginAgentDeletion,
   claimCompletedAgentDeletion,
 } from "../agents/agent-lifecycle-registry.js";
-import { closeOpenClawStateDatabaseForTest } from "../state/openclaw-state-db.js";
+import { closeOpenClawStateDatabaseForTest } from "../state/grokbot-state-db.js";
 import { captureEnv, deleteTestEnvValue, setTestEnvValue } from "../test-utils/env.js";
 import { makeTempDir } from "./exec-approvals-test-helpers.js";
 
@@ -98,7 +98,7 @@ function createHomeDir(): string {
 }
 
 function approvalsFilePath(homeDir: string): string {
-  return path.join(homeDir, ".openclaw", "exec-approvals.json");
+  return path.join(homeDir, ".grokbot", "exec-approvals.json");
 }
 
 function stateApprovalsFilePath(stateDir: string): string {
@@ -143,12 +143,12 @@ describe("exec approvals store helpers", () => {
     const dir = createHomeDir();
 
     expect(path.normalize(resolveExecApprovalsPath())).toBe(
-      path.normalize(path.join(dir, ".openclaw", "exec-approvals.json")),
+      path.normalize(path.join(dir, ".grokbot", "exec-approvals.json")),
     );
     expect(path.normalize(resolveExecApprovalsSocketPath())).toBe(
-      path.normalize(path.join(dir, ".openclaw", "exec-approvals.sock")),
+      path.normalize(path.join(dir, ".grokbot", "exec-approvals.sock")),
     );
-    expect(resolveExecApprovalsDisplayPath()).toBe("~/.openclaw/exec-approvals.json");
+    expect(resolveExecApprovalsDisplayPath()).toBe("~/.grokbot/exec-approvals.json");
   });
 
   it("uses OPENCLAW_STATE_DIR for default file and socket paths", () => {
@@ -310,7 +310,7 @@ describe("exec approvals store helpers", () => {
       `${JSON.stringify({
         version: 1,
         socket: {
-          path: path.join(dir, ".openclaw", "exec-approvals.sock"),
+          path: path.join(dir, ".grokbot", "exec-approvals.sock"),
           token: "legacy-token",
         },
         defaults: {
@@ -352,7 +352,7 @@ describe("exec approvals store helpers", () => {
 
   it("keeps named-profile approvals isolated from the default profile", () => {
     const dir = createHomeDir();
-    const stateDir = path.join(dir, ".openclaw-work");
+    const stateDir = path.join(dir, ".grokbot-work");
     const defaultPath = approvalsFilePath(dir);
     fs.mkdirSync(path.dirname(defaultPath), { recursive: true });
     fs.writeFileSync(
@@ -1400,7 +1400,7 @@ describe("exec approvals store helpers", () => {
     saveExecApprovals({ version: 1, defaults: { security: "full" }, agents: {} });
 
     expect(
-      fs.readFileSync(path.join(realHome, ".openclaw", "exec-approvals.json"), "utf8"),
+      fs.readFileSync(path.join(realHome, ".grokbot", "exec-approvals.json"), "utf8"),
     ).toContain('"security": "full"');
   });
 
@@ -1411,7 +1411,7 @@ describe("exec approvals store helpers", () => {
     tempDirs.push(realHome, linkedHome);
     fs.mkdirSync(linkedStateTarget, { recursive: true });
     fs.symlinkSync(realHome, linkedHome, "dir");
-    fs.symlinkSync(linkedStateTarget, path.join(realHome, ".openclaw"), "dir");
+    fs.symlinkSync(linkedStateTarget, path.join(realHome, ".grokbot"), "dir");
     setTestEnvValue("OPENCLAW_HOME", linkedHome);
 
     expect(() =>
@@ -1430,7 +1430,7 @@ describe("exec approvals store helpers", () => {
       tempDirs.push(realHome, linkedHome);
       fs.mkdirSync(linkedStateTarget, { recursive: true });
       fs.symlinkSync(realHome, linkedHome, "dir");
-      fs.symlinkSync(linkedStateTarget, path.join(realHome, ".openclaw"), "dir");
+      fs.symlinkSync(linkedStateTarget, path.join(realHome, ".grokbot"), "dir");
       setTestEnvValue("OPENCLAW_HOME", linkedHome);
 
       await expect(

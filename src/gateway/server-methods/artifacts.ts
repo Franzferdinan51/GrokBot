@@ -1,9 +1,9 @@
 // Artifact gateway methods collect generated artifacts from session transcripts
 // and expose list/get/download RPCs scoped by session, run, task, or agent.
 import { createHash } from "node:crypto";
-import { isHttpUrl } from "@openclaw/net-policy/url-protocol";
-import { asOptionalRecord } from "@openclaw/normalization-core/record-coerce";
-import { normalizeOptionalString as asNonEmptyString } from "@openclaw/normalization-core/string-coerce";
+import { isHttpUrl } from "@grokbot/net-policy/url-protocol";
+import { asOptionalRecord } from "@grokbot/normalization-core/record-coerce";
+import { normalizeOptionalString as asNonEmptyString } from "@grokbot/normalization-core/string-coerce";
 import {
   ErrorCodes,
   errorShape,
@@ -14,7 +14,7 @@ import {
   validateArtifactsListParams,
 } from "../../../packages/gateway-protocol/src/index.js";
 import { resolveDefaultAgentId } from "../../agents/agent-scope.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import {
   normalizeAgentId,
   parseAgentSessionKey,

@@ -1,9 +1,9 @@
 /** Preflights local model-provider endpoints before scheduled cron runner startup. */
-import { normalizeProviderId } from "@openclaw/model-catalog-core/provider-id";
-import { expectDefined } from "@openclaw/normalization-core";
-import { normalizeLowercaseStringOrEmpty } from "@openclaw/normalization-core/string-coerce";
+import { normalizeProviderId } from "@grokbot/model-catalog-core/provider-id";
+import { expectDefined } from "@grokbot/normalization-core";
+import { normalizeLowercaseStringOrEmpty } from "@grokbot/normalization-core/string-coerce";
 import type { ModelProviderConfig } from "../../config/types.models.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import { fetchWithSsrFGuard } from "../../infra/net/fetch-guard.js";
 import type { SsrFPolicy } from "../../infra/net/ssrf.js";
 
@@ -138,7 +138,7 @@ function formatUnavailableReason(params: {
 }): string {
   return [
     `Agent cron job uses ${params.provider}/${params.model} but the local provider endpoint is not reachable at ${params.baseUrl}.`,
-    `Skipping this cron run; OpenClaw will retry the provider preflight on a later scheduled run.`,
+    `Skipping this cron run; GrokBot will retry the provider preflight on a later scheduled run.`,
     `Last error: ${String(params.error)}`,
   ].join(" ");
 }

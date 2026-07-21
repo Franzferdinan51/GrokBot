@@ -1,5 +1,5 @@
 /**
- * Amazon Bedrock Converse streaming runtime. It maps OpenClaw messages/tools,
+ * Amazon Bedrock Converse streaming runtime. It maps GrokBot messages/tools,
  * thinking, cache points, images, and usage into Bedrock Converse Stream calls.
  */
 import {
@@ -27,7 +27,7 @@ import {
 } from "@aws-sdk/client-bedrock-runtime";
 import { NodeHttpHandler } from "@smithy/node-http-handler";
 import type { DocumentType } from "@smithy/types";
-import { expectDefined } from "openclaw/plugin-sdk/expect-runtime";
+import { expectDefined } from "grokbot/plugin-sdk/expect-runtime";
 import {
   adjustMaxTokensForThinking,
   AssistantMessageEventStream,
@@ -53,7 +53,7 @@ import {
   type Tool,
   type ToolCall,
   type ToolResultMessage,
-} from "openclaw/plugin-sdk/llm";
+} from "grokbot/plugin-sdk/llm";
 import {
   resolveClaudeFable5ModelIdentity,
   resolveClaudeModelIdentity,
@@ -62,14 +62,14 @@ import {
   requiresClaudeMandatoryAdaptiveThinking,
   supportsClaudeAdaptiveThinking,
   supportsClaudeNativeXhighEffort,
-} from "openclaw/plugin-sdk/provider-model-shared";
+} from "grokbot/plugin-sdk/provider-model-shared";
 import {
   applyAnthropicRefusal,
   createDeferredEventBuffer,
   notifyLlmRequestActivity,
-} from "openclaw/plugin-sdk/provider-stream-shared";
-import { describeToolResultMediaPlaceholder } from "openclaw/plugin-sdk/provider-transport-runtime";
-import { normalizeOptionalString } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/provider-stream-shared";
+import { describeToolResultMediaPlaceholder } from "grokbot/plugin-sdk/provider-transport-runtime";
+import { normalizeOptionalString } from "grokbot/plugin-sdk/string-coerce-runtime";
 import { supportsBedrockPromptCaching, type BedrockOptions } from "./bedrock-options.js";
 import { supportsBedrockNativeMaxEffort } from "./thinking-policy.js";
 
@@ -111,7 +111,7 @@ function normalizeAdaptiveClaudeToolChoice(
   return toolChoice;
 }
 
-// OpenClaw synthesizes these caps when the provider's real output limit is unknown.
+// GrokBot synthesizes these caps when the provider's real output limit is unknown.
 // Keep them out of Bedrock adaptive requests so Bedrock can use its native default.
 const OPENCLAW_FALLBACK_MODEL_MAX_TOKENS = new Set([4096, 8192, 16_384]);
 
@@ -389,7 +389,7 @@ function formatBedrockError(error: unknown): string {
   return message;
 }
 
-/** Stream a Bedrock Converse request from the generic OpenClaw stream options. */
+/** Stream a Bedrock Converse request from the generic GrokBot stream options. */
 export const streamSimpleBedrock: StreamFunction<"bedrock-converse-stream", SimpleStreamOptions> = (
   model: Model<"bedrock-converse-stream">,
   context: Context,
@@ -1213,6 +1213,6 @@ const testing = {
 };
 
 if (process.env.VITEST === "true") {
-  Reflect.set(globalThis, Symbol.for("openclaw.amazonBedrockStreamTestApi"), testing);
+  Reflect.set(globalThis, Symbol.for("grokbot.amazonBedrockStreamTestApi"), testing);
 }
 /* oxlint-disable max-lines -- TODO: split this grandfathered oversized file. */

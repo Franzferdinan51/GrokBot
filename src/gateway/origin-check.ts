@@ -1,10 +1,10 @@
 // Browser Origin validator for gateway HTTP and websocket requests.
 import net from "node:net";
-import { isPrivateOrLoopbackIpAddress } from "@openclaw/net-policy/ip";
+import { isPrivateOrLoopbackIpAddress } from "@grokbot/net-policy/ip";
 import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalLowercaseString,
-} from "@openclaw/normalization-core/string-coerce";
+} from "@grokbot/normalization-core/string-coerce";
 import { isLoopbackHost, normalizeHostHeader, resolveHostName } from "./net.js";
 
 type OriginCheckResult =

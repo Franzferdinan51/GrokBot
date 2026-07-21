@@ -1,10 +1,10 @@
 // Transcript redaction tests cover structured and text transcript fields so
 // secrets do not persist in logs or replay artifacts.
 
-import { expectDefined } from "@openclaw/normalization-core";
-import type { AgentMessage } from "openclaw/plugin-sdk/agent-core";
+import { expectDefined } from "@grokbot/normalization-core";
+import type { AgentMessage } from "grokbot/plugin-sdk/agent-core";
 import { describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import * as loggingConfigModule from "../logging/config.js";
 import { redactTranscriptMessage } from "./transcript-redact.js";
 
@@ -211,7 +211,7 @@ describe("redactTranscriptMessage", () => {
 
   it.each([
     {
-      api: "openclaw-openai-responses-transport",
+      api: "grokbot-openai-responses-transport",
       provider: "openai",
       block: {
         type: "thinking",
@@ -230,7 +230,7 @@ describe("redactTranscriptMessage", () => {
       }),
     },
     {
-      api: "openclaw-anthropic-messages-transport",
+      api: "grokbot-anthropic-messages-transport",
       provider: "anthropic",
       block: {
         type: "thinking",
@@ -241,7 +241,7 @@ describe("redactTranscriptMessage", () => {
       expectedSignature: CIPHERTEXT_WITH_TOKEN_SHAPED_BYTES,
     },
     {
-      api: "openclaw-google-generative-ai-transport",
+      api: "grokbot-google-generative-ai-transport",
       provider: "google",
       block: {
         type: "toolCall",
@@ -267,7 +267,7 @@ describe("redactTranscriptMessage", () => {
       expectedSignature: SHORT_GOOGLE_THOUGHT_SIGNATURE,
     },
     {
-      api: "openclaw-openai-completions-transport",
+      api: "grokbot-openai-completions-transport",
       provider: "google",
       block: {
         type: "toolCall",
@@ -469,7 +469,7 @@ describe("redactTranscriptMessage", () => {
     );
   });
 
-  it.each(["openai-responses", "openclaw-openai-responses-transport"])(
+  it.each(["openai-responses", "grokbot-openai-responses-transport"])(
     "preserves structured OpenAI text signatures for %s",
     (api) => {
       const textSignature = JSON.stringify({ v: 1, id: COPILOT_CONNECTION_BOUND_ID });
@@ -600,7 +600,7 @@ describe("redactTranscriptMessage", () => {
     } as unknown as AgentMessage;
     const googleOpenAICompletionsMsg = {
       role: "assistant",
-      api: "openclaw-openai-completions-transport",
+      api: "grokbot-openai-completions-transport",
       model: "gemini-3.1-pro",
       provider: "google-compatible-proxy",
       content: [
@@ -903,7 +903,7 @@ describe("redactTranscriptMessage", () => {
           id: "call_1",
           name: "shell",
           arguments: {
-            command: "OPENAI_API_KEY=sk-abcdef1234567890xyz openclaw health",
+            command: "OPENAI_API_KEY=sk-abcdef1234567890xyz grokbot health",
             env: { nested: ["token sk-abcdef1234567890xyz"] },
             count: 1,
           },
@@ -923,10 +923,10 @@ describe("redactTranscriptMessage", () => {
     };
     const serializedArguments = JSON.stringify(block.arguments);
     expect(serializedArguments).not.toContain("sk-abcdef1234567890xyz");
-    expect(argumentsValue.command).toBe("OPENAI_API_KEY=sk-abc…0xyz openclaw health");
+    expect(argumentsValue.command).toBe("OPENAI_API_KEY=sk-abc…0xyz grokbot health");
     expect(argumentsValue.env.nested[0]).toBe("token sk-abc…0xyz");
     expect(argumentsValue.count).toBe(1);
-    expect(serializedArguments).toContain("openclaw health");
+    expect(serializedArguments).toContain("grokbot health");
     expect(block.arguments).not.toBe(
       expectDefined(
         (msgContent(msg) as Array<{ arguments: unknown }>)[0],
@@ -985,7 +985,7 @@ describe("redactTranscriptMessage", () => {
           input: {
             apiKey: "plainsecretvalue123",
             nested: { accessToken: ["nestedplainsecret123"] },
-            command: "OPENAI_API_KEY=sk-abcdef1234567890xyz openclaw health",
+            command: "OPENAI_API_KEY=sk-abcdef1234567890xyz grokbot health",
             safe: "visible",
           },
         },
@@ -1009,7 +1009,7 @@ describe("redactTranscriptMessage", () => {
     expect(serializedInput).not.toContain("sk-abcdef1234567890xyz");
     expect(inputValue.apiKey).toBe("plains…e123");
     expect(inputValue.nested.accessToken[0]).toBe("nested…t123");
-    expect(inputValue.command).toBe("OPENAI_API_KEY=sk-abc…0xyz openclaw health");
+    expect(inputValue.command).toBe("OPENAI_API_KEY=sk-abc…0xyz grokbot health");
     expect(serializedInput).toContain("visible");
   });
 
@@ -1345,7 +1345,7 @@ describe("redactTranscriptMessage", () => {
   it("redacts documented transcript text fields on content-less message types", () => {
     const msg = {
       role: "bashExecution",
-      command: "OPENAI_API_KEY=sk-abcdef1234567890xyz openclaw health",
+      command: "OPENAI_API_KEY=sk-abcdef1234567890xyz grokbot health",
       output: "failed with sk-abcdef1234567890xyz",
       exitCode: 1,
       cancelled: false,

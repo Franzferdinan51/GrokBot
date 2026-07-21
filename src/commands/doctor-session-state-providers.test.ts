@@ -4,7 +4,7 @@ import os from "node:os";
 import path from "node:path";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { SessionEntry } from "../config/sessions.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { runPluginSessionStateDoctorRepairs } from "./doctor-session-state-providers.js";
 
 const codexOwner = {
@@ -41,7 +41,7 @@ async function runDoctor(params: {
   confirm?: boolean;
   env?: NodeJS.ProcessEnv;
 }) {
-  const root = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-session-route-doctor-"));
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-session-route-doctor-"));
   const storePath = path.join(root, "sessions.json");
   await fs.writeFile(storePath, JSON.stringify(params.store), "utf8");
   const warnings: string[] = [];

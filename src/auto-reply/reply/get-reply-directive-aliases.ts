@@ -2,8 +2,8 @@
 import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalString,
-} from "@openclaw/normalization-core/string-coerce";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+} from "@grokbot/normalization-core/string-coerce";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import type { SkillCommandSpec } from "../../skills/types.js";
 
 export function reserveSkillCommandNames(params: {

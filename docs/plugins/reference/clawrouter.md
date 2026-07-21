@@ -1,5 +1,5 @@
 ---
-summary: "Adds ClawRouter model provider support to OpenClaw."
+summary: "Adds ClawRouter model provider support to GrokBot."
 read_when:
   - You are installing, configuring, or auditing the clawrouter plugin
 title: "ClawRouter plugin"
@@ -7,12 +7,12 @@ title: "ClawRouter plugin"
 
 # ClawRouter plugin
 
-Adds ClawRouter model provider support to OpenClaw.
+Adds ClawRouter model provider support to GrokBot.
 
 ## Distribution
 
-- Package: `@openclaw/clawrouter`
-- Install route: included in OpenClaw
+- Package: `@grokbot/clawrouter`
+- Install route: included in GrokBot
 
 ## Surface
 

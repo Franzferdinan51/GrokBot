@@ -1,12 +1,12 @@
-# OpenClaw Groq Provider
+# GrokBot Groq Provider
 
-Official OpenClaw provider plugin for Groq.
+Official GrokBot provider plugin for Groq.
 
-Install from OpenClaw:
+Install from GrokBot:
 
 ```bash
-openclaw plugins install @openclaw/groq-provider
-openclaw gateway restart
+grokbot plugins install @grokbot/groq-provider
+grokbot gateway restart
 ```
 
-See <https://docs.openclaw.ai/providers/groq> for setup and configuration.
+See <https://docs.grokbot.ai/providers/groq> for setup and configuration.

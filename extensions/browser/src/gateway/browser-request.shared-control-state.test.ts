@@ -1,5 +1,5 @@
 // Browser tests cover browser request.shared control state plugin behavior.
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { getFreePort } from "../browser/test-port.js";
 import type { OpenClawConfig } from "../config/config.js";
@@ -43,7 +43,7 @@ vi.mock("../browser/chrome.js", () => ({
   launchOpenClawChrome: vi.fn(async () => {
     throw new Error("launch should not be needed for status");
   }),
-  resolveOpenClawUserDataDir: vi.fn(() => "/tmp/openclaw-browser"),
+  resolveOpenClawUserDataDir: vi.fn(() => "/tmp/grokbot-browser"),
   stopOpenClawChrome: vi.fn(async () => {}),
 }));
 
@@ -65,12 +65,12 @@ function browserConfig(params: {
     },
     browser: {
       enabled: true,
-      defaultProfile: "openclaw",
+      defaultProfile: "grokbot",
       ...(params.executablePath ? { executablePath: params.executablePath } : {}),
       ...(typeof params.headless === "boolean" ? { headless: params.headless } : {}),
       ...(typeof params.noSandbox === "boolean" ? { noSandbox: params.noSandbox } : {}),
       profiles: {
-        openclaw: {
+        grokbot: {
           cdpPort: params.gatewayPort + 11,
           color: "#FF4500",
         },
@@ -88,7 +88,7 @@ async function browserRequestStatus(): Promise<unknown> {
     params: {
       method: "GET",
       path: "/",
-      query: { profile: "openclaw" },
+      query: { profile: "grokbot" },
     },
     respond: respond as never,
     context: {

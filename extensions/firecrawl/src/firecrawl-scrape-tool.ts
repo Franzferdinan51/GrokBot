@@ -1,12 +1,12 @@
 // Firecrawl plugin module implements firecrawl scrape tool behavior.
-import { optionalStringEnum } from "openclaw/plugin-sdk/channel-actions";
-import type { OpenClawPluginApi } from "openclaw/plugin-sdk/plugin-runtime";
+import { optionalStringEnum } from "grokbot/plugin-sdk/channel-actions";
+import type { OpenClawPluginApi } from "grokbot/plugin-sdk/plugin-runtime";
 import {
   jsonResult,
   readNonNegativeIntegerParam,
   readPositiveIntegerParam,
   readStringParam,
-} from "openclaw/plugin-sdk/provider-web-search";
+} from "grokbot/plugin-sdk/provider-web-search";
 import { Type } from "typebox";
 import { runFirecrawlScrape } from "./firecrawl-client.js";
 

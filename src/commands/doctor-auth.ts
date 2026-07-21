@@ -31,7 +31,7 @@ import {
 } from "../agents/auth-profiles/oauth-refresh-failure.js";
 import { resolveAuthStorePathForDisplay } from "../agents/auth-profiles/path-resolve.js";
 import { buildProviderAuthRecoveryHint } from "../agents/provider-auth-recovery-hint.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import type { HealthFinding } from "../flows/health-checks.js";
 import { formatErrorMessage } from "../infra/errors.js";
 import { isRecord } from "../utils.js";
@@ -136,7 +136,7 @@ function legacyCodexProviderOverrideToHealthFinding(providerOverride: unknown): 
 }
 
 if (process.env.VITEST || process.env.NODE_ENV === "test") {
-  (globalThis as Record<PropertyKey, unknown>)[Symbol.for("openclaw.doctorAuthTestApi")] = {
+  (globalThis as Record<PropertyKey, unknown>)[Symbol.for("grokbot.doctorAuthTestApi")] = {
     legacyCodexProviderOverrideToHealthFinding,
   };
 }
@@ -265,7 +265,7 @@ async function resolveAuthIssueHint(
     return "Invalid token expires metadata. Set a future Unix ms timestamp or remove expires.";
   }
   if (issue.reasonCode === "malformed_api_key") {
-    return "Paste the API key value, not an OpenClaw onboarding command.";
+    return "Paste the API key value, not an GrokBot onboarding command.";
   }
   const providerHint = await formatAuthDoctorHint({
     cfg,
@@ -319,8 +319,8 @@ function authProfileIssueToHealthFinding(params: {
     fixHint:
       params.hint ??
       (params.issue.status === "expiring"
-        ? "Run `openclaw doctor --fix` to refresh expiring OAuth profiles, or re-authenticate static tokens."
-        : "Run `openclaw doctor --fix` to refresh OAuth profiles, or re-authenticate this provider."),
+        ? "Run `grokbot doctor --fix` to refresh expiring OAuth profiles, or re-authenticate static tokens."
+        : "Run `grokbot doctor --fix` to refresh OAuth profiles, or re-authenticate this provider."),
   };
 }
 

@@ -3,7 +3,7 @@
  *
  * Infers child completion from persisted session entries when registry updates arrive late.
  */
-import { asFiniteNumber } from "@openclaw/normalization-core/number-coercion";
+import { asFiniteNumber } from "@grokbot/normalization-core/number-coercion";
 import { getRuntimeConfig } from "../config/config.js";
 import {
   resolveAgentIdFromSessionKey,
@@ -11,7 +11,7 @@ import {
   type SessionEntry,
 } from "../config/sessions.js";
 import { listSessionEntries, loadSessionEntry } from "../config/sessions/session-accessor.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import type { SubagentRunOutcome } from "./subagent-announce-output.js";
 import {
   SUBAGENT_ENDED_REASON_COMPLETE,

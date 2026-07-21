@@ -4,8 +4,8 @@ import { describe, expect, it } from "vitest";
 import {
   assertCanonicalOperatorApprovalKinds,
   repairOperatorApprovalSchema,
-} from "./openclaw-state-db-operator-approval-migration.js";
-import { OPENCLAW_STATE_SCHEMA_SQL } from "./openclaw-state-schema.generated.js";
+} from "./grokbot-state-db-operator-approval-migration.js";
+import { OPENCLAW_STATE_SCHEMA_SQL } from "./grokbot-state-schema.generated.js";
 
 function canonicalOperatorApprovalCreateSql(): string {
   const marker = "CREATE TABLE IF NOT EXISTS operator_approvals (";
@@ -66,7 +66,7 @@ function expectAlterAppendedLegacyRepair(strict: boolean): void {
   seedRow(db, "exec");
 
   expect(repairOperatorApprovalSchema(db)).toEqual([
-    "Migrated shared state operator approvals → OpenClaw system changes",
+    "Migrated shared state operator approvals → GrokBot system changes",
   ]);
 
   expect(() => assertCanonicalOperatorApprovalKinds(db, ":memory:")).not.toThrow();
@@ -89,7 +89,7 @@ describe("repairOperatorApprovalKinds", () => {
     );
 
     expect(repairOperatorApprovalSchema(db)).toEqual([
-      "Migrated shared state operator approvals → OpenClaw system changes",
+      "Migrated shared state operator approvals → GrokBot system changes",
     ]);
 
     expect(() => assertCanonicalOperatorApprovalKinds(db, ":memory:")).not.toThrow();
@@ -128,7 +128,7 @@ describe("repairOperatorApprovalKinds", () => {
     `).run(Buffer.from("ref0000000000000000000000000000000000000000"));
 
     expect(repairOperatorApprovalSchema(db)).toEqual([
-      "Migrated shared state operator approvals → OpenClaw system changes",
+      "Migrated shared state operator approvals → GrokBot system changes",
     ]);
 
     expect(() => assertCanonicalOperatorApprovalKinds(db, ":memory:")).not.toThrow();

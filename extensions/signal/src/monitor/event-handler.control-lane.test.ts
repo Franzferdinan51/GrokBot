@@ -1,6 +1,6 @@
 // Signal tests cover ordered control delivery around active inbound work.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import type { MsgContext } from "openclaw/plugin-sdk/reply-runtime";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import type { MsgContext } from "grokbot/plugin-sdk/reply-runtime";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const {
@@ -21,9 +21,9 @@ vi.mock("../send.js", () => ({
   sendReadReceiptSignal: sendReadReceiptMock,
 }));
 
-vi.mock("openclaw/plugin-sdk/reply-runtime", async () => {
-  const actual = await vi.importActual<typeof import("openclaw/plugin-sdk/reply-runtime")>(
-    "openclaw/plugin-sdk/reply-runtime",
+vi.mock("grokbot/plugin-sdk/reply-runtime", async () => {
+  const actual = await vi.importActual<typeof import("grokbot/plugin-sdk/reply-runtime")>(
+    "grokbot/plugin-sdk/reply-runtime",
   );
   return {
     ...actual,
@@ -33,9 +33,9 @@ vi.mock("openclaw/plugin-sdk/reply-runtime", async () => {
   };
 });
 
-vi.mock("openclaw/plugin-sdk/channel-inbound", async () => {
-  const actual = await vi.importActual<typeof import("openclaw/plugin-sdk/channel-inbound")>(
-    "openclaw/plugin-sdk/channel-inbound",
+vi.mock("grokbot/plugin-sdk/channel-inbound", async () => {
+  const actual = await vi.importActual<typeof import("grokbot/plugin-sdk/channel-inbound")>(
+    "grokbot/plugin-sdk/channel-inbound",
   );
   type RunParams = Parameters<typeof actual.runChannelInboundEvent>[0];
   return {
@@ -62,7 +62,7 @@ vi.mock("openclaw/plugin-sdk/channel-inbound", async () => {
         channel: resolved.channel,
         accountId: resolved.accountId,
         routeSessionKey: resolved.route.sessionKey,
-        storePath: "/tmp/openclaw/signal-sessions.json",
+        storePath: "/tmp/grokbot/signal-sessions.json",
         ctxPayload: resolved.ctxPayload,
         recordInboundSession: recordInboundSessionMock,
         afterRecord: resolved.afterRecord,
@@ -78,9 +78,9 @@ vi.mock("openclaw/plugin-sdk/channel-inbound", async () => {
   };
 });
 
-vi.mock("openclaw/plugin-sdk/conversation-runtime", async () => {
-  const actual = await vi.importActual<typeof import("openclaw/plugin-sdk/conversation-runtime")>(
-    "openclaw/plugin-sdk/conversation-runtime",
+vi.mock("grokbot/plugin-sdk/conversation-runtime", async () => {
+  const actual = await vi.importActual<typeof import("grokbot/plugin-sdk/conversation-runtime")>(
+    "grokbot/plugin-sdk/conversation-runtime",
   );
   return {
     ...actual,

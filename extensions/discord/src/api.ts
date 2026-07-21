@@ -1,15 +1,15 @@
 // Discord API module exposes the plugin public contract.
-import { resolveFetch } from "openclaw/plugin-sdk/fetch-runtime";
-import { resolveTimerTimeoutMs } from "openclaw/plugin-sdk/number-runtime";
-import { readResponseTextLimited } from "openclaw/plugin-sdk/provider-http";
-import { readResponseWithLimit } from "openclaw/plugin-sdk/response-limit-runtime";
+import { resolveFetch } from "grokbot/plugin-sdk/fetch-runtime";
+import { resolveTimerTimeoutMs } from "grokbot/plugin-sdk/number-runtime";
+import { readResponseTextLimited } from "grokbot/plugin-sdk/provider-http";
+import { readResponseWithLimit } from "grokbot/plugin-sdk/response-limit-runtime";
 import {
   parseRetryAfterHeaderSeconds,
   resolveRetryConfig,
   retryAsync,
   type RetryConfig,
-} from "openclaw/plugin-sdk/retry-runtime";
-import { sleepWithAbort } from "openclaw/plugin-sdk/runtime-env";
+} from "grokbot/plugin-sdk/retry-runtime";
+import { sleepWithAbort } from "grokbot/plugin-sdk/runtime-env";
 import { isDiscordHtmlResponseBody, summarizeDiscordResponseBody } from "./error-body.js";
 import { parseDiscordRetryAfterBodySeconds } from "./retry-after.js";
 

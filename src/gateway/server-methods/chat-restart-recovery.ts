@@ -18,7 +18,7 @@ import {
   type SessionTranscriptTurnExpectedState,
   type SessionTranscriptTurnLifecyclePatch,
 } from "../../config/sessions/session-accessor.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import { loadOrCreateProcessDeviceIdentity } from "../../infra/device-identity.js";
 import { findRestartRecoveryUnsafeChatAdmissionHook } from "../../plugins/restart-recovery-hook-safety.js";
 import { isCronSessionKey, isSubagentSessionKey } from "../../routing/session-key.js";
@@ -30,7 +30,7 @@ import type { GatewayRequestContext } from "./types.js";
 
 export { hasRestartRecoveryTerminalRun };
 
-const RESTART_SAFE_CHAT_REQUEST_VERIFIER_DOMAIN = "openclaw.chat.restart-retry.v1";
+const RESTART_SAFE_CHAT_REQUEST_VERIFIER_DOMAIN = "grokbot.chat.restart-retry.v1";
 
 type RestartSafeChatRequest = {
   fingerprint: string;

@@ -1,5 +1,5 @@
 import { executeSqliteQuerySync } from "../../infra/kysely-sync.js";
-import type { OpenClawAgentDatabase } from "../../state/openclaw-agent-db.js";
+import type { OpenClawAgentDatabase } from "../../state/grokbot-agent-db.js";
 import {
   conversationIdentityFromSessionEntry,
   type ConversationIdentity,

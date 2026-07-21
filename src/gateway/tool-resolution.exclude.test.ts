@@ -2,7 +2,7 @@
  * Gateway tool-resolution exclusion tests.
  */
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 
 type CreateOpenClawToolsArg = {
   clientCaps?: string[];
@@ -62,7 +62,7 @@ const hoisted = vi.hoisted(() => {
   };
 });
 
-vi.mock("../agents/openclaw-tools.js", () => ({
+vi.mock("../agents/grokbot-tools.js", () => ({
   createOpenClawTools: (args: CreateOpenClawToolsArg) => hoisted.createOpenClawToolsMock(args),
 }));
 
@@ -161,7 +161,7 @@ describe("resolveGatewayScopedTools excludeToolNames", () => {
       "conversations_turn",
       "nodes",
       "computer",
-      "openclaw",
+      "grokbot",
     ]);
     expect(args.inheritedToolDenylist).toEqual([
       "cron",
@@ -174,7 +174,7 @@ describe("resolveGatewayScopedTools excludeToolNames", () => {
       "conversations_turn",
       "nodes",
       "computer",
-      "openclaw",
+      "grokbot",
     ]);
   });
 

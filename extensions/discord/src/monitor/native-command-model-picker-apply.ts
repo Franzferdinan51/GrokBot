@@ -1,15 +1,15 @@
 // Discord plugin module implements native command model picker apply behavior.
 import { randomUUID } from "node:crypto";
-import type { ChatCommandDefinition, CommandArgs } from "openclaw/plugin-sdk/command-auth-native";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { ChatCommandDefinition, CommandArgs } from "grokbot/plugin-sdk/command-auth-native";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import {
   applyModelOverrideToSessionEntry,
   ModelSelectionLockedError,
-} from "openclaw/plugin-sdk/model-session-runtime";
-import type { ResolvedAgentRoute } from "openclaw/plugin-sdk/routing";
-import { logVerbose } from "openclaw/plugin-sdk/runtime-env";
-import { patchSessionEntry, resolveStorePath } from "openclaw/plugin-sdk/session-store-runtime";
-import { withTimeout } from "openclaw/plugin-sdk/text-utility-runtime";
+} from "grokbot/plugin-sdk/model-session-runtime";
+import type { ResolvedAgentRoute } from "grokbot/plugin-sdk/routing";
+import { logVerbose } from "grokbot/plugin-sdk/runtime-env";
+import { patchSessionEntry, resolveStorePath } from "grokbot/plugin-sdk/session-store-runtime";
+import { withTimeout } from "grokbot/plugin-sdk/text-utility-runtime";
 import type { ButtonInteraction, StringSelectMenuInteraction } from "../internal/discord.js";
 import {
   recordDiscordModelPickerRecentModel,

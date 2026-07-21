@@ -2,7 +2,7 @@
  * Activates and injects OpenAI/Codex native web-search tools when config,
  * model API, and auth state allow it.
  */
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { isRecord } from "../utils.js";
 import { externalCliDiscoveryForProviderAuth } from "./auth-profiles/external-cli-discovery.js";
 import { listProfilesForProvider } from "./auth-profiles/profile-list.js";
@@ -253,7 +253,7 @@ export function patchCodexNativeWebSearchPayload(params: {
   return { status: "injected" };
 }
 
-/** Returns whether the managed OpenClaw web-search tool should be hidden. */
+/** Returns whether the managed GrokBot web-search tool should be hidden. */
 export function shouldSuppressManagedWebSearchTool(params: {
   config?: OpenClawConfig;
   modelProvider?: string;

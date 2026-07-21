@@ -6,20 +6,20 @@ import path from "node:path";
 import {
   resolveProviderIdForAuth,
   type ProviderAuthAliasLookupParams,
-} from "openclaw/plugin-sdk/agent-runtime";
+} from "grokbot/plugin-sdk/agent-runtime";
 import {
   resolveExecApprovalsFromFile,
   type ExecApprovalsFile,
-} from "openclaw/plugin-sdk/exec-approvals-runtime";
-import { resolvePositiveTimerTimeoutMs } from "openclaw/plugin-sdk/number-runtime";
-import { normalizeAgentId } from "openclaw/plugin-sdk/routing";
+} from "grokbot/plugin-sdk/exec-approvals-runtime";
+import { resolvePositiveTimerTimeoutMs } from "grokbot/plugin-sdk/number-runtime";
+import { normalizeAgentId } from "grokbot/plugin-sdk/routing";
 import {
   buildSecretInputSchema,
   normalizeResolvedSecretInputString,
   type SecretInput,
-} from "openclaw/plugin-sdk/secret-input";
-import { normalizeTrimmedStringList } from "openclaw/plugin-sdk/string-coerce-runtime";
-import { detectWindowsSpawnCommandInlineArgs } from "openclaw/plugin-sdk/windows-spawn";
+} from "grokbot/plugin-sdk/secret-input";
+import { normalizeTrimmedStringList } from "grokbot/plugin-sdk/string-coerce-runtime";
+import { detectWindowsSpawnCommandInlineArgs } from "grokbot/plugin-sdk/windows-spawn";
 import { parse as parseToml } from "smol-toml";
 import { z } from "zod";
 import type {
@@ -34,7 +34,7 @@ import {
   codexSessionCatalogConfigSchema,
 } from "./session-discovery-config.js";
 
-const START_OPTIONS_KEY_SECRET_SYMBOL = Symbol.for("openclaw.codexAppServerStartOptionsKeySecret");
+const START_OPTIONS_KEY_SECRET_SYMBOL = Symbol.for("grokbot.codexAppServerStartOptionsKeySecret");
 const START_OPTIONS_KEY_SECRET = getStartOptionsKeySecret();
 const UNIX_CODEX_REQUIREMENTS_PATH = "/etc/codex/requirements.toml";
 const WINDOWS_CODEX_REQUIREMENTS_SUFFIX = "\\OpenAI\\Codex\\requirements.toml";
@@ -310,7 +310,7 @@ const DEFAULT_CODEX_COMPUTER_USE_MARKETPLACE_DISCOVERY_TIMEOUT_MS = 60_000;
 const DEFAULT_CODEX_COMPUTER_USE_LIVE_TEST_TIMEOUT_MS = 60_000;
 const DEFAULT_CODEX_COMPUTER_USE_TOOL_CALL_TIMEOUT_MS = 60_000;
 const DEFAULT_CODEX_COMPUTER_USE_HEALTH_CHECK_INTERVAL_MINUTES = 60;
-const DEFAULT_CODEX_APP_SERVER_NETWORK_PROXY_PROFILE_PREFIX = "openclaw-network";
+const DEFAULT_CODEX_APP_SERVER_NETWORK_PROXY_PROFILE_PREFIX = "grokbot-network";
 
 const codexAppServerTransportSchema = z.enum(["stdio", "websocket", "unix"]);
 const codexAppServerHomeScopeSchema = z.enum(["agent", "user"]);

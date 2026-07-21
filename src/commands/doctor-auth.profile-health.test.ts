@@ -4,7 +4,7 @@ import os from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { AuthProfileFailureReason, AuthProfileStore } from "../agents/auth-profiles/types.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import type { DoctorPrompter } from "./doctor-prompter.js";
 
 const authProfileMocks = vi.hoisted(() => ({
@@ -44,7 +44,7 @@ describe("noteAuthProfileHealth", () => {
   let tempDir: string;
 
   beforeEach(() => {
-    tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-doctor-auth-"));
+    tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-doctor-auth-"));
     authProfileMocks.ensureAuthProfileStore.mockReset();
     authProfileMocks.hasAnyAuthProfileStoreSource.mockReset();
     authProfileMocks.hasAnyAuthProfileStoreSource.mockReturnValue(false);
@@ -66,7 +66,7 @@ describe("noteAuthProfileHealth", () => {
   }
 
   function expectedAuthStorePath(agentDir: string): string {
-    return path.join(agentDir, "openclaw-agent.sqlite");
+    return path.join(agentDir, "grokbot-agent.sqlite");
   }
 
   function expiredStore(profileId: string, expires: number) {
@@ -308,7 +308,7 @@ describe("noteAuthProfileHealth", () => {
         "zai:default": {
           type: "api_key",
           provider: "zai",
-          key: "openclaw onboard --auth-choice zai-coding-global",
+          key: "grokbot onboard --auth-choice zai-coding-global",
         },
       },
     } satisfies AuthProfileStore);
@@ -329,7 +329,7 @@ describe("noteAuthProfileHealth", () => {
         path: expectedAuthStorePath(mainDir),
         target: "zai:default",
         requirement: "malformed_api_key",
-        fixHint: "Paste the API key value, not an OpenClaw onboarding command.",
+        fixHint: "Paste the API key value, not an GrokBot onboarding command.",
       }),
     ]);
   });
@@ -537,7 +537,7 @@ describe("noteAuthProfileHealth", () => {
               "zai:default": {
                 type: "api_key",
                 provider: "zai",
-                key: "openclaw onboard --auth-choice zai-coding-global",
+                key: "grokbot onboard --auth-choice zai-coding-global",
               },
             },
           };
@@ -609,22 +609,22 @@ describe("noteAuthProfileHealth", () => {
     [
       "openai-codex:default",
       "OAuth token refresh failed for openai-codex: refresh_token_reused. Please try again or re-authenticate.",
-      "- openai-codex:default: re-auth required [refresh_token_reused] — Run `openclaw models auth login --provider openai`.",
+      "- openai-codex:default: re-auth required [refresh_token_reused] — Run `grokbot models auth login --provider openai`.",
     ],
     [
       "openai-codex:default",
       "OAuth token refresh failed for openai-codex: temporary upstream issue. Please try again or re-authenticate.",
-      "- openai-codex:default: OAuth refresh failed — Try again; if this persists, run `openclaw models auth login --provider openai`.",
+      "- openai-codex:default: OAuth refresh failed — Try again; if this persists, run `grokbot models auth login --provider openai`.",
     ],
     [
       "OpenAI Work Profile",
       "OAuth token refresh failed for openai: invalid_grant. Please try again or re-authenticate.",
-      "- OpenAI Work Profile: re-auth required [invalid_grant] — Run `openclaw models auth login --provider openai --profile-id 'OpenAI Work Profile'`.",
+      "- OpenAI Work Profile: re-auth required [invalid_grant] — Run `grokbot models auth login --provider openai --profile-id 'OpenAI Work Profile'`.",
     ],
     [
       "openai-codex:default",
       "OAuth token refresh failed for openai-codex`\nrm -rf /: invalid_grant. Please try again or re-authenticate.",
-      "- openai-codex:default: re-auth required [invalid_grant] — Run `openclaw models auth login --provider openai`.",
+      "- openai-codex:default: re-auth required [invalid_grant] — Run `grokbot models auth login --provider openai`.",
     ],
   ])(
     "formats OAuth refresh failures through the doctor command path",

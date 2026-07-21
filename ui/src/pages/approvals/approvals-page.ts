@@ -21,7 +21,7 @@ import {
 import { renderSettingsPage } from "../../components/settings-ui.ts";
 import { renderSettingsWorkspace } from "../../components/settings-workspace.ts";
 import { i18n, t } from "../../i18n/index.ts";
-import { OpenClawLightDomElement } from "../../lit/openclaw-element.ts";
+import { OpenClawLightDomElement } from "../../lit/grokbot-element.ts";
 import { SubscriptionsController } from "../../lit/subscriptions-controller.ts";
 
 const APPROVAL_HISTORY_PAGE_SIZE = 50;
@@ -335,6 +335,6 @@ class ApprovalsPage extends OpenClawLightDomElement {
   }
 }
 
-if (!customElements.get("openclaw-approvals-page")) {
-  customElements.define("openclaw-approvals-page", ApprovalsPage);
+if (!customElements.get("grokbot-approvals-page")) {
+  customElements.define("grokbot-approvals-page", ApprovalsPage);
 }

@@ -1,7 +1,7 @@
 // Discord tests cover native command.command arg plugin behavior.
-import type { ChatCommandDefinition } from "openclaw/plugin-sdk/command-auth-native";
-import * as commandRegistryModule from "openclaw/plugin-sdk/command-auth-native";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { ChatCommandDefinition } from "grokbot/plugin-sdk/command-auth-native";
+import * as commandRegistryModule from "grokbot/plugin-sdk/command-auth-native";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import type { DispatchDiscordCommandInteraction } from "./native-command-dispatch.js";
 import { createDiscordCommandArgFallbackButton } from "./native-command-ui.js";

@@ -1,7 +1,7 @@
 // Implements identity metadata updates for configured agents.
 import path from "node:path";
-import { expectDefined } from "@openclaw/normalization-core";
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+import { expectDefined } from "@grokbot/normalization-core";
+import { normalizeOptionalString } from "@grokbot/normalization-core/string-coerce";
 import {
   listAgentIds,
   resolveAgentWorkspaceDir,
@@ -118,7 +118,7 @@ export async function agentsSetIdentityCommand(
   const resolvedAgentId = expectDefined(agentId, "agent id");
   const resolvedAgentIds = listAgentIds(cfg).map((id) => normalizeAgentId(id));
   if (!resolvedAgentIds.includes(resolvedAgentId)) {
-    runtime.error(`Agent "${resolvedAgentId}" not found. Create it with \`openclaw agents add\`.`);
+    runtime.error(`Agent "${resolvedAgentId}" not found. Create it with \`grokbot agents add\`.`);
     runtime.exit(1);
     return;
   }

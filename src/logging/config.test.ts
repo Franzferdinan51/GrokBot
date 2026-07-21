@@ -10,9 +10,9 @@ const originalArgv = process.argv;
 let tempDirs: string[] = [];
 
 function writeConfig(source: string): string {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-logging-config-"));
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-logging-config-"));
   tempDirs.push(dir);
-  const configPath = path.join(dir, "openclaw.json");
+  const configPath = path.join(dir, "grokbot.json");
   fs.writeFileSync(configPath, source);
   return configPath;
 }
@@ -27,7 +27,7 @@ describe("readLoggingConfig", () => {
   });
 
   it("skips mutating config loads for config schema", () => {
-    process.argv = ["node", "openclaw", "config", "schema"];
+    process.argv = ["node", "grokbot", "config", "schema"];
     const configPath = writeConfig(`{ logging: { file: "/tmp/should-not-read.log" } }`);
     fs.rmSync(configPath);
 
@@ -40,7 +40,7 @@ describe("readLoggingConfig", () => {
     const configPath = writeConfig(`{
       logging: {
         level: "debug",
-        file: "/tmp/openclaw-custom.log",
+        file: "/tmp/grokbot-custom.log",
         maxFileBytes: 1234,
       },
     }`);
@@ -48,7 +48,7 @@ describe("readLoggingConfig", () => {
     withEnv({ OPENCLAW_CONFIG_PATH: configPath }, () => {
       expect(readLoggingConfig()).toStrictEqual({
         level: "debug",
-        file: "/tmp/openclaw-custom.log",
+        file: "/tmp/grokbot-custom.log",
         maxFileBytes: 1234,
       });
     });
@@ -56,7 +56,7 @@ describe("readLoggingConfig", () => {
 
   it("supports JSON5 comments and trailing commas", () => {
     const configPath = writeConfig(`{
-      // users commonly keep comments in openclaw.json
+      // users commonly keep comments in grokbot.json
       logging: {
         consoleLevel: "warn",
       },
@@ -71,7 +71,7 @@ describe("readLoggingConfig", () => {
 
   it("returns undefined for missing or malformed config files", () => {
     withEnv(
-      { OPENCLAW_CONFIG_PATH: path.join(os.tmpdir(), "openclaw-missing-config.json") },
+      { OPENCLAW_CONFIG_PATH: path.join(os.tmpdir(), "grokbot-missing-config.json") },
       () => {
         expect(readLoggingConfig()).toBeUndefined();
       },

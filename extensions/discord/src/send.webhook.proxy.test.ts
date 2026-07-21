@@ -1,13 +1,13 @@
 // Discord tests cover send.webhook.proxy plugin behavior.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { DiscordError, RateLimitError } from "./internal/rest-errors.js";
 import { sendWebhookMessageDiscord } from "./send.webhook.js";
 
 const makeProxyFetchMock = vi.hoisted(() => vi.fn());
-vi.mock("openclaw/plugin-sdk/fetch-runtime", async () => {
-  const actual = await vi.importActual<typeof import("openclaw/plugin-sdk/fetch-runtime")>(
-    "openclaw/plugin-sdk/fetch-runtime",
+vi.mock("grokbot/plugin-sdk/fetch-runtime", async () => {
+  const actual = await vi.importActual<typeof import("grokbot/plugin-sdk/fetch-runtime")>(
+    "grokbot/plugin-sdk/fetch-runtime",
   );
   return {
     ...actual,

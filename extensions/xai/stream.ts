@@ -1,12 +1,12 @@
 // Xai plugin module implements stream behavior.
-import type { StreamFn } from "openclaw/plugin-sdk/agent-core";
-import { streamSimple } from "openclaw/plugin-sdk/llm";
-import type { ProviderWrapStreamFnContext } from "openclaw/plugin-sdk/plugin-entry";
+import type { StreamFn } from "grokbot/plugin-sdk/agent-core";
+import { streamSimple } from "grokbot/plugin-sdk/llm";
+import type { ProviderWrapStreamFnContext } from "grokbot/plugin-sdk/plugin-entry";
 import {
   composeProviderStreamWrappers,
   createPlainTextToolCallCompatWrapper,
   createToolStreamWrapper,
-} from "openclaw/plugin-sdk/provider-stream-shared";
+} from "grokbot/plugin-sdk/provider-stream-shared";
 import { isXaiProviderId } from "./provider-id.js";
 
 const XAI_FAST_MODEL_IDS = new Map<string, string>([

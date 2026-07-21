@@ -28,7 +28,7 @@ import {
   requestSessionUsageTimeSeries,
 } from "../../lib/sessions/index.ts";
 import { normalizeLowercaseStringOrEmpty } from "../../lib/string-coerce.ts";
-import { OpenClawLightDomElement } from "../../lit/openclaw-element.ts";
+import { OpenClawLightDomElement } from "../../lit/grokbot-element.ts";
 import { SubscriptionsController } from "../../lit/subscriptions-controller.ts";
 import { mergeUsageCacheStatus } from "./cache-status.ts";
 import type { ProviderUsageSummary } from "./data-types.ts";
@@ -715,6 +715,6 @@ class UsagePage extends OpenClawLightDomElement {
   }
 }
 
-if (!customElements.get("openclaw-usage-page")) {
-  customElements.define("openclaw-usage-page", UsagePage);
+if (!customElements.get("grokbot-usage-page")) {
+  customElements.define("grokbot-usage-page", UsagePage);
 }

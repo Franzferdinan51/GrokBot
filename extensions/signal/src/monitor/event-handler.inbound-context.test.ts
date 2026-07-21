@@ -1,7 +1,7 @@
 // Signal tests cover event handler.inbound context plugin behavior.
-import { expectChannelInboundContextContract as expectInboundContextContract } from "openclaw/plugin-sdk/channel-contract-testing";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import type { MsgContext } from "openclaw/plugin-sdk/reply-runtime";
+import { expectChannelInboundContextContract as expectInboundContextContract } from "grokbot/plugin-sdk/channel-contract-testing";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import type { MsgContext } from "grokbot/plugin-sdk/reply-runtime";
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { resolveSignalReplyContextWithPersistence } from "../reply-authors.js";
 import { resetSignalReplyAuthorsForTests } from "../reply-authors.test-helpers.js";
@@ -73,9 +73,9 @@ vi.mock("../send-reactions.js", () => ({
   removeReactionSignal: removeReactionSignalMock,
 }));
 
-vi.mock("openclaw/plugin-sdk/reply-runtime", async () => {
-  const actual = await vi.importActual<typeof import("openclaw/plugin-sdk/reply-runtime")>(
-    "openclaw/plugin-sdk/reply-runtime",
+vi.mock("grokbot/plugin-sdk/reply-runtime", async () => {
+  const actual = await vi.importActual<typeof import("grokbot/plugin-sdk/reply-runtime")>(
+    "grokbot/plugin-sdk/reply-runtime",
   );
   return {
     ...actual,
@@ -85,9 +85,9 @@ vi.mock("openclaw/plugin-sdk/reply-runtime", async () => {
   };
 });
 
-vi.mock("openclaw/plugin-sdk/channel-inbound", async () => {
-  const actual = await vi.importActual<typeof import("openclaw/plugin-sdk/channel-inbound")>(
-    "openclaw/plugin-sdk/channel-inbound",
+vi.mock("grokbot/plugin-sdk/channel-inbound", async () => {
+  const actual = await vi.importActual<typeof import("grokbot/plugin-sdk/channel-inbound")>(
+    "grokbot/plugin-sdk/channel-inbound",
   );
   type RunParams = Parameters<typeof actual.runChannelInboundEvent>[0];
   return {
@@ -127,7 +127,7 @@ vi.mock("openclaw/plugin-sdk/channel-inbound", async () => {
           channel: resolved.channel,
           accountId: resolved.accountId,
           routeSessionKey: resolved.route.sessionKey,
-          storePath: "/tmp/openclaw/signal-sessions.json",
+          storePath: "/tmp/grokbot/signal-sessions.json",
           ctxPayload: resolved.ctxPayload,
           recordInboundSession: recordInboundSessionMock,
           afterRecord: resolved.afterRecord,
@@ -165,9 +165,9 @@ vi.mock("openclaw/plugin-sdk/channel-inbound", async () => {
   };
 });
 
-vi.mock("openclaw/plugin-sdk/conversation-runtime", async () => {
-  const actual = await vi.importActual<typeof import("openclaw/plugin-sdk/conversation-runtime")>(
-    "openclaw/plugin-sdk/conversation-runtime",
+vi.mock("grokbot/plugin-sdk/conversation-runtime", async () => {
+  const actual = await vi.importActual<typeof import("grokbot/plugin-sdk/conversation-runtime")>(
+    "grokbot/plugin-sdk/conversation-runtime",
   );
   return {
     ...actual,
@@ -177,9 +177,9 @@ vi.mock("openclaw/plugin-sdk/conversation-runtime", async () => {
   };
 });
 
-vi.mock("openclaw/plugin-sdk/system-event-runtime", async () => {
-  const actual = await vi.importActual<typeof import("openclaw/plugin-sdk/system-event-runtime")>(
-    "openclaw/plugin-sdk/system-event-runtime",
+vi.mock("grokbot/plugin-sdk/system-event-runtime", async () => {
+  const actual = await vi.importActual<typeof import("grokbot/plugin-sdk/system-event-runtime")>(
+    "grokbot/plugin-sdk/system-event-runtime",
   );
   return {
     ...actual,

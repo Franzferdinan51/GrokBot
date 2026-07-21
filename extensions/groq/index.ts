@@ -1,12 +1,12 @@
-import type { StreamFn } from "openclaw/plugin-sdk/agent-core";
+import type { StreamFn } from "grokbot/plugin-sdk/agent-core";
 import {
   createAssistantMessageEventStream,
   streamSimple,
   type AssistantMessageEvent,
-} from "openclaw/plugin-sdk/llm";
-// Groq plugin entrypoint registers its OpenClaw integration.
-import { definePluginEntry } from "openclaw/plugin-sdk/plugin-entry";
-import { createProviderApiKeyAuthMethod } from "openclaw/plugin-sdk/provider-auth-api-key";
+} from "grokbot/plugin-sdk/llm";
+// Groq plugin entrypoint registers its GrokBot integration.
+import { definePluginEntry } from "grokbot/plugin-sdk/plugin-entry";
+import { createProviderApiKeyAuthMethod } from "grokbot/plugin-sdk/provider-auth-api-key";
 import { groqMediaUnderstandingProvider } from "./media-understanding-provider.js";
 
 const GROQ_DEFAULT_MODEL_REF = "groq/llama-3.3-70b-versatile";

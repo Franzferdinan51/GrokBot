@@ -10,7 +10,7 @@ import { buildWorkspaceSkillsPrompt } from "./workspace.js";
 describe("buildWorkspaceSkillsPrompt", () => {
   it("applies bundled allowlist without affecting workspace skills", async () => {
     const env = captureEnv(["HOME", "USERPROFILE", "OPENCLAW_HOME", "OPENCLAW_STATE_DIR"]);
-    const workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-"));
+    const workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-"));
     try {
       setTestEnvValue("HOME", workspaceDir);
       setTestEnvValue("USERPROFILE", workspaceDir);

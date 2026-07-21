@@ -1,6 +1,6 @@
 // Discord plugin module implements runtime behavior.
-import type { PluginRuntime } from "openclaw/plugin-sdk/channel-core";
-import { createPluginRuntimeStore } from "openclaw/plugin-sdk/runtime-store";
+import type { PluginRuntime } from "grokbot/plugin-sdk/channel-core";
+import { createPluginRuntimeStore } from "grokbot/plugin-sdk/runtime-store";
 
 type DiscordChannelRuntime = {
   messageActions?: typeof import("./channel-actions.js").discordMessageActions;

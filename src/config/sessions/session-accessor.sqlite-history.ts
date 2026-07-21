@@ -1,6 +1,6 @@
 import { executeSqliteQuerySync, getNodeSqliteKysely } from "../../infra/kysely-sync.js";
-import type { DB as OpenClawAgentKyselyDatabase } from "../../state/openclaw-agent-db.generated.js";
-import type { OpenClawAgentDatabase } from "../../state/openclaw-agent-db.js";
+import type { DB as OpenClawAgentKyselyDatabase } from "../../state/grokbot-agent-db.generated.js";
+import type { OpenClawAgentDatabase } from "../../state/grokbot-agent-db.js";
 import { isInternalSessionEffectsKey } from "./internal-session-key.js";
 import type { SessionTranscriptInstance } from "./session-accessor.sqlite-contract.js";
 import { formatSqliteSessionFileMarker } from "./sqlite-marker.js";

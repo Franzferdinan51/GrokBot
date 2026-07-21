@@ -10,7 +10,7 @@ import {
   type NormalizeLegacyChannelAccountParams,
 } from "./channel-compat-normalization.js";
 import type { LegacyConfigRule } from "./legacy.shared.js";
-import type { OpenClawConfig } from "./types.openclaw.js";
+import type { OpenClawConfig } from "./types.grokbot.js";
 
 export type StreamingAliasMode = "off" | "partial" | "block" | "progress";
 
@@ -96,7 +96,7 @@ function buildAliasRuleMessage(params: {
   const prefixedCount = params.root && !streaming.deliveryOnly ? 2 : 1;
   const keys = flat.map((key, index) => (index < prefixedCount ? `${prefix}.${key}` : key));
   const keyList = `${keys.slice(0, -1).join(", ")}, and ${keys.at(-1)}`;
-  return `${keyList} are legacy; use ${prefix}.streaming.{${nested.join(",")}}. Run "openclaw doctor --fix".`;
+  return `${keyList} are legacy; use ${prefix}.streaming.{${nested.join(",")}}. Run "grokbot doctor --fix".`;
 }
 
 function hasLegacyDmAliases(value: unknown): boolean {
@@ -207,14 +207,14 @@ export function defineChannelAliasMigration<TMode extends string = StreamingAlia
   if (spec.dm?.root) {
     legacyConfigRules.push({
       path: ["channels", spec.channelId],
-      message: `${pathPrefix}.dm.policy and ${pathPrefix}.dm.allowFrom are legacy; use ${pathPrefix}.dmPolicy and ${pathPrefix}.allowFrom. Run "openclaw doctor --fix".`,
+      message: `${pathPrefix}.dm.policy and ${pathPrefix}.dm.allowFrom are legacy; use ${pathPrefix}.dmPolicy and ${pathPrefix}.allowFrom. Run "grokbot doctor --fix".`,
       match: hasLegacyDmAliases,
     });
   }
   if (spec.dm?.accounts) {
     legacyConfigRules.push({
       path: ["channels", spec.channelId, "accounts"],
-      message: `${pathPrefix}.accounts.<id>.dm.policy and dm.allowFrom are legacy; use ${pathPrefix}.accounts.<id>.dmPolicy and allowFrom. Run "openclaw doctor --fix".`,
+      message: `${pathPrefix}.accounts.<id>.dm.policy and dm.allowFrom are legacy; use ${pathPrefix}.accounts.<id>.dmPolicy and allowFrom. Run "grokbot doctor --fix".`,
       match: (value) => hasLegacyAccountStreamingAliases(value, hasLegacyDmAliases),
     });
   }

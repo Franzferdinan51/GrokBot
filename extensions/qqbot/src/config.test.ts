@@ -1,10 +1,10 @@
 // Qqbot tests cover config plugin behavior.
 import fs from "node:fs";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import {
   type JsonSchemaObject,
   validateJsonSchemaValue,
-} from "openclaw/plugin-sdk/json-schema-runtime";
+} from "grokbot/plugin-sdk/json-schema-runtime";
 import { describe, expect, it } from "vitest";
 import { qqbotSetupAdapterShared } from "./bridge/config-shared.js";
 import {
@@ -43,7 +43,7 @@ describe("qqbot config", () => {
 
   it("accepts top-level speech overrides in the manifest schema", () => {
     const manifest = JSON.parse(
-      fs.readFileSync(new URL("../openclaw.plugin.json", import.meta.url), "utf-8"),
+      fs.readFileSync(new URL("../grokbot.plugin.json", import.meta.url), "utf-8"),
     ) as { configSchema: JsonSchemaObject };
 
     const result = validateJsonSchemaValue({
@@ -64,7 +64,7 @@ describe("qqbot config", () => {
 
   it("accepts defaultAccount in the manifest schema", () => {
     const manifest = JSON.parse(
-      fs.readFileSync(new URL("../openclaw.plugin.json", import.meta.url), "utf-8"),
+      fs.readFileSync(new URL("../grokbot.plugin.json", import.meta.url), "utf-8"),
     ) as { configSchema: JsonSchemaObject };
 
     const result = validateJsonSchemaValue({
@@ -116,7 +116,7 @@ describe("qqbot config", () => {
         transcodeEnabled: false,
       },
       urlDirectUpload: false,
-      upgradeUrl: "https://docs.openclaw.ai/channels/qqbot",
+      upgradeUrl: "https://docs.grokbot.ai/channels/qqbot",
       upgradeMode: "doc",
       accounts: {
         bot2: {
@@ -197,7 +197,7 @@ describe("qqbot config", () => {
             transcodeEnabled: false,
           },
           urlDirectUpload: false,
-          upgradeUrl: "https://docs.openclaw.ai/channels/qqbot",
+          upgradeUrl: "https://docs.grokbot.ai/channels/qqbot",
           upgradeMode: "hot-reload",
         },
       },
@@ -212,7 +212,7 @@ describe("qqbot config", () => {
       transcodeEnabled: false,
     });
     expect(resolved.config.urlDirectUpload).toBe(false);
-    expect(resolved.config.upgradeUrl).toBe("https://docs.openclaw.ai/channels/qqbot");
+    expect(resolved.config.upgradeUrl).toBe("https://docs.grokbot.ai/channels/qqbot");
     expect(resolved.config.upgradeMode).toBe("hot-reload");
   });
 

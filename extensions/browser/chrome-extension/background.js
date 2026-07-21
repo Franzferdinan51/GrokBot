@@ -4,13 +4,13 @@ import {
   capturePageShare,
   waitForCondition,
 } from "./modules/page-share-core.js";
-// OpenClaw extension service worker.
+// GrokBot extension service worker.
 //
-// Thin transport between the OpenClaw extension relay (loopback WebSocket) and
+// Thin transport between the GrokBot extension relay (loopback WebSocket) and
 // chrome.debugger. All CDP target synthesis lives server-side in the relay
 // bridge; this worker only attaches tabs, forwards frames, and keeps the
-// OpenClaw tab group in sync. Membership in that group is the user-visible
-// consent boundary: only grouped tabs are reported to (and driven by) OpenClaw.
+// GrokBot tab group in sync. Membership in that group is the user-visible
+// consent boundary: only grouped tabs are reported to (and driven by) GrokBot.
 import {
   OPENCLAW_TAB_GROUP_TITLE,
   buildRelayWsProtocols,
@@ -32,8 +32,8 @@ const COPILOT_RELAY_LABEL = {
   on: "Browser relay connected",
   error: "Browser relay reconnecting",
 };
-const RELAY_WATCHDOG_ALARM = "openclaw-relay-watchdog";
-const RELAY_OPENING_DEADLINE_ALARM = "openclaw-relay-opening-deadline";
+const RELAY_WATCHDOG_ALARM = "grokbot-relay-watchdog";
+const RELAY_OPENING_DEADLINE_ALARM = "grokbot-relay-opening-deadline";
 const RELAY_OPENING_TIMEOUT_MS = 30_000;
 
 /** @type {WebSocket|null} */
@@ -489,7 +489,7 @@ async function sendPageShareRequest(payload) {
   return await new Promise((resolve, reject) => {
     const timer = setTimeout(() => {
       pendingPageShares.delete(requestId);
-      reject(new Error("Timed out waiting for OpenClaw."));
+      reject(new Error("Timed out waiting for GrokBot."));
     }, 10_000);
     pendingPageShares.set(requestId, { resolve, reject, timer });
     try {
@@ -555,8 +555,8 @@ function sendPageFromChromeEntry(tabId) {
 async function installPageShareContextMenu() {
   await chrome.contextMenus.removeAll();
   chrome.contextMenus.create({
-    id: "openclaw-send-page",
-    title: "Send page to OpenClaw",
+    id: "grokbot-send-page",
+    title: "Send page to GrokBot",
     contexts: ["page", "selection"],
   });
 }
@@ -754,7 +754,7 @@ chrome.commands.onCommand.addListener((command) => {
     .then(([tab]) => (typeof tab?.id === "number" ? sendPageFromChromeEntry(tab.id) : undefined));
 });
 chrome.contextMenus.onClicked.addListener((info, tab) => {
-  if (info.menuItemId !== "openclaw-send-page" || typeof tab?.id !== "number") {
+  if (info.menuItemId !== "grokbot-send-page" || typeof tab?.id !== "number") {
     return;
   }
   const selection = info.selectionText?.trim() ?? "";

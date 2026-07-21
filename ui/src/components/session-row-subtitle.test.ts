@@ -8,7 +8,7 @@ function workSession(): SidebarRecentSession {
     hasActiveRun: false,
     label: "Backing session",
     status: "done",
-    subtitle: "~/Projects/openclaw",
+    subtitle: "~/Projects/grokbot",
     workSession: true,
   } as unknown as SidebarRecentSession;
 }

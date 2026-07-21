@@ -1,9 +1,9 @@
 // Resolves and packages install sources for plugin installs.
 import fs from "node:fs/promises";
 import path from "node:path";
-import { isRecord } from "@openclaw/normalization-core/record-coerce";
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
-import { normalizeStringEntries } from "@openclaw/normalization-core/string-normalization";
+import { isRecord } from "@grokbot/normalization-core/record-coerce";
+import { normalizeOptionalString } from "@grokbot/normalization-core/string-coerce";
+import { normalizeStringEntries } from "@grokbot/normalization-core/string-normalization";
 import {
   gt as gtSemver,
   satisfies as satisfiesSemver,
@@ -15,7 +15,7 @@ import { resolveArchiveKind } from "./archive.js";
 import { pathExists } from "./fs-safe.js";
 import { applyNpmFreshnessBypassEnv, type NpmProjectInstallEnvOptions } from "./npm-install-env.js";
 import { withTempWorkspace } from "./private-temp-workspace.js";
-import { resolvePreferredOpenClawTmpDir } from "./tmp-openclaw-dir.js";
+import { resolvePreferredOpenClawTmpDir } from "./tmp-grokbot-dir.js";
 
 /** Metadata npm reports when resolving a registry spec or packed archive. */
 export type NpmSpecResolution = {
@@ -114,7 +114,7 @@ function normalizeNpmViewMetadata(value: unknown, spec: string): NpmSpecResoluti
     integrity:
       normalizeOptionalString(rec["dist.integrity"]) ?? normalizeOptionalString(dist.integrity),
     shasum: normalizeOptionalString(rec["dist.shasum"]) ?? normalizeOptionalString(dist.shasum),
-    ...(isRecord(rec.openclaw) ? { packageOpenClaw: rec.openclaw } : {}),
+    ...(isRecord(rec.grokbot) ? { packageOpenClaw: rec.grokbot } : {}),
   };
 }
 
@@ -141,7 +141,7 @@ export async function resolveNpmSpecMetadata(params: { spec: string; timeoutMs?:
       "version",
       "dist.integrity",
       "dist.shasum",
-      "openclaw",
+      "grokbot",
       "--json",
     ],
     {
@@ -154,7 +154,7 @@ export async function resolveNpmSpecMetadata(params: { spec: string; timeoutMs?:
     if (/E404|is not in this registry/i.test(raw)) {
       return {
         ok: false,
-        error: `Package not found on npm: ${params.spec}. See https://docs.openclaw.ai/tools/plugin for installable plugins.`,
+        error: `Package not found on npm: ${params.spec}. See https://docs.grokbot.ai/tools/plugin for installable plugins.`,
       };
     }
     return { ok: false, error: `npm view failed: ${raw}`, category: "metadata-env" };
@@ -367,7 +367,7 @@ export async function packNpmSpecToArchive(params: {
     if (/E404|is not in this registry/i.test(raw)) {
       return {
         ok: false,
-        error: `Package not found on npm: ${params.spec}. See https://docs.openclaw.ai/tools/plugin for installable plugins.`,
+        error: `Package not found on npm: ${params.spec}. See https://docs.grokbot.ai/tools/plugin for installable plugins.`,
       };
     }
     return { ok: false, error: `npm pack failed: ${raw}` };

@@ -227,7 +227,7 @@ describe("AppSidebar session attention", () => {
 
   it("marks a collapsed section that contains agent-declared attention", async () => {
     localStorage.setItem(
-      "openclaw:sidebar:sessions:collapsed-sections",
+      "grokbot:sidebar:sessions:collapsed-sections",
       JSON.stringify(["ungrouped"]),
     );
     const sessionsHarness = createSessionsHarness("main", [sessionKey]);

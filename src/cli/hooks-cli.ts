@@ -8,7 +8,7 @@ import { getTerminalTableWidth, renderTable } from "../../packages/terminal-core
 import { theme } from "../../packages/terminal-core/src/theme.js";
 import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from "../agents/agent-scope.js";
 import { getRuntimeConfig, readConfigFileSnapshot, replaceConfigFile } from "../config/config.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import {
   buildWorkspaceHookStatus,
   type HookStatusEntry,
@@ -211,7 +211,7 @@ export function formatHooksList(report: HookStatusReport, opts: HooksListOptions
 
   if (hooks.length === 0) {
     const message = opts.eligible
-      ? `No eligible hooks found. Run \`${formatCliCommand("openclaw hooks list")}\` to see all hooks.`
+      ? `No eligible hooks found. Run \`${formatCliCommand("grokbot hooks list")}\` to see all hooks.`
       : "No hooks found.";
     return message;
   }
@@ -267,7 +267,7 @@ export function formatHookInfo(
     if (opts.json) {
       return JSON.stringify({ error: "not found", hook: hookName }, null, 2);
     }
-    return `Hook "${hookName}" not found. Run \`${formatCliCommand("openclaw hooks list")}\` to see available hooks.`;
+    return `Hook "${hookName}" not found. Run \`${formatCliCommand("grokbot hooks list")}\` to see available hooks.`;
   }
 
   if (opts.json) {
@@ -483,7 +483,7 @@ export function registerHooksCli(program: Command): void {
     .addHelpText(
       "after",
       () =>
-        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/hooks", "docs.openclaw.ai/cli/hooks")}\n`,
+        `\n${theme.muted("Docs:")} ${formatDocsLink("/cli/hooks", "docs.grokbot.ai/cli/hooks")}\n`,
     );
 
   hooks
@@ -561,27 +561,27 @@ export function registerHooksCli(program: Command): void {
 
   hooks
     .command("install")
-    .description("Deprecated: install a hook pack via `openclaw plugins install`")
+    .description("Deprecated: install a hook pack via `grokbot plugins install`")
     .argument("<path-or-spec>", "Path to a hook pack or npm package spec")
     .option("-l, --link", "Link a local path instead of copying", false)
     .option("--pin", "Record npm installs as exact resolved <name>@<version>", false)
     .option("--force", "Confirm non-ClawHub sources and overwrite an existing hook pack", false)
     .action(async (raw: string, opts: { force?: boolean; link?: boolean; pin?: boolean }) => {
       defaultRuntime.log(
-        theme.warn("`openclaw hooks install` is deprecated; use `openclaw plugins install`."),
+        theme.warn("`grokbot hooks install` is deprecated; use `grokbot plugins install`."),
       );
       await runPluginInstallCommand({ raw, opts, invalidateRuntimeCache: false });
     });
 
   hooks
     .command("update")
-    .description("Deprecated: update hook packs via `openclaw plugins update`")
+    .description("Deprecated: update hook packs via `grokbot plugins update`")
     .argument("[id]", "Hook pack id (omit with --all)")
     .option("--all", "Update all tracked hooks", false)
     .option("--dry-run", "Show what would change without writing", false)
     .action(async (id: string | undefined, opts: HooksUpdateOptions) => {
       defaultRuntime.log(
-        theme.warn("`openclaw hooks update` is deprecated; use `openclaw plugins update`."),
+        theme.warn("`grokbot hooks update` is deprecated; use `grokbot plugins update`."),
       );
       await runPluginUpdateCommand({ id, opts });
     });

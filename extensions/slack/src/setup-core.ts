@@ -1,5 +1,5 @@
-import type { ChannelSetupInput } from "openclaw/plugin-sdk/channel-setup";
-import { normalizeSecretInputString } from "openclaw/plugin-sdk/secret-input";
+import type { ChannelSetupInput } from "grokbot/plugin-sdk/channel-setup";
+import { normalizeSecretInputString } from "grokbot/plugin-sdk/secret-input";
 // Slack plugin module implements setup core behavior.
 import {
   createAccountScopedAllowFromSection,
@@ -18,13 +18,13 @@ import {
   type ChannelSetupDmPolicy,
   type ChannelSetupWizard,
   type OpenClawConfig,
-} from "openclaw/plugin-sdk/setup-runtime";
-import { formatDocsLink } from "openclaw/plugin-sdk/setup-tools";
+} from "grokbot/plugin-sdk/setup-runtime";
+import { formatDocsLink } from "grokbot/plugin-sdk/setup-tools";
 import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalString,
   uniqueStrings,
-} from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/string-coerce-runtime";
 import { inspectSlackAccount } from "./account-inspect.js";
 import {
   buildSlackManifest,
@@ -297,7 +297,7 @@ export function createSlackSetupWizardBase(handlers: {
         return { cfg };
       }
       const identity = await prompter.select<"bot" | "user">({
-        message: "How should OpenClaw appear in Slack?",
+        message: "How should GrokBot appear in Slack?",
         options: [
           { value: "bot", label: "Slack bot", hint: "Post as the Slack app (default)" },
           { value: "user", label: "Slack user", hint: "Post as the authorizing human" },

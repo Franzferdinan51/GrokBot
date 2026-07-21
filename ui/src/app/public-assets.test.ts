@@ -25,7 +25,7 @@ describe("controlUiPublicAssetPath", () => {
 
   it("resolves base-mounted public assets under the configured base path", () => {
     expect(controlUiPublicAssetPath("favicon.svg", "/ui")).toBe("/ui/favicon.svg");
-    expect(controlUiPublicAssetPath("sw.js", "/apps/openclaw/")).toBe("/apps/openclaw/sw.js");
+    expect(controlUiPublicAssetPath("sw.js", "/apps/grokbot/")).toBe("/apps/grokbot/sw.js");
   });
 });
 
@@ -37,17 +37,17 @@ describe("inferControlUiPublicAssetPath", () => {
   });
 
   it("infers base-mounted assets from nested routes", () => {
-    expect(inferControlUiPublicAssetPath("sw.js", { pathname: "/openclaw/skills/workshop" })).toBe(
-      "/openclaw/sw.js",
+    expect(inferControlUiPublicAssetPath("sw.js", { pathname: "/grokbot/skills/workshop" })).toBe(
+      "/grokbot/sw.js",
     );
   });
 
   it("keeps explicit pathname inference independent from ambient page state", () => {
     expect(
       withConfiguredBasePath("/other", () =>
-        inferControlUiPublicAssetPath("sw.js", { pathname: "/openclaw/skills/workshop" }),
+        inferControlUiPublicAssetPath("sw.js", { pathname: "/grokbot/skills/workshop" }),
       ),
-    ).toBe("/openclaw/sw.js");
+    ).toBe("/grokbot/sw.js");
   });
 
   it("keeps an about mount root distinct from the settings About route", () => {

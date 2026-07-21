@@ -1,9 +1,9 @@
 // Telegram tests cover bot native commands.session meta plugin behavior.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { getAgentScopedMediaLocalRoots } from "openclaw/plugin-sdk/media-runtime";
-import { resolveChunkMode } from "openclaw/plugin-sdk/reply-dispatch-runtime";
-import { resolveThreadSessionKeys } from "openclaw/plugin-sdk/routing";
-import type { ResolvedAgentRoute } from "openclaw/plugin-sdk/routing";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { getAgentScopedMediaLocalRoots } from "grokbot/plugin-sdk/media-runtime";
+import { resolveChunkMode } from "grokbot/plugin-sdk/reply-dispatch-runtime";
+import { resolveThreadSessionKeys } from "grokbot/plugin-sdk/routing";
+import type { ResolvedAgentRoute } from "grokbot/plugin-sdk/routing";
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import type { TelegramNativeCommandDeps } from "./bot-native-command-deps.runtime.js";
 import {
@@ -19,23 +19,23 @@ import type { RegisterTelegramHandlerParams } from "./bot-native-commands.js";
 // All mocks scoped to this file only — does not affect bot-native-commands.test.ts
 
 type ResolveConfiguredBindingRouteFn =
-  typeof import("openclaw/plugin-sdk/conversation-runtime").resolveConfiguredBindingRoute;
+  typeof import("grokbot/plugin-sdk/conversation-runtime").resolveConfiguredBindingRoute;
 type EnsureConfiguredBindingRouteReadyFn =
-  typeof import("openclaw/plugin-sdk/conversation-runtime").ensureConfiguredBindingRouteReady;
+  typeof import("grokbot/plugin-sdk/conversation-runtime").ensureConfiguredBindingRouteReady;
 type DispatchReplyWithBufferedBlockDispatcherFn =
-  typeof import("openclaw/plugin-sdk/reply-dispatch-runtime").dispatchReplyWithBufferedBlockDispatcher;
+  typeof import("grokbot/plugin-sdk/reply-dispatch-runtime").dispatchReplyWithBufferedBlockDispatcher;
 type DispatchReplyWithBufferedBlockDispatcherParams =
   Parameters<DispatchReplyWithBufferedBlockDispatcherFn>[0];
 type DispatchReplyWithBufferedBlockDispatcherResult = Awaited<
   ReturnType<DispatchReplyWithBufferedBlockDispatcherFn>
 >;
 type ResolveCommandArgMenuFn =
-  typeof import("openclaw/plugin-sdk/command-auth-native").resolveCommandArgMenu;
+  typeof import("grokbot/plugin-sdk/command-auth-native").resolveCommandArgMenu;
 type DeliverRepliesFn = typeof import("./bot/delivery.js").deliverReplies;
 type DeliverRepliesParams = Parameters<DeliverRepliesFn>[0];
-type LoadModelCatalogFn = typeof import("openclaw/plugin-sdk/agent-runtime").loadModelCatalog;
+type LoadModelCatalogFn = typeof import("grokbot/plugin-sdk/agent-runtime").loadModelCatalog;
 type ResolveDefaultModelForAgentFn =
-  typeof import("openclaw/plugin-sdk/agent-runtime").resolveDefaultModelForAgent;
+  typeof import("grokbot/plugin-sdk/agent-runtime").resolveDefaultModelForAgent;
 type MatchPluginCommandFn = typeof import("./bot-native-commands.runtime.js").matchPluginCommand;
 
 const dispatchReplyResult: DispatchReplyWithBufferedBlockDispatcherResult = {
@@ -96,9 +96,9 @@ const conversationStoreMocks = vi.hoisted(() => ({
   upsertChannelPairingRequest: vi.fn(async () => ({ code: "PAIRCODE", created: true })),
 }));
 
-vi.mock("openclaw/plugin-sdk/conversation-runtime", async () => {
-  const actual = await vi.importActual<typeof import("openclaw/plugin-sdk/conversation-runtime")>(
-    "openclaw/plugin-sdk/conversation-runtime",
+vi.mock("grokbot/plugin-sdk/conversation-runtime", async () => {
+  const actual = await vi.importActual<typeof import("grokbot/plugin-sdk/conversation-runtime")>(
+    "grokbot/plugin-sdk/conversation-runtime",
   );
   return {
     ...actual,
@@ -168,9 +168,9 @@ vi.mock("openclaw/plugin-sdk/conversation-runtime", async () => {
     }),
   };
 });
-vi.mock("openclaw/plugin-sdk/session-store-runtime", async () => {
-  const actual = await vi.importActual<typeof import("openclaw/plugin-sdk/session-store-runtime")>(
-    "openclaw/plugin-sdk/session-store-runtime",
+vi.mock("grokbot/plugin-sdk/session-store-runtime", async () => {
+  const actual = await vi.importActual<typeof import("grokbot/plugin-sdk/session-store-runtime")>(
+    "grokbot/plugin-sdk/session-store-runtime",
   );
   return {
     ...actual,
@@ -180,9 +180,9 @@ vi.mock("openclaw/plugin-sdk/session-store-runtime", async () => {
     updateSessionStoreEntry: sessionMocks.updateSessionStoreEntry,
   };
 });
-vi.mock("openclaw/plugin-sdk/command-auth-native", async () => {
-  const actual = await vi.importActual<typeof import("openclaw/plugin-sdk/command-auth-native")>(
-    "openclaw/plugin-sdk/command-auth-native",
+vi.mock("grokbot/plugin-sdk/command-auth-native", async () => {
+  const actual = await vi.importActual<typeof import("grokbot/plugin-sdk/command-auth-native")>(
+    "grokbot/plugin-sdk/command-auth-native",
   );
   commandAuthMocks.resolveCommandArgMenu.mockImplementation(actual.resolveCommandArgMenu);
   return {
@@ -190,9 +190,9 @@ vi.mock("openclaw/plugin-sdk/command-auth-native", async () => {
     resolveCommandArgMenu: commandAuthMocks.resolveCommandArgMenu,
   };
 });
-vi.mock("openclaw/plugin-sdk/agent-runtime", async () => {
-  const actual = await vi.importActual<typeof import("openclaw/plugin-sdk/agent-runtime")>(
-    "openclaw/plugin-sdk/agent-runtime",
+vi.mock("grokbot/plugin-sdk/agent-runtime", async () => {
+  const actual = await vi.importActual<typeof import("grokbot/plugin-sdk/agent-runtime")>(
+    "grokbot/plugin-sdk/agent-runtime",
   );
   agentRuntimeMocks.resolveDefaultModelForAgent.mockImplementation(
     actual.resolveDefaultModelForAgent,
@@ -239,9 +239,9 @@ vi.mock("./bot-native-commands.runtime.js", () => {
     dispatchReplyWithBufferedBlockDispatcher: replyMocks.dispatchReplyWithBufferedBlockDispatcher,
   };
 });
-vi.mock("openclaw/plugin-sdk/plugin-runtime", async () => {
-  const actual = await vi.importActual<typeof import("openclaw/plugin-sdk/plugin-runtime")>(
-    "openclaw/plugin-sdk/plugin-runtime",
+vi.mock("grokbot/plugin-sdk/plugin-runtime", async () => {
+  const actual = await vi.importActual<typeof import("grokbot/plugin-sdk/plugin-runtime")>(
+    "grokbot/plugin-sdk/plugin-runtime",
   );
   return {
     ...actual,
@@ -651,7 +651,7 @@ function resetSessionMetaMocks() {
     return patch ? { ...current, ...patch } : current;
   });
   sessionMocks.recordSessionMetaFromInbound.mockClear().mockResolvedValue(undefined);
-  sessionMocks.resolveStorePath.mockClear().mockReturnValue("/tmp/openclaw-sessions.json");
+  sessionMocks.resolveStorePath.mockClear().mockReturnValue("/tmp/grokbot-sessions.json");
   pluginRuntimeMocks.executePluginCommand.mockClear().mockResolvedValue({ text: "ok" });
   pluginRuntimeMocks.matchPluginCommand.mockClear().mockReturnValue(null);
   replyMocks.dispatchReplyWithBufferedBlockDispatcher
@@ -779,7 +779,7 @@ describe("registerTelegramNativeCommands — session metadata", () => {
       "thinking menu call",
     );
     expect(sessionMocks.getSessionEntry).toHaveBeenCalledWith({
-      storePath: "/tmp/openclaw-sessions.json",
+      storePath: "/tmp/grokbot-sessions.json",
       sessionKey: "agent:main:main",
     });
     expectSendMessageCall({
@@ -794,7 +794,7 @@ describe("registerTelegramNativeCommands — session metadata", () => {
 
   it.each([
     { sessionRuntime: undefined, expectedRuntime: "codex" },
-    { sessionRuntime: "openclaw", expectedRuntime: "openclaw" },
+    { sessionRuntime: "grokbot", expectedRuntime: "grokbot" },
   ])(
     "uses the effective $expectedRuntime runtime for native /think menus",
     async ({ sessionRuntime, expectedRuntime }) => {
@@ -1608,7 +1608,7 @@ describe("registerTelegramNativeCommands — session metadata", () => {
   });
 
   it("passes persisted topic session identity to plugin commands", async () => {
-    sessionMocks.resolveStorePath.mockReturnValue("/tmp/openclaw-sessions/sessions.json");
+    sessionMocks.resolveStorePath.mockReturnValue("/tmp/grokbot-sessions/sessions.json");
     sessionMocks.getSessionEntry.mockReturnValue({
       authProfileOverride: "openai:owner@example.com",
       sessionId: "sess-topic",
@@ -1640,7 +1640,7 @@ describe("registerTelegramNativeCommands — session metadata", () => {
         name: "codex",
         description: "Codex",
         handler: vi.fn(),
-        pluginId: "openclaw-codex-app-server",
+        pluginId: "grokbot-codex-app-server",
         pluginName: "Codex",
         requireAuth: true,
       },
@@ -1708,7 +1708,7 @@ describe("registerTelegramNativeCommands — session metadata", () => {
     ).toBeUndefined();
     expect(sessionMocks.updateSessionStoreEntry).toHaveBeenCalledWith({
       sessionKey: "agent:main:main",
-      storePath: "/tmp/openclaw-sessions.json",
+      storePath: "/tmp/grokbot-sessions.json",
       requireWriteSuccess: true,
       skipMaintenance: true,
       update: expect.any(Function),
@@ -1898,7 +1898,7 @@ describe("registerTelegramNativeCommands — session metadata", () => {
   });
 
   it("passes session identity to plugin commands when the entry has no file", async () => {
-    sessionMocks.resolveStorePath.mockReturnValue("/tmp/openclaw-sessions/sessions.json");
+    sessionMocks.resolveStorePath.mockReturnValue("/tmp/grokbot-sessions/sessions.json");
     sessionMocks.getSessionEntry.mockReturnValue({
       sessionId: "sess-main",
       updatedAt: 1,
@@ -1921,7 +1921,7 @@ describe("registerTelegramNativeCommands — session metadata", () => {
         name: "codex",
         description: "Codex",
         handler: vi.fn(),
-        pluginId: "openclaw-codex-app-server",
+        pluginId: "grokbot-codex-app-server",
         pluginName: "Codex",
         requireAuth: true,
       },
@@ -1935,14 +1935,14 @@ describe("registerTelegramNativeCommands — session metadata", () => {
       {
         sessionKey: "agent:main:main",
         sessionId: "sess-main",
-        sessionFile: "sqlite:main:sess-main:/tmp/openclaw-sessions/sessions.json",
+        sessionFile: "sqlite:main:sess-main:/tmp/grokbot-sessions/sessions.json",
       },
       "plugin command params",
     );
   });
 
   it("passes SQLite transcript markers to plugin commands without path resolution", async () => {
-    const storePath = "/tmp/openclaw-sessions/sessions.json";
+    const storePath = "/tmp/grokbot-sessions/sessions.json";
     const marker = `sqlite:main:sess-main:${storePath}`;
     sessionMocks.resolveStorePath.mockReturnValue(storePath);
     sessionMocks.getSessionEntry.mockReturnValue({
@@ -1968,7 +1968,7 @@ describe("registerTelegramNativeCommands — session metadata", () => {
         name: "codex",
         description: "Codex",
         handler: vi.fn(),
-        pluginId: "openclaw-codex-app-server",
+        pluginId: "grokbot-codex-app-server",
         pluginName: "Codex",
         requireAuth: true,
       },
@@ -1989,7 +1989,7 @@ describe("registerTelegramNativeCommands — session metadata", () => {
   });
 
   it("replaces stale legacy transcript paths for plugin commands", async () => {
-    const storePath = "/tmp/openclaw-sessions/sessions.json";
+    const storePath = "/tmp/grokbot-sessions/sessions.json";
     const marker = `sqlite:main:sess-main:${storePath}`;
     sessionMocks.resolveStorePath.mockReturnValue(storePath);
     sessionMocks.getSessionEntry.mockReturnValue({
@@ -2015,7 +2015,7 @@ describe("registerTelegramNativeCommands — session metadata", () => {
         name: "codex",
         description: "Codex",
         handler: vi.fn(),
-        pluginId: "openclaw-codex-app-server",
+        pluginId: "grokbot-codex-app-server",
         pluginName: "Codex",
         requireAuth: true,
       },
@@ -2055,7 +2055,7 @@ describe("registerTelegramNativeCommands — session metadata", () => {
         name: "codex",
         description: "Codex",
         handler: vi.fn(),
-        pluginId: "openclaw-codex-app-server",
+        pluginId: "grokbot-codex-app-server",
         pluginName: "Codex",
         requireAuth: true,
       },

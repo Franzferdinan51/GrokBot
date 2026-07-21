@@ -32,7 +32,7 @@ async function writeInstallableSkill(workspaceDir: string, name: string): Promis
     `---
 name: ${name}
 description: test skill
-metadata: {"openclaw":{"install":[{"id":"deps","kind":"node","package":"example-package"}]}}
+metadata: {"grokbot":{"install":[{"id":"deps","kind":"node","package":"example-package"}]}}
 ---
 
 # ${name}
@@ -56,7 +56,7 @@ async function writeDangerousInstallableSkill(workspaceDir: string, name: string
 function loadTestWorkspaceSkillEntries(workspaceDir: string): SkillEntry[] {
   const skills = loadSkillsFromDirSafe({
     dir: path.join(workspaceDir, "skills"),
-    source: "openclaw-workspace",
+    source: "grokbot-workspace",
   }).skills;
   return skills.map((skill) => {
     const frontmatter =
@@ -84,7 +84,7 @@ function lastRunCommandCall(): unknown[] | undefined {
   return calls[calls.length - 1];
 }
 
-const workspaceSuite = createFixtureSuite("openclaw-skills-install-");
+const workspaceSuite = createFixtureSuite("grokbot-skills-install-");
 
 beforeAll(async () => {
   await workspaceSuite.setup();
@@ -133,7 +133,7 @@ describe("installSkill before_install hooks", () => {
     });
   });
 
-  it("runs npm node installs with an OpenClaw-managed user prefix", async () => {
+  it("runs npm node installs with an GrokBot-managed user prefix", async () => {
     await withWorkspaceCase(async ({ workspaceDir, stateDir }) => {
       await writeInstallableSkill(workspaceDir, "node-prefix-skill");
 
@@ -160,7 +160,7 @@ describe("installSkill before_install hooks", () => {
     const envSnapshot = captureEnv(["OPENCLAW_STATE_DIR", "OPENCLAW_CONFIG_PATH"]);
     try {
       process.env.OPENCLAW_STATE_DIR = "/tmp/untrusted-state";
-      process.env.OPENCLAW_CONFIG_PATH = "/tmp/untrusted-config/openclaw.json";
+      process.env.OPENCLAW_CONFIG_PATH = "/tmp/untrusted-config/grokbot.json";
 
       expect(
         skillsInstallTesting.resolveDefaultNodeInstallStateDir({
@@ -168,7 +168,7 @@ describe("installSkill before_install hooks", () => {
           homedir: () => "/Users/tester",
           platform: "darwin",
         }),
-      ).toBe("/Users/tester/.openclaw");
+      ).toBe("/Users/tester/.grokbot");
     } finally {
       envSnapshot.restore();
     }
@@ -177,12 +177,12 @@ describe("installSkill before_install hooks", () => {
   it("uses a fixed system state root for root npm installs", () => {
     expect(
       skillsInstallTesting.resolveDefaultNodeInstallStateDir({
-        cwd: "/workspace/openclaw",
+        cwd: "/workspace/grokbot",
         getuid: () => 0,
         homedir: () => "/root",
         platform: "linux",
       }),
-    ).toBe("/var/lib/openclaw");
+    ).toBe("/var/lib/grokbot");
   });
 
   it("surfaces plugin hook findings from before_install", async () => {
@@ -228,7 +228,7 @@ describe("installSkill before_install hooks", () => {
         | undefined;
       expect(payload?.targetName).toBe("policy-skill");
       expect(payload?.targetType).toBe("skill");
-      expect(payload?.origin).toBe("openclaw-workspace");
+      expect(payload?.origin).toBe("grokbot-workspace");
       expect(payload?.sourcePath).toContain("policy-skill");
       expect(payload?.sourcePathKind).toBe("directory");
       expect(payload?.request).toEqual({
@@ -242,7 +242,7 @@ describe("installSkill before_install hooks", () => {
       expect(payload?.skill?.installSpec?.kind).toBe("node");
       expect(payload?.skill?.installSpec?.package).toBe("example-package");
       expect(handlerCall?.[1]).toEqual({
-        origin: "openclaw-workspace",
+        origin: "grokbot-workspace",
         targetType: "skill",
         requestKind: "skill-install",
       });

@@ -1,5 +1,5 @@
 /** Detects whether the current process is running inside a launchd service label. */
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+import { normalizeOptionalString } from "@grokbot/normalization-core/string-coerce";
 
 type CurrentProcessLaunchdServiceLabelOptions = {
   allowConfiguredLabelFallback?: boolean;
@@ -29,7 +29,7 @@ export function isCurrentProcessLaunchdServiceLabel(
     return false;
   }
   if (
-    normalizeOptionalString(env.OPENCLAW_SERVICE_MARKER) === "openclaw" &&
+    normalizeOptionalString(env.OPENCLAW_SERVICE_MARKER) === "grokbot" &&
     Boolean(normalizeOptionalString(env.OPENCLAW_SERVICE_KIND))
   ) {
     // Managed wrappers inject service metadata; trust it when launchd's own

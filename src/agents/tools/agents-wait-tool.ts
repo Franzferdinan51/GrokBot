@@ -1,5 +1,5 @@
 import { Type } from "typebox";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import { onSubagentRegistryPersisted } from "../subagent-registry-state.js";
 import { getSubagentRunsByRunIds } from "../subagent-registry.js";
 import type { SubagentRunRecord } from "../subagent-registry.types.js";
@@ -235,7 +235,7 @@ const testing = {
 };
 
 if (process.env.VITEST || process.env.NODE_ENV === "test") {
-  (globalThis as Record<PropertyKey, unknown>)[Symbol.for("openclaw.agentsWaitToolTestApi")] = {
+  (globalThis as Record<PropertyKey, unknown>)[Symbol.for("grokbot.agentsWaitToolTestApi")] = {
     testing,
   };
 }

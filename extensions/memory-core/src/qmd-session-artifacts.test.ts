@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { requireNodeSqlite } from "openclaw/plugin-sdk/memory-core-host-engine-storage";
+import { requireNodeSqlite } from "grokbot/plugin-sdk/memory-core-host-engine-storage";
 import { describe, expect, it, vi } from "vitest";
 import {
   refreshQmdSessionArtifactDocIds,
@@ -10,7 +10,7 @@ import {
 
 describe("QMD session artifact mappings", () => {
   it("rechecks lease ownership before every doc-id publication and commit", async () => {
-    const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-qmd-artifact-lease-"));
+    const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-qmd-artifact-lease-"));
     const indexPath = path.join(tempDir, "index.sqlite");
     try {
       replaceQmdSessionArtifactMappings({

@@ -1,8 +1,8 @@
 // Telegram tests cover directory contract plugin behavior.
-import type { BaseProbeResult, BaseTokenResolution } from "openclaw/plugin-sdk/channel-contract";
-import { expectDirectoryIds } from "openclaw/plugin-sdk/channel-test-helpers";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { withEnvAsync } from "openclaw/plugin-sdk/test-env";
+import type { BaseProbeResult, BaseTokenResolution } from "grokbot/plugin-sdk/channel-contract";
+import { expectDirectoryIds } from "grokbot/plugin-sdk/channel-test-helpers";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { withEnvAsync } from "grokbot/plugin-sdk/test-env";
 import { describe, expect, expectTypeOf, it } from "vitest";
 import {
   listTelegramDirectoryGroupsFromConfig,

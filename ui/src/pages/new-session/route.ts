@@ -1,5 +1,5 @@
-import type { RouteLocation } from "@openclaw/uirouter";
-import { definePage } from "@openclaw/uirouter";
+import type { RouteLocation } from "@grokbot/uirouter";
+import { definePage } from "@grokbot/uirouter";
 import { html } from "lit";
 import type { ApplicationContext } from "../../app/context.ts";
 import { resolveAgentId, resolveCreateTarget } from "./catalog-target.ts";
@@ -42,6 +42,6 @@ export const page = definePage({
   component: () =>
     import("./new-session-page.ts").then(() => ({
       render: (data: unknown) =>
-        html`<openclaw-new-session-page .data=${data}></openclaw-new-session-page>`,
+        html`<grokbot-new-session-page .data=${data}></grokbot-new-session-page>`,
     })),
 });

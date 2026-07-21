@@ -7,8 +7,8 @@ import {
   readSessionTranscriptMessageEvents,
   replaceSessionEntry,
 } from "../../config/sessions/session-accessor.js";
-import { closeOpenClawAgentDatabasesForTest } from "../../state/openclaw-agent-db.js";
-import { closeOpenClawStateDatabaseForTest } from "../../state/openclaw-state-db.js";
+import { closeOpenClawAgentDatabasesForTest } from "../../state/grokbot-agent-db.js";
+import { closeOpenClawStateDatabaseForTest } from "../../state/grokbot-state-db.js";
 import {
   authorizeClientVoiceConfirmation,
   resolveClientVoiceToolConfirmationPolicy,
@@ -52,7 +52,7 @@ async function invokeClose(params: Record<string, unknown>) {
 describe("talk.client.transcript", () => {
   beforeEach(async () => {
     tempDir = await fs.realpath(
-      await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-talk-transcript-")),
+      await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-talk-transcript-")),
     );
     setTestEnvValue("OPENCLAW_STATE_DIR", tempDir);
     await replaceSessionEntry(

@@ -1,13 +1,13 @@
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { formatErrorMessage } from "grokbot/plugin-sdk/error-runtime";
 import {
   addMeetingSetupCheck,
   createMeetingSetupStatus,
   resolveMeetingBrowserNodeInfo,
   type MeetingSetupStatus,
-} from "openclaw/plugin-sdk/meeting-runtime";
-import type { PluginRuntime } from "openclaw/plugin-sdk/plugin-runtime";
-import { uniqueStrings } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/meeting-runtime";
+import type { PluginRuntime } from "grokbot/plugin-sdk/plugin-runtime";
+import { uniqueStrings } from "grokbot/plugin-sdk/string-coerce-runtime";
 import type { ZoomMeetingsConfig, ZoomMeetingsMode, ZoomMeetingsTransport } from "./config.js";
 import { assertBlackHole2chAvailable } from "./transports/chrome.js";
 import { ZOOM_MEETINGS_BROWSER_NODE_ADAPTER } from "./transports/zoom-meetings-platform-constants.js";
@@ -51,7 +51,7 @@ export async function getZoomMeetingsSetupStatus(params: {
       ok: true,
       message: params.config.chrome.browserProfile
         ? `Chrome node profile configured: ${params.config.chrome.browserProfile}`
-        : "Local Chrome uses the configured OpenClaw browser profile",
+        : "Local Chrome uses the configured GrokBot browser profile",
     },
     {
       id: "guest-join",

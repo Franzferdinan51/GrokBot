@@ -1,18 +1,18 @@
 ---
-summary: "Messaging platforms OpenClaw can connect to"
+summary: "Messaging platforms GrokBot can connect to"
 read_when:
-  - You want to choose a chat channel for OpenClaw
+  - You want to choose a chat channel for GrokBot
   - You need a quick overview of supported messaging platforms
 title: "Chat channels"
 ---
 
-OpenClaw can talk to you on any chat app you already use. Each channel connects via the Gateway.
+GrokBot can talk to you on any chat app you already use. Each channel connects via the Gateway.
 Text is supported everywhere; media and reactions vary by channel.
 
 iMessage, Telegram, and the WebChat UI ship with the core install. Channels marked
-"official plugin" install with one command (`openclaw plugins install @openclaw/<id>`)
-or on demand during `openclaw onboard` / `openclaw channels add`, then need a Gateway
-restart. "External plugin" channels are maintained outside the OpenClaw repo.
+"official plugin" install with one command (`grokbot plugins install @grokbot/<id>`)
+or on demand during `grokbot onboard` / `grokbot channels add`, then need a Gateway
+restart. "External plugin" channels are maintained outside the GrokBot repo.
 
 ## Supported channels
 
@@ -28,7 +28,7 @@ restart. "External plugin" channels are maintained outside the OpenClaw repo.
 - [Nextcloud Talk](/channels/nextcloud-talk) - Self-hosted chat via Nextcloud Talk (official plugin).
 - [Nostr](/channels/nostr) - Decentralized DMs via NIP-04 (official plugin).
 - [QQ Bot](/channels/qqbot) - QQ Bot API; private chat, group chat, and rich media (official plugin).
-- [Reef](/channels/reef) - Guarded, end-to-end-encrypted claw-to-claw messaging between OpenClaw agents of different people (bundled plugin).
+- [Reef](/channels/reef) - Guarded, end-to-end-encrypted claw-to-claw messaging between GrokBot agents of different people (bundled plugin).
 - [Raft](/channels/raft) - Raft CLI wake bridge for human and agent collaboration (official plugin).
 - [Signal](/channels/signal) - signal-cli; privacy-focused (official plugin).
 - [Slack](/channels/slack) - Bolt SDK; workspace apps (official plugin).
@@ -64,7 +64,7 @@ restart. "External plugin" channels are maintained outside the OpenClaw repo.
 
 ## Notes
 
-- Channels can run simultaneously; configure multiple and OpenClaw will route per chat.
+- Channels can run simultaneously; configure multiple and GrokBot will route per chat.
 - Fastest setup is usually **Telegram** (simple bot token, no plugin install). WhatsApp
   requires QR pairing and stores more state on disk.
 - Group behavior varies by channel; see [Groups](/channels/groups).

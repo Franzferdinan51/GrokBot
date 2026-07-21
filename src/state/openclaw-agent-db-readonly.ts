@@ -3,14 +3,14 @@ import type { DatabaseSync } from "node:sqlite";
 import { clearNodeSqliteKyselyCacheForDatabase } from "../infra/kysely-sync.js";
 import { requireNodeSqlite } from "../infra/node-sqlite.js";
 import { normalizeAgentId } from "../routing/session-key.js";
-import type { OpenClawAgentDatabaseOptions } from "./openclaw-agent-db-contract.js";
+import type { OpenClawAgentDatabaseOptions } from "./grokbot-agent-db-contract.js";
 import {
   assertExistingAgentSchemaOwner,
   assertSupportedAgentSchemaVersion,
   readExistingAgentSchemaMeta,
-} from "./openclaw-agent-db-schema-helpers.js";
-import { resolveOpenClawAgentSqlitePath } from "./openclaw-agent-db.paths.js";
-import { OPENCLAW_SQLITE_BUSY_TIMEOUT_MS } from "./openclaw-state-db.js";
+} from "./grokbot-agent-db-schema-helpers.js";
+import { resolveOpenClawAgentSqlitePath } from "./grokbot-agent-db.paths.js";
+import { OPENCLAW_SQLITE_BUSY_TIMEOUT_MS } from "./grokbot-state-db.js";
 
 type OpenClawAgentReadOnlyDatabase = {
   agentId: string;

@@ -14,13 +14,13 @@ const mocks = vi.hoisted(() => ({
       mutate: (draft: OpenClawConfig, context: { snapshot: { path: string } }) => unknown;
     }) => {
       const draft = structuredClone(mocks.getRuntimeConfig());
-      const result = await params.mutate(draft, { snapshot: { path: "/tmp/openclaw.json" } });
+      const result = await params.mutate(draft, { snapshot: { path: "/tmp/grokbot.json" } });
       await mocks.writeConfigFile(draft);
       return {
-        path: "/tmp/openclaw.json",
+        path: "/tmp/grokbot.json",
         previousHash: "test-hash",
         persistedHash: "test-hash",
-        snapshot: { path: "/tmp/openclaw.json" },
+        snapshot: { path: "/tmp/grokbot.json" },
         nextConfig: draft,
         result,
         attempts: 1,

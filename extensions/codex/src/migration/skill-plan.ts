@@ -1,7 +1,7 @@
 // Codex skill plan items resolve naming collisions before workspace writes.
 import path from "node:path";
-import { createMigrationItem, MIGRATION_REASON_TARGET_EXISTS } from "openclaw/plugin-sdk/migration";
-import type { MigrationItem } from "openclaw/plugin-sdk/plugin-entry";
+import { createMigrationItem, MIGRATION_REASON_TARGET_EXISTS } from "grokbot/plugin-sdk/migration";
+import type { MigrationItem } from "grokbot/plugin-sdk/plugin-entry";
 import { exists, sanitizeName } from "./helpers.js";
 import type { CodexSkillSource } from "./source-files.js";
 
@@ -47,7 +47,7 @@ export async function buildCodexSkillItems(params: {
           : targetExists && !params.overwrite
             ? MIGRATION_REASON_TARGET_EXISTS
             : undefined,
-        message: `Copy ${item.skill.sourceLabel} into this OpenClaw agent workspace.`,
+        message: `Copy ${item.skill.sourceLabel} into this GrokBot agent workspace.`,
         details: {
           skillName: item.name,
           sourceLabel: item.skill.sourceLabel,

@@ -1,13 +1,13 @@
-# Venice OpenClaw provider
+# Venice GrokBot provider
 
-Official OpenClaw provider plugin for Venice.
+Official GrokBot provider plugin for Venice.
 
 ## Install
 
 ```sh
-openclaw plugins install @openclaw/venice-provider
+grokbot plugins install @grokbot/venice-provider
 ```
 
 ## Docs
 
-See `docs/providers/venice.md` in the OpenClaw repository, or the published docs at `https://docs.openclaw.ai/providers/venice`.
+See `docs/providers/venice.md` in the GrokBot repository, or the published docs at `https://docs.grokbot.ai/providers/venice`.

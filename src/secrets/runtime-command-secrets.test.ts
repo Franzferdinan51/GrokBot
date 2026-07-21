@@ -4,7 +4,7 @@ import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import { getRuntimeAuthProfileStoreCredentialsRevision } from "../agents/auth-profiles/runtime-snapshots.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { resolveCommandSecretsFromActiveRuntimeSnapshot } from "./runtime-command-secrets.js";
 import { createEmptyRuntimeWebToolsMetadata } from "./runtime-fast-path.js";
 import { activateSecretsRuntimeSnapshotState } from "./runtime-state.js";
@@ -205,7 +205,7 @@ describe("runtime command secrets", () => {
   it.skipIf(process.platform === "win32")(
     "serves an exec SecretRef materialized during runtime preparation",
     async () => {
-      const root = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-command-secret-exec-"));
+      const root = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-command-secret-exec-"));
       try {
         const resolverPath = path.join(root, "resolver.sh");
         await fs.writeFile(

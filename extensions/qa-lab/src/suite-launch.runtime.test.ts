@@ -9,9 +9,9 @@ const { crablineRuntimeLoads, runQaFlowSuite, runQaTestFileScenarios } = vi.hois
   runQaTestFileScenarios: vi.fn(),
 }));
 
-vi.mock("@openclaw/crabline", async (importOriginal) => {
+vi.mock("@grokbot/crabline", async (importOriginal) => {
   crablineRuntimeLoads();
-  return await importOriginal<typeof import("@openclaw/crabline")>();
+  return await importOriginal<typeof import("@grokbot/crabline")>();
 });
 
 vi.mock("./suite.js", async (importOriginal) => ({
@@ -36,7 +36,7 @@ async function makeTempRepo(prefix: string) {
 
 async function writeEvidence(pathLocal: string, writeFile = true) {
   const evidence = {
-    kind: "openclaw.qa.evidence-summary",
+    kind: "grokbot.qa.evidence-summary",
     schemaVersion: 2,
     generatedAt: "2026-06-14T00:00:00.000Z",
     evidenceMode: "full",
@@ -158,7 +158,7 @@ describe("qa suite runtime launcher", () => {
       repoRoot,
       outputDir: ".artifacts/qa-e2e/flow-only-isolated",
       concurrency: 1,
-      runtimePair: ["openclaw", "codex"],
+      runtimePair: ["grokbot", "codex"],
       scenarioIds: ["channel-chat-baseline", "matrix-allowlist-hot-reload"],
     });
 
@@ -170,7 +170,7 @@ describe("qa suite runtime launcher", () => {
       expect.objectContaining({
         outputDir: path.join(outputDir, "flow", "isolated-1"),
         concurrency: 1,
-        runtimePair: ["openclaw", "codex"],
+        runtimePair: ["grokbot", "codex"],
         scenarioIds: ["channel-chat-baseline"],
       }),
     );
@@ -179,7 +179,7 @@ describe("qa suite runtime launcher", () => {
       expect.objectContaining({
         outputDir: path.join(outputDir, "flow", "isolated-2"),
         concurrency: 1,
-        runtimePair: ["openclaw", "codex"],
+        runtimePair: ["grokbot", "codex"],
         scenarioIds: ["matrix-allowlist-hot-reload"],
       }),
     );
@@ -300,7 +300,7 @@ describe("qa suite runtime launcher", () => {
       const result = await defaultFlowImplementation(params);
       const scenarioIds: readonly string[] = params?.scenarioIds ?? [];
       result.evidence = {
-        kind: "openclaw.qa.evidence-summary",
+        kind: "grokbot.qa.evidence-summary",
         schemaVersion: 2,
         generatedAt: "2026-06-14T00:00:00.000Z",
         evidenceMode: "full",
@@ -407,7 +407,7 @@ describe("qa suite runtime launcher", () => {
       outputDir: ".artifacts/qa-e2e/crabline-runtime-pair",
       providerMode: "mock-openai",
       channelDriver: "crabline",
-      runtimePair: ["openclaw", "codex"],
+      runtimePair: ["grokbot", "codex"],
       scenarioIds: ["telegram-help-command", "matrix-restart-resume"],
     });
 
@@ -415,7 +415,7 @@ describe("qa suite runtime launcher", () => {
     for (const call of runQaFlowSuite.mock.calls) {
       expect(call[0]).toEqual(
         expect.objectContaining({
-          runtimePair: ["openclaw", "codex"],
+          runtimePair: ["grokbot", "codex"],
         }),
       );
     }
@@ -431,7 +431,7 @@ describe("qa suite runtime launcher", () => {
         "utf8",
       ),
     ) as { run?: { runtimePair?: unknown } };
-    expect(summary.run?.runtimePair).toEqual(["openclaw", "codex"]);
+    expect(summary.run?.runtimePair).toEqual(["grokbot", "codex"]);
     await expect(
       fs.access(
         path.join(
@@ -1289,7 +1289,7 @@ describe("qa suite runtime launcher", () => {
     await expect(
       runQaSuite({
         repoRoot: process.cwd(),
-        runtimePair: ["openclaw", "codex"],
+        runtimePair: ["grokbot", "codex"],
         scenarioIds: ["control-ui-chat-flow-playwright"],
       }),
     ).rejects.toThrow("--runtime-pair requires execution.kind: flow scenarios");

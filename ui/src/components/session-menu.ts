@@ -9,7 +9,7 @@ import {
 } from "../../../packages/gateway-protocol/src/session-icon.js";
 import { t } from "../i18n/index.ts";
 import { EDITOR_IDS, EDITOR_LABELS, type EditorId } from "../lib/editor-links.ts";
-import { OpenClawLightDomElement } from "../lit/openclaw-element.ts";
+import { OpenClawLightDomElement } from "../lit/grokbot-element.ts";
 import { icons } from "./icons.ts";
 import { activateMenuShortcut, menuShortcutHint } from "./menu-shortcuts.ts";
 import { promoteToPopoverTopLayer } from "./menu-surface.ts";
@@ -90,7 +90,7 @@ class SessionMenu extends OpenClawLightDomElement {
     // Sidebar-hosted menus live inside the nav stacking context (z-index 10),
     // which paints below the sidebar resizer divider (z-index 20); promoting
     // the menu to the popover top layer keeps app chrome from bleeding
-    // through it (same pattern as openclaw-native-link-menu).
+    // through it (same pattern as grokbot-native-link-menu).
     promoteToPopoverTopLayer(this);
   }
 
@@ -618,6 +618,6 @@ class SessionMenu extends OpenClawLightDomElement {
   }
 }
 
-if (!customElements.get("openclaw-session-menu")) {
-  customElements.define("openclaw-session-menu", SessionMenu);
+if (!customElements.get("grokbot-session-menu")) {
+  customElements.define("grokbot-session-menu", SessionMenu);
 }

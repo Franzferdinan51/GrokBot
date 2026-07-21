@@ -2,7 +2,7 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import type { ModelCatalogEntry } from "../../agents/model-catalog.js";
 import { MODEL_SELECTION_LOCKED_MESSAGE } from "../../sessions/model-overrides.js";
@@ -237,7 +237,7 @@ vi.mock("../../agents/provider-auth-aliases.js", () => ({
 }));
 
 vi.mock("../../agents/harness/selection.js", () => ({
-  selectAgentHarness: () => ({ id: "openclaw" }),
+  selectAgentHarness: () => ({ id: "grokbot" }),
   resolveAgentHarnessPolicy: ({
     provider,
     modelId,
@@ -437,7 +437,7 @@ function setOpenAiRuntimeScopedUltraProvider(): void {
           { id: "medium" },
           { id: "high" },
           { id: "max" },
-          ...(agentRuntime === "openclaw" ? ([{ id: "ultra" }] as const) : []),
+          ...(agentRuntime === "grokbot" ? ([{ id: "ultra" }] as const) : []),
         ],
       }),
     },
@@ -662,9 +662,9 @@ describe("/model chat UX", () => {
   });
 
   it("passes workspace scope through the /model list browser alias", async () => {
-    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-model-list-auth-label-"));
+    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-model-list-auth-label-"));
     const workspaceDir = path.join(tempRoot, "workspace");
-    const pluginDir = path.join(workspaceDir, ".openclaw", "extensions", "workspace-model-list");
+    const pluginDir = path.join(workspaceDir, ".grokbot", "extensions", "workspace-model-list");
     const bundledDir = path.join(tempRoot, "bundled");
     const stateDir = path.join(tempRoot, "state");
     const credentialPath = path.join(tempRoot, "credentials.json");
@@ -674,7 +674,7 @@ describe("/model chat UX", () => {
     fs.writeFileSync(path.join(pluginDir, "index.ts"), "export default {}\n", "utf8");
     fs.writeFileSync(credentialPath, "{}", "utf8");
     fs.writeFileSync(
-      path.join(pluginDir, "openclaw.plugin.json"),
+      path.join(pluginDir, "grokbot.plugin.json"),
       JSON.stringify({
         id: "workspace-model-list",
         configSchema: { type: "object" },
@@ -1053,7 +1053,7 @@ describe("/model chat UX", () => {
     expect(reply?.text).not.toContain("via codex runtime");
   });
 
-  it("does not borrow Codex auth when OpenAI model policy pins OpenClaw runtime", async () => {
+  it("does not borrow Codex auth when OpenAI model policy pins GrokBot runtime", async () => {
     setAuthProfiles({
       "openai:patrick@example.test": {
         type: "oauth",
@@ -1077,7 +1077,7 @@ describe("/model chat UX", () => {
             model: { primary: "openai/gpt-5.5" },
             models: {
               "openai/gpt-5.5": {
-                agentRuntime: { id: "openclaw" },
+                agentRuntime: { id: "grokbot" },
               },
             },
           },
@@ -1119,7 +1119,7 @@ describe("/model chat UX", () => {
             model: { primary: "openai/gpt-5.5" },
             models: {
               "openai/gpt-5.5": {
-                agentRuntime: { id: "openclaw" },
+                agentRuntime: { id: "grokbot" },
               },
             },
           },
@@ -1160,7 +1160,7 @@ describe("/model chat UX", () => {
             model: { primary: "openai/gpt-5.5" },
             models: {
               "openai/gpt-5.5": {
-                agentRuntime: { id: "openclaw" },
+                agentRuntime: { id: "grokbot" },
               },
             },
           },
@@ -1174,9 +1174,9 @@ describe("/model chat UX", () => {
   });
 
   it("uses workspace-scoped auth evidence in /model status labels", async () => {
-    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-model-status-auth-label-"));
+    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-model-status-auth-label-"));
     const workspaceDir = path.join(tempRoot, "workspace");
-    const pluginDir = path.join(workspaceDir, ".openclaw", "extensions", "workspace-model-auth");
+    const pluginDir = path.join(workspaceDir, ".grokbot", "extensions", "workspace-model-auth");
     const bundledDir = path.join(tempRoot, "bundled");
     const stateDir = path.join(tempRoot, "state");
     const credentialPath = path.join(tempRoot, "credentials.json");
@@ -1186,7 +1186,7 @@ describe("/model chat UX", () => {
     fs.writeFileSync(path.join(pluginDir, "index.ts"), "export default {}\n", "utf8");
     fs.writeFileSync(credentialPath, "{}", "utf8");
     fs.writeFileSync(
-      path.join(pluginDir, "openclaw.plugin.json"),
+      path.join(pluginDir, "grokbot.plugin.json"),
       JSON.stringify({
         id: "workspace-model-auth",
         configSchema: { type: "object" },
@@ -1295,7 +1295,7 @@ describe("/model chat UX", () => {
       'Add "openai/gpt-5.5" or its provider wildcard to agents.defaults.modelPolicy.allow.',
     );
     expect(resolved.errorText).toContain("Then retry: /model openai/gpt-5.5 --runtime codex");
-    expect(resolved.errorText).toContain("openclaw plugins enable codex");
+    expect(resolved.errorText).toContain("grokbot plugins enable codex");
   });
 
   it("names the active per-agent allowlist in repair guidance", () => {
@@ -1589,7 +1589,7 @@ describe("/model chat UX", () => {
       providerOverride: "anthropic",
       modelOverride: "claude-opus-4-6",
       modelOverrideSource: "user",
-      agentRuntimeOverride: "openclaw",
+      agentRuntimeOverride: "grokbot",
     });
     const { persisted } = await persistModelDirectiveForTest({
       command: "/model openai/gpt-4o --runtime claude-cli hello",
@@ -1602,7 +1602,7 @@ describe("/model chat UX", () => {
       providerOverride: "anthropic",
       modelOverride: "claude-opus-4-6",
       modelOverrideSource: "user",
-      agentRuntimeOverride: "openclaw",
+      agentRuntimeOverride: "grokbot",
     });
     expect(enqueueSystemEvent).not.toHaveBeenCalled();
   });
@@ -1623,7 +1623,7 @@ describe("/model chat UX", () => {
       providerOverride: "openai",
       modelOverride: "gpt-5.6-sol",
       modelOverrideSource: "user",
-      agentRuntimeOverride: "openclaw",
+      agentRuntimeOverride: "grokbot",
       thinkingLevel: "high",
     });
     const initialSessionEntry = { ...sessionEntry };
@@ -1648,7 +1648,7 @@ describe("/model chat UX", () => {
     setOpenAiRuntimeScopedUltraProvider();
     const sessionEntry = createSessionEntry({ thinkingLevel: "high" });
     const { persisted } = await persistModelDirectiveForTest({
-      command: "/model openai/gpt-5.6-luna --runtime openclaw /think ultra please solve",
+      command: "/model openai/gpt-5.6-luna --runtime grokbot /think ultra please solve",
       allowedModelKeys: ["openai/gpt-5.6-luna"],
       sessionEntry,
     });
@@ -1658,7 +1658,7 @@ describe("/model chat UX", () => {
       providerOverride: "openai",
       modelOverride: "gpt-5.6-luna",
       modelOverrideSource: "user",
-      agentRuntimeOverride: "openclaw",
+      agentRuntimeOverride: "grokbot",
       thinkingLevel: "ultra",
     });
   });
@@ -1825,18 +1825,18 @@ describe("handleDirectiveOnly model persist behavior (fixes #1435)", () => {
     const sessionEntry = createSessionEntry();
     const result = await handleDirectiveOnly(
       createHandleParams({
-        directives: parseInlineDirectives("/model openai/gpt-4o --runtime openclaw"),
+        directives: parseInlineDirectives("/model openai/gpt-4o --runtime grokbot"),
         sessionEntry,
       }),
     );
 
     expect(result?.text).toContain("Model set to openai/gpt-4o for this session.");
-    expect(result?.text).toContain("Runtime set to openclaw for this session.");
+    expect(result?.text).toContain("Runtime set to grokbot for this session.");
     expect(sessionEntry).toMatchObject({
       providerOverride: "openai",
       modelOverride: "gpt-4o",
       modelOverrideSource: "user",
-      agentRuntimeOverride: "openclaw",
+      agentRuntimeOverride: "grokbot",
     });
   });
 
@@ -1845,7 +1845,7 @@ describe("handleDirectiveOnly model persist behavior (fixes #1435)", () => {
       providerOverride: "anthropic",
       modelOverride: "claude-opus-4-6",
       modelOverrideSource: "user",
-      agentRuntimeOverride: "openclaw",
+      agentRuntimeOverride: "grokbot",
     });
     const initialSessionEntry = { ...sessionEntry };
     const result = await handleDirectiveOnly(
@@ -1884,7 +1884,7 @@ describe("handleDirectiveOnly model persist behavior (fixes #1435)", () => {
 
     const result = await handleDirectiveOnly(
       createHandleParams({
-        directives: parseInlineDirectives("/model openai/gpt-4o --runtime openclaw"),
+        directives: parseInlineDirectives("/model openai/gpt-4o --runtime grokbot"),
         sessionEntry,
       }),
     );
@@ -2010,7 +2010,7 @@ describe("handleDirectiveOnly model persist behavior (fixes #1435)", () => {
   });
 
   it("suppresses model side effects when a concurrent switch wins", async () => {
-    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-model-directive-race-"));
+    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-model-directive-race-"));
     const storePath = path.join(tempRoot, "sessions.json");
     const sessionEntry = createSessionEntry({
       providerOverride: "anthropic",
@@ -2058,7 +2058,7 @@ describe("handleDirectiveOnly model persist behavior (fixes #1435)", () => {
   });
 
   it("reports a rejected non-model directive after session rotation", async () => {
-    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-elevated-directive-race-"));
+    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-elevated-directive-race-"));
     const storePath = path.join(tempRoot, "sessions.json");
     const sessionEntry = createSessionEntry({ elevatedLevel: "full" });
     const rotatedEntry: SessionEntry = {
@@ -2095,7 +2095,7 @@ describe("handleDirectiveOnly model persist behavior (fixes #1435)", () => {
   });
 
   it("rejects an explicit same-value directive after a concurrent change", async () => {
-    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-elevated-directive-race-"));
+    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-elevated-directive-race-"));
     const storePath = path.join(tempRoot, "sessions.json");
     const sessionEntry = createSessionEntry({ elevatedLevel: "off" });
     const concurrentEntry: SessionEntry = {
@@ -2136,7 +2136,7 @@ describe("handleDirectiveOnly model persist behavior (fixes #1435)", () => {
         }),
       },
     ]);
-    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-thinking-remap-race-"));
+    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-thinking-remap-race-"));
     const storePath = path.join(tempRoot, "sessions.json");
     const sessionEntry = createSessionEntry({ thinkingLevel: "xhigh" });
     const concurrentEntry: SessionEntry = {
@@ -2210,7 +2210,7 @@ describe("handleDirectiveOnly model persist behavior (fixes #1435)", () => {
       nextThinking: {
         level: undefined,
         catalog: allowedModelCatalog,
-        agentRuntime: "openclaw",
+        agentRuntime: "grokbot",
       },
     });
     expect(enqueueSystemEvent).toHaveBeenCalledWith(
@@ -2320,7 +2320,7 @@ describe("handleDirectiveOnly model persist behavior (fixes #1435)", () => {
             { id: "medium" },
             { id: "high" },
             { id: "max" },
-            ...(agentRuntime === "openclaw" ? ([{ id: "ultra" }] as const) : []),
+            ...(agentRuntime === "grokbot" ? ([{ id: "ultra" }] as const) : []),
           ],
         }),
       },
@@ -2677,7 +2677,7 @@ describe("handleDirectiveOnly model persist behavior (fixes #1435)", () => {
 
 describe("persistInlineDirectives session directive persistence policy", () => {
   it("checks an explicit same-value model selection against persisted state", async () => {
-    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-inline-model-race-"));
+    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-inline-model-race-"));
     const storePath = path.join(tempRoot, "sessions.json");
     const sessionKey = "agent:main:dm:same-model";
     const sessionEntry = createSessionEntry({
@@ -2729,7 +2729,7 @@ describe("persistInlineDirectives session directive persistence policy", () => {
   });
 
   it("returns the concurrent model winner without emitting switch side effects", async () => {
-    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-inline-model-race-"));
+    const tempRoot = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-inline-model-race-"));
     const storePath = path.join(tempRoot, "sessions.json");
     const sessionKey = "agent:main:dm:race";
     const sessionEntry = createSessionEntry({

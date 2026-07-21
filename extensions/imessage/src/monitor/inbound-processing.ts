@@ -15,26 +15,26 @@ import {
   toInboundMediaFacts,
   type ChannelInboundMediaInput,
   type MediaPlaceholderTextFact,
-} from "openclaw/plugin-sdk/channel-inbound";
+} from "grokbot/plugin-sdk/channel-inbound";
 import {
   createChannelIngressResolver,
   defineStableChannelIngressIdentity,
   type ChannelIngressIdentityDescriptor,
-} from "openclaw/plugin-sdk/channel-ingress-runtime";
+} from "grokbot/plugin-sdk/channel-ingress-runtime";
 import {
   buildChannelGroupsScopeTree,
   resolveChannelGroupPolicy,
   resolveScopeRequireMention,
-} from "openclaw/plugin-sdk/channel-policy";
-import { hasControlCommand } from "openclaw/plugin-sdk/command-auth-native";
-import type { DmPolicy, GroupPolicy, OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { resolveChannelContextVisibilityMode } from "openclaw/plugin-sdk/context-visibility-runtime";
-import { createChannelHistoryWindow, type HistoryEntry } from "openclaw/plugin-sdk/reply-history";
-import type { FinalizedMsgContext } from "openclaw/plugin-sdk/reply-runtime";
-import { resolveAgentRoute } from "openclaw/plugin-sdk/routing";
-import { uniqueStrings } from "openclaw/plugin-sdk/string-coerce-runtime";
-import { sanitizeTerminalText } from "openclaw/plugin-sdk/text-chunking";
-import { truncateUtf16Safe } from "openclaw/plugin-sdk/text-utility-runtime";
+} from "grokbot/plugin-sdk/channel-policy";
+import { hasControlCommand } from "grokbot/plugin-sdk/command-auth-native";
+import type { DmPolicy, GroupPolicy, OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { resolveChannelContextVisibilityMode } from "grokbot/plugin-sdk/context-visibility-runtime";
+import { createChannelHistoryWindow, type HistoryEntry } from "grokbot/plugin-sdk/reply-history";
+import type { FinalizedMsgContext } from "grokbot/plugin-sdk/reply-runtime";
+import { resolveAgentRoute } from "grokbot/plugin-sdk/routing";
+import { uniqueStrings } from "grokbot/plugin-sdk/string-coerce-runtime";
+import { sanitizeTerminalText } from "grokbot/plugin-sdk/text-chunking";
+import { truncateUtf16Safe } from "grokbot/plugin-sdk/text-utility-runtime";
 import { resolveIMessageAccount } from "../accounts.js";
 import { resolveIMessageConversationRoute } from "../conversation-route.js";
 import {

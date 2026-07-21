@@ -6,12 +6,12 @@ import { beginSessionWorkAdmission } from "../../sessions/session-lifecycle-admi
 import {
   closeOpenClawAgentDatabasesForTest,
   openOpenClawAgentDatabase,
-} from "../../state/openclaw-agent-db.js";
+} from "../../state/grokbot-agent-db.js";
 import {
   createOpenClawTestState,
   type OpenClawTestState,
   withOpenClawTestState,
-} from "../../test-utils/openclaw-test-state.js";
+} from "../../test-utils/grokbot-test-state.js";
 import { appendSqliteTrajectoryRuntimeEvents } from "../../trajectory/runtime-store.sqlite.js";
 import type { TrajectoryEvent } from "../../trajectory/types.js";
 import { measureSessionPhysicalDiskUsage } from "./disk-budget.js";
@@ -35,7 +35,7 @@ describe("SQLite historical session disk budget", () => {
 
   beforeEach(async () => {
     testState = await createOpenClawTestState({
-      prefix: "openclaw-session-history-budget-",
+      prefix: "grokbot-session-history-budget-",
       layout: "state-only",
     });
     tempDir = testState.sessionsDir();
@@ -292,7 +292,7 @@ describe("SQLite historical session disk budget", () => {
 
 function createTrajectoryEvent(sessionId: string, sessionKey: string): TrajectoryEvent {
   return {
-    traceSchema: "openclaw-trajectory",
+    traceSchema: "grokbot-trajectory",
     schemaVersion: 1,
     traceId: sessionId,
     source: "runtime",
@@ -307,7 +307,7 @@ function createTrajectoryEvent(sessionId: string, sessionKey: string): Trajector
 describe("kickSessionHistoryDiskBudgetMaintenance", () => {
   it("throttles repeat kicks and skips warn mode entirely", async () => {
     await withOpenClawTestState(
-      { prefix: "openclaw-session-history-kick-", layout: "state-only" },
+      { prefix: "grokbot-session-history-kick-", layout: "state-only" },
       async (testState) => {
         const tempDir = testState.sessionsDir();
         fs.mkdirSync(tempDir, { recursive: true });

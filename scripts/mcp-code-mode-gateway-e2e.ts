@@ -1,4 +1,4 @@
-// Mcp Code Mode Gateway E2E script supports OpenClaw repository automation.
+// Mcp Code Mode Gateway E2E script supports GrokBot repository automation.
 import fs from "node:fs/promises";
 import net from "node:net";
 import os from "node:os";
@@ -182,7 +182,7 @@ async function writeConfig(params: {
 }
 
 async function main() {
-  const rootDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-mcp-code-mode-"));
+  const rootDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-mcp-code-mode-"));
   const keep = process.env.OPENCLAW_MCP_CODE_MODE_GATEWAY_E2E_KEEP === "1";
   const previousEnv = {
     configPath: process.env.OPENCLAW_CONFIG_PATH,
@@ -196,7 +196,7 @@ async function main() {
     const stateDir = path.join(rootDir, "state");
     const workspaceDir = path.join(rootDir, "workspace");
     const serverPath = path.join(rootDir, "mcp", "fixture-server.mjs");
-    const configPath = path.join(stateDir, "openclaw.json");
+    const configPath = path.join(stateDir, "grokbot.json");
     const gatewayPort = await freePort();
     await fs.mkdir(workspaceDir, { recursive: true });
     await writeProbeMcpServer(serverPath);
@@ -228,11 +228,11 @@ async function main() {
       method: "POST",
       headers: {
         "content-type": "application/json",
-        "x-openclaw-scopes": "operator.write",
-        "x-openclaw-agent": "qa",
+        "x-grokbot-scopes": "operator.write",
+        "x-grokbot-agent": "qa",
       },
       body: JSON.stringify({
-        model: "openclaw/qa",
+        model: "grokbot/qa",
         input: [
           {
             type: "message",

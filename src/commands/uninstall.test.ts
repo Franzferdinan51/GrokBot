@@ -31,7 +31,7 @@ describe("uninstallCommand", () => {
 
     expect(
       cleanupCommandLogMessages(runtime).some((message) =>
-        message.includes("openclaw backup create"),
+        message.includes("grokbot backup create"),
       ),
     ).toBe(true);
   });
@@ -46,7 +46,7 @@ describe("uninstallCommand", () => {
 
     expect(
       cleanupCommandLogMessages(runtime).some((message) =>
-        message.includes("openclaw backup create"),
+        message.includes("grokbot backup create"),
       ),
     ).toBe(false);
   });
@@ -64,14 +64,14 @@ describe("uninstallCommand", () => {
       runtime,
       expect.objectContaining({
         dryRun: true,
-        preservePaths: ["/tmp/.openclaw/workspace"],
+        preservePaths: ["/tmp/.grokbot/workspace"],
       }),
     );
   });
 
   it("previews retired workspace files during state-only uninstall", async () => {
     removeLegacyWorkspaceStateForReset.mockResolvedValueOnce({
-      removedPaths: ["/tmp/.openclaw/workspace/openclaw-workspace-state.json"],
+      removedPaths: ["/tmp/.grokbot/workspace/grokbot-workspace-state.json"],
       warnings: [],
     });
 
@@ -82,13 +82,13 @@ describe("uninstallCommand", () => {
       dryRun: true,
     });
 
-    expect(prepareLegacyWorkspaceStateReset).toHaveBeenCalledWith("/tmp/.openclaw/workspace");
+    expect(prepareLegacyWorkspaceStateReset).toHaveBeenCalledWith("/tmp/.grokbot/workspace");
     expect(removeLegacyWorkspaceStateForReset).toHaveBeenCalledWith(
-      { workspaceDir: "/tmp/.openclaw/workspace" },
+      { workspaceDir: "/tmp/.grokbot/workspace" },
       { dryRun: true },
     );
     expect(cleanupCommandLogMessages(runtime)).toContain(
-      "[dry-run] remove /tmp/.openclaw/workspace/openclaw-workspace-state.json",
+      "[dry-run] remove /tmp/.grokbot/workspace/grokbot-workspace-state.json",
     );
   });
 
@@ -119,7 +119,7 @@ describe("uninstallCommand", () => {
       dryRun: true,
     });
 
-    expect(removeWorkspaceDirs).toHaveBeenCalledWith(["/tmp/.openclaw/workspace"], runtime, {
+    expect(removeWorkspaceDirs).toHaveBeenCalledWith(["/tmp/.grokbot/workspace"], runtime, {
       dryRun: true,
       removeStateRows: true,
     });
@@ -134,7 +134,7 @@ describe("uninstallCommand", () => {
       dryRun: true,
     });
 
-    expect(removeWorkspaceDirs).toHaveBeenCalledWith(["/tmp/.openclaw/workspace"], runtime, {
+    expect(removeWorkspaceDirs).toHaveBeenCalledWith(["/tmp/.grokbot/workspace"], runtime, {
       dryRun: true,
       removeStateRows: false,
     });
@@ -150,7 +150,7 @@ describe("uninstallCommand", () => {
       nonInteractive: true,
     });
 
-    expect(removeWorkspaceDirs).toHaveBeenCalledWith(["/tmp/.openclaw/workspace"], runtime, {
+    expect(removeWorkspaceDirs).toHaveBeenCalledWith(["/tmp/.grokbot/workspace"], runtime, {
       dryRun: false,
       removeStateRows: true,
     });

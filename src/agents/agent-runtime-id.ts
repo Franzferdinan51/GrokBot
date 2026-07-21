@@ -1,10 +1,10 @@
 /** Agent runtime id normalization and retired runtime-selection compatibility helpers. */
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { normalizeAgentId } from "../routing/session-key.js";
 
-export type EmbeddedAgentRuntime = "openclaw" | "auto" | (string & {});
+export type EmbeddedAgentRuntime = "grokbot" | "auto" | (string & {});
 
-export const OPENCLAW_AGENT_RUNTIME_ID = "openclaw";
+export const OPENCLAW_AGENT_RUNTIME_ID = "grokbot";
 export const AUTO_AGENT_RUNTIME_ID = "auto";
 
 /** Normalizes configured runtime aliases to the current embedded-agent runtime id vocabulary. */
@@ -13,7 +13,7 @@ export function normalizeEmbeddedAgentRuntime(raw: string | undefined): Embedded
   if (!value) {
     return OPENCLAW_AGENT_RUNTIME_ID;
   }
-  if (value === "openclaw" || value === "pi") {
+  if (value === "grokbot" || value === "pi") {
     return OPENCLAW_AGENT_RUNTIME_ID;
   }
   if (value === "auto") {

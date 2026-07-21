@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { AGENT_HARNESS_SESSION_KEY_RESERVED_MESSAGE } from "../../sessions/agent-harness-session-key.js";
 import {
@@ -17,7 +17,7 @@ describe("agent harness session store invariant", () => {
   let storePath: string;
 
   beforeEach(() => {
-    tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-agent-harness-store-"));
+    tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-agent-harness-store-"));
     storePath = path.join(tempDir, "sessions.json");
   });
 
@@ -56,7 +56,7 @@ describe("agent harness session store invariant", () => {
   it("loads and updates a pre-existing unlocked harness-prefixed session", async () => {
     const sessionKey = "agent:main:harness:notes";
     const entry: SessionEntry = {
-      agentHarnessId: "openclaw",
+      agentHarnessId: "grokbot",
       sessionId: "legacy-session",
       updatedAt: 1,
     };
@@ -379,7 +379,7 @@ describe("agent harness session store invariant", () => {
       storePath,
       JSON.stringify({
         [sessionKey]: {
-          agentHarnessId: "openclaw",
+          agentHarnessId: "grokbot",
           sessionId: " legacy-session ",
           updatedAt: 1,
           modelProvider: " openai ",
@@ -390,7 +390,7 @@ describe("agent harness session store invariant", () => {
     );
 
     expect(loadSessionStore(storePath, { skipCache: true })[sessionKey]).toEqual({
-      agentHarnessId: "openclaw",
+      agentHarnessId: "grokbot",
       sessionId: "legacy-session",
       updatedAt: 1,
       modelProvider: "openai",

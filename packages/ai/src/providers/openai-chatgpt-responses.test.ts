@@ -1,7 +1,7 @@
 import { arch, platform, release } from "node:os";
 import { zstdDecompressSync } from "node:zlib";
 // ChatGPT Responses provider tests cover stream handling and timeout behavior.
-import { MAX_TIMER_TIMEOUT_MS } from "@openclaw/normalization-core/number-coercion";
+import { MAX_TIMER_TIMEOUT_MS } from "@grokbot/normalization-core/number-coercion";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { configureAiTransportHost } from "../host.js";
 import type { Context, Model } from "../types.js";
@@ -203,7 +203,7 @@ describe("streamOpenAICodexResponses transport", () => {
       })
       .result();
 
-    expect(userAgent).toBe(`openclaw (${platform()} ${release()}; ${arch()})`);
+    expect(userAgent).toBe(`grokbot (${platform()} ${release()}; ${arch()})`);
   });
 
   it("zstd-compresses SSE bodies without overriding an existing encoding", async () => {

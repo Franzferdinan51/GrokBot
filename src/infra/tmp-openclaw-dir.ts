@@ -1,10 +1,10 @@
-// Creates temporary OpenClaw directories for runtime scratch work.
+// Creates temporary GrokBot directories for runtime scratch work.
 import fs from "node:fs";
 import { tmpdir as getOsTmpDir } from "node:os";
 import path from "node:path";
 
-/** Preferred shared OpenClaw temp root on POSIX systems when ownership and permissions are safe. */
-export const POSIX_OPENCLAW_TMP_DIR = "/tmp/openclaw";
+/** Preferred shared GrokBot temp root on POSIX systems when ownership and permissions are safe. */
+export const POSIX_OPENCLAW_TMP_DIR = "/tmp/grokbot";
 
 type MaybeNodeError = { code?: string };
 
@@ -36,7 +36,7 @@ function isNodeErrorWithCode(err: unknown, code: string): err is MaybeNodeError 
   );
 }
 
-/** Resolves a safe OpenClaw temp root, falling back to user-scoped os.tmpdir paths when needed. */
+/** Resolves a safe GrokBot temp root, falling back to user-scoped os.tmpdir paths when needed. */
 export function resolvePreferredOpenClawTmpDir(
   options: ResolvePreferredOpenClawTmpDirOptions = {},
 ): string {
@@ -70,7 +70,7 @@ export function resolvePreferredOpenClawTmpDir(
   };
 
   const fallback = (): string => {
-    const suffix = uid === undefined ? "openclaw" : `openclaw-${uid}`;
+    const suffix = uid === undefined ? "grokbot" : `grokbot-${uid}`;
     const joiner = platform === "win32" ? path.win32.join : path.join;
     return joiner(tmpdir(), suffix);
   };
@@ -118,7 +118,7 @@ export function resolvePreferredOpenClawTmpDir(
         }
         throw chmodErr;
       }
-      warn(`[openclaw] tightened permissions on temp dir: ${candidatePath}`);
+      warn(`[grokbot] tightened permissions on temp dir: ${candidatePath}`);
       return resolveDirState(candidatePath) === "available";
     } catch {
       return false;
@@ -137,16 +137,16 @@ export function resolvePreferredOpenClawTmpDir(
       }
       // Never continue with a symlinked, wrong-owner, or world-writable temp root;
       // callers create executable/media artifacts under this path.
-      throw new Error(`Unsafe fallback OpenClaw temp dir: ${fallbackPath}`);
+      throw new Error(`Unsafe fallback GrokBot temp dir: ${fallbackPath}`);
     }
     try {
       mkdirSync(fallbackPath, { recursive: true, mode: 0o700 });
       chmodSync(fallbackPath, 0o700);
     } catch {
-      throw new Error(`Unable to create fallback OpenClaw temp dir: ${fallbackPath}`);
+      throw new Error(`Unable to create fallback GrokBot temp dir: ${fallbackPath}`);
     }
     if (resolveDirState(fallbackPath) !== "available" && !tryRepairWritableBits(fallbackPath)) {
-      throw new Error(`Unsafe fallback OpenClaw temp dir: ${fallbackPath}`);
+      throw new Error(`Unsafe fallback GrokBot temp dir: ${fallbackPath}`);
     }
     return fallbackPath;
   };

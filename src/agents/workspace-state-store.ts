@@ -7,12 +7,12 @@ import {
   getNodeSqliteKysely,
 } from "../infra/kysely-sync.js";
 import { runSqliteDeferredTransactionSync } from "../infra/sqlite-transaction.js";
-import type { DB as OpenClawStateKyselyDatabase } from "../state/openclaw-state-db.generated.js";
+import type { DB as OpenClawStateKyselyDatabase } from "../state/grokbot-state-db.generated.js";
 import {
   openOpenClawStateDatabase,
   runOpenClawStateWriteTransaction,
-} from "../state/openclaw-state-db.js";
-import { resolveOpenClawStateSqlitePath } from "../state/openclaw-state-db.paths.js";
+} from "../state/grokbot-state-db.js";
+import { resolveOpenClawStateSqlitePath } from "../state/grokbot-state-db.paths.js";
 import { resolveUserPath } from "../utils.js";
 
 export const WORKSPACE_SETUP_STATE_VERSION = 1 as const;
@@ -296,7 +296,7 @@ function readSnapshotFromDatabase(params: {
     throw new Error("workspace state key collision");
   }
   if (setupRow && setupRow.version !== WORKSPACE_SETUP_STATE_VERSION) {
-    throw new Error("workspace setup state version requires openclaw doctor --fix");
+    throw new Error("workspace setup state version requires grokbot doctor --fix");
   }
   if (setupRow) {
     assertCanonicalTimestamp(setupRow.bootstrap_seeded_at, "bootstrap seeded");

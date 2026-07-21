@@ -1,9 +1,9 @@
-// Resolve Openclaw Package Candidate Ip Bypass tests cover resolve openclaw package candidate ip bypass script behavior.
+// Resolve Openclaw Package Candidate Ip Bypass tests cover resolve grokbot package candidate ip bypass script behavior.
 import { mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
-import { downloadUrl } from "../../scripts/resolve-openclaw-package-candidate.mjs";
+import { downloadUrl } from "../../scripts/resolve-grokbot-package-candidate.mjs";
 
 const tempDirs: string[] = [];
 const dotted = (...parts: number[]) => parts.join(".");
@@ -37,12 +37,12 @@ describe("package URL IPv6 transition address blocking", () => {
     ["Teredo embedded loopback", "2001:0:0:0:0:0:80ff:fffe"],
     ["ISATAP embedded RFC1918", "fe80::5efe:a00:1"],
   ])("rejects %s DNS result before fetch", async (_name, address) => {
-    const dir = await mkdtemp(path.join(tmpdir(), "openclaw-package-ip-bypass-"));
+    const dir = await mkdtemp(path.join(tmpdir(), "grokbot-package-ip-bypass-"));
     tempDirs.push(dir);
-    const target = path.join(dir, "openclaw.tgz");
+    const target = path.join(dir, "grokbot.tgz");
 
     await expect(
-      downloadUrl("https://packages.example/openclaw.tgz", target, {
+      downloadUrl("https://packages.example/grokbot.tgz", target, {
         fetchImpl: unexpectedFetch,
         lookupHost: lookupAddresses([{ address, family: 6 }]),
       }),
@@ -50,12 +50,12 @@ describe("package URL IPv6 transition address blocking", () => {
   });
 
   it.each([
-    ["IPv4-mapped loopback dotted", `https://[::ffff:${dotted(127, 0, 0, 1)}]/openclaw.tgz`],
-    ["IPv4-compatible loopback dotted", `https://[::${dotted(127, 0, 0, 1)}]/openclaw.tgz`],
+    ["IPv4-mapped loopback dotted", `https://[::ffff:${dotted(127, 0, 0, 1)}]/grokbot.tgz`],
+    ["IPv4-compatible loopback dotted", `https://[::${dotted(127, 0, 0, 1)}]/grokbot.tgz`],
   ])("rejects %s URL literals before fetch", async (_name, url) => {
-    const dir = await mkdtemp(path.join(tmpdir(), "openclaw-package-ip-bypass-"));
+    const dir = await mkdtemp(path.join(tmpdir(), "grokbot-package-ip-bypass-"));
     tempDirs.push(dir);
-    const target = path.join(dir, "openclaw.tgz");
+    const target = path.join(dir, "grokbot.tgz");
 
     await expect(
       downloadUrl(url, target, {

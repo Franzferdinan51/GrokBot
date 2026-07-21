@@ -3,9 +3,9 @@ import { isDeepStrictEqual } from "node:util";
 import {
   asDateTimestampMs,
   resolveExpiresAtMsFromDurationMs,
-} from "@openclaw/normalization-core/number-coercion";
-import { isRecord } from "@openclaw/normalization-core/record-coerce";
-import { normalizeStringEntries } from "@openclaw/normalization-core/string-normalization";
+} from "@grokbot/normalization-core/number-coercion";
+import { isRecord } from "@grokbot/normalization-core/record-coerce";
+import { normalizeStringEntries } from "@grokbot/normalization-core/string-normalization";
 import {
   ErrorCodes,
   errorShape,
@@ -32,7 +32,7 @@ import { normalizeConfigPatchReplacePaths } from "../../config/patch-replace-pat
 import { redactConfigObject, restoreRedactedValues } from "../../config/redact-snapshot.js";
 import { loadGatewayRuntimeConfigSchema } from "../../config/runtime-schema.js";
 import { lookupConfigSchema, type ConfigSchemaResponse } from "../../config/schema.js";
-import type { ConfigValidationIssue, OpenClawConfig } from "../../config/types.openclaw.js";
+import type { ConfigValidationIssue, OpenClawConfig } from "../../config/types.grokbot.js";
 import {
   validateConfigObjectRawWithPlugins,
   validateConfigObjectWithPlugins,

@@ -508,7 +508,7 @@ describe("resolveOutboundSessionRoute", () => {
     {
       name: "uses resolved direct-only channel user targets to avoid phantom group sessions",
       target: "wxid_abc123@im.wechat",
-      channel: "openclaw-weixin",
+      channel: "grokbot-weixin",
       resolvedTarget: {
         to: "wxid_abc123@im.wechat",
         kind: "user" as const,
@@ -516,8 +516,8 @@ describe("resolveOutboundSessionRoute", () => {
         resolutionSource: "normalized" as const,
       },
       expected: {
-        sessionKey: "agent:main:openclaw-weixin:direct:wxid_abc123@im.wechat",
-        from: "openclaw-weixin:wxid_abc123@im.wechat",
+        sessionKey: "agent:main:grokbot-weixin:direct:wxid_abc123@im.wechat",
+        from: "grokbot-weixin:wxid_abc123@im.wechat",
         to: "user:wxid_abc123@im.wechat",
         chatType: "direct",
       },

@@ -1,8 +1,8 @@
 // Memory Core plugin module implements manager behavior.
 import type { DatabaseSync } from "node:sqlite";
 import type { FSWatcher } from "chokidar";
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
-import { listRegisteredMemoryEmbeddingProviderAdapters } from "openclaw/plugin-sdk/memory-core-host-embedding-registry";
+import { formatErrorMessage } from "grokbot/plugin-sdk/error-runtime";
+import { listRegisteredMemoryEmbeddingProviderAdapters } from "grokbot/plugin-sdk/memory-core-host-embedding-registry";
 import {
   createSubsystemLogger,
   resolveAgentDir,
@@ -10,8 +10,8 @@ import {
   resolveMemorySearchConfig,
   type OpenClawConfig,
   type ResolvedMemorySearchConfig,
-} from "openclaw/plugin-sdk/memory-core-host-engine-foundation";
-import { extractKeywords } from "openclaw/plugin-sdk/memory-core-host-engine-qmd";
+} from "grokbot/plugin-sdk/memory-core-host-engine-foundation";
+import { extractKeywords } from "grokbot/plugin-sdk/memory-core-host-engine-qmd";
 import {
   readMemoryFile,
   MEMORY_EMBEDDING_CACHE_TABLE,
@@ -26,9 +26,9 @@ import {
   type MemorySessionSyncTarget,
   type MemorySource,
   type MemorySyncParams,
-} from "openclaw/plugin-sdk/memory-core-host-engine-storage";
-import { normalizeAgentId } from "openclaw/plugin-sdk/routing";
-import { uniqueValues } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/memory-core-host-engine-storage";
+import { normalizeAgentId } from "grokbot/plugin-sdk/routing";
+import { uniqueValues } from "grokbot/plugin-sdk/string-coerce-runtime";
 import {
   resolveMemoryCoreLocalServiceHostIdentity,
   type MemoryCoreAcquireLocalService,
@@ -86,7 +86,7 @@ import {
 } from "./manager-sync-control.js";
 import { applyTemporalDecayToHybridResults } from "./temporal-decay.js";
 
-const LOCAL_EMBEDDING_RUNTIME_FACTS = Symbol.for("openclaw.localEmbeddingRuntimeFacts");
+const LOCAL_EMBEDDING_RUNTIME_FACTS = Symbol.for("grokbot.localEmbeddingRuntimeFacts");
 
 function getLocalEmbeddingRuntimeFacts(provider: EmbeddingProvider | null): unknown {
   if (!provider) {
@@ -101,7 +101,7 @@ const VECTOR_TABLE = MEMORY_INDEX_VECTOR_TABLE;
 const FTS_TABLE = MEMORY_INDEX_FTS_TABLE;
 const PATH_FTS_TABLE = MEMORY_INDEX_PATHS_FTS_TABLE;
 const EMBEDDING_CACHE_TABLE = MEMORY_EMBEDDING_CACHE_TABLE;
-const MEMORY_INDEX_MANAGER_CACHE_KEY = Symbol.for("openclaw.memoryIndexManagerCache");
+const MEMORY_INDEX_MANAGER_CACHE_KEY = Symbol.for("grokbot.memoryIndexManagerCache");
 const EMBEDDING_PROBE_CACHE_TTL_MS = 30_000;
 const KEYWORD_FALLBACK_SEARCH_TERM_LIMIT = 6;
 const EXACT_PATH_CANDIDATE_LIMIT = 200;

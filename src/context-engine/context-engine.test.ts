@@ -1,8 +1,8 @@
 // Context engine tests cover context extraction and prompt context assembly.
-import type { AgentMessage } from "openclaw/plugin-sdk/agent-core";
+import type { AgentMessage } from "grokbot/plugin-sdk/agent-core";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { MemoryCitationsMode } from "../config/types.memory.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import {
   clearMemoryPluginState,
   registerMemoryPromptPreparation,
@@ -128,7 +128,7 @@ function requireFactoryContext(
 
 function requireRegistryState() {
   const registryState = (globalThis as Record<symbol, unknown>)[
-    Symbol.for("openclaw.contextEngineRegistryState")
+    Symbol.for("grokbot.contextEngineRegistryState")
   ] as { engines: Map<string, unknown> } | undefined;
   if (!registryState) {
     throw new Error("expected context engine registry state");
@@ -604,7 +604,7 @@ describe("Engine contract tests", () => {
       agentId: "main",
       sessionId: "s2",
       sessionKey: "agent:main:s2",
-      storePath: "/tmp/openclaw-agent.sqlite",
+      storePath: "/tmp/grokbot-agent.sqlite",
     };
     const result = await delegateCompactionToRuntime({
       sessionId: "s2",
@@ -652,7 +652,7 @@ describe("Engine contract tests", () => {
         tokensAfter: 40,
         details: undefined,
         sessionId: "s3-successor",
-        sessionFile: "sqlite:main:s3-successor:/tmp/openclaw-agent.sqlite",
+        sessionFile: "sqlite:main:s3-successor:/tmp/grokbot-agent.sqlite",
       },
     });
 
@@ -671,7 +671,7 @@ describe("Engine contract tests", () => {
         agentId: "main",
         sessionId: "s3-successor",
         sessionKey: "agent:main:s3",
-        storePath: "/tmp/openclaw-agent.sqlite",
+        storePath: "/tmp/grokbot-agent.sqlite",
       },
     });
     expect(result.result).not.toHaveProperty("sessionFile");
@@ -1613,7 +1613,7 @@ describe("Invalid engine fallback", () => {
   });
 
   it("accepts resolved engines whose info.id differs from the registered slot id (#66601)", async () => {
-    // Regression for openclaw/openclaw#66601: third-party plugins like
+    // Regression for grokbot/grokbot#66601: third-party plugins like
     // lossless-claw register under an external slot id ("lossless-claw") but
     // the ContextEngine they return uses the plugin's own internal id
     // (e.g. "lcm"). That id is metadata, not the lookup key.

@@ -86,7 +86,7 @@ describe("board session shell", () => {
     expect(container.querySelector(`.board-session-surface--dock-${dock}`)).not.toBeNull();
     expect(container.querySelector("[data-test-divider]")).not.toBeNull();
     expect(container.querySelector("[data-test-chat]")).not.toBeNull();
-    expect(container.querySelector("openclaw-board-view")).not.toBeNull();
+    expect(container.querySelector("grokbot-board-view")).not.toBeNull();
   });
 
   it("collapses hidden chat to a reopen affordance", () => {
@@ -146,19 +146,19 @@ describe("board session shell", () => {
     };
 
     render(renderBoardSessionSurface({ ...props, dock: "right" }), container);
-    const board = container.querySelector("openclaw-board-view");
+    const board = container.querySelector("grokbot-board-view");
     const chat = container.querySelector("[data-test-chat]");
 
     render(renderBoardSessionSurface({ ...props, dock: "left" }), container);
-    expect(container.querySelector("openclaw-board-view")).toBe(board);
+    expect(container.querySelector("grokbot-board-view")).toBe(board);
     expect(container.querySelector("[data-test-chat]")).toBe(chat);
 
     render(renderBoardSessionSurface({ ...props, dock: "bottom" }), container);
-    expect(container.querySelector("openclaw-board-view")).toBe(board);
+    expect(container.querySelector("grokbot-board-view")).toBe(board);
     expect(container.querySelector("[data-test-chat]")).toBe(chat);
 
     render(renderBoardSessionSurface({ ...props, dock: "hidden" }), container);
-    expect(container.querySelector("openclaw-board-view")).toBe(board);
+    expect(container.querySelector("grokbot-board-view")).toBe(board);
     expect(container.querySelector("[data-test-chat]")).toBe(chat);
   });
 });

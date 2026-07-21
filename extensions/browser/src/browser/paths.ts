@@ -6,7 +6,7 @@
  */
 import fs from "node:fs/promises";
 import path from "node:path";
-import { resolvePreferredOpenClawTmpDir } from "../infra/tmp-openclaw-dir.js";
+import { resolvePreferredOpenClawTmpDir } from "../infra/tmp-grokbot-dir.js";
 import {
   resolveExistingPathsWithinRoot,
   resolveStrictExistingPathsWithinRoot,
@@ -14,7 +14,7 @@ import {
 import { CONFIG_DIR } from "../utils.js";
 export { resolveExistingPathsWithinRoot };
 
-const DEFAULT_FALLBACK_BROWSER_TMP_DIR = "/tmp/openclaw";
+const DEFAULT_FALLBACK_BROWSER_TMP_DIR = "/tmp/grokbot";
 
 function canUseNodeFs(): boolean {
   const getBuiltinModule = (

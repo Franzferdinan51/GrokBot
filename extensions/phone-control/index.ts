@@ -1,16 +1,16 @@
-// Phone Control plugin entrypoint registers its OpenClaw integration.
+// Phone Control plugin entrypoint registers its GrokBot integration.
 import { randomUUID } from "node:crypto";
 import milliseconds from "ms";
 import {
   asDateTimestampMs,
   resolveExpiresAtMsFromDurationMs,
-} from "openclaw/plugin-sdk/number-runtime";
+} from "grokbot/plugin-sdk/number-runtime";
 import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalLowercaseString,
   normalizeStringEntries,
   sortUniqueStrings,
-} from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/string-coerce-runtime";
 import prettyMilliseconds from "pretty-ms";
 import {
   definePluginEntry,

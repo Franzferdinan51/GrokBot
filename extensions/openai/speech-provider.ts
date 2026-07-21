@@ -1,17 +1,17 @@
 // Openai provider module implements model/runtime integration.
-import { isVoiceMessageCompatibleAudio } from "openclaw/plugin-sdk/media-runtime";
-import { normalizeResolvedSecretInputString } from "openclaw/plugin-sdk/secret-input";
+import { isVoiceMessageCompatibleAudio } from "grokbot/plugin-sdk/media-runtime";
+import { normalizeResolvedSecretInputString } from "grokbot/plugin-sdk/secret-input";
 import type {
   SpeechDirectiveTokenParseContext,
   SpeechProviderConfig,
   SpeechProviderOverrides,
   SpeechProviderPlugin,
-} from "openclaw/plugin-sdk/speech-core";
-import { parseSpeechDirectiveNumberOverride } from "openclaw/plugin-sdk/speech-core";
+} from "grokbot/plugin-sdk/speech-core";
+import { parseSpeechDirectiveNumberOverride } from "grokbot/plugin-sdk/speech-core";
 import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalLowercaseString,
-} from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/string-coerce-runtime";
 import {
   asFiniteNumber,
   asObjectRecord,

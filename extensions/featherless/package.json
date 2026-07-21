@@ -1,22 +1,22 @@
 {
-  "name": "@openclaw/featherless-provider",
+  "name": "@grokbot/featherless-provider",
   "version": "2026.7.2",
-  "description": "OpenClaw Featherless AI provider plugin.",
+  "description": "GrokBot Featherless AI provider plugin.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/openclaw/openclaw"
+    "url": "https://github.com/grokbot/grokbot"
   },
   "type": "module",
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@grokbot/plugin-sdk": "workspace:*"
   },
-  "openclaw": {
+  "grokbot": {
     "extensions": [
       "./index.ts"
     ],
     "install": {
-      "clawhubSpec": "clawhub:@openclaw/featherless-provider",
-      "npmSpec": "@openclaw/featherless-provider",
+      "clawhubSpec": "clawhub:@grokbot/featherless-provider",
+      "npmSpec": "@grokbot/featherless-provider",
       "defaultChoice": "npm",
       "minHostVersion": ">=2026.6.11"
     },

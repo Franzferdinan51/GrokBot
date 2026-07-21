@@ -13,33 +13,33 @@ import { configureSqlitePreSchemaPragmas } from "../infra/sqlite-wal.js";
 import { createSubsystemLogger } from "../logging/subsystem.js";
 import { normalizeAgentId } from "../routing/session-key.js";
 import { VERSION } from "../version.js";
-import { OPENCLAW_AGENT_SCHEMA_WITHOUT_BOARD_SQL } from "./openclaw-agent-board-schema.js";
+import { OPENCLAW_AGENT_SCHEMA_WITHOUT_BOARD_SQL } from "./grokbot-agent-board-schema.js";
 import {
   OPENCLAW_AGENT_SCHEMA_VERSION,
   type OpenClawAgentDatabaseOptions,
-} from "./openclaw-agent-db-contract.js";
-import { ensureOpenClawAgentDatabasePermissions } from "./openclaw-agent-db-permissions.js";
-import { registerOpenClawAgentDatabase } from "./openclaw-agent-db-registry.js";
+} from "./grokbot-agent-db-contract.js";
+import { ensureOpenClawAgentDatabasePermissions } from "./grokbot-agent-db-permissions.js";
+import { registerOpenClawAgentDatabase } from "./grokbot-agent-db-registry.js";
 import {
   assertExistingAgentSchemaOwner,
   assertSupportedAgentSchemaVersion,
   readExistingAgentSchemaMeta,
-} from "./openclaw-agent-db-schema-helpers.js";
+} from "./grokbot-agent-db-schema-helpers.js";
 import {
   backfillSessionConversations,
   migrateConversationDeliveryTargetColumn,
   migrateSessionEntryStatusProjection,
   readSqliteTableColumns,
-} from "./openclaw-agent-db-session-migrations.js";
+} from "./grokbot-agent-db-session-migrations.js";
 import {
   addSessionProvenanceColumns,
   backfillSessionEntryProvenance,
   backfillTranscriptMutationWatermarks,
-} from "./openclaw-agent-db-session-provenance.js";
-import type { DB as OpenClawAgentKyselyDatabase } from "./openclaw-agent-db.generated.js";
-import { resolveOpenClawAgentSqlitePath } from "./openclaw-agent-db.paths.js";
-import { OPENCLAW_AGENT_SCHEMA_SQL } from "./openclaw-agent-schema.generated.js";
-import { OPENCLAW_SQLITE_BUSY_TIMEOUT_MS } from "./openclaw-state-db.js";
+} from "./grokbot-agent-db-session-provenance.js";
+import type { DB as OpenClawAgentKyselyDatabase } from "./grokbot-agent-db.generated.js";
+import { resolveOpenClawAgentSqlitePath } from "./grokbot-agent-db.paths.js";
+import { OPENCLAW_AGENT_SCHEMA_SQL } from "./grokbot-agent-schema.generated.js";
+import { OPENCLAW_SQLITE_BUSY_TIMEOUT_MS } from "./grokbot-state-db.js";
 
 const OPENCLAW_AGENT_CANONICAL_UNIQUE_INDEXES = [
   {

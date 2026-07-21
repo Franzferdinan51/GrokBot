@@ -1,20 +1,20 @@
 ---
-name: openclaw-debugging
-description: Debug OpenClaw model, provider, tool-surface, code-mode, streaming, and live/Crabbox behavior by choosing the right logs, probes, and proof path before changing code.
+name: grokbot-debugging
+description: Debug GrokBot model, provider, tool-surface, code-mode, streaming, and live/Crabbox behavior by choosing the right logs, probes, and proof path before changing code.
 ---
 
-# OpenClaw Debugging
+# GrokBot Debugging
 
-Use this skill when OpenClaw behavior differs between local tests, live models,
+Use this skill when GrokBot behavior differs between local tests, live models,
 providers, code mode, Tool Search, Crabbox, or CI, and the next move should be a
 debug signal rather than a guess.
 
 ## Read First
 
-- `docs/logging.md` for log files, `openclaw logs`, and targeted debug flags.
+- `docs/logging.md` for log files, `grokbot logs`, and targeted debug flags.
 - `docs/reference/test.md` for local test commands.
 - `docs/tools/code-mode.md` for code-mode exec/wait and tool catalog rules.
-- Use `$openclaw-testing` for choosing test lanes.
+- Use `$grokbot-testing` for choosing test lanes.
 - Use `$crabbox` for broad, Docker, package, Linux, live-key, or CI-parity proof.
 
 ## Default Loop
@@ -34,9 +34,9 @@ Use targeted env flags instead of global debug when the model request shape or
 stream timing matters:
 
 ```bash
-OPENCLAW_DEBUG_MODEL_TRANSPORT=1 openclaw gateway
-OPENCLAW_DEBUG_MODEL_PAYLOAD=tools OPENCLAW_DEBUG_SSE=events openclaw gateway
-OPENCLAW_DEBUG_MODEL_PAYLOAD=full-redacted OPENCLAW_DEBUG_SSE=peek openclaw gateway
+OPENCLAW_DEBUG_MODEL_TRANSPORT=1 grokbot gateway
+OPENCLAW_DEBUG_MODEL_PAYLOAD=tools OPENCLAW_DEBUG_SSE=events grokbot gateway
+OPENCLAW_DEBUG_MODEL_PAYLOAD=full-redacted OPENCLAW_DEBUG_SSE=peek grokbot gateway
 ```
 
 Useful flags:
@@ -54,7 +54,7 @@ Useful flags:
 Watch logs with:
 
 ```bash
-openclaw logs --follow
+grokbot logs --follow
 ```
 
 ## Common Boundaries

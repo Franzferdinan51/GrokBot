@@ -84,7 +84,7 @@ describe("model auth markers", () => {
   it("reads bundled plugin-owned non-secret markers from manifests", () => {
     withEnv(cleanPluginManifestEnv(), () => {
       expect(isNonSecretApiKeyMarker("codex-app-server")).toBe(true);
-      expect(isNonSecretApiKeyMarker(["openclaw", "claude-cli-api-key-helper"].join(":"))).toBe(
+      expect(isNonSecretApiKeyMarker(["grokbot", "claude-cli-api-key-helper"].join(":"))).toBe(
         true,
       );
       expect(isNonSecretApiKeyMarker("gcp-vertex-credentials")).toBe(true);

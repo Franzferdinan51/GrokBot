@@ -41,7 +41,7 @@ import {
   updateSessionGoalStatus,
 } from "../config/sessions.js";
 import { applySessionPatchProjection } from "../config/sessions/session-accessor.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { isChatStopCommandText } from "../gateway/chat-abort.js";
 import {
   projectRecentChatDisplayMessages,
@@ -1474,7 +1474,7 @@ export class EmbeddedTuiBackend implements TuiBackend {
           // The per-message timestamp prefix is applied at the single LLM
           // boundary (normalizeMessagesForLlmBoundary) from each message's own
           // timestamp, so the current turn and historical turns carry identical
-          // bytes on the wire. See: https://github.com/openclaw/openclaw/issues/3658
+          // bytes on the wire. See: https://github.com/grokbot/grokbot/issues/3658
           message,
           sessionKey: canonicalKey,
           ...(params.agentId ? { agentId: params.agentId } : {}),

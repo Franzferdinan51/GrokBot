@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-source scripts/lib/openclaw-e2e-instance.sh
+source scripts/lib/grokbot-e2e-instance.sh
 
 openclaw_e2e_eval_test_state_from_b64 "${OPENCLAW_TEST_STATE_SCRIPT_B64:?missing OPENCLAW_TEST_STATE_SCRIPT_B64}"
-openclaw_e2e_install_package /tmp/openclaw-install.log "mounted OpenClaw package" /tmp/npm-prefix
+openclaw_e2e_install_package /tmp/grokbot-install.log "mounted GrokBot package" /tmp/npm-prefix
 
 package_root="$(openclaw_e2e_package_root /tmp/npm-prefix)"
 entry="$(openclaw_e2e_package_entrypoint "$package_root")"
@@ -16,9 +16,9 @@ export PATH="/tmp/npm-prefix/bin:$PATH"
 
 node "$probe" seed
 
-registry_port_file=/tmp/openclaw-e2e-registry.port
+registry_port_file=/tmp/grokbot-e2e-registry.port
 rm -f "$registry_port_file"
-node scripts/e2e/lib/plugin-update/registry-server.mjs "$registry_port_file" >/tmp/openclaw-e2e-registry.log 2>&1 &
+node scripts/e2e/lib/plugin-update/registry-server.mjs "$registry_port_file" >/tmp/grokbot-e2e-registry.log 2>&1 &
 registry_pid=$!
 trap 'openclaw_e2e_stop_process "${registry_pid:-}"' EXIT
 for _ in $(seq 1 50); do
@@ -29,7 +29,7 @@ for _ in $(seq 1 50); do
 done
 if [ ! -s "$registry_port_file" ]; then
   echo "Local npm metadata registry did not expose a port"
-  openclaw_e2e_print_log /tmp/openclaw-e2e-registry.log
+  openclaw_e2e_print_log /tmp/grokbot-e2e-registry.log
   exit 1
 fi
 export NPM_CONFIG_REGISTRY="http://127.0.0.1:$(cat "$registry_port_file")"
@@ -37,7 +37,7 @@ export npm_config_registry="$NPM_CONFIG_REGISTRY"
 
 if ! node "$probe" wait-registry; then
   echo "Local npm metadata registry failed to start"
-  openclaw_e2e_print_log /tmp/openclaw-e2e-registry.log
+  openclaw_e2e_print_log /tmp/grokbot-e2e-registry.log
   exit 1
 fi
 
@@ -58,7 +58,7 @@ if [ "$plugin_update_status" -ne 0 ]; then
   echo "--- plugin update output ---"
   openclaw_e2e_print_log /tmp/plugin-update-output.log
   echo "--- local registry output ---"
-  openclaw_e2e_print_log /tmp/openclaw-e2e-registry.log
+  openclaw_e2e_print_log /tmp/grokbot-e2e-registry.log
   exit "$plugin_update_status"
 fi
 

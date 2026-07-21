@@ -1,7 +1,7 @@
 // Zalo plugin module implements monitor.webhook behavior.
 import type { IncomingMessage, ServerResponse } from "node:http";
-import { safeEqualSecret } from "openclaw/plugin-sdk/security-runtime";
-import { readWebhookBodyOrReject } from "openclaw/plugin-sdk/webhook-request-guards";
+import { safeEqualSecret } from "grokbot/plugin-sdk/security-runtime";
+import { readWebhookBodyOrReject } from "grokbot/plugin-sdk/webhook-request-guards";
 import type { ResolvedZaloAccount } from "./accounts.js";
 import type { ZaloRuntimeEnv } from "./monitor.types.js";
 import {

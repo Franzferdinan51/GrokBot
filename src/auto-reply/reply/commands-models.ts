@@ -1,9 +1,9 @@
 // Implements model listing and provider catalog commands.
-import { parseStrictPositiveInteger } from "@openclaw/normalization-core/number-coercion";
+import { parseStrictPositiveInteger } from "@grokbot/normalization-core/number-coercion";
 import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalString,
-} from "@openclaw/normalization-core/string-coerce";
+} from "@grokbot/normalization-core/string-coerce";
 import {
   resolveAgentDir,
   resolveAgentWorkspaceDir,
@@ -38,7 +38,7 @@ import { loadPreparedModelCatalogSnapshot } from "../../agents/prepared-model-ca
 import { resolveDefaultAgentWorkspaceDir } from "../../agents/workspace.js";
 import { getChannelPlugin } from "../../channels/plugins/index.js";
 import type { SessionEntry } from "../../config/sessions.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import { resolveAgentRuntimeLabel } from "../../status/agent-runtime-label.js";
 import type { ReplyPayload } from "../types.js";
 import { rejectUnauthorizedCommand } from "./command-gates.js";
@@ -96,7 +96,7 @@ function usesUnfilteredCatalogModels(
 function normalizeRuntimeChoiceId(runtime: string | undefined): string {
   const normalized = normalizeLowercaseStringOrEmpty(runtime);
   if (!normalized || normalized === "auto" || normalized === "default") {
-    return "openclaw";
+    return "grokbot";
   }
   return normalized;
 }
@@ -113,8 +113,8 @@ function buildRuntimeChoice(params: {
     id,
     label,
     description:
-      id === "openclaw"
-        ? "Use the built-in OpenClaw runtime."
+      id === "grokbot"
+        ? "Use the built-in GrokBot runtime."
         : params.cli
           ? `Run ${params.provider} models through ${label}.`
           : `Use the ${label} runtime selected by the effective harness policy.`,
@@ -377,7 +377,7 @@ export async function buildModelsProviderData(
         modelId: defaultModelId,
       }),
     ];
-    addRuntimeChoice(choices, buildRuntimeChoice({ cfg, provider, runtime: "openclaw" }));
+    addRuntimeChoice(choices, buildRuntimeChoice({ cfg, provider, runtime: "grokbot" }));
     addRuntimeChoice(
       choices,
       buildRuntimeChoice({

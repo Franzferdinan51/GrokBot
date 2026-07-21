@@ -1,9 +1,9 @@
 import { describe, expect, it, vi } from "vitest";
 import type { ModelCatalogEntry, ModelCatalogSnapshot } from "../../agents/model-catalog.types.js";
 import type { createOpenAIModelRoutesResolver } from "../../agents/openai-model-routes.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import { withEnvAsync } from "../../test-utils/env.js";
-import { withOpenClawTestState } from "../../test-utils/openclaw-test-state.js";
+import { withOpenClawTestState } from "../../test-utils/grokbot-test-state.js";
 import { buildModelsListResult } from "./models-list-result.js";
 import type { GatewayRequestContext } from "./types.js";
 
@@ -16,7 +16,7 @@ const WITHOUT_OPENAI_ENV_AUTH = {
   CHATGPT_OAUTH_TOKEN: undefined,
 } as const;
 const IMPLICIT_CODEX_RUNTIME = { id: "codex", source: "implicit" } as const;
-const IMPLICIT_OPENCLAW_RUNTIME = { id: "openclaw", source: "implicit" } as const;
+const IMPLICIT_OPENCLAW_RUNTIME = { id: "grokbot", source: "implicit" } as const;
 
 function catalogEntry(id: string, api: ModelCatalogEntry["api"]): ModelCatalogEntry {
   return { id, name: id, provider: "openai", api };
@@ -103,7 +103,7 @@ describe("models.list OpenAI routes", () => {
       await withOpenClawTestState(
         {
           layout: "state-only",
-          prefix: "openclaw-models-list-openai-null-artifact-oauth-",
+          prefix: "grokbot-models-list-openai-null-artifact-oauth-",
           agentEnv: "main",
         },
         async (state) => {
@@ -282,7 +282,7 @@ describe("models.list OpenAI routes", () => {
       await withOpenClawTestState(
         {
           layout: "state-only",
-          prefix: "openclaw-models-list-openai-auth-order-",
+          prefix: "grokbot-models-list-openai-auth-order-",
           agentEnv: "main",
         },
         async (state) => {
@@ -451,7 +451,7 @@ describe("models.list OpenAI routes", () => {
       await withOpenClawTestState(
         {
           layout: "state-only",
-          prefix: "openclaw-models-list-openai-fallback-",
+          prefix: "grokbot-models-list-openai-fallback-",
           agentEnv: "main",
         },
         async () => {

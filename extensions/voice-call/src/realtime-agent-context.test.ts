@@ -2,7 +2,7 @@
 import { mkdtemp, rm, writeFile } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import type { VoiceCallConfig } from "./config.js";
 import type { CoreAgentDeps } from "./core-bridge.js";
@@ -16,7 +16,7 @@ afterEach(async () => {
 });
 
 async function createWorkspace(): Promise<string> {
-  const workspaceDir = await mkdtemp(path.join(tmpdir(), "openclaw-voice-context-"));
+  const workspaceDir = await mkdtemp(path.join(tmpdir(), "grokbot-voice-context-"));
   tempDirs.push(workspaceDir);
   return workspaceDir;
 }
@@ -84,7 +84,7 @@ describe("buildRealtimeVoiceInstructions", () => {
       agentId: "voice",
     });
 
-    expect(instructions).toContain("OpenClaw agent voice context:");
+    expect(instructions).toContain("GrokBot agent voice context:");
     expect(instructions).toContain("Consult behavior:");
     expect(instructions).toContain("Call openclaw_agent_consult before answering requests");
     expect(instructions).toContain("- Agent id: voice");
@@ -98,7 +98,7 @@ describe("buildRealtimeVoiceInstructions", () => {
 
   it("truncates injected context without splitting UTF-16 surrogate pairs", async () => {
     const agentId = "abc🚀tail";
-    const expectedContext = "OpenClaw agent voice context:\n\n- Agent id: abc";
+    const expectedContext = "GrokBot agent voice context:\n\n- Agent id: abc";
     const config = createConfig({
       agentContext: {
         enabled: true,

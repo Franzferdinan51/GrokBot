@@ -1,13 +1,13 @@
 // Whatsapp plugin module implements broadcast behavior.
-import type { AckReactionHandle } from "openclaw/plugin-sdk/channel-feedback";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import type { resolveAgentRoute } from "openclaw/plugin-sdk/routing";
-import { buildAgentSessionKey, deriveLastRoutePolicy } from "openclaw/plugin-sdk/routing";
+import type { AckReactionHandle } from "grokbot/plugin-sdk/channel-feedback";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import type { resolveAgentRoute } from "grokbot/plugin-sdk/routing";
+import { buildAgentSessionKey, deriveLastRoutePolicy } from "grokbot/plugin-sdk/routing";
 import {
   buildAgentMainSessionKey,
   DEFAULT_MAIN_KEY,
   normalizeAgentId,
-} from "openclaw/plugin-sdk/routing";
+} from "grokbot/plugin-sdk/routing";
 import { resolveWhatsAppGroupSessionRoute } from "../../group-session-key.js";
 import { requireWhatsAppInboundAdmission } from "../../inbound/admission.js";
 import type { AdmittedWebInboundMessage } from "../../inbound/types.js";

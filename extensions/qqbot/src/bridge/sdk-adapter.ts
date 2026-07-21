@@ -1,15 +1,15 @@
 // Qqbot plugin module implements sdk adapter behavior.
-import { parseAccessGroupAllowFromEntry } from "openclaw/plugin-sdk/access-groups";
+import { parseAccessGroupAllowFromEntry } from "grokbot/plugin-sdk/access-groups";
 import {
   createChannelIngressResolver,
   defineStableChannelIngressIdentity,
-} from "openclaw/plugin-sdk/channel-ingress-runtime";
-import { resolveInboundMentionDecision } from "openclaw/plugin-sdk/channel-mention-gating";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+} from "grokbot/plugin-sdk/channel-ingress-runtime";
+import { resolveInboundMentionDecision } from "grokbot/plugin-sdk/channel-mention-gating";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import {
   createChannelHistoryWindow,
   type HistoryEntry as SdkHistoryEntry,
-} from "openclaw/plugin-sdk/reply-history";
+} from "grokbot/plugin-sdk/reply-history";
 import { resolveQQBotEffectivePolicies } from "../engine/access/resolve-policy.js";
 import { normalizeQQBotAllowFrom, normalizeQQBotSenderId } from "../engine/access/sender-match.js";
 import type { HistoryPort, HistoryEntryLike } from "../engine/adapter/history.port.js";

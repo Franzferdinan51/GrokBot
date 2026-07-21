@@ -4,12 +4,12 @@ import { randomUUID } from "node:crypto";
 import { mkdirSync } from "node:fs";
 import { dirname } from "node:path";
 import { performance } from "node:perf_hooks";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { isDiagnosticFlagEnabled } from "./diagnostic-flags.js";
 import { isTruthyEnvValue } from "./env.js";
 import { appendRegularFileSync } from "./regular-file.js";
 
-const OPENCLAW_DIAGNOSTICS_TIMELINE_SCHEMA_VERSION = "openclaw.diagnostics.v1";
+const OPENCLAW_DIAGNOSTICS_TIMELINE_SCHEMA_VERSION = "grokbot.diagnostics.v1";
 
 type DiagnosticsTimelineEventType =
   | "span.start"

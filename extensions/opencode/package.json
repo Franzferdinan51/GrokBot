@@ -1,13 +1,13 @@
 {
-  "name": "@openclaw/opencode-provider",
+  "name": "@grokbot/opencode-provider",
   "version": "2026.7.2",
   "private": true,
-  "description": "OpenClaw OpenCode Zen provider plugin",
+  "description": "GrokBot OpenCode Zen provider plugin",
   "type": "module",
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@grokbot/plugin-sdk": "workspace:*"
   },
-  "openclaw": {
+  "grokbot": {
     "extensions": [
       "./index.ts"
     ]

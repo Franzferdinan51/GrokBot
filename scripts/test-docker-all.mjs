@@ -1,5 +1,5 @@
 // Docker E2E aggregate scheduler.
-// Builds shared Docker images, prepares one OpenClaw npm tarball, assigns lanes
+// Builds shared Docker images, prepares one GrokBot npm tarball, assigns lanes
 // to bare/functional images, and runs lanes through weighted resource pools.
 import { spawn } from "node:child_process";
 import fs from "node:fs";
@@ -48,7 +48,7 @@ const SHELL_POST_FORCE_KILL_WAIT_MS = 1_000;
 const SHELL_PROCESS_GROUP_EXIT_POLL_MS = 25;
 const MAX_TIMER_TIMEOUT_MS = 2_147_000_000;
 const DEFAULT_TIMINGS_FILE = path.join(ROOT_DIR, ".artifacts/docker-tests/lane-timings.json");
-const DEFAULT_GITHUB_WORKFLOW = "openclaw-live-and-e2e-checks-reusable.yml";
+const DEFAULT_GITHUB_WORKFLOW = "grokbot-live-and-e2e-checks-reusable.yml";
 const IS_MAIN = process.argv[1]
   ? path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)
   : false;
@@ -543,7 +543,7 @@ export function dockerPreflightContainerNames(raw) {
     .split(/\r?\n/)
     .map((line) => line.trim().split(/\s+/, 1)[0])
     .filter((name) =>
-      /^(?:openclaw-[a-z0-9-]+-e2e-\d+|openclaw-openwebui(?:-gateway)?-\d+)$/u.test(name),
+      /^(?:grokbot-[a-z0-9-]+-e2e-\d+|grokbot-openwebui(?:-gateway)?-\d+)$/u.test(name),
     );
 }
 
@@ -981,16 +981,16 @@ async function prepareOpenClawPackage(baseEnv, logDir) {
     baseEnv.OPENCLAW_CURRENT_PACKAGE_TGZ = packageTgz;
     baseEnv.OPENCLAW_BUNDLED_CHANNEL_HOST_BUILD = "0";
     baseEnv.OPENCLAW_NPM_ONBOARD_HOST_BUILD = "0";
-    console.log(`==> OpenClaw package: ${packageTgz}`);
+    console.log(`==> GrokBot package: ${packageTgz}`);
     return;
   }
 
-  const packDir = path.join(logDir, "openclaw-package");
+  const packDir = path.join(logDir, "grokbot-package");
   await mkdir(packDir, { recursive: true });
-  const packageTgz = path.join(packDir, "openclaw-current.tgz");
+  const packageTgz = path.join(packDir, "grokbot-current.tgz");
   await runForeground(
-    "Prepare OpenClaw package once",
-    `node scripts/package-openclaw-for-docker.mjs --allow-unreleased-changelog --output-dir ${shellQuote(packDir)} --output-name openclaw-current.tgz`,
+    "Prepare GrokBot package once",
+    `node scripts/package-grokbot-for-docker.mjs --allow-unreleased-changelog --output-dir ${shellQuote(packDir)} --output-name grokbot-current.tgz`,
     baseEnv,
   );
   await fs.promises.access(packageTgz);
@@ -1000,7 +1000,7 @@ async function prepareOpenClawPackage(baseEnv, logDir) {
   baseEnv.OPENCLAW_CURRENT_PACKAGE_TGZ = packageTgz;
   baseEnv.OPENCLAW_BUNDLED_CHANNEL_HOST_BUILD = "0";
   baseEnv.OPENCLAW_NPM_ONBOARD_HOST_BUILD = "0";
-  console.log(`==> OpenClaw package: ${baseEnv.OPENCLAW_CURRENT_PACKAGE_TGZ}`);
+  console.log(`==> GrokBot package: ${baseEnv.OPENCLAW_CURRENT_PACKAGE_TGZ}`);
 }
 
 function e2eImageForLane(poolLane, baseEnv) {
@@ -1636,11 +1636,11 @@ async function main() {
     },
   );
   if (lanesNeedOpenClawPackage(scheduledLanes)) {
-    await runPhase(phases, "prepare-openclaw-package", {}, async () => {
+    await runPhase(phases, "prepare-grokbot-package", {}, async () => {
       await prepareOpenClawPackage(baseEnv, logDir);
     });
   } else {
-    console.log("==> OpenClaw package: not needed for selected lanes");
+    console.log("==> GrokBot package: not needed for selected lanes");
   }
 
   if (buildEnabled) {

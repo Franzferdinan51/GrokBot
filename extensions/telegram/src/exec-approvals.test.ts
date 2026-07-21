@@ -6,9 +6,9 @@ import type {
   OpenClawConfig,
   TelegramAccountConfig,
   TelegramExecApprovalConfig,
-} from "openclaw/plugin-sdk/config-contracts";
-import { upsertSessionEntry } from "openclaw/plugin-sdk/session-store-runtime";
-import { closeOpenClawAgentDatabasesForTest } from "openclaw/plugin-sdk/sqlite-runtime-testing";
+} from "grokbot/plugin-sdk/config-contracts";
+import { upsertSessionEntry } from "grokbot/plugin-sdk/session-store-runtime";
+import { closeOpenClawAgentDatabasesForTest } from "grokbot/plugin-sdk/sqlite-runtime-testing";
 import { afterEach, describe, expect, it } from "vitest";
 import {
   getTelegramExecApprovalApprovers,
@@ -35,7 +35,7 @@ afterEach(() => {
 });
 
 function createTempDir(): string {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-telegram-exec-approvals-"));
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-telegram-exec-approvals-"));
   tempDirs.push(dir);
   return dir;
 }

@@ -39,8 +39,8 @@ function mount(patch: Partial<ChatPaneHeaderProps> = {}) {
     catalog: false,
     editing: false,
     renameValue: "Session title",
-    workspaceRoot: "/repo/openclaw",
-    workspaceLabel: "openclaw",
+    workspaceRoot: "/repo/grokbot",
+    workspaceLabel: "grokbot",
     branch: "feature/header",
     branches: [],
     branchSwitchDisabledReason: null,
@@ -104,7 +104,7 @@ describe("chat pane header", () => {
     const title = container.querySelector<HTMLButtonElement>(".chat-pane__session-title-button");
     const chip = container.querySelector<HTMLButtonElement>(".chat-pane__workspace-chip");
     expect(title?.textContent?.trim()).toBe("Session title");
-    expect(chip?.textContent?.trim()).toContain("openclaw");
+    expect(chip?.textContent?.trim()).toContain("grokbot");
     title?.click();
     expect(props.onBeginRename).toHaveBeenCalledOnce();
   });
@@ -227,39 +227,39 @@ describe("chat pane workspace resolution", () => {
       resolveChatPaneWorkspace({
         session: row({
           spawnedCwd: "/tmp/worktrees/title-bar",
-          worktree: { id: "wt-1", branch: "title-bar", repoRoot: "/src/openclaw" },
+          worktree: { id: "wt-1", branch: "title-bar", repoRoot: "/src/grokbot" },
         }),
       }),
-    ).toEqual({ root: "/tmp/worktrees/title-bar", label: "openclaw" });
+    ).toEqual({ root: "/tmp/worktrees/title-bar", label: "grokbot" });
   });
 
   it("does not substitute the agent workspace for a missing worktree checkout", () => {
     expect(
       resolveChatPaneWorkspace({
         session: row({
-          worktree: { id: "wt-missing", branch: "feature", repoRoot: "/src/openclaw" },
+          worktree: { id: "wt-missing", branch: "feature", repoRoot: "/src/grokbot" },
         }),
         agentWorkspace: "/src/default-agent-workspace",
         worktreePath: null,
       }),
-    ).toEqual({ root: null, label: "openclaw" });
+    ).toEqual({ root: null, label: "grokbot" });
   });
 
   it("matches the gateway root order: spawned workspace before spawned cwd", () => {
     expect(
       resolveChatPaneWorkspace({
         session: row({
-          spawnedWorkspaceDir: "/src/openclaw",
-          spawnedCwd: "/src/openclaw/packages/nested",
+          spawnedWorkspaceDir: "/src/grokbot",
+          spawnedCwd: "/src/grokbot/packages/nested",
         }),
       }),
-    ).toEqual({ root: "/src/openclaw", label: "openclaw" });
+    ).toEqual({ root: "/src/grokbot", label: "grokbot" });
     // execCwd is exec-node routing state; it never overrides local facts.
     expect(
       resolveChatPaneWorkspace({
-        session: row({ execCwd: "/remote/stale", spawnedCwd: "/src/openclaw" }),
+        session: row({ execCwd: "/remote/stale", spawnedCwd: "/src/grokbot" }),
       }),
-    ).toEqual({ root: "/src/openclaw", label: "openclaw" });
+    ).toEqual({ root: "/src/grokbot", label: "grokbot" });
   });
 
   it("prefers exec cwd and falls back to the agent workspace", () => {
@@ -278,9 +278,9 @@ describe("chat pane workspace resolution", () => {
         worktreePath: "/local/worktree",
       }),
     ).toEqual({ root: null, label: null });
-    expect(resolveChatPaneWorkspace({ session: row(), agentWorkspace: "/src/openclaw" })).toEqual({
-      root: "/src/openclaw",
-      label: "openclaw",
+    expect(resolveChatPaneWorkspace({ session: row(), agentWorkspace: "/src/grokbot" })).toEqual({
+      root: "/src/grokbot",
+      label: "grokbot",
     });
   });
 
@@ -304,7 +304,7 @@ describe("chat pane workspace resolution", () => {
     expect(
       canRevealSessionWorkspace({
         session: row(),
-        workspaceRoot: "/src/openclaw",
+        workspaceRoot: "/src/grokbot",
         methodAdvertised: false,
         hasAdminAccess: true,
       }),
@@ -312,7 +312,7 @@ describe("chat pane workspace resolution", () => {
     expect(
       canRevealSessionWorkspace({
         session: row(),
-        workspaceRoot: "/src/openclaw",
+        workspaceRoot: "/src/grokbot",
         methodAdvertised: true,
         hasAdminAccess: false,
       }),

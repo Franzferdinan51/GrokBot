@@ -57,14 +57,14 @@ async function runPosixShell(params: {
 }
 
 function installerTempFiles(dir: string) {
-  return readdirSync(dir).filter((entry) => entry.startsWith("openclaw-installer-"));
+  return readdirSync(dir).filter((entry) => entry.startsWith("grokbot-installer-"));
 }
 
 describe("cross-OS installer fetch", () => {
   it.runIf(process.platform !== "win32")(
     "buffers POSIX installers before execution and cleans up timed-out downloads",
     async () => {
-      const dir = tempDirs.make("openclaw-cross-os-installer-");
+      const dir = tempDirs.make("grokbot-cross-os-installer-");
       const healthyMarker = join(dir, "healthy.txt");
       const stalledMarker = join(dir, "stalled.txt");
       const server = createServer((request, response) => {
@@ -142,7 +142,7 @@ describe("cross-OS installer fetch", () => {
   it.runIf(process.platform === "win32")(
     "times out stalled bodies without executing partial scripts or leaking temp files",
     async () => {
-      const dir = tempDirs.make("openclaw-cross-os-installer-");
+      const dir = tempDirs.make("grokbot-cross-os-installer-");
       const healthyMarker = join(dir, "healthy.txt");
       const stalledMarker = join(dir, "stalled.txt");
       const server = createServer((request, response) => {

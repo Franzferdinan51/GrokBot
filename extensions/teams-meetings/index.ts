@@ -1,19 +1,19 @@
 import {
   readNonNegativeIntegerParam,
   readPositiveIntegerParam,
-} from "openclaw/plugin-sdk/channel-actions";
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
+} from "grokbot/plugin-sdk/channel-actions";
+import { formatErrorMessage } from "grokbot/plugin-sdk/error-runtime";
 import {
   callGatewayFromCli,
   ErrorCodes,
   errorShape,
   type GatewayRequestHandlerOptions,
-} from "openclaw/plugin-sdk/gateway-runtime";
-import { createLazyRuntimeModule } from "openclaw/plugin-sdk/lazy-runtime";
-import { definePluginEntry, type OpenClawPluginApi } from "openclaw/plugin-sdk/plugin-entry";
-import { normalizeAgentId, parseAgentSessionKey } from "openclaw/plugin-sdk/routing";
-import { normalizeOptionalString } from "openclaw/plugin-sdk/string-coerce-runtime";
-import { jsonResult as json } from "openclaw/plugin-sdk/tool-results";
+} from "grokbot/plugin-sdk/gateway-runtime";
+import { createLazyRuntimeModule } from "grokbot/plugin-sdk/lazy-runtime";
+import { definePluginEntry, type OpenClawPluginApi } from "grokbot/plugin-sdk/plugin-entry";
+import { normalizeAgentId, parseAgentSessionKey } from "grokbot/plugin-sdk/routing";
+import { normalizeOptionalString } from "grokbot/plugin-sdk/string-coerce-runtime";
+import { jsonResult as json } from "grokbot/plugin-sdk/tool-results";
 import { Type } from "typebox";
 import {
   resolveTeamsMeetingsConfig,
@@ -37,7 +37,7 @@ const teamsMeetingsConfigSchema = {
   uiHints: {
     defaultMode: {
       label: "Default Mode",
-      help: "Agent consults OpenClaw, bidi uses direct realtime voice, and transcribe observes only.",
+      help: "Agent consults GrokBot, bidi uses direct realtime voice, and transcribe observes only.",
     },
     "chrome.browserProfile": { label: "Chrome Profile", advanced: true },
     "chrome.guestName": { label: "Guest Name" },
@@ -387,7 +387,7 @@ export default definePluginEntry({
         name: "teams_meetings",
         label: "Microsoft Teams meetings",
         description:
-          "Join and manage Microsoft Teams meeting browser guests. Guest admission, tenant sign-in, and media permissions may require manual action in the OpenClaw Chrome profile.",
+          "Join and manage Microsoft Teams meeting browser guests. Guest admission, tenant sign-in, and media permissions may require manual action in the GrokBot Chrome profile.",
         parameters: TeamsMeetingsToolSchema,
         async execute(_toolCallId, params) {
           const raw = asRecord(params);

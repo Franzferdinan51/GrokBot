@@ -7,7 +7,7 @@ read_when:
 
 # HEARTBEAT.md template
 
-`HEARTBEAT.md` lives in the agent workspace and holds the periodic heartbeat checklist. Keep it empty, or with only whitespace, Markdown comments, ATX headings, empty list stubs (`- `, `* [ ]`), or fence markers, to make OpenClaw skip the heartbeat model call entirely (`reason=empty-heartbeat-file`).
+`HEARTBEAT.md` lives in the agent workspace and holds the periodic heartbeat checklist. Keep it empty, or with only whitespace, Markdown comments, ATX headings, empty list stubs (`- `, `* [ ]`), or fence markers, to make GrokBot skip the heartbeat model call entirely (`reason=empty-heartbeat-file`).
 
 Shipped default content:
 

@@ -1,4 +1,4 @@
-// Webhooks plugin entrypoint registers its OpenClaw integration.
+// Webhooks plugin entrypoint registers its GrokBot integration.
 import { definePluginEntry, type OpenClawPluginApi } from "./api.js";
 import { resolveWebhooksPluginConfig } from "./src/config.js";
 import { createTaskFlowWebhookRequestHandler, type TaskFlowWebhookTarget } from "./src/http.js";
@@ -46,7 +46,7 @@ export default definePluginEntry({
   id: "webhooks",
   name: "Webhooks",
   description:
-    "Authenticated inbound webhooks that bind external automation to OpenClaw TaskFlows.",
+    "Authenticated inbound webhooks that bind external automation to GrokBot TaskFlows.",
   register(api: OpenClawPluginApi) {
     registerWebhookRoutes(api);
   },

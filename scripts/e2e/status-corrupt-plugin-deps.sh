@@ -4,7 +4,7 @@
 set -euo pipefail
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
-TMP_DIR="$(mktemp -d "${TMPDIR:-/tmp}/openclaw-status-corrupt-plugin-deps.XXXXXX")"
+TMP_DIR="$(mktemp -d "${TMPDIR:-/tmp}/grokbot-status-corrupt-plugin-deps.XXXXXX")"
 cleanup() {
   rm -rf "$TMP_DIR"
 }
@@ -12,17 +12,17 @@ trap cleanup EXIT
 
 HOME_DIR="$TMP_DIR/home"
 STATE_DIR="$TMP_DIR/state"
-CONFIG_PATH="$TMP_DIR/openclaw.json"
+CONFIG_PATH="$TMP_DIR/grokbot.json"
 PLUGIN_DIR="$TMP_DIR/plugin"
 STAGE_DIR="$TMP_DIR/stage"
 mkdir -p "$HOME_DIR" "$STATE_DIR" "$PLUGIN_DIR" "$STAGE_DIR/node_modules/ansi-escapes"
-printf "corrupt rename residue\n" > "$STAGE_DIR/node_modules/ansi-escapes/.openclaw-rename-tmp"
+printf "corrupt rename residue\n" > "$STAGE_DIR/node_modules/ansi-escapes/.grokbot-rename-tmp"
 
 cat > "$PLUGIN_DIR/package.json" <<'JSON'
 {
-  "name": "@example/openclaw-e2e-corrupt-chat",
+  "name": "@example/grokbot-e2e-corrupt-chat",
   "version": "1.0.0",
-  "openclaw": {
+  "grokbot": {
     "extensions": ["./index.cjs"],
     "setupEntry": "./setup-entry.cjs",
     "channel": {
@@ -33,7 +33,7 @@ cat > "$PLUGIN_DIR/package.json" <<'JSON'
 }
 JSON
 
-cat > "$PLUGIN_DIR/openclaw.plugin.json" <<'JSON'
+cat > "$PLUGIN_DIR/grokbot.plugin.json" <<'JSON'
 {
   "id": "e2e-corrupt-chat",
   "configSchema": {
@@ -71,7 +71,7 @@ const fs = require("node:fs");
 const path = require("node:path");
 
 const stageDir = process.env.OPENCLAW_PLUGIN_STAGE_DIR || "";
-const renameResidue = path.join(stageDir, "node_modules", "ansi-escapes", ".openclaw-rename-tmp");
+const renameResidue = path.join(stageDir, "node_modules", "ansi-escapes", ".grokbot-rename-tmp");
 if (fs.existsSync(renameResidue)) {
   const err = new Error("ENOTEMPTY: directory not empty, rename 'ansi-escapes'");
   err.code = "ENOTEMPTY";
@@ -137,7 +137,7 @@ AFTER="$TMP_DIR/status-after.txt"
 
 run_openclaw status --all --timeout 1 > "$BEFORE"
 grep -F "e2e-corrupt-chat" "$BEFORE" >/dev/null
-grep -F "plugin load failed: dependency tree corrupted; run openclaw doctor --fix" "$BEFORE" >/dev/null
+grep -F "plugin load failed: dependency tree corrupted; run grokbot doctor --fix" "$BEFORE" >/dev/null
 
 run_openclaw doctor --fix --non-interactive --yes > "$DOCTOR"
 if [[ -e "$STAGE_DIR" ]]; then

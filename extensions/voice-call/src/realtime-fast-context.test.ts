@@ -1,12 +1,12 @@
 // Voice Call tests cover realtime fast context plugin behavior.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({
   resolveRealtimeVoiceFastContextConsult: vi.fn(),
 }));
 
-vi.mock("openclaw/plugin-sdk/realtime-voice", () => ({
+vi.mock("grokbot/plugin-sdk/realtime-voice", () => ({
   resolveRealtimeVoiceFastContextConsult: mocks.resolveRealtimeVoiceFastContextConsult,
 }));
 
@@ -70,7 +70,7 @@ describe("resolveRealtimeFastContextConsult", () => {
       logger,
       labels: {
         audienceLabel: "caller",
-        contextName: "OpenClaw memory or session context",
+        contextName: "GrokBot memory or session context",
       },
     });
   });

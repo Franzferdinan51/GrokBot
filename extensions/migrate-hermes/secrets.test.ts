@@ -6,9 +6,9 @@ import {
   resolveAuthStorePathForDisplay,
   saveAuthProfileStore,
   type AuthProfileStore,
-} from "openclaw/plugin-sdk/agent-runtime";
-import type { MigrationProviderContext } from "openclaw/plugin-sdk/plugin-entry";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/provider-auth";
+} from "grokbot/plugin-sdk/agent-runtime";
+import type { MigrationProviderContext } from "grokbot/plugin-sdk/plugin-entry";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/provider-auth";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   HERMES_REASON_AUTH_PROFILE_EXISTS,
@@ -286,7 +286,7 @@ describe("Hermes migration secret items", () => {
     );
   });
 
-  it("imports a configured provider key_env as matching OpenClaw provider auth", async () => {
+  it("imports a configured provider key_env as matching GrokBot provider auth", async () => {
     const root = await makeTempRoot();
     const source = path.join(root, "hermes");
     const workspaceDir = path.join(root, "workspace");

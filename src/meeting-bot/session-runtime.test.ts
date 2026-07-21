@@ -89,7 +89,7 @@ function createTestRuntime(params: {
         state: "active",
         createdAt,
         updatedAt: createdAt,
-        participantIdentity: "OpenClaw",
+        participantIdentity: "GrokBot",
         realtime: { enabled: false, toolPolicy: "none" },
         notes: [],
       };

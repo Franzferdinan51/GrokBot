@@ -1,10 +1,10 @@
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
-import { createSubsystemLogger } from "openclaw/plugin-sdk/memory-core-host-engine-foundation";
+import { formatErrorMessage } from "grokbot/plugin-sdk/error-runtime";
+import { createSubsystemLogger } from "grokbot/plugin-sdk/memory-core-host-engine-foundation";
 import {
   parseQmdQueryJson,
   type QmdQueryResult,
-} from "openclaw/plugin-sdk/memory-core-host-engine-qmd";
-import { normalizeLowercaseStringOrEmpty } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/memory-core-host-engine-qmd";
+import { normalizeLowercaseStringOrEmpty } from "grokbot/plugin-sdk/string-coerce-runtime";
 
 const log = createSubsystemLogger("memory");
 

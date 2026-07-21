@@ -1,4 +1,4 @@
-// OpenClaw state database manages shared persisted state and migrations.
+// GrokBot state database manages shared persisted state and migrations.
 import { existsSync } from "node:fs";
 import type { DatabaseSync } from "node:sqlite";
 import {
@@ -34,8 +34,8 @@ import { VERSION } from "../version.js";
 import {
   clearOpenClawDatabaseQuarantine,
   readOpenClawDatabaseQuarantine,
-} from "./openclaw-quarantine-store.js";
-import { repairAuditEventsSchema } from "./openclaw-state-db-audit-migration.js";
+} from "./grokbot-quarantine-store.js";
+import { repairAuditEventsSchema } from "./grokbot-state-db-audit-migration.js";
 import {
   OPENCLAW_DATABASE_SCHEMA_DOCS_URL,
   OPENCLAW_SQLITE_BUSY_TIMEOUT_MS,
@@ -43,26 +43,26 @@ import {
   OPENCLAW_STATE_STRICT_SCHEMA_VERSION,
   type OpenClawStateDatabase,
   type OpenClawStateDatabaseOptions,
-} from "./openclaw-state-db-contract.js";
+} from "./grokbot-state-db-contract.js";
 import {
   assertSupportedSchemaVersion,
   createOpenClawDatabaseVerificationError,
   resolveDatabasePath,
-} from "./openclaw-state-db-maintenance.js";
-import * as operatorApprovalMigration from "./openclaw-state-db-operator-approval-migration.js";
-import { ensureOpenClawStatePermissions } from "./openclaw-state-db-permissions.js";
-import { ensureAdditiveStateColumns } from "./openclaw-state-db-schema-additive.js";
-import { tableExists } from "./openclaw-state-db-schema-helpers.js";
+} from "./grokbot-state-db-maintenance.js";
+import * as operatorApprovalMigration from "./grokbot-state-db-operator-approval-migration.js";
+import { ensureOpenClawStatePermissions } from "./grokbot-state-db-permissions.js";
+import { ensureAdditiveStateColumns } from "./grokbot-state-db-schema-additive.js";
+import { tableExists } from "./grokbot-state-db-schema-helpers.js";
 import {
   assertCanonicalStateSchemaShape,
   dropLegacyStateTables,
   markCurrentStateSchemaVersion,
   repairAgentDatabasesCompositePrimaryKey,
   repairLegacyGatewayRestartHandoffsForStrictMigration,
-} from "./openclaw-state-db-schema-repair.js";
-import * as sessionWatchMigration from "./openclaw-state-db-session-watch-migration.js";
-import type { DB as OpenClawStateKyselyDatabase } from "./openclaw-state-db.generated.js";
-import { OPENCLAW_STATE_SCHEMA_SQL } from "./openclaw-state-schema.generated.js";
+} from "./grokbot-state-db-schema-repair.js";
+import * as sessionWatchMigration from "./grokbot-state-db-session-watch-migration.js";
+import type { DB as OpenClawStateKyselyDatabase } from "./grokbot-state-db.generated.js";
+import { OPENCLAW_STATE_SCHEMA_SQL } from "./grokbot-state-schema.generated.js";
 
 export {
   OPENCLAW_DATABASE_SCHEMA_DOCS_URL,
@@ -73,17 +73,17 @@ export type {
   OpenClawStateDatabase,
   OpenClawStateDatabaseOptions,
   OpenClawStateDatabaseSchemaMigration,
-} from "./openclaw-state-db-contract.js";
+} from "./grokbot-state-db-contract.js";
 export {
   assertOpenClawStateDatabaseForMaintenance,
   createOpenClawDatabaseVerificationError,
-} from "./openclaw-state-db-maintenance.js";
-export { ensureOpenClawStatePermissions } from "./openclaw-state-db-permissions.js";
-export { detectOpenClawStateDatabaseSchemaMigrations } from "./openclaw-state-db-schema-repair.js";
-export { withOpenClawStateStartupMigrationCheckpointDatabase } from "./openclaw-state-db-startup-checkpoint.js";
+} from "./grokbot-state-db-maintenance.js";
+export { ensureOpenClawStatePermissions } from "./grokbot-state-db-permissions.js";
+export { detectOpenClawStateDatabaseSchemaMigrations } from "./grokbot-state-db-schema-repair.js";
+export { withOpenClawStateStartupMigrationCheckpointDatabase } from "./grokbot-state-db-startup-checkpoint.js";
 
 /**
- * Shared OpenClaw SQLite state database lifecycle and metadata writers.
+ * Shared GrokBot SQLite state database lifecycle and metadata writers.
  *
  * This module owns schema creation, additive migrations for released state
  * tables, private file permissions, cached handles, and audit rows for
@@ -205,14 +205,14 @@ export function repairOpenClawStateDatabaseSchema(options: OpenClawStateDatabase
       warnings: quarantineCleared
         ? []
         : [
-            `Persisted quarantine record for ${pathname} could not be cleared; rerun openclaw doctor --fix so the repaired database is not refused again.`,
+            `Persisted quarantine record for ${pathname} could not be cleared; rerun grokbot doctor --fix so the repaired database is not refused again.`,
           ],
     };
   } catch (err) {
     // Reaching this catch inside doctor means repair itself refused or failed,
-    // so the runtime asserts' "run openclaw doctor --fix" advice is circular here.
+    // so the runtime asserts' "run grokbot doctor --fix" advice is circular here.
     const reason = String(err).replace(
-      /has a legacy ([a-z ]+) schema; run openclaw doctor --fix to migrate it\./u,
+      /has a legacy ([a-z ]+) schema; run grokbot doctor --fix to migrate it\./u,
       "has a legacy $1 schema; automatic repair refused the unrecognized schema shape.",
     );
     return {
@@ -370,7 +370,7 @@ export function openOpenClawStateDatabase(
       });
       maintenance = configureSqliteConnectionPragmas(db, {
         busyTimeoutMs: OPENCLAW_SQLITE_BUSY_TIMEOUT_MS,
-        databaseLabel: "openclaw-state",
+        databaseLabel: "grokbot-state",
         databasePath: pathname,
         foreignKeys: true,
         synchronous: "NORMAL",

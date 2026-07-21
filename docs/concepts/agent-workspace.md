@@ -10,28 +10,28 @@ sidebarTitle: "Agent workspace"
 The workspace is the agent's home: the working directory used for file tools
 and workspace context. Keep it private and treat it as memory.
 
-This is separate from `~/.openclaw/`, which stores config, credentials, and sessions.
+This is separate from `~/.grokbot/`, which stores config, credentials, and sessions.
 
 <Warning>
 The workspace is the **default cwd**, not a hard sandbox. Tools resolve relative paths against the workspace, but absolute paths can still reach elsewhere on the host unless sandboxing is enabled. If you need isolation, use [`agents.defaults.sandbox`](/gateway/sandboxing) (and/or per-agent sandbox config).
 
-When sandboxing is enabled and `workspaceAccess` is not `"rw"`, tools operate inside a sandbox workspace under `~/.openclaw/sandboxes`, not your host workspace.
+When sandboxing is enabled and `workspaceAccess` is not `"rw"`, tools operate inside a sandbox workspace under `~/.grokbot/sandboxes`, not your host workspace.
 </Warning>
 
 ## Default location
 
-- Default: `~/.openclaw/workspace`
-- If `OPENCLAW_PROFILE` is set and not `"default"`, the default becomes `~/.openclaw/workspace-<profile>`.
+- Default: `~/.grokbot/workspace`
+- If `OPENCLAW_PROFILE` is set and not `"default"`, the default becomes `~/.grokbot/workspace-<profile>`.
 - `OPENCLAW_WORKSPACE_DIR` overrides both of the above when set.
 - Non-default agents (`agents.list[]`) without an explicit workspace resolve to `<state-dir>/workspace-<agentId>`, not the shared default workspace.
 
-Override in `~/.openclaw/openclaw.json`:
+Override in `~/.grokbot/grokbot.json`:
 
 ```json5
 {
   agents: {
     defaults: {
-      workspace: "~/.openclaw/workspace",
+      workspace: "~/.grokbot/workspace",
     },
   },
 }
@@ -39,7 +39,7 @@ Override in `~/.openclaw/openclaw.json`:
 
 Per-agent override: `agents.list[].workspace`.
 
-`openclaw onboard`, `openclaw configure`, or `openclaw setup` create the workspace and seed the bootstrap files if they are missing.
+`grokbot onboard`, `grokbot configure`, or `grokbot setup` create the workspace and seed the bootstrap files if they are missing.
 
 <Note>
 Sandbox seed copies only accept regular in-workspace files; symlink/hardlink aliases that resolve outside the source workspace are ignored.
@@ -53,15 +53,15 @@ If you already manage the workspace files yourself, disable bootstrap file creat
 
 ## Extra workspace folders
 
-Older installs may have created `~/openclaw`. Keeping multiple workspace directories around can cause confusing auth or state drift, since only one workspace is active at a time.
+Older installs may have created `~/grokbot`. Keeping multiple workspace directories around can cause confusing auth or state drift, since only one workspace is active at a time.
 
 <Note>
-**Recommendation:** keep a single active workspace. If you no longer use the extra folders, archive or move them to Trash (for example `trash ~/openclaw`). If you intentionally keep multiple workspaces, make sure `agents.defaults.workspace` (or the per-agent `workspace` key) points to the active one.
+**Recommendation:** keep a single active workspace. If you no longer use the extra folders, archive or move them to Trash (for example `trash ~/grokbot`). If you intentionally keep multiple workspaces, make sure `agents.defaults.workspace` (or the per-agent `workspace` key) points to the active one.
 </Note>
 
 ## Workspace file map
 
-Standard files OpenClaw expects inside the workspace:
+Standard files GrokBot expects inside the workspace:
 
 <AccordionGroup>
   <Accordion title="AGENTS.md - operating instructions">
@@ -103,28 +103,28 @@ Standard files OpenClaw expects inside the workspace:
 </AccordionGroup>
 
 <Note>
-If a bootstrap file is missing, OpenClaw injects a "missing file" marker into the session and continues. Large bootstrap files are truncated when injected; adjust limits with `agents.defaults.bootstrapMaxChars` (default: `20000`) and `agents.defaults.bootstrapTotalMaxChars` (default: `60000`). `openclaw setup` can recreate missing defaults without overwriting existing files.
+If a bootstrap file is missing, GrokBot injects a "missing file" marker into the session and continues. Large bootstrap files are truncated when injected; adjust limits with `agents.defaults.bootstrapMaxChars` (default: `20000`) and `agents.defaults.bootstrapTotalMaxChars` (default: `60000`). `grokbot setup` can recreate missing defaults without overwriting existing files.
 </Note>
 
 ## What is NOT in the workspace
 
-These live under `~/.openclaw/` and should NOT be committed to the workspace repo:
+These live under `~/.grokbot/` and should NOT be committed to the workspace repo:
 
-- `~/.openclaw/openclaw.json` (config)
-- `~/.openclaw/state/openclaw.sqlite` (shared workspace setup state and attestations)
-- `~/.openclaw/agents/<agentId>/agent/auth-profiles.json` (model auth profiles: OAuth + API keys)
-- `~/.openclaw/agents/<agentId>/agent/openclaw-agent.sqlite` (session rows, transcripts, and per-agent runtime state)
-- `~/.openclaw/agents/<agentId>/agent/codex-home/` (per-agent Codex runtime account, config, skills, plugins, and native thread state)
-- `~/.openclaw/credentials/` (channel/provider state plus legacy OAuth import data)
-- `~/.openclaw/agents/<agentId>/sessions/` (legacy migration sources and archive/support artifacts)
-- `~/.openclaw/skills/` (managed skills)
+- `~/.grokbot/grokbot.json` (config)
+- `~/.grokbot/state/grokbot.sqlite` (shared workspace setup state and attestations)
+- `~/.grokbot/agents/<agentId>/agent/auth-profiles.json` (model auth profiles: OAuth + API keys)
+- `~/.grokbot/agents/<agentId>/agent/grokbot-agent.sqlite` (session rows, transcripts, and per-agent runtime state)
+- `~/.grokbot/agents/<agentId>/agent/codex-home/` (per-agent Codex runtime account, config, skills, plugins, and native thread state)
+- `~/.grokbot/credentials/` (channel/provider state plus legacy OAuth import data)
+- `~/.grokbot/agents/<agentId>/sessions/` (legacy migration sources and archive/support artifacts)
+- `~/.grokbot/skills/` (managed skills)
 
 If you need to migrate sessions or config, copy them separately and keep them out of version control.
 
-Older OpenClaw releases wrote `openclaw-workspace-state.json`,
-`.openclaw/workspace-state.json`, and `.attested` workspace sidecars. Current
+Older GrokBot releases wrote `grokbot-workspace-state.json`,
+`.grokbot/workspace-state.json`, and `.attested` workspace sidecars. Current
 runtime uses only the shared SQLite database for that state. If Doctor reports
-one of these files, run `openclaw doctor --fix`; Doctor imports valid legacy
+one of these files, run `grokbot doctor --fix`; Doctor imports valid legacy
 state and deletes a source only after verifying the database rows.
 
 ## Git backup (recommended, private)
@@ -138,7 +138,7 @@ Run these steps on the machine where the Gateway runs (that is where the workspa
     If git is installed, brand-new workspaces are initialized automatically. If this workspace is not already a repo, run:
 
     ```bash
-    cd ~/.openclaw/workspace
+    cd ~/.grokbot/workspace
     git init
     git add AGENTS.md SOUL.md TOOLS.md IDENTITY.md USER.md HEARTBEAT.md memory/
     git commit -m "Add agent workspace"
@@ -162,7 +162,7 @@ Run these steps on the machine where the Gateway runs (that is where the workspa
       <Tab title="GitHub CLI (gh)">
         ```bash
         gh auth login
-        gh repo create openclaw-workspace --private --source . --remote origin --push
+        gh repo create grokbot-workspace --private --source . --remote origin --push
         ```
       </Tab>
       <Tab title="GitLab web UI">
@@ -196,10 +196,10 @@ Run these steps on the machine where the Gateway runs (that is where the workspa
 Even in a private repo, avoid storing secrets in the workspace:
 
 - API keys, OAuth tokens, passwords, or private credentials.
-- Anything under `~/.openclaw/`.
+- Anything under `~/.grokbot/`.
 - Raw dumps of chats or sensitive attachments.
 
-If you must store sensitive references, use placeholders and keep the real secret elsewhere (password manager, environment variables, or `~/.openclaw/`).
+If you must store sensitive references, use placeholders and keep the real secret elsewhere (password manager, environment variables, or `~/.grokbot/`).
 </Warning>
 
 Suggested `.gitignore` starter:
@@ -216,17 +216,17 @@ Suggested `.gitignore` starter:
 
 <Steps>
   <Step title="Clone the repo">
-    Clone the repo to the desired path (default `~/.openclaw/workspace`).
+    Clone the repo to the desired path (default `~/.grokbot/workspace`).
   </Step>
   <Step title="Update config">
-    Set `agents.defaults.workspace` to that path in `~/.openclaw/openclaw.json`.
+    Set `agents.defaults.workspace` to that path in `~/.grokbot/grokbot.json`.
   </Step>
   <Step title="Seed missing files">
-    Run `openclaw setup --workspace <path>` to seed any missing files.
+    Run `grokbot setup --workspace <path>` to seed any missing files.
   </Step>
   <Step title="Copy sessions (optional)">
-    If you need sessions, copy `~/.openclaw/agents/<agentId>/agent/openclaw-agent.sqlite`
-    from the old machine separately. Copy `~/.openclaw/agents/<agentId>/sessions/`
+    If you need sessions, copy `~/.grokbot/agents/<agentId>/agent/grokbot-agent.sqlite`
+    from the old machine separately. Copy `~/.grokbot/agents/<agentId>/sessions/`
     only when you also need legacy migration inputs or archive/support artifacts.
   </Step>
 </Steps>

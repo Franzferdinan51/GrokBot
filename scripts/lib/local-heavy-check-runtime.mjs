@@ -377,10 +377,10 @@ export function acquireLocalHeavyCheckLockSync(params) {
 function resolveHeavyCheckLocksDir(cwd, env) {
   const lockScope = env.OPENCLAW_HEAVY_CHECK_LOCK_SCOPE?.trim().toLowerCase();
   if (lockScope === "worktree") {
-    return path.join(resolveGitWorktreeRoot(cwd), ".artifacts", "openclaw-local-checks");
+    return path.join(resolveGitWorktreeRoot(cwd), ".artifacts", "grokbot-local-checks");
   }
 
-  return path.join(resolveGitCommonDir(cwd), "openclaw-local-checks");
+  return path.join(resolveGitCommonDir(cwd), "grokbot-local-checks");
 }
 
 function resolveGitWorktreeRoot(cwd) {

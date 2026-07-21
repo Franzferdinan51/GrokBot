@@ -1,6 +1,6 @@
 /** Tests live model switching behavior in active agent command sessions. */
 
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import type { SessionEntry } from "../config/sessions.js";
 import {
@@ -231,7 +231,7 @@ vi.mock("../acp/runtime/errors.js", () => ({
     error instanceof Error ? error : new Error(String(error)),
 }));
 
-vi.mock("@openclaw/acp-core/runtime/session-identifiers", () => ({
+vi.mock("@grokbot/acp-core/runtime/session-identifiers", () => ({
   resolveAcpSessionCwd: () => "/tmp",
 }));
 
@@ -1006,7 +1006,7 @@ function setupSessionTouchStore(): void {
   };
   state.sessionEntryMock = sessionEntry;
   state.sessionStoreMock = { "agent:main:main": sessionEntry };
-  state.storePathMock = "/tmp/openclaw-sessions.json";
+  state.storePathMock = "/tmp/grokbot-sessions.json";
 }
 
 function expectFallbackOverrideCalls(first: boolean, second: boolean) {
@@ -1183,8 +1183,8 @@ describe("agentCommand – LiveSessionModelSwitchError retry", () => {
       agentId: "default",
       sessionId: "internal-session",
       sessionKey: "agent:default:internal-session-effects:run",
-      storePath: "/tmp/openclaw-session-store.json",
-      sessionFile: "sqlite:default:internal-session:/tmp/openclaw-session-store.json",
+      storePath: "/tmp/grokbot-session-store.json",
+      sessionFile: "sqlite:default:internal-session:/tmp/grokbot-session-store.json",
       sessionEntry: { sessionId: "internal-session", updatedAt: 1 },
     });
     state.removeInternalSessionEffectsSessionMock.mockResolvedValue(undefined);
@@ -1276,11 +1276,11 @@ describe("agentCommand – LiveSessionModelSwitchError retry", () => {
     const sessionEntry: SessionEntry = {
       sessionId: "session-1",
       updatedAt: 1,
-      agentRuntimeOverride: "openclaw",
+      agentRuntimeOverride: "grokbot",
     };
     state.sessionEntryMock = sessionEntry;
     state.sessionStoreMock = { "agent:main:main": sessionEntry };
-    state.storePathMock = "/tmp/openclaw-sessions.json";
+    state.storePathMock = "/tmp/grokbot-sessions.json";
     setupModelSwitchRetry({
       provider: "openai",
       model: "gpt-5.4",
@@ -1796,7 +1796,7 @@ describe("agentCommand – LiveSessionModelSwitchError retry", () => {
     };
     state.sessionEntryMock = sessionEntry;
     state.sessionStoreMock = { "agent:main:main": sessionEntry };
-    state.storePathMock = "/tmp/openclaw-sessions.json";
+    state.storePathMock = "/tmp/grokbot-sessions.json";
 
     await expect(
       agentCommand({
@@ -2032,7 +2032,7 @@ describe("agentCommand – LiveSessionModelSwitchError retry", () => {
     } satisfies SessionEntry;
     state.sessionEntryMock = sessionEntry;
     state.sessionStoreMock = { "agent:main:main": sessionEntry };
-    state.storePathMock = "/tmp/openclaw-session-store.json";
+    state.storePathMock = "/tmp/grokbot-session-store.json";
     state.persistSessionEntryMock.mockImplementation(async (...args: unknown[]) => {
       const params = args[0] as { entry?: SessionEntry };
       if (params.entry?.modelOverride === "stale-fallback-model") {
@@ -2426,7 +2426,7 @@ describe("agentCommand – LiveSessionModelSwitchError retry", () => {
     });
   });
 
-  it("does not treat backend CLI session id as OpenClaw session identity", async () => {
+  it("does not treat backend CLI session id as GrokBot session identity", async () => {
     setupSingleAttemptFallback();
     setupSessionTouchStore();
     const result = makeSuccessResult("openai", "gpt-5.4") as ReturnType<
@@ -2487,7 +2487,7 @@ describe("agentCommand – LiveSessionModelSwitchError retry", () => {
     expect(state.updateSessionStoreAfterAgentRunMock).toHaveBeenCalledTimes(1);
   });
 
-  it("forwards an explicit OpenClaw runtime override into fallback and attempt execution", async () => {
+  it("forwards an explicit GrokBot runtime override into fallback and attempt execution", async () => {
     setupSingleAttemptFallback();
     state.runtimeConfigMock = {
       agents: {
@@ -2501,24 +2501,24 @@ describe("agentCommand – LiveSessionModelSwitchError retry", () => {
       sessionId: "session-1",
       updatedAt: 1,
       skillsSnapshot: { prompt: "", skills: [], version: 0 },
-      agentRuntimeOverride: "openclaw",
+      agentRuntimeOverride: "grokbot",
       agentHarnessId: "codex",
     };
     state.sessionEntryMock = sessionEntry;
     state.sessionStoreMock = { "agent:main:main": sessionEntry };
-    state.storePathMock = "/tmp/openclaw-sessions.json";
+    state.storePathMock = "/tmp/grokbot-sessions.json";
     state.runAgentAttemptMock.mockResolvedValue(makeSuccessResult("openai", "gpt-5.4"));
 
     await runBasicAgentCommand();
 
     const fallbackParams = mockCallArg(state.runWithModelFallbackMock) as FallbackRunnerParams;
     expect(fallbackParams.resolveAgentHarnessRuntimeOverride?.("openai", "gpt-5.4")).toBe(
-      "openclaw",
+      "grokbot",
     );
     expectRecordFields(mockCallArg(state.runAgentAttemptMock), {
       providerOverride: "openai",
       modelOverride: "gpt-5.4",
-      agentHarnessRuntimeOverride: "openclaw",
+      agentHarnessRuntimeOverride: "grokbot",
     });
   });
 
@@ -2533,7 +2533,7 @@ describe("agentCommand – LiveSessionModelSwitchError retry", () => {
     const sessionStore: Record<string, SessionEntry> = { "agent:main:main": sessionEntry };
     state.sessionEntryMock = sessionEntry;
     state.sessionStoreMock = sessionStore;
-    state.storePathMock = "/tmp/openclaw-sessions.json";
+    state.storePathMock = "/tmp/grokbot-sessions.json";
     state.isThinkingLevelSupportedMock.mockReturnValue(false);
     state.resolveSupportedThinkingLevelMock.mockReturnValue("off");
     state.runAgentAttemptMock.mockResolvedValue(makeSuccessResult("openai", "gpt-5.4"));
@@ -2561,7 +2561,7 @@ describe("agentCommand – LiveSessionModelSwitchError retry", () => {
     };
     state.sessionEntryMock = sessionEntry;
     state.sessionStoreMock = { "agent:main:main": sessionEntry };
-    state.storePathMock = "/tmp/openclaw-sessions.json";
+    state.storePathMock = "/tmp/grokbot-sessions.json";
     state.runtimeConfigMock = {
       agents: {
         defaults: {
@@ -2630,7 +2630,7 @@ describe("agentCommand – LiveSessionModelSwitchError retry", () => {
     };
     state.sessionEntryMock = sessionEntry;
     state.sessionStoreMock = { "agent:main:main": sessionEntry };
-    state.storePathMock = "/tmp/openclaw-sessions.json";
+    state.storePathMock = "/tmp/grokbot-sessions.json";
     state.runtimeConfigMock = {
       agents: {
         defaults: {
@@ -2682,7 +2682,7 @@ describe("agentCommand – LiveSessionModelSwitchError retry", () => {
     };
     state.sessionEntryMock = sessionEntry;
     state.sessionStoreMock = { "agent:main:main": sessionEntry };
-    state.storePathMock = "/tmp/openclaw-sessions.json";
+    state.storePathMock = "/tmp/grokbot-sessions.json";
     state.deliverAgentCommandResultMock.mockResolvedValue({ deliverySucceeded: true });
 
     await agentCommand({
@@ -2720,7 +2720,7 @@ describe("agentCommand – LiveSessionModelSwitchError retry", () => {
     };
     state.sessionEntryMock = sessionEntry;
     state.sessionStoreMock = { "agent:main:main": sessionEntry };
-    state.storePathMock = "/tmp/openclaw-sessions.json";
+    state.storePathMock = "/tmp/grokbot-sessions.json";
     state.deliverAgentCommandResultMock.mockImplementation(async (params: unknown) => {
       const onDeliveryResult = (params as { onDeliveryResult?: (result: unknown) => void })
         .onDeliveryResult;
@@ -2818,7 +2818,7 @@ describe("agentCommand – LiveSessionModelSwitchError retry", () => {
     };
     state.sessionEntryMock = sessionEntry;
     state.sessionStoreMock = { "agent:main:main": sessionEntry };
-    state.storePathMock = "/tmp/openclaw-sessions.json";
+    state.storePathMock = "/tmp/grokbot-sessions.json";
 
     await agentCommand({
       message: "generated image ready",
@@ -2909,7 +2909,7 @@ describe("agentCommand – LiveSessionModelSwitchError retry", () => {
     };
     state.sessionEntryMock = sessionEntry;
     state.sessionStoreMock = { "agent:main:main": sessionEntry };
-    state.storePathMock = "/tmp/openclaw-sessions.json";
+    state.storePathMock = "/tmp/grokbot-sessions.json";
 
     await agentCommand({
       message: "continue generated media delivery",
@@ -2969,7 +2969,7 @@ describe("agentCommand – LiveSessionModelSwitchError retry", () => {
     };
     state.sessionEntryMock = sessionEntry;
     state.sessionStoreMock = { "agent:main:main": sessionEntry };
-    state.storePathMock = "/tmp/openclaw-sessions.json";
+    state.storePathMock = "/tmp/grokbot-sessions.json";
 
     await agentCommand({
       message: "continue after restart",
@@ -3027,7 +3027,7 @@ describe("agentCommand – LiveSessionModelSwitchError retry", () => {
     const sessionStore: Record<string, SessionEntry> = { "agent:main:main": sessionEntry };
     state.sessionEntryMock = sessionEntry;
     state.sessionStoreMock = sessionStore;
-    state.storePathMock = "/tmp/openclaw-sessions.json";
+    state.storePathMock = "/tmp/grokbot-sessions.json";
     state.loadSessionEntryMock.mockReturnValue(freshEntry);
     state.deliverAgentCommandResultMock.mockImplementation(async (params: unknown) => {
       const resolver = (
@@ -3049,7 +3049,7 @@ describe("agentCommand – LiveSessionModelSwitchError retry", () => {
     });
 
     expect(state.loadSessionEntryMock).toHaveBeenCalledWith({
-      storePath: "/tmp/openclaw-sessions.json",
+      storePath: "/tmp/grokbot-sessions.json",
       sessionKey: "agent:main:main",
       readConsistency: "latest",
       clone: false,
@@ -3065,7 +3065,7 @@ describe("agentCommand – LiveSessionModelSwitchError retry", () => {
     };
     state.sessionEntryMock = sessionEntry;
     state.sessionStoreMock = { "agent:main:main": sessionEntry };
-    state.storePathMock = "/tmp/openclaw-sessions.json";
+    state.storePathMock = "/tmp/grokbot-sessions.json";
     state.deliverAgentCommandResultMock.mockResolvedValue({ deliverySucceeded: true });
     state.resolveAgentDeliveryPlanMock.mockReturnValueOnce({
       baseDelivery: {
@@ -3110,7 +3110,7 @@ describe("agentCommand – LiveSessionModelSwitchError retry", () => {
     };
     state.sessionEntryMock = sessionEntry;
     state.sessionStoreMock = { "agent:main:main": sessionEntry };
-    state.storePathMock = "/tmp/openclaw-sessions.json";
+    state.storePathMock = "/tmp/grokbot-sessions.json";
     state.deliverAgentCommandResultMock.mockResolvedValue({ deliverySucceeded: true });
 
     await agentCommand({
@@ -3147,7 +3147,7 @@ describe("agentCommand – LiveSessionModelSwitchError retry", () => {
     };
     state.sessionEntryMock = sessionEntry;
     state.sessionStoreMock = { "agent:main:main": sessionEntry };
-    state.storePathMock = "/tmp/openclaw-sessions.json";
+    state.storePathMock = "/tmp/grokbot-sessions.json";
     state.deliverAgentCommandResultMock.mockResolvedValue({ deliverySucceeded: true });
 
     await agentCommand({
@@ -3187,7 +3187,7 @@ describe("agentCommand – LiveSessionModelSwitchError retry", () => {
     };
     state.sessionEntryMock = sessionEntry;
     state.sessionStoreMock = { "agent:main:main": sessionEntry };
-    state.storePathMock = "/tmp/openclaw-sessions.json";
+    state.storePathMock = "/tmp/grokbot-sessions.json";
     state.deliverAgentCommandResultMock.mockResolvedValue({ deliverySucceeded: true });
     state.resolveMessageChannelSelectionMock.mockResolvedValue({
       channel: "discord",
@@ -3238,7 +3238,7 @@ describe("agentCommand – LiveSessionModelSwitchError retry", () => {
     };
     state.sessionEntryMock = staleEntry;
     state.sessionStoreMock = sessionStore;
-    state.storePathMock = "/tmp/openclaw-sessions.json";
+    state.storePathMock = "/tmp/grokbot-sessions.json";
 
     await agentCommand({
       message: "hello",
@@ -3278,7 +3278,7 @@ describe("agentCommand – LiveSessionModelSwitchError retry", () => {
     };
     state.sessionEntryMock = staleEntry;
     state.sessionStoreMock = sessionStore;
-    state.storePathMock = "/tmp/openclaw-sessions.json";
+    state.storePathMock = "/tmp/grokbot-sessions.json";
 
     await agentCommand({
       message: "hello",
@@ -3306,7 +3306,7 @@ describe("agentCommand – LiveSessionModelSwitchError retry", () => {
     const sessionStore: Record<string, SessionEntry> = { "agent:main:main": sessionEntry };
     state.sessionEntryMock = sessionEntry;
     state.sessionStoreMock = sessionStore;
-    state.storePathMock = "/tmp/openclaw-sessions.json";
+    state.storePathMock = "/tmp/grokbot-sessions.json";
     state.deliverAgentCommandResultMock.mockImplementation(async () => {
       const current = sessionStore["agent:main:main"];
       if (current) {
@@ -3348,7 +3348,7 @@ describe("agentCommand – LiveSessionModelSwitchError retry", () => {
     const sessionStore: Record<string, SessionEntry> = { "agent:main:main": sessionEntry };
     state.sessionEntryMock = sessionEntry;
     state.sessionStoreMock = sessionStore;
-    state.storePathMock = "/tmp/openclaw-sessions.json";
+    state.storePathMock = "/tmp/grokbot-sessions.json";
     state.deliverAgentCommandResultMock.mockImplementation(async () => {
       delete sessionStore["agent:main:main"];
       return { deliverySucceeded: true };
@@ -3384,7 +3384,7 @@ describe("agentCommand – LiveSessionModelSwitchError retry", () => {
     const sessionStore: Record<string, SessionEntry> = { "agent:main:main": sessionEntry };
     state.sessionEntryMock = sessionEntry;
     state.sessionStoreMock = sessionStore;
-    state.storePathMock = "/tmp/openclaw-sessions.json";
+    state.storePathMock = "/tmp/grokbot-sessions.json";
     state.deliverAgentCommandResultMock.mockImplementation(async () => {
       sessionStore["agent:main:main"] = rotatedEntry;
       return { deliverySucceeded: true };
@@ -3421,7 +3421,7 @@ describe("agentCommand – LiveSessionModelSwitchError retry", () => {
     const sessionStore: Record<string, SessionEntry> = { "agent:main:main": sessionEntry };
     state.sessionEntryMock = sessionEntry;
     state.sessionStoreMock = sessionStore;
-    state.storePathMock = "/tmp/openclaw-sessions.json";
+    state.storePathMock = "/tmp/grokbot-sessions.json";
     state.deliverAgentCommandResultMock.mockImplementation(async () => {
       sessionStore["agent:main:main"] = laterRunEntry;
       return { deliverySucceeded: false };
@@ -3447,7 +3447,7 @@ describe("agentCommand – LiveSessionModelSwitchError retry", () => {
     };
     state.sessionEntryMock = sessionEntry;
     state.sessionStoreMock = { "agent:main:main": sessionEntry };
-    state.storePathMock = "/tmp/openclaw-sessions.json";
+    state.storePathMock = "/tmp/grokbot-sessions.json";
     state.deliverAgentCommandResultMock.mockResolvedValue({ deliverySucceeded: false });
     state.resolveAgentDeliveryPlanWithSessionRouteMock.mockResolvedValueOnce({
       baseDelivery: {},
@@ -3558,7 +3558,7 @@ describe("agentCommand – LiveSessionModelSwitchError retry", () => {
     };
     state.sessionEntryMock = sessionEntry;
     state.sessionStoreMock = { "agent:main:main": sessionEntry };
-    state.storePathMock = "/tmp/openclaw-sessions.json";
+    state.storePathMock = "/tmp/grokbot-sessions.json";
     state.deliverAgentCommandResultMock.mockResolvedValue(undefined);
 
     await agentCommand({
@@ -3589,12 +3589,12 @@ describe("agentCommand – LiveSessionModelSwitchError retry", () => {
     const visibleEntry: SessionEntry = {
       sessionId: "session-1",
       updatedAt: 1,
-      sessionFile: "sqlite:default:session-1:/tmp/openclaw-session-store.json",
+      sessionFile: "sqlite:default:session-1:/tmp/grokbot-session-store.json",
     };
     const sessionStore: Record<string, SessionEntry> = { "agent:main:main": visibleEntry };
     state.sessionEntryMock = visibleEntry;
     state.sessionStoreMock = sessionStore;
-    state.storePathMock = "/tmp/openclaw-session-store.json";
+    state.storePathMock = "/tmp/grokbot-session-store.json";
     state.loadSessionEntryMock.mockReturnValue(visibleEntry);
     const attemptCalls: Array<{ sessionFile?: string; sessionEntry?: SessionEntry }> = [];
     state.runAgentAttemptMock.mockImplementation(async (params) => {
@@ -3609,7 +3609,7 @@ describe("agentCommand – LiveSessionModelSwitchError retry", () => {
 
     expect(attemptCalls).toHaveLength(1);
     expect(attemptCalls[0]?.sessionFile).toBe(
-      "sqlite:default:session-1:/tmp/openclaw-session-store.json",
+      "sqlite:default:session-1:/tmp/grokbot-session-store.json",
     );
   });
 
@@ -3627,7 +3627,7 @@ describe("agentCommand – LiveSessionModelSwitchError retry", () => {
     const sessionStore: Record<string, SessionEntry> = { "agent:main:main": visibleEntry };
     state.sessionEntryMock = visibleEntry;
     state.sessionStoreMock = sessionStore;
-    state.storePathMock = "/tmp/openclaw-session-store.json";
+    state.storePathMock = "/tmp/grokbot-session-store.json";
     state.loadSessionEntryMock.mockReturnValue(visibleEntry);
     const attemptCalls: Array<{ sessionFile?: string; sessionEntry?: SessionEntry }> = [];
     state.runAgentAttemptMock.mockImplementation(async (params) => {
@@ -3650,18 +3650,18 @@ describe("agentCommand – LiveSessionModelSwitchError retry", () => {
         agentId: "default",
         sessionId: "session-1",
         sessionKey: "agent:main:main",
-        storePath: "/tmp/openclaw-session-store.json",
+        storePath: "/tmp/grokbot-session-store.json",
       },
-      storePath: "/tmp/openclaw-session-store.json",
+      storePath: "/tmp/grokbot-session-store.json",
     });
     expect(attemptCalls).toHaveLength(1);
     expect(attemptCalls[0]?.sessionFile).toBe(
-      "sqlite:default:internal-session:/tmp/openclaw-session-store.json",
+      "sqlite:default:internal-session:/tmp/grokbot-session-store.json",
     );
     expect(attemptCalls[0]?.sessionEntry).toStrictEqual(visibleEntry);
     expect(state.trajectoryRecorderParamsMock).toHaveBeenCalledWith(
       expect.objectContaining({
-        sessionFile: "sqlite:default:internal-session:/tmp/openclaw-session-store.json",
+        sessionFile: "sqlite:default:internal-session:/tmp/grokbot-session-store.json",
       }),
     );
     expect(state.persistSessionEntryMock).not.toHaveBeenCalled();
@@ -3780,7 +3780,7 @@ describe("agentCommand – LiveSessionModelSwitchError retry", () => {
           provider: "openai",
           model: "gpt-5.4",
           sessionId: "rotated-model-run-session",
-          sessionFile: "sqlite:default:rotated-model-run-session:/tmp/openclaw-session-store.json",
+          sessionFile: "sqlite:default:rotated-model-run-session:/tmp/grokbot-session-store.json",
         },
       },
     });
@@ -3796,22 +3796,22 @@ describe("agentCommand – LiveSessionModelSwitchError retry", () => {
 
     expect(state.createTrajectoryRuntimeRecorderMock).toHaveBeenCalledWith(
       expect.objectContaining({
-        sessionFile: "sqlite:default:internal-session:/tmp/openclaw-session-store.json",
+        sessionFile: "sqlite:default:internal-session:/tmp/grokbot-session-store.json",
       }),
     );
     expect(state.persistCliTurnTranscriptMock).toHaveBeenCalledWith(
       expect.objectContaining({
         sessionId: "rotated-model-run-session",
         sessionKey: "agent:default:internal-session-effects:run",
-        storePath: "/tmp/openclaw-session-store.json",
+        storePath: "/tmp/grokbot-session-store.json",
       }),
     );
     expect(state.removeInternalSessionEffectsSessionMock).toHaveBeenCalledWith({
       agentId: "default",
       sessionId: "rotated-model-run-session",
       sessionKey: "agent:default:internal-session-effects:run",
-      storePath: "/tmp/openclaw-session-store.json",
-      sessionFile: "sqlite:default:internal-session:/tmp/openclaw-session-store.json",
+      storePath: "/tmp/grokbot-session-store.json",
+      sessionFile: "sqlite:default:internal-session:/tmp/grokbot-session-store.json",
       sessionEntry: { sessionId: "internal-session", updatedAt: 1 },
     });
     const deliveryOrder = state.deliverAgentCommandResultMock.mock.invocationCallOrder[0] ?? 0;
@@ -3839,13 +3839,13 @@ describe("agentCommand – LiveSessionModelSwitchError retry", () => {
       expect.objectContaining({
         sessionId: "internal-session",
         sessionKey: "agent:default:internal-session-effects:run",
-        storePath: "/tmp/openclaw-session-store.json",
+        storePath: "/tmp/grokbot-session-store.json",
       }),
     );
   });
 
   it("cleans the deterministic model-run session when preparation fails", async () => {
-    state.storePathMock = "/tmp/openclaw-session-store.json";
+    state.storePathMock = "/tmp/grokbot-session-store.json";
     state.loadSessionEntryMock.mockReturnValue({ sessionId: "session-1", updatedAt: 1 });
     state.prepareInternalSessionEffectsSessionMock.mockRejectedValueOnce(
       new Error("session preparation failed"),
@@ -3866,13 +3866,13 @@ describe("agentCommand – LiveSessionModelSwitchError retry", () => {
       agentId: "default",
       sessionId: "internal-model-run-prepare-failure",
       sessionKey: "agent:default:internal-session-effects:model-run-prepare-failure",
-      storePath: "/tmp/openclaw-session-store.json",
+      storePath: "/tmp/grokbot-session-store.json",
     });
   });
 
   it("does not replace a completed model-run result with a SQLite cleanup failure", async () => {
     setupSingleAttemptFallback();
-    state.storePathMock = "/tmp/openclaw-session-store.json";
+    state.storePathMock = "/tmp/grokbot-session-store.json";
     state.loadSessionEntryMock.mockReturnValue({ sessionId: "session-1", updatedAt: 1 });
     state.runAgentAttemptMock.mockResolvedValue(makeSuccessResult("openai", "gpt-5.4"));
     state.removeInternalSessionEffectsSessionMock.mockRejectedValue(
@@ -4427,7 +4427,7 @@ describe("agentCommand – LiveSessionModelSwitchError retry", () => {
     state.sessionEntryMock = sessionEntry;
     const sessionStore: Record<string, SessionEntry> = { "agent:main:main": sessionEntry };
     state.sessionStoreMock = sessionStore;
-    state.storePathMock = "/tmp/openclaw-session-store.json";
+    state.storePathMock = "/tmp/grokbot-session-store.json";
     setupModelSwitchRetry({
       provider: "openai",
       model: "gpt-5.4",
@@ -4468,7 +4468,7 @@ describe("agentCommand – LiveSessionModelSwitchError retry", () => {
     state.sessionEntryMock = sessionEntry;
     const sessionStore: Record<string, SessionEntry> = { "agent:main:main": sessionEntry };
     state.sessionStoreMock = sessionStore;
-    state.storePathMock = "/tmp/openclaw-session-store.json";
+    state.storePathMock = "/tmp/grokbot-session-store.json";
     state.runWithModelFallbackMock.mockImplementationOnce(async (params: FallbackRunnerParams) => {
       const result = await params.run(params.provider, params.model);
       sessionStore["agent:main:main"] = {
@@ -4510,7 +4510,7 @@ describe("agentCommand – LiveSessionModelSwitchError retry", () => {
     };
     state.sessionEntryMock = sessionEntry;
     state.sessionStoreMock = { "agent:main:main": sessionEntry };
-    state.storePathMock = "/tmp/openclaw-session-store.json";
+    state.storePathMock = "/tmp/grokbot-session-store.json";
     state.resolveAutoFallbackPrimaryProbeMock.mockReturnValue({
       provider: "anthropic",
       model: "claude",
@@ -4878,7 +4878,7 @@ describe("agentCommand – LiveSessionModelSwitchError retry", () => {
     await agentCommand({
       message: [
         INTERNAL_RUNTIME_CONTEXT_BEGIN,
-        "OpenClaw runtime context (internal):",
+        "GrokBot runtime context (internal):",
         "hidden task completion event",
         INTERNAL_RUNTIME_CONTEXT_END,
       ].join("\n"),

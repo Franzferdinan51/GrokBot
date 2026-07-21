@@ -1,5 +1,5 @@
 // Msteams tests cover graph upload plugin behavior.
-import { withFetchPreconnect, withServer } from "openclaw/plugin-sdk/test-env";
+import { withFetchPreconnect, withServer } from "grokbot/plugin-sdk/test-env";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { buildTeamsFileInfoCard } from "./graph-chat.js";
 import { requireMSTeamsSharePointSiteId, uploadAndShareSharePoint } from "./graph-upload.js";
@@ -26,7 +26,7 @@ function expectGraphUploadFetch(fetchFn: ReturnType<typeof vi.fn>, expectedUrl: 
   expect(init?.method).toBe("PUT");
   expect(init?.headers?.Authorization).toBe("Bearer graph-token");
   expect(init?.headers?.["Content-Type"]).toBe("application/octet-stream");
-  expect(init?.headers?.["User-Agent"]).toMatch(/^teams\.ts\[apps\]\/.+ OpenClaw\/.+$/);
+  expect(init?.headers?.["User-Agent"]).toMatch(/^teams\.ts\[apps\]\/.+ GrokBot\/.+$/);
 }
 
 function bodyOnlyErrorResponse(body: string, status = 500): Response {

@@ -7,12 +7,12 @@
  * tell how a node fulfills computer.act; macOS nodes are the first fulfiller.
  */
 import crypto from "node:crypto";
-import { imageMimeFromFormat } from "@openclaw/media-core/mime";
-import { isRecord } from "@openclaw/normalization-core/record-coerce";
-import { normalizeOptionalLowercaseString } from "@openclaw/normalization-core/string-coerce";
+import { imageMimeFromFormat } from "@grokbot/media-core/mime";
+import { isRecord } from "@grokbot/normalization-core/record-coerce";
+import { normalizeOptionalLowercaseString } from "@grokbot/normalization-core/string-coerce";
 import { Type } from "typebox";
 import { parseScreenSnapshotPayload } from "../../cli/nodes-screen.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import { formatErrorMessage } from "../../infra/errors.js";
 import {
   DEFAULT_IMAGE_MAX_DIMENSION_PX,
@@ -322,7 +322,7 @@ function isEligibleComputerNode(node: NodeListNode): boolean {
 }
 
 const NOT_COMPUTER_CAPABLE_HINT =
-  "enable Computer Control in the OpenClaw app and approve the pairing update";
+  "enable Computer Control in the GrokBot app and approve the pairing update";
 
 function nodeMatchesQuery(node: NodeListNode, query: string): boolean {
   const lowered = query.toLowerCase();

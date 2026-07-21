@@ -5,10 +5,10 @@ import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 
 const tempDirs: string[] = [];
-const resolverPath = path.resolve("scripts/secrets/openclaw-bws-resolver.mjs");
+const resolverPath = path.resolve("scripts/secrets/grokbot-bws-resolver.mjs");
 
 function makeTempDir(): string {
-  const dir = mkdtempSync(path.join(tmpdir(), "openclaw-bws-resolver-"));
+  const dir = mkdtempSync(path.join(tmpdir(), "grokbot-bws-resolver-"));
   tempDirs.push(dir);
   return dir;
 }
@@ -19,7 +19,7 @@ afterEach(() => {
   }
 });
 
-describe("openclaw-bws-resolver", () => {
+describe("grokbot-bws-resolver", () => {
   it("forwards the self-hosted server URL without inheriting unrelated variables", () => {
     const dir = makeTempDir();
     const fakeBwsPath = path.join(dir, "bws");

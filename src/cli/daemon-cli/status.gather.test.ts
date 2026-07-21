@@ -102,8 +102,8 @@ const serviceReadCommand = vi.fn<
 >(async (_env?: NodeJS.ProcessEnv) => ({
   programArguments: ["/bin/node", "cli", "gateway", "--port", "19001"],
   environment: {
-    OPENCLAW_STATE_DIR: "/tmp/openclaw-daemon",
-    OPENCLAW_CONFIG_PATH: "/tmp/openclaw-daemon/openclaw.json",
+    OPENCLAW_STATE_DIR: "/tmp/grokbot-daemon",
+    OPENCLAW_CONFIG_PATH: "/tmp/grokbot-daemon/grokbot.json",
   },
 }));
 const resolveGatewayBindHost = vi.fn(
@@ -116,10 +116,10 @@ const resolveAdvertisedControlUiLinks = vi.fn(async (_opts?: unknown) => ({
 const pickPrimaryTailnetIPv4 = vi.fn(() => "100.64.0.9");
 const resolveGatewayPort = vi.fn((_cfg?: unknown, _env?: unknown) => 18789);
 const resolveStateDir = vi.fn(
-  (env: NodeJS.ProcessEnv) => env.OPENCLAW_STATE_DIR ?? "/tmp/openclaw-cli",
+  (env: NodeJS.ProcessEnv) => env.OPENCLAW_STATE_DIR ?? "/tmp/grokbot-cli",
 );
 const resolveConfigPath = vi.fn((env: NodeJS.ProcessEnv, stateDir: string) => {
-  return env.OPENCLAW_CONFIG_PATH ?? `${stateDir}/openclaw.json`;
+  return env.OPENCLAW_CONFIG_PATH ?? `${stateDir}/grokbot.json`;
 });
 const createConfigIOCalls = vi.fn((configPath: string, pluginValidation?: "full" | "skip") => ({
   configPath,
@@ -150,7 +150,7 @@ vi.mock("../../config/config.js", () => ({
     configPath: string;
     pluginValidation?: "full" | "skip";
   }) => {
-    const isDaemon = configPath.includes("/openclaw-daemon/");
+    const isDaemon = configPath.includes("/grokbot-daemon/");
     const runtimeConfig = isDaemon ? daemonLoadedConfig : cliLoadedConfig;
     const warnings = isDaemon ? daemonConfigWarnings : cliConfigWarnings;
     createConfigIOCalls(configPath, pluginValidation);
@@ -287,8 +287,8 @@ describe("gatherDaemonStatus", () => {
       "DAEMON_GATEWAY_TOKEN",
       "DAEMON_GATEWAY_PASSWORD",
     ]);
-    setTestEnvValue("OPENCLAW_STATE_DIR", "/tmp/openclaw-cli");
-    setTestEnvValue("OPENCLAW_CONFIG_PATH", "/tmp/openclaw-cli/openclaw.json");
+    setTestEnvValue("OPENCLAW_STATE_DIR", "/tmp/grokbot-cli");
+    setTestEnvValue("OPENCLAW_CONFIG_PATH", "/tmp/grokbot-cli/grokbot.json");
     deleteTestEnvValue("OPENCLAW_GATEWAY_TOKEN");
     deleteTestEnvValue("OPENCLAW_GATEWAY_PASSWORD");
     deleteTestEnvValue("DAEMON_GATEWAY_TOKEN");
@@ -386,8 +386,8 @@ describe("gatherDaemonStatus", () => {
     serviceReadCommand.mockResolvedValueOnce({
       programArguments: ["/bin/node", "cli", "gateway", "--port", "19001"],
       environment: {
-        OPENCLAW_STATE_DIR: "/tmp/openclaw-daemon",
-        OPENCLAW_CONFIG_PATH: "/tmp/openclaw-daemon/openclaw.json",
+        OPENCLAW_STATE_DIR: "/tmp/grokbot-daemon",
+        OPENCLAW_CONFIG_PATH: "/tmp/grokbot-daemon/grokbot.json",
         NODE_OPTIONS: "--max-old-space-size=6144",
       },
     });
@@ -458,7 +458,7 @@ describe("gatherDaemonStatus", () => {
       configPath?: string;
     };
     expect(probeInput.requireRpc).toBe(true);
-    expect(probeInput.configPath).toBe("/tmp/openclaw-daemon/openclaw.json");
+    expect(probeInput.configPath).toBe("/tmp/grokbot-daemon/grokbot.json");
   });
 
   it("reuses the shared CLI config snapshot when the daemon uses the same config path", async () => {
@@ -473,7 +473,7 @@ describe("gatherDaemonStatus", () => {
     });
 
     expect(readConfigFileSnapshotCalls).toHaveBeenCalledTimes(1);
-    expect(readConfigFileSnapshotCalls).toHaveBeenCalledWith("/tmp/openclaw-cli/openclaw.json");
+    expect(readConfigFileSnapshotCalls).toHaveBeenCalledWith("/tmp/grokbot-cli/grokbot.json");
     expect(loadConfigCalls).not.toHaveBeenCalled();
   });
 
@@ -548,8 +548,8 @@ describe("gatherDaemonStatus", () => {
       programArguments: ["/bin/node", "cli", "gateway", "--port", "19001"],
       environment: {
         OPENCLAW_GATEWAY_PORT: "19001",
-        OPENCLAW_CONFIG_PATH: "/tmp/openclaw-daemon/openclaw.json",
-        OPENCLAW_STATE_DIR: "/tmp/openclaw-daemon",
+        OPENCLAW_CONFIG_PATH: "/tmp/grokbot-daemon/grokbot.json",
+        OPENCLAW_STATE_DIR: "/tmp/grokbot-daemon",
       } as Record<string, string>,
     });
     serviceReadRuntime.mockImplementationOnce(async (env?: NodeJS.ProcessEnv) => ({
@@ -614,8 +614,8 @@ describe("gatherDaemonStatus", () => {
     });
 
     const handoffInput = callArg(readGatewayRestartHandoffSync) as NodeJS.ProcessEnv;
-    expect(handoffInput.OPENCLAW_STATE_DIR).toBe("/tmp/openclaw-daemon");
-    expect(handoffInput.OPENCLAW_CONFIG_PATH).toBe("/tmp/openclaw-daemon/openclaw.json");
+    expect(handoffInput.OPENCLAW_STATE_DIR).toBe("/tmp/grokbot-daemon");
+    expect(handoffInput.OPENCLAW_CONFIG_PATH).toBe("/tmp/grokbot-daemon/grokbot.json");
     expect(status.service.restartHandoff?.reason).toBe("plugin source changed");
     expect(status.service.restartHandoff?.restartKind).toBe("full-process");
     expect(status.service.restartHandoff?.supervisorMode).toBe("launchd");
@@ -627,18 +627,18 @@ describe("gatherDaemonStatus", () => {
       serviceReadCommand.mockResolvedValueOnce({
         programArguments: ["/bin/node", "cli", "gateway", "--port", "19001"],
         environment: {
-          OPENCLAW_STATE_DIR: "/tmp/openclaw-daemon",
-          OPENCLAW_CONFIG_PATH: "/tmp/openclaw-daemon/openclaw.json",
-          OPENCLAW_LAUNCHD_LABEL: "ai.openclaw.manual-update.gateway",
+          OPENCLAW_STATE_DIR: "/tmp/grokbot-daemon",
+          OPENCLAW_CONFIG_PATH: "/tmp/grokbot-daemon/grokbot.json",
+          OPENCLAW_LAUNCHD_LABEL: "ai.grokbot.manual-update.gateway",
         },
       });
       findStaleOpenClawUpdateLaunchdJobs.mockResolvedValueOnce([
         {
-          label: "ai.openclaw.update.2026.5.12",
+          label: "ai.grokbot.update.2026.5.12",
           lastExitStatus: 127,
         },
         {
-          label: "ai.openclaw.manual-update.1717168800",
+          label: "ai.grokbot.manual-update.1717168800",
           lastExitStatus: 0,
         },
       ]);
@@ -650,16 +650,16 @@ describe("gatherDaemonStatus", () => {
       });
 
       const staleScanEnv = findStaleOpenClawUpdateLaunchdJobs.mock.calls[0]?.[0];
-      expect(staleScanEnv?.OPENCLAW_STATE_DIR).toBe("/tmp/openclaw-daemon");
-      expect(staleScanEnv?.OPENCLAW_CONFIG_PATH).toBe("/tmp/openclaw-daemon/openclaw.json");
-      expect(staleScanEnv?.OPENCLAW_LAUNCHD_LABEL).toBe("ai.openclaw.manual-update.gateway");
+      expect(staleScanEnv?.OPENCLAW_STATE_DIR).toBe("/tmp/grokbot-daemon");
+      expect(staleScanEnv?.OPENCLAW_CONFIG_PATH).toBe("/tmp/grokbot-daemon/grokbot.json");
+      expect(staleScanEnv?.OPENCLAW_LAUNCHD_LABEL).toBe("ai.grokbot.manual-update.gateway");
       expect(status.service.staleUpdateLaunchdJobs).toEqual([
         {
-          label: "ai.openclaw.update.2026.5.12",
+          label: "ai.grokbot.update.2026.5.12",
           lastExitStatus: 127,
         },
         {
-          label: "ai.openclaw.manual-update.1717168800",
+          label: "ai.grokbot.manual-update.1717168800",
           lastExitStatus: 0,
         },
       ]);
@@ -686,7 +686,7 @@ describe("gatherDaemonStatus", () => {
           pid: 4242,
           ppid: 1,
           command: "node",
-          commandLine: "node /tmp/newer-openclaw/dist/index.js logs --follow",
+          commandLine: "node /tmp/newer-grokbot/dist/index.js logs --follow",
           address: "TCP 127.0.0.1:50123->127.0.0.1:19001 (ESTABLISHED)",
           direction: "client",
         },
@@ -705,7 +705,7 @@ describe("gatherDaemonStatus", () => {
         pid: 4242,
         ppid: 1,
         command: "node",
-        commandLine: "node /tmp/newer-openclaw/dist/index.js logs --follow",
+        commandLine: "node /tmp/newer-grokbot/dist/index.js logs --follow",
         address: "TCP 127.0.0.1:50123->127.0.0.1:19001 (ESTABLISHED)",
         direction: "client",
       },
@@ -735,8 +735,8 @@ describe("gatherDaemonStatus", () => {
   });
 
   it("uses the fast config path for plain same-file status reads", async () => {
-    const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-status-config-"));
-    const configPath = path.join(tmp, "openclaw.json");
+    const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-status-config-"));
+    const configPath = path.join(tmp, "grokbot.json");
     await fs.writeFile(
       configPath,
       JSON.stringify({
@@ -779,8 +779,8 @@ describe("gatherDaemonStatus", () => {
   });
 
   it("uses full plugin-aware config validation for deep status", async () => {
-    const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-status-config-"));
-    const configPath = path.join(tmp, "openclaw.json");
+    const tmp = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-status-config-"));
+    const configPath = path.join(tmp, "grokbot.json");
     await fs.writeFile(
       configPath,
       JSON.stringify({
@@ -1128,7 +1128,7 @@ describe("gatherDaemonStatus", () => {
       portUsage: {
         port: 19001,
         status: "busy",
-        listeners: [{ pid: 9000, ppid: 8999, commandLine: "openclaw-gateway" }],
+        listeners: [{ pid: 9000, ppid: 8999, commandLine: "grokbot-gateway" }],
         hints: [],
       },
       healthy: false,
@@ -1152,7 +1152,7 @@ describe("gatherDaemonStatus", () => {
     inspectPortUsage.mockResolvedValueOnce({
       port: 19001,
       status: "busy",
-      listeners: [{ pid: 8000, ppid: 1, commandLine: "openclaw gateway" }],
+      listeners: [{ pid: 8000, ppid: 1, commandLine: "grokbot gateway" }],
       hints: [],
     });
     callGatewayStatusProbe.mockResolvedValueOnce({
@@ -1172,8 +1172,8 @@ describe("gatherDaemonStatus", () => {
 
     expect(readLastGatewayErrorLine).toHaveBeenCalledWith(
       expect.objectContaining({
-        OPENCLAW_STATE_DIR: "/tmp/openclaw-daemon",
-        OPENCLAW_CONFIG_PATH: "/tmp/openclaw-daemon/openclaw.json",
+        OPENCLAW_STATE_DIR: "/tmp/grokbot-daemon",
+        OPENCLAW_CONFIG_PATH: "/tmp/grokbot-daemon/grokbot.json",
       }),
       { requirePatternMatch: true },
     );
@@ -1188,7 +1188,7 @@ describe("gatherDaemonStatus", () => {
     inspectPortUsage.mockResolvedValueOnce({
       port: 19001,
       status: "busy",
-      listeners: [{ pid: 8000, ppid: 1, commandLine: "openclaw gateway" }],
+      listeners: [{ pid: 8000, ppid: 1, commandLine: "grokbot gateway" }],
       hints: [],
     });
     callGatewayStatusProbe.mockResolvedValueOnce({
@@ -1218,7 +1218,7 @@ describe("gatherDaemonStatus", () => {
     inspectPortUsage.mockResolvedValueOnce({
       port: 19001,
       status: "busy",
-      listeners: [{ pid: 8000, ppid: 1, commandLine: "openclaw gateway" }],
+      listeners: [{ pid: 8000, ppid: 1, commandLine: "grokbot gateway" }],
       hints: [],
     });
     callGatewayStatusProbe.mockResolvedValueOnce({
@@ -1250,7 +1250,7 @@ describe("gatherDaemonStatus", () => {
     loadInstalledPluginIndexInstallRecords.mockResolvedValueOnce({
       whatsapp: {
         source: "npm",
-        resolvedName: "@openclaw/whatsapp",
+        resolvedName: "@grokbot/whatsapp",
         resolvedVersion: "2026.5.4",
       },
     } as never);
@@ -1275,7 +1275,7 @@ describe("gatherDaemonStatus", () => {
     loadInstalledPluginIndexInstallRecords.mockResolvedValueOnce({
       whatsapp: {
         source: "npm",
-        resolvedName: "@openclaw/whatsapp",
+        resolvedName: "@grokbot/whatsapp",
         resolvedVersion: "2026.5.3",
       },
     } as never);
@@ -1297,13 +1297,13 @@ describe("gatherDaemonStatus", () => {
       deep: true,
     });
 
-    // The mock daemon service command sets OPENCLAW_STATE_DIR=/tmp/openclaw-daemon,
-    // distinct from the CLI process OPENCLAW_STATE_DIR=/tmp/openclaw-cli. Drift
+    // The mock daemon service command sets OPENCLAW_STATE_DIR=/tmp/grokbot-daemon,
+    // distinct from the CLI process OPENCLAW_STATE_DIR=/tmp/grokbot-cli. Drift
     // detection must inspect the daemon profile's install records.
     expect(loadInstalledPluginIndexInstallRecords).toHaveBeenCalledWith(
       expect.objectContaining({
         env: expect.objectContaining({
-          OPENCLAW_STATE_DIR: "/tmp/openclaw-daemon",
+          OPENCLAW_STATE_DIR: "/tmp/grokbot-daemon",
         }),
       }),
     );
@@ -1313,7 +1313,7 @@ describe("gatherDaemonStatus", () => {
     loadInstalledPluginIndexInstallRecords.mockResolvedValueOnce({
       whatsapp: {
         source: "npm",
-        resolvedName: "@openclaw/whatsapp",
+        resolvedName: "@grokbot/whatsapp",
         resolvedVersion: "2026.5.3",
       },
     } as never);
@@ -1327,7 +1327,7 @@ describe("gatherDaemonStatus", () => {
     expect(loadInstalledPluginIndexInstallRecords).toHaveBeenCalledWith(
       expect.objectContaining({
         env: expect.objectContaining({
-          OPENCLAW_STATE_DIR: "/tmp/openclaw-daemon",
+          OPENCLAW_STATE_DIR: "/tmp/grokbot-daemon",
         }),
       }),
     );

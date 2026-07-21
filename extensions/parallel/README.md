@@ -1,12 +1,12 @@
-# OpenClaw Parallel Plugin
+# GrokBot Parallel Plugin
 
-Official OpenClaw plugin for Parallel.
+Official GrokBot plugin for Parallel.
 
-Install from OpenClaw:
+Install from GrokBot:
 
 ```bash
-openclaw plugins install @openclaw/parallel-plugin
-openclaw gateway restart
+grokbot plugins install @grokbot/parallel-plugin
+grokbot gateway restart
 ```
 
-See <https://docs.openclaw.ai/tools/parallel-search> for setup and configuration.
+See <https://docs.grokbot.ai/tools/parallel-search> for setup and configuration.

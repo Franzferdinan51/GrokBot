@@ -11,7 +11,7 @@ import { property, state } from "lit/decorators.js";
 import type { GatewayBrowserClient } from "../../api/gateway.ts";
 import { t } from "../../i18n/index.ts";
 import { openExternalUrlSafe } from "../../lib/open-external-url.ts";
-import { OpenClawLitElement } from "../../lit/openclaw-element.ts";
+import { OpenClawLitElement } from "../../lit/grokbot-element.ts";
 import { createDockPanelLayout, type DockPanelSide } from "../dock-panel-layout.ts";
 import { panelTabStripStyles } from "../panel-tab-strip.ts";
 import {
@@ -73,7 +73,7 @@ type BrowserPanelView = {
 };
 
 const panelLayout = createDockPanelLayout({
-  storageKey: "openclaw.browser.panel.v1",
+  storageKey: "grokbot.browser.panel.v1",
   minHeight: 240,
   minWidth: 380,
   defaultDock: "right",
@@ -108,7 +108,7 @@ function loadImage(dataUrl: string): Promise<HTMLImageElement> {
   });
 }
 
-/** `<openclaw-browser-panel>` — the dockable gateway browser surface. */
+/** `<grokbot-browser-panel>` — the dockable gateway browser surface. */
 class OpenClawBrowserPanel extends OpenClawLitElement {
   /** Gateway client used for browser.request RPCs; null until connected. */
   @property({ attribute: false }) client: GatewayBrowserClient | null = null;
@@ -1300,13 +1300,13 @@ class OpenClawBrowserPanel extends OpenClawLitElement {
 
 // Guarded define (not @customElement) so re-imports under a shared registry —
 // e.g. vitest with isolate=false — don't throw "already registered".
-if (!customElements.get("openclaw-browser-panel")) {
-  customElements.define("openclaw-browser-panel", OpenClawBrowserPanel);
+if (!customElements.get("grokbot-browser-panel")) {
+  customElements.define("grokbot-browser-panel", OpenClawBrowserPanel);
 }
 
 declare global {
   interface HTMLElementTagNameMap {
-    "openclaw-browser-panel": OpenClawBrowserPanel;
+    "grokbot-browser-panel": OpenClawBrowserPanel;
   }
 }
 /* oxlint-disable max-lines -- TODO: split this grandfathered oversized file. */

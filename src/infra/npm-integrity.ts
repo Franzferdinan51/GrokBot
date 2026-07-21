@@ -80,7 +80,7 @@ type ResolveNpmIntegrityDriftWithDefaultMessageParams = {
 };
 
 /**
- * Resolves integrity drift with OpenClaw's default warning and abort messages.
+ * Resolves integrity drift with GrokBot's default warning and abort messages.
  * Used by npm archive installers that do not need a custom payload shape.
  */
 export async function resolveNpmIntegrityDriftWithDefaultMessage(

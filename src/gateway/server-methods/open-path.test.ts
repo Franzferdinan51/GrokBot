@@ -32,16 +32,16 @@ afterEach(() => {
 
 describe("resolveOpenPathCommand", () => {
   it("uses open on macOS", () => {
-    expect(resolveOpenPathCommand("/tmp/openclaw.json", "darwin")).toEqual({
+    expect(resolveOpenPathCommand("/tmp/grokbot.json", "darwin")).toEqual({
       command: "open",
-      args: ["/tmp/openclaw.json"],
+      args: ["/tmp/grokbot.json"],
     });
   });
 
   it("uses xdg-open on Linux", () => {
-    expect(resolveOpenPathCommand("/tmp/openclaw.json", "linux")).toEqual({
+    expect(resolveOpenPathCommand("/tmp/grokbot.json", "linux")).toEqual({
       command: "xdg-open",
-      args: ["/tmp/openclaw.json"],
+      args: ["/tmp/grokbot.json"],
     });
   });
 

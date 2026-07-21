@@ -16,8 +16,8 @@ import {
   type EmbeddedRunAttemptParams,
   type NativeHookRelayEvent,
   type NativeHookRelayRegistrationHandle,
-} from "openclaw/plugin-sdk/agent-harness-runtime";
-import { loadExecApprovals } from "openclaw/plugin-sdk/exec-approvals-runtime";
+} from "grokbot/plugin-sdk/agent-harness-runtime";
+import { loadExecApprovals } from "grokbot/plugin-sdk/exec-approvals-runtime";
 import { resolveCodexAppServerForModelProvider } from "./app-server-policy.js";
 import { handleCodexAppServerApprovalRequest } from "./approval-bridge.js";
 import { resolveCodexAppServerPreparedAuthHandoff } from "./auth-bridge.js";
@@ -916,7 +916,7 @@ async function createCodexSideToolBridge(input: {
   const messageToolProvider = resolveCodexMessageToolProvider(input.params);
   let tools: AnyAgentTool[] = [];
   if (supportsModelTools(runtimeModel)) {
-    const createOpenClawCodingTools = (await import("openclaw/plugin-sdk/agent-harness"))
+    const createOpenClawCodingTools = (await import("grokbot/plugin-sdk/agent-harness"))
       .createOpenClawCodingTools;
     const sandboxSessionKey =
       input.params.sandboxSessionKey?.trim() ||

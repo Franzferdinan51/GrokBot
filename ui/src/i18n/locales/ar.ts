@@ -269,14 +269,14 @@ export const ar: TranslationMap = {
     errorTitle: "فشل تحميل اللوحة",
     genericSubtitle: "حدث خطأ ما أثناء تحميل هذه اللوحة.",
     staleTitle: "يتوفر إصدار جديد",
-    staleSubtitle: "تم تحديث OpenClaw في الخلفية. أعد التحميل للحصول على أحدث لوحة.",
+    staleSubtitle: "تم تحديث GrokBot في الخلفية. أعد التحميل للحصول على أحدث لوحة.",
     retry: "إعادة المحاولة",
   },
   nodes: {
     pairing: {
       button: "إقران جهاز محمول",
       adminRequired: "يلزم الوصول كمسؤول لإنشاء رموز الإعداد.",
-      title: "OpenClaw للأجهزة المحمولة",
+      title: "GrokBot للأجهزة المحمولة",
       subtitle: "امسح رمز QR هذا في تطبيق الهاتف المحمول لتوصيل هاتف جديد.",
       generating: "جارٍ إنشاء رمز إعداد آمن…",
       accessTitle: "الوصول عبر الهاتف المحمول",
@@ -290,14 +290,14 @@ export const ar: TranslationMap = {
       transportLimitedHint:
         "يستخدم عنوان URL الخاص بـ Gateway اتصال ws:// بنص عادي. استخدم wss:// أو Tailscale Serve، ثم أنشئ رمزًا جديدًا للوصول الكامل.",
       failed: "تعذر إنشاء رمز إعداد.",
-      qrAlt: "رمز QR لإقران OpenClaw للأجهزة المحمولة",
+      qrAlt: "رمز QR لإقران GrokBot للأجهزة المحمولة",
       qrUnavailable: "رمز QR غير متاح. انسخ رمز الإعداد بدلًا من ذلك.",
       copySetupCode: "نسخ رمز الإعداد",
       newCode: "رمز جديد",
       showSetupCode: "إظهار رمز الإعداد",
       pending: "طلبات الأجهزة بانتظار المراجعة: {count}",
       review: "مراجعة",
-      waiting: "تتصل تطبيقات OpenClaw الرسمية للأجهزة المحمولة تلقائيًا بعد المسح.",
+      waiting: "تتصل تطبيقات GrokBot الرسمية للأجهزة المحمولة تلقائيًا بعد المسح.",
       help: "مساعدة الإقران",
       manageDevices: "إدارة الأجهزة",
     },
@@ -441,11 +441,11 @@ export const ar: TranslationMap = {
     ownerSession: "الجلسة",
     ownerWorkboard: "Workboard",
     title: "مساحات العمل المُدارة",
-    subtitle: "نسخ مستودعات معزولة مملوكة لـ OpenClaw.",
+    subtitle: "نسخ مستودعات معزولة مملوكة لـ GrokBot.",
     cleanNow: "تنظيف الآن",
     cleanupTitle: "التنظيف",
     cleanupSubtitle:
-      "يزيل OpenClaw دوريًا أشجار العمل القديمة لتوفير مساحة على القرص. اضبط مدى صرامة عملية التنظيف.",
+      "يزيل GrokBot دوريًا أشجار العمل القديمة لتوفير مساحة على القرص. اضبط مدى صرامة عملية التنظيف.",
     cleanupMaxCount: "الحد الأقصى لأشجار العمل",
     cleanupMaxCountHelp:
       "الحد الأقصى لعدد أشجار العمل المُدارة التي سيتم الاحتفاظ بها عبر جميع المستودعات. تُؤخذ لقطات لأشجار العمل الأقدم وتُزال أولًا. اضبطه على 0 لتعطيل حد العدد.",
@@ -1332,7 +1332,7 @@ export const ar: TranslationMap = {
     autoSaveFailed: "فشل الحفظ",
     autoSaveConflict: "تم تغيير الإعدادات في مكان آخر",
     retry: "إعادة المحاولة",
-    applyBannerText: "تم الحفظ في openclaw.json — أعد تشغيل Gateway للتطبيق.",
+    applyBannerText: "تم الحفظ في grokbot.json — أعد تشغيل Gateway للتطبيق.",
     applyBannerAction: "إعادة التشغيل والتطبيق",
     rawDiscard: "تجاهل",
     rawDraftBlocksApply:
@@ -1386,7 +1386,7 @@ export const ar: TranslationMap = {
     },
   },
   approvalPage: {
-    brandName: "OpenClaw",
+    brandName: "GrokBot",
     eyebrow: "Operator approval",
     loadingTitle: "Loading approval",
     loadingDescription: "Checking the current approval state with the Gateway.",
@@ -1395,7 +1395,7 @@ export const ar: TranslationMap = {
       "This approval could not be found or this device is not authorized to review it.",
     connectionErrorTitle: "Connection interrupted",
     connectionErrorDescription:
-      "OpenClaw cannot confirm or record a decision while disconnected. Reconnect to check the current status.",
+      "GrokBot cannot confirm or record a decision while disconnected. Reconnect to check the current status.",
     retry: "Retry",
     execTitle: "Command approval",
     pending: "Waiting for your decision",
@@ -1721,7 +1721,7 @@ export const ar: TranslationMap = {
     skillWorkshop: "راجع المقترحات وحسّنها وطبّقها قبل أن تصبح مهارات نشطة.",
     nodes: "الأجهزة المقترنة والأوامر.",
     chat: "دردشة Gateway للتدخلات السريعة.",
-    config: "تعديل openclaw.json.",
+    config: "تعديل grokbot.json.",
     profile: "إحصاءات وكيلك، وسلاسل نشاطه، وحياته في الشعاب.",
     communications: "القنوات، والرسائل، وإعدادات الصوت.",
     appearance: "السمة، وواجهة المستخدم، وإعدادات معالج الإعداد.",
@@ -1740,7 +1740,7 @@ export const ar: TranslationMap = {
   modelSetup: {
     heading: "اربط نموذج الذكاء الاصطناعي الخاص بك",
     intro:
-      "يعيد OpenClaw استخدام وصول الذكاء الاصطناعي المتوفر لديك بالفعل — سواء عبر تسجيل دخول CLI، أو مفتاح API، أو تسجيل الدخول لدى موفّر.",
+      "يعيد GrokBot استخدام وصول الذكاء الاصطناعي المتوفر لديك بالفعل — سواء عبر تسجيل دخول CLI، أو مفتاح API، أو تسجيل الدخول لدى موفّر.",
     loading: "جارٍ التحقق من إمكانية الوصول إلى الذكاء الاصطناعي المتاحة على Gateway هذا…",
     retry: "إعادة المحاولة",
     checkAgain: "التحقق مجددًا",
@@ -1753,7 +1753,7 @@ export const ar: TranslationMap = {
     },
     access: {
       adminRequired: "يتطلب إعداد النموذج صلاحية operator.admin.",
-      gatewayTooOld: "يعمل Gateway بإصدار أقدم من OpenClaw",
+      gatewayTooOld: "يعمل Gateway بإصدار أقدم من GrokBot",
     },
     candidates: {
       title: "تم العثور عليها على Gateway هذا",
@@ -1852,12 +1852,12 @@ export const ar: TranslationMap = {
     confirmTitle: "هل تريد الاستيراد من {provider}؟",
     confirmDescription: "انسخ {count} من ملفات الذاكرة المحددة إلى مساحة عمل هذا الوكيل.",
     confirmReplace: "سيتم نسخ ملفات الوجهة الحالية احتياطيًا في تقرير الترحيل قبل استبدالها.",
-    confirmBackup: "ينشئ OpenClaw نسخة احتياطية متحققًا منها قبل الاستيراد وقبل نسخ الذاكرة.",
+    confirmBackup: "ينشئ GrokBot نسخة احتياطية متحققًا منها قبل الاستيراد وقبل نسخ الذاكرة.",
     confirmImport: "استيراد الذاكرة",
     disconnected: "اتصل بـ Gateway لاستيراد الذاكرة.",
     title: "استيراد ذاكرة المساعد",
     subtitle:
-      "راجع الذاكرة الموحّدة لـ Codex والذاكرة التلقائية لـ Claude Code قبل نسخهما إلى OpenClaw.",
+      "راجع الذاكرة الموحّدة لـ Codex والذاكرة التلقائية لـ Claude Code قبل نسخهما إلى GrokBot.",
     agent: "الوكيل الوجهة",
     replaceExisting: "استبدال عمليات الاستيراد الحالية",
     replaceHint: "عاين التعارضات مجددًا واحتفظ بنسخ احتياطية من العناصر قبل الاستبدال.",
@@ -1865,7 +1865,7 @@ export const ar: TranslationMap = {
   onboarding: {
     memoryImport: {
       title: "اصطحب ذاكرة مساعدك معك",
-      body: "عثر OpenClaw على ذاكرة من مساعدي برمجة آخرين. هل تريد استيرادها إلى مساحة عمل وكيلك؟",
+      body: "عثر GrokBot على ذاكرة من مساعدي برمجة آخرين. هل تريد استيرادها إلى مساحة عمل وكيلك؟",
       plannedCount: "{count} جاهز للاستيراد",
       alreadyImported: "تم استيراده بالفعل: {count}",
       sourceUnavailable: "مسار المصدر غير متاح",
@@ -1880,7 +1880,7 @@ export const ar: TranslationMap = {
       connectionChanged: "تم التخطي: تغير اتصال Gateway أثناء الاستيراد",
       unknownError: "فشل الطلب",
       doneTitle: "اكتمل استيراد الذاكرة",
-      doneBody: "تم ترحيل {migrated} وتخطي {skipped}. يمكنك متابعة إعداد OpenClaw.",
+      doneBody: "تم ترحيل {migrated} وتخطي {skipped}. يمكنك متابعة إعداد GrokBot.",
     },
   },
   mcpPage: {
@@ -1968,7 +1968,7 @@ export const ar: TranslationMap = {
       notes: "حفظ الملاحظات في Markdown أو Obsidian أو Notion أو Bear.",
     },
     noInstalledTitle: "لا توجد مكونات إضافية اختيارية مثبتة",
-    noInstalledBody: "اكتشف مكونًا إضافيًا مميزًا أو ابحث في ClawHub لتوسيع OpenClaw.",
+    noInstalledBody: "اكتشف مكونًا إضافيًا مميزًا أو ابحث في ClawHub لتوسيع GrokBot.",
     noInstalledMatchTitle: "لا توجد مكونات إضافية مثبتة مطابقة",
     noMatchBody: "جرّب بحثًا مختلفًا.",
     filterAll: "الكل",
@@ -2013,7 +2013,7 @@ export const ar: TranslationMap = {
     detailPluginId: "معرّف المكوّن الإضافي",
     offlineTitle: "Gateway غير متصل",
     offlineBody: "اتصل لتصفّح المكوّنات الإضافية المثبّتة والموصى بها.",
-    optionalCapability: "إمكانية اختيارية في OpenClaw.",
+    optionalCapability: "إمكانية اختيارية في GrokBot.",
     enabled: "مفعّل",
     disabled: "معطّل",
     available: "متاح",
@@ -2045,7 +2045,7 @@ export const ar: TranslationMap = {
     disabledRestart: "تم تعطيل {name}. يلزم إعادة تشغيل Gateway لتطبيق التغيير.",
   },
   aboutPage: {
-    productName: "OpenClaw",
+    productName: "GrokBot",
     tagline: "مساعدك الشخصي بالذكاء الاصطناعي، يعمل على أجهزتك الخاصة.",
     waveHello: "لوّح مرحبًا لـ Clawd",
     linksLabel: "المجتمع والموارد",
@@ -2054,7 +2054,7 @@ export const ar: TranslationMap = {
     linkGitHub: "GitHub",
     linkDiscord: "Discord",
     linkChangelog: "سجل التغييرات",
-    license: "© 2026 مؤسسة OpenClaw — ترخيص MIT.",
+    license: "© 2026 مؤسسة GrokBot — ترخيص MIT.",
     artifactTitle: "Control UI",
     artifactSubtitle: "الهوية المضمّنة عند بناء هذا الأثر للمتصفح.",
     artifactDetails: "تفاصيل بناء Control UI",
@@ -2231,7 +2231,7 @@ export const ar: TranslationMap = {
     selfLearning: {
       pitchTitle: "تشغيل التعلّم الذاتي",
       pitchBody:
-        "يراجع OpenClaw التصحيحات وعمليات التشغيل المهمة المكتملة، ثم يُعدّ مسودات لمقترحات Skills لهذه اللوحة. يستهلك رموزًا إضافية في الخلفية، وتصل المسودات كمقترحات معلّقة.",
+        "يراجع GrokBot التصحيحات وعمليات التشغيل المهمة المكتملة، ثم يُعدّ مسودات لمقترحات Skills لهذه اللوحة. يستهلك رموزًا إضافية في الخلفية، وتصل المسودات كمقترحات معلّقة.",
       enable: "تفعيل التعلّم الذاتي",
       enabling: "جارٍ التفعيل…",
       updateError: "تعذّر تحديث إعداد التعلّم الذاتي.",
@@ -2426,7 +2426,7 @@ export const ar: TranslationMap = {
       onboardingTitle: "No workspaces yet",
       onboardingSubtitle:
         "Ask your agent to build a workspace, or create one from the command line.",
-      onboardingCommand: "openclaw workspaces tabs create --title Main",
+      onboardingCommand: "grokbot workspaces tabs create --title Main",
       tabTitle: "This workspace is empty",
       tabSubtitle: "Ask your agent to add a widget, or add one yourself.",
       noVisibleTabs: "Every workspace tab is hidden. Restore one from the hidden menu.",
@@ -3435,9 +3435,9 @@ export const ar: TranslationMap = {
         title: "المصادقة مطلوبة",
         summary:
           "يمكن الوصول إلى Gateway، لكنه يحتاج إلى رمز مميز أو كلمة مرور مطابقة قبل أن يتمكن هذا المتصفح من الاتصال.",
-        stepPaste: "الصق الرمز المميز من openclaw dashboard --no-open أو أدخل كلمة المرور المكونة.",
+        stepPaste: "الصق الرمز المميز من grokbot dashboard --no-open أو أدخل كلمة المرور المكونة.",
         stepGenerate:
-          "إذا لم يتم تكوين رمز مميز، فشغل openclaw doctor --generate-gateway-token على مضيف Gateway.",
+          "إذا لم يتم تكوين رمز مميز، فشغل grokbot doctor --generate-gateway-token على مضيف Gateway.",
         stepConnect: "انقر على Connect مرة أخرى بعد تحديث بيانات الاعتماد.",
       },
       authFailed: {
@@ -3445,7 +3445,7 @@ export const ar: TranslationMap = {
         summary:
           "تم رفض بيانات الاعتماد المقدمة. السبب الأكثر شيوعا هو رمز مميز قديم أو رمز منسوخ من عنوان Gateway آخر.",
         stepDashboard:
-          "شغل openclaw dashboard --no-open وافتح عنوان URL الجديد أو الصق رمزه المميز.",
+          "شغل grokbot dashboard --no-open وافتح عنوان URL الجديد أو الصق رمزه المميز.",
         stepReplace:
           "استبدل قيم الرمز المميز/كلمة المرور القديمة؛ لا تعد استخدام رمز من عنوان Gateway آخر.",
         stepMode:
@@ -3467,8 +3467,8 @@ export const ar: TranslationMap = {
         summary: "يحتاج هذا المتصفح إلى موافقة لمرة واحدة من مضيف Gateway قبل استخدام Control UI.",
         upgradeSummary:
           "هذا المتصفح معروف بالفعل، لكن الوصول المطلوب تغير ويحتاج إلى موافقة جديدة.",
-        stepList: "شغل openclaw devices list على مضيف Gateway.",
-        stepApproveId: "وافق على هذا الطلب: openclaw devices approve {requestId}.",
+        stepList: "شغل grokbot devices list على مضيف Gateway.",
+        stepApproveId: "وافق على هذا الطلب: grokbot devices approve {requestId}.",
         stepApprove: "وافق على طلب المتصفح/الجهاز المعلق من تلك القائمة.",
         stepReconnect: "أعد الاتصال بعد اكتمال الموافقة.",
       },
@@ -3492,20 +3492,20 @@ export const ar: TranslationMap = {
         title: "عدم تطابق البروتوكول",
         summary: "لا يتفق Control UI المقدم مع Gateway العامل على بروتوكول الاتصال المدعوم.",
         stepDashboard:
-          "أعد فتح لوحة المعلومات المقدمة باستخدام openclaw dashboard حتى يأتي UI وGateway من التثبيت نفسه.",
+          "أعد فتح لوحة المعلومات المقدمة باستخدام grokbot dashboard حتى يأتي UI وGateway من التثبيت نفسه.",
         stepDevUi:
           "إذا كنت تستخدم pnpm ui:dev، فأعد بناء أو تشغيل واجهة التطوير مقابل checkout الحالي.",
-        stepRestart: "أعد تشغيل Gateway بعد تحديث OpenClaw حتى يقدم البروتوكول الحالي.",
+        stepRestart: "أعد تشغيل Gateway بعد تحديث GrokBot حتى يقدم البروتوكول الحالي.",
       },
       network: {
         title: "تعذر الاتصال",
         summary:
           "لم يتمكن المتصفح من إكمال اتصال Gateway. تحقق من الهدف والنقل قبل إعادة تجربة بيانات الاعتماد.",
-        stepGateway: "تأكد من أن Gateway يعمل باستخدام openclaw status أو openclaw gateway run.",
+        stepGateway: "تأكد من أن Gateway يعمل باستخدام grokbot status أو grokbot gateway run.",
         stepUrl:
           "تحقق من عنوان WebSocket واستخدم wss:// عندما يكون Gateway خلف HTTPS/Tailscale Serve.",
         stepDashboard:
-          "أعد فتح لوحة المعلومات باستخدام openclaw dashboard --no-open لنسخ عنوان URL وتفاصيل المصادقة الحالية.",
+          "أعد فتح لوحة المعلومات باستخدام grokbot dashboard --no-open لنسخ عنوان URL وتفاصيل المصادقة الحالية.",
       },
     },
   },
@@ -3530,7 +3530,7 @@ export const ar: TranslationMap = {
       remoteViewOnly: "هذه الجلسة موجودة على عقدة مقترنة وهي للعرض فقط.",
       unsupportedViewOnly: "مصدر الجلسة الخارجية هذا للعرض فقط.",
       sessionMenu: "External session actions",
-      openInOpenClaw: "Open in OpenClaw",
+      openInOpenClaw: "Open in GrokBot",
       openInTerminal: "Open in terminal",
       terminalUnavailable: "Terminal opening is unavailable for this session.",
     },
@@ -3585,7 +3585,7 @@ export const ar: TranslationMap = {
     followUpModeOverriding: "تجاوز الإعداد الافتراضي للخادم ({mode})",
     followUpModeReset: "إعادة التعيين إلى الوضع الافتراضي للخادم",
     catalogOpenTarget: "Open Codex/Claude sessions in",
-    catalogOpenTargetViewer: "OpenClaw viewer",
+    catalogOpenTargetViewer: "GrokBot viewer",
     catalogOpenTargetTerminal: "Terminal",
     onboardingDisabled: "معطل أثناء الإعداد",
     gatewayStatus: "حالة Gateway: {status}",
@@ -4024,7 +4024,7 @@ export const ar: TranslationMap = {
       filters: "عوامل التصفية",
       shownOf: "{shown} من {total}",
       emptyTitle: "لا توجد مهام مجدولة بعد",
-      emptyHint: "صِف ما ينبغي أن يفعله OpenClaw ومتى — وسيعمل وفق الجدول المحدد.",
+      emptyHint: "صِف ما ينبغي أن يفعله GrokBot ومتى — وسيعمل وفق الجدول المحدد.",
       noMatching: "لا توجد مهام تطابق عوامل التصفية الحالية.",
       loadMore: "تحميل المزيد",
       loading: "جارٍ التحميل...",
@@ -4091,7 +4091,7 @@ export const ar: TranslationMap = {
     detail: {
       tabsLabel: "تفاصيل الأتمتة",
       newTitle: "مهمة مجدولة جديدة",
-      newSubtitle: "صِف ما ينبغي أن يفعله OpenClaw، ثم اختر وقت تشغيله.",
+      newSubtitle: "صِف ما ينبغي أن يفعله GrokBot، ثم اختر وقت تشغيله.",
       back: "كل عمليات الأتمتة",
       settingsTab: "الإعدادات",
       historyTitle: "سجل التشغيل",
@@ -4164,7 +4164,7 @@ export const ar: TranslationMap = {
       descriptionPlaceholder: "سياق اختياري لهذه المهمة",
       agentPlaceholder: "main أو ops",
       agentHelp: "ابدأ الكتابة لاختيار وكيل معروف، أو أدخل وكيلًا مخصصًا.",
-      promptPlaceholder: "صِف ما ينبغي أن يفعله OpenClaw...",
+      promptPlaceholder: "صِف ما ينبغي أن يفعله GrokBot...",
       repeat: "التكرار",
       repeatInterval: "الفاصل الزمني",
       repeatOnce: "مرة واحدة",

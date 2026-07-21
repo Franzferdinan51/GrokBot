@@ -124,7 +124,7 @@ describeTelegramDispatch("dispatchTelegramMessage context-recovery", () => {
     expect(draftStream.update).toHaveBeenCalledWith("Hello");
     const delivery = expectDeliverRepliesParams({ thread: { id: 777, scope: "dm" } });
     const mediaLocalRoots = delivery.mediaLocalRoots as string[] | undefined;
-    expect(mediaLocalRoots?.some((root) => /[\\/]\.openclaw[\\/]workspace-work$/u.test(root))).toBe(
+    expect(mediaLocalRoots?.some((root) => /[\\/]\.grokbot[\\/]workspace-work$/u.test(root))).toBe(
       true,
     );
     const dispatchParams = expectDispatchParams({});
@@ -289,7 +289,7 @@ describeTelegramDispatch("dispatchTelegramMessage context-recovery", () => {
         groupHistories,
         sendChatActionHandler,
         turn: {
-          storePath: "/tmp/openclaw/telegram-sessions.json",
+          storePath: "/tmp/grokbot/telegram-sessions.json",
           recordInboundSession,
           record: {
             updateLastRoute: {

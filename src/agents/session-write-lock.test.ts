@@ -5,7 +5,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { MAX_TIMER_TIMEOUT_MS } from "@openclaw/normalization-core/number-coercion";
+import { MAX_TIMER_TIMEOUT_MS } from "@grokbot/normalization-core/number-coercion";
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import { SessionWriteLockStaleError } from "./session-write-lock-error.js";
 
@@ -69,7 +69,7 @@ async function expectCurrentPidOwnsLock(params: {
 async function withTempSessionLockFile(
   run: (params: { root: string; sessionFile: string; lockPath: string }) => Promise<void>,
 ) {
-  const root = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-lock-"));
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-lock-"));
   try {
     const sessionFile = path.join(root, "sessions.json");
     await run({ root, sessionFile, lockPath: `${sessionFile}.lock` });
@@ -116,7 +116,7 @@ async function withSymlinkedSessionPaths(
     return;
   }
 
-  const root = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-lock-"));
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-lock-"));
   try {
     const realDir = path.join(root, "real");
     const linkDir = path.join(root, "link");
@@ -293,7 +293,7 @@ describe("acquireSessionWriteLock", () => {
   });
 
   it("reclaims stale lock files", async () => {
-    const root = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-lock-"));
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-lock-"));
     try {
       const sessionFile = path.join(root, "sessions.json");
       const lockPath = `${sessionFile}.lock`;
@@ -310,7 +310,7 @@ describe("acquireSessionWriteLock", () => {
   });
 
   it("does not reclaim fresh malformed lock files during contention", async () => {
-    const root = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-lock-"));
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-lock-"));
     try {
       const sessionFile = path.join(root, "sessions.json");
       const lockPath = `${sessionFile}.lock`;
@@ -459,9 +459,9 @@ describe("acquireSessionWriteLock", () => {
     });
   });
 
-  it("reports live OpenClaw-owned stale locks without removing them", async () => {
+  it("reports live GrokBot-owned stale locks without removing them", async () => {
     await withTempSessionLockFile(async ({ sessionFile, lockPath }) => {
-      const owner = spawn(process.execPath, ["-e", "setInterval(() => {}, 1000)", "openclaw"], {
+      const owner = spawn(process.execPath, ["-e", "setInterval(() => {}, 1000)", "grokbot"], {
         stdio: "ignore",
       });
       if (!owner.pid) {
@@ -495,7 +495,7 @@ describe("acquireSessionWriteLock", () => {
 
   it("retries when a stale lock report disappears before diagnostics", async () => {
     await withTempSessionLockFile(async ({ sessionFile, lockPath }) => {
-      const owner = spawn(process.execPath, ["-e", "setInterval(() => {}, 1000)", "openclaw"], {
+      const owner = spawn(process.execPath, ["-e", "setInterval(() => {}, 1000)", "grokbot"], {
         stdio: "ignore",
       });
       if (!owner.pid) {
@@ -542,7 +542,7 @@ describe("acquireSessionWriteLock", () => {
 
   it("retries when a stale lock report is replaced before diagnostics", async () => {
     await withTempSessionLockFile(async ({ sessionFile, lockPath }) => {
-      const owner = spawn(process.execPath, ["-e", "setInterval(() => {}, 1000)", "openclaw"], {
+      const owner = spawn(process.execPath, ["-e", "setInterval(() => {}, 1000)", "grokbot"], {
         stdio: "ignore",
       });
       if (!owner.pid) {
@@ -597,7 +597,7 @@ describe("acquireSessionWriteLock", () => {
 
   it("retries when a stale lock report is replaced by a fresh payload-less lock", async () => {
     await withTempSessionLockFile(async ({ sessionFile, lockPath }) => {
-      const owner = spawn(process.execPath, ["-e", "setInterval(() => {}, 1000)", "openclaw"], {
+      const owner = spawn(process.execPath, ["-e", "setInterval(() => {}, 1000)", "grokbot"], {
         stdio: "ignore",
       });
       if (!owner.pid) {
@@ -651,7 +651,7 @@ describe("acquireSessionWriteLock", () => {
   });
 
   it("watchdog releases stale in-process locks", async () => {
-    const root = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-lock-"));
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-lock-"));
     const stderrSpy = vi.spyOn(process.stderr, "write").mockImplementation(() => true);
     try {
       const sessionFile = path.join(root, "session.jsonl");
@@ -756,7 +756,7 @@ describe("acquireSessionWriteLock", () => {
   });
 
   it("uses resolved stale policy when cleaning stale lock files", async () => {
-    const root = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-lock-policy-"));
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-lock-policy-"));
     const sessionsDir = path.join(root, "sessions");
     await fs.mkdir(sessionsDir, { recursive: true });
     const nowMs = Date.now();
@@ -777,7 +777,7 @@ describe("acquireSessionWriteLock", () => {
         env: { OPENCLAW_SESSION_WRITE_LOCK_STALE_MS: "60000" },
         nowMs,
         removeStale: false,
-        readOwnerProcessArgs: () => ["node", "/opt/openclaw/openclaw.mjs", "doctor"],
+        readOwnerProcessArgs: () => ["node", "/opt/grokbot/grokbot.mjs", "doctor"],
       });
       expect(envOverride.locks[0]?.stale).toBe(false);
     } finally {
@@ -785,8 +785,8 @@ describe("acquireSessionWriteLock", () => {
     }
   });
 
-  it("does not clean live OpenClaw locks just because holder max hold expired", async () => {
-    const root = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-lock-policy-"));
+  it("does not clean live GrokBot locks just because holder max hold expired", async () => {
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-lock-policy-"));
     const sessionsDir = path.join(root, "sessions");
     await fs.mkdir(sessionsDir, { recursive: true });
     const nowMs = Date.now();
@@ -808,7 +808,7 @@ describe("acquireSessionWriteLock", () => {
         staleMs: 60_000,
         nowMs,
         removeStale: true,
-        readOwnerProcessArgs: () => ["node", "/opt/openclaw/openclaw.mjs", "agent"],
+        readOwnerProcessArgs: () => ["node", "/opt/grokbot/grokbot.mjs", "agent"],
       });
 
       expect(lockCleanupRecords(result.locks)).toEqual([
@@ -835,7 +835,7 @@ describe("acquireSessionWriteLock", () => {
   });
 
   it("cleans stale .jsonl lock files in sessions directories", async () => {
-    const root = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-lock-"));
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-lock-"));
     const sessionsDir = path.join(root, "sessions");
     await fs.mkdir(sessionsDir, { recursive: true });
 
@@ -875,7 +875,7 @@ describe("acquireSessionWriteLock", () => {
         staleMs: 30_000,
         nowMs,
         removeStale: true,
-        readOwnerProcessArgs: () => ["node", "/opt/openclaw/openclaw.mjs", "agent"],
+        readOwnerProcessArgs: () => ["node", "/opt/grokbot/grokbot.mjs", "agent"],
       });
 
       expect(result.locks).toHaveLength(3);
@@ -916,12 +916,12 @@ describe("acquireSessionWriteLock", () => {
     }
   });
 
-  it("cleans old live .jsonl lock files owned by non-OpenClaw processes", async () => {
-    const root = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-lock-"));
+  it("cleans old live .jsonl lock files owned by non-GrokBot processes", async () => {
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-lock-"));
     const sessionsDir = path.join(root, "sessions");
     await fs.mkdir(sessionsDir, { recursive: true });
     const nowMs = Date.now();
-    const lockPath = path.join(sessionsDir, "old-non-openclaw.jsonl.lock");
+    const lockPath = path.join(sessionsDir, "old-non-grokbot.jsonl.lock");
 
     try {
       await fs.writeFile(
@@ -943,10 +943,10 @@ describe("acquireSessionWriteLock", () => {
 
       expect(lockCleanupRecords(result.cleaned)).toEqual([
         {
-          name: "old-non-openclaw.jsonl.lock",
+          name: "old-non-grokbot.jsonl.lock",
           removed: true,
           stale: true,
-          staleReasons: ["too-old", "non-openclaw-owner"],
+          staleReasons: ["too-old", "non-grokbot-owner"],
         },
       ]);
       await expectPathMissing(lockPath);
@@ -956,7 +956,7 @@ describe("acquireSessionWriteLock", () => {
   });
 
   it("does not clean fresh malformed .jsonl lock files during cleanup sweeps", async () => {
-    const root = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-lock-"));
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-lock-"));
     const sessionsDir = path.join(root, "sessions");
     await fs.mkdir(sessionsDir, { recursive: true });
     const nowMs = Date.now();
@@ -987,8 +987,8 @@ describe("acquireSessionWriteLock", () => {
     }
   });
 
-  it("cleans fresh live .jsonl lock files owned by a non-OpenClaw process", async () => {
-    const root = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-lock-"));
+  it("cleans fresh live .jsonl lock files owned by a non-GrokBot process", async () => {
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-lock-"));
     const sessionsDir = path.join(root, "sessions");
     await fs.mkdir(sessionsDir, { recursive: true });
 
@@ -1018,7 +1018,7 @@ describe("acquireSessionWriteLock", () => {
           name: "false-live.jsonl.lock",
           removed: true,
           stale: true,
-          staleReasons: ["non-openclaw-owner"],
+          staleReasons: ["non-grokbot-owner"],
         },
       ]);
       expect(lockCleanupRecords(result.cleaned)).toEqual([
@@ -1026,7 +1026,7 @@ describe("acquireSessionWriteLock", () => {
           name: "false-live.jsonl.lock",
           removed: true,
           stale: true,
-          staleReasons: ["non-openclaw-owner"],
+          staleReasons: ["non-grokbot-owner"],
         },
       ]);
       await expect(fs.access(falseLiveLock)).rejects.toThrow();
@@ -1035,8 +1035,8 @@ describe("acquireSessionWriteLock", () => {
     }
   });
 
-  it("cleans fresh live .jsonl lock files owned by generic non-OpenClaw entrypoints", async () => {
-    const root = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-lock-"));
+  it("cleans fresh live .jsonl lock files owned by generic non-GrokBot entrypoints", async () => {
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-lock-"));
     const sessionsDir = path.join(root, "sessions");
     await fs.mkdir(sessionsDir, { recursive: true });
 
@@ -1066,7 +1066,7 @@ describe("acquireSessionWriteLock", () => {
           name: "false-live-generic-entry.jsonl.lock",
           removed: true,
           stale: true,
-          staleReasons: ["non-openclaw-owner"],
+          staleReasons: ["non-grokbot-owner"],
         },
       ]);
       await expect(fs.access(falseLiveLock)).rejects.toThrow();
@@ -1076,7 +1076,7 @@ describe("acquireSessionWriteLock", () => {
   });
 
   it("memoizes readOwnerProcessArgs across locks with the same pid in one sweep (#86509)", async () => {
-    const root = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-lock-"));
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-lock-"));
     const sessionsDir = path.join(root, "sessions");
     await fs.mkdir(sessionsDir, { recursive: true });
     const nowMs = Date.now();
@@ -1115,7 +1115,7 @@ describe("acquireSessionWriteLock", () => {
     // could still cache that null-equivalent failure and short-circuit later locks for the
     // same pid. The fix writes the cache only after the resolver returns, so each lock
     // retries the resolver fresh after a throw.
-    const root = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-lock-"));
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-lock-"));
     const sessionsDir = path.join(root, "sessions");
     await fs.mkdir(sessionsDir, { recursive: true });
     const nowMs = Date.now();
@@ -1147,13 +1147,13 @@ describe("acquireSessionWriteLock", () => {
     }
   });
 
-  it("keeps fresh live .jsonl lock files with OpenClaw or unknown owners", async () => {
-    const root = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-lock-"));
+  it("keeps fresh live .jsonl lock files with GrokBot or unknown owners", async () => {
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-lock-"));
     const sessionsDir = path.join(root, "sessions");
     await fs.mkdir(sessionsDir, { recursive: true });
 
     const nowMs = Date.now();
-    const openclawLock = path.join(sessionsDir, "openclaw-live.jsonl.lock");
+    const openclawLock = path.join(sessionsDir, "grokbot-live.jsonl.lock");
     const gatewayLock = path.join(sessionsDir, "gateway-live.jsonl.lock");
     const unknownLock = path.join(sessionsDir, "unknown-live.jsonl.lock");
 
@@ -1171,7 +1171,7 @@ describe("acquireSessionWriteLock", () => {
         staleMs: 30_000,
         nowMs,
         removeStale: true,
-        readOwnerProcessArgs: () => ["node", "/opt/openclaw/openclaw.mjs", "agent"],
+        readOwnerProcessArgs: () => ["node", "/opt/grokbot/grokbot.mjs", "agent"],
       });
 
       expect(openclawResult.cleaned).toEqual([]);
@@ -1223,7 +1223,7 @@ describe("acquireSessionWriteLock", () => {
 
   it("cleans untracked current-process .jsonl lock files with matching starttime", async () => {
     pinCurrentProcessStartTimeForTest();
-    const root = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-lock-"));
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-lock-"));
     const sessionsDir = path.join(root, "sessions");
     await fs.mkdir(sessionsDir, { recursive: true });
 
@@ -1305,7 +1305,7 @@ describe("acquireSessionWriteLock", () => {
     process.kill = ((_pid: number, _signal?: NodeJS.Signals) => true) as typeof process.kill;
     try {
       for (const signal of signals) {
-        const root = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-lock-cleanup-"));
+        const root = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-lock-cleanup-"));
         try {
           const sessionFile = path.join(root, "sessions.json");
           const lockPath = `${sessionFile}.lock`;
@@ -1382,7 +1382,7 @@ describe("acquireSessionWriteLock", () => {
     expect(testing.cleanupSignals).toContain("SIGABRT");
   });
   it("cleans up locks on SIGINT without removing other handlers", async () => {
-    const root = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-lock-"));
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-lock-"));
     const originalKill = process.kill.bind(process);
     const killCalls: Array<NodeJS.Signals | undefined> = [];
     let otherHandlerCalled = false;

@@ -1,5 +1,5 @@
-import { isHttpsUrl, isHttpUrl } from "@openclaw/net-policy/url-protocol";
-import { normalizeLowercaseStringOrEmpty } from "@openclaw/normalization-core/string-coerce";
+import { isHttpsUrl, isHttpUrl } from "@grokbot/net-policy/url-protocol";
+import { normalizeLowercaseStringOrEmpty } from "@grokbot/normalization-core/string-coerce";
 import { z } from "zod";
 import { base64UrlDecode, normalizeEd25519PublicKeyBase64Url } from "../infra/ed25519-signature.js";
 import type { GatewayRemoteConfig } from "./types.gateway.js";
@@ -34,7 +34,7 @@ export const TailscaleServiceNameSchema = z
   .string()
   .regex(/^svc:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$/, {
     message:
-      'Tailscale serviceName must use the "svc:<dns-label>" format, for example "svc:openclaw"',
+      'Tailscale serviceName must use the "svc:<dns-label>" format, for example "svc:grokbot"',
   });
 
 export const SecuritySchema = z
@@ -378,7 +378,7 @@ const McpServerSchema = z
       const disabled = Reflect.get(data, "disabled") as unknown;
       const replacement =
         typeof disabled === "boolean"
-          ? `"enabled: ${!disabled}" instead, then run "openclaw doctor --fix" to migrate existing config`
+          ? `"enabled: ${!disabled}" instead, then run "grokbot doctor --fix" to migrate existing config`
           : 'the canonical "enabled" boolean instead';
       ctx.addIssue({
         code: z.ZodIssueCode.custom,

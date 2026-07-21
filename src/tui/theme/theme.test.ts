@@ -1,8 +1,8 @@
 // TUI theme tests cover theme defaults and environment-driven variants.
 
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import chalk from "chalk";
-import { importFreshModule } from "openclaw/plugin-sdk/test-fixtures";
+import { importFreshModule } from "grokbot/plugin-sdk/test-fixtures";
 import { afterAll, afterEach, describe, expect, it } from "vitest";
 
 const originalChalkLevel = chalk.level;

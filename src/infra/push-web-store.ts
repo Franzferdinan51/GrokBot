@@ -1,11 +1,11 @@
 // Canonical shared-SQLite store for Web Push subscriptions and VAPID identity.
 import type { Insertable, Selectable } from "kysely";
-import type { DB as OpenClawStateKyselyDatabase } from "../state/openclaw-state-db.generated.js";
+import type { DB as OpenClawStateKyselyDatabase } from "../state/grokbot-state-db.generated.js";
 import {
   openOpenClawStateDatabase,
   runOpenClawStateWriteTransaction,
   type OpenClawStateDatabaseOptions,
-} from "../state/openclaw-state-db.js";
+} from "../state/grokbot-state-db.js";
 import { sha256HexPrefix } from "./crypto-digest.js";
 import {
   executeSqliteQuerySync,
@@ -14,7 +14,7 @@ import {
 } from "./kysely-sync.js";
 
 export const WEB_PUSH_VAPID_KEY_ID = "default";
-export const DEFAULT_WEB_PUSH_VAPID_SUBJECT = "https://openclaw.ai";
+export const DEFAULT_WEB_PUSH_VAPID_SUBJECT = "https://grokbot.ai";
 const WEB_PUSH_MAX_ENDPOINT_LENGTH = 2048;
 const WEB_PUSH_MAX_KEY_LENGTH = 512;
 

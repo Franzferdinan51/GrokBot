@@ -1,5 +1,5 @@
 import { consume } from "@lit/context";
-import { asNullableRecord as catalogRawRecord } from "@openclaw/normalization-core/record-coerce";
+import { asNullableRecord as catalogRawRecord } from "@grokbot/normalization-core/record-coerce";
 import { html, nothing } from "lit";
 import { property, state as litState } from "lit/decorators.js";
 import {
@@ -114,7 +114,7 @@ import {
   uiSessionEventMatches,
 } from "../../lib/sessions/session-key.ts";
 import { SessionUnreadPatchGuard } from "../../lib/sessions/unread.ts";
-import { OpenClawLightDomElement } from "../../lit/openclaw-element.ts";
+import { OpenClawLightDomElement } from "../../lit/grokbot-element.ts";
 import { PollController } from "../../lit/poll-controller.ts";
 import { SubscriptionsController } from "../../lit/subscriptions-controller.ts";
 import {
@@ -249,7 +249,7 @@ type ResolvedBoardView = {
 };
 
 const boardChatDockLayout = createDockPanelLayout({
-  storageKey: "openclaw.control.board-chat-dock.v1",
+  storageKey: "grokbot.control.board-chat-dock.v1",
   minHeight: 180,
   minWidth: 320,
   defaultDock: "right",
@@ -1875,7 +1875,7 @@ class ChatPane extends OpenClawLightDomElement {
     const title = t("chat.board.resetTitle");
     const description = t("chat.board.resetDescription");
     return html`
-      <openclaw-modal-dialog
+      <grokbot-modal-dialog
         label=${title}
         description=${description}
         @modal-cancel=${() => this.settleResetConfirmation(false)}
@@ -1905,7 +1905,7 @@ class ChatPane extends OpenClawLightDomElement {
             </button>
           </div>
         </div>
-      </openclaw-modal-dialog>
+      </grokbot-modal-dialog>
     `;
   }
 
@@ -2314,7 +2314,7 @@ class ChatPane extends OpenClawLightDomElement {
     if (
       board.hasBoard &&
       board.face === "dashboard" &&
-      !customElements.get("openclaw-board-view")
+      !customElements.get("grokbot-board-view")
     ) {
       void ensureBoardViewElement().then((loaded) => {
         if (loaded) {
@@ -2959,7 +2959,7 @@ class ChatPane extends OpenClawLightDomElement {
       state.sidebarContent.sessionKey === sessionKey;
     const label = t("chat.sessionDiscussion.show");
     return html`
-      <openclaw-tooltip .content=${label}>
+      <grokbot-tooltip .content=${label}>
         <button
           class="btn btn--ghost btn--icon chat-icon-btn chat-session-discussion-toggle"
           type="button"
@@ -2969,7 +2969,7 @@ class ChatPane extends OpenClawLightDomElement {
         >
           ${icons.messageSquare}
         </button>
-      </openclaw-tooltip>
+      </grokbot-tooltip>
     `;
   }
 
@@ -3514,13 +3514,13 @@ class ChatPane extends OpenClawLightDomElement {
   }
 }
 
-if (!customElements.get("openclaw-chat-pane")) {
-  customElements.define("openclaw-chat-pane", ChatPane);
+if (!customElements.get("grokbot-chat-pane")) {
+  customElements.define("grokbot-chat-pane", ChatPane);
 }
 
 declare global {
   interface HTMLElementTagNameMap {
-    "openclaw-chat-pane": ChatPane;
+    "grokbot-chat-pane": ChatPane;
   }
 }
 /* oxlint-disable max-lines -- TODO: split this grandfathered oversized file. */

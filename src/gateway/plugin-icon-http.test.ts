@@ -220,13 +220,13 @@ describe("GET /__openclaw__/plugin-icon/:pluginId", () => {
 
   it("accepts one canonical scoped plugin id encoded as a single path segment", async () => {
     const response = await request(
-      `/__openclaw__/plugin-icon/${encodeURIComponent("@expediagroup/expedia-openclaw")}`,
+      `/__openclaw__/plugin-icon/${encodeURIComponent("@expediagroup/expedia-grokbot")}`,
     );
 
     expect(response.status).toBe(200);
     expect(mocks.resolveIconUrl).toHaveBeenCalledWith({
       config: testConfig,
-      pluginId: "@expediagroup/expedia-openclaw",
+      pluginId: "@expediagroup/expedia-grokbot",
     });
   });
 
@@ -292,7 +292,7 @@ describe("GET /__openclaw__/plugin-icon/:pluginId", () => {
       void handlePluginIconHttpRequest(req, res, {
         auth: { mode: "token", token: "test-token", allowTailscale: false },
         config: {},
-        basePath: "/openclaw",
+        basePath: "/grokbot",
       }).then((handled) => {
         if (!handled) {
           res.statusCode = 404;
@@ -307,7 +307,7 @@ describe("GET /__openclaw__/plugin-icon/:pluginId", () => {
     try {
       const handledPort = (handledServer.address() as AddressInfo).port;
       const response = await fetch(
-        `http://127.0.0.1:${handledPort}/openclaw/__openclaw__/plugin-icon/firecrawl`,
+        `http://127.0.0.1:${handledPort}/grokbot/__openclaw__/plugin-icon/firecrawl`,
         { headers: { Authorization: "Bearer test-token" } },
       );
       expect(response.status).toBe(200);

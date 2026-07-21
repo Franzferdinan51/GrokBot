@@ -1,5 +1,5 @@
 // Whatsapp plugin module implements outbound test support behavior.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 
 export function createWhatsAppPollFixture() {
   const cfg = { marker: "resolved-cfg" } as OpenClawConfig;

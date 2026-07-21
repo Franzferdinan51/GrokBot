@@ -15,8 +15,8 @@ import {
 import type { CronJob } from "../cron/types.js";
 import { createEmptyPluginRegistry } from "../plugins/registry-empty.js";
 import { resetPluginRuntimeStateForTest, setActivePluginRegistry } from "../plugins/runtime.js";
-import { closeOpenClawAgentDatabasesForTest } from "../state/openclaw-agent-db.js";
-import { closeOpenClawStateDatabaseForTest } from "../state/openclaw-state-db.js";
+import { closeOpenClawAgentDatabasesForTest } from "../state/grokbot-agent-db.js";
+import { closeOpenClawStateDatabaseForTest } from "../state/grokbot-state-db.js";
 import { withStateDirEnv as withRawStateDirEnv } from "../test-helpers/state-dir-env.js";
 import { registerSessionAutomationSource } from "./session-automation-index.js";
 import { buildGatewaySessionEventFields } from "./session-event-payload.js";
@@ -369,7 +369,7 @@ describe("gateway session utils", () => {
       "agent:main:telegram:direct:42": {
         chatType: "direct",
         channel: "telegram",
-        origin: { label: "openclaw-tui" },
+        origin: { label: "grokbot-tui" },
         updatedAt: 2,
       } as SessionEntry,
       "agent:main:telegram:direct:99": {
@@ -384,13 +384,13 @@ describe("gateway session utils", () => {
       cfg,
       storePath: "",
       store,
-      opts: { search: "openclaw-tui" },
+      opts: { search: "grokbot-tui" },
     });
 
     expect(listed.sessions.map((session) => session.key)).toEqual([
       "agent:main:telegram:direct:42",
     ]);
-    expect(listed.sessions[0]?.displayName).toBe("openclaw-tui");
+    expect(listed.sessions[0]?.displayName).toBe("grokbot-tui");
   });
 
   test("session lists mark the final offset page without hasMore", () => {
@@ -829,7 +829,7 @@ describe("gateway session utils", () => {
           { id: "xhigh" },
           { id: "max" },
           ...(modelId.startsWith("gpt-5.6") &&
-          (agentRuntime === "openclaw" || !modelId.startsWith("gpt-5.6-luna"))
+          (agentRuntime === "grokbot" || !modelId.startsWith("gpt-5.6-luna"))
             ? [{ id: "ultra" as const }]
             : []),
         ],
@@ -857,20 +857,20 @@ describe("gateway session utils", () => {
 
     const codex = row({ sessionId: "codex", thinkingLevel: "ultra" } as SessionEntry);
     const openClawOverride = row({
-      sessionId: "openclaw",
+      sessionId: "grokbot",
       thinkingLevel: "ultra",
-      agentRuntimeOverride: "openclaw",
+      agentRuntimeOverride: "grokbot",
     } as SessionEntry);
     const legacyObservedOpenClaw = row({
-      sessionId: "legacy-observed-openclaw",
+      sessionId: "legacy-observed-grokbot",
       thinkingLevel: "ultra",
-      agentHarnessId: "openclaw",
+      agentHarnessId: "grokbot",
     } as SessionEntry);
     const lockedCodex = row({
       sessionId: "locked-codex",
       thinkingLevel: "ultra",
       agentHarnessId: "codex",
-      agentRuntimeOverride: "openclaw",
+      agentRuntimeOverride: "grokbot",
       modelSelectionLocked: true,
     } as SessionEntry);
 
@@ -878,7 +878,7 @@ describe("gateway session utils", () => {
     expect(codex.thinkingLevel).toBe("ultra");
     expect(codex.thinkingLevels?.map((level) => level.id)).not.toContain("ultra");
     expect(openClawOverride.thinkingLevel).toBe("ultra");
-    expect(openClawOverride.agentRuntime?.id).toBe("openclaw");
+    expect(openClawOverride.agentRuntime?.id).toBe("grokbot");
     expect(legacyObservedOpenClaw.thinkingLevel).toBe("ultra");
     expect(legacyObservedOpenClaw.agentRuntime?.id).toBe("codex");
     expect(legacyObservedOpenClaw.thinkingLevels?.map((level) => level.id)).not.toContain("ultra");
@@ -893,7 +893,7 @@ describe("gateway session utils", () => {
         defaults: {
           model: { primary: "openai/gpt-5.6-sol" },
           models: {
-            "openai/gpt-5.6-sol": { agentRuntime: { id: "openclaw" } },
+            "openai/gpt-5.6-sol": { agentRuntime: { id: "grokbot" } },
           },
         },
       },
@@ -954,7 +954,7 @@ describe("gateway session utils", () => {
       key: "agent:main:main",
       entry: {
         sessionId: "session-1",
-        sessionFile: "/tmp/openclaw/agents/main/sessions/session-1.jsonl",
+        sessionFile: "/tmp/grokbot/agents/main/sessions/session-1.jsonl",
         updatedAt: 1,
         contextBudgetStatus: {
           schemaVersion: 1,
@@ -1134,7 +1134,7 @@ describe("gateway session utils", () => {
     const entry = {
       chatType: "direct",
       channel: "telegram",
-      origin: { label: "openclaw-tui" },
+      origin: { label: "grokbot-tui" },
     } as SessionEntry;
     const row = buildGatewaySessionRow({
       cfg,
@@ -1143,7 +1143,7 @@ describe("gateway session utils", () => {
       key: "agent:main:telegram:direct:42",
       entry,
     });
-    expect(row.displayName).toBe("openclaw-tui");
+    expect(row.displayName).toBe("grokbot-tui");
   });
 
   test("buildGatewaySessionRow keeps dashboard sender identity out of the session title", () => {
@@ -1179,7 +1179,7 @@ describe("gateway session utils", () => {
       chatType: "group",
       channel: "telegram",
       subject: "Engineering",
-      origin: { label: "openclaw-tui" },
+      origin: { label: "grokbot-tui" },
     } as SessionEntry;
     const row = buildGatewaySessionRow({
       cfg,
@@ -1235,9 +1235,9 @@ describe("gateway session utils", () => {
       sessionId: "s1",
       updatedAt: 1,
       spawnedCwd: "/state/worktrees/abc/wt-1234",
-      worktree: { id: "wt-id", branch: "openclaw/wt-1234", repoRoot: "/repo" },
+      worktree: { id: "wt-id", branch: "grokbot/wt-1234", repoRoot: "/repo" },
       execNode: "macbook",
-      execCwd: "/Users/peter/Projects/openclaw",
+      execCwd: "/Users/peter/Projects/grokbot",
     } as SessionEntry;
     const row = buildGatewaySessionRow({
       cfg,
@@ -1246,9 +1246,9 @@ describe("gateway session utils", () => {
       key: "agent:main:dashboard:x",
       entry,
     });
-    expect(row.worktree).toEqual({ id: "wt-id", branch: "openclaw/wt-1234", repoRoot: "/repo" });
+    expect(row.worktree).toEqual({ id: "wt-id", branch: "grokbot/wt-1234", repoRoot: "/repo" });
     expect(row.execNode).toBe("macbook");
-    expect(row.execCwd).toBe("/Users/peter/Projects/openclaw");
+    expect(row.execCwd).toBe("/Users/peter/Projects/grokbot");
   });
 
   test("buildGatewaySessionRow prefers entry.label over origin.label for direct sessions", () => {
@@ -1257,7 +1257,7 @@ describe("gateway session utils", () => {
       chatType: "direct",
       channel: "telegram",
       label: "Alice",
-      origin: { label: "openclaw-tui" },
+      origin: { label: "grokbot-tui" },
     } as SessionEntry;
     const row = buildGatewaySessionRow({
       cfg,
@@ -1611,7 +1611,7 @@ describe("gateway session utils", () => {
   test("resolveGatewaySessionStoreTarget uses canonical key for main alias", () => {
     const storeTemplate = path.join(
       os.tmpdir(),
-      "openclaw-session-utils",
+      "grokbot-session-utils",
       "{agentId}",
       "sessions.json",
     );
@@ -2079,7 +2079,7 @@ describe("gateway session utils", () => {
   });
 
   test("listAgentsForGateway keeps explicit agents.list scope over disk-only agents (scope boundary)", async () => {
-    await withStateDirEnv("openclaw-agent-list-scope-", async ({ stateDir }) => {
+    await withStateDirEnv("grokbot-agent-list-scope-", async ({ stateDir }) => {
       fs.mkdirSync(path.join(stateDir, "agents", "main"), { recursive: true });
       fs.mkdirSync(path.join(stateDir, "agents", "codex"), { recursive: true });
 
@@ -2124,7 +2124,7 @@ describe("gateway session utils", () => {
   });
 
   test("listAgentsForGateway reports whether each workspace is a git checkout", () => {
-    const root = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-agent-workspace-git-"));
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-agent-workspace-git-"));
     const gitWorkspace = path.join(root, "git");
     const plainWorkspace = path.join(root, "plain");
     fs.mkdirSync(path.join(gitWorkspace, ".git"), { recursive: true });
@@ -2439,7 +2439,7 @@ describe("resolveSessionModelRef", () => {
 
 describe("listSessionsFromStore selected model display", () => {
   test("async list yields during bulk transcript title and last-message hydration", async () => {
-    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-sessions-list-yield-"));
+    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-sessions-list-yield-"));
     try {
       const storePath = path.join(tmpDir, "sessions.json");
       const store: Record<string, SessionEntry> = {};
@@ -2510,7 +2510,7 @@ describe("listSessionsFromStore selected model display", () => {
   });
 
   test("caps transcript title and last-message hydration for bulk list responses", async () => {
-    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-sessions-list-cap-"));
+    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-sessions-list-cap-"));
     try {
       const storePath = path.join(tmpDir, "sessions.json");
       const store: Record<string, SessionEntry> = {};

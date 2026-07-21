@@ -48,8 +48,8 @@ let viewerFacepileModuleLoad: Promise<unknown> | null = null;
 
 function scheduleSidebarChromeLoad() {
   if (
-    (lobsterPetModuleLoad || customElements.get("openclaw-lobster-pet")) &&
-    (viewerFacepileModuleLoad || customElements.get("openclaw-viewer-facepile"))
+    (lobsterPetModuleLoad || customElements.get("grokbot-lobster-pet")) &&
+    (viewerFacepileModuleLoad || customElements.get("grokbot-viewer-facepile"))
   ) {
     return;
   }
@@ -58,13 +58,13 @@ function scheduleSidebarChromeLoad() {
     // cache and retry when connectivity returns. The sidebar mounts once per
     // page, so without this a transient failure would disable the pet for the
     // whole session; a deploy-pruned chunk stays off until reload, by design.
-    if (!customElements.get("openclaw-lobster-pet")) {
+    if (!customElements.get("grokbot-lobster-pet")) {
       lobsterPetModuleLoad ??= import("./lobster-pet.ts").catch(() => {
         lobsterPetModuleLoad = null;
         window.addEventListener("online", () => start(), { once: true });
       });
     }
-    if (!customElements.get("openclaw-viewer-facepile")) {
+    if (!customElements.get("grokbot-viewer-facepile")) {
       viewerFacepileModuleLoad ??= import("./viewer-facepile.ts").catch(() => {
         viewerFacepileModuleLoad = null;
         window.addEventListener("online", () => start(), { once: true });
@@ -183,7 +183,7 @@ class AppSidebar extends AppSidebarSessionListElement {
     // keeps its separate offline-tolerant ⌘N mirror.
     return html`
       <div class="sidebar-brand">
-        <openclaw-sidebar-agent-card
+        <grokbot-sidebar-agent-card
           .agentName=${cardName}
           .avatarUrl=${cardAgent ? resolveAgentAvatarUrl(cardAgent) : null}
           .avatarText=${cardAvatarText}
@@ -195,9 +195,9 @@ class AppSidebar extends AppSidebarSessionListElement {
           .approvalCount=${approvalCount}
           .switcherAvailable=${cardAgents.length > 1}
           .onToggleMenu=${(trigger: HTMLElement) => this.toggleAgentMenu(trigger)}
-        ></openclaw-sidebar-agent-card>
+        ></grokbot-sidebar-agent-card>
         <div class="sidebar-brand__actions">
-          <openclaw-tooltip
+          <grokbot-tooltip
             .content=${this.connected
               ? t("chat.runControls.newSession")
               : t("chat.runControls.newSessionDisconnected")}
@@ -211,9 +211,9 @@ class AppSidebar extends AppSidebarSessionListElement {
             >
               ${icons.plus}
             </button>
-          </openclaw-tooltip>
+          </grokbot-tooltip>
           ${this.renderSearch()}
-          <openclaw-tooltip .content=${`${collapseLabel} (⌘B)`}>
+          <grokbot-tooltip .content=${`${collapseLabel} (⌘B)`}>
             <button
               class="sidebar-brand__icon sidebar-brand__collapse"
               type="button"
@@ -223,7 +223,7 @@ class AppSidebar extends AppSidebarSessionListElement {
             >
               ${icons.panelLeftClose}
             </button>
-          </openclaw-tooltip>
+          </grokbot-tooltip>
         </div>
       </div>
     `;
@@ -336,7 +336,7 @@ class AppSidebar extends AppSidebarSessionListElement {
             alt=""
             aria-hidden="true"
           />
-          <openclaw-lobster-logo-standin .visit=${this.logoVisit}></openclaw-lobster-logo-standin>
+          <grokbot-lobster-logo-standin .visit=${this.logoVisit}></grokbot-lobster-logo-standin>
         </span>
         ${selfUser && selfLabel
           ? html`<button
@@ -346,24 +346,24 @@ class AppSidebar extends AppSidebarSessionListElement {
               aria-label=${t("profilePage.identity.openSettings", { name: selfLabel })}
               @click=${() => this.onNavigate?.("profile", { hash: "#settings-profile-identity" })}
             >
-              <openclaw-viewer-avatar
+              <grokbot-viewer-avatar
                 .user=${{ ...selfUser, watchedSessions: [] }}
                 variant="footer"
-              ></openclaw-viewer-avatar>
+              ></grokbot-viewer-avatar>
               <span class="sidebar-footer-bar__identity-name">${selfLabel}</span>
             </button>`
           : nothing}
-        <openclaw-viewer-facepile
+        <grokbot-viewer-facepile
           .presencePayload=${this.presencePayload}
           .selfInstanceId=${this.presenceInstanceId}
           .maxVisible=${5}
           variant="footer"
-        ></openclaw-viewer-facepile>
-        <openclaw-sidebar-build-chip
+        ></grokbot-viewer-facepile>
+        <grokbot-sidebar-build-chip
           .basePath=${this.basePath}
           .gatewayVersion=${this.gatewayVersion}
           .onNavigate=${(routeId: "about") => this.onNavigate?.(routeId)}
-        ></openclaw-sidebar-build-chip>
+        ></grokbot-sidebar-build-chip>
         ${this.debouncedDisconnected
           ? html`<span
               class="sidebar-footer-bar__status"
@@ -375,7 +375,7 @@ class AppSidebar extends AppSidebarSessionListElement {
               )}</span
             >`
           : nothing}
-        <openclaw-tooltip .content=${t("nav.settings")}>
+        <grokbot-tooltip .content=${t("nav.settings")}>
           <button
             type="button"
             class="sidebar-footer-bar__settings"
@@ -384,7 +384,7 @@ class AppSidebar extends AppSidebarSessionListElement {
           >
             ${icons.settings}
           </button>
-        </openclaw-tooltip>
+        </grokbot-tooltip>
       </div>
     `;
   }
@@ -392,7 +392,7 @@ class AppSidebar extends AppSidebarSessionListElement {
   private renderSearch() {
     const tooltip = `${t("chat.openCommandPalette")} (${PALETTE_SHORTCUT})`;
     return html`
-      <openclaw-tooltip .content=${tooltip}>
+      <grokbot-tooltip .content=${tooltip}>
         <button
           type="button"
           class="sidebar-brand__icon sidebar-search"
@@ -402,7 +402,7 @@ class AppSidebar extends AppSidebarSessionListElement {
         >
           ${icons.search}
         </button>
-      </openclaw-tooltip>
+      </grokbot-tooltip>
     `;
   }
 
@@ -469,23 +469,23 @@ class AppSidebar extends AppSidebarSessionListElement {
             ${this.renderSessions()}
           </div>
           <div class="sidebar-shell__footer">
-            <openclaw-sidebar-attention
+            <grokbot-sidebar-attention
               .onNavigate=${(routeId: NavigationRouteId) => this.onNavigate?.(routeId)}
               .onOpenApprovals=${() => this.onOpenApprovals?.()}
-            ></openclaw-sidebar-attention>
-            <openclaw-sidebar-update-card
+            ></grokbot-sidebar-attention>
+            <grokbot-sidebar-update-card
               .updateAvailable=${this.updateAvailable}
               .updateRunning=${this.updateRunning}
               .onUpdate=${this.onUpdate}
-            ></openclaw-sidebar-update-card>
-            <openclaw-lobster-pet
+            ></grokbot-sidebar-update-card>
+            <grokbot-lobster-pet
               .seed=${lobsterPetSeed(this.sessionKey)}
               .mode=${resolveLobsterPetMode(this.connected, this.sessionsResult?.sessions)}
               .runOutcome=${resolveLobsterRunOutcome(this.sessionsResult?.sessions)}
               .visitsEnabled=${this.lobsterPetVisits}
               .soundsEnabled=${this.lobsterPetSounds}
               .gatewayVersion=${this.gatewayVersion}
-            ></openclaw-lobster-pet>
+            ></grokbot-lobster-pet>
             ${this.devGitBranch
               ? html`<div class="sidebar-footer-branch" title=${this.devGitBranch}>
                   <span class="sidebar-footer-branch__icon" aria-hidden="true"
@@ -505,6 +505,6 @@ class AppSidebar extends AppSidebarSessionListElement {
   }
 }
 
-if (!customElements.get("openclaw-app-sidebar")) {
-  customElements.define("openclaw-app-sidebar", AppSidebar);
+if (!customElements.get("grokbot-app-sidebar")) {
+  customElements.define("grokbot-app-sidebar", AppSidebar);
 }

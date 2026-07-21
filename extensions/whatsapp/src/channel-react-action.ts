@@ -1,7 +1,7 @@
 // Whatsapp plugin module implements channel react action behavior.
-import { readBooleanParam } from "openclaw/plugin-sdk/boolean-param";
-import { jsonResult } from "openclaw/plugin-sdk/channel-actions";
-import { canonicalizeBase64, estimateBase64DecodedBytes } from "openclaw/plugin-sdk/media-runtime";
+import { readBooleanParam } from "grokbot/plugin-sdk/boolean-param";
+import { jsonResult } from "grokbot/plugin-sdk/channel-actions";
+import { canonicalizeBase64, estimateBase64DecodedBytes } from "grokbot/plugin-sdk/media-runtime";
 import {
   isWhatsAppGroupJid,
   resolveAuthorizedWhatsAppOutboundTarget,

@@ -1,14 +1,14 @@
 // Line plugin module implements monitor behavior.
 import type { webhook } from "@line/bot-sdk";
-import { hasFinalInboundReplyDispatch } from "openclaw/plugin-sdk/channel-inbound";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { chunkMarkdownText } from "openclaw/plugin-sdk/reply-runtime";
+import { hasFinalInboundReplyDispatch } from "grokbot/plugin-sdk/channel-inbound";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { chunkMarkdownText } from "grokbot/plugin-sdk/reply-runtime";
 import {
   danger,
   logVerbose,
   waitForAbortSignal,
   type RuntimeEnv,
-} from "openclaw/plugin-sdk/runtime-env";
+} from "grokbot/plugin-sdk/runtime-env";
 import {
   isRequestBodyLimitError,
   normalizePluginHttpPath,
@@ -16,11 +16,11 @@ import {
   registerWebhookTargetWithPluginRoute,
   requestBodyErrorToText,
   resolveSingleWebhookTarget,
-} from "openclaw/plugin-sdk/webhook-ingress";
+} from "grokbot/plugin-sdk/webhook-ingress";
 import {
   beginWebhookRequestPipelineOrReject,
   createWebhookInFlightLimiter,
-} from "openclaw/plugin-sdk/webhook-request-guards";
+} from "grokbot/plugin-sdk/webhook-request-guards";
 import { resolveDefaultLineAccountId } from "./accounts.js";
 import { deliverLineAutoReply } from "./auto-reply-delivery.js";
 import { createLineBot } from "./bot.js";

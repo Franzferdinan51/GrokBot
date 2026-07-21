@@ -3,12 +3,12 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
-import { buildMarkdown, parseArgs } from "../../scripts/openclaw-performance-source-summary.mjs";
+import { buildMarkdown, parseArgs } from "../../scripts/grokbot-performance-source-summary.mjs";
 
 const tmpRoots: string[] = [];
 
 function mkTmpRoot() {
-  const root = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-source-summary-"));
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-source-summary-"));
   tmpRoots.push(root);
   return root;
 }
@@ -19,7 +19,7 @@ function writeJson(filePath: string, value: unknown) {
 }
 
 function runCli(...args: string[]) {
-  return spawnSync(process.execPath, ["scripts/openclaw-performance-source-summary.mjs", ...args], {
+  return spawnSync(process.execPath, ["scripts/grokbot-performance-source-summary.mjs", ...args], {
     cwd: path.resolve("."),
     encoding: "utf8",
   });

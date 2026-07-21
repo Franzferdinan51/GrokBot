@@ -173,6 +173,6 @@ export function detectOpenAICompletionsCompat(
 
 if (process.env.VITEST || process.env.NODE_ENV === "test") {
   (globalThis as Record<PropertyKey, unknown>)[
-    Symbol.for("openclaw.openAICompletionsCompatTestApi")
+    Symbol.for("grokbot.openAICompletionsCompatTestApi")
   ] = { resolveOpenAICompletionsCompatDefaults };
 }

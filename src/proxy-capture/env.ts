@@ -2,7 +2,7 @@
 import { randomUUID } from "node:crypto";
 import type { Agent } from "node:http";
 import process from "node:process";
-import { createAmbientNodeProxyAgent } from "@openclaw/proxyline";
+import { createAmbientNodeProxyAgent } from "@grokbot/proxyline";
 import {
   resolveDebugProxyBlobDir,
   resolveDebugProxyCertDir,
@@ -52,7 +52,7 @@ export function resolveDebugProxySettings(
     blobDir: resolveDebugProxyBlobDir(env),
     certDir: env[OPENCLAW_DEBUG_PROXY_CERT_DIR]?.trim() || resolveDebugProxyCertDir(env),
     sessionId,
-    sourceProcess: "openclaw",
+    sourceProcess: "grokbot",
   };
 }
 

@@ -50,7 +50,7 @@ export function buildInstallManifest(rootArchive, workspacePackages) {
   return {
     private: true,
     dependencies: {
-      openclaw: pathToFileURL(rootArchive).href,
+      grokbot: pathToFileURL(rootArchive).href,
       ...Object.fromEntries(
         workspacePackages.map(({ name, tarball }) => [name, pathToFileURL(tarball).href]),
       ),
@@ -144,7 +144,7 @@ function runChecked(command, args, options = {}) {
 
 function supportsPreparedRuntimePack(env) {
   const script = `
-    const mod = await import("./scripts/openclaw-prepack.ts");
+    const mod = await import("./scripts/grokbot-prepack.ts");
     process.exit(typeof mod.preparePrepackArtifacts === "function" ? 0 : 1);
   `;
   const result = runNpm(
@@ -168,7 +168,7 @@ function prepareRuntimePack(profile, env) {
     stdio: "inherit",
   });
   const script = `
-    const mod = await import("./scripts/openclaw-prepack.ts");
+    const mod = await import("./scripts/grokbot-prepack.ts");
     await mod.preparePrepackArtifacts();
   `;
   runChecked(process.execPath, ["--import", "tsx", "--input-type=module", "--eval", script], {
@@ -262,7 +262,7 @@ function patchRootArchiveWorkspaceDependencies(rootArchive, workspacePackages, o
   }
 
   writeFileSync(packageJsonPath, `${JSON.stringify(packageJson, null, 2)}\n`);
-  const patchedArchive = join(outputDir, "openclaw-root-patched.tgz");
+  const patchedArchive = join(outputDir, "grokbot-root-patched.tgz");
   runTar(["-czf", patchedArchive, "-C", unpackDir, "package"]);
   return patchedArchive;
 }
@@ -297,7 +297,7 @@ function main() {
     return result.status ?? 1;
   }
 
-  const packDir = mkdtempSync(join(tmpdir(), "openclaw-ocm-workspace-deps-"));
+  const packDir = mkdtempSync(join(tmpdir(), "grokbot-ocm-workspace-deps-"));
   try {
     const workspacePackages = packWorkspaceDependencies(npm, workspaceDirs, packDir);
     const rootArchive = patchRootArchiveWorkspaceDependencies(

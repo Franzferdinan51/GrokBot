@@ -2,7 +2,7 @@ import type { isEmbeddedAgentRunActive } from "../agents/embedded-agent.js";
 import type { loadSessionEntry } from "../config/sessions/session-accessor.js";
 import type { SessionEntry } from "../config/sessions/types.js";
 import type { SessionCatalogProvider, SessionUpstreamProbe } from "../plugins/session-catalog.js";
-import type { OpenClawStateDatabaseOptions } from "../state/openclaw-state-db.js";
+import type { OpenClawStateDatabaseOptions } from "../state/grokbot-state-db.js";
 import "./session-upstream-monitor.js";
 
 type SessionUpstreamMonitorOptions = OpenClawStateDatabaseOptions & {
@@ -30,7 +30,7 @@ type SessionUpstreamMonitorTestApi = {
 
 function getTestApi(): SessionUpstreamMonitorTestApi {
   return (globalThis as Record<PropertyKey, unknown>)[
-    Symbol.for("openclaw.sessionUpstreamMonitorTestApi")
+    Symbol.for("grokbot.sessionUpstreamMonitorTestApi")
   ] as SessionUpstreamMonitorTestApi;
 }
 

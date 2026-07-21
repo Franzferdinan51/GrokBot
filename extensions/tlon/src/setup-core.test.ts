@@ -1,7 +1,7 @@
 // Tlon tests cover non-interactive setup validation and config writes.
-import { DEFAULT_ACCOUNT_ID } from "openclaw/plugin-sdk/account-id";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { createNonExitingRuntimeEnv } from "openclaw/plugin-sdk/plugin-test-runtime";
+import { DEFAULT_ACCOUNT_ID } from "grokbot/plugin-sdk/account-id";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { createNonExitingRuntimeEnv } from "grokbot/plugin-sdk/plugin-test-runtime";
 import { describe, expect, it } from "vitest";
 import { tlonSetupAdapter } from "./setup-core.js";
 

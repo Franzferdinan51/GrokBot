@@ -1,18 +1,18 @@
 // Qqbot plugin module implements channel behavior.
-import { getExecApprovalReplyMetadata } from "openclaw/plugin-sdk/approval-runtime";
-import { buildChannelOutboundSessionRoute } from "openclaw/plugin-sdk/channel-core";
+import { getExecApprovalReplyMetadata } from "grokbot/plugin-sdk/approval-runtime";
+import { buildChannelOutboundSessionRoute } from "grokbot/plugin-sdk/channel-core";
 import {
   createMessageReceiptFromOutboundResults,
   defineChannelMessageAdapter,
   type ChannelMessageSendResult,
   type MessageReceiptPartKind,
-} from "openclaw/plugin-sdk/channel-outbound";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import type { ChannelPlugin } from "openclaw/plugin-sdk/core";
-import { createLazyRuntimeModule } from "openclaw/plugin-sdk/lazy-runtime";
+} from "grokbot/plugin-sdk/channel-outbound";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import type { ChannelPlugin } from "grokbot/plugin-sdk/core";
+import { createLazyRuntimeModule } from "grokbot/plugin-sdk/lazy-runtime";
 // Register the PlatformAdapter before any core/ module is used.
 import "./bridge/bootstrap.js";
-import { sanitizeAssistantVisibleText } from "openclaw/plugin-sdk/text-chunking";
+import { sanitizeAssistantVisibleText } from "grokbot/plugin-sdk/text-chunking";
 import { getQQBotApprovalCapability } from "./bridge/approval/capability.js";
 import { qqbotConfigAdapter, qqbotMeta, qqbotSetupAdapterShared } from "./bridge/config-shared.js";
 import {
@@ -268,7 +268,7 @@ export const qqbotPlugin: ChannelPlugin<ResolvedQQBotAccount> = {
      * Treat an account as configured when either the live config has
      * credentials OR a recoverable credential backup exists. This mirrors
      * the standalone plugin and lets the gateway survive a hot upgrade
-     * that wiped openclaw.json mid-flight.
+     * that wiped grokbot.json mid-flight.
      */
     isConfigured: (account: ResolvedQQBotAccount | undefined) => {
       if (qqbotConfigAdapter.isConfigured(account)) {
@@ -341,7 +341,7 @@ export const qqbotPlugin: ChannelPlugin<ResolvedQQBotAccount> = {
 
       // Recover credentials from the per-account backup if the live
       // config is missing appId/secret (e.g. a hot-upgrade wiped
-      // openclaw.json). We only restore when both fields are empty so a
+      // grokbot.json). We only restore when both fields are empty so a
       // user's intentional clear isn't silently undone.
       if (!account.appId || !account.clientSecret) {
         const backup = loadCredentialBackup(account.accountId);
@@ -390,7 +390,7 @@ export const qqbotPlugin: ChannelPlugin<ResolvedQQBotAccount> = {
             lastError: null,
           });
           // Snapshot credentials so we can recover from the next hot
-          // upgrade that might wipe openclaw.json mid-flight.
+          // upgrade that might wipe grokbot.json mid-flight.
           persistAccountCredentialSnapshot(account);
         },
         onResumed: () => {

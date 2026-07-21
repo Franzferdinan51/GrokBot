@@ -1,15 +1,15 @@
 ---
 summary: "Resolve Gateway secrets with the 1Password CLI and let agents use the bundled 1password skill"
 read_when:
-  - You want API keys out of openclaw.json and inside 1Password
+  - You want API keys out of grokbot.json and inside 1Password
   - You run the Gateway headless and need service account auth for op
   - You want agents to read or inject secrets with the op CLI
 title: "1Password"
 ---
 
-OpenClaw pairs with **1Password** in two independent ways:
+GrokBot pairs with **1Password** in two independent ways:
 
-- **Config secrets:** any [SecretRef](/gateway/secrets) field in `openclaw.json` can resolve through the `op` CLI at runtime, so API keys never live in the config file.
+- **Config secrets:** any [SecretRef](/gateway/secrets) field in `grokbot.json` can resolve through the `op` CLI at runtime, so API keys never live in the config file.
 - **Agent workflows:** the bundled `1password` skill teaches agents to sign in and read or inject secrets with `op` for their own tasks.
 
 ## Requirements
@@ -33,7 +33,7 @@ Declare an exec secret provider that runs `op read` with an `op://vault/item/fie
         command: "/opt/homebrew/bin/op",
         allowSymlinkCommand: true, // required for Homebrew symlinked binaries
         trustedDirs: ["/opt/homebrew"],
-        args: ["read", "op://Personal/OpenClaw QA API Key/password"],
+        args: ["read", "op://Personal/GrokBot QA API Key/password"],
         passEnv: ["HOME"],
         jsonOnly: false,
       },
@@ -54,7 +54,7 @@ Declare an exec secret provider that runs `op read` with an `op://vault/item/fie
 How the pieces fit:
 
 - `command` must be an absolute path; `trustedDirs` marks its directory as trusted, and `allowSymlinkCommand` is needed because Homebrew installs `op` as a symlink.
-- `args` carries the `op://vault/item/field` reference verbatim. OpenClaw does not parse the `op://` scheme itself; the `op` binary resolves it.
+- `args` carries the `op://vault/item/field` reference verbatim. GrokBot does not parse the `op://` scheme itself; the `op` binary resolves it.
 - `passEnv` forwards the listed variables from the Gateway environment. Desktop app integration needs `HOME`; service accounts also need `OP_SERVICE_ACCOUNT_TOKEN` present in the Gateway service environment (add it to `passEnv`, or set it via `env` only if you accept the token being readable in the config file).
 - For single-value output keep `id: "value"`. With `jsonOnly: true` and a JSON payload, address fields with a JSON pointer id instead.
 - One provider entry per secret keeps references auditable; name providers after their consumer (`onepassword_openai`, `onepassword_telegram`).
@@ -72,14 +72,14 @@ Service account reads require the vault to be named explicitly in the `op://` re
 
 ## The 1password skill for agents
 
-OpenClaw bundles a `1password` skill that turns agents into competent `op` operators: it detects the available auth mode (service account, desktop app integration, or standalone sign-in), verifies access with `op whoami` before reading anything, and prefers `op run` / `op inject` over writing secret values to disk. The skill requires the `op` binary and offers a Homebrew install when it is missing.
+GrokBot bundles a `1password` skill that turns agents into competent `op` operators: it detects the available auth mode (service account, desktop app integration, or standalone sign-in), verifies access with `op whoami` before reading anything, and prefers `op run` / `op inject` over writing secret values to disk. The skill requires the `op` binary and offers a Homebrew install when it is missing.
 
 Agents use it for their own workflows, for example reading a deploy token mid-task or injecting env vars into a command. It is independent of config secret resolution; the Gateway resolves SecretRefs without any skill involved.
 
 ## Security notes
 
 - Secret values resolved through exec providers stay in Gateway memory; config snapshots and `config.get` responses redact SecretRef fields.
-- Never place secret values in `openclaw.json`, logs, or chat. Keep item names in config, values in 1Password.
+- Never place secret values in `grokbot.json`, logs, or chat. Keep item names in config, values in 1Password.
 - The 1Password audit trail shows every service account read, which makes key rotation and incident review practical.
 
 ## Troubleshooting

@@ -8,7 +8,7 @@ import type { SessionCatalogProvider, SessionUpstreamProbe } from "../plugins/se
 import {
   closeOpenClawStateDatabaseForTest,
   openOpenClawStateDatabase,
-} from "../state/openclaw-state-db.js";
+} from "../state/grokbot-state-db.js";
 import { listSessionStateEventsSince, registerSessionStateWatch } from "./session-state-events.js";
 import {
   deleteSessionUpstreamLink,
@@ -25,7 +25,7 @@ function createMissingCounts() {
 }
 
 function createDatabaseOptions() {
-  const stateDir = makeTempDir(tempDirs, "openclaw-session-upstream-monitor-");
+  const stateDir = makeTempDir(tempDirs, "grokbot-session-upstream-monitor-");
   vi.stubEnv("OPENCLAW_STATE_DIR", stateDir);
   return { env: { ...process.env, OPENCLAW_STATE_DIR: stateDir } };
 }
@@ -647,7 +647,7 @@ describe("session upstream monitor", () => {
     expect(listSessionStateEventsSince(sessionKey, "main", 0, 20, database).events).toEqual([]);
   });
 
-  it("records an external prompt five seconds after OpenClaw activity", async () => {
+  it("records an external prompt five seconds after GrokBot activity", async () => {
     const database = createDatabaseOptions();
     const sessionKey = "agent:main:adopted:recent-external";
     createLink(sessionKey, "claude", database);
@@ -668,7 +668,7 @@ describe("session upstream monitor", () => {
       ],
       loadEntry: () => ({ sessionId: "session-external", lastActivityAt: 5_000 }) as never,
       isRunActive: () => false,
-      loadOwnRecentUserTexts: async () => ["OpenClaw prompt"],
+      loadOwnRecentUserTexts: async () => ["GrokBot prompt"],
     });
 
     expect(listSessionStateEventsSince(sessionKey, "main", 0, 20, database).events).toHaveLength(1);

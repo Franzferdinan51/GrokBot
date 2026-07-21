@@ -27,7 +27,7 @@ describe("resolveOAuthRefreshLockPath", () => {
   let stateDir = "";
 
   beforeEach(async () => {
-    stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-auth-lock-path-"));
+    stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-auth-lock-path-"));
     setTestEnvValue("OPENCLAW_STATE_DIR", stateDir);
   });
 
@@ -137,7 +137,7 @@ describe("resolveOAuthRefreshLockPath fuzz", () => {
   let stateDir = "";
 
   beforeEach(async () => {
-    stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-auth-lock-path-fuzz-"));
+    stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-auth-lock-path-fuzz-"));
     setTestEnvValue("OPENCLAW_STATE_DIR", stateDir);
   });
 

@@ -20,10 +20,10 @@ describe("createTempHomeEnv", () => {
     const previousUserProfile = process.env.USERPROFILE;
     const previousStateDir = process.env.OPENCLAW_STATE_DIR;
 
-    const tempHome = await createTempHomeEnv("openclaw-temp-home-");
+    const tempHome = await createTempHomeEnv("grokbot-temp-home-");
     expect(process.env.HOME).toBe(tempHome.home);
     expect(process.env.USERPROFILE).toBe(tempHome.home);
-    expect(process.env.OPENCLAW_STATE_DIR).toBe(path.join(tempHome.home, ".openclaw"));
+    expect(process.env.OPENCLAW_STATE_DIR).toBe(path.join(tempHome.home, ".grokbot"));
     const homeStat = await fs.stat(tempHome.home);
     expect(homeStat.isDirectory()).toBe(true);
 

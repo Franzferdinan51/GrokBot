@@ -9,11 +9,11 @@ import {
   waitForDiagnosticEventsDrained,
 } from "../../infra/diagnostic-events.js";
 import { executeSqliteQuerySync, getNodeSqliteKysely } from "../../infra/kysely-sync.js";
-import type { DB as OpenClawStateDatabase } from "../../state/openclaw-state-db.generated.js";
+import type { DB as OpenClawStateDatabase } from "../../state/grokbot-state-db.generated.js";
 import {
   closeOpenClawStateDatabaseForTest,
   openOpenClawStateDatabase,
-} from "../../state/openclaw-state-db.js";
+} from "../../state/grokbot-state-db.js";
 import { loadSkills } from "../loading/session.js";
 import {
   buildWorkspaceSkillSnapshot,
@@ -161,7 +161,7 @@ function addAppliedSkill(params: {
     scanState: "clean",
   });
   store.records.set(id, {
-    schema: "openclaw.skill-workshop.proposal.v1",
+    schema: "grokbot.skill-workshop.proposal.v1",
     id,
     kind,
     status: "applied",
@@ -203,7 +203,7 @@ function writeSkill(agentDir: string, key: string, name: string): void {
 }
 
 beforeEach(() => {
-  rootDir = fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-curator-")));
+  rootDir = fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-curator-")));
   stateDir = path.join(rootDir, "state-root");
   fs.mkdirSync(stateDir, { recursive: true });
   originalStateDir = process.env.OPENCLAW_STATE_DIR;
@@ -211,7 +211,7 @@ beforeEach(() => {
   store.entries.length = 0;
   store.records.clear();
   store.readManifest.mockReset().mockImplementation(async () => ({
-    schema: "openclaw.skill-workshop.proposals-manifest.v1",
+    schema: "grokbot.skill-workshop.proposals-manifest.v1",
     updatedAt: new Date(0).toISOString(),
     proposals: store.entries,
   }));
@@ -597,7 +597,7 @@ describe("skill curator lifecycle", () => {
       ).toContain("skill curator has not completed a sweep");
 
       resolveManifest?.({
-        schema: "openclaw.skill-workshop.proposals-manifest.v1",
+        schema: "grokbot.skill-workshop.proposals-manifest.v1",
         updatedAt: new Date(nowMs).toISOString(),
         proposals: [],
       });

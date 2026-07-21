@@ -18,7 +18,7 @@ vi.mock("../../packages/terminal-core/src/note.js", () => ({
 const tempDirs: string[] = [];
 
 async function makeTempRoot(): Promise<string> {
-  const root = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-heartbeat-template-"));
+  const root = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-heartbeat-template-"));
   tempDirs.push(root);
   return root;
 }
@@ -35,7 +35,7 @@ async function makeWorkspaceWithHeartbeat(content: string): Promise<{
 
 async function collectFindingsForContent(content: string) {
   return collectHeartbeatTemplateHealthFindings(
-    { agents: { defaults: { workspace: "/tmp/openclaw-heartbeat-template-test" } } },
+    { agents: { defaults: { workspace: "/tmp/grokbot-heartbeat-template-test" } } },
     { readFile: async () => content },
   );
 }
@@ -119,7 +119,7 @@ Keep this file empty unless you want a tiny checklist. Keep it small.
   it("recognizes the current docs page boilerplate template as repairable", async () => {
     const findings = await collectFindingsForContent(`# HEARTBEAT.md template
 
-\`HEARTBEAT.md\` lives in the agent workspace. Keep the file empty, or with only Markdown comments and headings, when you want OpenClaw to skip heartbeat model calls.
+\`HEARTBEAT.md\` lives in the agent workspace. Keep the file empty, or with only Markdown comments and headings, when you want GrokBot to skip heartbeat model calls.
 
 The default runtime template is:
 
@@ -214,7 +214,7 @@ Add short tasks below the comments only when you want the agent to check somethi
         severity: "warning",
         path: heartbeatPath,
         requirement: "legacy-template",
-        fixHint: expect.stringContaining("openclaw doctor --fix"),
+        fixHint: expect.stringContaining("grokbot doctor --fix"),
       }),
     ]);
   });

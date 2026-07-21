@@ -4,8 +4,8 @@
 import {
   buildChannelConfigSchema,
   buildMultiAccountChannelSchema,
-} from "openclaw/plugin-sdk/channel-config-schema";
-import { buildSecretInputSchema } from "openclaw/plugin-sdk/secret-input";
+} from "grokbot/plugin-sdk/channel-config-schema";
+import { buildSecretInputSchema } from "grokbot/plugin-sdk/secret-input";
 import { z } from "zod";
 
 const ClickClackAccountConfigSchema = z
@@ -45,7 +45,7 @@ const ClickClackConfigSchema = buildMultiAccountChannelSchema(ClickClackAccountC
 });
 
 /**
- * Config schema exported to core so `openclaw doctor` and config validation
+ * Config schema exported to core so `grokbot doctor` and config validation
  * understand both default and named ClickClack accounts.
  */
 export const clickClackConfigSchema = buildChannelConfigSchema(ClickClackConfigSchema);

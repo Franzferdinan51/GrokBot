@@ -15,17 +15,17 @@ import type {
   ChannelStatusIssue as ContractChannelStatusIssue,
   ChannelThreadingContext as ContractChannelThreadingContext,
   ChannelThreadingToolContext as ContractChannelThreadingToolContext,
-} from "openclaw/plugin-sdk/channel-contract";
+} from "grokbot/plugin-sdk/channel-contract";
 import type {
   ChannelMessageActionContext as CoreChannelMessageActionContext,
   OpenClawPluginApi as CoreOpenClawPluginApi,
   PluginRuntime as CorePluginRuntime,
-} from "openclaw/plugin-sdk/core";
+} from "grokbot/plugin-sdk/core";
 import type {
   GetReplyOptions as ReplyRuntimeGetReplyOptions,
   ReplyDispatchBeforeDeliverOptions as ReplyRuntimeBeforeDeliverOptions,
   ReplyDispatcher as ReplyRuntimeDispatcher,
-} from "openclaw/plugin-sdk/reply-runtime";
+} from "grokbot/plugin-sdk/reply-runtime";
 import ts from "typescript";
 import { beforeAll, describe, expect, expectTypeOf, it } from "vitest";
 import type { ChannelMessageActionContext } from "../../channels/plugins/types.public.js";
@@ -495,7 +495,7 @@ describe("plugin-sdk subpath exports", () => {
         resolve(REPO_ROOT, "test"),
       ],
       pattern:
-        /(?:from\s+|import\s+(?:type\s+)?|import\s*\(\s*)["']openclaw\/plugin-sdk\/channel-runtime(?=["'])/u,
+        /(?:from\s+|import\s+(?:type\s+)?|import\s*\(\s*)["']grokbot\/plugin-sdk\/channel-runtime(?=["'])/u,
       exclude: ["src/plugins/compat/registry.ts", "src/plugins/sdk-alias.test.ts"],
     });
   });
@@ -1318,23 +1318,23 @@ describe("plugin-sdk subpath exports", () => {
   });
 
   it("keeps runtime entry subpaths importable", async () => {
-    const coreSdk = await importResolvedPluginSdkSubpath("openclaw/plugin-sdk/core");
+    const coreSdk = await importResolvedPluginSdkSubpath("grokbot/plugin-sdk/core");
     const channelActionsSdk = await importResolvedPluginSdkSubpath(
-      "openclaw/plugin-sdk/channel-actions",
+      "grokbot/plugin-sdk/channel-actions",
     );
-    const pluginEntrySdk = await importResolvedPluginSdkSubpath("openclaw/plugin-sdk/plugin-entry");
+    const pluginEntrySdk = await importResolvedPluginSdkSubpath("grokbot/plugin-sdk/plugin-entry");
     const channelLifecycleSdk = await importResolvedPluginSdkSubpath(
-      "openclaw/plugin-sdk/channel-lifecycle",
+      "grokbot/plugin-sdk/channel-lifecycle",
     );
     const channelPairingSdk = await importResolvedPluginSdkSubpath(
-      "openclaw/plugin-sdk/channel-pairing",
+      "grokbot/plugin-sdk/channel-pairing",
     );
     const channelReplyPipelineSdk = await importResolvedPluginSdkSubpath(
-      "openclaw/plugin-sdk/channel-reply-pipeline",
+      "grokbot/plugin-sdk/channel-reply-pipeline",
     );
     const representativeModules = [];
     for (const id of representativeRuntimeSmokeSubpaths) {
-      representativeModules.push(await importResolvedPluginSdkSubpath(`openclaw/plugin-sdk/${id}`));
+      representativeModules.push(await importResolvedPluginSdkSubpath(`grokbot/plugin-sdk/${id}`));
     }
 
     expect(coreSdk.definePluginEntry).toBe(pluginEntrySdk.definePluginEntry);
@@ -1409,7 +1409,7 @@ describe("plugin-sdk subpath exports", () => {
 
   it("keeps repeated silent-token semantics visible through the reply-chunking subpath", async () => {
     const replyChunkingSdk = await importResolvedPluginSdkSubpath(
-      "openclaw/plugin-sdk/reply-chunking",
+      "grokbot/plugin-sdk/reply-chunking",
     );
 
     expect(replyChunkingSdk.isSilentReplyText("NO_REPLY\n\nNO_REPLY")).toBe(true);

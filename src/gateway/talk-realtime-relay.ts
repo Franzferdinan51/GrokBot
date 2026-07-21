@@ -1,7 +1,7 @@
 // Gateway Talk realtime relay.
 // Bridges browser Talk audio sessions with realtime voice provider plugins.
 import { randomUUID } from "node:crypto";
-import { resolveExpiresAtMsFromDurationMs } from "@openclaw/normalization-core/number-coercion";
+import { resolveExpiresAtMsFromDurationMs } from "@grokbot/normalization-core/number-coercion";
 import type { OpenClawConfig } from "../config/types.js";
 import { formatErrorMessage } from "../infra/errors.js";
 import type { RealtimeVoiceProviderPlugin } from "../plugins/types.js";
@@ -339,14 +339,14 @@ function isRelayAssistantEchoTranscript(session: RelaySession | undefined, text:
 }
 function buildForcedConsultCheckingPrompt(): string {
   return [
-    "Briefly tell the person that you are checking with OpenClaw.",
-    "Do not answer the request yet. Wait for the OpenClaw result before giving the actual answer.",
+    "Briefly tell the person that you are checking with GrokBot.",
+    "Do not answer the request yet. Wait for the GrokBot result before giving the actual answer.",
   ].join(" ");
 }
 
 function buildForcedConsultSpeechPrompt(text: string): string {
   return [
-    "OpenClaw finished checking. Speak this result naturally and concisely.",
+    "GrokBot finished checking. Speak this result naturally and concisely.",
     "Do not mention tool calls, JSON, or internal routing.",
     "",
     text,
@@ -356,7 +356,7 @@ function buildForcedConsultSpeechPrompt(text: string): string {
 function buildAlreadyDeliveredToolResult(): Record<string, string> {
   return {
     status: "already_delivered",
-    message: "OpenClaw already delivered this consult result internally. Do not repeat it.",
+    message: "GrokBot already delivered this consult result internally. Do not repeat it.",
   };
 }
 
@@ -502,7 +502,7 @@ function submitFinalProviderToolResult(params: {
       await params.session.bridge.submitToolResult(
         params.callId,
         buildRealtimeVoiceAgentCancelProviderResult(
-          "OpenClaw cancelled this consult before completion. Do not restart it.",
+          "GrokBot cancelled this consult before completion. Do not restart it.",
         ),
         suppressedToolResultOptions(params.session),
       );
@@ -915,7 +915,7 @@ export function createTalkRealtimeRelaySession(
           if (forcedConsult.kind === "already_delivered") {
             const result = relay.forcedConsults.isCancelled(forcedConsult.handle)
               ? buildRealtimeVoiceAgentCancelProviderResult(
-                  "OpenClaw cancelled this consult before completion. Do not restart it.",
+                  "GrokBot cancelled this consult before completion. Do not restart it.",
                 )
               : buildAlreadyDeliveredToolResult();
             return submitForcedConsultProviderResult(
@@ -1104,7 +1104,7 @@ function scheduleForcedAgentConsult(session: RelaySession | undefined, question:
       args: {
         question: handle.question,
         context:
-          "The realtime provider produced a final user transcript without invoking openclaw_agent_consult, so OpenClaw is forcing the consult for realtime Talk.",
+          "The realtime provider produced a final user transcript without invoking openclaw_agent_consult, so GrokBot is forcing the consult for realtime Talk.",
         responseStyle: "Reply in a concise spoken tone.",
       },
       talkEvent: session.talk.emit({
@@ -1307,7 +1307,7 @@ export function submitTalkRealtimeRelayToolResult(params: {
     }
     if (cancelled) {
       const providerResult = buildRealtimeVoiceAgentCancelProviderResult(
-        "OpenClaw cancelled this consult before completion. Do not restart it.",
+        "GrokBot cancelled this consult before completion. Do not restart it.",
       );
       const terminal: ForcedTerminalProviderResult = {
         result: providerResult,
@@ -1402,7 +1402,7 @@ export function submitTalkRealtimeRelayToolResult(params: {
   }
   if (cancelledAgentCall) {
     const providerResult = buildRealtimeVoiceAgentCancelProviderResult(
-      "OpenClaw cancelled this consult before completion. Do not restart it.",
+      "GrokBot cancelled this consult before completion. Do not restart it.",
     );
     const submitCancellation = () =>
       submitFinalProviderToolResult({

@@ -1,6 +1,6 @@
 // Verifies current plugin registry contribution snapshots.
 import { afterEach, describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import {
   clearCurrentPluginMetadataSnapshot,
   setCurrentPluginMetadataSnapshot,
@@ -18,7 +18,7 @@ afterEach(() => {
 function createPluginRecord(id: string, enabled: boolean): InstalledPluginIndex["plugins"][number] {
   return {
     pluginId: id,
-    manifestPath: `/plugins/${id}/openclaw.plugin.json`,
+    manifestPath: `/plugins/${id}/grokbot.plugin.json`,
     manifestHash: id,
     rootDir: `/plugins/${id}`,
     origin: "global",
@@ -99,7 +99,7 @@ describe("loadPluginManifestRegistryForPluginRegistry current snapshot", () => {
   it("reuses compatible current manifest metadata", () => {
     const config: OpenClawConfig = {};
     const env = {
-      HOME: "/tmp/openclaw-test-home",
+      HOME: "/tmp/grokbot-test-home",
       OPENCLAW_DISABLE_BUNDLED_PLUGINS: "1",
     };
     const workspaceDir = "/workspace";
@@ -145,7 +145,7 @@ describe("loadPluginManifestRegistryForPluginRegistry current snapshot", () => {
   it("does not reuse current metadata for explicit registry inputs or diagnostics", () => {
     const config: OpenClawConfig = {};
     const env = {
-      HOME: "/tmp/openclaw-test-home",
+      HOME: "/tmp/grokbot-test-home",
       OPENCLAW_DISABLE_BUNDLED_PLUGINS: "1",
     };
     const workspaceDir = "/workspace";

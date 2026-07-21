@@ -27,7 +27,7 @@ const logLevel = process.env.OPENCLAW_BUILD_VERBOSE ? "info" : "warn";
 const INEFFECTIVE_DYNAMIC_IMPORT_MARKER = "[INEFFECTIVE_DYNAMIC_IMPORT]";
 const UNRESOLVED_IMPORT_RE = /\[UNRESOLVED_IMPORT\]/;
 const ANSI_ESCAPE_RE = new RegExp(String.raw`\u001B\[[0-9;]*m`, "g");
-const DEPENDENCY_PATH_MARKERS = ["node_modules/", "openclaw-pnpm-node-modules/"];
+const DEPENDENCY_PATH_MARKERS = ["node_modules/", "grokbot-pnpm-node-modules/"];
 const HASHED_ROOT_JS_RE = /^(?<base>.+)-[A-Za-z0-9_-]+\.js$/u;
 const DEFAULT_CAPTURE_BYTES = 8 * 1024 * 1024;
 const DEFAULT_HEARTBEAT_MS = 30_000;
@@ -543,7 +543,7 @@ function tsdownBuildUsage() {
   return [
     "Usage: node scripts/tsdown-build.mjs [tsdown args...]",
     "",
-    "Builds OpenClaw with tsdown and validates emitted import diagnostics.",
+    "Builds GrokBot with tsdown and validates emitted import diagnostics.",
     "",
     "Options:",
     "  -h, --help  Show this help without starting tsdown.",

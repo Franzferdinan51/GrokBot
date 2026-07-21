@@ -1,9 +1,9 @@
 // Fireworks plugin module implements stream behavior.
-import type { StreamFn } from "openclaw/plugin-sdk/agent-core";
-import { streamSimple } from "openclaw/plugin-sdk/llm";
-import type { ProviderWrapStreamFnContext } from "openclaw/plugin-sdk/plugin-entry";
-import { normalizeProviderId } from "openclaw/plugin-sdk/provider-model-shared";
-import { streamWithPayloadPatch } from "openclaw/plugin-sdk/provider-stream-shared";
+import type { StreamFn } from "grokbot/plugin-sdk/agent-core";
+import { streamSimple } from "grokbot/plugin-sdk/llm";
+import type { ProviderWrapStreamFnContext } from "grokbot/plugin-sdk/plugin-entry";
+import { normalizeProviderId } from "grokbot/plugin-sdk/provider-model-shared";
+import { streamWithPayloadPatch } from "grokbot/plugin-sdk/provider-stream-shared";
 import { isFireworksKimiModelId } from "./model-id.js";
 
 function isFireworksProviderId(providerId: string): boolean {

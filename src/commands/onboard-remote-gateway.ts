@@ -6,7 +6,7 @@ import type {
   SystemAgentSetupDetectResult,
   SystemAgentSetupVerifyResult,
 } from "../../packages/gateway-protocol/src/index.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import type { CallGatewayCliOptions } from "../gateway/call.js";
 import { defaultRuntime, type RuntimeEnv } from "../runtime.js";
 import type {
@@ -171,7 +171,7 @@ function assertVerifiedActivation(params: {
 
 /**
  * Configure missing inference on the selected remote Gateway, then let that
- * Gateway's OpenClaw finish setup before handing off to its normal TUI.
+ * Gateway's GrokBot finish setup before handing off to its normal TUI.
  * The local config is routing input only; every setup mutation runs through
  * Gateway RPC.
  */
@@ -209,7 +209,7 @@ export async function runRemoteGatewayInferenceOnboarding(
 
   const detect = async (): Promise<SetupInferenceDetection> => {
     const result = await request<SystemAgentSetupDetectResult>({
-      method: "openclaw.setup.detect",
+      method: "grokbot.setup.detect",
       payload: {},
       timeoutMs: GATEWAY_SETUP_DETECT_TIMEOUT_MS,
     });
@@ -222,7 +222,7 @@ export async function runRemoteGatewayInferenceOnboarding(
     params: ActivateSetupInferenceParams,
   ): Promise<ActivateSetupInferenceResult> => {
     const result = await request<SystemAgentSetupActivateResult>({
-      method: "openclaw.setup.activate",
+      method: "grokbot.setup.activate",
       payload: {
         kind: params.kind,
         ...(params.modelRef !== undefined ? { modelRef: params.modelRef } : {}),
@@ -237,7 +237,7 @@ export async function runRemoteGatewayInferenceOnboarding(
       return activation;
     }
     const verification = await request<SystemAgentSetupVerifyResult>({
-      method: "openclaw.setup.verify",
+      method: "grokbot.setup.verify",
       payload: {},
       timeoutMs: GATEWAY_SETUP_VERIFY_TIMEOUT_MS,
     });
@@ -262,10 +262,10 @@ export async function runRemoteGatewayInferenceOnboarding(
         import("../wizard/clack-prompter.js").then(({ createClackPrompter }) =>
           createClackPrompter(),
         ));
-      await prompter.intro("OpenClaw");
+      await prompter.intro("GrokBot");
       const sessionId = randomUUID();
       let reply = await request<SystemAgentChatResult>({
-        method: "openclaw.chat",
+        method: "grokbot.chat",
         payload: { sessionId, welcomeVariant: "onboarding" },
         timeoutMs: GATEWAY_SYSTEM_AGENT_CHAT_TIMEOUT_MS,
       });
@@ -273,9 +273,9 @@ export async function runRemoteGatewayInferenceOnboarding(
       let agentDraft: SystemAgentChatResult["agentDraft"];
       try {
         for (;;) {
-          await prompter.note(reply.reply, "OpenClaw");
+          await prompter.note(reply.reply, "GrokBot");
           if (reply.action === "exit") {
-            await prompter.outro("OpenClaw setup finished.");
+            await prompter.outro("GrokBot setup finished.");
             return;
           }
           if (reply.action === "open-agent") {
@@ -284,19 +284,19 @@ export async function runRemoteGatewayInferenceOnboarding(
             break;
           }
           const message = await prompter.text({
-            message: "Reply to OpenClaw",
+            message: "Reply to GrokBot",
             ...(reply.sensitive ? { sensitive: true } : {}),
             validate: (value) => (value.trim() ? undefined : "Required"),
           });
           reply = await request<SystemAgentChatResult>({
-            method: "openclaw.chat",
+            method: "grokbot.chat",
             payload: { sessionId, message },
             timeoutMs: GATEWAY_SYSTEM_AGENT_CHAT_TIMEOUT_MS,
           });
         }
       } catch (error) {
         if (error instanceof WizardCancelledError) {
-          await prompter.outro("OpenClaw setup paused.");
+          await prompter.outro("GrokBot setup paused.");
           return;
         }
         throw error;

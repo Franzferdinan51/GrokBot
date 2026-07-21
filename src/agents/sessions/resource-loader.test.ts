@@ -41,7 +41,7 @@ afterEach(() => {
 
 describe("DefaultResourceLoader", () => {
   it("reuses extension modules between loaders and refreshes them on reload", async () => {
-    const root = tempDirs.make("openclaw-resource-loader-extension-");
+    const root = tempDirs.make("grokbot-resource-loader-extension-");
     const extensionPath = join(root, "extension.ts");
     await writeFile(extensionPath, extensionSource("before-reload"));
     const createLoader = () =>
@@ -72,7 +72,7 @@ describe("DefaultResourceLoader", () => {
   });
 
   it("does not use unreadable prompt file paths as prompt content", async () => {
-    const root = tempDirs.make("openclaw-resource-loader-");
+    const root = tempDirs.make("grokbot-resource-loader-");
     const consoleError = vi.spyOn(console, "error").mockImplementation(() => {});
     try {
       const loader = new DefaultResourceLoader({

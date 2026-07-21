@@ -5,8 +5,8 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { URL } from "node:url";
-import { detectMime } from "@openclaw/media-core/mime";
-import { formatByteSize } from "@openclaw/normalization-core";
+import { detectMime } from "@grokbot/media-core/mime";
+import { formatByteSize } from "@grokbot/normalization-core";
 import { isWindowsDrivePath } from "../infra/archive-path.js";
 import { toErrorObject } from "../infra/errors.js";
 import {
@@ -753,9 +753,9 @@ function withWorkspaceSafeTempHint(error: unknown): unknown {
   if (!isSandboxRootEscapeError(error)) {
     return error;
   }
-  const message = error.message.includes(".openclaw/tmp/")
+  const message = error.message.includes(".grokbot/tmp/")
     ? error.message
-    : `${error.message}. Use a relative path under \`.openclaw/tmp/\` inside the workspace for scratch/temp/meta files that file tools need to read or write later.`;
+    : `${error.message}. Use a relative path under \`.grokbot/tmp/\` inside the workspace for scratch/temp/meta files that file tools need to read or write later.`;
   return new Error(message, { cause: error });
 }
 
@@ -884,7 +884,7 @@ type SandboxToolParams = {
   imageSanitization?: ImageSanitizationLimits;
 };
 
-/** Create a sandbox-backed read tool with OpenClaw result normalization. */
+/** Create a sandbox-backed read tool with GrokBot result normalization. */
 export function createSandboxedReadTool(params: SandboxToolParams) {
   const base = createReadTool(params.root, {
     operations: createSandboxReadOperations(params),
@@ -927,7 +927,7 @@ export function createHostWorkspaceEditTool(root: string, options?: { workspaceO
   return wrapToolParamValidation(base, REQUIRED_PARAM_GROUPS.edit);
 }
 
-/** Wrap the base read tool with OpenClaw paging, MIME, and image handling. */
+/** Wrap the base read tool with GrokBot paging, MIME, and image handling. */
 export function createOpenClawReadTool(
   base: AnyAgentTool,
   options?: OpenClawReadToolOptions,

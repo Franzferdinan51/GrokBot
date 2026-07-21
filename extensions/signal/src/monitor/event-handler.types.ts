@@ -1,14 +1,14 @@
-import type { StatusReactionTiming } from "openclaw/plugin-sdk/channel-feedback";
+import type { StatusReactionTiming } from "grokbot/plugin-sdk/channel-feedback";
 // Signal type declarations define plugin contracts.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import type {
   DmPolicy,
   GroupPolicy,
   SignalReactionNotificationMode,
-} from "openclaw/plugin-sdk/config-contracts";
-import type { HistoryEntry } from "openclaw/plugin-sdk/reply-history";
-import type { ReplyPayload } from "openclaw/plugin-sdk/reply-runtime";
-import type { RuntimeEnv } from "openclaw/plugin-sdk/runtime-env";
+} from "grokbot/plugin-sdk/config-contracts";
+import type { HistoryEntry } from "grokbot/plugin-sdk/reply-history";
+import type { ReplyPayload } from "grokbot/plugin-sdk/reply-runtime";
+import type { RuntimeEnv } from "grokbot/plugin-sdk/runtime-env";
 import type { SignalSender } from "../identity.js";
 
 export type SignalEnvelope = {

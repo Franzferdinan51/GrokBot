@@ -3,8 +3,8 @@ run_plugins_clawhub_scenario() {
     echo "Skipping ClawHub plugin install and uninstall (OPENCLAW_PLUGINS_E2E_CLAWHUB=0)."
   else
     echo "Testing ClawHub plugin install and uninstall..."
-    CLAWHUB_PLUGIN_SPEC="${OPENCLAW_PLUGINS_E2E_CLAWHUB_SPEC:-clawhub:@openclaw/kitchen-sink}"
-    CLAWHUB_PLUGIN_ID="${OPENCLAW_PLUGINS_E2E_CLAWHUB_ID:-openclaw-kitchen-sink-fixture}"
+    CLAWHUB_PLUGIN_SPEC="${OPENCLAW_PLUGINS_E2E_CLAWHUB_SPEC:-clawhub:@grokbot/kitchen-sink}"
+    CLAWHUB_PLUGIN_ID="${OPENCLAW_PLUGINS_E2E_CLAWHUB_ID:-grokbot-kitchen-sink-fixture}"
     export CLAWHUB_PLUGIN_SPEC CLAWHUB_PLUGIN_ID
 
     start_clawhub_fixture_server() {
@@ -46,7 +46,7 @@ run_plugins_clawhub_scenario() {
         echo "Ignoring ambient ClawHub URL for fixture-mode plugin E2E; set OPENCLAW_PLUGINS_E2E_LIVE_CLAWHUB=1 for live ClawHub."
       fi
       unset OPENCLAW_CLAWHUB_URL CLAWHUB_URL
-      clawhub_fixture_dir="$(mktemp -d "$OPENCLAW_PLUGINS_TMP_DIR/openclaw-clawhub-fixture.XXXXXX")"
+      clawhub_fixture_dir="$(mktemp -d "$OPENCLAW_PLUGINS_TMP_DIR/grokbot-clawhub-fixture.XXXXXX")"
       local fixture_status=0
       start_clawhub_fixture_server "$clawhub_fixture_dir" || fixture_status="$?"
       if [[ "$fixture_status" -ne 0 ]]; then

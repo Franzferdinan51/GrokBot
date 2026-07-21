@@ -35,8 +35,8 @@ function shouldIncludeOptionalBundledClusters(env = process.env) {
 
 function hasReleasedBundledInstall(packageJson) {
   return (
-    typeof packageJson?.openclaw?.install?.npmSpec === "string" &&
-    packageJson.openclaw.install.npmSpec.trim().length > 0
+    typeof packageJson?.grokbot?.install?.npmSpec === "string" &&
+    packageJson.grokbot.install.npmSpec.trim().length > 0
   );
 }
 

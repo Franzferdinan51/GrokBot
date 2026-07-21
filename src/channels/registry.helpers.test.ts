@@ -1,6 +1,6 @@
 // Registry helper tests cover channel registry fixtures and lookup helpers.
 
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { afterEach, describe, expect, it } from "vitest";
 import { createEmptyPluginRegistry } from "../plugins/registry-empty.js";
 import {
@@ -66,19 +66,19 @@ describe("channel registry helpers", () => {
     const line = formatChannelSelectionLine(telegram, formatTestLink);
     expect(line).not.toContain("Docs:");
     expect(line).toContain("/channels/telegram");
-    expect(line).toContain("https://openclaw.ai");
+    expect(line).toContain("https://grokbot.ai");
   });
 
   it("prefers the pinned channel registry when resolving registered plugin channels", () => {
-    const startupRegistry = createRegistryWithRegisteredChannel("openclaw-weixin", ["weixin"]);
+    const startupRegistry = createRegistryWithRegisteredChannel("grokbot-weixin", ["weixin"]);
     setActivePluginRegistry(startupRegistry);
     pinActivePluginChannelRegistry(startupRegistry);
 
     const replacementRegistry = createRegistryWithRegisteredChannel("qqbot", ["qq"]);
     setActivePluginRegistry(replacementRegistry);
 
-    expect(listRegisteredChannelPluginIds()).toEqual(["openclaw-weixin"]);
-    expect(normalizeAnyChannelId("weixin")).toBe("openclaw-weixin");
+    expect(listRegisteredChannelPluginIds()).toEqual(["grokbot-weixin"]);
+    expect(normalizeAnyChannelId("weixin")).toBe("grokbot-weixin");
     expect(getRegisteredChannelPluginMeta("OPENCLAW-WEIXIN")?.aliases).toEqual(["weixin"]);
   });
 

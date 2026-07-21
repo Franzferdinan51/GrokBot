@@ -1,14 +1,14 @@
 ---
-summary: "Run OpenClaw Gateway 24/7 on a cheap Hetzner VPS (Docker) with durable state and baked-in binaries"
+summary: "Run GrokBot Gateway 24/7 on a cheap Hetzner VPS (Docker) with durable state and baked-in binaries"
 read_when:
-  - You want OpenClaw running 24/7 on a cloud VPS (not your laptop)
+  - You want GrokBot running 24/7 on a cloud VPS (not your laptop)
   - You want a production-grade, always-on Gateway on your own VPS
   - You want full control over persistence, binaries, and restart behavior
-  - You are running OpenClaw in Docker on Hetzner or a similar provider
+  - You are running GrokBot in Docker on Hetzner or a similar provider
 title: "Hetzner"
 ---
 
-Run a persistent OpenClaw Gateway on a Hetzner VPS using Docker, with durable state, baked-in binaries, and safe restart behavior.
+Run a persistent GrokBot Gateway on a Hetzner VPS using Docker, with durable state, baked-in binaries, and safe restart behavior.
 
 Hetzner pricing changes; pick the smallest Debian/Ubuntu VPS that fits and scale up if you hit OOMs.
 
@@ -37,7 +37,7 @@ This guide assumes Ubuntu or Debian on Hetzner. On another Linux VPS, map packag
 
 1. Provision Hetzner VPS
 2. Install Docker
-3. Clone the OpenClaw repository
+3. Clone the GrokBot repository
 4. Create persistent host directories
 5. Configure `.env` and `docker-compose.yml`
 6. Bake required binaries into the image
@@ -72,10 +72,10 @@ This guide assumes Ubuntu or Debian on Hetzner. On another Linux VPS, map packag
 
   </Step>
 
-  <Step title="Clone the OpenClaw repository">
+  <Step title="Clone the GrokBot repository">
     ```bash
-    git clone https://github.com/openclaw/openclaw.git
-    cd openclaw
+    git clone https://github.com/grokbot/grokbot.git
+    cd grokbot
     ```
 
     This guide builds a custom image so any binaries you bake in survive restarts.
@@ -86,10 +86,10 @@ This guide assumes Ubuntu or Debian on Hetzner. On another Linux VPS, map packag
     Docker containers are ephemeral; all long-lived state must live on the host.
 
     ```bash
-    mkdir -p /root/.openclaw/workspace
+    mkdir -p /root/.grokbot/workspace
 
     # Set ownership to the container user (uid 1000):
-    chown -R 1000:1000 /root/.openclaw
+    chown -R 1000:1000 /root/.grokbot
     ```
 
   </Step>
@@ -98,21 +98,21 @@ This guide assumes Ubuntu or Debian on Hetzner. On another Linux VPS, map packag
     Create `.env` in the repository root:
 
     ```bash
-    OPENCLAW_IMAGE=openclaw:latest
+    OPENCLAW_IMAGE=grokbot:latest
     OPENCLAW_GATEWAY_TOKEN=
     OPENCLAW_GATEWAY_BIND=lan
     OPENCLAW_GATEWAY_PORT=18789
 
-    OPENCLAW_CONFIG_DIR=/root/.openclaw
-    OPENCLAW_WORKSPACE_DIR=/root/.openclaw/workspace
+    OPENCLAW_CONFIG_DIR=/root/.grokbot
+    OPENCLAW_WORKSPACE_DIR=/root/.grokbot/workspace
 
     GOG_KEYRING_PASSWORD=
-    XDG_CONFIG_HOME=/home/node/.openclaw
+    XDG_CONFIG_HOME=/home/node/.grokbot
     ```
 
     Set `OPENCLAW_GATEWAY_TOKEN` to manage the stable gateway token through
     `.env`; otherwise configure `gateway.auth.token` before relying on clients
-    across restarts. If neither is set, OpenClaw uses a runtime-only token for
+    across restarts. If neither is set, GrokBot uses a runtime-only token for
     that startup. Generate a keyring password for `GOG_KEYRING_PASSWORD`:
 
     ```bash
@@ -121,7 +121,7 @@ This guide assumes Ubuntu or Debian on Hetzner. On another Linux VPS, map packag
 
     **Do not commit this file.** It holds container/runtime env such as
     `OPENCLAW_GATEWAY_TOKEN`. Stored provider OAuth/API-key auth lives in the
-    mounted `~/.openclaw/agents/<agentId>/agent/auth-profiles.json`.
+    mounted `~/.grokbot/agents/<agentId>/agent/auth-profiles.json`.
 
   </Step>
 
@@ -130,7 +130,7 @@ This guide assumes Ubuntu or Debian on Hetzner. On another Linux VPS, map packag
 
     ```yaml
     services:
-      openclaw-gateway:
+      grokbot-gateway:
         image: ${OPENCLAW_IMAGE}
         build: .
         restart: unless-stopped
@@ -147,8 +147,8 @@ This guide assumes Ubuntu or Debian on Hetzner. On another Linux VPS, map packag
           - XDG_CONFIG_HOME=${XDG_CONFIG_HOME}
           - PATH=/home/linuxbrew/.linuxbrew/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
         volumes:
-          - ${OPENCLAW_CONFIG_DIR}:/home/node/.openclaw
-          - ${OPENCLAW_WORKSPACE_DIR}:/home/node/.openclaw/workspace
+          - ${OPENCLAW_CONFIG_DIR}:/home/node/.grokbot
+          - ${OPENCLAW_WORKSPACE_DIR}:/home/node/.grokbot/workspace
         ports:
           # Recommended: keep the Gateway loopback-only on the VPS; access via SSH tunnel.
           # To expose it publicly, remove the `127.0.0.1:` prefix and firewall accordingly.
@@ -222,8 +222,8 @@ For teams preferring infrastructure-as-code workflows, a community-maintained Te
 
 **Repositories:**
 
-- Infrastructure: [openclaw-terraform-hetzner](https://github.com/andreesg/openclaw-terraform-hetzner)
-- Docker config: [openclaw-docker-config](https://github.com/andreesg/openclaw-docker-config)
+- Infrastructure: [grokbot-terraform-hetzner](https://github.com/andreesg/grokbot-terraform-hetzner)
+- Docker config: [grokbot-docker-config](https://github.com/andreesg/grokbot-docker-config)
 
 This approach complements the Docker setup above with reproducible deployments, version-controlled infrastructure, and automated disaster recovery.
 
@@ -235,7 +235,7 @@ Community-maintained. For issues or contributions, see the repository links abov
 
 - Set up messaging channels: [Channels](/channels)
 - Configure the Gateway: [Gateway configuration](/gateway/configuration)
-- Keep OpenClaw up to date: [Updating](/install/updating)
+- Keep GrokBot up to date: [Updating](/install/updating)
 
 ## Related
 

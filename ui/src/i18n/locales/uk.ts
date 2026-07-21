@@ -273,14 +273,14 @@ export const uk: TranslationMap = {
     genericSubtitle: "Під час завантаження цієї панелі сталася помилка.",
     staleTitle: "Доступна нова версія",
     staleSubtitle:
-      "OpenClaw оновлено у фоновому режимі. Перезавантажте, щоб отримати найновішу панель.",
+      "GrokBot оновлено у фоновому режимі. Перезавантажте, щоб отримати найновішу панель.",
     retry: "Повторити",
   },
   nodes: {
     pairing: {
       button: "Під’єднати мобільний пристрій",
       adminRequired: "Для створення кодів налаштування потрібен доступ адміністратора.",
-      title: "OpenClaw mobile",
+      title: "GrokBot mobile",
       subtitle: "Відскануйте цей QR-код у мобільному застосунку, щоб підключити новий телефон.",
       generating: "Створення безпечного коду налаштування…",
       accessTitle: "Мобільний доступ",
@@ -293,14 +293,14 @@ export const uk: TranslationMap = {
       transportLimitedHint:
         "Ця URL-адреса Gateway використовує незашифрований протокол ws://. Використовуйте wss:// або Tailscale Serve, а потім створіть новий код для повного доступу.",
       failed: "Не вдалося створити код налаштування.",
-      qrAlt: "QR-код сполучення OpenClaw mobile",
+      qrAlt: "QR-код сполучення GrokBot mobile",
       qrUnavailable: "QR-код недоступний. Натомість скопіюйте код налаштування.",
       copySetupCode: "Скопіювати код налаштування",
       newCode: "Новий код",
       showSetupCode: "Показати код налаштування",
       pending: "Запити пристроїв, що очікують на перегляд: {count}",
       review: "Перегляд",
-      waiting: "Офіційні мобільні застосунки OpenClaw підключаються автоматично після сканування.",
+      waiting: "Офіційні мобільні застосунки GrokBot підключаються автоматично після сканування.",
       help: "Довідка щодо сполучення",
       manageDevices: "Керувати пристроями",
     },
@@ -447,11 +447,11 @@ export const uk: TranslationMap = {
     ownerSession: "Сесія",
     ownerWorkboard: "Workboard",
     title: "Керовані Worktrees",
-    subtitle: "Ізольовані копії репозиторію, що належать OpenClaw.",
+    subtitle: "Ізольовані копії репозиторію, що належать GrokBot.",
     cleanNow: "Очистити зараз",
     cleanupTitle: "Очищення",
     cleanupSubtitle:
-      "OpenClaw періодично видаляє старі робочі дерева, щоб звільнити місце на диску. Налаштуйте інтенсивність очищення.",
+      "GrokBot періодично видаляє старі робочі дерева, щоб звільнити місце на диску. Налаштуйте інтенсивність очищення.",
     cleanupMaxCount: "Максимальна кількість робочих дерев",
     cleanupMaxCountHelp:
       "Максимальна кількість керованих робочих дерев, які зберігатимуться в усіх репозиторіях. Для старіших робочих дерев спочатку створюються знімки, після чого їх видаляють. Установіть значення 0, щоб вимкнути обмеження кількості.",
@@ -1346,7 +1346,7 @@ export const uk: TranslationMap = {
     autoSaveFailed: "Не вдалося зберегти",
     autoSaveConflict: "Налаштування змінено в іншому місці",
     retry: "Повторити",
-    applyBannerText: "Збережено в openclaw.json — перезапустіть gateway для застосування.",
+    applyBannerText: "Збережено в grokbot.json — перезапустіть gateway для застосування.",
     applyBannerAction: "Перезапустити й застосувати",
     rawDiscard: "Відхилити",
     rawDraftBlocksApply:
@@ -1402,7 +1402,7 @@ export const uk: TranslationMap = {
     },
   },
   approvalPage: {
-    brandName: "OpenClaw",
+    brandName: "GrokBot",
     eyebrow: "Operator approval",
     loadingTitle: "Loading approval",
     loadingDescription: "Checking the current approval state with the Gateway.",
@@ -1411,7 +1411,7 @@ export const uk: TranslationMap = {
       "This approval could not be found or this device is not authorized to review it.",
     connectionErrorTitle: "Connection interrupted",
     connectionErrorDescription:
-      "OpenClaw cannot confirm or record a decision while disconnected. Reconnect to check the current status.",
+      "GrokBot cannot confirm or record a decision while disconnected. Reconnect to check the current status.",
     retry: "Retry",
     execTitle: "Command approval",
     pending: "Waiting for your decision",
@@ -1739,7 +1739,7 @@ export const uk: TranslationMap = {
       "Переглядайте, уточнюйте й застосовуйте пропозиції, перш ніж вони стануть активними Skills.",
     nodes: "Спарені пристрої та команди.",
     chat: "Чат шлюзу для швидких втручань.",
-    config: "Редагування openclaw.json.",
+    config: "Редагування grokbot.json.",
     profile: "Статистика, серії та життя вашого агента на рифі.",
     communications: "Канали, повідомлення та налаштування аудіо.",
     appearance: "Тема, інтерфейс і налаштування майстра налаштування.",
@@ -1758,7 +1758,7 @@ export const uk: TranslationMap = {
   modelSetup: {
     heading: "Підключіть свій ШІ",
     intro:
-      "OpenClaw повторно використовує вже наявний у вас доступ до ШІ — вхід через CLI, API-ключ або обліковий запис постачальника.",
+      "GrokBot повторно використовує вже наявний у вас доступ до ШІ — вхід через CLI, API-ключ або обліковий запис постачальника.",
     loading: "Перевіряємо доступні способи доступу до ШІ на цьому Gateway…",
     retry: "Повторити",
     checkAgain: "Перевірити ще раз",
@@ -1771,7 +1771,7 @@ export const uk: TranslationMap = {
     },
     access: {
       adminRequired: "Для налаштування моделі потрібен доступ operator.admin.",
-      gatewayTooOld: "Gateway працює на застарілій версії OpenClaw",
+      gatewayTooOld: "Gateway працює на застарілій версії GrokBot",
     },
     candidates: {
       title: "Знайдено на цьому Gateway",
@@ -1872,12 +1872,12 @@ export const uk: TranslationMap = {
       "Скопіювати {count} вибраних файлів пам’яті до робочого простору цього агента.",
     confirmReplace:
       "Перед заміною наявні файли призначення буде збережено в резервній копії у звіті про міграцію.",
-    confirmBackup: "Перед копіюванням пам’яті OpenClaw створює перевірену резервну копію.",
+    confirmBackup: "Перед копіюванням пам’яті GrokBot створює перевірену резервну копію.",
     confirmImport: "Імпортувати пам’ять",
     disconnected: "Підключіться до Gateway, щоб імпортувати пам’ять.",
     title: "Імпорт пам’яті асистента",
     subtitle:
-      "Перегляньте консолідовану пам’ять Codex і автоматичну пам’ять Claude Code, перш ніж копіювати їх до OpenClaw.",
+      "Перегляньте консолідовану пам’ять Codex і автоматичну пам’ять Claude Code, перш ніж копіювати їх до GrokBot.",
     agent: "Агент призначення",
     replaceExisting: "Замінити наявні імпортовані дані",
     replaceHint:
@@ -1886,7 +1886,7 @@ export const uk: TranslationMap = {
   onboarding: {
     memoryImport: {
       title: "Перенесіть із собою пам’ять асистента",
-      body: "OpenClaw виявив пам’ять інших асистентів для програмування. Імпортувати її до робочого простору вашого агента?",
+      body: "GrokBot виявив пам’ять інших асистентів для програмування. Імпортувати її до робочого простору вашого агента?",
       plannedCount: "{count} готово до імпорту",
       alreadyImported: "Уже імпортовано: {count}",
       sourceUnavailable: "Шлях до джерела недоступний",
@@ -1902,7 +1902,7 @@ export const uk: TranslationMap = {
       unknownError: "Не вдалося виконати запит",
       doneTitle: "Імпорт пам’яті завершено",
       doneBody:
-        "Перенесено: {migrated}, пропущено: {skipped}. Можна продовжити налаштування OpenClaw.",
+        "Перенесено: {migrated}, пропущено: {skipped}. Можна продовжити налаштування GrokBot.",
     },
   },
   mcpPage: {
@@ -1996,7 +1996,7 @@ export const uk: TranslationMap = {
     },
     noInstalledTitle: "Не встановлено жодних додаткових плагінів",
     noInstalledBody:
-      "Відкрийте для себе рекомендований плагін або шукайте в ClawHub, щоб розширити OpenClaw.",
+      "Відкрийте для себе рекомендований плагін або шукайте в ClawHub, щоб розширити GrokBot.",
     noInstalledMatchTitle: "Немає збігів серед установлених плагінів",
     noMatchBody: "Спробуйте інший пошук.",
     filterAll: "Усі",
@@ -2041,7 +2041,7 @@ export const uk: TranslationMap = {
     detailPluginId: "ID плагіна",
     offlineTitle: "Gateway офлайн",
     offlineBody: "Підключіться, щоб переглянути встановлені й рекомендовані плагіни.",
-    optionalCapability: "Необов’язкова можливість OpenClaw.",
+    optionalCapability: "Необов’язкова можливість GrokBot.",
     enabled: "Увімкнено",
     disabled: "Вимкнено",
     available: "Доступно",
@@ -2073,7 +2073,7 @@ export const uk: TranslationMap = {
     disabledRestart: "Вимкнено {name}. Щоб застосувати зміну, потрібно перезапустити Gateway.",
   },
   aboutPage: {
-    productName: "OpenClaw",
+    productName: "GrokBot",
     tagline: "Ваш особистий ШІ-асистент, що працює на ваших власних пристроях.",
     waveHello: "Привітайтеся з Clawd",
     linksLabel: "Спільнота та ресурси",
@@ -2082,7 +2082,7 @@ export const uk: TranslationMap = {
     linkGitHub: "GitHub",
     linkDiscord: "Discord",
     linkChangelog: "Журнал змін",
-    license: "© 2026 OpenClaw Foundation — ліцензія MIT.",
+    license: "© 2026 GrokBot Foundation — ліцензія MIT.",
     artifactTitle: "Control UI",
     artifactSubtitle: "Ідентифікаційні дані, вбудовані під час збірки цього браузерного артефакту.",
     artifactDetails: "Відомості про збірку Control UI",
@@ -2262,7 +2262,7 @@ export const uk: TranslationMap = {
     selfLearning: {
       pitchTitle: "Увімкнути самонавчання",
       pitchBody:
-        "OpenClaw аналізує виправлення та суттєві завершені запуски, а потім створює чернетки пропозицій навичок для цієї дошки. Він використовує додаткові фонові токени, а чернетки надходять як пропозиції, що очікують розгляду.",
+        "GrokBot аналізує виправлення та суттєві завершені запуски, а потім створює чернетки пропозицій навичок для цієї дошки. Він використовує додаткові фонові токени, а чернетки надходять як пропозиції, що очікують розгляду.",
       enable: "Увімкнути самонавчання",
       enabling: "Увімкнення…",
       updateError: "Не вдалося оновити налаштування самонавчання.",
@@ -2457,7 +2457,7 @@ export const uk: TranslationMap = {
       onboardingTitle: "No workspaces yet",
       onboardingSubtitle:
         "Ask your agent to build a workspace, or create one from the command line.",
-      onboardingCommand: "openclaw workspaces tabs create --title Main",
+      onboardingCommand: "grokbot workspaces tabs create --title Main",
       tabTitle: "This workspace is empty",
       tabSubtitle: "Ask your agent to add a widget, or add one yourself.",
       noVisibleTabs: "Every workspace tab is hidden. Restore one from the hidden menu.",
@@ -3469,9 +3469,9 @@ export const uk: TranslationMap = {
         title: "Потрібна автентифікація",
         summary:
           "Gateway доступний, але цьому браузеру потрібен відповідний токен або пароль перед підключенням.",
-        stepPaste: "Вставте токен з openclaw dashboard --no-open або введіть налаштований пароль.",
+        stepPaste: "Вставте токен з grokbot dashboard --no-open або введіть налаштований пароль.",
         stepGenerate:
-          "Якщо токен не налаштовано, виконайте openclaw doctor --generate-gateway-token на хості Gateway.",
+          "Якщо токен не налаштовано, виконайте grokbot doctor --generate-gateway-token на хості Gateway.",
         stepConnect: "Після оновлення облікових даних знову натисніть Connect.",
       },
       authFailed: {
@@ -3479,7 +3479,7 @@ export const uk: TranslationMap = {
         summary:
           "Надані облікові дані відхилено. Найпоширеніша причина — застарілий токен або токен, скопійований з іншого Gateway URL.",
         stepDashboard:
-          "Виконайте openclaw dashboard --no-open і відкрийте свіжий URL або вставте його токен.",
+          "Виконайте grokbot dashboard --no-open і відкрийте свіжий URL або вставте його токен.",
         stepReplace:
           "Замініть застарілі значення токена/пароля; не використовуйте повторно токен з іншого Gateway URL.",
         stepMode:
@@ -3503,8 +3503,8 @@ export const uk: TranslationMap = {
           "Цей браузер потребує одноразового схвалення від хоста Gateway перед використанням Control UI.",
         upgradeSummary:
           "Цей браузер уже відомий, але запитаний доступ змінився і потребує нового схвалення.",
-        stepList: "Виконайте openclaw devices list на хості Gateway.",
-        stepApproveId: "Схваліть цей запит: openclaw devices approve {requestId}.",
+        stepList: "Виконайте grokbot devices list на хості Gateway.",
+        stepApproveId: "Схваліть цей запит: grokbot devices approve {requestId}.",
         stepApprove: "Схваліть запит браузера/пристрою, що очікує, з цього списку.",
         stepReconnect: "Підключіться знову після завершення схвалення.",
       },
@@ -3531,22 +3531,22 @@ export const uk: TranslationMap = {
         summary:
           "Надана Control UI і запущений Gateway не узгоджуються щодо підтримуваного протоколу з’єднання.",
         stepDashboard:
-          "Знову відкрийте наданий dashboard через openclaw dashboard, щоб UI і Gateway походили з однієї інсталяції.",
+          "Знову відкрийте наданий dashboard через grokbot dashboard, щоб UI і Gateway походили з однієї інсталяції.",
         stepDevUi:
           "Якщо використовуєте pnpm ui:dev, перебудуйте або перезапустіть dev UI з поточного checkout.",
         stepRestart:
-          "Перезапустіть Gateway після оновлення OpenClaw, щоб він надавав поточний протокол.",
+          "Перезапустіть Gateway після оновлення GrokBot, щоб він надавав поточний протокол.",
       },
       network: {
         title: "Не вдалося підключитися",
         summary:
           "Браузер не зміг завершити з’єднання з Gateway. Перевірте ціль і транспорт перед повторною спробою з обліковими даними.",
         stepGateway:
-          "Підтвердьте, що Gateway працює, через openclaw status або openclaw gateway run.",
+          "Підтвердьте, що Gateway працює, через grokbot status або grokbot gateway run.",
         stepUrl:
           "Перевірте WebSocket URL і використовуйте wss://, коли Gateway знаходиться за HTTPS/Tailscale Serve.",
         stepDashboard:
-          "Знову відкрийте dashboard через openclaw dashboard --no-open, щоб повторно скопіювати поточний URL і деталі auth.",
+          "Знову відкрийте dashboard через grokbot dashboard --no-open, щоб повторно скопіювати поточний URL і деталі auth.",
       },
     },
   },
@@ -3571,7 +3571,7 @@ export const uk: TranslationMap = {
       remoteViewOnly: "Цей сеанс розташований на спареному вузлі й доступний лише для перегляду.",
       unsupportedViewOnly: "Це зовнішнє джерело сеансів доступне лише для перегляду.",
       sessionMenu: "External session actions",
-      openInOpenClaw: "Open in OpenClaw",
+      openInOpenClaw: "Open in GrokBot",
       openInTerminal: "Open in terminal",
       terminalUnavailable: "Terminal opening is unavailable for this session.",
     },
@@ -3627,7 +3627,7 @@ export const uk: TranslationMap = {
     followUpModeOverriding: "Перевизначення типового значення сервера ({mode})",
     followUpModeReset: "Скинути до типового значення сервера",
     catalogOpenTarget: "Open Codex/Claude sessions in",
-    catalogOpenTargetViewer: "OpenClaw viewer",
+    catalogOpenTargetViewer: "GrokBot viewer",
     catalogOpenTargetTerminal: "Terminal",
     onboardingDisabled: "Вимкнено під час налаштування",
     gatewayStatus: "Стан Gateway: {status}",
@@ -4067,7 +4067,7 @@ export const uk: TranslationMap = {
       filters: "Фільтри",
       shownOf: "{shown} з {total}",
       emptyTitle: "Ще немає запланованих завдань",
-      emptyHint: "Опишіть, що і коли має робити OpenClaw — воно виконуватиметься за розкладом.",
+      emptyHint: "Опишіть, що і коли має робити GrokBot — воно виконуватиметься за розкладом.",
       noMatching: "Немає завдань, що відповідають поточним фільтрам.",
       loadMore: "Завантажити ще",
       loading: "Завантаження...",
@@ -4134,7 +4134,7 @@ export const uk: TranslationMap = {
     detail: {
       tabsLabel: "Відомості про автоматизацію",
       newTitle: "Нове заплановане завдання",
-      newSubtitle: "Опишіть, що має зробити OpenClaw, потім виберіть час запуску.",
+      newSubtitle: "Опишіть, що має зробити GrokBot, потім виберіть час запуску.",
       back: "Усі автоматизації",
       settingsTab: "Налаштування",
       historyTitle: "Історія запусків",
@@ -4207,7 +4207,7 @@ export const uk: TranslationMap = {
       descriptionPlaceholder: "Необов’язковий контекст для цього завдання",
       agentPlaceholder: "main або ops",
       agentHelp: "Почніть вводити, щоб вибрати відомого агента, або введіть власного.",
-      promptPlaceholder: "Опишіть, що має зробити OpenClaw...",
+      promptPlaceholder: "Опишіть, що має зробити GrokBot...",
       repeat: "Повторювати",
       repeatInterval: "Інтервал",
       repeatOnce: "Один раз",

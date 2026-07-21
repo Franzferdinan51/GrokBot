@@ -1,5 +1,5 @@
-// Perplexity plugin entrypoint registers its OpenClaw integration.
-import { definePluginEntry } from "openclaw/plugin-sdk/plugin-entry";
+// Perplexity plugin entrypoint registers its GrokBot integration.
+import { definePluginEntry } from "grokbot/plugin-sdk/plugin-entry";
 import { createPerplexityWebSearchProvider } from "./src/perplexity-web-search-provider.js";
 
 export default definePluginEntry({

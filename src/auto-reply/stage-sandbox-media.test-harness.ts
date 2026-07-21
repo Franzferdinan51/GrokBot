@@ -1,7 +1,7 @@
 /** Shared harness for sandbox media staging tests. */
 import { join } from "node:path";
-import { withTempHome as withTempHomeBase } from "openclaw/plugin-sdk/test-env";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import { withTempHome as withTempHomeBase } from "grokbot/plugin-sdk/test-env";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import type { MsgContext, TemplateContext } from "./templating.js";
 
 export async function withSandboxMediaTempHome<T>(
@@ -33,7 +33,7 @@ export function createSandboxMediaStageConfig(home: string): OpenClawConfig {
     agents: {
       defaults: {
         model: "anthropic/claude-opus-4-6",
-        workspace: join(home, "openclaw"),
+        workspace: join(home, "grokbot"),
         sandbox: {
           mode: "non-main",
           workspaceRoot: join(home, "sandboxes"),

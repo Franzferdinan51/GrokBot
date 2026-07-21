@@ -46,9 +46,9 @@ describe("resolveOpenAiCompatModelOverride", () => {
   it("rejects CLI model overrides outside the configured allowlist", async () => {
     await expect(
       resolveOpenAiCompatModelOverride({
-        req: createReq({ "x-openclaw-model": "claude-cli/opus" }),
+        req: createReq({ "x-grokbot-model": "claude-cli/opus" }),
         agentId: "main",
-        model: "openclaw",
+        model: "grokbot",
       }),
     ).resolves.toEqual({
       errorMessage: "Model 'claude-cli/opus' is not allowed for agent 'main'.",

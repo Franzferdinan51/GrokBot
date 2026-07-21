@@ -1,7 +1,7 @@
 /* @vitest-environment jsdom */
 
-import { GatewayProtocolRequestError } from "@openclaw/gateway-client/browser";
-import { buildSystemAgentSessionInvalidatedErrorDetails } from "@openclaw/gateway-protocol";
+import { GatewayProtocolRequestError } from "@grokbot/gateway-client/browser";
+import { buildSystemAgentSessionInvalidatedErrorDetails } from "@grokbot/gateway-protocol";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { waitForFast } from "../../test-helpers/wait-for.ts";
 import { createContext, mountPage } from "./custodian-page.test-harness.ts";
@@ -33,7 +33,7 @@ describe("custodian page session lifecycle", () => {
       .mockRejectedValueOnce(
         new GatewayProtocolRequestError({
           code: "UNAVAILABLE",
-          message: "OpenClaw inference became unavailable.",
+          message: "GrokBot inference became unavailable.",
           details: buildSystemAgentSessionInvalidatedErrorDetails(),
         }),
       )

@@ -16,7 +16,7 @@
  * never re-bills the same calls.
  */
 import { createHash } from "node:crypto";
-import { truncateUtf16Safe } from "@openclaw/normalization-core/utf16-slice";
+import { truncateUtf16Safe } from "@grokbot/normalization-core/utf16-slice";
 import { DEFAULT_PROVIDER } from "../agents/defaults.js";
 import { splitTrailingAuthProfile } from "../agents/model-ref-profile.js";
 import { parseModelRef } from "../agents/model-selection-normalize.js";
@@ -25,15 +25,15 @@ import {
   prepareSimpleCompletionModelForAgent,
 } from "../agents/simple-completion-runtime.js";
 import { resolveUtilityModelRefForAgent } from "../agents/utility-model.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { logVerbose } from "../globals.js";
 import { executeSqliteQuerySync, getNodeSqliteKysely } from "../infra/kysely-sync.js";
 import { redactToolPayloadText } from "../logging/redact.js";
-import type { DB as OpenClawAgentKyselyDatabase } from "../state/openclaw-agent-db.generated.js";
+import type { DB as OpenClawAgentKyselyDatabase } from "../state/grokbot-agent-db.generated.js";
 import {
   openOpenClawAgentDatabase,
   runOpenClawAgentWriteTransaction,
-} from "../state/openclaw-agent-db.js";
+} from "../state/grokbot-agent-db.js";
 
 const TOOL_TITLE_CACHE_SCOPE = "tool-call-titles";
 const TOOL_TITLES_MAX_ITEMS = 24;

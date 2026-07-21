@@ -19,10 +19,10 @@ export {
   shortenHomePath,
   splitShellArgs,
   truncateUtf16Safe,
-} from "./openclaw-runtime.js";
+} from "./grokbot-runtime.js";
 
 export type {
   SqliteConnectionPragmaOptions,
   SqliteWalMaintenance,
   SqliteWalMaintenanceOptions,
-} from "./openclaw-runtime.js";
+} from "./grokbot-runtime.js";

@@ -13,7 +13,7 @@ import { CopilotPanelBindingRegistry, CopilotSessionRegistry } from "./copilot-s
 import { createCopilotSessionController } from "./copilot-session.js";
 import { gatewayUrlFromPairing } from "./panel-core.js";
 
-const PANEL_PORT = "openclaw-copilot-panel";
+const PANEL_PORT = "grokbot-copilot-panel";
 
 /** Background-owned session custody for all tab-specific panel documents. */
 export function createCopilotController({

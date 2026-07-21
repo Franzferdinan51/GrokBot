@@ -64,7 +64,7 @@ describe("secret target registry", () => {
 
   it("resolves plan targets by owning config document", () => {
     const configTarget = resolveSecretPlanTargetByPath({
-      configFile: "openclaw.json",
+      configFile: "grokbot.json",
       pathSegments: ["models", "providers", "openai", "apiKey"],
     });
     const authProfileTarget = resolveSecretPlanTargetByPath({

@@ -11,11 +11,11 @@ import {
   loadSqliteVecExtension,
   MEMORY_INDEX_PATHS_FTS_TABLE,
   requireNodeSqlite,
-} from "openclaw/plugin-sdk/memory-core-host-engine-storage";
+} from "grokbot/plugin-sdk/memory-core-host-engine-storage";
 import {
   ensureOpenClawAgentDatabaseSchema,
   runSqliteImmediateTransactionSync,
-} from "openclaw/plugin-sdk/sqlite-runtime";
+} from "grokbot/plugin-sdk/sqlite-runtime";
 import {
   tryAcquireMemoryReindexLock,
   type MemoryReindexLockHandle,

@@ -1,9 +1,9 @@
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
+import { formatErrorMessage } from "grokbot/plugin-sdk/error-runtime";
 import type {
   MeetingBrowserJoinSession,
   MeetingManualActionCategory,
   MeetingPlatformAdapter,
-} from "openclaw/plugin-sdk/meeting-runtime";
+} from "grokbot/plugin-sdk/meeting-runtime";
 import type { TeamsMeetingsMode } from "../config.js";
 import {
   teamsMeetingLeaveScript,
@@ -307,7 +307,7 @@ export const TEAMS_MEETINGS_PLATFORM_ADAPTER: MeetingPlatformAdapter<
       category: "browser-control-unavailable",
       reason: "browser-control-unavailable",
       message:
-        "Open the OpenClaw browser profile, finish the Teams sign-in, admission, or permission prompt, then retry.",
+        "Open the GrokBot browser profile, finish the Teams sign-in, admission, or permission prompt, then retry.",
     }),
     buildLeaveScript: (meetingUrl) =>
       teamsMeetingLeaveScript({

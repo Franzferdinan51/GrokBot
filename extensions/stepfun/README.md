@@ -1,12 +1,12 @@
-# OpenClaw StepFun Provider
+# GrokBot StepFun Provider
 
-Official OpenClaw provider plugin for StepFun.
+Official GrokBot provider plugin for StepFun.
 
-Install from OpenClaw:
+Install from GrokBot:
 
 ```bash
-openclaw plugins install @openclaw/stepfun-provider
-openclaw gateway restart
+grokbot plugins install @grokbot/stepfun-provider
+grokbot gateway restart
 ```
 
-See <https://docs.openclaw.ai/providers/stepfun> for setup and configuration.
+See <https://docs.grokbot.ai/providers/stepfun> for setup and configuration.

@@ -1,7 +1,7 @@
 // Control UI component renders update status and available-update actions.
 import { html, nothing } from "lit";
 import { property } from "lit/decorators.js";
-import { OpenClawLightDomContentsElement } from "../lit/openclaw-element.ts";
+import { OpenClawLightDomContentsElement } from "../lit/grokbot-element.ts";
 
 type UpdateBannerProps = {
   statusBanner: { tone: "danger" | "warn" | "info"; text: string } | null;
@@ -34,6 +34,6 @@ class UpdateBanner extends OpenClawLightDomContentsElement {
   }
 }
 
-if (!customElements.get("openclaw-update-banner")) {
-  customElements.define("openclaw-update-banner", UpdateBanner);
+if (!customElements.get("grokbot-update-banner")) {
+  customElements.define("grokbot-update-banner", UpdateBanner);
 }

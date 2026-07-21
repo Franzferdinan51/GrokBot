@@ -1,12 +1,12 @@
 // Covers MCP OAuth token refresh, lease cancellation, and concurrency.
 import path from "node:path";
-import { withTempHome as withBaseTempHome } from "openclaw/plugin-sdk/test-env";
+import { withTempHome as withBaseTempHome } from "grokbot/plugin-sdk/test-env";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { vi } from "vitest";
 import {
   closeOpenClawStateDatabaseForTest,
   openOpenClawStateDatabase,
-} from "../state/openclaw-state-db.js";
+} from "../state/grokbot-state-db.js";
 import { createMcpOAuthClientProvider, withMcpOAuthLeaseSignal } from "./mcp-oauth-provider.js";
 import { readMcpOAuthStore, resolveMcpOAuthStoreKey } from "./mcp-oauth-store.js";
 import { clearMcpOAuthCredentials, resolveMcpOAuthAccessToken } from "./mcp-oauth.js";
@@ -25,7 +25,7 @@ async function withTempHome<T>(
 ): Promise<T> {
   return withBaseTempHome(async (home) => {
     const previousStateDir = process.env.OPENCLAW_STATE_DIR;
-    process.env.OPENCLAW_STATE_DIR = path.join(home, ".openclaw");
+    process.env.OPENCLAW_STATE_DIR = path.join(home, ".grokbot");
     closeOpenClawStateDatabaseForTest();
     try {
       return await run(home);
@@ -96,7 +96,7 @@ describe("MCP OAuth provider", () => {
         expect(authMock).not.toHaveBeenCalled();
       },
       {
-        prefix: "openclaw-mcp-oauth-fresh-token-",
+        prefix: "grokbot-mcp-oauth-fresh-token-",
         skipSessionCleanup: true,
         env: {
           OPENCLAW_CONFIG_PATH: undefined,
@@ -166,7 +166,7 @@ describe("MCP OAuth provider", () => {
         expect(leaseCount.count).toBe(0);
       },
       {
-        prefix: "openclaw-mcp-oauth-aborted-refresh-",
+        prefix: "grokbot-mcp-oauth-aborted-refresh-",
         skipSessionCleanup: true,
         env: { OPENCLAW_CONFIG_PATH: undefined, OPENCLAW_STATE_DIR: undefined },
       },
@@ -210,7 +210,7 @@ describe("MCP OAuth provider", () => {
         });
       },
       {
-        prefix: "openclaw-mcp-oauth-expired-token-",
+        prefix: "grokbot-mcp-oauth-expired-token-",
         skipSessionCleanup: true,
         env: {
           OPENCLAW_CONFIG_PATH: undefined,
@@ -272,7 +272,7 @@ describe("MCP OAuth provider", () => {
         expect(authMock).toHaveBeenCalledOnce();
       },
       {
-        prefix: "openclaw-mcp-oauth-concurrent-refresh-",
+        prefix: "grokbot-mcp-oauth-concurrent-refresh-",
         skipSessionCleanup: true,
         env: {
           OPENCLAW_CONFIG_PATH: undefined,
@@ -344,7 +344,7 @@ describe("MCP OAuth provider", () => {
         ).toBeUndefined();
       },
       {
-        prefix: "openclaw-mcp-oauth-concurrent-challenge-",
+        prefix: "grokbot-mcp-oauth-concurrent-challenge-",
         skipSessionCleanup: true,
         env: { OPENCLAW_CONFIG_PATH: undefined, OPENCLAW_STATE_DIR: undefined },
       },
@@ -400,7 +400,7 @@ describe("MCP OAuth provider", () => {
         expect(provider.tokens()).toBeUndefined();
       },
       {
-        prefix: "openclaw-mcp-oauth-refresh-logout-",
+        prefix: "grokbot-mcp-oauth-refresh-logout-",
         skipSessionCleanup: true,
         env: { OPENCLAW_CONFIG_PATH: undefined, OPENCLAW_STATE_DIR: undefined },
       },
@@ -449,7 +449,7 @@ describe("MCP OAuth provider", () => {
         ).toBeUndefined();
       },
       {
-        prefix: "openclaw-mcp-oauth-rejected-token-",
+        prefix: "grokbot-mcp-oauth-rejected-token-",
         skipSessionCleanup: true,
         env: { OPENCLAW_CONFIG_PATH: undefined, OPENCLAW_STATE_DIR: undefined },
       },

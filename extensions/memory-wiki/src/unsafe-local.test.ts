@@ -141,8 +141,8 @@ describe("syncMemoryWikiUnsafeLocalSources", () => {
     await fs.writeFile(
       path.join(vaultDir, unavailablePage!.pagePath),
       unavailablePage!.content.replace(
-        "<!-- openclaw:human:start -->\n<!-- openclaw:human:end -->",
-        "<!-- openclaw:human:start -->\nremember this\n<!-- openclaw:human:end -->",
+        "<!-- grokbot:human:start -->\n<!-- grokbot:human:end -->",
+        "<!-- grokbot:human:start -->\nremember this\n<!-- grokbot:human:end -->",
       ),
       "utf8",
     );

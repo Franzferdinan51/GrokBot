@@ -24,7 +24,7 @@ afterEach(() => {
 });
 
 function makeTempDir(): string {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-archive-zstd-"));
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-archive-zstd-"));
   tempDirs.push(dir);
   return dir;
 }

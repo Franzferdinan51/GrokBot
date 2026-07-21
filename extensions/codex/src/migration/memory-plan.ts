@@ -1,12 +1,12 @@
 // Codex memory plans validate source/destination separation before exposing copy items.
 import fs from "node:fs/promises";
 import path from "node:path";
-import { createMigrationItem, MIGRATION_REASON_TARGET_EXISTS } from "openclaw/plugin-sdk/migration";
-import type { MigrationItem } from "openclaw/plugin-sdk/plugin-entry";
+import { createMigrationItem, MIGRATION_REASON_TARGET_EXISTS } from "grokbot/plugin-sdk/migration";
+import type { MigrationItem } from "grokbot/plugin-sdk/plugin-entry";
 import {
   canonicalPathFromExistingAncestor,
   isPathInside,
-} from "openclaw/plugin-sdk/security-runtime";
+} from "grokbot/plugin-sdk/security-runtime";
 import type { CodexMemorySource } from "./source-files.js";
 
 const MIGRATION_REASON_TARGET_NOT_REGULAR = "target is not a regular file";
@@ -43,7 +43,7 @@ async function assertSafeMemoryDestination(params: {
     isPathInside(canonicalSource, canonicalTarget) ||
     isPathInside(canonicalTarget, canonicalSource)
   ) {
-    throw new Error("Codex memory source and OpenClaw import destination must be separate paths.");
+    throw new Error("Codex memory source and GrokBot import destination must be separate paths.");
   }
 }
 
@@ -85,7 +85,7 @@ export async function buildCodexMemoryItems(params: {
           : targetConflict
             ? MIGRATION_REASON_TARGET_EXISTS
             : undefined,
-        message: "Copy consolidated Codex memory into the OpenClaw memory index.",
+        message: "Copy consolidated Codex memory into the GrokBot memory index.",
         details: {
           sourceType: "codex-memory",
           sourceLabel: memory.label,

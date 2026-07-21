@@ -37,7 +37,7 @@ import {
   runBuiltGatewayCall,
   runBuiltGatewayCli,
   verifyGatewayReadiness,
-} from "../../.agents/skills/openclaw-live-updater/scripts/update-main.mjs";
+} from "../../.agents/skills/grokbot-live-updater/scripts/update-main.mjs";
 import {
   BUILD_STAMP_FILE,
   RUNTIME_POSTBUILD_STAMP_FILE,
@@ -45,7 +45,7 @@ import {
 import { listCoreRuntimePostBuildOutputs } from "../../scripts/runtime-postbuild.mjs";
 
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../..");
-const script = path.join(repoRoot, ".agents/skills/openclaw-live-updater/scripts/update-main.mjs");
+const script = path.join(repoRoot, ".agents/skills/grokbot-live-updater/scripts/update-main.mjs");
 const fixtureOrigins = new Map<string, string>();
 let fixtureTemplate: ReturnType<typeof initializeFixture> | undefined;
 
@@ -115,7 +115,7 @@ function initializeFixture(root: string) {
   git(seed, "remote", "add", "origin", "../origin.git");
   git(seed, "push", "-u", "origin", "main");
   git(root, "clone", `--template=${gitTemplate}`, origin, mirror);
-  const canonicalOrigin = "https://github.com/openclaw/openclaw.git";
+  const canonicalOrigin = "https://github.com/grokbot/grokbot.git";
   git(mirror, "remote", "set-url", "origin", canonicalOrigin);
   return { root, mirror, origin, seed };
 }
@@ -128,7 +128,7 @@ function makeFixture(options?: { includeSeed?: boolean }) {
   if (!fixtureTemplate) {
     throw new Error("fixture template is not initialized");
   }
-  const root = realpathSync(mkdtempSync(path.join(tmpdir(), "openclaw-live-updater-")));
+  const root = realpathSync(mkdtempSync(path.join(tmpdir(), "grokbot-live-updater-")));
   const origin = path.join(root, "origin.git");
   const seed = path.join(root, "seed");
   const mirror = path.join(root, "mirror");
@@ -190,9 +190,9 @@ function fakeCommands(mirror: string) {
   };
 }
 
-describe("openclaw live updater", () => {
+describe("grokbot live updater", () => {
   beforeAll(() => {
-    const root = realpathSync(mkdtempSync(path.join(tmpdir(), "openclaw-live-updater-template-")));
+    const root = realpathSync(mkdtempSync(path.join(tmpdir(), "grokbot-live-updater-template-")));
     fixtureTemplate = initializeFixture(root);
   });
 
@@ -205,7 +205,7 @@ describe("openclaw live updater", () => {
 
   test("audits only error and warning logs emitted after Gateway restart", () => {
     const output = [
-      { type: "meta", file: "/tmp/openclaw.log" },
+      { type: "meta", file: "/tmp/grokbot.log" },
       { type: "log", time: "2026-07-11T08:00:00.000Z", level: "error", message: "old" },
       { type: "log", time: "2026-07-11T08:00:02.000Z", level: "info", message: "ready" },
       {
@@ -252,14 +252,14 @@ describe("openclaw live updater", () => {
 
   test("parses the loaded launchd ProgramArguments block", () => {
     expect(
-      parseLaunchctlArguments(`gui/501/ai.openclaw.gateway = {
+      parseLaunchctlArguments(`gui/501/ai.grokbot.gateway = {
 \tprogram = /bin/sh
 \targuments = {
 \t\t/bin/sh
-\t\t/Users/test/.openclaw/service-env/ai.openclaw.gateway-env-wrapper.sh
-\t\t/Users/test/.openclaw/service-env/ai.openclaw.gateway.env
+\t\t/Users/test/.grokbot/service-env/ai.grokbot.gateway-env-wrapper.sh
+\t\t/Users/test/.grokbot/service-env/ai.grokbot.gateway.env
 \t\t/opt/homebrew/bin/node
-\t\t/Users/test/openclaw/dist/index.js
+\t\t/Users/test/grokbot/dist/index.js
 \t\tgateway
 \t\t--port
 \t\t18789
@@ -268,10 +268,10 @@ describe("openclaw live updater", () => {
 }`),
     ).toEqual([
       "/bin/sh",
-      "/Users/test/.openclaw/service-env/ai.openclaw.gateway-env-wrapper.sh",
-      "/Users/test/.openclaw/service-env/ai.openclaw.gateway.env",
+      "/Users/test/.grokbot/service-env/ai.grokbot.gateway-env-wrapper.sh",
+      "/Users/test/.grokbot/service-env/ai.grokbot.gateway.env",
       "/opt/homebrew/bin/node",
-      "/Users/test/openclaw/dist/index.js",
+      "/Users/test/grokbot/dist/index.js",
       "gateway",
       "--port",
       "18789",
@@ -305,12 +305,12 @@ describe("openclaw live updater", () => {
     });
   });
 
-  test("ignores restart-window logs emitted by a foreign OpenClaw checkout", () => {
-    const root = mkdtempSync(path.join(tmpdir(), "openclaw-log-attribution-"));
-    const sourceRoot = path.join(root, "managed/openclaw/dist");
-    const foreignRoot = path.join(root, "worktree/openclaw");
+  test("ignores restart-window logs emitted by a foreign GrokBot checkout", () => {
+    const root = mkdtempSync(path.join(tmpdir(), "grokbot-log-attribution-"));
+    const sourceRoot = path.join(root, "managed/grokbot/dist");
+    const foreignRoot = path.join(root, "worktree/grokbot");
     mkdirSync(path.join(foreignRoot, ".git"), { recursive: true });
-    writeFileSync(path.join(foreignRoot, "package.json"), '{"name":"openclaw"}\n');
+    writeFileSync(path.join(foreignRoot, "package.json"), '{"name":"grokbot"}\n');
     const output = [
       {
         "0": '{"subsystem":"gateway"}',
@@ -356,13 +356,13 @@ describe("openclaw live updater", () => {
   });
 
   test("keeps managed restart logs when the deployment root is symlinked", () => {
-    const root = mkdtempSync(path.join(tmpdir(), "openclaw-log-symlink-attribution-"));
+    const root = mkdtempSync(path.join(tmpdir(), "grokbot-log-symlink-attribution-"));
     const releaseRoot = path.join(root, "releases/abc");
     const releaseDist = path.join(releaseRoot, "dist");
     const linkedRoot = path.join(root, "current");
     mkdirSync(releaseDist, { recursive: true });
     mkdirSync(path.join(releaseRoot, ".git"));
-    writeFileSync(path.join(releaseRoot, "package.json"), '{"name":"openclaw"}\n');
+    writeFileSync(path.join(releaseRoot, "package.json"), '{"name":"grokbot"}\n');
     const sourceFile = path.join(releaseDist, "console-managed.js");
     writeFileSync(sourceFile, "export {};\n");
     symlinkSync(releaseRoot, linkedRoot);
@@ -386,11 +386,11 @@ describe("openclaw live updater", () => {
   });
 
   test("scopes embedded RPC records without dropping unattributed errors", () => {
-    const root = mkdtempSync(path.join(tmpdir(), "openclaw-rpc-log-attribution-"));
-    const sourceRoot = path.join(root, "managed/openclaw/dist");
-    const foreignRoot = path.join(root, "worktree/openclaw");
+    const root = mkdtempSync(path.join(tmpdir(), "grokbot-rpc-log-attribution-"));
+    const sourceRoot = path.join(root, "managed/grokbot/dist");
+    const foreignRoot = path.join(root, "worktree/grokbot");
     mkdirSync(path.join(foreignRoot, ".git"), { recursive: true });
-    writeFileSync(path.join(foreignRoot, "package.json"), '{"name":"openclaw"}\n');
+    writeFileSync(path.join(foreignRoot, "package.json"), '{"name":"grokbot"}\n');
     const configuredPluginFile = path.join(foreignRoot, "configured-plugin.ts");
     writeFileSync(configuredPluginFile, "export default {};\n");
     const output = [
@@ -496,14 +496,14 @@ describe("openclaw live updater", () => {
       resolveManagedPluginSourceRoots({
         plugins: [
           { id: "configured", rootDir: "/opt/configured-plugin" },
-          { id: "workspace", rootDir: "/srv/workspace/.openclaw/extensions/workspace" },
-          { id: "global", rootDir: "/Users/test/.openclaw/extensions/global" },
+          { id: "workspace", rootDir: "/srv/workspace/.grokbot/extensions/workspace" },
+          { id: "global", rootDir: "/Users/test/.grokbot/extensions/global" },
         ],
       }),
     ).toEqual([
       "/opt/configured-plugin",
-      "/srv/workspace/.openclaw/extensions/workspace",
-      "/Users/test/.openclaw/extensions/global",
+      "/srv/workspace/.grokbot/extensions/workspace",
+      "/Users/test/.grokbot/extensions/global",
     ]);
     expect(resolveManagedPluginSourceRoots({ plugins: [{ id: "unknown" }] })).toBeNull();
     expect(resolveManagedPluginSourceRoots({})).toBeNull();
@@ -511,7 +511,7 @@ describe("openclaw live updater", () => {
 
   test("scopes restart logs to the effective managed runtime", () => {
     expect(
-      resolveManagedGatewaySourceRoot("/srv/openclaw", {
+      resolveManagedGatewaySourceRoot("/srv/grokbot", {
         entrypoint: "/srv/runtime/gateway-abc/dist/index.js",
       }),
     ).toBe("/srv/runtime/gateway-abc/dist");
@@ -539,10 +539,10 @@ describe("openclaw live updater", () => {
 
     expect(delays).toEqual([5_000, 5_000]);
     expect(calls).toEqual([
-      "pnpm openclaw gateway status --deep --require-rpc --json",
-      "pnpm openclaw gateway status --deep --require-rpc --json",
-      "pnpm openclaw gateway status --deep --require-rpc --json",
-      "pnpm openclaw health --verbose --json",
+      "pnpm grokbot gateway status --deep --require-rpc --json",
+      "pnpm grokbot gateway status --deep --require-rpc --json",
+      "pnpm grokbot gateway status --deep --require-rpc --json",
+      "pnpm grokbot health --verbose --json",
     ]);
   });
 
@@ -557,7 +557,7 @@ describe("openclaw live updater", () => {
         mirror,
         ["gateway", "status"],
         {
-          configPath: path.join(root, "openclaw.json"),
+          configPath: path.join(root, "grokbot.json"),
           entrypoint,
           executable: process.execPath,
           invocationPrefix: [entrypoint],
@@ -568,7 +568,7 @@ describe("openclaw live updater", () => {
       ),
     ).toThrow();
     expect(
-      readdirSync(root).filter((name) => name.startsWith(".openclaw-live-updater-config-")),
+      readdirSync(root).filter((name) => name.startsWith(".grokbot-live-updater-config-")),
     ).toEqual([]);
   });
 
@@ -584,7 +584,7 @@ describe("openclaw live updater", () => {
           selectedDeployment: unknown,
         ) => {
           expect(method).toBe("gateway.suspend.prepare");
-          expect(params.requestId).toMatch(/^openclaw-live-updater-/u);
+          expect(params.requestId).toMatch(/^grokbot-live-updater-/u);
           expect(selectedDeployment).toBe(deployment);
           return JSON.stringify({ status: "ready", suspensionId: "suspension-1" });
         },
@@ -606,11 +606,11 @@ describe("openclaw live updater", () => {
   });
 
   test("pins managed Gateway calls with a backward-compatible local overlay", () => {
-    const root = realpathSync(mkdtempSync(path.join(tmpdir(), "openclaw-gateway-call-")));
+    const root = realpathSync(mkdtempSync(path.join(tmpdir(), "grokbot-gateway-call-")));
     const checkout = path.join(root, "checkout");
     const entrypoint = path.join(checkout, "dist/index.js");
     const capture = path.join(root, "capture.mjs");
-    const configPath = path.join(root, "openclaw.json");
+    const configPath = path.join(root, "grokbot.json");
     mkdirSync(path.dirname(entrypoint), { recursive: true });
     writeFileSync(configPath, "{}\n");
     writeFileSync(
@@ -642,21 +642,21 @@ describe("openclaw live updater", () => {
     expect(result.url).toBeNull();
   });
 
-  test("accepts supported OpenClaw GitHub origins", () => {
-    expect(originMatches("https://github.com/openclaw/openclaw.git")).toBe(true);
-    expect(originMatches("git@github.com:openclaw/openclaw.git")).toBe(true);
-    expect(originMatches("https://github.com/example/openclaw.git")).toBe(false);
+  test("accepts supported GrokBot GitHub origins", () => {
+    expect(originMatches("https://github.com/grokbot/grokbot.git")).toBe(true);
+    expect(originMatches("git@github.com:grokbot/grokbot.git")).toBe(true);
+    expect(originMatches("https://github.com/example/grokbot.git")).toBe(false);
   });
 
   test("accepts only immutable canonical runtime snapshots owned by the checkout", () => {
     const { root, mirror, origin } = makeFixture();
     const head = git(mirror, "rev-parse", "HEAD");
     const home = path.join(root, "home");
-    const runtimeRoot = path.join(home, ".openclaw/runtime");
+    const runtimeRoot = path.join(home, ".grokbot/runtime");
     const snapshot = path.join(runtimeRoot, `gateway-${head.slice(0, 7)}`);
     mkdirSync(runtimeRoot, { recursive: true });
     git(runtimeRoot, "clone", origin, snapshot);
-    git(snapshot, "remote", "set-url", "origin", "https://github.com/openclaw/openclaw.git");
+    git(snapshot, "remote", "set-url", "origin", "https://github.com/grokbot/grokbot.git");
     git(snapshot, "checkout", "--detach", head);
     chmodSync(path.join(snapshot, ".git/HEAD"), 0o600);
     chmodSync(path.join(snapshot, ".git/config"), 0o600);
@@ -714,7 +714,7 @@ describe("openclaw live updater", () => {
       sourceEntrypoint,
       `import fs from "node:fs"; fs.writeFileSync(${JSON.stringify(sourceExecutionMarker)}, "ran"); console.log("{}");\n`,
     );
-    const configPath = path.join(root, "openclaw.json");
+    const configPath = path.join(root, "grokbot.json");
     writeFileSync(configPath, "{}\n");
     expect(
       runBuiltGatewayCall(
@@ -738,9 +738,9 @@ describe("openclaw live updater", () => {
 
   test("accepts owned entrypoints only in supported LaunchAgent command layouts", () => {
     const home = "/Users/test";
-    const entrypoint = "/Users/test/.openclaw/runtime/gateway-1234567/dist/index.js";
-    const wrapper = `${home}/.openclaw/service-env/ai.openclaw.gateway-env-wrapper.sh`;
-    const envFile = `${home}/.openclaw/service-env/ai.openclaw.gateway.env`;
+    const entrypoint = "/Users/test/.grokbot/runtime/gateway-1234567/dist/index.js";
+    const wrapper = `${home}/.grokbot/service-env/ai.grokbot.gateway-env-wrapper.sh`;
+    const envFile = `${home}/.grokbot/service-env/ai.grokbot.gateway.env`;
     const nodeCommand = ["/opt/homebrew/bin/node", entrypoint, "gateway", "--port", "18789"];
 
     expect(resolveManagedGatewayEntrypoint(nodeCommand, home)).toBe(entrypoint);
@@ -754,8 +754,8 @@ describe("openclaw live updater", () => {
       entrypoint,
     );
     const customState = "/Users/test/state";
-    const customWrapper = `${customState}/service-env/ai.openclaw.gateway-env-wrapper.sh`;
-    const customEnvFile = `${customState}/service-env/ai.openclaw.gateway.env`;
+    const customWrapper = `${customState}/service-env/ai.grokbot.gateway-env-wrapper.sh`;
+    const customEnvFile = `${customState}/service-env/ai.grokbot.gateway.env`;
     expect(
       resolveManagedGatewayEntrypoint(
         ["/bin/sh", customWrapper, customEnvFile, ...nodeCommand],
@@ -771,16 +771,16 @@ describe("openclaw live updater", () => {
   });
 
   test("retargets an accepted snapshot to the exact source build", () => {
-    const checkout = "/Users/test/openclaw";
-    const snapshot = "/Users/test/.openclaw/runtime/gateway-1234567/dist/index.js";
+    const checkout = "/Users/test/grokbot";
+    const snapshot = "/Users/test/.grokbot/runtime/gateway-1234567/dist/index.js";
     const source = path.join(checkout, "dist/index.js");
     const replacements: string[] = [];
     const deployment = {
-      configPath: "/Users/test/config/openclaw.json",
+      configPath: "/Users/test/config/grokbot.json",
       entrypoint: snapshot,
       entrypointIndex: 1,
-      label: "ai.openclaw.gateway",
-      plistPath: "/Users/test/Library/LaunchAgents/ai.openclaw.gateway.plist",
+      label: "ai.grokbot.gateway",
+      plistPath: "/Users/test/Library/LaunchAgents/ai.grokbot.gateway.plist",
       port: 18789,
     };
     const result = repointManagedGatewayDeployment(
@@ -795,19 +795,19 @@ describe("openclaw live updater", () => {
       changed: true,
       configPath: deployment.configPath,
       entrypoint: source,
-      label: "ai.openclaw.gateway",
+      label: "ai.grokbot.gateway",
       port: 18789,
       previousEntrypoint: snapshot,
     });
   });
 
   test("replaces a wrapped LaunchAgent entrypoint without inserting another argument", () => {
-    const snapshot = "/Users/test/.openclaw/runtime/gateway-1234567/dist/index.js";
-    const source = "/Users/test/openclaw/dist/index.js";
+    const snapshot = "/Users/test/.grokbot/runtime/gateway-1234567/dist/index.js";
+    const source = "/Users/test/grokbot/dist/index.js";
     const original = [
       "/bin/sh",
-      "/Users/test/.openclaw/service-env/ai.openclaw.gateway-env-wrapper.sh",
-      "/Users/test/.openclaw/service-env/ai.openclaw.gateway.env",
+      "/Users/test/.grokbot/service-env/ai.grokbot.gateway-env-wrapper.sh",
+      "/Users/test/.grokbot/service-env/ai.grokbot.gateway.env",
       "/opt/homebrew/bin/node",
       snapshot,
       "gateway",
@@ -825,22 +825,22 @@ describe("openclaw live updater", () => {
   });
 
   test("fails closed when Gateway service retargeting does not stick", () => {
-    const checkout = "/Users/test/openclaw";
-    const snapshot = "/Users/test/.openclaw/runtime/gateway-1234567/dist/index.js";
+    const checkout = "/Users/test/grokbot";
+    const snapshot = "/Users/test/.grokbot/runtime/gateway-1234567/dist/index.js";
     expect(() =>
       repointManagedGatewayDeployment(
         checkout,
         {
-          configPath: "/Users/test/.openclaw/openclaw.json",
+          configPath: "/Users/test/.grokbot/grokbot.json",
           entrypoint: snapshot,
-          label: "ai.openclaw.gateway",
+          label: "ai.grokbot.gateway",
           port: 18789,
         },
         () => {},
         () => ({
-          configPath: "/Users/test/.openclaw/openclaw.json",
+          configPath: "/Users/test/.grokbot/grokbot.json",
           entrypoint: snapshot,
-          label: "ai.openclaw.gateway",
+          label: "ai.grokbot.gateway",
           port: 18789,
         }),
       ),
@@ -855,7 +855,7 @@ describe("openclaw live updater", () => {
 
   test("rejects Git URL rewrites that change the effective fetch source", () => {
     const { mirror, origin } = makeFixture();
-    git(mirror, "config", `url.${origin}.insteadOf`, "https://github.com/openclaw/openclaw.git");
+    git(mirror, "config", `url.${origin}.insteadOf`, "https://github.com/grokbot/grokbot.git");
 
     const result = spawnSync(process.execPath, [script, "--checkout", mirror], {
       encoding: "utf8",
@@ -900,7 +900,7 @@ describe("openclaw live updater", () => {
       macUiVerification: false,
     });
     expect(
-      classifyActions(["package.json", "apps/macos/Sources/OpenClaw/AppDelegate.swift"], {
+      classifyActions(["package.json", "apps/macos/Sources/GrokBot/AppDelegate.swift"], {
         buildProvenanceKnown: true,
         buildRequired: true,
         nodeModulesPresent: true,
@@ -932,8 +932,8 @@ describe("openclaw live updater", () => {
   });
 
   test("accepts only the delayed exact target bundle process", () => {
-    const executable = "/Users/steipete/openclaw/dist/OpenClaw.app/Contents/MacOS/OpenClaw";
-    const foreign = "41 /tmp/agent/OpenClaw.app/Contents/MacOS/OpenClaw";
+    const executable = "/Users/steipete/grokbot/dist/GrokBot.app/Contents/MacOS/GrokBot";
+    const foreign = "41 /tmp/agent/GrokBot.app/Contents/MacOS/GrokBot";
     expect(findExactMacTarget(foreign, executable)).toBeNull();
     expect(findExactMacTarget(`${foreign}\n42 ${executable} --attach-only`, executable)).toEqual({
       executable,
@@ -980,8 +980,8 @@ describe("openclaw live updater", () => {
 
   test("fast-forwards, builds exact SHA, restarts Gateway, then proves exact Mac target", () => {
     const { root, mirror, seed } = makeFixture({ includeSeed: true });
-    mkdirSync(path.join(seed, "apps/macos/Sources/OpenClaw"), { recursive: true });
-    writeFileSync(path.join(seed, "apps/macos/Sources/OpenClaw/App.swift"), "// changed\n");
+    mkdirSync(path.join(seed, "apps/macos/Sources/GrokBot"), { recursive: true });
+    writeFileSync(path.join(seed, "apps/macos/Sources/GrokBot/App.swift"), "// changed\n");
     git(seed, "add", ".");
     git(seed, "commit", "-m", "mac change");
     git(seed, "push");
@@ -997,7 +997,7 @@ describe("openclaw live updater", () => {
       {
         runCommand: commands.runCommand,
         verifyMacTarget: () => ({
-          executable: path.join(mirror, "dist/OpenClaw.app/Contents/MacOS/OpenClaw"),
+          executable: path.join(mirror, "dist/GrokBot.app/Contents/MacOS/GrokBot"),
           pid: 123,
         }),
       },
@@ -1005,7 +1005,7 @@ describe("openclaw live updater", () => {
 
     expect(output.updated).toBe(true);
     expect(output.afterSha).toBe(git(seed, "rev-parse", "HEAD"));
-    expect(output.buildChangedPaths).toEqual(["apps/macos/Sources/OpenClaw/App.swift"]);
+    expect(output.buildChangedPaths).toEqual(["apps/macos/Sources/GrokBot/App.swift"]);
     expect(output.actions).toEqual({
       dependencyInstall: true,
       gatewayBuild: true,
@@ -1026,15 +1026,15 @@ describe("openclaw live updater", () => {
       `${process.execPath} dist/index.js gateway stop`,
       "pnpm install --frozen-lockfile",
       "pnpm build",
-      "pnpm openclaw gateway restart",
-      "pnpm openclaw gateway status --deep --require-rpc --json",
-      "pnpm openclaw health --verbose --json",
+      "pnpm grokbot gateway restart",
+      "pnpm grokbot gateway status --deep --require-rpc --json",
+      "pnpm grokbot health --verbose --json",
       "env SKIP_TSC=1 SKIP_UI_BUILD=1 bash scripts/restart-mac.sh --sign --wait --target-only",
-      "pnpm openclaw gateway status --deep --require-rpc --json",
-      "pnpm openclaw health --verbose --json",
+      "pnpm grokbot gateway status --deep --require-rpc --json",
+      "pnpm grokbot health --verbose --json",
     ]);
     expect(output.macTarget?.executable).toBe(
-      path.join(mirror, "dist/OpenClaw.app/Contents/MacOS/OpenClaw"),
+      path.join(mirror, "dist/GrokBot.app/Contents/MacOS/GrokBot"),
     );
   });
 
@@ -1073,9 +1073,9 @@ describe("openclaw live updater", () => {
       `${process.execPath} dist/index.js gateway stop`,
       "pnpm install --frozen-lockfile",
       "pnpm build",
-      "pnpm openclaw gateway restart",
-      "pnpm openclaw gateway status --deep --require-rpc --json",
-      "pnpm openclaw health --verbose --json",
+      "pnpm grokbot gateway restart",
+      "pnpm grokbot gateway status --deep --require-rpc --json",
+      "pnpm grokbot health --verbose --json",
     ]);
   });
 
@@ -1190,16 +1190,16 @@ describe("openclaw live updater", () => {
     expect(commands.calls).toEqual([
       "pnpm install --frozen-lockfile",
       "pnpm build",
-      "pnpm openclaw gateway restart",
-      "pnpm openclaw gateway status --deep --require-rpc --json",
-      "pnpm openclaw health --verbose --json",
+      "pnpm grokbot gateway restart",
+      "pnpm grokbot gateway status --deep --require-rpc --json",
+      "pnpm grokbot health --verbose --json",
     ]);
   });
 
   test("preserves the signed Mac bundle while a Gateway build replaces dist", () => {
     const { root, mirror } = makeFixture();
     mkdirSync(path.join(mirror, "node_modules"));
-    const appBundle = path.join(mirror, "dist/OpenClaw.app");
+    const appBundle = path.join(mirror, "dist/GrokBot.app");
     const appMarker = path.join(appBundle, "Contents/signature-marker");
     mkdirSync(path.dirname(appMarker), { recursive: true });
     writeFileSync(appMarker, "signed\n");
@@ -1220,7 +1220,7 @@ describe("openclaw live updater", () => {
     expect(readFileSync(appMarker, "utf8")).toBe("signed\n");
     expect(
       readdirSync(path.join(mirror, ".git")).filter((entry) =>
-        entry.startsWith(".openclaw-live-mac-"),
+        entry.startsWith(".grokbot-live-mac-"),
       ),
     ).toEqual([]);
   });
@@ -1228,7 +1228,7 @@ describe("openclaw live updater", () => {
   test("restores the Mac bundle when the Gateway build fails", () => {
     const { root, mirror } = makeFixture();
     mkdirSync(path.join(mirror, "node_modules"));
-    const appMarker = path.join(mirror, "dist/OpenClaw.app/Contents/signature-marker");
+    const appMarker = path.join(mirror, "dist/GrokBot.app/Contents/signature-marker");
     mkdirSync(path.dirname(appMarker), { recursive: true });
     writeFileSync(appMarker, "signed\n");
 
@@ -1250,12 +1250,12 @@ describe("openclaw live updater", () => {
   test("accepts a delayed external restore of the exact preserved Mac bundle", () => {
     const { root, mirror } = makeFixture();
     mkdirSync(path.join(mirror, "node_modules"));
-    const appBundle = path.join(mirror, "dist/OpenClaw.app");
+    const appBundle = path.join(mirror, "dist/GrokBot.app");
     const appMarker = path.join(appBundle, "Contents/signature-marker");
     mkdirSync(path.dirname(appMarker), { recursive: true });
     writeFileSync(appMarker, "signed\n");
     const commands = fakeCommands(mirror);
-    const delayedBundle = path.join(root, "delayed-openclaw.app");
+    const delayedBundle = path.join(root, "delayed-grokbot.app");
     let restored = false;
 
     maintainFixture(
@@ -1268,7 +1268,7 @@ describe("openclaw live updater", () => {
           commands.runCommand(command, args);
           if (command === "pnpm" && args[0] === "build") {
             const preserved = readdirSync(path.join(mirror, ".git")).find((entry) =>
-              entry.startsWith(".openclaw-live-mac-"),
+              entry.startsWith(".grokbot-live-mac-"),
             );
             expect(preserved).toBeDefined();
             renameSync(path.join(mirror, ".git", preserved!), delayedBundle);
@@ -1288,7 +1288,7 @@ describe("openclaw live updater", () => {
     expect(readFileSync(appMarker, "utf8")).toBe("signed\n");
     expect(
       readdirSync(path.join(mirror, ".git")).filter((entry) =>
-        entry.startsWith(".openclaw-live-mac-"),
+        entry.startsWith(".grokbot-live-mac-"),
       ),
     ).toEqual([]);
   });
@@ -1296,7 +1296,7 @@ describe("openclaw live updater", () => {
   test("preserves a build failure after an external Mac bundle restore", () => {
     const { root, mirror } = makeFixture();
     mkdirSync(path.join(mirror, "node_modules"));
-    const appBundle = path.join(mirror, "dist/OpenClaw.app");
+    const appBundle = path.join(mirror, "dist/GrokBot.app");
     const appMarker = path.join(appBundle, "Contents/signature-marker");
     mkdirSync(path.dirname(appMarker), { recursive: true });
     writeFileSync(appMarker, "signed\n");
@@ -1308,7 +1308,7 @@ describe("openclaw live updater", () => {
           runCommand(command: string, args: string[]) {
             if (command === "pnpm" && args[0] === "build") {
               const preserved = readdirSync(path.join(mirror, ".git")).find((entry) =>
-                entry.startsWith(".openclaw-live-mac-"),
+                entry.startsWith(".grokbot-live-mac-"),
               );
               expect(preserved).toBeDefined();
               renameSync(path.join(mirror, ".git", preserved!), appBundle);
@@ -1340,8 +1340,8 @@ describe("openclaw live updater", () => {
       gatewaySelfHeal: false,
     });
     expect(commands.calls).toEqual([
-      "pnpm openclaw gateway status --deep --require-rpc --json",
-      "pnpm openclaw health --verbose --json",
+      "pnpm grokbot gateway status --deep --require-rpc --json",
+      "pnpm grokbot health --verbose --json",
     ]);
   });
 
@@ -1356,8 +1356,8 @@ describe("openclaw live updater", () => {
     const commands = fakeCommands(mirror);
     const snapshot = path.join(root, "gateway-ancestor/dist/index.js");
     const source = path.join(mirror, "dist/index.js");
-    const configPath = path.join(root, "openclaw.json");
-    const plistPath = path.join(root, "ai.openclaw.gateway.plist");
+    const configPath = path.join(root, "grokbot.json");
+    const plistPath = path.join(root, "ai.grokbot.gateway.plist");
     writeFileSync(configPath, "{}\n");
     writeFileSync(plistPath, "plist\n", { mode: 0o600 });
     let deployedEntrypoint = snapshot;
@@ -1368,7 +1368,7 @@ describe("openclaw live updater", () => {
       entrypointIndex: 1,
       executable: process.execPath,
       invocationPrefix: [deployedEntrypoint],
-      label: "ai.openclaw.gateway",
+      label: "ai.grokbot.gateway",
       plistPath,
       port: 18789,
       runtime: process.execPath,
@@ -1447,10 +1447,10 @@ describe("openclaw live updater", () => {
     expect(controlEntrypoint).toBe(source);
     const uid = process.getuid?.() ?? 501;
     expect(commands.calls).toEqual([
-      `/bin/launchctl bootout gui/${uid}/ai.openclaw.gateway`,
+      `/bin/launchctl bootout gui/${uid}/ai.grokbot.gateway`,
       "prove gateway stopped",
       "pnpm build",
-      `/bin/launchctl enable gui/${uid}/ai.openclaw.gateway`,
+      `/bin/launchctl enable gui/${uid}/ai.grokbot.gateway`,
       `/bin/launchctl bootstrap gui/${uid} ${plistPath}`,
     ]);
   });
@@ -1461,8 +1461,8 @@ describe("openclaw live updater", () => {
     const commands = fakeCommands(mirror);
     const snapshot = path.join(root, "gateway-ancestor/dist/index.js");
     const source = path.join(mirror, "dist/index.js");
-    const configPath = path.join(root, "openclaw.json");
-    const plistPath = path.join(root, "ai.openclaw.gateway.plist");
+    const configPath = path.join(root, "grokbot.json");
+    const plistPath = path.join(root, "ai.grokbot.gateway.plist");
     writeFileSync(configPath, "{}\n");
     writeFileSync(plistPath, "plist\n", { mode: 0o600 });
     let deployedEntrypoint = snapshot;
@@ -1483,7 +1483,7 @@ describe("openclaw live updater", () => {
           entrypointIndex: 1,
           executable: process.execPath,
           invocationPrefix: [deployedEntrypoint],
-          label: "ai.openclaw.gateway",
+          label: "ai.grokbot.gateway",
           plistPath,
           port: 18789,
           runtime: process.execPath,
@@ -1538,11 +1538,11 @@ describe("openclaw live updater", () => {
       "prove gateway stopped",
       "pnpm install --frozen-lockfile",
       "pnpm build",
-      `/bin/launchctl bootout gui/${uid}/ai.openclaw.gateway`,
+      `/bin/launchctl bootout gui/${uid}/ai.grokbot.gateway`,
       "prove gateway stopped",
       "sleep 100",
       "prove gateway stopped",
-      `/bin/launchctl enable gui/${uid}/ai.openclaw.gateway`,
+      `/bin/launchctl enable gui/${uid}/ai.grokbot.gateway`,
       `/bin/launchctl bootstrap gui/${uid} ${plistPath}`,
     ]);
   });
@@ -1553,8 +1553,8 @@ describe("openclaw live updater", () => {
     const commands = fakeCommands(mirror);
     const snapshot = path.join(root, "gateway-ancestor/dist/index.js");
     const source = path.join(mirror, "dist/index.js");
-    const configPath = path.join(root, "openclaw.json");
-    const plistPath = path.join(root, "ai.openclaw.gateway.plist");
+    const configPath = path.join(root, "grokbot.json");
+    const plistPath = path.join(root, "ai.grokbot.gateway.plist");
     writeFileSync(configPath, "{}\n");
     writeFileSync(plistPath, "plist\n", { mode: 0o600 });
     let deployedEntrypoint = snapshot;
@@ -1574,7 +1574,7 @@ describe("openclaw live updater", () => {
           entrypointIndex: 1,
           executable: process.execPath,
           invocationPrefix: [deployedEntrypoint],
-          label: "ai.openclaw.gateway",
+          label: "ai.grokbot.gateway",
           plistPath,
           port: 18789,
           runtime: process.execPath,
@@ -1617,7 +1617,7 @@ describe("openclaw live updater", () => {
     expect(commands.calls).toEqual([
       "pnpm install --frozen-lockfile",
       "pnpm build",
-      `/bin/launchctl enable gui/${uid}/ai.openclaw.gateway`,
+      `/bin/launchctl enable gui/${uid}/ai.grokbot.gateway`,
       `/bin/launchctl bootstrap gui/${uid} ${plistPath}`,
     ]);
   });
@@ -1641,9 +1641,9 @@ describe("openclaw live updater", () => {
     expect(commands.calls).toEqual([
       `${process.execPath} dist/index.js gateway stop`,
       "pnpm install --frozen-lockfile",
-      "pnpm openclaw gateway restart",
-      "pnpm openclaw gateway status --deep --require-rpc --json",
-      "pnpm openclaw health --verbose --json",
+      "pnpm grokbot gateway restart",
+      "pnpm grokbot gateway status --deep --require-rpc --json",
+      "pnpm grokbot health --verbose --json",
     ]);
   });
 
@@ -1674,10 +1674,10 @@ describe("openclaw live updater", () => {
       gatewaySelfHeal: true,
     });
     expect(calls).toEqual([
-      "pnpm openclaw gateway status --deep --require-rpc --json",
-      "pnpm openclaw gateway restart",
-      "pnpm openclaw gateway status --deep --require-rpc --json",
-      "pnpm openclaw health --verbose --json",
+      "pnpm grokbot gateway status --deep --require-rpc --json",
+      "pnpm grokbot gateway restart",
+      "pnpm grokbot gateway status --deep --require-rpc --json",
+      "pnpm grokbot health --verbose --json",
     ]);
   });
 
@@ -1688,15 +1688,15 @@ describe("openclaw live updater", () => {
     writeBuild(mirror);
     const commands = fakeCommands(mirror);
     const source = path.join(mirror, "dist/index.js");
-    const plistPath = path.join(root, "ai.openclaw.gateway.plist");
+    const plistPath = path.join(root, "ai.grokbot.gateway.plist");
     writeFileSync(plistPath, "plist\n", { mode: 0o600 });
     const deployment = {
-      configPath: path.join(root, "openclaw.json"),
+      configPath: path.join(root, "grokbot.json"),
       entrypoint: source,
       entrypointIndex: 1,
       executable: process.execPath,
       invocationPrefix: [source],
-      label: "ai.openclaw.gateway",
+      label: "ai.grokbot.gateway",
       plistPath,
       port: 18789,
       runtime: process.execPath,
@@ -1728,7 +1728,7 @@ describe("openclaw live updater", () => {
       gatewaySelfHeal: true,
     });
     expect(commands.calls).toEqual([
-      `/bin/launchctl enable gui/${uid}/ai.openclaw.gateway`,
+      `/bin/launchctl enable gui/${uid}/ai.grokbot.gateway`,
       `/bin/launchctl bootstrap gui/${uid} ${plistPath}`,
     ]);
   });
@@ -1794,7 +1794,7 @@ describe("openclaw live updater", () => {
         {
           fetchMain: fetchFixtureMain,
           runCommand(command: string, args: string[]) {
-            if (command === "pnpm" && args.slice(0, 3).join(" ") === "openclaw gateway status") {
+            if (command === "pnpm" && args.slice(0, 3).join(" ") === "grokbot gateway status") {
               statusCalls += 1;
               throw new Error("RPC unavailable");
             }
@@ -1815,8 +1815,8 @@ describe("openclaw live updater", () => {
 
   test("retains failed exact-bundle Mac proof for the next heartbeat", () => {
     const { root, mirror, seed } = makeFixture({ includeSeed: true });
-    mkdirSync(path.join(seed, "apps/macos/Sources/OpenClaw"), { recursive: true });
-    writeFileSync(path.join(seed, "apps/macos/Sources/OpenClaw/App.swift"), "// changed\n");
+    mkdirSync(path.join(seed, "apps/macos/Sources/GrokBot"), { recursive: true });
+    writeFileSync(path.join(seed, "apps/macos/Sources/GrokBot/App.swift"), "// changed\n");
     git(seed, "add", ".");
     git(seed, "commit", "-m", "mac change");
     git(seed, "push");
@@ -1853,8 +1853,8 @@ describe("openclaw live updater", () => {
     expect(retry.actions.gatewayBuild).toBe(false);
     expect(retry.actions.macAppRebuild).toBe(true);
     expect(retryCommands.calls.slice(0, 3)).toEqual([
-      "pnpm openclaw gateway status --deep --require-rpc --json",
-      "pnpm openclaw health --verbose --json",
+      "pnpm grokbot gateway status --deep --require-rpc --json",
+      "pnpm grokbot health --verbose --json",
       "env SKIP_TSC=1 SKIP_UI_BUILD=1 bash scripts/restart-mac.sh --sign --wait --target-only",
     ]);
     expect(existsSync(statePath)).toBe(false);
@@ -1862,8 +1862,8 @@ describe("openclaw live updater", () => {
 
   test("records pending Mac work before Gateway maintenance can fail", () => {
     const { root, mirror, seed } = makeFixture({ includeSeed: true });
-    mkdirSync(path.join(seed, "apps/macos/Sources/OpenClaw"), { recursive: true });
-    writeFileSync(path.join(seed, "apps/macos/Sources/OpenClaw/App.swift"), "// changed\n");
+    mkdirSync(path.join(seed, "apps/macos/Sources/GrokBot"), { recursive: true });
+    writeFileSync(path.join(seed, "apps/macos/Sources/GrokBot/App.swift"), "// changed\n");
     git(seed, "add", ".");
     git(seed, "commit", "-m", "mac change");
     git(seed, "push");

@@ -1,6 +1,6 @@
 // Launchd tests cover macOS service plist generation and command handling.
 import { PassThrough } from "node:stream";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { deleteTestEnvValue, setTestEnvValue } from "../test-utils/env.js";
 import { GATEWAY_SERVICE_KIND, GATEWAY_SERVICE_MARKER } from "./constants.js";
@@ -185,7 +185,7 @@ async function runStopLaunchAgentWithFakeTimers(args: Parameters<typeof stopLaun
 
 function expectLaunchctlEnableBootstrapOrder(env: Record<string, string | undefined>) {
   const domain = typeof process.getuid === "function" ? `gui/${process.getuid()}` : "gui/501";
-  const label = "ai.openclaw.gateway";
+  const label = "ai.grokbot.gateway";
   const plistPath = resolveLaunchAgentPlistPath(env);
   const serviceId = `${domain}/${label}`;
   const enableIndex = state.launchctlCalls.findIndex(
@@ -515,30 +515,30 @@ describe("launchd runtime state", () => {
 });
 
 describe("launchctl list detection", () => {
-  it("parses stale OpenClaw updater jobs from launchctl list", () => {
+  it("parses stale GrokBot updater jobs from launchctl list", () => {
     const jobs = parseLaunchctlListOpenClawUpdateJobs(
       [
-        "123 0 ai.openclaw.gateway",
-        "- 127 ai.openclaw.update.2026.5.12",
-        "- 0 ai.openclaw.manual-update.1717168800",
-        "8142 0 ai.openclaw.update.2026.5.13-beta.1",
-        "915 0 ai.openclaw.tayoun.update.20260625T201026-0400",
-        "- 0 ai.openclaw.manual-updater.1717168800",
+        "123 0 ai.grokbot.gateway",
+        "- 127 ai.grokbot.update.2026.5.12",
+        "- 0 ai.grokbot.manual-update.1717168800",
+        "8142 0 ai.grokbot.update.2026.5.13-beta.1",
+        "915 0 ai.grokbot.tayoun.update.20260625T201026-0400",
+        "- 0 ai.grokbot.manual-updater.1717168800",
         "- 0 com.example.other",
       ].join("\n"),
     );
 
     expect(jobs).toEqual([
       {
-        label: "ai.openclaw.manual-update.1717168800",
+        label: "ai.grokbot.manual-update.1717168800",
         lastExitStatus: 0,
       },
       {
-        label: "ai.openclaw.update.2026.5.12",
+        label: "ai.grokbot.update.2026.5.12",
         lastExitStatus: 127,
       },
       {
-        label: "ai.openclaw.update.2026.5.13-beta.1",
+        label: "ai.grokbot.update.2026.5.13-beta.1",
         pid: 8142,
         lastExitStatus: 0,
       },
@@ -546,15 +546,15 @@ describe("launchctl list detection", () => {
   });
 
   it.runIf(process.platform === "darwin")(
-    "finds stale OpenClaw updater jobs via launchctl list",
+    "finds stale GrokBot updater jobs via launchctl list",
     async () => {
-      state.listOutput = "- 127 ai.openclaw.update.2026.5.12\n";
+      state.listOutput = "- 127 ai.grokbot.update.2026.5.12\n";
 
       const jobs = await findStaleOpenClawUpdateLaunchdJobs();
 
       expect(jobs).toEqual([
         {
-          label: "ai.openclaw.update.2026.5.12",
+          label: "ai.grokbot.update.2026.5.12",
           lastExitStatus: 127,
         },
       ]);
@@ -565,10 +565,10 @@ describe("launchctl list detection", () => {
     "reports profile-scoped updater jobs only when launchd metadata confirms an update command",
     async () => {
       const env = createDefaultLaunchdEnv();
-      const updaterLabel = "ai.openclaw.tayoun.update.20260625T201026-0400";
-      const gatewayLikeLabel = "ai.openclaw.dev.team.update.20260625T201026-0400";
-      const nonOpenClawLabel = "ai.openclaw.fake.update.20260625T201026-0400";
-      const prefixedCliLabel = "ai.openclaw.helper.update.20260625T201026-0400";
+      const updaterLabel = "ai.grokbot.tayoun.update.20260625T201026-0400";
+      const gatewayLikeLabel = "ai.grokbot.dev.team.update.20260625T201026-0400";
+      const nonOpenClawLabel = "ai.grokbot.fake.update.20260625T201026-0400";
+      const prefixedCliLabel = "ai.grokbot.helper.update.20260625T201026-0400";
       state.listOutput = [
         `4321 0 ${updaterLabel}`,
         `9876 0 ${gatewayLikeLabel}`,
@@ -578,12 +578,12 @@ describe("launchctl list detection", () => {
       setLaunchAgentPlist({
         env,
         label: updaterLabel,
-        programArguments: ["/opt/homebrew/bin/openclaw", "update", "--yes", "--json"],
+        programArguments: ["/opt/homebrew/bin/grokbot", "update", "--yes", "--json"],
       });
       setLaunchAgentPlist({
         env,
         label: gatewayLikeLabel,
-        programArguments: ["/opt/homebrew/bin/openclaw", "gateway", "run"],
+        programArguments: ["/opt/homebrew/bin/grokbot", "gateway", "run"],
       });
       setLaunchAgentPlist({
         env,
@@ -593,7 +593,7 @@ describe("launchctl list detection", () => {
       setLaunchAgentPlist({
         env,
         label: prefixedCliLabel,
-        programArguments: ["/usr/local/bin/openclaw-helper", "update", "--yes"],
+        programArguments: ["/usr/local/bin/grokbot-helper", "update", "--yes"],
       });
 
       const jobs = await findStaleOpenClawUpdateLaunchdJobs(env as NodeJS.ProcessEnv);
@@ -612,12 +612,12 @@ describe("launchctl list detection", () => {
     "accepts an explicit updater marker when confirming profile-scoped updater jobs",
     async () => {
       const env = createDefaultLaunchdEnv();
-      const updaterLabel = "ai.openclaw.tayoun.update.20260625T201026-0400";
+      const updaterLabel = "ai.grokbot.tayoun.update.20260625T201026-0400";
       state.listOutput = `4321 0 ${updaterLabel}`;
       setLaunchAgentPlist({
         env,
         label: updaterLabel,
-        programArguments: ["/opt/homebrew/bin/openclaw", "gateway", "run"],
+        programArguments: ["/opt/homebrew/bin/grokbot", "gateway", "run"],
         environment: { OPENCLAW_UPDATE_RUN_HANDOFF: "1" },
       });
 
@@ -637,8 +637,8 @@ describe("launchctl list detection", () => {
     "unwraps generated environment-wrapper metadata for profile-scoped updater jobs",
     async () => {
       const env = createDefaultLaunchdEnv();
-      const label = "ai.openclaw.tayoun.update.20260625T201026-0400";
-      const envDir = "/Users/test/.openclaw-tayoun/service-env";
+      const label = "ai.grokbot.tayoun.update.20260625T201026-0400";
+      const envDir = "/Users/test/.grokbot-tayoun/service-env";
       const wrapperPath = `${envDir}/${label}-env-wrapper.sh`;
       const envFilePath = `${envDir}/${label}.env`;
       state.listOutput = `4321 0 ${label}`;
@@ -650,7 +650,7 @@ describe("launchctl list detection", () => {
           LAUNCH_AGENT_ENV_WRAPPER_SHELL,
           wrapperPath,
           envFilePath,
-          "/opt/homebrew/bin/openclaw",
+          "/opt/homebrew/bin/grokbot",
           "update",
           "--yes",
         ],
@@ -672,8 +672,8 @@ describe("launchctl list detection", () => {
     "reads the updater marker from a generated environment file",
     async () => {
       const env = createDefaultLaunchdEnv();
-      const label = "ai.openclaw.tayoun.update.20260625T201026-0400";
-      const envDir = "/Users/test/.openclaw-tayoun/service-env";
+      const label = "ai.grokbot.tayoun.update.20260625T201026-0400";
+      const envDir = "/Users/test/.grokbot-tayoun/service-env";
       const wrapperPath = `${envDir}/${label}-env-wrapper.sh`;
       const envFilePath = `${envDir}/${label}.env`;
       state.listOutput = `4321 0 ${label}`;
@@ -685,7 +685,7 @@ describe("launchctl list detection", () => {
           LAUNCH_AGENT_ENV_WRAPPER_SHELL,
           wrapperPath,
           envFilePath,
-          "/opt/homebrew/bin/openclaw",
+          "/opt/homebrew/bin/grokbot",
           "gateway",
           "run",
         ],
@@ -710,12 +710,12 @@ describe("launchctl list detection", () => {
         ...createDefaultLaunchdEnv(),
         OPENCLAW_UPDATE_RUN_HANDOFF: "1",
       };
-      const gatewayLikeLabel = "ai.openclaw.dev.team.update.20260625T201026-0400";
+      const gatewayLikeLabel = "ai.grokbot.dev.team.update.20260625T201026-0400";
       state.listOutput = `9876 0 ${gatewayLikeLabel}`;
       setLaunchAgentPlist({
         env,
         label: gatewayLikeLabel,
-        programArguments: ["/opt/homebrew/bin/openclaw", "gateway", "run"],
+        programArguments: ["/opt/homebrew/bin/grokbot", "gateway", "run"],
       });
 
       const jobs = await findStaleOpenClawUpdateLaunchdJobs(env as NodeJS.ProcessEnv);
@@ -728,21 +728,21 @@ describe("launchctl list detection", () => {
     "does not report current gateway labels that collide with manual update labels",
     async () => {
       state.listOutput = [
-        "- 0 ai.openclaw.manual-update.1717168800",
-        "812 0 ai.openclaw.manual-update.profile",
-        "913 0 ai.openclaw.manual-update.custom-label",
+        "- 0 ai.grokbot.manual-update.1717168800",
+        "812 0 ai.grokbot.manual-update.profile",
+        "913 0 ai.grokbot.manual-update.custom-label",
       ].join("\n");
 
       const jobs = await findStaleOpenClawUpdateLaunchdJobs({
         OPENCLAW_PROFILE: "manual-update.profile",
-        OPENCLAW_LAUNCHD_LABEL: "ai.openclaw.manual-update.custom-label",
+        OPENCLAW_LAUNCHD_LABEL: "ai.grokbot.manual-update.custom-label",
         OPENCLAW_SERVICE_MARKER: GATEWAY_SERVICE_MARKER,
         OPENCLAW_SERVICE_KIND: GATEWAY_SERVICE_KIND,
       } as NodeJS.ProcessEnv);
 
       expect(jobs).toEqual([
         {
-          label: "ai.openclaw.manual-update.1717168800",
+          label: "ai.grokbot.manual-update.1717168800",
           lastExitStatus: 0,
         },
       ]);
@@ -754,14 +754,14 @@ describe("launchctl list detection", () => {
     async () => {
       await expect(
         disableCurrentOpenClawUpdateLaunchdJob({
-          LAUNCH_JOB_LABEL: "ai.openclaw.update.2026.5.12",
+          LAUNCH_JOB_LABEL: "ai.grokbot.update.2026.5.12",
         }),
       ).resolves.toBe(true);
 
       const domain = typeof process.getuid === "function" ? `gui/${process.getuid()}` : "gui/501";
       expect(state.launchctlCalls).toContainEqual([
         "disable",
-        `${domain}/ai.openclaw.update.2026.5.12`,
+        `${domain}/ai.grokbot.update.2026.5.12`,
       ]);
       expect(launchctlCommandNames()).not.toContain("remove");
     },
@@ -772,50 +772,50 @@ describe("launchctl list detection", () => {
     async () => {
       await expect(
         disableCurrentOpenClawUpdateLaunchdJob({
-          LAUNCH_JOB_LABEL: "ai.openclaw.manual-update.1717168800",
+          LAUNCH_JOB_LABEL: "ai.grokbot.manual-update.1717168800",
         }),
       ).resolves.toBe(true);
 
       const domain = typeof process.getuid === "function" ? `gui/${process.getuid()}` : "gui/501";
       expect(state.launchctlCalls).toContainEqual([
         "disable",
-        `${domain}/ai.openclaw.manual-update.1717168800`,
+        `${domain}/ai.grokbot.manual-update.1717168800`,
       ]);
       expect(launchctlCommandNames()).not.toContain("remove");
     },
   );
 
   it.runIf(process.platform === "darwin")(
-    "disables the current legacy updater launchd job from OpenClaw label env",
+    "disables the current legacy updater launchd job from GrokBot label env",
     async () => {
       await expect(
         disableCurrentOpenClawUpdateLaunchdJob({
-          OPENCLAW_LAUNCHD_LABEL: "ai.openclaw.update.2026.5.12",
+          OPENCLAW_LAUNCHD_LABEL: "ai.grokbot.update.2026.5.12",
         }),
       ).resolves.toBe(true);
 
       const domain = typeof process.getuid === "function" ? `gui/${process.getuid()}` : "gui/501";
       expect(state.launchctlCalls).toContainEqual([
         "disable",
-        `${domain}/ai.openclaw.update.2026.5.12`,
+        `${domain}/ai.grokbot.update.2026.5.12`,
       ]);
     },
   );
 
   it.runIf(process.platform === "darwin")(
-    "does not let non-update launchd markers mask the OpenClaw update label",
+    "does not let non-update launchd markers mask the GrokBot update label",
     async () => {
       await expect(
         disableCurrentOpenClawUpdateLaunchdJob({
           XPC_SERVICE_NAME: "0",
-          OPENCLAW_LAUNCHD_LABEL: "ai.openclaw.update.2026.5.12",
+          OPENCLAW_LAUNCHD_LABEL: "ai.grokbot.update.2026.5.12",
         }),
       ).resolves.toBe(true);
 
       const domain = typeof process.getuid === "function" ? `gui/${process.getuid()}` : "gui/501";
       expect(state.launchctlCalls).toContainEqual([
         "disable",
-        `${domain}/ai.openclaw.update.2026.5.12`,
+        `${domain}/ai.grokbot.update.2026.5.12`,
       ]);
     },
   );
@@ -825,7 +825,7 @@ describe("launchctl list detection", () => {
     async () => {
       await expect(
         disableCurrentOpenClawUpdateLaunchdJob({
-          LAUNCH_JOB_LABEL: "ai.openclaw.gateway",
+          LAUNCH_JOB_LABEL: "ai.grokbot.gateway",
         }),
       ).resolves.toBe(false);
 
@@ -838,7 +838,7 @@ describe("launchctl list detection", () => {
     async () => {
       await expect(
         disableCurrentOpenClawUpdateLaunchdJob({
-          LAUNCH_JOB_LABEL: "ai.openclaw.update.2026.5.12",
+          LAUNCH_JOB_LABEL: "ai.grokbot.update.2026.5.12",
           OPENCLAW_PROFILE: "update.2026.5.12",
         }),
       ).resolves.toBe(false);
@@ -852,7 +852,7 @@ describe("launchctl list detection", () => {
     async () => {
       await expect(
         disableCurrentOpenClawUpdateLaunchdJob({
-          LAUNCH_JOB_LABEL: "ai.openclaw.manual-update.1717168800",
+          LAUNCH_JOB_LABEL: "ai.grokbot.manual-update.1717168800",
           OPENCLAW_PROFILE: "manual-update.1717168800",
         }),
       ).resolves.toBe(false);
@@ -865,11 +865,11 @@ describe("launchctl list detection", () => {
     "disables current profile-scoped updater launchd jobs only after metadata confirmation",
     async () => {
       const env = createDefaultLaunchdEnv();
-      const label = "ai.openclaw.tayoun.update.20260625T201026-0400";
+      const label = "ai.grokbot.tayoun.update.20260625T201026-0400";
       setLaunchAgentPlist({
         env,
         label,
-        programArguments: ["/usr/local/bin/node", "/opt/openclaw/openclaw.mjs", "update", "--yes"],
+        programArguments: ["/usr/local/bin/node", "/opt/grokbot/grokbot.mjs", "update", "--yes"],
       });
 
       await expect(
@@ -888,7 +888,7 @@ describe("launchctl list detection", () => {
     "lets a profile-scoped updater self-disarm from launchd runtime metadata",
     async () => {
       const env = createDefaultLaunchdEnv();
-      const label = "ai.openclaw.tayoun.update.20260625T201026-0400";
+      const label = "ai.grokbot.tayoun.update.20260625T201026-0400";
 
       await expect(
         disableCurrentOpenClawUpdateLaunchdJob({
@@ -907,11 +907,11 @@ describe("launchctl list detection", () => {
     "requires plist proof for a configured label preserved by an update handoff",
     async () => {
       const env = createDefaultLaunchdEnv();
-      const label = "ai.openclaw.dev.team.update.20260625T201026-0400";
+      const label = "ai.grokbot.dev.team.update.20260625T201026-0400";
       setLaunchAgentPlist({
         env,
         label,
-        programArguments: ["/opt/homebrew/bin/openclaw", "gateway", "run"],
+        programArguments: ["/opt/homebrew/bin/grokbot", "gateway", "run"],
       });
 
       await expect(
@@ -930,11 +930,11 @@ describe("launchctl list detection", () => {
     "disables a configured profile-scoped updater only with confirming plist metadata",
     async () => {
       const env = createDefaultLaunchdEnv();
-      const label = "ai.openclaw.tayoun.update.20260625T201026-0400";
+      const label = "ai.grokbot.tayoun.update.20260625T201026-0400";
       setLaunchAgentPlist({
         env,
         label,
-        programArguments: ["/opt/homebrew/bin/openclaw", "update", "--yes"],
+        programArguments: ["/opt/homebrew/bin/grokbot", "update", "--yes"],
       });
 
       await expect(
@@ -954,11 +954,11 @@ describe("launchctl list detection", () => {
     "does not disable profile-scoped gateway labels without updater metadata",
     async () => {
       const env = createDefaultLaunchdEnv();
-      const label = "ai.openclaw.tayoun.update.20260625T201026-0400";
+      const label = "ai.grokbot.tayoun.update.20260625T201026-0400";
       setLaunchAgentPlist({
         env,
         label,
-        programArguments: ["/opt/homebrew/bin/openclaw", "gateway", "run"],
+        programArguments: ["/opt/homebrew/bin/grokbot", "gateway", "run"],
       });
 
       await expect(
@@ -977,7 +977,7 @@ describe("launchctl list detection", () => {
     async () => {
       await expect(
         disableCurrentOpenClawUpdateLaunchdJob({
-          LAUNCH_JOB_LABEL: "ai.openclaw.manual-update.gateway",
+          LAUNCH_JOB_LABEL: "ai.grokbot.manual-update.gateway",
         }),
       ).resolves.toBe(false);
 
@@ -990,9 +990,9 @@ describe("launchctl list detection", () => {
     async () => {
       await expect(
         disableCurrentOpenClawUpdateLaunchdJob({
-          LAUNCH_JOB_LABEL: "ai.openclaw.update.2026.5.12",
-          OPENCLAW_LAUNCHD_LABEL: "ai.openclaw.update.2026.5.12",
-          OPENCLAW_SERVICE_MARKER: "openclaw",
+          LAUNCH_JOB_LABEL: "ai.grokbot.update.2026.5.12",
+          OPENCLAW_LAUNCHD_LABEL: "ai.grokbot.update.2026.5.12",
+          OPENCLAW_SERVICE_MARKER: "grokbot",
           OPENCLAW_SERVICE_KIND: "gateway",
         }),
       ).resolves.toBe(false);
@@ -1002,26 +1002,26 @@ describe("launchctl list detection", () => {
   );
 
   it.runIf(process.platform === "darwin")("disables explicit legacy updater jobs", async () => {
-    await expect(disableOpenClawUpdateLaunchdJob("ai.openclaw.update.2026.5.12")).resolves.toBe(
+    await expect(disableOpenClawUpdateLaunchdJob("ai.grokbot.update.2026.5.12")).resolves.toBe(
       true,
     );
 
     const domain = typeof process.getuid === "function" ? `gui/${process.getuid()}` : "gui/501";
     expect(state.launchctlCalls).toContainEqual([
       "disable",
-      `${domain}/ai.openclaw.update.2026.5.12`,
+      `${domain}/ai.grokbot.update.2026.5.12`,
     ]);
   });
 
   it.runIf(process.platform === "darwin")("disables explicit manual updater jobs", async () => {
     await expect(
-      disableOpenClawUpdateLaunchdJob("ai.openclaw.manual-update.1717168800"),
+      disableOpenClawUpdateLaunchdJob("ai.grokbot.manual-update.1717168800"),
     ).resolves.toBe(true);
 
     const domain = typeof process.getuid === "function" ? `gui/${process.getuid()}` : "gui/501";
     expect(state.launchctlCalls).toContainEqual([
       "disable",
-      `${domain}/ai.openclaw.manual-update.1717168800`,
+      `${domain}/ai.grokbot.manual-update.1717168800`,
     ]);
   });
 
@@ -1029,7 +1029,7 @@ describe("launchctl list detection", () => {
     "does not let the process marker bypass metadata for an explicit profile job",
     async () => {
       const env = createDefaultLaunchdEnv();
-      const label = "ai.openclaw.tayoun.update.20260625T201026-0400";
+      const label = "ai.grokbot.tayoun.update.20260625T201026-0400";
 
       await expect(
         disableOpenClawUpdateLaunchdJob(label, {
@@ -1047,14 +1047,14 @@ describe("launchd bootstrap repair", () => {
   it("migrates inline secrets before making an existing plist readable", async () => {
     const env = createDefaultLaunchdEnv();
     const plistPath = resolveLaunchAgentPlistPath(env);
-    const wrapperPath = "/Users/test/.openclaw/service-env/ai.openclaw.gateway-env-wrapper.sh";
+    const wrapperPath = "/Users/test/.grokbot/service-env/ai.grokbot.gateway-env-wrapper.sh";
     const warn = vi.fn();
     const secret = "legacy-secret";
     state.files.set(wrapperPath, "custom wrapper");
     state.files.set(
       plistPath,
       createTestLaunchAgentPlist({
-        label: "ai.openclaw.gateway",
+        label: "ai.grokbot.gateway",
         programArguments: defaultProgramArguments,
         environment: { OPENAI_API_KEY: secret },
       }),
@@ -1066,7 +1066,7 @@ describe("launchd bootstrap repair", () => {
     expect(warn).toHaveBeenCalledWith(expect.stringContaining("custom behavior"));
     expect(state.files.get(plistPath)).not.toContain(secret);
     expect(state.fileModes.get(plistPath)).toBe(0o644);
-    expect(state.files.get("/Users/test/.openclaw/service-env/ai.openclaw.gateway.env")).toContain(
+    expect(state.files.get("/Users/test/.grokbot/service-env/ai.grokbot.gateway.env")).toContain(
       secret,
     );
   });
@@ -1194,7 +1194,7 @@ describe("launchd install", () => {
 
   it("writes LaunchAgent environment to an owner-only env file when provided", async () => {
     const env = createDefaultLaunchdEnv();
-    const tmpDir = "/Users/test/.openclaw/tmp";
+    const tmpDir = "/Users/test/.grokbot/tmp";
     const apiKey = "secret-api-key";
     await installLaunchAgent({
       env,
@@ -1204,8 +1204,8 @@ describe("launchd install", () => {
     });
 
     const plistPath = resolveLaunchAgentPlistPath(env);
-    const envFilePath = "/Users/test/.openclaw/service-env/ai.openclaw.gateway.env";
-    const wrapperPath = "/Users/test/.openclaw/service-env/ai.openclaw.gateway-env-wrapper.sh";
+    const envFilePath = "/Users/test/.grokbot/service-env/ai.grokbot.gateway.env";
+    const wrapperPath = "/Users/test/.grokbot/service-env/ai.grokbot.gateway-env-wrapper.sh";
     const plist = state.files.get(plistPath) ?? "";
     expect(plist).not.toContain("<key>EnvironmentVariables</key>");
     expect(plist).not.toContain(apiKey);
@@ -1220,7 +1220,7 @@ describe("launchd install", () => {
     expect(envFile).toContain(`export OPENAI_API_KEY='${apiKey}'`);
     expect(state.fileModes.get(envFilePath)).toBe(0o600);
     expect(state.fileModes.get(wrapperPath)).toBe(0o700);
-    expect(state.dirModes.get("/Users/test/.openclaw/service-env")).toBe(0o700);
+    expect(state.dirModes.get("/Users/test/.grokbot/service-env")).toBe(0o700);
 
     const command = await readLaunchAgentProgramArguments(env);
     expect(command?.programArguments).toEqual(defaultProgramArguments);
@@ -1232,7 +1232,7 @@ describe("launchd install", () => {
 
   it("warns before overwriting a customized generated LaunchAgent env wrapper", async () => {
     const env = createDefaultLaunchdEnv();
-    const wrapperPath = "/Users/test/.openclaw/service-env/ai.openclaw.gateway-env-wrapper.sh";
+    const wrapperPath = "/Users/test/.grokbot/service-env/ai.grokbot.gateway-env-wrapper.sh";
     await installLaunchAgent({
       env,
       stdout: new PassThrough(),
@@ -1263,14 +1263,14 @@ describe("launchd install", () => {
 
     expect(output).toContain("Warning:");
     expect(output).toContain("contains custom behavior and will be overwritten");
-    expect(output).toContain("openclaw gateway install --wrapper <path>");
+    expect(output).toContain("grokbot gateway install --wrapper <path>");
     expect(output).toContain("OPENCLAW_WRAPPER");
     expect(state.files.get(wrapperPath)).toBe(generatedWrapper);
   });
 
   it("warns before overwriting a customized generated LaunchAgent env wrapper during restart rewrite", async () => {
     const env = createDefaultLaunchdEnv();
-    const wrapperPath = "/Users/test/.openclaw/service-env/ai.openclaw.gateway-env-wrapper.sh";
+    const wrapperPath = "/Users/test/.grokbot/service-env/ai.grokbot.gateway-env-wrapper.sh";
     await installLaunchAgent({
       env,
       stdout: new PassThrough(),
@@ -1300,15 +1300,15 @@ describe("launchd install", () => {
 
     expect(output).toContain("Warning:");
     expect(output).toContain("contains custom behavior and will be overwritten");
-    expect(output).toContain("openclaw gateway install --wrapper <path>");
+    expect(output).toContain("grokbot gateway install --wrapper <path>");
     expect(output).toContain("OPENCLAW_WRAPPER");
     expect(state.files.get(wrapperPath)).toBe(generatedWrapper);
   });
 
   it("rewrites legacy LaunchAgent environment wrappers to a system shell executable", async () => {
     const env = createDefaultLaunchdEnv();
-    const envFilePath = "/Users/test/.openclaw/service-env/ai.openclaw.gateway.env";
-    const wrapperPath = "/Users/test/.openclaw/service-env/ai.openclaw.gateway-env-wrapper.sh";
+    const envFilePath = "/Users/test/.grokbot/service-env/ai.grokbot.gateway.env";
+    const wrapperPath = "/Users/test/.grokbot/service-env/ai.grokbot.gateway-env-wrapper.sh";
     await installLaunchAgent({
       env,
       stdout: new PassThrough(),
@@ -1365,16 +1365,16 @@ describe("launchd install", () => {
     });
 
     const plistPath = resolveLaunchAgentPlistPath(callerEnv);
-    const envFilePath = "/Users/test/service-env/custom-state/service-env/ai.openclaw.gateway.env";
+    const envFilePath = "/Users/test/service-env/custom-state/service-env/ai.grokbot.gateway.env";
     const wrapperPath =
-      "/Users/test/service-env/custom-state/service-env/ai.openclaw.gateway-env-wrapper.sh";
-    const callerEnvFilePath = "/Users/test/.openclaw/service-env/ai.openclaw.gateway.env";
+      "/Users/test/service-env/custom-state/service-env/ai.grokbot.gateway-env-wrapper.sh";
+    const callerEnvFilePath = "/Users/test/.grokbot/service-env/ai.grokbot.gateway.env";
     const callerWrapperPath =
-      "/Users/test/.openclaw/service-env/ai.openclaw.gateway-env-wrapper.sh";
+      "/Users/test/.grokbot/service-env/ai.grokbot.gateway-env-wrapper.sh";
     const mangledEnvFilePath =
-      "/Users/test/service-env/custom-state/service-env/[ai.openclaw.gateway.env](http:/ai.openclaw.gateway.env)";
+      "/Users/test/service-env/custom-state/service-env/[ai.grokbot.gateway.env](http:/ai.grokbot.gateway.env)";
     const mangledWrapperPath =
-      "/Users/test/service-env/custom-state/service-env/[ai.openclaw.gateway-env-wrapper.sh](http:/ai.openclaw.gateway-env-wrapper.sh)";
+      "/Users/test/service-env/custom-state/service-env/[ai.grokbot.gateway-env-wrapper.sh](http:/ai.grokbot.gateway-env-wrapper.sh)";
     state.files.set(
       plistPath,
       (state.files.get(plistPath) ?? "")
@@ -1411,7 +1411,7 @@ describe("launchd install", () => {
 
   it("creates the LaunchAgent TMPDIR before bootstrap", async () => {
     const env = createDefaultLaunchdEnv();
-    const tmpDir = "/Users/test/.openclaw/tmp";
+    const tmpDir = "/Users/test/.grokbot/tmp";
     await installLaunchAgent({
       env,
       stdout: new PassThrough(),
@@ -1438,7 +1438,7 @@ describe("launchd install", () => {
     expect(plist).toContain("<key>StandardInPath</key>");
     expect(plist).toContain("<string>/dev/null</string>");
     expect(plist).toContain("<key>StandardOutPath</key>");
-    expect(plist).toContain("<string>/Users/test/Library/Logs/openclaw/gateway.log</string>");
+    expect(plist).toContain("<string>/Users/test/Library/Logs/grokbot/gateway.log</string>");
     expect(plist).not.toContain("<key>SuccessfulExit</key>");
     expect(plist).toContain("<key>ExitTimeOut</key>");
     expect(plist).toContain(`<integer>${LAUNCH_AGENT_EXIT_TIMEOUT_SECONDS}</integer>`);
@@ -1463,7 +1463,7 @@ describe("launchd install", () => {
         '<plist version="1.0">',
         "  <dict>",
         "    <key>Label</key>",
-        "    <string>ai.openclaw.gateway</string>",
+        "    <string>ai.grokbot.gateway</string>",
         "    <key>ProgramArguments</key>",
         "    <array>",
         "      <string>node</string>",
@@ -1482,7 +1482,7 @@ describe("launchd install", () => {
     const plist = state.files.get(plistPath) ?? "";
     expect(plist).toContain("<key>StandardInPath</key>");
     expect(plist).toContain("<key>StandardOutPath</key>");
-    expect(plist).toContain("<string>/Users/test/Library/Logs/openclaw/gateway.log</string>");
+    expect(plist).toContain("<string>/Users/test/Library/Logs/grokbot/gateway.log</string>");
     expect(plist).toContain("<key>StandardErrorPath</key>");
     expect(plist).toContain("<string>/dev/null</string>");
     expect(plist).toContain("<key>KeepAlive</key>");
@@ -1525,7 +1525,7 @@ describe("launchd install", () => {
     await stopLaunchAgent({ env, stdout });
 
     const domain = typeof process.getuid === "function" ? `gui/${process.getuid()}` : "gui/501";
-    const serviceId = `${domain}/ai.openclaw.gateway`;
+    const serviceId = `${domain}/ai.grokbot.gateway`;
     expect(state.launchctlCalls).toEqual([["bootout", serviceId]]);
     expect(output).toContain("Stopped LaunchAgent");
   });
@@ -1535,11 +1535,11 @@ describe("launchd install", () => {
 
     await withProcessEnv(
       {
-        LAUNCH_JOB_LABEL: "ai.openclaw.gateway",
+        LAUNCH_JOB_LABEL: "ai.grokbot.gateway",
       },
       async () => {
         await expect(stopLaunchAgent({ env, stdout: new PassThrough() })).rejects.toThrow(
-          "Refusing to stop LaunchAgent ai.openclaw.gateway from inside the same launchd service",
+          "Refusing to stop LaunchAgent ai.grokbot.gateway from inside the same launchd service",
         );
       },
     );
@@ -1555,13 +1555,13 @@ describe("launchd install", () => {
         LAUNCH_JOB_LABEL: undefined,
         LAUNCH_JOB_NAME: undefined,
         XPC_SERVICE_NAME: "0",
-        OPENCLAW_SERVICE_MARKER: "openclaw",
+        OPENCLAW_SERVICE_MARKER: "grokbot",
         OPENCLAW_SERVICE_KIND: "gateway",
-        OPENCLAW_LAUNCHD_LABEL: "ai.openclaw.gateway",
+        OPENCLAW_LAUNCHD_LABEL: "ai.grokbot.gateway",
       },
       async () => {
         await expect(stopLaunchAgent({ env, stdout: new PassThrough() })).rejects.toThrow(
-          "Refusing to stop LaunchAgent ai.openclaw.gateway from inside the same launchd service",
+          "Refusing to stop LaunchAgent ai.grokbot.gateway from inside the same launchd service",
         );
       },
     );
@@ -1572,7 +1572,7 @@ describe("launchd install", () => {
   it("allows external LaunchAgent label overrides to stop the selected target", async () => {
     const env = {
       ...createDefaultLaunchdEnv(),
-      OPENCLAW_LAUNCHD_LABEL: "com.example.openclaw.gateway",
+      OPENCLAW_LAUNCHD_LABEL: "com.example.grokbot.gateway",
     };
     const stdout = new PassThrough();
     let output = "";
@@ -1595,7 +1595,7 @@ describe("launchd install", () => {
     );
 
     const domain = typeof process.getuid === "function" ? `gui/${process.getuid()}` : "gui/501";
-    const serviceId = `${domain}/com.example.openclaw.gateway`;
+    const serviceId = `${domain}/com.example.grokbot.gateway`;
     expect(state.launchctlCalls).toEqual([["bootout", serviceId]]);
     expect(output).toContain("Stopped LaunchAgent");
   });
@@ -1711,10 +1711,10 @@ describe("launchd install", () => {
     await stopLaunchAgent({ env, stdout, disable: true });
 
     const domain = typeof process.getuid === "function" ? `gui/${process.getuid()}` : "gui/501";
-    const serviceId = `${domain}/ai.openclaw.gateway`;
+    const serviceId = `${domain}/ai.grokbot.gateway`;
     expect(state.launchctlCalls).toEqual([
       ["disable", serviceId],
-      ["stop", "ai.openclaw.gateway"],
+      ["stop", "ai.grokbot.gateway"],
       ["print", serviceId],
     ]);
     expect(output).toContain("Stopped LaunchAgent");
@@ -1743,13 +1743,13 @@ describe("launchd install", () => {
 
     await withProcessEnv(
       {
-        LAUNCH_JOB_LABEL: "ai.openclaw.gateway",
+        LAUNCH_JOB_LABEL: "ai.grokbot.gateway",
       },
       async () => {
         await expect(
           stopLaunchAgent({ env, stdout: new PassThrough(), disable: true }),
         ).rejects.toThrow(
-          "Refusing to stop LaunchAgent ai.openclaw.gateway from inside the same launchd service",
+          "Refusing to stop LaunchAgent ai.grokbot.gateway from inside the same launchd service",
         );
       },
     );
@@ -1772,10 +1772,10 @@ describe("launchd install", () => {
     await stopLaunchAgent({ env, stdout, disable: true });
 
     const domain = typeof process.getuid === "function" ? `gui/${process.getuid()}` : "gui/501";
-    const serviceId = `${domain}/ai.openclaw.gateway`;
+    const serviceId = `${domain}/ai.grokbot.gateway`;
     expect(state.launchctlCalls).toEqual([
       ["disable", serviceId],
-      ["stop", "ai.openclaw.gateway"],
+      ["stop", "ai.grokbot.gateway"],
       ["print", serviceId],
     ]);
     expect(launchctlCommandNames()).not.toContain("bootout");
@@ -1986,7 +1986,7 @@ describe("launchd install", () => {
     });
 
     const domain = typeof process.getuid === "function" ? `gui/${process.getuid()}` : "gui/501";
-    const label = "ai.openclaw.gateway";
+    const label = "ai.grokbot.gateway";
     const serviceId = `${domain}/${label}`;
     expect(result).toEqual({ outcome: "completed" });
     expect(cleanStaleGatewayProcessesSync).toHaveBeenCalledWith(18789);
@@ -2017,7 +2017,7 @@ describe("launchd install", () => {
     ).resolves.toBeUndefined();
 
     const domain = typeof process.getuid === "function" ? `gui/${process.getuid()}` : "gui/501";
-    const serviceId = `${domain}/ai.openclaw.gateway`;
+    const serviceId = `${domain}/ai.grokbot.gateway`;
     expect(state.launchctlCalls).toEqual([
       ["enable", serviceId],
       ["kickstart", serviceId],
@@ -2037,7 +2037,7 @@ describe("launchd install", () => {
     await startLaunchAgent({ env, stdout: new PassThrough(), onMutation });
 
     const domain = typeof process.getuid === "function" ? `gui/${process.getuid()}` : "gui/501";
-    const serviceId = `${domain}/ai.openclaw.gateway`;
+    const serviceId = `${domain}/ai.grokbot.gateway`;
     expect(state.launchctlCalls).toEqual([
       ["enable", serviceId],
       ["kickstart", serviceId],
@@ -2089,14 +2089,14 @@ describe("launchd install", () => {
         '<plist version="1.0">',
         "  <dict>",
         "    <key>Label</key>",
-        "    <string>ai.openclaw.gateway</string>",
+        "    <string>ai.grokbot.gateway</string>",
         "    <key>ProgramArguments</key>",
         "    <array>",
         "      <string>node</string>",
         "      <string>gateway.js</string>",
         "    </array>",
         "    <key>StandardOutPath</key>",
-        "    <string>/Users/test/.openclaw-default/logs/gateway.log</string>",
+        "    <string>/Users/test/.grokbot-default/logs/gateway.log</string>",
         "  </dict>",
         "</plist>",
       ].join("\n"),
@@ -2112,7 +2112,7 @@ describe("launchd install", () => {
     const plist = state.files.get(plistPath) ?? "";
     expect(plist).toContain("<key>StandardInPath</key>");
     expect(plist).toContain("<string>/dev/null</string>");
-    expect(plist).toContain("<string>/Users/test/Library/Logs/openclaw/gateway.log</string>");
+    expect(plist).toContain("<string>/Users/test/Library/Logs/grokbot/gateway.log</string>");
     expect(launchctlCommandNames()).toEqual(["enable", "bootout", "enable", "bootstrap"]);
     expect(launchctlCommandNames()).not.toContain("kickstart");
     expect(onMutation.mock.calls).toEqual([
@@ -2130,7 +2130,7 @@ describe("launchd install", () => {
     };
     setLaunchAgentPlist({
       env,
-      label: "ai.openclaw.gateway",
+      label: "ai.grokbot.gateway",
       programArguments: ["node", "gateway.js"],
     });
     state.bootstrapError = "Operation not permitted";
@@ -2156,7 +2156,7 @@ describe("launchd install", () => {
     };
     setLaunchAgentPlist({
       env,
-      label: "ai.openclaw.gateway",
+      label: "ai.grokbot.gateway",
       programArguments: ["node", "gateway.js"],
     });
     const onMutation = vi.fn(({ mode }: { mode: string }) => {
@@ -2187,14 +2187,14 @@ describe("launchd install", () => {
         '<plist version="1.0">',
         "  <dict>",
         "    <key>Label</key>",
-        "    <string>ai.openclaw.gateway</string>",
+        "    <string>ai.grokbot.gateway</string>",
         "    <key>ProgramArguments</key>",
         "    <array>",
         "      <string>node</string>",
         "      <string>gateway.js</string>",
         "    </array>",
         "    <key>StandardOutPath</key>",
-        "    <string>/Users/test/.openclaw-default/logs/gateway.log</string>",
+        "    <string>/Users/test/.grokbot-default/logs/gateway.log</string>",
         "  </dict>",
         "</plist>",
       ].join("\n"),
@@ -2310,14 +2310,14 @@ describe("launchd install", () => {
       '<plist version="1.0">',
       "  <dict>",
       "    <key>Label</key>",
-      "    <string>ai.openclaw.gateway</string>",
+      "    <string>ai.grokbot.gateway</string>",
       "    <key>ProgramArguments</key>",
       "    <array>",
       "      <string>node</string>",
       "      <string>gateway.js</string>",
       "    </array>",
       "    <key>StandardOutPath</key>",
-      "    <string>/Users/test/.openclaw-default/logs/gateway.log</string>",
+      "    <string>/Users/test/.grokbot-default/logs/gateway.log</string>",
       "  </dict>",
       "</plist>",
     ].join("\n");
@@ -2369,7 +2369,7 @@ describe("launchd install", () => {
     });
 
     const domain = typeof process.getuid === "function" ? `gui/${process.getuid()}` : "gui/501";
-    const serviceId = `${domain}/ai.openclaw.gateway`;
+    const serviceId = `${domain}/ai.grokbot.gateway`;
     const kickstartCalls = state.launchctlCalls.filter(
       (c) => c[0] === "kickstart" && c[1] === "-k" && c[2] === serviceId,
     );
@@ -2418,7 +2418,7 @@ describe("launchd install", () => {
   it("hands restart off to a detached helper when invoked from the current LaunchAgent", async () => {
     const env = createDefaultLaunchdEnv();
 
-    const result = await withProcessEnv({ LAUNCH_JOB_LABEL: "ai.openclaw.gateway" }, async () =>
+    const result = await withProcessEnv({ LAUNCH_JOB_LABEL: "ai.grokbot.gateway" }, async () =>
       restartLaunchAgent({
         env,
         stdout: new PassThrough(),
@@ -2444,20 +2444,20 @@ describe("launchd install", () => {
         '<plist version="1.0">',
         "  <dict>",
         "    <key>Label</key>",
-        "    <string>ai.openclaw.gateway</string>",
+        "    <string>ai.grokbot.gateway</string>",
         "    <key>ProgramArguments</key>",
         "    <array>",
         "      <string>node</string>",
         "      <string>gateway.js</string>",
         "    </array>",
         "    <key>StandardOutPath</key>",
-        "    <string>/Users/test/.openclaw-default/logs/gateway.log</string>",
+        "    <string>/Users/test/.grokbot-default/logs/gateway.log</string>",
         "  </dict>",
         "</plist>",
       ].join("\n"),
     );
 
-    const result = await withProcessEnv({ LAUNCH_JOB_LABEL: "ai.openclaw.gateway" }, async () =>
+    const result = await withProcessEnv({ LAUNCH_JOB_LABEL: "ai.grokbot.gateway" }, async () =>
       restartLaunchAgent({
         env,
         stdout: new PassThrough(),
@@ -2470,7 +2470,7 @@ describe("launchd install", () => {
       mode: "reload",
       waitForPid: process.pid,
     });
-    expect(state.files.get(plistPath)).toContain("/Users/test/Library/Logs/openclaw/gateway.log");
+    expect(state.files.get(plistPath)).toContain("/Users/test/Library/Logs/grokbot/gateway.log");
     expect(state.launchctlCalls).toStrictEqual([]);
   });
 
@@ -2482,7 +2482,7 @@ describe("launchd install", () => {
     });
 
     await expect(
-      withProcessEnv({ LAUNCH_JOB_LABEL: "ai.openclaw.gateway" }, async () =>
+      withProcessEnv({ LAUNCH_JOB_LABEL: "ai.grokbot.gateway" }, async () =>
         restartLaunchAgent({
           env,
           stdout: new PassThrough(),
@@ -2499,9 +2499,9 @@ describe("launchd install", () => {
         LAUNCH_JOB_LABEL: undefined,
         LAUNCH_JOB_NAME: undefined,
         XPC_SERVICE_NAME: "0",
-        OPENCLAW_SERVICE_MARKER: "openclaw",
+        OPENCLAW_SERVICE_MARKER: "grokbot",
         OPENCLAW_SERVICE_KIND: "gateway",
-        OPENCLAW_LAUNCHD_LABEL: "ai.openclaw.gateway",
+        OPENCLAW_LAUNCHD_LABEL: "ai.grokbot.gateway",
       },
       async () =>
         restartLaunchAgent({
@@ -2557,7 +2557,7 @@ describe("launchd install", () => {
     }
     expect(message).toContain("logged-in macOS GUI session");
     expect(message).toContain("wrong user (including sudo)");
-    expect(message).toContain("https://docs.openclaw.ai/gateway");
+    expect(message).toContain("https://docs.grokbot.ai/gateway");
   });
 
   it("surfaces generic bootstrap failures without GUI-specific guidance", async () => {
@@ -2579,12 +2579,12 @@ describe("resolveLaunchAgentPlistPath", () => {
     {
       name: "uses default label when OPENCLAW_PROFILE is unset",
       env: { HOME: "/Users/test" },
-      expected: "/Users/test/Library/LaunchAgents/ai.openclaw.gateway.plist",
+      expected: "/Users/test/Library/LaunchAgents/ai.grokbot.gateway.plist",
     },
     {
       name: "uses profile-specific label when OPENCLAW_PROFILE is set to a custom value",
       env: { HOME: "/Users/test", OPENCLAW_PROFILE: "jbphoenix" },
-      expected: "/Users/test/Library/LaunchAgents/ai.openclaw.jbphoenix.plist",
+      expected: "/Users/test/Library/LaunchAgents/ai.grokbot.jbphoenix.plist",
     },
     {
       name: "prefers OPENCLAW_LAUNCHD_LABEL over OPENCLAW_PROFILE",
@@ -2610,7 +2610,7 @@ describe("resolveLaunchAgentPlistPath", () => {
         OPENCLAW_PROFILE: "myprofile",
         OPENCLAW_LAUNCHD_LABEL: "   ",
       },
-      expected: "/Users/test/Library/LaunchAgents/ai.openclaw.myprofile.plist",
+      expected: "/Users/test/Library/LaunchAgents/ai.grokbot.myprofile.plist",
     },
   ])("$name", ({ env, expected }) => {
     expect(resolveLaunchAgentPlistPath(env)).toBe(expected);

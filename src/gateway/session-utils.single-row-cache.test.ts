@@ -195,8 +195,8 @@ describe("single gateway session row child-session cache", () => {
 
   test("shares the child-session index across repeated single-row loads for the same store", async () => {
     await withSingleRowCacheStore(
-      "openclaw-single-row-cache-",
-      "/tmp/openclaw-single-row-cache",
+      "grokbot-single-row-cache-",
+      "/tmp/grokbot-single-row-cache",
       async ({ now, storePath }) => {
         const store: Record<string, SessionEntry> = {
           "agent:main:subagent:parent-a": parentSession("parent-a", now),
@@ -230,8 +230,8 @@ describe("single gateway session row child-session cache", () => {
 
   test("refreshes subagent registry state while reusing store child candidates", async () => {
     await withSingleRowCacheStore(
-      "openclaw-single-row-cache-fresh-registry-",
-      "/tmp/openclaw-single-row-cache-fresh-registry",
+      "grokbot-single-row-cache-fresh-registry-",
+      "/tmp/grokbot-single-row-cache-fresh-registry",
       async ({ now, storePath }) => {
         const fixture = createMovingChildFixture(now);
         await seedSessionEntries(storePath, fixture.store);
@@ -249,8 +249,8 @@ describe("single gateway session row child-session cache", () => {
 
   test("builds shared subagent metadata context for single-row session lists", async () => {
     await withSingleRowCacheStore(
-      "openclaw-single-row-list-context-",
-      "/tmp/openclaw-single-row-list-context",
+      "grokbot-single-row-list-context-",
+      "/tmp/grokbot-single-row-list-context",
       async ({ now, storePath }) => {
         const store: Record<string, SessionEntry> = {
           "agent:main:discord:channel:parent": parentSession("parent", now),
@@ -261,7 +261,7 @@ describe("single gateway session row child-session cache", () => {
               {
                 id: MAIN_AGENT_ID,
                 default: true,
-                workspace: "/tmp/openclaw-single-row-list-context",
+                workspace: "/tmp/grokbot-single-row-list-context",
               },
             ],
             defaults: { model: { primary: TEST_MODEL } },
@@ -301,8 +301,8 @@ describe("single gateway session row child-session cache", () => {
 
   test("rebuilds store child candidates after same-object session store writes", async () => {
     await withSingleRowCacheStore(
-      "openclaw-single-row-cache-write-version-",
-      "/tmp/openclaw-single-row-cache-write-version",
+      "grokbot-single-row-cache-write-version-",
+      "/tmp/grokbot-single-row-cache-write-version",
       async ({ now, storePath }) => {
         const fixture = createMovingChildFixture(now);
         await seedSessionEntries(storePath, fixture.store);

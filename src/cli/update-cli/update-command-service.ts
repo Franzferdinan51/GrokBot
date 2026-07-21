@@ -3,8 +3,8 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { Writable } from "node:stream";
 import { confirm, isCancel } from "@clack/prompts";
-import { err as resultError, ok, type Result } from "@openclaw/normalization-core/result";
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+import { err as resultError, ok, type Result } from "@grokbot/normalization-core/result";
+import { normalizeOptionalString } from "@grokbot/normalization-core/string-coerce";
 import { stylePromptMessage } from "../../../packages/terminal-core/src/prompt-style.js";
 import { theme } from "../../../packages/terminal-core/src/theme.js";
 import {
@@ -14,7 +14,7 @@ import {
 import { doctorCommand } from "../../commands/doctor.js";
 import { UPDATE_PARENT_SUPPORTS_DOCTOR_CONFIG_WRITE_ENV } from "../../commands/doctor/shared/update-phase.js";
 import { resolveGatewayPort } from "../../config/config.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import {
   GATEWAY_SERVICE_KIND,
   GATEWAY_SERVICE_MARKER,
@@ -214,19 +214,19 @@ async function hasLoadedLaunchdKeepAliveSupervisor(params: {
   if (process.platform !== "darwin") {
     return false;
   }
-  // OpenClaw's loaded LaunchAgent has canonical KeepAlive policy. Read this once before
+  // GrokBot's loaded LaunchAgent has canonical KeepAlive policy. Read this once before
   // polling so an unloaded agent can still reach the existing recovery path promptly.
   return await params.service.isLoaded({ env: params.env }).catch(() => false);
 }
 
 function formatPostUpdateGatewayRecoveryLine(platform: NodeJS.Platform): string {
-  const restartCommand = replaceCliName(formatCliCommand("openclaw gateway restart"), CLI_NAME);
+  const restartCommand = replaceCliName(formatCliCommand("grokbot gateway restart"), CLI_NAME);
   const installCommand = replaceCliName(
-    formatCliCommand("openclaw gateway install --force"),
+    formatCliCommand("grokbot gateway install --force"),
     CLI_NAME,
   );
   const statusCommand = replaceCliName(
-    formatCliCommand("openclaw gateway status --deep"),
+    formatCliCommand("grokbot gateway status --deep"),
     CLI_NAME,
   );
   if (platform === "darwin") {
@@ -249,14 +249,14 @@ function formatPostUpdateGatewayRecoveryInstructions(
   const beforeVersion = normalizeOptionalString(result.before?.version);
   if (isPackageManagerUpdateMode(result.mode) && beforeVersion) {
     lines.push(
-      `Rollback: reinstall OpenClaw ${beforeVersion} with the same package manager, then rerun \`${replaceCliName(formatCliCommand("openclaw gateway install --force"), CLI_NAME)}\`.`,
+      `Rollback: reinstall GrokBot ${beforeVersion} with the same package manager, then rerun \`${replaceCliName(formatCliCommand("grokbot gateway install --force"), CLI_NAME)}\`.`,
     );
   }
   return lines;
 }
 
 if (process.env.VITEST || process.env.NODE_ENV === "test") {
-  (globalThis as Record<PropertyKey, unknown>)[Symbol.for("openclaw.updateCommandServiceTestApi")] =
+  (globalThis as Record<PropertyKey, unknown>)[Symbol.for("grokbot.updateCommandServiceTestApi")] =
     {
       formatPostUpdateGatewayRecoveryInstructions,
       recoverInstalledLaunchAgentAfterUpdate,
@@ -290,7 +290,7 @@ export type UpdateCommandRecoveryState = {
 
 export class UpdateCommandAbort extends Error {
   constructor() {
-    super("openclaw-update-abort");
+    super("grokbot-update-abort");
     this.name = "UpdateCommandAbort";
   }
 }
@@ -310,9 +310,9 @@ export type ManagedServiceRootRedirect = {
 };
 
 function formatGatewayAncestryBlockMessage(pid: number): string {
-  return `openclaw update detected it is running inside the gateway process tree.
+  return `grokbot update detected it is running inside the gateway process tree.
 Gateway PID ${pid} is an ancestor of this process, so this updater cannot safely stop or restart the gateway that owns it.
-Run \`${replaceCliName(formatCliCommand("openclaw update"), CLI_NAME)}\` from a shell outside the gateway service, or stop the gateway service first and then update.`;
+Run \`${replaceCliName(formatCliCommand("grokbot update"), CLI_NAME)}\` from a shell outside the gateway service, or stop the gateway service first and then update.`;
 }
 
 function parsePositivePid(value: unknown): number | null {
@@ -600,7 +600,7 @@ export async function maybeStopManagedServiceBeforeMutableUpdate(params: {
     if (!params.jsonMode) {
       defaultRuntime.log(
         theme.muted(
-          `Managed gateway service points at a different OpenClaw root; leaving it running during this ${params.updateInstallKind} update.`,
+          `Managed gateway service points at a different GrokBot root; leaving it running during this ${params.updateInstallKind} update.`,
         ),
       );
     }
@@ -814,13 +814,13 @@ export async function resolvePackageRuntimePreflight(params: {
     : `Node ${runtime.version ?? "unknown"}`;
   return resultError(
     [
-      `${runtimeLabel} is too old for openclaw@${targetVersion}.`,
+      `${runtimeLabel} is too old for grokbot@${targetVersion}.`,
       `The requested package requires ${status.nodeEngine}.`,
       runtime.nodeRunner
-        ? "Upgrade the Node runtime that owns the managed Gateway service, then rerun `openclaw update`."
-        : "Upgrade to Node 22.22.3+, Node 24.15.0+, or Node 25.9.0+, then rerun `openclaw update`.",
-      "Bare `npm i -g openclaw` can silently install an older compatible release.",
-      "After upgrading Node, use `npm i -g openclaw@latest`.",
+        ? "Upgrade the Node runtime that owns the managed Gateway service, then rerun `grokbot update`."
+        : "Upgrade to Node 22.22.3+, Node 24.15.0+, or Node 25.9.0+, then rerun `grokbot update`.",
+      "Bare `npm i -g grokbot` can silently install an older compatible release.",
+      "After upgrading Node, use `npm i -g grokbot@latest`.",
     ].join("\n"),
   );
 }
@@ -1048,7 +1048,7 @@ export async function tryInstallShellCompletion(opts: {
       if (!opts.skipPrompt) {
         defaultRuntime.log(
           theme.muted(
-            `Skipped. Run \`${replaceCliName(formatCliCommand("openclaw completion --install"), CLI_NAME)}\` later to enable.`,
+            `Skipped. Run \`${replaceCliName(formatCliCommand("grokbot completion --install"), CLI_NAME)}\` later to enable.`,
           ),
         );
       }
@@ -1302,7 +1302,7 @@ export async function maybeRestartService(params: {
           ]
         : []),
       `Restart log: ${resolveGatewayRestartLogPath(params.serviceEnv ?? process.env)}`,
-      `Run \`${replaceCliName(formatCliCommand("openclaw gateway status --deep"), CLI_NAME)}\` for details.`,
+      `Run \`${replaceCliName(formatCliCommand("grokbot gateway status --deep"), CLI_NAME)}\` for details.`,
       ...formatPostUpdateGatewayRecoveryInstructions(params.result),
     ];
     if (params.opts.json) {
@@ -1471,7 +1471,7 @@ export async function maybeRestartService(params: {
         defaultRuntime.log(theme.warn(`Gateway: restart failed: ${String(err)}`));
         defaultRuntime.log(
           theme.muted(
-            `You may need to restart the service manually: ${replaceCliName(formatCliCommand("openclaw gateway restart"), CLI_NAME)}`,
+            `You may need to restart the service manually: ${replaceCliName(formatCliCommand("grokbot gateway restart"), CLI_NAME)}`,
           ),
         );
       }
@@ -1491,13 +1491,13 @@ export async function maybeRestartService(params: {
     if (params.result.mode === "npm" || params.result.mode === "pnpm") {
       defaultRuntime.log(
         theme.muted(
-          `Tip: Run \`${replaceCliName(formatCliCommand("openclaw doctor"), CLI_NAME)}\`, then \`${replaceCliName(formatCliCommand("openclaw gateway restart"), CLI_NAME)}\` to apply updates to a running gateway.`,
+          `Tip: Run \`${replaceCliName(formatCliCommand("grokbot doctor"), CLI_NAME)}\`, then \`${replaceCliName(formatCliCommand("grokbot gateway restart"), CLI_NAME)}\` to apply updates to a running gateway.`,
         ),
       );
     } else {
       defaultRuntime.log(
         theme.muted(
-          `Tip: Run \`${replaceCliName(formatCliCommand("openclaw gateway restart"), CLI_NAME)}\` to apply updates to a running gateway.`,
+          `Tip: Run \`${replaceCliName(formatCliCommand("grokbot gateway restart"), CLI_NAME)}\` to apply updates to a running gateway.`,
         ),
       );
     }

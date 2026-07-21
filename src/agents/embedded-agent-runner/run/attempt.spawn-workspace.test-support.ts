@@ -5,7 +5,7 @@ import path from "node:path";
 import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalLowercaseString,
-} from "@openclaw/normalization-core/string-coerce";
+} from "@grokbot/normalization-core/string-coerce";
 import { expect, vi, type Mock } from "vitest";
 import type {
   AssembleResult,
@@ -792,7 +792,7 @@ vi.mock("../cache-ttl.js", () => ({
   appendCacheTtlTimestamp: (
     sessionManager: { appendCustomEntry?: (customType: string, data: unknown) => void },
     data: unknown,
-  ) => sessionManager.appendCustomEntry?.("openclaw.cache-ttl", data),
+  ) => sessionManager.appendCustomEntry?.("grokbot.cache-ttl", data),
   isCacheTtlEligibleProvider: (provider?: string) => provider === "anthropic",
   readLastCacheTtlTimestamp: (
     sessionManager: {
@@ -803,7 +803,7 @@ vi.mock("../cache-ttl.js", () => ({
     const calls = sessionManager.appendCustomEntry?.mock?.calls ?? [];
     for (let index = calls.length - 1; index >= 0; index -= 1) {
       const [customType, data] = calls[index] ?? [];
-      if (customType !== "openclaw.cache-ttl") {
+      if (customType !== "grokbot.cache-ttl") {
         continue;
       }
       const entry = data as
@@ -1322,8 +1322,8 @@ export async function createContextEngineAttemptRunner(params: {
   trajectory?: boolean;
 }) {
   const { maintain: rawMaintain, ...contextEngineRest } = params.contextEngine;
-  const workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-ctx-engine-workspace-"));
-  const agentDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-ctx-engine-agent-"));
+  const workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-ctx-engine-workspace-"));
+  const agentDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-ctx-engine-agent-"));
   const sessionFile = path.join(workspaceDir, "session.jsonl");
   const sessionStore = path.join(workspaceDir, "sessions.json");
   params.tempPaths.push(workspaceDir, agentDir);

@@ -1,4 +1,4 @@
-import { createAssistantMessageEventStream, type AssistantMessage } from "openclaw/plugin-sdk/llm";
+import { createAssistantMessageEventStream, type AssistantMessage } from "grokbot/plugin-sdk/llm";
 // Agent session SDK tests cover default tool wiring, prompt preservation, and
 // session write-lock behavior.
 import { Type } from "typebox";
@@ -314,13 +314,13 @@ describe("createAgentSession attribution headers", () => {
     });
 
     expect(providerOptions.headers).toMatchObject({
-      "HTTP-Referer": "https://openclaw.ai",
-      "X-OpenRouter-Title": "OpenClaw",
+      "HTTP-Referer": "https://grokbot.ai",
+      "X-OpenRouter-Title": "GrokBot",
       "X-OpenRouter-Categories": "cli-agent",
     });
     expect(endpointOptions.headers).toMatchObject({
-      "HTTP-Referer": "https://openclaw.ai",
-      "X-OpenRouter-Title": "OpenClaw",
+      "HTTP-Referer": "https://grokbot.ai",
+      "X-OpenRouter-Title": "GrokBot",
       "X-OpenRouter-Categories": "cli-agent",
     });
   });
@@ -337,8 +337,8 @@ describe("createAgentSession attribution headers", () => {
       baseUrl: "https://gateway.ai.cloudflare.com/v1/account/gateway/openai",
     });
 
-    expect(providerOptions.headers).toMatchObject({ "User-Agent": "openclaw" });
-    expect(endpointOptions.headers).toMatchObject({ "User-Agent": "openclaw" });
+    expect(providerOptions.headers).toMatchObject({ "User-Agent": "grokbot" });
+    expect(endpointOptions.headers).toMatchObject({ "User-Agent": "grokbot" });
   });
 });
 
@@ -451,7 +451,7 @@ describe("createAgentSession tool defaults", () => {
       settingsManager: SettingsManager.inMemory(),
       modelRegistry: ModelRegistry.inMemory(AuthStorage.inMemory()),
     });
-    const systemPrompt = "You are a personal assistant running inside OpenClaw.";
+    const systemPrompt = "You are a personal assistant running inside GrokBot.";
 
     session.setBaseSystemPrompt(systemPrompt);
     session.setActiveToolsByName(["bash", "custom_lookup"]);

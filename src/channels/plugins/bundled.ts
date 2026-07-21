@@ -5,8 +5,8 @@
  */
 import fs from "node:fs";
 import path from "node:path";
-import { normalizeOptionalLowercaseString } from "@openclaw/normalization-core/string-coerce";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import { normalizeOptionalLowercaseString } from "@grokbot/normalization-core/string-coerce";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import { extractErrorCode, formatErrorMessage } from "../../infra/errors.js";
 import { isPathInside } from "../../infra/path-guards.js";
 import { createSubsystemLogger } from "../../logging/subsystem.js";
@@ -378,7 +378,7 @@ function findMissingModuleCodeInChain(error: unknown): string | undefined {
 function describeBundledChannelLoadError(error: unknown, channelId: string): string {
   const detail = formatErrorMessage(error);
   if (findMissingModuleCodeInChain(error) !== undefined) {
-    return `${detail} (run \`openclaw doctor --fix\` to install missing bundled runtime dependencies for channel ${channelId})`;
+    return `${detail} (run \`grokbot doctor --fix\` to install missing bundled runtime dependencies for channel ${channelId})`;
   }
   return detail;
 }

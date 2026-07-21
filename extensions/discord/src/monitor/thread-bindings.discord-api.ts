@@ -1,9 +1,9 @@
 // Discord API module exposes the plugin public contract.
 import { ChannelType } from "discord-api-types/v10";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { parseStrictNonNegativeInteger } from "openclaw/plugin-sdk/number-runtime";
-import { logVerbose } from "openclaw/plugin-sdk/runtime-env";
-import { normalizeOptionalString } from "openclaw/plugin-sdk/string-coerce-runtime";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { parseStrictNonNegativeInteger } from "grokbot/plugin-sdk/number-runtime";
+import { logVerbose } from "grokbot/plugin-sdk/runtime-env";
+import { normalizeOptionalString } from "grokbot/plugin-sdk/string-coerce-runtime";
 import { createDiscordRestClient } from "../client.js";
 import { createChannelWebhook, getChannel } from "../internal/discord.js";
 import { sendMessageDiscord, sendWebhookMessageDiscord } from "../send.js";
@@ -184,7 +184,7 @@ export async function createWebhookForChannel(params: {
     }).rest;
     const created = await createChannelWebhook(rest, params.channelId, {
       body: {
-        name: "OpenClaw Agents",
+        name: "GrokBot Agents",
       },
     });
     const webhookId = normalizeOptionalString(created?.id) ?? "";

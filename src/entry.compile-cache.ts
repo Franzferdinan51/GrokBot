@@ -5,7 +5,7 @@ import { enableCompileCache, getCompileCacheDir } from "node:module";
 import os from "node:os";
 import path from "node:path";
 import process from "node:process";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { isTerminalInteractiveRespawnArgv } from "./cli/respawn-policy.js";
 import { attachChildProcessBridge } from "./process/child-process-bridge.js";
 import {
@@ -116,7 +116,7 @@ function resolveOpenClawCompileCacheDirectory(params: {
       : path.join(os.tmpdir(), "node-compile-cache");
   return path.join(
     baseDirectory,
-    "openclaw",
+    "grokbot",
     version,
     sanitizeCompileCachePathSegment(installMarker),
   );
@@ -211,7 +211,7 @@ function runOpenClawCompileCacheRespawnPlan(
     runtime,
     onError: (error) => {
       runtime.writeError(
-        `[openclaw] Failed to respawn CLI without compile cache: ${
+        `[grokbot] Failed to respawn CLI without compile cache: ${
           error instanceof Error ? (error.stack ?? error.message) : String(error)
         }\n`,
       );
@@ -234,7 +234,7 @@ export function enableOpenClawCompileCache(params: {
 }
 
 if (process.env.VITEST || process.env.NODE_ENV === "test") {
-  (globalThis as Record<PropertyKey, unknown>)[Symbol.for("openclaw.entryCompileCacheTestApi")] = {
+  (globalThis as Record<PropertyKey, unknown>)[Symbol.for("grokbot.entryCompileCacheTestApi")] = {
     buildOpenClawCompileCacheRespawnPlan,
     isNodeVersionAffectedByCompileCacheDeadlock,
     isSourceCheckoutInstallRoot,

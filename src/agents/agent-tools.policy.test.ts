@@ -214,7 +214,7 @@ describe("resolveSubagentToolPolicyForSession", () => {
   } as unknown as OpenClawConfig;
 
   it("uses stored leaf role for flat depth-1 session keys", async () => {
-    const storePath = createSessionStorePath("openclaw-subagent-policy");
+    const storePath = createSessionStorePath("grokbot-subagent-policy");
     await writeSessionEntries(storePath, {
       "agent:main:subagent:flat-leaf": {
         sessionId: "flat-leaf",
@@ -239,7 +239,7 @@ describe("resolveSubagentToolPolicyForSession", () => {
   });
 
   it("resolves inherited tool denies from stored subagent sessions", async () => {
-    const storePath = createSessionStorePath("openclaw-subagent-inherited-deny");
+    const storePath = createSessionStorePath("grokbot-subagent-inherited-deny");
     await writeSessionEntries(storePath, {
       "agent:main:subagent:limited": {
         sessionId: "limited-session",
@@ -264,7 +264,7 @@ describe("resolveSubagentToolPolicyForSession", () => {
   });
 
   it("resolves inherited tool allows from stored subagent sessions", async () => {
-    const storePath = createSessionStorePath("openclaw-subagent-inherited-allow");
+    const storePath = createSessionStorePath("grokbot-subagent-inherited-allow");
     await writeSessionEntries(storePath, {
       "agent:main:subagent:limited": {
         sessionId: "limited-session",
@@ -290,7 +290,7 @@ describe("resolveSubagentToolPolicyForSession", () => {
   });
 
   it("keeps configured plugin allows separate from inherited tool allows", async () => {
-    const storePath = createSessionStorePath("openclaw-subagent-inherited-allow-separate");
+    const storePath = createSessionStorePath("grokbot-subagent-inherited-allow-separate");
     await writeSessionEntries(storePath, {
       "agent:main:subagent:limited": {
         sessionId: "limited-session",
@@ -325,7 +325,7 @@ describe("resolveSubagentToolPolicyForSession", () => {
   });
 
   it("applies inherited tool policy from stored ACP sessions without subagent metadata", async () => {
-    const storePath = createSessionStorePath("openclaw-acp-inherited-deny");
+    const storePath = createSessionStorePath("grokbot-acp-inherited-deny");
     await writeSessionEntries(storePath, {
       "agent:main:acp:limited": {
         sessionId: "limited-acp-session",
@@ -464,7 +464,7 @@ describe("resolveEffectiveToolPolicy", () => {
   });
 
   it("does not warn an agent profile about inherited global tool sections (#47487)", async () => {
-    const warnLogs = createWarnLogCapture("openclaw-agent-tools-policy-test");
+    const warnLogs = createWarnLogCapture("grokbot-agent-tools-policy-test");
     try {
       const cfg = {
         tools: {
@@ -493,7 +493,7 @@ describe("resolveEffectiveToolPolicy", () => {
   });
 
   it("still warns when an agent profile has its own configured exec section (#47487)", async () => {
-    const warnLogs = createWarnLogCapture("openclaw-agent-tools-policy-test");
+    const warnLogs = createWarnLogCapture("grokbot-agent-tools-policy-test");
     try {
       const cfg = {
         agents: {
@@ -521,7 +521,7 @@ describe("resolveEffectiveToolPolicy", () => {
   });
 
   it("only lists configured sections whose grants are still missing (#47487)", async () => {
-    const warnLogs = createWarnLogCapture("openclaw-agent-tools-policy-test");
+    const warnLogs = createWarnLogCapture("grokbot-agent-tools-policy-test");
     try {
       const cfg = {
         agents: {

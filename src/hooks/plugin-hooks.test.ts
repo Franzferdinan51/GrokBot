@@ -21,7 +21,7 @@ describe("bundle plugin hooks", () => {
   let previousBundledHooksDir: string | undefined;
 
   beforeAll(async () => {
-    fixtureRoot = await fsp.mkdtemp(path.join(os.tmpdir(), "openclaw-plugin-hooks-"));
+    fixtureRoot = await fsp.mkdtemp(path.join(os.tmpdir(), "grokbot-plugin-hooks-"));
   });
 
   beforeEach(async () => {
@@ -48,7 +48,7 @@ describe("bundle plugin hooks", () => {
   });
 
   async function writeBundleHookFixture(): Promise<string> {
-    const bundleRoot = path.join(workspaceDir, ".openclaw", "extensions", "sample-bundle");
+    const bundleRoot = path.join(workspaceDir, ".grokbot", "extensions", "sample-bundle");
     const hookDir = path.join(bundleRoot, "hooks", "bundle-hook");
     await fsp.mkdir(path.join(bundleRoot, ".codex-plugin"), { recursive: true });
     await fsp.mkdir(hookDir, { recursive: true });
@@ -66,7 +66,7 @@ describe("bundle plugin hooks", () => {
         "---",
         "name: bundle-hook",
         'description: "Bundle hook"',
-        'metadata: {"openclaw":{"events":["command:new"]}}',
+        'metadata: {"grokbot":{"events":["command:new"]}}',
         "---",
         "",
         "# Bundle hook",
@@ -117,7 +117,7 @@ describe("bundle plugin hooks", () => {
 
     const entry = requireOnlyHookEntry(entries);
     expect(entry.hook.name).toBe("bundle-hook");
-    expect(entry.hook.source).toBe("openclaw-plugin");
+    expect(entry.hook.source).toBe("grokbot-plugin");
     expect(entry.hook.pluginId).toBe("sample-bundle");
     expect(entry.hook.baseDir).toBe(
       fs.realpathSync.native(path.join(bundleRoot, "hooks", "bundle-hook")),
@@ -145,8 +145,8 @@ describe("bundle plugin hooks", () => {
     expect(entries).toHaveLength(0);
   });
 
-  it("does not treat Claude hooks.json bundles as OpenClaw hook packs", async () => {
-    const bundleRoot = path.join(workspaceDir, ".openclaw", "extensions", "claude-bundle");
+  it("does not treat Claude hooks.json bundles as GrokBot hook packs", async () => {
+    const bundleRoot = path.join(workspaceDir, ".grokbot", "extensions", "claude-bundle");
     await fsp.mkdir(path.join(bundleRoot, ".claude-plugin"), { recursive: true });
     await fsp.mkdir(path.join(bundleRoot, "hooks"), { recursive: true });
     await fsp.writeFile(

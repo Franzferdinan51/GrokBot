@@ -1,5 +1,5 @@
 // Telegram tests cover reaction level plugin behavior.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { resolveTelegramReactionLevel } from "./reaction-level.js";
 

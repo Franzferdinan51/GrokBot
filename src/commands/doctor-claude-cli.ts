@@ -4,7 +4,7 @@ import {
   normalizeOptionalLowercaseString,
   normalizeOptionalString,
   resolvePrimaryStringValue,
-} from "@openclaw/normalization-core/string-coerce";
+} from "@grokbot/normalization-core/string-coerce";
 import { note } from "../../packages/terminal-core/src/note.js";
 import { resolveModelAgentRuntimeMetadata } from "../agents/agent-runtime-metadata.js";
 import {
@@ -23,7 +23,7 @@ import type {
 import { readClaudeCliCredentialsCached } from "../agents/cli-credentials.js";
 import { resolveClaudeCliProjectDirForWorkspace } from "../agents/command/claude-cli-project-dir.js";
 import { formatCliCommand } from "../cli/command-format.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { resolveExecutablePath } from "../infra/executable-path.js";
 import { shortenHomePath } from "../utils.js";
 
@@ -241,25 +241,25 @@ export function noteClaudeCliHealth(
     lines.push("- Headless Claude auth: unavailable without interactive prompting.");
     fixHints.push(
       `- Fix: run ${formatCliCommand("claude auth login")}, then ${formatCliCommand(
-        "openclaw models auth login --provider anthropic --method cli --set-default",
+        "grokbot models auth login --provider anthropic --method cli --set-default",
       )}.`,
     );
   }
 
   if (!storedProfile && credential?.type !== "api_key_helper") {
-    lines.push(`- OpenClaw auth profile: missing (${CLAUDE_CLI_PROFILE_ID}) in ${authStorePath}.`);
+    lines.push(`- GrokBot auth profile: missing (${CLAUDE_CLI_PROFILE_ID}) in ${authStorePath}.`);
     fixHints.push(
       `- Fix: run ${formatCliCommand(
-        "openclaw models auth login --provider anthropic --method cli --set-default",
+        "grokbot models auth login --provider anthropic --method cli --set-default",
       )}.`,
     );
   } else if (storedProfile && storedProfile.provider !== CLAUDE_CLI_PROVIDER) {
     lines.push(
-      `- OpenClaw auth profile: ${CLAUDE_CLI_PROFILE_ID} is wired to provider "${storedProfile.provider}" instead of "${CLAUDE_CLI_PROVIDER}".`,
+      `- GrokBot auth profile: ${CLAUDE_CLI_PROFILE_ID} is wired to provider "${storedProfile.provider}" instead of "${CLAUDE_CLI_PROVIDER}".`,
     );
     fixHints.push(
       `- Fix: rerun ${formatCliCommand(
-        "openclaw models auth login --provider anthropic --method cli --set-default",
+        "grokbot models auth login --provider anthropic --method cli --set-default",
       )} to rewrite the profile cleanly.`,
     );
   }

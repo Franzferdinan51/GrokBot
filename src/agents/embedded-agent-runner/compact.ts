@@ -3,13 +3,13 @@
  */
 import fs from "node:fs/promises";
 import os from "node:os";
-import type { ApiRegistry } from "@openclaw/ai";
+import type { ApiRegistry } from "@grokbot/ai";
 import { isAcpRuntimeSpawnAvailable } from "../../acp/runtime/availability.js";
 import type { ThinkLevel } from "../../auto-reply/thinking.js";
 import { resolveAgentModelFallbackValues } from "../../config/model-input.js";
 import { parseSqliteSessionFileMarker } from "../../config/sessions/sqlite-marker.js";
 import { acquireOwnedSessionTranscriptWriteLock } from "../../config/sessions/transcript-write-context.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import {
   createFileBackedCompactionCheckpointStore,
   readSessionLeafStateFromTranscriptAsync,
@@ -441,7 +441,7 @@ export async function compactEmbeddedAgentSessionDirect(
 ): Promise<EmbeddedAgentCompactResult> {
   const paramsBase = applyAgentRunSessionTargetIdentity(paramsInput);
   const lockedHarnessRuntime = normalizeOptionalAgentRuntimeId(paramsBase.agentHarnessId);
-  if (paramsBase.modelSelectionLocked === true && lockedHarnessRuntime !== "openclaw") {
+  if (paramsBase.modelSelectionLocked === true && lockedHarnessRuntime !== "grokbot") {
     return {
       ok: false,
       compacted: false,
@@ -1505,9 +1505,9 @@ async function compactEmbeddedAgentSessionDirectOnce(
         extensionFactories,
       });
       await resourceLoader.reload();
-      // DefaultResourceLoader.reload() rehydrates settings from disk and can drop OpenClaw
+      // DefaultResourceLoader.reload() rehydrates settings from disk and can drop GrokBot
       // compaction overrides applied in createPreparedEmbeddedAgentSettingsManager — same
-      // rehydration also restores OpenClaw runtime's auto-compaction (openclaw#75799), so re-apply
+      // rehydration also restores GrokBot runtime's auto-compaction (grokbot#75799), so re-apply
       // both guards. effectiveModel.baseUrl matches the surrounding scope so
       // auth-profile-injected baseUrls reach the endpoint-class detector.
       applyAgentCompactionSettingsFromConfig({
@@ -1541,7 +1541,7 @@ async function compactEmbeddedAgentSessionDirectOnce(
         },
       });
       // The session runtime treats `tools` as a name allowlist during session creation. Pass the
-      // exact OpenClaw-managed registrations so custom tools survive startup.
+      // exact GrokBot-managed registrations so custom tools survive startup.
       const sessionToolAllowlist = toSessionToolAllowlist(collectRegisteredToolNames(customTools));
 
       const providerStreamFn = resolveCompactionProviderStream({

@@ -2,8 +2,8 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { expectDefined } from "@openclaw/normalization-core";
-import { truncateUtf16Safe } from "@openclaw/normalization-core/utf16-slice";
+import { expectDefined } from "@grokbot/normalization-core";
+import { truncateUtf16Safe } from "@grokbot/normalization-core/utf16-slice";
 import { Logger as TsLogger } from "tslog";
 import type { OpenClawConfig } from "../config/types.js";
 import {
@@ -23,7 +23,7 @@ import { appendRegularFileSync } from "../infra/regular-file.js";
 import {
   POSIX_OPENCLAW_TMP_DIR,
   resolvePreferredOpenClawTmpDir,
-} from "../infra/tmp-openclaw-dir.js";
+} from "../infra/tmp-grokbot-dir.js";
 import { readLoggingConfig, shouldSkipMutatingLoggingConfigRead } from "./config.js";
 import { resolveEnvLogLevelOverride } from "./env-log-level.js";
 import { type LogLevel, levelToMinLevel, normalizeLogLevel } from "./levels.js";
@@ -40,8 +40,8 @@ function resolveDefaultLogDir(): string {
 
 function resolveDefaultLogFile(defaultLogDir: string): string {
   return canUseNodeFs()
-    ? path.join(defaultLogDir, "openclaw.log")
-    : `${POSIX_OPENCLAW_TMP_DIR}/openclaw.log`;
+    ? path.join(defaultLogDir, "grokbot.log")
+    : `${POSIX_OPENCLAW_TMP_DIR}/grokbot.log`;
 }
 
 export const DEFAULT_LOG_DIR = resolveDefaultLogDir();
@@ -569,7 +569,7 @@ export function isFileLogLevelEnabled(level: LogLevel): boolean {
 
 function buildLogger(settings: ResolvedSettings): TsLogger<LogObj> {
   const logger = new TsLogger<LogObj>({
-    name: "openclaw",
+    name: "grokbot",
     // Custom structured redaction runs at each transport boundary; avoid tslog pre-masking divergent records.
     maskValuesOfKeys: [],
     minLevel: levelToMinLevel(settings.level),
@@ -627,7 +627,7 @@ function buildLogger(settings: ResolvedSettings): TsLogger<LogObj> {
         } else if (!warnedAboutRotationFailure) {
           warnedAboutRotationFailure = true;
           process.stderr.write(
-            `[openclaw] log file rotation failed; continuing writes file=${activeFile} maxFileBytes=${settings.maxFileBytes}\n`,
+            `[grokbot] log file rotation failed; continuing writes file=${activeFile} maxFileBytes=${settings.maxFileBytes}\n`,
           );
         }
       }

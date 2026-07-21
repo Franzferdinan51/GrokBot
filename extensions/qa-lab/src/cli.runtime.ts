@@ -4,10 +4,10 @@ import path from "node:path";
 import {
   OPENCLAW_CRABLINE_DEFAULT_CHANNEL,
   resolveOpenClawCrablineChannelDriverSelection,
-} from "@openclaw/crabline";
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
-import { parseStrictPositiveInteger } from "openclaw/plugin-sdk/number-runtime";
-import { uniqueStrings } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "@grokbot/crabline";
+import { formatErrorMessage } from "grokbot/plugin-sdk/error-runtime";
+import { parseStrictPositiveInteger } from "grokbot/plugin-sdk/number-runtime";
+import { uniqueStrings } from "grokbot/plugin-sdk/string-coerce-runtime";
 import {
   buildQaAgenticParityComparison,
   buildQaRuntimeParityReport,
@@ -260,8 +260,8 @@ function normalizeQaOptionalModelRef(input: string | undefined) {
 }
 
 function normalizeQaRuntimeId(value: string): RuntimeId | undefined {
-  if (value === "openclaw" || value === "pi") {
-    return "openclaw";
+  if (value === "grokbot" || value === "pi") {
+    return "grokbot";
   }
   if (value === "codex") {
     return "codex";
@@ -279,16 +279,16 @@ function parseQaRuntimePair(value: string | undefined): [RuntimeId, RuntimeId] |
     .filter(Boolean)
     .map(normalizeQaRuntimeId);
   if (runtimes.length !== 2) {
-    throw new Error('--runtime-pair must use exactly two runtimes, e.g. "openclaw,codex".');
+    throw new Error('--runtime-pair must use exactly two runtimes, e.g. "grokbot,codex".');
   }
   const [left, right] = runtimes;
   if (!left || !right) {
-    throw new Error('--runtime-pair only supports "openclaw" and "codex".');
+    throw new Error('--runtime-pair only supports "grokbot" and "codex".');
   }
   if (left === right) {
     throw new Error("--runtime-pair must compare two different runtimes.");
   }
-  return ["openclaw", "codex"];
+  return ["grokbot", "codex"];
 }
 
 function parseQaRuntimeParityTierFilters(input: string[] | undefined): QaRuntimeParityTier[] {
@@ -1405,9 +1405,9 @@ export async function runQaJsonlReplayCommand(opts: {
   providerMode?: QaProviderModeInput;
 }) {
   const repoRoot = path.resolve(opts.repoRoot ?? process.cwd());
-  const runtimePair = parseQaRuntimePair(opts.runtimePair) ?? ["openclaw", "codex"];
-  if (runtimePair[0] !== "openclaw" || runtimePair[1] !== "codex") {
-    throw new Error('--runtime-pair for jsonl-replay must be "openclaw,codex".');
+  const runtimePair = parseQaRuntimePair(opts.runtimePair) ?? ["grokbot", "codex"];
+  if (runtimePair[0] !== "grokbot" || runtimePair[1] !== "codex") {
+    throw new Error('--runtime-pair for jsonl-replay must be "grokbot,codex".');
   }
   const providerMode = normalizeQaProviderMode(opts.providerMode ?? "mock-openai");
   if (providerMode !== "mock-openai") {

@@ -2,7 +2,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import type { MigrationApplyResult, MigrationPlan } from "../plugins/types.js";
 import type { RuntimeEnv } from "../runtime.js";
 import { makeTempWorkspace } from "../test-helpers/workspace.js";
@@ -60,7 +60,7 @@ function resolveTestConfigPath() {
   if (!stateDir) {
     throw new Error("OPENCLAW_STATE_DIR must be set before config IO in this test");
   }
-  return path.join(stateDir, "openclaw.json");
+  return path.join(stateDir, "grokbot.json");
 }
 
 // oxlint-disable-next-line typescript/no-unnecessary-type-parameters -- Test helper lets assertions ascribe stored config shape.
@@ -126,7 +126,7 @@ vi.mock("./onboard-helpers.js", () => {
     return trimmed === "undefined" || trimmed === "null" ? "" : trimmed;
   };
   return {
-    DEFAULT_WORKSPACE: "/tmp/openclaw-workspace",
+    DEFAULT_WORKSPACE: "/tmp/grokbot-workspace",
     applyWizardMetadata: (cfg: unknown) => cfg,
     ensureWorkspaceAndSessions: ensureWorkspaceAndSessionsMock,
     normalizeGatewayTokenInput,
@@ -275,7 +275,7 @@ async function expectLocalJsonSetupFailure(stateDir: string, runtimeWithCapture:
       {
         nonInteractive: true,
         mode: "local",
-        workspace: path.join(stateDir, "openclaw"),
+        workspace: path.join(stateDir, "grokbot"),
         authChoice: "skip",
         skipSkills: true,
         skipHealth: false,
@@ -292,7 +292,7 @@ function createLocalDaemonSetupOptions(stateDir: string) {
   return {
     nonInteractive: true,
     mode: "local" as const,
-    workspace: path.join(stateDir, "openclaw"),
+    workspace: path.join(stateDir, "grokbot"),
     authChoice: "skip" as const,
     skipSkills: true,
     skipHealth: false,
@@ -376,7 +376,7 @@ describe("onboard (non-interactive): gateway and remote auth", () => {
     deleteTestEnvValue("OPENCLAW_GATEWAY_TOKEN");
     deleteTestEnvValue("OPENCLAW_GATEWAY_PASSWORD");
 
-    tempHome = await makeTempWorkspace("openclaw-onboard-");
+    tempHome = await makeTempWorkspace("grokbot-onboard-");
     setTestEnvValue("HOME", tempHome);
 
     await loadGatewayOnboardModules();
@@ -404,9 +404,9 @@ describe("onboard (non-interactive): gateway and remote auth", () => {
     readLastGatewayErrorLineMock.mockClear();
   });
 
-  it("preserves existing config on onboard rerun (openclaw#84692)", async () => {
+  it("preserves existing config on onboard rerun (grokbot#84692)", async () => {
     await withStateDir("state-preserve-agents-", async (stateDir) => {
-      const workspace = path.join(stateDir, "openclaw");
+      const workspace = path.join(stateDir, "grokbot");
       const passwordRef = { source: "env" as const, provider: "default", id: "GATEWAY_PASSWORD" };
       const seededAgents = [
         { id: "alpha", model: "anthropic/claude-3-5-sonnet" },
@@ -473,7 +473,7 @@ describe("onboard (non-interactive): gateway and remote auth", () => {
 
   it("allows local onboard plugin install-record migration size drops", async () => {
     await withStateDir("state-local-plugin-installs-", async (stateDir) => {
-      const workspace = path.join(stateDir, "openclaw");
+      const workspace = path.join(stateDir, "grokbot");
       testConfigStore.set(resolveTestConfigPath(), {
         plugins: {
           installs: {
@@ -516,7 +516,7 @@ describe("onboard (non-interactive): gateway and remote auth", () => {
   it("writes gateway token auth into config", async () => {
     await withStateDir("state-noninteractive-", async (stateDir) => {
       const token = "tok_test_123";
-      const workspace = path.join(stateDir, "openclaw");
+      const workspace = path.join(stateDir, "grokbot");
       testConfigStore.set(resolveTestConfigPath(), {
         gateway: {
           bind: "lan",
@@ -568,7 +568,7 @@ describe("onboard (non-interactive): gateway and remote auth", () => {
 
   it("does not auto-enable default hooks when skipHooks is set", async () => {
     await withStateDir("state-skip-hooks-", async (stateDir) => {
-      const workspace = path.join(stateDir, "openclaw");
+      const workspace = path.join(stateDir, "grokbot");
       testConfigStore.set(resolveTestConfigPath(), {
         gateway: { mode: "local", bind: "lan" },
       } as OpenClawConfig);
@@ -596,7 +596,7 @@ describe("onboard (non-interactive): gateway and remote auth", () => {
   it("persists skipBootstrap and skips workspace bootstrap creation", async () => {
     ensureWorkspaceAndSessionsMock.mockClear();
     await withStateDir("state-skip-bootstrap-", async (stateDir) => {
-      const workspace = path.join(stateDir, "openclaw");
+      const workspace = path.join(stateDir, "grokbot");
 
       await runNonInteractiveSetup(
         {
@@ -631,7 +631,7 @@ describe("onboard (non-interactive): gateway and remote auth", () => {
   it("applies non-interactive migration imports instead of ignoring import flags", async () => {
     await withStateDir("state-noninteractive-import-", async (stateDir) => {
       const source = path.join(stateDir, "hermes-home");
-      const workspace = path.join(stateDir, "openclaw");
+      const workspace = path.join(stateDir, "grokbot");
       const planned: MigrationPlan = {
         providerId: "hermes",
         source,
@@ -746,7 +746,7 @@ describe("onboard (non-interactive): gateway and remote auth", () => {
     });
   }, 60_000);
 
-  it("preserves existing agents.list and bindings on remote onboard rerun (openclaw#84692)", async () => {
+  it("preserves existing agents.list and bindings on remote onboard rerun (grokbot#84692)", async () => {
     await withStateDir("state-remote-preserve-agents-", async (_stateDir) => {
       const port = getPseudoPort(30_000);
       const passwordRef = {
@@ -864,7 +864,7 @@ describe("onboard (non-interactive): gateway and remote auth", () => {
           {
             nonInteractive: true,
             mode: "local",
-            workspace: path.join(stateDir, "openclaw"),
+            workspace: path.join(stateDir, "grokbot"),
             authChoice: "skip",
             skipSkills: true,
             skipHealth: false,
@@ -874,7 +874,7 @@ describe("onboard (non-interactive): gateway and remote auth", () => {
           runtime,
         ),
       ).rejects.toThrow(
-        /only waits for an already-running gateway unless you pass `--install-daemon` to `openclaw onboard`[\s\S]*openclaw onboard --install-daemon[\s\S]*openclaw onboard --skip-health/,
+        /only waits for an already-running gateway unless you pass `--install-daemon` to `grokbot onboard`[\s\S]*grokbot onboard --install-daemon[\s\S]*grokbot onboard --skip-health/,
       );
     });
   }, 60_000);
@@ -1016,7 +1016,7 @@ describe("onboard (non-interactive): gateway and remote auth", () => {
       expect(parsed.installDaemon).toBe(true);
       expect(parsed.detail).toContain("1006 abnormal closure");
       expect(parsed.gateway?.wsUrl).toContain("ws://127.0.0.1:");
-      expect(parsed.hints).toContain("Run `openclaw gateway status --deep` for more detail.");
+      expect(parsed.hints).toContain("Run `grokbot gateway status --deep` for more detail.");
       expect(parsed.diagnostics?.service?.label).toBe("LaunchAgent");
       expect(parsed.diagnostics?.service?.loaded).toBe(true);
       expect(parsed.diagnostics?.service?.runtimeStatus).toBe("running");
@@ -1050,7 +1050,7 @@ describe("onboard (non-interactive): gateway and remote auth", () => {
       expect(parsed.ok).toBe(false);
       expect(parsed.phase).toBe("gateway-health");
       expect(parsed.classification).toBe("service-stopped");
-      expect(parsed.hints).toContain("Fix: run `openclaw gateway restart`.");
+      expect(parsed.hints).toContain("Fix: run `grokbot gateway restart`.");
     });
   }, 60_000);
 
@@ -1061,10 +1061,10 @@ describe("onboard (non-interactive): gateway and remote auth", () => {
     }
     await withStateDir("state-lan-", async (stateDir) => {
       setTestEnvValue("OPENCLAW_STATE_DIR", stateDir);
-      setTestEnvValue("OPENCLAW_CONFIG_PATH", path.join(stateDir, "openclaw.json"));
+      setTestEnvValue("OPENCLAW_CONFIG_PATH", path.join(stateDir, "grokbot.json"));
 
       const port = getPseudoPort(40_000);
-      const workspace = path.join(stateDir, "openclaw");
+      const workspace = path.join(stateDir, "grokbot");
 
       await runNonInteractiveSetup(
         {

@@ -1,5 +1,5 @@
 // Discord helper module supports message handler helpers behavior.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import { vi } from "vitest";
 import type { createDiscordMessageDispatcher } from "./message-dispatcher.js";
 import { createNoopThreadBindingManager } from "./thread-bindings.js";

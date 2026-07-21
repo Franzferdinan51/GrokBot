@@ -1,15 +1,15 @@
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import type { OpenClawPluginApi } from "openclaw/plugin-sdk/plugin-entry";
+import type { OpenClawPluginApi } from "grokbot/plugin-sdk/plugin-entry";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 const nodeHostMocks = vi.hoisted(() => ({
   runNodePtyCommand: vi.fn(async () => ({ exitCode: 0 })),
 }));
 
-vi.mock("openclaw/plugin-sdk/node-host", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("openclaw/plugin-sdk/node-host")>();
+vi.mock("grokbot/plugin-sdk/node-host", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("grokbot/plugin-sdk/node-host")>();
   return {
     ...actual,
     runNodePtyCommand: nodeHostMocks.runNodePtyCommand,
@@ -52,7 +52,7 @@ async function createPiStore(
   sessionName = "Pi catalog session",
   toolArguments: unknown = { command: "pwd" },
 ): Promise<string> {
-  const directory = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-pi-catalog-"));
+  const directory = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-pi-catalog-"));
   temporaryDirectories.push(directory);
   process.env.PI_CODING_AGENT_SESSION_DIR = directory;
   const entries = [
@@ -116,7 +116,7 @@ async function createPiStore(
 }
 
 async function installFakePi(): Promise<string> {
-  const directory = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-pi-cli-"));
+  const directory = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-pi-cli-"));
   temporaryDirectories.push(directory);
   const executable = path.join(directory, "pi");
   await fs.writeFile(executable, "#!/bin/sh\nexit 0\n");
@@ -196,8 +196,8 @@ describe("Pi session catalog", () => {
   });
 
   it("resolves relative project and global session directories like Pi", async () => {
-    const projectDirectory = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-pi-project-"));
-    const agentDirectory = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-pi-agent-"));
+    const projectDirectory = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-pi-project-"));
+    const agentDirectory = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-pi-agent-"));
     temporaryDirectories.push(projectDirectory, agentDirectory);
     await fs.mkdir(path.join(projectDirectory, ".pi"), { recursive: true });
     await fs.writeFile(
@@ -520,7 +520,7 @@ describe("Pi session catalog", () => {
   });
 
   it("paginates, searches, and reads beyond the newest summary batch", async () => {
-    const directory = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-pi-catalog-"));
+    const directory = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-pi-catalog-"));
     temporaryDirectories.push(directory);
     process.env.PI_CODING_AGENT_SESSION_DIR = directory;
     const baseTime = Date.parse("2026-07-13T10:00:00Z") / 1_000;
@@ -565,8 +565,8 @@ describe("Pi session catalog", () => {
   });
 
   it("uses the configured Pi session directory and lists oversized sessions", async () => {
-    const agentDirectory = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-pi-agent-"));
-    const homeDirectory = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-pi-home-"));
+    const agentDirectory = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-pi-agent-"));
+    const homeDirectory = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-pi-home-"));
     temporaryDirectories.push(agentDirectory, homeDirectory);
     const sessionDirectory = path.join(homeDirectory, "custom-sessions");
     await fs.mkdir(sessionDirectory, { recursive: true });

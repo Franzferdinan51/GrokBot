@@ -1,8 +1,8 @@
 /**
  * Shared config normalization for Codex native web search.
  */
-import { normalizeUniqueTrimmedStringList } from "@openclaw/normalization-core/string-normalization";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import { normalizeUniqueTrimmedStringList } from "@grokbot/normalization-core/string-normalization";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { isRecord } from "../utils.js";
 
 /** Whether native Codex search may use cached or live external web access. */
@@ -58,7 +58,7 @@ function normalizeUserLocation(value: unknown): CodexNativeSearchUserLocation | 
     : undefined;
 }
 
-/** Resolve Codex native web-search config from OpenClaw tool settings. */
+/** Resolve Codex native web-search config from GrokBot tool settings. */
 export function resolveCodexNativeWebSearchConfig(
   config: OpenClawConfig | undefined,
 ): ResolvedCodexNativeWebSearchConfig {

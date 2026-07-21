@@ -3,8 +3,8 @@ import {
   createLlmRuntime,
   type ApiRegistry,
   type LlmRuntime,
-} from "@openclaw/ai";
-import { registerBuiltInApiProviders } from "@openclaw/ai/providers";
+} from "@grokbot/ai";
+import { registerBuiltInApiProviders } from "@grokbot/ai/providers";
 import "../../llm/ai-transport-host.js";
 import { bindStreamLlmRuntime } from "../../llm/model-runtime-binding.js";
 

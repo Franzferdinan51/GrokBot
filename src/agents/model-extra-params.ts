@@ -1,4 +1,4 @@
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { modelKey } from "../shared/model-key.js";
 
 type ModelExtraParamSources = {
@@ -34,7 +34,7 @@ export function resolveModelExtraParamSources(params: {
   return { defaultParams, modelParams, agentParams };
 }
 
-/** Returns whether embedded OpenClaw would apply authored request parameters. */
+/** Returns whether embedded GrokBot would apply authored request parameters. */
 export function hasModelExtraParams(
   params: Parameters<typeof resolveModelExtraParamSources>[0],
 ): boolean {

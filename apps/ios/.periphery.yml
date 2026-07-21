@@ -1,6 +1,6 @@
-project: OpenClaw.xcodeproj
+project: GrokBot.xcodeproj
 schemes:
-  - OpenClaw
+  - GrokBot
 retain_codable_properties: true
 retain_swift_ui_previews: true
 retain_objc_accessible: true

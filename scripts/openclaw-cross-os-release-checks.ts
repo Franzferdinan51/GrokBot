@@ -80,7 +80,7 @@ async function main(argv: string[]) {
   const previousVersion = args["previous-version"]?.trim() || "";
   const baselineSpec =
     args["baseline-spec"]?.trim() ||
-    (previousVersion ? `openclaw@${previousVersion}` : "openclaw@latest");
+    (previousVersion ? `grokbot@${previousVersion}` : "grokbot@latest");
   const providedBaselineTgz = args["baseline-tgz"]?.trim()
     ? resolve(args["baseline-tgz"].trim())
     : "";

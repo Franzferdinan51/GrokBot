@@ -204,7 +204,7 @@ describe("runMatrixStartupMaintenance", () => {
     vi.mocked(deps.summarizeMatrixDeviceHealth).mockReturnValue({
       currentDeviceId: null,
       staleOpenClawDevices: [
-        { deviceId: "DEV123", displayName: "OpenClaw Device", current: false },
+        { deviceId: "DEV123", displayName: "GrokBot Device", current: false },
       ],
       currentOpenClawDevices: [],
     });
@@ -214,10 +214,10 @@ describe("runMatrixStartupMaintenance", () => {
     await runMatrixStartupMaintenance(params, deps);
 
     expect(params.logger.warn).toHaveBeenCalledWith(
-      "matrix: stale OpenClaw devices detected for @bot:example.org: DEV123. Run 'openclaw matrix devices prune-stale --account ops' to keep encrypted-room trust healthy.",
+      "matrix: stale GrokBot devices detected for @bot:example.org: DEV123. Run 'grokbot matrix devices prune-stale --account ops' to keep encrypted-room trust healthy.",
     );
     expect(params.logger.info).toHaveBeenCalledWith(
-      "matrix: device not verified — run 'openclaw matrix verify device <key>' to enable E2EE",
+      "matrix: device not verified — run 'grokbot matrix verify device <key>' to enable E2EE",
     );
     expect(params.logger.info).toHaveBeenCalledWith(
       "matrix: startup verification request is already pending; finish it in another Matrix client",

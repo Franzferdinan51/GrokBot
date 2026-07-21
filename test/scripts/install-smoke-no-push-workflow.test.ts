@@ -4,7 +4,7 @@ import { parse } from "yaml";
 
 const INSTALL_SMOKE = ".github/workflows/install-smoke.yml";
 const INSTALL_SMOKE_REUSABLE = ".github/workflows/install-smoke-reusable.yml";
-const RELEASE_CHECKS = ".github/workflows/openclaw-release-checks.yml";
+const RELEASE_CHECKS = ".github/workflows/grokbot-release-checks.yml";
 
 type WorkflowStep = {
   env?: Record<string, string>;
@@ -117,7 +117,7 @@ describe("install smoke no-push root image transport", () => {
         "${{ inputs.run_bun_global_install_smoke || 'false' }}",
     });
     expect(manifest.run).toContain(
-      'dockerfile_image="openclaw-dockerfile-smoke-local:${target_sha}"',
+      'dockerfile_image="grokbot-dockerfile-smoke-local:${target_sha}"',
     );
     expect(manifest.run).toContain(
       'run_bun_global_install_smoke="$workflow_bun_global_install_smoke"',

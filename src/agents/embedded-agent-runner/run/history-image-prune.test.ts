@@ -1,7 +1,7 @@
 // History image prune tests keep provider replay compact by replacing stale
 // image bytes and media references while preserving recent user context.
-import type { AgentMessage } from "openclaw/plugin-sdk/agent-core";
-import type { ImageContent } from "openclaw/plugin-sdk/llm";
+import type { AgentMessage } from "grokbot/plugin-sdk/agent-core";
+import type { ImageContent } from "grokbot/plugin-sdk/llm";
 import { describe, expect, it } from "vitest";
 import { castAgentMessage } from "../../test-helpers/agent-message-fixtures.js";
 import {

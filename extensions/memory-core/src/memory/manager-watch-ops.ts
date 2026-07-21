@@ -2,14 +2,14 @@
 import fsSync from "node:fs";
 import path from "node:path";
 import chokidar, { type FSWatcher } from "chokidar";
-import { classifyMemoryMultimodalPath } from "openclaw/plugin-sdk/memory-core-host-engine-embeddings";
+import { classifyMemoryMultimodalPath } from "grokbot/plugin-sdk/memory-core-host-engine-embeddings";
 import {
   createSubsystemLogger,
   type ResolvedMemorySearchConfig,
-} from "openclaw/plugin-sdk/memory-core-host-engine-foundation";
-import { normalizeExtraMemoryPaths } from "openclaw/plugin-sdk/memory-core-host-engine-storage";
-import { resolveTimerTimeoutMs } from "openclaw/plugin-sdk/number-runtime";
-import { normalizeLowercaseStringOrEmpty } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/memory-core-host-engine-foundation";
+import { normalizeExtraMemoryPaths } from "grokbot/plugin-sdk/memory-core-host-engine-storage";
+import { resolveTimerTimeoutMs } from "grokbot/plugin-sdk/number-runtime";
+import { normalizeLowercaseStringOrEmpty } from "grokbot/plugin-sdk/string-coerce-runtime";
 import { MemoryManagerSyncBase } from "./manager-sync-base.js";
 import {
   countChokidarWatchedEntries,
@@ -34,8 +34,8 @@ const IGNORED_MEMORY_WATCH_DIR_NAMES = new Set([
   "__pycache__",
 ]);
 const log = createSubsystemLogger("memory");
-const TEST_MEMORY_WATCH_FACTORY_KEY = Symbol.for("openclaw.test.memoryWatchFactory");
-const TEST_MEMORY_NATIVE_WATCH_FACTORY_KEY = Symbol.for("openclaw.test.memoryNativeWatchFactory");
+const TEST_MEMORY_WATCH_FACTORY_KEY = Symbol.for("grokbot.test.memoryWatchFactory");
+const TEST_MEMORY_NATIVE_WATCH_FACTORY_KEY = Symbol.for("grokbot.test.memoryNativeWatchFactory");
 
 type NativeMemoryWatchPair = {
   dir: string;
@@ -236,7 +236,7 @@ export abstract class MemoryManagerWatchOps extends MemoryManagerSyncBase {
       this.memoryWatchPressureWarning,
       count,
       unit,
-      "Large memory folders or extraPaths can make OpenClaw run out of file watchers or open files.",
+      "Large memory folders or extraPaths can make GrokBot run out of file watchers or open files.",
       "Remove large extraPaths, or set memorySearch.sync.watch to false and refresh memory manually.",
       (message) => log.warn(message),
     );

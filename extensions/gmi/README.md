@@ -1,13 +1,13 @@
-# OpenClaw GMI Cloud Provider
+# GrokBot GMI Cloud Provider
 
-Official OpenClaw provider plugin for hosted GMI Cloud models through an
+Official GrokBot provider plugin for hosted GMI Cloud models through an
 OpenAI-compatible API.
 
-Install from OpenClaw:
+Install from GrokBot:
 
 ```bash
-openclaw plugins install @openclaw/gmi-provider
-openclaw gateway restart
+grokbot plugins install @grokbot/gmi-provider
+grokbot gateway restart
 ```
 
 Configure a GMI Cloud API key, then select models with refs such as

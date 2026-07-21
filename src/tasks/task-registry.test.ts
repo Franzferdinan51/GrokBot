@@ -292,7 +292,7 @@ function createAcpSessionStoreEntry(params: {
   } as const;
   return {
     cfg: {} as never,
-    storePath: "/tmp/openclaw-test-sessions.json",
+    storePath: "/tmp/grokbot-test-sessions.json",
     sessionKey: params.sessionKey,
     storeSessionKey: params.sessionKey,
     entry: {
@@ -457,7 +457,7 @@ async function withTaskRegistryTempDir<T>(
   run: (root: string) => Promise<T>,
   options?: { durableStore?: boolean },
 ): Promise<T> {
-  return await withTempDir({ prefix: "openclaw-task-registry-" }, async (root) => {
+  return await withTempDir({ prefix: "grokbot-task-registry-" }, async (root) => {
     return await withEnvAsync({ OPENCLAW_STATE_DIR: root }, async () => {
       resetTaskRegistryForTests({ persist: false });
       resetTaskFlowRegistryForTests({ persist: false });
@@ -5481,7 +5481,7 @@ describe("task-registry", () => {
     });
   });
 
-  it("cancels childless codex-native tasks without routing through OpenClaw subagent sessions", async () => {
+  it("cancels childless codex-native tasks without routing through GrokBot subagent sessions", async () => {
     await withTaskRegistryTempDir(async () => {
       resetTaskRegistryForTests();
       const task = createTaskRecord({
@@ -5518,7 +5518,7 @@ describe("task-registry", () => {
     });
   });
 
-  it("cancels childless copilot-native tasks without routing through OpenClaw subagent sessions", async () => {
+  it("cancels childless copilot-native tasks without routing through GrokBot subagent sessions", async () => {
     await withTaskRegistryTempDir(async () => {
       resetTaskRegistryForTests();
       const task = createTaskRecord({

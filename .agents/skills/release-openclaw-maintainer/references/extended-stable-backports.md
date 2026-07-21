@@ -8,13 +8,13 @@ PRs, issues, ClawSweeper reports, and advisories as supporting context.
 ## Boundaries
 
 - Read `docs/reference/RELEASING.md`,
-  `scripts/openclaw-npm-extended-stable-release.mjs`, and the relevant release
+  `scripts/grokbot-npm-extended-stable-release.mjs`, and the relevant release
   workflows from a pinned current `origin/main` before resolving the line.
 - Target npm `extended-stable` and the canonical
   `extended-stable/YYYY.M.33` branch. The user-facing `extended-stable` update
   channel resolves that selector; user-facing `stable` continues to resolve
   npm `latest`.
-- Cover the core `openclaw` package and every npm-publishable official plugin
+- Cover the core `grokbot` package and every npm-publishable official plugin
   included by the canonical `all-publishable` release inventory at the same
   exact version.
 - Exclude ClawHub publication, GitHub Releases, native apps, Docker images,
@@ -29,10 +29,10 @@ PRs, issues, ClawSweeper reports, and advisories as supporting context.
   require new config, migrations, APIs, protocols, dependencies, runtime
   requirements, or operator action.
 - Read `SECURITY.md` and use `$security-triage` for security candidates. Route
-  unpublished advisory work through `$openclaw-ghsa-maintainer`; never expose
+  unpublished advisory work through `$grokbot-ghsa-maintainer`; never expose
   private details before the security owner authorizes disclosure.
-- Use `$openclaw-testing` for proof selection, `$autoreview` before handoff,
-  and `$openclaw-pr-maintainer` for GitHub operations.
+- Use `$grokbot-testing` for proof selection, `$autoreview` before handoff,
+  and `$grokbot-pr-maintainer` for GitHub operations.
 
 ## Resolve the Active Line
 
@@ -69,10 +69,10 @@ Use an isolated npm config for unauthenticated registry reads:
 ```bash
 npm_userconfig=$(mktemp)
 trap 'rm -f "$npm_userconfig"' EXIT
-dist_tags=$(npm view openclaw dist-tags --json --userconfig "$npm_userconfig")
+dist_tags=$(npm view grokbot dist-tags --json --userconfig "$npm_userconfig")
 published_version=$(printf '%s' "$dist_tags" | jq -r '."extended-stable" // empty')
 if [[ -n "$published_version" ]]; then
-  npm view "openclaw@${published_version}" version \
+  npm view "grokbot@${published_version}" version \
     --userconfig "$npm_userconfig"
 fi
 ```
@@ -159,7 +159,7 @@ exclude a commit because its title lacks `fix:` or it has no PR.
 ## Reconcile Private Security Work
 
 Before calling the release set complete, use `$security-triage` and
-`$openclaw-ghsa-maintainer` to:
+`$grokbot-ghsa-maintainer` to:
 
 1. enumerate authorized open/draft advisories and private-fork fix state;
 2. determine privately whether each item affects a published npm package in the
@@ -247,7 +247,7 @@ forward.
 
 Report:
 
-- mode, published `openclaw@extended-stable` version or approved bootstrap
+- mode, published `grokbot@extended-stable` version or approved bootstrap
   base, and canonical branch;
 - intended maintenance tag and final staging head;
 - included, skipped, blocked, not-affected, and already-covered candidates;
@@ -263,7 +263,7 @@ and Full Release Validation from the canonical branch; publish every
 npm-publishable official plugin from the exact release SHA; publish the
 prepared core tarball with the referenced successful run IDs; verify every
 exact package and `extended-stable` selector; and preserve the generated
-core `openclaw` selector-repair command. Repair missing or stale official-
+core `grokbot` selector-repair command. Repair missing or stale official-
 plugin selectors on already-published versions with the approved credential-
 isolated release tooling for manual tag repair; the OIDC source workflow cannot
 mutate those tags. Never republish an immutable version when only a selector

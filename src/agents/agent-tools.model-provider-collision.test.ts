@@ -1,13 +1,13 @@
 /**
  * Tests provider-native tool collision policy.
- * Protects OpenClaw web_search routing when provider/model compatibility also
+ * Protects GrokBot web_search routing when provider/model compatibility also
  * advertises native search support.
  */
 import { describe, expect, it, vi } from "vitest";
 import { createOpenClawCodingTools } from "./agent-tools.js";
 import type { AnyAgentTool } from "./agent-tools.types.js";
 
-vi.mock("./openclaw-plugin-tools.js", () => ({
+vi.mock("./grokbot-plugin-tools.js", () => ({
   resolveOpenClawPluginToolsForOptions: () => [{ name: "browser" }],
 }));
 
@@ -27,8 +27,8 @@ const testing = {
   ): AnyAgentTool[] {
     const actualTools = createOpenClawCodingTools({
       ...options,
-      cwd: "/tmp/openclaw-agent-tools-policy-test",
-      workspaceDir: "/tmp/openclaw-agent-tools-policy-test",
+      cwd: "/tmp/grokbot-agent-tools-policy-test",
+      workspaceDir: "/tmp/grokbot-agent-tools-policy-test",
       toolConstructionPlan: {
         includeBaseCodingTools: true,
         includeShellTools: true,
@@ -58,7 +58,7 @@ describe("applyModelProviderToolPolicy", () => {
     expect(toolNames(filtered)).toEqual(["read", "web_search", "exec"]);
   });
 
-  it("keeps web_search for OpenRouter xAI model ids so OpenClaw tool routing stays authoritative", () => {
+  it("keeps web_search for OpenRouter xAI model ids so GrokBot tool routing stays authoritative", () => {
     const filtered = testing.applyModelProviderToolPolicy(baseTools, {
       modelCompat: {
         toolSchemaProfile: XAI_TOOL_SCHEMA_PROFILE,

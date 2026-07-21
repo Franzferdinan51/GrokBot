@@ -526,7 +526,7 @@ describe("SessionHistorySseState", () => {
       rawMessages: [
         {
           role: "custom",
-          customType: "openclaw.runtime-context",
+          customType: "grokbot.runtime-context",
           content: "secret runtime context",
           display: false,
           __openclaw: { seq: 1 },
@@ -549,7 +549,7 @@ describe("SessionHistorySseState", () => {
               type: "text",
               text: [
                 "[Inter-session message] sourceSession=agent:main:subagent:child sourceChannel=webchat sourceTool=subagent_announce isUser=false",
-                "This content was routed by OpenClaw from another session or internal tool.",
+                "This content was routed by GrokBot from another session or internal tool.",
                 "<<<BEGIN_OPENCLAW_INTERNAL_CONTEXT>>>",
                 "subagent completion payload",
                 "<<<END_OPENCLAW_INTERNAL_CONTEXT>>>",
@@ -641,7 +641,7 @@ describe("SessionHistorySseState", () => {
       state.appendInlineMessage({
         message: {
           role: "custom",
-          customType: "openclaw.runtime-context",
+          customType: "grokbot.runtime-context",
           content: "secret runtime context",
           display: false,
         },

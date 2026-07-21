@@ -596,7 +596,7 @@ describe("describeReplyTarget", () => {
             },
             {
               type: "photo",
-              caption: { text: "Chart", credit: "OpenClaw" },
+              caption: { text: "Chart", credit: "GrokBot" },
             },
           ],
         },

@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: openclaw
+    name: grokbot
     runtime: docker
     plan: starter
     healthCheckPath: /health
@@ -8,12 +8,12 @@ services:
       - key: OPENCLAW_GATEWAY_PORT
         value: "8080"
       - key: OPENCLAW_STATE_DIR
-        value: /data/.openclaw
+        value: /data/.grokbot
       - key: OPENCLAW_WORKSPACE_DIR
         value: /data/workspace
       - key: OPENCLAW_GATEWAY_TOKEN
         generateValue: true
     disk:
-      name: openclaw-data
+      name: grokbot-data
       mountPath: /data
       sizeGB: 1

@@ -1,4 +1,4 @@
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import {
   readPairingQrReplyChannelData,
   type ReplyPayload,
@@ -54,7 +54,7 @@ async function buildPairingQrAssistantContentBlock(
     type: "openclaw_pairing_qr",
     image_url: imageUrl,
     terminalText,
-    alt: "OpenClaw pairing QR code",
+    alt: "GrokBot pairing QR code",
     expiresAtMs: qr.expiresAtMs,
     sensitive: true,
   };

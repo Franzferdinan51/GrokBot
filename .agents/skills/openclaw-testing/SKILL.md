@@ -1,9 +1,9 @@
 ---
-name: openclaw-testing
-description: Choose, run, rerun, or debug OpenClaw tests, CI checks, Docker E2E lanes, release validation, and the cheapest safe verification path.
+name: grokbot-testing
+description: Choose, run, rerun, or debug GrokBot tests, CI checks, Docker E2E lanes, release validation, and the cheapest safe verification path.
 ---
 
-# OpenClaw Testing
+# GrokBot Testing
 
 Use this skill when deciding what to test, debugging failures, rerunning CI,
 or validating a change without wasting hours.
@@ -38,7 +38,7 @@ warm direct AWS with an installed trusted Crabbox binary. Do not execute the
 untrusted checkout's wrapper or config locally:
 
 ```bash
-cd <trusted-openclaw-main>
+cd <trusted-grokbot-main>
 env -u CRABBOX_AWS_INSTANCE_PROFILE \
   crabbox config show --json | \
   jq -e '.aws.instanceProfile == ""' >/dev/null
@@ -137,7 +137,7 @@ sync the current checkout on every run, and stop it before handoff.
 - Treat contributor and fork patches as untrusted unless a maintainer
   explicitly approves credentialed execution after review. For untrusted AWS
   runs, `CRABBOX_ENV_ALLOW=CI` must replace the repo's
-  `OPENCLAW_*` allowlist, `--no-hydrate` must block auth-profile hydration, and
+  `GROKBOT_*` allowlist, `--no-hydrate` must block auth-profile hydration, and
   the remote command must use a fresh temporary `HOME`. The lease must be newly
   warmed for and bound to one reviewed head SHA, never trusted or previously
   hydrated; stop and rewarm when the SHA changes. Do
@@ -204,7 +204,7 @@ managed dependency path, and do not treat `npm-pack:` as proof of catalog-linked
 official trust.
 
 - For local release-candidate proof, pack the plugin and install it with
-  `openclaw plugins install npm-pack:<path.tgz> --force`. This uses the managed
+  `grokbot plugins install npm-pack:<path.tgz> --force`. This uses the managed
   per-plugin npm project and is the closest local substitute for the registry
   artifact's dependency behavior.
 - If the behavior depends on bundled-plugin or trusted official plugin status,
@@ -214,7 +214,7 @@ official trust.
 - Treat missing runtime imports as package-manifest bugs first. Runtime code
   must depend on packages declared in the plugin package `dependencies` or
   `optionalDependencies`; do not make a final proof depend on manually running
-  `npm install` inside `~/.openclaw/npm/projects/...`.
+  `npm install` inside `~/.grokbot/npm/projects/...`.
 - If the plugin ships `npm-shrinkwrap.json`, regenerate or check it after
   moving dependencies between dev and runtime sections.
 - Inspect the packed tarball when dependency ownership or generated `dist/`
@@ -295,7 +295,7 @@ dispatches:
   `include_android=true`
 - `Plugin Prerelease` for release-only plugin static checks, extension shards,
   the release-only `agentic-plugins` shard, and plugin product Docker lanes
-- `OpenClaw Release Checks` for install smoke, cross-OS release checks, live and
+- `GrokBot Release Checks` for install smoke, cross-OS release checks, live and
   E2E checks, Docker release-path suites, OpenWebUI, QA Lab, fast Matrix, and
   Telegram release lanes
 - optional post-publish Telegram E2E when a package spec is supplied
@@ -357,9 +357,9 @@ workflow only spends setup and queue time on that suite.
 ### Release Evidence
 
 After release-candidate validation or before a release decision, record the
-important run ids in the public `openclaw/releases` evidence ledger.
-Use the manual `OpenClaw Release Evidence`
-(`openclaw-release-evidence.yml`) workflow there. It writes durable summaries
+important run ids in the public `grokbot/releases` evidence ledger.
+Use the manual `GrokBot Release Evidence`
+(`grokbot-release-evidence.yml`) workflow there. It writes durable summaries
 under `evidence/<release-id>/` and commits:
 
 - `release-evidence.md`
@@ -370,9 +370,9 @@ under `evidence/<release-id>/` and commits:
 Use one run per line:
 
 ```text
-full-release-validation openclaw/openclaw <run-id> blocking
-package-acceptance openclaw/openclaw <run-id> blocking
-release-checks openclaw/openclaw <run-id> blocking
+full-release-validation grokbot/grokbot <run-id> blocking
+package-acceptance grokbot/grokbot <run-id> blocking
+release-checks grokbot/grokbot <run-id> blocking
 ```
 
 Store summaries, run URLs, artifact metadata, timings, pass/fail state, and
@@ -382,7 +382,7 @@ config in git; raw logs stay in Actions artifacts.
 
 When `Full Release Validation` completes and `OPENCLAW_RELEASES_DISPATCH_TOKEN`
 is configured in the source repo, it requests the public
-`OpenClaw Release Evidence From Full Validation` workflow. That workflow reads
+`GrokBot Release Evidence From Full Validation` workflow. That workflow reads
 the parent full-validation run, extracts the child CI/release-checks/Telegram
 run ids from the parent logs, and opens the evidence PR automatically. If the
 token is absent or the run predates this wiring, trigger that workflow manually
@@ -390,7 +390,7 @@ with the full-validation run id.
 
 ### Release Checks
 
-`OpenClaw Release Checks` (`openclaw-release-checks.yml`) is the release child
+`GrokBot Release Checks` (`grokbot-release-checks.yml`) is the release child
 workflow. It is broader than normal CI but narrower than the umbrella because it
 does not dispatch the separate full normal CI child. It runs Package Acceptance
 with artifact-native delta lanes and `telegram_mode=mock-openai`, so the release
@@ -400,8 +400,8 @@ package/update/plugin lanes. Use it when release-path validation is needed
 without rerunning the entire umbrella.
 
 ```bash
-gh workflow run openclaw-release-checks.yml \
-  --repo openclaw/openclaw \
+gh workflow run grokbot-release-checks.yml \
+  --repo grokbot/grokbot \
   --ref main \
   -f ref=<branch-or-sha> \
   -f provider=openai \
@@ -412,7 +412,7 @@ gh workflow run openclaw-release-checks.yml \
 
 Release-check rerun groups are `all`, `install-smoke`, `cross-os`, `live-e2e`,
 `package`, `qa`, `qa-parity`, and `qa-live`.
-`OpenClaw Release Checks` uses the trusted workflow ref to resolve the selected
+`GrokBot Release Checks` uses the trusted workflow ref to resolve the selected
 ref once as `release-package-under-test` and passes that artifact into cross-OS
 release checks, release-path Docker live/E2E checks, and Package Acceptance.
 When `Full Release Validation` dispatches release checks, it passes the requested
@@ -427,7 +427,7 @@ If install-smoke gets slow again, first check whether the root image was reused
 or rebuilt before adding/removing coverage.
 
 The full-profile native live media shards use the prebuilt
-`ghcr.io/openclaw/openclaw-live-media-runner:ubuntu-24.04` container so
+`ghcr.io/grokbot/grokbot-live-media-runner:ubuntu-24.04` container so
 `ffmpeg`/`ffprobe` are already present. If those jobs suddenly spend minutes in
 dependency setup again, first check the `Live Media Runner Image` workflow and
 the `Verify preinstalled live media dependencies` step before assuming the media
@@ -441,34 +441,34 @@ dedicated `openwebui` job; aggregate aliases such as `plugins-runtime-core`,
 
 The release QA parity box is internally split into candidate and baseline lane
 jobs, followed by a report job that downloads both artifacts and runs
-`pnpm openclaw qa parity-report`. For parity failures, inspect the failed lane
+`pnpm grokbot qa parity-report`. For parity failures, inspect the failed lane
 first; inspect the report job when both lane summaries exist but the comparison
 fails.
 
 ### QA Lab Matrix Profiles
 
-`pnpm openclaw qa matrix` defaults to `--profile all`. Do not assume the CLI
+`pnpm grokbot qa matrix` defaults to `--profile all`. Do not assume the CLI
 default is the fast release path. Use explicit profiles:
 
 - `--profile fast|release`: focused release-critical scenarios
 - `--profile transport|all`: broad Matrix proof
 - repeated `--scenario <id>` flags: explicit scenario selection
 
-`QA-Lab - All Lanes` and `OpenClaw Release Checks` use the same QA Lab selector
+`QA-Lab - All Lanes` and `GrokBot Release Checks` use the same QA Lab selector
 and standard artifacts. Manual dispatch keeps `matrix_profile=all` as the
 default and fans it across the transport, media, and E2EE profiles; focused
 dispatches select `fast`, `release`, or `transport`.
 
 ### Reusable Live/E2E Checks
 
-`OpenClaw Live And E2E Checks (Reusable)`
-(`openclaw-live-and-e2e-checks-reusable.yml`) is the preferred entry point for
+`GrokBot Live And E2E Checks (Reusable)`
+(`grokbot-live-and-e2e-checks-reusable.yml`) is the preferred entry point for
 targeted live, Docker, model, and E2E proof. Inputs let you turn off unrelated
 lanes:
 
 ```bash
-gh workflow run openclaw-live-and-e2e-checks-reusable.yml \
-  --repo openclaw/openclaw \
+gh workflow run grokbot-live-and-e2e-checks-reusable.yml \
+  --repo grokbot/grokbot \
   --ref main \
   -f ref=<sha> \
   -f include_repo_e2e=false \
@@ -635,7 +635,7 @@ Good defaults:
 gh workflow run package-acceptance.yml --ref main \
   -f source=npm \
   -f workflow_ref=main \
-  -f package_spec=openclaw@beta \
+  -f package_spec=grokbot@beta \
   -f suite_profile=product \
   -f telegram_mode=mock-openai
 ```
@@ -643,25 +643,25 @@ gh workflow run package-acceptance.yml --ref main \
 Npm candidate selection:
 
 - Resolve the registry immediately before dispatch:
-  `npm view openclaw dist-tags --json --prefer-online --cache /tmp/openclaw-npm-cache-verify-$$`
-  and `npm view openclaw@beta version dist.tarball dist.integrity --json --prefer-online --cache /tmp/openclaw-npm-cache-verify-$$`.
+  `npm view grokbot dist-tags --json --prefer-online --cache /tmp/grokbot-npm-cache-verify-$$`
+  and `npm view grokbot@beta version dist.tarball dist.integrity --json --prefer-online --cache /tmp/grokbot-npm-cache-verify-$$`.
 - If Peter asks for "latest beta", use `source=npm` with
-  `package_spec=openclaw@beta`, then record the resolved version from `npm view`
+  `package_spec=grokbot@beta`, then record the resolved version from `npm view`
   or the workflow summary.
 - For reruns, release proof, or comparing one known package, prefer the exact
-  immutable spec: `package_spec=openclaw@YYYY.M.D-beta.N` or
-  `package_spec=openclaw@YYYY.M.D`.
-- For stable package proof, use `package_spec=openclaw@latest` only when the
+  immutable spec: `package_spec=grokbot@YYYY.M.D-beta.N` or
+  `package_spec=grokbot@YYYY.M.D`.
+- For stable package proof, use `package_spec=grokbot@latest` only when the
   question is explicitly the current stable dist-tag; otherwise pin the exact
   version.
-- `source=npm` only accepts registry specs for `openclaw@beta`,
-  `openclaw@latest`, or exact OpenClaw release versions. Do not pass semver
+- `source=npm` only accepts registry specs for `grokbot@beta`,
+  `grokbot@latest`, or exact GrokBot release versions. Do not pass semver
   ranges, git refs, file paths, tarball URLs, or plugin package names there.
 - If the candidate is a tarball URL, use `source=url` with `package_sha256`. If
   it is an Actions tarball artifact, use `source=artifact`. If it is an
   unpublished source candidate, use `source=ref` with a trusted ref or SHA.
 - Package acceptance tests exactly the selected package candidate. Do not apply
-  `openclaw update --channel beta` fallback semantics here; if `beta` is absent,
+  `grokbot update --channel beta` fallback semantics here; if `beta` is absent,
   stale, older than `latest`, or points at a broken tarball, report that tag
   state instead of silently testing `latest`.
 
@@ -680,7 +680,7 @@ Profiles:
 
 Candidate sources:
 
-- `source=npm`: `openclaw@beta`, `openclaw@latest`, or an exact release version.
+- `source=npm`: `grokbot@beta`, `grokbot@latest`, or an exact release version.
 - `source=ref`: pack `package_ref` using the trusted `workflow_ref` harness.
   This intentionally separates old package commits from new workflow/test code.
 - `source=url`: HTTPS `.tgz` plus required `package_sha256`.
@@ -693,7 +693,7 @@ Ref model:
 - `workflow_ref` is the trusted harness/script ref passed to reusable Docker
   E2E.
 - `package_ref` is the source ref to build when `source=ref`. It can be an
-  older branch/tag/SHA as long as it is reachable from an OpenClaw branch or
+  older branch/tag/SHA as long as it is reachable from an GrokBot branch or
   release tag.
 
 Example: run latest package acceptance harness against an older trusted commit:
@@ -717,7 +717,7 @@ credentialed package proof for a focused rerun.
 
 Docker E2E images never copy repo sources as the app under test: the bare image
 is a Node/Git runner, and the functional image installs the same prebuilt npm
-tarball that bare lanes mount. `scripts/package-openclaw-for-docker.mjs` is the
+tarball that bare lanes mount. `scripts/package-grokbot-for-docker.mjs` is the
 single packer for local scripts and CI and validates the tarball inventory
 before Docker consumes it. `scripts/test-docker-all.mjs --plan-json` is the
 scheduler-owned CI plan for image kind, package, live image, lane, and
@@ -736,7 +736,7 @@ Skill install proof: use `pnpm test:docker:skill-install` or targeted
 `docker_lanes=skill-install` for live ClawHub skill-install validation. The
 lane installs the package tarball in a bare runner, keeps
 `skills.install.allowUploadedArchives=false`, resolves the current live slug
-from `openclaw skills search`, installs it, and verifies `.clawhub` origin/lock
+from `grokbot skills search`, installs it, and verifies `.clawhub` origin/lock
 metadata. Prefer this checked-in script over inline heredoc Testbox recipes.
 
 ## Cheap Docker Reruns
@@ -754,7 +754,7 @@ plus per-lane commands. Prefer the combined targeted command when several lanes
 failed for the same patch:
 
 ```bash
-gh workflow run openclaw-live-and-e2e-checks-reusable.yml \
+gh workflow run grokbot-live-and-e2e-checks-reusable.yml \
   -f ref=<sha> \
   -f include_repo_e2e=false \
   -f include_release_path_suites=false \

@@ -1,8 +1,8 @@
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import type {
   PluginStateEntry,
   PluginStateKeyedStore,
-} from "openclaw/plugin-sdk/plugin-state-runtime";
+} from "grokbot/plugin-sdk/plugin-state-runtime";
 import { DiscordActivitiesRuntime } from "./runtime.js";
 import { DiscordActivityStore } from "./store.js";
 

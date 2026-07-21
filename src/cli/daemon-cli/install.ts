@@ -1,5 +1,5 @@
 // Gateway service installer: writes config defaults, resolves credentials, and installs service definitions.
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+import { normalizeOptionalString } from "@grokbot/normalization-core/string-coerce";
 import { resolveNodeStartupTlsEnvironment } from "../../bootstrap/node-startup-env.js";
 import { buildGatewayInstallPlan } from "../../commands/daemon-install-helpers.js";
 import {
@@ -71,15 +71,15 @@ function formatNoAuthNonLoopbackInstallBlock(params: {
   const hints: string[] = [`${bindReason}, but gateway.auth.mode=none disables Gateway auth.`];
   if (normalizeOptionalString(auth.token)) {
     hints.push(
-      `This config already has gateway.auth.token; run ${formatCliCommand("openclaw config set gateway.auth.mode token")} and then rerun ${formatCliCommand("openclaw gateway install --force")}.`,
+      `This config already has gateway.auth.token; run ${formatCliCommand("grokbot config set gateway.auth.mode token")} and then rerun ${formatCliCommand("grokbot gateway install --force")}.`,
     );
   } else if (normalizeOptionalString(auth.password)) {
     hints.push(
-      `This config already has gateway.auth.password; run ${formatCliCommand("openclaw config set gateway.auth.mode password")} and then rerun ${formatCliCommand("openclaw gateway install --force")}.`,
+      `This config already has gateway.auth.password; run ${formatCliCommand("grokbot config set gateway.auth.mode password")} and then rerun ${formatCliCommand("grokbot gateway install --force")}.`,
     );
   } else {
     hints.push(
-      `Configure token/password auth, use trusted-proxy auth, or set ${formatCliCommand("openclaw config set gateway.bind loopback")} before installing the managed service.`,
+      `Configure token/password auth, use trusted-proxy auth, or set ${formatCliCommand("grokbot config set gateway.bind loopback")} before installing the managed service.`,
     );
   }
   return hints.join(" ");
@@ -122,7 +122,7 @@ export function mergeInstallInvocationEnv(params: {
       upper === "HOME" ||
       upper === "PATH" ||
       upper === "TMPDIR" ||
-      upper.startsWith("OPENCLAW_")
+      upper.startsWith("GROKBOT_")
     ) {
       continue;
     }
@@ -293,7 +293,7 @@ export async function runDaemonInstall(opts: DaemonInstallOptions) {
         if (!json) {
           defaultRuntime.log(`Gateway service already ${service.loadedText}.`);
           defaultRuntime.log(
-            `Reinstall with: ${formatCliCommand("openclaw gateway install --force")}`,
+            `Reinstall with: ${formatCliCommand("grokbot gateway install --force")}`,
           );
         }
         return;

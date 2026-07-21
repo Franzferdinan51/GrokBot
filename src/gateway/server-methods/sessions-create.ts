@@ -2,8 +2,8 @@
 import { randomUUID } from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
-import { expectDefined } from "@openclaw/normalization-core";
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+import { expectDefined } from "@grokbot/normalization-core";
+import { normalizeOptionalString } from "@grokbot/normalization-core/string-coerce";
 import {
   ErrorCodes,
   errorShape,
@@ -290,7 +290,7 @@ export const sessionCreateHandlers: GatewayRequestHandlers = {
             ownerId: target.canonicalKey,
             name: requestedWorktreeName,
             baseRef: requestedWorktreeBaseRef,
-            // Checkout hooks and .openclaw/worktree-setup.sh run repo code; keep them
+            // Checkout hooks and .grokbot/worktree-setup.sh run repo code; keep them
             // admin-only so this write-scoped path cannot execute gated repo scripts.
             runSetupScript: scopes.includes(ADMIN_SCOPE),
           });

@@ -242,9 +242,9 @@ describe("toSanitizedMarkdownHtml", () => {
     });
 
     it("links http:// URLs", () => {
-      const html = toSanitizedMarkdownHtml("Visit http://github.com/openclaw");
+      const html = toSanitizedMarkdownHtml("Visit http://github.com/grokbot");
       expect(html).toBe(
-        '<p>Visit <a href="http://github.com/openclaw" rel="noreferrer noopener" target="_blank">http://github.com/openclaw</a></p>\n',
+        '<p>Visit <a href="http://github.com/grokbot" rel="noreferrer noopener" target="_blank">http://github.com/grokbot</a></p>\n',
       );
     });
 
@@ -289,9 +289,9 @@ describe("toSanitizedMarkdownHtml", () => {
     });
 
     it("does NOT rewrite explicit markdown links with CJK display text", () => {
-      const html = toSanitizedMarkdownHtml("[OpenClaw中文](https://docs.openclaw.ai)");
+      const html = toSanitizedMarkdownHtml("[OpenClaw中文](https://docs.grokbot.ai)");
       expect(html).toBe(
-        '<p><a href="https://docs.openclaw.ai" rel="noreferrer noopener" target="_blank">OpenClaw中文</a></p>\n',
+        '<p><a href="https://docs.grokbot.ai" rel="noreferrer noopener" target="_blank">OpenClaw中文</a></p>\n',
       );
     });
 
@@ -840,7 +840,7 @@ PY
 
     it("strips href from host-local absolute file paths", () => {
       const html = toSanitizedMarkdownHtml(
-        "[report.docx](/Users/test/.openclaw/data/skills/output/report.docx)",
+        "[report.docx](/Users/test/.grokbot/data/skills/output/report.docx)",
       );
       expect(html).toBe("<p><a>report.docx</a></p>\n");
     });
@@ -857,7 +857,7 @@ PY
         "[workspace](/concepts/agent-workspace) [hooks](/automation/hooks#session-memory) [telegram](/channels/telegram?tab=setup) [shortlink](/telegram) [openai](/openai) [images](/images) [groups](/groups) [camera](/nodes/camera) [macOS](/platforms/macos) [cliSessions](/cli/sessions) [toolSkills](/tools/skills) [pluginDocs](/plugins/reference/diffs) [prose](/prose) [access](/channels/access-groups)",
       );
       expect(html).toBe(
-        '<p><a href="https://docs.openclaw.ai/concepts/agent-workspace" rel="noreferrer noopener" target="_blank">workspace</a> <a href="https://docs.openclaw.ai/automation/hooks#session-memory" rel="noreferrer noopener" target="_blank">hooks</a> <a href="https://docs.openclaw.ai/channels/telegram?tab=setup" rel="noreferrer noopener" target="_blank">telegram</a> <a href="https://docs.openclaw.ai/telegram" rel="noreferrer noopener" target="_blank">shortlink</a> <a href="https://docs.openclaw.ai/openai" rel="noreferrer noopener" target="_blank">openai</a> <a href="https://docs.openclaw.ai/images" rel="noreferrer noopener" target="_blank">images</a> <a href="https://docs.openclaw.ai/groups" rel="noreferrer noopener" target="_blank">groups</a> <a href="https://docs.openclaw.ai/nodes/camera" rel="noreferrer noopener" target="_blank">camera</a> <a href="https://docs.openclaw.ai/platforms/macos" rel="noreferrer noopener" target="_blank">macOS</a> <a href="https://docs.openclaw.ai/cli/sessions" rel="noreferrer noopener" target="_blank">cliSessions</a> <a href="https://docs.openclaw.ai/tools/skills" rel="noreferrer noopener" target="_blank">toolSkills</a> <a href="https://docs.openclaw.ai/plugins/reference/diffs" rel="noreferrer noopener" target="_blank">pluginDocs</a> <a href="https://docs.openclaw.ai/prose" rel="noreferrer noopener" target="_blank">prose</a> <a href="https://docs.openclaw.ai/channels/access-groups" rel="noreferrer noopener" target="_blank">access</a></p>\n',
+        '<p><a href="https://docs.grokbot.ai/concepts/agent-workspace" rel="noreferrer noopener" target="_blank">workspace</a> <a href="https://docs.grokbot.ai/automation/hooks#session-memory" rel="noreferrer noopener" target="_blank">hooks</a> <a href="https://docs.grokbot.ai/channels/telegram?tab=setup" rel="noreferrer noopener" target="_blank">telegram</a> <a href="https://docs.grokbot.ai/telegram" rel="noreferrer noopener" target="_blank">shortlink</a> <a href="https://docs.grokbot.ai/openai" rel="noreferrer noopener" target="_blank">openai</a> <a href="https://docs.grokbot.ai/images" rel="noreferrer noopener" target="_blank">images</a> <a href="https://docs.grokbot.ai/groups" rel="noreferrer noopener" target="_blank">groups</a> <a href="https://docs.grokbot.ai/nodes/camera" rel="noreferrer noopener" target="_blank">camera</a> <a href="https://docs.grokbot.ai/platforms/macos" rel="noreferrer noopener" target="_blank">macOS</a> <a href="https://docs.grokbot.ai/cli/sessions" rel="noreferrer noopener" target="_blank">cliSessions</a> <a href="https://docs.grokbot.ai/tools/skills" rel="noreferrer noopener" target="_blank">toolSkills</a> <a href="https://docs.grokbot.ai/plugins/reference/diffs" rel="noreferrer noopener" target="_blank">pluginDocs</a> <a href="https://docs.grokbot.ai/prose" rel="noreferrer noopener" target="_blank">prose</a> <a href="https://docs.grokbot.ai/channels/access-groups" rel="noreferrer noopener" target="_blank">access</a></p>\n',
       );
     });
 

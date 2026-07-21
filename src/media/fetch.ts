@@ -1,9 +1,9 @@
 // Media fetch helpers download and validate remote media payloads.
-import { MAX_DOCUMENT_BYTES } from "@openclaw/media-core/constants";
-import { parseMediaContentLength } from "@openclaw/media-core/content-length";
-import { basenameFromAnyPath, extnameFromAnyPath } from "@openclaw/media-core/file-name";
-import { detectMime, extensionForMime } from "@openclaw/media-core/mime";
-import { expectDefined } from "@openclaw/normalization-core";
+import { MAX_DOCUMENT_BYTES } from "@grokbot/media-core/constants";
+import { parseMediaContentLength } from "@grokbot/media-core/content-length";
+import { basenameFromAnyPath, extnameFromAnyPath } from "@grokbot/media-core/file-name";
+import { detectMime, extensionForMime } from "@grokbot/media-core/mime";
+import { expectDefined } from "@grokbot/normalization-core";
 import { isAbortError } from "../infra/abort-signal.js";
 import { formatErrorMessage } from "../infra/errors.js";
 import {

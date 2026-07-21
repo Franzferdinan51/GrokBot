@@ -3,7 +3,7 @@
 set -euo pipefail
 
 usage() {
-  echo "usage: bash scripts/openclaw-npm-publish.sh --publish [package.tgz]"
+  echo "usage: bash scripts/grokbot-npm-publish.sh --publish [package.tgz]"
 }
 
 if [[ "${1:-}" == "--help" || "${1:-}" == "-h" ]]; then
@@ -72,7 +72,7 @@ fi
 publish_plan="$(
   PACKAGE_VERSION="${package_version}" REQUESTED_PUBLISH_TAG="${OPENCLAW_NPM_PUBLISH_TAG:-}" \
     BYPASS_EXTENDED_STABLE_GUARD="${BYPASS_EXTENDED_STABLE_GUARD:-}" \
-    node scripts/openclaw-npm-extended-stable-release.mjs publish-plan
+    node scripts/grokbot-npm-extended-stable-release.mjs publish-plan
 )"
 
 release_channel="${publish_plan%%$'\n'*}"

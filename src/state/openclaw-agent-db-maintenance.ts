@@ -14,15 +14,15 @@ import {
   readSqliteUserVersion,
 } from "../infra/sqlite-user-version.js";
 import { normalizeAgentId } from "../routing/session-key.js";
-import { OPENCLAW_AGENT_SCHEMA_VERSION } from "./openclaw-agent-db-contract.js";
+import { OPENCLAW_AGENT_SCHEMA_VERSION } from "./grokbot-agent-db-contract.js";
 import {
   assertExistingAgentSchemaOwner,
   assertSupportedAgentSchemaVersion,
   readExistingAgentSchemaMeta,
-} from "./openclaw-agent-db-schema-helpers.js";
-import { ensureOpenClawAgentDatabaseSchema } from "./openclaw-agent-db-schema.js";
-import { OPENCLAW_AGENT_SCHEMA_SQL } from "./openclaw-agent-schema.generated.js";
-import { OPENCLAW_SQLITE_BUSY_TIMEOUT_MS } from "./openclaw-state-db.js";
+} from "./grokbot-agent-db-schema-helpers.js";
+import { ensureOpenClawAgentDatabaseSchema } from "./grokbot-agent-db-schema.js";
+import { OPENCLAW_AGENT_SCHEMA_SQL } from "./grokbot-agent-schema.generated.js";
+import { OPENCLAW_SQLITE_BUSY_TIMEOUT_MS } from "./grokbot-state-db.js";
 
 const OPENCLAW_AGENT_MAINTENANCE_SCHEMA_COMPATIBILITY = {
   allowedColumnDefinitions: {
@@ -45,7 +45,7 @@ export function assertOpenClawAgentDatabaseForMaintenance(
   const metadata = readExistingAgentSchemaMeta(database);
   if (!metadata) {
     throw new Error(
-      `OpenClaw agent database ${options.pathname} has no schema ownership metadata.`,
+      `GrokBot agent database ${options.pathname} has no schema ownership metadata.`,
     );
   }
   assertExistingAgentSchemaOwner(metadata, agentId, options.pathname);
@@ -53,7 +53,7 @@ export function assertOpenClawAgentDatabaseForMaintenance(
   const userVersion = readSqliteUserVersion(database);
   if (userVersion > OPENCLAW_AGENT_SCHEMA_VERSION) {
     throw createNewerSqliteSchemaVersionError(
-      "OpenClaw agent database",
+      "GrokBot agent database",
       options.pathname,
       userVersion,
       OPENCLAW_AGENT_SCHEMA_VERSION,
@@ -61,12 +61,12 @@ export function assertOpenClawAgentDatabaseForMaintenance(
   }
   if (userVersion !== OPENCLAW_AGENT_SCHEMA_VERSION) {
     throw new Error(
-      `OpenClaw agent database ${options.pathname} uses schema version ${userVersion}; run openclaw doctor --fix before compacting it.`,
+      `GrokBot agent database ${options.pathname} uses schema version ${userVersion}; run grokbot doctor --fix before compacting it.`,
     );
   }
   if (metadata.schemaVersion !== OPENCLAW_AGENT_SCHEMA_VERSION) {
     throw new Error(
-      `OpenClaw agent database ${options.pathname} metadata schema version ${metadata.schemaVersion ?? "invalid"} does not match ${OPENCLAW_AGENT_SCHEMA_VERSION}; run openclaw doctor --fix before compacting it.`,
+      `GrokBot agent database ${options.pathname} metadata schema version ${metadata.schemaVersion ?? "invalid"} does not match ${OPENCLAW_AGENT_SCHEMA_VERSION}; run grokbot doctor --fix before compacting it.`,
     );
   }
   assertSqliteSchemaContains(

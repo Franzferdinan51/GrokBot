@@ -1,12 +1,12 @@
 // Slack plugin module implements action runtime behavior.
-import { normalizeAccountId } from "openclaw/plugin-sdk/account-resolution";
-import type { AgentToolResult } from "openclaw/plugin-sdk/agent-core";
-import { readBooleanParam } from "openclaw/plugin-sdk/boolean-param";
-import type { ChannelMessageActionContext } from "openclaw/plugin-sdk/channel-contract";
-import { createLazyRuntimeModule } from "openclaw/plugin-sdk/lazy-runtime";
-import { isSingleUseReplyToMode } from "openclaw/plugin-sdk/reply-reference";
-import { resolveOpenProviderRuntimeGroupPolicy } from "openclaw/plugin-sdk/runtime-group-policy";
-import { normalizeOptionalLowercaseString } from "openclaw/plugin-sdk/string-coerce-runtime";
+import { normalizeAccountId } from "grokbot/plugin-sdk/account-resolution";
+import type { AgentToolResult } from "grokbot/plugin-sdk/agent-core";
+import { readBooleanParam } from "grokbot/plugin-sdk/boolean-param";
+import type { ChannelMessageActionContext } from "grokbot/plugin-sdk/channel-contract";
+import { createLazyRuntimeModule } from "grokbot/plugin-sdk/lazy-runtime";
+import { isSingleUseReplyToMode } from "grokbot/plugin-sdk/reply-reference";
+import { resolveOpenProviderRuntimeGroupPolicy } from "grokbot/plugin-sdk/runtime-group-policy";
+import { normalizeOptionalLowercaseString } from "grokbot/plugin-sdk/string-coerce-runtime";
 import type { ResolvedSlackAccount } from "./accounts.js";
 import { parseSlackBlocksInput } from "./blocks-input.js";
 import type { SlackConversationInfo } from "./channel-type.js";

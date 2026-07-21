@@ -1,12 +1,12 @@
-# OpenClaw Featherless AI Provider
+# GrokBot Featherless AI Provider
 
-Official OpenClaw provider plugin for Featherless AI's OpenAI-compatible API.
+Official GrokBot provider plugin for Featherless AI's OpenAI-compatible API.
 
-Install from OpenClaw:
+Install from GrokBot:
 
 ```bash
-openclaw plugins install @openclaw/featherless-provider
-openclaw gateway restart
+grokbot plugins install @grokbot/featherless-provider
+grokbot gateway restart
 ```
 
-See <https://docs.openclaw.ai/providers/featherless> for setup and configuration.
+See <https://docs.grokbot.ai/providers/featherless> for setup and configuration.

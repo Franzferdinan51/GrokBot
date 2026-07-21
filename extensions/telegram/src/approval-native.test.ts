@@ -1,10 +1,10 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { upsertSessionEntry } from "openclaw/plugin-sdk/session-store-runtime";
-import type { SessionEntry } from "openclaw/plugin-sdk/session-store-runtime";
-import { closeOpenClawAgentDatabasesForTest } from "openclaw/plugin-sdk/sqlite-runtime-testing";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { upsertSessionEntry } from "grokbot/plugin-sdk/session-store-runtime";
+import type { SessionEntry } from "grokbot/plugin-sdk/session-store-runtime";
+import { closeOpenClawAgentDatabasesForTest } from "grokbot/plugin-sdk/sqlite-runtime-testing";
 import { afterEach, describe, expect, it } from "vitest";
 import { telegramApprovalCapability } from "./approval-native.js";
 
@@ -36,7 +36,7 @@ afterEach(() => {
 });
 
 function createTempStorePath(): string {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-telegram-approval-native-"));
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-telegram-approval-native-"));
   tempDirs.push(dir);
   return path.join(dir, "sessions.json");
 }

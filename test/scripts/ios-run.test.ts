@@ -20,7 +20,7 @@ function writeExecutable(filePath: string, body: string): void {
 }
 
 function makeFixture(bundleId: string): { root: string; script: string; logFile: string } {
-  const root = mkdtempSync(path.join(os.tmpdir(), "openclaw-ios-run-"));
+  const root = mkdtempSync(path.join(os.tmpdir(), "grokbot-ios-run-"));
   tempDirs.push(root);
 
   const scriptsDir = path.join(root, "scripts");
@@ -104,7 +104,7 @@ while [[ $# -gt 0 ]]; do
       ;;
   esac
 done
-app_dir="$derived/Build/Products/$configuration-iphonesimulator/OpenClaw.app"
+app_dir="$derived/Build/Products/$configuration-iphonesimulator/GrokBot.app"
 mkdir -p "$app_dir"
 cat >"$app_dir/Info.plist" <<'PLIST'
 <?xml version="1.0" encoding="UTF-8"?>
@@ -201,7 +201,7 @@ describe("scripts/ios-run.sh", () => {
     const log = readFileSync(fixture.logFile, "utf8");
     expect(log).toContain("OPENCLAW_PUSH_MODE=simulatorSandbox");
     expect(log).toContain(
-      "OPENCLAW_PUSH_RELAY_BASE_URL=https://ios-push-relay-sandbox.openclaw.ai",
+      "OPENCLAW_PUSH_RELAY_BASE_URL=https://ios-push-relay-sandbox.grokbot.ai",
     );
     expect(log).toContain("simctl launch iPhone 17 ai.openclawfoundation.app");
     expect(log).toContain("simctl-launch-proof set");

@@ -2,13 +2,13 @@
 import { createHash } from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
-import { root, type Root } from "@openclaw/fs-safe";
+import { root, type Root } from "@grokbot/fs-safe";
 import { parseMcpOAuthStoreJson } from "../agents/mcp-oauth-store.js";
-import type { DB as OpenClawStateKyselyDatabase } from "../state/openclaw-state-db.generated.js";
+import type { DB as OpenClawStateKyselyDatabase } from "../state/grokbot-state-db.generated.js";
 import {
   openOpenClawStateDatabase,
   runOpenClawStateWriteTransaction,
-} from "../state/openclaw-state-db.js";
+} from "../state/grokbot-state-db.js";
 import { formatErrorMessage } from "./errors.js";
 import { acquireGatewayLock, GatewayLockError } from "./gateway-lock.js";
 import {
@@ -542,7 +542,7 @@ async function migrateWithExclusiveStateOwnership(params: {
     } catch (error) {
       const staleGuidance =
         (error as { code?: unknown }).code === "file_lock_stale"
-          ? " Verify no older OpenClaw process is running, remove the retired .lock sidecar, and rerun Doctor."
+          ? " Verify no older GrokBot process is running, remove the retired .lock sidecar, and rerun Doctor."
           : "";
       warnings.push(
         `Failed locking legacy MCP OAuth store ${path.basename(sourcePath)}: ${String(error)}.${staleGuidance}`,
@@ -582,7 +582,7 @@ export async function migrateLegacyMcpOAuthStores(params: {
     return {
       changes: [],
       warnings: [
-        `Failed migrating legacy MCP OAuth stores: ${detail}. Stop the Gateway and run \`openclaw doctor --fix\` again.`,
+        `Failed migrating legacy MCP OAuth stores: ${detail}. Stop the Gateway and run \`grokbot doctor --fix\` again.`,
       ],
     };
   }

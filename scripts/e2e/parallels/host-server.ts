@@ -1,4 +1,4 @@
-// Host Server script supports OpenClaw repository automation.
+// Host Server script supports GrokBot repository automation.
 import { spawn, type ChildProcess } from "node:child_process";
 import { randomUUID } from "node:crypto";
 import { rm } from "node:fs/promises";
@@ -103,7 +103,7 @@ export async function startNpmRegistryServer(input: {
     die("npm registry server requires at least one package");
   }
   const port = allocateHostPort();
-  const portFile = path.join(tmpdir(), `openclaw-npm-registry-${randomUUID()}.port`);
+  const portFile = path.join(tmpdir(), `grokbot-npm-registry-${randomUUID()}.port`);
   const packageArgs = input.packages.flatMap((pkg) => [pkg.name, pkg.version, pkg.tarballPath]);
   const child = spawn(
     process.execPath,

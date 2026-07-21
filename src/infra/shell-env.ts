@@ -3,7 +3,7 @@ import { execFileSync } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { resolveTimerTimeoutMs } from "@openclaw/normalization-core/number-coercion";
+import { resolveTimerTimeoutMs } from "@grokbot/normalization-core/number-coercion";
 import { isTruthyEnvValue } from "./env.js";
 import { formatErrorMessage } from "./errors.js";
 import { resolveExecutableFromPathEnv } from "./executable-path.js";
@@ -156,7 +156,7 @@ function createLoginShellEnvCacheKey(params: {
       ) {
         return true;
       }
-      return key.startsWith("XDG_") || key.startsWith("OPENCLAW_");
+      return key.startsWith("XDG_") || key.startsWith("GROKBOT_");
     })
     .toSorted(([left], [right]) => left.localeCompare(right));
   return JSON.stringify([
@@ -260,7 +260,7 @@ export function loadShellEnvFallback(opts: ShellEnvFallbackOptions): ShellEnvFal
     platform: opts.platform,
   });
   if (!probe.ok) {
-    logger.warn(`[openclaw] shell env fallback failed: ${probe.error}`);
+    logger.warn(`[grokbot] shell env fallback failed: ${probe.error}`);
     lastAppliedKeys = [];
     return { ok: false, error: probe.error, applied: [] };
   }

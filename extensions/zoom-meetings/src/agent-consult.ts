@@ -1,17 +1,17 @@
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import {
   consultMeetingAgent,
   handleMeetingRealtimeConsultToolCall,
   resolveMeetingRealtimeTools,
   type MeetingAgentConsultSurface,
-} from "openclaw/plugin-sdk/meeting-runtime";
-import type { PluginRuntime, RuntimeLogger } from "openclaw/plugin-sdk/plugin-runtime";
+} from "grokbot/plugin-sdk/meeting-runtime";
+import type { PluginRuntime, RuntimeLogger } from "grokbot/plugin-sdk/plugin-runtime";
 import type {
   RealtimeVoiceBridgeSession,
   RealtimeVoiceTool,
   RealtimeVoiceToolCallEvent,
   TalkEventInput,
-} from "openclaw/plugin-sdk/realtime-voice";
+} from "grokbot/plugin-sdk/realtime-voice";
 import type { ZoomMeetingsConfig, ZoomMeetingsToolPolicy } from "./config.js";
 
 const ZOOM_MEETINGS_CONSULT_SURFACE: MeetingAgentConsultSurface = {

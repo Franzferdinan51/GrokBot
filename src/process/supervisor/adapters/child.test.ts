@@ -169,7 +169,7 @@ describe("createChildAdapter", () => {
   });
 
   const createWindowsNpmShim = async (params: { command: string; packagePath: string[] }) => {
-    const binDir = tempDirs.make("openclaw-child-shim-");
+    const binDir = tempDirs.make("grokbot-child-shim-");
     const entrypoint = path.join(binDir, "node_modules", ...params.packagePath);
     await mkdir(path.dirname(entrypoint), { recursive: true });
     await writeFile(entrypoint, "", "utf8");
@@ -386,7 +386,7 @@ describe("createChildAdapter", () => {
         usedFallback: false,
       });
       const adapterLocal = await createChildAdapter({
-        argv: ["openclaw", "version"],
+        argv: ["grokbot", "version"],
         stdinMode: "pipe-closed",
       });
       return { ...stub, adapter: adapterLocal };
@@ -406,7 +406,7 @@ describe("createChildAdapter", () => {
   });
 
   it("disables detached mode in service-managed runtime", async () => {
-    process.env.OPENCLAW_SERVICE_MARKER = "openclaw";
+    process.env.OPENCLAW_SERVICE_MARKER = "grokbot";
 
     await createAdapterHarness({ pid: 7777 });
 

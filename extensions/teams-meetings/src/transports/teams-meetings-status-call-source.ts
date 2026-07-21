@@ -10,7 +10,7 @@ export function teamsMeetingStatusCallSource(): string {
     const media = [...document.querySelectorAll("audio, video")].filter(
       (element) =>
         typeof element.setSinkId === "function" &&
-        !String(element.id || "").startsWith("openclaw-teams-audio-output-"),
+        !String(element.id || "").startsWith("grokbot-teams-audio-output-"),
     );
     if (media.length > 0) {
       try {
@@ -157,7 +157,7 @@ export function teamsMeetingStatusCallSource(): string {
             if (!elementRouted && stream) {
               if (!entry && canMutateSession) {
                 const bridge = document.createElement("audio");
-                bridge.id = "openclaw-teams-audio-output-" + bridgeEntries.length;
+                bridge.id = "grokbot-teams-audio-output-" + bridgeEntries.length;
                 bridge.autoplay = false;
                 bridge.hidden = true;
                 bridge.srcObject = stream;

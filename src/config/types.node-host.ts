@@ -23,7 +23,7 @@ export type NodeHostConfig = {
   };
   /** Skills published by the headless node host. */
   skills?: {
-    /** Scan and publish ~/.openclaw/skills (default: true). */
+    /** Scan and publish ~/.grokbot/skills (default: true). */
     enabled?: boolean;
   };
 };

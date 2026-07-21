@@ -2,9 +2,9 @@ import fsSync from "node:fs";
 import {
   findNormalizedProviderValue,
   normalizeProviderId,
-} from "@openclaw/model-catalog-core/provider-id";
-import { formatByteSize } from "@openclaw/normalization-core";
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+} from "@grokbot/model-catalog-core/provider-id";
+import { formatByteSize } from "@grokbot/normalization-core";
+import { normalizeOptionalString } from "@grokbot/normalization-core/string-coerce";
 import { note } from "../../packages/terminal-core/src/note.js";
 import {
   listAgentIds,
@@ -24,7 +24,7 @@ import {
   resolveUsableCustomProviderApiKey,
 } from "../agents/model-auth.js";
 import { formatCliCommand } from "../cli/command-format.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import type { DoctorMemoryEmbeddingRuntimePayload } from "../gateway/server-methods/doctor.js";
 import { formatErrorMessage } from "../infra/errors.js";
 import {
@@ -293,8 +293,8 @@ function buildMemoryRecallIssueNote(audit: ShortTermAuditSummary): string | null
   const issueLines = audit.issues.map((issue) => `- ${issue.message}`);
   const hasFixableIssue = audit.issues.some((issue) => issue.fixable);
   const guidance = hasFixableIssue
-    ? `Fix: ${formatCliCommand("openclaw doctor --fix")} or ${formatCliCommand("openclaw memory status --fix")}`
-    : `Verify: ${formatCliCommand("openclaw memory status --deep")}`;
+    ? `Fix: ${formatCliCommand("grokbot doctor --fix")} or ${formatCliCommand("grokbot memory status --fix")}`
+    : `Verify: ${formatCliCommand("grokbot memory status --deep")}`;
   return [
     "Memory recall artifacts need attention:",
     ...issueLines,
@@ -314,8 +314,8 @@ function buildDreamingArtifactIssueNote(audit: DreamingArtifactsAuditSummary): s
     ...issueLines,
     `Dream corpus: ${audit.sessionCorpusDir}`,
     hasFixableIssue
-      ? `Fix: ${formatCliCommand("openclaw doctor --fix")} or ${formatCliCommand("openclaw memory status --fix")}`
-      : `Verify: ${formatCliCommand("openclaw memory status --deep")}`,
+      ? `Fix: ${formatCliCommand("grokbot doctor --fix")} or ${formatCliCommand("grokbot memory status --fix")}`
+      : `Verify: ${formatCliCommand("grokbot memory status --deep")}`,
   ].join("\n");
 }
 
@@ -420,7 +420,7 @@ export async function maybeRepairMemoryRecallHealth(params: {
                 ? `- rewrote recall store${details ? ` (${details})` : ""}`
                 : null,
               repair.removedStaleLock ? "- removed stale promotion lock" : null,
-              `Verify: ${formatCliCommand("openclaw memory status --deep")}`,
+              `Verify: ${formatCliCommand("grokbot memory status --deep")}`,
             ].filter(Boolean);
             note(
               formatAgentMessage(scope.agentId, labelAgents, lines.join("\n")),
@@ -457,7 +457,7 @@ export async function maybeRepairMemoryRecallHealth(params: {
         dreamingRepair.archivedDreamsDiary ? "- archived dream diary" : null,
         dreamingRepair.archiveDir ? `- archive dir: ${dreamingRepair.archiveDir}` : null,
         ...dreamingRepair.warnings.map((warning) => `- warning: ${warning}`),
-        `Verify: ${formatCliCommand("openclaw memory status --deep")}`,
+        `Verify: ${formatCliCommand("grokbot memory status --deep")}`,
       ].filter(Boolean);
       note(formatAgentMessage(scope.agentId, labelAgents, lines.join("\n")), "Doctor changes");
     } catch (err) {
@@ -567,7 +567,7 @@ function noteRememberAcrossConversationsHealth(params: {
 
 /**
  * Check whether memory search has a usable embedding provider.
- * Runs as part of `openclaw doctor` — config-only checks where possible;
+ * Runs as part of `grokbot doctor` — config-only checks where possible;
  * may spawn a short-lived probe process when `memory.backend=qmd` to verify
  * the configured `qmd` binary is available.
  */
@@ -676,10 +676,10 @@ async function noteMemorySearchHealthForAgent(
               : "- Install the supported QMD package: npm install -g @tobilu/qmd (or bun install -g @tobilu/qmd)",
             workspaceProbeFailed
               ? "- Verify the resolved workspace path for the affected agent before retrying."
-              : `- Set an explicit binary path: ${formatCliCommand("openclaw config set memory.qmd.command /absolute/path/to/qmd")}`,
-            `- Or switch back to builtin memory: ${formatCliCommand("openclaw config set memory.backend builtin")}`,
+              : `- Set an explicit binary path: ${formatCliCommand("grokbot config set memory.qmd.command /absolute/path/to/qmd")}`,
+            `- Or switch back to builtin memory: ${formatCliCommand("grokbot config set memory.backend builtin")}`,
             "",
-            `Verify: ${formatCliCommand("openclaw memory status --deep")}`,
+            `Verify: ${formatCliCommand("grokbot memory status --deep")}`,
           ]
             .filter(Boolean)
             .join("\n"),
@@ -700,11 +700,11 @@ async function noteMemorySearchHealthForAgent(
           "",
           "Fix (pick one):",
           `- Enable QMD session export: ${formatCliCommand(
-            "openclaw config set memory.qmd.sessions.enabled true",
+            "grokbot config set memory.qmd.sessions.enabled true",
           )}`,
           "- Or remove sessions from the default agent's memorySearch.sources if QMD session recall is not intended.",
           "",
-          `Verify: ${formatCliCommand("openclaw memory status --deep")}`,
+          `Verify: ${formatCliCommand("grokbot memory status --deep")}`,
         ].join("\n"),
         "Memory search",
       );
@@ -743,13 +743,13 @@ async function noteMemorySearchHealthForAgent(
         gatewayDetail ? `Gateway probe: ${gatewayDetail}` : null,
         "",
         "Fix (pick one):",
-        `- Install the llama.cpp provider plugin: ${formatCliCommand("openclaw plugins install @openclaw/llama-cpp-provider")}`,
+        `- Install the llama.cpp provider plugin: ${formatCliCommand("grokbot plugins install @grokbot/llama-cpp-provider")}`,
         `- Set a local GGUF model path in config`,
         suggestedRemoteProvider
-          ? `- Switch to a remote provider: ${formatCliCommand(`openclaw config set agents.defaults.memorySearch.provider ${suggestedRemoteProvider}`)}`
+          ? `- Switch to a remote provider: ${formatCliCommand(`grokbot config set agents.defaults.memorySearch.provider ${suggestedRemoteProvider}`)}`
           : `- Switch to a remote embedding provider in config`,
         "",
-        `Verify: ${formatCliCommand("openclaw memory status --deep")}`,
+        `Verify: ${formatCliCommand("grokbot memory status --deep")}`,
       ]
         .filter(Boolean)
         .join("\n"),
@@ -768,9 +768,9 @@ async function noteMemorySearchHealthForAgent(
         "Set agents.defaults.memorySearch.remote.baseUrl to the /v1 endpoint for your embeddings server.",
         "",
         "Fix:",
-        `- ${formatCliCommand("openclaw config set agents.defaults.memorySearch.remote.baseUrl http://127.0.0.1:1234/v1")}`,
+        `- ${formatCliCommand("grokbot config set agents.defaults.memorySearch.remote.baseUrl http://127.0.0.1:1234/v1")}`,
         "",
-        `Verify: ${formatCliCommand("openclaw memory status --deep")}`,
+        `Verify: ${formatCliCommand("grokbot memory status --deep")}`,
       ].join("\n"),
       "Memory search",
     );
@@ -784,9 +784,9 @@ async function noteMemorySearchHealthForAgent(
         "Set agents.defaults.memorySearch.model to the embedding model id your server expects.",
         "",
         "Fix:",
-        `- ${formatCliCommand("openclaw config set agents.defaults.memorySearch.model text-embedding-bge-m3")}`,
+        `- ${formatCliCommand("grokbot config set agents.defaults.memorySearch.model text-embedding-bge-m3")}`,
         "",
-        `Verify: ${formatCliCommand("openclaw memory status --deep")}`,
+        `Verify: ${formatCliCommand("grokbot memory status --deep")}`,
       ].join("\n"),
       "Memory search",
     );
@@ -799,7 +799,7 @@ async function noteMemorySearchHealthForAgent(
     }
     // When the probe was intentionally skipped (skipped: true / checked: false
     // due to probe:false path), we have no embedding status information — do
-    // not warn. A skipped probe means the user ran `openclaw doctor` without
+    // not warn. A skipped probe means the user ran `grokbot doctor` without
     // --deep; it does not mean embeddings are unavailable.
     // NOTE: a transport timeout also sets checked: false, but skipped stays
     // false/absent — a timeout is a real diagnostic signal and should fall
@@ -814,7 +814,7 @@ async function noteMemorySearchHealthForAgent(
           ? `Memory search provider "${provider}" is configured, but the gateway reports embeddings are not ready.`
           : `Memory search provider "${provider}" is configured, but the gateway could not confirm embeddings are ready.`,
         gatewayProbeWarning,
-        `Verify: ${formatCliCommand("openclaw memory status --deep")}`,
+        `Verify: ${formatCliCommand("grokbot memory status --deep")}`,
       ]
         .filter(Boolean)
         .join("\n"),
@@ -838,7 +838,7 @@ async function noteMemorySearchHealthForAgent(
       [
         `Memory search provider is set to "${provider}" but the API key was not found in the CLI environment.`,
         "The running gateway reports memory embeddings are ready for the default agent.",
-        `Verify: ${formatCliCommand("openclaw memory status --deep")}`,
+        `Verify: ${formatCliCommand("grokbot memory status --deep")}`,
       ].join("\n"),
       "Memory search",
     );
@@ -855,10 +855,10 @@ async function noteMemorySearchHealthForAgent(
       "",
       "Fix (pick one):",
       `- Set ${envVar} in your environment`,
-      `- Configure credentials: ${formatCliCommand("openclaw configure --section model")}`,
-      `- To disable: ${formatCliCommand("openclaw config set agents.defaults.memorySearch.enabled false")}`,
+      `- Configure credentials: ${formatCliCommand("grokbot configure --section model")}`,
+      `- To disable: ${formatCliCommand("grokbot config set agents.defaults.memorySearch.enabled false")}`,
       "",
-      `Verify: ${formatCliCommand("openclaw memory status --deep")}`,
+      `Verify: ${formatCliCommand("grokbot memory status --deep")}`,
     ].join("\n"),
     "Memory search",
   );

@@ -267,7 +267,7 @@ export function renderAgentChannels(params: {
                   ? html`
                       <a
                         class="settings-row__value"
-                        href="https://docs.openclaw.ai/channels"
+                        href="https://docs.grokbot.ai/channels"
                         target="_blank"
                         rel="noopener"
                         >${t("agents.channels.setupGuide")}</a
@@ -486,7 +486,7 @@ export function renderAgentFiles(params: {
                               const btn = e.currentTarget as HTMLElement;
                               btn
                                 .closest(".settings-group")
-                                ?.querySelector<OpenClawModalDialog>("openclaw-modal-dialog")
+                                ?.querySelector<OpenClawModalDialog>("grokbot-modal-dialog")
                                 ?.show();
                             }}
                           >
@@ -523,10 +523,10 @@ export function renderAgentFiles(params: {
                             )}
                         ></textarea>
                       </label>
-                      <openclaw-modal-dialog
+                      <grokbot-modal-dialog
                         manual
                         label=${activeEntry.name}
-                        style="--openclaw-modal-width: min(1040px, calc(100vw - 32px));"
+                        style="--grokbot-modal-width: min(1040px, calc(100vw - 32px));"
                         @modal-cancel=${(e: Event) => {
                           resetAgentFilePreview(e.currentTarget as HTMLElement);
                         }}
@@ -552,7 +552,7 @@ export function renderAgentFiles(params: {
                               </div>
                             </div>
                             <div class="md-preview-dialog__actions">
-                              <openclaw-tooltip .content=${t("agents.files.expandPreview")}>
+                              <grokbot-tooltip .content=${t("agents.files.expandPreview")}>
                                 <button
                                   type="button"
                                   class="btn btn--sm md-preview-icon-btn md-preview-expand-btn"
@@ -566,7 +566,7 @@ export function renderAgentFiles(params: {
                                     }
                                     const isFullscreen = panel.classList.toggle("fullscreen");
                                     btn
-                                      .closest("openclaw-modal-dialog")
+                                      .closest("grokbot-modal-dialog")
                                       ?.classList.toggle("fullscreen", isFullscreen);
                                     setPreviewExpandButtonState(btn, isFullscreen);
                                   }}
@@ -577,15 +577,15 @@ export function renderAgentFiles(params: {
                                     >${icons.minimize}</span
                                   >
                                 </button>
-                              </openclaw-tooltip>
-                              <openclaw-tooltip .content=${t("agents.files.editFile")}>
+                              </grokbot-tooltip>
+                              <grokbot-tooltip .content=${t("agents.files.editFile")}>
                                 <button
                                   type="button"
                                   class="btn btn--sm md-preview-icon-btn"
                                   aria-label=${t("agents.files.editFile")}
                                   @click=${(e: Event) => {
                                     const modal = (e.currentTarget as HTMLElement).closest(
-                                      "openclaw-modal-dialog",
+                                      "grokbot-modal-dialog",
                                     ) as OpenClawModalDialog | null;
                                     modal?.hide();
                                     if (modal) {
@@ -598,15 +598,15 @@ export function renderAgentFiles(params: {
                                 >
                                   <span aria-hidden="true">${icons.edit}</span>
                                 </button>
-                              </openclaw-tooltip>
-                              <openclaw-tooltip .content=${t("agents.files.closePreview")}>
+                              </grokbot-tooltip>
+                              <grokbot-tooltip .content=${t("agents.files.closePreview")}>
                                 <button
                                   type="button"
                                   class="btn btn--sm md-preview-icon-btn"
                                   aria-label=${t("agents.files.closePreview")}
                                   @click=${(e: Event) => {
                                     const modal = (e.currentTarget as HTMLElement).closest(
-                                      "openclaw-modal-dialog",
+                                      "grokbot-modal-dialog",
                                     ) as OpenClawModalDialog | null;
                                     modal?.hide();
                                     if (modal) {
@@ -616,7 +616,7 @@ export function renderAgentFiles(params: {
                                 >
                                   <span aria-hidden="true">${icons.x}</span>
                                 </button>
-                              </openclaw-tooltip>
+                              </grokbot-tooltip>
                             </div>
                           </div>
                           <div class="md-preview-dialog__meta">
@@ -644,7 +644,7 @@ export function renderAgentFiles(params: {
                             </article>
                           </div>
                         </div>
-                      </openclaw-modal-dialog>
+                      </grokbot-modal-dialog>
                     `}
               </div>
             `,

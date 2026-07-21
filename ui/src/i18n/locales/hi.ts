@@ -272,14 +272,14 @@ export const hi: TranslationMap = {
     errorTitle: "पैनल लोड नहीं हो सका",
     genericSubtitle: "इस पैनल को लोड करते समय कुछ गड़बड़ हो गई।",
     staleTitle: "एक नया संस्करण उपलब्ध है",
-    staleSubtitle: "OpenClaw को बैकग्राउंड में अपडेट किया गया था। नवीनतम पैनल पाने के लिए फिर से लोड करें।",
+    staleSubtitle: "GrokBot को बैकग्राउंड में अपडेट किया गया था। नवीनतम पैनल पाने के लिए फिर से लोड करें।",
     retry: "फिर से प्रयास करें",
   },
   nodes: {
     pairing: {
       button: "मोबाइल डिवाइस पेयर करें",
       adminRequired: "सेटअप कोड बनाने के लिए एडमिनिस्ट्रेटर एक्सेस आवश्यक है।",
-      title: "OpenClaw मोबाइल",
+      title: "GrokBot मोबाइल",
       subtitle: "नया फ़ोन कनेक्ट करने के लिए मोबाइल ऐप में इस QR कोड को स्कैन करें।",
       generating: "सुरक्षित सेटअप कोड बनाया जा रहा है…",
       accessTitle: "मोबाइल एक्सेस",
@@ -292,14 +292,14 @@ export const hi: TranslationMap = {
       transportLimitedHint:
         "यह Gateway URL प्लेनटेक्स्ट ws:// का उपयोग करता है। wss:// या Tailscale Serve का उपयोग करें, फिर पूर्ण एक्सेस के लिए नया कोड बनाएँ।",
       failed: "सेटअप कोड नहीं बनाया जा सका।",
-      qrAlt: "OpenClaw मोबाइल पेयरिंग QR कोड",
+      qrAlt: "GrokBot मोबाइल पेयरिंग QR कोड",
       qrUnavailable: "QR उपलब्ध नहीं है। इसके बजाय सेटअप कोड कॉपी करें।",
       copySetupCode: "सेटअप कोड कॉपी करें",
       newCode: "नया कोड",
       showSetupCode: "सेटअप कोड दिखाएँ",
       pending: "समीक्षा की प्रतीक्षा में डिवाइस अनुरोध: {count}",
       review: "समीक्षा",
-      waiting: "आधिकारिक OpenClaw मोबाइल ऐप स्कैन करने के बाद अपने आप कनेक्ट हो जाते हैं।",
+      waiting: "आधिकारिक GrokBot मोबाइल ऐप स्कैन करने के बाद अपने आप कनेक्ट हो जाते हैं।",
       help: "पेयरिंग सहायता",
       manageDevices: "डिवाइस प्रबंधित करें",
     },
@@ -443,11 +443,11 @@ export const hi: TranslationMap = {
     ownerSession: "सत्र",
     ownerWorkboard: "वर्कबोर्ड",
     title: "प्रबंधित Worktrees",
-    subtitle: "OpenClaw के स्वामित्व वाले पृथक repository checkouts.",
+    subtitle: "GrokBot के स्वामित्व वाले पृथक repository checkouts.",
     cleanNow: "अभी साफ़ करें",
     cleanupTitle: "सफ़ाई",
     cleanupSubtitle:
-      "डिस्क स्थान खाली करने के लिए OpenClaw समय-समय पर पुराने worktrees हटाता है। तय करें कि सफ़ाई कितनी सख़्ती से की जाए।",
+      "डिस्क स्थान खाली करने के लिए GrokBot समय-समय पर पुराने worktrees हटाता है। तय करें कि सफ़ाई कितनी सख़्ती से की जाए।",
     cleanupMaxCount: "अधिकतम worktrees",
     cleanupMaxCountHelp:
       "सभी repositories में रखे जाने वाले प्रबंधित worktrees की अधिकतम संख्या। पुराने worktrees का पहले snapshot लिया जाता है और फिर उन्हें हटा दिया जाता है। संख्या सीमा अक्षम करने के लिए इसे 0 पर सेट करें।",
@@ -1334,7 +1334,7 @@ export const hi: TranslationMap = {
     autoSaveFailed: "सहेजना विफल",
     autoSaveConflict: "सेटिंग्स कहीं और बदली गईं",
     retry: "पुनः प्रयास करें",
-    applyBannerText: "openclaw.json में सहेजा गया — लागू करने के लिए gateway पुनः आरंभ करें।",
+    applyBannerText: "grokbot.json में सहेजा गया — लागू करने के लिए gateway पुनः आरंभ करें।",
     applyBannerAction: "पुनः आरंभ करें और लागू करें",
     rawDiscard: "खारिज करें",
     rawDraftBlocksApply: "सहेजे न गए raw config संपादन — पुनः आरंभ करने से पहले Raw editor में सहेजें या त्यागें।",
@@ -1387,7 +1387,7 @@ export const hi: TranslationMap = {
     },
   },
   approvalPage: {
-    brandName: "OpenClaw",
+    brandName: "GrokBot",
     eyebrow: "Operator approval",
     loadingTitle: "Loading approval",
     loadingDescription: "Checking the current approval state with the Gateway.",
@@ -1396,7 +1396,7 @@ export const hi: TranslationMap = {
       "This approval could not be found or this device is not authorized to review it.",
     connectionErrorTitle: "Connection interrupted",
     connectionErrorDescription:
-      "OpenClaw cannot confirm or record a decision while disconnected. Reconnect to check the current status.",
+      "GrokBot cannot confirm or record a decision while disconnected. Reconnect to check the current status.",
     retry: "पुनः प्रयास करें",
     execTitle: "Command approval",
     pending: "Waiting for your decision",
@@ -1720,7 +1720,7 @@ export const hi: TranslationMap = {
     skillWorkshop: "प्रस्तावों के लाइव स्किल्स बनने से पहले उनकी समीक्षा करें, उन्हें परिष्कृत करें और लागू करें।",
     nodes: "पेयर किए गए डिवाइस और कमांड्स।",
     chat: "त्वरित हस्तक्षेपों के लिए गेटवे चैट।",
-    config: "openclaw.json संपादित करें।",
+    config: "grokbot.json संपादित करें।",
     profile: "आपके एजेंट के आँकड़े, streaks, और रीफ में जीवन।",
     communications: "चैनल, संदेश, और ऑडियो सेटिंग्स।",
     appearance: "थीम, UI, और सेटअप विज़ार्ड सेटिंग्स।",
@@ -1739,7 +1739,7 @@ export const hi: TranslationMap = {
   modelSetup: {
     heading: "अपना AI कनेक्ट करें",
     intro:
-      "OpenClaw आपके पास पहले से मौजूद AI एक्सेस का दोबारा उपयोग करता है — CLI लॉगिन, API कुंजी या प्रदाता साइन-इन।",
+      "GrokBot आपके पास पहले से मौजूद AI एक्सेस का दोबारा उपयोग करता है — CLI लॉगिन, API कुंजी या प्रदाता साइन-इन।",
     loading: "उपलब्ध AI एक्सेस के लिए इस Gateway की जाँच की जा रही है…",
     retry: "पुनः प्रयास करें",
     checkAgain: "फिर से जाँचें",
@@ -1752,7 +1752,7 @@ export const hi: TranslationMap = {
     },
     access: {
       adminRequired: "मॉडल सेटअप के लिए operator.admin एक्सेस आवश्यक है।",
-      gatewayTooOld: "Gateway पर OpenClaw का पुराना संस्करण चल रहा है",
+      gatewayTooOld: "Gateway पर GrokBot का पुराना संस्करण चल रहा है",
     },
     candidates: {
       title: "इस Gateway पर मिले",
@@ -1850,12 +1850,12 @@ export const hi: TranslationMap = {
     confirmTitle: "{provider} से आयात करें?",
     confirmDescription: "चुनी गई {count} मेमोरी फ़ाइलों को इस एजेंट वर्कस्पेस में कॉपी करें।",
     confirmReplace: "बदलने से पहले मौजूदा गंतव्य फ़ाइलों का बैकअप माइग्रेशन रिपोर्ट में लिया जाएगा।",
-    confirmBackup: "मेमोरी कॉपी करने से पहले OpenClaw एक सत्यापित पूर्व-आयात बैकअप बनाता है।",
+    confirmBackup: "मेमोरी कॉपी करने से पहले GrokBot एक सत्यापित पूर्व-आयात बैकअप बनाता है।",
     confirmImport: "मेमोरी आयात करें",
     disconnected: "मेमोरी आयात करने के लिए Gateway से कनेक्ट करें।",
     title: "असिस्टेंट मेमोरी आयात करें",
     subtitle:
-      "OpenClaw में कॉपी करने से पहले Codex की समेकित मेमोरी और Claude Code की ऑटो-मेमोरी की समीक्षा करें।",
+      "GrokBot में कॉपी करने से पहले Codex की समेकित मेमोरी और Claude Code की ऑटो-मेमोरी की समीक्षा करें।",
     agent: "गंतव्य एजेंट",
     replaceExisting: "मौजूदा आयात बदलें",
     replaceHint: "टकरावों का फिर से पूर्वावलोकन करें और बदलने से पहले आइटम बैकअप सुरक्षित रखें।",
@@ -1863,7 +1863,7 @@ export const hi: TranslationMap = {
   onboarding: {
     memoryImport: {
       title: "अपने सहायक की मेमोरी अपने साथ लाएँ",
-      body: "OpenClaw को अन्य कोडिंग सहायकों की मेमोरी मिली है। इसे अपने एजेंट वर्कस्पेस में इम्पोर्ट करें?",
+      body: "GrokBot को अन्य कोडिंग सहायकों की मेमोरी मिली है। इसे अपने एजेंट वर्कस्पेस में इम्पोर्ट करें?",
       plannedCount: "{count} इम्पोर्ट के लिए तैयार",
       alreadyImported: "पहले ही इम्पोर्ट किए गए: {count}",
       sourceUnavailable: "स्रोत पथ उपलब्ध नहीं है",
@@ -1879,7 +1879,7 @@ export const hi: TranslationMap = {
       unknownError: "अनुरोध विफल रहा",
       doneTitle: "मेमोरी इम्पोर्ट पूरा हुआ",
       doneBody:
-        "{migrated} माइग्रेट किए गए, {skipped} छोड़े गए। आप OpenClaw को सेट अप करना जारी रख सकते हैं।",
+        "{migrated} माइग्रेट किए गए, {skipped} छोड़े गए। आप GrokBot को सेट अप करना जारी रख सकते हैं।",
     },
   },
   mcpPage: {
@@ -1964,7 +1964,7 @@ export const hi: TranslationMap = {
       notes: "नोट्स को Markdown, Obsidian, Notion, या Bear में कैप्चर करें।",
     },
     noInstalledTitle: "कोई वैकल्पिक प्लगइन्स इंस्टॉल नहीं हैं",
-    noInstalledBody: "OpenClaw को विस्तारित करने के लिए कोई विशेष प्लगइन खोजें या ClawHub में खोजें।",
+    noInstalledBody: "GrokBot को विस्तारित करने के लिए कोई विशेष प्लगइन खोजें या ClawHub में खोजें।",
     noInstalledMatchTitle: "कोई इंस्टॉल किए गए प्लगइन्स मेल नहीं खाते",
     noMatchBody: "कोई अलग खोज आज़माएँ।",
     filterAll: "सभी",
@@ -2009,7 +2009,7 @@ export const hi: TranslationMap = {
     detailPluginId: "Plugin ID",
     offlineTitle: "Gateway ऑफ़लाइन",
     offlineBody: "इंस्टॉल किए गए और अनुशंसित प्लगइन ब्राउज़ करने के लिए कनेक्ट करें।",
-    optionalCapability: "वैकल्पिक OpenClaw क्षमता।",
+    optionalCapability: "वैकल्पिक GrokBot क्षमता।",
     enabled: "सक्षम",
     disabled: "अक्षम",
     available: "उपलब्ध",
@@ -2041,7 +2041,7 @@ export const hi: TranslationMap = {
     disabledRestart: "{name} अक्षम किया गया। बदलाव लागू करने के लिए Gateway को रीस्टार्ट करना आवश्यक है।",
   },
   aboutPage: {
-    productName: "OpenClaw",
+    productName: "GrokBot",
     tagline: "आपका व्यक्तिगत AI सहायक, जो आपके अपने डिवाइसों पर चलता है।",
     waveHello: "Clawd को हाथ हिलाकर नमस्ते कहें",
     linksLabel: "समुदाय और संसाधन",
@@ -2050,7 +2050,7 @@ export const hi: TranslationMap = {
     linkGitHub: "GitHub",
     linkDiscord: "Discord",
     linkChangelog: "परिवर्तन लॉग",
-    license: "© 2026 OpenClaw Foundation — MIT License.",
+    license: "© 2026 GrokBot Foundation — MIT License.",
     artifactTitle: "Control UI",
     artifactSubtitle: "इस ब्राउज़र आर्टिफैक्ट के बिल्ड होने पर एम्बेड की गई पहचान।",
     artifactDetails: "Control UI बिल्ड विवरण",
@@ -2226,7 +2226,7 @@ export const hi: TranslationMap = {
     selfLearning: {
       pitchTitle: "स्व-शिक्षण चालू करें",
       pitchBody:
-        "OpenClaw सुधारों और पूरे किए गए महत्वपूर्ण रन की समीक्षा करता है, फिर इस बोर्ड के लिए Skill प्रस्तावों के ड्राफ़्ट तैयार करता है। इसमें अतिरिक्त बैकग्राउंड टोकन खर्च होते हैं और ड्राफ़्ट लंबित प्रस्तावों के रूप में आते हैं।",
+        "GrokBot सुधारों और पूरे किए गए महत्वपूर्ण रन की समीक्षा करता है, फिर इस बोर्ड के लिए Skill प्रस्तावों के ड्राफ़्ट तैयार करता है। इसमें अतिरिक्त बैकग्राउंड टोकन खर्च होते हैं और ड्राफ़्ट लंबित प्रस्तावों के रूप में आते हैं।",
       enable: "स्व-शिक्षण सक्षम करें",
       enabling: "सक्षम किया जा रहा है…",
       updateError: "स्व-शिक्षण सेटिंग अपडेट नहीं की जा सकी।",
@@ -2421,7 +2421,7 @@ export const hi: TranslationMap = {
       onboardingTitle: "No workspaces yet",
       onboardingSubtitle:
         "Ask your agent to build a workspace, or create one from the command line.",
-      onboardingCommand: "openclaw workspaces tabs create --title Main",
+      onboardingCommand: "grokbot workspaces tabs create --title Main",
       tabTitle: "This workspace is empty",
       tabSubtitle: "Ask your agent to add a widget, or add one yourself.",
       noVisibleTabs: "Every workspace tab is hidden. Restore one from the hidden menu.",
@@ -3429,16 +3429,16 @@ export const hi: TranslationMap = {
         title: "ऑथ आवश्यक",
         summary:
           "Gateway पहुँच योग्य है, लेकिन इस ब्राउज़र के कनेक्ट होने से पहले इसे मिलान करने वाले टोकन या पासवर्ड की आवश्यकता है।",
-        stepPaste: "openclaw dashboard --no-open से टोकन पेस्ट करें या कॉन्फ़िगर किया गया पासवर्ड दर्ज करें।",
+        stepPaste: "grokbot dashboard --no-open से टोकन पेस्ट करें या कॉन्फ़िगर किया गया पासवर्ड दर्ज करें।",
         stepGenerate:
-          "यदि कोई टोकन कॉन्फ़िगर नहीं है, तो gateway होस्ट पर openclaw doctor --generate-gateway-token चलाएँ।",
+          "यदि कोई टोकन कॉन्फ़िगर नहीं है, तो gateway होस्ट पर grokbot doctor --generate-gateway-token चलाएँ।",
         stepConnect: "क्रेडेंशियल अपडेट करने के बाद फिर से कनेक्ट करें पर क्लिक करें।",
       },
       authFailed: {
         title: "ऑथ मेल नहीं खाया",
         summary:
           "प्रदान किया गया क्रेडेंशियल अस्वीकार कर दिया गया। सबसे आम कारण पुराना टोकन या किसी अन्य Gateway URL से कॉपी किया गया टोकन है।",
-        stepDashboard: "openclaw dashboard --no-open चलाएँ और नया URL खोलें या उसका टोकन पेस्ट करें।",
+        stepDashboard: "grokbot dashboard --no-open चलाएँ और नया URL खोलें या उसका टोकन पेस्ट करें।",
         stepReplace: "पुराने टोकन/पासवर्ड मान बदलें; किसी अन्य Gateway URL से टोकन दोबारा उपयोग न करें।",
         stepMode:
           "एक समय में एक मेल खाने वाला auth mode उपयोग करें: token mode के लिए gateway token, password mode के लिए password।",
@@ -3458,8 +3458,8 @@ export const hi: TranslationMap = {
         summary:
           "Control UI का उपयोग करने से पहले इस ब्राउज़र को Gateway host से एक बार की स्वीकृति चाहिए।",
         upgradeSummary: "यह ब्राउज़र पहले से ज्ञात है, लेकिन अनुरोधित access बदल गया है और नई स्वीकृति चाहिए।",
-        stepList: "Gateway host पर openclaw devices list चलाएँ।",
-        stepApproveId: "इस request को स्वीकृत करें: openclaw devices approve {requestId}.",
+        stepList: "Gateway host पर grokbot devices list चलाएँ।",
+        stepApproveId: "इस request को स्वीकृत करें: grokbot devices approve {requestId}.",
         stepApprove: "उस सूची से लंबित browser/device request को स्वीकृत करें।",
         stepReconnect: "स्वीकृति पूरी होने के बाद फिर से कनेक्ट करें।",
       },
@@ -3485,21 +3485,21 @@ export const hi: TranslationMap = {
         title: "प्रोटोकॉल मेल नहीं खाता",
         summary: "सर्व किया गया Control UI और चल रहा Gateway समर्थित कनेक्शन प्रोटोकॉल पर सहमत नहीं हैं।",
         stepDashboard:
-          "openclaw dashboard के साथ सर्व किया गया dashboard फिर से खोलें ताकि UI और Gateway एक ही install से आएँ।",
+          "grokbot dashboard के साथ सर्व किया गया dashboard फिर से खोलें ताकि UI और Gateway एक ही install से आएँ।",
         stepDevUi:
           "यदि pnpm ui:dev का उपयोग कर रहे हैं, तो वर्तमान checkout के विरुद्ध dev UI को फिर से build या restart करें।",
         stepRestart:
-          "OpenClaw अपडेट करने के बाद Gateway को रीस्टार्ट करें ताकि वह वर्तमान प्रोटोकॉल सर्व करे।",
+          "GrokBot अपडेट करने के बाद Gateway को रीस्टार्ट करें ताकि वह वर्तमान प्रोटोकॉल सर्व करे।",
       },
       network: {
         title: "कनेक्ट नहीं हो सका",
         summary:
           "ब्राउज़र Gateway कनेक्शन पूरा नहीं कर सका। credentials दोबारा आज़माने से पहले target और transport जाँचें।",
-        stepGateway: "openclaw status या openclaw gateway run के साथ पुष्टि करें कि Gateway चल रहा है।",
+        stepGateway: "grokbot status या grokbot gateway run के साथ पुष्टि करें कि Gateway चल रहा है।",
         stepUrl:
           "WebSocket URL जांचें और जब Gateway HTTPS/Tailscale Serve के पीछे हो, तो wss:// का उपयोग करें।",
         stepDashboard:
-          "मौजूदा URL और auth विवरण फिर से कॉपी करने के लिए openclaw dashboard --no-open के साथ dashboard फिर से खोलें।",
+          "मौजूदा URL और auth विवरण फिर से कॉपी करने के लिए grokbot dashboard --no-open के साथ dashboard फिर से खोलें।",
       },
     },
   },
@@ -3524,7 +3524,7 @@ export const hi: TranslationMap = {
       remoteViewOnly: "यह सत्र एक युग्मित नोड पर है और केवल देखने के लिए है।",
       unsupportedViewOnly: "यह बाहरी सत्र स्रोत केवल देखने के लिए है।",
       sessionMenu: "External session actions",
-      openInOpenClaw: "Open in OpenClaw",
+      openInOpenClaw: "Open in GrokBot",
       openInTerminal: "Open in terminal",
       terminalUnavailable: "Terminal opening is unavailable for this session.",
     },
@@ -3579,7 +3579,7 @@ export const hi: TranslationMap = {
     followUpModeOverriding: "सर्वर डिफ़ॉल्ट ({mode}) को ओवरराइड कर रहे हैं",
     followUpModeReset: "सर्वर डिफ़ॉल्ट पर रीसेट करें",
     catalogOpenTarget: "Open Codex/Claude sessions in",
-    catalogOpenTargetViewer: "OpenClaw viewer",
+    catalogOpenTargetViewer: "GrokBot viewer",
     catalogOpenTargetTerminal: "टर्मिनल",
     onboardingDisabled: "सेटअप के दौरान अक्षम",
     gatewayStatus: "Gateway स्थिति: {status}",
@@ -4018,7 +4018,7 @@ export const hi: TranslationMap = {
       filters: "फ़िल्टर",
       shownOf: "{total} में से {shown}",
       emptyTitle: "अभी तक कोई अनुसूचित कार्य नहीं",
-      emptyHint: "वर्णन करें कि OpenClaw को क्या और कब करना चाहिए — यह अनुसूची पर चलता है।",
+      emptyHint: "वर्णन करें कि GrokBot को क्या और कब करना चाहिए — यह अनुसूची पर चलता है।",
       noMatching: "मौजूदा फ़िल्टर से कोई कार्य मेल नहीं खाता।",
       loadMore: "और लोड करें",
       loading: "लोड हो रहा है...",
@@ -4085,7 +4085,7 @@ export const hi: TranslationMap = {
     detail: {
       tabsLabel: "ऑटोमेशन का विवरण",
       newTitle: "नया शेड्यूल किया गया कार्य",
-      newSubtitle: "बताएं कि OpenClaw को क्या करना चाहिए, फिर चुनें कि यह कब चले।",
+      newSubtitle: "बताएं कि GrokBot को क्या करना चाहिए, फिर चुनें कि यह कब चले।",
       back: "सभी ऑटोमेशन",
       settingsTab: "सेटिंग्स",
       historyTitle: "रन इतिहास",
@@ -4158,7 +4158,7 @@ export const hi: TranslationMap = {
       descriptionPlaceholder: "इस जॉब के लिए वैकल्पिक संदर्भ",
       agentPlaceholder: "main या ops",
       agentHelp: "किसी ज्ञात एजेंट को चुनने के लिए टाइप करना शुरू करें, या कोई कस्टम एजेंट दर्ज करें।",
-      promptPlaceholder: "बताएं कि OpenClaw को क्या करना चाहिए...",
+      promptPlaceholder: "बताएं कि GrokBot को क्या करना चाहिए...",
       repeat: "दोहराएं",
       repeatInterval: "अंतराल",
       repeatOnce: "एक बार",

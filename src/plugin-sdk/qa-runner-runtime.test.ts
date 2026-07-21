@@ -23,7 +23,7 @@ vi.mock("../plugins/manifest-registry.js", () => ({
   loadPluginManifestRegistry,
 }));
 
-vi.mock("../infra/openclaw-root.js", () => ({
+vi.mock("../infra/grokbot-root.js", () => ({
   resolveOpenClawPackageRootSync,
 }));
 
@@ -102,7 +102,7 @@ describe("plugin-sdk qa-runner-runtime", () => {
   });
 
   it("loads bundled plugin test APIs with the private QA source tree override", async () => {
-    const sourceRoot = makePrivateQaSourceRoot(tempDirs, "openclaw-qa-test-api-root-");
+    const sourceRoot = makePrivateQaSourceRoot(tempDirs, "grokbot-qa-test-api-root-");
     resolveOpenClawPackageRootSync.mockReturnValue(sourceRoot);
 
     const testApi = { marker: "matrix-test-api" };
@@ -229,7 +229,7 @@ describe("plugin-sdk qa-runner-runtime", () => {
   });
 
   it("prefers the source bundled tree for private qa discovery in repo checkouts", async () => {
-    const sourceRoot = makePrivateQaSourceRoot(tempDirs, "openclaw-qa-runner-root-");
+    const sourceRoot = makePrivateQaSourceRoot(tempDirs, "grokbot-qa-runner-root-");
     resolveOpenClawPackageRootSync.mockReturnValue(sourceRoot);
 
     const register = vi.fn((qa: Command) => qa);
@@ -333,7 +333,7 @@ describe("plugin-sdk qa-runner-runtime", () => {
     const module = await import("./qa-runner-runtime.js");
 
     expect(() => module.listQaRunnerCliContributions()).toThrow(
-      'QA runner plugin "qa-example" exported "extra" from runtime-api.js but did not declare it in openclaw.plugin.json',
+      'QA runner plugin "qa-example" exported "extra" from runtime-api.js but did not declare it in grokbot.plugin.json',
     );
   });
 });

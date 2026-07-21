@@ -1,4 +1,4 @@
-import { definePage } from "@openclaw/uirouter";
+import { definePage } from "@grokbot/uirouter";
 import { html } from "lit";
 import type { ApplicationContext } from "../../app/context.ts";
 import { loadSkillStatusReport } from "../../lib/skills/index.ts";
@@ -57,6 +57,6 @@ export const page = definePage({
     import("./skills-page.ts").then(() => ({
       header: true,
       render: (data: SkillsRouteData | undefined) =>
-        html`<openclaw-skills-page .routeData=${data}></openclaw-skills-page>`,
+        html`<grokbot-skills-page .routeData=${data}></grokbot-skills-page>`,
     })),
 });

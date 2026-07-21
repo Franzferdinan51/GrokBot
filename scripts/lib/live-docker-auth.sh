@@ -60,7 +60,7 @@ openclaw_live_default_profile_file() {
     printf '%s\n' "$OPENCLAW_PROFILE_FILE"
     return 0
   fi
-  local testbox_profile="$HOME/.openclaw-testbox-live.profile"
+  local testbox_profile="$HOME/.grokbot-testbox-live.profile"
   if [[ -f "$testbox_profile" ]]; then
     printf '%s\n' "$testbox_profile"
     return 0
@@ -442,7 +442,7 @@ openclaw_live_chown_bind_dirs_for_container_user() {
   for dir in "$@"; do
     [[ -n "$dir" ]] || continue
     mkdir -p "$dir"
-    mount_args+=(-v "$dir:/openclaw-bind-dir-$index")
+    mount_args+=(-v "$dir:/grokbot-bind-dir-$index")
     index=$((index + 1))
   done
   ((index > 0)) || return 0
@@ -457,5 +457,5 @@ openclaw_live_chown_bind_dirs_for_container_user() {
     -e OPENCLAW_BIND_DIR_USER="$container_user" \
     "${mount_args[@]}" \
     "$image_name" \
-    -c 'for dir in /openclaw-bind-dir-*; do chown -R "$OPENCLAW_BIND_DIR_USER" "$dir"; done'
+    -c 'for dir in /grokbot-bind-dir-*; do chown -R "$OPENCLAW_BIND_DIR_USER" "$dir"; done'
 }

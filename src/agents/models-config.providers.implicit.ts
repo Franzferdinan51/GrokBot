@@ -6,12 +6,12 @@
 import {
   findNormalizedProviderValue,
   normalizeProviderId,
-} from "@openclaw/model-catalog-core/provider-id";
+} from "@grokbot/model-catalog-core/provider-id";
 import {
   normalizeStringEntries,
   uniqueStrings,
-} from "@openclaw/normalization-core/string-normalization";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+} from "@grokbot/normalization-core/string-normalization";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { formatErrorMessage } from "../infra/errors.js";
 import { createSubsystemLogger } from "../logging/subsystem.js";
 import type { PluginMetadataSnapshot } from "../plugins/plugin-metadata-snapshot.js";
@@ -255,7 +255,7 @@ function resolvePluginMetadataProviderOwnersForTest(
 
 if (process.env.VITEST || process.env.NODE_ENV === "test") {
   (globalThis as Record<PropertyKey, unknown>)[
-    Symbol.for("openclaw.modelsConfigImplicitProvidersTestApi")
+    Symbol.for("grokbot.modelsConfigImplicitProvidersTestApi")
   ] = {
     resolvePluginMetadataProviderOwnersForTest,
     resolveProviderDiscoveryFilterForTest,

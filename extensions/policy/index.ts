@@ -1,5 +1,5 @@
-// Policy plugin entrypoint registers its OpenClaw integration.
-import { definePluginEntry } from "openclaw/plugin-sdk/plugin-entry";
+// Policy plugin entrypoint registers its GrokBot integration.
+import { definePluginEntry } from "grokbot/plugin-sdk/plugin-entry";
 import { registerPolicyCli } from "./src/cli.js";
 import { registerPolicyDoctorChecks } from "./src/doctor/register.js";
 

@@ -107,10 +107,10 @@ const mocks = vi.hoisted(() => {
       mutate(draft);
       configState = draft;
       return {
-        path: "/tmp/openclaw.json",
+        path: "/tmp/grokbot.json",
         previousHash: "hash-1",
         persistedHash: "hash-1",
-        snapshot: { path: "/tmp/openclaw.json" },
+        snapshot: { path: "/tmp/grokbot.json" },
         nextConfig: draft,
         result: undefined,
       };
@@ -119,10 +119,10 @@ const mocks = vi.hoisted(() => {
       async ({ nextConfig }: { nextConfig: OpenClawConfig; baseHash?: string }) => {
         configState = structuredClone(nextConfig);
         return {
-          path: "/tmp/openclaw.json",
+          path: "/tmp/grokbot.json",
           previousHash: "hash-1",
           persistedHash: "hash-1",
-          snapshot: { path: "/tmp/openclaw.json" },
+          snapshot: { path: "/tmp/grokbot.json" },
           nextConfig,
         };
       },
@@ -130,7 +130,7 @@ const mocks = vi.hoisted(() => {
     readConfigFileSnapshot: vi.fn<
       () => Promise<{ path: string; hash: string; config: OpenClawConfig }>
     >(async () => ({
-      path: "/tmp/openclaw.json",
+      path: "/tmp/grokbot.json",
       hash: "config-hash-1",
       config: configState,
     })),
@@ -253,10 +253,10 @@ describe("exec-policy CLI", () => {
         mutate(draft);
         mocks.setConfig(draft);
         return {
-          path: "/tmp/openclaw.json",
+          path: "/tmp/grokbot.json",
           previousHash: "hash-1",
           persistedHash: "hash-1",
-          snapshot: { path: "/tmp/openclaw.json" },
+          snapshot: { path: "/tmp/grokbot.json" },
           nextConfig: draft,
           result: undefined,
         };
@@ -267,17 +267,17 @@ describe("exec-policy CLI", () => {
       async ({ nextConfig }: { nextConfig: OpenClawConfig; baseHash?: string }) => {
         mocks.setConfig(structuredClone(nextConfig));
         return {
-          path: "/tmp/openclaw.json",
+          path: "/tmp/grokbot.json",
           previousHash: "hash-1",
           persistedHash: "hash-1",
-          snapshot: { path: "/tmp/openclaw.json" },
+          snapshot: { path: "/tmp/grokbot.json" },
           nextConfig,
         };
       },
     );
     mocks.readConfigFileSnapshot.mockReset();
     mocks.readConfigFileSnapshot.mockImplementation(async () => ({
-      path: "/tmp/openclaw.json",
+      path: "/tmp/grokbot.json",
       hash: "config-hash-1",
       config: mocks.getConfig(),
     }));
@@ -311,7 +311,7 @@ describe("exec-policy CLI", () => {
     const effectivePolicy = payload.effectivePolicy as { note?: unknown } | undefined;
     expect(String(effectivePolicy?.note)).toContain(SESSION_EXEC_OVERRIDES_NOTE);
     expectFields(payload, {
-      configPath: "/tmp/openclaw.json",
+      configPath: "/tmp/grokbot.json",
       approvalsPath: "/tmp/exec-approvals.json",
     });
     const scope = readFirstPolicyScope(payload);
@@ -426,7 +426,7 @@ describe("exec-policy CLI", () => {
       },
     });
     mocks.readConfigFileSnapshot.mockImplementationOnce(async () => ({
-      path: "/tmp/openclaw.json\u001B[2J\nforged",
+      path: "/tmp/grokbot.json\u001B[2J\nforged",
       hash: "config-hash-1",
       config: mocks.getConfig(),
     }));
@@ -457,7 +457,7 @@ describe("exec-policy CLI", () => {
     const output = stripAnsi(
       mocks.defaultRuntime.log.mock.calls.map((call) => String(call[0] ?? "")).join("\n"),
     );
-    expect(output).toContain("/tmp/openclaw.json");
+    expect(output).toContain("/tmp/grokbot.json");
     expect(output).toContain("/tmp/exec-approvals.json");
     expect(output).toContain("scope\\u{200B}name");
     expect(output).toContain("host=auto");
@@ -465,7 +465,7 @@ describe("exec-policy CLI", () => {
     expect(output).toContain("host)");
     expect(output).toContain(SESSION_EXEC_OVERRIDES_NOTE);
     expect(output).toContain("\\nforged");
-    expect(output).not.toContain("/tmp/openclaw.json\nforged");
+    expect(output).not.toContain("/tmp/grokbot.json\nforged");
     expect(output).not.toContain("\u001B[2J");
     expect(output).not.toContain("\u0007");
   });

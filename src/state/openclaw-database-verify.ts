@@ -6,7 +6,7 @@ import {
   OPENCLAW_DATABASE_VERIFY_INITIAL_DELAY_MS,
   OPENCLAW_DATABASE_VERIFY_INTERVAL_MS,
   runDatabaseVerifyWorker,
-} from "./openclaw-database-verify.impl.js";
+} from "./grokbot-database-verify.impl.js";
 
 const log = createSubsystemLogger("state/database-verify");
 

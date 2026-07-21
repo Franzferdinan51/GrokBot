@@ -2,10 +2,10 @@
 import { existsSync } from "node:fs";
 import path from "node:path";
 import process from "node:process";
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+import { normalizeOptionalString } from "@grokbot/normalization-core/string-coerce";
 import type { Command as CommanderCommand, Option as CommanderOption } from "commander";
 import { resolveStateDir } from "../config/paths.js";
-import type { ConfigFileSnapshot, OpenClawConfig } from "../config/types.openclaw.js";
+import type { ConfigFileSnapshot, OpenClawConfig } from "../config/types.grokbot.js";
 import { isLoopbackAddress, isSecureWebSocketUrl } from "../gateway/net.js";
 import { FLAG_TERMINATOR, isValueToken } from "../infra/cli-root-options.js";
 import { isTruthyEnvValue, normalizeEnv } from "../infra/env.js";
@@ -174,7 +174,7 @@ async function tryRunGatewayRunFastPath(
     emitCliBanner(VERSION, { argv });
   }
   const program = new Command();
-  program.name("openclaw");
+  program.name("grokbot");
   program.enablePositionalOptions();
   program.option("--no-color", "Disable ANSI colors", false);
   program.exitOverride((err) => {
@@ -936,7 +936,7 @@ async function resolveUnownedCliPrimaryMessage(params: {
   }
   const suggestion = formatCliCommandSuggestions(params.primary);
   return [
-    `Unknown command: openclaw ${params.primary}. No built-in command or plugin CLI metadata owns "${params.primary}".`,
+    `Unknown command: grokbot ${params.primary}. No built-in command or plugin CLI metadata owns "${params.primary}".`,
     suggestion,
   ]
     .filter(Boolean)
@@ -1148,8 +1148,8 @@ export async function runCli(argv: string[] = process.argv) {
     }
 
     // Reject unowned command roots before help/version routing, so that
-    // `openclaw <typo> --help` surfaces the same Unknown command error as
-    // `openclaw <typo>` instead of silently showing generic top-level help.
+    // `grokbot <typo> --help` surfaces the same Unknown command error as
+    // `grokbot <typo>` instead of silently showing generic top-level help.
     // Runs after legitimate precomputed help fast paths so known help commands
     // still dispatch normally. See #81077.
     {
@@ -1177,7 +1177,7 @@ export async function runCli(argv: string[] = process.argv) {
       if (bareRootLaunchTarget.kind === "remote-gateway-inference") {
         if (!process.stdin.isTTY || !process.stdout.isTTY) {
           console.error(
-            "Remote Gateway inference setup needs an interactive TTY. Re-run `openclaw` in a terminal connected to this Gateway.",
+            "Remote Gateway inference setup needs an interactive TTY. Re-run `grokbot` in a terminal connected to this Gateway.",
           );
           process.exitCode = 1;
           return;
@@ -1191,8 +1191,8 @@ export async function runCli(argv: string[] = process.argv) {
         if (!process.stdin.isTTY || !process.stdout.isTTY) {
           console.error(
             bareRootLaunchTarget.classic
-              ? "OpenClaw config is invalid. Run `openclaw doctor --fix` before onboarding."
-              : "Onboarding needs an interactive TTY. Use `openclaw onboard --non-interactive --accept-risk ...` for automation.",
+              ? "GrokBot config is invalid. Run `grokbot doctor --fix` before onboarding."
+              : "Onboarding needs an interactive TTY. Use `grokbot onboard --non-interactive --accept-risk ...` for automation.",
           );
           process.exitCode = 1;
           return;
@@ -1204,7 +1204,7 @@ export async function runCli(argv: string[] = process.argv) {
       if (bareRootLaunchTarget.kind === "tui") {
         if (!process.stdin.isTTY || !process.stdout.isTTY) {
           console.error(
-            "OpenClaw TUI needs an interactive TTY. Use `openclaw agent --local ...` for automation.",
+            "GrokBot TUI needs an interactive TTY. Use `grokbot agent --local ...` for automation.",
           );
           process.exitCode = 1;
           return;
@@ -1263,7 +1263,7 @@ export async function runCli(argv: string[] = process.argv) {
     const suppressStartupProgress = hasJsonOutputFlag(parseArgv);
     const { createCliProgress } = await loadProgressModule();
     const startupProgress = createCliProgress({
-      label: "Loading OpenClaw CLI…",
+      label: "Loading GrokBot CLI…",
       indeterminate: true,
       delayMs: 0,
       ...(suppressStartupProgress ? { enabled: false } : {}),
@@ -1315,20 +1315,20 @@ export async function runCli(argv: string[] = process.argv) {
         }
         if (isBenignUncaughtExceptionError(error)) {
           console.warn(
-            "[openclaw] Non-fatal uncaught exception (continuing):",
+            "[grokbot] Non-fatal uncaught exception (continuing):",
             formatUncaughtError(error),
           );
           return;
         }
         for (const line of formatCliFailureLines({
-          title: "OpenClaw hit an unexpected runtime error.",
+          title: "GrokBot hit an unexpected runtime error.",
           error,
           argv: normalizedArgv,
         })) {
           console.error(line);
         }
         for (const message of runFatalErrorHooks({ reason: "uncaught_exception", error })) {
-          console.error("[openclaw]", message);
+          console.error("[grokbot]", message);
         }
         restoreTerminalState("uncaught exception", { resumeStdinIfPaused: false });
         process.exit(1);

@@ -1,4 +1,4 @@
-// Check Openclaw Package Tarball tests cover check openclaw package tarball script behavior.
+// Check Openclaw Package Tarball tests cover check grokbot package tarball script behavior.
 import { spawnSync } from "node:child_process";
 import {
   chmodSync,
@@ -16,12 +16,12 @@ import { LOCAL_BUILD_METADATA_DIST_PATHS } from "../../scripts/lib/local-build-m
 import { PACKAGE_INSTALL_GUARD_RELATIVE_PATH } from "../../scripts/lib/package-dist-inventory.ts";
 import { WORKSPACE_TEMPLATE_PACK_PATHS } from "../../scripts/lib/workspace-bootstrap-smoke.mjs";
 
-const CHECK_SCRIPT = "scripts/check-openclaw-package-tarball.mjs";
+const CHECK_SCRIPT = "scripts/check-grokbot-package-tarball.mjs";
 const NODE_DEFAULT_SPAWN_MAX_BUFFER_BYTES = 1024 * 1024;
 const FLAT_PLUGIN_SDK_DECLARATION = "dist/plugin-sdk/provider-entry.d.ts";
 const DEEP_PLUGIN_SDK_DECLARATION = "dist/plugin-sdk/src/plugin-sdk/provider-entry.d.ts";
 const AI_RUNTIME_PACKAGE_JSON = JSON.stringify({
-  name: "@openclaw/ai",
+  name: "@grokbot/ai",
   version: "2026.6.11",
   exports: {
     ".": { import: "./dist/index.mjs" },
@@ -44,24 +44,24 @@ function withTarball(
     shrinkwrapRootPackage?: Record<string, unknown>;
   } = {},
 ) {
-  const root = mkdtempSync(join(tmpdir(), "openclaw-package-tarball-test-"));
+  const root = mkdtempSync(join(tmpdir(), "grokbot-package-tarball-test-"));
   try {
     const packageRoot = join(root, "package");
     mkdirSync(join(packageRoot, "dist"), { recursive: true });
     writeFileSync(
       join(packageRoot, "package.json"),
-      JSON.stringify({ name: "openclaw", version, ...options.packageJson }),
+      JSON.stringify({ name: "grokbot", version, ...options.packageJson }),
     );
     if (options.includeShrinkwrap !== false) {
       writeFileSync(
         join(packageRoot, "npm-shrinkwrap.json"),
         JSON.stringify({
-          name: "openclaw",
+          name: "grokbot",
           version,
           lockfileVersion: 3,
           packages: {
             "": {
-              name: "openclaw",
+              name: "grokbot",
               version,
               ...options.shrinkwrapRootPackage,
             },
@@ -86,7 +86,7 @@ function withTarball(
       options.includeControlUi === false
         ? {}
         : {
-            "dist/control-ui/index.html": "<!doctype html><openclaw-app></openclaw-app>",
+            "dist/control-ui/index.html": "<!doctype html><grokbot-app></grokbot-app>",
             "dist/control-ui/assets/app.js": "console.log('ok');\n",
           };
     const installGuardFile =
@@ -94,7 +94,7 @@ function withTarball(
         ? {}
         : {
             [PACKAGE_INSTALL_GUARD_RELATIVE_PATH]:
-              "OpenClaw package preinstall has not completed.\n",
+              "GrokBot package preinstall has not completed.\n",
           };
     const tarFiles = { ...workspaceTemplates, ...controlUiFiles, ...installGuardFile, ...files };
     for (const [relativePath, body] of Object.entries(tarFiles)) {
@@ -103,7 +103,7 @@ function withTarball(
       writeFileSync(filePath, body);
     }
 
-    const tarball = join(root, "openclaw.tgz");
+    const tarball = join(root, "grokbot.tgz");
     const pack = spawnSync("tar", ["-czf", tarball, "-C", root, "package"], {
       encoding: "utf8",
     });
@@ -114,13 +114,13 @@ function withTarball(
   }
 }
 
-describe("check-openclaw-package-tarball", () => {
+describe("check-grokbot-package-tarball", () => {
   it("prints help before touching tarball state", () => {
     const result = spawnSync("node", [CHECK_SCRIPT, "--help"], { encoding: "utf8" });
 
     expect(result.status, result.stderr).toBe(0);
     expect(result.stdout).toContain(
-      "Usage: node scripts/check-openclaw-package-tarball.mjs [--require-bundled-workspace-deps] <openclaw.tgz>",
+      "Usage: node scripts/check-grokbot-package-tarball.mjs [--require-bundled-workspace-deps] <grokbot.tgz>",
     );
     expect(result.stderr).toBe("");
   });
@@ -129,16 +129,16 @@ describe("check-openclaw-package-tarball", () => {
     const unknown = spawnSync("node", [CHECK_SCRIPT, "--tag"], { encoding: "utf8" });
 
     expect(unknown.status).not.toBe(0);
-    expect(unknown.stderr).toContain("Unknown OpenClaw package tarball check option: --tag");
-    expect(unknown.stderr).not.toContain("OpenClaw package tarball does not exist");
+    expect(unknown.stderr).toContain("Unknown GrokBot package tarball check option: --tag");
+    expect(unknown.stderr).not.toContain("GrokBot package tarball does not exist");
 
-    const extra = spawnSync("node", [CHECK_SCRIPT, "openclaw.tgz", "extra"], {
+    const extra = spawnSync("node", [CHECK_SCRIPT, "grokbot.tgz", "extra"], {
       encoding: "utf8",
     });
 
     expect(extra.status).not.toBe(0);
-    expect(extra.stderr).toContain("Unexpected OpenClaw package tarball check argument: extra");
-    expect(extra.stderr).not.toContain("OpenClaw package tarball does not exist");
+    expect(extra.stderr).toContain("Unexpected GrokBot package tarball check argument: extra");
+    expect(extra.stderr).not.toContain("GrokBot package tarball does not exist");
   });
 
   it("accepts tarballs whose entry list exceeds Node's default spawn buffer", () => {
@@ -166,7 +166,7 @@ describe("check-openclaw-package-tarball", () => {
         const result = spawnSync("node", [CHECK_SCRIPT, tarball], { encoding: "utf8" });
 
         expect(result.status, result.stderr).toBe(0);
-        expect(result.stdout).toContain("OpenClaw package tarball integrity passed.");
+        expect(result.stdout).toContain("GrokBot package tarball integrity passed.");
       },
     );
   });
@@ -174,7 +174,7 @@ describe("check-openclaw-package-tarball", () => {
   it.runIf(process.platform !== "win32")(
     "removes the extract dir when tar extraction fails",
     () => {
-      const root = mkdtempSync(join(tmpdir(), "openclaw-package-tarball-extract-fail-"));
+      const root = mkdtempSync(join(tmpdir(), "grokbot-package-tarball-extract-fail-"));
       try {
         const fakeBin = join(root, "bin");
         mkdirSync(fakeBin);
@@ -194,7 +194,7 @@ describe("check-openclaw-package-tarball", () => {
           ].join("\n"),
         );
         chmodSync(fakeTar, 0o755);
-        const tarball = join(root, "openclaw.tgz");
+        const tarball = join(root, "grokbot.tgz");
         writeFileSync(tarball, "not used by fake tar");
 
         const result = spawnSync("node", [CHECK_SCRIPT, tarball], {
@@ -224,7 +224,7 @@ describe("check-openclaw-package-tarball", () => {
 
         expect(result.status, result.stderr).toBe(0);
         expect(result.stderr).toContain("legacy inventory references omitted private QA");
-        expect(result.stdout).toContain("OpenClaw package tarball integrity passed.");
+        expect(result.stdout).toContain("GrokBot package tarball integrity passed.");
       },
       "2026.4.25-beta.10",
     );
@@ -326,7 +326,7 @@ describe("check-openclaw-package-tarball", () => {
         const result = spawnSync("node", [CHECK_SCRIPT, tarball], { encoding: "utf8" });
 
         expect(result.status, result.stderr).toBe(0);
-        expect(result.stdout).toContain("OpenClaw package tarball integrity passed.");
+        expect(result.stdout).toContain("GrokBot package tarball integrity passed.");
       },
     );
   });
@@ -358,7 +358,7 @@ describe("check-openclaw-package-tarball", () => {
         const result = spawnSync("node", [CHECK_SCRIPT, tarball], { encoding: "utf8" });
 
         expect(result.status, result.stderr).toBe(0);
-        expect(result.stdout).toContain("OpenClaw package tarball integrity passed.");
+        expect(result.stdout).toContain("GrokBot package tarball integrity passed.");
       },
       "2026.4.27",
     );
@@ -461,7 +461,7 @@ describe("check-openclaw-package-tarball", () => {
         const result = spawnSync("node", [CHECK_SCRIPT, tarball], { encoding: "utf8" });
 
         expect(result.status, result.stderr).toBe(0);
-        expect(result.stdout).toContain("OpenClaw package tarball integrity passed.");
+        expect(result.stdout).toContain("GrokBot package tarball integrity passed.");
       },
       "2026.4.27",
     );
@@ -478,7 +478,7 @@ describe("check-openclaw-package-tarball", () => {
         const result = spawnSync("node", [CHECK_SCRIPT, tarball], { encoding: "utf8" });
 
         expect(result.status, result.stderr).toBe(0);
-        expect(result.stdout).toContain("OpenClaw package tarball integrity passed.");
+        expect(result.stdout).toContain("GrokBot package tarball integrity passed.");
       },
       "2026.4.27",
     );
@@ -574,11 +574,11 @@ describe("check-openclaw-package-tarball", () => {
 
         expect(result.status).not.toBe(0);
         expect(result.stderr).toContain(
-          "package.json dependencies.@openclaw/ai must not use workspace protocol workspace:*",
+          "package.json dependencies.@grokbot/ai must not use workspace protocol workspace:*",
         );
       },
       "2026.6.11",
-      { packageJson: { dependencies: { "@openclaw/ai": "workspace:*" } } },
+      { packageJson: { dependencies: { "@grokbot/ai": "workspace:*" } } },
     );
   });
 
@@ -591,11 +591,11 @@ describe("check-openclaw-package-tarball", () => {
 
         expect(result.status).not.toBe(0);
         expect(result.stderr).toContain(
-          "npm-shrinkwrap.json packages root dependencies.@openclaw/ai must not use workspace protocol workspace:*",
+          "npm-shrinkwrap.json packages root dependencies.@grokbot/ai must not use workspace protocol workspace:*",
         );
       },
       "2026.6.11",
-      { shrinkwrapRootPackage: { dependencies: { "@openclaw/ai": "workspace:*" } } },
+      { shrinkwrapRootPackage: { dependencies: { "@grokbot/ai": "workspace:*" } } },
     );
   });
 
@@ -607,10 +607,10 @@ describe("check-openclaw-package-tarball", () => {
         const result = spawnSync("node", [CHECK_SCRIPT, tarball], { encoding: "utf8" });
 
         expect(result.status, result.stderr).toBe(0);
-        expect(result.stdout).toContain("OpenClaw package tarball integrity passed.");
+        expect(result.stdout).toContain("GrokBot package tarball integrity passed.");
       },
       "2026.6.11",
-      { packageJson: { dependencies: { "@openclaw/ai": "2026.6.11" } } },
+      { packageJson: { dependencies: { "@grokbot/ai": "2026.6.11" } } },
     );
   });
 
@@ -627,14 +627,14 @@ describe("check-openclaw-package-tarball", () => {
 
         expect(result.status).not.toBe(0);
         expect(result.stderr).toContain(
-          "package.json dependencies.@openclaw/ai must be listed in bundleDependencies because it is private to the OpenClaw workspace",
+          "package.json dependencies.@grokbot/ai must be listed in bundleDependencies because it is private to the GrokBot workspace",
         );
         expect(result.stderr).toContain(
-          "package.json dependencies.@openclaw/ai must be bundled in node_modules/@openclaw/ai",
+          "package.json dependencies.@grokbot/ai must be bundled in node_modules/@grokbot/ai",
         );
       },
       "2026.6.11",
-      { packageJson: { dependencies: { "@openclaw/ai": "2026.6.11" } } },
+      { packageJson: { dependencies: { "@grokbot/ai": "2026.6.11" } } },
     );
   });
 
@@ -643,7 +643,7 @@ describe("check-openclaw-package-tarball", () => {
       ["dist/index.js"],
       {
         "dist/index.js": "export {};\n",
-        "node_modules/@openclaw/ai/package.json": AI_RUNTIME_PACKAGE_JSON,
+        "node_modules/@grokbot/ai/package.json": AI_RUNTIME_PACKAGE_JSON,
       },
       (tarball) => {
         const result = spawnSync(
@@ -654,20 +654,20 @@ describe("check-openclaw-package-tarball", () => {
 
         expect(result.status).not.toBe(0);
         expect(result.stderr).toContain(
-          "bundled @openclaw/ai is missing required runtime entry dist/index.mjs",
+          "bundled @grokbot/ai is missing required runtime entry dist/index.mjs",
         );
         expect(result.stderr).toContain(
-          "bundled @openclaw/ai is missing required runtime entry dist/providers.mjs",
+          "bundled @grokbot/ai is missing required runtime entry dist/providers.mjs",
         );
         expect(result.stderr).toContain(
-          "bundled @openclaw/ai is missing required runtime entry dist/internal/runtime.mjs",
+          "bundled @grokbot/ai is missing required runtime entry dist/internal/runtime.mjs",
         );
       },
       "2026.6.11",
       {
         packageJson: {
-          dependencies: { "@openclaw/ai": "2026.6.11" },
-          bundleDependencies: ["@openclaw/ai"],
+          dependencies: { "@grokbot/ai": "2026.6.11" },
+          bundleDependencies: ["@grokbot/ai"],
         },
       },
     );
@@ -678,10 +678,10 @@ describe("check-openclaw-package-tarball", () => {
       ["dist/index.js"],
       {
         "dist/index.js": "export {};\n",
-        "node_modules/@openclaw/ai/package.json": AI_RUNTIME_PACKAGE_JSON,
-        "node_modules/@openclaw/ai/dist/index.mjs": "export {};\n",
-        "node_modules/@openclaw/ai/dist/providers.mjs": "export {};\n",
-        "node_modules/@openclaw/ai/dist/internal/runtime.mjs": "export {};\n",
+        "node_modules/@grokbot/ai/package.json": AI_RUNTIME_PACKAGE_JSON,
+        "node_modules/@grokbot/ai/dist/index.mjs": "export {};\n",
+        "node_modules/@grokbot/ai/dist/providers.mjs": "export {};\n",
+        "node_modules/@grokbot/ai/dist/internal/runtime.mjs": "export {};\n",
       },
       (tarball) => {
         const result = spawnSync(
@@ -691,13 +691,13 @@ describe("check-openclaw-package-tarball", () => {
         );
 
         expect(result.status, result.stderr).toBe(0);
-        expect(result.stdout).toContain("OpenClaw package tarball integrity passed.");
+        expect(result.stdout).toContain("GrokBot package tarball integrity passed.");
       },
       "2026.6.11",
       {
         packageJson: {
-          dependencies: { "@openclaw/ai": "2026.6.11" },
-          bundleDependencies: ["@openclaw/ai"],
+          dependencies: { "@grokbot/ai": "2026.6.11" },
+          bundleDependencies: ["@grokbot/ai"],
         },
       },
     );
@@ -708,9 +708,9 @@ describe("check-openclaw-package-tarball", () => {
       ["dist/index.js"],
       {
         "dist/index.js": "export {};\n",
-        "node_modules/@openclaw/ai/package.json": AI_RUNTIME_PACKAGE_JSON,
-        "node_modules/@openclaw/ai/dist/index.mjs": "export {};\n",
-        "node_modules/@openclaw/ai/dist/internal/runtime.mjs": "export {};\n",
+        "node_modules/@grokbot/ai/package.json": AI_RUNTIME_PACKAGE_JSON,
+        "node_modules/@grokbot/ai/dist/index.mjs": "export {};\n",
+        "node_modules/@grokbot/ai/dist/internal/runtime.mjs": "export {};\n",
       },
       (tarball) => {
         const result = spawnSync(
@@ -721,14 +721,14 @@ describe("check-openclaw-package-tarball", () => {
 
         expect(result.status).not.toBe(0);
         expect(result.stderr).toContain(
-          "bundled @openclaw/ai is missing required runtime entry dist/providers.mjs",
+          "bundled @grokbot/ai is missing required runtime entry dist/providers.mjs",
         );
       },
       "2026.6.11",
       {
         packageJson: {
-          dependencies: { "@openclaw/ai": "2026.6.11" },
-          bundleDependencies: ["@openclaw/ai"],
+          dependencies: { "@grokbot/ai": "2026.6.11" },
+          bundleDependencies: ["@grokbot/ai"],
         },
       },
     );
@@ -739,8 +739,8 @@ describe("check-openclaw-package-tarball", () => {
       ["dist/index.js"],
       {
         "dist/index.js": "export {};\n",
-        "node_modules/@openclaw/ai/package.json": JSON.stringify({
-          name: "@openclaw/ai",
+        "node_modules/@grokbot/ai/package.json": JSON.stringify({
+          name: "@grokbot/ai",
           version: "2026.6.11",
           exports: {
             ".": "./dist/index.mjs",
@@ -748,9 +748,9 @@ describe("check-openclaw-package-tarball", () => {
             "./internal/*": "./dist/internal/*.mjs",
           },
         }),
-        "node_modules/@openclaw/ai/dist/index.mjs": "export {};\n",
-        "node_modules/@openclaw/ai/dist/providers.mjs": "export {};\n",
-        "node_modules/@openclaw/ai/dist/internal/runtime.mjs": "export {};\n",
+        "node_modules/@grokbot/ai/dist/index.mjs": "export {};\n",
+        "node_modules/@grokbot/ai/dist/providers.mjs": "export {};\n",
+        "node_modules/@grokbot/ai/dist/internal/runtime.mjs": "export {};\n",
       },
       (tarball) => {
         const result = spawnSync(
@@ -761,14 +761,14 @@ describe("check-openclaw-package-tarball", () => {
 
         expect(result.status).not.toBe(0);
         expect(result.stderr).toContain(
-          "bundled @openclaw/ai runtime specifier @openclaw/ai/providers is not resolvable",
+          "bundled @grokbot/ai runtime specifier @grokbot/ai/providers is not resolvable",
         );
       },
       "2026.6.11",
       {
         packageJson: {
-          dependencies: { "@openclaw/ai": "2026.6.11" },
-          bundleDependencies: ["@openclaw/ai"],
+          dependencies: { "@grokbot/ai": "2026.6.11" },
+          bundleDependencies: ["@grokbot/ai"],
         },
       },
     );
@@ -779,10 +779,10 @@ describe("check-openclaw-package-tarball", () => {
       ["dist/index.js"],
       {
         "dist/index.js": "export {};\n",
-        "node_modules/@openclaw/ai/package.json": AI_RUNTIME_PACKAGE_JSON,
-        "node_modules/@openclaw/ai/dist/index.mjs": "export {};\n",
-        "node_modules/@openclaw/ai/dist/providers.mjs": "export {};\n",
-        "node_modules/@openclaw/ai/dist/internal/runtime.mjs": 'export * from "./missing.mjs";\n',
+        "node_modules/@grokbot/ai/package.json": AI_RUNTIME_PACKAGE_JSON,
+        "node_modules/@grokbot/ai/dist/index.mjs": "export {};\n",
+        "node_modules/@grokbot/ai/dist/providers.mjs": "export {};\n",
+        "node_modules/@grokbot/ai/dist/internal/runtime.mjs": 'export * from "./missing.mjs";\n',
       },
       (tarball) => {
         const result = spawnSync(
@@ -793,14 +793,14 @@ describe("check-openclaw-package-tarball", () => {
 
         expect(result.status).not.toBe(0);
         expect(result.stderr).toContain(
-          "bundled @openclaw/ai dist/internal/runtime.mjs imports missing dist/internal/missing.mjs",
+          "bundled @grokbot/ai dist/internal/runtime.mjs imports missing dist/internal/missing.mjs",
         );
       },
       "2026.6.11",
       {
         packageJson: {
-          dependencies: { "@openclaw/ai": "2026.6.11" },
-          bundleDependencies: ["@openclaw/ai"],
+          dependencies: { "@grokbot/ai": "2026.6.11" },
+          bundleDependencies: ["@grokbot/ai"],
         },
       },
     );
@@ -845,7 +845,7 @@ describe("check-openclaw-package-tarball", () => {
         expect(result.stderr).toContain(
           "legacy package includes local build metadata tar entry dist/.runtime-postbuildstamp",
         );
-        expect(result.stdout).toContain("OpenClaw package tarball integrity passed.");
+        expect(result.stdout).toContain("GrokBot package tarball integrity passed.");
       },
       "2026.4.26",
     );

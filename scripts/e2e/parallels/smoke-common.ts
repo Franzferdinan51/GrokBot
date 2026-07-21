@@ -1,4 +1,4 @@
-// Smoke Common helper supports OpenClaw script workflows.
+// Smoke Common helper supports GrokBot script workflows.
 import { readFile, rm } from "node:fs/promises";
 import path from "node:path";
 import { extractLastOpenClawVersionFromLog } from "./filesystem.ts";

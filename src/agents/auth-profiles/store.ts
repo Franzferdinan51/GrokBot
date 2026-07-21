@@ -4,13 +4,13 @@
  * profiles, and external CLI overlays while keeping save paths local.
  */
 import { isDeepStrictEqual } from "node:util";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import { isSecretRef } from "../../config/types.secrets.js";
 import { asDateTimestampMs } from "../../shared/number-coercion.js";
 import {
   deferOpenClawAgentPostCommitPublication,
   type OpenClawAgentDatabase,
-} from "../../state/openclaw-agent-db.js";
+} from "../../state/grokbot-agent-db.js";
 import { isRecord } from "../../utils.js";
 import { cloneAuthProfileStore } from "./clone.js";
 import { AUTH_STORE_VERSION, log } from "./constants.js";
@@ -172,7 +172,7 @@ const testing = {
   },
 };
 if (process.env.VITEST || process.env.NODE_ENV === "test") {
-  (globalThis as Record<PropertyKey, unknown>)[Symbol.for("openclaw.authProfileStoreTestApi")] =
+  (globalThis as Record<PropertyKey, unknown>)[Symbol.for("grokbot.authProfileStoreTestApi")] =
     testing;
 }
 

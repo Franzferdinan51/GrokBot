@@ -47,7 +47,7 @@ import { bindSimpleCompletionModelResolverWorkspace } from "../../agents/simple-
 import { normalizeCodexResponsesBaseUrlForOpenAISdk } from "../../agents/simple-completion-transport.js";
 import { normalizeUsage, hasNonzeroUsage } from "../../agents/usage.js";
 import { getRuntimeConfig } from "../../config/config.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import { emitTrustedDiagnosticEvent, isDiagnosticsEnabled } from "../../infra/diagnostic-events.js";
 import { resolveDiagnosticModelContentCapturePolicy } from "../../infra/diagnostic-llm-content.js";
 import {

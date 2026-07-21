@@ -300,7 +300,7 @@ describe("OpenClawChannelBridge — pendingClaudePermissions / pendingApprovals 
       await bridge.sendNotification({ method: "channel/event" });
 
       expect(writes).toHaveLength(1);
-      expect(writes[0]).toBe("openclaw mcp: notification channel/event failed\n");
+      expect(writes[0]).toBe("grokbot mcp: notification channel/event failed\n");
       expect(writes[0]).not.toContain("transport closed");
     } finally {
       writeSpy.mockRestore();
@@ -322,7 +322,7 @@ describe("OpenClawChannelBridge — pendingClaudePermissions / pendingApprovals 
       await bridge.dispatchGatewayEvent({ event: "exec.approval.requested", payload: {} });
 
       expect(writes).toHaveLength(1);
-      expect(writes[0]).toBe("openclaw mcp: gateway event exec.approval.requested failed\n");
+      expect(writes[0]).toBe("grokbot mcp: gateway event exec.approval.requested failed\n");
       expect(writes[0]).not.toContain("handler boom");
     } finally {
       writeSpy.mockRestore();
@@ -344,9 +344,9 @@ describe("OpenClawChannelBridge — pendingClaudePermissions / pendingApprovals 
       await bridge.dispatchGatewayEvent({ event: "exec.approval.requested", payload: {} });
 
       expect(writes).toHaveLength(2);
-      expect(writes[0]).toBe("openclaw mcp: gateway event exec.approval.requested failed\n");
+      expect(writes[0]).toBe("grokbot mcp: gateway event exec.approval.requested failed\n");
       expect(writes[1]).toBe(
-        "openclaw mcp: gateway event exec.approval.requested error: Error: handler boom\n",
+        "grokbot mcp: gateway event exec.approval.requested error: Error: handler boom\n",
       );
     } finally {
       writeSpy.mockRestore();

@@ -1,12 +1,12 @@
-# OpenClaw Perplexity Plugin
+# GrokBot Perplexity Plugin
 
-Official OpenClaw plugin for Perplexity.
+Official GrokBot plugin for Perplexity.
 
-Install from OpenClaw:
+Install from GrokBot:
 
 ```bash
-openclaw plugins install @openclaw/perplexity-plugin
-openclaw gateway restart
+grokbot plugins install @grokbot/perplexity-plugin
+grokbot gateway restart
 ```
 
-See <https://docs.openclaw.ai/tools/perplexity-search> for setup and configuration.
+See <https://docs.grokbot.ai/tools/perplexity-search> for setup and configuration.

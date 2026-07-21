@@ -2,7 +2,7 @@
 // reconciliation, commit hooks, and retry budget deferral.
 import fs from "node:fs/promises";
 import path from "node:path";
-import { MAX_DATE_TIMESTAMP_MS } from "@openclaw/normalization-core/number-coercion";
+import { MAX_DATE_TIMESTAMP_MS } from "@grokbot/normalization-core/number-coercion";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { controlNextRecoverySleep } from "../../../test/helpers/infra/delivery-recovery.js";
 import type { TrustedMessageAuditEvent } from "../../audit/message-audit-events.js";
@@ -15,8 +15,8 @@ import {
 } from "../../config/sessions/conversation-delivery-store.js";
 import { upsertSessionEntry } from "../../config/sessions/session-accessor.js";
 import { buildConversationRef } from "../../routing/conversation-ref.js";
-import { closeOpenClawAgentDatabasesForTest } from "../../state/openclaw-agent-db.js";
-import { openOpenClawStateDatabase } from "../../state/openclaw-state-db.js";
+import { closeOpenClawAgentDatabasesForTest } from "../../state/grokbot-agent-db.js";
+import { openOpenClawStateDatabase } from "../../state/grokbot-state-db.js";
 import {
   OutboundDeliveryError,
   PlatformMessageNotDispatchedError,

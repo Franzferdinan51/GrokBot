@@ -68,18 +68,18 @@ function readBundledPluginPackageJson(packageJsonPath, options = {}) {
 }
 
 function isManifestlessBundledRuntimeSupportPackage(params) {
-  if (params.packageJson?.openclaw?.release?.publishToNpm === true) {
+  if (params.packageJson?.grokbot?.release?.publishToNpm === true) {
     return false;
   }
   const packageName = typeof params.packageJson?.name === "string" ? params.packageJson.name : "";
-  if (packageName !== `@openclaw/${params.dirName}`) {
+  if (packageName !== `@grokbot/${params.dirName}`) {
     return false;
   }
   return params.topLevelPublicSurfaceEntries.length > 0;
 }
 
 function shouldBuildBundledDistEntry(packageJson) {
-  return packageJson?.openclaw?.build?.bundledDist !== false;
+  return packageJson?.grokbot?.build?.bundledDist !== false;
 }
 
 function isExcludedTopLevelPublicSurfaceFile(fileName) {
@@ -95,15 +95,15 @@ function isExcludedTopLevelPublicSurfaceFile(fileName) {
 
 /** Collect plugin source entry files declared by package export metadata. */
 export function collectPluginSourceEntries(packageJson) {
-  let packageEntries = Array.isArray(packageJson?.openclaw?.extensions)
-    ? packageJson.openclaw.extensions.filter(
+  let packageEntries = Array.isArray(packageJson?.grokbot?.extensions)
+    ? packageJson.grokbot.extensions.filter(
         (entry) => typeof entry === "string" && entry.trim().length > 0,
       )
     : [];
   const setupEntry =
-    typeof packageJson?.openclaw?.setupEntry === "string" &&
-    packageJson.openclaw.setupEntry.trim().length > 0
-      ? packageJson.openclaw.setupEntry
+    typeof packageJson?.grokbot?.setupEntry === "string" &&
+    packageJson.grokbot.setupEntry.trim().length > 0
+      ? packageJson.grokbot.setupEntry
       : undefined;
   if (setupEntry) {
     packageEntries = Array.from(new Set([...packageEntries, setupEntry]));
@@ -226,9 +226,9 @@ export function collectBundledPluginBuildEntries(params = {}) {
 
   for (const candidate of candidates) {
     const { dirName, pluginDir, relativeFiles, topLevelPublicSurfaceEntries } = candidate;
-    const manifestPath = path.join(pluginDir, "openclaw.plugin.json");
+    const manifestPath = path.join(pluginDir, "grokbot.plugin.json");
     const hasManifest =
-      relativeFiles?.includes("openclaw.plugin.json") ?? fs.existsSync(manifestPath);
+      relativeFiles?.includes("grokbot.plugin.json") ?? fs.existsSync(manifestPath);
     const packageJsonPath = path.join(pluginDir, "package.json");
     const packageJson = readBundledPluginPackageJson(packageJsonPath, {
       hasPackageJson: relativeFiles?.includes("package.json"),
@@ -352,7 +352,7 @@ export function listBundledPluginPackArtifacts(params = {}) {
 
   for (const { id, hasManifest, hasPackageJson, sourceEntries } of entries) {
     if (hasManifest) {
-      artifacts.add(bundledDistPluginFile(id, "openclaw.plugin.json"));
+      artifacts.add(bundledDistPluginFile(id, "grokbot.plugin.json"));
     }
     if (hasPackageJson) {
       artifacts.add(bundledDistPluginFile(id, "package.json"));

@@ -3,8 +3,8 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { DatabaseSync } from "node:sqlite";
-import type { MemorySearchResult } from "openclaw/plugin-sdk/memory-core-host-runtime-files";
-import * as sessionTranscriptHit from "openclaw/plugin-sdk/session-transcript-hit";
+import type { MemorySearchResult } from "grokbot/plugin-sdk/memory-core-host-runtime-files";
+import * as sessionTranscriptHit from "grokbot/plugin-sdk/session-transcript-hit";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { replaceQmdSessionArtifactMappings } from "./qmd-session-artifacts.js";
 import { filterMemorySearchHitsBySessionVisibility } from "./session-search-visibility.js";
@@ -28,9 +28,9 @@ const crossAgentStore: Record<string, TestSessionEntry> = {
 let combinedSessionStore: Record<string, TestSessionEntry> = crossAgentStore;
 const tempRoots: string[] = [];
 
-vi.mock("openclaw/plugin-sdk/session-transcript-hit", async (importOriginal) => {
+vi.mock("grokbot/plugin-sdk/session-transcript-hit", async (importOriginal) => {
   const actual =
-    await importOriginal<typeof import("openclaw/plugin-sdk/session-transcript-hit")>();
+    await importOriginal<typeof import("grokbot/plugin-sdk/session-transcript-hit")>();
   return {
     ...actual,
     loadCombinedSessionStoreForGateway: vi.fn(() => ({
@@ -53,7 +53,7 @@ describe("filterMemorySearchHitsBySessionVisibility", () => {
   });
 
   it("migrates legacy QMD artifact mappings to STRICT without losing rows", async () => {
-    const root = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-qmd-session-artifact-"));
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-qmd-session-artifact-"));
     tempRoots.push(root);
     const indexPath = path.join(root, "index.sqlite");
     const legacy = new DatabaseSync(indexPath);

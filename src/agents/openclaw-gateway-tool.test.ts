@@ -1,4 +1,4 @@
-// Verifies the read-only OpenClaw gateway tool schema and config reads.
+// Verifies the read-only GrokBot gateway tool schema and config reads.
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { GatewayClientRequestError } from "../gateway/client.js";
 import { createGatewayTool } from "./tools/gateway-tool.js";
@@ -89,7 +89,7 @@ describe("gateway tool", () => {
 
     expect(parameters.properties?.action?.enum).toEqual(["config.get", "config.schema.lookup"]);
     expect(tool.description).toBe(
-      "Read gateway config + schema. Writes/restart: use openclaw tool.",
+      "Read gateway config + schema. Writes/restart: use grokbot tool.",
     );
   });
 

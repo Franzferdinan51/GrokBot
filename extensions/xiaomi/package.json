@@ -1,13 +1,13 @@
 {
-  "name": "@openclaw/xiaomi-provider",
+  "name": "@grokbot/xiaomi-provider",
   "version": "2026.7.2",
   "private": true,
-  "description": "OpenClaw Xiaomi provider plugin",
+  "description": "GrokBot Xiaomi provider plugin",
   "type": "module",
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@grokbot/plugin-sdk": "workspace:*"
   },
-  "openclaw": {
+  "grokbot": {
     "extensions": [
       "./index.ts"
     ]

@@ -7,7 +7,7 @@ import { resolveNodeHostedSkillDirectory, scanNodeHostedSkills } from "./skills.
 const roots: string[] = [];
 
 function createRoot(): string {
-  const root = fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-node-skills-")));
+  const root = fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-node-skills-")));
   roots.push(root);
   return root;
 }
@@ -58,7 +58,7 @@ describe("scanNodeHostedSkills", () => {
     }
   });
 
-  it("uses the active OpenClaw profile skills directory by default", () => {
+  it("uses the active GrokBot profile skills directory by default", () => {
     const stateDir = createRoot();
     const content = writeSkill(path.join(stateDir, "skills"), "profile-skill", "Profile skill");
     vi.stubEnv("OPENCLAW_STATE_DIR", stateDir);
@@ -86,7 +86,7 @@ name: json5-metadata
 description: JSON5-style metadata
 metadata:
   {
-    "openclaw":
+    "grokbot":
       {
         "requires":
           {

@@ -1,5 +1,5 @@
 /** Keyed routing for all turn traffic on one shared Codex app-server client. */
-import { embeddedAgentLog } from "openclaw/plugin-sdk/agent-harness-runtime";
+import { embeddedAgentLog } from "grokbot/plugin-sdk/agent-harness-runtime";
 import type { CodexAppServerClient } from "./client.js";
 import { redactCodexEventKind } from "./event-projector-diagnostics.js";
 import {
@@ -376,7 +376,7 @@ class ClientTurnRouter implements CodexAppServerTurnRouter {
       return undefined;
     }
     // Open routes service a resumed native turn. Arming starts the handoff to a
-    // new OpenClaw turn, whose requests must wait for its accepted turn id.
+    // new GrokBot turn, whose requests must wait for its accepted turn id.
     while (route.gate === "armed") {
       await route.binding?.promise;
       if (route.released) {

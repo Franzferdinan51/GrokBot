@@ -13,7 +13,7 @@ type TestApi = {
 
 function getTestApi(): TestApi {
   return (globalThis as Record<PropertyKey, unknown>)[
-    Symbol.for("openclaw.codexRouteSessionRepairTestApi")
+    Symbol.for("grokbot.codexRouteSessionRepairTestApi")
   ] as TestApi;
 }
 

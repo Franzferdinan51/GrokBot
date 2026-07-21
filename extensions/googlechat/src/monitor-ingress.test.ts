@@ -5,7 +5,7 @@ import path from "node:path";
 import {
   closeOpenClawStateDatabaseForTest,
   createChannelIngressQueueForTests,
-} from "openclaw/plugin-sdk/plugin-state-test-runtime";
+} from "grokbot/plugin-sdk/plugin-state-test-runtime";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { createGoogleChatIngressMonitor } from "./monitor-ingress.js";
 
@@ -73,7 +73,7 @@ function startIngress(queue: GoogleChatIngressQueue, dispatch: GoogleChatIngress
 }
 
 async function withQueue<T>(fn: (queue: GoogleChatIngressQueue) => Promise<T>): Promise<T> {
-  const created = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-googlechat-ingress-"));
+  const created = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-googlechat-ingress-"));
   const stateDir = await fs.realpath(created);
   const queue = createChannelIngressQueueForTests<GoogleChatIngressPayload>({
     channelId: "googlechat",

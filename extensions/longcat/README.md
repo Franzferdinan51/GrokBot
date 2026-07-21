@@ -1,13 +1,13 @@
-# OpenClaw LongCat Provider
+# GrokBot LongCat Provider
 
-Official OpenClaw provider plugin for LongCat-2.0 through LongCat's hosted
+Official GrokBot provider plugin for LongCat-2.0 through LongCat's hosted
 OpenAI-compatible API.
 
-Install from OpenClaw:
+Install from GrokBot:
 
 ```bash
-openclaw plugins install @openclaw/longcat-provider
-openclaw gateway restart
+grokbot plugins install @grokbot/longcat-provider
+grokbot gateway restart
 ```
 
 Configure `LONGCAT_API_KEY`, then select `longcat/LongCat-2.0`.

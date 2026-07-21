@@ -1,12 +1,12 @@
-import { jsonResult, readStringParam } from "openclaw/plugin-sdk/channel-actions";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import type { AnyAgentTool, OpenClawPluginToolContext } from "openclaw/plugin-sdk/plugin-entry";
-import { escapeHtml } from "openclaw/plugin-sdk/text-utility-runtime";
+import { jsonResult, readStringParam } from "grokbot/plugin-sdk/channel-actions";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import type { AnyAgentTool, OpenClawPluginToolContext } from "grokbot/plugin-sdk/plugin-entry";
+import { escapeHtml } from "grokbot/plugin-sdk/text-utility-runtime";
 import {
   assertWidgetHtmlSize,
   isCompleteHtmlDocument,
   WidgetHtmlInputError,
-} from "openclaw/plugin-sdk/widget-html";
+} from "grokbot/plugin-sdk/widget-html";
 import { Type } from "typebox";
 import { resolveDiscordAccount } from "../accounts.js";
 import { sendDiscordComponentMessage } from "../send.components.js";

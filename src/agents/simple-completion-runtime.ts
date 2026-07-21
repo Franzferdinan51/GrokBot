@@ -1,13 +1,13 @@
-import { supportsOpenAIReasoningEffort } from "@openclaw/ai/internal/openai";
-import { defaultApiRegistry } from "@openclaw/ai/internal/runtime";
-import { resolveClaudeSonnet5ModelIdentity } from "@openclaw/llm-core";
+import { supportsOpenAIReasoningEffort } from "@grokbot/ai/internal/openai";
+import { defaultApiRegistry } from "@grokbot/ai/internal/runtime";
+import { resolveClaudeSonnet5ModelIdentity } from "@grokbot/llm-core";
 /**
  * Simple completion runtime preparation.
  *
  * Resolves agent model selection, auth, runtime policy, and missing-auth errors before simple completions run.
  */
 import type { ThinkLevel } from "../auto-reply/thinking.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { formatErrorMessage } from "../infra/errors.js";
 import { bindModelLlmRuntime, getModelLlmRuntime } from "../llm/model-runtime-binding.js";
 import { completeSimple } from "../llm/stream.js";

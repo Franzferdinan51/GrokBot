@@ -112,13 +112,13 @@ const cases = [
   {
     id: "help",
     label: "--help",
-    args: ["openclaw.mjs", "--help"],
+    args: ["grokbot.mjs", "--help"],
     limitMb: readPositiveNumberEnv("OPENCLAW_STARTUP_MEMORY_HELP_MB", DEFAULT_LIMITS_MB.help),
   },
   {
     id: "pluginsList",
     label: "plugins list --json",
-    args: ["openclaw.mjs", "plugins", "list", "--json"],
+    args: ["grokbot.mjs", "plugins", "list", "--json"],
     limitMb: readPositiveNumberEnv(
       "OPENCLAW_STARTUP_MEMORY_PLUGINS_LIST_MB",
       DEFAULT_LIMITS_MB.pluginsList,
@@ -127,7 +127,7 @@ const cases = [
   {
     id: "statusJson",
     label: "status --json",
-    args: ["openclaw.mjs", "status", "--json"],
+    args: ["grokbot.mjs", "status", "--json"],
     limitMb: readPositiveNumberEnv(
       "OPENCLAW_STARTUP_MEMORY_STATUS_JSON_MB",
       DEFAULT_LIMITS_MB.statusJson,
@@ -136,7 +136,7 @@ const cases = [
   {
     id: "gatewayStatus",
     label: "gateway status",
-    args: ["openclaw.mjs", "gateway", "status"],
+    args: ["grokbot.mjs", "gateway", "status"],
     limitMb: readPositiveNumberEnv(
       "OPENCLAW_STARTUP_MEMORY_GATEWAY_STATUS_MB",
       DEFAULT_LIMITS_MB.gatewayStatus,
@@ -155,7 +155,7 @@ function formatFixGuidance(testCase, details) {
     "2. If this is an RSS overage, compare the startup import graph against the last passing commit and look for newly eager imports, bootstrap side effects, or plugin loading on the command path.",
     "3. If this is a non-zero exit, inspect the first transitive import/config error in stderr and fix that root cause before re-checking memory.",
     "LLM prompt:",
-    `"OpenClaw startup-memory CI failed for '${testCase.label}'. Analyze this failure, identify the first runtime/import side effect that makes startup heavier or broken, and propose the smallest safe patch. Failure output:\n${details}"`,
+    `"GrokBot startup-memory CI failed for '${testCase.label}'. Analyze this failure, identify the first runtime/import side effect that makes startup heavier or broken, and propose the smallest safe patch. Failure output:\n${details}"`,
   ];
   return `${guidance.join("\n")}\n`;
 }
@@ -355,7 +355,7 @@ function writeReport(options, results) {
     results: results.map(({ failureMessage: _failureMessage, ...result }) => result),
   };
   const lines = [
-    "# OpenClaw Startup Memory",
+    "# GrokBot Startup Memory",
     "",
     `Generated: ${report.generatedAt}`,
     "",
@@ -392,7 +392,7 @@ function runStartupMemoryCheck(argv = process.argv.slice(2), params = {}) {
     return { skipped: true, results: [] };
   }
   const options = parseArgs(argv);
-  tmpHome = mkdtempSync(path.join(os.tmpdir(), "openclaw-startup-memory-"));
+  tmpHome = mkdtempSync(path.join(os.tmpdir(), "grokbot-startup-memory-"));
   rssHookPath = path.join(tmpHome, "measure-rss.mjs");
   writeFileSync(
     rssHookPath,

@@ -59,7 +59,7 @@ describe("resolveAgentScopedOutboundMediaAccess", () => {
   });
 
   it("keeps explicit workspaceDir in localRoots when agent id is unavailable", () => {
-    const workspaceDir = "/tmp/openclaw-home/workspace-xiaoqian";
+    const workspaceDir = "/tmp/grokbot-home/workspace-xiaoqian";
     const result = resolveAgentScopedOutboundMediaAccess({
       cfg: {
         tools: {

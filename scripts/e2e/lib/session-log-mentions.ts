@@ -1,4 +1,4 @@
-// Session Log Mentions script supports OpenClaw repository automation.
+// Session Log Mentions script supports GrokBot repository automation.
 import fs from "node:fs/promises";
 import path from "node:path";
 import { DatabaseSync } from "node:sqlite";
@@ -195,7 +195,7 @@ function resolveAgentSqlitePathFromSessionsDir(sessionsDir: string): string | nu
   if (path.basename(sessionsDir) !== "sessions") {
     return null;
   }
-  return path.join(path.dirname(sessionsDir), "agent", "openclaw-agent.sqlite");
+  return path.join(path.dirname(sessionsDir), "agent", "grokbot-agent.sqlite");
 }
 
 async function countSqliteTranscriptMentions(params: {

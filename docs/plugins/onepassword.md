@@ -3,7 +3,7 @@ summary: "Use the optional 1Password plugin as an audited agent secrets broker"
 read_when:
   - You want agents to request curated 1Password secrets
   - You need per-secret approval policy and audit history
-  - You are configuring a 1Password service account for OpenClaw
+  - You are configuring a 1Password service account for GrokBot
 title: "1Password secrets broker"
 ---
 
@@ -14,20 +14,20 @@ reading a curated set of 1Password fields. It is disabled by default and does
 nothing until `plugins.entries.onepassword.config` is present.
 
 This is an agent tool, not a SecretRef provider. It does not inject environment
-variables or resolve OpenClaw config secrets.
+variables or resolve GrokBot config secrets.
 
 ## Security model
 
 - Service-account authentication only. The token stays in a local credentials
-  file and is never accepted in `openclaw.json`.
+  file and is never accepted in `grokbot.json`.
 - Curated registry only. Agents can list configured slugs, but the plugin never
   enumerates a 1Password vault.
 - Per-slug `auto`, `approve`, or `deny` policy.
 - Approval grants expire. A cached value never bypasses current policy.
-- Every access attempt is recorded in OpenClaw's shared SQLite state. Audit
+- Every access attempt is recorded in GrokBot's shared SQLite state. Audit
   rows include the supplied reason; keep reasons non-sensitive. The broker
   never copies a fetched value or the service token into an audit row.
-- After the current tool execution, OpenClaw-owned transcript persistence
+- After the current tool execution, GrokBot-owned transcript persistence
   replaces a successful `get` value with redacted metadata.
 - The value is model-visible for that execution. If the model copies it into a
   later tool call or reply, that separate record is outside this plugin's
@@ -54,27 +54,27 @@ You need:
 Enable the bundled plugin:
 
 ```bash
-openclaw plugins enable onepassword
+grokbot plugins enable onepassword
 ```
 
-Create the token directory and file under the OpenClaw state directory:
+Create the token directory and file under the GrokBot state directory:
 
 ```bash
-mkdir -p ~/.openclaw/credentials/onepassword
-chmod 700 ~/.openclaw/credentials/onepassword
+mkdir -p ~/.grokbot/credentials/onepassword
+chmod 700 ~/.grokbot/credentials/onepassword
 printf '%s' "$OP_SERVICE_ACCOUNT_TOKEN" > \
-  ~/.openclaw/credentials/onepassword/service-account-token
-chmod 600 ~/.openclaw/credentials/onepassword/service-account-token
+  ~/.grokbot/credentials/onepassword/service-account-token
+chmod 600 ~/.grokbot/credentials/onepassword/service-account-token
 unset OP_SERVICE_ACCOUNT_TOKEN
 ```
 
-When `OPENCLAW_STATE_DIR` is set, replace `~/.openclaw` with that directory.
+When `OPENCLAW_STATE_DIR` is set, replace `~/.grokbot` with that directory.
 The plugin warns once when the token file is readable or writable by group or
 other users.
 
 ## Configure registered secrets
 
-Add plugin config to `openclaw.json`:
+Add plugin config to `grokbot.json`:
 
 ```jsonc
 {
@@ -157,7 +157,7 @@ any supplied value, and an unknown value fails the request.
 
 Allow once authorizes only the current tool call. Allow always writes a standing
 grant for that agent and slug to SQLite; other agents must receive their own
-approval. OpenClaw offers allow always only when the caller has a concrete agent
+approval. GrokBot offers allow always only when the caller has a concrete agent
 identity. The grant expires after `grantTtlHours`, which defaults to 720 hours.
 An unresolved or timed-out approval denies the request; the maximum approval
 wait is 600 seconds. The plugin retains up to 1,024 standing grants; at that
@@ -180,7 +180,7 @@ cached values.
 Show readiness and registry counts:
 
 ```bash
-openclaw onepassword status
+grokbot onepassword status
 ```
 
 This reports whether the token file exists, whether `op` resolved and its path,
@@ -190,8 +190,8 @@ token or secret values.
 Show the 50 most recent audit rows:
 
 ```bash
-openclaw onepassword audit
-openclaw onepassword audit --limit 100
+grokbot onepassword audit
+grokbot onepassword audit --limit 100
 ```
 
 Rows are newest first and show timestamp, agent, slug, outcome, an `errorCode`

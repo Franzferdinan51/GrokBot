@@ -38,7 +38,7 @@ vi.mock("../config/config.js", () => ({
   resolveGatewayPort: () => 18789,
 }));
 
-import "./test-helpers/fast-openclaw-tools-sessions.js";
+import "./test-helpers/fast-grokbot-tools-sessions.js";
 import { setActivePluginRegistry } from "../plugins/runtime.js";
 import { setActiveEmbeddedRun } from "./embedded-agent-runner/runs.js";
 import { testing as embeddedRunsTesting } from "./embedded-agent-runner/runs.test-support.js";
@@ -564,7 +564,7 @@ describe("sessions tools", () => {
   });
 
   it("derives mailbox previews only after agent visibility filtering", async () => {
-    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-sessions-list-preview-"));
+    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-sessions-list-preview-"));
     const storePath = path.join(tmpDir, "sessions.json");
     try {
       await upsertSessionEntry(
@@ -698,13 +698,13 @@ describe("sessions tools", () => {
             { role: "toolResult", content: [] },
             {
               role: "assistant",
-              provider: "openclaw",
+              provider: "grokbot",
               model: "delivery-mirror",
               content: [{ type: "text", text: "mirrored" }],
             },
             {
               role: "assistant",
-              provider: "openclaw",
+              provider: "grokbot",
               model: "gateway-injected",
               content: [{ type: "text", text: "injected" }],
             },
@@ -724,10 +724,10 @@ describe("sessions tools", () => {
     const details = result.details as { messages?: unknown[] };
     expect(details.messages).toHaveLength(3);
     expect(details.messages).toContainEqual(
-      expect.objectContaining({ provider: "openclaw", model: "gateway-injected" }),
+      expect.objectContaining({ provider: "grokbot", model: "gateway-injected" }),
     );
     expect(details.messages).toContainEqual(
-      expect.objectContaining({ provider: "openclaw", model: "delivery-mirror" }),
+      expect.objectContaining({ provider: "grokbot", model: "delivery-mirror" }),
     );
 
     const withTools = await tool.execute("call4", {
@@ -737,10 +737,10 @@ describe("sessions tools", () => {
     const withToolsDetails = withTools.details as { messages?: unknown[] };
     expect(withToolsDetails.messages).toHaveLength(4);
     expect(withToolsDetails.messages).toContainEqual(
-      expect.objectContaining({ provider: "openclaw", model: "delivery-mirror" }),
+      expect.objectContaining({ provider: "grokbot", model: "delivery-mirror" }),
     );
     expect(withToolsDetails.messages).toContainEqual(
-      expect.objectContaining({ provider: "openclaw", model: "gateway-injected" }),
+      expect.objectContaining({ provider: "grokbot", model: "gateway-injected" }),
     );
   });
 
@@ -1183,7 +1183,7 @@ describe("sessions tools", () => {
   });
 
   it("keeps scoped sends from creating post-return work or durable watches", async () => {
-    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-scoped-session-send-"));
+    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-scoped-session-send-"));
     const storePath = path.join(tmpDir, "sessions.json");
     const requesterSessionKey = "agent:main:clickclack:discussion-proof";
     const targetSessionKey = "agent:main:main";

@@ -58,8 +58,8 @@ function buildVitestCapabilityShimAliasMap(): Record<string, string> {
     CAPABILITY_VITEST_SHIM_ALIASES.flatMap(({ subpath, target }) => {
       const targetPath = fileURLToPath(target);
       return [
-        [`openclaw/plugin-sdk/${subpath}`, targetPath],
-        [`@openclaw/plugin-sdk/${subpath}`, targetPath],
+        [`grokbot/plugin-sdk/${subpath}`, targetPath],
+        [`@grokbot/plugin-sdk/${subpath}`, targetPath],
       ];
     }),
   );

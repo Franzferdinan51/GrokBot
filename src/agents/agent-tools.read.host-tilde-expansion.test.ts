@@ -103,7 +103,7 @@ describe("host tool tilde expansion (non-workspace mode)", () => {
   });
 
   it("edit readFile expands ~ to the OS home directory", async () => {
-    const dir = await createTempDir("openclaw-tilde-test-edit-");
+    const dir = await createTempDir("grokbot-tilde-test-edit-");
     const testFile = path.join(dir, "test.txt");
     await fs.writeFile(testFile, "hello", "utf8");
 
@@ -114,7 +114,7 @@ describe("host tool tilde expansion (non-workspace mode)", () => {
   });
 
   it("edit access expands ~ to the OS home directory", async () => {
-    const dir = await createTempDir("openclaw-tilde-test-edit-");
+    const dir = await createTempDir("grokbot-tilde-test-edit-");
     const testFile = path.join(dir, "test.txt");
     await fs.writeFile(testFile, "hello", "utf8");
 
@@ -124,7 +124,7 @@ describe("host tool tilde expansion (non-workspace mode)", () => {
   });
 
   it("write writeFile expands ~ to the OS home directory", async () => {
-    const dir = await createTempDir("openclaw-tilde-test-write-");
+    const dir = await createTempDir("grokbot-tilde-test-write-");
     const testFile = path.join(dir, "tilde-write-test.txt");
 
     createHostWorkspaceWriteTool(dir, { workspaceOnly: false });
@@ -134,7 +134,7 @@ describe("host tool tilde expansion (non-workspace mode)", () => {
   });
 
   it("write mkdir expands ~ to the OS home directory", async () => {
-    const dir = await createTempDir("openclaw-tilde-test-mkdir-");
+    const dir = await createTempDir("grokbot-tilde-test-mkdir-");
     const newDir = path.join(dir, "subdir");
 
     createHostWorkspaceWriteTool(dir, { workspaceOnly: false });
@@ -144,8 +144,8 @@ describe("host tool tilde expansion (non-workspace mode)", () => {
   });
 
   it("ignores OPENCLAW_HOME for write operations", async () => {
-    const openclawHome = await createTempDir("openclaw-home-override-", os.tmpdir());
-    const dir = await createTempDir("openclaw-tilde-test-write-");
+    const openclawHome = await createTempDir("grokbot-home-override-", os.tmpdir());
+    const dir = await createTempDir("grokbot-tilde-test-write-");
     const testFile = path.join(dir, "os-home-write.txt");
 
     await withEnvAsync({ OPENCLAW_HOME: openclawHome }, async () => {
@@ -158,8 +158,8 @@ describe("host tool tilde expansion (non-workspace mode)", () => {
   });
 
   it("ignores OPENCLAW_HOME for mkdir operations", async () => {
-    const openclawHome = await createTempDir("openclaw-home-override-", os.tmpdir());
-    const dir = await createTempDir("openclaw-tilde-test-mkdir-");
+    const openclawHome = await createTempDir("grokbot-home-override-", os.tmpdir());
+    const dir = await createTempDir("grokbot-tilde-test-mkdir-");
     const newDir = path.join(dir, "os-home-subdir");
 
     await withEnvAsync({ OPENCLAW_HOME: openclawHome }, async () => {
@@ -172,8 +172,8 @@ describe("host tool tilde expansion (non-workspace mode)", () => {
   });
 
   it("ignores OPENCLAW_HOME for readFile operations", async () => {
-    const openclawHome = await createTempDir("openclaw-home-override-", os.tmpdir());
-    const dir = await createTempDir("openclaw-tilde-test-edit-");
+    const openclawHome = await createTempDir("grokbot-home-override-", os.tmpdir());
+    const dir = await createTempDir("grokbot-tilde-test-edit-");
     const testFile = path.join(dir, "os-home-read.txt");
     await fs.writeFile(testFile, "OS home content", "utf8");
 
@@ -187,8 +187,8 @@ describe("host tool tilde expansion (non-workspace mode)", () => {
   });
 
   it("ignores OPENCLAW_HOME for access operations", async () => {
-    const openclawHome = await createTempDir("openclaw-home-override-", os.tmpdir());
-    const dir = await createTempDir("openclaw-tilde-test-edit-");
+    const openclawHome = await createTempDir("grokbot-home-override-", os.tmpdir());
+    const dir = await createTempDir("grokbot-tilde-test-edit-");
     const testFile = path.join(dir, "os-home-access.txt");
     await fs.writeFile(testFile, "exists", "utf8");
 

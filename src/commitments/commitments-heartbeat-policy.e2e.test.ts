@@ -7,7 +7,7 @@ import {
   seedSessionStore,
   withTempHeartbeatSandbox,
 } from "../infra/heartbeat-runner.test-utils.js";
-import { closeOpenClawStateDatabaseForTest } from "../state/openclaw-state-db.js";
+import { closeOpenClawStateDatabaseForTest } from "../state/grokbot-state-db.js";
 import { withEnvAsync } from "../test-utils/env.js";
 import { readCommitmentsForTest, seedCommitmentsForTest } from "./store.test-utils.js";
 import type { CommitmentRecord } from "./types.js";

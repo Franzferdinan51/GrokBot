@@ -105,7 +105,7 @@ function expectMalformedAgentAskUsesDefaults(agentAsk: unknown): void {
   expectFields(summary.ask, {
     requested: "off",
     host: "always",
-    hostSource: "~/.openclaw/exec-approvals.json defaults.ask",
+    hostSource: "~/.grokbot/exec-approvals.json defaults.ask",
     effective: "always",
     note: "more aggressive ask wins",
   });
@@ -439,19 +439,19 @@ describe("exec approvals policy helpers", () => {
       requested: "full",
       host: "allowlist",
       effective: "allowlist",
-      hostSource: "~/.openclaw/exec-approvals.json defaults.security",
+      hostSource: "~/.grokbot/exec-approvals.json defaults.security",
       note: "stricter host security wins",
     });
     expectFields(summary.ask, {
       requested: "off",
       host: "always",
       effective: "always",
-      hostSource: "~/.openclaw/exec-approvals.json defaults.ask",
+      hostSource: "~/.grokbot/exec-approvals.json defaults.ask",
       note: "more aggressive ask wins",
     });
     expect(summary.askFallback).toEqual({
       effective: "deny",
-      source: "~/.openclaw/exec-approvals.json defaults.askFallback",
+      source: "~/.grokbot/exec-approvals.json defaults.askFallback",
     });
   });
 
@@ -604,7 +604,7 @@ describe("exec approvals policy helpers", () => {
 
   it("uses OPENCLAW_STATE_DIR when reporting default host sources", () => {
     const originalOpenClawStateDir = process.env.OPENCLAW_STATE_DIR;
-    const stateDir = path.join(process.cwd(), ".tmp-openclaw-state");
+    const stateDir = path.join(process.cwd(), ".tmp-grokbot-state");
     process.env.OPENCLAW_STATE_DIR = stateDir;
     try {
       const summary = summarizeExecPolicyScopeSnapshot({
@@ -676,7 +676,7 @@ describe("exec approvals policy helpers", () => {
 
     expect(summary.askFallback).toEqual({
       effective: "allowlist",
-      source: "~/.openclaw/exec-approvals.json defaults.askFallback",
+      source: "~/.grokbot/exec-approvals.json defaults.askFallback",
     });
   });
 
@@ -720,15 +720,15 @@ describe("exec approvals policy helpers", () => {
 
     expectFields(summary.security, {
       host: "allowlist",
-      hostSource: "~/.openclaw/exec-approvals.json agents.*.security",
+      hostSource: "~/.grokbot/exec-approvals.json agents.*.security",
     });
     expectFields(summary.ask, {
       host: "always",
-      hostSource: "~/.openclaw/exec-approvals.json agents.*.ask",
+      hostSource: "~/.grokbot/exec-approvals.json agents.*.ask",
     });
     expect(summary.askFallback).toEqual({
       effective: "deny",
-      source: "~/.openclaw/exec-approvals.json agents.*.askFallback",
+      source: "~/.grokbot/exec-approvals.json agents.*.askFallback",
     });
   });
 
@@ -766,7 +766,7 @@ describe("exec approvals policy helpers", () => {
     });
   });
 
-  it("reports askFallback from the OpenClaw default when approvals omit it", () => {
+  it("reports askFallback from the GrokBot default when approvals omit it", () => {
     const summary = summarizeExecPolicyScopeSnapshot({
       approvals: {
         version: 1,
@@ -778,7 +778,7 @@ describe("exec approvals policy helpers", () => {
 
     expect(summary.askFallback).toEqual({
       effective: "deny",
-      source: "OpenClaw default (deny)",
+      source: "GrokBot default (deny)",
     });
   });
 
@@ -880,11 +880,11 @@ describe("exec approvals policy helpers", () => {
     expect(snapshots.map((snapshot) => snapshot.scopeLabel)).toEqual(["tools.exec"]);
     expectFields(snapshots[0]?.security, {
       host: "allowlist",
-      hostSource: "~/.openclaw/exec-approvals.json agents.main.security",
+      hostSource: "~/.grokbot/exec-approvals.json agents.main.security",
     });
     expectFields(snapshots[0]?.ask, {
       host: "always",
-      hostSource: "~/.openclaw/exec-approvals.json agents.main.ask",
+      hostSource: "~/.grokbot/exec-approvals.json agents.main.ask",
     });
   });
 

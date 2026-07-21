@@ -31,12 +31,12 @@ import {
 import type { AuthProfileStore } from "../../../agents/auth-profiles/types.js";
 import { resolveProviderIdForAuth } from "../../../agents/provider-auth-aliases.js";
 import { resolveStateDir } from "../../../config/paths.js";
-import type { OpenClawConfig } from "../../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../../config/types.grokbot.js";
 import { DEFAULT_AGENT_ID, normalizeAgentId } from "../../../routing/session-key.js";
 import {
   inspectOpenClawAgentDatabaseOwner,
   listOpenClawRegisteredAgentDatabases,
-} from "../../../state/openclaw-agent-db.js";
+} from "../../../state/grokbot-agent-db.js";
 import { isRecord, resolveUserPath } from "../../../utils.js";
 
 type StaleConfiguredAuthOrder = {
@@ -618,7 +618,7 @@ export function collectStaleConfiguredAuthOrderWarnings(params: {
 }
 
 if (process.env.VITEST || process.env.NODE_ENV === "test") {
-  (globalThis as Record<PropertyKey, unknown>)[Symbol.for("openclaw.staleAuthOrderTestApi")] = {
+  (globalThis as Record<PropertyKey, unknown>)[Symbol.for("grokbot.staleAuthOrderTestApi")] = {
     repairStaleConfiguredAuthOrders,
   };
 }

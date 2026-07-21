@@ -1,20 +1,20 @@
 // Imessage plugin module implements send behavior.
 import { constants, accessSync } from "node:fs";
 import { createRequire } from "node:module";
-import type { MediaPlaceholderTextFact } from "openclaw/plugin-sdk/channel-inbound";
+import type { MediaPlaceholderTextFact } from "grokbot/plugin-sdk/channel-inbound";
 import {
   createMessageReceiptFromOutboundResults,
   type MessageReceipt,
   type MessageReceiptPartKind,
   type MessageReceiptSourceResult,
-} from "openclaw/plugin-sdk/channel-outbound";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { resolveMarkdownTableMode } from "openclaw/plugin-sdk/markdown-table-runtime";
-import { kindFromMime, resolveOutboundAttachmentFromUrl } from "openclaw/plugin-sdk/media-runtime";
-import { requireRuntimeConfig } from "openclaw/plugin-sdk/plugin-config-runtime";
-import { sleep as delay } from "openclaw/plugin-sdk/runtime-env";
-import { convertMarkdownTables } from "openclaw/plugin-sdk/text-chunking";
-import { stripInlineDirectiveTagsForDelivery } from "openclaw/plugin-sdk/text-chunking";
+} from "grokbot/plugin-sdk/channel-outbound";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { resolveMarkdownTableMode } from "grokbot/plugin-sdk/markdown-table-runtime";
+import { kindFromMime, resolveOutboundAttachmentFromUrl } from "grokbot/plugin-sdk/media-runtime";
+import { requireRuntimeConfig } from "grokbot/plugin-sdk/plugin-config-runtime";
+import { sleep as delay } from "grokbot/plugin-sdk/runtime-env";
+import { convertMarkdownTables } from "grokbot/plugin-sdk/text-chunking";
+import { stripInlineDirectiveTagsForDelivery } from "grokbot/plugin-sdk/text-chunking";
 import {
   hasExclusiveIMessageLocalDatabase,
   resolveIMessageAccount,

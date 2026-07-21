@@ -19,7 +19,7 @@ describe("shouldAttemptTtsPayload", () => {
   let caseId = 0;
 
   beforeAll(() => {
-    root = mkdtempSync(path.join(tmpdir(), "openclaw-tts-config-"));
+    root = mkdtempSync(path.join(tmpdir(), "grokbot-tts-config-"));
   });
 
   afterAll(() => {

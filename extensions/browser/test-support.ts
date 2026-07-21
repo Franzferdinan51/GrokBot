@@ -3,17 +3,17 @@
  */
 import fs from "node:fs";
 import path from "node:path";
-import { resolvePreferredOpenClawTmpDir } from "openclaw/plugin-sdk/temp-path";
+import { resolvePreferredOpenClawTmpDir } from "grokbot/plugin-sdk/temp-path";
 
 export {
   createCliRuntimeCapture,
   expectGeneratedTokenPersistedToGatewayAuth,
   type CliRuntimeCapture,
-} from "openclaw/plugin-sdk/test-fixtures";
-export { createTempHomeEnv } from "openclaw/plugin-sdk/test-env";
-export type { TempHomeEnv } from "openclaw/plugin-sdk/test-env";
-export { isLiveTestEnabled } from "openclaw/plugin-sdk/test-live";
-export type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+} from "grokbot/plugin-sdk/test-fixtures";
+export { createTempHomeEnv } from "grokbot/plugin-sdk/test-env";
+export type { TempHomeEnv } from "grokbot/plugin-sdk/test-env";
+export { isLiveTestEnabled } from "grokbot/plugin-sdk/test-live";
+export type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 
 export function useAutoCleanupTempDirTracker(registerCleanup: (cleanup: () => void) => unknown) {
   const dirs = new Set<string>();

@@ -1,13 +1,13 @@
-# OpenClaw Cohere Provider
+# GrokBot Cohere Provider
 
-Official OpenClaw provider plugin for Cohere's OpenAI-compatible Compatibility
+Official GrokBot provider plugin for Cohere's OpenAI-compatible Compatibility
 API.
 
-Install from OpenClaw:
+Install from GrokBot:
 
 ```bash
-openclaw plugins install @openclaw/cohere-provider
-openclaw gateway restart
+grokbot plugins install @grokbot/cohere-provider
+grokbot gateway restart
 ```
 
 Configure a Cohere API key, then select `cohere/command-a-plus-05-2026`,

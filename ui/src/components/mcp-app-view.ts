@@ -6,7 +6,7 @@ import {
   ListToolsRequestSchema,
   type ListToolsResult,
 } from "@modelcontextprotocol/sdk/types.js";
-import { isMcpAppViewExpiredError } from "@openclaw/gateway-protocol";
+import { isMcpAppViewExpiredError } from "@grokbot/gateway-protocol";
 import { LitElement, css, html, nothing, type PropertyValues } from "lit";
 import { property, state } from "lit/decorators.js";
 import { createRef, ref } from "lit/directives/ref.js";
@@ -332,7 +332,7 @@ export class McpAppView extends LitElement {
 
       const bridge = new OpenClawAppBridge(
         null,
-        { name: "OpenClaw", version: "1.0.0" },
+        { name: "GrokBot", version: "1.0.0" },
         buildMcpAppHostCapabilities(
           payload.csp,
           payload.messageSupported === true,

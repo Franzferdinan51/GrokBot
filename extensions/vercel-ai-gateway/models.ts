@@ -1,12 +1,12 @@
 // Vercel Ai Gateway plugin module implements models behavior.
-import { parseStrictFiniteNumber } from "openclaw/plugin-sdk/number-runtime";
+import { parseStrictFiniteNumber } from "grokbot/plugin-sdk/number-runtime";
 import {
   getCachedLiveProviderModelRows,
   LiveModelCatalogHttpError,
-} from "openclaw/plugin-sdk/provider-catalog-live-runtime";
-import type { ModelDefinitionConfig } from "openclaw/plugin-sdk/provider-model-shared";
-import { createSubsystemLogger } from "openclaw/plugin-sdk/runtime-env";
-import { asPositiveSafeInteger } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/provider-catalog-live-runtime";
+import type { ModelDefinitionConfig } from "grokbot/plugin-sdk/provider-model-shared";
+import { createSubsystemLogger } from "grokbot/plugin-sdk/runtime-env";
+import { asPositiveSafeInteger } from "grokbot/plugin-sdk/string-coerce-runtime";
 
 export const VERCEL_AI_GATEWAY_PROVIDER_ID = "vercel-ai-gateway";
 export const VERCEL_AI_GATEWAY_BASE_URL = "https://ai-gateway.vercel.sh";

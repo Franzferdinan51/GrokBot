@@ -25,9 +25,9 @@ export function parsePackageOpenClawSchemaVersions(
   if (!packageJson || typeof packageJson !== "object" || Array.isArray(packageJson)) {
     return undefined;
   }
-  const openclaw = (packageJson as Record<string, unknown>).openclaw;
-  if (!openclaw || typeof openclaw !== "object" || Array.isArray(openclaw)) {
+  const grokbot = (packageJson as Record<string, unknown>).grokbot;
+  if (!grokbot || typeof grokbot !== "object" || Array.isArray(grokbot)) {
     return undefined;
   }
-  return parseOpenClawSchemaVersions((openclaw as Record<string, unknown>).schemaVersions);
+  return parseOpenClawSchemaVersions((grokbot as Record<string, unknown>).schemaVersions);
 }

@@ -1,12 +1,12 @@
-# OpenClaw DeepSeek Provider
+# GrokBot DeepSeek Provider
 
-Official OpenClaw provider plugin for DeepSeek.
+Official GrokBot provider plugin for DeepSeek.
 
-Install from OpenClaw:
+Install from GrokBot:
 
 ```bash
-openclaw plugins install @openclaw/deepseek-provider
-openclaw gateway restart
+grokbot plugins install @grokbot/deepseek-provider
+grokbot gateway restart
 ```
 
-See <https://docs.openclaw.ai/providers/deepseek> for setup and configuration.
+See <https://docs.grokbot.ai/providers/deepseek> for setup and configuration.

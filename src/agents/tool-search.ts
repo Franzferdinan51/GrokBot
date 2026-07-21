@@ -1,20 +1,20 @@
 /**
  * Tool Search catalog compaction.
  *
- * Presents large OpenClaw/MCP/client tool inventories through search, describe, call, and optional code-mode tools.
+ * Presents large GrokBot/MCP/client tool inventories through search, describe, call, and optional code-mode tools.
  */
 import { spawn } from "node:child_process";
 import os from "node:os";
-import { isRecord } from "@openclaw/normalization-core/record-coerce";
-import type { Result } from "@openclaw/normalization-core/result";
+import { isRecord } from "@grokbot/normalization-core/record-coerce";
+import type { Result } from "@grokbot/normalization-core/result";
 import {
   normalizeStringEntries,
   uniqueStrings,
   uniqueValues,
-} from "@openclaw/normalization-core/string-normalization";
-import { sliceUtf16Safe, truncateUtf16Safe } from "@openclaw/normalization-core/utf16-slice";
+} from "@grokbot/normalization-core/string-normalization";
+import { sliceUtf16Safe, truncateUtf16Safe } from "@grokbot/normalization-core/utf16-slice";
 import { Type, type TSchema } from "typebox";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { getPluginToolMeta, type PluginToolMcpMeta } from "../plugins/tools.js";
 import {
   isPreExecutionBlockedToolResult,
@@ -58,7 +58,7 @@ const MAX_TOOL_SCHEMA_DIRECTORY_PROMPT_CHARS = 18_000;
 const TOOL_DIRECTORY_IDENTIFIER_RE = /^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$/u;
 
 type ToolSearchMode = "code" | "tools" | "directory";
-type CatalogSource = "openclaw" | "mcp" | "client";
+type CatalogSource = "grokbot" | "mcp" | "client";
 type CatalogTool = AnyAgentTool | ToolDefinition;
 type CatalogVisibilityOptions = {
   includeMcp?: boolean;
@@ -262,7 +262,7 @@ function settleBridge(message) {
 }
 
 function buildModelScriptSource(code) {
-  return "(async (openclaw, console) => {\n" + code + "\n})(openclaw, console)";
+  return "(async (grokbot, console) => {\n" + code + "\n})(grokbot, console)";
 }
 
 function buildControllerSource() {
@@ -316,7 +316,7 @@ function buildControllerSource() {
     "  warn: (...items) => logs.push(items.map(formatLogItem)),\n" +
     "  error: (...items) => logs.push(items.map(formatLogItem)),\n" +
     "});\n" +
-    "const openclaw = Object.freeze({\n" +
+    "const grokbot = Object.freeze({\n" +
     "  tools: Object.freeze({\n" +
     "    search: (query, options) => bridge('search', [query, options]),\n" +
     "    describe: (id) => bridge('describe', [id]),\n" +
@@ -324,7 +324,7 @@ function buildControllerSource() {
     "  }),\n" +
     "});\n" +
     "return Object.freeze({\n" +
-    "  openclaw,\n" +
+    "  grokbot,\n" +
     "  console,\n" +
     "  isBridgeIdle,\n" +
     "  waitForBridgeIdle,\n" +
@@ -370,7 +370,7 @@ async function runModelCode(code, timeoutMs) {
   });
   Object.defineProperties(sandbox, {
     console: { value: controller.console, enumerable: true },
-    openclaw: { value: controller.openclaw, enumerable: true },
+    grokbot: { value: controller.grokbot, enumerable: true },
   });
   activeController = controller;
   const pumpTimer = setInterval(() => pumpController(controller), 1);
@@ -425,7 +425,7 @@ process.on("message", (message) => {
 });
 `;
 
-const SESSION_CATALOGS_KEY = Symbol.for("openclaw.toolSearch.sessionCatalogs");
+const SESSION_CATALOGS_KEY = Symbol.for("grokbot.toolSearch.sessionCatalogs");
 const globalToolSearchState = globalThis as typeof globalThis & {
   [SESSION_CATALOGS_KEY]?: Map<string, ToolSearchCatalogSession>;
 };
@@ -602,10 +602,10 @@ function catalogEntriesFingerprint(entries: readonly ToolSearchCatalogEntry[]): 
         entry.description,
         // Remote/client schemas may be attacker-sized. Object identity still
         // invalidates reuse when a schema object is replaced without walking it.
-        entry.source === "openclaw"
+        entry.source === "grokbot"
           ? stableJsonFingerprint(entry.parameters)
           : untrustedSchemaFingerprint(entry.parameters),
-        entry.source === "openclaw"
+        entry.source === "grokbot"
           ? stableJsonFingerprint(entry.outputSchema)
           : untrustedSchemaFingerprint(entry.outputSchema),
         String(catalogToolIdentity(entry.tool)),
@@ -702,9 +702,9 @@ function classifyTool(tool: CatalogTool): {
     return { source: "mcp", sourceName: pluginId };
   }
   if (pluginId) {
-    return { source: "openclaw", sourceName: pluginId };
+    return { source: "grokbot", sourceName: pluginId };
   }
-  return { source: "openclaw", sourceName: "core" };
+  return { source: "grokbot", sourceName: "core" };
 }
 
 function makeCatalogId(tool: CatalogTool, source: CatalogSource, sourceName?: string): string {
@@ -738,9 +738,9 @@ function toCatalogEntry(
     label: tool.label,
     description: tool.description ?? "",
     parameters: tool.parameters,
-    // Only locally loaded OpenClaw/core tools may declare model-visible output
+    // Only locally loaded GrokBot/core tools may declare model-visible output
     // contracts. MCP and client metadata remains untrusted and deferred.
-    ...(source === "openclaw" && (tool as AnyAgentTool).outputSchema
+    ...(source === "grokbot" && (tool as AnyAgentTool).outputSchema
       ? { outputSchema: (tool as AnyAgentTool).outputSchema }
       : {}),
     tool: catalogTool,
@@ -1210,7 +1210,7 @@ function resolveCatalog(ctx: ToolSearchToolContext): ToolSearchCatalogSession {
 
 export function compactToolSearchCatalogEntry(entry: ToolSearchCatalogEntry) {
   const output =
-    entry.source === "openclaw" ? compactToolOutputHint(entry.outputSchema) : undefined;
+    entry.source === "grokbot" ? compactToolOutputHint(entry.outputSchema) : undefined;
   return {
     id: entry.id,
     source: entry.source,
@@ -1221,7 +1221,7 @@ export function compactToolSearchCatalogEntry(entry: ToolSearchCatalogEntry) {
     description: entry.description,
     // Remote MCP and client schemas are untrusted metadata. Keep them deferred
     // rather than repeatedly traversing attacker-sized property maps on search.
-    input: entry.source === "openclaw" ? compactToolInputHint(entry.parameters) : "unknown",
+    input: entry.source === "grokbot" ? compactToolInputHint(entry.parameters) : "unknown",
     ...(output ? { output } : {}),
   };
 }
@@ -1242,7 +1242,7 @@ function formatToolDirectoryIdentifier(value: string | undefined): string | unde
 function formatToolDirectoryEntry(
   entry: ReturnType<typeof compactToolSearchCatalogEntry>,
 ): string | undefined {
-  if (entry.source !== "openclaw") {
+  if (entry.source !== "grokbot") {
     return undefined;
   }
   const name = formatToolDirectoryIdentifier(entry.name);
@@ -1703,7 +1703,7 @@ function formatUnknownToolIdError(
   ).slice(0, 3);
   const recoveryText =
     options.recoverySurface === "code-mode"
-      ? "Use openclaw.tools.search to find a tool, openclaw.tools.describe to inspect it, then openclaw.tools.call with the exact id or name."
+      ? "Use grokbot.tools.search to find a tool, grokbot.tools.describe to inspect it, then grokbot.tools.call with the exact id or name."
       : options.recoverySurface === "tools"
         ? "Use tools.search to find a tool, tools.describe to inspect it, then tools.call with the exact id or name."
         : "Use tool_search to find a tool, tool_describe to inspect it, then tool_call with the exact id or name.";
@@ -1794,7 +1794,7 @@ function readCallArgs(args: unknown): { id: string; input: unknown } {
 
 function getTelemetry(catalog: ToolSearchCatalogSession) {
   const sources: Record<CatalogSource, number> = {
-    openclaw: 0,
+    grokbot: 0,
     mcp: 0,
     client: 0,
   };
@@ -1954,7 +1954,7 @@ export class ToolSearchRuntime {
     } catch {
       return false;
     }
-    if (entry.source !== "openclaw") {
+    if (entry.source !== "grokbot") {
       return false;
     }
     const pluginMeta = getPluginToolMeta(entry.tool as Parameters<typeof getPluginToolMeta>[0]);
@@ -2480,11 +2480,11 @@ export function createToolSearchTools(ctx: ToolSearchToolContext): AnyAgentTool[
       name: TOOL_SEARCH_CODE_MODE_TOOL_NAME,
       label: "Tool Search Code",
       description:
-        "Run JavaScript in an isolated Node subprocess over a large tool catalog. APIs: `openclaw.tools.search(query: string, options?)`, `openclaw.tools.describe(id: string)`, and `openclaw.tools.call(id: string, args?)`. Search takes a positional query string. Call returns `{ tool, result }`; JSON values normally live in `result.details`.",
+        "Run JavaScript in an isolated Node subprocess over a large tool catalog. APIs: `grokbot.tools.search(query: string, options?)`, `grokbot.tools.describe(id: string)`, and `grokbot.tools.call(id: string, args?)`. Search takes a positional query string. Call returns `{ tool, result }`; JSON values normally live in `result.details`.",
       parameters: Type.Object({
         code: Type.String({
           description:
-            "JavaScript body for an async function. Use return to return the final value. The openclaw.tools bridge is available.",
+            "JavaScript body for an async function. Use return to return the final value. The grokbot.tools bridge is available.",
         }),
       }),
       execute: async (
@@ -2525,7 +2525,7 @@ export function createToolSearchTools(ctx: ToolSearchToolContext): AnyAgentTool[
     {
       name: TOOL_CALL_RAW_TOOL_NAME,
       label: "Tool Call",
-      description: "Call an exact Tool Search result id or name through OpenClaw.",
+      description: "Call an exact Tool Search result id or name through GrokBot.",
       parameters: Type.Object({
         id: Type.String({ description: "Tool search result id or tool name." }),
         args: Type.Optional(
@@ -2573,6 +2573,6 @@ const testing = {
 };
 
 if (process.env.VITEST || process.env.NODE_ENV === "test") {
-  (globalThis as Record<PropertyKey, unknown>)[Symbol.for("openclaw.toolSearchTestApi")] = testing;
+  (globalThis as Record<PropertyKey, unknown>)[Symbol.for("grokbot.toolSearchTestApi")] = testing;
 }
 /* oxlint-disable max-lines -- TODO: split this grandfathered oversized file. */

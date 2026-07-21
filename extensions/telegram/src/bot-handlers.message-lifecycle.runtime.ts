@@ -1,7 +1,7 @@
 // Telegram dispatch dedupe, replay settlement, and synthetic-message helpers.
 import type { Message } from "grammy/types";
-import { formatMediaPlaceholderText } from "openclaw/plugin-sdk/channel-inbound";
-import { danger, logVerbose } from "openclaw/plugin-sdk/runtime-env";
+import { formatMediaPlaceholderText } from "grokbot/plugin-sdk/channel-inbound";
+import { danger, logVerbose } from "grokbot/plugin-sdk/runtime-env";
 import type {
   TelegramAmbientTranscriptWatermark,
   TelegramMessageContextOptions,

@@ -2,22 +2,22 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import type {
   OpenKeyedStoreOptions,
   PluginStateSyncKeyedStore,
-} from "openclaw/plugin-sdk/plugin-state-runtime";
+} from "grokbot/plugin-sdk/plugin-state-runtime";
 import {
   createPluginStateKeyedStoreForTests,
   createPluginStateSyncKeyedStoreForTests,
   resetPluginStateStoreForTests,
-} from "openclaw/plugin-sdk/plugin-state-test-runtime";
-import { createTestPluginApi } from "openclaw/plugin-sdk/plugin-test-api";
+} from "grokbot/plugin-sdk/plugin-state-test-runtime";
+import { createTestPluginApi } from "grokbot/plugin-sdk/plugin-test-api";
 import {
   clearRuntimeConfigSnapshot,
   setRuntimeConfigSnapshot,
-} from "openclaw/plugin-sdk/runtime-config-snapshot";
-import { importFreshModule } from "openclaw/plugin-sdk/test-fixtures";
+} from "grokbot/plugin-sdk/runtime-config-snapshot";
+import { importFreshModule } from "grokbot/plugin-sdk/test-fixtures";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { registerBrowserPlugin } from "../../plugin-registration.js";
 import type { OpenClawPluginApi } from "../../runtime-api.js";
@@ -108,13 +108,13 @@ const ownership = (
 function clearProcessLocalTabState(): void {
   const state = globalThis as Record<symbol, unknown>;
   for (const name of [
-    "openclaw.browser.session-tabs.volatile",
-    "openclaw.browser.session-tabs.active-durable-keys",
-    "openclaw.browser.session-tabs.cold-native-activity",
-    "openclaw.browser.session-tabs.interaction-storage-keys",
-    "openclaw.browser.session-tabs.exact-interaction-storage-keys",
-    "openclaw.browser.session-tabs.volatile-aliases",
-    "openclaw.browser.session-tabs.exact-volatile-aliases",
+    "grokbot.browser.session-tabs.volatile",
+    "grokbot.browser.session-tabs.active-durable-keys",
+    "grokbot.browser.session-tabs.cold-native-activity",
+    "grokbot.browser.session-tabs.interaction-storage-keys",
+    "grokbot.browser.session-tabs.exact-interaction-storage-keys",
+    "grokbot.browser.session-tabs.volatile-aliases",
+    "grokbot.browser.session-tabs.exact-volatile-aliases",
   ]) {
     delete state[Symbol.for(name)];
   }
@@ -183,7 +183,7 @@ describe("durable session tab registry", () => {
   beforeEach(() => {
     clearRuntimeConfigSnapshot();
     clearProcessLocalTabState();
-    stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-browser-tabs-"));
+    stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-browser-tabs-"));
     process.env.OPENCLAW_STATE_DIR = stateDir;
     resetPluginStateStoreForTests();
     installRuntime();

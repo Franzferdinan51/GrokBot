@@ -61,9 +61,9 @@ export function warnIfConfigFromFuture(
   }
   logger.warn(
     [
-      `Your OpenClaw config was written by version ${touched}, but this command is running ${VERSION}.`,
-      "Check: `openclaw --version`, `which openclaw`, and `openclaw gateway status --deep`.",
-      "If unexpected, update PATH so `openclaw` points to the version you want, or reinstall the Gateway service from that same OpenClaw install.",
+      `Your GrokBot config was written by version ${touched}, but this command is running ${VERSION}.`,
+      "Check: `grokbot --version`, `which grokbot`, and `grokbot gateway status --deep`.",
+      "If unexpected, update PATH so `grokbot` points to the version you want, or reinstall the Gateway service from that same GrokBot install.",
     ].join("\n"),
   );
 }

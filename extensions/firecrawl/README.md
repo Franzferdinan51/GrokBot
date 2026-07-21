@@ -1,12 +1,12 @@
-# OpenClaw Firecrawl Plugin
+# GrokBot Firecrawl Plugin
 
-Official OpenClaw plugin for Firecrawl.
+Official GrokBot plugin for Firecrawl.
 
-Install from OpenClaw:
+Install from GrokBot:
 
 ```bash
-openclaw plugins install @openclaw/firecrawl-plugin
-openclaw gateway restart
+grokbot plugins install @grokbot/firecrawl-plugin
+grokbot gateway restart
 ```
 
-See <https://docs.openclaw.ai/tools/firecrawl> for setup and configuration.
+See <https://docs.grokbot.ai/tools/firecrawl> for setup and configuration.

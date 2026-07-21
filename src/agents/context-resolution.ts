@@ -1,6 +1,6 @@
-import { resolveClaudeSonnet5ModelIdentity } from "@openclaw/llm-core";
-import { normalizeLowercaseStringOrEmpty } from "@openclaw/normalization-core/string-coerce";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import { resolveClaudeSonnet5ModelIdentity } from "@grokbot/llm-core";
+import { normalizeLowercaseStringOrEmpty } from "@grokbot/normalization-core/string-coerce";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import {
   lookupCachedContextTokens,
   lookupCachedContextWindow,

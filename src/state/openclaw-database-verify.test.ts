@@ -9,25 +9,25 @@ import {
   clearOpenClawAgentDatabaseOpenFailure,
   closeOpenClawAgentDatabasesForTest,
   openOpenClawAgentDatabase,
-} from "./openclaw-agent-db.js";
+} from "./grokbot-agent-db.js";
 import {
   applyOpenClawDatabaseVerificationResults,
   runDatabaseVerifyWorker,
-} from "./openclaw-database-verify.impl.js";
+} from "./grokbot-database-verify.impl.js";
 import {
   type OpenClawDatabaseVerifyTarget,
   verifyOpenClawDatabases,
-} from "./openclaw-database-verify.worker.js";
+} from "./grokbot-database-verify.worker.js";
 import {
   clearOpenClawDatabaseQuarantine,
   readOpenClawDatabaseQuarantine,
   recordOpenClawDatabaseQuarantine,
-} from "./openclaw-quarantine-store.js";
+} from "./grokbot-quarantine-store.js";
 import {
   closeOpenClawStateDatabaseForTest,
   openOpenClawStateDatabase,
   repairOpenClawStateDatabaseSchema,
-} from "./openclaw-state-db.js";
+} from "./grokbot-state-db.js";
 
 const tempDirs: string[] = [];
 
@@ -67,19 +67,19 @@ function createUnsafeIndexDrift(databasePath: string): void {
 }
 
 function quarantineStorePath(stateDir: string): string {
-  return path.join(stateDir, "state", "openclaw-quarantine.sqlite");
+  return path.join(stateDir, "state", "grokbot-quarantine.sqlite");
 }
 
-describe("OpenClaw database integrity verifier", () => {
+describe("GrokBot database integrity verifier", () => {
   it("detects corruption off-thread, quarantines it, and latches later opens", async () => {
-    const stateDir = makeTempDir(tempDirs, "openclaw-database-verify-");
+    const stateDir = makeTempDir(tempDirs, "grokbot-database-verify-");
     const env = { OPENCLAW_STATE_DIR: stateDir };
     const agentPath = openOpenClawAgentDatabase({ agentId: "worker-1", env }).path;
     closeOpenClawAgentDatabasesForTest();
     closeOpenClawStateDatabaseForTest();
     createUnsafeIndexDrift(agentPath);
     const targets: OpenClawDatabaseVerifyTarget[] = [
-      { kind: "agent", label: "OpenClaw agent database worker-1", path: agentPath },
+      { kind: "agent", label: "GrokBot agent database worker-1", path: agentPath },
     ];
 
     const directResults = verifyOpenClawDatabases(targets);
@@ -127,7 +127,7 @@ describe("OpenClaw database integrity verifier", () => {
   });
 
   it("reports an uncleared quarantine row instead of claiming repair success", () => {
-    const stateDir = makeTempDir(tempDirs, "openclaw-database-verify-clear-failure-");
+    const stateDir = makeTempDir(tempDirs, "grokbot-database-verify-clear-failure-");
     const env = { OPENCLAW_STATE_DIR: stateDir };
     const agentPath = openOpenClawAgentDatabase({ agentId: "worker-1", env }).path;
     openOpenClawStateDatabase({ env });
@@ -136,7 +136,7 @@ describe("OpenClaw database integrity verifier", () => {
     applyOpenClawDatabaseVerificationResults({
       env,
       results: [{ path: agentPath, ok: false, error: "corrupt index", terminal: true }],
-      targets: [{ kind: "agent", label: "OpenClaw agent database worker-1", path: agentPath }],
+      targets: [{ kind: "agent", label: "GrokBot agent database worker-1", path: agentPath }],
     });
     closeOpenClawStateDatabaseForTest();
 
@@ -162,7 +162,7 @@ describe("OpenClaw database integrity verifier", () => {
   });
 
   it("keeps healthy opens on the missing-store fast path", () => {
-    const stateDir = makeTempDir(tempDirs, "openclaw-database-verify-clean-");
+    const stateDir = makeTempDir(tempDirs, "grokbot-database-verify-clean-");
     const env = { OPENCLAW_STATE_DIR: stateDir };
 
     openOpenClawStateDatabase({ env });
@@ -172,7 +172,7 @@ describe("OpenClaw database integrity verifier", () => {
   });
 
   it("records and clears dedicated quarantine rows with rollback journaling", () => {
-    const stateDir = makeTempDir(tempDirs, "openclaw-database-verify-store-");
+    const stateDir = makeTempDir(tempDirs, "grokbot-database-verify-store-");
     const env = { OPENCLAW_STATE_DIR: stateDir };
     const databasePath = path.join(stateDir, "agent.sqlite");
     const storePath = quarantineStorePath(stateDir);
@@ -211,7 +211,7 @@ describe("OpenClaw database integrity verifier", () => {
   });
 
   it("recovers an interrupted empty quarantine-store initialization", () => {
-    const stateDir = makeTempDir(tempDirs, "openclaw-database-verify-empty-store-");
+    const stateDir = makeTempDir(tempDirs, "grokbot-database-verify-empty-store-");
     const env = { OPENCLAW_STATE_DIR: stateDir };
     const databasePath = path.join(stateDir, "agent.sqlite");
     const storePath = quarantineStorePath(stateDir);
@@ -233,7 +233,7 @@ describe("OpenClaw database integrity verifier", () => {
   it.skipIf(process.platform === "win32")(
     "recovers a hot rollback journal before reading quarantine",
     () => {
-      const stateDir = makeTempDir(tempDirs, "openclaw-database-verify-hot-journal-");
+      const stateDir = makeTempDir(tempDirs, "grokbot-database-verify-hot-journal-");
       const env = { OPENCLAW_STATE_DIR: stateDir };
       const databasePath = path.join(stateDir, "agent.sqlite");
       const storePath = quarantineStorePath(stateDir);
@@ -272,13 +272,13 @@ describe("OpenClaw database integrity verifier", () => {
   );
 
   it("does not latch transient verifier errors", () => {
-    const stateDir = makeTempDir(tempDirs, "openclaw-database-verify-transient-");
+    const stateDir = makeTempDir(tempDirs, "grokbot-database-verify-transient-");
     const env = { OPENCLAW_STATE_DIR: stateDir };
     const agentPath = openOpenClawAgentDatabase({ agentId: "worker-1", env }).path;
     closeOpenClawAgentDatabasesForTest();
     closeOpenClawStateDatabaseForTest();
     const targets: OpenClawDatabaseVerifyTarget[] = [
-      { kind: "agent", label: "OpenClaw agent database worker-1", path: agentPath },
+      { kind: "agent", label: "GrokBot agent database worker-1", path: agentPath },
     ];
 
     applyOpenClawDatabaseVerificationResults({
@@ -291,12 +291,12 @@ describe("OpenClaw database integrity verifier", () => {
   });
 
   it("persists state failure quarantine across restart until doctor repair", () => {
-    const stateDir = makeTempDir(tempDirs, "openclaw-database-verify-state-failure-");
+    const stateDir = makeTempDir(tempDirs, "grokbot-database-verify-state-failure-");
     const env = { OPENCLAW_STATE_DIR: stateDir };
     const statePath = openOpenClawStateDatabase({ env }).path;
     closeOpenClawStateDatabaseForTest();
     const targets: OpenClawDatabaseVerifyTarget[] = [
-      { kind: "state", label: "OpenClaw state database", path: statePath },
+      { kind: "state", label: "GrokBot state database", path: statePath },
     ];
 
     applyOpenClawDatabaseVerificationResults({

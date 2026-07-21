@@ -1,14 +1,14 @@
 import type {
   AgentHarnessSessionForkParams,
   AgentHarnessSessionForkResult,
-} from "openclaw/plugin-sdk/agent-harness-runtime";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import type { PluginRuntime } from "openclaw/plugin-sdk/plugin-runtime";
+} from "grokbot/plugin-sdk/agent-harness-runtime";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import type { PluginRuntime } from "grokbot/plugin-sdk/plugin-runtime";
 import {
   deleteSessionUpstreamLink,
   upsertSessionUpstreamLink,
-} from "openclaw/plugin-sdk/session-catalog";
-import { isRecord } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/session-catalog";
+import { isRecord } from "grokbot/plugin-sdk/string-coerce-runtime";
 import type { CodexSessionCatalogControl } from "../session-catalog-types.js";
 import { codexLastTerminalTurnId, codexUpstreamBaseline } from "../session-upstream-marker.js";
 import { assertCodexThreadForkResponse } from "./protocol-validators.js";

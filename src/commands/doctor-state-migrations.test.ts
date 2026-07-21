@@ -27,7 +27,7 @@ import {
   closeOpenClawStateDatabaseForTest,
   openOpenClawStateDatabase,
   OPENCLAW_STATE_SCHEMA_VERSION,
-} from "../state/openclaw-state-db.js";
+} from "../state/grokbot-state-db.js";
 import { loadTaskFlowRegistryStateFromSqlite } from "../tasks/task-flow-registry.store.sqlite.js";
 import { loadTaskRegistryStateFromSqlite } from "../tasks/task-registry.store.sqlite.js";
 import {
@@ -139,7 +139,7 @@ vi.mock("../plugins/doctor-contract-registry.js", () => ({
 }));
 
 async function makeTempRoot() {
-  const root = await fs.promises.mkdtemp(path.join(os.tmpdir(), "openclaw-doctor-"));
+  const root = await fs.promises.mkdtemp(path.join(os.tmpdir(), "grokbot-doctor-"));
   tempRoots.push(root);
   return root;
 }
@@ -213,7 +213,7 @@ function readPrimaryKeyColumns(db: DatabaseSync, tableName: string): string[] {
 }
 
 function createLegacyAgentDatabaseRegistry(stateDir: string): string {
-  const stateDatabasePath = path.join(stateDir, "state", "openclaw.sqlite");
+  const stateDatabasePath = path.join(stateDir, "state", "grokbot.sqlite");
   fs.mkdirSync(path.dirname(stateDatabasePath), { recursive: true });
   const { DatabaseSync } = requireNodeSqlite();
   const db = new DatabaseSync(stateDatabasePath);
@@ -234,7 +234,7 @@ function createLegacyAgentDatabaseRegistry(stateDir: string): string {
         size_bytes
       ) VALUES (
         'worker-1',
-        '/legacy/worker-1/openclaw-agent.sqlite',
+        '/legacy/worker-1/grokbot-agent.sqlite',
         1,
         10,
         20
@@ -352,8 +352,8 @@ function writeLegacyDebugProxyCaptureSidecar(
       100,
       200,
       "proxy-run",
-      "openclaw",
-      "openclaw",
+      "grokbot",
+      "grokbot",
       "http://127.0.0.1:8080",
       sourcePath,
       blobDir,
@@ -367,8 +367,8 @@ function writeLegacyDebugProxyCaptureSidecar(
     ).run(
       "legacy-session",
       150,
-      "openclaw",
-      "openclaw",
+      "grokbot",
+      "grokbot",
       "https",
       "outbound",
       "request",
@@ -698,7 +698,7 @@ const DIR_LINK_TYPE = process.platform === "win32" ? "junction" : "dir";
 
 function getStateDirMigrationPaths(root: string) {
   return {
-    targetDir: path.join(root, ".openclaw"),
+    targetDir: path.join(root, ".grokbot"),
     legacyDir: path.join(root, ".clawdbot"),
   };
 }
@@ -934,7 +934,7 @@ describe("doctor legacy state migrations", () => {
 
   it("migrates the legacy shared state agent registry primary key", async () => {
     const root = await makeTempRoot();
-    const stateDir = path.join(root, ".openclaw");
+    const stateDir = path.join(root, ".grokbot");
     const stateDatabasePath = createLegacyAgentDatabaseRegistry(stateDir);
     const detected = await detectLegacyStateMigrations({
       cfg: {},
@@ -966,7 +966,7 @@ describe("doctor legacy state migrations", () => {
             size_bytes
           ) VALUES (
             'worker-1',
-            '/relocated/worker-1/openclaw-agent.sqlite',
+            '/relocated/worker-1/grokbot-agent.sqlite',
             1,
             20,
             30
@@ -983,7 +983,7 @@ describe("doctor legacy state migrations", () => {
 
   it("does not repair newer shared state schemas", async () => {
     const root = await makeTempRoot();
-    const stateDir = path.join(root, ".openclaw");
+    const stateDir = path.join(root, ".grokbot");
     const stateDatabasePath = createLegacyAgentDatabaseRegistry(stateDir);
     const { DatabaseSync } = requireNodeSqlite();
     const seededDb = new DatabaseSync(stateDatabasePath);
@@ -1050,7 +1050,7 @@ describe("doctor legacy state migrations", () => {
     expect(store[legacySessionKey]?.acp).toBeUndefined();
 
     const sqlite = requireNodeSqlite();
-    const db = new sqlite.DatabaseSync(path.join(root, "state", "openclaw.sqlite"));
+    const db = new sqlite.DatabaseSync(path.join(root, "state", "grokbot.sqlite"));
     try {
       const row = db
         .prepare(
@@ -1125,7 +1125,7 @@ describe("doctor legacy state migrations", () => {
     expect(store[legacySessionKey]?.acp).toBeUndefined();
 
     const sqlite = requireNodeSqlite();
-    const db = new sqlite.DatabaseSync(path.join(root, "state", "openclaw.sqlite"));
+    const db = new sqlite.DatabaseSync(path.join(root, "state", "grokbot.sqlite"));
     try {
       const row = db
         .prepare(
@@ -2310,7 +2310,7 @@ describe("doctor legacy state migrations", () => {
           id, started_at, mode, source_scope, source_process
         ) VALUES (?, ?, ?, ?, ?)`,
       )
-      .run("legacy-session", 999, "different", "openclaw", "openclaw");
+      .run("legacy-session", 999, "different", "grokbot", "grokbot");
 
     const result = await runLegacyStateMigrationsForRoot(root);
 
@@ -2619,8 +2619,8 @@ describe("doctor legacy state migrations", () => {
     await writeExistingPluginInstallIndex(root, {
       discord: {
         source: "npm",
-        spec: "@openclaw/discord@latest",
-        resolvedName: "@openclaw/discord",
+        spec: "@grokbot/discord@latest",
+        resolvedName: "@grokbot/discord",
         resolvedVersion: "2026.6.16",
         integrity: "sha512-current",
         installedAt: "2026-06-16T12:00:00.000Z",
@@ -2629,7 +2629,7 @@ describe("doctor legacy state migrations", () => {
     const sourcePath = writeLegacyPluginInstallIndex(root, {
       discord: {
         source: "npm",
-        spec: "@openclaw/discord@2026.6.16",
+        spec: "@grokbot/discord@2026.6.16",
         version: "2026.6.16",
         installedAt: "2026-06-01T12:00:00.000Z",
       },
@@ -2644,8 +2644,8 @@ describe("doctor legacy state migrations", () => {
       installRecords: {
         discord: {
           source: "npm",
-          spec: "@openclaw/discord@latest",
-          resolvedName: "@openclaw/discord",
+          spec: "@grokbot/discord@latest",
+          resolvedName: "@grokbot/discord",
           resolvedVersion: "2026.6.16",
           integrity: "sha512-current",
         },
@@ -2692,7 +2692,7 @@ describe("doctor legacy state migrations", () => {
   it("converges the reported plugin, update-check, and config-health conflicts", async () => {
     const root = await makeTempRoot();
     const env = { ...process.env, OPENCLAW_STATE_DIR: root };
-    const configPath = path.join(root, "openclaw.json");
+    const configPath = path.join(root, "grokbot.json");
     const pluginSourcePath = writeLegacyPluginInstallIndex(root, {
       demo: {
         source: "npm",
@@ -2832,11 +2832,11 @@ describe("doctor legacy state migrations", () => {
       label: "name different packages",
       current: {
         source: "npm",
-        spec: "@openclaw/demo@1.0.0",
+        spec: "@grokbot/demo@1.0.0",
         version: "1.0.0",
-        resolvedName: "@openclaw/demo",
+        resolvedName: "@grokbot/demo",
         resolvedVersion: "1.0.0",
-        resolvedSpec: "@openclaw/demo@1.0.0",
+        resolvedSpec: "@grokbot/demo@1.0.0",
       },
       legacy: {
         source: "npm",
@@ -3002,7 +3002,7 @@ describe("doctor legacy state migrations", () => {
     // Even direct doctor repair must not copy or archive default approvals.
     const root = await makeTempRoot();
     const stateDir = path.join(root, "custom-state");
-    const sourcePath = path.join(root, ".openclaw", "exec-approvals.json");
+    const sourcePath = path.join(root, ".grokbot", "exec-approvals.json");
     const targetPath = path.join(stateDir, "exec-approvals.json");
     writeJson5(sourcePath, {
       version: 1,
@@ -3035,7 +3035,7 @@ describe("doctor legacy state migrations", () => {
   it("keeps default exec approvals in place during automatic state migration", async () => {
     const root = await makeTempRoot();
     const stateDir = path.join(root, "custom-state");
-    const sourcePath = path.join(root, ".openclaw", "exec-approvals.json");
+    const sourcePath = path.join(root, ".grokbot", "exec-approvals.json");
     const targetPath = path.join(stateDir, "exec-approvals.json");
     writeJson5(sourcePath, {
       version: 1,
@@ -3675,7 +3675,7 @@ describe("doctor legacy state migrations", () => {
       loadTaskRegistryStateFromSqlite();
       closeOpenClawStateDatabaseForTest();
       const sqlite = requireNodeSqlite();
-      const db = new sqlite.DatabaseSync(path.join(root, "state", "openclaw.sqlite"));
+      const db = new sqlite.DatabaseSync(path.join(root, "state", "grokbot.sqlite"));
       try {
         db.prepare(
           `INSERT INTO task_runs (
@@ -3733,7 +3733,7 @@ describe("doctor legacy state migrations", () => {
 
     await withStateDir(root, async () => {
       const sqlite = requireNodeSqlite();
-      const sharedPath = path.join(root, "state", "openclaw.sqlite");
+      const sharedPath = path.join(root, "state", "grokbot.sqlite");
       fs.mkdirSync(path.dirname(sharedPath), { recursive: true });
       const db = new sqlite.DatabaseSync(sharedPath);
       try {

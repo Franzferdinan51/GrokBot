@@ -1,6 +1,6 @@
 // User turn transcript helpers extract user-turn text from session transcripts.
 import path from "node:path";
-import { mimeTypeFromFilePath } from "@openclaw/media-core/mime";
+import { mimeTypeFromFilePath } from "@grokbot/media-core/mime";
 import type { AgentMessage } from "../../packages/agent-core/src/types.js";
 import {
   persistSessionTranscriptTurn,
@@ -220,7 +220,7 @@ export function buildPersistedUserTurnMessage(params: UserTurnInput): PersistedU
   // derived from each message's own `timestamp` field, so the current turn and
   // every historical turn serialize identically on the wire. Persisting a stamp
   // here would NOT match the bare-current arrival (the gateway no longer stamps
-  // the live turn) — see https://github.com/openclaw/openclaw/issues/3658.
+  // the live turn) — see https://github.com/grokbot/grokbot/issues/3658.
   const senderMeta = buildUserTurnSenderMeta(params.sender);
   const openClawMeta = {
     ...(params.senderIsOwner === undefined ? {} : { senderIsOwner: params.senderIsOwner }),
@@ -721,7 +721,7 @@ export function createUserTurnTranscriptRecorder(
 }
 
 if (process.env.VITEST || process.env.NODE_ENV === "test") {
-  (globalThis as Record<PropertyKey, unknown>)[Symbol.for("openclaw.userTurnTranscriptTestApi")] = {
+  (globalThis as Record<PropertyKey, unknown>)[Symbol.for("grokbot.userTurnTranscriptTestApi")] = {
     persistUserTurnTranscript,
   };
 }

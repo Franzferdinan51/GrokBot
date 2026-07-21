@@ -267,7 +267,7 @@ function normalizeScenario(
       : basePathWithSlash;
   return {
     assistantAgentId: scenario.assistantAgentId?.trim() || defaultAgentId,
-    assistantName: scenario.assistantName?.trim() || "OpenClaw",
+    assistantName: scenario.assistantName?.trim() || "GrokBot",
     basePath,
     controlUiTabs: scenario.controlUiTabs ?? [],
     featureCapabilities: scenario.featureCapabilities ?? [],
@@ -371,7 +371,7 @@ function installControlUiMockGateway(input: {
   const scenario: BrowserScenario = input.scenario;
   (window as unknown as WindowWithGateway)["__OPENCLAW_CONTROL_UI_BASE_PATH__"] = scenario.basePath;
   const protocolVersion = input.protocolVersion;
-  const methodResponseOverridesStorageKey = "openclaw.control-ui-e2e.method-responses.v1";
+  const methodResponseOverridesStorageKey = "grokbot.control-ui-e2e.method-responses.v1";
   const methodResponseOverrides: Record<string, unknown> = {};
   try {
     const storedOverrides = window.sessionStorage.getItem(methodResponseOverridesStorageKey);
@@ -392,12 +392,12 @@ function installControlUiMockGateway(input: {
   const sockets: Array<{ readonly url: string }> = [];
   let sessionMessageEventIndex = 0;
   let sessionMessageEventTimer: number | null = null;
-  const offlineStateKey = "openclaw.control-ui-e2e.gatewayOffline";
+  const offlineStateKey = "grokbot.control-ui-e2e.gatewayOffline";
   // Gateway-owned custom group catalog (sessions.groups.*). Persisted in
   // sessionStorage so a page reload keeps the catalog the way the real
   // gateway's SQLite store does; renames replay onto static sessions.list
   // fixtures because the real gateway rewrites member categories server-side.
-  const groupsStateKey = "openclaw.control-ui-e2e.sessionGroups";
+  const groupsStateKey = "grokbot.control-ui-e2e.sessionGroups";
   let groupsState: { names: string[]; renames: Array<{ from: string; to: string | null }> } = {
     names: [...input.scenario.sessionGroups],
     renames: [],
@@ -421,7 +421,7 @@ function installControlUiMockGateway(input: {
   // and advance the hash so autosave -> reload flows round-trip edits the way
   // the real gateway does. Active only when the scenario ships a config.get
   // fixture with a raw string; persisted in sessionStorage like groupsState.
-  const configStateKey = "openclaw.control-ui-e2e.configState";
+  const configStateKey = "grokbot.control-ui-e2e.configState";
   const baseConfigResponse: Record<string, unknown> | null = (() => {
     const configured = scenario.methodResponses["config.get"];
     return isRecord(configured) && typeof configured.raw === "string" ? configured : null;

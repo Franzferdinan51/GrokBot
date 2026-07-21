@@ -1,5 +1,5 @@
 // Sms plugin module implements accounts behavior.
-import { normalizeOptionalAccountId } from "openclaw/plugin-sdk/account-id";
+import { normalizeOptionalAccountId } from "grokbot/plugin-sdk/account-id";
 import {
   DEFAULT_ACCOUNT_ID,
   hasConfiguredAccountValue,
@@ -8,13 +8,13 @@ import {
   resolveListedDefaultAccountId,
   resolveMergedAccountConfig,
   type OpenClawConfig,
-} from "openclaw/plugin-sdk/account-resolution";
-import { parseStrictInteger } from "openclaw/plugin-sdk/number-runtime";
+} from "grokbot/plugin-sdk/account-resolution";
+import { parseStrictInteger } from "grokbot/plugin-sdk/number-runtime";
 import {
   hasConfiguredSecretInput,
   normalizeResolvedSecretInputString,
-} from "openclaw/plugin-sdk/secret-input";
-import { normalizeStringEntries } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/secret-input";
+import { normalizeStringEntries } from "grokbot/plugin-sdk/string-coerce-runtime";
 import { normalizeSmsAllowFrom, normalizeSmsPhoneNumber } from "./phone.js";
 import type { ResolvedSmsAccount, SmsChannelConfig } from "./types.js";
 

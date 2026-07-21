@@ -6,8 +6,8 @@ import {
   closeOpenClawAgentDatabasesForTest,
   openOpenClawAgentDatabase,
   runOpenClawAgentWriteTransaction,
-} from "../../state/openclaw-agent-db.js";
-import { closeOpenClawStateDatabaseForTest } from "../../state/openclaw-state-db.js";
+} from "../../state/grokbot-agent-db.js";
+import { closeOpenClawStateDatabaseForTest } from "../../state/grokbot-state-db.js";
 import { appendTranscriptEvent, persistSessionTranscriptTurn } from "./session-accessor.js";
 import {
   readRecentSessionTranscriptMessageEvents,
@@ -53,7 +53,7 @@ describe("SQLite active transcript event projection", () => {
 
   beforeEach(() => {
     queuedSessionWrite.mockReset();
-    stateDir = tempDirs.make("openclaw-active-transcript-");
+    stateDir = tempDirs.make("grokbot-active-transcript-");
     scope = {
       agentId: "main",
       env: { ...process.env, OPENCLAW_STATE_DIR: stateDir },

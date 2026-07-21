@@ -11,7 +11,7 @@ const gatewayRpcMock = vi.hoisted(() => {
   };
 });
 
-vi.mock("openclaw/plugin-sdk/gateway-runtime", () => ({
+vi.mock("grokbot/plugin-sdk/gateway-runtime", () => ({
   callGatewayFromCli: gatewayRpcMock.callGatewayFromCli,
 }));
 

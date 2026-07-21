@@ -2,13 +2,13 @@
  * Synchronous Amazon Bedrock Mantle provider registration. It wires discovery,
  * runtime bearer-token preparation, stream wrappers, and failover classifiers.
  */
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { resolvePluginConfigObject } from "openclaw/plugin-sdk/plugin-config-runtime";
-import type { OpenClawPluginApi, ProviderRuntimeModel } from "openclaw/plugin-sdk/plugin-entry";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { resolvePluginConfigObject } from "grokbot/plugin-sdk/plugin-config-runtime";
+import type { OpenClawPluginApi, ProviderRuntimeModel } from "grokbot/plugin-sdk/plugin-entry";
 import {
   modelCostsEqual,
   resolveClaudeSonnet5ModelIdentity,
-} from "openclaw/plugin-sdk/provider-model-shared";
+} from "grokbot/plugin-sdk/provider-model-shared";
 import {
   mergeImplicitMantleProvider,
   resolveImplicitMantleProvider,
@@ -41,7 +41,7 @@ function normalizeMantleResolvedModel(params: {
   return { ...params.model, cost };
 }
 
-/** Register the Amazon Bedrock Mantle provider with OpenClaw. */
+/** Register the Amazon Bedrock Mantle provider with GrokBot. */
 export function registerBedrockMantlePlugin(api: OpenClawPluginApi): void {
   const providerId = "amazon-bedrock-mantle";
   const startupPluginConfig = (api.pluginConfig ?? {}) as BedrockMantlePluginConfig;

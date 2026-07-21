@@ -6,12 +6,12 @@
 import {
   asOptionalObjectRecord,
   asOptionalRecord as readRecordField,
-} from "@openclaw/normalization-core/record-coerce";
+} from "@grokbot/normalization-core/record-coerce";
 import {
   normalizeOptionalLowercaseString,
   readStringValue,
-} from "@openclaw/normalization-core/string-coerce";
-import { truncateUtf16Safe } from "@openclaw/normalization-core/utf16-slice";
+} from "@grokbot/normalization-core/string-coerce";
+import { truncateUtf16Safe } from "@grokbot/normalization-core/utf16-slice";
 import {
   HEARTBEAT_RESPONSE_TOOL_NAME,
   normalizeHeartbeatToolResponse,
@@ -501,12 +501,12 @@ function extractLiveExecOutput(result: unknown): string | undefined {
 
 function isOpenClawExecutable(token: string | undefined): boolean {
   const executable = normalizeOptionalLowercaseString(token);
-  return executable?.split(/[\\/]/).at(-1) === "openclaw";
+  return executable?.split(/[\\/]/).at(-1) === "grokbot";
 }
 
 function isOpenClawPackageSpec(token: string | undefined): boolean {
   const packageSpec = normalizeOptionalLowercaseString(token);
-  return packageSpec?.startsWith("openclaw@") === true && packageSpec.length > "openclaw@".length;
+  return packageSpec?.startsWith("grokbot@") === true && packageSpec.length > "grokbot@".length;
 }
 
 function skipOpenClawPackageRunner(
@@ -1605,7 +1605,7 @@ export async function handleToolExecutionEnd(
       data: {
         phase: "update",
         title: "Plan updated",
-        source: "openclaw",
+        source: "grokbot",
         ...planUpdate,
       },
     };

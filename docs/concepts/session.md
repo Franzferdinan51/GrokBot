@@ -1,5 +1,5 @@
 ---
-summary: "How OpenClaw manages conversation sessions"
+summary: "How GrokBot manages conversation sessions"
 read_when:
   - You want to understand session routing and isolation
   - You want to configure DM scope for multi-user setups
@@ -7,7 +7,7 @@ read_when:
 title: "Session management"
 ---
 
-OpenClaw routes every inbound message to a **session** based on where it came
+GrokBot routes every inbound message to a **session** based on where it came
 from: DMs, group chats, cron jobs, etc. All session state is owned by the
 **gateway**; UI clients query the gateway for session data.
 
@@ -66,7 +66,7 @@ linked channel without starting a new session. See
 [Channel docking](/concepts/channel-docking) for examples, config, and
 troubleshooting.
 
-Verify your setup with `openclaw security audit`.
+Verify your setup with `grokbot security audit`.
 
 ## Remember across conversations
 
@@ -140,9 +140,9 @@ an idle-mode default when no `session.reset`/`resetByType` block is set.
 
 ## Where state lives
 
-- **Runtime session rows:** `~/.openclaw/agents/<agentId>/agent/openclaw-agent.sqlite`
-- **Archived transcript files:** `~/.openclaw/agents/<agentId>/sessions/`
-- **Legacy row migration source:** `~/.openclaw/agents/<agentId>/sessions/sessions.json`
+- **Runtime session rows:** `~/.grokbot/agents/<agentId>/agent/grokbot-agent.sqlite`
+- **Archived transcript files:** `~/.grokbot/agents/<agentId>/sessions/`
+- **Legacy row migration source:** `~/.grokbot/agents/<agentId>/sessions/sessions.json`
 
 The session rows in the per-agent SQLite database keep separate lifecycle
 timestamps:
@@ -152,19 +152,19 @@ timestamps:
 - `updatedAt`: last store-row mutation; useful for listing and pruning, but not
   authoritative for daily/idle reset freshness.
 
-During migration from older installs, gateway startup and `openclaw doctor
+During migration from older installs, gateway startup and `grokbot doctor
 --fix` import legacy `sessions.json` rows and hot transcript JSONL history into
 SQLite automatically. Rows without `sessionStartedAt` are resolved from the
 legacy transcript JSONL session header when available. If an older row also
 lacks `lastInteractionAt`, idle freshness falls back to that session start time,
-not to later bookkeeping writes. Use `openclaw doctor --session-sqlite inspect
+not to later bookkeeping writes. Use `grokbot doctor --session-sqlite inspect
 --session-sqlite-all-agents` and the [Doctor migration
 sequence](/cli/doctor#session-sqlite-migration) when you want explicit
 inspection or validation evidence.
 
 ## Session maintenance
 
-OpenClaw bounds session storage over time via `session.maintenance`, defaults
+GrokBot bounds session storage over time via `session.maintenance`, defaults
 shown:
 
 ```json5
@@ -183,7 +183,7 @@ For production-sized `maxEntries` limits, Gateway runtime writes use a small
 high-water buffer and clean back down to the configured cap in batches.
 Session store reads do not prune or cap entries during Gateway startup, so
 startup and isolated cron sessions do not pay for a full store cleanup.
-`openclaw sessions cleanup --enforce` applies the cap immediately.
+`grokbot sessions cleanup --enforce` applies the cap immediately.
 
 Gateway model-run probe sessions are short-lived by default. Rows matching
 `agent:*:explicit:model-run-<uuid>` use fixed `24h` retention, but cleanup is
@@ -198,18 +198,18 @@ hook, heartbeat, ACP, and sub-agent entries to age out.
 
 If you previously used DM isolation and later returned `session.dmScope` to
 `main`, preview stale peer-keyed DM rows with
-`openclaw sessions cleanup --dry-run --fix-dm-scope`. Applying the same flag
+`grokbot sessions cleanup --dry-run --fix-dm-scope`. Applying the same flag
 retires those old direct-DM rows and keeps their transcripts as deleted
 archives.
 
-Preview any maintenance run with `openclaw sessions cleanup --dry-run`.
+Preview any maintenance run with `grokbot sessions cleanup --dry-run`.
 
 ## Inspecting sessions
 
 | Command                    | Shows                                           |
 | -------------------------- | ----------------------------------------------- |
-| `openclaw status`          | Session store path and recent activity          |
-| `openclaw sessions --json` | All sessions (filter with `--active <minutes>`) |
+| `grokbot status`          | Session store path and recent activity          |
+| `grokbot sessions --json` | All sessions (filter with `--active <minutes>`) |
 | `/status` in chat          | Context usage, model, and toggles               |
 | `/context list`            | What is in the system prompt                    |
 

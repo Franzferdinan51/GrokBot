@@ -1,9 +1,9 @@
-import type { ErrorShape, EventFrame, HelloOk, ResponseFrame } from "@openclaw/gateway-protocol";
+import type { ErrorShape, EventFrame, HelloOk, ResponseFrame } from "@grokbot/gateway-protocol";
 import {
   isGatewayEventFrame,
   isGatewayResponseFrame,
-} from "@openclaw/gateway-protocol/frame-guards";
-import { RetrySupervisor, sleepWithAbort } from "@openclaw/retry";
+} from "@grokbot/gateway-protocol/frame-guards";
+import { RetrySupervisor, sleepWithAbort } from "@grokbot/retry";
 
 export type GatewayProtocolSocket = {
   isOpen: () => boolean;

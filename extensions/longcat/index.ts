@@ -1,7 +1,7 @@
-// LongCat plugin entrypoint registers its OpenClaw integration.
-import { defineSingleProviderPluginEntry } from "openclaw/plugin-sdk/provider-entry";
-import { buildProviderReplayFamilyHooks } from "openclaw/plugin-sdk/provider-model-shared";
-import { buildProviderToolCompatFamilyHooks } from "openclaw/plugin-sdk/provider-tools";
+// LongCat plugin entrypoint registers its GrokBot integration.
+import { defineSingleProviderPluginEntry } from "grokbot/plugin-sdk/provider-entry";
+import { buildProviderReplayFamilyHooks } from "grokbot/plugin-sdk/provider-model-shared";
+import { buildProviderToolCompatFamilyHooks } from "grokbot/plugin-sdk/provider-tools";
 import { LONGCAT_DEFAULT_MODEL_REF } from "./models.js";
 import { applyLongCatConfig } from "./onboard.js";
 import { buildLongCatProvider } from "./provider-catalog.js";

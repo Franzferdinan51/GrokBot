@@ -35,7 +35,7 @@ import { resolvePathEnvKey, resolveWindowsCmdExePath } from "./windows-cmd-helpe
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const CRABBOX_METADATA_PROBE_TIMEOUT_MS = 5_000;
 const MAX_TIMING_JSON_LINE_CHARS = 1024 * 1024;
-const REMOTE_CHANGED_GATE_BUNDLE_FILE = ".openclaw-crabbox-changed-gate.bundle";
+const REMOTE_CHANGED_GATE_BUNDLE_FILE = ".grokbot-crabbox-changed-gate.bundle";
 // A cold Crabbox (first call after an upgrade, or one on a loaded machine) can
 // exceed the snappy default probe timeout while it renders `run --help` or does
 // first-run init. Retry the metadata probes once with this generous timeout so a
@@ -730,8 +730,8 @@ function enforceBrokeredAws(commandArgs, providerName) {
   }
   console.error(
     [
-      "[crabbox] provider=aws requires a configured Crabbox broker for OpenClaw proof.",
-      "[crabbox] run `crabbox login --url https://crabbox.openclaw.ai --provider aws`, then retry.",
+      "[crabbox] provider=aws requires a configured Crabbox broker for GrokBot proof.",
+      "[crabbox] run `crabbox login --url https://crabbox.grokbot.ai --provider aws`, then retry.",
       "[crabbox] for intentional direct AWS provider debugging, set OPENCLAW_CRABBOX_ALLOW_DIRECT_AWS=1.",
     ].join("\n"),
   );
@@ -2181,21 +2181,21 @@ function remoteGitBootstrapForChangedGate(changedGateBase, changedGateAlias) {
   return [
     `openclaw_changed_gate_base=${quotedBase};`,
     `openclaw_changed_gate_alias=${quotedAlias};`,
-    'if ! command -v git >/dev/null 2>&1; then echo "git is required for OpenClaw remote changed-gate sync" >&2; exit 2; fi;',
+    'if ! command -v git >/dev/null 2>&1; then echo "git is required for GrokBot remote changed-gate sync" >&2; exit 2; fi;',
     `openclaw_changed_gate_bundle=${quotedBundleFile};`,
     'if [ ! -f "$openclaw_changed_gate_bundle" ]; then echo "missing changed-gate bundle: $openclaw_changed_gate_bundle" >&2; exit 2; fi;',
-    'openclaw_changed_gate_bundle_tmp="$(mktemp /tmp/openclaw-changed-gate.XXXXXX)" || exit 2;',
+    'openclaw_changed_gate_bundle_tmp="$(mktemp /tmp/grokbot-changed-gate.XXXXXX)" || exit 2;',
     "trap 'rm -f \"$openclaw_changed_gate_bundle_tmp\"' EXIT HUP INT TERM;",
     'cp "$openclaw_changed_gate_bundle" "$openclaw_changed_gate_bundle_tmp" || exit 2;',
     'rm -rf -- "$openclaw_changed_gate_bundle" || exit 2;',
     "rm -rf .git || exit 2;",
     "git init -q || exit 2;",
-    "git remote add origin https://github.com/openclaw/openclaw.git 2>/dev/null || git remote set-url origin https://github.com/openclaw/openclaw.git || exit 2;",
+    "git remote add origin https://github.com/grokbot/grokbot.git 2>/dev/null || git remote set-url origin https://github.com/grokbot/grokbot.git || exit 2;",
     'git fetch -q --depth=2 origin "$openclaw_changed_gate_base:refs/remotes/origin/main" || exit 2;',
     'if [ -n "$openclaw_changed_gate_alias" ]; then git update-ref "$openclaw_changed_gate_alias" refs/remotes/origin/main || exit 2; fi;',
     'if [ ! -f "$openclaw_changed_gate_bundle_tmp" ]; then echo "changed-gate bundle disappeared before import" >&2; exit 2; fi;',
     "openclaw_changed_gate_target=refs/remotes/origin/main;",
-    'if [ -s "$openclaw_changed_gate_bundle_tmp" ]; then git fetch -q "$openclaw_changed_gate_bundle_tmp" HEAD:refs/heads/openclaw-changed-gate-tree || exit 2; openclaw_changed_gate_tree="$(git rev-parse refs/heads/openclaw-changed-gate-tree^{tree})" || exit 2; openclaw_changed_gate_head="$(git -c user.name=OpenClaw -c user.email=ci@openclaw.local commit-tree "$openclaw_changed_gate_tree" -p refs/remotes/origin/main -m remote-changed-gate-tree)" || exit 2; git update-ref refs/heads/openclaw-changed-gate-head "$openclaw_changed_gate_head" || exit 2; openclaw_changed_gate_target=refs/heads/openclaw-changed-gate-head; fi;',
+    'if [ -s "$openclaw_changed_gate_bundle_tmp" ]; then git fetch -q "$openclaw_changed_gate_bundle_tmp" HEAD:refs/heads/grokbot-changed-gate-tree || exit 2; openclaw_changed_gate_tree="$(git rev-parse refs/heads/grokbot-changed-gate-tree^{tree})" || exit 2; openclaw_changed_gate_head="$(git -c user.name=GrokBot -c user.email=ci@grokbot.local commit-tree "$openclaw_changed_gate_tree" -p refs/remotes/origin/main -m remote-changed-gate-tree)" || exit 2; git update-ref refs/heads/grokbot-changed-gate-head "$openclaw_changed_gate_head" || exit 2; openclaw_changed_gate_target=refs/heads/grokbot-changed-gate-head; fi;',
     'rm -f "$openclaw_changed_gate_bundle_tmp" || exit 2;',
     "trap - EXIT HUP INT TERM;",
     'git reset --hard --quiet "$openclaw_changed_gate_target" || exit 2;',
@@ -2420,7 +2420,7 @@ function remoteAwsMacosJsBootstrap({ packageManager = false, bun = false } = {})
   const nodeVersion = process.env.OPENCLAW_CRABBOX_MACOS_NODE_VERSION?.trim() || "24.15.0";
   const bootstrap = [
     "openclaw_crabbox_bootstrap_macos_js() {",
-    'tool_root="${OPENCLAW_CRABBOX_MACOS_TOOLCHAIN_DIR:-$HOME/.openclaw-crabbox-toolchain}";',
+    'tool_root="${OPENCLAW_CRABBOX_MACOS_TOOLCHAIN_DIR:-$HOME/.grokbot-crabbox-toolchain}";',
     `node_version=${shellQuote(nodeVersion)};`,
     'arch="$(uname -m)";',
     'case "$arch" in arm64) node_arch=arm64 ;; x86_64) node_arch=x64 ;; *) echo "unsupported macOS arch: $arch" >&2; return 2 ;; esac;',
@@ -2432,7 +2432,7 @@ function remoteAwsMacosJsBootstrap({ packageManager = false, bun = false } = {})
     'if [ ! -d "$TMPDIR" ]; then mkdir -p "$TMPDIR" 2>/dev/null || export TMPDIR="/tmp"; fi;',
     'if [ ! -d "$TMPDIR" ]; then echo "usable TMPDIR not found: $TMPDIR" >&2; return 1; fi;',
     'node_dir="$tool_root/node-v${node_version}-darwin-${node_arch}";',
-    'ready_marker="$node_dir/.openclaw-crabbox-node-ready";',
+    'ready_marker="$node_dir/.grokbot-crabbox-node-ready";',
     'export PATH="$node_dir/bin:$PATH";',
     'if [ ! -x "$node_dir/bin/node" ] || [ ! -f "$ready_marker" ]; then',
     'mkdir -p "$tool_root" || { status=$?; return "$status"; };',
@@ -2484,7 +2484,7 @@ function remoteAwsMacosJsBootstrap({ packageManager = false, bun = false } = {})
     bootstrap.push(
       `bun_version=${shellQuote(awsMacosBunVersion)};`,
       'bun_root="$tool_root/bun-v${bun_version}";',
-      'bun_ready_marker="$bun_root/.openclaw-crabbox-bun-ready";',
+      'bun_ready_marker="$bun_root/.grokbot-crabbox-bun-ready";',
       'export PATH="$bun_root/bin:$PATH";',
       'if [ ! -x "$bun_root/bin/bun" ] || [ ! -f "$bun_ready_marker" ]; then',
       'mkdir -p "$tool_root" || { status=$?; return "$status"; };',
@@ -2524,7 +2524,7 @@ function remoteWsl2JsBootstrap({ packageManager = false } = {}) {
   const nodeVersion = process.env.OPENCLAW_CRABBOX_WSL2_NODE_VERSION?.trim() || "24.15.0";
   const bootstrap = [
     "openclaw_crabbox_bootstrap_wsl2_js() {",
-    'tool_root="${OPENCLAW_CRABBOX_WSL2_TOOLCHAIN_DIR:-$HOME/.openclaw-crabbox-toolchain}";',
+    'tool_root="${OPENCLAW_CRABBOX_WSL2_TOOLCHAIN_DIR:-$HOME/.grokbot-crabbox-toolchain}";',
     `node_version=${shellQuote(nodeVersion)};`,
     'arch="$(uname -m)";',
     'case "$arch" in arm64|aarch64) node_arch=arm64 ;; x86_64|amd64) node_arch=x64 ;; *) echo "unsupported WSL2 arch: $arch" >&2; return 2 ;; esac;',
@@ -2532,7 +2532,7 @@ function remoteWsl2JsBootstrap({ packageManager = false } = {}) {
     'if [ ! -d "$TMPDIR" ]; then mkdir -p "$TMPDIR" 2>/dev/null || export TMPDIR="/tmp"; fi;',
     'if [ ! -d "$TMPDIR" ]; then echo "usable TMPDIR not found: $TMPDIR" >&2; return 1; fi;',
     'node_dir="$tool_root/node-v${node_version}-linux-${node_arch}";',
-    'ready_marker="$node_dir/.openclaw-crabbox-node-ready";',
+    'ready_marker="$node_dir/.grokbot-crabbox-node-ready";',
     'export PATH="$node_dir/bin:$PATH";',
     'if [ ! -x "$node_dir/bin/node" ] || [ ! -f "$ready_marker" ]; then',
     'mkdir -p "$tool_root" || { status=$?; return "$status"; };',
@@ -2878,7 +2878,7 @@ function prepareRemoteWsl2JsBootstrapScript(commandArgs, providerName) {
     return { args: commandArgs, cleanup: () => {}, prepared: false };
   }
 
-  const scriptRoot = mkdtempSync(resolve(tmpdir(), "openclaw-crabbox-wsl2-script-"));
+  const scriptRoot = mkdtempSync(resolve(tmpdir(), "grokbot-crabbox-wsl2-script-"));
   const scriptPath = resolve(scriptRoot, "script.sh");
   const remoteCommand = commandArgs.slice(start);
   const originalShellCommand =
@@ -2968,17 +2968,17 @@ function remoteAwsMacosSwiftBootstrap() {
     'openclaw_swift_version="$(swift --version 2>&1)" || { status=$?; printf "%s\\n" "$openclaw_swift_version" >&2; return "$status"; };',
     'printf "%s\\n" "$openclaw_swift_version" >&2;',
     'openclaw_swift_major_minor="$(printf "%s\\n" "$openclaw_swift_version" | sed -nE "s/.*Apple Swift version ([0-9]+)\\.([0-9]+).*/\\1 \\2/p" | head -n 1)";',
-    'if [ -z "$openclaw_swift_major_minor" ]; then echo "[crabbox] OpenClaw macOS app proof requires Swift tools 6.2+; unable to parse swift --version." >&2; return 2; fi;',
+    'if [ -z "$openclaw_swift_major_minor" ]; then echo "[crabbox] GrokBot macOS app proof requires Swift tools 6.2+; unable to parse swift --version." >&2; return 2; fi;',
     "set -- $openclaw_swift_major_minor;",
     'if [ "$1" -lt 6 ] || { [ "$1" -eq 6 ] && [ "$2" -lt 2 ]; }; then',
-    'echo "[crabbox] OpenClaw macOS app proof requires Swift tools 6.2+ (Xcode 26.x)." >&2;',
+    'echo "[crabbox] GrokBot macOS app proof requires Swift tools 6.2+ (Xcode 26.x)." >&2;',
     'echo "[crabbox] current Swift is $1.$2; select/install Xcode 26.x or use a Blacksmith macOS runner with Xcode_26.1.app." >&2;',
     "return 2;",
     "fi;",
-    'openclaw_xcodebuild_version="$(xcodebuild -version 2>&1)" || { printf "%s\\n" "$openclaw_xcodebuild_version" >&2; echo "[crabbox] OpenClaw macOS app proof requires Xcode 26.x; active developer directory does not provide usable xcodebuild." >&2; return 2; };',
+    'openclaw_xcodebuild_version="$(xcodebuild -version 2>&1)" || { printf "%s\\n" "$openclaw_xcodebuild_version" >&2; echo "[crabbox] GrokBot macOS app proof requires Xcode 26.x; active developer directory does not provide usable xcodebuild." >&2; return 2; };',
     'printf "%s\\n" "$openclaw_xcodebuild_version" >&2;',
     'openclaw_xcode_major="$(printf "%s\\n" "$openclaw_xcodebuild_version" | sed -nE "s/^Xcode ([0-9]+)(\\..*)?$/\\1/p" | head -n 1)";',
-    'if [ "$openclaw_xcode_major" != "26" ]; then echo "[crabbox] OpenClaw macOS app proof requires Xcode 26.x; current xcodebuild is ${openclaw_xcode_major:-unknown}." >&2; return 2; fi;',
+    'if [ "$openclaw_xcode_major" != "26" ]; then echo "[crabbox] GrokBot macOS app proof requires Xcode 26.x; current xcodebuild is ${openclaw_xcode_major:-unknown}." >&2; return 2; fi;',
     "};",
     "openclaw_crabbox_require_macos_swift_62",
   ].join(" ");
@@ -3062,7 +3062,7 @@ function prepareAwsMacosScriptStdinBootstrap(commandArgs, providerName) {
     return { args: commandArgs, cleanup: () => {}, prepared: false };
   }
 
-  const scriptRoot = mkdtempSync(resolve(tmpdir(), "openclaw-crabbox-macos-script-"));
+  const scriptRoot = mkdtempSync(resolve(tmpdir(), "grokbot-crabbox-macos-script-"));
   const scriptPath = resolve(scriptRoot, "script.sh");
   const script = readFileSync(0, "utf8");
   writeFileSync(scriptPath, createAwsMacosScriptStdinWrapper(script), "utf8");
@@ -3082,7 +3082,7 @@ function createAwsMacosScriptStdinWrapper(script) {
   const delimiterValue = uniqueHereDocDelimiter(script);
   return [
     `${remoteAwsMacosScriptBootstrap(requirements)} || exit $?`,
-    'tmp_script="$(mktemp "${TMPDIR:-/tmp}/openclaw-crabbox-script.XXXXXX")" || exit $?',
+    'tmp_script="$(mktemp "${TMPDIR:-/tmp}/grokbot-crabbox-script.XXXXXX")" || exit $?',
     'cleanup_openclaw_crabbox_script() { rm -f "$tmp_script"; }',
     "trap cleanup_openclaw_crabbox_script EXIT",
     `cat >"$tmp_script" <<'${delimiterValue}'`,
@@ -3166,9 +3166,9 @@ function shouldUseFullCheckoutForCleanRemoteSync(commandArgs, _providerName) {
 function defaultFullCheckoutSyncRoot() {
   const home = homedir();
   if (home) {
-    return resolve(home, ".cache", "openclaw", "crabbox-sync");
+    return resolve(home, ".cache", "grokbot", "crabbox-sync");
   }
-  return resolve(tmpdir(), "openclaw-crabbox-sync");
+  return resolve(tmpdir(), "grokbot-crabbox-sync");
 }
 
 function fullCheckoutSyncRoot() {
@@ -3237,7 +3237,7 @@ function assertFullCheckoutSyncDisk(root) {
 function prepareFullCheckoutForSync(options = {}) {
   const syncRoot = fullCheckoutSyncRoot();
   assertFullCheckoutSyncDisk(syncRoot);
-  const dir = mkdtempSync(resolve(syncRoot, "openclaw-crabbox-sync-"));
+  const dir = mkdtempSync(resolve(syncRoot, "grokbot-crabbox-sync-"));
   let active = false;
   let resolvedChangedGateBase = options.changedGateBase ?? "";
 
@@ -3260,7 +3260,7 @@ function prepareFullCheckoutForSync(options = {}) {
       const bundlePath = resolve(dir, REMOTE_CHANGED_GATE_BUNDLE_FILE);
       let bundleTempDir;
       try {
-        bundleTempDir = mkdtempSync(resolve(syncRoot, "openclaw-crabbox-bundle-"));
+        bundleTempDir = mkdtempSync(resolve(syncRoot, "grokbot-crabbox-bundle-"));
         const bundleTempPath = resolve(bundleTempDir, "changed-gate.bundle");
         const head = gitOutput(["-C", dir, "rev-parse", "HEAD"]);
         const base = gitOutput(["-C", dir, "rev-parse", options.changedGateBase]);
@@ -3281,9 +3281,9 @@ function prepareFullCheckoutForSync(options = {}) {
             "-C",
             dir,
             "-c",
-            "user.name=OpenClaw",
+            "user.name=GrokBot",
             "-c",
-            "user.email=ci@openclaw.local",
+            "user.email=ci@grokbot.local",
             "commit-tree",
             headTree.stdout,
             "-m",
@@ -3529,7 +3529,7 @@ if (canonicalProvider === "blacksmith-testbox") {
       [
         `[crabbox] provider=blacksmith-testbox requires Crabbox >= ${formatVersionTuple(minimumBlacksmithCrabboxVersion)} for current Testbox sync, queue, and cleanup behavior.`,
         `[crabbox] selected binary reported version=${version.text || "unknown"}.`,
-        "[crabbox] if using ../crabbox, rebuild it: version=$(git -C ../crabbox describe --tags --always --dirty | sed 's/^v//') && go build -C ../crabbox -trimpath -ldflags \"-s -w -X github.com/openclaw/crabbox/internal/cli.version=${version}\" -o bin/crabbox ./cmd/crabbox",
+        "[crabbox] if using ../crabbox, rebuild it: version=$(git -C ../crabbox describe --tags --always --dirty | sed 's/^v//') && go build -C ../crabbox -trimpath -ldflags \"-s -w -X github.com/grokbot/crabbox/internal/cli.version=${version}\" -o bin/crabbox ./cmd/crabbox",
       ].join("\n"),
     );
     process.exit(2);
@@ -3643,7 +3643,7 @@ if (
       ? `pnpm crabbox:hydrate -- --id ${id}`
       : "pnpm crabbox:warmup, then pnpm crabbox:hydrate -- --id <id>";
     console.error(
-      `[crabbox] warning: provider=aws raw boxes may lack Node/Corepack/pnpm/Bun for ${runtimeEntrypoint}; hydrate first (${hydrate}) or pass --provider blacksmith-testbox for OpenClaw CI-like proof; not switching providers automatically`,
+      `[crabbox] warning: provider=aws raw boxes may lack Node/Corepack/pnpm/Bun for ${runtimeEntrypoint}; hydrate first (${hydrate}) or pass --provider blacksmith-testbox for GrokBot CI-like proof; not switching providers automatically`,
     );
   }
 }
@@ -3667,7 +3667,7 @@ if (
 ) {
   childEnv.CRABBOX_LOCAL_CONTAINER_DOCKER_SOCKET = "1";
   console.error(
-    "[crabbox] provider=docker enabling host Docker socket pass-through for OpenClaw Docker tests",
+    "[crabbox] provider=docker enabling host Docker socket pass-through for GrokBot Docker tests",
   );
 }
 if (
@@ -3676,9 +3676,9 @@ if (
   !childEnv.CRABBOX_LOCAL_CONTAINER_WORK_ROOT &&
   !hasOption(normalizedArgs, "--local-container-work-root")
 ) {
-  childEnv.CRABBOX_LOCAL_CONTAINER_WORK_ROOT = "/tmp/openclaw-crabbox-docker-work";
+  childEnv.CRABBOX_LOCAL_CONTAINER_WORK_ROOT = "/tmp/grokbot-crabbox-docker-work";
   console.error(
-    "[crabbox] provider=docker using short host-visible work root for OpenClaw Docker tests",
+    "[crabbox] provider=docker using short host-visible work root for GrokBot Docker tests",
   );
 }
 

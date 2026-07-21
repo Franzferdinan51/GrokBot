@@ -1,7 +1,7 @@
 import { constants as fsConstants } from "node:fs";
 import fs from "node:fs/promises";
 import path from "node:path";
-import type { LiveTransportQaCommandOptions } from "openclaw/plugin-sdk/qa-runtime";
+import type { LiveTransportQaCommandOptions } from "grokbot/plugin-sdk/qa-runtime";
 import type { QaGatewayChildCommand } from "../../gateway-child.js";
 import { runQaFlowSuiteFromRuntime } from "../../suite-launch.runtime.js";
 import type { QaSuiteRoundTripProbe } from "../../suite-round-trip.js";

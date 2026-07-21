@@ -5,11 +5,11 @@ import {
   OpenClawLightDomContentsElement,
   OpenClawLightDomElement,
   OpenClawLitElement,
-} from "./openclaw-element.ts";
+} from "./grokbot-element.ts";
 
-const LIGHT_ELEMENT_NAME = "test-openclaw-light-dom-element";
-const LIGHT_CONTENTS_ELEMENT_NAME = "test-openclaw-light-dom-contents-element";
-const SHADOW_ELEMENT_NAME = "test-openclaw-shadow-dom-element";
+const LIGHT_ELEMENT_NAME = "test-grokbot-light-dom-element";
+const LIGHT_CONTENTS_ELEMENT_NAME = "test-grokbot-light-dom-contents-element";
+const SHADOW_ELEMENT_NAME = "test-grokbot-shadow-dom-element";
 
 class TestLightDomElement extends OpenClawLightDomElement {
   renderCount = 0;
@@ -42,7 +42,7 @@ if (!customElements.get(LIGHT_CONTENTS_ELEMENT_NAME)) {
   customElements.define(LIGHT_CONTENTS_ELEMENT_NAME, TestLightDomContentsElement);
 }
 
-describe("OpenClaw Lit elements", () => {
+describe("GrokBot Lit elements", () => {
   beforeEach(async () => {
     await i18n.setLocale("en");
   });

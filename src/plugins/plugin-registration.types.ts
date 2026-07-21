@@ -1,7 +1,7 @@
 import type { IncomingMessage, ServerResponse } from "node:http";
 import type { Duplex } from "node:stream";
 import type { Command } from "commander";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import type {
   DiagnosticEventPrivateData,
   DiagnosticEventInput,
@@ -66,7 +66,7 @@ export type OpenClawPluginCliContext = {
   /**
    * Command object where this plugin should register its commands.
    *
-   * For root CLI registrations this is the root `openclaw` program. For nested
+   * For root CLI registrations this is the root `grokbot` program. For nested
    * registrations it is the resolved parent command from `parentPath`.
    */
   program: Command;
@@ -82,7 +82,7 @@ export type OpenClawPluginCliRegistrar = (ctx: OpenClawPluginCliContext) => void
  * Top-level CLI metadata for plugin-owned commands.
  *
  * Descriptors are the parse-time contract for lazy plugin CLI registration.
- * If you want OpenClaw to keep a plugin command lazy-loaded while still
+ * If you want GrokBot to keep a plugin command lazy-loaded while still
  * advertising it at the root CLI level, provide descriptors that cover every
  * top-level command root registered by that plugin CLI surface.
  */
@@ -93,13 +93,13 @@ export type OpenClawPluginCliCommandDescriptor = {
 };
 
 export type OpenClawPluginNodeCliFeatureOptions = {
-  /** Explicit node feature command names owned under `openclaw nodes`. */
+  /** Explicit node feature command names owned under `grokbot nodes`. */
   commands?: string[];
   /**
    * Parse-time command descriptors for lazy node feature CLI registration.
    *
-   * Descriptors are registered under `openclaw nodes`, so a descriptor named
-   * `"camera"` exposes `openclaw nodes camera`.
+   * Descriptors are registered under `grokbot nodes`, so a descriptor named
+   * `"camera"` exposes `grokbot nodes camera`.
    */
   descriptors?: OpenClawPluginCliCommandDescriptor[];
 };

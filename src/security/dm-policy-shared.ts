@@ -1,6 +1,6 @@
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 // Shares direct-message policy normalization for channel audits.
-import { normalizeStringEntries } from "@openclaw/normalization-core/string-normalization";
+import { normalizeStringEntries } from "@grokbot/normalization-core/string-normalization";
 import { resolveGroupAllowFromSources } from "../channels/allow-from.js";
 import { resolveControlCommandGate } from "../channels/command-gating.js";
 import { resolveChannelIngressEffectiveAllowFromLists } from "../channels/message-access/effective-allow-from.js";
@@ -37,7 +37,7 @@ export function resolvePinnedMainDmOwnerFromAllowlist(params: {
     : null;
 }
 
-/** @deprecated Use `resolveChannelMessageIngress` from `openclaw/plugin-sdk/channel-ingress-runtime`. */
+/** @deprecated Use `resolveChannelMessageIngress` from `grokbot/plugin-sdk/channel-ingress-runtime`. */
 export function resolveEffectiveAllowFromLists(params: {
   allowFrom?: Array<string | number> | null;
   groupAllowFrom?: Array<string | number> | null;
@@ -85,7 +85,7 @@ const dmGroupAccess = (
  * Resolve sender access for `dmPolicy=open`, where `*` means fully open and a configured
  * allowlist still restricts the accepted sender set.
  *
- * @deprecated Use `resolveChannelMessageIngress` from `openclaw/plugin-sdk/channel-ingress-runtime`.
+ * @deprecated Use `resolveChannelMessageIngress` from `grokbot/plugin-sdk/channel-ingress-runtime`.
  */
 export function resolveOpenDmAllowlistAccess(params: {
   effectiveAllowFrom: Array<string | number>;
@@ -144,7 +144,7 @@ const GROUP_ACCESS_RESULT: Record<
   ),
 };
 
-/** @deprecated Use `resolveChannelMessageIngress` or `readChannelIngressStoreAllowFromForDmPolicy` from `openclaw/plugin-sdk/channel-ingress-runtime`. */
+/** @deprecated Use `resolveChannelMessageIngress` or `readChannelIngressStoreAllowFromForDmPolicy` from `grokbot/plugin-sdk/channel-ingress-runtime`. */
 export async function readStoreAllowFromForDmPolicy(params: {
   provider: ChannelId;
   accountId: string;
@@ -230,7 +230,7 @@ function resolveLegacyDmGroupAccessDecision(params: {
 /**
  * Resolve legacy DM/group sender admission and return the effective allowlists used.
  *
- * @deprecated Use `resolveChannelMessageIngress` from `openclaw/plugin-sdk/channel-ingress-runtime`.
+ * @deprecated Use `resolveChannelMessageIngress` from `grokbot/plugin-sdk/channel-ingress-runtime`.
  */
 export function resolveDmGroupAccessWithLists(params: DmGroupAccessInputParams): {
   decision: DmGroupAccessDecision;
@@ -265,7 +265,7 @@ export function resolveDmGroupAccessWithLists(params: DmGroupAccessInputParams):
  * Resolve legacy sender admission plus control-command authorization.
  * Control commands use configured allowlists, not pairing-store state, for group safety.
  *
- * @deprecated Use `resolveChannelMessageIngress` from `openclaw/plugin-sdk/channel-ingress-runtime`.
+ * @deprecated Use `resolveChannelMessageIngress` from `grokbot/plugin-sdk/channel-ingress-runtime`.
  */
 export function resolveDmGroupAccessWithCommandGate(
   params: DmGroupAccessInputParams & {

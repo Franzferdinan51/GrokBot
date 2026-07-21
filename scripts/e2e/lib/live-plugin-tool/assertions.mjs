@@ -49,19 +49,19 @@ function requireEnv(name) {
 }
 
 function stateDir() {
-  return process.env.OPENCLAW_STATE_DIR || path.join(process.env.HOME, ".openclaw");
+  return process.env.OPENCLAW_STATE_DIR || path.join(process.env.HOME, ".grokbot");
 }
 
 function configPath() {
-  return process.env.OPENCLAW_CONFIG_PATH || path.join(stateDir(), "openclaw.json");
+  return process.env.OPENCLAW_CONFIG_PATH || path.join(stateDir(), "grokbot.json");
 }
 
 function agentOutputPath() {
-  return process.env.OPENCLAW_LIVE_PLUGIN_TOOL_AGENT_OUTPUT_PATH || "/tmp/openclaw-agent.json";
+  return process.env.OPENCLAW_LIVE_PLUGIN_TOOL_AGENT_OUTPUT_PATH || "/tmp/grokbot-agent.json";
 }
 
 function agentErrorPath() {
-  return process.env.OPENCLAW_LIVE_PLUGIN_TOOL_AGENT_ERROR_PATH || "/tmp/openclaw-agent.err";
+  return process.env.OPENCLAW_LIVE_PLUGIN_TOOL_AGENT_ERROR_PATH || "/tmp/grokbot-agent.err";
 }
 
 function isRecord(value) {
@@ -443,8 +443,8 @@ function installRecords() {
 
 function pluginInstallPath() {
   const pluginId = requireEnv("PLUGIN_ID");
-  const inspect = fs.existsSync("/tmp/openclaw-plugin-inspect.json")
-    ? readJson("/tmp/openclaw-plugin-inspect.json")
+  const inspect = fs.existsSync("/tmp/grokbot-plugin-inspect.json")
+    ? readJson("/tmp/grokbot-plugin-inspect.json")
     : {};
   const record = installRecords()[pluginId] || inspect.install;
   if (!record) {
@@ -470,9 +470,9 @@ function writeFixture() {
     name: pluginName,
     version,
     dependencies: { slugify: "^1.6.6" },
-    openclaw: { extensions: ["./index.js"] },
+    grokbot: { extensions: ["./index.js"] },
   });
-  writeJson(path.join(dir, "openclaw.plugin.json"), {
+  writeJson(path.join(dir, "grokbot.plugin.json"), {
     id: pluginId,
     name: "E2E Slug Tool",
     description: "Docker E2E plugin tool fixture",
@@ -537,7 +537,7 @@ function configure() {
         api: "openai-responses",
         baseUrl: (process.env.OPENAI_BASE_URL || "https://api.openai.com/v1").trim(),
         apiKey: { source: "env", provider: "default", id: "OPENAI_API_KEY" },
-        agentRuntime: { id: "openclaw" },
+        agentRuntime: { id: "grokbot" },
         timeoutSeconds: agentTurnTimeoutSeconds,
         models: [
           {
@@ -564,7 +564,7 @@ function configure() {
         ...cfg.agents?.defaults?.models,
         [modelRef]: {
           ...cfg.agents?.defaults?.models?.[modelRef],
-          agentRuntime: { id: "openclaw" },
+          agentRuntime: { id: "grokbot" },
           params: { transport: "sse", openaiWsWarmup: false },
         },
       },
@@ -611,12 +611,12 @@ function assertInstalled() {
   }
   assertPathInside(npmRoot, slugifyPackageJson, "slugify dependency");
 
-  const list = readJson("/tmp/openclaw-plugins-list.json");
+  const list = readJson("/tmp/grokbot-plugins-list.json");
   const plugin = (list.plugins || []).find((entry) => entry.id === pluginId);
   if (!plugin || plugin.enabled !== true || plugin.status !== "loaded") {
     throw new Error(`fixture plugin was not enabled+loaded: ${JSON.stringify(plugin)}`);
   }
-  const inspect = readJson("/tmp/openclaw-plugin-inspect.json");
+  const inspect = readJson("/tmp/grokbot-plugin-inspect.json");
   const toolNames = Array.isArray(inspect.tools)
     ? inspect.tools.flatMap((entry) => (Array.isArray(entry?.names) ? entry.names : []))
     : [];
@@ -649,7 +649,7 @@ function assertAgentTurn() {
   }
   const agentStateDir = path.join(stateDir(), "agents", "main");
   const sqliteScan = scanSqliteSessionTranscript(
-    path.join(agentStateDir, "agent", "openclaw-agent.sqlite"),
+    path.join(agentStateDir, "agent", "grokbot-agent.sqlite"),
     LIVE_PLUGIN_TOOL_SESSION_ID,
     toolName,
     expected,

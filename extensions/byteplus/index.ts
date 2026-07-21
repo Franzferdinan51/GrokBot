@@ -1,9 +1,9 @@
 /**
  * BytePlus provider plugin entrypoint for model and video generation providers.
  */
-import { definePluginEntry } from "openclaw/plugin-sdk/plugin-entry";
-import { createProviderApiKeyAuthMethod } from "openclaw/plugin-sdk/provider-auth-api-key";
-import { ensureModelAllowlistEntry } from "openclaw/plugin-sdk/provider-onboard";
+import { definePluginEntry } from "grokbot/plugin-sdk/plugin-entry";
+import { createProviderApiKeyAuthMethod } from "grokbot/plugin-sdk/provider-auth-api-key";
+import { ensureModelAllowlistEntry } from "grokbot/plugin-sdk/provider-onboard";
 import { BYTEPLUS_PROVIDER_CATALOG_ENTRIES } from "./provider-catalog.js";
 import { buildBytePlusVideoGenerationProvider } from "./video-generation-provider.js";
 

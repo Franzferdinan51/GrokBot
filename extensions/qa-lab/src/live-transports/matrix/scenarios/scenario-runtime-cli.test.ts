@@ -2,7 +2,7 @@
 import { mkdir, mkdtemp, readFile, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { setTimeout as sleep } from "node:timers/promises";
-import { resolvePreferredOpenClawTmpDir } from "openclaw/plugin-sdk/temp-path";
+import { resolvePreferredOpenClawTmpDir } from "grokbot/plugin-sdk/temp-path";
 import { describe, expect, it, vi } from "vitest";
 import {
   killMatrixQaCliChild,
@@ -63,13 +63,13 @@ describe("Matrix QA CLI runtime", () => {
         "--recovery-key",
         "abcdef1234567890ghij",
       ]),
-    ).toBe("openclaw matrix verify backup restore --recovery-key [REDACTED]");
+    ).toBe("grokbot matrix verify backup restore --recovery-key [REDACTED]");
     expect(formatMatrixQaCliCommand(["matrix", "account", "add", "--access-token=token-123"])).toBe(
-      "openclaw matrix account add --access-token=[REDACTED]",
+      "grokbot matrix account add --access-token=[REDACTED]",
     );
     expect(
       formatMatrixQaCliCommand(["matrix", "verify", "device", "abcdef1234567890ghij", "--json"]),
-    ).toBe("openclaw matrix verify device [REDACTED] --json");
+    ).toBe("grokbot matrix verify device [REDACTED] --json");
   });
 
   it("redacts Matrix token output before diagnostics and artifacts", () => {
@@ -125,7 +125,7 @@ describe("Matrix QA CLI runtime", () => {
     }
   });
 
-  it("prefers the ESM OpenClaw CLI entrypoint when present", async () => {
+  it("prefers the ESM GrokBot CLI entrypoint when present", async () => {
     const root = await mkdtemp(path.join(resolvePreferredOpenClawTmpDir(), "matrix-qa-cli-entry-"));
     try {
       await mkdir(path.join(root, "dist"));

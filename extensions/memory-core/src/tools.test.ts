@@ -1,9 +1,9 @@
-import type { MemorySearchRuntimeDebug } from "openclaw/plugin-sdk/memory-core-host-runtime-files";
+import type { MemorySearchRuntimeDebug } from "grokbot/plugin-sdk/memory-core-host-runtime-files";
 // Memory Core tests cover tools plugin behavior.
 import {
   clearMemoryPluginState,
   registerMemoryCorpusSupplement,
-} from "openclaw/plugin-sdk/memory-host-core";
+} from "grokbot/plugin-sdk/memory-host-core";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
   getMemoryCloseMockCalls,
@@ -95,9 +95,9 @@ function createTestSearchManager(params: {
   };
 }
 
-vi.mock("openclaw/plugin-sdk/session-transcript-hit", async (importOriginal) => {
+vi.mock("grokbot/plugin-sdk/session-transcript-hit", async (importOriginal) => {
   const actual =
-    await importOriginal<typeof import("openclaw/plugin-sdk/session-transcript-hit")>();
+    await importOriginal<typeof import("grokbot/plugin-sdk/session-transcript-hit")>();
   return {
     ...actual,
     loadCombinedSessionStoreForGateway: vi.fn(() => ({
@@ -309,9 +309,9 @@ describe("memory_search unavailable payloads", () => {
     expectUnavailableMemorySearchDetails(result.details, {
       error,
       warning:
-        "Memory search is unavailable because this OpenClaw Node runtime does not provide SQLite support.",
+        "Memory search is unavailable because this GrokBot Node runtime does not provide SQLite support.",
       action:
-        "Run OpenClaw with a Node runtime that includes node:sqlite, then retry memory_search.",
+        "Run GrokBot with a Node runtime that includes node:sqlite, then retry memory_search.",
     });
   });
 
@@ -1089,7 +1089,7 @@ describe("memory_search unavailable payloads", () => {
       warning:
         "Tell the user: memory search is paused because the memory index was built with a different embedding provider/model/settings.",
       action:
-        "Tell the user to run: openclaw memory status --index or openclaw memory index --force.",
+        "Tell the user to run: grokbot memory status --index or grokbot memory index --force.",
     });
     expect(searchCalls).toBe(1);
     expect(getMemorySyncMockCalls()).toBe(0);

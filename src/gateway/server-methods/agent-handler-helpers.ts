@@ -11,7 +11,7 @@ import {
   type SessionEntry,
 } from "../../config/sessions.js";
 import { formatSqliteSessionFileMarker } from "../../config/sessions/sqlite-marker.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import type { PluginHookSessionEndReason } from "../../plugins/hook-types.js";
 import {
   AGENT_HARNESS_MODEL_RUN_FORBIDDEN_MESSAGE,

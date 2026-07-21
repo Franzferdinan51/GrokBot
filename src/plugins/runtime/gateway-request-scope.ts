@@ -26,7 +26,7 @@ type PluginRuntimePluginScope = {
 };
 
 const PLUGIN_RUNTIME_GATEWAY_REQUEST_SCOPE_KEY: unique symbol = Symbol.for(
-  "openclaw.pluginRuntimeGatewayRequestScope",
+  "grokbot.pluginRuntimeGatewayRequestScope",
 );
 
 const pluginRuntimeGatewayRequestScope = resolveGlobalSingleton<

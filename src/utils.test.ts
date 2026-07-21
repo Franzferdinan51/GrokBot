@@ -20,7 +20,7 @@ import {
 
 describe("ensureDir", () => {
   it("creates nested directory", async () => {
-    await withTempDir({ prefix: "openclaw-test-" }, async (tmp) => {
+    await withTempDir({ prefix: "grokbot-test-" }, async (tmp) => {
       const target = path.join(tmp, "nested", "dir");
       await ensureDir(target);
       expect(fs.existsSync(target)).toBe(true);
@@ -71,9 +71,9 @@ describe("normalizeE164", () => {
 });
 
 describe("resolveConfigDir", () => {
-  it("prefers ~/.openclaw when legacy dir is missing", async () => {
-    await withTempDir({ prefix: "openclaw-config-dir-" }, async (root) => {
-      const newDir = path.join(root, ".openclaw");
+  it("prefers ~/.grokbot when legacy dir is missing", async () => {
+    await withTempDir({ prefix: "grokbot-config-dir-" }, async (root) => {
+      const newDir = path.join(root, ".grokbot");
       await fs.promises.mkdir(newDir, { recursive: true });
       const resolved = resolveConfigDir({} as NodeJS.ProcessEnv, () => root);
       expect(resolved).toBe(newDir);
@@ -82,25 +82,25 @@ describe("resolveConfigDir", () => {
 
   it("expands OPENCLAW_STATE_DIR using the provided env", () => {
     const env = {
-      HOME: "/tmp/openclaw-home",
+      HOME: "/tmp/grokbot-home",
       OPENCLAW_STATE_DIR: "~/state",
     } as NodeJS.ProcessEnv;
 
-    expect(resolveConfigDir(env)).toBe(path.resolve("/tmp/openclaw-home", "state"));
+    expect(resolveConfigDir(env)).toBe(path.resolve("/tmp/grokbot-home", "state"));
   });
 
   it("falls back to the config file directory when only OPENCLAW_CONFIG_PATH is set", () => {
     const env = {
-      HOME: "/tmp/openclaw-home",
-      OPENCLAW_CONFIG_PATH: "~/profiles/dev/openclaw.json",
+      HOME: "/tmp/grokbot-home",
+      OPENCLAW_CONFIG_PATH: "~/profiles/dev/grokbot.json",
     } as NodeJS.ProcessEnv;
 
-    expect(resolveConfigDir(env)).toBe(path.resolve("/tmp/openclaw-home", "profiles", "dev"));
+    expect(resolveConfigDir(env)).toBe(path.resolve("/tmp/grokbot-home", "profiles", "dev"));
   });
 
   it("re-pins the exported configuration root after startup environment selection", () => {
     const originalConfigDir = CONFIG_DIR;
-    const selectedConfigDir = path.resolve("/tmp/openclaw-selected-config-root");
+    const selectedConfigDir = path.resolve("/tmp/grokbot-selected-config-root");
     try {
       expect(
         pinConfigDir({
@@ -120,17 +120,17 @@ describe("resolveConfigDir", () => {
 
 describe("resolveHomeDir", () => {
   it("prefers OPENCLAW_HOME over HOME", () => {
-    withEnv({ OPENCLAW_HOME: "/srv/openclaw-home", HOME: "/home/other" }, () => {
-      expect(resolveHomeDir()).toBe(path.resolve("/srv/openclaw-home"));
+    withEnv({ OPENCLAW_HOME: "/srv/grokbot-home", HOME: "/home/other" }, () => {
+      expect(resolveHomeDir()).toBe(path.resolve("/srv/grokbot-home"));
     });
   });
 });
 
 describe("shortenHomePath", () => {
   it("uses $OPENCLAW_HOME prefix when OPENCLAW_HOME is set", () => {
-    withEnv({ OPENCLAW_HOME: "/srv/openclaw-home", HOME: "/home/other" }, () => {
-      expect(shortenHomePath(`${path.resolve("/srv/openclaw-home")}/.openclaw/openclaw.json`)).toBe(
-        "$OPENCLAW_HOME/.openclaw/openclaw.json",
+    withEnv({ OPENCLAW_HOME: "/srv/grokbot-home", HOME: "/home/other" }, () => {
+      expect(shortenHomePath(`${path.resolve("/srv/grokbot-home")}/.grokbot/grokbot.json`)).toBe(
+        "$OPENCLAW_HOME/.grokbot/grokbot.json",
       );
     });
   });
@@ -138,12 +138,12 @@ describe("shortenHomePath", () => {
 
 describe("shortenHomeInString", () => {
   it("uses $OPENCLAW_HOME replacement when OPENCLAW_HOME is set", () => {
-    withEnv({ OPENCLAW_HOME: "/srv/openclaw-home", HOME: "/home/other" }, () => {
+    withEnv({ OPENCLAW_HOME: "/srv/grokbot-home", HOME: "/home/other" }, () => {
       expect(
         shortenHomeInString(
-          `config: ${path.resolve("/srv/openclaw-home")}/.openclaw/openclaw.json`,
+          `config: ${path.resolve("/srv/grokbot-home")}/.grokbot/grokbot.json`,
         ),
-      ).toBe("config: $OPENCLAW_HOME/.openclaw/openclaw.json");
+      ).toBe("config: $OPENCLAW_HOME/.grokbot/grokbot.json");
     });
   });
 });
@@ -154,8 +154,8 @@ describe("resolveUserPath", () => {
   });
 
   it("expands ~/ to home dir", () => {
-    expect(resolveUserPath("~/openclaw", {}, () => "/Users/thoffman")).toBe(
-      path.resolve("/Users/thoffman", "openclaw"),
+    expect(resolveUserPath("~/grokbot", {}, () => "/Users/thoffman")).toBe(
+      path.resolve("/Users/thoffman", "grokbot"),
     );
   });
 
@@ -164,18 +164,18 @@ describe("resolveUserPath", () => {
   });
 
   it("prefers OPENCLAW_HOME for tilde expansion", () => {
-    withEnv({ OPENCLAW_HOME: "/srv/openclaw-home", HOME: "/home/other" }, () => {
-      expect(resolveUserPath("~/openclaw")).toBe(path.resolve("/srv/openclaw-home", "openclaw"));
+    withEnv({ OPENCLAW_HOME: "/srv/grokbot-home", HOME: "/home/other" }, () => {
+      expect(resolveUserPath("~/grokbot")).toBe(path.resolve("/srv/grokbot-home", "grokbot"));
     });
   });
 
   it("uses the provided env for tilde expansion", () => {
     const env = {
-      HOME: "/tmp/openclaw-home",
-      OPENCLAW_HOME: "/srv/openclaw-home",
+      HOME: "/tmp/grokbot-home",
+      OPENCLAW_HOME: "/srv/grokbot-home",
     } as NodeJS.ProcessEnv;
 
-    expect(resolveUserPath("~/openclaw", env)).toBe(path.resolve("/srv/openclaw-home", "openclaw"));
+    expect(resolveUserPath("~/grokbot", env)).toBe(path.resolve("/srv/grokbot-home", "grokbot"));
   });
 
   it("keeps blank paths blank", () => {

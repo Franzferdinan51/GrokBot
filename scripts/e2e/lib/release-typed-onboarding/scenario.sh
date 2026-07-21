@@ -4,7 +4,7 @@ trap "" PIPE
 export TERM=xterm-256color
 export NO_COLOR=1
 
-source scripts/lib/openclaw-e2e-instance.sh
+source scripts/lib/grokbot-e2e-instance.sh
 
 openclaw_e2e_eval_test_state_from_b64 "${OPENCLAW_TEST_STATE_SCRIPT_B64:?missing OPENCLAW_TEST_STATE_SCRIPT_B64}"
 openclaw_e2e_install_trash_shim
@@ -14,12 +14,12 @@ export PATH="$NPM_CONFIG_PREFIX/bin:$PATH"
 export npm_config_loglevel=error
 export npm_config_fund=false
 export npm_config_audit=false
-export OPENAI_API_KEY="sk-openclaw-release-typed-onboarding"
+export OPENAI_API_KEY="sk-grokbot-release-typed-onboarding"
 
 PORT="18789"
 MOCK_PORT="44190"
 SUCCESS_MARKER="OPENCLAW_E2E_OK_TYPED_ONBOARDING"
-scenario_tmp="$(mktemp -d "${TMPDIR:-/tmp}/openclaw-release-typed-onboarding.XXXXXX")"
+scenario_tmp="$(mktemp -d "${TMPDIR:-/tmp}/grokbot-release-typed-onboarding.XXXXXX")"
 LOG_DIR="$scenario_tmp/logs"
 mkdir -p "$LOG_DIR"
 INSTALL_LOG="$LOG_DIR/install.log"
@@ -53,7 +53,7 @@ dump_debug_logs() {
     "$MOCK_REQUEST_LOG" \
     "$AGENT_LOG" \
     "$OPENCLAW_CONFIG_PATH" \
-    "$HOME/.openclaw/agents/main/agent/auth-profiles.json"
+    "$HOME/.grokbot/agents/main/agent/auth-profiles.json"
 }
 trap 'status=$?; dump_debug_logs "$status"; exit "$status"' ERR
 
@@ -88,7 +88,7 @@ wait_for_log() {
 }
 
 openclaw_e2e_install_package "$INSTALL_LOG"
-command -v openclaw >/dev/null
+command -v grokbot >/dev/null
 package_root="$(openclaw_e2e_package_root)"
 entry="$(openclaw_e2e_package_entrypoint "$package_root")"
 openclaw_e2e_enable_openclaw_cli_timeout
@@ -116,7 +116,7 @@ input_fifo_dir=""
 
 node scripts/e2e/lib/release-scenarios/assertions.mjs assert-session-memory-hook-enabled
 
-openclaw onboard \
+grokbot onboard \
   --non-interactive \
   --accept-risk \
   --flow quickstart \
@@ -134,7 +134,7 @@ openclaw onboard \
 node scripts/e2e/lib/release-scenarios/assertions.mjs assert-openai-env-ref "$OPENAI_API_KEY"
 node scripts/e2e/lib/release-scenarios/assertions.mjs configure-mock-openai "$MOCK_PORT"
 
-openclaw agent --local \
+grokbot agent --local \
   --agent main \
   --session-id release-typed-onboarding-agent \
   --message "Return marker $SUCCESS_MARKER" \

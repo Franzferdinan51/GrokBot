@@ -2,15 +2,15 @@
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { closeOpenClawStateDatabaseForTest } from "openclaw/plugin-sdk/plugin-state-test-runtime";
+import { closeOpenClawStateDatabaseForTest } from "grokbot/plugin-sdk/plugin-state-test-runtime";
 import {
   createTestRegistry,
   setActivePluginRegistry,
-} from "openclaw/plugin-sdk/plugin-test-runtime";
+} from "grokbot/plugin-sdk/plugin-test-runtime";
 import {
   getSessionBindingService,
   testing as sessionBindingTesting,
-} from "openclaw/plugin-sdk/session-binding-runtime";
+} from "grokbot/plugin-sdk/session-binding-runtime";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { slackPlugin } from "./channel.js";
 import type { OpenClawConfig } from "./runtime-api.js";
@@ -29,7 +29,7 @@ describe("Slack Enterprise Grid runtime conversation bindings", () => {
 
   beforeEach(async () => {
     previousStateDir = process.env.OPENCLAW_STATE_DIR;
-    testStateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-slack-bindings-"));
+    testStateDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-slack-bindings-"));
     process.env.OPENCLAW_STATE_DIR = testStateDir;
     cfg = { channels: { slack: {} } };
     setSlackRuntime({ config: { current: () => cfg } } as never);

@@ -2,9 +2,9 @@
 import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalString,
-} from "@openclaw/normalization-core/string-coerce";
-import { normalizeStringEntries } from "@openclaw/normalization-core/string-normalization";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+} from "@grokbot/normalization-core/string-coerce";
+import { normalizeStringEntries } from "@grokbot/normalization-core/string-normalization";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import { hasConfiguredSecretInput } from "../../config/types.secrets.js";
 import type { SkillConfig } from "../../config/types.skills.js";
 import {
@@ -100,7 +100,7 @@ function normalizeAllowlist(input: unknown): ReadonlySet<string> | undefined {
   return normalized.length > 0 ? new Set(normalized) : undefined;
 }
 
-const BUNDLED_SOURCES = new Set(["openclaw-bundled"]);
+const BUNDLED_SOURCES = new Set(["grokbot-bundled"]);
 
 function isBundledSkill(entry: SkillEntry): boolean {
   return BUNDLED_SOURCES.has(resolveSkillSource(entry.skill));

@@ -25,18 +25,18 @@ const mockState = vi.hoisted(() => ({
 }));
 
 // `loadOutboundMediaFromUrl` is re-exported from msteams's runtime-api which
-// pulls from `openclaw/plugin-sdk/outbound-media` (post-migration). Mock the
+// pulls from `grokbot/plugin-sdk/outbound-media` (post-migration). Mock the
 // canonical source so the re-export carries our stub through.
-vi.mock("openclaw/plugin-sdk/outbound-media", () => ({
+vi.mock("grokbot/plugin-sdk/outbound-media", () => ({
   loadOutboundMediaFromUrl: mockState.loadOutboundMediaFromUrl,
 }));
 
-vi.mock("openclaw/plugin-sdk/markdown-table-runtime", () => ({
+vi.mock("grokbot/plugin-sdk/markdown-table-runtime", () => ({
   resolveMarkdownTableMode: mockState.resolveMarkdownTableMode,
 }));
 
-vi.mock("openclaw/plugin-sdk/text-chunking", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("openclaw/plugin-sdk/text-chunking")>();
+vi.mock("grokbot/plugin-sdk/text-chunking", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("grokbot/plugin-sdk/text-chunking")>();
   return {
     ...actual,
     convertMarkdownTables: mockState.convertMarkdownTables,

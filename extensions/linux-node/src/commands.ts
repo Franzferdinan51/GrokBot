@@ -3,9 +3,9 @@ import path from "node:path";
 import type {
   OpenClawPluginNodeHostCommand,
   OpenClawPluginNodeHostCommandAvailabilityContext,
-} from "openclaw/plugin-sdk/plugin-entry";
-import { runCommandWithTimeout } from "openclaw/plugin-sdk/process-runtime";
-import { resolvePreferredOpenClawTmpDir, withTempWorkspace } from "openclaw/plugin-sdk/temp-path";
+} from "grokbot/plugin-sdk/plugin-entry";
+import { runCommandWithTimeout } from "grokbot/plugin-sdk/process-runtime";
+import { resolvePreferredOpenClawTmpDir, withTempWorkspace } from "grokbot/plugin-sdk/temp-path";
 import {
   assertToolResult,
   clamp,
@@ -139,7 +139,7 @@ async function defaultWithTempFile<T>(
   run: (filePath: string) => Promise<T>,
 ): Promise<T> {
   return await withTempWorkspace(
-    { rootDir: resolvePreferredOpenClawTmpDir(), prefix: "openclaw-linux-node-" },
+    { rootDir: resolvePreferredOpenClawTmpDir(), prefix: "grokbot-linux-node-" },
     async ({ dir }) => await run(path.join(dir, `capture${suffix}`)),
   );
 }

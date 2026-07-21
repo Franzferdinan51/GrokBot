@@ -634,7 +634,7 @@ describe("sendPolicy deny — suppress delivery, not processing (#53328)", () =>
     hookMocks.runner.hasHooks.mockImplementation(
       ((hookName?: string) => hookName === "inbound_claim") as () => boolean,
     );
-    hookMocks.registry.plugins = [{ id: "openclaw-codex-app-server", status: "loaded" }];
+    hookMocks.registry.plugins = [{ id: "grokbot-codex-app-server", status: "loaded" }];
     hookMocks.runner.runInboundClaimForPluginOutcome.mockResolvedValue({
       status: "handled",
       result: { handled: true, reply: { text: "must not send" } },
@@ -652,7 +652,7 @@ describe("sendPolicy deny — suppress delivery, not processing (#53328)", () =>
       boundAt: 1710000000000,
       metadata: {
         pluginBindingOwner: "plugin",
-        pluginId: "openclaw-codex-app-server",
+        pluginId: "grokbot-codex-app-server",
         pluginRoot: "/tmp/plugin",
       },
     } satisfies SessionBindingRecord);
@@ -691,7 +691,7 @@ describe("sendPolicy deny — suppress delivery, not processing (#53328)", () =>
       ((hookName?: string) =>
         hookName === "inbound_claim" || hookName === "message_received") as () => boolean,
     );
-    hookMocks.registry.plugins = [{ id: "openclaw-codex-app-server", status: "loaded" }];
+    hookMocks.registry.plugins = [{ id: "grokbot-codex-app-server", status: "loaded" }];
     hookMocks.runner.runInboundClaimForPluginOutcome.mockResolvedValue({
       status: "handled",
       result: { handled: true },
@@ -709,7 +709,7 @@ describe("sendPolicy deny — suppress delivery, not processing (#53328)", () =>
       boundAt: 1710000000000,
       metadata: {
         pluginBindingOwner: "plugin",
-        pluginId: "openclaw-codex-app-server",
+        pluginId: "grokbot-codex-app-server",
         pluginRoot: "/tmp/plugin",
       },
     } satisfies SessionBindingRecord);
@@ -843,7 +843,7 @@ describe("sendPolicy deny — suppress delivery, not processing (#53328)", () =>
         ((hookName?: string) =>
           hookName === "inbound_claim" || hookName === "message_received") as () => boolean,
       );
-      hookMocks.registry.plugins = [{ id: "openclaw-codex-app-server", status: "loaded" }];
+      hookMocks.registry.plugins = [{ id: "grokbot-codex-app-server", status: "loaded" }];
       hookMocks.runner.runInboundClaimForPluginOutcome.mockResolvedValue({
         status: "handled",
         result: params.pluginReply
@@ -859,7 +859,7 @@ describe("sendPolicy deny — suppress delivery, not processing (#53328)", () =>
         boundAt: 1710000000000,
         metadata: {
           pluginBindingOwner: "plugin",
-          pluginId: "openclaw-codex-app-server",
+          pluginId: "grokbot-codex-app-server",
           pluginRoot: "/tmp/plugin",
         },
       } satisfies SessionBindingRecord);
@@ -886,7 +886,7 @@ describe("sendPolicy deny — suppress delivery, not processing (#53328)", () =>
       });
       expect(sessionBindingMocks.touch).toHaveBeenCalledWith(params.bindingId);
       expect(hookMocks.runner.runInboundClaimForPluginOutcome).toHaveBeenCalledWith(
-        "openclaw-codex-app-server",
+        "grokbot-codex-app-server",
         expect.objectContaining({
           content: "observed message",
           ...params.expectedClaim,
@@ -910,7 +910,7 @@ describe("sendPolicy deny — suppress delivery, not processing (#53328)", () =>
       ((hookName?: string) =>
         hookName === "inbound_claim" || hookName === "message_received") as () => boolean,
     );
-    hookMocks.registry.plugins = [{ id: "openclaw-codex-app-server", status: "loaded" }];
+    hookMocks.registry.plugins = [{ id: "grokbot-codex-app-server", status: "loaded" }];
     hookMocks.runner.runInboundClaimForPluginOutcome.mockResolvedValue({
       status: "no_handler",
     });
@@ -929,7 +929,7 @@ describe("sendPolicy deny — suppress delivery, not processing (#53328)", () =>
       boundAt: 1710000000000,
       metadata: {
         pluginBindingOwner: "plugin",
-        pluginId: "openclaw-codex-app-server",
+        pluginId: "grokbot-codex-app-server",
         pluginRoot: "/tmp/plugin",
       },
     } satisfies SessionBindingRecord);
@@ -973,7 +973,7 @@ describe("sendPolicy deny — suppress delivery, not processing (#53328)", () =>
       hookMocks.runner.runInboundClaimForPluginOutcome,
       "plugin inbound claim",
     );
-    expect(claimCall[0]).toBe("openclaw-codex-app-server");
+    expect(claimCall[0]).toBe("grokbot-codex-app-server");
     expect(claimCall[1]).toMatchObject({
       channel: "telegram",
       content: "observed message",
@@ -1005,7 +1005,7 @@ describe("sendPolicy deny — suppress delivery, not processing (#53328)", () =>
       ((hookName?: string) =>
         hookName === "inbound_claim" || hookName === "message_received") as () => boolean,
     );
-    hookMocks.registry.plugins = [{ id: "openclaw-codex-app-server", status: "loaded" }];
+    hookMocks.registry.plugins = [{ id: "grokbot-codex-app-server", status: "loaded" }];
     hookMocks.runner.runInboundClaimForPluginOutcome.mockResolvedValue({
       status: "no_handler",
     });
@@ -1024,7 +1024,7 @@ describe("sendPolicy deny — suppress delivery, not processing (#53328)", () =>
       boundAt: 1710000000000,
       metadata: {
         pluginBindingOwner: "plugin",
-        pluginId: "openclaw-codex-app-server",
+        pluginId: "grokbot-codex-app-server",
         pluginRoot: "/tmp/plugin",
       },
     } satisfies SessionBindingRecord);
@@ -1065,7 +1065,7 @@ describe("sendPolicy deny — suppress delivery, not processing (#53328)", () =>
       hookMocks.runner.runInboundClaimForPluginOutcome,
       "plugin inbound claim",
     );
-    expect(claimCall[0]).toBe("openclaw-codex-app-server");
+    expect(claimCall[0]).toBe("grokbot-codex-app-server");
     expect(claimCall[1]).toMatchObject({
       channel: "imessage",
       content: "observed message",
@@ -1088,7 +1088,7 @@ describe("sendPolicy deny — suppress delivery, not processing (#53328)", () =>
       ((hookName?: string) =>
         hookName === "inbound_claim" || hookName === "message_received") as () => boolean,
     );
-    hookMocks.registry.plugins = [{ id: "openclaw-codex-app-server", status: "loaded" }];
+    hookMocks.registry.plugins = [{ id: "grokbot-codex-app-server", status: "loaded" }];
     hookMocks.runner.runInboundClaimForPluginOutcome.mockResolvedValue({
       status: "no_handler",
     });
@@ -1107,7 +1107,7 @@ describe("sendPolicy deny — suppress delivery, not processing (#53328)", () =>
       boundAt: 1710000000000,
       metadata: {
         pluginBindingOwner: "plugin",
-        pluginId: "openclaw-codex-app-server",
+        pluginId: "grokbot-codex-app-server",
         pluginRoot: "/tmp/plugin",
       },
     } satisfies SessionBindingRecord);
@@ -1129,10 +1129,10 @@ describe("sendPolicy deny — suppress delivery, not processing (#53328)", () =>
       MessageThreadId: 11,
       ChatType: "group",
       GroupSubject: "Dev",
-      Body: "/reset@openclaw",
-      RawBody: "/reset@openclaw",
-      CommandBody: "/reset@openclaw",
-      BotUsername: "openclaw",
+      Body: "/reset@grokbot",
+      RawBody: "/reset@grokbot",
+      CommandBody: "/reset@grokbot",
+      BotUsername: "grokbot",
       CommandSource: undefined,
       CommandAuthorized: true,
       WasMentioned: false,
@@ -1156,7 +1156,7 @@ describe("sendPolicy deny — suppress delivery, not processing (#53328)", () =>
       ((hookName?: string) =>
         hookName === "inbound_claim" || hookName === "message_received") as () => boolean,
     );
-    hookMocks.registry.plugins = [{ id: "openclaw-codex-app-server", status: "loaded" }];
+    hookMocks.registry.plugins = [{ id: "grokbot-codex-app-server", status: "loaded" }];
     hookMocks.runner.runInboundClaimForPluginOutcome.mockResolvedValue({
       status: "handled",
       result: { handled: true },
@@ -1176,7 +1176,7 @@ describe("sendPolicy deny — suppress delivery, not processing (#53328)", () =>
       boundAt: 1710000000000,
       metadata: {
         pluginBindingOwner: "plugin",
-        pluginId: "openclaw-codex-app-server",
+        pluginId: "grokbot-codex-app-server",
         pluginRoot: "/tmp/plugin",
       },
     } satisfies SessionBindingRecord);
@@ -1216,7 +1216,7 @@ describe("sendPolicy deny — suppress delivery, not processing (#53328)", () =>
       hookMocks.runner.runInboundClaimForPluginOutcome,
       "plugin inbound claim",
     );
-    expect(claimCall[0]).toBe("openclaw-codex-app-server");
+    expect(claimCall[0]).toBe("grokbot-codex-app-server");
     expect(claimCall[1]).toMatchObject({
       channel: "telegram",
       content: "/status",
@@ -1232,7 +1232,7 @@ describe("sendPolicy deny — suppress delivery, not processing (#53328)", () =>
       ((hookName?: string) =>
         hookName === "inbound_claim" || hookName === "message_received") as () => boolean,
     );
-    hookMocks.registry.plugins = [{ id: "openclaw-codex-app-server", status: "loaded" }];
+    hookMocks.registry.plugins = [{ id: "grokbot-codex-app-server", status: "loaded" }];
     hookMocks.runner.runInboundClaimForPluginOutcome.mockResolvedValue({
       status: "handled",
       result: { handled: true },
@@ -1252,7 +1252,7 @@ describe("sendPolicy deny — suppress delivery, not processing (#53328)", () =>
       boundAt: 1710000000000,
       metadata: {
         pluginBindingOwner: "plugin",
-        pluginId: "openclaw-codex-app-server",
+        pluginId: "grokbot-codex-app-server",
         pluginRoot: "/tmp/plugin",
       },
     } satisfies SessionBindingRecord);
@@ -1297,7 +1297,7 @@ describe("sendPolicy deny — suppress delivery, not processing (#53328)", () =>
       hookMocks.runner.runInboundClaimForPluginOutcome,
       "plugin inbound claim",
     );
-    expect(claimCall[0]).toBe("openclaw-codex-app-server");
+    expect(claimCall[0]).toBe("grokbot-codex-app-server");
     expect(claimCall[1]).toMatchObject({
       channel: "telegram",
       content: "/think high through this",

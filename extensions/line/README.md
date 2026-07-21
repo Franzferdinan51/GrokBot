@@ -1,11 +1,11 @@
-# OpenClaw LINE
+# GrokBot LINE
 
-Official OpenClaw channel plugin for LINE Bot API chats.
+Official GrokBot channel plugin for LINE Bot API chats.
 
-Install from OpenClaw:
+Install from GrokBot:
 
 ```bash
-openclaw plugin add @openclaw/line
+grokbot plugin add @grokbot/line
 ```
 
-Configure LINE channel credentials in OpenClaw, then connect the bot to the chats where agents should receive and send messages.
+Configure LINE channel credentials in GrokBot, then connect the bot to the chats where agents should receive and send messages.

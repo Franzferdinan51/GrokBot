@@ -9,7 +9,7 @@ const tempDirs = useAutoCleanupTempDirTracker(afterEach);
 const scriptPath = "scripts/package-mac-app.sh";
 
 function makePlist(): string {
-  const dir = tempDirs.make("openclaw-plistbuddy-");
+  const dir = tempDirs.make("grokbot-plistbuddy-");
   const plist = path.join(dir, "Info.plist");
   writeFileSync(
     plist,
@@ -103,11 +103,11 @@ function getSwiftCompatibilityBlock(): string {
 }
 
 function runStopPackagedAppHarness(killZeroStatus: 0 | 1) {
-  const root = tempDirs.make("openclaw-package-stop-root-");
-  const toolsDir = tempDirs.make("openclaw-package-stop-tools-");
+  const root = tempDirs.make("grokbot-package-stop-root-");
+  const toolsDir = tempDirs.make("grokbot-package-stop-tools-");
 
-  const appRoot = path.join(root, "dist", "OpenClaw.app");
-  const appBinary = path.join(appRoot, "Contents", "MacOS", "OpenClaw");
+  const appRoot = path.join(root, "dist", "GrokBot.app");
+  const appBinary = path.join(appRoot, "Contents", "MacOS", "GrokBot");
   const lsofPath = path.join(toolsDir, "lsof");
   const pgrepPath = path.join(toolsDir, "pgrep");
   const sleepPath = path.join(toolsDir, "sleep");
@@ -126,7 +126,7 @@ function runStopPackagedAppHarness(killZeroStatus: 0 | 1) {
   return runHelper(`
     set -euo pipefail
     APP_ROOT=${JSON.stringify(appRoot)}
-    PRODUCT=OpenClaw
+    PRODUCT=GrokBot
     PATH=${JSON.stringify(`${toolsDir}:/usr/bin:/bin`)}
     kill() {
       if [[ "\${1:-}" == "-0" ]]; then
@@ -140,10 +140,10 @@ function runStopPackagedAppHarness(killZeroStatus: 0 | 1) {
 }
 
 function runSwiftCompatibilityHarness(buildConfig: "debug" | "release") {
-  const root = tempDirs.make("openclaw-package-swift-root-");
-  const toolsDir = tempDirs.make("openclaw-package-swift-tools-");
+  const root = tempDirs.make("grokbot-package-swift-root-");
+  const toolsDir = tempDirs.make("grokbot-package-swift-tools-");
   const developerDir = path.join(root, "Xcode.app", "Contents", "Developer");
-  const appRoot = path.join(root, "OpenClaw.app");
+  const appRoot = path.join(root, "GrokBot.app");
   const xcodeSelectPath = path.join(toolsDir, "xcode-select");
 
   writeFileSync(
@@ -164,8 +164,8 @@ function runSwiftCompatibilityHarness(buildConfig: "debug" | "release") {
 }
 
 function runSwiftPackageResolutionHarness(mutateLockfile: boolean) {
-  const root = tempDirs.make("openclaw-swift-resolve-root-");
-  const toolsDir = tempDirs.make("openclaw-swift-resolve-tools-");
+  const root = tempDirs.make("grokbot-swift-resolve-root-");
+  const toolsDir = tempDirs.make("grokbot-swift-resolve-tools-");
   const resolvedFile = path.join(root, "apps", "macos", "Package.resolved");
   const swiftPath = path.join(toolsDir, "swift");
 
@@ -385,8 +385,8 @@ describe("package-mac-app plist stamping", () => {
 
   it("falls back to corepack pnpm when the pnpm shim is absent", () => {
     const helperBlock = getPackageManagerHelperBlock();
-    const tempRoot = tempDirs.make("openclaw-package-pnpm-root-");
-    const toolsDir = tempDirs.make("openclaw-package-pnpm-tools-");
+    const tempRoot = tempDirs.make("grokbot-package-pnpm-root-");
+    const toolsDir = tempDirs.make("grokbot-package-pnpm-tools-");
     const logPath = path.join(tempRoot, "corepack.log");
 
     const corepackPath = path.join(toolsDir, "corepack");
@@ -426,9 +426,9 @@ describe("package-mac-app plist stamping", () => {
 
   it("prefers repo Corepack pnpm over a global pnpm shim", () => {
     const helperBlock = getPackageManagerHelperBlock();
-    const tempRoot = tempDirs.make("openclaw-package-pnpm-root-");
-    const outerRoot = tempDirs.make("openclaw-package-pnpm-outer-");
-    const toolsDir = tempDirs.make("openclaw-package-pnpm-tools-");
+    const tempRoot = tempDirs.make("grokbot-package-pnpm-root-");
+    const outerRoot = tempDirs.make("grokbot-package-pnpm-outer-");
+    const toolsDir = tempDirs.make("grokbot-package-pnpm-tools-");
     const logPath = path.join(tempRoot, "pnpm.log");
 
     writeFileSync(
@@ -487,8 +487,8 @@ describe("package-mac-app plist stamping", () => {
 
   it("fails with an actionable error when neither pnpm nor corepack pnpm is available", () => {
     const helperBlock = getPackageManagerHelperBlock();
-    const tempRoot = tempDirs.make("openclaw-package-pnpm-root-");
-    const toolsDir = tempDirs.make("openclaw-package-pnpm-tools-");
+    const tempRoot = tempDirs.make("grokbot-package-pnpm-root-");
+    const toolsDir = tempDirs.make("grokbot-package-pnpm-tools-");
 
     const result = runHelper(`
       set -euo pipefail
@@ -513,7 +513,7 @@ describe("package-mac-app plist stamping", () => {
 
   it("fails with an actionable error when Swift tools are too old", () => {
     const helperBlock = getSwiftToolchainBlock();
-    const toolsDir = tempDirs.make("openclaw-package-swift-tools-");
+    const toolsDir = tempDirs.make("grokbot-package-swift-tools-");
 
     const swiftPath = path.join(toolsDir, "swift");
     writeFileSync(
@@ -535,13 +535,13 @@ describe("package-mac-app plist stamping", () => {
     `);
 
     expect(result.status).toBe(1);
-    expect(result.stderr).toContain("OpenClaw macOS app packaging requires Swift tools 6.2+");
+    expect(result.stderr).toContain("GrokBot macOS app packaging requires Swift tools 6.2+");
     expect(result.stderr).toContain("Current Swift is 6.0");
   });
 
   it("accepts Swift tools 6.2 or newer", () => {
     const helperBlock = getSwiftToolchainBlock();
-    const toolsDir = tempDirs.make("openclaw-package-swift-tools-");
+    const toolsDir = tempDirs.make("grokbot-package-swift-tools-");
 
     const swiftPath = path.join(toolsDir, "swift");
     writeFileSync(
@@ -568,8 +568,8 @@ describe("package-mac-app plist stamping", () => {
 
   it("runs Sparkle build metadata derivation from the repository root", () => {
     const helperBlock = getSparkleBuildHelperBlock();
-    const tempRoot = tempDirs.make("openclaw-package-sparkle-root-");
-    const toolsDir = tempDirs.make("openclaw-package-sparkle-tools-");
+    const tempRoot = tempDirs.make("grokbot-package-sparkle-root-");
+    const toolsDir = tempDirs.make("grokbot-package-sparkle-tools-");
 
     const nodePath = path.join(toolsDir, "node");
     writeFileSync(
@@ -604,15 +604,15 @@ describe("package-mac-app plist stamping", () => {
     expect(result.stderr).toBe("");
   });
 
-  it("does not kill unrelated OpenClaw processes during packaging", () => {
+  it("does not kill unrelated GrokBot processes during packaging", () => {
     const script = readFileSync(scriptPath, "utf8");
     const stopBlock = script.slice(
       script.indexOf("running_packaged_app_pids()"),
       script.indexOf('echo "🔏 Signing bundle'),
     );
 
-    expect(script).not.toContain("killall -q OpenClaw");
-    expect(stopBlock).toContain('local app_binary="$APP_ROOT/Contents/MacOS/OpenClaw"');
+    expect(script).not.toContain("killall -q GrokBot");
+    expect(stopBlock).toContain('local app_binary="$APP_ROOT/Contents/MacOS/GrokBot"');
     expect(stopBlock).toContain('pgrep -x "$PRODUCT"');
     expect(stopBlock).toContain('grep -Fx "$app_binary"');
     expect(stopBlock).toContain(
@@ -624,7 +624,7 @@ describe("package-mac-app plist stamping", () => {
     const result = runStopPackagedAppHarness(0);
 
     expect(result.status).toBe(1);
-    expect(result.stderr).toContain("ERROR: Packaged OpenClaw bundle did not exit: 123");
+    expect(result.stderr).toContain("ERROR: Packaged GrokBot bundle did not exit: 123");
   });
 
   it("fails release packaging when the Swift compatibility library is missing", () => {
@@ -744,18 +744,18 @@ describe("package-mac-app plist stamping", () => {
     expect(packageManifest).toContain('.copy("Resources/ProviderIcons")');
     expect(
       readFileSync(
-        "apps/macos/Sources/OpenClaw/Resources/ProviderIcons/ProviderIcon-claude.svg",
+        "apps/macos/Sources/GrokBot/Resources/ProviderIcons/ProviderIcon-claude.svg",
         "utf8",
       ),
     ).toContain("<svg");
     expect(
       readFileSync(
-        "apps/macos/Sources/OpenClaw/Resources/ProviderIcons/ProviderIcon-codex.svg",
+        "apps/macos/Sources/GrokBot/Resources/ProviderIcons/ProviderIcon-codex.svg",
         "utf8",
       ),
     ).toContain("<svg");
     expect(script).toContain(
-      'PROVIDER_ICONS_SRC="$ROOT_DIR/apps/macos/Sources/OpenClaw/Resources/ProviderIcons"',
+      'PROVIDER_ICONS_SRC="$ROOT_DIR/apps/macos/Sources/GrokBot/Resources/ProviderIcons"',
     );
     expect(script).toContain(
       'echo "ERROR: Provider icon resources missing at $PROVIDER_ICONS_SRC"',
@@ -786,14 +786,14 @@ describe("package-mac-app plist stamping", () => {
       const result = runHelper(`
         set -euo pipefail
         source scripts/lib/plistbuddy.sh
-        plist_set_string_required ${JSON.stringify(plist)} CFBundleIdentifier 'ai.openclaw.test'
+        plist_set_string_required ${JSON.stringify(plist)} CFBundleIdentifier 'ai.grokbot.test'
         /usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' ${JSON.stringify(plist)}
         broken="$(mktemp -d)"
         plist_set_string_required "$broken" CFBundleIdentifier broken
       `);
 
       expect(result.status).toBe(1);
-      expect(result.stdout).toContain("ai.openclaw.test");
+      expect(result.stdout).toContain("ai.grokbot.test");
       expect(result.stderr).toContain("Error Reading File");
     },
   );

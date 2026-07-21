@@ -1,5 +1,5 @@
 ---
-summary: "Adds StepFun, StepFun Plan model provider support to OpenClaw."
+summary: "Adds StepFun, StepFun Plan model provider support to GrokBot."
 read_when:
   - You are installing, configuring, or auditing the stepfun plugin
 title: "StepFun plugin"
@@ -7,12 +7,12 @@ title: "StepFun plugin"
 
 # StepFun plugin
 
-Adds StepFun, StepFun Plan model provider support to OpenClaw.
+Adds StepFun, StepFun Plan model provider support to GrokBot.
 
 ## Distribution
 
-- Package: `@openclaw/stepfun-provider`
-- Install route: npm; ClawHub: `clawhub:@openclaw/stepfun-provider`
+- Package: `@grokbot/stepfun-provider`
+- Install route: npm; ClawHub: `clawhub:@grokbot/stepfun-provider`
 
 ## Surface
 

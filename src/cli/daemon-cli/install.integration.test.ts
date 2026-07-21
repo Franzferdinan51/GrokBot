@@ -50,8 +50,8 @@ describe("runDaemonInstall integration", () => {
       "OPENCLAW_GATEWAY_TOKEN",
       "OPENCLAW_GATEWAY_PASSWORD",
     ]);
-    tempHome = await makeTempWorkspace("openclaw-daemon-install-int-");
-    configPath = path.join(tempHome, "openclaw.json");
+    tempHome = await makeTempWorkspace("grokbot-daemon-install-int-");
+    configPath = path.join(tempHome, "grokbot.json");
     process.env.HOME = tempHome;
     process.env.OPENCLAW_STATE_DIR = tempHome;
     process.env.OPENCLAW_CONFIG_PATH = configPath;
@@ -108,7 +108,7 @@ describe("runDaemonInstall integration", () => {
     expect(joined).toContain("MISSING_GATEWAY_TOKEN");
   });
 
-  it("refuses service install when config was written by a newer OpenClaw", async () => {
+  it("refuses service install when config was written by a newer GrokBot", async () => {
     await fs.writeFile(
       configPath,
       JSON.stringify(

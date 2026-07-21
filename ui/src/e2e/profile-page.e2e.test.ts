@@ -152,7 +152,7 @@ describeControlUiE2e("Control UI profile page mocked Gateway E2E", () => {
 
       await page.locator(".profile-hero__name").waitFor({ timeout: 10_000 });
       await expect(page.locator(".profile-hero__name").textContent()).resolves.toContain(
-        "OpenClaw",
+        "GrokBot",
       );
       await expect(page.locator(".profile-hero__handle").textContent()).resolves.toContain("@main");
       // No avatar configured: the lobster mascot fills in.
@@ -232,7 +232,7 @@ describeControlUiE2e("Control UI profile page mocked Gateway E2E", () => {
         ],
       });
 
-      const profileAvatar = page.locator("#settings-profile-identity openclaw-viewer-avatar img");
+      const profileAvatar = page.locator("#settings-profile-identity grokbot-viewer-avatar img");
       await profileAvatar.waitFor({ timeout: 10_000 });
       // profile-page derives the src from userProfileAvatarUrl(id, updatedAt);
       // the gateway origin may absolutize it, so match the canonical path suffix.

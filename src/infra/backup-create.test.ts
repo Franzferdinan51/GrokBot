@@ -3,24 +3,24 @@ import { rmSync } from "node:fs";
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import * as tar from "tar";
 import { describe, expect, it, vi } from "vitest";
 import { saveAuthProfileStore } from "../agents/auth-profiles/store.js";
 import { backupVerifyCommand } from "../commands/backup-verify.js";
 import { CONFIG_AUDIT_MAX_ENTRIES, CONFIG_AUDIT_SCOPE } from "../config/io.audit.js";
 import type { RuntimeEnv } from "../runtime.js";
-import { closeOpenClawAgentDatabasesForTest } from "../state/openclaw-agent-db.js";
+import { closeOpenClawAgentDatabasesForTest } from "../state/grokbot-agent-db.js";
 import {
   closeOpenClawStateDatabase,
   openOpenClawStateDatabase,
-} from "../state/openclaw-state-db.js";
-import { resolveOpenClawStateSqlitePath } from "../state/openclaw-state-db.paths.js";
+} from "../state/grokbot-state-db.js";
+import { resolveOpenClawStateSqlitePath } from "../state/grokbot-state-db.paths.js";
 import {
   sanitizeOpenClawGlobalStateSnapshot,
   sanitizeOpenClawStateLeaseRows,
-} from "../state/openclaw-state-snapshot-sanitizer.js";
-import { withOpenClawTestState } from "../test-utils/openclaw-test-state.js";
+} from "../state/grokbot-state-snapshot-sanitizer.js";
+import { withOpenClawTestState } from "../test-utils/grokbot-test-state.js";
 import {
   createBackupArchive,
   formatBackupCreateSummary,
@@ -36,8 +36,8 @@ import { detectLegacyAuditLogs, migrateLegacyAuditLogs } from "./state-migration
 function makeResult(overrides: Partial<BackupCreateResult> = {}): BackupCreateResult {
   return {
     createdAt: "2026-01-01T00:00:00.000Z",
-    archiveRoot: "openclaw-backup-2026-01-01",
-    archivePath: "/tmp/openclaw-backup.tar.gz",
+    archiveRoot: "grokbot-backup-2026-01-01",
+    archivePath: "/tmp/grokbot-backup.tar.gz",
     dryRun: false,
     includeWorkspace: true,
     onlyConfig: false,
@@ -112,7 +112,7 @@ function createUnsafeIndexDrift(sqlitePath: string): void {
 }
 
 describe("formatBackupCreateSummary", () => {
-  const backupArchiveLine = "Backup archive: /tmp/openclaw-backup.tar.gz";
+  const backupArchiveLine = "Backup archive: /tmp/grokbot-backup.tar.gz";
 
   it.each([
     {
@@ -124,26 +124,26 @@ describe("formatBackupCreateSummary", () => {
             kind: "state",
             sourcePath: "/state",
             archivePath: "archive/state",
-            displayPath: "~/.openclaw",
+            displayPath: "~/.grokbot",
           },
         ],
         skipped: [
           {
             kind: "workspace",
             sourcePath: "/workspace",
-            displayPath: "~/Projects/openclaw",
+            displayPath: "~/Projects/grokbot",
             reason: "covered",
-            coveredBy: "~/.openclaw",
+            coveredBy: "~/.grokbot",
           },
         ],
       }),
       expected: [
         backupArchiveLine,
         "Included 1 path:",
-        "- state: ~/.openclaw",
+        "- state: ~/.grokbot",
         "Skipped 1 path:",
-        "- workspace: ~/Projects/openclaw (covered by ~/.openclaw)",
-        "Created /tmp/openclaw-backup.tar.gz",
+        "- workspace: ~/Projects/grokbot (covered by ~/.grokbot)",
+        "Created /tmp/grokbot-backup.tar.gz",
         "Archive verification: passed",
       ],
     },
@@ -156,21 +156,21 @@ describe("formatBackupCreateSummary", () => {
             kind: "config",
             sourcePath: "/config",
             archivePath: "archive/config",
-            displayPath: "~/.openclaw/config.json",
+            displayPath: "~/.grokbot/config.json",
           },
           {
             kind: "credentials",
             sourcePath: "/oauth",
             archivePath: "archive/oauth",
-            displayPath: "~/.openclaw/oauth",
+            displayPath: "~/.grokbot/oauth",
           },
         ],
       }),
       expected: [
         backupArchiveLine,
         "Included 2 paths:",
-        "- config: ~/.openclaw/config.json",
-        "- credentials: ~/.openclaw/oauth",
+        "- config: ~/.grokbot/config.json",
+        "- credentials: ~/.grokbot/oauth",
         "Dry run only; archive was not written.",
       ],
     },
@@ -187,17 +187,17 @@ describe("formatBackupCreateSummary", () => {
               kind: "state",
               sourcePath: "/state",
               archivePath: "archive/state",
-              displayPath: "~/.openclaw",
+              displayPath: "~/.grokbot",
             },
           ],
           skippedVolatileCount: 3,
         }),
       ),
     ).toEqual([
-      "Backup archive: /tmp/openclaw-backup.tar.gz",
+      "Backup archive: /tmp/grokbot-backup.tar.gz",
       "Included 1 path:",
-      "- state: ~/.openclaw",
-      "Created /tmp/openclaw-backup.tar.gz",
+      "- state: ~/.grokbot",
+      "Created /tmp/grokbot-backup.tar.gz",
       "Skipped 3 volatile files (live sessions, cron logs, queues, sockets, pid/tmp).",
     ]);
   });
@@ -477,7 +477,7 @@ describe("createBackupVolatileStatCache", () => {
     await withOpenClawTestState(
       {
         layout: "state-only",
-        prefix: "openclaw-backup-volatile-stat-cache-",
+        prefix: "grokbot-backup-volatile-stat-cache-",
         scenario: "minimal",
       },
       async (state) => {
@@ -523,7 +523,7 @@ describe("createBackupArchive", () => {
     await withOpenClawTestState(
       {
         layout: "state-only",
-        prefix: "openclaw-backup-invalid-now-",
+        prefix: "grokbot-backup-invalid-now-",
         scenario: "minimal",
       },
       async (state) => {
@@ -540,7 +540,7 @@ describe("createBackupArchive", () => {
           });
 
           expect(result.createdAt).toBe("2026-05-30T12:00:00.000Z");
-          expect(path.basename(result.archivePath)).toContain("openclaw-backup.tar.gz");
+          expect(path.basename(result.archivePath)).toContain("grokbot-backup.tar.gz");
           expect(path.basename(result.archivePath)).not.toContain("NaN");
         } finally {
           dateNowSpy.mockRestore();
@@ -553,7 +553,7 @@ describe("createBackupArchive", () => {
     await withOpenClawTestState(
       {
         layout: "state-only",
-        prefix: "openclaw-backup-invalid-fallback-now-",
+        prefix: "grokbot-backup-invalid-fallback-now-",
         scenario: "minimal",
       },
       async (state) => {
@@ -570,7 +570,7 @@ describe("createBackupArchive", () => {
           });
 
           expect(result.createdAt).toBe("1970-01-01T00:00:00.000Z");
-          expect(path.basename(result.archivePath)).toContain("openclaw-backup.tar.gz");
+          expect(path.basename(result.archivePath)).toContain("grokbot-backup.tar.gz");
           expect(path.basename(result.archivePath)).not.toContain("NaN");
         } finally {
           dateNowSpy.mockRestore();
@@ -583,7 +583,7 @@ describe("createBackupArchive", () => {
     await withOpenClawTestState(
       {
         layout: "split",
-        prefix: "openclaw-backup-volatile-",
+        prefix: "grokbot-backup-volatile-",
         scenario: "minimal",
       },
       async (state) => {
@@ -649,7 +649,7 @@ describe("createBackupArchive", () => {
     await withOpenClawTestState(
       {
         layout: "state-only",
-        prefix: "openclaw-backup-audit-raw-",
+        prefix: "grokbot-backup-audit-raw-",
         scenario: "minimal",
       },
       async (state) => {
@@ -665,7 +665,7 @@ describe("createBackupArchive", () => {
             ts: "2026-07-01T00:00:00.000Z",
             source: "config-io",
             event: "config.write",
-            argv: ["openclaw", "config", "set", "token", marker],
+            argv: ["grokbot", "config", "set", "token", marker],
             execArgv: [],
           })}\n`,
         );
@@ -690,7 +690,7 @@ describe("createBackupArchive", () => {
             "sanitized raw archive entry",
           );
           const databaseEntry = expectDefined(
-            entries.find((entry) => entry.endsWith("/state/state/openclaw.sqlite")),
+            entries.find((entry) => entry.endsWith("/state/state/grokbot.sqlite")),
             "global state database entry",
           );
           expect(entries.some((entry) => entry.endsWith(".doctor-scrub-restore"))).toBe(false);
@@ -699,7 +699,7 @@ describe("createBackupArchive", () => {
           const archivedRaw = await fs.readFile(path.join(extractDir, rawEntry), "utf8");
           expect(archivedRaw).not.toContain(marker);
           expect(JSON.parse(archivedRaw.trim())).toMatchObject({
-            argv: ["openclaw", "config", "set", "token", "***"],
+            argv: ["grokbot", "config", "set", "token", "***"],
           });
           const sqlite = requireNodeSqlite();
           const archivedDb = new sqlite.DatabaseSync(path.join(extractDir, databaseEntry), {
@@ -727,7 +727,7 @@ describe("createBackupArchive", () => {
     await withOpenClawTestState(
       {
         layout: "state-only",
-        prefix: "openclaw-backup-completed-audit-pad-",
+        prefix: "grokbot-backup-completed-audit-pad-",
         scenario: "minimal",
       },
       async (state) => {
@@ -744,7 +744,7 @@ describe("createBackupArchive", () => {
             ts: "2026-07-01T00:00:00.000Z",
             source: "config-io",
             event: "config.write",
-            argv: ["openclaw", "config", "set", "safe", "value"],
+            argv: ["grokbot", "config", "set", "safe", "value"],
             execArgv: [],
           })}\n`,
         );
@@ -779,7 +779,7 @@ describe("createBackupArchive", () => {
           const entries = await listArchiveEntries(result.archivePath);
           expect(entries.some((entry) => entry.endsWith(`/state/${rawRelativePath}`))).toBe(false);
           const databaseEntry = expectDefined(
-            entries.find((entry) => entry.endsWith("/state/state/openclaw.sqlite")),
+            entries.find((entry) => entry.endsWith("/state/state/grokbot.sqlite")),
             "global state database entry",
           );
           await tar.x({ file: result.archivePath, gzip: true, cwd: extractDir });
@@ -809,7 +809,7 @@ describe("createBackupArchive", () => {
     await withOpenClawTestState(
       {
         layout: "state-only",
-        prefix: "openclaw-backup-audit-ordinal-",
+        prefix: "grokbot-backup-audit-ordinal-",
         scenario: "minimal",
       },
       async (state) => {
@@ -821,7 +821,7 @@ describe("createBackupArchive", () => {
           ts: "2026-07-01T00:00:00.000Z",
           source: "config-io",
           event: "config.write",
-          argv: ["openclaw", "config", "set", "safe", "same"],
+          argv: ["grokbot", "config", "set", "safe", "same"],
           execArgv: [],
         };
         await fs.mkdir(outputDir, { recursive: true });
@@ -844,7 +844,7 @@ describe("createBackupArchive", () => {
         });
         const entries = await listArchiveEntries(result.archivePath);
         const databaseEntry = expectDefined(
-          entries.find((entry) => entry.endsWith("/state/state/openclaw.sqlite")),
+          entries.find((entry) => entry.endsWith("/state/state/grokbot.sqlite")),
           "global state database entry",
         );
         await tar.x({ file: result.archivePath, gzip: true, cwd: extractDir });
@@ -878,7 +878,7 @@ describe("createBackupArchive", () => {
     await withOpenClawTestState(
       {
         layout: "state-only",
-        prefix: "openclaw-backup-sqlite-queue-",
+        prefix: "grokbot-backup-sqlite-queue-",
         scenario: "minimal",
       },
       async (state) => {
@@ -938,10 +938,10 @@ describe("createBackupArchive", () => {
           });
           const entries = await listArchiveEntries(result.archivePath);
           const archivedDbEntry = entries.find((entry) =>
-            entry.endsWith("/state/state/openclaw.sqlite"),
+            entry.endsWith("/state/state/grokbot.sqlite"),
           );
           expect(archivedDbEntry).toBeDefined();
-          expect(entries.some((entry) => entry.endsWith("/state/state/openclaw.sqlite-wal"))).toBe(
+          expect(entries.some((entry) => entry.endsWith("/state/state/grokbot.sqlite-wal"))).toBe(
             false,
           );
 
@@ -998,7 +998,7 @@ describe("createBackupArchive", () => {
     await withOpenClawTestState(
       {
         layout: "state-only",
-        prefix: "openclaw-backup-unsafe-index-",
+        prefix: "grokbot-backup-unsafe-index-",
         scenario: "minimal",
       },
       async (state) => {
@@ -1026,7 +1026,7 @@ describe("createBackupArchive", () => {
     await withOpenClawTestState(
       {
         layout: "state-only",
-        prefix: "openclaw-backup-foreign-key-",
+        prefix: "grokbot-backup-foreign-key-",
         scenario: "minimal",
       },
       async (state) => {
@@ -1068,7 +1068,7 @@ describe("createBackupArchive", () => {
     await withOpenClawTestState(
       {
         layout: "state-only",
-        prefix: "openclaw-backup-agent-sqlite-",
+        prefix: "grokbot-backup-agent-sqlite-",
         scenario: "minimal",
       },
       async (state) => {
@@ -1092,7 +1092,7 @@ describe("createBackupArchive", () => {
         );
         closeOpenClawAgentDatabasesForTest();
         const sqlite = requireNodeSqlite();
-        const liveDbPath = path.join(state.agentDir(), "openclaw-agent.sqlite");
+        const liveDbPath = path.join(state.agentDir(), "grokbot-agent.sqlite");
         const deletedSecretMarker = "OPENCLAW_DELETED_SECRET_PAGE_MARKER";
         const deletedSecret = `${deletedSecretMarker}-${"x".repeat(16_384)}`;
         const liveDb = new sqlite.DatabaseSync(liveDbPath);
@@ -1128,12 +1128,12 @@ describe("createBackupArchive", () => {
         });
         const entries = await listArchiveEntries(result.archivePath);
         const archivedDbEntry = entries.find((entry) =>
-          entry.endsWith("/state/agents/main/agent/openclaw-agent.sqlite"),
+          entry.endsWith("/state/agents/main/agent/grokbot-agent.sqlite"),
         );
         expect(archivedDbEntry).toBeDefined();
         expect(
           entries.some((entry) =>
-            entry.endsWith("/state/agents/main/agent/openclaw-agent.sqlite-wal"),
+            entry.endsWith("/state/agents/main/agent/grokbot-agent.sqlite-wal"),
           ),
         ).toBe(false);
 
@@ -1177,13 +1177,13 @@ describe("createBackupArchive", () => {
     await withOpenClawTestState(
       {
         layout: "state-only",
-        prefix: "openclaw-backup-agent-node-modules-",
+        prefix: "grokbot-backup-agent-node-modules-",
         scenario: "minimal",
       },
       async (state) => {
         const outputDir = state.path("backups");
         const extractDir = state.path("extract");
-        const dbPath = state.statePath("agents", "node_modules", "agent", "openclaw-agent.sqlite");
+        const dbPath = state.statePath("agents", "node_modules", "agent", "grokbot-agent.sqlite");
         await fs.mkdir(path.dirname(dbPath), { recursive: true });
         await fs.mkdir(outputDir, { recursive: true });
         await fs.mkdir(extractDir, { recursive: true });
@@ -1211,12 +1211,12 @@ describe("createBackupArchive", () => {
           });
           const entries = await listArchiveEntries(result.archivePath);
           const archivedDbEntry = entries.find((entry) =>
-            entry.endsWith("/state/agents/node_modules/agent/openclaw-agent.sqlite"),
+            entry.endsWith("/state/agents/node_modules/agent/grokbot-agent.sqlite"),
           );
           expect(archivedDbEntry).toBeDefined();
           expect(
             entries.some((entry) =>
-              entry.endsWith("/state/agents/node_modules/agent/openclaw-agent.sqlite-wal"),
+              entry.endsWith("/state/agents/node_modules/agent/grokbot-agent.sqlite-wal"),
             ),
           ).toBe(false);
 
@@ -1247,7 +1247,7 @@ describe("createBackupArchive", () => {
     await withOpenClawTestState(
       {
         layout: "state-only",
-        prefix: "openclaw-backup-nested-sqlite-",
+        prefix: "grokbot-backup-nested-sqlite-",
         scenario: "minimal",
       },
       async (state) => {
@@ -1354,7 +1354,7 @@ describe("createBackupArchive", () => {
     await withOpenClawTestState(
       {
         layout: "state-only",
-        prefix: "openclaw-backup-plugin-capability-",
+        prefix: "grokbot-backup-plugin-capability-",
         scenario: "minimal",
       },
       async (state) => {
@@ -1387,7 +1387,7 @@ describe("createBackupArchive", () => {
     await withOpenClawTestState(
       {
         layout: "state-only",
-        prefix: "openclaw-backup-plugin-deleted-bytes-",
+        prefix: "grokbot-backup-plugin-deleted-bytes-",
         scenario: "minimal",
       },
       async (state) => {
@@ -1438,7 +1438,7 @@ describe("createBackupArchive", () => {
     await withOpenClawTestState(
       {
         layout: "state-only",
-        prefix: "openclaw-backup-malformed-sqlite-",
+        prefix: "grokbot-backup-malformed-sqlite-",
         scenario: "minimal",
       },
       async (state) => {
@@ -1465,7 +1465,7 @@ describe("createBackupArchive", () => {
       await withOpenClawTestState(
         {
           layout: "state-only",
-          prefix: "openclaw-backup-late-sqlite-",
+          prefix: "grokbot-backup-late-sqlite-",
           scenario: "minimal",
         },
         async (state) => {
@@ -1513,7 +1513,7 @@ describe("createBackupArchive", () => {
     await withOpenClawTestState(
       {
         layout: "state-only",
-        prefix: "openclaw-backup-orphan-sqlite-sidecars-",
+        prefix: "grokbot-backup-orphan-sqlite-sidecars-",
         scenario: "minimal",
       },
       async (state) => {
@@ -1547,7 +1547,7 @@ describe("createBackupArchive", () => {
     await withOpenClawTestState(
       {
         layout: "state-only",
-        prefix: "openclaw-backup-memory-reindex-lock-",
+        prefix: "grokbot-backup-memory-reindex-lock-",
         scenario: "minimal",
       },
       async (state) => {
@@ -1600,7 +1600,7 @@ describe("createBackupArchive", () => {
     await withOpenClawTestState(
       {
         layout: "state-only",
-        prefix: "openclaw-backup-symlinked-sqlite-",
+        prefix: "grokbot-backup-symlinked-sqlite-",
         scenario: "minimal",
       },
       async (state) => {
@@ -1637,14 +1637,14 @@ describe("createBackupArchive", () => {
     await withOpenClawTestState(
       {
         layout: "state-only",
-        prefix: "openclaw-backup-global-sqlite-symlink-",
+        prefix: "grokbot-backup-global-sqlite-symlink-",
         scenario: "minimal",
       },
       async (state) => {
         const outputDir = state.path("backups");
         const extractDir = state.path("extract");
         const backingDbPath = state.statePath("state", "backing-global.sqlite");
-        const linkedDbPath = state.statePath("state", "openclaw.sqlite");
+        const linkedDbPath = state.statePath("state", "grokbot.sqlite");
         const hardlinkedDbPath = state.statePath("state", "hardlinked-global.sqlite");
         await state.writeConfig({
           agents: {
@@ -1713,7 +1713,7 @@ describe("createBackupArchive", () => {
           const entries = await listArchiveEntryDetails(result.archivePath);
           const archivedDbEntries = entries.filter(
             (entry) =>
-              entry.path.endsWith("/state/state/openclaw.sqlite") ||
+              entry.path.endsWith("/state/state/grokbot.sqlite") ||
               entry.path.endsWith("/state/state/backing-global.sqlite") ||
               entry.path.endsWith("/state/state/hardlinked-global.sqlite"),
           );
@@ -1770,7 +1770,7 @@ describe("createBackupArchive", () => {
     await withOpenClawTestState(
       {
         layout: "state-only",
-        prefix: "openclaw-backup-agent-sqlite-alias-",
+        prefix: "grokbot-backup-agent-sqlite-alias-",
         scenario: "minimal",
       },
       async (state) => {
@@ -1778,7 +1778,7 @@ describe("createBackupArchive", () => {
         const extractDir = state.path("extract");
         const agentDir = state.statePath("agents", "main", "agent");
         const backingDbPath = path.join(agentDir, "backing-agent.sqlite");
-        const linkedDbPath = path.join(agentDir, "openclaw-agent.sqlite");
+        const linkedDbPath = path.join(agentDir, "grokbot-agent.sqlite");
         const hardlinkedDbPath = state.statePath("plugins", "dedicated", "agent-alias.sqlite");
         await fs.mkdir(agentDir, { recursive: true });
         await fs.mkdir(path.dirname(hardlinkedDbPath), { recursive: true });
@@ -1821,7 +1821,7 @@ describe("createBackupArchive", () => {
           const entries = await listArchiveEntryDetails(result.archivePath);
           const archivedDbEntries = entries.filter(
             (entry) =>
-              entry.path.endsWith("/state/agents/main/agent/openclaw-agent.sqlite") ||
+              entry.path.endsWith("/state/agents/main/agent/grokbot-agent.sqlite") ||
               entry.path.endsWith("/state/agents/main/agent/backing-agent.sqlite") ||
               entry.path.endsWith("/state/plugins/dedicated/agent-alias.sqlite"),
           );
@@ -1866,12 +1866,12 @@ describe("createBackupArchive", () => {
     await withOpenClawTestState(
       {
         layout: "state-only",
-        prefix: "openclaw-backup-global-sqlite-directory-",
+        prefix: "grokbot-backup-global-sqlite-directory-",
         scenario: "minimal",
       },
       async (state) => {
         const outputDir = state.path("backups");
-        const globalDbPath = state.statePath("state", "openclaw.sqlite");
+        const globalDbPath = state.statePath("state", "grokbot.sqlite");
         await fs.mkdir(globalDbPath, { recursive: true });
         await fs.mkdir(outputDir, { recursive: true });
 
@@ -1891,7 +1891,7 @@ describe("createBackupArchive", () => {
     await withOpenClawTestState(
       {
         layout: "state-only",
-        prefix: "openclaw-backup-plugin-deps-",
+        prefix: "grokbot-backup-plugin-deps-",
         scenario: "minimal",
       },
       async (state) => {
@@ -1914,7 +1914,7 @@ describe("createBackupArchive", () => {
           );
         }
         await fs.writeFile(
-          path.join(stateDir, "extensions", "demo", "openclaw.plugin.json"),
+          path.join(stateDir, "extensions", "demo", "grokbot.plugin.json"),
           '{"id":"demo"}\n',
           "utf8",
         );
@@ -1958,7 +1958,7 @@ describe("createBackupArchive", () => {
         const entries = await listArchiveEntries(result.archivePath);
 
         const entrySuffixes = entries.map((entry) => entry.replace(/^.*\/state\//, "/state/"));
-        expect(entrySuffixes).toContain("/state/extensions/demo/openclaw.plugin.json");
+        expect(entrySuffixes).toContain("/state/extensions/demo/grokbot.plugin.json");
         expect(entrySuffixes).toContain("/state/extensions/demo/src/index.js");
         expect(entrySuffixes).toContain("/state/node_modules/root-dep/index.js");
         expect(entrySuffixes).toContain("/state/node_modules/root-dep/fixture.sqlite");
@@ -1987,15 +1987,15 @@ describe("createBackupArchive", () => {
     await withOpenClawTestState(
       {
         layout: "state-only",
-        prefix: "openclaw-backup-managed-root-workspace-",
+        prefix: "grokbot-backup-managed-root-workspace-",
         scenario: "minimal",
         env: { OPENCLAW_OAUTH_DIR: undefined },
       },
       async (state) => {
         const stateDir = state.stateDir;
         const workspaceDir = path.join(stateDir, "dev", "workspace");
-        const runtimeDir = path.join(stateDir, "dev", "openclaw");
-        const configPath = path.join(stateDir, "git", "config", "openclaw.json");
+        const runtimeDir = path.join(stateDir, "dev", "grokbot");
+        const configPath = path.join(stateDir, "git", "config", "grokbot.json");
         const oauthDir = path.join(stateDir, "tools", "oauth");
         const toolRuntimeDir = path.join(stateDir, "tools", "runtime");
         const workspaceDbPath = path.join(workspaceDir, "workspace.sqlite");
@@ -2045,13 +2045,13 @@ describe("createBackupArchive", () => {
         expect(
           entries.some((entry) => entry.endsWith("/state/dev/workspace/workspace.sqlite")),
         ).toBe(true);
-        expect(entries.some((entry) => entry.endsWith("/state/git/config/openclaw.json"))).toBe(
+        expect(entries.some((entry) => entry.endsWith("/state/git/config/grokbot.json"))).toBe(
           true,
         );
         expect(entries.some((entry) => entry.endsWith("/state/tools/oauth/credentials.json"))).toBe(
           true,
         );
-        expect(entries.some((entry) => entry.includes("/state/dev/openclaw/"))).toBe(false);
+        expect(entries.some((entry) => entry.includes("/state/dev/grokbot/"))).toBe(false);
         expect(entries.some((entry) => entry.includes("/state/tools/runtime/"))).toBe(false);
 
         const runtime: RuntimeEnv = { log: vi.fn(), error: vi.fn(), exit: vi.fn() };
@@ -2066,13 +2066,13 @@ describe("createBackupArchive", () => {
     await withOpenClawTestState(
       {
         layout: "state-only",
-        prefix: "openclaw-backup-hardlink-",
+        prefix: "grokbot-backup-hardlink-",
         scenario: "minimal",
       },
       async (state) => {
         const stateDir = state.stateDir;
         const outputDir = state.path("backups");
-        const sourcePath = path.join(stateDir, "workspace-adx", "openclaw-src", "node_modules");
+        const sourcePath = path.join(stateDir, "workspace-adx", "grokbot-src", "node_modules");
         const targetPath = path.join(sourcePath, "esbuild", "bin", "esbuild");
         const hardlinkPath = path.join(sourcePath, "@esbuild", "darwin-arm64", "bin", "esbuild");
         await fs.mkdir(path.dirname(targetPath), { recursive: true });
@@ -2105,7 +2105,7 @@ describe("createBackupArchive", () => {
     await withOpenClawTestState(
       {
         layout: "state-only",
-        prefix: "openclaw-backup-tmp-overlap-",
+        prefix: "grokbot-backup-tmp-overlap-",
         scenario: "minimal",
       },
       async (state) => {
@@ -2142,7 +2142,7 @@ describe("createBackupArchive", () => {
     await withOpenClawTestState(
       {
         layout: "state-only",
-        prefix: "openclaw-backup-tmp-equals-state-",
+        prefix: "grokbot-backup-tmp-equals-state-",
         scenario: "minimal",
       },
       async (state) => {
@@ -2170,7 +2170,7 @@ describe("createBackupArchive", () => {
             entry.endsWith("/state/plugins/dedicated/empty.sqlite"),
           );
           expect(emptyDbEntries).toHaveLength(1);
-          expect(entries.some((entry) => entry.includes("/openclaw-state-db-"))).toBe(false);
+          expect(entries.some((entry) => entry.includes("/grokbot-state-db-"))).toBe(false);
 
           await tar.x({ file: result.archivePath, gzip: true, cwd: extractDir });
           const sqlite = requireNodeSqlite();
@@ -2217,7 +2217,7 @@ describe("createBackupArchive", () => {
         await withOpenClawTestState(
           {
             layout: "state-only",
-            prefix: "openclaw-backup-mode-",
+            prefix: "grokbot-backup-mode-",
             scenario: "minimal",
           },
           async (state) => {

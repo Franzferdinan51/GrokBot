@@ -1,14 +1,14 @@
-import type { OpenClawConfig, TelegramAccountConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig, TelegramAccountConfig } from "grokbot/plugin-sdk/config-contracts";
 // Telegram plugin module owns buffered reply payload delivery decisions.
-import { normalizeMessagePresentation } from "openclaw/plugin-sdk/interactive-runtime";
+import { normalizeMessagePresentation } from "grokbot/plugin-sdk/interactive-runtime";
 import {
   isFastModeAutoProgressPayload,
   isReplyPayloadNonTerminalToolErrorWarning,
   resolveSendableOutboundReplyParts,
-} from "openclaw/plugin-sdk/reply-payload";
-import type { ReplyPayload } from "openclaw/plugin-sdk/reply-payload";
-import type { RuntimeEnv } from "openclaw/plugin-sdk/runtime-env";
-import { danger } from "openclaw/plugin-sdk/runtime-env";
+} from "grokbot/plugin-sdk/reply-payload";
+import type { ReplyPayload } from "grokbot/plugin-sdk/reply-payload";
+import type { RuntimeEnv } from "grokbot/plugin-sdk/runtime-env";
+import { danger } from "grokbot/plugin-sdk/runtime-env";
 import type { TelegramBotDeps } from "./bot-deps.js";
 import type { TelegramMessageContext } from "./bot-message-context.js";
 import type { TelegramDeliveryController } from "./bot-message-dispatch-delivery.js";

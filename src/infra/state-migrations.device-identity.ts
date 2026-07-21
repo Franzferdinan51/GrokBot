@@ -1,12 +1,12 @@
 // Doctor-only import for the retired primary device identity JSON.
 import { createHash } from "node:crypto";
 import path from "node:path";
-import { root, type Root } from "@openclaw/fs-safe";
-import type { DB as OpenClawStateKyselyDatabase } from "../state/openclaw-state-db.generated.js";
+import { root, type Root } from "@grokbot/fs-safe";
+import type { DB as OpenClawStateKyselyDatabase } from "../state/grokbot-state-db.generated.js";
 import {
   openOpenClawStateDatabase,
   runOpenClawStateWriteTransaction,
-} from "../state/openclaw-state-db.js";
+} from "../state/grokbot-state-db.js";
 import { acquireDeviceIdentityCoordinator } from "./device-identity-coordinator.js";
 import {
   normalizeLegacyDeviceIdentity,
@@ -635,7 +635,7 @@ export async function migrateLegacyDeviceIdentity(params: {
     return {
       changes: [],
       warnings: [
-        `Failed migrating legacy device identity: ${detail}. Stop the Gateway and run \`openclaw doctor --fix\` again.`,
+        `Failed migrating legacy device identity: ${detail}. Stop the Gateway and run \`grokbot doctor --fix\` again.`,
       ],
     };
   }

@@ -6,11 +6,11 @@ import {
   CLAUDE_CLI_PROFILE_ID,
   type OpenClawConfig,
   type ProviderAuthResult,
-} from "openclaw/plugin-sdk/provider-auth";
+} from "grokbot/plugin-sdk/provider-auth";
 import {
   isRecord,
   normalizeLowercaseStringOrEmpty,
-} from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/string-coerce-runtime";
 import { resolveClaudeCliAnthropicModelRefs } from "./claude-model-refs.js";
 import type { readClaudeCliCredentialsForSetup } from "./cli-auth-seam.js";
 import { CLAUDE_CLI_BACKEND_ID, CLAUDE_CLI_DEFAULT_ALLOWLIST_REFS } from "./cli-shared.js";

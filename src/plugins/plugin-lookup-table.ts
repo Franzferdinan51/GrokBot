@@ -1,5 +1,5 @@
 /** Builds plugin lookup tables keyed by manifest ids, channels, providers, and commands. */
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import {
   createGatewayStartupMetadataPluginIdScope,
   isMetadataSnapshotScopedForGatewayStartup,

@@ -8,7 +8,7 @@ import {
   normalizeOptionalLowercaseString,
   normalizeOptionalString,
   readStringValue,
-} from "@openclaw/normalization-core/string-coerce";
+} from "@grokbot/normalization-core/string-coerce";
 import {
   AgentDeletionAuthorityRollbackError,
   AgentDeletionCommitUncertainError,
@@ -318,7 +318,7 @@ const DEFAULT_SECURITY: ExecSecurity = "full";
 const DEFAULT_ASK: ExecAsk = "off";
 export const DEFAULT_EXEC_APPROVAL_ASK_FALLBACK: ExecSecurity = "deny";
 const DEFAULT_AUTO_ALLOW_SKILLS = false;
-const DEFAULT_EXEC_APPROVALS_STATE_DIR = "~/.openclaw";
+const DEFAULT_EXEC_APPROVALS_STATE_DIR = "~/.grokbot";
 const EXEC_APPROVALS_FILE = "exec-approvals.json";
 const EXEC_APPROVALS_SOCKET = "exec-approvals.sock";
 const EXEC_APPROVALS_LOCK_OPTIONS = {
@@ -335,7 +335,7 @@ const EXEC_APPROVALS_LOCK_OPTIONS = {
   staleRecovery: "fail-closed",
 } as const;
 const EXEC_APPROVALS_LOCK_QUEUE = resolveGlobalMap<string, Promise<unknown>>(
-  Symbol.for("openclaw.execApprovalsLockQueue"),
+  Symbol.for("grokbot.execApprovalsLockQueue"),
 );
 let execApprovalsProcessStartTime: number | null | undefined;
 
@@ -1873,8 +1873,8 @@ function textMentionsSecurityAuditSuppressions(value: string): boolean {
 
 function isReadOnlySecurityAuditSuppressionInspection(argv: string[]): boolean {
   const command = normalizeCommandName(argv[0]);
-  let offset = command === "pnpm" && argv[1] === "openclaw" ? 1 : 0;
-  if (normalizeCommandName(argv[offset]) !== "openclaw") {
+  let offset = command === "pnpm" && argv[1] === "grokbot" ? 1 : 0;
+  if (normalizeCommandName(argv[offset]) !== "grokbot") {
     return false;
   }
   offset += 1;

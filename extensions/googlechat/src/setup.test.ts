@@ -7,16 +7,16 @@ import {
   expectLifecyclePatch,
   expectPendingUntilAbort,
   startAccountAndTrackLifecycle,
-} from "openclaw/plugin-sdk/channel-test-helpers";
+} from "grokbot/plugin-sdk/channel-test-helpers";
 import {
   createPluginSetupWizardConfigure,
   createPluginSetupWizardStatus,
   createTestWizardPrompter,
   runSetupWizardConfigure,
-} from "openclaw/plugin-sdk/plugin-test-runtime";
-import type { WizardPrompter } from "openclaw/plugin-sdk/plugin-test-runtime";
-import { DEFAULT_ACCOUNT_ID } from "openclaw/plugin-sdk/setup";
-import type { ChannelAccountSnapshot } from "openclaw/plugin-sdk/status-helpers";
+} from "grokbot/plugin-sdk/plugin-test-runtime";
+import type { WizardPrompter } from "grokbot/plugin-sdk/plugin-test-runtime";
+import { DEFAULT_ACCOUNT_ID } from "grokbot/plugin-sdk/setup";
+import type { ChannelAccountSnapshot } from "grokbot/plugin-sdk/status-helpers";
 import { afterAll, afterEach, describe, expect, it, vi } from "vitest";
 import type { OpenClawConfig } from "../runtime-api.js";
 import {
@@ -459,7 +459,7 @@ describe("resolveGoogleChatAccount", () => {
   });
 
   it("resolves user-relative service-account files before checking availability", () => {
-    const homeDir = makeTempDir("openclaw-googlechat-home-");
+    const homeDir = makeTempDir("grokbot-googlechat-home-");
     fs.writeFileSync(path.join(homeDir, "service-account.json"), "{}", { mode: 0o600 });
     vi.stubEnv("OPENCLAW_HOME", homeDir);
     try {
@@ -495,7 +495,7 @@ describe("resolveGoogleChatAccount", () => {
   });
 
   it("ignores env JSON credentials when they decode to a non-object value", () => {
-    const missingFile = path.join(makeTempDir("openclaw-googlechat-missing-"), "missing.json");
+    const missingFile = path.join(makeTempDir("grokbot-googlechat-missing-"), "missing.json");
     vi.stubEnv("GOOGLE_CHAT_SERVICE_ACCOUNT", '["not","an","object"]');
     vi.stubEnv("GOOGLE_CHAT_SERVICE_ACCOUNT_FILE", missingFile);
 

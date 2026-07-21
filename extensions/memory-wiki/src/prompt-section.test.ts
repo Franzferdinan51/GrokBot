@@ -3,7 +3,7 @@ import fsSync from "node:fs";
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import type { OpenClawConfig } from "../api.js";
 import {
@@ -64,10 +64,10 @@ async function seedCompiledDigest(params: {
   pages: PromptPageFixture[];
 }): Promise<void> {
   configureCompiledCacheStore();
-  await fs.mkdir(path.join(params.config.vault.path, ".openclaw-wiki"), { recursive: true });
+  await fs.mkdir(path.join(params.config.vault.path, ".grokbot-wiki"), { recursive: true });
   await Promise.all([
     fs.writeFile(path.join(params.config.vault.path, "WIKI.md"), "# Memory Wiki\n", "utf8"),
-    fs.writeFile(path.join(params.config.vault.path, ".openclaw-wiki", "log.jsonl"), "", "utf8"),
+    fs.writeFile(path.join(params.config.vault.path, ".grokbot-wiki", "log.jsonl"), "", "utf8"),
   ]);
   activateMemoryWikiCompiledCacheOwner(
     params.config,

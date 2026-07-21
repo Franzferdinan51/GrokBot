@@ -4,11 +4,11 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import type { App, Receiver, ReceiverEvent } from "@slack/bolt";
-import type { ChannelIngressQueue } from "openclaw/plugin-sdk/channel-outbound";
+import type { ChannelIngressQueue } from "grokbot/plugin-sdk/channel-outbound";
 import {
   closeOpenClawStateDatabaseForTest,
   createChannelIngressQueueForTests,
-} from "openclaw/plugin-sdk/plugin-state-test-runtime";
+} from "grokbot/plugin-sdk/plugin-state-test-runtime";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { createSlackDurableIngress, resolveSlackIngressTurnLifecycle } from "./ingress.js";
 
@@ -84,7 +84,7 @@ async function withQueue(
   fn: (queue: ChannelIngressQueue<SlackIngressPayload>) => Promise<void>,
 ): Promise<void> {
   const rawRoot = await fs.mkdtemp(
-    path.join(os.tmpdir(), `openclaw-slack-ingress-${crypto.randomUUID()}-`),
+    path.join(os.tmpdir(), `grokbot-slack-ingress-${crypto.randomUUID()}-`),
   );
   const stateDir = await fs.realpath(rawRoot);
   const queue = createChannelIngressQueueForTests<SlackIngressPayload>({

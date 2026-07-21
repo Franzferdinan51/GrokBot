@@ -12,7 +12,7 @@ import {
   replaceSessionEntry,
   updateSessionLastRoute,
 } from "../config/sessions/session-accessor.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { createSuiteTempRootTracker } from "../test-helpers/temp-dir.js";
 import { listSessionsFromStore } from "./session-utils.js";
 
@@ -22,7 +22,7 @@ const cfg = {
   agents: {
     defaults: {
       model: "openai/gpt-5.4",
-      workspace: "/tmp/openclaw",
+      workspace: "/tmp/grokbot",
     },
   },
   session: {
@@ -49,7 +49,7 @@ function createTelegramDirectContext(): MsgContext {
 
 describe("Telegram direct session recreation after delete", () => {
   const suiteRootTracker = createSuiteTempRootTracker({
-    prefix: "openclaw-telegram-session-recreate-",
+    prefix: "grokbot-telegram-session-recreate-",
   });
 
   beforeAll(async () => {

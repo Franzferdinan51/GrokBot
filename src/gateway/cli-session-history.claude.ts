@@ -1,10 +1,10 @@
 // Claude CLI session history importer.
-// Converts Claude project JSONL into OpenClaw transcript-compatible messages.
+// Converts Claude project JSONL into GrokBot transcript-compatible messages.
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { asFiniteNumber } from "@openclaw/normalization-core/number-coercion";
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+import { asFiniteNumber } from "@grokbot/normalization-core/number-coercion";
+import { normalizeOptionalString } from "@grokbot/normalization-core/string-coerce";
 import { hashCliReseedPrompt, parseCliReseedPrompt } from "../agents/cli-runner/reseed-envelope.js";
 import {
   isToolCallBlock,
@@ -125,7 +125,7 @@ function normalizeClaudeCliContent(
     const block = cloneJsonValue(item as ToolContentBlock);
     const type = typeof block.type === "string" ? block.type : "";
     if (type === "tool_use") {
-      // Claude stores tool calls as `tool_use` with `input`; OpenClaw history
+      // Claude stores tool calls as `tool_use` with `input`; GrokBot history
       // expects `toolcall` plus `arguments` so replay remains provider-neutral.
       const id = normalizeOptionalString(block.id) ?? "";
       const name = normalizeOptionalString(block.name) ?? "";

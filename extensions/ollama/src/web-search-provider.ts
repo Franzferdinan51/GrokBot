@@ -1,11 +1,11 @@
 // Ollama provider module implements model/runtime integration.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import {
   isNonSecretApiKeyMarker,
   normalizeOptionalSecretInput,
-} from "openclaw/plugin-sdk/provider-auth";
-import { resolveEnvApiKey } from "openclaw/plugin-sdk/provider-auth-runtime";
-import { readProviderJsonResponse } from "openclaw/plugin-sdk/provider-http";
+} from "grokbot/plugin-sdk/provider-auth";
+import { resolveEnvApiKey } from "grokbot/plugin-sdk/provider-auth-runtime";
+import { readProviderJsonResponse } from "grokbot/plugin-sdk/provider-http";
 import {
   enablePluginInConfig,
   readPositiveIntegerParam,
@@ -17,9 +17,9 @@ import {
   truncateText,
   wrapWebContent,
   type WebSearchProviderPlugin,
-} from "openclaw/plugin-sdk/provider-web-search";
-import { fetchWithSsrFGuard } from "openclaw/plugin-sdk/ssrf-runtime";
-import { normalizeOptionalString } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/provider-web-search";
+import { fetchWithSsrFGuard } from "grokbot/plugin-sdk/ssrf-runtime";
+import { normalizeOptionalString } from "grokbot/plugin-sdk/string-coerce-runtime";
 import { Type } from "typebox";
 import { OLLAMA_DEFAULT_BASE_URL } from "./defaults.js";
 import { readProviderBaseUrl } from "./provider-base-url.js";
@@ -305,7 +305,7 @@ export function createOllamaWebSearchProvider(): WebSearchProviderPlugin {
     envVars: [],
     placeholder: "(run ollama signin)",
     signupUrl: "https://ollama.com/",
-    docsUrl: "https://docs.openclaw.ai/tools/web",
+    docsUrl: "https://docs.grokbot.ai/tools/web",
     autoDetectOrder: 110,
     credentialPath: "",
     getCredentialValue: () => undefined,

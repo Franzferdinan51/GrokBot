@@ -2,7 +2,7 @@
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { describe, expect, it } from "vitest";
 import {
   appendBoundedReproOutput,
@@ -15,7 +15,7 @@ import {
 describe("zai fallback repro command resolution", () => {
   it("wraps Windows pnpm.cmd without Node shell argv", () => {
     expect(
-      resolveZaiFallbackPnpmCommand(["openclaw", "agent", "--message", "hello world"], {
+      resolveZaiFallbackPnpmCommand(["grokbot", "agent", "--message", "hello world"], {
         comSpec: String.raw`C:\Windows\System32\cmd.exe`,
         npmExecPath: String.raw`C:\Program Files\nodejs\pnpm.cmd`,
         platform: "win32",
@@ -25,7 +25,7 @@ describe("zai fallback repro command resolution", () => {
         "/d",
         "/s",
         "/c",
-        String.raw`""C:\Program Files\nodejs\pnpm.cmd" openclaw agent --message "hello world""`,
+        String.raw`""C:\Program Files\nodejs\pnpm.cmd" grokbot agent --message "hello world""`,
       ],
       command: String.raw`C:\Windows\System32\cmd.exe`,
       shell: false,
@@ -42,7 +42,7 @@ describe("zai fallback repro command resolution", () => {
   });
 
   it("scans session transcripts with a byte cap", async () => {
-    const root = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-zai-session-test-"));
+    const root = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-zai-session-test-"));
     try {
       const sessionFile = path.join(root, "session.jsonl");
       await fs.writeFile(
@@ -81,7 +81,7 @@ describe("zai fallback repro command resolution", () => {
       error: () => {},
       log: () => {},
       mkdtemp: (async () => {
-        const root = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-zai-fallback-test-"));
+        const root = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-zai-fallback-test-"));
         tempRoots.push(root);
         return root;
       }) as unknown as typeof fs.mkdtemp,

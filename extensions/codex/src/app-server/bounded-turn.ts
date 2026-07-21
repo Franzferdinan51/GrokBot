@@ -1,9 +1,9 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import type { AuthProfileStore } from "openclaw/plugin-sdk/agent-runtime";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { resolveTimerTimeoutMs } from "openclaw/plugin-sdk/number-runtime";
-import { resolvePreferredOpenClawTmpDir, withTempWorkspace } from "openclaw/plugin-sdk/temp-path";
+import type { AuthProfileStore } from "grokbot/plugin-sdk/agent-runtime";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { resolveTimerTimeoutMs } from "grokbot/plugin-sdk/number-runtime";
+import { resolvePreferredOpenClawTmpDir, withTempWorkspace } from "grokbot/plugin-sdk/temp-path";
 import { readCodexNotificationItem } from "./attempt-notifications.js";
 import type { CodexAppServerClient } from "./client.js";
 import { resolveCodexAppServerRuntimeOptions } from "./config.js";
@@ -180,7 +180,7 @@ async function runBoundedCodexAppServerTurnInWorkspace(
           cwd: workspace.cwd,
           approvalPolicy: "on-request",
           sandbox: "read-only",
-          serviceName: "OpenClaw",
+          serviceName: "GrokBot",
           developerInstructions: params.developerInstructions,
           config: buildCodexRuntimeThreadConfig(resolveBoundedThreadConfig(params, workspace), {
             nativeCodeModeEnabled: false,
@@ -293,7 +293,7 @@ function createCodexBoundedApprovalHandler(taskLabel: string) {
     ) {
       return {
         decision: "decline",
-        reason: `OpenClaw Codex ${taskLabel} does not grant tool or file approvals.`,
+        reason: `GrokBot Codex ${taskLabel} does not grant tool or file approvals.`,
       };
     }
     if (request.method === "item/permissions/requestApproval") {
@@ -302,7 +302,7 @@ function createCodexBoundedApprovalHandler(taskLabel: string) {
     if (request.method.includes("requestApproval")) {
       return {
         decision: "decline",
-        reason: `OpenClaw Codex ${taskLabel} does not grant native approvals.`,
+        reason: `GrokBot Codex ${taskLabel} does not grant native approvals.`,
       };
     }
     if (request.method === "mcpServer/elicitation/request") {

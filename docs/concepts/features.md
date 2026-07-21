@@ -1,7 +1,7 @@
 ---
-summary: "OpenClaw capabilities across channels, routing, media, and UX."
+summary: "GrokBot capabilities across channels, routing, media, and UX."
 read_when:
-  - You want a full list of what OpenClaw supports
+  - You want a full list of what GrokBot supports
 title: "Features"
 ---
 
@@ -33,12 +33,12 @@ title: "Features"
 **Channels:**
 
 - iMessage, Telegram, and WebChat ship with the core install; every other channel is an
-  official plugin installed with `openclaw plugins install @openclaw/<id>` (or on demand
-  during `openclaw onboard` / `openclaw channels add`)
+  official plugin installed with `grokbot plugins install @grokbot/<id>` (or on demand
+  during `grokbot onboard` / `grokbot channels add`)
 - Official plugin channels: Discord, Feishu, Google Chat, IRC, LINE, Matrix, Mattermost,
   Microsoft Teams, Nextcloud Talk, Nostr, QQ Bot, Raft, Signal, Slack, SMS, Synology Chat,
   Tlon, Twitch, Voice Call, WhatsApp, Zalo, and Zalo Personal
-- External plugin channels maintained outside the OpenClaw repo: WeChat, Yuanbao, and Zalo ClawBot
+- External plugin channels maintained outside the GrokBot repo: WeChat, Yuanbao, and Zalo ClawBot
 - Group chat support with mention-based activation
 - DM safety with allowlists and pairing
 
@@ -90,6 +90,6 @@ title: "Features"
     Connect Telegram, WhatsApp, Discord, Slack, and more from one Gateway.
   </Card>
   <Card title="Plugins" href="/tools/plugin" icon="plug">
-    Official and external plugins that extend OpenClaw.
+    Official and external plugins that extend GrokBot.
   </Card>
 </CardGroup>

@@ -1,9 +1,9 @@
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 // Qqbot plugin module implements finalize behavior.
-import { expectDefined } from "openclaw/plugin-sdk/expect-runtime";
-import type { ChannelSetupWizard } from "openclaw/plugin-sdk/setup";
-import { DEFAULT_ACCOUNT_ID } from "openclaw/plugin-sdk/setup";
-import { formatDocsLink } from "openclaw/plugin-sdk/setup-tools";
+import { expectDefined } from "grokbot/plugin-sdk/expect-runtime";
+import type { ChannelSetupWizard } from "grokbot/plugin-sdk/setup";
+import { DEFAULT_ACCOUNT_ID } from "grokbot/plugin-sdk/setup";
+import { formatDocsLink } from "grokbot/plugin-sdk/setup-tools";
 import { applyQQBotAccountConfig, resolveQQBotAccount } from "../config.js";
 
 type SetupPrompter = Parameters<NonNullable<ChannelSetupWizard["finalize"]>>[0]["prompter"];
@@ -46,7 +46,7 @@ async function linkViaQrCode(params: {
   await params.beforePersistentEffect?.();
   try {
     const accounts: { appId: string; appSecret: string }[] = await connector.qrConnect({
-      source: "openclaw",
+      source: "grokbot",
     });
 
     if (accounts.length === 0) {
@@ -154,7 +154,7 @@ export async function finalizeQQBotSetup(params: {
     });
   } else if (!configured) {
     await params.prompter.note(
-      ["您可以稍后运行以下命令重新选择 QQ Bot 进行配置：", "  openclaw channels add"].join("\n"),
+      ["您可以稍后运行以下命令重新选择 QQ Bot 进行配置：", "  grokbot channels add"].join("\n"),
       "QQ Bot",
     );
   }

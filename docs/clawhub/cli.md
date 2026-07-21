@@ -1,8 +1,8 @@
 ---
-summary: "ClawHub CLI entry points for discovering, installing, publishing, and verifying OpenClaw skills and plugins."
+summary: "ClawHub CLI entry points for discovering, installing, publishing, and verifying GrokBot skills and plugins."
 read_when:
   - You want to use ClawHub from the command line
-  - You want to install ClawHub skills or plugins through OpenClaw
+  - You want to install ClawHub skills or plugins through GrokBot
   - You want to publish ClawHub packages
 title: "ClawHub CLI"
 ---
@@ -11,37 +11,37 @@ title: "ClawHub CLI"
 
 Two command-line surfaces talk to ClawHub:
 
-- `openclaw skills` / `openclaw plugins` - discover, install, and update
-  packages for a local OpenClaw agent or Gateway.
+- `grokbot skills` / `grokbot plugins` - discover, install, and update
+  packages for a local GrokBot agent or Gateway.
 - The standalone `clawhub` CLI - publisher workflows: login, publish, sync,
   and transfer.
 
 ## Discover and install
 
 ```bash
-openclaw skills search "calendar"
-openclaw skills install @owner/<slug>
-openclaw skills install @owner/<slug> --version <version> --global
-openclaw skills update @owner/<slug>
-openclaw skills update --all --acknowledge-clawhub-risk
-openclaw skills verify @owner/<slug> --card
+grokbot skills search "calendar"
+grokbot skills install @owner/<slug>
+grokbot skills install @owner/<slug> --version <version> --global
+grokbot skills update @owner/<slug>
+grokbot skills update --all --acknowledge-clawhub-risk
+grokbot skills verify @owner/<slug> --card
 
-openclaw plugins search "calendar"
-openclaw plugins install clawhub:<package>
-openclaw plugins install clawhub:<package> --acknowledge-clawhub-risk
-openclaw plugins update <id-or-npm-spec>
-openclaw plugins update --all
+grokbot plugins search "calendar"
+grokbot plugins install clawhub:<package>
+grokbot plugins install clawhub:<package> --acknowledge-clawhub-risk
+grokbot plugins update <id-or-npm-spec>
+grokbot plugins update --all
 ```
 
 Skill installs target the active workspace `skills/` directory by default; add
 `--global` for the shared managed skills directory. Plugin installs need the
 explicit `clawhub:` prefix to force ClawHub resolution over npm, git, or a
-local path. Full flag reference: [`openclaw skills`](/cli/skills) and
-[`openclaw plugins`](/cli/plugins).
+local path. Full flag reference: [`grokbot skills`](/cli/skills) and
+[`grokbot plugins`](/cli/plugins).
 
 ### Release trust
 
-OpenClaw checks a release's ClawHub trust state before downloading it, for
+GrokBot checks a release's ClawHub trust state before downloading it, for
 both skills and plugins. Versioned releases use exact-release trust metadata;
 resolver-backed GitHub skills go through ClawHub's install resolver, which
 enforces scan and force-install policy before returning a pinned commit.
@@ -50,7 +50,7 @@ enforces scan and force-install policy before returning a pinned commit.
 - **Risky** releases (non-clean scan, non-blocking moderation state) print a
   warning and require `--acknowledge-clawhub-risk` to continue
   non-interactively.
-- **Official ClawHub publishers/packages and bundled OpenClaw sources** skip
+- **Official ClawHub publishers/packages and bundled GrokBot sources** skip
   the trust prompt and security-verdict fetch entirely.
 
 ## Publish and maintain
@@ -89,9 +89,9 @@ clawhub explore --sort trending                              # browse the regist
 
 ## Related
 
-- [`openclaw skills`](/cli/skills) - local skill search, install, update, and
+- [`grokbot skills`](/cli/skills) - local skill search, install, update, and
   verification
-- [`openclaw plugins`](/cli/plugins) - plugin search, install, update, and
+- [`grokbot plugins`](/cli/plugins) - plugin search, install, update, and
   inspection
 - [ClawHub publishing](/clawhub/publishing) - owner scope, release validation,
   and review flow

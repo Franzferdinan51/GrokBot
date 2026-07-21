@@ -14,9 +14,9 @@ import { parse } from "yaml";
 import { useAutoCleanupTempDirTracker } from "../helpers/temp-dir.js";
 
 const PACKAGE_ACCEPTANCE_WORKFLOW = ".github/workflows/package-acceptance.yml";
-const LIVE_E2E_WORKFLOW = ".github/workflows/openclaw-live-and-e2e-checks-reusable.yml";
+const LIVE_E2E_WORKFLOW = ".github/workflows/grokbot-live-and-e2e-checks-reusable.yml";
 const LIVE_MEDIA_RUNNER_DOCKERFILE = ".github/images/live-media-runner/Dockerfile";
-const LIVE_MEDIA_RUNNER_IMAGE = "ghcr.io/openclaw/openclaw-live-media-runner:ubuntu-24.04";
+const LIVE_MEDIA_RUNNER_IMAGE = "ghcr.io/grokbot/grokbot-live-media-runner:ubuntu-24.04";
 const LIVE_MEDIA_RUNNER_IMAGE_WORKFLOW = ".github/workflows/live-media-runner-image.yml";
 const NPM_TELEGRAM_WORKFLOW = ".github/workflows/npm-telegram-beta-e2e.yml";
 const MANTIS_DISCORD_SMOKE_WORKFLOW = ".github/workflows/mantis-discord-smoke.yml";
@@ -32,15 +32,15 @@ const MANTIS_WEB_UI_CHAT_PROOF_WORKFLOW = ".github/workflows/mantis-web-ui-chat-
 const PACKAGE_JSON = "package.json";
 const SETUP_PNPM_STORE_CACHE_ACTION = ".github/actions/setup-pnpm-store-cache/action.yml";
 const DOCKER_E2E_PLAN_ACTION = ".github/actions/docker-e2e-plan/action.yml";
-const RELEASE_CHECKS_WORKFLOW = ".github/workflows/openclaw-release-checks.yml";
-const RELEASE_TELEGRAM_QA_WORKFLOW = ".github/workflows/openclaw-release-telegram-qa.yml";
-const RELEASE_PUBLISH_WORKFLOW = ".github/workflows/openclaw-release-publish.yml";
+const RELEASE_CHECKS_WORKFLOW = ".github/workflows/grokbot-release-checks.yml";
+const RELEASE_TELEGRAM_QA_WORKFLOW = ".github/workflows/grokbot-release-telegram-qa.yml";
+const RELEASE_PUBLISH_WORKFLOW = ".github/workflows/grokbot-release-publish.yml";
 const PLUGIN_PRERELEASE_WORKFLOW = ".github/workflows/plugin-prerelease.yml";
-const OPENCLAW_NPM_RELEASE_WORKFLOW = ".github/workflows/openclaw-npm-release.yml";
+const OPENCLAW_NPM_RELEASE_WORKFLOW = ".github/workflows/grokbot-npm-release.yml";
 const PLUGIN_CLAWHUB_RELEASE_WORKFLOW = ".github/workflows/plugin-clawhub-release.yml";
 const PLUGIN_NPM_RELEASE_WORKFLOW = ".github/workflows/plugin-npm-release.yml";
 const ANDROID_RELEASE_WORKFLOW = ".github/workflows/android-release.yml";
-const STABLE_MAIN_CLOSEOUT_WORKFLOW = ".github/workflows/openclaw-stable-main-closeout.yml";
+const STABLE_MAIN_CLOSEOUT_WORKFLOW = ".github/workflows/grokbot-stable-main-closeout.yml";
 const WINDOWS_NODE_RELEASE_WORKFLOW = ".github/workflows/windows-node-release.yml";
 const FULL_RELEASE_VALIDATION_WORKFLOW = ".github/workflows/full-release-validation.yml";
 const QA_LIVE_TRANSPORTS_WORKFLOW = ".github/workflows/qa-live-transports-convex.yml";
@@ -51,10 +51,10 @@ const CI_BUILD_ARTIFACTS_TESTBOX_WORKFLOW = ".github/workflows/ci-build-artifact
 const WINDOWS_BLACKSMITH_TESTBOX_WORKFLOW = ".github/workflows/windows-blacksmith-testbox.yml";
 const CRABBOX_HYDRATE_WORKFLOW = ".github/workflows/crabbox-hydrate.yml";
 const CRABBOX_CONFIG = ".crabbox.yaml";
-const SCHEDULED_LIVE_CHECKS_WORKFLOW = ".github/workflows/openclaw-scheduled-live-checks.yml";
+const SCHEDULED_LIVE_CHECKS_WORKFLOW = ".github/workflows/grokbot-scheduled-live-checks.yml";
 const CI_HYDRATE_LIVE_AUTH_SCRIPT = "scripts/ci-hydrate-live-auth.sh";
 const VERIFY_PROVIDER_SECRETS_SCRIPT =
-  ".agents/skills/release-openclaw-ci/scripts/verify-provider-secrets.mjs";
+  ".agents/skills/release-grokbot-ci/scripts/verify-provider-secrets.mjs";
 const UPGRADE_SURVIVOR_RUN_SCRIPT = "scripts/e2e/lib/upgrade-survivor/run.sh";
 const SETUP_NODE_V6 = "actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e";
 const DOWNLOAD_ARTIFACT_V8 = "actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c";
@@ -226,7 +226,7 @@ function runNpmTelegramInputValidation(overrides: Record<string, string>) {
       PACKAGE_FILE_NAME: "",
       PACKAGE_SHA256: "",
       PACKAGE_SOURCE_SHA: "",
-      PACKAGE_SPEC: "openclaw@beta",
+      PACKAGE_SPEC: "grokbot@beta",
       PACKAGE_VERSION: "",
       PATH: process.env.PATH,
       PROVIDER_MODE: "mock-openai",
@@ -271,7 +271,7 @@ esac
       ARTIFACT_NAME: artifactName,
       ARTIFACT_RUN_ATTEMPT: attempt,
       ARTIFACT_RUN_ID: params.producerRunId,
-      GITHUB_REPOSITORY: "openclaw/openclaw",
+      GITHUB_REPOSITORY: "grokbot/grokbot",
       GITHUB_RUN_ID: params.currentRunId,
       MOCK_ARTIFACT_JSON: JSON.stringify({
         created_at: "2026-07-15T08:49:20Z",
@@ -326,9 +326,9 @@ function runOpenClawNpmTrustedRefGuard(overrides: Record<string, string>) {
   const job = workflowJob(OPENCLAW_NPM_RELEASE_WORKFLOW, "validate_publish_request");
   const script = workflowStep(job, "Require trusted workflow ref for publish").run;
   if (!script) {
-    throw new Error("Expected OpenClaw npm trusted ref guard");
+    throw new Error("Expected GrokBot npm trusted ref guard");
   }
-  const binDir = tempDirs.make("openclaw-npm-trusted-ref-");
+  const binDir = tempDirs.make("grokbot-npm-trusted-ref-");
   const gitPath = `${binDir}/git`;
   writeFileSync(
     gitPath,
@@ -363,7 +363,7 @@ function runReleaseChecksSummary(params: {
   }
   const runId = "123456";
   const targetSha = "a".repeat(40);
-  const workdir = tempDirs.make("openclaw-release-check-status-");
+  const workdir = tempDirs.make("grokbot-release-check-status-");
   return spawnSync("bash", ["-c", script], {
     cwd: workdir,
     encoding: "utf8",
@@ -402,7 +402,7 @@ describe("package acceptance workflow", () => {
     const selected = runReleasePublishInputValidation({
       FULL_RELEASE_VALIDATION_RUN_ATTEMPT: "",
       FULL_RELEASE_VALIDATION_RUN_ID: "",
-      PLUGINS: "@openclaw/meta",
+      PLUGINS: "@grokbot/meta",
       PLUGIN_PUBLISH_SCOPE: "selected",
       PREFLIGHT_RUN_ID: "",
       PUBLISH_OPENCLAW_NPM: "false",
@@ -432,7 +432,7 @@ describe("package acceptance workflow", () => {
     const partialEvidence = runReleasePublishInputValidation({
       FULL_RELEASE_VALIDATION_RUN_ATTEMPT: "",
       FULL_RELEASE_VALIDATION_RUN_ID: "",
-      PLUGINS: "@openclaw/meta",
+      PLUGINS: "@grokbot/meta",
       PLUGIN_PUBLISH_SCOPE: "selected",
       PUBLISH_OPENCLAW_NPM: "false",
     });
@@ -457,7 +457,7 @@ describe("package acceptance workflow", () => {
     writeFileSync(ghPath, `#!/bin/sh\nprintf '%s\\n' "\${MOCK_MERGE_BASE_SHA}"\n`);
     chmodSync(ghPath, 0o755);
     const pinnedEnv = {
-      GITHUB_REPOSITORY: "openclaw/openclaw",
+      GITHUB_REPOSITORY: "grokbot/grokbot",
       PATH: `${binDir}:${process.env.PATH}`,
       WORKFLOW_REF: `refs/tags/release-publish/${workflowSha.slice(0, 12)}-123`,
       WORKFLOW_SHA: workflowSha,
@@ -504,7 +504,7 @@ describe("package acceptance workflow", () => {
     });
     expect(mismatchedName.status).toBe(1);
     expect(mismatchedName.stderr).toContain(
-      "SHA-pinned release-publish tag does not match the OpenClaw npm workflow SHA",
+      "SHA-pinned release-publish tag does not match the GrokBot npm workflow SHA",
     );
 
     const unreachable = runOpenClawNpmTrustedRefGuard({
@@ -514,7 +514,7 @@ describe("package acceptance workflow", () => {
     });
     expect(unreachable.status).toBe(1);
     expect(unreachable.stderr).toContain(
-      "SHA-pinned OpenClaw npm workflow revision is not reachable from current main",
+      "SHA-pinned GrokBot npm workflow revision is not reachable from current main",
     );
   });
 
@@ -552,11 +552,11 @@ describe("package acceptance workflow", () => {
     const publishOrchestration = workflowStep(publishJob, "Dispatch publish workflows");
 
     for (const stepName of [
-      "Download OpenClaw npm preflight manifest",
+      "Download GrokBot npm preflight manifest",
       "Resolve full release validation run",
       "Download full release validation manifest",
       "Download trusted release validation tooling",
-      "Validate OpenClaw npm preflight manifest",
+      "Validate GrokBot npm preflight manifest",
       "Validate full release validation manifest",
     ]) {
       expect(workflowStep(resolveJob, stepName).if).toContain(
@@ -585,7 +585,7 @@ describe("package acceptance workflow", () => {
       'dispatch_workflow_at_ref "${RELEASE_TAG}" "${TARGET_SHA}" android-release.yml',
       'wait_for_run android-release.yml "${android_release_run_id}" "${TARGET_SHA}"',
       'wait_for_run plugin-npm-release.yml "${plugin_npm_run_id}" "${PARENT_WORKFLOW_SHA}"',
-      'wait_for_run_background openclaw-npm-release.yml "${openclaw_npm_run_id}" "${PARENT_WORKFLOW_SHA}"',
+      'wait_for_run_background grokbot-npm-release.yml "${openclaw_npm_run_id}" "${PARENT_WORKFLOW_SHA}"',
       "plugin-clawhub-release.yml: detached; approval and publish not awaited",
       "plugin-clawhub-new.yml: detached; approvals and bootstrap not awaited",
     ]);
@@ -745,7 +745,7 @@ describe("package acceptance workflow", () => {
     expect(workflow).toContain(
       '--require-complete-platform-assets "$ALLOW_FAILED_PUBLISH_RECOVERY"',
     );
-    expect(workflow).toContain("verify_checksum_manifest OpenClaw-Android-SHA256SUMS.txt");
+    expect(workflow).toContain("verify_checksum_manifest GrokBot-Android-SHA256SUMS.txt");
     expect(workflow).toContain("verify_checksum_manifest OpenClawCompanion-SHA256SUMS.txt");
     expect(workflow).toContain("actual=\"$(awk 'NF { name=$2;");
     expect(workflow).toContain('sub(/^\\*/, "", name)');
@@ -772,7 +772,7 @@ describe("package acceptance workflow", () => {
     );
     expect(workflow).toContain('--allow-stale-rollback-drill "$REPAIR_PARTIAL_CLOSEOUT"');
     expect(workflow).toContain(
-      'awk -v asset="openclaw-${release_version}-stable-main-closeout.json"',
+      'awk -v asset="grokbot-${release_version}-stable-main-closeout.json"',
     );
     expect(workflow).toContain("attach_or_verify \\");
     expect(attachStep.run).toContain('cp -- "$source_path" "$existing_dir/$asset_name"');
@@ -785,7 +785,7 @@ describe("package acceptance workflow", () => {
     );
     expect(workflow).toContain("(.[0].runAttempt == null) or");
     expect(workflow).toContain(
-      'release_manifest_asset="openclaw-${evidence_version}-release-manifest.json"',
+      'release_manifest_asset="grokbot-${evidence_version}-release-manifest.json"',
     );
     expect(workflow).toContain('sha256sum --strict --status -c "$release_manifest_checksum_asset"');
     expect(workflow).toContain(
@@ -801,7 +801,7 @@ describe("package acceptance workflow", () => {
       'String(run.run_attempt ?? "") !== process.env.FULL_RELEASE_VALIDATION_RUN_ATTEMPT',
     );
     expect(evidenceStep.run).toContain(
-      'manifest_asset="openclaw-${evidence_version}-release-manifest.json"',
+      'manifest_asset="grokbot-${evidence_version}-release-manifest.json"',
     );
     expect(evidenceStep.run).toContain('gh_with_retry release download "$EVIDENCE_TAG"');
     expect(evidenceStep.run).toContain(".runId == $run_id");
@@ -948,7 +948,7 @@ describe("package acceptance workflow", () => {
       "$Value | Out-File -FilePath $Path -Encoding utf8 -Append",
     );
     expect(hydrateWindowsPnpm.run).toContain('"--filter",');
-    expect(hydrateWindowsPnpm.run).toContain('"openclaw",');
+    expect(hydrateWindowsPnpm.run).toContain('"grokbot",');
     expect(hydrateWindowsPnpm.run).toContain(
       "New-Item -ItemType Junction -Path $workspaceNodeModules -Target $env:PNPM_CONFIG_MODULES_DIR",
     );
@@ -1070,14 +1070,14 @@ describe("package acceptance workflow", () => {
     expect(workflow).toContain("trusted_source_id:");
     expect(workflow).toContain("TRUSTED_SOURCE_ID: ${{ inputs.trusted_source_id }}");
     expect(workflow).toContain('--trusted-source-id "$TRUSTED_SOURCE_ID"');
-    expect(workflow).toContain("scripts/resolve-openclaw-package-candidate.mjs");
+    expect(workflow).toContain("scripts/resolve-grokbot-package-candidate.mjs");
     expect(workflow).toContain('--package-ref "$PACKAGE_REF"');
     expect(workflow).toContain("artifact-ids: ${{ inputs.artifact_id }}");
     expect(workflow).toContain("actions/artifacts/${ARTIFACT_ID}");
     expect(workflow).toContain("name: ${{ env.PACKAGE_ARTIFACT_NAME }}");
     expect(workflow).toContain("pull-requests: read");
     expect(workflow).toContain(
-      "uses: ./.github/workflows/openclaw-live-and-e2e-checks-reusable.yml",
+      "uses: ./.github/workflows/grokbot-live-and-e2e-checks-reusable.yml",
     );
     expect(workflow).toContain(
       "ref: ${{ needs.resolve_package.outputs.package_source_sha || inputs.workflow_ref }}",
@@ -1087,7 +1087,7 @@ describe("package acceptance workflow", () => {
     );
     expect(workflow).toContain("package_integrity:");
     expect(workflow).toContain("name: Package integrity");
-    expect(workflow).toContain('node scripts/check-openclaw-package-tarball.mjs "$package"');
+    expect(workflow).toContain('node scripts/check-grokbot-package-tarball.mjs "$package"');
     expect(workflow).toContain('[[ "$actual_sha256" == "$EXPECTED_PACKAGE_SHA256" ]]');
     expect(workflow).toContain("needs: [resolve_package, package_integrity]");
     expect(workflow).toContain("package_integrity=${PACKAGE_INTEGRITY_RESULT}");
@@ -1100,7 +1100,7 @@ describe("package acceptance workflow", () => {
       workflow.indexOf("  package_integrity:"),
     );
 
-    expect(resolveJob).toContain("scripts/resolve-openclaw-package-candidate.mjs");
+    expect(resolveJob).toContain("scripts/resolve-grokbot-package-candidate.mjs");
     expect(resolveJob).not.toContain("pnpm install");
   });
 
@@ -1162,7 +1162,7 @@ describe("package acceptance workflow", () => {
     expect(workflow).toContain("telegram_scenarios:");
     expect(workflow).toContain("scenario: ${{ inputs.telegram_scenarios }}");
     expect(workflow).toContain(
-      "package_label: openclaw@${{ needs.resolve_package.outputs.package_version }}",
+      "package_label: grokbot@${{ needs.resolve_package.outputs.package_version }}",
     );
     expect(npmTelegramWorkflow).toContain("package_artifact_run_id:");
     expect(npmTelegramWorkflow).toContain("Download package-under-test artifact from release run");
@@ -1208,7 +1208,7 @@ describe("package acceptance workflow", () => {
     expect(workflow).toContain("codex_plugin_spec:");
     expect(workflow).toContain('args+=(-f codex_plugin_spec="$CODEX_PLUGIN_SPEC")');
     expect(releaseChecksWorkflow).toContain(
-      'codex_plugin_spec="npm:@openclaw/codex@${BASH_REMATCH[1]}"',
+      'codex_plugin_spec="npm:@grokbot/codex@${BASH_REMATCH[1]}"',
     );
     expect(releaseChecksWorkflow).toContain(
       "codex_plugin_spec: ${{ needs.resolve_target.outputs.codex_plugin_spec }}",
@@ -1247,7 +1247,7 @@ describe("package acceptance workflow", () => {
       "source: ${{ (needs.resolve_target.outputs.package_acceptance_package_spec != '' || needs.resolve_target.outputs.release_package_spec != '') && 'npm' || 'artifact' }}",
     );
     expect(releaseChecksWorkflow).toContain(
-      "package_spec: ${{ needs.resolve_target.outputs.package_acceptance_package_spec || needs.resolve_target.outputs.release_package_spec || 'openclaw@beta' }}",
+      "package_spec: ${{ needs.resolve_target.outputs.package_acceptance_package_spec || needs.resolve_target.outputs.release_package_spec || 'grokbot@beta' }}",
     );
   });
 
@@ -1255,7 +1255,7 @@ describe("package acceptance workflow", () => {
     const workflow = readFileSync(FULL_RELEASE_VALIDATION_WORKFLOW, "utf8");
     const performanceStep = workflowStep(
       workflowJob(FULL_RELEASE_VALIDATION_WORKFLOW, "performance"),
-      "Dispatch and monitor OpenClaw Performance",
+      "Dispatch and monitor GrokBot Performance",
     );
     const summaryStep = workflowStep(
       workflowJob(FULL_RELEASE_VALIDATION_WORKFLOW, "summary"),
@@ -1286,7 +1286,7 @@ describe("package acceptance workflow", () => {
       "Validate full release validation manifest",
     );
     const npmValidationStep = workflowStep(
-      workflowJob(".github/workflows/openclaw-npm-release.yml", "publish_openclaw_npm"),
+      workflowJob(".github/workflows/grokbot-npm-release.yml", "publish_openclaw_npm"),
       "Verify full release validation target",
     );
 
@@ -1311,7 +1311,7 @@ describe("package acceptance workflow", () => {
       ["plugin_prerelease", "Dispatch and monitor plugin prerelease"],
       ["release_checks", "Dispatch and monitor release checks"],
       ["npm_telegram", "Dispatch and monitor npm Telegram E2E"],
-      ["performance", "Dispatch and monitor OpenClaw Performance"],
+      ["performance", "Dispatch and monitor GrokBot Performance"],
     ] as const;
     const dispatchScripts = childDispatches.map(([jobName, stepName]) => {
       const job = workflowJob(FULL_RELEASE_VALIDATION_WORKFLOW, jobName);
@@ -1359,7 +1359,7 @@ describe("package acceptance workflow", () => {
       "read: i/o timeout",
       "network is unreachable",
       "unexpected EOF",
-      'Post "https://api.github.com/repos/openclaw/openclaw/actions/workflows/ci.yml/dispatches": EOF',
+      'Post "https://api.github.com/repos/grokbot/grokbot/actions/workflows/ci.yml/dispatches": EOF',
       "EOF",
       "ETIMEDOUT",
       "ECONNRESET",
@@ -1416,7 +1416,7 @@ describe("package acceptance workflow", () => {
       "format('Plugin Prerelease {0}', inputs.dispatch_id)",
     );
     expect(readFileSync(RELEASE_CHECKS_WORKFLOW, "utf8")).toContain(
-      "format('OpenClaw Release Checks {0}', inputs.dispatch_id)",
+      "format('GrokBot Release Checks {0}', inputs.dispatch_id)",
     );
     expect(readFileSync(NPM_TELEGRAM_WORKFLOW, "utf8")).toContain(
       "format('NPM Telegram Beta E2E {0}', inputs.dispatch_id)",
@@ -1532,8 +1532,8 @@ describe("package artifact reuse", () => {
     expect(workflow).toContain(
       "OPENCLAW_ALLOW_FROZEN_TARGET_SCENARIO_OMISSIONS: ${{ inputs.allow_frozen_target_scenario_omissions && '1' || '0' }}",
     );
-    expect(workflow).toContain("Download current-run OpenClaw Docker E2E package");
-    expect(workflow).toContain("Download previous-run OpenClaw Docker E2E package");
+    expect(workflow).toContain("Download current-run GrokBot Docker E2E package");
+    expect(workflow).toContain("Download previous-run GrokBot Docker E2E package");
     expect(workflow).toContain("inputs.package_artifact_id != ''");
     expect(workflow).toContain(
       'bare_image="${PROVIDED_BARE_IMAGE:-ghcr.io/${repository}-docker-e2e-bare:${image_tag}}"',
@@ -1598,10 +1598,10 @@ describe("package artifact reuse", () => {
     expect(publishedUpgradeSurvivor).toContain("write_update_restart_service_secretref_env");
     expect(publishedUpgradeSurvivor).toContain("GATEWAY_AUTH_TOKEN_REF=%s");
     expect(publishedUpgradeSurvivor).toContain(
-      "env -u OPENCLAW_GATEWAY_TOKEN -u OPENCLAW_GATEWAY_PASSWORD openclaw",
+      "env -u OPENCLAW_GATEWAY_TOKEN -u OPENCLAW_GATEWAY_PASSWORD grokbot",
     );
     expect(publishedUpgradeSurvivor).toContain("phase prepare-update-restart-probe");
-    expect(publishedUpgradeSurvivor).toContain("openclaw@(alpha|beta|latest|");
+    expect(publishedUpgradeSurvivor).toContain("grokbot@(alpha|beta|latest|");
     expect(publishedUpgradeSurvivor).toContain("plugin_deps_cleanup_plugin_dirs");
     expect(publishedUpgradeSurvivor).toContain('"$(package_root)/extensions/$plugin"');
     expect(publishedUpgradeSurvivor).toContain("probe_gateway_endpoint");
@@ -1611,7 +1611,7 @@ describe("package artifact reuse", () => {
     expect(publishedUpgradeSurvivor.indexOf("phase seed-source-only-plugin-shadow")).toBeLessThan(
       publishedUpgradeSurvivor.indexOf("phase assert-baseline"),
     );
-    expect(publishedUpgradeSurvivor).toContain('"id": "opik-openclaw"');
+    expect(publishedUpgradeSurvivor).toContain('"id": "opik-grokbot"');
     expect(publishedUpgradeSurvivor).toContain('"configSchema": {');
     expect(publishedUpgradeSurvivor).toContain(
       "Legacy plugin dependency debris was already removed before doctor",
@@ -1687,7 +1687,7 @@ describe("package artifact reuse", () => {
       "Dispatch and monitor release checks",
     );
 
-    expect(prepare.uses).toBe("./.github/workflows/openclaw-live-and-e2e-checks-reusable.yml");
+    expect(prepare.uses).toBe("./.github/workflows/grokbot-live-and-e2e-checks-reusable.yml");
     expect(prepare.with).toMatchObject({
       prepare_only: true,
       shared_image_policy: "no-push-artifact",
@@ -2398,7 +2398,7 @@ describe("package artifact reuse", () => {
       "Run Testbox",
     );
 
-    expect(workflow).toContain('PNPM_CONFIG_STORE_DIR: "/tmp/openclaw-pnpm-store"');
+    expect(workflow).toContain('PNPM_CONFIG_STORE_DIR: "/tmp/grokbot-pnpm-store"');
     expect(workflow).not.toContain("PNPM_CONFIG_MODULES_DIR");
     expect(workflow).not.toContain("PNPM_CONFIG_VIRTUAL_STORE_DIR");
     expect(checkTestboxJob["timeout-minutes"]).toBe(
@@ -2467,7 +2467,7 @@ describe("package artifact reuse", () => {
       "source: ${{ (needs.resolve_target.outputs.package_acceptance_package_spec != '' || needs.resolve_target.outputs.release_package_spec != '') && 'npm' || 'artifact' }}",
     );
     expect(workflow).toContain(
-      "package_spec: ${{ needs.resolve_target.outputs.package_acceptance_package_spec || needs.resolve_target.outputs.release_package_spec || 'openclaw@beta' }}",
+      "package_spec: ${{ needs.resolve_target.outputs.package_acceptance_package_spec || needs.resolve_target.outputs.release_package_spec || 'grokbot@beta' }}",
     );
     expect(workflow).toContain(".artifacts/docker-e2e-package/package-candidate.json");
     expect(workflow).toContain(
@@ -2586,8 +2586,8 @@ describe("package artifact reuse", () => {
     }
     expect(releaseWorkflow).not.toContain("qa_live_matrix_release_checks");
     expect(releaseWorkflow).not.toContain("Run QA Lab live Matrix lane");
-    expect(releaseWorkflow).not.toContain("pnpm openclaw qa matrix");
-    expect(qaWorkflow).toContain("pnpm openclaw qa matrix");
+    expect(releaseWorkflow).not.toContain("pnpm grokbot qa matrix");
+    expect(qaWorkflow).toContain("pnpm grokbot qa matrix");
     expect(qaWorkflow).toContain('for attempt in $(seq 1 "${MATRIX_ATTEMPTS}")');
     expect(qaWorkflow).toContain("matrix_status:");
     expect(qaWorkflow).toContain("value: ${{ jobs.run_live_matrix.outputs.status }}");
@@ -3097,7 +3097,7 @@ describe("package artifact reuse", () => {
 
     expectTextToIncludeAll(workflow, [
       "Published-package Telegram E2E:",
-      "Package Telegram E2E: OpenClaw Release Checks Package Acceptance",
+      "Package Telegram E2E: GrokBot Release Checks Package Acceptance",
       "Package Telegram E2E: focused rerun requires \\`release_package_spec\\` or \\`npm_telegram_package_spec\\`",
     ]);
     expect(releaseDocs).toContain(
@@ -3150,7 +3150,7 @@ describe("package artifact reuse", () => {
     expectTextToIncludeAll(validateStep.run, [
       'if [[ -z "${PACKAGE_ARTIFACT_NAME// }" ]]; then',
       "Artifact-backed Telegram E2E requires all artifact identity fields or none.",
-      "package_spec must be openclaw@alpha",
+      "package_spec must be grokbot@alpha",
       "Artifact-backed Telegram E2E requires the complete immutable artifact and package identity tuple.",
     ]);
     expect(identityStep.env).toMatchObject({
@@ -3188,7 +3188,7 @@ describe("package artifact reuse", () => {
       'find "${package_dir}" -type f -name "*.tgz"',
       "package artifact manifest contains duplicate package metadata",
       "package artifact tarball set does not match preflight manifest",
-      "package candidate manifest does not match the OpenClaw tarball",
+      "package candidate manifest does not match the GrokBot tarball",
       "Package Telegram artifact SHA-256 differs from package_sha256.",
       "package candidate digest mismatch",
       "Package Telegram artifact tarball differs from package_file_name.",
@@ -3361,7 +3361,7 @@ describe("package artifact reuse", () => {
 
     const telegramCaller = workflowJob(RELEASE_CHECKS_WORKFLOW, "qa_live_telegram_release_checks");
     const telegramDispatch = workflowStep(telegramCaller, "Dispatch and await trusted Telegram QA");
-    expect(telegramDispatch.run).toContain('workflow="openclaw-release-telegram-qa.yml"');
+    expect(telegramDispatch.run).toContain('workflow="grokbot-release-telegram-qa.yml"');
     expect(telegramDispatch.run).toContain('--repo "$GITHUB_REPOSITORY"');
     expect(telegramDispatch.run).toContain("--ref main");
     expect(telegramDispatch.run).toContain(
@@ -3547,9 +3547,9 @@ describe("package artifact reuse", () => {
 
   it("keeps release publish creation compatible with gh api and prerelease notes", () => {
     const workflow = readFileSync(RELEASE_PUBLISH_WORKFLOW, "utf8");
-    const npmWorkflow = readFileSync(".github/workflows/openclaw-npm-release.yml", "utf8");
+    const npmWorkflow = readFileSync(".github/workflows/grokbot-npm-release.yml", "utf8");
     const maintainerSkill = readFileSync(
-      ".agents/skills/release-openclaw-maintainer/SKILL.md",
+      ".agents/skills/release-grokbot-maintainer/SKILL.md",
       "utf8",
     );
     const fullReleaseWorkflow = readFileSync(FULL_RELEASE_VALIDATION_WORKFLOW, "utf8");
@@ -3562,7 +3562,7 @@ describe("package artifact reuse", () => {
     const publishDownload = workflowStep(publishJob, "Download full release validation manifest");
     const publishOrchestration = workflowStep(publishJob, "Dispatch publish workflows");
     const npmPublishJob = workflowJob(
-      ".github/workflows/openclaw-npm-release.yml",
+      ".github/workflows/grokbot-npm-release.yml",
       "publish_openclaw_npm",
     );
     const npmCheckout = workflowStep(npmPublishJob, "Checkout");
@@ -3572,8 +3572,8 @@ describe("package artifact reuse", () => {
 
     expect(workflow).toContain("timeout-minutes: 120");
     expect(workflow).toContain("environment: npm-release");
-    expect(workflow).toContain("Download OpenClaw npm preflight manifest");
-    expect(workflow).toContain("Validate OpenClaw npm preflight manifest");
+    expect(workflow).toContain("Download GrokBot npm preflight manifest");
+    expect(workflow).toContain("Validate GrokBot npm preflight manifest");
     expect(workflow).toContain("Download full release validation manifest");
     expect(workflow).toContain("Validate full release validation manifest");
     expect(workflow).toContain("scripts/validate-full-release-validation-evidence.mjs");
@@ -3659,7 +3659,7 @@ describe("package artifact reuse", () => {
     expect(fullReleaseWorkflow).toContain("docker build");
     expect(fullReleaseWorkflow).toContain("--target runtime-assets");
     expect(fullReleaseWorkflow).toContain("timeout --kill-after=30s 15m docker build");
-    expect(fullReleaseWorkflow).not.toContain("node /app/openclaw.mjs agent");
+    expect(fullReleaseWorkflow).not.toContain("node /app/grokbot.mjs agent");
     expect(fullReleaseWorkflow).toContain('OPENCLAW_EXTENSIONS="diagnostics-otel,codex"');
     expect(fullReleaseWorkflow).not.toContain("/app/src/agents/templates/HEARTBEAT.md");
     expect(fullReleaseWorkflow).toContain("inputs.rerun_group == 'all'");
@@ -3677,21 +3677,21 @@ describe("package artifact reuse", () => {
     expect(npmWorkflow).toContain("corePackageTarballs");
     expect(npmWorkflow).toContain("dependencyTarballs");
     expect(npmWorkflow).toContain("dependencyTarballs: process.env.AI_TARBALL_NAME");
-    expect(npmWorkflow).toContain('packageName: "@openclaw/ai"');
-    expect(npmWorkflow).toContain('packageName: "@openclaw/gateway-protocol"');
-    expect(npmWorkflow).toContain('packageName: "@openclaw/gateway-client"');
+    expect(npmWorkflow).toContain('packageName: "@grokbot/ai"');
+    expect(npmWorkflow).toContain('packageName: "@grokbot/gateway-protocol"');
+    expect(npmWorkflow).toContain('packageName: "@grokbot/gateway-client"');
     expect(npmWorkflow).toContain(
       "CORE_PACKAGE_DIRS: packages/ai packages/gateway-protocol packages/gateway-client",
     );
     expect(npmWorkflow).toContain("AI_TARBALL_SHA256");
     expect(npmWorkflow).toContain("GATEWAY_PROTOCOL_TARBALL_SHA256");
     expect(npmWorkflow).toContain("GATEWAY_CLIENT_TARBALL_SHA256");
-    expect(npmWorkflow).toContain("does not match openclaw");
-    expect(npmWorkflow).toContain("Frozen target does not depend on @openclaw/ai");
+    expect(npmWorkflow).toContain("does not match grokbot");
+    expect(npmWorkflow).toContain("Frozen target does not depend on @grokbot/ai");
     expect(npmWorkflow).toContain("core-packages-SHA256SUMS");
     expect(npmWorkflow).toContain(".corePackageTarballs[] | [.packageName, .tarballName] | @tsv");
     expect(npmWorkflow).toContain('verify_args=("$TARBALL_PATH" "$PACKAGE_VERSION")');
-    expect(npmWorkflow).toContain("Frozen target without an @openclaw/ai dependency");
+    expect(npmWorkflow).toContain("Frozen target without an @grokbot/ai dependency");
     const npmTelegramWorkflow = readFileSync(NPM_TELEGRAM_WORKFLOW, "utf8");
     expect(npmTelegramWorkflow).toContain("preflight-manifest.json");
     expect(npmTelegramWorkflow).toContain("OPENCLAW_NPM_TELEGRAM_PACKAGE_DIR");
@@ -3724,8 +3724,8 @@ describe("package artifact reuse", () => {
     expect(workflow).not.toContain("timeout-minutes: 360");
   });
 
-  it("keeps OpenClaw npm release pack tarball paths local before preflight upload", () => {
-    const npmWorkflow = readFileSync(".github/workflows/openclaw-npm-release.yml", "utf8");
+  it("keeps GrokBot npm release pack tarball paths local before preflight upload", () => {
+    const npmWorkflow = readFileSync(".github/workflows/grokbot-npm-release.yml", "utf8");
     const packStepIndex = npmWorkflow.indexOf("- name: Pack prepared npm tarball");
     const copyIndex = npmWorkflow.indexOf('cp "$PACK_PATH" "$ARTIFACT_DIR/"');
     const uploadIndex = npmWorkflow.indexOf("- name: Upload prepared npm publish bundle");
@@ -3745,7 +3745,7 @@ describe("package artifact reuse", () => {
     expect(npmWorkflow).not.toContain('TARBALL_NAME="$(basename "$PACK_PATH")"');
   });
 
-  it("accepts tag-matched frozen release branches in OpenClaw npm preflight", () => {
+  it("accepts tag-matched frozen release branches in GrokBot npm preflight", () => {
     const preflight = workflowJob(OPENCLAW_NPM_RELEASE_WORKFLOW, "preflight_openclaw_npm");
     const metadata = workflowStep(preflight, "Validate release metadata");
 
@@ -3762,15 +3762,15 @@ describe("package artifact reuse", () => {
     const windowsWorkflow = readFileSync(WINDOWS_NODE_RELEASE_WORKFLOW, "utf8");
     const releaseDocs = readFileSync("docs/reference/RELEASING.md", "utf8");
     const releaseSkill = readFileSync(
-      ".agents/skills/release-openclaw-maintainer/SKILL.md",
+      ".agents/skills/release-grokbot-maintainer/SKILL.md",
       "utf8",
     );
 
     expect(releaseWorkflow).toContain(
-      "Stable OpenClaw publish requires an explicit windows_node_tag.",
+      "Stable GrokBot publish requires an explicit windows_node_tag.",
     );
     expect(releaseWorkflow).toContain(
-      "Stable OpenClaw publish requires candidate-approved windows_node_installer_digests.",
+      "Stable GrokBot publish requires candidate-approved windows_node_installer_digests.",
     );
     expect(releaseWorkflow).toContain("promote_windows_release_assets()");
     expect(releaseWorkflow).toContain("dispatch_workflow windows-node-release.yml");
@@ -3825,7 +3825,7 @@ describe("package artifact reuse", () => {
     expect(windowsWorkflow).not.toContain("default: latest");
     expect(windowsWorkflow).toContain("expected_installer_digests:");
     expect(windowsWorkflow).toContain("expected_installer_digests must contain exactly");
-    expect(windowsWorkflow).toContain("must be an explicit openclaw-windows-node release tag");
+    expect(windowsWorkflow).toContain("must be an explicit grokbot-windows-node release tag");
     expect(windowsWorkflow).toContain("$installerPatterns = @(");
     expect(windowsWorkflow).toContain("Every matched installer is signature-checked");
     expect(windowsWorkflow).toContain("Get-ChildItem -LiteralPath dist -File");
@@ -3833,7 +3833,7 @@ describe("package artifact reuse", () => {
       "Downloaded Windows source asset does not match pinned digest",
     );
     expect(windowsWorkflow).toContain(
-      "--repo openclaw/openclaw-windows-node --json tagName,isDraft,isPrerelease,assets,url",
+      "--repo grokbot/grokbot-windows-node --json tagName,isDraft,isPrerelease,assets,url",
     );
     expect(windowsWorkflow).toContain(
       "Windows source release must contain exactly one required asset",
@@ -3842,7 +3842,7 @@ describe("package artifact reuse", () => {
       "Windows source release asset digest does not match the pinned digest",
     );
     expect(windowsWorkflow).toContain(
-      "CN=OpenClaw Foundation, O=OpenClaw Foundation, L=Mill Valley, S=California, C=US",
+      "CN=GrokBot Foundation, O=GrokBot Foundation, L=Mill Valley, S=California, C=US",
     );
     expect(windowsWorkflow).toContain("has unexpected signer subject");
     expect(windowsWorkflow).toContain("OpenClawCompanion-SHA256SUMS.txt");
@@ -3895,15 +3895,15 @@ describe("package artifact reuse", () => {
       "android-release-approval-${{ inputs.release_publish_run_id }}",
     );
     expect(androidWorkflow).toContain(
-      '--signer-workflow "${GITHUB_REPOSITORY}/.github/workflows/openclaw-release-publish.yml"',
+      '--signer-workflow "${GITHUB_REPOSITORY}/.github/workflows/grokbot-release-publish.yml"',
     );
     expect(androidWorkflow).toContain('--source-ref "refs/heads/${EXPECTED_WORKFLOW_BRANCH}"');
     expect(approvalScript).toContain(
       "Attested Android release approval does not match this run request.",
     );
     expect(androidWorkflow).toContain('--artifact", "third-party');
-    expect(androidWorkflow).toContain("OpenClaw-Android.apk");
-    expect(androidWorkflow).toContain("OpenClaw-Android-SHA256SUMS.txt");
+    expect(androidWorkflow).toContain("GrokBot-Android.apk");
+    expect(androidWorkflow).toContain("GrokBot-Android-SHA256SUMS.txt");
     expect(androidWorkflow).toContain("actions/attest@a1948c3f048ba23858d222213b7c278aabede763");
     expect(androidWorkflow).toContain("--signer-workflow");
     expect(androidWorkflow).toContain('--source-ref "refs/tags/${RELEASE_TAG}"');
@@ -3933,7 +3933,7 @@ describe("package artifact reuse", () => {
 
     expect(releaseWorkflow).toContain("promote_android_release_asset()");
     expect(releaseWorkflow).toContain("is_android_release()");
-    expect(androidWorkflow).toContain("requires a final or correction OpenClaw release tag");
+    expect(androidWorkflow).toContain("requires a final or correction GrokBot release tag");
     expect(androidWorkflow).toContain("previous_version_code");
     expect(androidWorkflow).toContain("must exceed ${previous_tag} versionCode");
     expect(androidWorkflow).toContain("standalone channel bootstrap");
@@ -3958,9 +3958,9 @@ describe("package artifact reuse", () => {
     expect(promoteAndroidCall).toBeGreaterThan(createDraftCall);
     expect(publishReleaseCall).toBeGreaterThan(promoteAndroidCall);
 
-    expect(androidDocs).toContain("github.com/openclaw/openclaw/releases");
-    expect(androidDocs).not.toContain("releases/latest/download/OpenClaw-Android.apk");
-    expect(androidDocs).toContain("gh attestation verify OpenClaw-Android.apk");
+    expect(androidDocs).toContain("github.com/grokbot/grokbot/releases");
+    expect(androidDocs).not.toContain("releases/latest/download/GrokBot-Android.apk");
+    expect(androidDocs).toContain("gh attestation verify GrokBot-Android.apk");
     expect(androidDocs).toContain('--source-ref "refs/tags/${release_tag}"');
     expect(releaseDocs).toContain("signed standalone Android APK");
   });
@@ -3982,7 +3982,7 @@ describe("package artifact reuse", () => {
       "if ($stableRelease -and $sourceRelease.isPrerelease)",
     );
     const rejectUnexpectedTargetAssetsIndex = windowsWorkflow.indexOf(
-      "Target OpenClaw release contains unexpected OpenClawCompanion assets before upload",
+      "Target GrokBot release contains unexpected OpenClawCompanion assets before upload",
     );
     const uploadAssetsIndex = windowsWorkflow.indexOf("gh release upload $env:RELEASE_TAG");
 
@@ -4001,7 +4001,7 @@ describe("package artifact reuse", () => {
     const clawHubWorkflow = readFileSync(".github/workflows/plugin-clawhub-release.yml", "utf8");
     const clawHubNewWorkflow = readFileSync(".github/workflows/plugin-clawhub-new.yml", "utf8");
     const pluginNpmWorkflow = readFileSync(PLUGIN_NPM_RELEASE_WORKFLOW, "utf8");
-    const openclawNpmWorkflow = readFileSync(".github/workflows/openclaw-npm-release.yml", "utf8");
+    const openclawNpmWorkflow = readFileSync(".github/workflows/grokbot-npm-release.yml", "utf8");
     const fastPretagScript = readFileSync("scripts/release-fast-pretag-check.sh", "utf8");
     const pluginPretagPackScript = readFileSync(
       "scripts/plugin-release-pretag-pack-check.ts",
@@ -4009,7 +4009,7 @@ describe("package artifact reuse", () => {
     );
     const approvalScript = readFileSync("scripts/validate-release-publish-approval.mjs", "utf8");
     const clawHubReleasePlanScript = readFileSync(
-      "scripts/lib/openclaw-release-clawhub-plan.ts",
+      "scripts/lib/grokbot-release-clawhub-plan.ts",
       "utf8",
     );
     const clawHubResolveRefIndex = clawHubWorkflow.indexOf("- name: Resolve checked-out ref");
@@ -4087,10 +4087,10 @@ describe("package artifact reuse", () => {
       "github.event_name == 'workflow_dispatch' && inputs.dry_run != true && inputs.publish_scope == 'selected' && steps.plan.outputs.skipped_published_count != '0'",
     );
     expect(clawHubWorkflow).toContain(
-      "uses: openclaw/clawhub/.github/workflows/package-publish.yml@d8096dfc039e86ab942ddf9ef117d04849fd84c1",
+      "uses: grokbot/clawhub/.github/workflows/package-publish.yml@d8096dfc039e86ab942ddf9ef117d04849fd84c1",
     );
     expect(clawHubWorkflow).toContain(
-      'family: ${{ contains(fromJson(\'["@openclaw/acpx","@openclaw/diffs","@openclaw/feishu","@openclaw/qqbot"]\'), matrix.plugin.packageName) && \'bundle-plugin\' || \'\' }}',
+      'family: ${{ contains(fromJson(\'["@grokbot/acpx","@grokbot/diffs","@grokbot/feishu","@grokbot/qqbot"]\'), matrix.plugin.packageName) && \'bundle-plugin\' || \'\' }}',
     );
     expect(clawHubWorkflow).toContain("dry_run:");
     expect(clawHubWorkflow).toContain("default: false");
@@ -4186,11 +4186,11 @@ describe("package artifact reuse", () => {
     expect(releaseWorkflow).not.toContain("before_json");
     expect(releaseWorkflow).toContain("plugin-clawhub-new.yml");
     expect(releaseWorkflow).toContain("Plugin ClawHub bootstrap run ID");
-    expect(releaseWorkflow).toContain("scripts/openclaw-release-clawhub-plan.ts");
-    expect(releaseWorkflow).toContain("scripts/openclaw-release-clawhub-runtime-state.ts");
-    expect(isExecutable("scripts/openclaw-release-clawhub-plan.ts")).toBe(true);
-    expect(isExecutable("scripts/openclaw-release-clawhub-runtime-state.ts")).toBe(true);
-    expect(releaseWorkflow).toContain("openclaw-release-clawhub-plan.json");
+    expect(releaseWorkflow).toContain("scripts/grokbot-release-clawhub-plan.ts");
+    expect(releaseWorkflow).toContain("scripts/grokbot-release-clawhub-runtime-state.ts");
+    expect(isExecutable("scripts/grokbot-release-clawhub-plan.ts")).toBe(true);
+    expect(isExecutable("scripts/grokbot-release-clawhub-runtime-state.ts")).toBe(true);
+    expect(releaseWorkflow).toContain("grokbot-release-clawhub-plan.json");
     expect(trustedReleaseToolingCheckout.with).toMatchObject({
       ref: "${{ github.sha }}",
       path: ".release-harness",
@@ -4198,10 +4198,10 @@ describe("package artifact reuse", () => {
       "persist-credentials": false,
     });
     expect(releaseWorkflow).toContain(
-      '"${GITHUB_WORKSPACE}/.release-harness/scripts/openclaw-release-clawhub-plan.ts"',
+      '"${GITHUB_WORKSPACE}/.release-harness/scripts/grokbot-release-clawhub-plan.ts"',
     );
     expect(trustedClawHubPlan.run).toContain(
-      '"${GITHUB_WORKSPACE}/.release-harness/scripts/openclaw-release-clawhub-plan.ts"',
+      '"${GITHUB_WORKSPACE}/.release-harness/scripts/grokbot-release-clawhub-plan.ts"',
     );
     expect(trustedClawHubPlan.run).toContain('--release-sha "${TARGET_SHA}"');
     expect(trustedClawHubPlan.run).toContain(
@@ -4231,12 +4231,12 @@ describe("package artifact reuse", () => {
     expect(releaseWorkflow).toContain("parentWorkflowSha: process.env.GITHUB_SHA");
     expect(releaseWorkflow).toContain("bootstrapWorkflowSha: plan.bootstrapWorkflowSha");
     expect(releaseWorkflow).toContain(
-      '"${GITHUB_WORKSPACE}/.release-harness/scripts/openclaw-release-clawhub-runtime-state.ts"',
+      '"${GITHUB_WORKSPACE}/.release-harness/scripts/grokbot-release-clawhub-runtime-state.ts"',
     );
     expect(releaseWorkflow).toContain(
       '"${GITHUB_WORKSPACE}/.release-harness/scripts/release-verify-beta.ts"',
     );
-    expect(releaseWorkflow).toContain("openclaw-release-clawhub-runtime-state");
+    expect(releaseWorkflow).toContain("grokbot-release-clawhub-runtime-state");
     expect(releaseWorkflow).toContain("bootstrap_plugins");
     expect(releaseWorkflow).toContain("missing_trusted_plugins");
     expect(releaseWorkflow).toContain(".summary.bootstrapPlugins");
@@ -4272,7 +4272,7 @@ describe("package artifact reuse", () => {
     );
     expect(verifyBootstrapWorkflowIndex).toBeGreaterThan(-1);
     expect(dispatchPluginNpmIndex).toBeGreaterThan(verifyBootstrapWorkflowIndex);
-    expect(releaseWorkflow).toContain("OpenClaw npm run ID");
+    expect(releaseWorkflow).toContain("GrokBot npm run ID");
     expect(releaseWorkflow).toContain("npm_telegram_run_id");
     expect(releaseWorkflow).toContain('release_publish_run_id="${GITHUB_RUN_ID}"');
     expect(releaseWorkflow).toContain("append_release_proof_to_github_release");
@@ -4298,7 +4298,7 @@ describe("package artifact reuse", () => {
     // The release proof must cite the verified evidence tarball; the only
     // direct registry tarball query is the resume identity check.
     expect(
-      releaseWorkflow.match(/npm view "openclaw@\$\{release_version\}" dist\.tarball/g),
+      releaseWorkflow.match(/npm view "grokbot@\$\{release_version\}" dist\.tarball/g),
     ).toHaveLength(1);
     expect(releaseWorkflow).toContain("release SHA");
     expect(clawHubReleasePlanScript).toContain("not awaited by this proof");
@@ -4333,21 +4333,21 @@ describe("package artifact reuse", () => {
     expect(releaseWorkflow).toContain("Approve child release gate after parent release approval");
     expect(releaseWorkflow).toContain("openclaw_npm_resume_run_id");
     expect(releaseWorkflow).toContain(
-      '"${GITHUB_WORKSPACE}/.release-harness/scripts/openclaw-npm-resume-run.mjs"',
+      '"${GITHUB_WORKSPACE}/.release-harness/scripts/grokbot-npm-resume-run.mjs"',
     );
     expect(releaseWorkflow).toContain('--run-id "${OPENCLAW_NPM_RESUME_RUN_ID}"');
     expect(releaseWorkflow).toContain("openclaw_npm_expected_workflow_ref=\"$(printf '%s'");
     expect(releaseWorkflow).toContain("openclaw_npm_expected_workflow_sha=\"$(printf '%s'");
     expect(releaseWorkflow).toContain(
-      '"${GITHUB_WORKSPACE}/.release-harness/scripts/openclaw-npm-postpublish-verify.ts"',
+      '"${GITHUB_WORKSPACE}/.release-harness/scripts/grokbot-npm-postpublish-verify.ts"',
     );
     expect(releaseWorkflow).toContain(
-      '"${GITHUB_WORKSPACE}/.release-harness/scripts/openclaw-npm-postpublish-verify.ts"',
+      '"${GITHUB_WORKSPACE}/.release-harness/scripts/grokbot-npm-postpublish-verify.ts"',
     );
     expect(releaseWorkflow).toContain("--postpublish-verifier");
     expect(releaseWorkflow).toContain('"${verify_args[@]}"');
     expect(releaseWorkflow).toContain(
-      "OpenClaw Release Publish must use trusted main workflow tooling",
+      "GrokBot Release Publish must use trusted main workflow tooling",
     );
     expect(releaseInputGuard).toContain(
       '[[ "${WORKFLOW_REF}" != "refs/heads/main" && "${tideclaw_alpha_publish}" != "true" && "${sha_pinned_release_publish}" != "true" ]]',
@@ -4369,7 +4369,7 @@ describe("package artifact reuse", () => {
     expect(releaseWorkflow).toContain("--skip-github-release");
     expect(clawHubReleasePlanScript).toContain("--plugin-clawhub-bootstrap-run");
     expect(releaseWorkflow).toContain('verify_args+=(--plugins "${PLUGINS}")');
-    expect(releaseWorkflow).toContain("openclaw-release-postpublish-evidence");
+    expect(releaseWorkflow).toContain("grokbot-release-postpublish-evidence");
     const postpublishEvidenceUpload = workflowStep(
       workflowJob(RELEASE_PUBLISH_WORKFLOW, "publish"),
       "Upload postpublish evidence",
@@ -4403,13 +4403,13 @@ describe("package artifact reuse", () => {
     );
     expect(pluginNpmWorkflow).toContain("Direct Plugin NPM Release dispatch");
     expect(clawHubWorkflow).toContain("Direct Plugin ClawHub Release dispatch");
-    expect(openclawNpmWorkflow).toContain("Direct OpenClaw npm publish");
+    expect(openclawNpmWorkflow).toContain("Direct GrokBot npm publish");
     expect(pluginNpmWorkflow).toContain('GITHUB_ACTOR}" != "github-actions[bot]"');
     expect(clawHubWorkflow).toContain('GITHUB_ACTOR}" != "github-actions[bot]"');
     expect(openclawNpmWorkflow).toContain('GITHUB_ACTOR}" != "github-actions[bot]"');
     expect(pluginNpmWorkflow).toContain("Direct Plugin NPM Release recovery");
     expect(clawHubWorkflow).toContain("Direct Plugin ClawHub Release recovery");
-    expect(openclawNpmWorkflow).toContain("Direct OpenClaw npm recovery");
+    expect(openclawNpmWorkflow).toContain("Direct GrokBot npm recovery");
     expect(pluginNpmWorkflow).toContain("validate-release-publish-approval.mjs");
     expect(clawHubWorkflow).toContain("validate-release-publish-approval.mjs");
     expect(openclawNpmWorkflow).toContain("validate-release-publish-approval.mjs");
@@ -4424,7 +4424,7 @@ describe("package artifact reuse", () => {
     expect(clawHubNewWorkflow).toContain("environment: clawhub-plugin-bootstrap");
     expect(clawHubNewWorkflow).toContain("secrets.CLAWHUB_TOKEN");
     expect(clawHubNewWorkflow).not.toContain(
-      "uses: openclaw/clawhub/.github/workflows/package-publish.yml",
+      "uses: grokbot/clawhub/.github/workflows/package-publish.yml",
     );
     expect(clawHubNewWorkflow).not.toContain("clawhub_token:");
     expect(clawHubNewWorkflow).toContain("Validate pinned ClawHub trusted publisher CLI support");
@@ -4436,7 +4436,7 @@ describe("package artifact reuse", () => {
     expect(clawHubNewWorkflow).toContain("--clawhub-toolchain-sha256");
     expect(clawHubNewWorkflow).toContain("--clawhub-toolchain-version");
     expect(clawHubNewWorkflow).toContain(
-      "CLAW-277 03 - Split OpenClaw plugin ClawHub publishing into OIDC release and token bootstrap workflows",
+      "CLAW-277 03 - Split GrokBot plugin ClawHub publishing into OIDC release and token bootstrap workflows",
     );
     expect(clawHubNewWorkflow).toContain("Usage: clawhub package trusted-publisher set");
     expect(clawHubNewWorkflow).toContain("Write ClawHub token config");
@@ -4571,7 +4571,7 @@ describe("package artifact reuse", () => {
         "-c",
         `
 set -uo pipefail
-GITHUB_REPOSITORY=openclaw/openclaw
+GITHUB_REPOSITORY=grokbot/grokbot
 gh() {
   if [[ "$1" == "run" && "$2" == "view" ]]; then
     printf '%s\\n' '{"headSha":"${expectedSha}","url":"https://example.invalid/run/123"}'
@@ -4603,7 +4603,7 @@ approve_pending_deployments plugin-clawhub-new.yml 123 "${expectedSha}" || statu
         "-c",
         `
 set -uo pipefail
-GITHUB_REPOSITORY=openclaw/openclaw
+GITHUB_REPOSITORY=grokbot/grokbot
 GITHUB_STEP_SUMMARY=/dev/null
 gh() {
   if [[ "$1" == "run" && "$2" == "view" ]]; then
@@ -4634,7 +4634,7 @@ approve_child_publish_environment plugin-clawhub-new.yml 123 "${expectedSha}" ||
         "-c",
         `
 set -uo pipefail
-GITHUB_REPOSITORY=openclaw/openclaw
+GITHUB_REPOSITORY=grokbot/grokbot
 gh() {
   if [[ "$1" == "run" && "$2" == "view" ]]; then
     printf '%s\\n' '{"headSha":"${"b".repeat(40)}","url":"https://example.invalid/run/123"}'
@@ -4660,18 +4660,18 @@ wait_for_run plugin-clawhub-new.yml 123 "${expectedSha}" || status=$?
   it("keeps release workflow setup and timeout budgets bounded", () => {
     const fullRelease = readWorkflow(FULL_RELEASE_VALIDATION_WORKFLOW);
     const releaseChecks = readWorkflow(RELEASE_CHECKS_WORKFLOW);
-    const crossOs = readWorkflow(".github/workflows/openclaw-cross-os-release-checks-reusable.yml");
+    const crossOs = readWorkflow(".github/workflows/grokbot-cross-os-release-checks-reusable.yml");
     const liveE2e = readWorkflow(LIVE_E2E_WORKFLOW);
     const releaseWorkflowPaths = [
       FULL_RELEASE_VALIDATION_WORKFLOW,
       RELEASE_CHECKS_WORKFLOW,
       RELEASE_TELEGRAM_QA_WORKFLOW,
-      ".github/workflows/openclaw-cross-os-release-checks-reusable.yml",
+      ".github/workflows/grokbot-cross-os-release-checks-reusable.yml",
       LIVE_E2E_WORKFLOW,
       NPM_TELEGRAM_WORKFLOW,
-      ".github/workflows/openclaw-release-publish.yml",
+      ".github/workflows/grokbot-release-publish.yml",
       ".github/workflows/android-release.yml",
-      ".github/workflows/openclaw-npm-release.yml",
+      ".github/workflows/grokbot-npm-release.yml",
       ".github/workflows/macos-release.yml",
       ".github/workflows/plugin-clawhub-release.yml",
       PACKAGE_ACCEPTANCE_WORKFLOW,
@@ -4711,7 +4711,7 @@ wait_for_run plugin-clawhub-new.yml 123 "${expectedSha}" || status=$?
       packageArtifactDigest: "b".repeat(64),
       packageArtifactRunId: "456",
       packageArtifactRunAttempt: "1",
-      packageFileName: "openclaw-current.tgz",
+      packageFileName: "grokbot-current.tgz",
       packageSourceSha: selectedSha,
       packageSha256: "c".repeat(64),
       packageVersion: "2026.7.2",
@@ -4764,7 +4764,7 @@ wait_for_run plugin-clawhub-new.yml 123 "${expectedSha}" || status=$?
       [OPENCLAW_NPM_RELEASE_WORKFLOW, "preflight_openclaw_npm", "Checkout"],
       [OPENCLAW_NPM_RELEASE_WORKFLOW, "validate_publish_request", "Checkout"],
       [
-        ".github/workflows/openclaw-cross-os-release-checks-reusable.yml",
+        ".github/workflows/grokbot-cross-os-release-checks-reusable.yml",
         "prepare",
         "Checkout public source ref",
       ],

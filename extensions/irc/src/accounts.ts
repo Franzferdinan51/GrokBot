@@ -1,15 +1,15 @@
 // Irc plugin module implements accounts behavior.
-import { createAccountListHelpers } from "openclaw/plugin-sdk/account-helpers";
-import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "openclaw/plugin-sdk/account-id";
-import { resolveMergedAccountConfig } from "openclaw/plugin-sdk/account-resolution";
-import { parseOptionalDelimitedEntries } from "openclaw/plugin-sdk/channel-core";
-import { parseStrictPositiveInteger } from "openclaw/plugin-sdk/number-runtime";
-import { tryReadSecretFileSync } from "openclaw/plugin-sdk/secret-file-runtime";
-import { normalizeResolvedSecretInputString } from "openclaw/plugin-sdk/secret-input";
+import { createAccountListHelpers } from "grokbot/plugin-sdk/account-helpers";
+import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "grokbot/plugin-sdk/account-id";
+import { resolveMergedAccountConfig } from "grokbot/plugin-sdk/account-resolution";
+import { parseOptionalDelimitedEntries } from "grokbot/plugin-sdk/channel-core";
+import { parseStrictPositiveInteger } from "grokbot/plugin-sdk/number-runtime";
+import { tryReadSecretFileSync } from "grokbot/plugin-sdk/secret-file-runtime";
+import { normalizeResolvedSecretInputString } from "grokbot/plugin-sdk/secret-input";
 import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalString,
-} from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/string-coerce-runtime";
 import type { CoreConfig, IrcAccountConfig, IrcNickServConfig } from "./types.js";
 
 type CredentialUnavailableDiagnostic = Extract<
@@ -199,12 +199,12 @@ export function resolveIrcAccount(params: {
       merged.username?.trim() ||
       (accountId === DEFAULT_ACCOUNT_ID ? process.env.IRC_USERNAME?.trim() : "") ||
       nick ||
-      "openclaw"
+      "grokbot"
     ).trim();
     const realname = (
       merged.realname?.trim() ||
       (accountId === DEFAULT_ACCOUNT_ID ? process.env.IRC_REALNAME?.trim() : "") ||
-      "OpenClaw"
+      "GrokBot"
     ).trim();
 
     const passwordResolution = resolvePassword(accountId, merged);

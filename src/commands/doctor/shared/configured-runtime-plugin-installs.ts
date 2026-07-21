@@ -1,10 +1,10 @@
 // Doctor helpers for installing plugins required by configured agent runtimes.
-import { asOptionalRecord } from "@openclaw/normalization-core/record-coerce";
+import { asOptionalRecord } from "@grokbot/normalization-core/record-coerce";
 import {
   collectConfiguredAgentHarnessRuntimes,
   type ConfiguredAgentHarnessRuntimeOptions,
 } from "../../../agents/harness-runtimes.js";
-import type { OpenClawConfig } from "../../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../../config/types.grokbot.js";
 import type { PluginPackageInstall } from "../../../plugins/manifest.js";
 
 type ConfiguredRuntimePluginInstallCandidate = {
@@ -20,7 +20,7 @@ type ConfiguredRuntimePluginInstallCandidate = {
   trustedSourceLinkedOfficialInstall?: boolean;
   /** Default installer choice when multiple official sources are available. */
   defaultChoice?: PluginPackageInstall["defaultChoice"];
-  /** Keep this official runtime package on the same release cohort as OpenClaw. */
+  /** Keep this official runtime package on the same release cohort as GrokBot. */
   versionBoundToOpenClaw?: boolean;
 };
 
@@ -29,14 +29,14 @@ export const CONFIGURED_RUNTIME_PLUGIN_INSTALL_CANDIDATES: readonly ConfiguredRu
     {
       pluginId: "acpx",
       label: "ACPX Runtime",
-      npmSpec: "@openclaw/acpx",
+      npmSpec: "@grokbot/acpx",
       trustedSourceLinkedOfficialInstall: true,
     },
     // Runtime-only configs do not have a provider/channel integration catalog entry.
     {
       pluginId: "codex",
       label: "Codex",
-      npmSpec: "@openclaw/codex",
+      npmSpec: "@grokbot/codex",
       trustedSourceLinkedOfficialInstall: true,
       versionBoundToOpenClaw: true,
     },

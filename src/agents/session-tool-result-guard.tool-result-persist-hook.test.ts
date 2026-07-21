@@ -2,8 +2,8 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import type { AgentMessage } from "openclaw/plugin-sdk/agent-core";
-import { SessionManager } from "openclaw/plugin-sdk/agent-sessions";
+import type { AgentMessage } from "grokbot/plugin-sdk/agent-core";
+import { SessionManager } from "grokbot/plugin-sdk/agent-sessions";
 import { describe, expect, it, afterEach, vi } from "vitest";
 import {
   initializeGlobalHookRunner,
@@ -29,7 +29,7 @@ function writeTempPlugin(params: { dir: string; id: string; body: string }): str
   const file = path.join(pluginDir, `${params.id}.mjs`);
   fs.writeFileSync(file, params.body, "utf-8");
   fs.writeFileSync(
-    path.join(pluginDir, "openclaw.plugin.json"),
+    path.join(pluginDir, "grokbot.plugin.json"),
     JSON.stringify(
       {
         id: params.id,
@@ -303,9 +303,9 @@ describe("tool_result_persist hook", () => {
   });
 
   it("keeps sensitive parent keys when custom value patterns match the key probe", () => {
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-redact-config-"));
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-redact-config-"));
     tempDirs.push(tempDir);
-    const configPath = path.join(tempDir, "openclaw.json");
+    const configPath = path.join(tempDir, "grokbot.json");
     setTestEnvValue("OPENCLAW_CONFIG_PATH", configPath);
     fs.writeFileSync(
       configPath,
@@ -756,7 +756,7 @@ describe("tool_result_persist hook", () => {
   });
 
   it("loads tool_result_persist hooks without breaking persistence", () => {
-    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-toolpersist-"));
+    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-toolpersist-"));
     process.env.OPENCLAW_BUNDLED_PLUGINS_DIR = "/nonexistent/bundled/plugins";
 
     const pluginA = writeTempPlugin({
@@ -811,7 +811,7 @@ describe("tool_result_persist hook", () => {
 
   it("reapplies the cap after tool_result_persist expands a tool result", () => {
     initializeTempPlugin({
-      tmpPrefix: "openclaw-toolpersist-expand-",
+      tmpPrefix: "grokbot-toolpersist-expand-",
       id: "persist-expand",
       body: `export default { id: "persist-expand", register(api) {
   api.on("tool_result_persist", (event) => {
@@ -837,7 +837,7 @@ describe("tool_result_persist hook", () => {
 
   it("reapplies the details cap after tool_result_persist expands details", () => {
     initializeTempPlugin({
-      tmpPrefix: "openclaw-toolpersist-details-expand-",
+      tmpPrefix: "grokbot-toolpersist-details-expand-",
       id: "persist-details-expand",
       body: `export default { id: "persist-details-expand", register(api) {
   api.on("tool_result_persist", (event) => {
@@ -868,7 +868,7 @@ describe("tool_result_persist hook", () => {
     const deepItems = Array.from({ length: 2_000 }, () => ({}));
     const hookDetails = { a: { b: { c: { d: { e: { f: { g: deepItems } } } } } } };
     initializeTempPlugin({
-      tmpPrefix: "openclaw-toolpersist-details-redaction-expand-",
+      tmpPrefix: "grokbot-toolpersist-details-redaction-expand-",
       id: "persist-details-redaction-expand",
       body: `export default { id: "persist-details-redaction-expand", register(api) {
   api.on("tool_result_persist", (event) => {
@@ -890,7 +890,7 @@ describe("tool_result_persist hook", () => {
 describe("before_message_write hook", () => {
   it("continues persistence when a before_message_write hook throws", () => {
     initializeTempPlugin({
-      tmpPrefix: "openclaw-before-write-",
+      tmpPrefix: "grokbot-before-write-",
       id: "before-write-throws",
       body: `export default { id: "before-write-throws", register(api) {
   api.on("before_message_write", () => {
@@ -921,7 +921,7 @@ describe("before_message_write hook", () => {
 
   it("reapplies the cap after before_message_write expands a tool result", () => {
     initializeTempPlugin({
-      tmpPrefix: "openclaw-before-write-expand-",
+      tmpPrefix: "grokbot-before-write-expand-",
       id: "before-write-expand",
       body: `export default { id: "before-write-expand", register(api) {
   api.on("before_message_write", (event) => {

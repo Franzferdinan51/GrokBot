@@ -1,6 +1,6 @@
 // Verifies nodes outPath normalization and workspace-only sandbox enforcement.
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { applyNodesToolWorkspaceGuard } from "./openclaw-tools.nodes-workspace-guard.js";
+import { applyNodesToolWorkspaceGuard } from "./grokbot-tools.nodes-workspace-guard.js";
 import type { AnyAgentTool } from "./tools/common.js";
 
 const mocks = vi.hoisted(() => ({
@@ -35,7 +35,7 @@ vi.mock("./sandbox-paths.js", () => ({
   assertSandboxPath: mocks.assertSandboxPath,
 }));
 
-const WORKSPACE_ROOT = "/tmp/openclaw-workspace-nodes-guard";
+const WORKSPACE_ROOT = "/tmp/grokbot-workspace-nodes-guard";
 
 function createNodesToolHarness() {
   // Guard wraps a minimal nodes tool so tests assert only argument rewriting.

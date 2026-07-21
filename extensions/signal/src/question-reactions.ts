@@ -1,9 +1,9 @@
 // Signal transport binding for numbered ask_user reactions.
-import type { OutboundDeliveryResult } from "openclaw/plugin-sdk/channel-send-result";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { questionGatewayRuntime } from "openclaw/plugin-sdk/question-gateway-runtime";
-import type { ReplyPayload } from "openclaw/plugin-sdk/reply-runtime";
-import { normalizeAccountId } from "openclaw/plugin-sdk/routing";
+import type { OutboundDeliveryResult } from "grokbot/plugin-sdk/channel-send-result";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { questionGatewayRuntime } from "grokbot/plugin-sdk/question-gateway-runtime";
+import type { ReplyPayload } from "grokbot/plugin-sdk/reply-runtime";
+import { normalizeAccountId } from "grokbot/plugin-sdk/routing";
 import { resolveSignalTarget } from "./aliases.js";
 import {
   resolveSignalApprovalConversationKey,

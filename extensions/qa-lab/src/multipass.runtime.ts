@@ -3,21 +3,21 @@ import { randomUUID } from "node:crypto";
 import fs from "node:fs";
 import { access, mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
-import type { OpenClawCrablineChannelDriverSelection } from "@openclaw/crabline";
-import { runExec } from "openclaw/plugin-sdk/process-runtime";
-import { sleep } from "openclaw/plugin-sdk/runtime-env";
-import { appendRegularFile } from "openclaw/plugin-sdk/security-runtime";
-import { uniqueStrings } from "openclaw/plugin-sdk/string-coerce-runtime";
-import { resolvePreferredOpenClawTmpDir } from "openclaw/plugin-sdk/temp-path";
+import type { OpenClawCrablineChannelDriverSelection } from "@grokbot/crabline";
+import { runExec } from "grokbot/plugin-sdk/process-runtime";
+import { sleep } from "grokbot/plugin-sdk/runtime-env";
+import { appendRegularFile } from "grokbot/plugin-sdk/security-runtime";
+import { uniqueStrings } from "grokbot/plugin-sdk/string-coerce-runtime";
+import { resolvePreferredOpenClawTmpDir } from "grokbot/plugin-sdk/temp-path";
 import type { QaProviderMode } from "./model-selection.js";
 import { resolveQaForwardedLiveEnv, resolveQaLiveProviderConfigPath } from "./providers/env.js";
 import { DEFAULT_QA_LIVE_PROVIDER_MODE, getQaProvider } from "./providers/index.js";
 import type { RuntimeId } from "./runtime-parity.js";
 import { shellQuote } from "./shell-quote.js";
 
-const MULTIPASS_MOUNTED_REPO_PATH = "/workspace/openclaw-host";
-const MULTIPASS_GUEST_REPO_PATH = "/workspace/openclaw";
-const MULTIPASS_GUEST_CODEX_HOME_PATH = "/workspace/openclaw-codex-home";
+const MULTIPASS_MOUNTED_REPO_PATH = "/workspace/grokbot-host";
+const MULTIPASS_GUEST_REPO_PATH = "/workspace/grokbot";
+const MULTIPASS_GUEST_CODEX_HOME_PATH = "/workspace/grokbot-codex-home";
 const MULTIPASS_GUEST_PACKAGES = [
   "build-essential",
   "ca-certificates",
@@ -269,12 +269,12 @@ function createQaMultipassPlan(params: {
     liveProviderConfig && fs.existsSync(liveProviderConfig.path)
       ? liveProviderConfig.path
       : undefined;
-  const vmName = `openclaw-qa-${createVmSuffix()}`;
+  const vmName = `grokbot-qa-${createVmSuffix()}`;
   const guestOutputDir = resolveGuestMountedPath(params.repoRoot, outputDir);
   const qaCommand = appendScenarioArgs(
     [
       "pnpm",
-      "openclaw",
+      "grokbot",
       "qa",
       "suite",
       "--transport",
@@ -586,7 +586,7 @@ export async function runQaMultipass(params: {
   await mkdir(plan.outputDir, { recursive: true });
   await writeFile(
     plan.hostLogPath,
-    `# OpenClaw QA Multipass host log\nvmName=${plan.vmName}\noutputDir=${plan.outputDir}\n\n`,
+    `# GrokBot QA Multipass host log\nvmName=${plan.vmName}\noutputDir=${plan.outputDir}\n\n`,
     "utf8",
   );
   await writeFile(
@@ -608,7 +608,7 @@ export async function runQaMultipass(params: {
       );
     }
     throw new Error(
-      `Multipass is not installed on this host. Install it with '${resolveMultipassInstallHint()}', then rerun 'pnpm openclaw qa suite --runner multipass'.`,
+      `Multipass is not installed on this host. Install it with '${resolveMultipassInstallHint()}', then rerun 'pnpm grokbot qa suite --runner multipass'.`,
       { cause: error },
     );
   }

@@ -8,12 +8,12 @@ import {
 } from "../../agents/auth-profiles/sqlite.js";
 import { executeSqliteQueryTakeFirstSync, getNodeSqliteKysely } from "../../infra/kysely-sync.js";
 import { onSessionTranscriptUpdate } from "../../sessions/transcript-events.js";
-import type { DB as OpenClawAgentKyselyDatabase } from "../../state/openclaw-agent-db.generated.js";
+import type { DB as OpenClawAgentKyselyDatabase } from "../../state/grokbot-agent-db.generated.js";
 import {
   closeOpenClawAgentDatabasesForTest,
   openOpenClawAgentDatabase,
-} from "../../state/openclaw-agent-db.js";
-import { closeOpenClawStateDatabaseForTest } from "../../state/openclaw-state-db.js";
+} from "../../state/grokbot-agent-db.js";
+import { closeOpenClawStateDatabaseForTest } from "../../state/grokbot-state-db.js";
 import { appendSqliteTrajectoryRuntimeEvents } from "../../trajectory/runtime-store.sqlite.js";
 import { readSessionArchiveContentSync } from "./archive-compression.js";
 import {
@@ -66,7 +66,7 @@ import {
 import { parseSqliteSessionFileMarker } from "./sqlite-marker.js";
 import type { SessionCompactionCheckpoint, SessionEntry } from "./types.js";
 
-// Keep accessor conformance independent of any real openclaw.json on the machine.
+// Keep accessor conformance independent of any real grokbot.json on the machine.
 vi.mock("../config.js", async () => ({
   ...(await vi.importActual<typeof import("../config.js")>("../config.js")),
   getRuntimeConfig: vi.fn().mockReturnValue({}),
@@ -219,9 +219,9 @@ describe.each([publicAccessorAdapter, sqliteAdapter])(
     let paths: TestPaths;
 
     beforeEach(() => {
-      const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-session-accessor-conf-"));
+      const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-session-accessor-conf-"));
       paths = {
-        sqlitePath: path.join(tempDir, "openclaw-agent.sqlite"),
+        sqlitePath: path.join(tempDir, "grokbot-agent.sqlite"),
         stateDir: path.join(tempDir, "state"),
         storePath: path.join(tempDir, "sessions.json"),
         tempDir,
@@ -470,7 +470,7 @@ describe.each([publicAccessorAdapter, sqliteAdapter])(
         const database = openOpenClawAgentDatabase({
           agentId: "main",
           env: { ...process.env, OPENCLAW_STATE_DIR: paths.stateDir },
-          path: path.join(paths.stateDir, "agents", "main", "agent", "openclaw-agent.sqlite"),
+          path: path.join(paths.stateDir, "agents", "main", "agent", "grokbot-agent.sqlite"),
         });
         const db = getNodeSqliteKysely<OpenClawAgentKyselyDatabase>(database.db);
         const removedRoute = executeSqliteQueryTakeFirstSync(
@@ -583,7 +583,7 @@ describe.each([publicAccessorAdapter, sqliteAdapter])(
         "agents",
         "voice",
         "agent",
-        "openclaw-agent.sqlite",
+        "grokbot-agent.sqlite",
       );
       const scope = {
         env: { ...process.env, OPENCLAW_STATE_DIR: paths.stateDir },
@@ -650,7 +650,7 @@ describe.each([publicAccessorAdapter, sqliteAdapter])(
       const customStorePath = path.join(paths.tempDir, "custom-store", "sessions.json");
       const customSqlitePath = path.join(
         path.dirname(customStorePath),
-        "openclaw-agent.support.sqlite",
+        "grokbot-agent.support.sqlite",
       );
       const scope = {
         agentId: "support",
@@ -806,7 +806,7 @@ describe.each([publicAccessorAdapter, sqliteAdapter])(
           { sessionId: "transaction-gap", storePath: paths.sqlitePath },
           [
             {
-              traceSchema: "openclaw-trajectory",
+              traceSchema: "grokbot-trajectory",
               schemaVersion: 1,
               traceId: "transaction-gap",
               source: "runtime",
@@ -870,7 +870,7 @@ describe.each([publicAccessorAdapter, sqliteAdapter])(
         { sessionId: "shared-writers", storePath: conventionalStorePath },
         [
           {
-            traceSchema: "openclaw-trajectory",
+            traceSchema: "grokbot-trajectory",
             schemaVersion: 1,
             traceId: "shared-writers",
             source: "runtime",
@@ -1132,9 +1132,9 @@ describe("sqlite session normalization", () => {
   let paths: TestPaths;
 
   beforeEach(() => {
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-session-sqlite-norm-"));
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-session-sqlite-norm-"));
     paths = {
-      sqlitePath: path.join(tempDir, "openclaw-agent.sqlite"),
+      sqlitePath: path.join(tempDir, "grokbot-agent.sqlite"),
       stateDir: path.join(tempDir, "state"),
       storePath: path.join(tempDir, "sessions.json"),
       tempDir,

@@ -5,8 +5,8 @@ import { afterEach, describe, expect, it } from "vitest";
 import {
   closeOpenClawAgentDatabasesForTest,
   openOpenClawAgentDatabase,
-} from "../state/openclaw-agent-db.js";
-import { closeOpenClawStateDatabaseForTest } from "../state/openclaw-state-db.js";
+} from "../state/grokbot-agent-db.js";
+import { closeOpenClawStateDatabaseForTest } from "../state/grokbot-state-db.js";
 import {
   buildHeartbeatOutcomeContext,
   claimHeartbeatOutcomeForRun,
@@ -16,7 +16,7 @@ import {
 const tempDirs: string[] = [];
 
 function createEnv(): NodeJS.ProcessEnv {
-  const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-heartbeat-outcome-"));
+  const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-heartbeat-outcome-"));
   tempDirs.push(stateDir);
   return { OPENCLAW_STATE_DIR: stateDir };
 }

@@ -29,7 +29,7 @@ function commandOutput(error: unknown): string {
 }
 
 function createRepoWithPrChangelogDiff(entry: string): string {
-  const repo = mkdtempSync(path.join(os.tmpdir(), "openclaw-changelog-credit-"));
+  const repo = mkdtempSync(path.join(os.tmpdir(), "grokbot-changelog-credit-"));
   run(repo, "git", ["init", "-q", "--initial-branch=main"]);
   run(repo, "git", ["config", "user.email", "test@example.com"]);
   run(repo, "git", ["config", "user.name", "Test User"]);
@@ -52,7 +52,7 @@ function createRepoWithPrChangelogDiff(entry: string): string {
 }
 
 function createRepoWithChangelog(content: string): string {
-  const repo = mkdtempSync(path.join(os.tmpdir(), "openclaw-changelog-policy-"));
+  const repo = mkdtempSync(path.join(os.tmpdir(), "grokbot-changelog-policy-"));
   writeFileSync(repo + "/CHANGELOG.md", content, "utf8");
   return repo;
 }
@@ -87,9 +87,9 @@ describe("check-changelog-attributions", () => {
   it("flags forbidden bot, org, and maintainer thanks attributions", () => {
     const content = [
       "- Internal cleanup. Thanks @codex.",
-      "- Org-owned fix. Thanks @openclaw.",
+      "- Org-owned fix. Thanks @grokbot.",
       "- Maintainer-owned fix. Thanks @steipete.",
-      "- Mixed credit. Thanks @contributor and @OpenClaw.",
+      "- Mixed credit. Thanks @contributor and @GrokBot.",
       "- Bot repair. Thanks @clawsweeper[bot].",
       "- Dependency bump. Thanks @dependabot[bot].",
       "- App repair. Thanks @app/clawsweeper.",
@@ -97,9 +97,9 @@ describe("check-changelog-attributions", () => {
 
     expect(findForbiddenChangelogThanks(content)).toEqual([
       { line: 1, handle: "codex", text: "- Internal cleanup. Thanks @codex." },
-      { line: 2, handle: "openclaw", text: "- Org-owned fix. Thanks @openclaw." },
+      { line: 2, handle: "grokbot", text: "- Org-owned fix. Thanks @grokbot." },
       { line: 3, handle: "steipete", text: "- Maintainer-owned fix. Thanks @steipete." },
-      { line: 4, handle: "openclaw", text: "- Mixed credit. Thanks @contributor and @OpenClaw." },
+      { line: 4, handle: "grokbot", text: "- Mixed credit. Thanks @contributor and @GrokBot." },
       { line: 5, handle: "clawsweeper[bot]", text: "- Bot repair. Thanks @clawsweeper[bot]." },
       { line: 6, handle: "dependabot[bot]", text: "- Dependency bump. Thanks @dependabot[bot]." },
       { line: 7, handle: "app/clawsweeper", text: "- App repair. Thanks @app/clawsweeper." },
@@ -116,12 +116,12 @@ describe("check-changelog-attributions", () => {
 
   it("checks every thanked handle on a changelog line", () => {
     expect(
-      findForbiddenChangelogThanks("- Mixed credit (#123). Thanks @openclaw and @alice."),
+      findForbiddenChangelogThanks("- Mixed credit (#123). Thanks @grokbot and @alice."),
     ).toEqual([
       {
         line: 1,
-        handle: "openclaw",
-        text: "- Mixed credit (#123). Thanks @openclaw and @alice.",
+        handle: "grokbot",
+        text: "- Mixed credit (#123). Thanks @grokbot and @alice.",
       },
     ]);
   });
@@ -131,13 +131,13 @@ describe("check-changelog-attributions", () => {
     expect(isForbiddenChangelogThanksHandle("null")).toBe(true);
     expect(isForbiddenChangelogThanksHandle("app/any-bot")).toBe(true);
     expect(isForbiddenChangelogThanksHandle("codex")).toBe(true);
-    expect(isForbiddenChangelogThanksHandle("openclaw")).toBe(true);
+    expect(isForbiddenChangelogThanksHandle("grokbot")).toBe(true);
     expect(isForbiddenChangelogThanksHandle("steipete")).toBe(true);
     expect(isForbiddenChangelogThanksHandle("app/clawsweeper")).toBe(true);
     expect(isForbiddenChangelogThanksHandle("clawsweeper")).toBe(true);
     expect(isForbiddenChangelogThanksHandle("clawsweeper[bot]")).toBe(true);
-    expect(isForbiddenChangelogThanksHandle("openclaw-clawsweeper")).toBe(true);
-    expect(isForbiddenChangelogThanksHandle("openclaw-clawsweeper[bot]")).toBe(true);
+    expect(isForbiddenChangelogThanksHandle("grokbot-clawsweeper")).toBe(true);
+    expect(isForbiddenChangelogThanksHandle("grokbot-clawsweeper[bot]")).toBe(true);
     expect(isForbiddenChangelogThanksHandle("dependabot[bot]")).toBe(true);
     expect(isForbiddenChangelogThanksHandle("dependabot[bot]", { strictBotHandle: true })).toBe(
       true,

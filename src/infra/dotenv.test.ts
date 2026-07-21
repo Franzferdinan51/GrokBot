@@ -156,7 +156,7 @@ function createManifestBackedProviderSnapshot(
 }
 
 async function withDotEnvFixture(run: (fixture: DotEnvFixture) => Promise<void>) {
-  const base = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-dotenv-test-"));
+  const base = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-dotenv-test-"));
   const cwdDir = path.join(base, "cwd");
   const stateDir = path.join(base, "state");
   setTestEnvValue("OPENCLAW_STATE_DIR", stateDir);
@@ -166,7 +166,7 @@ async function withDotEnvFixture(run: (fixture: DotEnvFixture) => Promise<void>)
 }
 
 describe("loadDotEnv", () => {
-  it("loads ~/.openclaw/.env as fallback without overriding CWD .env", async () => {
+  it("loads ~/.grokbot/.env as fallback without overriding CWD .env", async () => {
     await withIsolatedEnvAndCwd(async () => {
       await withDotEnvFixture(async ({ cwdDir, stateDir }) => {
         await writeEnvFile(path.join(stateDir, ".env"), "FOO=from-global\nBAR=1\n");
@@ -231,15 +231,15 @@ describe("loadDotEnv", () => {
     });
   });
 
-  it("loads the Ubuntu gateway.env compatibility fallback after ~/.openclaw/.env", async () => {
+  it("loads the Ubuntu gateway.env compatibility fallback after ~/.grokbot/.env", async () => {
     await withIsolatedEnvAndCwd(async () => {
       await withDotEnvFixture(async ({ base, cwdDir }) => {
         setTestEnvValue("HOME", base);
-        const defaultStateDir = path.join(base, ".openclaw");
+        const defaultStateDir = path.join(base, ".grokbot");
         setTestEnvValue("OPENCLAW_STATE_DIR", defaultStateDir);
         await writeEnvFile(path.join(defaultStateDir, ".env"), "FOO=from-global\n");
         await writeEnvFile(
-          path.join(base, ".config", "openclaw", "gateway.env"),
+          path.join(base, ".config", "grokbot", "gateway.env"),
           ["FOO=from-gateway", "BAR=from-gateway"].join("\n"),
         );
 
@@ -269,7 +269,7 @@ describe("loadDotEnv", () => {
         process.env.FOO = "from-shell";
         await writeEnvFile(path.join(stateDir, ".env"), "FOO=from-global\n");
         await writeEnvFile(
-          path.join(base, ".config", "openclaw", "gateway.env"),
+          path.join(base, ".config", "grokbot", "gateway.env"),
           "FOO=from-gateway\n",
         );
 
@@ -701,11 +701,11 @@ describe("loadCliDotEnv", () => {
     await withIsolatedEnvAndCwd(async () => {
       await withDotEnvFixture(async ({ base, cwdDir }) => {
         setTestEnvValue("HOME", base);
-        const defaultStateDir = path.join(base, ".openclaw");
+        const defaultStateDir = path.join(base, ".grokbot");
         setTestEnvValue("OPENCLAW_STATE_DIR", defaultStateDir);
         await writeEnvFile(path.join(defaultStateDir, ".env"), "FOO=from-global\n");
         await writeEnvFile(
-          path.join(base, ".config", "openclaw", "gateway.env"),
+          path.join(base, ".config", "grokbot", "gateway.env"),
           "BAR=from-gateway\n",
         );
 
@@ -725,12 +725,12 @@ describe("loadCliDotEnv", () => {
     await withIsolatedEnvAndCwd(async () => {
       await withDotEnvFixture(async ({ base, cwdDir }) => {
         setTestEnvValue("HOME", base);
-        const defaultStateDir = path.join(base, ".openclaw");
+        const defaultStateDir = path.join(base, ".grokbot");
         setTestEnvValue("OPENCLAW_STATE_DIR", defaultStateDir);
         await writeEnvFile(path.join(cwdDir, ".env"), "BAZ=from-workspace\n");
         await writeEnvFile(path.join(defaultStateDir, ".env"), "FOO=from-global\n");
         await writeEnvFile(
-          path.join(base, ".config", "openclaw", "gateway.env"),
+          path.join(base, ".config", "grokbot", "gateway.env"),
           "BAR=from-gateway\n",
         );
 
@@ -771,7 +771,7 @@ describe("loadCliDotEnv", () => {
         setTestEnvValue("HOME", base);
         setTestEnvValue("OPENCLAW_STATE_DIR", customStateDir);
         await writeEnvFile(
-          path.join(base, ".config", "openclaw", "gateway.env"),
+          path.join(base, ".config", "grokbot", "gateway.env"),
           "FOO=from-gateway\n",
         );
 
@@ -789,7 +789,7 @@ describe("loadCliDotEnv", () => {
 
   it("keeps the legacy state-dir fallback for CLI dotenv loading", async () => {
     await withIsolatedEnvAndCwd(async () => {
-      const base = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-dotenv-legacy-"));
+      const base = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-dotenv-legacy-"));
       const cwdDir = path.join(base, "cwd");
       const legacyStateDir = path.join(base, ".clawdbot");
       setTestEnvValue("HOME", base);
@@ -893,7 +893,7 @@ describe("workspace .env blocklist completeness", () => {
           origin: "global",
           rootDir: "/plugins/runtime-cloud",
           source: "/plugins/runtime-cloud/index.js",
-          manifestPath: "/plugins/runtime-cloud/openclaw.plugin.json",
+          manifestPath: "/plugins/runtime-cloud/grokbot.plugin.json",
           setup: {
             providers: [{ id: "runtime-cloud", envVars: ["RUNTIME_CLOUD_API_KEY"] }],
           },
@@ -1038,7 +1038,7 @@ describe("workspace .env blocklist completeness", () => {
       await withDotEnvFixture(async ({ cwdDir }) => {
         await writeEnvFile(
           path.join(cwdDir, ".env"),
-          "MY_APP_KEY=user-value\nAPP_GITHUB_REPO=openclaw/openclaw\nDATABASE_URL_CUSTOM=pg://localhost\n",
+          "MY_APP_KEY=user-value\nAPP_GITHUB_REPO=grokbot/grokbot\nDATABASE_URL_CUSTOM=pg://localhost\n",
         );
 
         delete process.env.MY_APP_KEY;
@@ -1048,7 +1048,7 @@ describe("workspace .env blocklist completeness", () => {
         loadWorkspaceDotEnvFile(path.join(cwdDir, ".env"), { quiet: true });
 
         expect(process.env.MY_APP_KEY).toBe("user-value");
-        expect(process.env.APP_GITHUB_REPO).toBe("openclaw/openclaw");
+        expect(process.env.APP_GITHUB_REPO).toBe("grokbot/grokbot");
         expect(process.env.DATABASE_URL_CUSTOM).toBe("pg://localhost");
       });
     });

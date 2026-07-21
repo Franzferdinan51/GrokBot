@@ -1,13 +1,13 @@
-import { isConfiguredContextSizeOverflowError } from "@openclaw/ai/internal/runtime";
+import { isConfiguredContextSizeOverflowError } from "@grokbot/ai/internal/runtime";
 /**
  * Classifies provider/runtime failures and formats assistant-facing error text.
  */
 import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalLowercaseString,
-} from "@openclaw/normalization-core/string-coerce";
-import { truncateUtf16Safe } from "@openclaw/normalization-core/utf16-slice";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+} from "@grokbot/normalization-core/string-coerce";
+import { truncateUtf16Safe } from "@grokbot/normalization-core/utf16-slice";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import type { AssistantMessage } from "../../llm/types.js";
 import { createSubsystemLogger } from "../../logging/subsystem.js";
 import {
@@ -621,7 +621,7 @@ function isOAuthRefreshContentionMessage(raw: string): boolean {
   return (
     /\brefresh_contention\b/i.test(raw) ||
     (/\bfile lock timeout\b/i.test(raw) &&
-      /(?:\/|\\|^)(?:oauth-refresh|openclaw-oauth-refresh)[^/\n\\]*?(?:\.lock)?\b/i.test(raw))
+      /(?:\/|\\|^)(?:oauth-refresh|grokbot-oauth-refresh)[^/\n\\]*?(?:\.lock)?\b/i.test(raw))
   );
 }
 

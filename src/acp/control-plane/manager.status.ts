@@ -1,12 +1,12 @@
 /** Reads ACP session status from the runtime and reconciles persisted identity metadata. */
-import { resolveSessionIdentityFromMeta } from "@openclaw/acp-core/runtime/session-identity";
+import { resolveSessionIdentityFromMeta } from "@grokbot/acp-core/runtime/session-identity";
 import type {
   AcpRuntime,
   AcpRuntimeCapabilities,
   AcpRuntimeHandle,
   AcpRuntimeStatus,
-} from "@openclaw/acp-core/runtime/types";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+} from "@grokbot/acp-core/runtime/types";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import { withAcpRuntimeErrorBoundary } from "../runtime/errors.js";
 import type {
   AcpSessionStatus,

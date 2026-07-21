@@ -3,7 +3,7 @@
  *
  * Builds restricted agent configs for sandbox tool-policy and workspace tests.
  */
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 
 type AgentToolsConfig = NonNullable<NonNullable<OpenClawConfig["agents"]>["list"]>[number]["tools"];
 type SandboxToolsConfig = {
@@ -27,7 +27,7 @@ export function createRestrictedAgentSandboxConfig(params: {
       list: [
         {
           id: "restricted",
-          workspace: params.workspace ?? "~/openclaw-restricted",
+          workspace: params.workspace ?? "~/grokbot-restricted",
           sandbox: {
             mode: "all",
             scope: "agent",

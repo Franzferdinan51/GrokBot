@@ -7,8 +7,8 @@ import { basename, resolve } from "node:path";
 import { pathToFileURL } from "node:url";
 import { satisfies as satisfiesSemver, validRange } from "semver";
 
-const AI_PACKAGE_NAME = "@openclaw/ai";
-const AI_LOCK_PATH = "node_modules/@openclaw/ai";
+const AI_PACKAGE_NAME = "@grokbot/ai";
+const AI_LOCK_PATH = "node_modules/@grokbot/ai";
 
 type JsonObject = Record<string, unknown>;
 
@@ -127,7 +127,7 @@ export function prepareOpenClawNpmShrinkwrap(params: {
     throw new Error(`AI package name must be ${AI_PACKAGE_NAME}, found ${aiName}`);
   }
   if (aiVersion !== rootVersion) {
-    throw new Error(`AI package version ${aiVersion} does not match OpenClaw ${rootVersion}`);
+    throw new Error(`AI package version ${aiVersion} does not match GrokBot ${rootVersion}`);
   }
   if (!params.aiIntegrity.startsWith("sha512-")) {
     throw new Error("AI package integrity must use sha512");
@@ -144,7 +144,7 @@ export function prepareOpenClawNpmShrinkwrap(params: {
   const rootLockVersion = requireString(rootPackage.version, "npm shrinkwrap root version");
   if (rootLockVersion !== rootVersion) {
     throw new Error(
-      `npm shrinkwrap root version ${rootLockVersion} does not match OpenClaw ${rootVersion}`,
+      `npm shrinkwrap root version ${rootLockVersion} does not match GrokBot ${rootVersion}`,
     );
   }
 
@@ -193,7 +193,7 @@ export function assertPreparedOpenClawNpmShrinkwrap(params: {
   // the shrinkwrap additionally pins registry integrity for npm clients that still honor it.
   if (rootManifest.dependencies?.[AI_PACKAGE_NAME] !== aiVersion) {
     throw new Error(
-      `packed OpenClaw manifest must depend on exact ${AI_PACKAGE_NAME}@${aiVersion}`,
+      `packed GrokBot manifest must depend on exact ${AI_PACKAGE_NAME}@${aiVersion}`,
     );
   }
   const expected = prepareOpenClawNpmShrinkwrap({
@@ -225,7 +225,7 @@ export function assertPreparedOpenClawNpmShrinkwrap(params: {
     JSON.stringify(actualPackages[AI_LOCK_PATH]) !== JSON.stringify(expectedPackages[AI_LOCK_PATH])
   ) {
     throw new Error(
-      `prepared OpenClaw npm shrinkwrap does not lock the exact ${AI_PACKAGE_NAME} tarball`,
+      `prepared GrokBot npm shrinkwrap does not lock the exact ${AI_PACKAGE_NAME} tarball`,
     );
   }
 }
@@ -248,7 +248,7 @@ function main(argv = process.argv.slice(2)): void {
   const rootManifestPath = resolve(argv[2]?.trim() || "package.json");
   if (!aiTarballPath || argv.length > 3) {
     throw new Error(
-      "Usage: node --import tsx scripts/prepare-openclaw-npm-shrinkwrap.ts <openclaw-ai.tgz> [npm-shrinkwrap.json] [package.json]",
+      "Usage: node --import tsx scripts/prepare-grokbot-npm-shrinkwrap.ts <grokbot-ai.tgz> [npm-shrinkwrap.json] [package.json]",
     );
   }
 

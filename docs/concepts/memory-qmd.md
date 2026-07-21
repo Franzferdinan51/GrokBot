@@ -7,7 +7,7 @@ read_when:
 ---
 
 [QMD](https://github.com/tobi/qmd) is a local-first search sidecar that runs
-alongside OpenClaw. It combines BM25, vector search, and reranking in a single
+alongside GrokBot. It combines BM25, vector search, and reranking in a single
 binary, and can index content beyond your workspace memory files.
 
 ## What it adds over builtin
@@ -17,7 +17,7 @@ binary, and can index content beyond your workspace memory files.
 - **Index session transcripts** - recall earlier conversations.
 - **Fully local** - runs with the official llama.cpp provider plugin and
   auto-downloads GGUF models.
-- **Automatic fallback** - if QMD is unavailable, OpenClaw falls back to the
+- **Automatic fallback** - if QMD is unavailable, GrokBot falls back to the
   builtin engine seamlessly.
 
 ## Getting started
@@ -39,8 +39,8 @@ binary, and can index content beyond your workspace memory files.
 }
 ```
 
-OpenClaw creates a self-contained QMD home under
-`~/.openclaw/agents/<agentId>/qmd/` and manages the sidecar lifecycle
+GrokBot creates a self-contained QMD home under
+`~/.grokbot/agents/<agentId>/qmd/` and manages the sidecar lifecycle
 automatically - collections, updates, and embedding runs are handled for you.
 It prefers current QMD collection and MCP query shapes, but falls back to
 alternate collection-pattern flags and older MCP tool names when needed.
@@ -50,7 +50,7 @@ present.
 
 ## How the sidecar works
 
-- OpenClaw creates collections from your workspace memory files and any
+- GrokBot creates collections from your workspace memory files and any
   configured `memory.qmd.paths`, then runs `qmd update` when the QMD manager
   opens and periodically afterward (`memory.qmd.update.interval`, default
   `5m`). Refreshes run through QMD subprocesses, not an in-process filesystem
@@ -58,12 +58,12 @@ present.
   (`memory.qmd.update.embedInterval`, default `60m`).
 - QMD continues to own its `index.sqlite`, YAML collection config, and model
   downloads under the per-agent QMD home; these are external-tool artifacts,
-  not OpenClaw state tables. OpenClaw-owned coordination lives only in SQLite:
+  not GrokBot state tables. GrokBot-owned coordination lives only in SQLite:
   one shared lease limits embedding work across agents, while one lease in each
   agent database serializes that agent's collection, update, and embed writes.
-  Runtime no longer creates QMD file-lock sidecars. `openclaw doctor --fix`
+  Runtime no longer creates QMD file-lock sidecars. `grokbot doctor --fix`
   removes retired sidecars only after proving their old process owner is stale.
-  Upgrades are a clean cutover: stop and restart every OpenClaw process that
+  Upgrades are a clean cutover: stop and restart every GrokBot process that
   shares the state directory before using the new version. Mixed old/new QMD
   writers are unsupported; runtime intentionally does not dual-lock the retired
   sidecars.
@@ -81,20 +81,20 @@ present.
   immediate refresh (the long-lived manager still opens when update or embed
   intervals are configured, so QMD keeps owning its regular watcher/timers).
 - Searches use the configured `searchMode` (default: `search`; also supports
-  `vsearch` and `query`). `search` is BM25-only, so OpenClaw skips semantic
+  `vsearch` and `query`). `search` is BM25-only, so GrokBot skips semantic
   vector readiness probes and embedding maintenance in that mode. If a mode
-  fails, OpenClaw retries with `qmd query`.
+  fails, GrokBot retries with `qmd query`.
 - When `searchMode` is `query`, set `memory.qmd.rerank` to `false` to use
   QMD's hybrid query path without the reranker (requires QMD 2.1 or newer).
-  OpenClaw passes `--no-rerank` to the direct QMD CLI path and
+  GrokBot passes `--no-rerank` to the direct QMD CLI path and
   `rerank: false` to QMD's MCP query tool.
-- With QMD releases that advertise multi-collection filters, OpenClaw groups
+- With QMD releases that advertise multi-collection filters, GrokBot groups
   same-source collections into one QMD search invocation. Older QMD releases
   keep the compatible per-collection fallback.
-- If QMD fails entirely, OpenClaw falls back to the builtin SQLite engine.
+- If QMD fails entirely, GrokBot falls back to the builtin SQLite engine.
   Repeated chat-turn attempts back off briefly after an open failure so a
   missing binary or broken sidecar dependency does not create a retry storm;
-  `openclaw memory status` and one-shot CLI probes still recheck QMD
+  `grokbot memory status` and one-shot CLI probes still recheck QMD
   directly.
 
 <Info>
@@ -104,11 +104,11 @@ reranking and query expansion on the first `qmd query` run.
 
 ## Search performance and compatibility
 
-OpenClaw keeps the QMD search path compatible with both current and older QMD
+GrokBot keeps the QMD search path compatible with both current and older QMD
 installs.
 
-On startup, OpenClaw checks the installed QMD help text once per manager. If
-the binary advertises support for multiple collection filters, OpenClaw
+On startup, GrokBot checks the installed QMD help text once per manager. If
+the binary advertises support for multiple collection filters, GrokBot
 searches all same-source collections with one command:
 
 ```bash
@@ -120,7 +120,7 @@ Session transcript collections stay in their own source group, so mixed
 `memory` + `sessions` searches still give the result diversifier input from
 both sources.
 
-Older QMD builds only accept one collection filter. When OpenClaw detects one
+Older QMD builds only accept one collection filter. When GrokBot detects one
 of those builds, it keeps the compatibility path and searches each collection
 separately before merging and deduplicating results.
 
@@ -136,7 +136,7 @@ usually describes a single collection.
 ## Model overrides
 
 QMD model environment variables pass through unchanged from the gateway
-process, so you can tune QMD globally without adding new OpenClaw config:
+process, so you can tune QMD globally without adding new GrokBot config:
 
 ```bash
 export QMD_EMBED_MODEL="hf:Qwen/Qwen3-Embedding-0.6B-GGUF/Qwen3-Embedding-0.6B-Q8_0.gguf"
@@ -191,7 +191,7 @@ general `memorySearch` session source and the QMD transcript exporter:
 ```
 
 Transcripts export as sanitized User/Assistant turns into a dedicated QMD
-collection under `~/.openclaw/agents/<id>/qmd/sessions/`. Setting only
+collection under `~/.grokbot/agents/<id>/qmd/sessions/`. Setting only
 `memorySearch.experimental.sessionMemory` does not export transcripts into
 QMD.
 
@@ -224,7 +224,7 @@ group or channel chats). Configure `memory.qmd.scope` to change this:
 ```
 
 The snippet above is the actual default rule. When scope denies a search,
-OpenClaw logs a warning with the derived channel and chat type so empty
+GrokBot logs a warning with the derived channel and chat type so empty
 results are easier to debug.
 
 ## Citations
@@ -249,11 +249,11 @@ with no extra dependencies.
 
 ## Troubleshooting
 
-**QMD not found?** Ensure the binary is on the gateway's `PATH`. If OpenClaw
+**QMD not found?** Ensure the binary is on the gateway's `PATH`. If GrokBot
 runs as a service, create a symlink:
 `sudo ln -s ~/.bun/bin/qmd /usr/local/bin/qmd`.
 
-If `qmd --version` works in your shell but OpenClaw still reports
+If `qmd --version` works in your shell but GrokBot still reports
 `spawn qmd ENOENT`, the gateway process likely has a different `PATH` than
 your interactive shell. Pin the binary explicitly:
 
@@ -269,18 +269,18 @@ your interactive shell. Pin the binary explicitly:
 ```
 
 Use `command -v qmd` in the environment where QMD is installed, then recheck
-with `openclaw memory status --deep`.
+with `grokbot memory status --deep`.
 
 **First search very slow?** QMD downloads GGUF models on first use. Pre-warm
-with `qmd query "test"` using the same XDG dirs OpenClaw uses.
+with `qmd query "test"` using the same XDG dirs GrokBot uses.
 
-**Many QMD subprocesses during search?** Update QMD if possible. OpenClaw
+**Many QMD subprocesses during search?** Update QMD if possible. GrokBot
 uses one process for same-source multi-collection searches only when the
 installed QMD advertises support for multiple `-c` filters; otherwise it
 keeps the older per-collection fallback for correctness.
 
 **BM25-only QMD still trying to build llama.cpp?** Set
-`memory.qmd.searchMode = "search"`. OpenClaw treats that mode as
+`memory.qmd.searchMode = "search"`. GrokBot treats that mode as
 lexical-only, skips QMD vector status probes and embedding maintenance, and
 leaves semantic readiness checks to `vsearch` or `query` setups.
 
@@ -295,12 +295,12 @@ default `memory.qmd.scope`, which allows only direct sessions. Add an
 there.
 
 **Root memory search suddenly got too broad?** Restart the gateway or wait
-for the next startup reconciliation. OpenClaw recreates stale managed
+for the next startup reconciliation. GrokBot recreates stale managed
 collections back to canonical `MEMORY.md` and `memory/` patterns when it
 detects a same-name conflict.
 
 **Workspace-visible temp repos causing `ENAMETOOLONG` or broken indexing?**
-QMD traversal follows the underlying QMD scanner rather than OpenClaw's
+QMD traversal follows the underlying QMD scanner rather than GrokBot's
 builtin symlink rules. Keep temporary monorepo checkouts under hidden
 directories like `.tmp/` or outside indexed QMD roots until QMD exposes
 cycle-safe traversal or explicit exclusion controls.

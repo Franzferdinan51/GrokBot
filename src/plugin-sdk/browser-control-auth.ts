@@ -1,5 +1,5 @@
-// Browser control auth helpers resolve plugin browser credentials from OpenClaw config.
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+// Browser control auth helpers resolve plugin browser credentials from GrokBot config.
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { loadBundledPluginPublicSurfaceModuleSync } from "./facade-loader.js";
 
 /** Browser control credentials resolved from config, env, or generated setup state. */

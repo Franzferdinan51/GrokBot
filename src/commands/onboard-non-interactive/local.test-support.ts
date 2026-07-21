@@ -1,4 +1,4 @@
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import "./local.js";
 
 type GatewayHealthProbeAuth = {
@@ -18,7 +18,7 @@ type TestApi = {
 
 function getTestApi(): TestApi {
   return (globalThis as Record<PropertyKey, unknown>)[
-    Symbol.for("openclaw.onboardNonInteractiveLocalTestApi")
+    Symbol.for("grokbot.onboardNonInteractiveLocalTestApi")
   ] as TestApi;
 }
 

@@ -1,4 +1,4 @@
-import { OPENCLAW_AGENT_SCHEMA_SQL } from "./openclaw-agent-schema.generated.js";
+import { OPENCLAW_AGENT_SCHEMA_SQL } from "./grokbot-agent-schema.generated.js";
 
 const BOARD_SCHEMA_START = "CREATE TABLE IF NOT EXISTS board_tabs (";
 const BOARD_SCHEMA_END = "CREATE TABLE IF NOT EXISTS heartbeat_outcomes (";
@@ -7,7 +7,7 @@ function splitBoardSchema(sql: string): { board: string; withoutBoard: string } 
   const start = sql.indexOf(BOARD_SCHEMA_START);
   const end = sql.indexOf(BOARD_SCHEMA_END, start);
   if (start === -1 || end === -1) {
-    throw new Error("OpenClaw agent board schema markers are missing from the canonical schema.");
+    throw new Error("GrokBot agent board schema markers are missing from the canonical schema.");
   }
   return {
     board: sql.slice(start, end),

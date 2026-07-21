@@ -1,10 +1,10 @@
 import { randomUUID } from "node:crypto";
-import { resolveTimestampMsToIsoString } from "@openclaw/normalization-core/number-coercion";
+import { resolveTimestampMsToIsoString } from "@grokbot/normalization-core/number-coercion";
 import {
   openOpenClawAgentDatabase,
   runOpenClawAgentWriteTransaction,
   type OpenClawAgentDatabase,
-} from "../../state/openclaw-agent-db.js";
+} from "../../state/grokbot-agent-db.js";
 import type {
   SessionTranscriptAccessScope,
   SessionTranscriptTurnMessageAppend,
@@ -250,7 +250,7 @@ export function appendSqliteTranscriptEventSync(
 export async function appendSqliteExpectedSessionTranscriptTurn(
   scope: SessionTranscriptWriteScope,
   options: {
-    config?: import("../types.openclaw.js").OpenClawConfig;
+    config?: import("../types.grokbot.js").OpenClawConfig;
     cwd?: string;
     expectedLifecycleRevision?: string;
     expectedSessionState?: SessionTranscriptTurnExpectedState;

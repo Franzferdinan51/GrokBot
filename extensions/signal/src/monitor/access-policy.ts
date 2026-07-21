@@ -2,10 +2,10 @@
 import {
   createChannelIngressResolver,
   defineStableChannelIngressIdentity,
-} from "openclaw/plugin-sdk/channel-ingress-runtime";
-import { createChannelPairingChallengeIssuer } from "openclaw/plugin-sdk/channel-pairing";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { upsertChannelPairingRequest } from "openclaw/plugin-sdk/conversation-runtime";
+} from "grokbot/plugin-sdk/channel-ingress-runtime";
+import { createChannelPairingChallengeIssuer } from "grokbot/plugin-sdk/channel-pairing";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { upsertChannelPairingRequest } from "grokbot/plugin-sdk/conversation-runtime";
 import {
   formatSignalSenderId,
   looksLikeUuid,

@@ -1,14 +1,14 @@
 ---
-summary: "CLI reference for `openclaw tui` (Gateway-backed or local embedded terminal UI)"
+summary: "CLI reference for `grokbot tui` (Gateway-backed or local embedded terminal UI)"
 read_when:
   - You want a terminal UI for the Gateway (remote-friendly)
   - You want to pass url/token/session from scripts
   - You want to run the TUI in local embedded mode without a Gateway
-  - You want to use openclaw chat or openclaw tui --local
+  - You want to use grokbot chat or grokbot tui --local
 title: "TUI"
 ---
 
-# `openclaw tui`
+# `grokbot tui`
 
 Open the terminal UI connected to the Gateway, or run it in local embedded
 mode.
@@ -31,7 +31,7 @@ Related guide: [TUI](/web/tui)
 | `--timeout-ms <ms>`          | `agents.defaults.timeoutSeconds`          | Agent timeout. Invalid values log a warning and are ignored.                       |
 | `--history-limit <n>`        | `200`                                     | History entries to load on attach.                                                 |
 
-Aliases: `openclaw chat` and `openclaw terminal` invoke this command with
+Aliases: `grokbot chat` and `grokbot terminal` invoke this command with
 `--local` implied.
 
 ## Notes
@@ -56,14 +56,14 @@ Aliases: `openclaw chat` and `openclaw terminal` invoke this command with
 ## Examples
 
 ```bash
-openclaw chat
-openclaw tui --local
-openclaw tui
-openclaw tui --url ws://127.0.0.1:18789 --token <token>
-openclaw tui --session main --deliver
-openclaw chat --message "Compare my config to the docs and tell me what to fix"
+grokbot chat
+grokbot tui --local
+grokbot tui
+grokbot tui --url ws://127.0.0.1:18789 --token <token>
+grokbot tui --session main --deliver
+grokbot chat --message "Compare my config to the docs and tell me what to fix"
 # when run inside an agent workspace, infers that agent automatically
-openclaw tui --session bugfix
+grokbot tui --session bugfix
 ```
 
 ## Config repair loop
@@ -71,25 +71,25 @@ openclaw tui --session bugfix
 Use local mode to have the embedded agent inspect the current config, compare
 it against the docs, and help repair it from the same terminal.
 
-If `openclaw config validate` is already failing, run `openclaw configure` or
-`openclaw doctor --fix` first; `openclaw chat` does not bypass the
+If `grokbot config validate` is already failing, run `grokbot configure` or
+`grokbot doctor --fix` first; `grokbot chat` does not bypass the
 invalid-config guard.
 
 ```bash
-openclaw chat
+grokbot chat
 ```
 
 Then inside the TUI:
 
 ```text
-!openclaw config file
-!openclaw docs gateway auth token secretref
-!openclaw config validate
-!openclaw doctor
+!grokbot config file
+!grokbot docs gateway auth token secretref
+!grokbot config validate
+!grokbot doctor
 ```
 
-Apply targeted fixes with `openclaw config set` or `openclaw configure`, then
-rerun `openclaw config validate`. See [TUI](/web/tui) and
+Apply targeted fixes with `grokbot config set` or `grokbot configure`, then
+rerun `grokbot config validate`. See [TUI](/web/tui) and
 [Config](/cli/config).
 
 ## Related

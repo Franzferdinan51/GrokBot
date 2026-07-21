@@ -1,8 +1,8 @@
 // Web media helpers load local and remote media for web-facing surfaces.
 import { lstat, realpath } from "node:fs/promises";
 import path from "node:path";
-import { maxBytesForKind, type MediaKind } from "@openclaw/media-core/constants";
-import { basenameFromAnyPath, extnameFromAnyPath } from "@openclaw/media-core/file-name";
+import { maxBytesForKind, type MediaKind } from "@grokbot/media-core/constants";
+import { basenameFromAnyPath, extnameFromAnyPath } from "@grokbot/media-core/file-name";
 import {
   detectMime,
   extensionForMime,
@@ -10,16 +10,16 @@ import {
   kindFromMime,
   mimeTypeFromFilePath,
   normalizeMimeType,
-} from "@openclaw/media-core/mime";
-import { hasHttpUrlPrefix } from "@openclaw/net-policy/url-protocol";
-import { uniqueValues } from "@openclaw/normalization-core/string-normalization";
+} from "@grokbot/media-core/mime";
+import { hasHttpUrlPrefix } from "@grokbot/net-policy/url-protocol";
+import { uniqueValues } from "@grokbot/normalization-core/string-normalization";
 import { resolveCanvasHttpPathToLocalPath } from "../canvas/documents.js";
 import { logVerbose, shouldLogVerbose } from "../globals.js";
 import { formatErrorMessage } from "../infra/errors.js";
 import { FsSafeError, readLocalFileSafely } from "../infra/fs-safe.js";
 import { assertNoWindowsNetworkPath, safeFileURLToPath } from "../infra/local-file-access.js";
 import type { PinnedDispatcherPolicy, SsrFPolicy } from "../infra/net/ssrf.js";
-import { resolvePreferredOpenClawTmpDir } from "../infra/tmp-openclaw-dir.js";
+import { resolvePreferredOpenClawTmpDir } from "../infra/tmp-grokbot-dir.js";
 import { getActivePluginRegistry } from "../plugins/runtime.js";
 import { resolveUserPath } from "../utils.js";
 import { readRemoteMediaBuffer } from "./fetch.js";

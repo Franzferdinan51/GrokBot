@@ -1,5 +1,5 @@
 // Sms tests cover inbound plugin behavior.
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { describe, expect, it, vi } from "vitest";
 import { dispatchSmsInboundEvent, type SmsChannelRuntime } from "./inbound.js";
 import type { sendSmsViaTwilio as sendSmsViaTwilioType } from "./twilio.js";
@@ -131,7 +131,7 @@ describe("dispatchSmsInboundEvent", () => {
       sessionKey: "agent:main:sms:direct:+15551234567",
     });
     buildContext.mockReturnValue({ SessionKey: "agent:main:sms:direct:+15551234567" });
-    resolveStorePath.mockReturnValue("/tmp/openclaw-sessions");
+    resolveStorePath.mockReturnValue("/tmp/grokbot-sessions");
     const turnAdoptionLifecycle = { onAdopted: vi.fn(async () => undefined) };
 
     await dispatchSmsInboundEvent({

@@ -1,5 +1,5 @@
 // Plugin management service tests cover cold state, catalog identity, and guarded mutations.
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({
@@ -107,12 +107,12 @@ function configSnapshot(config: Record<string, unknown> = {}) {
     snapshot: {
       valid: true,
       parsed: {},
-      path: "/tmp/openclaw.json",
+      path: "/tmp/grokbot.json",
       sourceConfig: config,
       hash: "base-hash",
     },
     writeOptions: {
-      expectedConfigPath: "/tmp/openclaw.json",
+      expectedConfigPath: "/tmp/grokbot.json",
       includeFileHashesForWrite: { "/tmp/plugins.json": "include-hash" },
       includeFileTargetsForWrite: { "/tmp/plugins.json": "/tmp/plugins.json" },
     },
@@ -142,14 +142,14 @@ function metadataSnapshot(params: {
     origin: params.origin ?? "bundled",
     rootDir: `/tmp/${id}`,
     source: `/tmp/${id}/index.ts`,
-    manifestPath: `/tmp/${id}/openclaw.plugin.json`,
+    manifestPath: `/tmp/${id}/grokbot.plugin.json`,
   };
   return {
     index: {
       plugins: [
         {
           pluginId: id,
-          packageName: `@openclaw/${id}`,
+          packageName: `@grokbot/${id}`,
           origin: params.origin ?? "bundled",
           enabled: params.enabled,
         },
@@ -174,28 +174,28 @@ function emptyMetadataSnapshot() {
 }
 
 const hostedDiffsEntry = {
-  name: "@openclaw/diffs",
+  name: "@grokbot/diffs",
   version: "2.0.0",
   description: "Hosted description",
-  openclaw: {
+  grokbot: {
     plugin: { id: "diffs", label: "Hosted Diffs" },
-    install: { clawhubSpec: "clawhub:@openclaw/diffs", defaultChoice: "clawhub" },
+    install: { clawhubSpec: "clawhub:@grokbot/diffs", defaultChoice: "clawhub" },
   },
 };
 
 // Mirrors the current default ClawHub feed shape: package identity lives in a
 // source candidate while runtime/editorial metadata remains local.
 const hostedFeedDiffsEntry = {
-  id: "@openclaw/diffs",
+  id: "@grokbot/diffs",
   title: "Diffs",
   state: "available",
   featured: true,
-  publisher: { id: "openclaw", trust: "official" },
+  publisher: { id: "grokbot", trust: "official" },
   install: {
     candidates: [
       {
         sourceRef: "public-clawhub",
-        package: "@openclaw/diffs",
+        package: "@grokbot/diffs",
         version: "2026.6.11",
         integrity: `sha256:${"a".repeat(64)}`,
       },
@@ -247,7 +247,7 @@ describe("plugin management service", () => {
         version: "2.0.0",
         featured: true,
         order: 40,
-        install: { source: "clawhub", packageName: "@openclaw/diffs" },
+        install: { source: "clawhub", packageName: "@grokbot/diffs" },
       }),
     ]);
   });
@@ -289,8 +289,8 @@ describe("plugin management service", () => {
         {
           ...hostedDiffsEntry,
           name: "community/impostor",
-          openclaw: {
-            ...hostedDiffsEntry.openclaw,
+          grokbot: {
+            ...hostedDiffsEntry.grokbot,
             install: { clawhubSpec: "clawhub:community/impostor", defaultChoice: "clawhub" },
           },
         },
@@ -314,14 +314,14 @@ describe("plugin management service", () => {
         entries: [
           {
             name: "community/partial",
-            openclaw: {
+            grokbot: {
               plugin: { id: "partial", label: "Partial" },
               catalog: { featured: "yes", order: 25 },
             },
           },
           {
             name: "community/invalid",
-            openclaw: {
+            grokbot: {
               plugin: { id: "invalid", label: "Invalid" },
               catalog: { featured: "yes", order: "first" },
             },
@@ -351,7 +351,7 @@ describe("plugin management service", () => {
     expect(catalog.plugins).toEqual([
       expect.objectContaining({
         id: "workboard",
-        packageName: "@openclaw/workboard",
+        packageName: "@grokbot/workboard",
         installed: true,
         enabled: false,
         state: "disabled",
@@ -387,9 +387,9 @@ describe("plugin management service", () => {
     const officialCatalog = {
       entries: [
         {
-          name: "@openclaw/firecrawl",
+          name: "@grokbot/firecrawl",
           description: "Web extraction and crawling.",
-          openclaw: {
+          grokbot: {
             plugin: { id: "firecrawl", label: "FireCrawl" },
             catalog: { featured: true, order: 60 },
             icon,
@@ -637,11 +637,11 @@ describe("plugin management service", () => {
       pluginId: "impostor",
       targetDir: "/tmp/extensions/impostor",
       extensions: ["index.js"],
-      packageName: "@openclaw/diffs",
+      packageName: "@grokbot/diffs",
       clawhub: {
         source: "clawhub",
         clawhubUrl: "https://clawhub.ai",
-        clawhubPackage: "@openclaw/diffs",
+        clawhubPackage: "@grokbot/diffs",
         clawhubFamily: "code-plugin",
       },
     });
@@ -650,7 +650,7 @@ describe("plugin management service", () => {
       installManagedPlugin({
         request: {
           source: "clawhub",
-          packageName: "@openclaw/diffs",
+          packageName: "@grokbot/diffs",
           acknowledgeClawHubRisk: true,
         },
         env: {},
@@ -658,7 +658,7 @@ describe("plugin management service", () => {
     ).rejects.toThrow("expected diffs, got impostor");
     expect(mocks.clawhubInstall).toHaveBeenCalledWith(
       expect.objectContaining({
-        spec: "clawhub:@openclaw/diffs@2026.6.11",
+        spec: "clawhub:@grokbot/diffs@2026.6.11",
         expectedPluginId: "diffs",
         expectedIntegrity: `sha256-${Buffer.from("a".repeat(64), "hex").toString("base64")}`,
         acknowledgeClawHubRisk: true,
@@ -670,7 +670,7 @@ describe("plugin management service", () => {
   it("does not pin a runtime id when the hosted entry only exposes its package name", async () => {
     const installRecord = {
       source: "clawhub",
-      spec: "clawhub:@openclaw/bluebubbles",
+      spec: "clawhub:@grokbot/bluebubbles",
       installPath: "/tmp/extensions/bluebubbles",
     };
     mocks.readConfig.mockResolvedValue(configSnapshot());
@@ -680,12 +680,12 @@ describe("plugin management service", () => {
       // the package name, which must not become an expectedPluginId pin.
       entries: [
         {
-          id: "@openclaw/bluebubbles",
+          id: "@grokbot/bluebubbles",
           title: "BlueBubbles",
           state: "available",
-          publisher: { id: "openclaw", trust: "official" },
+          publisher: { id: "grokbot", trust: "official" },
           install: {
-            candidates: [{ sourceRef: "public-clawhub", package: "@openclaw/bluebubbles" }],
+            candidates: [{ sourceRef: "public-clawhub", package: "@grokbot/bluebubbles" }],
           },
         },
       ],
@@ -697,11 +697,11 @@ describe("plugin management service", () => {
       pluginId: "bluebubbles",
       targetDir: "/tmp/extensions/bluebubbles",
       extensions: ["index.js"],
-      packageName: "@openclaw/bluebubbles",
+      packageName: "@grokbot/bluebubbles",
       clawhub: {
         source: "clawhub",
         clawhubUrl: "https://clawhub.ai",
-        clawhubPackage: "@openclaw/bluebubbles",
+        clawhubPackage: "@grokbot/bluebubbles",
         clawhubFamily: "code-plugin",
       },
     });
@@ -718,7 +718,7 @@ describe("plugin management service", () => {
     );
 
     const result = await installManagedPlugin({
-      request: { source: "clawhub", packageName: "@openclaw/bluebubbles" },
+      request: { source: "clawhub", packageName: "@grokbot/bluebubbles" },
       env: {},
     });
 
@@ -738,8 +738,8 @@ describe("plugin management service", () => {
           id: "sonos",
           title: "Sonos",
           state: "available",
-          publisher: { id: "openclaw", trust: "official" },
-          openclaw: { plugin: { id: "sonos" } },
+          publisher: { id: "grokbot", trust: "official" },
+          grokbot: { plugin: { id: "sonos" } },
           install: { candidates: [{ sourceRef: "public-clawhub", package: "sonos" }] },
         },
       ],
@@ -784,11 +784,11 @@ describe("plugin management service", () => {
       pluginId: "diffs",
       targetDir: "/tmp/extensions/diffs",
       extensions: ["index.js"],
-      packageName: "@openclaw/diffs",
+      packageName: "@grokbot/diffs",
       clawhub: {
         source: "clawhub",
         clawhubUrl: "https://clawhub.ai",
-        clawhubPackage: "@openclaw/diffs",
+        clawhubPackage: "@grokbot/diffs",
         clawhubFamily: "code-plugin",
       },
     });
@@ -804,7 +804,7 @@ describe("plugin management service", () => {
 
     expect(mocks.clawhubInstall).toHaveBeenCalledWith(
       expect.objectContaining({
-        spec: "clawhub:@openclaw/diffs@2026.6.11",
+        spec: "clawhub:@grokbot/diffs@2026.6.11",
         expectedPluginId: "diffs",
         expectedIntegrity: `sha256-${Buffer.from("a".repeat(64), "hex").toString("base64")}`,
       }),
@@ -1001,7 +1001,7 @@ describe("plugin management service", () => {
   it("uninstalls an external plugin through commit, file removal, and registry refresh", async () => {
     const installRecord = {
       source: "clawhub",
-      spec: "clawhub:@openclaw/diffs",
+      spec: "clawhub:@grokbot/diffs",
       installPath: "/tmp/extensions/diffs",
     };
     const prepared = configSnapshot({ plugins: { entries: { diffs: { enabled: true } } } });

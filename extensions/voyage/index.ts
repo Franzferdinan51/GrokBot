@@ -1,5 +1,5 @@
-// Voyage plugin entrypoint registers its OpenClaw integration.
-import { definePluginEntry } from "openclaw/plugin-sdk/plugin-entry";
+// Voyage plugin entrypoint registers its GrokBot integration.
+import { definePluginEntry } from "grokbot/plugin-sdk/plugin-entry";
 import { voyageMemoryEmbeddingProviderAdapter } from "./memory-embedding-adapter.js";
 
 export default definePluginEntry({

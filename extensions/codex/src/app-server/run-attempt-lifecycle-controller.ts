@@ -6,7 +6,7 @@ import {
   resolveAgentRunAbortLifecycleFields,
   resolveFastModeForElapsed,
   type EmbeddedRunAttemptParams,
-} from "openclaw/plugin-sdk/agent-harness-runtime";
+} from "grokbot/plugin-sdk/agent-harness-runtime";
 import {
   CODEX_APP_SERVER_INTERRUPT_TIMEOUT_MS,
   interruptCodexTurnBestEffort,

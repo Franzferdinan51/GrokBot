@@ -1,12 +1,12 @@
 // Voice Call tests cover realtime handler plugin behavior.
 import http from "node:http";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import type {
   RealtimeVoiceBridge,
   RealtimeVoiceProviderPlugin,
   RealtimeVoiceSessionHarness,
   RealtimeVoiceToolCallEvent,
-} from "openclaw/plugin-sdk/realtime-voice";
+} from "grokbot/plugin-sdk/realtime-voice";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { WebSocket, type RawData } from "ws";
 import type { VoiceCallRealtimeConfig } from "../config.js";
@@ -20,8 +20,8 @@ const realtimeVoiceHarnessTestHooks = vi.hoisted(() => ({
   onCreate: undefined as ((harness: RealtimeVoiceSessionHarness) => void) | undefined,
 }));
 
-vi.mock("openclaw/plugin-sdk/realtime-voice", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("openclaw/plugin-sdk/realtime-voice")>();
+vi.mock("grokbot/plugin-sdk/realtime-voice", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("grokbot/plugin-sdk/realtime-voice")>();
   return {
     ...actual,
     createRealtimeVoiceSessionHarness: (
@@ -1341,7 +1341,7 @@ describe("RealtimeCallHandler path routing", () => {
             "native-cancelled",
             {
               status: "cancelled",
-              message: "OpenClaw cancelled this consult before completion. Do not restart it.",
+              message: "GrokBot cancelled this consult before completion. Do not restart it.",
             },
             undefined,
           );
@@ -1431,7 +1431,7 @@ describe("RealtimeCallHandler path routing", () => {
         await waitForRealtimeTest(() => {
           expect(sendUserMessage).toHaveBeenCalledTimes(1);
           expect(requireFirstMockCall(sendUserMessage.mock.calls, "user message")).toEqual([
-            "Internal OpenClaw consult result is ready.\nDo not call tools for this internal result.\nSpeak the following answer to the caller now, briefly and naturally:\nI created the smoke test file.",
+            "Internal GrokBot consult result is ready.\nDo not call tools for this internal result.\nSpeak the following answer to the caller now, briefly and naturally:\nI created the smoke test file.",
           ]);
         });
       } finally {

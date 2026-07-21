@@ -1,7 +1,7 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 // Control UI tests cover chat flow behavior.
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { chromium, type Browser, type BrowserContext, type Page } from "playwright";
 import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
 import { SESSION_DRAG_MIME } from "../lib/sessions/drag.ts";
@@ -175,7 +175,7 @@ async function captureSessionAccessibilityProof(page: Page, name: string): Promi
     return;
   }
   await mkdir(sessionAccessibilityProofDir, { recursive: true });
-  const sidebar = page.locator("openclaw-app-sidebar");
+  const sidebar = page.locator("grokbot-app-sidebar");
   await page.screenshot({
     fullPage: true,
     path: path.join(sessionAccessibilityProofDir, `${name}.png`),
@@ -307,7 +307,7 @@ describeControlUiE2e("Control UI mocked Gateway E2E", () => {
       await expect.poll(() => splitEntry.isVisible()).toBe(true);
       await expect.poll(() => page.locator(".chat-pane__header").count()).toBe(1);
       await page.evaluate(() => {
-        document.documentElement.classList.add("openclaw-native-macos");
+        document.documentElement.classList.add("grokbot-native-macos");
         document.querySelector(".shell")?.classList.add("shell--nav-collapsed");
       });
       await expect
@@ -318,7 +318,7 @@ describeControlUiE2e("Control UI mocked Gateway E2E", () => {
         )
         .toBe("90px");
       await page.evaluate(() => {
-        document.documentElement.classList.remove("openclaw-native-macos");
+        document.documentElement.classList.remove("grokbot-native-macos");
         document.querySelector(".shell")?.classList.remove("shell--nav-collapsed");
       });
       await page.setViewportSize({ height: 900, width: 1100 });
@@ -329,7 +329,7 @@ describeControlUiE2e("Control UI mocked Gateway E2E", () => {
           splitEntry.evaluate((node) => node.closest(".agent-chat__composer-shell") == null),
         )
         .toBe(true);
-      await page.locator("openclaw-chat-pane").evaluate((pane) => {
+      await page.locator("grokbot-chat-pane").evaluate((pane) => {
         (
           globalThis as typeof globalThis & {
             classicChatPane?: Element;
@@ -344,7 +344,7 @@ describeControlUiE2e("Control UI mocked Gateway E2E", () => {
         .toBeGreaterThan(startupRequestsBeforeSplit);
 
       // Each pane owns the same in-flow header in classic and split layouts.
-      const panes = page.locator("openclaw-chat-pane.chat-split-view__pane");
+      const panes = page.locator("grokbot-chat-pane.chat-split-view__pane");
       const headers = page.locator(".chat-pane__header");
       await expect.poll(() => panes.count()).toBe(2);
       await panes.last().getByText("Split toolbar proof.").waitFor();
@@ -387,7 +387,7 @@ describeControlUiE2e("Control UI mocked Gateway E2E", () => {
       await expect
         .poll(() =>
           targetHeader.evaluate((header) => {
-            const owner = header.closest("openclaw-chat-pane");
+            const owner = header.closest("grokbot-chat-pane");
             return (
               owner === header.parentElement && owner?.classList.contains("chat-split-view__pane")
             );
@@ -775,7 +775,7 @@ describeControlUiE2e("Control UI mocked Gateway E2E", () => {
       viewport: { height: 900, width: 1280 },
     });
     const page = await context.newPage();
-    const source = "/tmp/openclaw/测试 report.pdf";
+    const source = "/tmp/grokbot/测试 report.pdf";
     const mediaUrl = `/__openclaw__/assistant-media?source=${encodeURIComponent(source)}&mediaTicket=ticket-download`;
     const requestedUrls: URL[] = [];
     // The document opens in a new tab, so intercept at the context boundary.
@@ -973,7 +973,7 @@ describeControlUiE2e("Control UI mocked Gateway E2E", () => {
       fetchedMedia.push({
         authorization: request.headers().authorization,
         pathname: url.pathname,
-        requesterSessionKey: request.headers()["x-openclaw-requester-session-key"],
+        requesterSessionKey: request.headers()["x-grokbot-requester-session-key"],
       });
       await route.fulfill({
         body: '<svg xmlns="http://www.w3.org/2000/svg" width="160" height="90"><rect width="160" height="90" rx="12" fill="#0f766e"/><text x="80" y="50" text-anchor="middle" fill="white" font-family="sans-serif" font-size="14">managed preview</text></svg>',
@@ -1888,7 +1888,7 @@ describeControlUiE2e("Control UI mocked Gateway E2E", () => {
 
     try {
       await page.goto(`${server.baseUrl}chat`);
-      const newSessionButton = page.locator("openclaw-app-sidebar .sidebar-brand__new-thread");
+      const newSessionButton = page.locator("grokbot-app-sidebar .sidebar-brand__new-thread");
       await newSessionButton.waitFor({ state: "visible", timeout: 10_000 });
       await newSessionButton.click();
 
@@ -2110,7 +2110,7 @@ describeControlUiE2e("Control UI mocked Gateway E2E", () => {
       await page.getByText("First token visible.").waitFor({ timeout: 10_000 });
       await gateway.resolveDeferred("chat.startup", {
         agentsList: {
-          agents: [{ id: "ops", name: "OpenClaw" }],
+          agents: [{ id: "ops", name: "GrokBot" }],
           defaultId: "ops",
           mainKey: "main",
           scope: "agent",
@@ -2183,7 +2183,7 @@ describeControlUiE2e("Control UI mocked Gateway E2E", () => {
           .waitFor({ timeout: 10_000 });
 
         const gatewayErrorText =
-          "⚠️ Model login expired on the gateway for openai. Send `/login codex` from a private chat or Web UI session to pair a new Codex login, or re-auth with `openclaw models auth login --provider openai` in a terminal, then try again.";
+          "⚠️ Model login expired on the gateway for openai. Send `/login codex` from a private chat or Web UI session to pair a new Codex login, or re-auth with `grokbot models auth login --provider openai` in a terminal, then try again.";
         const errorText = gatewayErrorText.replace(/^⚠️\s*/u, "");
         await gateway.emitGatewayEvent("chat", {
           errorMessage: gatewayErrorText,
@@ -2953,7 +2953,7 @@ describeControlUiE2e("Control UI mocked Gateway E2E", () => {
       await expect
         .poll(() =>
           page
-            .locator("openclaw-chat-pane")
+            .locator("grokbot-chat-pane")
             .evaluate(
               (element) =>
                 (element as HTMLElement & { state: { chatMessages: unknown[] } }).state.chatMessages
@@ -2985,7 +2985,7 @@ describeControlUiE2e("Control UI mocked Gateway E2E", () => {
         ).chatSessionReturnSamples = samples;
         const deadline = performance.now() + 750;
         const sample = () => {
-          const pane = document.querySelector("openclaw-chat-pane") as
+          const pane = document.querySelector("grokbot-chat-pane") as
             | (HTMLElement & {
                 state?: { chatMessages?: unknown[]; sessionKey?: string };
               })
@@ -3158,7 +3158,7 @@ describeControlUiE2e("Control UI mocked Gateway E2E", () => {
       await composer.waitFor({ state: "visible", timeout: 10_000 });
 
       await gateway.setOnline(false);
-      await page.locator("openclaw-connection-banner").waitFor({ timeout: 10_000 });
+      await page.locator("grokbot-connection-banner").waitFor({ timeout: 10_000 });
 
       const prompt = "send this when the Gateway returns";
       const attachmentName = "offline-proof.txt";
@@ -3191,7 +3191,7 @@ describeControlUiE2e("Control UI mocked Gateway E2E", () => {
         page.evaluate(
           ({ expectedAttachmentName, expectedAttachmentDataUrl, expectedPrompt }) => {
             const storedValues = Object.entries(sessionStorage)
-              .filter(([key]) => key.startsWith("openclaw.control.chatComposer.v2:"))
+              .filter(([key]) => key.startsWith("grokbot.control.chatComposer.v2:"))
               .map(([, value]) => value);
             const stored = storedValues.join("\n");
             let runId: string | null = null;
@@ -3265,7 +3265,7 @@ describeControlUiE2e("Control UI mocked Gateway E2E", () => {
       expect(await gateway.getRequests("chat.send")).toHaveLength(0);
 
       await gateway.setOnline(true);
-      await page.locator("openclaw-chat-pane").waitFor({ state: "attached", timeout: 10_000 });
+      await page.locator("grokbot-chat-pane").waitFor({ state: "attached", timeout: 10_000 });
 
       const request = await gateway.waitForRequest("chat.send");
       const params = requireRecord(request.params);
@@ -3301,7 +3301,7 @@ describeControlUiE2e("Control UI mocked Gateway E2E", () => {
           return proof.attachment || proof.prompt || proof.runId === runId;
         })
         .toBe(false);
-      await page.locator("openclaw-connection-banner").waitFor({ state: "detached" });
+      await page.locator("grokbot-connection-banner").waitFor({ state: "detached" });
       await expectRequestCountStable(gateway, "chat.send", 1);
       if (artifactDir) {
         await page.screenshot({ path: `${artifactDir}/03-online-delivered.png`, fullPage: true });

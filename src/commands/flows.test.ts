@@ -11,7 +11,7 @@ import {
   resetTaskRegistryForTests,
 } from "../tasks/task-runtime.test-helpers.js";
 import { captureEnv } from "../test-utils/env.js";
-import { withOpenClawTestState } from "../test-utils/openclaw-test-state.js";
+import { withOpenClawTestState } from "../test-utils/grokbot-test-state.js";
 import { flowsCancelCommand, flowsListCommand, flowsShowCommand } from "./flows.js";
 
 vi.mock("../config/config.js", () => ({
@@ -64,7 +64,7 @@ async function withTaskFlowCommandStateDir(run: (root: string) => Promise<void>)
   await withOpenClawTestState(
     {
       layout: "state-only",
-      prefix: "openclaw-flows-command-",
+      prefix: "grokbot-flows-command-",
     },
     async (state) => {
       resetTaskRegistryDeliveryRuntimeForTests();

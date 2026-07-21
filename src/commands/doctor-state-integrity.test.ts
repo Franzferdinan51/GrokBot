@@ -10,7 +10,7 @@ import {
   resolveSessionTranscriptsDirForAgent,
 } from "../config/sessions/paths.js";
 import type { SessionEntry } from "../config/sessions/types.js";
-import { closeOpenClawStateDatabaseForTest } from "../state/openclaw-state-db.js";
+import { closeOpenClawStateDatabaseForTest } from "../state/grokbot-state-db.js";
 import { captureEnv, deleteTestEnvValue, setTestEnvValue } from "../test-utils/env.js";
 import {
   clearTuiLastSessionPointers,
@@ -121,10 +121,10 @@ describe("structured state integrity findings", () => {
 
   beforeEach(() => {
     envSnapshot = captureEnv(["HOME", "OPENCLAW_HOME", "OPENCLAW_STATE_DIR"]);
-    tempHome = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-doctor-state-integrity-"));
+    tempHome = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-doctor-state-integrity-"));
     setTestEnvValue("HOME", tempHome);
     setTestEnvValue("OPENCLAW_HOME", tempHome);
-    setTestEnvValue("OPENCLAW_STATE_DIR", path.join(tempHome, ".openclaw"));
+    setTestEnvValue("OPENCLAW_STATE_DIR", path.join(tempHome, ".grokbot"));
   });
 
   afterEach(() => {
@@ -143,18 +143,18 @@ describe("structured state integrity findings", () => {
 
     expect(issue).toEqual({
       kind: "missing-state-dir",
-      path: path.join(tempHome, ".openclaw"),
+      path: path.join(tempHome, ".grokbot"),
     });
     expect(stateIntegrityIssueToHealthFinding(issue)).toMatchObject({
       checkId: "core/doctor/state-integrity",
       severity: "error",
-      path: path.join(tempHome, ".openclaw"),
-      fixHint: "Run `openclaw doctor --fix` to create the state directory.",
+      path: path.join(tempHome, ".grokbot"),
+      fixHint: "Run `grokbot doctor --fix` to create the state directory.",
     });
     expect(stateIntegrityIssueToRepairEffect(issue)).toEqual({
       kind: "state",
       action: "would-create-state-dir",
-      target: path.join(tempHome, ".openclaw"),
+      target: path.join(tempHome, ".grokbot"),
       dryRunSafe: false,
     });
   });
@@ -163,8 +163,8 @@ describe("structured state integrity findings", () => {
     if (process.platform === "win32") {
       return;
     }
-    const stateDir = path.join(tempHome, ".openclaw");
-    const configPath = path.join(tempHome, "openclaw.json");
+    const stateDir = path.join(tempHome, ".grokbot");
+    const configPath = path.join(tempHome, "grokbot.json");
     fs.mkdirSync(stateDir, { recursive: true, mode: 0o755 });
     fs.chmodSync(stateDir, 0o755);
     fs.writeFileSync(configPath, "{}\n", { mode: 0o644 });
@@ -196,8 +196,8 @@ describe("structured state integrity findings", () => {
     if (process.platform === "win32") {
       return;
     }
-    const stateDir = path.join(tempHome, ".openclaw");
-    const configPath = path.join(tempHome, "openclaw.json");
+    const stateDir = path.join(tempHome, ".grokbot");
+    const configPath = path.join(tempHome, "grokbot.json");
     fs.writeFileSync(configPath, "{}\n", { mode: 0o644 });
     fs.chmodSync(configPath, 0o644);
 
@@ -267,8 +267,8 @@ describe("doctor state integrity oauth dir checks", () => {
       "OPENCLAW_OAUTH_DIR",
       "OPENCLAW_AGENT_DIR",
     ]);
-    tempHome = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-doctor-state-integrity-"));
-    const stateDir = path.join(tempHome, ".openclaw");
+    tempHome = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-doctor-state-integrity-"));
+    const stateDir = path.join(tempHome, ".grokbot");
     setTestEnvValue("HOME", tempHome);
     setTestEnvValue("OPENCLAW_HOME", tempHome);
     setTestEnvValue("OPENCLAW_STATE_DIR", stateDir);
@@ -424,7 +424,7 @@ describe("doctor state integrity oauth dir checks", () => {
     const text = stateIntegrityText();
     expect(text).toContain("automatic restart recovery tombstoned");
     expect(text).toContain("agent:main:subagent:wedged-child");
-    expect(text).toContain("openclaw tasks maintenance --apply");
+    expect(text).toContain("grokbot tasks maintenance --apply");
     expect(hasRepairPromptMessage(confirmRuntimeRepair, "Clear stale aborted recovery flags")).toBe(
       true,
     );
@@ -582,7 +582,7 @@ describe("doctor state integrity oauth dir checks", () => {
       );
       fs.symlinkSync(originalHome, symlinkHome, "dir");
       try {
-        const symlinkStateDir = path.join(symlinkHome, ".openclaw");
+        const symlinkStateDir = path.join(symlinkHome, ".grokbot");
         setTestEnvValue("HOME", symlinkHome);
         setTestEnvValue("OPENCLAW_HOME", symlinkHome);
         setTestEnvValue("OPENCLAW_STATE_DIR", symlinkStateDir);
@@ -636,7 +636,7 @@ describe("doctor state integrity oauth dir checks", () => {
     expect(confirmRuntimeRepair).toHaveBeenCalled();
   });
 
-  it("prints openclaw-only verification hints when recent sessions are missing transcripts", async () => {
+  it("prints grokbot-only verification hints when recent sessions are missing transcripts", async () => {
     const cfg: OpenClawConfig = {};
     writeSessionStore(cfg, {
       "agent:main:main": {
@@ -646,15 +646,15 @@ describe("doctor state integrity oauth dir checks", () => {
     });
     const text = await runStateIntegrityText(cfg);
     expect(text).toContain("recent sessions are missing transcripts");
-    expect(text).toMatch(/openclaw sessions --store ".*sessions\.json"/);
+    expect(text).toMatch(/grokbot sessions --store ".*sessions\.json"/);
     expect(text).toMatch(
-      /openclaw sessions cleanup --store ".*sessions\.json" --dry-run --fix-missing/,
+      /grokbot sessions cleanup --store ".*sessions\.json" --dry-run --fix-missing/,
     );
     expect(text).not.toMatch(
-      /openclaw sessions cleanup --store ".*sessions\.json" --dry-run(?! --fix-missing)/,
+      /grokbot sessions cleanup --store ".*sessions\.json" --dry-run(?! --fix-missing)/,
     );
     expect(text).toMatch(
-      /openclaw sessions cleanup --store ".*sessions\.json" --enforce --fix-missing/,
+      /grokbot sessions cleanup --store ".*sessions\.json" --enforce --fix-missing/,
     );
     expect(text).not.toContain("--active");
     expect(text).not.toContain(" ls ");
@@ -874,7 +874,7 @@ describe("doctor state integrity oauth dir checks", () => {
   });
 
   it("does not let synthetic heartbeat metadata override mixed transcript history", () => {
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-heartbeat-main-mixed-"));
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-heartbeat-main-mixed-"));
     try {
       const transcriptPath = path.join(tempDir, "session.jsonl");
       fs.writeFileSync(
@@ -897,7 +897,7 @@ describe("doctor state integrity oauth dir checks", () => {
   });
 
   it("does not let heartbeat-looking routing metadata skip mixed transcript checks", () => {
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-heartbeat-main-route-"));
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-heartbeat-main-route-"));
     try {
       const transcriptPath = path.join(tempDir, "session.jsonl");
       fs.writeFileSync(
@@ -922,7 +922,7 @@ describe("doctor state integrity oauth dir checks", () => {
   });
 
   it("does not classify transcripts with real user activity after 400 heartbeat messages", () => {
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-heartbeat-main-cap-"));
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-heartbeat-main-cap-"));
     try {
       const transcriptPath = path.join(tempDir, "session.jsonl");
       const heartbeatMessages = Array.from({ length: 400 }, () =>
@@ -944,7 +944,7 @@ describe("doctor state integrity oauth dir checks", () => {
   });
 
   it("keeps the heartbeat main-session helper conservative", () => {
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-heartbeat-main-helper-"));
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-heartbeat-main-helper-"));
     try {
       const transcriptPath = path.join(tempDir, "session.jsonl");
       fs.writeFileSync(
@@ -982,7 +982,7 @@ describe("doctor state integrity oauth dir checks", () => {
       "main-session",
     );
 
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-tui-pointer-clear-"));
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-tui-pointer-clear-"));
     try {
       await writeTuiLastSessionKey({
         scopeKey: "terminal",

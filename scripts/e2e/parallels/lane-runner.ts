@@ -1,4 +1,4 @@
-// Lane Runner script supports OpenClaw repository automation.
+// Lane Runner script supports GrokBot repository automation.
 import { warn } from "./host-command.ts";
 
 export type SmokeLane = "fresh" | "upgrade";

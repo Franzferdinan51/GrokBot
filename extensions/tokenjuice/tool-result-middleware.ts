@@ -4,8 +4,8 @@ import type {
   AgentToolResultMiddleware,
   AgentToolResultMiddlewareEvent,
   OpenClawAgentToolResult,
-} from "openclaw/plugin-sdk/agent-harness";
-import { isRecord } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/agent-harness";
+import { isRecord } from "grokbot/plugin-sdk/string-coerce-runtime";
 import { createTokenjuiceOpenClawEmbeddedExtension } from "./runtime-api.js";
 
 type TokenjuiceToolResultHandler = (

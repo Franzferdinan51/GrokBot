@@ -1,5 +1,5 @@
 /** Builds the per-run built-in and plugin tool inventory. */
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+import { normalizeOptionalString } from "@grokbot/normalization-core/string-coerce";
 import type {
   SourceReplyDeliveryMode,
   TaskSuggestionDeliveryMode,
@@ -10,7 +10,7 @@ import type { ChatType } from "../channels/chat-type.js";
 import type { InboundEventKind } from "../channels/inbound-event/kind.js";
 import type { ConversationReadInvocationOrigin } from "../channels/plugins/conversation-read-origin.js";
 import { selectApplicableRuntimeConfig } from "../config/config.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { callGateway } from "../gateway/call.js";
 import { isEmbeddedMode } from "../infra/embedded-mode.js";
 import { getActiveSecretsRuntimeConfigSnapshot } from "../secrets/runtime-state.js";
@@ -27,21 +27,21 @@ import {
   wrapToolWithBeforeToolCallHook,
 } from "./agent-tools.before-tool-call.js";
 import type { ConversationRecallContext } from "./conversation-recall.types.js";
-import { resolveOpenClawPluginToolsForOptions } from "./openclaw-plugin-tools.js";
+import { resolveOpenClawPluginToolsForOptions } from "./grokbot-plugin-tools.js";
 import {
   isToolExplicitlyAllowedByFactoryPolicy,
   mergeFactoryPolicyList,
   resolveImageToolFactoryAvailable,
   resolveOptionalMediaToolFactoryPlan,
-} from "./openclaw-tools.media-factory-plan.js";
-import type { ModelAwareToolContext } from "./openclaw-tools.model-context.js";
-import { applyNodesToolWorkspaceGuard } from "./openclaw-tools.nodes-workspace-guard.js";
+} from "./grokbot-tools.media-factory-plan.js";
+import type { ModelAwareToolContext } from "./grokbot-tools.model-context.js";
+import { applyNodesToolWorkspaceGuard } from "./grokbot-tools.nodes-workspace-guard.js";
 import {
   collectPresentOpenClawTools,
   shouldIncludeAskUserToolForOpenClawTools,
   shouldIncludeUpdatePlanToolForOpenClawTools,
-} from "./openclaw-tools.registration.js";
-import { createOpenClawSwarmToolGroups } from "./openclaw-tools.swarm.js";
+} from "./grokbot-tools.registration.js";
+import { createOpenClawSwarmToolGroups } from "./grokbot-tools.swarm.js";
 import type { SandboxFsBridge } from "./sandbox/fs-bridge.js";
 import type { SpawnedToolContext } from "./spawned-context.js";
 import type { ToolFsPolicy } from "./tool-fs-policy.js";
@@ -71,7 +71,7 @@ import { createImageTool } from "./tools/image-tool.js";
 import { createMessageTool } from "./tools/message-tool.js";
 import { createMusicGenerateTool } from "./tools/music-generate-tool.js";
 import { createNodesTool } from "./tools/nodes-tool.js";
-import { createOpenClawDelegateToolsForRun } from "./tools/openclaw-delegate-tool.js";
+import { createOpenClawDelegateToolsForRun } from "./tools/grokbot-delegate-tool.js";
 import { createPdfTool } from "./tools/pdf-tool.js";
 import { createScreenTool } from "./tools/screen-tool.js";
 import { createSessionStatusTool } from "./tools/session-status-tool.js";
@@ -261,7 +261,7 @@ export function createOpenClawTools(
   const runtimeCwd = resolveWorkspaceRoot(
     options?.cwd ?? options?.workspaceDir ?? inferredWorkspaceDir,
   );
-  options?.recordToolPrepStage?.("openclaw-tools:session-workspace");
+  options?.recordToolPrepStage?.("grokbot-tools:session-workspace");
   const deliveryContext = normalizeDeliveryContext({
     channel: options?.agentChannel,
     to: options?.agentTo,
@@ -319,7 +319,7 @@ export function createOpenClawTools(
         deferAutoModelResolution: true,
       })
     : null;
-  options?.recordToolPrepStage?.("openclaw-tools:image-tool");
+  options?.recordToolPrepStage?.("grokbot-tools:image-tool");
   const imageGenerateTool = optionalMediaTools.imageGenerate
     ? createImageGenerateTool({
         config: options?.config,
@@ -333,7 +333,7 @@ export function createOpenClawTools(
         onAsyncTaskStarted: mediaGenerationAsyncStartCallback,
       })
     : null;
-  options?.recordToolPrepStage?.("openclaw-tools:image-generate-tool");
+  options?.recordToolPrepStage?.("grokbot-tools:image-generate-tool");
   const videoGenerateTool = optionalMediaTools.videoGenerate
     ? createVideoGenerateTool({
         config: options?.config,
@@ -347,7 +347,7 @@ export function createOpenClawTools(
         onAsyncTaskStarted: mediaGenerationAsyncStartCallback,
       })
     : null;
-  options?.recordToolPrepStage?.("openclaw-tools:video-generate-tool");
+  options?.recordToolPrepStage?.("grokbot-tools:video-generate-tool");
   const musicGenerateTool = optionalMediaTools.musicGenerate
     ? createMusicGenerateTool({
         config: options?.config,
@@ -361,7 +361,7 @@ export function createOpenClawTools(
         onAsyncTaskStarted: mediaGenerationAsyncStartCallback,
       })
     : null;
-  options?.recordToolPrepStage?.("openclaw-tools:music-generate-tool");
+  options?.recordToolPrepStage?.("grokbot-tools:music-generate-tool");
   const pdfTool =
     optionalMediaTools.pdf && options?.agentDir?.trim()
       ? createPdfTool({
@@ -376,7 +376,7 @@ export function createOpenClawTools(
           deferAutoModelResolution: true,
         })
       : null;
-  options?.recordToolPrepStage?.("openclaw-tools:pdf-tool");
+  options?.recordToolPrepStage?.("grokbot-tools:pdf-tool");
   const webSearchTool = createWebSearchTool({
     config: options?.config,
     agentDir: options?.agentDir,
@@ -384,14 +384,14 @@ export function createOpenClawTools(
     runtimeWebSearch: runtimeWebTools?.search,
     lateBindRuntimeConfig: true,
   });
-  options?.recordToolPrepStage?.("openclaw-tools:web-search-tool");
+  options?.recordToolPrepStage?.("grokbot-tools:web-search-tool");
   const webFetchTool = createWebFetchTool({
     config: options?.config,
     sandboxed: options?.sandboxed,
     runtimeWebFetch: runtimeWebTools?.fetch,
     lateBindRuntimeConfig: true,
   });
-  options?.recordToolPrepStage?.("openclaw-tools:web-fetch-tool");
+  options?.recordToolPrepStage?.("grokbot-tools:web-fetch-tool");
   const messageTool = options?.disableMessageTool
     ? null
     : createMessageTool({
@@ -423,7 +423,7 @@ export function createOpenClawTools(
         conversationReadOrigin: options?.conversationReadOrigin,
       });
   const heartbeatTool = options?.enableHeartbeatTool ? createHeartbeatResponseTool() : null;
-  options?.recordToolPrepStage?.("openclaw-tools:message-tool");
+  options?.recordToolPrepStage?.("grokbot-tools:message-tool");
   const nodesToolBase = createNodesTool({
     agentSessionKey: options?.agentSessionKey,
     agentChannel: options?.agentChannel,
@@ -440,7 +440,7 @@ export function createOpenClawTools(
     sandboxRoot: options?.sandboxRoot,
     workspaceDir,
   });
-  options?.recordToolPrepStage?.("openclaw-tools:nodes-tool");
+  options?.recordToolPrepStage?.("grokbot-tools:nodes-tool");
   const embedded = isEmbeddedMode();
   const explicitFactoryAllowlist = mergeFactoryPolicyList(
     resolvedConfig?.tools?.allow,
@@ -722,7 +722,7 @@ export function createOpenClawTools(
     }),
     ...collectPresentOpenClawTools([webSearchTool, webFetchTool, imageTool, pdfTool]),
   ];
-  options?.recordToolPrepStage?.("openclaw-tools:core-tool-list");
+  options?.recordToolPrepStage?.("grokbot-tools:core-tool-list");
   let allTools = tools;
   if (!options?.disablePluginTools) {
     const existingToolNames = new Set<string>();
@@ -737,11 +737,11 @@ export function createOpenClawTools(
         existingToolNames,
       }),
     ];
-    options?.recordToolPrepStage?.("openclaw-tools:plugin-tools");
+    options?.recordToolPrepStage?.("grokbot-tools:plugin-tools");
   }
 
   allTools = filterToolsByClientCaps(allTools, options?.clientCaps);
-  options?.recordToolPrepStage?.("openclaw-tools:client-capabilities");
+  options?.recordToolPrepStage?.("grokbot-tools:client-capabilities");
 
   const hookAgentId = options?.requesterAgentIdOverride ?? sessionAgentId;
   const wrapGatewayCallerIdentity = createGatewayToolCallerWrapper(hookAgentId, options);
@@ -761,7 +761,7 @@ export function createOpenClawTools(
     ...defaultHookContext,
     ...options?.beforeToolCallHookContext,
   };
-  options?.recordToolPrepStage?.("openclaw-tools:tool-hooks");
+  options?.recordToolPrepStage?.("grokbot-tools:tool-hooks");
   return allTools
     .map((tool) =>
       isToolWrappedWithBeforeToolCallHook(tool)

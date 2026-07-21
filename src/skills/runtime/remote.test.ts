@@ -4,7 +4,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import type { NodeRegistry } from "../../gateway/node-registry.js";
 import { getSkillsSnapshotVersion } from "./refresh-state.js";
 import { resetSkillsRefreshForTest } from "./refresh.test-support.js";
@@ -19,7 +19,7 @@ import {
 } from "./remote.js";
 
 function createRemoteSkillWorkspace(bin: string): { cfg: OpenClawConfig; workspaceDir: string } {
-  const workspaceDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-remote-skills-"));
+  const workspaceDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-remote-skills-"));
   const skillDir = path.join(workspaceDir, "skills", "remote-skill");
   fs.mkdirSync(skillDir, { recursive: true });
   fs.writeFileSync(
@@ -28,7 +28,7 @@ function createRemoteSkillWorkspace(bin: string): { cfg: OpenClawConfig; workspa
       "---",
       "name: remote-skill",
       "description: Needs a remote bin",
-      `metadata: { "openclaw": { "os": ["darwin"], "requires": { "bins": ["${bin}"] } } }`,
+      `metadata: { "grokbot": { "os": ["darwin"], "requires": { "bins": ["${bin}"] } } }`,
       "---",
       "# Remote Skill",
       "",
@@ -239,7 +239,7 @@ describe("skills-remote", () => {
 
   it("skips remote bin probes when the node connectivity preflight fails", async () => {
     await resetSkillsRefreshForTest();
-    const workspaceDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-remote-skills-"));
+    const workspaceDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-remote-skills-"));
     const nodeId = `node-${randomUUID()}`;
     const bin = `bin-${randomUUID()}`;
     try {
@@ -250,7 +250,7 @@ describe("skills-remote", () => {
           "---",
           "name: remote-skill",
           "description: Needs a remote bin",
-          `metadata: { "openclaw": { "os": ["darwin"], "requires": { "bins": ["${bin}"] } } }`,
+          `metadata: { "grokbot": { "os": ["darwin"], "requires": { "bins": ["${bin}"] } } }`,
           "---",
           "# Remote Skill",
           "",
@@ -307,7 +307,7 @@ describe("skills-remote", () => {
 
   it("retries the bin probe when the node reconnects during preflight", async () => {
     await resetSkillsRefreshForTest();
-    const workspaceDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-remote-skills-"));
+    const workspaceDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-remote-skills-"));
     const nodeId = `node-${randomUUID()}`;
     const bin = `bin-${randomUUID()}`;
     try {
@@ -318,7 +318,7 @@ describe("skills-remote", () => {
           "---",
           "name: remote-skill",
           "description: Needs a remote bin",
-          `metadata: { "openclaw": { "os": ["darwin"], "requires": { "bins": ["${bin}"] } } }`,
+          `metadata: { "grokbot": { "os": ["darwin"], "requires": { "bins": ["${bin}"] } } }`,
           "---",
           "# Remote Skill",
           "",
@@ -387,7 +387,7 @@ describe("skills-remote", () => {
   });
 
   it("coalesces overlapping bin probes for the same node", async () => {
-    const workspaceDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-remote-skills-"));
+    const workspaceDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-remote-skills-"));
     const nodeId = `node-${randomUUID()}`;
     const bin = `bin-${randomUUID()}`;
     let invokeCount = 0;
@@ -417,7 +417,7 @@ describe("skills-remote", () => {
           "---",
           "name: remote-skill",
           "description: Needs a remote bin",
-          `metadata: { "openclaw": { "os": ["darwin"], "requires": { "bins": ["${bin}"] } } }`,
+          `metadata: { "grokbot": { "os": ["darwin"], "requires": { "bins": ["${bin}"] } } }`,
           "---",
           "# Remote Skill",
           "",

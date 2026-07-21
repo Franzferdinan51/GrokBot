@@ -1,15 +1,15 @@
 // Discord tests cover exec approvals plugin behavior.
-import type { ApprovalResolveResult } from "openclaw/plugin-sdk/approval-gateway-runtime";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { ApprovalResolveResult } from "grokbot/plugin-sdk/approval-gateway-runtime";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { buildExecApprovalCustomId, parseExecApprovalData } from "../approval-custom-id.js";
 import { parseCustomId, type ButtonInteraction, type ComponentData } from "../internal/discord.js";
 
 const resolveApprovalOverGatewayMock = vi.hoisted(() => vi.fn());
 
-vi.mock("openclaw/plugin-sdk/approval-gateway-runtime", async (importOriginal) => {
+vi.mock("grokbot/plugin-sdk/approval-gateway-runtime", async (importOriginal) => {
   const actual =
-    await importOriginal<typeof import("openclaw/plugin-sdk/approval-gateway-runtime")>();
+    await importOriginal<typeof import("grokbot/plugin-sdk/approval-gateway-runtime")>();
   return {
     ...actual,
     resolveApprovalOverGateway: resolveApprovalOverGatewayMock,

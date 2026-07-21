@@ -1,16 +1,16 @@
 import {
   compileAllowlist,
   resolveAllowlistMatchByCandidates,
-} from "openclaw/plugin-sdk/allow-from";
-import { ToolAuthorizationError } from "openclaw/plugin-sdk/channel-actions";
-import type { ChannelMessageActionContext } from "openclaw/plugin-sdk/channel-contract";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/core";
-import type { OpenClawPluginToolContext } from "openclaw/plugin-sdk/plugin-entry";
+} from "grokbot/plugin-sdk/allow-from";
+import { ToolAuthorizationError } from "grokbot/plugin-sdk/channel-actions";
+import type { ChannelMessageActionContext } from "grokbot/plugin-sdk/channel-contract";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/core";
+import type { OpenClawPluginToolContext } from "grokbot/plugin-sdk/plugin-entry";
 import {
   resolveDefaultGroupPolicy,
   resolveOpenProviderRuntimeGroupPolicy,
-} from "openclaw/plugin-sdk/runtime-group-policy";
-import { normalizeOptionalString } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/runtime-group-policy";
+import { normalizeOptionalString } from "grokbot/plugin-sdk/string-coerce-runtime";
 import { normalizeFeishuChatType } from "./chat-type.js";
 import {
   hasExplicitFeishuGroupConfig,

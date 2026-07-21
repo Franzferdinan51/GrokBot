@@ -1,14 +1,14 @@
 // Builds the gateway-visible combined session store across agent-specific stores.
 // Gateway callers need canonical per-agent keys even when stores are split by `{agentId}`.
 
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { resolveDefaultAgentId } from "../../agents/agent-scope.js";
 import {
   canonicalizeSpawnedByForAgent,
   resolveStoredSessionKeyForAgentStore,
 } from "../../gateway/session-store-key.js";
 import { normalizeAgentId } from "../../routing/session-key.js";
-import type { OpenClawConfig } from "../types.openclaw.js";
+import type { OpenClawConfig } from "../types.grokbot.js";
 import { resolveStorePath } from "./paths.js";
 import { listSessionEntries } from "./session-accessor.js";
 import {

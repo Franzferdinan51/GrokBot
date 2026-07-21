@@ -6,12 +6,12 @@ import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import {
   closeOpenClawStateDatabaseForTest,
   openOpenClawStateDatabase,
-} from "../state/openclaw-state-db.js";
-import { resolveOpenClawStateSqlitePath } from "../state/openclaw-state-db.paths.js";
+} from "../state/grokbot-state-db.js";
+import { resolveOpenClawStateSqlitePath } from "../state/grokbot-state-db.paths.js";
 import {
   createOpenClawTestState,
   type OpenClawTestState,
-} from "../test-utils/openclaw-test-state.js";
+} from "../test-utils/grokbot-test-state.js";
 import {
   clearExpiredWorkspaceStateForVanishedWorkspace,
   deleteWorkspaceState,
@@ -28,7 +28,7 @@ let testState: OpenClawTestState | undefined;
 beforeEach(async () => {
   testState = await createOpenClawTestState({
     layout: "state-only",
-    prefix: "openclaw-workspace-store-",
+    prefix: "grokbot-workspace-store-",
   });
 });
 
@@ -305,7 +305,7 @@ describe("workspace state store", () => {
       ) VALUES (?, ?, 99, NULL, NULL, 1)`,
     ).run(identity.workspaceKey, identity.workspacePath);
 
-    expect(() => readWorkspaceStateSnapshot(dir)).toThrow(/version requires openclaw doctor/u);
+    expect(() => readWorkspaceStateSnapshot(dir)).toThrow(/version requires grokbot doctor/u);
     expect(() => deleteState(dir)).not.toThrow();
     const row = db
       .prepare("SELECT workspace_key FROM workspace_setup_state WHERE workspace_key = ?")
@@ -350,7 +350,7 @@ describe("workspace state store", () => {
     insertReceipt.run(
       "owned-receipt",
       WORKSPACE_LEGACY_STATE_MIGRATION_KIND,
-      path.join(dir, ".openclaw", "workspace-state.json"),
+      path.join(dir, ".grokbot", "workspace-state.json"),
       "owned-run",
       JSON.stringify({ workspaceKey: identity.workspaceKey }),
     );

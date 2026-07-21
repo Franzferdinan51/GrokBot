@@ -55,7 +55,7 @@ const RESOLVER_STDIN_LIMIT_BYTES = readPositiveInt(
 );
 const RESULTS_PATH =
   process.env.OPENCLAW_SECRET_PROOF_RESULTS_PATH?.trim() ||
-  path.join(os.tmpdir(), `openclaw-secret-provider-e2e-results-${process.pid}.json`);
+  path.join(os.tmpdir(), `grokbot-secret-provider-e2e-results-${process.pid}.json`);
 
 const results = [];
 let gatewayClientStateCounter = 0;
@@ -289,13 +289,13 @@ function resolveOpenClawRunner() {
       }
     }
   }
-  return { pnpm: true, baseArgs: ["openclaw"], label: "pnpm openclaw" };
+  return { pnpm: true, baseArgs: ["grokbot"], label: "pnpm grokbot" };
 }
 
 function makeEnv(name) {
-  const root = fs.mkdtempSync(path.join(os.tmpdir(), `openclaw-secret-proof-${name}-`));
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), `grokbot-secret-proof-${name}-`));
   const home = path.join(root, "home");
-  const stateDir = path.join(home, ".openclaw");
+  const stateDir = path.join(home, ".grokbot");
   const agentDir = path.join(stateDir, "agents", "main", "agent");
   const hostHome = os.homedir();
   const serviceProfile = `secret-proof-${process.pid}-${name.replace(/[^a-z0-9-]/giu, "-")}`;
@@ -306,16 +306,16 @@ function makeEnv(name) {
     USERPROFILE: home,
     OPENCLAW_HOME: home,
     OPENCLAW_STATE_DIR: stateDir,
-    OPENCLAW_CONFIG_PATH: path.join(stateDir, "openclaw.json"),
+    OPENCLAW_CONFIG_PATH: path.join(stateDir, "grokbot.json"),
     OPENCLAW_AGENT_DIR: agentDir,
     PI_CODING_AGENT_DIR: "",
     OPENCLAW_NO_ONBOARD: "1",
     OPENCLAW_SKIP_PROVIDERS: "0",
     OPENCLAW_LOG_COLOR: "0",
     OPENCLAW_PROFILE: serviceProfile,
-    OPENCLAW_LAUNCHD_LABEL: `ai.openclaw.${serviceProfile}`,
-    OPENCLAW_SYSTEMD_UNIT: `openclaw-gateway-${serviceProfile}.service`,
-    OPENCLAW_WINDOWS_TASK_NAME: `OpenClaw Gateway (${serviceProfile})`,
+    OPENCLAW_LAUNCHD_LABEL: `ai.grokbot.${serviceProfile}`,
+    OPENCLAW_SYSTEMD_UNIT: `grokbot-gateway-${serviceProfile}.service`,
+    OPENCLAW_WINDOWS_TASK_NAME: `GrokBot Gateway (${serviceProfile})`,
     NO_COLOR: "1",
     PNPM_HOME:
       process.env.PNPM_HOME ??
@@ -619,7 +619,7 @@ function baseConfig(port, overrides = {}) {
 function writeProofPlugin(envCtx, options = {}) {
   const pluginRoot = path.join(envCtx.stateDir, "extensions", PLUGIN_ID);
   fs.mkdirSync(pluginRoot, { recursive: true, mode: 0o755 });
-  writeJson(path.join(pluginRoot, "openclaw.plugin.json"), {
+  writeJson(path.join(pluginRoot, "grokbot.plugin.json"), {
     id: PLUGIN_ID,
     name: "Secret Provider Proof",
     enabledByDefault: true,
@@ -697,7 +697,7 @@ function readPersistedProfile() {
 
 async function loadSecretRuntime() {
   const requireFromRepo = createRequire(path.join(REPO_ROOT, "package.json"));
-  const resolved = requireFromRepo.resolve("openclaw/plugin-sdk/secret-ref-runtime");
+  const resolved = requireFromRepo.resolve("grokbot/plugin-sdk/secret-ref-runtime");
   return await import(pathToFileURL(resolved).href);
 }
 
@@ -859,7 +859,7 @@ function serviceManagerEnv(source) {
   return {
     ...source,
     // systemd/launchd discover user service definitions from the real account
-    // home, while OpenClaw state/config below remain pinned to the proof root.
+    // home, while GrokBot state/config below remain pinned to the proof root.
     HOME: hostHome,
     USERPROFILE: hostHome,
   };

@@ -10,7 +10,7 @@ import {
   runOpenClawAgentWriteTransaction,
   type OpenClawAgentDatabase,
   type OpenClawAgentDatabaseOptions,
-} from "../../state/openclaw-agent-db.js";
+} from "../../state/grokbot-agent-db.js";
 import { runExclusiveSqliteSessionWrite } from "./session-accessor.sqlite-scope.js";
 import { deleteOrphanedTranscriptIndexRowsInTransaction } from "./session-transcript-index.js";
 import {

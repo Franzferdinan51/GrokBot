@@ -1,8 +1,8 @@
 // Firecrawl helper module supports config behavior.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { canResolveEnvSecretRefInReadOnlyPath } from "openclaw/plugin-sdk/extension-shared";
-import { resolvePositiveTimeoutSeconds } from "openclaw/plugin-sdk/provider-web-fetch";
-import { resolveSecretInputString, normalizeSecretInput } from "openclaw/plugin-sdk/secret-input";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { canResolveEnvSecretRefInReadOnlyPath } from "grokbot/plugin-sdk/extension-shared";
+import { resolvePositiveTimeoutSeconds } from "grokbot/plugin-sdk/provider-web-fetch";
+import { resolveSecretInputString, normalizeSecretInput } from "grokbot/plugin-sdk/secret-input";
 
 export const DEFAULT_FIRECRAWL_BASE_URL = "https://api.firecrawl.dev";
 const DEFAULT_FIRECRAWL_SEARCH_TIMEOUT_SECONDS = 30;

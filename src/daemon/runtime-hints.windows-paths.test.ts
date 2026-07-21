@@ -2,17 +2,17 @@
 import { beforeAll, describe, expect, it, vi } from "vitest";
 
 const resolveGatewayLogPathsMock = vi.fn(() => ({
-  logDir: "C:\\tmp\\openclaw-state\\logs",
-  stdoutPath: "C:\\tmp\\openclaw-state\\logs\\gateway.log",
-  stderrPath: "C:\\tmp\\openclaw-state\\logs\\gateway.err.log",
+  logDir: "C:\\tmp\\grokbot-state\\logs",
+  stdoutPath: "C:\\tmp\\grokbot-state\\logs\\gateway.log",
+  stderrPath: "C:\\tmp\\grokbot-state\\logs\\gateway.err.log",
 }));
 const resolveGatewaySupervisorLogPathsMock = vi.fn(() => ({
-  logDir: "C:\\Users\\test\\Library\\Logs\\openclaw",
-  stdoutPath: "C:\\Users\\test\\Library\\Logs\\openclaw\\gateway.log",
-  stderrPath: "C:\\Users\\test\\Library\\Logs\\openclaw\\gateway.err.log",
+  logDir: "C:\\Users\\test\\Library\\Logs\\grokbot",
+  stdoutPath: "C:\\Users\\test\\Library\\Logs\\grokbot\\gateway.log",
+  stderrPath: "C:\\Users\\test\\Library\\Logs\\grokbot\\gateway.err.log",
 }));
 const resolveGatewayRestartLogPathMock = vi.fn(
-  () => "C:\\tmp\\openclaw-state\\logs\\gateway-restart.log",
+  () => "C:\\tmp\\grokbot-state\\logs\\gateway-restart.log",
 );
 
 vi.mock("./restart-logs.js", () => ({
@@ -32,13 +32,13 @@ describe("buildPlatformRuntimeLogHints", () => {
     expect(
       buildPlatformRuntimeLogHints({
         platform: "darwin",
-        systemdServiceName: "openclaw-gateway",
-        windowsTaskName: "OpenClaw Gateway",
+        systemdServiceName: "grokbot-gateway",
+        windowsTaskName: "GrokBot Gateway",
       }),
     ).toEqual([
-      "Launchd stdout (if installed): /Users/test/Library/Logs/openclaw/gateway.log",
+      "Launchd stdout (if installed): /Users/test/Library/Logs/grokbot/gateway.log",
       "Launchd stderr (if installed): suppressed",
-      "Restart attempts: /tmp/openclaw-state/logs/gateway-restart.log",
+      "Restart attempts: /tmp/grokbot-state/logs/gateway-restart.log",
     ]);
   });
 });

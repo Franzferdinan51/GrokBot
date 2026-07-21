@@ -1,11 +1,11 @@
 /** Doctor migration for legacy plugin manifest capability keys into contracts.* fields. */
 import fs from "node:fs";
 import path from "node:path";
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
-import { normalizeTrimmedStringList } from "@openclaw/normalization-core/string-normalization";
+import { normalizeOptionalString } from "@grokbot/normalization-core/string-coerce";
+import { normalizeTrimmedStringList } from "@grokbot/normalization-core/string-normalization";
 import { z } from "zod";
 import { note } from "../../packages/terminal-core/src/note.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import type { HealthFinding } from "../flows/health-checks.js";
 import { loadPluginManifestRegistry } from "../plugins/manifest-registry.js";
 import type { RuntimeEnv } from "../runtime.js";
@@ -111,7 +111,7 @@ export function collectLegacyPluginManifestContractMigrations(params?: {
       if (!entry.isDirectory()) {
         continue;
       }
-      const manifestPath = path.join(root, entry.name, "openclaw.plugin.json");
+      const manifestPath = path.join(root, entry.name, "grokbot.plugin.json");
       const seenKey = manifestSeenKey(manifestPath);
       if (seen.has(seenKey)) {
         continue;
@@ -165,7 +165,7 @@ export function legacyPluginManifestContractMigrationToHealthFinding(
     target: migration.pluginId,
     requirement: "contracts-capability-keys",
     fixHint:
-      "Run `openclaw doctor --fix` to rewrite legacy plugin manifest capability keys under contracts.*.",
+      "Run `grokbot doctor --fix` to rewrite legacy plugin manifest capability keys under contracts.*.",
   };
 }
 

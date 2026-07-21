@@ -2,10 +2,10 @@
 // cron state, and REM harness previews for operator diagnostics.
 import fs from "node:fs/promises";
 import path from "node:path";
-import { expectDefined } from "@openclaw/normalization-core";
-import { asOptionalRecord } from "@openclaw/normalization-core/record-coerce";
+import { expectDefined } from "@grokbot/normalization-core";
+import { asOptionalRecord } from "@grokbot/normalization-core/record-coerce";
 import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from "../../agents/agent-scope.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import {
   resolveMemoryDeepDreamingConfig,
   resolveMemoryLightDreamingConfig,
@@ -730,7 +730,7 @@ function resolveDoctorMemoryTarget(
 const SKIPPED_MEMORY_EMBEDDING_PROBE = {
   ok: false,
   checked: false,
-  error: "memory embedding readiness not checked; run `openclaw memory status --deep` to probe",
+  error: "memory embedding readiness not checked; run `grokbot memory status --deep` to probe",
 } as const;
 
 export const doctorHandlers: GatewayRequestHandlers = {

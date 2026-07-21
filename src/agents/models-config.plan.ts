@@ -3,7 +3,7 @@
  * this module to merge implicit provider discovery, explicit config, and
  * preserved secrets before touching models.json.
  */
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import type { PluginMetadataSnapshot } from "../plugins/plugin-metadata-snapshot.js";
 import { isRecord } from "../utils.js";
 import {
@@ -114,7 +114,7 @@ async function resolveProvidersForModelsJsonWithDeps(
     : params.cfg;
   // When models.mode is "replace" the user opts out of provider discovery, so
   // skip the (potentially slow) implicit-provider resolver entirely and return
-  // only the explicit providers. See openclaw#66957.
+  // only the explicit providers. See grokbot#66957.
   if (cfg.models?.mode === "replace") {
     return mergeProviders({ implicit: {}, explicit: explicitProviders });
   }
@@ -318,7 +318,7 @@ export async function planOpenClawModelsJson(
 }
 
 if (process.env.VITEST || process.env.NODE_ENV === "test") {
-  (globalThis as Record<PropertyKey, unknown>)[Symbol.for("openclaw.modelsConfigPlanTestApi")] = {
+  (globalThis as Record<PropertyKey, unknown>)[Symbol.for("grokbot.modelsConfigPlanTestApi")] = {
     planOpenClawModelsJsonWithDeps,
     resolveProvidersForModelsJsonWithDeps,
   };

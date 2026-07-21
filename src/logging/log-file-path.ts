@@ -4,7 +4,7 @@ import type { OpenClawConfig } from "../config/types.js";
 import {
   POSIX_OPENCLAW_TMP_DIR,
   resolvePreferredOpenClawTmpDir,
-} from "../infra/tmp-openclaw-dir.js";
+} from "../infra/tmp-grokbot-dir.js";
 import { canUseNodeFs, formatLocalDate, LOG_PREFIX, LOG_SUFFIX } from "./log-file-shared.js";
 
 function resolveDefaultRollingLogFile(date = new Date()): string {

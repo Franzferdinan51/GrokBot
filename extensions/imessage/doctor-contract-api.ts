@@ -2,10 +2,10 @@
 import type {
   ChannelDoctorConfigMutation,
   ChannelDoctorLegacyConfigRule,
-} from "openclaw/plugin-sdk/channel-contract";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { defineChannelAliasMigration } from "openclaw/plugin-sdk/runtime-doctor";
-import { isRecord } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/channel-contract";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { defineChannelAliasMigration } from "grokbot/plugin-sdk/runtime-doctor";
+import { isRecord } from "grokbot/plugin-sdk/string-coerce-runtime";
 
 // Disabled `channels.imessage.catchup` blocks are retired. Enabled blocks stay
 // as a compatibility contract: older configs that opted into replay still get
@@ -44,7 +44,7 @@ export const legacyConfigRules: ChannelDoctorLegacyConfigRule[] = [
     path: ["channels", "imessage"],
     message:
       "disabled channels.imessage.catchup config is retired; iMessage now recovers via always-on inbound dedupe and a stale-backlog age fence. " +
-      'Run "openclaw doctor --fix" to remove disabled catchup blocks.',
+      'Run "grokbot doctor --fix" to remove disabled catchup blocks.',
     match: (value) => imessageEntryHasRetiredCatchup(value),
   },
   ...streamingAliasMigration.legacyConfigRules,

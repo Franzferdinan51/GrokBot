@@ -9,15 +9,15 @@ import type {
   PluginApprovalExpiredView,
   PluginApprovalPendingView,
   PluginApprovalResolvedView,
-} from "openclaw/plugin-sdk/approval-handler-runtime";
-import { createChannelApprovalNativeRuntimeAdapter } from "openclaw/plugin-sdk/approval-handler-runtime";
-import type { ExecApprovalActionDescriptor } from "openclaw/plugin-sdk/approval-reply-runtime";
+} from "grokbot/plugin-sdk/approval-handler-runtime";
+import { createChannelApprovalNativeRuntimeAdapter } from "grokbot/plugin-sdk/approval-handler-runtime";
+import type { ExecApprovalActionDescriptor } from "grokbot/plugin-sdk/approval-reply-runtime";
 import type {
   DiscordExecApprovalConfig,
   OpenClawConfig,
-} from "openclaw/plugin-sdk/config-contracts";
-import { logDebug, logError } from "openclaw/plugin-sdk/logging-core";
-import { normalizeOptionalString } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/config-contracts";
+import { logDebug, logError } from "grokbot/plugin-sdk/logging-core";
+import { normalizeOptionalString } from "grokbot/plugin-sdk/string-coerce-runtime";
 import { buildExecApprovalCustomId } from "./approval-custom-id.js";
 import {
   DISCORD_APPROVAL_ALLOWED_MENTIONS,

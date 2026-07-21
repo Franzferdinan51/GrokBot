@@ -3,7 +3,7 @@ import { spawn } from "node:child_process";
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+import { normalizeOptionalString } from "@grokbot/normalization-core/string-coerce";
 import { DEFAULT_GATEWAY_PORT } from "../../config/paths.js";
 import { quoteCmdScriptArg } from "../../daemon/cmd-argv.js";
 import {
@@ -83,33 +83,33 @@ export async function prepareRestartScript(
       const unitName = resolveSystemdUnit(env);
       const escaped = shellEscape(unitName);
       const logSetup = renderPosixRestartLogSetup({ ...process.env, ...env });
-      filename = `openclaw-restart-${timestamp}.sh`;
+      filename = `grokbot-restart-${timestamp}.sh`;
       scriptContent = `#!/bin/sh
 # Standalone restart script — survives parent process termination.
 # Wait briefly to ensure file locks are released after update.
 sleep 1
 exec 3>&2
 ${logSetup}
-printf '[%s] openclaw restart attempt source=update target=%s\\n' "$(date -u +%FT%TZ)" '${escaped}' >&2
+printf '[%s] grokbot restart attempt source=update target=%s\\n' "$(date -u +%FT%TZ)" '${escaped}' >&2
 if systemctl --user is-active --quiet '${escaped}' || systemctl --user is-enabled --quiet '${escaped}'; then
   if systemctl --user restart '${escaped}'; then
     status=0
-    printf '[%s] openclaw restart done source=update\\n' "$(date -u +%FT%TZ)" >&2
+    printf '[%s] grokbot restart done source=update\\n' "$(date -u +%FT%TZ)" >&2
   else
     status=$?
-    printf '[%s] openclaw restart failed source=update status=%s\\n' "$(date -u +%FT%TZ)" "$status" >&2
+    printf '[%s] grokbot restart failed source=update status=%s\\n' "$(date -u +%FT%TZ)" "$status" >&2
   fi
 elif systemctl is-active --quiet '${escaped}' || systemctl is-enabled --quiet '${escaped}'; then
   status=78
-  printf '[%s] system-scoped openclaw gateway unit detected; update cannot restart it without sudo. Run: sudo systemctl restart %s\\n' "$(date -u +%FT%TZ)" '${escaped}' >&2
-  printf '[%s] system-scoped openclaw gateway unit detected; update cannot restart it without sudo. Run: sudo systemctl restart %s\\n' "$(date -u +%FT%TZ)" '${escaped}' >&3 2>/dev/null || true
+  printf '[%s] system-scoped grokbot gateway unit detected; update cannot restart it without sudo. Run: sudo systemctl restart %s\\n' "$(date -u +%FT%TZ)" '${escaped}' >&2
+  printf '[%s] system-scoped grokbot gateway unit detected; update cannot restart it without sudo. Run: sudo systemctl restart %s\\n' "$(date -u +%FT%TZ)" '${escaped}' >&3 2>/dev/null || true
 else
   if systemctl --user restart '${escaped}'; then
     status=0
-    printf '[%s] openclaw restart done source=update\\n' "$(date -u +%FT%TZ)" >&2
+    printf '[%s] grokbot restart done source=update\\n' "$(date -u +%FT%TZ)" >&2
   else
     status=$?
-    printf '[%s] openclaw restart failed source=update status=%s\\n' "$(date -u +%FT%TZ)" "$status" >&2
+    printf '[%s] grokbot restart failed source=update status=%s\\n' "$(date -u +%FT%TZ)" "$status" >&2
   fi
 fi
 # Self-cleanup
@@ -130,7 +130,7 @@ exit "$status"
       const plistPath = path.join(home, "Library", "LaunchAgents", `${label}.plist`);
       const escapedPlistPath = shellEscape(plistPath);
       const logSetup = renderPosixRestartLogSetup({ ...process.env, ...env });
-      filename = `openclaw-restart-${timestamp}.sh`;
+      filename = `grokbot-restart-${timestamp}.sh`;
       scriptContent = `#!/bin/sh
 # Standalone restart script — survives parent process termination.
 # Wait briefly to ensure file locks are released after update.
@@ -139,7 +139,7 @@ sleep 1
 # audit trail. Log setup is best-effort: restart must still run if the log path
 # is temporarily unavailable.
 ${logSetup}
-printf '[%s] openclaw restart attempt source=update target=%s\\n' "$(date -u +%FT%TZ)" '${shellEscapeRestartLogValue(label)}' >&2
+printf '[%s] grokbot restart attempt source=update target=%s\\n' "$(date -u +%FT%TZ)" '${shellEscapeRestartLogValue(label)}' >&2
 # Try kickstart first (works when the service is still registered).
 # If it fails (e.g. after bootout), clear any persisted disabled state,
 # then re-register via bootstrap. Bootstrap loads RunAtLoad agents, so the
@@ -157,11 +157,11 @@ if ! launchctl kickstart -k 'gui/${uid}/${escaped}'; then
   fi
 fi
 if [ "$status" -eq 0 ]; then
-  printf '[%s] openclaw restart done source=update\\n' "$(date -u +%FT%TZ)" >&2
+  printf '[%s] grokbot restart done source=update\\n' "$(date -u +%FT%TZ)" >&2
 else
-  printf '[%s] openclaw restart failed source=update status=%s\\n' "$(date -u +%FT%TZ)" "$status" >&2
+  printf '[%s] grokbot restart failed source=update status=%s\\n' "$(date -u +%FT%TZ)" "$status" >&2
 fi
-# Self-cleanup (log is retained under the OpenClaw state logs directory).
+# Self-cleanup (log is retained under the GrokBot state logs directory).
 script_dir=$(dirname "$0")
 rm -f "$0"
 rmdir "$script_dir" 2>/dev/null || true
@@ -180,7 +180,7 @@ exit "$status"
       const gatewayScriptPath = resolveGatewayTaskScriptPath({ ...process.env, ...env });
       const quotedGatewayScriptPath = powerShellSingleQuote(gatewayScriptPath);
       const expectedGatewayArgv = windowsGatewayArgv.map(powerShellSingleQuote).join(", ");
-      filename = `openclaw-restart-${timestamp}.cmd`;
+      filename = `grokbot-restart-${timestamp}.cmd`;
       scriptContent = `@echo off
 REM Standalone restart script - survives parent process termination.
 REM Keep this as a cmd wrapper so Group Policy script execution policies
@@ -202,7 +202,7 @@ $logPath = ${quotedLogPath}
 try {
   $logDir = Split-Path -Parent $logPath
   New-Item -ItemType Directory -Path $logDir -Force | Out-Null
-  Add-Content -LiteralPath $logPath -Value "[$(Get-Date -Format o)] openclaw restart log initialized"
+  Add-Content -LiteralPath $logPath -Value "[$(Get-Date -Format o)] grokbot restart log initialized"
 } catch {
   # Restart should still run if log setup is unavailable.
 }
@@ -245,7 +245,7 @@ function Invoke-OpenClawSchtasksWithTimeout {
         $process.Kill()
       } catch {
       }
-      Write-RestartLog "openclaw restart schtasks timeout source=update args=$($Arguments -join ' ')"
+      Write-RestartLog "grokbot restart schtasks timeout source=update args=$($Arguments -join ' ')"
       return 124
     }
     $stdout = $process.StandardOutput.ReadToEnd()
@@ -258,7 +258,7 @@ function Invoke-OpenClawSchtasksWithTimeout {
     }
     return $process.ExitCode
   } catch {
-    Write-RestartLog "openclaw restart schtasks failed source=update args=$($Arguments -join ' ') error=$($_.Exception.Message)"
+    Write-RestartLog "grokbot restart schtasks failed source=update args=$($Arguments -join ' ') error=$($_.Exception.Message)"
     return 1
   }
 }
@@ -291,7 +291,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-namespace OpenClaw.Restart {
+namespace GrokBot.Restart {
   public sealed class ProcessLease : IDisposable {
     private IntPtr handle;
     public long CreationTimeFileTime { get; private set; }
@@ -400,7 +400,7 @@ namespace OpenClaw.Restart {
 try {
   Add-Type -TypeDefinition $nativeSource -Language CSharp -ErrorAction Stop
 } catch {
-  Write-RestartLog "openclaw restart native ownership helper unavailable source=update error=$($_.Exception.Message)"
+  Write-RestartLog "grokbot restart native ownership helper unavailable source=update error=$($_.Exception.Message)"
 }
 
 # OPENCLAW_RESTART_KILL_POLICY_BEGIN
@@ -418,7 +418,7 @@ function Get-OpenClawListenerSnapshot {
       return [pscustomobject]@{ Known = $true; Pids = $listenerPids }
     }
   } catch {
-    Write-RestartLog "openclaw restart Get-NetTCPConnection query failed source=update error=$($_.Exception.Message)"
+    Write-RestartLog "grokbot restart Get-NetTCPConnection query failed source=update error=$($_.Exception.Message)"
   }
 
   try {
@@ -449,7 +449,7 @@ function Get-OpenClawListenerSnapshot {
       Pids = @($listenerPids | Sort-Object -Unique)
     }
   } catch {
-    Write-RestartLog "openclaw restart netstat query failed source=update error=$($_.Exception.Message)"
+    Write-RestartLog "grokbot restart netstat query failed source=update error=$($_.Exception.Message)"
     return [pscustomobject]@{ Known = $false; Pids = @() }
   }
 }
@@ -472,10 +472,10 @@ function Get-OpenClawProcessFacts {
     return [pscustomobject]@{
       ProcessId = [int]$process.ProcessId
       CreationTimeFileTime = [string]$creationTimeFileTime
-      Argv = @([OpenClaw.Restart.NativeMethods]::ParseCommandLine([string]$process.CommandLine))
+      Argv = @([GrokBot.Restart.NativeMethods]::ParseCommandLine([string]$process.CommandLine))
     }
   } catch {
-    Write-RestartLog "openclaw restart process query failed source=update pid=$ProcessId error=$($_.Exception.Message)"
+    Write-RestartLog "grokbot restart process query failed source=update pid=$ProcessId error=$($_.Exception.Message)"
     return $null
   }
 }
@@ -556,20 +556,20 @@ function Invoke-OpenClawVerifiedListenerKill {
     [string[]]$ExpectedArgv,
     [scriptblock]$ProcessQuery = { param([int]$QueryPid) Get-OpenClawProcessFacts -ProcessId $QueryPid },
     [scriptblock]$ListenerQuery = { param([int]$QueryPort) Get-OpenClawListenerSnapshot -Port $QueryPort },
-    [scriptblock]$ProcessOpen = { param([int]$QueryPid) [OpenClaw.Restart.NativeMethods]::TryOpenProcess($QueryPid) }
+    [scriptblock]$ProcessOpen = { param([int]$QueryPid) [GrokBot.Restart.NativeMethods]::TryOpenProcess($QueryPid) }
   )
 
   $observedProcess = & $ProcessQuery $ProcessId
   if ($null -eq $observedProcess) {
-    Write-RestartLog "openclaw restart skipped listener source=update pid=$ProcessId decision=process-unavailable"
+    Write-RestartLog "grokbot restart skipped listener source=update pid=$ProcessId decision=process-unavailable"
     return
   }
   if ($ExpectedArgv.Count -eq 0) {
-    Write-RestartLog "openclaw restart skipped listener source=update pid=$ProcessId decision=expected-command-unavailable"
+    Write-RestartLog "grokbot restart skipped listener source=update pid=$ProcessId decision=expected-command-unavailable"
     return
   }
   if (-not (Test-OpenClawArgvEqual -Actual $observedProcess.Argv -Expected $ExpectedArgv)) {
-    Write-RestartLog "openclaw restart skipped listener source=update pid=$ProcessId decision=command-mismatch"
+    Write-RestartLog "grokbot restart skipped listener source=update pid=$ProcessId decision=command-mismatch"
     return
   }
 
@@ -577,7 +577,7 @@ function Invoke-OpenClawVerifiedListenerKill {
   try {
     $lease = & $ProcessOpen $ProcessId
     if ($null -eq $lease) {
-      Write-RestartLog "openclaw restart skipped listener source=update pid=$ProcessId decision=process-handle-unavailable"
+      Write-RestartLog "grokbot restart skipped listener source=update pid=$ProcessId decision=process-handle-unavailable"
       return
     }
 
@@ -593,17 +593,17 @@ function Invoke-OpenClawVerifiedListenerKill {
     }
     $decision = Get-OpenClawListenerKillDecision @decisionParams
     if ($decision -ne "kill") {
-      Write-RestartLog "openclaw restart skipped listener source=update pid=$ProcessId decision=$decision"
+      Write-RestartLog "grokbot restart skipped listener source=update pid=$ProcessId decision=$decision"
       return
     }
 
     if ($lease.Terminate()) {
-      Write-RestartLog "openclaw restart killed stale listener source=update pid=$ProcessId"
+      Write-RestartLog "grokbot restart killed stale listener source=update pid=$ProcessId"
     } else {
-      Write-RestartLog "openclaw restart failed to kill stale listener source=update pid=$ProcessId"
+      Write-RestartLog "grokbot restart failed to kill stale listener source=update pid=$ProcessId"
     }
   } catch {
-    Write-RestartLog "openclaw restart ownership verification failed source=update pid=$ProcessId error=$($_.Exception.Message)"
+    Write-RestartLog "grokbot restart ownership verification failed source=update pid=$ProcessId error=$($_.Exception.Message)"
   } finally {
     if ($null -ne $lease) {
       $lease.Dispose()
@@ -616,16 +616,16 @@ function Invoke-OpenClawStartupLauncher {
   param([string]$LauncherPath)
   $launcherPath = $LauncherPath
   if (-not (Test-Path -LiteralPath $launcherPath)) {
-    Write-RestartLog "openclaw restart startup launcher missing source=update path=$launcherPath"
+    Write-RestartLog "grokbot restart startup launcher missing source=update path=$launcherPath"
     return 1
   }
 
   try {
     Start-Process -FilePath $launcherPath -WindowStyle Hidden | Out-Null
-    Write-RestartLog "openclaw restart launched startup fallback source=update path=$launcherPath"
+    Write-RestartLog "grokbot restart launched startup fallback source=update path=$launcherPath"
     return 0
   } catch {
-    Write-RestartLog "openclaw restart startup fallback failed source=update error=$($_.Exception.Message)"
+    Write-RestartLog "grokbot restart startup fallback failed source=update error=$($_.Exception.Message)"
     return 1
   }
 }
@@ -634,23 +634,23 @@ $taskName = ${quotedTaskName}
 $port = ${port}
 $gatewayScriptPath = ${quotedGatewayScriptPath}
 $expectedGatewayArgv = @(${expectedGatewayArgv})
-Write-RestartLog "openclaw restart attempt source=update target=$taskName"
+Write-RestartLog "grokbot restart attempt source=update target=$taskName"
 
 $taskState = Get-OpenClawScheduledTaskState -TaskName $taskName
 if ($taskState -eq "Running") {
   $endStatus = Invoke-OpenClawSchtasksWithTimeout -Arguments @("/End", "/TN", $taskName) -TimeoutSeconds 10
   if ($endStatus -ne 0) {
-    Write-RestartLog "openclaw restart schtasks end did not complete cleanly source=update status=$endStatus"
+    Write-RestartLog "grokbot restart schtasks end did not complete cleanly source=update status=$endStatus"
   }
 } else {
-  Write-RestartLog "openclaw restart skipped schtasks end source=update state=$taskState"
+  Write-RestartLog "grokbot restart skipped schtasks end source=update state=$taskState"
 }
 
 for ($attempt = 1; $attempt -le 10; $attempt++) {
   $listenerSnapshot = Get-OpenClawListenerSnapshot -Port $port
   if (-not $listenerSnapshot.Known) {
     if ($attempt -eq 10) {
-      Write-RestartLog "openclaw restart listener ownership unavailable source=update; refusing force-kill"
+      Write-RestartLog "grokbot restart listener ownership unavailable source=update; refusing force-kill"
       break
     }
     Start-Sleep -Seconds 1
@@ -677,9 +677,9 @@ if ($status -ne 0) {
   $status = Invoke-OpenClawStartupLauncher -LauncherPath $gatewayScriptPath
 }
 if ($status -eq 0) {
-  Write-RestartLog "openclaw restart done source=update"
+  Write-RestartLog "grokbot restart done source=update"
 } else {
-  Write-RestartLog "openclaw restart failed source=update status=$status"
+  Write-RestartLog "grokbot restart failed source=update status=$status"
 }
 
 exit $status
@@ -688,7 +688,7 @@ exit $status
       return null;
     }
 
-    const scriptDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-restart-"));
+    const scriptDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-restart-"));
     const scriptPath = path.join(scriptDir, filename);
     try {
       await fs.writeFile(scriptPath, scriptContent, { mode: 0o755, flag: "wx" });

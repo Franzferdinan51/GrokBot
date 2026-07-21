@@ -3,11 +3,11 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
-import type { DB as OpenClawStateKyselyDatabase } from "../state/openclaw-state-db.generated.js";
+import type { DB as OpenClawStateKyselyDatabase } from "../state/grokbot-state-db.generated.js";
 import {
   closeOpenClawStateDatabaseForTest,
   runOpenClawStateWriteTransaction,
-} from "../state/openclaw-state-db.js";
+} from "../state/grokbot-state-db.js";
 import { readTuiLastSessionKey } from "../tui/tui-last-session.js";
 import { executeSqliteQuerySync, getNodeSqliteKysely } from "./kysely-sync.js";
 import {
@@ -20,7 +20,7 @@ type TuiLastSessionTestDatabase = Pick<OpenClawStateKyselyDatabase, "tui_last_se
 const tempDirs: string[] = [];
 
 function makeStateDir(): string {
-  const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-tui-migration-"));
+  const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-tui-migration-"));
   tempDirs.push(stateDir);
   return stateDir;
 }

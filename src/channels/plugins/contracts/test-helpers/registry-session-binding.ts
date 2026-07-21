@@ -12,7 +12,7 @@ import {
   type SessionBindingRecord,
 } from "../../../../infra/outbound/session-binding-service.js";
 import type { SessionBindingCapabilities } from "../../../../infra/outbound/session-binding.types.js";
-import { resolvePreferredOpenClawTmpDir } from "../../../../infra/tmp-openclaw-dir.js";
+import { resolvePreferredOpenClawTmpDir } from "../../../../infra/tmp-grokbot-dir.js";
 import type { OpenKeyedStoreOptions } from "../../../../plugin-sdk/plugin-state-runtime.js";
 import {
   createPluginStateKeyedStoreForTests,
@@ -53,7 +53,7 @@ async function createContractChannelConversationBindingManager(params: {
 }
 
 const matrixSessionBindingStateDir = fs.mkdtempSync(
-  path.join(resolvePreferredOpenClawTmpDir(), "openclaw-matrix-session-binding-contract-"),
+  path.join(resolvePreferredOpenClawTmpDir(), "grokbot-matrix-session-binding-contract-"),
 );
 const matrixSessionBindingAuth = {
   accountId: "ops",

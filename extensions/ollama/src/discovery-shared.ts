@@ -1,15 +1,15 @@
 // Ollama plugin module implements discovery shared behavior.
-import { getCachedLiveCatalogValue } from "openclaw/plugin-sdk/provider-catalog-shared";
+import { getCachedLiveCatalogValue } from "grokbot/plugin-sdk/provider-catalog-shared";
 import type {
   ModelProviderConfig,
   ModelDefinitionConfig,
-} from "openclaw/plugin-sdk/provider-model-shared";
+} from "grokbot/plugin-sdk/provider-model-shared";
 
 /** Provider config input type — partial config without required `models`. */
 type OllamaProviderConfigInput = Omit<Partial<ModelProviderConfig>, "models"> & {
   models?: ModelDefinitionConfig[];
 };
-import { normalizeOptionalString } from "openclaw/plugin-sdk/string-coerce-runtime";
+import { normalizeOptionalString } from "grokbot/plugin-sdk/string-coerce-runtime";
 import { OLLAMA_DEFAULT_BASE_URL } from "./defaults.js";
 import { readProviderBaseUrl } from "./provider-base-url.js";
 import { resolveOllamaApiBase } from "./provider-models.js";

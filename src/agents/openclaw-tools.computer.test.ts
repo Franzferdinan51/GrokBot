@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createOpenClawTools } from "./openclaw-tools.js";
+import { createOpenClawTools } from "./grokbot-tools.js";
 
 function computerTool(modelHasVision?: boolean) {
   return createOpenClawTools({ modelHasVision }).find((tool) => tool.name === "computer");

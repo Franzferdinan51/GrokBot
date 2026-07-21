@@ -159,7 +159,7 @@ export function fingerprintPluginRuntimeArtifact(
     throw new Error(`plugin runtime entry is unavailable: ${record.pluginId}`);
   }
   const hash = crypto.createHash("sha256");
-  hash.update("openclaw-plugin-runtime-artifact-v1\0");
+  hash.update("grokbot-plugin-runtime-artifact-v1\0");
   hash.update(sourceRelativePath ? normalizeRelativePath(sourceRelativePath) : "<no-source>");
   hash.update("\0");
   let totalBytes = 0;

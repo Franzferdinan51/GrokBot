@@ -4,7 +4,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { beforeAll, describe, expect, it, vi } from "vitest";
 import {
   buildGroupedTestComparison,
@@ -29,7 +29,7 @@ import {
 import { withEnv } from "../../src/test-utils/env.js";
 
 function makeTempDir() {
-  return fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-test-group-report-"));
+  return fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-test-group-report-"));
 }
 
 function isProcessAlive(pid: number): boolean {
@@ -1003,7 +1003,7 @@ describe("scripts/test-group-report child process guard", () => {
       return;
     }
 
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-test-group-report-"));
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-test-group-report-"));
     const markerPath = path.join(tempDir, "marker.txt");
     try {
       const result = await spawnText(
@@ -1221,7 +1221,7 @@ describe("scripts/test-group-report child process guard", () => {
   });
 
   it.concurrent("streams large child output to a log path without retaining it", async () => {
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-test-group-report-log-"));
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-test-group-report-log-"));
     const logPath = path.join(tempDir, "child.log");
     try {
       const result = await spawnText(
@@ -1281,7 +1281,7 @@ describe("scripts/test-group-report child process guard", () => {
   });
 
   it.concurrent("stops streamed child output after the configured log cap", async () => {
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-test-group-report-log-cap-"));
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-test-group-report-log-cap-"));
     const logPath = path.join(tempDir, "child.log");
     try {
       const result = await spawnText(

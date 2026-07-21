@@ -18,7 +18,7 @@ function expectedMcpServerArgs(params: { sourceEntry: string; distEntry: string 
 
 describe("embedded acpx plugin config", () => {
   it("resolves workspace stateDir and cwd by default", () => {
-    const workspaceDir = path.resolve("/tmp/openclaw-acpx");
+    const workspaceDir = path.resolve("/tmp/grokbot-acpx");
     const resolved = resolveAcpxPluginConfig({
       rawConfig: undefined,
       workspaceDir,
@@ -38,7 +38,7 @@ describe("embedded acpx plugin config", () => {
       rawConfig: {
         timeoutSeconds: 300,
       },
-      workspaceDir: "/tmp/openclaw-acpx",
+      workspaceDir: "/tmp/grokbot-acpx",
     });
 
     expect(resolved.timeoutSeconds).toBe(300);
@@ -52,7 +52,7 @@ describe("embedded acpx plugin config", () => {
           codex: { command: "codex custom-acp" },
         },
       },
-      workspaceDir: "/tmp/openclaw-acpx",
+      workspaceDir: "/tmp/grokbot-acpx",
     });
 
     expect(resolved.agents).toEqual({
@@ -75,7 +75,7 @@ describe("embedded acpx plugin config", () => {
           },
         },
       },
-      workspaceDir: "/tmp/openclaw-acpx",
+      workspaceDir: "/tmp/grokbot-acpx",
     });
 
     expect(resolved.agents).toEqual({
@@ -94,7 +94,7 @@ describe("embedded acpx plugin config", () => {
           },
         },
       },
-      workspaceDir: "/tmp/openclaw-acpx",
+      workspaceDir: "/tmp/grokbot-acpx",
     });
 
     expect(resolved.agents).toEqual({
@@ -109,7 +109,7 @@ describe("embedded acpx plugin config", () => {
           simple: { command: "simple-acp" },
         },
       },
-      workspaceDir: "/tmp/openclaw-acpx",
+      workspaceDir: "/tmp/grokbot-acpx",
     });
 
     expect(resolved.agents).toEqual({
@@ -122,7 +122,7 @@ describe("embedded acpx plugin config", () => {
       rawConfig: {
         probeAgent: "  OpenCode  ",
       },
-      workspaceDir: "/tmp/openclaw-acpx",
+      workspaceDir: "/tmp/grokbot-acpx",
     });
 
     expect(resolved.probeAgent).toBe("OpenCode");
@@ -134,7 +134,7 @@ describe("embedded acpx plugin config", () => {
         rawConfig: {
           probeAgent: "",
         },
-        workspaceDir: "/tmp/openclaw-acpx",
+        workspaceDir: "/tmp/grokbot-acpx",
       }),
     ).toThrow(/probeAgent must be a non-empty string/);
   });
@@ -144,10 +144,10 @@ describe("embedded acpx plugin config", () => {
       rawConfig: {
         pluginToolsMcpBridge: true,
       },
-      workspaceDir: "/tmp/openclaw-acpx",
+      workspaceDir: "/tmp/grokbot-acpx",
     });
 
-    const server = resolved.mcpServers["openclaw-plugin-tools"];
+    const server = resolved.mcpServers["grokbot-plugin-tools"];
     expect(server).toEqual({
       command: process.execPath,
       args: expectedMcpServerArgs({
@@ -157,20 +157,20 @@ describe("embedded acpx plugin config", () => {
     });
   });
 
-  it("injects the built-in OpenClaw tools MCP server only when explicitly enabled", () => {
+  it("injects the built-in GrokBot tools MCP server only when explicitly enabled", () => {
     const resolved = resolveAcpxPluginConfig({
       rawConfig: {
         openClawToolsMcpBridge: true,
       },
-      workspaceDir: "/tmp/openclaw-acpx",
+      workspaceDir: "/tmp/grokbot-acpx",
     });
 
-    const server = resolved.mcpServers["openclaw-tools"];
+    const server = resolved.mcpServers["grokbot-tools"];
     expect(server).toEqual({
       command: process.execPath,
       args: expectedMcpServerArgs({
-        sourceEntry: "src/mcp/openclaw-tools-serve.ts",
-        distEntry: "dist/mcp/openclaw-tools-serve.js",
+        sourceEntry: "src/mcp/grokbot-tools-serve.ts",
+        distEntry: "dist/mcp/grokbot-tools-serve.js",
       }),
     });
   });
@@ -185,7 +185,7 @@ describe("embedded acpx plugin config", () => {
   it("keeps the runtime json schema in sync with the manifest config schema", () => {
     const pluginRoot = resolveAcpxPluginRoot();
     const manifest = JSON.parse(
-      fs.readFileSync(path.join(pluginRoot, "openclaw.plugin.json"), "utf8"),
+      fs.readFileSync(path.join(pluginRoot, "grokbot.plugin.json"), "utf8"),
     ) as { configSchema?: unknown };
 
     expect(manifest.configSchema).toStrictEqual({

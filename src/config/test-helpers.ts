@@ -1,7 +1,7 @@
 // Provides config test helpers for temporary homes and fixture writes.
 import fs from "node:fs/promises";
 import path from "node:path";
-import { withTempHome as withTempHomeBase } from "openclaw/plugin-sdk/test-env";
+import { withTempHome as withTempHomeBase } from "grokbot/plugin-sdk/test-env";
 import { resetPluginLoaderTestStateForTest } from "../plugins/loader.test-fixtures.js";
 import { clearPluginMetadataLifecycleCaches } from "../plugins/plugin-metadata-lifecycle.js";
 import { resetConfigRuntimeState, type OpenClawConfig } from "./config.js";
@@ -16,7 +16,7 @@ export async function withTempHome<T>(fn: (home: string) => Promise<T>): Promise
   resetConfigTestRuntimeState();
   try {
     return await withTempHomeBase(fn, {
-      prefix: "openclaw-config-",
+      prefix: "grokbot-config-",
       env: {
         OPENCLAW_CONFIG_PATH: undefined,
         OPENCLAW_BUNDLED_PLUGINS_DIR: undefined,
@@ -36,7 +36,7 @@ export async function withTempHome<T>(fn: (home: string) => Promise<T>): Promise
 }
 
 export async function writeOpenClawConfig(home: string, config: unknown): Promise<string> {
-  const configPath = path.join(home, ".openclaw", "openclaw.json");
+  const configPath = path.join(home, ".grokbot", "grokbot.json");
   await fs.mkdir(path.dirname(configPath), { recursive: true });
   await fs.writeFile(configPath, JSON.stringify(config, null, 2), "utf-8");
   return configPath;

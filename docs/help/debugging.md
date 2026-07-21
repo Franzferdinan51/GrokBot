@@ -15,7 +15,7 @@ Debugging helpers for streaming output, gateway iteration, and startup profiling
 
 ```text
 /debug show
-/debug set messages.responsePrefix="[openclaw]"
+/debug set messages.responsePrefix="[grokbot]"
 /debug unset messages.responsePrefix
 /debug reset
 ```
@@ -38,7 +38,7 @@ Set `OPENCLAW_PLUGIN_LIFECYCLE_TRACE=1` for a phase-by-phase breakdown of plugin
 Plugin load failures include their stack trace while this trace is enabled.
 
 ```bash
-OPENCLAW_PLUGIN_LIFECYCLE_TRACE=1 openclaw plugins install tokenjuice --force
+OPENCLAW_PLUGIN_LIFECYCLE_TRACE=1 grokbot plugins install tokenjuice --force
 ```
 
 ```text
@@ -47,12 +47,12 @@ OPENCLAW_PLUGIN_LIFECYCLE_TRACE=1 openclaw plugins install tokenjuice --force
 [plugins:lifecycle] phase="registry refresh" ms=51.56 status=ok command="install" reason="source-changed"
 ```
 
-Use this before reaching for a CPU profiler. From a source checkout, measure the built runtime with `node dist/entry.js ...` after `pnpm build`; `pnpm openclaw ...` also measures source-runner overhead.
+Use this before reaching for a CPU profiler. From a source checkout, measure the built runtime with `node dist/entry.js ...` after `pnpm build`; `pnpm grokbot ...` also measures source-runner overhead.
 
 For synchronous module-load timings, use the shared diagnostics surface instead of a separate plugin-only environment switch:
 
 ```bash
-OPENCLAW_DIAGNOSTICS=plugin.load-profile openclaw plugins list
+OPENCLAW_DIAGNOSTICS=plugin.load-profile grokbot plugins list
 ```
 
 ## CLI startup and command profiling
@@ -68,7 +68,7 @@ pnpm tsx scripts/bench-cli-startup.ts --preset real --cpu-prof-dir .artifacts/cl
 For one-off profiling through the normal source runner, set `OPENCLAW_RUN_NODE_CPU_PROF_DIR`:
 
 ```bash
-OPENCLAW_RUN_NODE_CPU_PROF_DIR=.artifacts/cli-cpu pnpm openclaw status
+OPENCLAW_RUN_NODE_CPU_PROF_DIR=.artifacts/cli-cpu pnpm grokbot status
 ```
 
 The source runner adds Node CPU profile flags and writes a `.cpuprofile` for the command. Use this before adding temporary instrumentation to command code.
@@ -76,7 +76,7 @@ The source runner adds Node CPU profile flags and writes a `.cpuprofile` for the
 For startup stalls that look like synchronous filesystem or module-loader work, add Node's sync I/O trace flag through the source runner:
 
 ```bash
-OPENCLAW_TRACE_SYNC_IO=1 pnpm openclaw gateway --force
+OPENCLAW_TRACE_SYNC_IO=1 pnpm grokbot gateway --force
 ```
 
 `pnpm gateway:watch` leaves this flag disabled by default for the watched Gateway child; set `OPENCLAW_TRACE_SYNC_IO=1` when you want sync I/O trace output in watch mode too.
@@ -87,12 +87,12 @@ OPENCLAW_TRACE_SYNC_IO=1 pnpm openclaw gateway --force
 pnpm gateway:watch
 ```
 
-By default this starts or restarts a tmux session named `openclaw-gateway-watch-<profile>` (for example `openclaw-gateway-watch-main`), with a port suffix such as `openclaw-gateway-watch-dev-19001` added only when `OPENCLAW_GATEWAY_PORT` differs from the default port `18789`. It auto-attaches from interactive terminals; non-interactive shells, CI, and agent exec calls stay detached and print attach instructions instead:
+By default this starts or restarts a tmux session named `grokbot-gateway-watch-<profile>` (for example `grokbot-gateway-watch-main`), with a port suffix such as `grokbot-gateway-watch-dev-19001` added only when `OPENCLAW_GATEWAY_PORT` differs from the default port `18789`. It auto-attaches from interactive terminals; non-interactive shells, CI, and agent exec calls stay detached and print attach instructions instead:
 
 ```bash
-tmux attach -t openclaw-gateway-watch-main
+tmux attach -t grokbot-gateway-watch-main
 # Read recent output without attaching
-tmux capture-pane -ep -t openclaw-gateway-watch-main -S -200
+tmux capture-pane -ep -t grokbot-gateway-watch-main -S -200
 ```
 
 The pane uses tmux `remain-on-exit`, so startup failures stay available for attach or capture instead of deleting the session. Re-running `pnpm gateway:watch` respawns that pane.
@@ -106,7 +106,7 @@ node scripts/watch-node.mjs gateway --force
 Before watching the configured/default port, the tmux wrapper stops the active profile's installed Gateway service. This hands the port to the source watcher without launchd, systemd, or Scheduled Task respawning and replacing it. The service stays installed; restore it after the watch session with:
 
 ```bash
-pnpm openclaw gateway start
+pnpm grokbot gateway start
 ```
 
 When an explicit `--port` or `OPENCLAW_GATEWAY_PORT` differs from the installed service's effective port, the wrapper leaves the service running so both Gateways can run side by side.
@@ -119,7 +119,7 @@ pnpm gateway:watch:raw
 OPENCLAW_GATEWAY_WATCH_TMUX=0 pnpm gateway:watch
 ```
 
-Raw mode does not manage the installed service. Run `pnpm openclaw gateway stop` first when it uses the same port.
+Raw mode does not manage the installed service. Run `pnpm grokbot gateway stop` first when it uses the same port.
 
 Keep tmux management but disable auto-attach:
 
@@ -146,11 +146,11 @@ Benchmark mode suppresses sync-I/O trace spam by default. Set `OPENCLAW_TRACE_SY
 
 The tmux wrapper carries common non-secret runtime selectors into the pane, including `OPENCLAW_PROFILE`, `OPENCLAW_CONFIG_PATH`, `OPENCLAW_STATE_DIR`, `OPENCLAW_GATEWAY_PORT`, and `OPENCLAW_SKIP_CHANNELS`. Put provider credentials in your normal profile/config, or use raw foreground mode for one-off ephemeral secrets.
 
-If the watched Gateway exits during startup, the watcher runs `openclaw doctor --fix --non-interactive` once and restarts the Gateway child. Set `OPENCLAW_GATEWAY_WATCH_AUTO_DOCTOR=0` to see the original startup failure without the dev-only repair pass.
+If the watched Gateway exits during startup, the watcher runs `grokbot doctor --fix --non-interactive` once and restarts the Gateway child. Set `OPENCLAW_GATEWAY_WATCH_AUTO_DOCTOR=0` to see the original startup failure without the dev-only repair pass.
 
 The managed tmux pane defaults to colored Gateway logs; set `FORCE_COLOR=0` when starting `pnpm gateway:watch` to disable ANSI output.
 
-The watcher restarts on build-relevant files under `src/`, extension source files, extension `package.json` and `openclaw.plugin.json` metadata, `tsconfig.json`, `package.json`, and `tsdown.config.ts`. Extension metadata changes restart the gateway without forcing a rebuild; source and config changes still rebuild `dist` first.
+The watcher restarts on build-relevant files under `src/`, extension source files, extension `package.json` and `grokbot.plugin.json` metadata, `tsconfig.json`, `package.json`, and `tsdown.config.ts`. Extension metadata changes restart the gateway without forcing a rebuild; source and config changes still rebuild `dist` first.
 
 Add gateway CLI flags after `gateway:watch` and they pass through on each restart. Re-running the same watch command respawns the named tmux pane; the raw watcher keeps a single-watcher lock so duplicate watcher parents are replaced instead of piling up.
 
@@ -158,24 +158,24 @@ Add gateway CLI flags after `gateway:watch` and they pass through on each restar
 
 Two **separate** `--dev` flags:
 
-- **Global `--dev` (profile):** isolates state under `~/.openclaw-dev` and defaults the gateway port to `19001` (derived ports shift with it).
+- **Global `--dev` (profile):** isolates state under `~/.grokbot-dev` and defaults the gateway port to `19001` (derived ports shift with it).
 - **`gateway --dev`:** tells the Gateway to auto-create a default config + workspace when missing (and skip bootstrap).
 
 Recommended flow (dev profile + dev bootstrap):
 
 ```bash
 pnpm gateway:dev
-OPENCLAW_PROFILE=dev openclaw tui
+OPENCLAW_PROFILE=dev grokbot tui
 ```
 
-Without a global install, run the CLI via `pnpm openclaw ...`.
+Without a global install, run the CLI via `pnpm grokbot ...`.
 
 What this does:
 
 1. **Profile isolation** (global `--dev`)
    - `OPENCLAW_PROFILE=dev`
-   - `OPENCLAW_STATE_DIR=~/.openclaw-dev`
-   - `OPENCLAW_CONFIG_PATH=~/.openclaw-dev/openclaw.json`
+   - `OPENCLAW_STATE_DIR=~/.grokbot-dev`
+   - `OPENCLAW_CONFIG_PATH=~/.grokbot-dev/grokbot.json`
    - `OPENCLAW_GATEWAY_PORT=19001` (browser/canvas ports shift accordingly)
 
 2. **Dev bootstrap** (`gateway --dev`)
@@ -195,7 +195,7 @@ pnpm gateway:dev:reset
 `--dev` is a **global** profile flag and gets eaten by some runners. If you need to spell it out, use the env var form:
 
 ```bash
-OPENCLAW_PROFILE=dev openclaw gateway --dev --reset
+OPENCLAW_PROFILE=dev grokbot gateway --dev --reset
 ```
 
 </Note>
@@ -206,14 +206,14 @@ OPENCLAW_PROFILE=dev openclaw gateway --dev --reset
 If a non-dev gateway is already running (launchd or systemd), stop it first:
 
 ```bash
-openclaw gateway stop
+grokbot gateway stop
 ```
 
 </Tip>
 
 ## Raw stream logging
 
-OpenClaw can log the **raw assistant stream** before any filtering/formatting. This is the best way to see whether reasoning is arriving as plain text deltas (or as separate thinking blocks).
+GrokBot can log the **raw assistant stream** before any filtering/formatting. This is the best way to see whether reasoning is arriving as plain text deltas (or as separate thinking blocks).
 
 Enable it via CLI:
 
@@ -224,17 +224,17 @@ pnpm gateway:watch --raw-stream
 Optional path override:
 
 ```bash
-pnpm gateway:watch --raw-stream --raw-stream-path ~/.openclaw/logs/raw-stream.jsonl
+pnpm gateway:watch --raw-stream --raw-stream-path ~/.grokbot/logs/raw-stream.jsonl
 ```
 
 Equivalent env vars:
 
 ```bash
 OPENCLAW_RAW_STREAM=1
-OPENCLAW_RAW_STREAM_PATH=~/.openclaw/logs/raw-stream.jsonl
+OPENCLAW_RAW_STREAM_PATH=~/.grokbot/logs/raw-stream.jsonl
 ```
 
-Default file: `~/.openclaw/logs/raw-stream.jsonl`
+Default file: `~/.grokbot/logs/raw-stream.jsonl`
 
 ## Safety notes
 
@@ -270,7 +270,7 @@ Set breakpoints in `src/` TypeScript files; the debugger maps them to compiled J
 - **Rebuild and Debug Gateway** deletes `/dist` and runs a full `pnpm build` with source maps on every launch.
 - **Debug Gateway** can start/stop without affecting `/dist`, but you manage the build cycle in a separate terminal.
 - Edit `launch.json` `args` to debug other CLI subcommands.
-- To use the built CLI for other tasks (for example `dashboard --no-open` if your debug session spawns a new auth token), run it from another terminal: `node ./openclaw.mjs` or an alias like `alias openclaw-build="node $(pwd)/openclaw.mjs"`.
+- To use the built CLI for other tasks (for example `dashboard --no-open` if your debug session spawns a new auth token), run it from another terminal: `node ./grokbot.mjs` or an alias like `alias grokbot-build="node $(pwd)/grokbot.mjs"`.
 
 ## Related
 

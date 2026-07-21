@@ -1,9 +1,9 @@
 import fs from "node:fs";
 import path from "node:path";
-import { normalizeLowercaseStringOrEmpty } from "@openclaw/normalization-core/string-coerce";
+import { normalizeLowercaseStringOrEmpty } from "@grokbot/normalization-core/string-coerce";
 import { resolveAgentIdFromSessionKey } from "../routing/session-key.js";
-import type { DB as OpenClawStateKyselyDatabase } from "../state/openclaw-state-db.generated.js";
-import { runOpenClawStateWriteTransaction } from "../state/openclaw-state-db.js";
+import type { DB as OpenClawStateKyselyDatabase } from "../state/grokbot-state-db.generated.js";
+import { runOpenClawStateWriteTransaction } from "../state/grokbot-state-db.js";
 import { resolveRequiredHomeDir } from "./home-dir.js";
 import {
   executeSqliteQuerySync,
@@ -32,7 +32,7 @@ type LegacyCurrentConversationBindingsImportDatabase = Pick<
 >;
 
 const VOICEWAKE_CONFIG_KEY = "default";
-const DEFAULT_VOICEWAKE_TRIGGERS = ["openclaw", "claude", "computer"];
+const DEFAULT_VOICEWAKE_TRIGGERS = ["grokbot", "claude", "computer"];
 
 export function resolveLegacyVoiceWakeTriggersPath(stateDir: string): string {
   return path.join(stateDir, "settings", "voicewake.json");
@@ -556,7 +556,7 @@ export function resolveLegacyPluginBindingApprovalsPath(
 ): string {
   return path.join(
     resolveRequiredHomeDir(env, homedir),
-    ".openclaw",
+    ".grokbot",
     "plugin-binding-approvals.json",
   );
 }

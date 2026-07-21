@@ -6,7 +6,7 @@ import os from "node:os";
 import path from "node:path";
 import { CryptoEvent } from "matrix-js-sdk/lib/crypto-api/CryptoEvent.js";
 import type { DecryptionFailureCode as DecryptionFailureCodeValue } from "matrix-js-sdk/lib/crypto-api/index.js";
-import { resetPluginStateStoreForTests } from "openclaw/plugin-sdk/plugin-state-test-runtime";
+import { resetPluginStateStoreForTests } from "grokbot/plugin-sdk/plugin-state-test-runtime";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { installMatrixTestRuntime } from "../test-runtime.js";
 import { readMatrixRecoveryKeyStateForPath } from "./crypto-state-store.js";
@@ -289,7 +289,7 @@ function createMatrixJsClientStub(): MatrixJsClientStub {
   client.redactEvent = vi.fn(async () => ({ event_id: "$redact" }));
   client.getProfileInfo = vi.fn(async () => ({}));
   client.getDevices = vi.fn(async () => ({
-    devices: [{ device_id: "DEVICE123", display_name: "OpenClaw" }],
+    devices: [{ device_id: "DEVICE123", display_name: "GrokBot" }],
   }));
   client.joinRoom = vi.fn(async () => ({}));
   client.mxcUrlToHttp = vi.fn(() => null);
@@ -780,7 +780,7 @@ describe("MatrixClient request hardening", () => {
   });
 
   it("wires the sync store into the SDK and flushes it on shutdown", async () => {
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-matrix-sdk-store-"));
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-matrix-sdk-store-"));
 
     try {
       const client = new MatrixClient("https://matrix.example.org", "token", {
@@ -1661,13 +1661,13 @@ describe("MatrixClient crypto bootstrapping", () => {
 
     const client = new MatrixClient("https://matrix.example.org", "token", {
       encryption: true,
-      cryptoDatabasePrefix: "openclaw-matrix-test",
+      cryptoDatabasePrefix: "grokbot-matrix-test",
     });
 
     await client.start();
 
     expect(matrixJsClient.initRustCrypto).toHaveBeenCalledWith({
-      cryptoDatabasePrefix: "openclaw-matrix-test",
+      cryptoDatabasePrefix: "grokbot-matrix-test",
     });
   });
 
@@ -2021,7 +2021,7 @@ describe("MatrixClient crypto bootstrapping", () => {
     const client = new MatrixClient("https://matrix.example.org", "token", {
       encryption: true,
       idbSnapshotPath: path.join(os.tmpdir(), "matrix-idb-interval.json"),
-      cryptoDatabasePrefix: "openclaw-matrix-interval",
+      cryptoDatabasePrefix: "grokbot-matrix-interval",
     });
 
     await client.start();

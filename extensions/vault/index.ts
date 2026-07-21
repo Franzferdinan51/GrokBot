@@ -1,4 +1,4 @@
-import { definePluginEntry, type OpenClawPluginApi } from "openclaw/plugin-sdk/plugin-entry";
+import { definePluginEntry, type OpenClawPluginApi } from "grokbot/plugin-sdk/plugin-entry";
 
 export default definePluginEntry({
   id: "vault",

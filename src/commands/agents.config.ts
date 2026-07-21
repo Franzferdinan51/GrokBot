@@ -1,9 +1,9 @@
-// Agent config mutation and summary builders used by `openclaw agents` commands.
+// Agent config mutation and summary builders used by `grokbot agents` commands.
 import {
   normalizeOptionalString,
   resolvePrimaryStringValue,
-} from "@openclaw/normalization-core/string-coerce";
-import { uniqueStrings } from "@openclaw/normalization-core/string-normalization";
+} from "@grokbot/normalization-core/string-coerce";
+import { uniqueStrings } from "@grokbot/normalization-core/string-normalization";
 import {
   listAgentEntries,
   resolveAgentDir,
@@ -15,7 +15,7 @@ import type { AgentIdentityFile } from "../agents/identity-file.js";
 import { identityHasValues, loadAgentIdentityFromWorkspace } from "../agents/identity-file.js";
 import { listRouteBindings } from "../config/bindings.js";
 import type { IdentityConfig } from "../config/types.base.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { normalizeAgentId } from "../routing/session-key.js";
 
 export type AgentSummary = {

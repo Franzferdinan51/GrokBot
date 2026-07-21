@@ -1,8 +1,8 @@
 // Qa Lab plugin module implements runtime tool fixture behavior.
 import fs from "node:fs/promises";
 import path from "node:path";
-import { loadTranscriptEventsSync } from "openclaw/plugin-sdk/session-store-runtime";
-import { isRecord } from "openclaw/plugin-sdk/string-coerce-runtime";
+import { loadTranscriptEventsSync } from "grokbot/plugin-sdk/session-store-runtime";
+import { isRecord } from "grokbot/plugin-sdk/string-coerce-runtime";
 import {
   qaMockRequestCursorUrl,
   qaMockRequestsAfterUrl,
@@ -549,9 +549,9 @@ function formatCodexNativeWorkspaceDetails(params: {
   failureRequest?: QaRuntimeToolFixtureRequest;
 }) {
   return [
-    `codex-native-workspace ${params.toolName}: OpenClaw dynamic exposure is intentionally omitted because Codex owns this workspace operation natively`,
+    `codex-native-workspace ${params.toolName}: GrokBot dynamic exposure is intentionally omitted because Codex owns this workspace operation natively`,
     params.reason ? `reason: ${params.reason}` : undefined,
-    `available OpenClaw dynamic tools: ${[...params.tools].toSorted().join(", ")}`,
+    `available GrokBot dynamic tools: ${[...params.tools].toSorted().join(", ")}`,
     params.happyRequest
       ? `${params.toolName} mock provider happy planned args (diagnostic only): ${formatPlannedToolArgs(params.happyRequest.plannedToolArgs)}`
       : undefined,

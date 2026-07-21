@@ -202,7 +202,7 @@ jobs:
           install_dir="${RUNNER_TEMP}/crabbox"
           mkdir -p "$install_dir" "$HOME/.local/bin"
           git init "$install_dir/src"
-          git -C "$install_dir/src" remote add origin https://github.com/openclaw/crabbox.git
+          git -C "$install_dir/src" remote add origin https://github.com/grokbot/crabbox.git
           timeout --signal=TERM --kill-after=10s 120s git -C "$install_dir/src" fetch --depth 1 origin "$CRABBOX_REF"
           git -C "$install_dir/src" checkout --detach FETCH_HEAD
           go build -C "$install_dir/src" -o "$HOME/.local/bin/crabbox" ./cmd/crabbox
@@ -328,7 +328,7 @@ jobs:
           fi
 
           set +e
-          pnpm openclaw qa mantis slack-desktop-smoke \
+          pnpm grokbot qa mantis slack-desktop-smoke \
             --repo-root "$candidate_repo" \
             --output-dir "$output_rel" \
             --provider "$CRABBOX_PROVIDER" \
@@ -379,7 +379,7 @@ jobs:
           if [[ "$status" == "pass" ]]; then
             screenshot_required=true
           fi
-          evidence_summary="Mantis ran Slack QA inside a Crabbox Linux VNC desktop, started an OpenClaw Slack gateway in that VM, opened Slack Web in the visible browser, and captured screenshot/video evidence."
+          evidence_summary="Mantis ran Slack QA inside a Crabbox Linux VNC desktop, started an GrokBot Slack gateway in that VM, opened Slack Web in the visible browser, and captured screenshot/video evidence."
           expected_result="Slack QA and VM gateway setup pass"
           checkpoint_artifacts='[]'
           checkpoint_required=false
@@ -504,9 +504,9 @@ jobs:
           GH_TOKEN: ${{ steps.mantis_app_token.outputs.token }}
           ARTIFACT_URL: ${{ steps.upload_artifact.outputs.artifact-url }}
           MANTIS_ARTIFACT_R2_ACCESS_KEY_ID: ${{ secrets.MANTIS_ARTIFACT_R2_ACCESS_KEY_ID }}
-          MANTIS_ARTIFACT_R2_BUCKET: openclaw-crabbox-artifacts
+          MANTIS_ARTIFACT_R2_BUCKET: grokbot-crabbox-artifacts
           MANTIS_ARTIFACT_R2_ENDPOINT: ${{ vars.MANTIS_ARTIFACT_R2_ENDPOINT }}
-          MANTIS_ARTIFACT_R2_PUBLIC_BASE_URL: https://artifacts.openclaw.ai
+          MANTIS_ARTIFACT_R2_PUBLIC_BASE_URL: https://artifacts.grokbot.ai
           MANTIS_ARTIFACT_R2_REGION: auto
           MANTIS_ARTIFACT_R2_SECRET_ACCESS_KEY: ${{ secrets.MANTIS_ARTIFACT_R2_SECRET_ACCESS_KEY }}
           REQUEST_SOURCE: workflow_dispatch

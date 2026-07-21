@@ -5,9 +5,9 @@
  * context without launching a full agent consult; otherwise callers may fall
  * back to the normal consult flow.
  */
-import { resolveTimerTimeoutMs } from "@openclaw/normalization-core/number-coercion";
-import { truncateUtf16Safe } from "@openclaw/normalization-core/utf16-slice";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import { resolveTimerTimeoutMs } from "@grokbot/normalization-core/number-coercion";
+import { truncateUtf16Safe } from "@grokbot/normalization-core/utf16-slice";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { formatErrorMessage } from "../infra/errors.js";
 import { getActiveMemorySearchManager } from "../plugins/memory-runtime.js";
 import { withTimeout } from "../utils/with-timeout.js";
@@ -83,7 +83,7 @@ function resolveLabels(
 ): RealtimeVoiceFastContextLabels {
   return {
     audienceLabel: labels?.audienceLabel?.trim() || "person",
-    contextName: labels?.contextName?.trim() || "OpenClaw memory context",
+    contextName: labels?.contextName?.trim() || "GrokBot memory context",
   };
 }
 

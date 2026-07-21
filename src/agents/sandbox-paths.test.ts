@@ -4,7 +4,7 @@ import os from "node:os";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
 import { describe, expect, it, vi } from "vitest";
-import { resolvePreferredOpenClawTmpDir } from "../infra/tmp-openclaw-dir.js";
+import { resolvePreferredOpenClawTmpDir } from "../infra/tmp-grokbot-dir.js";
 import { withEnvAsync } from "../test-utils/env.js";
 import {
   resolveAllowedManagedMediaPath,
@@ -36,7 +36,7 @@ function makeTmpProbePath(prefix: string): string {
 }
 
 async function withManagedMediaRoot<T>(run: (ctx: { stateDir: string }) => Promise<T>) {
-  const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-managed-media-"));
+  const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-managed-media-"));
   try {
     return await withEnvAsync({ OPENCLAW_STATE_DIR: stateDir }, async () => {
       await fs.mkdir(path.join(stateDir, "media", "outbound"), { recursive: true });
@@ -106,11 +106,11 @@ describe("resolveSandboxPath", () => {
   it("still shortens roots beneath the home directory", async () => {
     const home = path.join(os.homedir(), "test-home");
     await withEnvAsync({ HOME: home, OPENCLAW_HOME: undefined }, async () => {
-      const root = path.join(home, "openclaw-sandbox");
+      const root = path.join(home, "grokbot-sandbox");
       const outside = path.dirname(root);
 
       expect(() => resolveSandboxPath({ filePath: outside, cwd: root, root })).toThrow(
-        `Path escapes sandbox root (~${path.sep}openclaw-sandbox): ${outside}`,
+        `Path escapes sandbox root (~${path.sep}grokbot-sandbox): ${outside}`,
       );
     });
   });
@@ -122,17 +122,17 @@ describe("resolveSandboxedMediaSource", () => {
   // Group 1: /tmp paths (the bug fix)
   it.each([
     {
-      name: "absolute paths under preferred OpenClaw tmp root",
+      name: "absolute paths under preferred GrokBot tmp root",
       media: path.join(openClawTmpDir, "image.png"),
       expected: path.join(openClawTmpDir, "image.png"),
     },
     {
-      name: "file:// URLs pointing to preferred OpenClaw tmp root",
+      name: "file:// URLs pointing to preferred GrokBot tmp root",
       media: pathToFileURL(path.join(openClawTmpDir, "photo.png")).href,
       expected: path.join(openClawTmpDir, "photo.png"),
     },
     {
-      name: "nested paths under preferred OpenClaw tmp root",
+      name: "nested paths under preferred GrokBot tmp root",
       media: path.join(openClawTmpDir, "subdir", "deep", "file.png"),
       expected: path.join(openClawTmpDir, "subdir", "deep", "file.png"),
     },
@@ -259,8 +259,8 @@ describe("resolveSandboxedMediaSource", () => {
       expected: /sandbox/i,
     },
     {
-      name: "absolute paths under host tmp outside openclaw tmp root",
-      media: path.join(os.tmpdir(), "outside-openclaw", "passwd"),
+      name: "absolute paths under host tmp outside grokbot tmp root",
+      media: path.join(os.tmpdir(), "outside-grokbot", "passwd"),
       expected: /sandbox/i,
     },
     {
@@ -304,7 +304,7 @@ describe("resolveSandboxedMediaSource", () => {
     });
   });
 
-  it("rejects symlinked OpenClaw tmp paths escaping tmp root", async () => {
+  it("rejects symlinked GrokBot tmp paths escaping tmp root", async () => {
     if (process.platform === "win32") {
       return;
     }
@@ -346,7 +346,7 @@ describe("resolveSandboxedMediaSource", () => {
     });
   });
 
-  it("rejects hardlinked OpenClaw tmp paths to outside files", async () => {
+  it("rejects hardlinked GrokBot tmp paths to outside files", async () => {
     if (process.platform === "win32") {
       return;
     }
@@ -363,7 +363,7 @@ describe("resolveSandboxedMediaSource", () => {
     );
   });
 
-  it("rejects symlinked OpenClaw tmp paths to hardlinked outside files", async () => {
+  it("rejects symlinked GrokBot tmp paths to hardlinked outside files", async () => {
     if (process.platform === "win32") {
       return;
     }

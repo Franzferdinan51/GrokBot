@@ -29,11 +29,11 @@ afterEach(() => {
 });
 
 function makeTempDir() {
-  return makeTrackedTempDir("openclaw-installed-plugin-index", tempDirs);
+  return makeTrackedTempDir("grokbot-installed-plugin-index", tempDirs);
 }
 
 function writePluginManifest(rootDir: string, manifest: Record<string, unknown>) {
-  fs.writeFileSync(path.join(rootDir, "openclaw.plugin.json"), JSON.stringify(manifest), "utf-8");
+  fs.writeFileSync(path.join(rootDir, "grokbot.plugin.json"), JSON.stringify(manifest), "utf-8");
 }
 
 function writePackageJson(rootDir: string, packageJson: Record<string, unknown>) {
@@ -338,7 +338,7 @@ describe("installed plugin index", () => {
   it("tolerates stale manifest records without normalized channels", () => {
     const rootDir = makeTempDir();
     writeRuntimeEntry(rootDir);
-    const manifestPath = path.join(rootDir, "openclaw.plugin.json");
+    const manifestPath = path.join(rootDir, "grokbot.plugin.json");
 
     const records = buildInstalledPluginIndexRecords({
       candidates: [createPluginCandidate({ rootDir })],

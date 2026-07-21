@@ -12,7 +12,7 @@ import { applicationContext, type ApplicationContext } from "../app/context.ts";
 import { t } from "../i18n/index.ts";
 import { createInitialCronState, loadCronJobsPage } from "../lib/cron/index.ts";
 import { loadModelAuthStatus } from "../lib/model-auth.ts";
-import { OpenClawLightDomContentsElement } from "../lit/openclaw-element.ts";
+import { OpenClawLightDomContentsElement } from "../lit/grokbot-element.ts";
 import { SubscriptionsController } from "../lit/subscriptions-controller.ts";
 import { icons } from "./icons.ts";
 import {
@@ -248,6 +248,6 @@ class SidebarAttention extends OpenClawLightDomContentsElement {
   }
 }
 
-if (!customElements.get("openclaw-sidebar-attention")) {
-  customElements.define("openclaw-sidebar-attention", SidebarAttention);
+if (!customElements.get("grokbot-sidebar-attention")) {
+  customElements.define("grokbot-sidebar-attention", SidebarAttention);
 }

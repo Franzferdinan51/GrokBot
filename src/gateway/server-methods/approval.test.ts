@@ -2,7 +2,7 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   type ApprovalHistoryResult,
@@ -21,12 +21,12 @@ import {
   type PluginApprovalRequestPayload,
 } from "../../infra/plugin-approvals.js";
 import type { SystemAgentApprovalRequestPayload } from "../../infra/system-agent-approvals.js";
-import type { DB as OpenClawStateKyselyDatabase } from "../../state/openclaw-state-db.generated.js";
+import type { DB as OpenClawStateKyselyDatabase } from "../../state/grokbot-state-db.generated.js";
 import {
   closeOpenClawStateDatabaseForTest,
   openOpenClawStateDatabase,
   type OpenClawStateDatabaseOptions,
-} from "../../state/openclaw-state-db.js";
+} from "../../state/grokbot-state-db.js";
 import { ExecApprovalManager } from "../exec-approval-manager.js";
 import { getOperatorApprovalDetailed, insertOperatorApproval } from "../operator-approval-store.js";
 
@@ -47,7 +47,7 @@ const managersForCleanup: Array<{
 
 function createDatabaseOptions(): OpenClawStateDatabaseOptions {
   const stateDir = fs.realpathSync(
-    fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-approval-handler-")),
+    fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-approval-handler-")),
   );
   tempDirs.push(stateDir);
   return { env: { ...process.env, OPENCLAW_STATE_DIR: stateDir } };
@@ -182,7 +182,7 @@ function registerSystemAgent(
 ) {
   const record = manager.create(
     {
-      title: "OpenClaw change",
+      title: "GrokBot change",
       description: "Set gateway.port to 19001",
       command: "Set gateway.port to 19001",
       proposalHash: "a".repeat(64),
@@ -587,7 +587,7 @@ describe("unified approval handlers", () => {
     ["approval.get", "."],
     ["approval.resolve", ".."],
   ] as const)("rejects unsafe approval id through %s: %s", async (method, id) => {
-    const databasePath = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-unsafe-approval-id-"));
+    const databasePath = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-unsafe-approval-id-"));
     tempDirs.push(databasePath);
     const handlers = createApprovalHandlers({
       execApprovalManager: new ExecApprovalManager(),
@@ -612,7 +612,7 @@ describe("unified approval handlers", () => {
   it.each(["approval.get", "approval.resolve"] as const)(
     "returns sanitized UNAVAILABLE when %s cannot read durable state",
     async (method) => {
-      const databasePath = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-approval-broken-db-"));
+      const databasePath = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-approval-broken-db-"));
       tempDirs.push(databasePath);
       const context = createContext();
       const handlers = createApprovalHandlers({
@@ -875,7 +875,7 @@ describe("unified approval handlers", () => {
   });
 
   it("repairs durable pending state after a transient local storage failure", async () => {
-    const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-approval-reconcile-"));
+    const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-approval-reconcile-"));
     tempDirs.push(stateDir);
     const databasePath = path.join(stateDir, "state.sqlite");
     const backupPath = path.join(stateDir, "state.backup.sqlite");

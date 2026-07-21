@@ -6,14 +6,14 @@ import { createSubsystemLogger } from "../logging/subsystem.js";
 import {
   listOpenClawRegisteredAgentDatabases,
   recordOpenClawAgentDatabaseOpenFailure,
-} from "./openclaw-agent-db.js";
+} from "./grokbot-agent-db.js";
 import type {
   OpenClawDatabaseVerifyResult,
   OpenClawDatabaseVerifyTarget,
-} from "./openclaw-database-verify.worker.js";
-import { recordOpenClawDatabaseQuarantine } from "./openclaw-quarantine-store.js";
-import { recordOpenClawStateDatabaseOpenFailure } from "./openclaw-state-db.js";
-import { resolveOpenClawStateSqlitePath } from "./openclaw-state-db.paths.js";
+} from "./grokbot-database-verify.worker.js";
+import { recordOpenClawDatabaseQuarantine } from "./grokbot-quarantine-store.js";
+import { recordOpenClawStateDatabaseOpenFailure } from "./grokbot-state-db.js";
+import { resolveOpenClawStateSqlitePath } from "./grokbot-state-db.paths.js";
 
 export const OPENCLAW_DATABASE_VERIFY_INITIAL_DELAY_MS = 5 * 60_000;
 export const OPENCLAW_DATABASE_VERIFY_INTERVAL_MS = 24 * 60 * 60_000;
@@ -31,10 +31,10 @@ function resolveDatabaseVerifyWorkerUrl(currentModuleUrl = import.meta.url): URL
   const distIndex = normalized.lastIndexOf(distMarker);
   if (distIndex >= 0) {
     const distRoot = currentPath.slice(0, distIndex + distMarker.length);
-    return pathToFileURL(path.join(distRoot, "state", "openclaw-database-verify.worker.js"));
+    return pathToFileURL(path.join(distRoot, "state", "grokbot-database-verify.worker.js"));
   }
   const extension = path.extname(currentPath) || ".js";
-  return new URL(`./openclaw-database-verify.worker${extension}`, currentModuleUrl);
+  return new URL(`./grokbot-database-verify.worker${extension}`, currentModuleUrl);
 }
 
 function isVerifyResult(value: unknown): value is OpenClawDatabaseVerifyResult {
@@ -102,7 +102,7 @@ export function collectOpenClawDatabaseVerifyTargets(options: {
   const targets = new Map<string, OpenClawDatabaseVerifyTarget>();
   const statePath = path.resolve(resolveOpenClawStateSqlitePath(options.env));
   if (existsSync(statePath)) {
-    targets.set(statePath, { kind: "state", label: "OpenClaw state database", path: statePath });
+    targets.set(statePath, { kind: "state", label: "GrokBot state database", path: statePath });
   }
   let registeredDatabases: ReturnType<typeof listOpenClawRegisteredAgentDatabases> = [];
   try {
@@ -119,7 +119,7 @@ export function collectOpenClawDatabaseVerifyTargets(options: {
     }
     targets.set(agentPath, {
       kind: "agent",
-      label: `OpenClaw agent database ${registered.agentId}`,
+      label: `GrokBot agent database ${registered.agentId}`,
       path: agentPath,
     });
   }

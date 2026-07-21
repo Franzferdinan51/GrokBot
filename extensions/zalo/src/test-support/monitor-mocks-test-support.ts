@@ -1,18 +1,18 @@
 // Zalo plugin module implements monitor mocks test support behavior.
 import fs from "node:fs/promises";
 import path from "node:path";
-import { createPluginRuntimeMock } from "openclaw/plugin-sdk/channel-test-helpers";
-import { createLazyRuntimeModule } from "openclaw/plugin-sdk/lazy-runtime";
+import { createPluginRuntimeMock } from "grokbot/plugin-sdk/channel-test-helpers";
+import { createLazyRuntimeModule } from "grokbot/plugin-sdk/lazy-runtime";
 import {
   closeOpenClawStateDatabaseForTest,
   createChannelIngressQueueForTests,
-} from "openclaw/plugin-sdk/plugin-state-test-runtime";
+} from "grokbot/plugin-sdk/plugin-state-test-runtime";
 import {
   createEmptyPluginRegistry,
   createRuntimeEnv,
   setActivePluginRegistry,
-} from "openclaw/plugin-sdk/plugin-test-runtime";
-import { resolvePreferredOpenClawTmpDir } from "openclaw/plugin-sdk/temp-path";
+} from "grokbot/plugin-sdk/plugin-test-runtime";
+import { resolvePreferredOpenClawTmpDir } from "grokbot/plugin-sdk/temp-path";
 import { vi, type Mock } from "vitest";
 import type { OpenClawConfig, PluginRuntime } from "../runtime-api.js";
 import type { ResolvedZaloAccount } from "../types.js";
@@ -133,7 +133,7 @@ export async function resetLifecycleTestState() {
 async function installLifecycleWebhookIngressState(): Promise<void> {
   const runtime = getZaloRuntimeMock() as PluginRuntime;
   const createdDir = await fs.mkdtemp(
-    path.join(resolvePreferredOpenClawTmpDir(), "openclaw-zalo-lifecycle-"),
+    path.join(resolvePreferredOpenClawTmpDir(), "grokbot-zalo-lifecycle-"),
   );
   const stateDir = await fs.realpath(createdDir);
   previousLifecycleStateDir = process.env.OPENCLAW_STATE_DIR;

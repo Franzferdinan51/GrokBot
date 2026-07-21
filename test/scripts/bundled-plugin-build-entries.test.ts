@@ -148,10 +148,10 @@ describe("bundled plugin build entries", () => {
 
     expect(artifacts).toContain("dist/extensions/image-generation-core/package.json");
     expect(artifacts).toContain("dist/extensions/image-generation-core/runtime-api.js");
-    expect(artifacts).not.toContain("dist/extensions/image-generation-core/openclaw.plugin.json");
+    expect(artifacts).not.toContain("dist/extensions/image-generation-core/grokbot.plugin.json");
     expect(artifacts).toContain("dist/extensions/media-understanding-core/runtime-api.js");
     expect(artifacts).not.toContain(
-      "dist/extensions/media-understanding-core/openclaw.plugin.json",
+      "dist/extensions/media-understanding-core/grokbot.plugin.json",
     );
   });
 
@@ -236,7 +236,7 @@ describe("bundled plugin build entries", () => {
   });
 
   it("sorts Docker-selected build entries without git metadata", () => {
-    const repoDir = tempDirs.make("openclaw-docker-build-entries-");
+    const repoDir = tempDirs.make("grokbot-docker-build-entries-");
     const extensionsDir = path.join(repoDir, "extensions");
 
     for (const pluginId of ["clickclack", "msteams", "slack"]) {
@@ -244,14 +244,14 @@ describe("bundled plugin build entries", () => {
       fs.mkdirSync(pluginDir, { recursive: true });
       fs.writeFileSync(path.join(pluginDir, "index.ts"), "export default {};\n");
       fs.writeFileSync(
-        path.join(pluginDir, "openclaw.plugin.json"),
+        path.join(pluginDir, "grokbot.plugin.json"),
         `${JSON.stringify({ id: pluginId })}\n`,
       );
       fs.writeFileSync(
         path.join(pluginDir, "package.json"),
         `${JSON.stringify({
-          name: `@openclaw/${pluginId}`,
-          openclaw: {
+          name: `@grokbot/${pluginId}`,
+          grokbot: {
             extensions: ["./index.ts"],
             build: { bundledDist: false },
           },
@@ -343,7 +343,7 @@ describe("bundled plugin build entries", () => {
     const artifacts = listBundledPluginPackArtifacts();
 
     expect(artifacts).toContain("dist/extensions/cohere/index.js");
-    expect(artifacts).toContain("dist/extensions/cohere/openclaw.plugin.json");
+    expect(artifacts).toContain("dist/extensions/cohere/grokbot.plugin.json");
     expect(artifacts).toContain("dist/extensions/cohere/package.json");
   });
 

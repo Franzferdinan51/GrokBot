@@ -1,6 +1,6 @@
-// Verifies OpenAI model selections route between OpenClaw and Codex runtimes.
+// Verifies OpenAI model selections route between GrokBot and Codex runtimes.
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import {
   listOpenAIAuthProfileProvidersForAgentRuntime,
   modelSelectionShouldEnsureCodexPlugin,
@@ -65,14 +65,14 @@ describe("OpenAI runtime routing policy", () => {
         },
         env: {},
       }),
-    ).toBe("openclaw");
+    ).toBe("grokbot");
     expect(
       resolveOpenAIImplicitAgentRuntime({
         provider: "openai",
         baseUrl: "https://direct.example.test/v1",
         env: {},
       }),
-    ).toBe("openclaw");
+    ).toBe("grokbot");
   });
 
   it("lets the provider owner interpret its environment", () => {
@@ -81,13 +81,13 @@ describe("OpenAI runtime routing policy", () => {
         provider: "openai",
         env: { OPENAI_BASE_URL: "https://relay.example.test/v1" },
       }),
-    ).toBe("openclaw");
+    ).toBe("grokbot");
   });
 
-  it("fails closed to OpenClaw when the provider artifact is unavailable", () => {
+  it("fails closed to GrokBot when the provider artifact is unavailable", () => {
     vi.stubEnv("OPENCLAW_DISABLE_BUNDLED_PLUGINS", "1");
     expect(resolveOpenAIImplicitAgentRuntime({ provider: "openai", modelId: "gpt-5.5" })).toBe(
-      "openclaw",
+      "grokbot",
     );
     expect(modelSelectionShouldEnsureCodexPlugin({ model: "openai/gpt-5.5" })).toBe(false);
   });
@@ -105,7 +105,7 @@ describe("OpenAI runtime routing policy", () => {
       },
     } satisfies OpenClawConfig;
 
-    expect(resolveOpenAIImplicitAgentRuntime({ provider: "openai", config })).toBe("openclaw");
+    expect(resolveOpenAIImplicitAgentRuntime({ provider: "openai", config })).toBe("grokbot");
     expect(modelSelectionShouldEnsureCodexPlugin({ model: "openai/gpt-5.5", config })).toBe(false);
     expect(
       resolveContextConfigProviderForRuntime({
@@ -138,7 +138,7 @@ describe("OpenAI runtime routing policy", () => {
       agents: {
         defaults: {
           models: {
-            "openai/gpt-5.5": { agentRuntime: { id: "openclaw" } },
+            "openai/gpt-5.5": { agentRuntime: { id: "grokbot" } },
           },
         },
       },
@@ -158,11 +158,11 @@ describe("OpenAI runtime routing policy", () => {
     ).toBe(false);
   });
 
-  it("honors the deprecated whole-agent OpenClaw runtime opt-out", () => {
+  it("honors the deprecated whole-agent GrokBot runtime opt-out", () => {
     const config = {
       agents: {
-        defaults: { agentRuntime: { id: "openclaw" } },
-        list: [{ id: "worker", agentRuntime: { id: "openclaw" } }],
+        defaults: { agentRuntime: { id: "grokbot" } },
+        list: [{ id: "worker", agentRuntime: { id: "grokbot" } }],
       },
     } satisfies OpenClawConfig;
 
@@ -176,11 +176,11 @@ describe("OpenAI runtime routing policy", () => {
     ).toBe(false);
   });
 
-  it("keeps per-model Codex policy above the whole-agent OpenClaw opt-out", () => {
+  it("keeps per-model Codex policy above the whole-agent GrokBot opt-out", () => {
     const config = {
       agents: {
         defaults: {
-          agentRuntime: { id: "openclaw" },
+          agentRuntime: { id: "grokbot" },
           models: {
             "openai/gpt-5.5": { agentRuntime: { id: "codex" } },
           },
@@ -191,11 +191,11 @@ describe("OpenAI runtime routing policy", () => {
     expect(modelSelectionShouldEnsureCodexPlugin({ model: "openai/gpt-5.5", config })).toBe(true);
   });
 
-  it("keeps per-model auto policy above the whole-agent OpenClaw opt-out", () => {
+  it("keeps per-model auto policy above the whole-agent GrokBot opt-out", () => {
     const config = {
       agents: {
         defaults: {
-          agentRuntime: { id: "openclaw" },
+          agentRuntime: { id: "grokbot" },
           models: {
             "openai/gpt-5.5": { agentRuntime: { id: "auto" } },
           },
@@ -218,7 +218,7 @@ describe("OpenAI runtime routing policy", () => {
       },
     } satisfies OpenClawConfig;
 
-    expect(resolveOpenAIImplicitAgentRuntime({ provider: "openai", config })).toBe("openclaw");
+    expect(resolveOpenAIImplicitAgentRuntime({ provider: "openai", config })).toBe("grokbot");
     expect(modelSelectionShouldEnsureCodexPlugin({ model: "openai/gpt-5.5", config })).toBe(false);
   });
 
@@ -252,18 +252,18 @@ describe("OpenAI runtime routing policy", () => {
     ).toBe("openai");
   });
 
-  it("keeps explicit OpenClaw plus Codex auth profile under the unified OpenAI provider", () => {
+  it("keeps explicit GrokBot plus Codex auth profile under the unified OpenAI provider", () => {
     // OpenAI auth now stays canonical even when the runtime is not Codex.
     expect(
       listOpenAIAuthProfileProvidersForAgentRuntime({
         provider: "openai",
-        harnessRuntime: "openclaw",
+        harnessRuntime: "grokbot",
       }),
     ).toEqual(["openai"]);
     expect(
       resolveOpenAIRuntimeProvider({
         provider: "openai",
-        harnessRuntime: "openclaw",
+        harnessRuntime: "grokbot",
         authProfileProvider: "openai",
         authProfileId: "openai:work",
       }),
@@ -282,21 +282,21 @@ describe("OpenAI runtime routing policy", () => {
     expect(
       listOpenAIAuthProfileProvidersForAgentRuntime({
         provider: "openai",
-        harnessRuntime: "openclaw",
+        harnessRuntime: "grokbot",
         config,
       }),
     ).toEqual(["openai"]);
     expect(
       resolveSelectedOpenAIRuntimeProvider({
         provider: "openai",
-        harnessRuntime: "openclaw",
+        harnessRuntime: "grokbot",
         config,
       }),
     ).toBe("openai");
     expect(
       resolveOpenAIRuntimeProvider({
         provider: "openai",
-        harnessRuntime: "openclaw",
+        harnessRuntime: "grokbot",
         config,
       }),
     ).toBe("openai");
@@ -314,13 +314,13 @@ describe("OpenAI runtime routing policy", () => {
     expect(
       listOpenAIAuthProfileProvidersForAgentRuntime({
         provider: "openai",
-        harnessRuntime: "openclaw",
+        harnessRuntime: "grokbot",
         config,
       }),
     ).toEqual(["openai"]);
   });
 
-  it("keeps explicit OpenAI OpenClaw API-key auth order ahead of Codex backups", () => {
+  it("keeps explicit OpenAI GrokBot API-key auth order ahead of Codex backups", () => {
     const config = {
       auth: {
         order: {
@@ -332,20 +332,20 @@ describe("OpenAI runtime routing policy", () => {
     expect(
       listOpenAIAuthProfileProvidersForAgentRuntime({
         provider: "openai",
-        harnessRuntime: "openclaw",
+        harnessRuntime: "grokbot",
         config,
       }),
     ).toEqual(["openai"]);
     expect(
       resolveSelectedOpenAIRuntimeProvider({
         provider: "openai",
-        harnessRuntime: "openclaw",
+        harnessRuntime: "grokbot",
         config,
       }),
     ).toBe("openai");
   });
 
-  it("does not route custom OpenAI-compatible OpenClaw configs through Codex auth order", () => {
+  it("does not route custom OpenAI-compatible GrokBot configs through Codex auth order", () => {
     const config = {
       models: {
         providers: {
@@ -365,14 +365,14 @@ describe("OpenAI runtime routing policy", () => {
     expect(
       listOpenAIAuthProfileProvidersForAgentRuntime({
         provider: "openai",
-        harnessRuntime: "openclaw",
+        harnessRuntime: "grokbot",
         config,
       }),
     ).toEqual(["openai"]);
     expect(
       resolveSelectedOpenAIRuntimeProvider({
         provider: "openai",
-        harnessRuntime: "openclaw",
+        harnessRuntime: "grokbot",
         config,
       }),
     ).toBe("openai");

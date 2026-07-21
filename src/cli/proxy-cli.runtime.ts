@@ -2,7 +2,7 @@
 import { spawn } from "node:child_process";
 import { randomUUID } from "node:crypto";
 import process from "node:process";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { colorize, isRich, theme } from "../../packages/terminal-core/src/theme.js";
 import { getRuntimeConfig } from "../config/config.js";
 import {
@@ -30,8 +30,8 @@ export async function runDebugProxyStartCommand(opts: { host?: string; port?: nu
     id: settings.sessionId,
     startedAt: Date.now(),
     mode: "proxy-start",
-    sourceScope: "openclaw",
-    sourceProcess: "openclaw",
+    sourceScope: "grokbot",
+    sourceProcess: "grokbot",
     proxyUrl: settings.proxyUrl,
   });
   initializeDebugProxyCapture("proxy-start", settings);
@@ -84,8 +84,8 @@ export async function runDebugProxyRunCommand(opts: {
     id: sessionId,
     startedAt: Date.now(),
     mode: "proxy-run",
-    sourceScope: "openclaw",
-    sourceProcess: "openclaw",
+    sourceScope: "grokbot",
+    sourceProcess: "grokbot",
     proxyUrl: undefined,
   });
   const server = await startDebugProxyServer({

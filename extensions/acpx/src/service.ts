@@ -6,14 +6,14 @@ import { randomUUID } from "node:crypto";
 import fs from "node:fs/promises";
 import path from "node:path";
 import { inspect } from "node:util";
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
-import { createLazyRuntimeModule } from "openclaw/plugin-sdk/lazy-runtime";
-import { finiteSecondsToTimerSafeMilliseconds } from "openclaw/plugin-sdk/number-runtime";
+import { formatErrorMessage } from "grokbot/plugin-sdk/error-runtime";
+import { createLazyRuntimeModule } from "grokbot/plugin-sdk/lazy-runtime";
+import { finiteSecondsToTimerSafeMilliseconds } from "grokbot/plugin-sdk/number-runtime";
 import type {
   OpenKeyedStoreOptions,
   PluginStateKeyedStore,
-} from "openclaw/plugin-sdk/plugin-state-runtime";
-import { normalizeLowercaseStringOrEmpty } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/plugin-state-runtime";
+import { normalizeLowercaseStringOrEmpty } from "grokbot/plugin-sdk/string-coerce-runtime";
 import type {
   AcpRuntime,
   OpenClawPluginService,
@@ -374,7 +374,7 @@ export function createAcpxRuntimeService(
       );
       if (startupReap.terminatedPids.length > 0) {
         ctx.logger.info(
-          `reaped ${startupReap.terminatedPids.length} stale OpenClaw-owned ACPX process${startupReap.terminatedPids.length === 1 ? "" : "es"}`,
+          `reaped ${startupReap.terminatedPids.length} stale GrokBot-owned ACPX process${startupReap.terminatedPids.length === 1 ? "" : "es"}`,
         );
       }
       warnOnIgnoredLegacyCompatibilityConfig({

@@ -6,7 +6,7 @@ import {
   addTimerTimeoutGraceMs,
   MAX_DATE_TIMESTAMP_MS,
   MAX_TIMER_TIMEOUT_MS,
-} from "@openclaw/normalization-core/number-coercion";
+} from "@grokbot/normalization-core/number-coercion";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const callGatewayMock = vi.fn();
@@ -113,7 +113,7 @@ describe("readLatestAssistantReply", () => {
     expect(result).toBe("older output");
   });
 
-  it("skips trailing transcript-only OpenClaw assistant mirrors for normal latest-reply reads", async () => {
+  it("skips trailing transcript-only GrokBot assistant mirrors for normal latest-reply reads", async () => {
     callGatewayMock.mockResolvedValue({
       messages: [
         {
@@ -132,7 +132,7 @@ describe("readLatestAssistantReply", () => {
         },
         {
           role: "assistant",
-          provider: "openclaw",
+          provider: "grokbot",
           model: "gateway-injected",
           content: [{ type: "text", text: "gateway notice" }],
           timestamp: 12,
@@ -181,7 +181,7 @@ describe("readLatestAssistantReply", () => {
         },
         {
           role: "assistant",
-          provider: "openclaw",
+          provider: "grokbot",
           model: "gateway-injected",
           content: [{ type: "text", text: "gateway notice" }],
           timestamp: 11,
@@ -535,7 +535,7 @@ describe("waitForAgentRunAndReadUpdatedAssistantReply", () => {
           baselineMessage,
           {
             role: "assistant",
-            provider: "openclaw",
+            provider: "grokbot",
             model: "delivery-mirror",
             content: [{ type: "text", text: "already delivered source reply" }],
             timestamp: 42,
@@ -828,7 +828,7 @@ describe("waitForAgentRunAndReadUpdatedAssistantReply", () => {
           },
           {
             role: "assistant",
-            provider: "openclaw",
+            provider: "grokbot",
             model: "delivery-mirror",
             content: [{ type: "text", text: "already delivered source reply" }],
             timestamp: 42,

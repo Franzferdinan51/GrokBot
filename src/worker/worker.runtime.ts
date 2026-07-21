@@ -46,12 +46,12 @@ export async function runWorkerDescriptor(
   options: { signal?: AbortSignal } = {},
 ): Promise<WorkerRuntimeResult> {
   const workspaceDir = await assertWorkspaceDirectory(descriptor.assignment.workspaceDir);
-  const stateDir = await mkdtemp(path.join(tmpdir(), "openclaw-worker-"));
+  const stateDir = await mkdtemp(path.join(tmpdir(), "grokbot-worker-"));
   await chmod(stateDir, 0o700);
   const previousStateDir = process.env.OPENCLAW_STATE_DIR;
   const previousConfigPath = process.env.OPENCLAW_CONFIG_PATH;
   process.env.OPENCLAW_STATE_DIR = stateDir;
-  process.env.OPENCLAW_CONFIG_PATH = path.join(stateDir, "openclaw.json");
+  process.env.OPENCLAW_CONFIG_PATH = path.join(stateDir, "grokbot.json");
 
   const abortController = new AbortController();
   let turnStarted = false;

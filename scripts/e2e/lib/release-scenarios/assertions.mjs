@@ -30,7 +30,7 @@ function assert(condition, message) {
 function configPath() {
   return (
     process.env.OPENCLAW_CONFIG_PATH ??
-    path.join(process.env.HOME ?? "", ".openclaw", "openclaw.json")
+    path.join(process.env.HOME ?? "", ".grokbot", "grokbot.json")
   );
 }
 
@@ -41,7 +41,7 @@ function writeConfig(cfg) {
 function authProfilesPath() {
   return path.join(
     process.env.HOME ?? "",
-    ".openclaw",
+    ".grokbot",
     "agents",
     "main",
     "agent",
@@ -52,11 +52,11 @@ function authProfilesPath() {
 function authProfilesDatabasePath() {
   return path.join(
     process.env.HOME ?? "",
-    ".openclaw",
+    ".grokbot",
     "agents",
     "main",
     "agent",
-    "openclaw-agent.sqlite",
+    "grokbot-agent.sqlite",
   );
 }
 
@@ -95,7 +95,7 @@ function configureMockOpenAi() {
 
 function assertOpenAiEnvRef() {
   const rawKey = process.argv[3];
-  assert(fs.existsSync(configPath()), "openclaw.json missing");
+  assert(fs.existsSync(configPath()), "grokbot.json missing");
   assertOpenAiEnvAuthProfileStore(readAuthProfileStoreSqliteText(), {
     missingMessage: "OpenAI env ref was not persisted",
     envRefMessage: "OpenAI env ref was not persisted",
@@ -192,7 +192,7 @@ function assertPluginUninstalled() {
   assert(!cfg.plugins?.entries?.[pluginId], `plugin config entry still present for ${pluginId}`);
   const managedRoot = path.join(
     process.env.HOME ?? "",
-    ".openclaw",
+    ".grokbot",
     "plugins",
     "installed",
     pluginId,

@@ -2,8 +2,8 @@
 import {
   resolveInboundMentionDecision,
   type InboundImplicitMentionKind,
-} from "openclaw/plugin-sdk/channel-inbound";
-import { resolveChannelImplicitMentions } from "openclaw/plugin-sdk/channel-ingress-runtime";
+} from "grokbot/plugin-sdk/channel-inbound";
+import { resolveChannelImplicitMentions } from "grokbot/plugin-sdk/channel-ingress-runtime";
 import type { ChatType, OpenClawConfig } from "./runtime-api.js";
 
 export function resolveMattermostInboundMentionDecision(params: {

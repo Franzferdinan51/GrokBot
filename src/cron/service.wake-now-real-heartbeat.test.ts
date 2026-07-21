@@ -32,7 +32,7 @@ afterEach(() => {
 const noopLogger = { debug() {}, info() {}, warn() {}, error() {} };
 
 function makeSandbox() {
-  const dir = tempDirs.make("openclaw-cron-real-heartbeat-");
+  const dir = tempDirs.make("grokbot-cron-real-heartbeat-");
   return {
     dir,
     cronStorePath: path.join(dir, "cron", "jobs.json"),

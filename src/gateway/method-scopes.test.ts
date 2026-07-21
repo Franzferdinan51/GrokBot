@@ -390,7 +390,7 @@ describe("method scope resolution", () => {
     expect(
       authorizeOperatorScopesForMethod("sessions.create", ["operator.write"], {
         execNode: "macbook",
-        cwd: "/Users/peter/Projects/openclaw",
+        cwd: "/Users/peter/Projects/grokbot",
       }),
     ).toEqual({ allowed: false, missingScope: "operator.admin" });
   });

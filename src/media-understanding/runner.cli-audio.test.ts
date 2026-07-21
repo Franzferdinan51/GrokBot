@@ -88,7 +88,7 @@ async function runAudioEntry(params: {
   args: string[];
 }): Promise<Awaited<ReturnType<typeof runCliEntry>>> {
   let result: Awaited<ReturnType<typeof runCliEntry>> = null;
-  await withAudioFixture(`openclaw-cli-${params.command}`, async ({ ctx, cache }) => {
+  await withAudioFixture(`grokbot-cli-${params.command}`, async ({ ctx, cache }) => {
     result = await runCliEntry({
       capability: "audio",
       entry: { type: "cli", command: params.command, args: params.args },
@@ -118,7 +118,7 @@ describe("media-understanding CLI audio entry", () => {
   it("applies per-request prompt and language overrides to CLI transcription templating", async () => {
     let mediaPath = "";
 
-    await withAudioFixture("openclaw-cli-audio", async ({ ctx, cache }) => {
+    await withAudioFixture("grokbot-cli-audio", async ({ ctx, cache }) => {
       mediaPath = await fs.realpath(ctx.MediaPath);
 
       await runCliEntry({
@@ -287,7 +287,7 @@ describe("media-understanding CLI audio entry", () => {
       stderr: "",
     });
 
-    await withAudioFixture("openclaw-cli-audio-empty-sherpa", async ({ ctx, cache }) => {
+    await withAudioFixture("grokbot-cli-audio-empty-sherpa", async ({ ctx, cache }) => {
       const result = await runCliEntry({
         capability: "audio",
         entry: {
@@ -312,7 +312,7 @@ describe("media-understanding CLI audio entry", () => {
       stderr: "",
     });
 
-    await withAudioFixture("openclaw-cli-audio-sherpa-json", async ({ ctx, cache }) => {
+    await withAudioFixture("grokbot-cli-audio-sherpa-json", async ({ ctx, cache }) => {
       const result = await runCliEntry({
         capability: "audio",
         entry: {

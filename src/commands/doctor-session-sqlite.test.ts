@@ -3,7 +3,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import type { DatabaseSync } from "node:sqlite";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { useAutoCleanupTempDirTracker } from "../../test/helpers/temp-dir.js";
 import {
@@ -20,12 +20,12 @@ import {
   openOpenClawAgentDatabase,
   OPENCLAW_AGENT_SCHEMA_VERSION,
   resolveOpenClawAgentSqlitePath,
-} from "../state/openclaw-agent-db.js";
+} from "../state/grokbot-agent-db.js";
 import {
   readOpenClawDatabaseQuarantine,
   recordOpenClawDatabaseQuarantine,
-} from "../state/openclaw-quarantine-store.js";
-import { closeOpenClawStateDatabaseForTest } from "../state/openclaw-state-db.js";
+} from "../state/grokbot-quarantine-store.js";
+import { closeOpenClawStateDatabaseForTest } from "../state/grokbot-state-db.js";
 import {
   assertSafeSessionSqliteMigrationMove,
   createSessionSqliteMigrationFailureIssue,
@@ -118,7 +118,7 @@ describe("runDoctorSessionSqlite", () => {
   });
 
   it("inspects SQLite-only all-agent targets without requiring a legacy store", async () => {
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-doctor-session-sqlite-"));
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-doctor-session-sqlite-"));
     try {
       const stateDir = path.join(tempDir, "state");
       const storePath = path.join(stateDir, "agents", "main", "sessions", "sessions.json");
@@ -148,7 +148,7 @@ describe("runDoctorSessionSqlite", () => {
   });
 
   it("migrates a dormant historical agent database before all-agent import compaction", async () => {
-    const tempDir = autoCleanupTempDirs.make("openclaw-doctor-session-sqlite-");
+    const tempDir = autoCleanupTempDirs.make("grokbot-doctor-session-sqlite-");
     const stateDir = path.join(tempDir, "state");
     const env = { ...process.env, OPENCLAW_STATE_DIR: stateDir };
     const agentIds = ["dormant", "current"] as const;
@@ -228,7 +228,7 @@ describe("runDoctorSessionSqlite", () => {
   });
 
   it("keeps mismatched older agent schema versions blocking during all-agent import", async () => {
-    const tempDir = autoCleanupTempDirs.make("openclaw-doctor-session-sqlite-");
+    const tempDir = autoCleanupTempDirs.make("grokbot-doctor-session-sqlite-");
     const stateDir = path.join(tempDir, "token=supersecret", "state");
     const sessionsDir = path.join(stateDir, "agents", "drifted", "sessions");
     const env = { ...process.env, OPENCLAW_STATE_DIR: stateDir };
@@ -270,7 +270,7 @@ describe("runDoctorSessionSqlite", () => {
     );
     const failureReport = fs.readFileSync(failureReportPath, "utf-8");
     expect(failureReport).toContain("sqlite_compact_failed");
-    expect(failureReport).toContain("openclaw doctor --session-sqlite recover --github-issue");
+    expect(failureReport).toContain("grokbot doctor --session-sqlite recover --github-issue");
     expect(failureReport).not.toContain("supersecret");
     const after = new sqlite.DatabaseSync(sqlitePath);
     try {
@@ -644,7 +644,7 @@ describe("runDoctorSessionSqlite", () => {
       mutate: (database: DatabaseSync) => {
         database.exec(`PRAGMA user_version = ${OPENCLAW_AGENT_SCHEMA_VERSION - 1};`);
       },
-      message: /run openclaw doctor --fix before compacting/iu,
+      message: /run grokbot doctor --fix before compacting/iu,
     },
   ])("rejects $label before compaction", async ({ mutate, message }) => {
     const { sqlitePath, store } = await createImportedStoreForCompaction();
@@ -764,7 +764,7 @@ describe("runDoctorSessionSqlite", () => {
     });
     expect(recovery.totals.issues).toBe(0);
     expect(recovery.targets[0]?.corruptRecovery?.movedFiles).toEqual(
-      expect.arrayContaining([expect.stringMatching(/openclaw-agent\.sqlite\.corrupt-/u)]),
+      expect.arrayContaining([expect.stringMatching(/grokbot-agent\.sqlite\.corrupt-/u)]),
     );
     expect(fs.existsSync(sqlitePath)).toBe(false);
   });
@@ -927,7 +927,7 @@ describe("runDoctorSessionSqlite", () => {
     fs.writeFileSync(
       pointerPath,
       `${JSON.stringify({
-        traceSchema: "openclaw-trajectory-pointer",
+        traceSchema: "grokbot-trajectory-pointer",
         schemaVersion: 1,
         sessionId: "session-1",
         runtimeFile: store.trajectoryPath,
@@ -1639,7 +1639,7 @@ describe("runDoctorSessionSqlite", () => {
     expectDefined(manifest.targets[0], "manifest.targets[0] test invariant").issues = [
       {
         code: "startup_failure",
-        message: `token=supersecret startup migration failed for agent:main:main at ${store.storePath} and ${process.env.HOME ?? "/Users/example"}/private/openclaw.json`,
+        message: `token=supersecret startup migration failed for agent:main:main at ${store.storePath} and ${process.env.HOME ?? "/Users/example"}/private/grokbot.json`,
         sessionKey: "agent:main:main",
       },
     ];
@@ -1668,7 +1668,7 @@ describe("runDoctorSessionSqlite", () => {
     if (process.env.HOME) {
       expect(recover.supportIssue?.body).not.toContain(process.env.HOME);
     }
-    expect(recover.supportIssue?.url).toContain("github.com/openclaw/openclaw/issues/new");
+    expect(recover.supportIssue?.url).toContain("github.com/grokbot/grokbot/issues/new");
   });
 
   it("keeps truncated GitHub issue bodies on a valid UTF-16 boundary", () => {
@@ -1693,7 +1693,7 @@ describe("runDoctorSessionSqlite", () => {
             completedMoves: [],
             issues: targetMessages.map((message) => ({ code: "startup_failure", message })),
             plannedMoves: [],
-            sqlitePath: path.join(store.tempDir, "openclaw-agent.sqlite"),
+            sqlitePath: path.join(store.tempDir, "grokbot-agent.sqlite"),
             storePath: store.storePath,
             validationBeforeArchive: "failed",
           };
@@ -1953,7 +1953,7 @@ describe("runDoctorSessionSqlite", () => {
   });
 
   it("keeps a shared legacy store intact when importing only one agent", async () => {
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-doctor-session-sqlite-"));
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-doctor-session-sqlite-"));
     try {
       const stateDir = path.join(tempDir, "state");
       const sessionDir = path.join(tempDir, "shared-session-store");
@@ -2020,7 +2020,7 @@ describe("runDoctorSessionSqlite", () => {
   });
 
   it("imports shared custom stores into per-agent SQLite targets", async () => {
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-doctor-session-sqlite-"));
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-doctor-session-sqlite-"));
     try {
       const stateDir = path.join(tempDir, "state");
       const sessionDir = path.join(tempDir, "shared-session-store");
@@ -2150,7 +2150,7 @@ describe("runDoctorSessionSqlite", () => {
       "agents",
       "main",
       "agent",
-      "openclaw-agent.sqlite",
+      "grokbot-agent.sqlite",
     );
     fs.mkdirSync(path.dirname(sqlitePath), { recursive: true });
     fs.writeFileSync(sqlitePath, "not a sqlite database\n", { mode: 0o600 });
@@ -2175,7 +2175,7 @@ describe("runDoctorSessionSqlite", () => {
       "agents",
       "main",
       "agent",
-      "openclaw-agent.sqlite",
+      "grokbot-agent.sqlite",
     );
     fs.mkdirSync(path.dirname(sqlitePath), { recursive: true });
     fs.writeFileSync(sqlitePath, "not a sqlite database\n", { mode: 0o600 });
@@ -2211,7 +2211,7 @@ describe("runDoctorSessionSqlite", () => {
         "agents",
         "main",
         "agent",
-        "openclaw-agent.sqlite",
+        "grokbot-agent.sqlite",
       );
       fs.mkdirSync(path.dirname(sqlitePath), { recursive: true });
       fs.writeFileSync(sqlitePath, "not a sqlite database\n", { mode: 0o400 });
@@ -2224,7 +2224,7 @@ describe("runDoctorSessionSqlite", () => {
 
       expect(report.totals.issues).toBe(0);
       expect(report.targets[0]?.corruptRecovery?.movedFiles).toEqual([
-        expect.stringMatching(/openclaw-agent\.sqlite\.corrupt-/u),
+        expect.stringMatching(/grokbot-agent\.sqlite\.corrupt-/u),
       ]);
       expect(fs.existsSync(sqlitePath)).toBe(false);
     },
@@ -2237,7 +2237,7 @@ describe("runDoctorSessionSqlite", () => {
       "agents",
       "main",
       "agent",
-      "openclaw-agent.sqlite",
+      "grokbot-agent.sqlite",
     );
     fs.mkdirSync(path.dirname(sqlitePath), { recursive: true });
     fs.writeFileSync(`${sqlitePath}-wal`, "wal", { mode: 0o600 });
@@ -2266,7 +2266,7 @@ describe("runDoctorSessionSqlite", () => {
       "agents",
       "main",
       "agent",
-      "openclaw-agent.sqlite",
+      "grokbot-agent.sqlite",
     );
     fs.mkdirSync(path.dirname(sqlitePath), { recursive: true });
     const expectedContents = new Map<string, string>();
@@ -2321,7 +2321,7 @@ describe("runDoctorSessionSqlite", () => {
       "agents",
       "main",
       "agent",
-      "openclaw-agent.sqlite",
+      "grokbot-agent.sqlite",
     );
     fs.mkdirSync(sqlitePath, { recursive: true });
 
@@ -2344,7 +2344,7 @@ describe("runDoctorSessionSqlite", () => {
       "agents",
       "main",
       "agent",
-      "openclaw-agent.sqlite",
+      "grokbot-agent.sqlite",
     );
     fs.mkdirSync(path.dirname(sqlitePath), { recursive: true });
     fs.writeFileSync(sqlitePath, "not a sqlite database\n", { mode: 0o600 });
@@ -2427,7 +2427,7 @@ describe("runDoctorSessionSqlite", () => {
     });
 
     expect(report.targets[0]?.sqlitePath).toBe(
-      path.join(store.sessionDir, "openclaw-agent.sqlite"),
+      path.join(store.sessionDir, "grokbot-agent.sqlite"),
     );
     expect(
       fs.existsSync(
@@ -2708,9 +2708,9 @@ function createLegacyStore(
     transcriptLines?: string[];
   } = {},
 ): TestStore {
-  const tempDir = autoCleanupTempDirs.make("openclaw-doctor-session-sqlite-", params.tempRoot);
+  const tempDir = autoCleanupTempDirs.make("grokbot-doctor-session-sqlite-", params.tempRoot);
   const stateDir = path.join(tempDir, "state");
-  const configPath = path.join(tempDir, "openclaw.json");
+  const configPath = path.join(tempDir, "grokbot.json");
   const sessionDir = params.customStore
     ? path.join(tempDir, "legacy-session-store")
     : path.join(stateDir, "agents", params.agentDirName ?? "main", "sessions");

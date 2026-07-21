@@ -1,11 +1,11 @@
-// Pure helpers for the OpenClaw extension: pairing-string parsing, reconnect
+// Pure helpers for the GrokBot extension: pairing-string parsing, reconnect
 // backoff, and Chrome tab-group color mapping. No chrome.* usage here so the
 // repo's vitest suite can exercise the logic directly.
 
 /** Tab group shown to the user; membership == what the agent may touch. */
-export const OPENCLAW_TAB_GROUP_TITLE = "OpenClaw";
-const EXTENSION_RELAY_PROTOCOL = "openclaw-extension-relay";
-const EXTENSION_RELAY_TOKEN_PROTOCOL_PREFIX = "openclaw-extension-token.";
+export const OPENCLAW_TAB_GROUP_TITLE = "GrokBot";
+const EXTENSION_RELAY_PROTOCOL = "grokbot-extension-relay";
+const EXTENSION_RELAY_TOKEN_PROTOCOL_PREFIX = "grokbot-extension-token.";
 
 const CHROME_GROUP_COLORS = {
   grey: [128, 128, 128],
@@ -20,7 +20,7 @@ const CHROME_GROUP_COLORS = {
 };
 
 /**
- * Parse a pairing string printed by `openclaw browser extension pair`.
+ * Parse a pairing string printed by `grokbot browser extension pair`.
  * Shape: ws://127.0.0.1:<port>/extension?gateway=<url>#<token>
  * The additive gateway hint is not a credential; old extensions safely pass
  * it through to the relay while new extensions remove it before connecting.

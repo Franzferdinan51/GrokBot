@@ -1,6 +1,6 @@
 // Discord type declarations define plugin contracts.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import type { CommandArgValues } from "openclaw/plugin-sdk/native-command-registry";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import type { CommandArgValues } from "grokbot/plugin-sdk/native-command-registry";
 
 export type DiscordConfig = NonNullable<OpenClawConfig["channels"]>["discord"];
 

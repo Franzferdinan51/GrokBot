@@ -14,7 +14,7 @@ import { managedWorktrees } from "../agents/worktrees/service.js";
 import { loadSessionEntry, loadTranscriptEvents } from "../config/sessions/session-accessor.js";
 import { createEmptyPluginRegistry } from "../plugins/registry-empty.js";
 import { setActivePluginRegistry } from "../plugins/runtime.js";
-import { closeOpenClawStateDatabaseForTest } from "../state/openclaw-state-db.js";
+import { closeOpenClawStateDatabaseForTest } from "../state/grokbot-state-db.js";
 import {
   agentCommand,
   agentDiscoveryMock,
@@ -52,9 +52,9 @@ async function initializeGitWorkspace(root: string): Promise<string> {
   await execFileAsync("git", ["-C", workspace, "add", "README.md"]);
   await execFileAsync("git", [
     "-c",
-    "user.name=OpenClaw Test",
+    "user.name=GrokBot Test",
     "-c",
-    "user.email=openclaw-test@example.invalid",
+    "user.email=grokbot-test@example.invalid",
     "-C",
     workspace,
     "commit",
@@ -73,7 +73,7 @@ function requireNonEmptyString(value: string | undefined, label: string): string
 
 test("sessions.create provisions and reuses a session worktree for later runs", async () => {
   const root = await fs.mkdtemp(
-    path.join(await fs.realpath(os.tmpdir()), "openclaw-session-worktree-"),
+    path.join(await fs.realpath(os.tmpdir()), "grokbot-session-worktree-"),
   );
   const workspace = await initializeGitWorkspace(root);
   const previousStateDir = process.env.OPENCLAW_STATE_DIR;
@@ -96,7 +96,7 @@ test("sessions.create provisions and reuses a session worktree for later runs", 
     expect(created.ok).toBe(true);
     const key = requireNonEmptyString(created.payload?.key, "created session key");
     const worktree = created.payload?.worktree;
-    expect(worktree?.branch).toMatch(/^openclaw\/wt-[a-f0-9]{8}$/);
+    expect(worktree?.branch).toMatch(/^grokbot\/wt-[a-f0-9]{8}$/);
     expect(created.payload?.entry.spawnedCwd).toBe(worktree?.path);
     worktreeId = worktree?.id;
     expect(findLiveRegistryWorktreeByOwner(process.env, "session", key)).toMatchObject({
@@ -157,7 +157,7 @@ test("sessions.create provisions and reuses a session worktree for later runs", 
 
 test("sessions.create honors worktree name/base ref and persists worktree info", async () => {
   const root = await fs.mkdtemp(
-    path.join(await fs.realpath(os.tmpdir()), "openclaw-session-worktree-target-"),
+    path.join(await fs.realpath(os.tmpdir()), "grokbot-session-worktree-target-"),
   );
   const workspace = await initializeGitWorkspace(root);
   await execFileAsync("git", ["-C", workspace, "checkout", "-b", "base-branch"]);
@@ -165,9 +165,9 @@ test("sessions.create honors worktree name/base ref and persists worktree info",
   await execFileAsync("git", ["-C", workspace, "add", "base.txt"]);
   await execFileAsync("git", [
     "-c",
-    "user.name=OpenClaw Test",
+    "user.name=GrokBot Test",
     "-c",
-    "user.email=openclaw-test@example.invalid",
+    "user.email=grokbot-test@example.invalid",
     "-C",
     workspace,
     "commit",
@@ -206,7 +206,7 @@ test("sessions.create honors worktree name/base ref and persists worktree info",
     expect(created.ok).toBe(true);
     const worktree = created.payload?.worktree;
     worktreeId = worktree?.id;
-    expect(worktree?.branch).toBe("openclaw/target-task");
+    expect(worktree?.branch).toBe("grokbot/target-task");
     const { stdout: worktreeCommitRaw } = await execFileAsync("git", [
       "-C",
       requireNonEmptyString(worktree?.path, "worktree path"),
@@ -216,7 +216,7 @@ test("sessions.create honors worktree name/base ref and persists worktree info",
     expect(worktreeCommitRaw.trim()).toBe(baseCommitRaw.trim());
     expect(created.payload?.entry.worktree).toEqual({
       id: worktree?.id,
-      branch: "openclaw/target-task",
+      branch: "grokbot/target-task",
       repoRoot: workspace,
     });
 
@@ -262,7 +262,7 @@ test("sessions.create accepts a node-host cwd without provisioning a Gateway wor
     entry: { execHost?: string; execNode?: string; execCwd?: string; spawnedCwd?: string };
   }>(
     "sessions.create",
-    { agentId: "main", execNode: "macbook", cwd: "/Users/peter/Projects/openclaw" },
+    { agentId: "main", execNode: "macbook", cwd: "/Users/peter/Projects/grokbot" },
     { client: { connect: { scopes: ["operator.admin"] } } as never },
   );
 
@@ -270,7 +270,7 @@ test("sessions.create accepts a node-host cwd without provisioning a Gateway wor
   expect(created.payload?.entry).toMatchObject({
     execHost: "node",
     execNode: "macbook",
-    execCwd: "/Users/peter/Projects/openclaw",
+    execCwd: "/Users/peter/Projects/grokbot",
   });
   expect(created.payload?.entry.spawnedCwd).toBeUndefined();
 });
@@ -307,7 +307,7 @@ test("sessions.create reset-in-place clears a prior node binding for Gateway exe
       parentSessionKey: "main",
       emitCommandHooks: true,
       execNode: "macbook",
-      cwd: "/Users/peter/Projects/openclaw",
+      cwd: "/Users/peter/Projects/grokbot",
     },
     { client: { connect: { scopes: ["operator.admin"] } } as never },
   );
@@ -315,7 +315,7 @@ test("sessions.create reset-in-place clears a prior node binding for Gateway exe
   expect(nodeSession.payload?.entry).toMatchObject({
     execHost: "node",
     execNode: "macbook",
-    execCwd: "/Users/peter/Projects/openclaw",
+    execCwd: "/Users/peter/Projects/grokbot",
   });
   expect(nodeSession.payload?.entry.spawnedCwd).toBeUndefined();
 
@@ -348,10 +348,10 @@ test("sessions.create rejects a Gateway worktree targeting a node", async () => 
 
 test("sessions.create provisions a worktree from an admin-selected cwd", async () => {
   const configuredRoot = await fs.mkdtemp(
-    path.join(await fs.realpath(os.tmpdir()), "openclaw-configured-workspace-"),
+    path.join(await fs.realpath(os.tmpdir()), "grokbot-configured-workspace-"),
   );
   const selectedRoot = await fs.mkdtemp(
-    path.join(await fs.realpath(os.tmpdir()), "openclaw-selected-workspace-"),
+    path.join(await fs.realpath(os.tmpdir()), "grokbot-selected-workspace-"),
   );
   const configuredWorkspace = await initializeGitWorkspace(configuredRoot);
   const selectedWorkspace = await initializeGitWorkspace(selectedRoot);
@@ -462,11 +462,11 @@ test("sessions.create allows cwd within a sandboxed agent workspace", async () =
 
 test("sessions.create skips the worktree setup script for non-admin callers", async () => {
   const root = await fs.mkdtemp(
-    path.join(await fs.realpath(os.tmpdir()), "openclaw-worktree-setup-scope-"),
+    path.join(await fs.realpath(os.tmpdir()), "grokbot-worktree-setup-scope-"),
   );
   const workspace = await initializeGitWorkspace(root);
-  await fs.mkdir(path.join(workspace, ".openclaw"), { recursive: true });
-  const setupScript = path.join(workspace, ".openclaw", "worktree-setup.sh");
+  await fs.mkdir(path.join(workspace, ".grokbot"), { recursive: true });
+  const setupScript = path.join(workspace, ".grokbot", "worktree-setup.sh");
   await fs.writeFile(setupScript, "#!/bin/sh\ntouch setup-marker.txt\n");
   await fs.chmod(setupScript, 0o755);
   const previousStateDir = process.env.OPENCLAW_STATE_DIR;
@@ -506,7 +506,7 @@ test("sessions.create skips the worktree setup script for non-admin callers", as
 
 test("sessions.create preserves a linked-worktree subdirectory", async () => {
   const root = await fs.mkdtemp(
-    path.join(await fs.realpath(os.tmpdir()), "openclaw-subdir-session-worktree-"),
+    path.join(await fs.realpath(os.tmpdir()), "grokbot-subdir-session-worktree-"),
   );
   const repoRoot = await initializeGitWorkspace(root);
   const linkedRoot = path.join(root, "linked");
@@ -534,7 +534,7 @@ test("sessions.create preserves a linked-worktree subdirectory", async () => {
     worktreeId = worktree?.id;
     // The managed worktree anchors at the repo root even when the workspace is nested;
     // the session cwd points at the equivalent subdirectory inside the worktree.
-    expect(worktree?.branch).toMatch(/^openclaw\/wt-[a-f0-9]{8}$/);
+    expect(worktree?.branch).toMatch(/^grokbot\/wt-[a-f0-9]{8}$/);
     expect(created.payload?.entry.spawnedCwd).toBe(
       path.join(requireNonEmptyString(worktree?.path, "worktree path"), "packages", "app"),
     );
@@ -555,7 +555,7 @@ test("sessions.create preserves a linked-worktree subdirectory", async () => {
 
 test("sessions.create reset-in-place persists the returned worktree cwd", async () => {
   const root = await fs.mkdtemp(
-    path.join(await fs.realpath(os.tmpdir()), "openclaw-reset-session-worktree-"),
+    path.join(await fs.realpath(os.tmpdir()), "grokbot-reset-session-worktree-"),
   );
   const workspace = await initializeGitWorkspace(root);
   // A remote makes the base commit reachable from `--remotes`, so leaving the worktree via a
@@ -646,7 +646,7 @@ test("sessions.create reset-in-place persists the returned worktree cwd", async 
 
 test("sessions.create rejects worktrees for non-git agent workspaces", async () => {
   const workspace = await fs.mkdtemp(
-    path.join(await fs.realpath(os.tmpdir()), "openclaw-session-plain-workspace-"),
+    path.join(await fs.realpath(os.tmpdir()), "grokbot-session-plain-workspace-"),
   );
   testState.agentConfig = { workspace };
   await createSessionStoreDir();

@@ -57,7 +57,7 @@ const IOS_CATALOG_KINDS = new Set([
 ]);
 const IOS_CATALOG_EXCLUSIONS = new Set([
   // Product names and preview-only single-character fixtures are intentionally verbatim.
-  "OpenClaw",
+  "GrokBot",
   "z",
 ]);
 const IOS_INFO_PLIST_TARGETS = [
@@ -373,15 +373,15 @@ const RAW_LOCALIZATION_BYPASSES: Record<string, readonly string[]> = {
 };
 
 const MACOS_CATALOG = {
-  path: "apps/macos/Sources/OpenClaw/Resources/Localizable.xcstrings",
+  path: "apps/macos/Sources/GrokBot/Resources/Localizable.xcstrings",
   coverage: {
-    "apps/macos/Sources/OpenClaw/ChannelsSettings+ChannelSections.swift": [
+    "apps/macos/Sources/GrokBot/ChannelsSettings+ChannelSections.swift": [
       "Logout",
       "Refresh",
       "Save",
     ],
-    "apps/macos/Sources/OpenClaw/CronSettings+Rows.swift": ["Run now"],
-    "apps/macos/Sources/OpenClaw/OnboardingSystemAgentChat.swift": ["Wake up, my friend!"],
+    "apps/macos/Sources/GrokBot/CronSettings+Rows.swift": ["Run now"],
+    "apps/macos/Sources/GrokBot/OnboardingSystemAgentChat.swift": ["Wake up, my friend!"],
   },
 } as const;
 
@@ -479,7 +479,7 @@ type InfoPlistTranslation = {
 function parseStringsFile(source: string): Map<string, InfoPlistTranslation> {
   const values = new Map<string, InfoPlistTranslation>();
   for (const match of source.matchAll(
-    /(?:^\/\* OpenClaw source: ("(?:\\.|[^"\\])*") \*\/\n)?^\s*("(?:\\.|[^"\\])*")\s*=\s*("(?:\\.|[^"\\])*");/gmu,
+    /(?:^\/\* GrokBot source: ("(?:\\.|[^"\\])*") \*\/\n)?^\s*("(?:\\.|[^"\\])*")\s*=\s*("(?:\\.|[^"\\])*");/gmu,
   )) {
     values.set(JSON.parse(match[2] ?? '""') as string, {
       source: match[1] ? (JSON.parse(match[1]) as string) : undefined,
@@ -812,7 +812,7 @@ async function syncIosInfoPlist(write: boolean): Promise<number> {
         const candidates = infoPlistTranslationCandidates(artifact, sourceId, source);
         const value = selectInfoPlistTranslation(source, candidates, existing.get(key));
         return [
-          `/* OpenClaw source: ${stringsLiteral(source)} */`,
+          `/* GrokBot source: ${stringsLiteral(source)} */`,
           `${stringsLiteral(key)} = ${stringsLiteral(value)};`,
         ].join("\n");
       });

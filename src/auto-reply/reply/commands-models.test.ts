@@ -1,9 +1,9 @@
 // Tests model command output, catalog loading, and provider auth status rendering.
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { testing as cliBackendsTesting } from "../../agents/cli-backends.test-support.js";
 import type { ChannelPlugin } from "../../channels/plugins/types.public.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import { setActivePluginRegistry } from "../../plugins/runtime.js";
 import {
   createChannelTestPluginBase,
@@ -761,13 +761,13 @@ describe("handleModelsCommand", () => {
       description: "Use the OpenAI Codex runtime selected by the effective harness policy.",
     });
     expect(data.runtimeChoicesByProvider?.get("openai")?.[1]).toEqual({
-      id: "openclaw",
-      label: "OpenClaw Default",
-      description: "Use the built-in OpenClaw runtime.",
+      id: "grokbot",
+      label: "GrokBot Default",
+      description: "Use the built-in GrokBot runtime.",
     });
   });
 
-  it("keeps custom OpenAI-compatible providers on the OpenClaw default runtime choice", async () => {
+  it("keeps custom OpenAI-compatible providers on the GrokBot default runtime choice", async () => {
     const data = await buildModelsProviderData({
       models: {
         providers: {
@@ -785,9 +785,9 @@ describe("handleModelsCommand", () => {
     } as OpenClawConfig);
 
     expect(data.runtimeChoicesByProvider?.get("openai")?.[0]).toEqual({
-      id: "openclaw",
-      label: "OpenClaw Default",
-      description: "Use the built-in OpenClaw runtime.",
+      id: "grokbot",
+      label: "GrokBot Default",
+      description: "Use the built-in GrokBot runtime.",
     });
   });
 
@@ -797,7 +797,7 @@ describe("handleModelsCommand", () => {
         providers: {
           openai: {
             baseUrl: "https://api.openai.com/v1",
-            agentRuntime: { id: "openclaw" },
+            agentRuntime: { id: "grokbot" },
             models: [],
           },
         },
@@ -818,9 +818,9 @@ describe("handleModelsCommand", () => {
       description: "Use the OpenAI Codex runtime selected by the effective harness policy.",
     });
     expect(data.runtimeChoicesByProvider?.get("openai")?.[1]).toEqual({
-      id: "openclaw",
-      label: "OpenClaw Default",
-      description: "Use the built-in OpenClaw runtime.",
+      id: "grokbot",
+      label: "GrokBot Default",
+      description: "Use the built-in GrokBot runtime.",
     });
   });
 
@@ -843,9 +843,9 @@ describe("handleModelsCommand", () => {
     } as OpenClawConfig);
 
     expect(data.runtimeChoicesByProvider?.get("anthropic")?.[0]).toEqual({
-      id: "openclaw",
-      label: "OpenClaw Default",
-      description: "Use the built-in OpenClaw runtime.",
+      id: "grokbot",
+      label: "GrokBot Default",
+      description: "Use the built-in GrokBot runtime.",
     });
   });
 
@@ -873,9 +873,9 @@ describe("handleModelsCommand", () => {
       description: "Use the Claude CLI runtime selected by the effective harness policy.",
     });
     expect(data.runtimeChoicesByProvider?.get("anthropic")?.[1]).toEqual({
-      id: "openclaw",
-      label: "OpenClaw Default",
-      description: "Use the built-in OpenClaw runtime.",
+      id: "grokbot",
+      label: "GrokBot Default",
+      description: "Use the built-in GrokBot runtime.",
     });
   });
 

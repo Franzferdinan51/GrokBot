@@ -122,14 +122,14 @@ describe("env test utils", () => {
   });
 
   it("createPathResolutionEnv clears leaked path overrides before applying explicit ones", () => {
-    const homeDir = path.join(path.sep, "tmp", "openclaw-home");
+    const homeDir = path.join(path.sep, "tmp", "grokbot-home");
     const resolvedHomeDir = path.resolve(homeDir);
     const previousOpenClawHome = process.env.OPENCLAW_HOME;
     const previousStateDir = process.env.OPENCLAW_STATE_DIR;
     const previousBundledDir = process.env.OPENCLAW_BUNDLED_PLUGINS_DIR;
-    setTestEnvValue("OPENCLAW_HOME", "/srv/openclaw-home");
-    setTestEnvValue("OPENCLAW_STATE_DIR", "/srv/openclaw-state");
-    setTestEnvValue("OPENCLAW_BUNDLED_PLUGINS_DIR", "/srv/openclaw-bundled");
+    setTestEnvValue("OPENCLAW_HOME", "/srv/grokbot-home");
+    setTestEnvValue("OPENCLAW_STATE_DIR", "/srv/grokbot-state");
+    setTestEnvValue("OPENCLAW_BUNDLED_PLUGINS_DIR", "/srv/grokbot-bundled");
 
     try {
       const env = createPathResolutionEnv(homeDir, {
@@ -148,10 +148,10 @@ describe("env test utils", () => {
   });
 
   it("withPathResolutionEnv only applies the explicit path env inside the callback", () => {
-    const homeDir = path.join(path.sep, "tmp", "openclaw-home");
+    const homeDir = path.join(path.sep, "tmp", "grokbot-home");
     const resolvedHomeDir = path.resolve(homeDir);
     const previousOpenClawHome = process.env.OPENCLAW_HOME;
-    setTestEnvValue("OPENCLAW_HOME", "/srv/openclaw-home");
+    setTestEnvValue("OPENCLAW_HOME", "/srv/grokbot-home");
 
     try {
       const seen = withPathResolutionEnv(
@@ -171,7 +171,7 @@ describe("env test utils", () => {
         processBundledDir: "~/bundled",
         envBundledDir: "~/bundled",
       });
-      expect(process.env.OPENCLAW_HOME).toBe("/srv/openclaw-home");
+      expect(process.env.OPENCLAW_HOME).toBe("/srv/grokbot-home");
     } finally {
       restoreEnvKey("OPENCLAW_HOME", previousOpenClawHome);
     }

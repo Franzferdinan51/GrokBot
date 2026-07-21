@@ -24,51 +24,51 @@ describe("isGatewayArgv", () => {
   });
 
   it("matches known entrypoints across slash and case variants", () => {
-    expect(isGatewayArgv(["NODE", "C:\\OpenClaw\\DIST\\ENTRY.JS", "gateway"])).toBe(true);
-    expect(isGatewayArgv(["bun", "/srv/openclaw/scripts/run-node.mjs", "gateway"])).toBe(true);
-    expect(isGatewayArgv(["node", "/srv/openclaw/openclaw.mjs", "gateway"])).toBe(true);
-    expect(isGatewayArgv(["tsx", "/srv/openclaw/src/entry.ts", "gateway"])).toBe(true);
-    expect(isGatewayArgv(["tsx", "/srv/openclaw/src/index.ts", "gateway"])).toBe(true);
+    expect(isGatewayArgv(["NODE", "C:\\GrokBot\\DIST\\ENTRY.JS", "gateway"])).toBe(true);
+    expect(isGatewayArgv(["bun", "/srv/grokbot/scripts/run-node.mjs", "gateway"])).toBe(true);
+    expect(isGatewayArgv(["node", "/srv/grokbot/grokbot.mjs", "gateway"])).toBe(true);
+    expect(isGatewayArgv(["tsx", "/srv/grokbot/src/entry.ts", "gateway"])).toBe(true);
+    expect(isGatewayArgv(["tsx", "/srv/grokbot/src/index.ts", "gateway"])).toBe(true);
   });
 
-  it("matches the openclaw executable but gates the gateway binary behind the opt-in flag", () => {
-    expect(isGatewayArgv(["C:\\bin\\openclaw.cmd", "gateway"])).toBe(true);
-    expect(isGatewayArgv(["/usr/local/bin/openclaw-gateway", "gateway"])).toBe(false);
-    expect(isGatewayArgv(["openclaw-gateway"])).toBe(false);
+  it("matches the grokbot executable but gates the gateway binary behind the opt-in flag", () => {
+    expect(isGatewayArgv(["C:\\bin\\grokbot.cmd", "gateway"])).toBe(true);
+    expect(isGatewayArgv(["/usr/local/bin/grokbot-gateway", "gateway"])).toBe(false);
+    expect(isGatewayArgv(["grokbot-gateway"])).toBe(false);
     expect(
-      isGatewayArgv(["/usr/local/bin/openclaw-gateway", "gateway"], {
+      isGatewayArgv(["/usr/local/bin/grokbot-gateway", "gateway"], {
         allowGatewayBinary: true,
       }),
     ).toBe(true);
     expect(
-      isGatewayArgv(["C:\\bin\\openclaw-gateway.EXE", "gateway"], {
+      isGatewayArgv(["C:\\bin\\grokbot-gateway.EXE", "gateway"], {
         allowGatewayBinary: true,
       }),
     ).toBe(true);
-    expect(isGatewayArgv(["openclaw-gateway"], { allowGatewayBinary: true })).toBe(true);
+    expect(isGatewayArgv(["grokbot-gateway"], { allowGatewayBinary: true })).toBe(true);
   });
 
   it("rejects unknown gateway argv even when the token is present", () => {
-    expect(isGatewayArgv(["node", "/srv/openclaw/custom.js", "gateway"])).toBe(false);
+    expect(isGatewayArgv(["node", "/srv/grokbot/custom.js", "gateway"])).toBe(false);
     expect(isGatewayArgv(["python", "gateway", "script.py"])).toBe(false);
   });
 });
 
 describe("isOpenClawCommandArgv", () => {
   it("matches doctor across source, built, and installed entrypoints", () => {
-    expect(isOpenClawCommandArgv(["node", "/srv/openclaw/openclaw.mjs", "doctor"], "doctor")).toBe(
+    expect(isOpenClawCommandArgv(["node", "/srv/grokbot/grokbot.mjs", "doctor"], "doctor")).toBe(
       true,
     );
     expect(
-      isOpenClawCommandArgv(["NODE", "C:\\OpenClaw\\DIST\\ENTRY.JS", "DOCTOR"], "doctor"),
+      isOpenClawCommandArgv(["NODE", "C:\\GrokBot\\DIST\\ENTRY.JS", "DOCTOR"], "doctor"),
     ).toBe(true);
-    expect(isOpenClawCommandArgv(["C:\\bin\\openclaw.cmd", "doctor", "--fix"], "doctor")).toBe(
+    expect(isOpenClawCommandArgv(["C:\\bin\\grokbot.cmd", "doctor", "--fix"], "doctor")).toBe(
       true,
     );
   });
 
-  it("rejects other OpenClaw commands and unrelated doctor processes", () => {
-    expect(isOpenClawCommandArgv(["openclaw", "gateway"], "doctor")).toBe(false);
+  it("rejects other GrokBot commands and unrelated doctor processes", () => {
+    expect(isOpenClawCommandArgv(["grokbot", "gateway"], "doctor")).toBe(false);
     expect(isOpenClawCommandArgv(["python", "doctor", "worker.py"], "doctor")).toBe(false);
   });
 });

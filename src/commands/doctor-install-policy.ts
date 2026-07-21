@@ -4,7 +4,7 @@ import os from "node:os";
 import path from "node:path";
 import { note } from "../../packages/terminal-core/src/note.js";
 import { formatCliCommand } from "../cli/command-format.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { formatErrorMessage } from "../infra/errors.js";
 import {
   probeInstallPolicy,
@@ -42,12 +42,12 @@ async function collectInstallPolicyHealthLines(
 
   if (!options.deep) {
     lines.push(
-      `- Static checks passed. Run ${formatCliCommand("openclaw doctor --deep")} to execute a synthetic policy probe.`,
+      `- Static checks passed. Run ${formatCliCommand("grokbot doctor --deep")} to execute a synthetic policy probe.`,
     );
     return lines;
   }
 
-  const probeDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-install-policy-probe-"));
+  const probeDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-install-policy-probe-"));
   try {
     const result = await probeInstallPolicy({
       config: cfg,

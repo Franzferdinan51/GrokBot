@@ -4,8 +4,8 @@ import {
   resolveScopeRequireMention,
   resolveScopeToolsPolicy,
   type GroupToolPolicyConfig,
-} from "openclaw/plugin-sdk/channel-policy";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/core";
+} from "grokbot/plugin-sdk/channel-policy";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/core";
 
 type IMessageGroupContext = {
   cfg: OpenClawConfig;

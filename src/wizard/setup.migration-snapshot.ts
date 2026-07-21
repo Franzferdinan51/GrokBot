@@ -3,7 +3,7 @@ import crypto from "node:crypto";
 import { createReadStream } from "node:fs";
 import fs from "node:fs/promises";
 import path from "node:path";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { withFileLock } from "../infra/file-lock.js";
 import { isNotFoundPathError } from "../infra/path-guards.js";
 import type { MigrationPlan } from "../plugins/types.js";
@@ -312,7 +312,7 @@ export async function prepareSetupMigrationAttemptBoundary(params: {
   };
 }
 
-/** Serializes all onboarding migration writes that share one OpenClaw state target. */
+/** Serializes all onboarding migration writes that share one GrokBot state target. */
 export async function withSetupMigrationTargetLock<T>(
   stateDir: string,
   fn: () => Promise<T>,
@@ -335,7 +335,7 @@ export function assertFreshSetupMigrationTarget(freshness: {
   }
   throw new Error(
     [
-      "Migration import during onboarding requires a fresh OpenClaw setup.",
+      "Migration import during onboarding requires a fresh GrokBot setup.",
       "Create a fresh setup or reset config, credentials, sessions, and workspace before importing.",
       "Backup plus overwrite/merge imports are feature-gated for now.",
       "Existing setup:",

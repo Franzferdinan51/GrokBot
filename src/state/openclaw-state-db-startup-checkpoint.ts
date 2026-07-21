@@ -5,13 +5,13 @@ import { runSqliteImmediateTransactionSync } from "../infra/sqlite-transaction.j
 import {
   OPENCLAW_SQLITE_BUSY_TIMEOUT_MS,
   type OpenClawStateDatabaseOptions,
-} from "./openclaw-state-db-contract.js";
+} from "./grokbot-state-db-contract.js";
 import {
   assertSupportedSchemaVersion,
   resolveDatabasePath,
-} from "./openclaw-state-db-maintenance.js";
-import { ensureOpenClawStatePermissions } from "./openclaw-state-db-permissions.js";
-import { ensureColumn } from "./openclaw-state-db-schema-helpers.js";
+} from "./grokbot-state-db-maintenance.js";
+import { ensureOpenClawStatePermissions } from "./grokbot-state-db-permissions.js";
+import { ensureColumn } from "./grokbot-state-db-schema-helpers.js";
 
 function ensureStartupMigrationCheckpointSchema(db: DatabaseSync, pathname: string): void {
   runSqliteImmediateTransactionSync(

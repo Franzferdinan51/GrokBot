@@ -1,12 +1,12 @@
 // Orchestrates security audit collection and report formatting.
 import path from "node:path";
-import { normalizeProviderId } from "@openclaw/model-catalog-core/provider-id";
-import { asNullableRecord } from "@openclaw/normalization-core/record-coerce";
+import { normalizeProviderId } from "@grokbot/model-catalog-core/provider-id";
+import { asNullableRecord } from "@grokbot/normalization-core/record-coerce";
 import {
   normalizeOptionalLowercaseString,
   normalizeOptionalString,
-} from "@openclaw/normalization-core/string-coerce";
-import { normalizeStringEntries } from "@openclaw/normalization-core/string-normalization";
+} from "@grokbot/normalization-core/string-coerce";
+import { normalizeStringEntries } from "@grokbot/normalization-core/string-normalization";
 import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from "../agents/agent-scope.js";
 import { resolveExecDefaults } from "../agents/exec-defaults.js";
 import { resolveSandboxConfigForAgent } from "../agents/sandbox/config.js";
@@ -15,7 +15,7 @@ import type { ConfigFileSnapshot, OpenClawConfig } from "../config/config.js";
 import { resolveConfigPath, resolveStateDir } from "../config/paths.js";
 import type { CliBackendConfig } from "../config/types.agent-defaults.js";
 import type { GatewayAuthConfig } from "../config/types.gateway.js";
-import type { SecurityAuditSuppression } from "../config/types.openclaw.js";
+import type { SecurityAuditSuppression } from "../config/types.grokbot.js";
 import {
   canMaterializeGatewayAuthSecretRefsWithoutExec,
   materializeGatewayAuthSecretRefs,
@@ -366,7 +366,7 @@ async function collectFilesystemFindings(params: {
         checkId: "fs.state_dir.perms_world_writable",
         severity: "critical",
         title: "State dir is world-writable",
-        detail: `${formatPermissionDetail(params.stateDir, stateDirPerms)}; other users can write into your OpenClaw state.`,
+        detail: `${formatPermissionDetail(params.stateDir, stateDirPerms)}; other users can write into your GrokBot state.`,
         remediation: formatPermissionRemediation({
           targetPath: params.stateDir,
           perms: stateDirPerms,
@@ -380,7 +380,7 @@ async function collectFilesystemFindings(params: {
         checkId: "fs.state_dir.perms_group_writable",
         severity: "warn",
         title: "State dir is group-writable",
-        detail: `${formatPermissionDetail(params.stateDir, stateDirPerms)}; group users can write into your OpenClaw state.`,
+        detail: `${formatPermissionDetail(params.stateDir, stateDirPerms)}; group users can write into your GrokBot state.`,
         remediation: formatPermissionRemediation({
           targetPath: params.stateDir,
           perms: stateDirPerms,
@@ -836,9 +836,9 @@ function collectExecRuntimeFindings(cfg: OpenClawConfig): SecurityAuditFinding[]
       checkId: "agents.claude_cli.permission_mode_overridden_by_yolo",
       severity: "warn",
       title: "Claude permission mode is ignored under YOLO exec",
-      detail: `claude-cli sets ${claudePermissionModeHits.map((hit) => `${hit.argSet}=${hit.mode}`).join(", ")}, but OpenClaw exec is YOLO for: ${yoloExecScopeIds.join(", ")}. Managed Claude live sessions use --permission-mode bypassPermissions.`,
+      detail: `claude-cli sets ${claudePermissionModeHits.map((hit) => `${hit.argSet}=${hit.mode}`).join(", ")}, but GrokBot exec is YOLO for: ${yoloExecScopeIds.join(", ")}. Managed Claude live sessions use --permission-mode bypassPermissions.`,
       remediation:
-        "Restrict OpenClaw tools.exec.security/tools.exec.ask, or remove the Claude --permission-mode override.",
+        "Restrict GrokBot tools.exec.security/tools.exec.ask, or remove the Claude --permission-mode override.",
     });
   }
 
@@ -1228,7 +1228,7 @@ async function collectAgentSkillMcpBoundaryFindings(params: {
       `\nMCP server registries visible to the gateway configuration/state:\n${sources
         .map((source) => `- ${source.label}: ${formatNamesPreview(source.names)}`)
         .join("\n")}\n` +
-      "agents.*.skills filters OpenClaw skill visibility and snapshots; it is not a shell-time authorization boundary. " +
+      "agents.*.skills filters GrokBot skill visibility and snapshots; it is not a shell-time authorization boundary. " +
       "A host exec process can run external MCP clients or read a global mcporter registry unless sandbox, filesystem, network, or MCP credential boundaries block it.",
     remediation:
       'For agents that need per-agent MCP isolation, set their exec policy to security="deny" or a tight allowlist, run them in sandbox/container/OS-user isolation where the global MCP registry is not readable, split sensitive MCP servers into a separate gateway/trust boundary, or require per-agent MCP credentials at the server layer.',

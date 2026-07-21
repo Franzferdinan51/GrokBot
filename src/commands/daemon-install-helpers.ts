@@ -454,7 +454,7 @@ function mergeServicePath(
 }
 
 // Operator opt-in env vars that should survive service regeneration even though
-// they share the OPENCLAW_ prefix that is otherwise stripped from preserved
+// they share the GROKBOT_ prefix that is otherwise stripped from preserved
 // environments. These represent intentional, user-placed configuration on the
 // service definition that the install/repair flow should not silently revert.
 const PRESERVED_OPENCLAW_OPERATOR_OPT_IN_ENV_KEYS = new Set([
@@ -481,7 +481,7 @@ function collectPreservedExistingServiceEnvVars(
       upper === "HOME" ||
       upper === "PATH" ||
       upper === "TMPDIR" ||
-      (upper.startsWith("OPENCLAW_") && !PRESERVED_OPENCLAW_OPERATOR_OPT_IN_ENV_KEYS.has(upper))
+      (upper.startsWith("GROKBOT_") && !PRESERVED_OPENCLAW_OPERATOR_OPT_IN_ENV_KEYS.has(upper))
     ) {
       continue;
     }
@@ -747,7 +747,7 @@ export async function buildGatewayInstallPlan(params: {
     isSameServicePath(wrapperInput, resolveGatewayTaskScriptPath(params.env), platform);
   if (wrapperPointsAtWindowsTaskScript) {
     params.warn?.(
-      `Ignoring ${OPENCLAW_WRAPPER_ENV_KEY} because it points to the Windows task script; using the OpenClaw gateway entrypoint directly to avoid a recursive gateway.cmd wrapper.`,
+      `Ignoring ${OPENCLAW_WRAPPER_ENV_KEY} because it points to the Windows task script; using the GrokBot gateway entrypoint directly to avoid a recursive gateway.cmd wrapper.`,
     );
   }
   const wrapperPath = wrapperPointsAtWindowsTaskScript
@@ -846,6 +846,6 @@ function omitEnvKey(
 export function gatewayInstallErrorHint(platform = process.platform): string {
   return platform === "win32"
     ? "Tip: native Windows now falls back to a per-user Startup-folder login item when Scheduled Task creation is denied; if install still fails, rerun from an elevated PowerShell or skip service install."
-    : `Tip: rerun \`${formatCliCommand("openclaw gateway install")}\` after fixing the error.`;
+    : `Tip: rerun \`${formatCliCommand("grokbot gateway install")}\` after fixing the error.`;
 }
 /* oxlint-disable max-lines -- TODO: split this grandfathered oversized file. */

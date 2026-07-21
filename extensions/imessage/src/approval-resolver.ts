@@ -2,10 +2,10 @@
 import {
   resolveApprovalOverGateway,
   type ApprovalResolveResult,
-} from "openclaw/plugin-sdk/approval-gateway-runtime";
-import type { ExecApprovalReplyDecision } from "openclaw/plugin-sdk/approval-reply-runtime";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { isApprovalNotFoundError } from "openclaw/plugin-sdk/error-runtime";
+} from "grokbot/plugin-sdk/approval-gateway-runtime";
+import type { ExecApprovalReplyDecision } from "grokbot/plugin-sdk/approval-reply-runtime";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { isApprovalNotFoundError } from "grokbot/plugin-sdk/error-runtime";
 
 export { isApprovalNotFoundError };
 

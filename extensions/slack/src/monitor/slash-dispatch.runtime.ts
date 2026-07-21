@@ -2,28 +2,28 @@
 import {
   recordInboundSessionMetaSafe as recordInboundSessionMetaSafeImpl,
   resolveConversationLabel as resolveConversationLabelImpl,
-} from "openclaw/plugin-sdk/conversation-runtime";
-import { resolveMarkdownTableMode as resolveMarkdownTableModeImpl } from "openclaw/plugin-sdk/markdown-table-runtime";
+} from "grokbot/plugin-sdk/conversation-runtime";
+import { resolveMarkdownTableMode as resolveMarkdownTableModeImpl } from "grokbot/plugin-sdk/markdown-table-runtime";
 import {
   dispatchReplyWithDispatcher as dispatchReplyWithDispatcherImpl,
   finalizeInboundContext as finalizeInboundContextImpl,
   resolveChunkMode as resolveChunkModeImpl,
-} from "openclaw/plugin-sdk/reply-runtime";
-import { resolveAgentRoute as resolveAgentRouteImpl } from "openclaw/plugin-sdk/routing";
+} from "grokbot/plugin-sdk/reply-runtime";
+import { resolveAgentRoute as resolveAgentRouteImpl } from "grokbot/plugin-sdk/routing";
 import { deliverSlackSlashReplies as deliverSlackSlashRepliesImpl } from "./replies.js";
 
-type ResolveChunkMode = typeof import("openclaw/plugin-sdk/reply-runtime").resolveChunkMode;
+type ResolveChunkMode = typeof import("grokbot/plugin-sdk/reply-runtime").resolveChunkMode;
 type FinalizeInboundContext =
-  typeof import("openclaw/plugin-sdk/reply-runtime").finalizeInboundContext;
+  typeof import("grokbot/plugin-sdk/reply-runtime").finalizeInboundContext;
 type DispatchReplyWithDispatcher =
-  typeof import("openclaw/plugin-sdk/reply-runtime").dispatchReplyWithDispatcher;
+  typeof import("grokbot/plugin-sdk/reply-runtime").dispatchReplyWithDispatcher;
 type ResolveConversationLabel =
-  typeof import("openclaw/plugin-sdk/conversation-runtime").resolveConversationLabel;
+  typeof import("grokbot/plugin-sdk/conversation-runtime").resolveConversationLabel;
 type RecordInboundSessionMetaSafe =
-  typeof import("openclaw/plugin-sdk/conversation-runtime").recordInboundSessionMetaSafe;
+  typeof import("grokbot/plugin-sdk/conversation-runtime").recordInboundSessionMetaSafe;
 type ResolveMarkdownTableMode =
-  typeof import("openclaw/plugin-sdk/markdown-table-runtime").resolveMarkdownTableMode;
-type ResolveAgentRoute = typeof import("openclaw/plugin-sdk/routing").resolveAgentRoute;
+  typeof import("grokbot/plugin-sdk/markdown-table-runtime").resolveMarkdownTableMode;
+type ResolveAgentRoute = typeof import("grokbot/plugin-sdk/routing").resolveAgentRoute;
 type DeliverSlackSlashReplies = typeof import("./replies.js").deliverSlackSlashReplies;
 
 export function resolveChunkMode(

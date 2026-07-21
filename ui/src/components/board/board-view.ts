@@ -23,7 +23,7 @@ import type {
   BoardViewWidget,
   BoardWidgetFrameUrl,
 } from "../../lib/board/view-types.ts";
-import { OpenClawLightDomElement } from "../../lit/openclaw-element.ts";
+import { OpenClawLightDomElement } from "../../lit/grokbot-element.ts";
 import "../../styles/board.css";
 import "../web-awesome-tabs.ts";
 import "../web-awesome.ts";
@@ -271,7 +271,7 @@ class OpenClawBoardView extends OpenClawLightDomElement {
         .elementFromPoint(event.clientX, event.clientY)
         ?.closest<HTMLElement>("[data-board-tab-id]");
       const candidateTabId =
-        tabTarget?.closest("openclaw-board-view") === this
+        tabTarget?.closest("grokbot-board-view") === this
           ? (tabTarget.dataset.boardTabId ?? "")
           : "";
       const candidateIsValid =
@@ -428,7 +428,7 @@ class OpenClawBoardView extends OpenClawLightDomElement {
     }
     this.focusName = target.name;
     void this.updateComplete.then(() => {
-      const cell = [...this.querySelectorAll("openclaw-board-widget-cell")].find(
+      const cell = [...this.querySelectorAll("grokbot-board-widget-cell")].find(
         (entry) => entry.widget?.name === target.name,
       );
       cell?.querySelector<HTMLElement>(".board-widget")?.focus();
@@ -571,7 +571,7 @@ class OpenClawBoardView extends OpenClawLightDomElement {
               return nothing;
             }
             return html`
-              <openclaw-board-widget-cell
+              <grokbot-board-widget-cell
                 .widget=${widget}
                 .rect=${rect}
                 .tabs=${tabs}
@@ -586,7 +586,7 @@ class OpenClawBoardView extends OpenClawLightDomElement {
                 .busy=${this.mutationPending}
                 .canMutate=${this.canMutate}
                 .canGrant=${this.canGrant}
-              ></openclaw-board-widget-cell>
+              ></grokbot-board-widget-cell>
             `;
           },
         )}
@@ -627,12 +627,12 @@ class OpenClawBoardView extends OpenClawLightDomElement {
   }
 }
 
-if (!customElements.get("openclaw-board-view")) {
-  customElements.define("openclaw-board-view", OpenClawBoardView);
+if (!customElements.get("grokbot-board-view")) {
+  customElements.define("grokbot-board-view", OpenClawBoardView);
 }
 
 declare global {
   interface HTMLElementTagNameMap {
-    "openclaw-board-view": OpenClawBoardView;
+    "grokbot-board-view": OpenClawBoardView;
   }
 }

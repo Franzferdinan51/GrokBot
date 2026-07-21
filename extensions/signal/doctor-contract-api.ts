@@ -2,9 +2,9 @@
 import type {
   ChannelDoctorConfigMutation,
   ChannelDoctorLegacyConfigRule,
-} from "openclaw/plugin-sdk/channel-contract";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { defineChannelAliasMigration } from "openclaw/plugin-sdk/runtime-doctor";
+} from "grokbot/plugin-sdk/channel-contract";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { defineChannelAliasMigration } from "grokbot/plugin-sdk/runtime-doctor";
 
 // Signal's nested streaming schema is delivery-only ({chunkMode, block}); it
 // has no preview mode, so only the delivery flat aliases are legal legacy

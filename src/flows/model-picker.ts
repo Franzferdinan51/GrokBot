@@ -1,6 +1,6 @@
 // Model picker flow lets users select provider models for config defaults.
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
-import { sortUniqueStrings } from "@openclaw/normalization-core/string-normalization";
+import { normalizeOptionalString } from "@grokbot/normalization-core/string-coerce";
+import { sortUniqueStrings } from "@grokbot/normalization-core/string-normalization";
 import { resolveDefaultAgentDir } from "../agents/agent-scope.js";
 import { DEFAULT_MODEL, DEFAULT_PROVIDER } from "../agents/defaults.js";
 import { resolveAgentHarnessPolicy } from "../agents/harness/policy.js";
@@ -38,7 +38,7 @@ import {
   resolveAgentModelPrimaryValue,
 } from "../config/model-input.js";
 import { computeModelPolicyAllowlist } from "../config/model-policy-allowlist-migration.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { resolveOwningPluginIdsForProviderRef } from "../plugins/providers.js";
 import type { ProviderPlugin } from "../plugins/types.js";
 import type { RuntimeEnv } from "../runtime.js";
@@ -59,7 +59,7 @@ type ModelRouteRuntimeResolver = (params: {
   modelId: string;
   api?: string | null;
   baseUrl?: unknown;
-}) => "codex" | "openclaw" | undefined;
+}) => "codex" | "grokbot" | undefined;
 
 // Internal router models are valid defaults during auth/setup but not manual API targets.
 const HIDDEN_ROUTER_MODELS = new Set(["openrouter/auto"]);
@@ -336,7 +336,7 @@ function createModelRouteRuntimeResolver(params: {
   config: OpenClawConfig;
   env?: NodeJS.ProcessEnv;
 }): ModelRouteRuntimeResolver {
-  const cache = new Map<string, "codex" | "openclaw" | undefined>();
+  const cache = new Map<string, "codex" | "grokbot" | undefined>();
   return (route) => {
     const baseUrlKey =
       typeof route.baseUrl === "string"
@@ -357,7 +357,7 @@ function createModelRouteRuntimeResolver(params: {
       env: params.env,
     });
     const runtime =
-      policy.runtime === "codex" ? "codex" : policy.runtime === "openclaw" ? "openclaw" : undefined;
+      policy.runtime === "codex" ? "codex" : policy.runtime === "grokbot" ? "grokbot" : undefined;
     cache.set(key, runtime);
     return runtime;
   };
@@ -381,8 +381,8 @@ function resolveModelRouteHint(params: {
   });
   return runtime === "codex"
     ? "Codex runtime route"
-    : runtime === "openclaw"
-      ? "OpenClaw runtime route"
+    : runtime === "grokbot"
+      ? "GrokBot runtime route"
       : undefined;
 }
 

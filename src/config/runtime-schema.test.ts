@@ -52,7 +52,7 @@ vi.mock("../plugins/current-plugin-metadata-snapshot.js", () => ({
 
 function makeSnapshot(params: { valid: boolean; config?: OpenClawConfig }): ConfigFileSnapshot {
   return {
-    path: "/tmp/openclaw.json",
+    path: "/tmp/grokbot.json",
     exists: true,
     raw: "{}",
     parsed: params.config ?? {},

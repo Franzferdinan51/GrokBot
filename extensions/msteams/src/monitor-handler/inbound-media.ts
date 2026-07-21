@@ -2,7 +2,7 @@
 import {
   formatInboundMediaUnavailableText,
   type MediaPlaceholderTextFact,
-} from "openclaw/plugin-sdk/channel-inbound";
+} from "grokbot/plugin-sdk/channel-inbound";
 import {
   buildMSTeamsGraphMessageUrl,
   downloadMSTeamsAttachments,

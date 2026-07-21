@@ -1,6 +1,6 @@
-import type { OpenClawPluginApi } from "openclaw/plugin-sdk/core";
-import { registerSessionDiscussionProvider } from "openclaw/plugin-sdk/session-discussion";
-import { createSessionVisibilityChecker } from "openclaw/plugin-sdk/session-visibility";
+import type { OpenClawPluginApi } from "grokbot/plugin-sdk/core";
+import { registerSessionDiscussionProvider } from "grokbot/plugin-sdk/session-discussion";
+import { createSessionVisibilityChecker } from "grokbot/plugin-sdk/session-visibility";
 import { ClickClackDiscussionService } from "./service.js";
 import {
   enforceClickClackDiscussionToolTarget,

@@ -5,7 +5,7 @@ import path from "node:path";
 import {
   closeOpenClawStateDatabaseForTest,
   createChannelIngressQueueForTests,
-} from "openclaw/plugin-sdk/plugin-state-test-runtime";
+} from "grokbot/plugin-sdk/plugin-state-test-runtime";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { createSignedCreateMessageRequest } from "./monitor.test-fixtures.js";
 import { migrateNextcloudTalkLegacyReplayState } from "./webhook-spool-state.js";
@@ -43,7 +43,7 @@ function startSpool(queue: NextcloudTalkIngressQueue, deliver: NextcloudTalkIngr
 }
 
 async function withQueue<T>(fn: (queue: NextcloudTalkIngressQueue) => Promise<T>): Promise<T> {
-  const created = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-nextcloud-ingress-"));
+  const created = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-nextcloud-ingress-"));
   const stateDir = await fs.realpath(created);
   const queue = createChannelIngressQueueForTests<NextcloudTalkIngressPayload>({
     channelId: "nextcloud-talk",

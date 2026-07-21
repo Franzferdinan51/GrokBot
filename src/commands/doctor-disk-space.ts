@@ -1,6 +1,6 @@
-// Doctor contribution for low disk space around the OpenClaw state directory.
+// Doctor contribution for low disk space around the GrokBot state directory.
 import os from "node:os";
-import { expectDefined, formatByteSize } from "@openclaw/normalization-core";
+import { expectDefined, formatByteSize } from "@grokbot/normalization-core";
 import { note } from "../../packages/terminal-core/src/note.js";
 import type { OpenClawConfig } from "../config/config.js";
 import { resolveStateDir } from "../config/paths.js";
@@ -130,7 +130,7 @@ export function collectDiskSpaceHealthFindings(
  * Doctor health contribution: check free disk space on the partition that
  * holds the state directory and warn when it drops below safe thresholds.
  *
- * This catches a common operational failure mode where OpenClaw silently
+ * This catches a common operational failure mode where GrokBot silently
  * fails to write config, sessions, or logs because the disk is full.
  *
  * Disk-space probing (statfs + nearest-existing-ancestor resolution) is

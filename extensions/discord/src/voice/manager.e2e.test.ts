@@ -1,11 +1,11 @@
 // Discord tests cover manager plugin behavior.
 import { PassThrough, type Readable } from "node:stream";
-import { expectDefined } from "@openclaw/normalization-core";
-import { createOpenClawCodingTools } from "openclaw/plugin-sdk/agent-harness";
+import { expectDefined } from "@grokbot/normalization-core";
+import { createOpenClawCodingTools } from "grokbot/plugin-sdk/agent-harness";
 import type {
   RealtimeVoiceAgentControlResult,
   RealtimeVoiceSessionHarness,
-} from "openclaw/plugin-sdk/realtime-voice";
+} from "grokbot/plugin-sdk/realtime-voice";
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { ChannelType } from "../internal/discord.js";
 import { createVoiceCaptureState } from "./capture-state.js";
@@ -177,7 +177,7 @@ const {
         active: false,
         queued: false,
         reason: "no_active_run",
-        message: "There is no active OpenClaw run to steer.",
+        message: "There is no active GrokBot run to steer.",
         speak: true,
         show: true,
         suppress: false,
@@ -212,9 +212,9 @@ vi.mock("./sdk-runtime.js", () => ({
   }),
 }));
 
-vi.mock("openclaw/plugin-sdk/routing", async () => {
-  const actual = await vi.importActual<typeof import("openclaw/plugin-sdk/routing")>(
-    "openclaw/plugin-sdk/routing",
+vi.mock("grokbot/plugin-sdk/routing", async () => {
+  const actual = await vi.importActual<typeof import("grokbot/plugin-sdk/routing")>(
+    "grokbot/plugin-sdk/routing",
   );
   return {
     ...actual,
@@ -222,30 +222,30 @@ vi.mock("openclaw/plugin-sdk/routing", async () => {
   };
 });
 
-vi.mock("openclaw/plugin-sdk/agent-runtime", async () => {
-  const actual = await vi.importActual<typeof import("openclaw/plugin-sdk/agent-runtime")>(
-    "openclaw/plugin-sdk/agent-runtime",
+vi.mock("grokbot/plugin-sdk/agent-runtime", async () => {
+  const actual = await vi.importActual<typeof import("grokbot/plugin-sdk/agent-runtime")>(
+    "grokbot/plugin-sdk/agent-runtime",
   );
   return {
     ...actual,
     agentCommandFromIngress: agentCommandMock,
-    resolveAgentDir: vi.fn(() => "/tmp/openclaw-agent"),
+    resolveAgentDir: vi.fn(() => "/tmp/grokbot-agent"),
   };
 });
 
-vi.mock("openclaw/plugin-sdk/realtime-bootstrap-context", async () => {
+vi.mock("grokbot/plugin-sdk/realtime-bootstrap-context", async () => {
   const actual = await vi.importActual<
-    typeof import("openclaw/plugin-sdk/realtime-bootstrap-context")
-  >("openclaw/plugin-sdk/realtime-bootstrap-context");
+    typeof import("grokbot/plugin-sdk/realtime-bootstrap-context")
+  >("grokbot/plugin-sdk/realtime-bootstrap-context");
   return {
     ...actual,
     resolveRealtimeBootstrapContextInstructions: resolveRealtimeBootstrapContextInstructionsMock,
   };
 });
 
-vi.mock("openclaw/plugin-sdk/runtime-env", async () => {
-  const actual = await vi.importActual<typeof import("openclaw/plugin-sdk/runtime-env")>(
-    "openclaw/plugin-sdk/runtime-env",
+vi.mock("grokbot/plugin-sdk/runtime-env", async () => {
+  const actual = await vi.importActual<typeof import("grokbot/plugin-sdk/runtime-env")>(
+    "grokbot/plugin-sdk/runtime-env",
   );
   return {
     ...actual,
@@ -253,13 +253,13 @@ vi.mock("openclaw/plugin-sdk/runtime-env", async () => {
   };
 });
 
-vi.mock("openclaw/plugin-sdk/system-event-runtime", () => ({
+vi.mock("grokbot/plugin-sdk/system-event-runtime", () => ({
   enqueueSystemEvent: enqueueSystemEventMock,
 }));
 
-vi.mock("openclaw/plugin-sdk/realtime-voice", async () => {
-  const actual = await vi.importActual<typeof import("openclaw/plugin-sdk/realtime-voice")>(
-    "openclaw/plugin-sdk/realtime-voice",
+vi.mock("grokbot/plugin-sdk/realtime-voice", async () => {
+  const actual = await vi.importActual<typeof import("grokbot/plugin-sdk/realtime-voice")>(
+    "grokbot/plugin-sdk/realtime-voice",
   );
   return {
     ...actual,
@@ -435,7 +435,7 @@ describe("DiscordVoiceManager", () => {
       active: false,
       queued: false,
       reason: "no_active_run",
-      message: "There is no active OpenClaw run to steer.",
+      message: "There is no active GrokBot run to steer.",
       speak: true,
       show: true,
       suppress: false,
@@ -559,8 +559,8 @@ describe("DiscordVoiceManager", () => {
       config: {},
       senderIsOwner: args.senderIsOwner,
       messageProvider: "discord",
-      workspaceDir: "/tmp/openclaw-discord-voice-tools",
-      agentDir: "/tmp/openclaw-discord-voice-agent",
+      workspaceDir: "/tmp/grokbot-discord-voice-tools",
+      agentDir: "/tmp/grokbot-discord-voice-agent",
     }).map((tool) => tool.name);
   };
 
@@ -1089,7 +1089,7 @@ describe("DiscordVoiceManager", () => {
 
     await manager.join({ guildId: "g1", channelId: "1001" });
 
-    expect(getVoiceConnectionMock).toHaveBeenCalledWith("g1", "openclaw:default");
+    expect(getVoiceConnectionMock).toHaveBeenCalledWith("g1", "grokbot:default");
     expect(staleConnection.destroy).toHaveBeenCalledTimes(1);
     expectConnectedStatus(manager, "1001");
   });
@@ -1101,15 +1101,15 @@ describe("DiscordVoiceManager", () => {
     await firstManager.join({ guildId: "g1", channelId: "1001" });
     await secondManager.join({ guildId: "g1", channelId: "1002" });
 
-    expect(getVoiceConnectionMock).toHaveBeenNthCalledWith(1, "g1", "openclaw:first");
-    expect(getVoiceConnectionMock).toHaveBeenNthCalledWith(2, "g1", "openclaw:second");
+    expect(getVoiceConnectionMock).toHaveBeenNthCalledWith(1, "g1", "grokbot:first");
+    expect(getVoiceConnectionMock).toHaveBeenNthCalledWith(2, "g1", "grokbot:second");
     expect(joinVoiceChannelMock).toHaveBeenNthCalledWith(
       1,
-      expect.objectContaining({ group: "openclaw:first" }),
+      expect.objectContaining({ group: "grokbot:first" }),
     );
     expect(joinVoiceChannelMock).toHaveBeenNthCalledWith(
       2,
-      expect.objectContaining({ group: "openclaw:second" }),
+      expect.objectContaining({ group: "grokbot:second" }),
     );
   });
 
@@ -2929,7 +2929,7 @@ describe("DiscordVoiceManager", () => {
       | undefined;
     expect(bridgeParams?.cfg).toBe(cfg);
     expect(bridgeParams?.autoRespondToAudio).toBe(false);
-    expect(bridgeParams?.instructions).toContain("same OpenClaw agent");
+    expect(bridgeParams?.instructions).toContain("same GrokBot agent");
     expect(bridgeParams?.instructions).toContain("short natural backchannel");
     expect(bridgeParams?.tools?.map((tool) => tool.name)).toContain("openclaw_agent_consult");
     expect(bridgeParams?.tools?.map((tool) => tool.name)).toContain("openclaw_agent_control");
@@ -3209,7 +3209,7 @@ describe("DiscordVoiceManager", () => {
         name: "openclaw_agent_consult",
         args: {
           question: [
-            "Speak this exact OpenClaw answer to the Discord voice channel, without adding, removing, or rephrasing words.",
+            "Speak this exact GrokBot answer to the Discord voice channel, without adding, removing, or rephrasing words.",
             'Answer: "direct internal answer"',
           ].join("\n"),
         },
@@ -3603,7 +3603,7 @@ describe("DiscordVoiceManager", () => {
       sessionId: "embedded-active",
       active: true,
       aborted: true,
-      message: "Cancelled the active OpenClaw run.",
+      message: "Cancelled the active GrokBot run.",
       speak: true,
       show: true,
       suppress: false,
@@ -3641,16 +3641,16 @@ describe("DiscordVoiceManager", () => {
         force: true,
       }),
     );
-    await vi.waitFor(() => expectUserMessageIncludes("Cancelled the active OpenClaw run."));
+    await vi.waitFor(() => expectUserMessageIncludes("Cancelled the active GrokBot run."));
     expect(textToSpeechMock).not.toHaveBeenCalledWith(
-      expect.objectContaining({ text: "Cancelled the active OpenClaw run." }),
+      expect.objectContaining({ text: "Cancelled the active GrokBot run." }),
     );
 
     const stopCallsAfterControl = player.stop.mock.calls.length;
-    bridgeParams?.onTranscript?.("assistant", "Cancelled the active OpenClaw run.", true);
+    bridgeParams?.onTranscript?.("assistant", "Cancelled the active GrokBot run.", true);
     expect(player.stop).toHaveBeenCalledTimes(stopCallsAfterControl);
     bridgeParams?.audioSink?.sendAudio(Buffer.alloc(24_000));
-    bridgeParams?.onTranscript?.("assistant", "Cancelled the active OpenClaw run.", true);
+    bridgeParams?.onTranscript?.("assistant", "Cancelled the active GrokBot run.", true);
     expect(player.stop).toHaveBeenCalledTimes(stopCallsAfterControl + 1);
   });
 
@@ -4052,8 +4052,8 @@ describe("DiscordVoiceManager", () => {
     expectUserMessageIncludes("wake answer");
   });
 
-  it("accepts OpenClaw as a default wake name before realtime agent-proxy consults", async () => {
-    agentCommandMock.mockResolvedValueOnce({ payloads: [{ text: "openclaw wake answer" }] });
+  it("accepts GrokBot as a default wake name before realtime agent-proxy consults", async () => {
+    agentCommandMock.mockResolvedValueOnce({ payloads: [{ text: "grokbot wake answer" }] });
     const manager = createManager(
       {
         groupPolicy: "open",
@@ -4091,15 +4091,15 @@ describe("DiscordVoiceManager", () => {
       "u-owner",
     );
     ownerTurn?.sendInputAudio(Buffer.alloc(8));
-    await emitFinalRealtimeUserTranscript(bridgeParams, "OpenClaw, how is it going");
+    await emitFinalRealtimeUserTranscript(bridgeParams, "GrokBot, how is it going");
 
     expect(controlRealtimeVoiceAgentRunMock).toHaveBeenCalledWith({
       sessionKey: "discord:g1:c1",
       text: "how is it going",
     });
     expect(lastAgentCommandArgs().message).toContain("how is it going");
-    expect(lastAgentCommandArgs().message).not.toContain("OpenClaw");
-    expectUserMessageIncludes("openclaw wake answer");
+    expect(lastAgentCommandArgs().message).not.toContain("GrokBot");
+    expectUserMessageIncludes("grokbot wake answer");
   });
 
   it("ignores default agent wake names longer than two words", async () => {
@@ -4150,10 +4150,10 @@ describe("DiscordVoiceManager", () => {
       "u-owner",
     );
     fallbackTurn?.sendInputAudio(Buffer.alloc(8));
-    await emitFinalRealtimeUserTranscript(bridgeParams, "OpenClaw, fallback still wakes");
+    await emitFinalRealtimeUserTranscript(bridgeParams, "GrokBot, fallback still wakes");
 
     expect(lastAgentCommandArgs().message).toContain("fallback still wakes");
-    expect(lastAgentCommandArgs().message).not.toContain("OpenClaw");
+    expect(lastAgentCommandArgs().message).not.toContain("GrokBot");
     expectUserMessageIncludes("fallback wake answer");
   });
 
@@ -4484,7 +4484,7 @@ describe("DiscordVoiceManager", () => {
       "u-owner",
     );
     fallbackTurn?.sendInputAudio(Buffer.alloc(8));
-    await emitFinalRealtimeUserTranscript(bridgeParams, "OpenClaw, ship it");
+    await emitFinalRealtimeUserTranscript(bridgeParams, "GrokBot, ship it");
 
     expect(agentCommandMock).not.toHaveBeenCalled();
   });
@@ -5060,7 +5060,7 @@ describe("DiscordVoiceManager", () => {
       "call-late",
       {
         status: "already_delivered",
-        message: "OpenClaw already delivered this answer to Discord voice. Do not repeat it.",
+        message: "GrokBot already delivered this answer to Discord voice. Do not repeat it.",
       },
       { suppressResponse: true },
     );
@@ -5083,7 +5083,7 @@ describe("DiscordVoiceManager", () => {
         "call-late-unsuppressed",
         {
           status: "already_delivered",
-          message: "OpenClaw already delivered this answer to Discord voice. Do not repeat it.",
+          message: "GrokBot already delivered this answer to Discord voice. Do not repeat it.",
         },
       ]);
     });
@@ -5141,7 +5141,7 @@ describe("DiscordVoiceManager", () => {
       "call-cancelled",
       {
         status: "cancelled",
-        message: "OpenClaw cancelled this consult before completion. Do not restart it.",
+        message: "GrokBot cancelled this consult before completion. Do not restart it.",
       },
       { suppressResponse: true },
     );
@@ -5305,7 +5305,7 @@ describe("DiscordVoiceManager", () => {
         "call-late",
         {
           status: "already_delivered",
-          message: "OpenClaw already delivered this answer to Discord voice. Do not repeat it.",
+          message: "GrokBot already delivered this answer to Discord voice. Do not repeat it.",
         },
         { suppressResponse: true },
       ),
@@ -5475,7 +5475,7 @@ describe("DiscordVoiceManager", () => {
       "call-new",
       {
         status: "already_delivered",
-        message: "OpenClaw already delivered this answer to Discord voice. Do not repeat it.",
+        message: "GrokBot already delivered this answer to Discord voice. Do not repeat it.",
       },
       { suppressResponse: true },
     );
@@ -5622,7 +5622,7 @@ describe("DiscordVoiceManager", () => {
       sessionKey: "agent:main:discord:channel:1001",
     });
     resolveRealtimeBootstrapContextInstructionsMock.mockResolvedValue(
-      "OpenClaw realtime voice profile context:\n\n### IDENTITY.md\nName: Wilfred",
+      "GrokBot realtime voice profile context:\n\n### IDENTITY.md\nName: Wilfred",
     );
     const manager = createManager({
       groupPolicy: "open",
@@ -5650,7 +5650,7 @@ describe("DiscordVoiceManager", () => {
           instructions?: string;
         }
       | undefined;
-    expect(bridgeParams?.instructions).toContain("OpenClaw realtime voice profile context");
+    expect(bridgeParams?.instructions).toContain("GrokBot realtime voice profile context");
     expect(bridgeParams?.instructions).toContain("Name: Wilfred");
     expect(bridgeParams?.instructions).toContain("short natural backchannel");
     expect(bridgeParams?.instructions).toContain("Call openclaw_agent_consult");
@@ -6350,7 +6350,7 @@ describe("DiscordVoiceManager", () => {
     expect(toolNames).toContain("exec");
     expect(toolNames).not.toContain("gateway");
     expect(toolNames).not.toContain("nodes");
-    expect(toolNames).not.toContain("openclaw");
+    expect(toolNames).not.toContain("grokbot");
   });
 
   it("admits account wildcard voice speakers without granting owner authority", async () => {
@@ -6424,7 +6424,7 @@ describe("DiscordVoiceManager", () => {
       expect.anything(),
     );
     expect(lastAgentCommandToolNames()).toEqual(
-      expect.arrayContaining(["gateway", "nodes", "openclaw"]),
+      expect.arrayContaining(["gateway", "nodes", "grokbot"]),
     );
   });
 

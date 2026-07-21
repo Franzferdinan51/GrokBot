@@ -12,7 +12,7 @@ vi.mock("../auto-reply/reply/conversation-label-generator.js", () => ({
 vi.mock("../config/sessions/session-accessor.js", () => ({ updateSessionEntry }));
 
 import type { SessionEntry } from "../config/sessions/types.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { maybeGenerateDashboardSessionTitle } from "./dashboard-session-title.js";
 
 const cfg = {
@@ -30,7 +30,7 @@ function titleParams(entry: SessionEntry | undefined = baseEntry) {
     entry,
     sessionId: "session-1",
     sessionKey: "agent:main:dashboard:chat-1",
-    storePath: "/tmp/openclaw/sessions.json",
+    storePath: "/tmp/grokbot/sessions.json",
     userMessage: "Help me plan the release",
   };
 }
@@ -76,7 +76,7 @@ describe("maybeGenerateDashboardSessionTitle", () => {
       {
         agentId: "main",
         sessionKey: "agent:main:dashboard:chat-1",
-        storePath: "/tmp/openclaw/sessions.json",
+        storePath: "/tmp/grokbot/sessions.json",
       },
       expect.any(Function),
       { requireWriteSuccess: true },

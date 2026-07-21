@@ -2,7 +2,7 @@
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { SessionManager } from "../agents/sessions/session-manager.js";
 
@@ -98,7 +98,7 @@ describe("doctor session transcript repair", () => {
     withDoctorSqliteMaintenanceLock
       .mockReset()
       .mockImplementation(async (params: { run: () => unknown }) => await params.run());
-    root = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-doctor-transcripts-"));
+    root = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-doctor-transcripts-"));
   });
 
   afterEach(async () => {
@@ -205,7 +205,7 @@ describe("doctor session transcript repair", () => {
     const [message, title] = requireFirstMockCall(note, "doctor note") as [string, string];
     expect(title).toBe("Session transcripts");
     expect(message).toContain("legacy state");
-    expect(message).toContain('Run "openclaw doctor --fix"');
+    expect(message).toContain('Run "grokbot doctor --fix"');
     expect(countNonEmptyLines(await fs.readFile(filePath, "utf-8"))).toBe(3);
   });
 
@@ -236,7 +236,7 @@ describe("doctor session transcript repair", () => {
       checkId: "core/doctor/session-transcripts",
       severity: "info",
       path: filePath,
-      fixHint: expect.stringContaining("openclaw doctor --fix"),
+      fixHint: expect.stringContaining("grokbot doctor --fix"),
     });
     expect(sessionTranscriptIssueToRepairEffect(issue)).toEqual({
       kind: "file",
@@ -355,7 +355,7 @@ describe("doctor session transcript repair", () => {
       "Session SQLite",
     );
     expect(note).toHaveBeenCalledWith(
-      expect.stringContaining('run "openclaw doctor --fix" for session-store maintenance'),
+      expect.stringContaining('run "grokbot doctor --fix" for session-store maintenance'),
       "Session SQLite",
     );
   });

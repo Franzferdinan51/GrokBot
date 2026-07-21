@@ -1,5 +1,5 @@
 #!/usr/bin/env -S node --import tsx
-// Openclaw Npm Release Check script supports OpenClaw repository automation.
+// Openclaw Npm Release Check script supports GrokBot repository automation.
 
 import { execFileSync } from "node:child_process";
 import { readFileSync } from "node:fs";
@@ -62,9 +62,9 @@ type NpmDistTagMirrorAuth = {
   hasAuth: boolean;
   source: "node-auth-token" | "npm-token" | "none";
 };
-const EXPECTED_REPOSITORY_URL = "https://github.com/openclaw/openclaw";
+const EXPECTED_REPOSITORY_URL = "https://github.com/grokbot/grokbot";
 const OPTIONAL_LOCAL_EMBEDDING_RUNTIME_PACKAGE = "node-llama-cpp";
-const FS_SAFE_PACKAGE = "@openclaw/fs-safe";
+const FS_SAFE_PACKAGE = "@grokbot/fs-safe";
 const REQUIRED_PACKED_PATHS = [
   "npm-shrinkwrap.json",
   PACKAGE_DIST_INVENTORY_RELATIVE_PATH,
@@ -354,8 +354,8 @@ export function collectReleasePackageMetadataErrors(pkg: PackageJson): string[] 
   );
   const errors: string[] = [];
 
-  if (pkg.name !== "openclaw") {
-    errors.push(`package.json name must be "openclaw"; found "${pkg.name ?? ""}".`);
+  if (pkg.name !== "grokbot") {
+    errors.push(`package.json name must be "grokbot"; found "${pkg.name ?? ""}".`);
   }
   if (!pkg.description?.trim()) {
     errors.push("package.json description must be non-empty.");
@@ -370,9 +370,9 @@ export function collectReleasePackageMetadataErrors(pkg: PackageJson): string[] 
       }.`,
     );
   }
-  if (pkg.bin?.openclaw !== "openclaw.mjs") {
+  if (pkg.bin?.grokbot !== "grokbot.mjs") {
     errors.push(
-      `package.json bin.openclaw must be "openclaw.mjs"; found "${pkg.bin?.openclaw ?? ""}".`,
+      `package.json bin.grokbot must be "grokbot.mjs"; found "${pkg.bin?.grokbot ?? ""}".`,
     );
   }
   if (pkg.dependencies?.[OPTIONAL_LOCAL_EMBEDDING_RUNTIME_PACKAGE]) {
@@ -776,7 +776,7 @@ async function main(): Promise<number> {
 
   if (errors.length > 0) {
     for (const error of errors) {
-      console.error(`openclaw-npm-release-check: ${error}`);
+      console.error(`grokbot-npm-release-check: ${error}`);
     }
     return 1;
   }
@@ -784,7 +784,7 @@ async function main(): Promise<number> {
   const parsedVersion = parseReleaseVersion(pkg.version ?? "");
   const channel = parsedVersion?.channel ?? "unknown";
   console.log(
-    `openclaw-npm-release-check: validated ${channel} release ${pkg.version} (monthly patch version${skipPackValidation ? "; metadata-only" : ""}).`,
+    `grokbot-npm-release-check: validated ${channel} release ${pkg.version} (monthly patch version${skipPackValidation ? "; metadata-only" : ""}).`,
   );
   return 0;
 }

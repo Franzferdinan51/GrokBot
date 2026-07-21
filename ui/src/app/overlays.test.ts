@@ -82,13 +82,13 @@ function createGatewayHarness(
     },
     emitSystemApproval(id: string, createdAtMs: number) {
       const event: GatewayEventFrame = {
-        event: "openclaw.approval.requested",
+        event: "grokbot.approval.requested",
         payload: {
           id,
           createdAtMs,
           expiresAtMs: Date.now() + 60_000,
           request: {
-            title: "OpenClaw change",
+            title: "GrokBot change",
             description: "Set gateway.port to 19001",
             command: "Set gateway.port to 19001",
             proposalHash: "a".repeat(64),
@@ -175,7 +175,7 @@ describe("Control UI refresh nudge", () => {
 });
 
 describe("application approval overlays", () => {
-  it("resolves OpenClaw changes through unified human approval", async () => {
+  it("resolves GrokBot changes through unified human approval", async () => {
     const request = vi.fn<RequestFn>(async (method) =>
       method.endsWith(".list") ? [] : { ok: true },
     );
@@ -217,7 +217,7 @@ describe("application approval overlays", () => {
     expect(execListRequests).toBe(1);
     expect(request).toHaveBeenCalledWith("exec.approval.list", {});
     expect(request).toHaveBeenCalledWith("plugin.approval.list", {});
-    expect(request).toHaveBeenCalledWith("openclaw.approval.list", {});
+    expect(request).toHaveBeenCalledWith("grokbot.approval.list", {});
 
     harness.update({ connected: false });
     expect(overlays.snapshot.approvalQueue).toEqual([]);

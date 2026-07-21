@@ -2,7 +2,7 @@
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import type { ChannelPlugin } from "../channels/plugins/types.public.js";
 import type { OpenClawConfig } from "../config/config.js";
@@ -40,7 +40,7 @@ describe("security fix", () => {
     channelPlugins?: ChannelPlugin[];
   }) => {
     const stateDir = await createStateDir(params.prefix);
-    const configPath = path.join(stateDir, "openclaw.json");
+    const configPath = path.join(stateDir, "grokbot.json");
     await fs.writeFile(configPath, `${JSON.stringify(params.cfg, null, 2)}\n`, "utf-8");
     const res = await fixSecurityFootguns({
       env: createFixEnv(stateDir, configPath),
@@ -168,7 +168,7 @@ describe("security fix", () => {
   };
 
   beforeAll(async () => {
-    fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-security-fix-suite-"));
+    fixtureRoot = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-security-fix-suite-"));
   });
 
   afterAll(async () => {
@@ -260,7 +260,7 @@ describe("security fix", () => {
     const stateDir = await createStateDir("invalid-config");
     await fs.chmod(stateDir, 0o755);
 
-    const configPath = path.join(stateDir, "openclaw.json");
+    const configPath = path.join(stateDir, "grokbot.json");
     await fs.writeFile(configPath, "{ this is not json }\n", "utf-8");
     await fs.chmod(configPath, 0o644);
 
@@ -281,7 +281,7 @@ describe("security fix", () => {
     await fs.writeFile(includePath, "{ logging: { redactSensitive: 'off' } }\n", "utf-8");
     await fs.chmod(includePath, 0o644);
 
-    const configPath = path.join(stateDir, "openclaw.json");
+    const configPath = path.join(stateDir, "grokbot.json");
     await fs.writeFile(
       configPath,
       `{ "$include": "./includes/extra.json5", channels: { whatsapp: { groupPolicy: "open" } } }\n`,
@@ -301,7 +301,7 @@ describe("security fix", () => {
 
     const agentDir = path.join(stateDir, "agents", "main", "agent");
     await fs.mkdir(agentDir, { recursive: true });
-    const authDatabasePath = path.join(agentDir, "openclaw-agent.sqlite");
+    const authDatabasePath = path.join(agentDir, "grokbot-agent.sqlite");
     await fs.writeFile(authDatabasePath, "sqlite\n", "utf-8");
     await fs.writeFile(`${authDatabasePath}-wal`, "wal\n", "utf-8");
     await fs.writeFile(`${authDatabasePath}-shm`, "shm\n", "utf-8");
@@ -350,7 +350,7 @@ describe("security fix", () => {
     "tightens only includes accepted by the config include resolver",
     async () => {
       const stateDir = await createStateDir("include-boundary");
-      const configPath = path.join(stateDir, "openclaw.json");
+      const configPath = path.join(stateDir, "grokbot.json");
       const safeIncludePath = path.join(stateDir, "safe.json5");
       const escapedIncludePath = path.join(fixtureRoot, "escaped.json5");
       await fs.writeFile(safeIncludePath, "{}\n", "utf-8");
@@ -379,7 +379,7 @@ describe("security fix", () => {
     "keeps explicitly allowed include roots in the permission target set",
     async () => {
       const stateDir = await createStateDir("include-allowed-root");
-      const configPath = path.join(stateDir, "openclaw.json");
+      const configPath = path.join(stateDir, "grokbot.json");
       const sharedDir = path.join(fixtureRoot, "shared-includes");
       const sharedIncludePath = path.join(sharedDir, "shared.json5");
       await fs.mkdir(sharedDir, { recursive: true });

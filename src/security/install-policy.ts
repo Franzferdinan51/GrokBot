@@ -1,8 +1,8 @@
 // Checks install policy constraints for package and plugin operations.
 import fs from "node:fs/promises";
 import path from "node:path";
-import { truncateUtf16Safe } from "@openclaw/normalization-core/utf16-slice";
-import type { OpenClawConfig, SecurityConfig } from "../config/types.openclaw.js";
+import { truncateUtf16Safe } from "@grokbot/normalization-core/utf16-slice";
+import type { OpenClawConfig, SecurityConfig } from "../config/types.grokbot.js";
 import { formatErrorMessage } from "../infra/errors.js";
 import { runCommandWithTimeout } from "../process/exec.js";
 import { normalizePositiveInt, normalizePositiveTimerMs } from "../secrets/shared.js";
@@ -63,7 +63,7 @@ export type InstallPolicySource = {
     | "npm"
     | "upload"
     | "workspace";
-  authority: "openclaw" | "official" | "third-party" | "unknown" | "user";
+  authority: "grokbot" | "official" | "third-party" | "unknown" | "user";
   mutable: boolean;
   network: boolean;
 };
@@ -596,7 +596,7 @@ export async function runInstallPolicy(params: {
       const { getRuntimeConfig } = await import("../config/io.js");
       config = getRuntimeConfig({ skipPluginValidation: true });
     } catch (err) {
-      return failClosed(`could not load OpenClaw config (${formatErrorMessage(err)})`);
+      return failClosed(`could not load GrokBot config (${formatErrorMessage(err)})`);
     }
   }
 

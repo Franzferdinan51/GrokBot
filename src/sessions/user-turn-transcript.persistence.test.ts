@@ -5,9 +5,9 @@ import path from "node:path";
 import {
   initializeGlobalHookRunner,
   resetGlobalHookRunner,
-} from "openclaw/plugin-sdk/hook-runtime";
-import { createMockPluginRegistry } from "openclaw/plugin-sdk/plugin-test-runtime";
-import { castAgentMessage } from "openclaw/plugin-sdk/test-fixtures";
+} from "grokbot/plugin-sdk/hook-runtime";
+import { createMockPluginRegistry } from "grokbot/plugin-sdk/plugin-test-runtime";
+import { castAgentMessage } from "grokbot/plugin-sdk/test-fixtures";
 import { afterEach, describe, expect, it } from "vitest";
 import { runAgentHarnessBeforeMessageWriteHook } from "../agents/harness/hook-helpers.js";
 import { loadTranscriptEvents } from "../config/sessions/session-accessor.js";
@@ -76,7 +76,7 @@ describe("persistUserTurnTranscript", () => {
   }
 
   it("appends a structured user turn through the shared transcript writer", async () => {
-    const dir = createTempDir("openclaw-user-turn-append-");
+    const dir = createTempDir("grokbot-user-turn-append-");
     const target = createSqliteTranscriptTarget({ dir });
     const provenance = {
       kind: "inter_session" as const,
@@ -114,7 +114,7 @@ describe("persistUserTurnTranscript", () => {
   });
 
   it("persists sender metadata as __openclaw envelope", async () => {
-    const dir = createTempDir("openclaw-user-turn-append-sender-");
+    const dir = createTempDir("grokbot-user-turn-append-sender-");
     const target = createSqliteTranscriptTarget({ dir });
 
     const appended = await persistUserTurnTranscript({
@@ -153,7 +153,7 @@ describe("persistUserTurnTranscript", () => {
   });
 
   it("omits __openclaw when no sender metadata is provided", async () => {
-    const dir = createTempDir("openclaw-user-turn-append-nosender-");
+    const dir = createTempDir("grokbot-user-turn-append-nosender-");
     const target = createSqliteTranscriptTarget({ dir });
 
     const appended = await persistUserTurnTranscript({
@@ -169,7 +169,7 @@ describe("persistUserTurnTranscript", () => {
   });
 
   it("uses inline update mode by default", async () => {
-    const dir = createTempDir("openclaw-user-turn-append-inline-");
+    const dir = createTempDir("grokbot-user-turn-append-inline-");
     const target = createSqliteTranscriptTarget({ dir });
 
     const appended = await persistUserTurnTranscript({
@@ -194,7 +194,7 @@ describe("persistUserTurnTranscript", () => {
   });
 
   it("returns the existing user turn when the idempotency key was already persisted", async () => {
-    const dir = createTempDir("openclaw-user-turn-append-idempotent-");
+    const dir = createTempDir("grokbot-user-turn-append-idempotent-");
     const target = createSqliteTranscriptTarget({ dir });
 
     const first = await persistUserTurnTranscript({
@@ -265,7 +265,7 @@ describe("persistUserTurnTranscript", () => {
         },
       ]),
     );
-    const dir = createTempDir("openclaw-user-turn-redacted-idempotent-");
+    const dir = createTempDir("grokbot-user-turn-redacted-idempotent-");
     const target = createSqliteTranscriptTarget({ dir });
 
     await persistUserTurnTranscript({

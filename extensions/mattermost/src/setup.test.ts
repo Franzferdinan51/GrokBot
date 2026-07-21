@@ -1,11 +1,11 @@
 // Mattermost tests cover setup plugin behavior.
-import { createTestPluginApi } from "openclaw/plugin-sdk/plugin-test-api";
+import { createTestPluginApi } from "grokbot/plugin-sdk/plugin-test-api";
 import {
   createSetupWizardAdapter,
   createQueuedWizardPrompter,
   runSetupWizardConfigure,
-} from "openclaw/plugin-sdk/plugin-test-runtime";
-import { DEFAULT_ACCOUNT_ID } from "openclaw/plugin-sdk/setup";
+} from "grokbot/plugin-sdk/plugin-test-runtime";
+import { DEFAULT_ACCOUNT_ID } from "grokbot/plugin-sdk/setup";
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import type { OpenClawConfig, OpenClawPluginApi } from "../runtime-api.js";
 

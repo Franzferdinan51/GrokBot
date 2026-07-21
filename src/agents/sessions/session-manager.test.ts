@@ -14,7 +14,7 @@ import {
 import { formatSqliteSessionFileMarker } from "../../config/sessions/sqlite-marker.js";
 import { withOwnedSessionTranscriptWrites } from "../../config/sessions/transcript-write-context.js";
 import * as Logger from "../../logger.js";
-import { isTranscriptOnlyOpenClawAssistantMessage } from "../../shared/transcript-only-openclaw-assistant.js";
+import { isTranscriptOnlyOpenClawAssistantMessage } from "../../shared/transcript-only-grokbot-assistant.js";
 import { prepareSessionManagerForRun } from "../embedded-agent-runner/session-manager-init.js";
 import { repairSessionFileIfNeeded } from "../session-file-repair.js";
 import { loadSqliteMarkedSessionFile } from "./session-manager-file.js";
@@ -33,7 +33,7 @@ import {
 const tempPaths: string[] = [];
 
 async function makeTempDir(): Promise<string> {
-  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-session-manager-"));
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-session-manager-"));
   tempPaths.push(dir);
   return dir;
 }
@@ -535,7 +535,7 @@ describe("SessionManager.open", () => {
       version: 3,
       id: "original-session",
       timestamp: "2026-05-27T00:00:00.000Z",
-      cwd: "/srv/openclaw/main",
+      cwd: "/srv/grokbot/main",
     };
     const userEntry = {
       type: "message",
@@ -2245,7 +2245,7 @@ describe("SessionManager.open", () => {
       timestamp: "2026-06-04T00:00:05.000Z",
       message: {
         ...buildAssistantMessage("mirrored delivery"),
-        provider: "openclaw",
+        provider: "grokbot",
         model: "delivery-mirror",
       },
     };

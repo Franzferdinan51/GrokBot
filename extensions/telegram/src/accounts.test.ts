@@ -1,7 +1,7 @@
 // Telegram tests cover accounts plugin behavior.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { createSubsystemLogger } from "openclaw/plugin-sdk/runtime-env";
-import { withEnv } from "openclaw/plugin-sdk/test-env";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { createSubsystemLogger } from "grokbot/plugin-sdk/runtime-env";
+import { withEnv } from "grokbot/plugin-sdk/test-env";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   createTelegramActionGate,
@@ -19,7 +19,7 @@ const { warnMock } = vi.hoisted(() => ({
   warnMock: vi.fn(),
 }));
 
-vi.mock("openclaw/plugin-sdk/runtime-env", { spy: true });
+vi.mock("grokbot/plugin-sdk/runtime-env", { spy: true });
 
 function warningLines(): string[] {
   return warnMock.mock.calls.map(([line]) => String(line));

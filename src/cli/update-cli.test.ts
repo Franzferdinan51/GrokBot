@@ -4,12 +4,12 @@ import fsSync from "node:fs";
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { Command } from "commander";
 import { afterAll, afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { writePackageDistInventory } from "../../scripts/lib/package-dist-inventory.ts";
 import { TEST_BUNDLED_RUNTIME_SIDECAR_PATHS } from "../../test/helpers/bundled-runtime-sidecars.js";
-import type { OpenClawConfig, ConfigFileSnapshot } from "../config/types.openclaw.js";
+import type { OpenClawConfig, ConfigFileSnapshot } from "../config/types.grokbot.js";
 import type { PluginInstallRecord } from "../config/types.plugins.js";
 import { GATEWAY_SERVICE_RUNTIME_PID_ENV } from "../daemon/constants.js";
 import type { ClawHubRiskAcknowledgementRequest } from "../infra/clawhub-install-trust.js";
@@ -107,12 +107,12 @@ vi.mock("../infra/update-runner.js", async (importOriginal) => ({
   runGatewayUpdate: vi.fn(),
 }));
 
-vi.mock("../state/openclaw-database-preflight.js", () => ({
-  OPENCLAW_DATABASE_SCHEMA_DOCS_URL: "https://docs.openclaw.ai/reference/database-schemas",
+vi.mock("../state/grokbot-database-preflight.js", () => ({
+  OPENCLAW_DATABASE_SCHEMA_DOCS_URL: "https://docs.grokbot.ai/reference/database-schemas",
   preflightOpenClawDatabaseSchemas: databasePreflightMocks.preflightOpenClawDatabaseSchemas,
 }));
 
-vi.mock("../infra/openclaw-root.js", () => ({
+vi.mock("../infra/grokbot-root.js", () => ({
   resolveOpenClawPackageRoot: vi.fn(),
   resolveOpenClawPackageRootSync: vi.fn(() => process.cwd()),
 }));
@@ -122,10 +122,10 @@ vi.mock("../config/config.js", () => ({
     if (process.env.OPENCLAW_NIX_MODE === "1") {
       throw new Error(
         [
-          "Config is managed by Nix (`OPENCLAW_NIX_MODE=1`), so OpenClaw treats openclaw.json as immutable.",
-          "Do not run setup, onboarding, openclaw update, plugin install/update/uninstall/enable, doctor repair/token-generation, or config set against this file.",
-          "Agent-first Nix setup: https://github.com/openclaw/nix-openclaw#quick-start",
-          "OpenClaw Nix overview: https://docs.openclaw.ai/install/nix",
+          "Config is managed by Nix (`OPENCLAW_NIX_MODE=1`), so GrokBot treats grokbot.json as immutable.",
+          "Do not run setup, onboarding, grokbot update, plugin install/update/uninstall/enable, doctor repair/token-generation, or config set against this file.",
+          "Agent-first Nix setup: https://github.com/grokbot/nix-grokbot#quick-start",
+          "GrokBot Nix overview: https://docs.grokbot.ai/install/nix",
         ].join("\n"),
       );
     }
@@ -253,7 +253,7 @@ vi.mock("../utils.js", async (importOriginal) => {
     isRecord: (value: unknown) =>
       typeof value === "object" && value !== null && !Array.isArray(value),
     pathExists: (...args: unknown[]) => pathExists(...args),
-    resolveConfigDir: () => "/tmp/openclaw-config",
+    resolveConfigDir: () => "/tmp/grokbot-config",
     sleep: vi.fn(async () => undefined),
   };
 });
@@ -418,7 +418,7 @@ vi.mock("../runtime.js", () => ({
 }));
 
 const { runGatewayUpdate } = await import("../infra/update-runner.js");
-const { resolveOpenClawPackageRoot } = await import("../infra/openclaw-root.js");
+const { resolveOpenClawPackageRoot } = await import("../infra/grokbot-root.js");
 const {
   mutateConfigFileWithRetry,
   readConfigFileSnapshot,
@@ -469,7 +469,7 @@ type UpdateCliScenario = {
 };
 
 describe("update-cli", () => {
-  const fixtureRoot = "/tmp/openclaw-update-tests";
+  const fixtureRoot = "/tmp/grokbot-update-tests";
   let fixtureCount = 0;
   const tempDirsToCleanup = new Set<string>();
 
@@ -487,7 +487,7 @@ describe("update-cli", () => {
 
   const baseConfig = {} as OpenClawConfig;
   const baseSnapshot: ConfigFileSnapshot = {
-    path: "/tmp/openclaw-config.json",
+    path: "/tmp/grokbot-config.json",
     exists: true,
     raw: "{}",
     parsed: {},
@@ -548,8 +548,8 @@ describe("update-cli", () => {
 
   const stripOpenClawPackageAlias = (spec: string) => {
     const trimmed = spec.trim();
-    return trimmed.toLowerCase().startsWith("openclaw@")
-      ? trimmed.slice("openclaw@".length)
+    return trimmed.toLowerCase().startsWith("grokbot@")
+      ? trimmed.slice("grokbot@".length)
       : trimmed;
   };
 
@@ -712,14 +712,14 @@ describe("update-cli", () => {
       if (!packDir) {
         throw new Error("Expected package pack directory");
       }
-      installSpec = path.join(packDir, "openclaw-9999.0.0.tgz");
+      installSpec = path.join(packDir, "grokbot-9999.0.0.tgz");
     } else {
       expect(packagePackCommandCall()).toBeUndefined();
     }
     const allowScriptsIdentity = isNpmGitPackageSpec(spec)
       ? `./${path.basename(installSpec)}`
-      : spec.toLowerCase().startsWith("openclaw@")
-        ? "openclaw"
+      : spec.toLowerCase().startsWith("grokbot@")
+        ? "grokbot"
         : spec;
     const call = packageInstallCommandCall();
     expect(call?.[0]).toEqual([
@@ -812,7 +812,7 @@ describe("update-cli", () => {
   };
 
   const setupNonInteractiveDowngrade = async () => {
-    const tempDir = createCaseDir("openclaw-update");
+    const tempDir = createCaseDir("grokbot-update");
     setTty(false);
     readPackageVersion.mockResolvedValue("2.0.0");
 
@@ -837,7 +837,7 @@ describe("update-cli", () => {
     gatewayUpdateImpl?: (root: string) => Promise<UpdateRunResult>;
     entrypoints?: string[];
   }) => {
-    const root = createCaseDir("openclaw-updated-root");
+    const root = createCaseDir("grokbot-updated-root");
     const entrypoints = params?.entrypoints ?? [path.join(root, "dist", "entry.js")];
     const packageRoots = entrypoints.map((entrypoint) => path.dirname(path.dirname(entrypoint)));
     const packageJsonPaths = new Set(
@@ -850,7 +850,7 @@ describe("update-cli", () => {
       fsSync.writeFileSync(entrypoint, "// test entrypoint\n", "utf8");
       fsSync.writeFileSync(
         packageJsonPath,
-        JSON.stringify({ name: "openclaw", version: "2026.4.24" }),
+        JSON.stringify({ name: "grokbot", version: "2026.4.24" }),
         "utf8",
       );
       tempDirsToCleanup.add(packageRoot);
@@ -915,7 +915,7 @@ describe("update-cli", () => {
       status: "resolved",
       selector: "extended-stable",
       version: "2026.6.33",
-      packageSpec: "openclaw@2026.6.33",
+      packageSpec: "grokbot@2026.6.33",
     });
     vi.mocked(resolveNpmChannelTag).mockResolvedValue({
       tag: "latest",
@@ -951,7 +951,7 @@ describe("update-cli", () => {
       if (argv[0] === "npm" && argv[1] === "pack") {
         const destination = argv[argv.indexOf("--pack-destination") + 1];
         if (destination) {
-          await fs.writeFile(path.join(destination, "openclaw-9999.0.0.tgz"), "packed\n", "utf8");
+          await fs.writeFile(path.join(destination, "grokbot-9999.0.0.tgz"), "packed\n", "utf8");
         }
       }
       return {
@@ -966,7 +966,7 @@ describe("update-cli", () => {
     vi.spyOn(updateCliShared, "readPackageName").mockImplementation(readPackageName);
     vi.spyOn(updateCliShared, "readPackageVersion").mockImplementation(readPackageVersion);
     vi.spyOn(updateCliShared, "resolveGlobalManager").mockImplementation(resolveGlobalManager);
-    readPackageName.mockResolvedValue("openclaw");
+    readPackageName.mockResolvedValue("grokbot");
     readPackageVersion.mockResolvedValue("1.0.0");
     resolveGlobalManager.mockResolvedValue("npm");
     serviceStop.mockResolvedValue(undefined);
@@ -975,7 +975,7 @@ describe("update-cli", () => {
     resumeScheduledTaskAutoStartAfterUpdate.mockResolvedValue(false);
     serviceLoaded.mockResolvedValue(false);
     serviceReadCommand.mockImplementation(async () =>
-      (await serviceLoaded()) ? { programArguments: ["openclaw", "gateway", "run"] } : null,
+      (await serviceLoaded()) ? { programArguments: ["grokbot", "gateway", "run"] } : null,
     );
     serviceReadRuntime.mockResolvedValue({
       status: "running",
@@ -983,12 +983,12 @@ describe("update-cli", () => {
       state: "running",
     });
     mockGetSelfAndAncestorPidsSync.mockReturnValue(new Set<number>([process.pid]));
-    prepareRestartScript.mockResolvedValue("/tmp/openclaw-restart-test.sh");
+    prepareRestartScript.mockResolvedValue("/tmp/grokbot-restart-test.sh");
     runRestartScript.mockResolvedValue(undefined);
     inspectPortUsage.mockResolvedValue({
       port: 18789,
       status: "busy",
-      listeners: [{ pid: 4242, command: "openclaw-gateway" }],
+      listeners: [{ pid: 4242, command: "grokbot-gateway" }],
       hints: [],
     });
     classifyPortListener.mockReturnValue("gateway");
@@ -1030,7 +1030,7 @@ describe("update-cli", () => {
       shell: "zsh",
       profileInstalled: false,
       cacheExists: false,
-      cachePath: "/tmp/openclaw-completion.zsh",
+      cachePath: "/tmp/grokbot-completion.zsh",
       usesSlowPattern: false,
     });
     ensureCompletionCacheExists.mockResolvedValue(true);
@@ -1078,14 +1078,14 @@ describe("update-cli", () => {
   });
 
   it("bounds completion cache refresh during update follow-up", async () => {
-    const root = createCaseDir("openclaw-completion-timeout");
+    const root = createCaseDir("grokbot-completion-timeout");
     pathExists.mockResolvedValue(true);
 
     await updateCliShared.tryWriteCompletionCache(root, false);
 
     const call = spawnSyncCall();
     expect(typeof call?.[0]).toBe("string");
-    expect(call?.[1]).toEqual([path.join(root, "openclaw.mjs"), "completion", "--write-state"]);
+    expect(call?.[1]).toEqual([path.join(root, "grokbot.mjs"), "completion", "--write-state"]);
     expect(call?.[2]?.env?.OPENCLAW_COMPLETION_SKIP_PLUGIN_COMMANDS).toBe("1");
     expect(call?.[2]?.timeout).toBe(30_000);
   });
@@ -1119,7 +1119,7 @@ describe("update-cli", () => {
   });
 
   it("logs friendly hint with manual refresh command when completion cache write times out", async () => {
-    const root = createCaseDir("openclaw-completion-timeout-msg");
+    const root = createCaseDir("grokbot-completion-timeout-msg");
     pathExists.mockResolvedValue(true);
     const timeoutErr = Object.assign(new Error("spawnSync /usr/bin/node ETIMEDOUT"), {
       code: "ETIMEDOUT",
@@ -1142,7 +1142,7 @@ describe("update-cli", () => {
       .mock.calls.map((call) => String(call[0]))
       .join("\n");
     expect(logOutput).toContain("timed out after 30s");
-    expect(logOutput).toContain("openclaw completion --write-state");
+    expect(logOutput).toContain("grokbot completion --write-state");
     expect(logOutput).not.toContain("Error: spawnSync");
   });
 
@@ -1152,14 +1152,14 @@ describe("update-cli", () => {
       shell: "zsh",
       profileInstalled: true,
       cacheExists: true,
-      cachePath: "/tmp/openclaw-completion.zsh",
+      cachePath: "/tmp/grokbot-completion.zsh",
       usesSlowPattern: true,
     });
     installCompletion.mockRejectedValueOnce(new Error("EACCES: permission denied"));
 
     await updateCommand({ yes: true, restart: false });
 
-    expect(installCompletion).toHaveBeenCalledWith("zsh", true, "openclaw");
+    expect(installCompletion).toHaveBeenCalledWith("zsh", true, "grokbot");
     const logOutput = vi
       .mocked(runtimeCapture.log)
       .mock.calls.map((call) => String(call[0]))
@@ -1222,7 +1222,7 @@ describe("update-cli", () => {
     const platformSpy = vi.spyOn(process, "platform", "get").mockReturnValue("win32");
     suspendScheduledTaskAutoStartForUpdate.mockResolvedValue(true);
     resumeScheduledTaskAutoStartAfterUpdate.mockResolvedValue(true);
-    const root = createCaseDir("openclaw-update");
+    const root = createCaseDir("grokbot-update");
     const entryPath = path.join(root, "dist", "index.js");
     mockPackageInstallStatus(root);
     serviceLoaded.mockResolvedValue(true);
@@ -1245,7 +1245,7 @@ describe("update-cli", () => {
                 reason: "missing-extension-entry: ./dist/index.js",
                 message:
                   'Plugin "demo" failed post-core payload smoke check (missing-extension-entry): ./dist/index.js',
-                guidance: ["Run openclaw update repair to retry post-update plugin repair."],
+                guidance: ["Run grokbot update repair to retry post-update plugin repair."],
               },
             ],
             sync: {
@@ -1300,7 +1300,7 @@ describe("update-cli", () => {
 
     await withEnvAsync(
       {
-        OPENCLAW_SERVICE_MARKER: "openclaw",
+        OPENCLAW_SERVICE_MARKER: "grokbot",
         OPENCLAW_SERVICE_KIND: "gateway",
         [GATEWAY_SERVICE_RUNTIME_PID_ENV]: "7777",
       },
@@ -1320,8 +1320,8 @@ describe("update-cli", () => {
     const pluginInstallRecords = {
       demo: {
         source: "npm",
-        spec: "@openclaw/demo@1.0.0",
-        installPath: "/tmp/openclaw-demo-plugin",
+        spec: "@grokbot/demo@1.0.0",
+        installPath: "/tmp/grokbot-demo-plugin",
       },
     } as const;
     const preUpdateConfig = {
@@ -1382,12 +1382,12 @@ describe("update-cli", () => {
     const pluginInstallRecords = {
       msteams: {
         source: "npm",
-        spec: "@openclaw/msteams",
-        installPath: "/tmp/openclaw-msteams-plugin",
+        spec: "@grokbot/msteams",
+        installPath: "/tmp/grokbot-msteams-plugin",
         version: "1.0.0",
-        resolvedName: "@openclaw/msteams",
+        resolvedName: "@grokbot/msteams",
         resolvedVersion: "1.0.0",
-        resolvedSpec: "@openclaw/msteams@1.0.0",
+        resolvedSpec: "@grokbot/msteams@1.0.0",
         integrity: "sha512-newer",
       },
     } as const;
@@ -1414,10 +1414,10 @@ describe("update-cli", () => {
     expect(capturedRecords).toEqual({
       msteams: {
         source: "npm",
-        spec: "@openclaw/msteams",
-        installPath: "/tmp/openclaw-msteams-plugin",
+        spec: "@grokbot/msteams",
+        installPath: "/tmp/grokbot-msteams-plugin",
         version: "1.0.0",
-        resolvedName: "@openclaw/msteams",
+        resolvedName: "@grokbot/msteams",
         integrity: "sha512-newer",
       },
     });
@@ -1476,7 +1476,7 @@ describe("update-cli", () => {
   });
 
   it("keeps downgrade post-update work in the current process", async () => {
-    const downgradedRoot = createCaseDir("openclaw-downgraded-root");
+    const downgradedRoot = createCaseDir("grokbot-downgraded-root");
     setupUpdatedRootRefresh({
       gatewayUpdateImpl: async () =>
         makeOkUpdateResult({
@@ -1519,7 +1519,7 @@ describe("update-cli", () => {
   });
 
   it("pins the compatibility host version to the downgraded target during current-process post-core plugin convergence (#87914)", async () => {
-    const downgradedRoot = createCaseDir("openclaw-downgraded-compat-root");
+    const downgradedRoot = createCaseDir("grokbot-downgraded-compat-root");
     setupUpdatedRootRefresh({
       gatewayUpdateImpl: async () =>
         makeOkUpdateResult({
@@ -1610,7 +1610,7 @@ describe("update-cli", () => {
   });
 
   it("post-core resume children exit after writing a plugin update result", async () => {
-    const resultDir = createCaseDir("openclaw-post-core-result");
+    const resultDir = createCaseDir("grokbot-post-core-result");
     const resultPath = path.join(resultDir, "plugins.json");
     await fs.mkdir(resultDir, { recursive: true });
 
@@ -1635,7 +1635,7 @@ describe("update-cli", () => {
   });
 
   it("post-core resume mode uses the parent install records snapshot for missing payload warnings", async () => {
-    const resultDir = createCaseDir("openclaw-post-core-records");
+    const resultDir = createCaseDir("grokbot-post-core-records");
     const recordsPath = path.join(resultDir, "plugin-install-records.json");
     const installPath = path.join(resultDir, "demo-plugin");
     await fs.mkdir(installPath, { recursive: true });
@@ -1644,7 +1644,7 @@ describe("update-cli", () => {
       `${JSON.stringify({
         demo: {
           source: "npm",
-          spec: "@openclaw/demo@1.0.0",
+          spec: "@grokbot/demo@1.0.0",
           installPath,
         },
       })}\n`,
@@ -1673,7 +1673,7 @@ describe("update-cli", () => {
   });
 
   it("post-core resume mode prefers post-doctor disk install records over the stale parent snapshot", async () => {
-    const resultDir = createCaseDir("openclaw-post-core-disk-records");
+    const resultDir = createCaseDir("grokbot-post-core-disk-records");
     const recordsPath = path.join(resultDir, "plugin-install-records.json");
     await fs.mkdir(resultDir, { recursive: true });
     await fs.writeFile(
@@ -1681,7 +1681,7 @@ describe("update-cli", () => {
       `${JSON.stringify({
         stale: {
           source: "npm",
-          spec: "@openclaw/stale@1.0.0",
+          spec: "@grokbot/stale@1.0.0",
           installPath: "/tmp/stale-plugin",
         },
       })}\n`,
@@ -1690,7 +1690,7 @@ describe("update-cli", () => {
     const postDoctorRecords = {
       codex: {
         source: "npm",
-        spec: "@openclaw/codex@2026.5.17",
+        spec: "@grokbot/codex@2026.5.17",
         installPath: "/tmp/codex-plugin",
       },
     } satisfies Record<string, PluginInstallRecord>;
@@ -1909,8 +1909,8 @@ describe("update-cli", () => {
     await expect(
       onIntegrityDrift({
         pluginId: "demo",
-        spec: "@openclaw/demo@1.0.0",
-        resolvedSpec: "@openclaw/demo@1.0.0",
+        spec: "@grokbot/demo@1.0.0",
+        resolvedSpec: "@grokbot/demo@1.0.0",
         expectedIntegrity: "sha512-old",
         actualIntegrity: "sha512-new",
       }),
@@ -1935,8 +1935,8 @@ describe("update-cli", () => {
       }) => {
         const proceed = await params.onIntegrityDrift?.({
           pluginId: "demo",
-          spec: "@openclaw/demo@1.0.0",
-          resolvedSpec: "@openclaw/demo@1.0.0",
+          spec: "@grokbot/demo@1.0.0",
+          resolvedSpec: "@grokbot/demo@1.0.0",
           resolvedVersion: "1.0.0",
           expectedIntegrity: "sha512-old",
           actualIntegrity: "sha512-new",
@@ -1951,7 +1951,7 @@ describe("update-cli", () => {
               status: "error",
               message:
                 proceed === false
-                  ? "Failed to update demo: aborted: npm package integrity drift detected for @openclaw/demo@1.0.0"
+                  ? "Failed to update demo: aborted: npm package integrity drift detected for @grokbot/demo@1.0.0"
                   : "unexpected drift continuation",
             },
           ],
@@ -1969,8 +1969,8 @@ describe("update-cli", () => {
     expect(jsonOutput?.postUpdate?.plugins?.integrityDrifts).toEqual([
       {
         pluginId: "demo",
-        spec: "@openclaw/demo@1.0.0",
-        resolvedSpec: "@openclaw/demo@1.0.0",
+        spec: "@grokbot/demo@1.0.0",
+        resolvedSpec: "@grokbot/demo@1.0.0",
         resolvedVersion: "1.0.0",
         expectedIntegrity: "sha512-old",
         actualIntegrity: "sha512-new",
@@ -1980,16 +1980,16 @@ describe("update-cli", () => {
     expect(jsonOutput?.postUpdate?.plugins?.status).toBe("warning");
     expect(pluginWarning(jsonOutput)?.pluginId).toBe("demo");
     expect(pluginWarning(jsonOutput)?.guidance).toEqual([
-      "Run openclaw update repair to retry post-update plugin repair.",
-      "Run openclaw plugins inspect demo --runtime --json for details.",
+      "Run grokbot update repair to retry post-update plugin repair.",
+      "Run grokbot plugins inspect demo --runtime --json for details.",
     ]);
     expect(pluginWarning(jsonOutput)?.reason).toContain("npm package integrity drift");
     expect(jsonOutput?.postUpdate?.plugins?.npm.outcomes[0]?.status).toBe("error");
     expect(jsonOutput?.postUpdate?.plugins?.npm.outcomes[0]?.message).toContain(
-      "Run openclaw update repair to retry post-update plugin repair.",
+      "Run grokbot update repair to retry post-update plugin repair.",
     );
     expect(jsonOutput?.postUpdate?.plugins?.npm.outcomes[0]?.message).toContain(
-      "Run openclaw plugins inspect demo --runtime --json for details.",
+      "Run grokbot plugins inspect demo --runtime --json for details.",
     );
   });
 
@@ -2166,12 +2166,12 @@ describe("update-cli", () => {
     const trustWarningOccurrences = output.split(trustWarning).length - 1;
     expect(trustWarningOccurrences).toBe(1);
     expect(output).toContain("Skipped demo ClawHub update");
-    expect(output).toContain("Run openclaw update repair to retry post-update plugin repair.");
-    expect(output).toContain("Run openclaw plugins inspect demo --runtime --json for details.");
+    expect(output).toContain("Run grokbot update repair to retry post-update plugin repair.");
+    expect(output).toContain("Run grokbot plugins inspect demo --runtime --json for details.");
   });
 
   it("detects missing plugin payloads from persisted records before npm updates", async () => {
-    const installPath = createCaseDir("openclaw-missing-plugin-payload");
+    const installPath = createCaseDir("grokbot-missing-plugin-payload");
     fsSync.mkdirSync(installPath, { recursive: true });
     const config = {
       plugins: {
@@ -2191,7 +2191,7 @@ describe("update-cli", () => {
     loadInstalledPluginIndexInstallRecords.mockResolvedValueOnce({
       demo: {
         source: "npm",
-        spec: "@openclaw/demo@1.0.0",
+        spec: "@grokbot/demo@1.0.0",
         installPath,
       },
     });
@@ -2252,8 +2252,8 @@ describe("update-cli", () => {
       .mock.calls.map((call) => String(call[0]))
       .join("\n");
     expect(logs).toContain("Failed to update demo: registry timeout");
-    expect(logs).toContain("Run openclaw update repair to retry post-update plugin repair.");
-    expect(logs).toContain("Run openclaw plugins inspect demo --runtime --json for details.");
+    expect(logs).toContain("Run grokbot update repair to retry post-update plugin repair.");
+    expect(logs).toContain("Run grokbot plugins inspect demo --runtime --json for details.");
   });
 
   it("marks disabled-after-failure plugin skips as post-update warnings", async () => {
@@ -2265,7 +2265,7 @@ describe("update-cli", () => {
           pluginId: "demo",
           status: "skipped",
           message:
-            'Disabled "demo" after plugin update failure; OpenClaw will continue without it. Failed to update demo: registry timeout',
+            'Disabled "demo" after plugin update failure; GrokBot will continue without it. Failed to update demo: registry timeout',
         },
       ],
     });
@@ -2277,8 +2277,8 @@ describe("update-cli", () => {
     expect(jsonOutput?.postUpdate?.plugins?.status).toBe("warning");
     expect(pluginWarning(jsonOutput)?.pluginId).toBe("demo");
     expect(pluginWarning(jsonOutput)?.guidance).toEqual([
-      "Run openclaw update repair to retry post-update plugin repair.",
-      "Run openclaw plugins inspect demo --runtime --json for details.",
+      "Run grokbot update repair to retry post-update plugin repair.",
+      "Run grokbot plugins inspect demo --runtime --json for details.",
     ]);
     expect(pluginOutcome(jsonOutput)?.pluginId).toBe("demo");
     expect(pluginOutcome(jsonOutput)?.status).toBe("skipped");
@@ -2315,8 +2315,8 @@ describe("update-cli", () => {
     expect(pluginWarning(jsonOutput)?.reason).toContain("suspicious payload strings");
     expect(pluginWarning(jsonOutput)?.reason).toContain("--acknowledge-clawhub-risk");
     expect(pluginWarning(jsonOutput)?.guidance).toEqual([
-      "Run openclaw update repair to retry post-update plugin repair.",
-      "Run openclaw plugins inspect demo --runtime --json for details.",
+      "Run grokbot update repair to retry post-update plugin repair.",
+      "Run grokbot plugins inspect demo --runtime --json for details.",
     ]);
     expect(pluginOutcome(jsonOutput)?.pluginId).toBe("demo");
     expect(pluginOutcome(jsonOutput)?.status).toBe("skipped");
@@ -2352,7 +2352,7 @@ describe("update-cli", () => {
     expect(pluginWarning(jsonOutput)?.reason).toContain("ClawHub blocked this release");
     expect(pluginOutcome(jsonOutput)?.pluginId).toBe("demo");
     expect(pluginOutcome(jsonOutput)?.status).toBe("skipped");
-    expect(pluginOutcome(jsonOutput)?.message).toContain("Run openclaw update repair");
+    expect(pluginOutcome(jsonOutput)?.message).toContain("Run grokbot update repair");
   });
 
   it("prints unacknowledged ClawHub risk skips in human post-update output", async () => {
@@ -2377,8 +2377,8 @@ describe("update-cli", () => {
       .mock.calls.map((call) => String(call[0]))
       .join("\n");
     expect(logs).toContain("--acknowledge-clawhub-risk");
-    expect(logs).toContain("Run openclaw update repair to retry post-update plugin repair.");
-    expect(logs).toContain("Run openclaw plugins inspect demo --runtime --json for details.");
+    expect(logs).toContain("Run grokbot update repair to retry post-update plugin repair.");
+    expect(logs).toContain("Run grokbot plugins inspect demo --runtime --json for details.");
   });
 
   it("fails unexpected post-core plugin sync exceptions", async () => {
@@ -2418,10 +2418,10 @@ describe("update-cli", () => {
                     pluginId: "demo",
                     reason: "Failed to update demo: registry timeout",
                     message:
-                      'Plugin "demo" could not be processed after the core update: Failed to update demo: registry timeout Run openclaw update repair to retry post-update plugin repair. Run openclaw plugins inspect demo --runtime --json for details.',
+                      'Plugin "demo" could not be processed after the core update: Failed to update demo: registry timeout Run grokbot update repair to retry post-update plugin repair. Run grokbot plugins inspect demo --runtime --json for details.',
                     guidance: [
-                      "Run openclaw update repair to retry post-update plugin repair.",
-                      "Run openclaw plugins inspect demo --runtime --json for details.",
+                      "Run grokbot update repair to retry post-update plugin repair.",
+                      "Run grokbot plugins inspect demo --runtime --json for details.",
                     ],
                   },
                 ],
@@ -2461,7 +2461,7 @@ describe("update-cli", () => {
     expect(jsonOutput?.status).toBe("ok");
     expect(jsonOutput?.reason).toBeUndefined();
     expect(jsonOutput?.postUpdate?.plugins?.warnings?.[0]?.guidance).toContain(
-      "Run openclaw update repair to retry post-update plugin repair.",
+      "Run grokbot update repair to retry post-update plugin repair.",
     );
     expect(jsonOutput?.postUpdate?.plugins?.npm.outcomes[0]?.message).toContain("registry timeout");
   });
@@ -2507,7 +2507,7 @@ describe("update-cli", () => {
   ] as const)("updateCommand dry-run behavior: $name", runUpdateCliScenario);
 
   it("refuses an incompatible package target before service stop or install", async () => {
-    mockPackageInstallStatus(createCaseDir("openclaw-schema-refusal"));
+    mockPackageInstallStatus(createCaseDir("grokbot-schema-refusal"));
     vi.mocked(fetchNpmPackageTargetStatus).mockResolvedValue({
       target: "9999.0.0",
       version: "9999.0.0",
@@ -2518,7 +2518,7 @@ describe("update-cli", () => {
       incompatible: [
         {
           kind: "agent",
-          path: "/tmp/openclaw/agents/main/agent/openclaw-agent.sqlite",
+          path: "/tmp/grokbot/agents/main/agent/grokbot-agent.sqlite",
           agentId: "main",
           foundVersion: 11,
           supportedVersion: 9,
@@ -2543,7 +2543,7 @@ describe("update-cli", () => {
   });
 
   it("skips package schema preflight when target metadata is missing", async () => {
-    mockPackageInstallStatus(createCaseDir("openclaw-schema-missing"));
+    mockPackageInstallStatus(createCaseDir("grokbot-schema-missing"));
     vi.mocked(fetchNpmPackageTargetStatus).mockResolvedValue({
       target: "9999.0.0",
       version: "9999.0.0",
@@ -2557,7 +2557,7 @@ describe("update-cli", () => {
   });
 
   it("refuses a package update when exact target metadata lookup fails", async () => {
-    mockPackageInstallStatus(createCaseDir("openclaw-schema-metadata-failure"));
+    mockPackageInstallStatus(createCaseDir("grokbot-schema-metadata-failure"));
     vi.mocked(fetchNpmPackageTargetStatus).mockResolvedValue({
       target: "9999.0.0",
       version: null,
@@ -2571,13 +2571,13 @@ describe("update-cli", () => {
     expect(serviceStop).not.toHaveBeenCalled();
     expect(packageInstallCommandCall()).toBeUndefined();
     expect(defaultRuntime.error).toHaveBeenCalledWith(
-      expect.stringContaining("could not inspect exact package target openclaw@9999.0.0"),
+      expect.stringContaining("could not inspect exact package target grokbot@9999.0.0"),
     );
     expect(defaultRuntime.exit).toHaveBeenCalledWith(1);
   });
 
   it("continues a package update when target schemas are compatible", async () => {
-    mockPackageInstallStatus(createCaseDir("openclaw-schema-compatible"));
+    mockPackageInstallStatus(createCaseDir("grokbot-schema-compatible"));
     vi.mocked(fetchNpmPackageTargetStatus).mockResolvedValue({
       target: "9999.0.0",
       version: "9999.0.0",
@@ -2588,11 +2588,11 @@ describe("update-cli", () => {
     await updateCommand({ yes: true, restart: false });
 
     expect(databasePreflightMocks.preflightOpenClawDatabaseSchemas).toHaveBeenCalledTimes(2);
-    expect(packageInstallCommandCall()?.[0]).toContain("openclaw@9999.0.0");
+    expect(packageInstallCommandCall()?.[0]).toContain("grokbot@9999.0.0");
   });
 
   it("reports an incompatible package target during dry-run", async () => {
-    mockPackageInstallStatus(createCaseDir("openclaw-schema-dry-run"));
+    mockPackageInstallStatus(createCaseDir("grokbot-schema-dry-run"));
     vi.mocked(fetchNpmPackageTargetStatus).mockResolvedValue({
       target: "9999.0.0",
       version: "9999.0.0",
@@ -2603,7 +2603,7 @@ describe("update-cli", () => {
       incompatible: [
         {
           kind: "state",
-          path: "/tmp/openclaw/state/openclaw.sqlite",
+          path: "/tmp/grokbot/state/grokbot.sqlite",
           foundVersion: 3,
           supportedVersion: 2,
         },
@@ -2618,7 +2618,7 @@ describe("update-cli", () => {
       .mock.calls.map((call) => String(call[0]))
       .join("\n");
     expect(logs).toContain("Would refuse update: state database");
-    expect(logs).toContain("https://docs.openclaw.ai/reference/database-schemas");
+    expect(logs).toContain("https://docs.grokbot.ai/reference/database-schemas");
     expect(serviceStop).not.toHaveBeenCalled();
     expect(packageInstallCommandCall()).toBeUndefined();
     expect(defaultRuntime.exit).not.toHaveBeenCalledWith(1);
@@ -2635,7 +2635,7 @@ describe("update-cli", () => {
       incompatible: [
         {
           kind: "agent",
-          path: "/tmp/openclaw/agents/main/agent/openclaw-agent.sqlite",
+          path: "/tmp/grokbot/agents/main/agent/grokbot-agent.sqlite",
           foundVersion: 11,
           supportedVersion: 9,
         },
@@ -2651,7 +2651,7 @@ describe("update-cli", () => {
   });
 
   it("reports indeterminate package databases during dry-run", async () => {
-    mockPackageInstallStatus(createCaseDir("openclaw-schema-indeterminate-dry-run"));
+    mockPackageInstallStatus(createCaseDir("grokbot-schema-indeterminate-dry-run"));
     vi.mocked(fetchNpmPackageTargetStatus).mockResolvedValue({
       target: "9999.0.0",
       version: "9999.0.0",
@@ -2661,7 +2661,7 @@ describe("update-cli", () => {
     databasePreflightMocks.preflightOpenClawDatabaseSchemas.mockReturnValue({
       incompatible: [],
       indeterminate: [
-        { kind: "state", path: "/tmp/openclaw/state/openclaw.sqlite", reason: "database busy" },
+        { kind: "state", path: "/tmp/grokbot/state/grokbot.sqlite", reason: "database busy" },
       ],
     });
 
@@ -2672,7 +2672,7 @@ describe("update-cli", () => {
       .mock.calls.map((call) => String(call[0]))
       .join("\n");
     expect(logs).toContain(
-      "could not inspect state database /tmp/openclaw/state/openclaw.sqlite: database busy; retry once the gateway releases it",
+      "could not inspect state database /tmp/grokbot/state/grokbot.sqlite: database busy; retry once the gateway releases it",
     );
   });
 
@@ -2696,7 +2696,7 @@ describe("update-cli", () => {
         incompatible: [
           {
             kind: "agent",
-            path: "/tmp/openclaw/agents/main/agent/openclaw-agent.sqlite",
+            path: "/tmp/grokbot/agents/main/agent/grokbot-agent.sqlite",
             foundVersion: 12,
             supportedVersion: 11,
           },
@@ -2727,7 +2727,7 @@ describe("update-cli", () => {
       .mockReturnValueOnce({
         incompatible: [],
         indeterminate: [
-          { kind: "agent", path: "/tmp/openclaw-agent.sqlite", reason: "database busy" },
+          { kind: "agent", path: "/tmp/grokbot-agent.sqlite", reason: "database busy" },
         ],
       });
 
@@ -2750,7 +2750,7 @@ describe("update-cli", () => {
       .mockReturnValueOnce({ incompatible: [], indeterminate: [] })
       .mockReturnValueOnce({
         incompatible: [],
-        indeterminate: [{ kind: "state", path: "/tmp/openclaw.sqlite", reason: "database busy" }],
+        indeterminate: [{ kind: "state", path: "/tmp/grokbot.sqlite", reason: "database busy" }],
       });
 
     await updateCommand({ yes: true });
@@ -2769,7 +2769,7 @@ describe("update-cli", () => {
       },
       assert: () => {
         const logs = vi.mocked(defaultRuntime.log).mock.calls.map((call) => call[0]);
-        expect(logs.join("\n")).toContain("OpenClaw update status");
+        expect(logs.join("\n")).toContain("GrokBot update status");
       },
     },
     {
@@ -2808,7 +2808,7 @@ describe("update-cli", () => {
 
   it("parses update status --json as the subcommand option", async () => {
     const program = new Command();
-    program.name("openclaw");
+    program.name("grokbot");
     program.enablePositionalOptions();
     let seenJson = false;
     const update = program.command("update").option("--json", "", false);
@@ -2819,22 +2819,22 @@ describe("update-cli", () => {
         seenJson = Boolean(opts.json);
       });
 
-    await program.parseAsync(["node", "openclaw", "update", "status", "--json"]);
+    await program.parseAsync(["node", "grokbot", "update", "status", "--json"]);
 
     expect(seenJson).toBe(true);
   });
 
   it("parses update --acknowledge-clawhub-risk as the update command option", async () => {
-    const tempDir = createCaseDir("openclaw-update");
+    const tempDir = createCaseDir("grokbot-update");
     mockPackageInstallStatus(tempDir);
     const program = new Command();
-    program.name("openclaw");
+    program.name("grokbot");
     program.exitOverride();
     registerUpdateCli(program);
 
     await program.parseAsync([
       "node",
-      "openclaw",
+      "grokbot",
       "update",
       "--channel",
       "beta",
@@ -2860,7 +2860,7 @@ describe("update-cli", () => {
       name: "defaults to stable channel for package installs when unset",
       options: { yes: true },
       prepare: async () => {
-        const tempDir = createCaseDir("openclaw-update");
+        const tempDir = createCaseDir("grokbot-update");
         mockPackageInstallStatus(tempDir);
       },
       expectedChannel: undefined as "stable" | undefined,
@@ -2904,7 +2904,7 @@ describe("update-cli", () => {
           expect(call?.tag).toBe(expectedTag);
         }
       } else {
-        expectPackageInstallSpec("openclaw@9999.0.0");
+        expectPackageInstallSpec("grokbot@9999.0.0");
       }
 
       if (expectedPersistedChannel !== undefined) {
@@ -2918,7 +2918,7 @@ describe("update-cli", () => {
   );
 
   it("falls back to latest when beta tag is older than release", async () => {
-    const tempDir = createCaseDir("openclaw-update");
+    const tempDir = createCaseDir("grokbot-update");
 
     mockPackageInstallStatus(tempDir);
     vi.mocked(readConfigFileSnapshot).mockResolvedValue({
@@ -2931,11 +2931,11 @@ describe("update-cli", () => {
     });
     await updateCommand({});
 
-    expectPackageInstallSpec("openclaw@1.2.3-1");
+    expectPackageInstallSpec("grokbot@1.2.3-1");
   });
 
   it("installs the verified exact package and persists an explicit extended-stable channel", async () => {
-    const tempDir = createCaseDir("openclaw-update");
+    const tempDir = createCaseDir("grokbot-update");
     mockPackageInstallStatus(tempDir);
     readPackageVersion.mockResolvedValue("2026.6.33");
 
@@ -2944,9 +2944,9 @@ describe("update-cli", () => {
     expect(resolveExtendedStablePackage).toHaveBeenCalledWith({
       installKind: "package",
       timeoutMs: undefined,
-      packageName: "openclaw",
+      packageName: "grokbot",
     });
-    expectPackageInstallSpec("openclaw@2026.6.33");
+    expectPackageInstallSpec("grokbot@2026.6.33");
     expect(lastReplaceConfigCall()?.nextConfig?.update?.channel).toBe("extended-stable");
     expect(syncPluginCall()?.channel).toBe("extended-stable");
     expect(syncPluginCall()?.coreVersion).toBe("2026.6.33");
@@ -2955,7 +2955,7 @@ describe("update-cli", () => {
   });
 
   it("uses the same exact resolver for a bare update with stored extended-stable", async () => {
-    const tempDir = createCaseDir("openclaw-update");
+    const tempDir = createCaseDir("grokbot-update");
     mockPackageInstallStatus(tempDir);
     readPackageVersion.mockResolvedValue("2026.6.33");
     const config = { update: { channel: "extended-stable" } } as OpenClawConfig;
@@ -2973,15 +2973,15 @@ describe("update-cli", () => {
     expect(resolveExtendedStablePackage).toHaveBeenCalledWith({
       installKind: "package",
       timeoutMs: undefined,
-      packageName: "openclaw",
+      packageName: "grokbot",
     });
-    expectPackageInstallSpec("openclaw@2026.6.33");
+    expectPackageInstallSpec("grokbot@2026.6.33");
     expect(syncPluginCall()?.channel).toBe("extended-stable");
     expect(syncPluginCall()?.coreVersion).toBe("2026.6.33");
   });
 
   it("fails closed without config or package mutation when extended-stable resolution fails", async () => {
-    const tempDir = createCaseDir("openclaw-update");
+    const tempDir = createCaseDir("grokbot-update");
     mockPackageInstallStatus(tempDir);
     vi.mocked(resolveExtendedStablePackage).mockResolvedValueOnce({
       status: "failed",
@@ -2998,7 +2998,7 @@ describe("update-cli", () => {
   });
 
   it("fails a stored extended-stable update before launchd cleanup when resolution fails", async () => {
-    const tempDir = createCaseDir("openclaw-update");
+    const tempDir = createCaseDir("grokbot-update");
     mockPackageInstallStatus(tempDir);
     const config = { update: { channel: "extended-stable" } } as OpenClawConfig;
     vi.mocked(readConfigFileSnapshot).mockResolvedValue({
@@ -3026,7 +3026,7 @@ describe("update-cli", () => {
     { name: "explicit", explicit: true },
     { name: "stored", explicit: false },
   ])("rejects --tag for an $name extended-stable channel", async ({ explicit }) => {
-    const tempDir = createCaseDir("openclaw-update");
+    const tempDir = createCaseDir("grokbot-update");
     mockPackageInstallStatus(tempDir);
     if (!explicit) {
       const config = { update: { channel: "extended-stable" } } as OpenClawConfig;
@@ -3068,7 +3068,7 @@ describe("update-cli", () => {
     { name: "refuses", yes: false, installs: false },
     { name: "allows with --yes", yes: true, installs: true },
   ])("$name an extended-stable downgrade in non-interactive mode", async ({ yes, installs }) => {
-    const tempDir = createCaseDir("openclaw-update");
+    const tempDir = createCaseDir("grokbot-update");
     setTty(false);
     mockPackageInstallStatus(tempDir);
     readPackageVersion.mockResolvedValue("2026.7.10");
@@ -3076,7 +3076,7 @@ describe("update-cli", () => {
       status: "resolved",
       selector: "extended-stable",
       version: "2026.6.33",
-      packageSpec: "openclaw@2026.6.33",
+      packageSpec: "grokbot@2026.6.33",
     });
 
     await updateCommand({ channel: "extended-stable", yes, restart: false });
@@ -3091,7 +3091,7 @@ describe("update-cli", () => {
   });
 
   it("retains extended-stable after a post-commit plugin convergence failure", async () => {
-    const tempDir = createCaseDir("openclaw-update");
+    const tempDir = createCaseDir("grokbot-update");
     mockPackageInstallStatus(tempDir);
     runPostCorePluginConvergenceSpy.mockResolvedValueOnce({
       changes: [],
@@ -3100,7 +3100,7 @@ describe("update-cli", () => {
           pluginId: "demo",
           reason: "plugin smoke failed",
           message: "plugin smoke failed",
-          guidance: ["Run openclaw update repair."],
+          guidance: ["Run grokbot update repair."],
         },
       ],
       errored: true,
@@ -3118,7 +3118,7 @@ describe("update-cli", () => {
   });
 
   it("refreshes package-manager updates when the installed version already matches the target", async () => {
-    const tempDir = createCaseDir("openclaw-update");
+    const tempDir = createCaseDir("grokbot-update");
     mockPackageInstallStatus(tempDir);
     readPackageVersion.mockResolvedValue("2026.4.22");
     vi.mocked(resolveNpmChannelTag).mockResolvedValue({
@@ -3141,7 +3141,7 @@ describe("update-cli", () => {
   });
 
   it("runs the package update when latest target lookup is unresolved", async () => {
-    const tempDir = createCaseDir("openclaw-update");
+    const tempDir = createCaseDir("grokbot-update");
     setTty(false);
     mockPackageInstallStatus(tempDir);
     readPackageVersion.mockResolvedValue("2026.4.22");
@@ -3155,11 +3155,11 @@ describe("update-cli", () => {
     const errors = vi.mocked(defaultRuntime.error).mock.calls.map((call) => String(call[0]));
     expect(errors.join("\n")).not.toContain("Downgrade confirmation required.");
     expect(defaultRuntime.exit).not.toHaveBeenCalled();
-    expectPackageInstallSpec("openclaw@latest");
+    expectPackageInstallSpec("grokbot@latest");
   });
 
   it("blocks the package update when a non-latest dist-tag lookup is unresolved", async () => {
-    const tempDir = createCaseDir("openclaw-update");
+    const tempDir = createCaseDir("grokbot-update");
     setTty(false);
     mockPackageInstallStatus(tempDir);
     readPackageVersion.mockResolvedValue("2026.4.22");
@@ -3178,7 +3178,7 @@ describe("update-cli", () => {
   });
 
   it("warns but still runs package updates when disk space looks low", async () => {
-    const tempDir = createCaseDir("openclaw-update");
+    const tempDir = createCaseDir("grokbot-update");
     mockPackageInstallStatus(tempDir);
     vi.spyOn(fsSync, "statfsSync").mockReturnValue(
       statfsFixture({
@@ -3189,14 +3189,14 @@ describe("update-cli", () => {
 
     await updateCommand({ yes: true });
 
-    expectPackageInstallSpec("openclaw@9999.0.0");
+    expectPackageInstallSpec("grokbot@9999.0.0");
     const preflightParams = vi
       .mocked(fetchNpmPackageTargetStatus)
       .mock.calls.find(([params]) => params.target === "latest")?.[0];
     expect(preflightParams).toEqual(
       expect.objectContaining({
         target: "latest",
-        spec: "openclaw@9999.0.0",
+        spec: "grokbot@9999.0.0",
         cwd: process.cwd(),
       }),
     );
@@ -3211,7 +3211,7 @@ describe("update-cli", () => {
   });
 
   it("allows package updates from inherited gateway service env when the managed gateway is not running", async () => {
-    mockPackageInstallStatus(createCaseDir("openclaw-update"));
+    mockPackageInstallStatus(createCaseDir("grokbot-update"));
     serviceReadRuntime.mockResolvedValueOnce({
       status: "stopped",
       state: "stopped",
@@ -3219,7 +3219,7 @@ describe("update-cli", () => {
 
     await withEnvAsync(
       {
-        OPENCLAW_SERVICE_MARKER: "openclaw",
+        OPENCLAW_SERVICE_MARKER: "grokbot",
         OPENCLAW_SERVICE_KIND: "gateway",
       },
       async () => {
@@ -3230,19 +3230,19 @@ describe("update-cli", () => {
     expect(defaultRuntime.error).not.toHaveBeenCalledWith(
       [
         "Package updates cannot run from inside the gateway service process.",
-        "That path replaces the active OpenClaw dist tree while the live gateway may still lazy-load old chunks.",
-        "Run `openclaw update` from a shell outside the gateway service, or stop the gateway service first and then update.",
+        "That path replaces the active GrokBot dist tree while the live gateway may still lazy-load old chunks.",
+        "Run `grokbot update` from a shell outside the gateway service, or stop the gateway service first and then update.",
       ].join("\n"),
     );
-    expectPackageInstallSpec("openclaw@9999.0.0");
+    expectPackageInstallSpec("grokbot@9999.0.0");
   });
 
   it("refuses package updates from inherited gateway service env when --no-restart leaves the gateway running", async () => {
-    mockPackageInstallStatus(createCaseDir("openclaw-update"));
+    mockPackageInstallStatus(createCaseDir("grokbot-update"));
     serviceReadCommand.mockResolvedValue({
-      programArguments: ["openclaw", "gateway", "run"],
+      programArguments: ["grokbot", "gateway", "run"],
       environment: {
-        OPENCLAW_SERVICE_MARKER: "openclaw",
+        OPENCLAW_SERVICE_MARKER: "grokbot",
         OPENCLAW_SERVICE_KIND: "gateway",
       },
     });
@@ -3250,7 +3250,7 @@ describe("update-cli", () => {
 
     await withEnvAsync(
       {
-        OPENCLAW_SERVICE_MARKER: "openclaw",
+        OPENCLAW_SERVICE_MARKER: "grokbot",
         OPENCLAW_SERVICE_KIND: "gateway",
       },
       async () => {
@@ -3261,8 +3261,8 @@ describe("update-cli", () => {
     expect(defaultRuntime.error).toHaveBeenCalledWith(
       [
         "Package updates cannot run from inside the gateway service process.",
-        "That path replaces the active OpenClaw dist tree while the live gateway may still lazy-load old chunks.",
-        "Run `openclaw update` from a shell outside the gateway service, or stop the gateway service first and then update.",
+        "That path replaces the active GrokBot dist tree while the live gateway may still lazy-load old chunks.",
+        "Run `grokbot update` from a shell outside the gateway service, or stop the gateway service first and then update.",
       ].join("\n"),
     );
     expect(defaultRuntime.exit).toHaveBeenCalledWith(1);
@@ -3284,11 +3284,11 @@ describe("update-cli", () => {
   ])(
     "refuses package updates from inherited gateway service env when $name",
     async ({ setupRuntime }) => {
-      mockPackageInstallStatus(createCaseDir("openclaw-update"));
+      mockPackageInstallStatus(createCaseDir("grokbot-update"));
       serviceReadCommand.mockResolvedValue({
-        programArguments: ["openclaw", "gateway", "run"],
+        programArguments: ["grokbot", "gateway", "run"],
         environment: {
-          OPENCLAW_SERVICE_MARKER: "openclaw",
+          OPENCLAW_SERVICE_MARKER: "grokbot",
           OPENCLAW_SERVICE_KIND: "gateway",
         },
       });
@@ -3296,7 +3296,7 @@ describe("update-cli", () => {
 
       await withEnvAsync(
         {
-          OPENCLAW_SERVICE_MARKER: "openclaw",
+          OPENCLAW_SERVICE_MARKER: "grokbot",
           OPENCLAW_SERVICE_KIND: "gateway",
         },
         async () => {
@@ -3307,8 +3307,8 @@ describe("update-cli", () => {
       expect(defaultRuntime.error).toHaveBeenCalledWith(
         [
           "Package updates cannot run from inside the gateway service process.",
-          "That path replaces the active OpenClaw dist tree while the live gateway may still lazy-load old chunks.",
-          "Run `openclaw update` from a shell outside the gateway service, or stop the gateway service first and then update.",
+          "That path replaces the active GrokBot dist tree while the live gateway may still lazy-load old chunks.",
+          "Run `grokbot update` from a shell outside the gateway service, or stop the gateway service first and then update.",
         ].join("\n"),
       );
       expect(defaultRuntime.exit).toHaveBeenCalledWith(1);
@@ -3319,7 +3319,7 @@ describe("update-cli", () => {
   );
 
   it("refuses package updates from inherited gateway service env when the service definition is missing but runtime is live", async () => {
-    mockPackageInstallStatus(createCaseDir("openclaw-update"));
+    mockPackageInstallStatus(createCaseDir("grokbot-update"));
     serviceReadCommand.mockResolvedValue(null);
     serviceReadRuntime.mockResolvedValueOnce({
       status: "running",
@@ -3329,7 +3329,7 @@ describe("update-cli", () => {
 
     await withEnvAsync(
       {
-        OPENCLAW_SERVICE_MARKER: "openclaw",
+        OPENCLAW_SERVICE_MARKER: "grokbot",
         OPENCLAW_SERVICE_KIND: "gateway",
       },
       async () => {
@@ -3340,8 +3340,8 @@ describe("update-cli", () => {
     expect(defaultRuntime.error).toHaveBeenCalledWith(
       [
         "Package updates cannot run from inside the gateway service process.",
-        "That path replaces the active OpenClaw dist tree while the live gateway may still lazy-load old chunks.",
-        "Run `openclaw update` from a shell outside the gateway service, or stop the gateway service first and then update.",
+        "That path replaces the active GrokBot dist tree while the live gateway may still lazy-load old chunks.",
+        "Run `grokbot update` from a shell outside the gateway service, or stop the gateway service first and then update.",
       ].join("\n"),
     );
     expect(defaultRuntime.exit).toHaveBeenCalledWith(1);
@@ -3351,7 +3351,7 @@ describe("update-cli", () => {
   });
 
   it("refuses package updates from inside the active gateway process tree", async () => {
-    mockPackageInstallStatus(createCaseDir("openclaw-update"));
+    mockPackageInstallStatus(createCaseDir("grokbot-update"));
     serviceLoaded.mockResolvedValue(true);
     mockGetSelfAndAncestorPidsSync.mockReturnValue(new Set<number>([process.pid, 4242]));
 
@@ -3359,7 +3359,7 @@ describe("update-cli", () => {
 
     const errors = vi.mocked(defaultRuntime.error).mock.calls.map((call) => String(call[0]));
     expect(errors.join("\n")).toContain(
-      "openclaw update detected it is running inside the gateway process tree.",
+      "grokbot update detected it is running inside the gateway process tree.",
     );
     expect(errors.join("\n")).toContain("Gateway PID 4242 is an ancestor");
     expect(defaultRuntime.exit).toHaveBeenCalledWith(1);
@@ -3368,7 +3368,7 @@ describe("update-cli", () => {
   });
 
   it("refuses package updates from inherited gateway runtime pid when process ancestry is truncated", async () => {
-    mockPackageInstallStatus(createCaseDir("openclaw-update"));
+    mockPackageInstallStatus(createCaseDir("grokbot-update"));
     serviceLoaded.mockResolvedValue(true);
     serviceReadRuntime.mockResolvedValue({
       status: "running",
@@ -3379,7 +3379,7 @@ describe("update-cli", () => {
 
     await withEnvAsync(
       {
-        OPENCLAW_SERVICE_MARKER: "openclaw",
+        OPENCLAW_SERVICE_MARKER: "grokbot",
         OPENCLAW_SERVICE_KIND: "gateway",
         [GATEWAY_SERVICE_RUNTIME_PID_ENV]: "4242",
       },
@@ -3390,7 +3390,7 @@ describe("update-cli", () => {
 
     const errors = vi.mocked(defaultRuntime.error).mock.calls.map((call) => String(call[0]));
     expect(errors.join("\n")).toContain(
-      "openclaw update detected it is running inside the gateway process tree.",
+      "grokbot update detected it is running inside the gateway process tree.",
     );
     expect(errors.join("\n")).toContain("Gateway PID 4242 is an ancestor");
     expect(defaultRuntime.exit).toHaveBeenCalledWith(1);
@@ -3399,7 +3399,7 @@ describe("update-cli", () => {
   });
 
   it("blocks package updates when the target requires a newer Node runtime", async () => {
-    mockPackageInstallStatus(createCaseDir("openclaw-update"));
+    mockPackageInstallStatus(createCaseDir("grokbot-update"));
     vi.mocked(resolveNpmChannelTag).mockResolvedValue({
       tag: "latest",
       version: "2026.3.23-2",
@@ -3419,7 +3419,7 @@ describe("update-cli", () => {
     const errors = vi.mocked(defaultRuntime.error).mock.calls.map((call) => String(call[0]));
     expect(errors.join("\n")).toContain("Node ");
     expect(errors.join("\n")).toContain(
-      "Bare `npm i -g openclaw` can silently install an older compatible release.",
+      "Bare `npm i -g grokbot` can silently install an older compatible release.",
     );
   });
 
@@ -3427,96 +3427,96 @@ describe("update-cli", () => {
     {
       name: "explicit dist-tag",
       run: async () => {
-        mockPackageInstallStatus(createCaseDir("openclaw-update"));
+        mockPackageInstallStatus(createCaseDir("grokbot-update"));
         await updateCommand({ tag: "next" });
       },
-      expectedSpec: "openclaw@9999.0.0",
+      expectedSpec: "grokbot@9999.0.0",
     },
     {
       name: "main shorthand",
       run: async () => {
-        mockPackageInstallStatus(createCaseDir("openclaw-update"));
+        mockPackageInstallStatus(createCaseDir("grokbot-update"));
         await updateCommand({ yes: true, tag: "main" });
       },
-      expectedSpec: "github:openclaw/openclaw#main",
+      expectedSpec: "github:grokbot/grokbot#main",
     },
     {
       name: "explicit git package spec",
       run: async () => {
-        mockPackageInstallStatus(createCaseDir("openclaw-update"));
-        await updateCommand({ yes: true, tag: "github:openclaw/openclaw#main" });
+        mockPackageInstallStatus(createCaseDir("grokbot-update"));
+        await updateCommand({ yes: true, tag: "github:grokbot/grokbot#main" });
       },
-      expectedSpec: "github:openclaw/openclaw#main",
+      expectedSpec: "github:grokbot/grokbot#main",
     },
     {
       name: "aliased git package spec",
       run: async () => {
-        mockPackageInstallStatus(createCaseDir("openclaw-update"));
-        await updateCommand({ yes: true, tag: "OpenClaw@github:openclaw/openclaw#main" });
+        mockPackageInstallStatus(createCaseDir("grokbot-update"));
+        await updateCommand({ yes: true, tag: "GrokBot@github:grokbot/grokbot#main" });
       },
-      expectedSpec: "OpenClaw@github:openclaw/openclaw#main",
+      expectedSpec: "GrokBot@github:grokbot/grokbot#main",
     },
     {
       name: "full git URL package spec",
       run: async () => {
-        mockPackageInstallStatus(createCaseDir("openclaw-update"));
-        await updateCommand({ yes: true, tag: "https://github.com/openclaw/openclaw.git#main" });
+        mockPackageInstallStatus(createCaseDir("grokbot-update"));
+        await updateCommand({ yes: true, tag: "https://github.com/grokbot/grokbot.git#main" });
       },
-      expectedSpec: "https://github.com/openclaw/openclaw.git#main",
+      expectedSpec: "https://github.com/grokbot/grokbot.git#main",
     },
     {
       name: "hosted GitHub URL package spec without git suffix",
       run: async () => {
-        mockPackageInstallStatus(createCaseDir("openclaw-update"));
-        await updateCommand({ yes: true, tag: "https://github.com/openclaw/openclaw#main" });
+        mockPackageInstallStatus(createCaseDir("grokbot-update"));
+        await updateCommand({ yes: true, tag: "https://github.com/grokbot/grokbot#main" });
       },
-      expectedSpec: "https://github.com/openclaw/openclaw#main",
+      expectedSpec: "https://github.com/grokbot/grokbot#main",
     },
     {
       name: "aliased hosted GitHub URL package spec without git suffix",
       run: async () => {
-        mockPackageInstallStatus(createCaseDir("openclaw-update"));
+        mockPackageInstallStatus(createCaseDir("grokbot-update"));
         await updateCommand({
           yes: true,
-          tag: "openclaw@https://github.com/openclaw/openclaw#main",
+          tag: "grokbot@https://github.com/grokbot/grokbot#main",
         });
       },
-      expectedSpec: "https://github.com/openclaw/openclaw#main",
+      expectedSpec: "https://github.com/grokbot/grokbot#main",
     },
     {
       name: "GitHub shorthand package spec",
       run: async () => {
-        mockPackageInstallStatus(createCaseDir("openclaw-update"));
-        await updateCommand({ yes: true, tag: "openclaw/openclaw#main" });
+        mockPackageInstallStatus(createCaseDir("grokbot-update"));
+        await updateCommand({ yes: true, tag: "grokbot/grokbot#main" });
       },
-      expectedSpec: "openclaw/openclaw#main",
+      expectedSpec: "grokbot/grokbot#main",
     },
     {
       name: "SCP-style SSH package spec",
       run: async () => {
-        mockPackageInstallStatus(createCaseDir("openclaw-update"));
-        await updateCommand({ yes: true, tag: "git@github.com:openclaw/openclaw.git#main" });
+        mockPackageInstallStatus(createCaseDir("grokbot-update"));
+        await updateCommand({ yes: true, tag: "git@github.com:grokbot/grokbot.git#main" });
       },
-      expectedSpec: "git@github.com:openclaw/openclaw.git#main",
+      expectedSpec: "git@github.com:grokbot/grokbot.git#main",
     },
     {
       name: "OPENCLAW_UPDATE_PACKAGE_SPEC override",
       run: async () => {
-        mockPackageInstallStatus(createCaseDir("openclaw-update"));
+        mockPackageInstallStatus(createCaseDir("grokbot-update"));
         await withEnvAsync(
-          { OPENCLAW_UPDATE_PACKAGE_SPEC: "http://10.211.55.2:8138/openclaw-next.tgz" },
+          { OPENCLAW_UPDATE_PACKAGE_SPEC: "http://10.211.55.2:8138/grokbot-next.tgz" },
           async () => {
             await updateCommand({ yes: true, tag: "latest" });
           },
         );
       },
-      expectedSpec: "http://10.211.55.2:8138/openclaw-next.tgz",
+      expectedSpec: "http://10.211.55.2:8138/grokbot-next.tgz",
     },
   ] as const)(
     "resolves package install specs from tags and env overrides: $name",
     async ({ run, expectedSpec }) => {
       vi.clearAllMocks();
-      readPackageName.mockResolvedValue("openclaw");
+      readPackageName.mockResolvedValue("grokbot");
       readPackageVersion.mockResolvedValue("1.0.0");
       resolveGlobalManager.mockResolvedValue("npm");
       vi.mocked(resolveOpenClawPackageRoot).mockResolvedValue(process.cwd());
@@ -3526,14 +3526,14 @@ describe("update-cli", () => {
   );
 
   it("fails package updates when the installed correction version does not match the requested target", async () => {
-    const tempDir = createCaseDir("openclaw-update");
+    const tempDir = createCaseDir("grokbot-update");
     const nodeModules = path.join(tempDir, "node_modules");
-    const pkgRoot = path.join(nodeModules, "openclaw");
+    const pkgRoot = path.join(nodeModules, "grokbot");
     mockPackageInstallStatus(tempDir);
     await fs.mkdir(pkgRoot, { recursive: true });
     await fs.writeFile(
       path.join(pkgRoot, "package.json"),
-      JSON.stringify({ name: "openclaw", version: "2026.3.23" }),
+      JSON.stringify({ name: "grokbot", version: "2026.3.23" }),
       "utf-8",
     );
     for (const relativePath of TEST_BUNDLED_RUNTIME_SIDECAR_PATHS) {
@@ -3574,10 +3574,10 @@ describe("update-cli", () => {
   });
 
   it("stops package post-update work when staged npm install verification fails", async () => {
-    const tempDir = await createTrackedTempDir("openclaw-update-staged-fail-");
+    const tempDir = await createTrackedTempDir("grokbot-update-staged-fail-");
     const prefix = path.join(tempDir, "prefix");
     const nodeModules = path.join(prefix, "lib", "node_modules");
-    const pkgRoot = path.join(nodeModules, "openclaw");
+    const pkgRoot = path.join(nodeModules, "grokbot");
     mockPackageInstallStatus(pkgRoot);
     readPackageVersion.mockResolvedValue("2026.4.20");
     vi.mocked(resolveNpmChannelTag).mockResolvedValue({
@@ -3587,7 +3587,7 @@ describe("update-cli", () => {
     await fs.mkdir(path.join(pkgRoot, "dist"), { recursive: true });
     await fs.writeFile(
       path.join(pkgRoot, "package.json"),
-      JSON.stringify({ name: "openclaw", version: "2026.4.20" }),
+      JSON.stringify({ name: "grokbot", version: "2026.4.20" }),
       "utf-8",
     );
     await fs.writeFile(path.join(pkgRoot, "dist", "index.js"), "export {};\n", "utf-8");
@@ -3614,11 +3614,11 @@ describe("update-cli", () => {
         if (typeof stagePrefix !== "string") {
           throw new Error("missing stage prefix");
         }
-        const stageRoot = path.join(stagePrefix, "lib", "node_modules", "openclaw");
+        const stageRoot = path.join(stagePrefix, "lib", "node_modules", "grokbot");
         await fs.mkdir(path.join(stageRoot, "dist"), { recursive: true });
         await fs.writeFile(
           path.join(stageRoot, "package.json"),
-          JSON.stringify({ name: "openclaw", version: "2026.4.25" }),
+          JSON.stringify({ name: "grokbot", version: "2026.4.25" }),
           "utf-8",
         );
         await fs.writeFile(path.join(stageRoot, "dist", "index.js"), "export {};\n", "utf-8");
@@ -3653,21 +3653,21 @@ describe("update-cli", () => {
   });
 
   it("runs old package doctors without fix mode when service ownership is unknown", async () => {
-    const tempDir = await createTrackedTempDir("openclaw-update-package-");
+    const tempDir = await createTrackedTempDir("grokbot-update-package-");
     const nodeModules = path.join(tempDir, "node_modules");
-    const pkgRoot = path.join(nodeModules, "openclaw");
+    const pkgRoot = path.join(nodeModules, "grokbot");
     const entryPath = path.join(pkgRoot, "dist", "index.js");
     mockPackageInstallStatus(pkgRoot);
     await fs.mkdir(path.dirname(entryPath), { recursive: true });
     await fs.writeFile(
       path.join(pkgRoot, "package.json"),
-      JSON.stringify({ name: "openclaw", version: "2026.4.21" }),
+      JSON.stringify({ name: "grokbot", version: "2026.4.21" }),
       "utf-8",
     );
     await fs.writeFile(entryPath, "export {};\n", "utf-8");
     await writePackageDistInventory(pkgRoot);
     serviceReadCommand.mockResolvedValue({
-      programArguments: ["openclaw-wrapper", "gateway", "run"],
+      programArguments: ["grokbot-wrapper", "gateway", "run"],
     });
     serviceLoaded.mockResolvedValue(true);
     serviceReadRuntime.mockResolvedValue({ status: "stopped", state: "stopped" });
@@ -3739,15 +3739,15 @@ describe("update-cli", () => {
   });
 
   it("continues package post-core work for explicit post-update doctor advisories", async () => {
-    const tempDir = await createTrackedTempDir("openclaw-update-package-doctor-warning-");
+    const tempDir = await createTrackedTempDir("grokbot-update-package-doctor-warning-");
     const nodeModules = path.join(tempDir, "node_modules");
-    const pkgRoot = path.join(nodeModules, "openclaw");
+    const pkgRoot = path.join(nodeModules, "grokbot");
     const entryPath = path.join(pkgRoot, "dist", "index.js");
     mockPackageInstallStatus(pkgRoot);
     await fs.mkdir(path.dirname(entryPath), { recursive: true });
     await fs.writeFile(
       path.join(pkgRoot, "package.json"),
-      JSON.stringify({ name: "openclaw", version: "2026.4.21" }),
+      JSON.stringify({ name: "grokbot", version: "2026.4.21" }),
       "utf-8",
     );
     await fs.writeFile(entryPath, "export {};\n", "utf-8");
@@ -3831,7 +3831,7 @@ describe("update-cli", () => {
     expect(updateNpmInstalledPlugins).not.toHaveBeenCalled();
     expect(defaultRuntime.exit).not.toHaveBeenCalledWith(1);
     const jsonOutput = lastWriteJsonCall() as UpdateRunResult | undefined;
-    const doctorStep = jsonOutput?.steps.find((step) => step.name === "openclaw doctor");
+    const doctorStep = jsonOutput?.steps.find((step) => step.name === "grokbot doctor");
     expect(jsonOutput?.status).toBe("ok");
     expect(doctorStep?.exitCode).toBe(UPDATE_POST_INSTALL_DOCTOR_ADVISORY_EXIT_CODE);
     expect(doctorStep?.advisory).toEqual({
@@ -3844,15 +3844,15 @@ describe("update-cli", () => {
   });
 
   it("fails package updates when the post-update doctor is killed after verification", async () => {
-    const tempDir = await createTrackedTempDir("openclaw-update-package-doctor-timeout-");
+    const tempDir = await createTrackedTempDir("grokbot-update-package-doctor-timeout-");
     const nodeModules = path.join(tempDir, "node_modules");
-    const pkgRoot = path.join(nodeModules, "openclaw");
+    const pkgRoot = path.join(nodeModules, "grokbot");
     const entryPath = path.join(pkgRoot, "dist", "index.js");
     mockPackageInstallStatus(pkgRoot);
     await fs.mkdir(path.dirname(entryPath), { recursive: true });
     await fs.writeFile(
       path.join(pkgRoot, "package.json"),
-      JSON.stringify({ name: "openclaw", version: "2026.4.21" }),
+      JSON.stringify({ name: "grokbot", version: "2026.4.21" }),
       "utf-8",
     );
     await fs.writeFile(entryPath, "export {};\n", "utf-8");
@@ -3907,7 +3907,7 @@ describe("update-cli", () => {
     expect(spawn).not.toHaveBeenCalled();
     expect(defaultRuntime.exit).toHaveBeenCalledWith(1);
     const jsonOutput = lastWriteJsonCall() as UpdateRunResult | undefined;
-    const doctorStep = jsonOutput?.steps.find((step) => step.name === "openclaw doctor");
+    const doctorStep = jsonOutput?.steps.find((step) => step.name === "grokbot doctor");
     expect(doctorStep?.exitCode).toBe(124);
     expect(doctorStep?.advisory).toBeUndefined();
     expect(doctorStep?.termination).toBe("timeout");
@@ -3920,15 +3920,15 @@ describe("update-cli", () => {
   });
 
   it("runs package post-update doctor from the verified package root after a staged swap", async () => {
-    const tempDir = await createTrackedTempDir("openclaw-update-staged-doctor-");
+    const tempDir = await createTrackedTempDir("grokbot-update-staged-doctor-");
     const nodeModules = path.join(tempDir, "lib", "node_modules");
-    const pkgRoot = path.join(nodeModules, "openclaw");
+    const pkgRoot = path.join(nodeModules, "grokbot");
     const entryPath = path.join(pkgRoot, "dist", "index.js");
     mockPackageInstallStatus(pkgRoot);
     await fs.mkdir(path.dirname(entryPath), { recursive: true });
     await fs.writeFile(
       path.join(pkgRoot, "package.json"),
-      JSON.stringify({ name: "openclaw", version: "2026.4.21" }),
+      JSON.stringify({ name: "grokbot", version: "2026.4.21" }),
       "utf-8",
     );
     await fs.writeFile(entryPath, "export {};\n", "utf-8");
@@ -3972,13 +3972,13 @@ describe("update-cli", () => {
           requireValue(stagePrefix, "stage prefix"),
           "lib",
           "node_modules",
-          "openclaw",
+          "grokbot",
         );
         const stageEntryPath = path.join(stagePackageRoot, "dist", "index.js");
         await fs.mkdir(path.dirname(stageEntryPath), { recursive: true });
         await fs.writeFile(
           path.join(stagePackageRoot, "package.json"),
-          JSON.stringify({ name: "openclaw", version: "2026.5.14" }),
+          JSON.stringify({ name: "grokbot", version: "2026.5.14" }),
           "utf-8",
         );
         await fs.writeFile(stageEntryPath, "export {};\n", "utf-8");
@@ -4020,23 +4020,23 @@ describe("update-cli", () => {
     const processOffSpy = vi.spyOn(process, "off");
     suspendScheduledTaskAutoStartForUpdate.mockResolvedValue(true);
     resumeScheduledTaskAutoStartAfterUpdate.mockResolvedValue(true);
-    const tempDir = await createTrackedTempDir("openclaw-update-stop-service-");
+    const tempDir = await createTrackedTempDir("grokbot-update-stop-service-");
     const nodeModules = path.join(tempDir, "node_modules");
-    const pkgRoot = path.join(nodeModules, "openclaw");
+    const pkgRoot = path.join(nodeModules, "grokbot");
     const entryPath = path.join(pkgRoot, "dist", "index.js");
     mockPackageInstallStatus(pkgRoot);
     await fs.mkdir(path.dirname(entryPath), { recursive: true });
     await fs.writeFile(
       path.join(pkgRoot, "package.json"),
-      JSON.stringify({ name: "openclaw", version: "2026.4.21" }),
+      JSON.stringify({ name: "grokbot", version: "2026.4.21" }),
       "utf-8",
     );
     await fs.writeFile(entryPath, "export {};\n", "utf-8");
     await writePackageDistInventory(pkgRoot);
     serviceReadCommand.mockResolvedValue({
-      programArguments: ["openclaw", "gateway", "run"],
+      programArguments: ["grokbot", "gateway", "run"],
       environment: {
-        OPENCLAW_SERVICE_MARKER: "openclaw",
+        OPENCLAW_SERVICE_MARKER: "grokbot",
         OPENCLAW_SERVICE_KIND: "gateway",
       },
     });
@@ -4077,7 +4077,7 @@ describe("update-cli", () => {
 
     await withEnvAsync(
       {
-        OPENCLAW_SERVICE_MARKER: "openclaw",
+        OPENCLAW_SERVICE_MARKER: "grokbot",
         OPENCLAW_SERVICE_KIND: "gateway",
       },
       async () => {
@@ -4096,7 +4096,7 @@ describe("update-cli", () => {
     const serviceStopCall = serviceStop.mock.calls[0]?.[0] as
       | { env?: NodeJS.ProcessEnv }
       | undefined;
-    expect(serviceStopCall?.env?.OPENCLAW_SERVICE_MARKER).toBe("openclaw");
+    expect(serviceStopCall?.env?.OPENCLAW_SERVICE_MARKER).toBe("grokbot");
     expect(serviceStopCall?.env?.OPENCLAW_SERVICE_KIND).toBe("gateway");
     const serviceStopCallOrder = serviceStop.mock.invocationCallOrder[0];
     const requiredServiceStopCallOrder = requireValue(
@@ -4119,13 +4119,13 @@ describe("update-cli", () => {
     );
     expect(suspendScheduledTaskAutoStartForUpdate).toHaveBeenCalledWith(
       expect.objectContaining({
-        OPENCLAW_SERVICE_MARKER: "openclaw",
+        OPENCLAW_SERVICE_MARKER: "grokbot",
         OPENCLAW_SERVICE_KIND: "gateway",
       }),
     );
     expect(resumeScheduledTaskAutoStartAfterUpdate).toHaveBeenCalledWith(
       expect.objectContaining({
-        OPENCLAW_SERVICE_MARKER: "openclaw",
+        OPENCLAW_SERVICE_MARKER: "grokbot",
         OPENCLAW_SERVICE_KIND: "gateway",
       }),
     );
@@ -4145,11 +4145,11 @@ describe("update-cli", () => {
 
   it("restores Windows Scheduled Task autostart when service stop fails", async () => {
     const platformSpy = vi.spyOn(process, "platform", "get").mockReturnValue("win32");
-    mockPackageInstallStatus(createCaseDir("openclaw-update-stop-failure"));
+    mockPackageInstallStatus(createCaseDir("grokbot-update-stop-failure"));
     serviceReadCommand.mockResolvedValue({
-      programArguments: ["openclaw", "gateway", "run"],
+      programArguments: ["grokbot", "gateway", "run"],
       environment: {
-        OPENCLAW_SERVICE_MARKER: "openclaw",
+        OPENCLAW_SERVICE_MARKER: "grokbot",
         OPENCLAW_SERVICE_KIND: "gateway",
       },
     });
@@ -4184,11 +4184,11 @@ describe("update-cli", () => {
 
   it("preserves both the update and Scheduled Task recovery failures", async () => {
     const platformSpy = vi.spyOn(process, "platform", "get").mockReturnValue("win32");
-    mockPackageInstallStatus(createCaseDir("openclaw-update-recovery-failure"));
+    mockPackageInstallStatus(createCaseDir("grokbot-update-recovery-failure"));
     serviceReadCommand.mockResolvedValue({
-      programArguments: ["openclaw", "gateway", "run"],
+      programArguments: ["grokbot", "gateway", "run"],
       environment: {
-        OPENCLAW_SERVICE_MARKER: "openclaw",
+        OPENCLAW_SERVICE_MARKER: "grokbot",
         OPENCLAW_SERVICE_KIND: "gateway",
       },
     });
@@ -4239,11 +4239,11 @@ describe("update-cli", () => {
           }),
       );
       resumeScheduledTaskAutoStartAfterUpdate.mockResolvedValue(true);
-      mockPackageInstallStatus(createCaseDir("openclaw-update-suspension-signal"));
+      mockPackageInstallStatus(createCaseDir("grokbot-update-suspension-signal"));
       serviceReadCommand.mockResolvedValue({
-        programArguments: ["openclaw", "gateway", "run"],
+        programArguments: ["grokbot", "gateway", "run"],
         environment: {
-          OPENCLAW_SERVICE_MARKER: "openclaw",
+          OPENCLAW_SERVICE_MARKER: "grokbot",
           OPENCLAW_SERVICE_KIND: "gateway",
         },
       });
@@ -4279,11 +4279,11 @@ describe("update-cli", () => {
     "guards a %s Windows Scheduled Task during a no-restart package update",
     async (runtimeStatus) => {
       const platformSpy = vi.spyOn(process, "platform", "get").mockReturnValue("win32");
-      mockPackageInstallStatus(createCaseDir("openclaw-update-stopped-task"));
+      mockPackageInstallStatus(createCaseDir("grokbot-update-stopped-task"));
       serviceReadCommand.mockResolvedValue({
-        programArguments: ["openclaw", "gateway", "run"],
+        programArguments: ["grokbot", "gateway", "run"],
         environment: {
-          OPENCLAW_SERVICE_MARKER: "openclaw",
+          OPENCLAW_SERVICE_MARKER: "grokbot",
           OPENCLAW_SERVICE_KIND: "gateway",
         },
       });
@@ -4323,7 +4323,7 @@ describe("update-cli", () => {
     serviceReadCommand.mockResolvedValue({
       programArguments: ["node", serviceEntrypoint, "gateway", "run"],
       environment: {
-        OPENCLAW_SERVICE_MARKER: "openclaw",
+        OPENCLAW_SERVICE_MARKER: "grokbot",
         OPENCLAW_SERVICE_KIND: "gateway",
       },
     });
@@ -4348,7 +4348,7 @@ describe("update-cli", () => {
     const serviceStopCall = serviceStop.mock.calls[0]?.[0] as
       | { env?: NodeJS.ProcessEnv }
       | undefined;
-    expect(serviceStopCall?.env?.OPENCLAW_SERVICE_MARKER).toBe("openclaw");
+    expect(serviceStopCall?.env?.OPENCLAW_SERVICE_MARKER).toBe("grokbot");
     expect(serviceStopCall?.env?.OPENCLAW_SERVICE_KIND).toBe("gateway");
     const updateCall = vi.mocked(runGatewayUpdate).mock.calls[0]?.[0];
     expect(updateCall?.beforeGitMutation).toEqual(expect.any(Function));
@@ -4360,13 +4360,13 @@ describe("update-cli", () => {
 
   it("stops a running managed git gateway when wrapper commands hide the service root", async () => {
     const wrapperPath = path.join(
-      createCaseDir("openclaw-update-wrapper-service"),
+      createCaseDir("grokbot-update-wrapper-service"),
       "gateway-wrapper",
     );
     serviceReadCommand.mockResolvedValue({
       programArguments: [wrapperPath, "gateway", "run"],
       environment: {
-        OPENCLAW_SERVICE_MARKER: "openclaw",
+        OPENCLAW_SERVICE_MARKER: "grokbot",
         OPENCLAW_SERVICE_KIND: "gateway",
       },
     });
@@ -4399,7 +4399,7 @@ describe("update-cli", () => {
     serviceReadCommand.mockResolvedValue({
       programArguments: ["node", serviceEntrypoint, "gateway", "run"],
       environment: {
-        OPENCLAW_SERVICE_MARKER: "openclaw",
+        OPENCLAW_SERVICE_MARKER: "grokbot",
         OPENCLAW_SERVICE_KIND: "gateway",
       },
     });
@@ -4420,7 +4420,7 @@ describe("update-cli", () => {
       portUsage: {
         port: 18789,
         status: "busy",
-        listeners: [{ pid: 4242, command: "openclaw-gateway" }],
+        listeners: [{ pid: 4242, command: "grokbot-gateway" }],
         hints: [],
       },
       healthy: true,
@@ -4448,7 +4448,7 @@ describe("update-cli", () => {
     serviceReadCommand.mockResolvedValue({
       programArguments: ["node", serviceEntrypoint, "gateway", "run"],
       environment: {
-        OPENCLAW_SERVICE_MARKER: "openclaw",
+        OPENCLAW_SERVICE_MARKER: "grokbot",
         OPENCLAW_SERVICE_KIND: "gateway",
       },
     });
@@ -4478,14 +4478,14 @@ describe("update-cli", () => {
   });
 
   it("stops a managed gateway rooted at the git checkout when switching package installs to dev", async () => {
-    const packageRoot = createCaseDir("openclaw-update-package-root");
-    const gitRoot = await createTrackedTempDir("openclaw-update-git-service-root-");
+    const packageRoot = createCaseDir("grokbot-update-package-root");
+    const gitRoot = await createTrackedTempDir("grokbot-update-git-service-root-");
     const serviceEntrypoint = path.join(gitRoot, "dist", "index.js");
     await fs.mkdir(path.join(gitRoot, ".git"), { recursive: true });
     await fs.mkdir(path.dirname(serviceEntrypoint), { recursive: true });
     await fs.writeFile(
       path.join(gitRoot, "package.json"),
-      JSON.stringify({ name: "openclaw", version: "2026.4.21" }),
+      JSON.stringify({ name: "grokbot", version: "2026.4.21" }),
       "utf-8",
     );
     await fs.writeFile(serviceEntrypoint, "export {};\n", "utf-8");
@@ -4494,7 +4494,7 @@ describe("update-cli", () => {
     serviceReadCommand.mockResolvedValue({
       programArguments: ["node", serviceEntrypoint, "gateway", "run"],
       environment: {
-        OPENCLAW_SERVICE_MARKER: "openclaw",
+        OPENCLAW_SERVICE_MARKER: "grokbot",
         OPENCLAW_SERVICE_KIND: "gateway",
       },
     });
@@ -4523,19 +4523,19 @@ describe("update-cli", () => {
   });
 
   it("stops a managed gateway rooted at the package install when switching package installs to dev", async () => {
-    const packageRoot = await createTrackedTempDir("openclaw-update-package-service-root-");
+    const packageRoot = await createTrackedTempDir("grokbot-update-package-service-root-");
     const packageEntrypoint = path.join(packageRoot, "dist", "index.js");
-    const gitRoot = await createTrackedTempDir("openclaw-update-git-service-root-");
+    const gitRoot = await createTrackedTempDir("grokbot-update-git-service-root-");
     await fs.mkdir(path.join(gitRoot, ".git"), { recursive: true });
     await fs.mkdir(path.dirname(packageEntrypoint), { recursive: true });
     await fs.writeFile(
       path.join(gitRoot, "package.json"),
-      JSON.stringify({ name: "openclaw", version: "2026.4.21" }),
+      JSON.stringify({ name: "grokbot", version: "2026.4.21" }),
       "utf-8",
     );
     await fs.writeFile(
       path.join(packageRoot, "package.json"),
-      JSON.stringify({ name: "openclaw", version: "2026.4.20" }),
+      JSON.stringify({ name: "grokbot", version: "2026.4.20" }),
       "utf-8",
     );
     await fs.writeFile(packageEntrypoint, "export {};\n", "utf-8");
@@ -4544,7 +4544,7 @@ describe("update-cli", () => {
     serviceReadCommand.mockResolvedValue({
       programArguments: ["node", packageEntrypoint, "gateway", "run"],
       environment: {
-        OPENCLAW_SERVICE_MARKER: "openclaw",
+        OPENCLAW_SERVICE_MARKER: "grokbot",
         OPENCLAW_SERVICE_KIND: "gateway",
       },
     });
@@ -4573,19 +4573,19 @@ describe("update-cli", () => {
   });
 
   it("does not stop or restart a managed gateway owned by another git checkout", async () => {
-    const otherRoot = await createTrackedTempDir("openclaw-update-other-service-root-");
+    const otherRoot = await createTrackedTempDir("grokbot-update-other-service-root-");
     const otherEntrypoint = path.join(otherRoot, "dist", "index.js");
     await fs.mkdir(path.dirname(otherEntrypoint), { recursive: true });
     await fs.writeFile(
       path.join(otherRoot, "package.json"),
-      JSON.stringify({ name: "openclaw", version: "2026.4.21" }),
+      JSON.stringify({ name: "grokbot", version: "2026.4.21" }),
       "utf-8",
     );
     await fs.writeFile(otherEntrypoint, "export {};\n", "utf-8");
     serviceReadCommand.mockResolvedValue({
       programArguments: ["node", otherEntrypoint, "gateway", "run"],
       environment: {
-        OPENCLAW_SERVICE_MARKER: "openclaw",
+        OPENCLAW_SERVICE_MARKER: "grokbot",
         OPENCLAW_SERVICE_KIND: "gateway",
       },
     });
@@ -4624,7 +4624,7 @@ describe("update-cli", () => {
     serviceReadCommand.mockResolvedValue({
       programArguments: ["node", serviceEntrypoint, "gateway", "run"],
       environment: {
-        OPENCLAW_SERVICE_MARKER: "openclaw",
+        OPENCLAW_SERVICE_MARKER: "grokbot",
         OPENCLAW_SERVICE_KIND: "gateway",
       },
     });
@@ -4645,24 +4645,24 @@ describe("update-cli", () => {
   });
 
   it("keeps managed service stop output off stdout during json package updates", async () => {
-    const tempDir = await createTrackedTempDir("openclaw-update-json-stop-service-");
+    const tempDir = await createTrackedTempDir("grokbot-update-json-stop-service-");
     const nodeModules = path.join(tempDir, "node_modules");
-    const pkgRoot = path.join(nodeModules, "openclaw");
+    const pkgRoot = path.join(nodeModules, "grokbot");
     const entryPath = path.join(pkgRoot, "dist", "index.js");
     const stdoutWrite = vi.spyOn(process.stdout, "write").mockImplementation(() => true);
     mockPackageInstallStatus(pkgRoot);
     await fs.mkdir(path.dirname(entryPath), { recursive: true });
     await fs.writeFile(
       path.join(pkgRoot, "package.json"),
-      JSON.stringify({ name: "openclaw", version: "2026.4.21" }),
+      JSON.stringify({ name: "grokbot", version: "2026.4.21" }),
       "utf-8",
     );
     await fs.writeFile(entryPath, "export {};\n", "utf-8");
     await writePackageDistInventory(pkgRoot);
     serviceReadCommand.mockResolvedValue({
-      programArguments: ["openclaw", "gateway", "run"],
+      programArguments: ["grokbot", "gateway", "run"],
       environment: {
-        OPENCLAW_SERVICE_MARKER: "openclaw",
+        OPENCLAW_SERVICE_MARKER: "grokbot",
         OPENCLAW_SERVICE_KIND: "gateway",
       },
     });
@@ -4673,7 +4673,7 @@ describe("update-cli", () => {
       state: "running",
     });
     serviceStop.mockImplementationOnce(async (params: { stdout?: NodeJS.WritableStream }) => {
-      params.stdout?.write("Stopped systemd service: openclaw-gateway.service\n");
+      params.stdout?.write("Stopped systemd service: grokbot-gateway.service\n");
     });
     pathExists.mockImplementation(async (candidate: string) => {
       try {
@@ -4717,23 +4717,23 @@ describe("update-cli", () => {
   });
 
   it("disarms legacy launchd updater jobs before stopping the gateway", async () => {
-    const tempDir = await createTrackedTempDir("openclaw-update-launchd-loop-");
+    const tempDir = await createTrackedTempDir("grokbot-update-launchd-loop-");
     const nodeModules = path.join(tempDir, "node_modules");
-    const pkgRoot = path.join(nodeModules, "openclaw");
+    const pkgRoot = path.join(nodeModules, "grokbot");
     const entryPath = path.join(pkgRoot, "dist", "index.js");
     mockPackageInstallStatus(pkgRoot);
     await fs.mkdir(path.dirname(entryPath), { recursive: true });
     await fs.writeFile(
       path.join(pkgRoot, "package.json"),
-      JSON.stringify({ name: "openclaw", version: "2026.4.21" }),
+      JSON.stringify({ name: "grokbot", version: "2026.4.21" }),
       "utf-8",
     );
     await fs.writeFile(entryPath, "export {};\n", "utf-8");
     await writePackageDistInventory(pkgRoot);
     serviceReadCommand.mockResolvedValue({
-      programArguments: ["openclaw", "gateway", "run"],
+      programArguments: ["grokbot", "gateway", "run"],
       environment: {
-        OPENCLAW_SERVICE_MARKER: "openclaw",
+        OPENCLAW_SERVICE_MARKER: "grokbot",
         OPENCLAW_SERVICE_KIND: "gateway",
       },
     });
@@ -4784,9 +4784,9 @@ describe("update-cli", () => {
   });
 
   it("refreshes package installs even when the current version already matches the target", async () => {
-    const tempDir = await createTrackedTempDir("openclaw-update-current-");
+    const tempDir = await createTrackedTempDir("grokbot-update-current-");
     const nodeModules = path.join(tempDir, "node_modules");
-    const pkgRoot = path.join(nodeModules, "openclaw");
+    const pkgRoot = path.join(nodeModules, "grokbot");
     const entryPath = path.join(pkgRoot, "dist", "index.js");
     mockPackageInstallStatus(pkgRoot);
     readPackageVersion.mockResolvedValue("2026.4.23");
@@ -4797,7 +4797,7 @@ describe("update-cli", () => {
     await fs.mkdir(path.dirname(entryPath), { recursive: true });
     await fs.writeFile(
       path.join(pkgRoot, "package.json"),
-      JSON.stringify({ name: "openclaw", version: "2026.4.23" }),
+      JSON.stringify({ name: "grokbot", version: "2026.4.23" }),
       "utf-8",
     );
     await fs.writeFile(entryPath, "export {};\n", "utf-8");
@@ -4838,7 +4838,7 @@ describe("update-cli", () => {
 
     await updateCommand({ yes: true, restart: false });
 
-    expectPackageInstallSpec("openclaw@2026.4.23");
+    expectPackageInstallSpec("grokbot@2026.4.23");
     const doctorCall = doctorCommandCall();
     expect(doctorCall?.[0][0]).toContain("node");
     expect(doctorCall?.[0].slice(1)).toEqual([entryPath, "doctor", "--non-interactive"]);
@@ -4858,14 +4858,14 @@ describe("update-cli", () => {
   });
 
   it("retries package updates without optional deps when npm global update fails", async () => {
-    const tempDir = await createTrackedTempDir("openclaw-update-optional-");
+    const tempDir = await createTrackedTempDir("grokbot-update-optional-");
     const nodeModules = path.join(tempDir, "node_modules");
-    const pkgRoot = path.join(nodeModules, "openclaw");
+    const pkgRoot = path.join(nodeModules, "grokbot");
     mockPackageInstallStatus(pkgRoot);
     await fs.mkdir(pkgRoot, { recursive: true });
     await fs.writeFile(
       path.join(pkgRoot, "package.json"),
-      JSON.stringify({ name: "openclaw", version: "9999.0.0" }),
+      JSON.stringify({ name: "grokbot", version: "9999.0.0" }),
       "utf-8",
     );
     for (const relativePath of TEST_BUNDLED_RUNTIME_SIDECAR_PATHS) {
@@ -4921,8 +4921,8 @@ describe("update-cli", () => {
         "npm",
         "i",
         "-g",
-        "--allow-scripts=openclaw",
-        "openclaw@9999.0.0",
+        "--allow-scripts=grokbot",
+        "grokbot@9999.0.0",
         "--no-fund",
         "--no-audit",
         "--loglevel=error",
@@ -4932,8 +4932,8 @@ describe("update-cli", () => {
         "npm",
         "i",
         "-g",
-        "--allow-scripts=openclaw",
-        "openclaw@9999.0.0",
+        "--allow-scripts=grokbot",
+        "grokbot@9999.0.0",
         "--omit=optional",
         "--no-fund",
         "--no-audit",
@@ -4948,7 +4948,7 @@ describe("update-cli", () => {
     const platformSpy = vi.spyOn(process, "platform", "get").mockReturnValue("darwin");
     const brewPrefix = createCaseDir("brew-prefix");
     const brewRoot = path.join(brewPrefix, "lib", "node_modules");
-    const pkgRoot = path.join(brewRoot, "openclaw");
+    const pkgRoot = path.join(brewRoot, "grokbot");
     const brewNpm = path.join(brewPrefix, "bin", "npm");
     const win32PrefixNpm = path.join(brewPrefix, "npm.cmd");
     const pathNpmRoot = createCaseDir("nvm-root");
@@ -5012,7 +5012,7 @@ describe("update-cli", () => {
           isOwningNpmCommand(argv[0], brewPrefix) &&
           argv[1] === "i" &&
           argv[2] === "-g" &&
-          argv.includes("openclaw@9999.0.0"),
+          argv.includes("grokbot@9999.0.0"),
       );
 
     const requiredInstallCall = requireValue(installCall, "brew npm install call");
@@ -5040,11 +5040,11 @@ describe("update-cli", () => {
 
   it("prepends portable Git PATH for package updates on Windows", async () => {
     const platformSpy = vi.spyOn(process, "platform", "get").mockReturnValue("win32");
-    const tempDir = createCaseDir("openclaw-update");
-    const localAppData = createCaseDir("openclaw-localappdata");
+    const tempDir = createCaseDir("grokbot-update");
+    const localAppData = createCaseDir("grokbot-localappdata");
     const portableGitMingw = path.join(
       localAppData,
-      "OpenClaw",
+      "GrokBot",
       "deps",
       "portable-git",
       "mingw64",
@@ -5052,7 +5052,7 @@ describe("update-cli", () => {
     );
     const portableGitUsr = path.join(
       localAppData,
-      "OpenClaw",
+      "GrokBot",
       "deps",
       "portable-git",
       "usr",
@@ -5123,7 +5123,7 @@ describe("update-cli", () => {
   ] as const)("updateCommand reports outcomes: $name", runUpdateCliScenario);
 
   it("persists the requested channel only after a successful package update", async () => {
-    const tempDir = createCaseDir("openclaw-update");
+    const tempDir = createCaseDir("grokbot-update");
     mockPackageInstallStatus(tempDir);
 
     await updateCommand({ channel: "beta", yes: true });
@@ -5155,13 +5155,13 @@ describe("update-cli", () => {
   });
 
   it("warns when a package update targets a managed service root outside the shell root", async () => {
-    const shellRoot = createCaseDir("openclaw-shell-root");
-    const serviceRoot = await createTrackedTempDir("openclaw-service-root-");
+    const shellRoot = createCaseDir("grokbot-shell-root");
+    const serviceRoot = await createTrackedTempDir("grokbot-service-root-");
     const serviceNode = path.join(path.dirname(serviceRoot), "bin", "node");
     await fs.mkdir(path.join(serviceRoot, "dist"), { recursive: true });
     await fs.writeFile(
       path.join(serviceRoot, "package.json"),
-      JSON.stringify({ name: "openclaw", version: "2026.5.18" }),
+      JSON.stringify({ name: "grokbot", version: "2026.5.18" }),
       "utf-8",
     );
     mockPackageInstallStatus(shellRoot);
@@ -5177,22 +5177,22 @@ describe("update-cli", () => {
       .join("\n");
     expect(logs).toContain(`Targeting managed gateway service package root: ${serviceRoot}`);
     expect(logs).toContain(
-      `Shell OpenClaw root differs from the managed gateway service root: ${shellRoot}`,
+      `Shell GrokBot root differs from the managed gateway service root: ${shellRoot}`,
     );
-    expect(logs).toContain("make sure `openclaw` on PATH resolves to the managed service root");
+    expect(logs).toContain("make sure `grokbot` on PATH resolves to the managed service root");
     expect(logs).toContain(`Managed gateway service Node: ${serviceNode}`);
   });
 
   it("blocks a stale managed service Node before a no-restart package update", async () => {
-    const shellRoot = createCaseDir("openclaw-shell-root");
-    const serviceRoot = await createTrackedTempDir("openclaw-service-root-");
+    const shellRoot = createCaseDir("grokbot-shell-root");
+    const serviceRoot = await createTrackedTempDir("grokbot-service-root-");
     const serviceNode = path.join(path.dirname(serviceRoot), "bin", "node");
     await fs.mkdir(path.join(serviceRoot, "dist"), { recursive: true });
     await fs.mkdir(path.dirname(serviceNode), { recursive: true });
     await fs.writeFile(serviceNode, "", "utf-8");
     await fs.writeFile(
       path.join(serviceRoot, "package.json"),
-      JSON.stringify({ name: "openclaw", version: "2026.5.18" }),
+      JSON.stringify({ name: "grokbot", version: "2026.5.18" }),
       "utf-8",
     );
     mockPackageInstallStatus(shellRoot);
@@ -5241,10 +5241,10 @@ describe("update-cli", () => {
   });
 
   it("runs managed service package follow-up commands with the service Node", async () => {
-    const shellRoot = createCaseDir("openclaw-shell-root");
-    const servicePrefix = await createTrackedTempDir("openclaw-service-prefix-");
+    const shellRoot = createCaseDir("grokbot-shell-root");
+    const servicePrefix = await createTrackedTempDir("grokbot-service-prefix-");
     const nodeModules = path.join(servicePrefix, "lib", "node_modules");
-    const serviceRoot = path.join(nodeModules, "openclaw");
+    const serviceRoot = path.join(nodeModules, "grokbot");
     const serviceNode = path.join(servicePrefix, "bin", "node");
     const serviceNpm = path.join(servicePrefix, "bin", "npm");
     const entrypoint = path.join(serviceRoot, "dist", "index.js");
@@ -5255,7 +5255,7 @@ describe("update-cli", () => {
     const serviceNpmReal = await fs.realpath(serviceNpm);
     await fs.writeFile(
       path.join(serviceRoot, "package.json"),
-      JSON.stringify({ name: "openclaw", version: "2026.5.18" }),
+      JSON.stringify({ name: "grokbot", version: "2026.5.18" }),
       "utf-8",
     );
     await fs.writeFile(entrypoint, "", "utf-8");
@@ -5312,13 +5312,13 @@ describe("update-cli", () => {
           ? argv[argv.indexOf("--prefix") + 1]
           : undefined;
         const stageRoot = stagePrefix
-          ? path.join(stagePrefix, "lib", "node_modules", "openclaw")
+          ? path.join(stagePrefix, "lib", "node_modules", "grokbot")
           : serviceRoot;
         const stageEntryPoint = path.join(stageRoot, "dist", "index.js");
         await fs.mkdir(path.dirname(stageEntryPoint), { recursive: true });
         await fs.writeFile(
           path.join(stageRoot, "package.json"),
-          JSON.stringify({ name: "openclaw", version: "2026.5.20" }),
+          JSON.stringify({ name: "grokbot", version: "2026.5.20" }),
           "utf-8",
         );
         await fs.writeFile(stageEntryPoint, "export {};\n", "utf-8");
@@ -5345,7 +5345,7 @@ describe("update-cli", () => {
   });
 
   it("uses the managed service Node when package roots match but node binaries differ", async () => {
-    const root = createCaseDir("openclaw-same-root");
+    const root = createCaseDir("grokbot-same-root");
     // Service is baked with a different node than the current process.execPath.
     const serviceNode = "/opt/other-node/bin/node";
     const entrypoint = path.join(root, "dist", "index.js");
@@ -5371,9 +5371,9 @@ describe("update-cli", () => {
   });
 
   it("refreshes the managed service to current Node when its baked Node cannot run the target", async () => {
-    const servicePrefix = await createTrackedTempDir("openclaw-service-prefix-");
+    const servicePrefix = await createTrackedTempDir("grokbot-service-prefix-");
     const nodeModules = path.join(servicePrefix, "lib", "node_modules");
-    const root = path.join(nodeModules, "openclaw");
+    const root = path.join(nodeModules, "grokbot");
     const serviceNode = path.join(servicePrefix, "bin", "node");
     const serviceNpm = path.join(servicePrefix, "bin", "npm");
     const entrypoint = path.join(root, "dist", "index.js");
@@ -5384,7 +5384,7 @@ describe("update-cli", () => {
     const serviceNpmReal = await fs.realpath(serviceNpm);
     await fs.writeFile(
       path.join(root, "package.json"),
-      JSON.stringify({ name: "openclaw", version: "2026.5.18" }),
+      JSON.stringify({ name: "grokbot", version: "2026.5.18" }),
       "utf-8",
     );
     await fs.writeFile(entrypoint, "", "utf-8");
@@ -5457,13 +5457,13 @@ describe("update-cli", () => {
           ? argv[argv.indexOf("--prefix") + 1]
           : undefined;
         const stageRoot = stagePrefix
-          ? path.join(stagePrefix, "lib", "node_modules", "openclaw")
+          ? path.join(stagePrefix, "lib", "node_modules", "grokbot")
           : root;
         const stageEntryPoint = path.join(stageRoot, "dist", "index.js");
         await fs.mkdir(path.dirname(stageEntryPoint), { recursive: true });
         await fs.writeFile(
           path.join(stageRoot, "package.json"),
-          JSON.stringify({ name: "openclaw", version: "2026.7.1" }),
+          JSON.stringify({ name: "grokbot", version: "2026.7.1" }),
           "utf-8",
         );
         await fs.writeFile(stageEntryPoint, "export {};\n", "utf-8");
@@ -5498,9 +5498,9 @@ describe("update-cli", () => {
   });
 
   it("pins package install to the service root when nodes differ and no owning npm exists at the prefix", async () => {
-    const servicePrefix = await createTrackedTempDir("openclaw-no-npm-prefix-");
+    const servicePrefix = await createTrackedTempDir("grokbot-no-npm-prefix-");
     const nodeModules = path.join(servicePrefix, "lib", "node_modules");
-    const root = path.join(nodeModules, "openclaw");
+    const root = path.join(nodeModules, "grokbot");
     const serviceNode = path.join(servicePrefix, "bin", "node");
     const entrypoint = path.join(root, "dist", "index.js");
     // Create the node binary but intentionally do NOT create <prefix>/bin/npm
@@ -5511,7 +5511,7 @@ describe("update-cli", () => {
     // No npm binary at servicePrefix/bin/npm!
     await fs.writeFile(
       path.join(root, "package.json"),
-      JSON.stringify({ name: "openclaw", version: "2026.5.18" }),
+      JSON.stringify({ name: "grokbot", version: "2026.5.18" }),
       "utf-8",
     );
     await fs.writeFile(entrypoint, "", "utf-8");
@@ -5567,13 +5567,13 @@ describe("update-cli", () => {
         const prefixIdx = argv.indexOf("--prefix");
         const stagePrefix = prefixIdx >= 0 ? argv[prefixIdx + 1] : undefined;
         const stageRoot = stagePrefix
-          ? path.join(stagePrefix, "lib", "node_modules", "openclaw")
+          ? path.join(stagePrefix, "lib", "node_modules", "grokbot")
           : root;
         const stageEntryPoint = path.join(stageRoot, "dist", "index.js");
         await fs.mkdir(path.dirname(stageEntryPoint), { recursive: true });
         await fs.writeFile(
           path.join(stageRoot, "package.json"),
-          JSON.stringify({ name: "openclaw", version: "2026.5.20" }),
+          JSON.stringify({ name: "grokbot", version: "2026.5.20" }),
           "utf-8",
         );
         await fs.writeFile(stageEntryPoint, "export {};\n", "utf-8");
@@ -5606,7 +5606,7 @@ describe("update-cli", () => {
   });
 
   it("repairs legacy config before persisting a requested update channel", async () => {
-    const tempDir = createCaseDir("openclaw-update");
+    const tempDir = createCaseDir("grokbot-update");
     mockPackageInstallStatus(tempDir);
     const legacyConfig = {
       channels: {
@@ -5738,7 +5738,7 @@ describe("update-cli", () => {
   });
 
   it("does not auto-repair legacy config when authored includes are present", async () => {
-    const tempDir = createCaseDir("openclaw-update");
+    const tempDir = createCaseDir("grokbot-update");
     mockPackageInstallStatus(tempDir);
     const legacyConfigWithInclude = {
       $include: "./channels.json5",
@@ -5780,7 +5780,7 @@ describe("update-cli", () => {
   });
 
   it("does not repair legacy config during a dry run", async () => {
-    const tempDir = createCaseDir("openclaw-update");
+    const tempDir = createCaseDir("grokbot-update");
     mockPackageInstallStatus(tempDir);
     const legacyConfig = {
       channels: {
@@ -5822,7 +5822,7 @@ describe("update-cli", () => {
   });
 
   it("does not persist the requested channel when the package update fails", async () => {
-    const tempDir = createCaseDir("openclaw-update");
+    const tempDir = createCaseDir("grokbot-update");
     mockPackageInstallStatus(tempDir);
     vi.mocked(runCommandWithTimeout).mockImplementation(async (argv) => {
       if (Array.isArray(argv) && argv[0] === "npm" && argv[1] === "i" && argv[2] === "-g") {
@@ -5852,7 +5852,7 @@ describe("update-cli", () => {
   });
 
   it("keeps the requested channel when plugin sync writes config after update", async () => {
-    const tempDir = createCaseDir("openclaw-update");
+    const tempDir = createCaseDir("grokbot-update");
     mockPackageInstallStatus(tempDir);
     syncPluginsForUpdateChannel.mockImplementation(async ({ config }) => ({
       changed: true,
@@ -5880,7 +5880,7 @@ describe("update-cli", () => {
   });
 
   it("refreshes post-doctor config before post-update plugin sync", async () => {
-    const tempDir = createCaseDir("openclaw-update");
+    const tempDir = createCaseDir("grokbot-update");
     mockPackageInstallStatus(tempDir);
     const preUpdateConfig = { update: { channel: "stable" } } as OpenClawConfig;
     const postDoctorConfig = {
@@ -5906,7 +5906,7 @@ describe("update-cli", () => {
         ...config,
         plugins: {
           ...config.plugins,
-          load: { paths: ["/tmp/openclaw-updated-plugin"] },
+          load: { paths: ["/tmp/grokbot-updated-plugin"] },
         },
       },
       summary: {
@@ -5940,8 +5940,8 @@ describe("update-cli", () => {
   });
 
   it("restores pre-update channels when post-core resume sees post-doctor config without them", async () => {
-    const tempDir = createCaseDir("openclaw-update");
-    const configPath = path.join(tempDir, "openclaw.json");
+    const tempDir = createCaseDir("grokbot-update");
+    const configPath = path.join(tempDir, "grokbot.json");
     const preUpdateConfig = {
       update: { channel: "stable" },
       channels: {
@@ -6015,8 +6015,8 @@ describe("update-cli", () => {
   });
 
   it("restores pre-update channel model overrides when post-core resume restores a channel", async () => {
-    const tempDir = createCaseDir("openclaw-update");
-    const configPath = path.join(tempDir, "openclaw.json");
+    const tempDir = createCaseDir("grokbot-update");
+    const configPath = path.join(tempDir, "grokbot.json");
     const preUpdateConfig = {
       update: { channel: "stable" },
       channels: {
@@ -6114,8 +6114,8 @@ describe("update-cli", () => {
   });
 
   it("does not restore stale backup channels when current pre-update snapshot has none", async () => {
-    const tempDir = createCaseDir("openclaw-update");
-    const configPath = path.join(tempDir, "openclaw.json");
+    const tempDir = createCaseDir("grokbot-update");
+    const configPath = path.join(tempDir, "grokbot.json");
     const removedChannelBackup = {
       update: { channel: "stable" },
       channels: {
@@ -6180,8 +6180,8 @@ describe("update-cli", () => {
   });
 
   it("ignores pre-update channel snapshots older than the current update attempt", async () => {
-    const tempDir = createCaseDir("openclaw-update");
-    const configPath = path.join(tempDir, "openclaw.json");
+    const tempDir = createCaseDir("grokbot-update");
+    const configPath = path.join(tempDir, "grokbot.json");
     const oldPreUpdateConfig = {
       update: { channel: "stable" },
       channels: {
@@ -6248,8 +6248,8 @@ describe("update-cli", () => {
   });
 
   it("uses the Windows parent process start time for old post-core parents", async () => {
-    const tempDir = createCaseDir("openclaw-update");
-    const configPath = path.join(tempDir, "openclaw.json");
+    const tempDir = createCaseDir("grokbot-update");
+    const configPath = path.join(tempDir, "grokbot.json");
     const preUpdateConfig = {
       update: { channel: "stable" },
       channels: {
@@ -6327,8 +6327,8 @@ describe("update-cli", () => {
   });
 
   it("ignores disk fallback snapshots when the update attempt start is unknown", async () => {
-    const tempDir = createCaseDir("openclaw-update");
-    const configPath = path.join(tempDir, "openclaw.json");
+    const tempDir = createCaseDir("grokbot-update");
+    const configPath = path.join(tempDir, "grokbot.json");
     const preUpdateConfig = {
       update: { channel: "stable" },
       channels: {
@@ -6387,7 +6387,7 @@ describe("update-cli", () => {
   });
 
   it("persists authored channel values when post-core restore input is resolved", async () => {
-    const tempDir = createCaseDir("openclaw-update");
+    const tempDir = createCaseDir("grokbot-update");
     const sourceConfigPath = path.join(tempDir, "source-config.json");
     const resolvedPreUpdateConfig = {
       update: { channel: "stable" },
@@ -6470,8 +6470,8 @@ describe("update-cli", () => {
   });
 
   it("resolves included pre-update channels for old post-core parents", async () => {
-    const tempDir = createCaseDir("openclaw-update");
-    const configPath = path.join(tempDir, "openclaw.json");
+    const tempDir = createCaseDir("grokbot-update");
+    const configPath = path.join(tempDir, "grokbot.json");
     const channelsPath = path.join(tempDir, "channels.json5");
     const includedChannels = {
       whatsapp: {
@@ -6543,8 +6543,8 @@ describe("update-cli", () => {
   });
 
   it("ignores stale pre-update channel snapshots during post-core resume", async () => {
-    const tempDir = createCaseDir("openclaw-update");
-    const configPath = path.join(tempDir, "openclaw.json");
+    const tempDir = createCaseDir("grokbot-update");
+    const configPath = path.join(tempDir, "grokbot.json");
     const staleConfig = {
       channels: {
         whatsapp: {
@@ -6600,7 +6600,7 @@ describe("update-cli", () => {
   });
 
   it("uses source config and plugin index records for post-update plugin sync", async () => {
-    const tempDir = createCaseDir("openclaw-update");
+    const tempDir = createCaseDir("grokbot-update");
     mockPackageInstallStatus(tempDir);
     const pluginInstallRecords = {
       "lossless-claw": {
@@ -6663,7 +6663,7 @@ describe("update-cli", () => {
   });
 
   it("forwards ClawHub risk acknowledgement to post-update plugin work", async () => {
-    const tempDir = createCaseDir("openclaw-update");
+    const tempDir = createCaseDir("grokbot-update");
     mockPackageInstallStatus(tempDir);
 
     await updateCommand({
@@ -6682,7 +6682,7 @@ describe("update-cli", () => {
   });
 
   it("does not prompt for ClawHub risk during post-update plugin work when stdout is not interactive", async () => {
-    const tempDir = createCaseDir("openclaw-update");
+    const tempDir = createCaseDir("grokbot-update");
     mockPackageInstallStatus(tempDir);
     setTty(true);
     setStdoutTty(false);
@@ -6698,7 +6698,7 @@ describe("update-cli", () => {
   });
 
   it("does not prompt for ClawHub risk during post-update plugin work when --yes is set", async () => {
-    const tempDir = createCaseDir("openclaw-update");
+    const tempDir = createCaseDir("grokbot-update");
     mockPackageInstallStatus(tempDir);
     setTty(true);
     setStdoutTty(true);
@@ -6715,7 +6715,7 @@ describe("update-cli", () => {
   });
 
   it("does not prompt for ClawHub risk during dry-run post-update plugin work", async () => {
-    const tempDir = createCaseDir("openclaw-update");
+    const tempDir = createCaseDir("grokbot-update");
     mockPackageInstallStatus(tempDir);
     setTty(true);
     setStdoutTty(true);
@@ -6732,7 +6732,7 @@ describe("update-cli", () => {
   });
 
   it("sanitizes ClawHub risk prompt labels during post-update plugin work", async () => {
-    const tempDir = createCaseDir("openclaw-update");
+    const tempDir = createCaseDir("grokbot-update");
     mockPackageInstallStatus(tempDir);
     setTty(true);
     setStdoutTty(true);
@@ -6773,7 +6773,7 @@ describe("update-cli", () => {
   });
 
   it("prints ClawHub risk warnings before interactive post-update acknowledgement prompts", async () => {
-    const tempDir = createCaseDir("openclaw-update");
+    const tempDir = createCaseDir("grokbot-update");
     const warning =
       "╭─ WARNING - ClawHub found security risks in this release ─╮\n" +
       "│ • Security scan:     suspicious                                      │\n" +
@@ -6815,7 +6815,7 @@ describe("update-cli", () => {
   });
 
   it("does not duplicate ClawHub risk warnings already printed before prompts", async () => {
-    const tempDir = createCaseDir("openclaw-update");
+    const tempDir = createCaseDir("grokbot-update");
     const warning =
       "╭─ WARNING - ClawHub found security risks in this release ─╮\n" +
       "│ • Security scan:     suspicious                                      │\n" +
@@ -6871,8 +6871,8 @@ describe("update-cli", () => {
   });
 
   it("persists channel and runs post-update work after switching from package to git", async () => {
-    const tempDir = createCaseDir("openclaw-update");
-    const gitRoot = path.join(tempDir, "..", "openclaw");
+    const tempDir = createCaseDir("grokbot-update");
+    const gitRoot = path.join(tempDir, "..", "grokbot");
     const completionCacheSpy = vi
       .spyOn(updateCliShared, "tryWriteCompletionCache")
       .mockResolvedValue(undefined);
@@ -6946,7 +6946,7 @@ describe("update-cli", () => {
       "Git-based updates need a clean working tree before they can switch commits, fetch, or rebase.",
     );
     expect(logs.join("\n")).toContain(
-      "Commit, stash, or discard the local changes, then rerun `openclaw update`.",
+      "Commit, stash, or discard the local changes, then rerun `grokbot update`.",
     );
     expect(serviceStop).not.toHaveBeenCalled();
     expect(defaultRuntime.exit).toHaveBeenCalledWith(0);
@@ -7052,7 +7052,7 @@ describe("update-cli", () => {
   ] as const)("updateCommand service refresh behavior: $name", runUpdateCliScenario);
 
   it("restores an unknown package service without rewriting its missing updated entrypoint", async () => {
-    const tempDir = createCaseDir("openclaw-update");
+    const tempDir = createCaseDir("grokbot-update");
     mockPackageInstallStatus(tempDir);
     serviceLoaded.mockResolvedValue(true);
     vi.mocked(runDaemonInstall).mockRejectedValueOnce(new Error("refresh failed"));
@@ -7060,12 +7060,12 @@ describe("update-cli", () => {
     await updateCommand({ yes: true });
 
     expect(runDaemonInstall).not.toHaveBeenCalled();
-    expect(runRestartScript).toHaveBeenCalledWith("/tmp/openclaw-restart-test.sh");
+    expect(runRestartScript).toHaveBeenCalledWith("/tmp/grokbot-restart-test.sh");
     expect(defaultRuntime.exit).not.toHaveBeenCalledWith(1);
   });
 
   it("tries the updated install restart when package service refresh fails", async () => {
-    const updatedRoot = createCaseDir("openclaw-updated-root");
+    const updatedRoot = createCaseDir("grokbot-updated-root");
     const updatedEntrypoint = path.join(updatedRoot, "dist", "entry.js");
     setupUpdatedRootRefresh({
       entrypoints: [updatedEntrypoint],
@@ -7126,13 +7126,13 @@ describe("update-cli", () => {
   });
 
   it("accepts same-version refresh failure recovery when the managed service restarts", async () => {
-    const updatedRoot = createCaseDir("openclaw-updated-root");
+    const updatedRoot = createCaseDir("grokbot-updated-root");
     const updatedEntrypoint = path.join(updatedRoot, "dist", "entry.js");
     const updatedPackageJson = path.join(updatedRoot, "package.json");
     await fs.mkdir(updatedRoot, { recursive: true });
     await fs.writeFile(
       updatedPackageJson,
-      JSON.stringify({ name: "openclaw", version: "2026.4.24" }),
+      JSON.stringify({ name: "grokbot", version: "2026.4.24" }),
       "utf8",
     );
     setupUpdatedRootRefresh({
@@ -7190,8 +7190,8 @@ describe("update-cli", () => {
   });
 
   it("restores a same-version service without rewriting when its root is ambiguous", async () => {
-    const oldRoot = createCaseDir("openclaw-old-root");
-    const updatedRoot = createCaseDir("openclaw-updated-root");
+    const oldRoot = createCaseDir("grokbot-old-root");
+    const updatedRoot = createCaseDir("grokbot-updated-root");
     const oldEntrypoint = path.join(oldRoot, "dist", "entry.js");
     const updatedEntrypoint = path.join(updatedRoot, "dist", "entry.js");
     const oldPackageJson = path.join(oldRoot, "package.json");
@@ -7203,12 +7203,12 @@ describe("update-cli", () => {
     await Promise.all([
       fs.writeFile(
         oldPackageJson,
-        JSON.stringify({ name: "openclaw", version: "2026.4.24" }),
+        JSON.stringify({ name: "grokbot", version: "2026.4.24" }),
         "utf8",
       ),
       fs.writeFile(
         updatedPackageJson,
-        JSON.stringify({ name: "openclaw", version: "2026.4.24" }),
+        JSON.stringify({ name: "grokbot", version: "2026.4.24" }),
         "utf8",
       ),
     ]);
@@ -7261,12 +7261,12 @@ describe("update-cli", () => {
 
     expect(gatewayCommandCall(updatedEntrypoint, "install")).toBeUndefined();
     expect(gatewayCommandCall(updatedEntrypoint, "restart")).toBeUndefined();
-    expect(runRestartScript).toHaveBeenCalledWith("/tmp/openclaw-restart-test.sh");
+    expect(runRestartScript).toHaveBeenCalledWith("/tmp/grokbot-restart-test.sh");
     expect(defaultRuntime.exit).not.toHaveBeenCalledWith(1);
   });
 
   it("fails a JSON package update when fallback restart leaves the old gateway running", async () => {
-    const updatedRoot = createCaseDir("openclaw-updated-root");
+    const updatedRoot = createCaseDir("grokbot-updated-root");
     const updatedEntrypoint = path.join(updatedRoot, "dist", "entry.js");
     setupUpdatedRootRefresh({
       entrypoints: [updatedEntrypoint],
@@ -7322,7 +7322,7 @@ describe("update-cli", () => {
   });
 
   it("skips the post-refresh restart script when LaunchAgent already serves the expected package version", async () => {
-    const updatedRoot = createCaseDir("openclaw-updated-root");
+    const updatedRoot = createCaseDir("grokbot-updated-root");
     const updatedEntrypoint = path.join(updatedRoot, "dist", "entry.js");
     setupUpdatedRootRefresh({
       entrypoints: [updatedEntrypoint],
@@ -7373,8 +7373,8 @@ describe("update-cli", () => {
   });
 
   it("writes the control-plane update sentinel after managed package restart health passes", async () => {
-    const stateDir = await createTrackedTempDir("openclaw-update-sentinel-state-");
-    const metaDir = await createTrackedTempDir("openclaw-update-sentinel-meta-");
+    const stateDir = await createTrackedTempDir("grokbot-update-sentinel-state-");
+    const metaDir = await createTrackedTempDir("grokbot-update-sentinel-meta-");
     const metaPath = path.join(metaDir, "meta.json");
     await fs.writeFile(
       metaPath,
@@ -7389,7 +7389,7 @@ describe("update-cli", () => {
       }),
     );
 
-    const updatedRoot = createCaseDir("openclaw-updated-root");
+    const updatedRoot = createCaseDir("grokbot-updated-root");
     const updatedEntrypoint = path.join(updatedRoot, "dist", "entry.js");
     setupUpdatedRootRefresh({
       entrypoints: [updatedEntrypoint],
@@ -7443,8 +7443,8 @@ describe("update-cli", () => {
   });
 
   it("writes an extended-stable selector failure to the control-plane sentinel", async () => {
-    const stateDir = await createTrackedTempDir("openclaw-update-sentinel-state-");
-    const metaDir = await createTrackedTempDir("openclaw-update-sentinel-meta-");
+    const stateDir = await createTrackedTempDir("grokbot-update-sentinel-state-");
+    const metaDir = await createTrackedTempDir("grokbot-update-sentinel-meta-");
     const metaPath = path.join(metaDir, "meta.json");
     await fs.writeFile(
       metaPath,
@@ -7457,7 +7457,7 @@ describe("update-cli", () => {
         },
       }),
     );
-    const tempDir = createCaseDir("openclaw-update");
+    const tempDir = createCaseDir("grokbot-update");
     mockPackageInstallStatus(tempDir);
     vi.mocked(resolveExtendedStablePackage).mockResolvedValueOnce({
       status: "failed",
@@ -7484,8 +7484,8 @@ describe("update-cli", () => {
   });
 
   it("marks the control-plane update sentinel failed when restart health verification fails", async () => {
-    const stateDir = await createTrackedTempDir("openclaw-update-sentinel-state-");
-    const metaDir = await createTrackedTempDir("openclaw-update-sentinel-meta-");
+    const stateDir = await createTrackedTempDir("grokbot-update-sentinel-state-");
+    const metaDir = await createTrackedTempDir("grokbot-update-sentinel-meta-");
     const metaPath = path.join(metaDir, "meta.json");
     await fs.writeFile(
       metaPath,
@@ -7498,7 +7498,7 @@ describe("update-cli", () => {
       }),
     );
 
-    const updatedRoot = createCaseDir("openclaw-updated-root");
+    const updatedRoot = createCaseDir("grokbot-updated-root");
     const updatedEntrypoint = path.join(updatedRoot, "dist", "entry.js");
     setupUpdatedRootRefresh({
       entrypoints: [updatedEntrypoint],
@@ -7549,7 +7549,7 @@ describe("update-cli", () => {
   });
 
   it("fails a package update when the restarted gateway reports activated plugin load errors", async () => {
-    const updatedRoot = createCaseDir("openclaw-updated-root");
+    const updatedRoot = createCaseDir("grokbot-updated-root");
     const updatedEntrypoint = path.join(updatedRoot, "dist", "entry.js");
     setupUpdatedRootRefresh({
       entrypoints: [updatedEntrypoint],
@@ -7623,7 +7623,7 @@ describe("update-cli", () => {
         await withEnvAsync(
           {
             OPENCLAW_STATE_DIR: "./state",
-            OPENCLAW_CONFIG_PATH: "./config/openclaw.json",
+            OPENCLAW_CONFIG_PATH: "./config/grokbot.json",
           },
           async () => {
             await updateCommand({});
@@ -7632,7 +7632,7 @@ describe("update-cli", () => {
       },
       expectedEnv: () => ({
         OPENCLAW_STATE_DIR: path.resolve("./state"),
-        OPENCLAW_CONFIG_PATH: path.resolve("./config/openclaw.json"),
+        OPENCLAW_CONFIG_PATH: path.resolve("./config/grokbot.json"),
       }),
       assertExtra: () => {
         expect(runDaemonInstall).not.toHaveBeenCalled();
@@ -7908,7 +7908,7 @@ describe("update-cli", () => {
   });
 
   it("updateFinalizeCommand restores channels from the RPC pre-update config payload", async () => {
-    const tempDir = createCaseDir("openclaw-rpc-finalize");
+    const tempDir = createCaseDir("grokbot-rpc-finalize");
     const sourceConfigPath = path.join(tempDir, "source-config.json");
     const preUpdateConfig = {
       channels: {
@@ -8050,7 +8050,7 @@ describe("update-cli", () => {
       run: async () => await updateWizardCommand({}),
       requireTty: false,
       expectedError:
-        "Update wizard requires a TTY. Use `openclaw update --channel <stable|extended-stable|beta|dev>` instead.",
+        "Update wizard requires a TTY. Use `grokbot update --channel <stable|extended-stable|beta|dev>` instead.",
     },
   ] as const)(
     "validates update command invocation errors: $name",
@@ -8103,7 +8103,7 @@ describe("update-cli", () => {
   });
 
   it("updateWizardCommand offers dev checkout and forwards selections", async () => {
-    const tempDir = createCaseDir("openclaw-update-wizard");
+    const tempDir = createCaseDir("grokbot-update-wizard");
     await withEnvAsync({ OPENCLAW_GIT_DIR: tempDir }, async () => {
       setTty(true);
 
@@ -8134,7 +8134,7 @@ describe("update-cli", () => {
     });
   });
 
-  it("uses ~/openclaw as the default dev checkout directory", async () => {
+  it("uses ~/grokbot as the default dev checkout directory", async () => {
     const homedirSpy = vi.spyOn(os, "homedir").mockReturnValue("/tmp/oc-home");
     try {
       await withEnvAsync(
@@ -8145,7 +8145,7 @@ describe("update-cli", () => {
           USERPROFILE: undefined,
         },
         async () => {
-          expect(resolveGitInstallDir()).toBe(path.posix.join("/tmp/oc-home", "openclaw"));
+          expect(resolveGitInstallDir()).toBe(path.posix.join("/tmp/oc-home", "grokbot"));
         },
       );
     } finally {
@@ -8157,9 +8157,9 @@ describe("update-cli", () => {
     const homedirSpy = vi.spyOn(os, "homedir").mockReturnValue("/tmp/oc-home");
     try {
       await withEnvAsync(
-        { OPENCLAW_GIT_DIR: undefined, OPENCLAW_HOME: "/srv/openclaw-home" },
+        { OPENCLAW_GIT_DIR: undefined, OPENCLAW_HOME: "/srv/grokbot-home" },
         async () => {
-          expect(resolveGitInstallDir()).toBe(path.posix.join("/srv/openclaw-home", "openclaw"));
+          expect(resolveGitInstallDir()).toBe(path.posix.join("/srv/grokbot-home", "grokbot"));
         },
       );
     } finally {
@@ -8168,9 +8168,9 @@ describe("update-cli", () => {
   });
 
   it("creates the parent directory before cloning the default dev checkout", async () => {
-    const root = await createTrackedTempDir("openclaw-update-home-");
-    const home = path.join(root, "custom-openclaw-home");
-    const checkoutDir = path.join(home, "openclaw");
+    const root = await createTrackedTempDir("grokbot-update-home-");
+    const home = path.join(root, "custom-grokbot-home");
+    const checkoutDir = path.join(home, "grokbot");
 
     await withEnvAsync({ OPENCLAW_GIT_DIR: undefined, OPENCLAW_HOME: home }, async () => {
       const dir = resolveGitInstallDir();
@@ -8185,7 +8185,7 @@ describe("update-cli", () => {
     expect(cloneCall?.[0]).toEqual([
       "git",
       "clone",
-      "https://github.com/openclaw/openclaw.git",
+      "https://github.com/grokbot/grokbot.git",
       checkoutDir,
     ]);
   });

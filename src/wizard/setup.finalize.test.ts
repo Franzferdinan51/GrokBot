@@ -1,6 +1,6 @@
 // Setup finalize tests cover writing final onboarding config and artifacts.
 import fs from "node:fs/promises";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { createWizardPrompter as buildWizardPrompter } from "../../test/helpers/wizard-prompter.js";
 import type * as AuthChoiceModelCheck from "../commands/auth-choice.model-check.js";
@@ -145,7 +145,7 @@ vi.mock("../infra/windows-gateway-firewall-diagnostics.js", () => ({
   formatWindowsGatewayFirewallGuidance: (params: { bind?: string }) =>
     params.bind === "lan"
       ? [
-          "Windows firewall: if another device cannot connect to the LAN URL, run `openclaw gateway status --deep` from this Windows host.",
+          "Windows firewall: if another device cannot connect to the LAN URL, run `grokbot gateway status --deep` from this Windows host.",
         ]
       : [],
 }));
@@ -795,7 +795,7 @@ describe("finalizeSetupWizard", () => {
     expect(launchTuiCli).toHaveBeenCalledWith(expect.objectContaining({ message: undefined }), {});
     expectNoteTitleNotCalled(prompter, "Model auth missing");
     expectNoteNotContains(prompter, "No credentials are configured");
-    expectNoteNotContains(prompter, "openclaw configure --section model");
+    expectNoteNotContains(prompter, "grokbot configure --section model");
   });
 
   it("hatches without a seed and omits setup advice for an incompatible model route", async () => {
@@ -817,7 +817,7 @@ describe("finalizeSetupWizard", () => {
     expect(launchTuiCli).toHaveBeenCalledWith(expect.objectContaining({ message: undefined }), {});
     expectNoteTitleNotCalled(prompter, "Model auth missing");
     expectNoteNotContains(prompter, "No credentials are configured");
-    expectNoteNotContains(prompter, "openclaw configure --section model");
+    expectNoteNotContains(prompter, "grokbot configure --section model");
   });
 
   it("does not resend the bootstrap hatch message on setup reruns", async () => {
@@ -948,7 +948,7 @@ describe("finalizeSetupWizard", () => {
     });
 
     expect(prompter.outro).toHaveBeenCalledWith(
-      "Onboarding complete. Use the dashboard link above to control OpenClaw.",
+      "Onboarding complete. Use the dashboard link above to control GrokBot.",
     );
     expect(launchTuiCli).toHaveBeenCalledOnce();
     expect(vi.mocked(prompter.outro).mock.invocationCallOrder[0]).toBeLessThan(

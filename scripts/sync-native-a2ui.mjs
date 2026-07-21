@@ -157,7 +157,7 @@ function bundleA2ui(repoRoot = rootDir, env = process.env) {
 }
 
 async function withFreshBundleCheckSource(sourceDir, run) {
-  const tempDir = await fs.mkdtemp(path.join(tmpdir(), "openclaw-a2ui-native-check-"));
+  const tempDir = await fs.mkdtemp(path.join(tmpdir(), "grokbot-a2ui-native-check-"));
   try {
     const checkSourceDir = path.join(tempDir, "a2ui");
     await fs.mkdir(checkSourceDir, { recursive: true });

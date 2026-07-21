@@ -2,7 +2,7 @@
 import {
   createModelCatalogPresetAppliers,
   type OpenClawConfig,
-} from "openclaw/plugin-sdk/provider-onboard";
+} from "grokbot/plugin-sdk/provider-onboard";
 import { BASETEN_BASE_URL, BASETEN_DEFAULT_MODEL_REF, buildStaticBasetenModels } from "./models.js";
 
 const basetenPresetAppliers = createModelCatalogPresetAppliers({

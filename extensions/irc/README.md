@@ -1,13 +1,13 @@
-# IRC OpenClaw channel
+# IRC GrokBot channel
 
-Official OpenClaw channel plugin for IRC.
+Official GrokBot channel plugin for IRC.
 
 ## Install
 
 ```sh
-openclaw plugins install @openclaw/irc
+grokbot plugins install @grokbot/irc
 ```
 
 ## Docs
 
-See `docs/channels/irc.md` in the OpenClaw repository, or the published docs at `https://docs.openclaw.ai/channels/irc`.
+See `docs/channels/irc.md` in the GrokBot repository, or the published docs at `https://docs.grokbot.ai/channels/irc`.

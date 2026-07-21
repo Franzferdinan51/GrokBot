@@ -9,22 +9,22 @@ import {
   toLocationContext,
   type NormalizedLocation,
   type InboundEventKind,
-} from "openclaw/plugin-sdk/channel-inbound";
-import { normalizeCommandBody } from "openclaw/plugin-sdk/command-surface";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+} from "grokbot/plugin-sdk/channel-inbound";
+import { normalizeCommandBody } from "grokbot/plugin-sdk/command-surface";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import type {
   TelegramDirectConfig,
   TelegramGroupConfig,
   TelegramTopicConfig,
-} from "openclaw/plugin-sdk/config-contracts";
-import { resolveChannelContextVisibilityMode } from "openclaw/plugin-sdk/context-visibility-runtime";
-import { timestampMsToIsoString } from "openclaw/plugin-sdk/number-runtime";
-import { createChannelHistoryWindow, type HistoryEntry } from "openclaw/plugin-sdk/reply-history";
-import type { ResolvedAgentRoute } from "openclaw/plugin-sdk/routing";
-import { logVerbose, shouldLogVerbose } from "openclaw/plugin-sdk/runtime-env";
-import { evaluateSupplementalContextVisibility } from "openclaw/plugin-sdk/security-runtime";
-import { normalizeOptionalLowercaseString } from "openclaw/plugin-sdk/string-coerce-runtime";
-import { truncateUtf16Safe } from "openclaw/plugin-sdk/text-utility-runtime";
+} from "grokbot/plugin-sdk/config-contracts";
+import { resolveChannelContextVisibilityMode } from "grokbot/plugin-sdk/context-visibility-runtime";
+import { timestampMsToIsoString } from "grokbot/plugin-sdk/number-runtime";
+import { createChannelHistoryWindow, type HistoryEntry } from "grokbot/plugin-sdk/reply-history";
+import type { ResolvedAgentRoute } from "grokbot/plugin-sdk/routing";
+import { logVerbose, shouldLogVerbose } from "grokbot/plugin-sdk/runtime-env";
+import { evaluateSupplementalContextVisibility } from "grokbot/plugin-sdk/security-runtime";
+import { normalizeOptionalLowercaseString } from "grokbot/plugin-sdk/string-coerce-runtime";
+import { truncateUtf16Safe } from "grokbot/plugin-sdk/text-utility-runtime";
 import type { NormalizedAllowFrom } from "./bot-access.js";
 import { isSenderAllowed, normalizeAllowFrom } from "./bot-access.js";
 import type {

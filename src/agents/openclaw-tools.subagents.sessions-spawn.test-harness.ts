@@ -391,7 +391,7 @@ vi.mock("../config/sessions.js", () => ({
   }) => `agent:${params.agentId}:${params.cfg?.session?.mainKey ?? "main"}`,
   readLegacySessionStoreTarget: () => undefined,
   resolveExistingAgentSessionStoreTargetsSync: () => [],
-  resolveStorePath: () => "/tmp/openclaw-sessions-spawn-test-store.json",
+  resolveStorePath: () => "/tmp/grokbot-sessions-spawn-test-store.json",
   updateSessionStore: async (
     _storePath: string,
     mutator: (store: typeof hoisted.sessionStore) => void | Promise<void>,

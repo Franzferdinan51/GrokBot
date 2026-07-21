@@ -1,5 +1,5 @@
 // Doctor preview warning aggregation for config that can surprise users before repair.
-import { isRecord as hasRecord } from "@openclaw/normalization-core/record-coerce";
+import { isRecord as hasRecord } from "@grokbot/normalization-core/record-coerce";
 import { resolveAgentConfig } from "../../../agents/agent-scope-config.js";
 import {
   normalizeToolProviderPolicyKey,
@@ -12,7 +12,7 @@ import {
   isToolAllowedByPolicyName,
 } from "../../../agents/tool-policy-match.js";
 import { mergeAlsoAllowPolicy, resolveToolProfilePolicy } from "../../../agents/tool-policy.js";
-import type { OpenClawConfig } from "../../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../../config/types.grokbot.js";
 import type {
   AgentToolsConfig,
   ToolPolicyConfig,
@@ -247,7 +247,7 @@ function collectVisibleReplyToolPolicyWarnings(cfg: OpenClawConfig): string[] {
     warnings.push(
       `- ${groupPolicy.path} is set to "message_tool", but the message tool is unavailable for ${formatTargets(
         targets,
-      )}; OpenClaw falls back to automatic visible replies, so normal replies may post to the source chat. Enable the message tool or set ${groupPolicy.path} to "automatic".`,
+      )}; GrokBot falls back to automatic visible replies, so normal replies may post to the source chat. Enable the message tool or set ${groupPolicy.path} to "automatic".`,
     );
   }
 
@@ -260,7 +260,7 @@ function collectVisibleReplyToolPolicyWarnings(cfg: OpenClawConfig): string[] {
     warnings.push(
       `- messages.visibleReplies is set to "message_tool", but the message tool is unavailable for ${formatTargets(
         targets,
-      )}; OpenClaw falls back to automatic direct-chat replies, so normal replies may post to the source chat. Enable the message tool or set messages.visibleReplies to "automatic".`,
+      )}; GrokBot falls back to automatic direct-chat replies, so normal replies may post to the source chat. Enable the message tool or set messages.visibleReplies to "automatic".`,
     );
   }
   return warnings;

@@ -1,15 +1,15 @@
 import {
   dispatchInboundDirectDm,
   recordChannelBotPairLoopAndCheckSuppression,
-} from "openclaw/plugin-sdk/channel-inbound";
-import { createChannelPairingController } from "openclaw/plugin-sdk/channel-pairing";
-import { PAIRING_APPROVED_MESSAGE } from "openclaw/plugin-sdk/channel-status";
+} from "grokbot/plugin-sdk/channel-inbound";
+import { createChannelPairingController } from "grokbot/plugin-sdk/channel-pairing";
+import { PAIRING_APPROVED_MESSAGE } from "grokbot/plugin-sdk/channel-status";
 import {
   buildChannelConfigSchema,
   buildChannelOutboundSessionRoute,
   type ChannelPlugin,
-} from "openclaw/plugin-sdk/core";
-import { createChannelDirectoryAdapter } from "openclaw/plugin-sdk/directory-runtime";
+} from "grokbot/plugin-sdk/core";
+import { createChannelDirectoryAdapter } from "grokbot/plugin-sdk/directory-runtime";
 import { runReefChannelLifecycle } from "./channel-lifecycle.js";
 import {
   ReefChannelConfigSchema,
@@ -197,7 +197,7 @@ export const reefPlugin: ChannelPlugin<ReefAccount> = {
       allowFrom: listTrustedPeers(account.config),
       policyPath: "Reef local peer trust",
       allowFromPath: "Reef local peer trust",
-      approveHint: "openclaw pairing approve reef <code>",
+      approveHint: "grokbot pairing approve reef <code>",
       normalizeEntry: (entry) => normalizeReefTarget(entry) ?? entry,
     }),
   },

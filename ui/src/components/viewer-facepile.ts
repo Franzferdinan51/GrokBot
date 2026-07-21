@@ -3,7 +3,7 @@ import { property, state } from "lit/decorators.js";
 import type { PresenceEntry } from "../api/types.ts";
 import { t } from "../i18n/index.ts";
 import { resolveAvatar } from "../lib/identity-avatar.ts";
-import { OpenClawLightDomContentsElement } from "../lit/openclaw-element.ts";
+import { OpenClawLightDomContentsElement } from "../lit/grokbot-element.ts";
 import "./menu-surface.ts";
 import "./tooltip.ts";
 import { consumeDropdownKeyboardDismissal, trackDropdownKeyboardDismissal } from "./web-awesome.ts";
@@ -179,7 +179,7 @@ function renderRosterRow(user: PresenceViewer, isSelf: boolean) {
   // as a subtitle would just echo the same line.
   const subtitle = user.email && user.email !== label ? user.email : undefined;
   return html`<wa-dropdown-item class="presence-roster-menu__item" data-viewer-id=${user.id}>
-    <openclaw-viewer-avatar slot="icon" .user=${user} variant="footer"></openclaw-viewer-avatar>
+    <grokbot-viewer-avatar slot="icon" .user=${user} variant="footer"></grokbot-viewer-avatar>
     <span class="presence-roster-menu__text">
       <span class="presence-roster-menu__name"
         >${label}${isSelf
@@ -236,7 +236,7 @@ class ViewerFacepile extends OpenClawLightDomContentsElement {
     if (!position) {
       return nothing;
     }
-    return html`<openclaw-menu-surface>
+    return html`<grokbot-menu-surface>
       <wa-dropdown
         class="presence-roster-menu"
         .open=${true}
@@ -276,7 +276,7 @@ class ViewerFacepile extends OpenClawLightDomContentsElement {
         </div>
         ${roster.map((user) => renderRosterRow(user, user.id === selfUserId))}
       </wa-dropdown>
-    </openclaw-menu-surface>`;
+    </grokbot-menu-surface>`;
   }
 
   override render() {
@@ -301,18 +301,18 @@ class ViewerFacepile extends OpenClawLightDomContentsElement {
     >
       ${visible.map((user) => {
         const label = presenceViewerLabel(user);
-        return html`<openclaw-tooltip .content=${label}>
-          <openclaw-viewer-avatar .user=${user} .variant=${this.variant}></openclaw-viewer-avatar>
-        </openclaw-tooltip>`;
+        return html`<grokbot-tooltip .content=${label}>
+          <grokbot-viewer-avatar .user=${user} .variant=${this.variant}></grokbot-viewer-avatar>
+        </grokbot-tooltip>`;
       })}
       ${overflow.length > 0
-        ? html`<openclaw-tooltip .content=${overflow.map(presenceViewerLabel).join("\n")}>
+        ? html`<grokbot-tooltip .content=${overflow.map(presenceViewerLabel).join("\n")}>
             <span
               class="viewer-avatar viewer-avatar--overflow"
               aria-label=${overflow.map(presenceViewerLabel).join(", ")}
               >+${overflow.length}</span
             >
-          </openclaw-tooltip>`
+          </grokbot-tooltip>`
         : nothing}
     </span>`;
     if (this.variant !== "footer") {
@@ -338,17 +338,17 @@ class ViewerFacepile extends OpenClawLightDomContentsElement {
 }
 
 if (globalThis.customElements) {
-  if (!customElements.get("openclaw-viewer-avatar")) {
-    customElements.define("openclaw-viewer-avatar", ViewerAvatar);
+  if (!customElements.get("grokbot-viewer-avatar")) {
+    customElements.define("grokbot-viewer-avatar", ViewerAvatar);
   }
-  if (!customElements.get("openclaw-viewer-facepile")) {
-    customElements.define("openclaw-viewer-facepile", ViewerFacepile);
+  if (!customElements.get("grokbot-viewer-facepile")) {
+    customElements.define("grokbot-viewer-facepile", ViewerFacepile);
   }
 }
 
 declare global {
   interface HTMLElementTagNameMap {
-    "openclaw-viewer-avatar": ViewerAvatar;
-    "openclaw-viewer-facepile": ViewerFacepile;
+    "grokbot-viewer-avatar": ViewerAvatar;
+    "grokbot-viewer-facepile": ViewerFacepile;
   }
 }

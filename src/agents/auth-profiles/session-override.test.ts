@@ -12,11 +12,11 @@ import {
   replaceSessionEntry,
 } from "../../config/sessions/session-accessor.js";
 import type { SessionEntry } from "../../config/sessions/types.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import {
   type OpenClawTestState,
   withOpenClawTestState,
-} from "../../test-utils/openclaw-test-state.js";
+} from "../../test-utils/grokbot-test-state.js";
 import {
   clearSessionAuthProfileOverride,
   resolveSessionAuthProfileOverride,
@@ -127,7 +127,7 @@ async function withAuthState<T>(run: (state: OpenClawTestState) => Promise<T>): 
   return await withOpenClawTestState(
     {
       layout: "state-only",
-      prefix: "openclaw-auth-",
+      prefix: "grokbot-auth-",
     },
     run,
   );

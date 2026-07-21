@@ -1,7 +1,7 @@
 /** Broad plugin loader coverage for manifest discovery, runtime registration, and diagnostics. */
 import fs from "node:fs";
 import path from "node:path";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { expect } from "vitest";
 import { listRegisteredAgentHarnesses } from "../agents/harness/registry.js";
 import { clearRuntimeConfigSnapshot } from "../config/runtime-snapshot.js";
@@ -119,7 +119,7 @@ export function updatePluginManifest(
   plugin: Pick<TempPlugin, "dir">,
   patch: Record<string, unknown>,
 ) {
-  const manifestPath = path.join(plugin.dir, "openclaw.plugin.json");
+  const manifestPath = path.join(plugin.dir, "grokbot.plugin.json");
   const raw = JSON.parse(fs.readFileSync(manifestPath, "utf-8")) as Record<string, unknown>;
   fs.writeFileSync(manifestPath, JSON.stringify({ ...raw, ...patch }, null, 2), "utf-8");
 }
@@ -156,7 +156,7 @@ export function setupBundledDreamingMemoryPlugins(params?: {
   });
   const openSchema = { type: "object", additionalProperties: true };
   fs.writeFileSync(
-    path.join(memoryCoreDir, "openclaw.plugin.json"),
+    path.join(memoryCoreDir, "grokbot.plugin.json"),
     JSON.stringify(
       { id: "memory-core", kind: "memory", configSchema: EMPTY_PLUGIN_SCHEMA },
       null,
@@ -165,7 +165,7 @@ export function setupBundledDreamingMemoryPlugins(params?: {
     "utf-8",
   );
   fs.writeFileSync(
-    path.join(selectedMemoryDir, "openclaw.plugin.json"),
+    path.join(selectedMemoryDir, "grokbot.plugin.json"),
     JSON.stringify(
       {
         id: selectedId,
@@ -206,7 +206,7 @@ export function writeBundledPlugin(params: {
 
 export function makeOpenClawDevSourceRoot() {
   const root = makeTempDir();
-  fs.writeFileSync(path.join(root, "package.json"), JSON.stringify({ name: "openclaw" }), "utf-8");
+  fs.writeFileSync(path.join(root, "package.json"), JSON.stringify({ name: "grokbot" }), "utf-8");
   mkdirSafe(path.join(root, "src"));
   mkdirSafe(path.join(root, "extensions"));
   return root;
@@ -219,7 +219,7 @@ export function writeWorkspacePlugin(params: {
   workspaceDir?: string;
 }) {
   const workspaceDir = params.workspaceDir ?? makeTempDir();
-  const workspacePluginDir = path.join(workspaceDir, ".openclaw", "extensions", params.id);
+  const workspacePluginDir = path.join(workspaceDir, ".grokbot", "extensions", params.id);
   mkdirSafe(workspacePluginDir);
   const plugin = writePlugin({
     id: params.id,
@@ -270,7 +270,7 @@ export function loadBundledMemoryPluginRegistry(options?: {
           name: options.packageMeta.name,
           version: options.packageMeta.version,
           description: options.packageMeta.description,
-          openclaw: { extensions: [`./${pluginFilename}`] },
+          grokbot: { extensions: [`./${pluginFilename}`] },
         },
         null,
         2,
@@ -604,7 +604,7 @@ function createEscapingEntryFixture(params: { id: string; sourceBody: string }) 
   const linkedEntry = path.join(pluginDir, "entry.cjs");
   fs.writeFileSync(outsideEntry, params.sourceBody, "utf-8");
   fs.writeFileSync(
-    path.join(pluginDir, "openclaw.plugin.json"),
+    path.join(pluginDir, "grokbot.plugin.json"),
     JSON.stringify(
       {
         id: params.id,
@@ -691,7 +691,7 @@ export function createSetupEntryChannelPluginFixture(params: {
     JSON.stringify(
       {
         name: params.packageName,
-        openclaw: {
+        grokbot: {
           extensions: ["./index.cjs"],
           setupEntry: "./setup-entry.cjs",
           ...(params.startupDeferConfiguredChannelFullLoadUntilAfterListen
@@ -709,7 +709,7 @@ export function createSetupEntryChannelPluginFixture(params: {
     "utf-8",
   );
   fs.writeFileSync(
-    path.join(pluginDir, "openclaw.plugin.json"),
+    path.join(pluginDir, "grokbot.plugin.json"),
     JSON.stringify(
       {
         id: params.id,

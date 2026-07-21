@@ -2,16 +2,16 @@
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { resolveStateDir } from "openclaw/plugin-sdk/state-paths";
-import { resolvePreferredOpenClawTmpDir } from "openclaw/plugin-sdk/temp-path";
-import { captureEnv } from "openclaw/plugin-sdk/test-env";
-import { mockPinnedHostnameResolution } from "openclaw/plugin-sdk/test-env";
+import { resolveStateDir } from "grokbot/plugin-sdk/state-paths";
+import { resolvePreferredOpenClawTmpDir } from "grokbot/plugin-sdk/temp-path";
+import { captureEnv } from "grokbot/plugin-sdk/test-env";
+import { mockPinnedHostnameResolution } from "grokbot/plugin-sdk/test-env";
 import {
   createGrayscaleAlphaPngBuffer,
   createSolidPngBuffer,
-} from "openclaw/plugin-sdk/test-fixtures";
-import { withMockedWindowsPlatform, withRestoredMocks } from "openclaw/plugin-sdk/test-node-mocks";
-import { optimizeImageToPng } from "openclaw/plugin-sdk/web-media";
+} from "grokbot/plugin-sdk/test-fixtures";
+import { withMockedWindowsPlatform, withRestoredMocks } from "grokbot/plugin-sdk/test-node-mocks";
+import { optimizeImageToPng } from "grokbot/plugin-sdk/web-media";
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import {
   LocalMediaAccessError,
@@ -60,7 +60,7 @@ async function expectLocalMediaAccessCode(promise: Promise<unknown>, code: strin
 
 beforeAll(async () => {
   fixtureRoot = await fs.mkdtemp(
-    path.join(resolvePreferredOpenClawTmpDir(), "openclaw-media-test-"),
+    path.join(resolvePreferredOpenClawTmpDir(), "grokbot-media-test-"),
   );
   largeJpegBuffer = await fs.readFile("docs/assets/showcase/roof-camera-sky.jpg");
   largeJpegFile = await writeTempFile(largeJpegBuffer, ".jpg");
@@ -96,13 +96,13 @@ afterEach(() => {
 describe("web media loading", () => {
   beforeAll(() => {
     // Ensure state dir is stable and not influenced by other tests that stub OPENCLAW_STATE_DIR.
-    // Also keep it outside the OpenClaw temp root so default localRoots doesn't accidentally make all state readable.
+    // Also keep it outside the GrokBot temp root so default localRoots doesn't accidentally make all state readable.
     stateDirSnapshot = captureEnv(["OPENCLAW_STATE_DIR"]);
     process.env.OPENCLAW_STATE_DIR = path.join(
       path.parse(os.tmpdir()).root,
       "var",
       "lib",
-      "openclaw-media-state-test",
+      "grokbot-media-state-test",
     );
   });
 
@@ -340,7 +340,7 @@ describe("local media root guard", () => {
     const actualStat = await fs.stat(tinyPngFile);
     const zeroDev = typeof actualLstat.dev === "bigint" ? 0n : 0;
     // Resolve before mocking platform: under `win32` the helper returns the
-    // os.tmpdir() fallback rather than the POSIX `/tmp/openclaw` root that
+    // os.tmpdir() fallback rather than the POSIX `/tmp/grokbot` root that
     // actually holds `tinyPngFile` on this Linux test runner (#60713).
     const realTmpRoot = resolvePreferredOpenClawTmpDir();
 
@@ -406,7 +406,7 @@ describe("local media root guard", () => {
     );
   });
 
-  it("allows default OpenClaw state workspace and sandbox roots", async () => {
+  it("allows default GrokBot state workspace and sandbox roots", async () => {
     const stateDir = resolveStateDir();
     const readFile = vi.fn(async () => Buffer.from("generated-media"));
 
@@ -429,7 +429,7 @@ describe("local media root guard", () => {
     expect(sandboxResult.kind).toBeUndefined();
   });
 
-  it("rejects default OpenClaw state per-agent workspace-* roots without explicit local roots", async () => {
+  it("rejects default GrokBot state per-agent workspace-* roots without explicit local roots", async () => {
     const stateDir = resolveStateDir();
     const readFile = vi.fn(async () => Buffer.from("generated-media"));
 

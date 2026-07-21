@@ -1,5 +1,5 @@
-// Runway plugin entrypoint registers its OpenClaw integration.
-import { definePluginEntry } from "openclaw/plugin-sdk/plugin-entry";
+// Runway plugin entrypoint registers its GrokBot integration.
+import { definePluginEntry } from "grokbot/plugin-sdk/plugin-entry";
 import { buildRunwayVideoGenerationProvider } from "./video-generation-provider.js";
 
 export default definePluginEntry({

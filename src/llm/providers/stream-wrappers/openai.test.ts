@@ -1,7 +1,7 @@
 // OpenAI stream wrapper tests cover streamed text, tools, and reasoning fields.
-import type { StreamFn } from "openclaw/plugin-sdk/agent-core";
-import type { Model } from "openclaw/plugin-sdk/llm";
-import { createAssistantMessageEventStream } from "openclaw/plugin-sdk/llm";
+import type { StreamFn } from "grokbot/plugin-sdk/agent-core";
+import type { Model } from "grokbot/plugin-sdk/llm";
+import { createAssistantMessageEventStream } from "grokbot/plugin-sdk/llm";
 import { describe, expect, it } from "vitest";
 import {
   createOpenAIAttributionHeadersWrapper,
@@ -725,7 +725,7 @@ describe("createOpenAIThinkingLevelWrapper", () => {
 });
 
 describe("createOpenAIAttributionHeadersWrapper", () => {
-  it("routes native Codex traffic through the OpenClaw transport so attribution survives OpenClaw defaults", () => {
+  it("routes native Codex traffic through the GrokBot transport so attribution survives GrokBot defaults", () => {
     let codexCalls = 0;
     let capturedHeaders: Record<string, string> | undefined;
     const codexTransport: StreamFn = (model, context, options) => {
@@ -745,15 +745,15 @@ describe("createOpenAIAttributionHeadersWrapper", () => {
       { messages: [] },
       {
         headers: {
-          originator: "openclaw",
-          "User-Agent": "openclaw",
+          originator: "grokbot",
+          "User-Agent": "grokbot",
         },
       },
     );
 
     expect(codexCalls).toBe(1);
-    expect(capturedHeaders?.originator).toBe("openclaw");
-    expect(capturedHeaders?.["User-Agent"]).toMatch(/^openclaw\//);
+    expect(capturedHeaders?.originator).toBe("grokbot");
+    expect(capturedHeaders?.["User-Agent"]).toMatch(/^grokbot\//);
   });
 
   it("keeps existing wrapped Codex streams so runtime OAuth injection is preserved", () => {
@@ -787,8 +787,8 @@ describe("createOpenAIAttributionHeadersWrapper", () => {
       {
         apiKey: "oauth-bearer-token",
         headers: {
-          originator: "openclaw",
-          "User-Agent": "openclaw",
+          originator: "grokbot",
+          "User-Agent": "grokbot",
         },
       },
     );
@@ -796,7 +796,7 @@ describe("createOpenAIAttributionHeadersWrapper", () => {
     expect(upstreamCalls).toBe(1);
     expect(codexCalls).toBe(0);
     expect(capturedOptions?.apiKey).toBe("oauth-bearer-token");
-    expect(capturedOptions?.headers?.originator).toBe("openclaw");
-    expect(capturedOptions?.headers?.["User-Agent"]).toMatch(/^openclaw\//);
+    expect(capturedOptions?.headers?.originator).toBe("grokbot");
+    expect(capturedOptions?.headers?.["User-Agent"]).toMatch(/^grokbot\//);
   });
 });

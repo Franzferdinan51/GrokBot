@@ -1,16 +1,16 @@
 // Copilot tests cover harness plugin behavior.
 import type { CopilotClient } from "@github/copilot-sdk";
-import { attachModelProviderRequestTransport } from "openclaw/plugin-sdk/agent-harness-runtime";
+import { attachModelProviderRequestTransport } from "grokbot/plugin-sdk/agent-harness-runtime";
 import type {
   AgentHarnessAttemptParams,
   AgentHarnessAttemptResult,
   AgentHarnessCompactParams,
-} from "openclaw/plugin-sdk/agent-harness-runtime";
+} from "grokbot/plugin-sdk/agent-harness-runtime";
 import {
   initializeGlobalHookRunner,
   resetGlobalHookRunner,
-} from "openclaw/plugin-sdk/hook-runtime";
-import { createMockPluginRegistry } from "openclaw/plugin-sdk/plugin-test-runtime";
+} from "grokbot/plugin-sdk/hook-runtime";
+import { createMockPluginRegistry } from "grokbot/plugin-sdk/plugin-test-runtime";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createCopilotAgentHarness, type CopilotSessionBinding } from "./harness.js";
 import type { resolvePoolAcquire } from "./src/attempt.js";
@@ -285,7 +285,7 @@ describe("createCopilotAgentHarness", () => {
       ["deepinfra", ["deepinfra"]],
       ["fireworks", ["fireworks"]],
       ["github", ["github"]],
-      ["openclaw", ["openclaw"]],
+      ["grokbot", ["grokbot"]],
       ["sglang", ["sglang"]],
       ["together", ["together"]],
       ["vllm", ["vllm"]],
@@ -682,7 +682,7 @@ describe("createCopilotAgentHarness", () => {
     expect(abort).toHaveBeenCalledTimes(1);
   });
 
-  it("aborts deferred compaction cleanup when the OpenClaw session resets", async () => {
+  it("aborts deferred compaction cleanup when the GrokBot session resets", async () => {
     const cleanup = createDeferred<"aborted" | "completed" | "deadline">();
     const abort = vi.fn(() => cleanup.resolve("aborted"));
     mocks.runCopilotAttempt.mockImplementation(async (_params, deps) => {
@@ -823,7 +823,7 @@ describe("createCopilotAgentHarness", () => {
 
   describe("session reuse across turns (dogfood finding #4)", () => {
     // These tests pin the harness's session-reuse contract: subsequent
-    // `runAttempt` calls within the same OpenClaw session should pass
+    // `runAttempt` calls within the same GrokBot session should pass
     // the tracked `sdkSessionId` to the attempt via `initialReplayState`
     // so the SDK can `resumeSession` and keep its prompt cache + thread
     // history warm. Compatibility-fingerprint mismatch (provider/model/

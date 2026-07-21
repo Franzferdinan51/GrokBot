@@ -3,7 +3,7 @@ import { runCommandWithTimeout } from "../process/exec.js";
 import {
   parseOpenClawSchemaVersions,
   type OpenClawSchemaVersions,
-} from "../state/openclaw-schema-versions.js";
+} from "../state/grokbot-schema-versions.js";
 import { buildTimeoutAbortSignal } from "../utils/fetch-timeout.js";
 
 type NpmPackageTargetStatus = {
@@ -53,11 +53,11 @@ function parseNpmPackageTargetMetadata(raw: string): {
   const nodeEngine =
     toOptionalTrimmedString(rec["engines.node"]) ??
     (engines ? toOptionalTrimmedString((engines as Record<string, unknown>).node) : null);
-  const openclaw = rec.openclaw && typeof rec.openclaw === "object" ? rec.openclaw : null;
+  const grokbot = rec.grokbot && typeof rec.grokbot === "object" ? rec.grokbot : null;
   const schemaVersions =
-    parseOpenClawSchemaVersions(rec["openclaw.schemaVersions"]) ??
-    (openclaw
-      ? parseOpenClawSchemaVersions((openclaw as Record<string, unknown>).schemaVersions)
+    parseOpenClawSchemaVersions(rec["grokbot.schemaVersions"]) ??
+    (grokbot
+      ? parseOpenClawSchemaVersions((grokbot as Record<string, unknown>).schemaVersions)
       : undefined);
   return {
     version: toOptionalTrimmedString(rec.version),
@@ -73,11 +73,11 @@ function formatNpmViewError(res: { stdout: string; stderr: string }): string {
 
 function packageTargetSpec(params: { target: string; spec?: string }): string {
   const spec = params.spec?.trim();
-  return spec || `openclaw@${params.target.trim() || "latest"}`;
+  return spec || `grokbot@${params.target.trim() || "latest"}`;
 }
 
 const PUBLIC_NPM_REGISTRY_URL = "https://registry.npmjs.org/";
-const PUBLIC_NPM_PACKAGE_NAME = "openclaw";
+const PUBLIC_NPM_PACKAGE_NAME = "grokbot";
 
 function npmRegistryTargetUrl(params: {
   registryUrl: string;
@@ -123,9 +123,9 @@ async function fetchNpmPackageTargetStatusFromRegistry(params: {
     const json = await readProviderJsonResponse<{
       version?: unknown;
       engines?: { node?: unknown };
-      openclaw?: { schemaVersions?: unknown };
+      grokbot?: { schemaVersions?: unknown };
     }>(res, "npm package target status");
-    const schemaVersions = parseOpenClawSchemaVersions(json.openclaw?.schemaVersions);
+    const schemaVersions = parseOpenClawSchemaVersions(json.grokbot?.schemaVersions);
     return {
       target: params.target,
       version: toOptionalTrimmedString(json.version),
@@ -172,7 +172,7 @@ export async function fetchNpmPackageTargetStatus(params: {
         packageTargetSpec({ target, spec: params.spec }),
         "version",
         "engines.node",
-        "openclaw.schemaVersions",
+        "grokbot.schemaVersions",
         "--json",
         "--global",
       ],

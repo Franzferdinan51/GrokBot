@@ -1,8 +1,8 @@
 // Qqbot helper module supports config behavior.
 import fs from "node:fs";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { resolveDefaultSecretProviderAlias } from "openclaw/plugin-sdk/provider-auth";
-import { coerceSecretRef, normalizeSecretInputString } from "openclaw/plugin-sdk/secret-input";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { resolveDefaultSecretProviderAlias } from "grokbot/plugin-sdk/provider-auth";
+import { coerceSecretRef, normalizeSecretInputString } from "grokbot/plugin-sdk/secret-input";
 import { getPlatformAdapter } from "../engine/adapter/index.js";
 import {
   DEFAULT_ACCOUNT_ID as ENGINE_DEFAULT_ACCOUNT_ID,
@@ -158,7 +158,7 @@ export function resolveQQBotAccount(
   };
 }
 
-/** Apply account config updates back into the OpenClaw config object. */
+/** Apply account config updates back into the GrokBot config object. */
 export function applyQQBotAccountConfig(
   cfg: OpenClawConfig,
   accountId: string,

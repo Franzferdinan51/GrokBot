@@ -5,8 +5,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   closeOpenClawAgentDatabasesForTest,
   resolveOpenClawAgentSqlitePath,
-} from "../../state/openclaw-agent-db.js";
-import { closeOpenClawStateDatabaseForTest } from "../../state/openclaw-state-db.js";
+} from "../../state/grokbot-agent-db.js";
+import { closeOpenClawStateDatabaseForTest } from "../../state/grokbot-state-db.js";
 import {
   hasTerminalMainSessionTranscriptNewerThanRegistry,
   hasTerminalMainSessionTranscriptNewerThanRegistrySync,
@@ -19,7 +19,7 @@ describe("terminal main session transcript freshness", () => {
   let storePath: string;
 
   beforeEach(() => {
-    stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-session-lifecycle-"));
+    stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-session-lifecycle-"));
     storePath = path.join(stateDir, "agents", "main", "sessions", "sessions.json");
   });
 

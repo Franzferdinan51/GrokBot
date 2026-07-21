@@ -11,8 +11,8 @@ Adds video generation provider support.
 
 ## Distribution
 
-- Package: `@openclaw/alibaba-provider`
-- Install route: included in OpenClaw
+- Package: `@grokbot/alibaba-provider`
+- Install route: included in GrokBot
 
 ## Surface
 

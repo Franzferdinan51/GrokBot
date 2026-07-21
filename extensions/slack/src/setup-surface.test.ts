@@ -1,5 +1,5 @@
 // Slack tests cover setup surface plugin behavior.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import {
   createQueuedWizardPrompter,
   createSetupWizardAdapter,
@@ -7,8 +7,8 @@ import {
   runSetupWizardConfigure,
   runSetupWizardPrepare,
   runSetupWizardFinalize,
-} from "openclaw/plugin-sdk/plugin-test-runtime";
-import type { WizardPrompter } from "openclaw/plugin-sdk/plugin-test-runtime";
+} from "grokbot/plugin-sdk/plugin-test-runtime";
+import type { WizardPrompter } from "grokbot/plugin-sdk/plugin-test-runtime";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { createSlackSetupWizardBase, slackSetupAdapter } from "./setup-core.js";
 import { buildSlackSetupLines } from "./setup-shared.js";
@@ -128,12 +128,12 @@ describe("slackSetupWizard.prepare", () => {
     const manifest = requireFirstStringArg(plain, "Slack manifest plain text");
     expect(JSON.parse(manifest)).toEqual({
       display_information: {
-        name: "OpenClaw",
-        description: "OpenClaw connector for OpenClaw",
+        name: "GrokBot",
+        description: "GrokBot connector for GrokBot",
       },
       features: {
         bot_user: {
-          display_name: "OpenClaw",
+          display_name: "GrokBot",
           always_online: true,
         },
         app_home: {
@@ -142,7 +142,7 @@ describe("slackSetupWizard.prepare", () => {
           messages_tab_read_only_enabled: false,
         },
         assistant_view: {
-          assistant_description: "OpenClaw connects Slack assistant threads to OpenClaw agents.",
+          assistant_description: "GrokBot connects Slack assistant threads to GrokBot agents.",
           suggested_prompts: [
             {
               title: "What can you do?",
@@ -160,8 +160,8 @@ describe("slackSetupWizard.prepare", () => {
         },
         slash_commands: [
           {
-            command: "/openclaw",
-            description: "Send a message to OpenClaw",
+            command: "/grokbot",
+            description: "Send a message to GrokBot",
             should_escape: false,
           },
         ],

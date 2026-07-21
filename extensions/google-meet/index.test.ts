@@ -8,7 +8,7 @@ import { createContext, Script } from "node:vm";
 import {
   validateJsonSchemaValue,
   type JsonSchemaObject,
-} from "openclaw/plugin-sdk/json-schema-runtime";
+} from "grokbot/plugin-sdk/json-schema-runtime";
 import {
   convertMeetingTtsAudioForBridge,
   createLocalMeetingRealtimeAudioTransport,
@@ -19,9 +19,9 @@ import {
   type MeetingRealtimeAudioEngineHealth,
   type MeetingRealtimeAudioTransport,
   type MeetingRealtimeToolCallParams,
-} from "openclaw/plugin-sdk/meeting-runtime";
-import type { RealtimeTranscriptionProviderPlugin } from "openclaw/plugin-sdk/realtime-transcription";
-import type { RealtimeVoiceProviderPlugin } from "openclaw/plugin-sdk/realtime-voice";
+} from "grokbot/plugin-sdk/meeting-runtime";
+import type { RealtimeTranscriptionProviderPlugin } from "grokbot/plugin-sdk/realtime-transcription";
+import type { RealtimeVoiceProviderPlugin } from "grokbot/plugin-sdk/realtime-voice";
 import { afterAll, afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import plugin, { testing as googleMeetPluginTesting } from "./index.js";
 import {
@@ -264,8 +264,8 @@ const fetchGuardMocks = vi.hoisted(() => ({
   ),
 }));
 
-vi.mock("openclaw/plugin-sdk/ssrf-runtime", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("openclaw/plugin-sdk/ssrf-runtime")>();
+vi.mock("grokbot/plugin-sdk/ssrf-runtime", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("grokbot/plugin-sdk/ssrf-runtime")>();
   return {
     ...actual,
     fetchWithSsrFGuard: fetchGuardMocks.fetchWithSsrFGuard,
@@ -374,7 +374,7 @@ type MockSessionEntry = {
 };
 
 function createMockSessionRuntime(sessionStore: Record<string, unknown>) {
-  const sessionRoot = createIsolatedTestDir("openclaw-google-meet-session-");
+  const sessionRoot = createIsolatedTestDir("grokbot-google-meet-session-");
   return {
     resolveStorePath: vi.fn(() => path.join(sessionRoot, "sessions.json")),
     loadSessionStore: vi.fn(() => sessionStore),
@@ -897,7 +897,7 @@ describe("google-meet plugin", () => {
   });
 
   afterAll(() => {
-    vi.doUnmock("openclaw/plugin-sdk/ssrf-runtime");
+    vi.doUnmock("grokbot/plugin-sdk/ssrf-runtime");
     vi.doUnmock("./src/voice-call-gateway.js");
     vi.resetModules();
   });
@@ -913,7 +913,7 @@ describe("google-meet plugin", () => {
     expect(config.chrome).toEqual({
       audioBackend: "blackhole-2ch",
       launch: true,
-      guestName: "OpenClaw Agent",
+      guestName: "GrokBot Agent",
       reuseExistingTab: true,
       autoJoin: true,
       joinTimeoutMs: 30000,
@@ -1130,7 +1130,7 @@ describe("google-meet plugin", () => {
 
   it("declares advanced config metadata in the plugin entry and manifest", () => {
     const manifest = JSON.parse(
-      readFileSync(new URL("./openclaw.plugin.json", import.meta.url), "utf8"),
+      readFileSync(new URL("./grokbot.plugin.json", import.meta.url), "utf8"),
     ) as {
       uiHints?: Record<string, unknown>;
       configSchema?: GoogleMeetManifestConfigSchema;
@@ -1462,7 +1462,7 @@ describe("google-meet plugin", () => {
       type: "string",
       enum: ["agent", "bidi", "transcribe"],
       description:
-        "Join mode. agent uses realtime transcription, the configured OpenClaw agent, and regular TTS. bidi uses the realtime voice model directly. transcribe joins observe-only.",
+        "Join mode. agent uses realtime transcription, the configured GrokBot agent, and regular TTS. bidi uses the realtime voice model directly. transcribe joins observe-only.",
     });
   });
 
@@ -2115,7 +2115,7 @@ describe("google-meet plugin", () => {
         details: {
           manualActionRequired: true,
           reason: "not-authenticated",
-          browser: { profile: "openclaw" },
+          browser: { profile: "grokbot" },
         },
       });
     });
@@ -2131,7 +2131,7 @@ describe("google-meet plugin", () => {
     expect(result.details).toEqual({
       manualActionRequired: true,
       reason: "not-authenticated",
-      browser: { profile: "openclaw" },
+      browser: { profile: "grokbot" },
     });
   });
 
@@ -2320,8 +2320,8 @@ describe("google-meet plugin", () => {
     try {
       const { tools } = setup({
         chrome: {
-          audioInputCommand: ["openclaw-audio-bridge", "capture"],
-          audioOutputCommand: ["openclaw-audio-bridge", "play"],
+          audioInputCommand: ["grokbot-audio-bridge", "capture"],
+          audioOutputCommand: ["grokbot-audio-bridge", "play"],
         },
       });
       const tool = tools[0] as {
@@ -2424,7 +2424,7 @@ describe("google-meet plugin", () => {
 
   it("writes export bundles through the tool", async () => {
     stubMeetArtifactsApi();
-    const tempDir = mkdtempSync(path.join(tmpdir(), "openclaw-google-meet-tool-export-"));
+    const tempDir = mkdtempSync(path.join(tmpdir(), "grokbot-google-meet-tool-export-"));
     const { tools } = setup();
     const tool = tools[0] as {
       execute: (
@@ -2483,7 +2483,7 @@ describe("google-meet plugin", () => {
 
   it("dry-runs export bundles through the tool", async () => {
     stubMeetArtifactsApi();
-    const parentDir = mkdtempSync(path.join(tmpdir(), "openclaw-google-meet-tool-dry-run-"));
+    const parentDir = mkdtempSync(path.join(tmpdir(), "grokbot-google-meet-tool-dry-run-"));
     const outputDir = path.join(parentDir, "bundle");
     const { tools } = setup();
     const tool = tools[0] as {
@@ -3970,7 +3970,7 @@ describe("google-meet plugin", () => {
                 lobbyWaiting: true,
                 manualActionRequired: true,
                 manualActionReason: "meet-admission-required",
-                manualActionMessage: "Admit the OpenClaw browser participant in Google Meet.",
+                manualActionMessage: "Admit the GrokBot browser participant in Google Meet.",
                 title: "Meet",
                 url: "https://meet.google.com/abc-defg-hij",
               }),
@@ -5358,7 +5358,7 @@ describe("google-meet plugin", () => {
                     inCall: false,
                     manualActionRequired: true,
                     manualActionReason: "meet-admission-required",
-                    manualActionMessage: "Admit the OpenClaw browser participant in Google Meet.",
+                    manualActionMessage: "Admit the GrokBot browser participant in Google Meet.",
                     title: "Meet",
                     url: "https://meet.google.com/abc-defg-hij?authuser=me%40example.com&hl=en",
                   }),
@@ -5590,7 +5590,7 @@ describe("google-meet plugin", () => {
               inCall: false,
               manualActionRequired: true,
               manualActionReason: "meet-admission-required",
-              manualActionMessage: "Admit the OpenClaw browser participant in Google Meet.",
+              manualActionMessage: "Admit the GrokBot browser participant in Google Meet.",
               title: "Meet",
               url: "https://meet.google.com/abc-defg-hij?authuser=me%40example.com&hl=en",
             }),
@@ -6953,7 +6953,7 @@ describe("google-meet plugin", () => {
           manualActionRequired: true,
           manualActionReason: "google-login-required",
           manualActionMessage:
-            "Sign in to Google in the OpenClaw browser profile, then retry the Meet join.",
+            "Sign in to Google in the GrokBot browser profile, then retry the Meet join.",
           title: "Sign in - Google Accounts",
           url: "https://accounts.google.com/signin",
         },
@@ -7170,7 +7170,7 @@ describe("google-meet plugin", () => {
     });
 
     expect(result.details.error).toContain("No connected Google Meet-capable node");
-    expect(result.details.error).toContain("openclaw node run");
+    expect(result.details.error).toContain("grokbot node run");
   });
 
   it("requires chromeNode.node when multiple capable nodes are connected", async () => {
@@ -8255,7 +8255,7 @@ describe("google-meet plugin", () => {
     let releaseIdlePull: (() => void) | undefined;
     const fullConfig = { models: { providers: {} } } as never;
     const sessionStore: Record<string, unknown> = {};
-    const testRoot = createIsolatedTestDir("openclaw-google-meet-node-agent-");
+    const testRoot = createIsolatedTestDir("grokbot-google-meet-node-agent-");
     const runtime = {
       nodes: {
         invoke: vi.fn(async ({ params }: { params?: { action?: string; base64?: string } }) => {

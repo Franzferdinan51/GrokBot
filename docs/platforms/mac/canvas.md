@@ -15,14 +15,14 @@ surfaces.
 
 Canvas state is stored under Application Support:
 
-- `~/Library/Application Support/OpenClaw/canvas/<session>/...`
+- `~/Library/Application Support/GrokBot/canvas/<session>/...`
 
 The Canvas panel serves those files via a custom URL scheme,
-`openclaw-canvas://<session>/<path>`:
+`grokbot-canvas://<session>/<path>`:
 
-- `openclaw-canvas://main/` -> `<canvasRoot>/main/index.html`
-- `openclaw-canvas://main/assets/app.css` -> `<canvasRoot>/main/assets/app.css`
-- `openclaw-canvas://main/widgets/todo/` -> `<canvasRoot>/main/widgets/todo/index.html`
+- `grokbot-canvas://main/` -> `<canvasRoot>/main/index.html`
+- `grokbot-canvas://main/assets/app.css` -> `<canvasRoot>/main/assets/app.css`
+- `grokbot-canvas://main/widgets/todo/` -> `<canvasRoot>/main/widgets/todo/index.html`
 
 If no `index.html` exists at the root, the app shows a built-in scaffold page.
 
@@ -44,10 +44,10 @@ panel, navigate to a path or URL, evaluate JavaScript, and capture a
 snapshot image:
 
 ```bash
-openclaw nodes canvas present --node <id>
-openclaw nodes canvas navigate --node <id> "/"
-openclaw nodes canvas eval --node <id> --js "document.title"
-openclaw nodes canvas snapshot --node <id>
+grokbot nodes canvas present --node <id>
+grokbot nodes canvas navigate --node <id> "/"
+grokbot nodes canvas eval --node <id> --js "document.title"
+grokbot nodes canvas snapshot --node <id>
 ```
 
 `eval` and `a2ui.*` update content without opening or revealing the panel. Only
@@ -85,21 +85,21 @@ cat > /tmp/a2ui-v0.8.jsonl <<'EOFA2'
 {"beginRendering":{"surfaceId":"main","root":"root"}}
 EOFA2
 
-openclaw nodes canvas a2ui push --jsonl /tmp/a2ui-v0.8.jsonl --node <id>
+grokbot nodes canvas a2ui push --jsonl /tmp/a2ui-v0.8.jsonl --node <id>
 ```
 
 Quick smoke test:
 
 ```bash
-openclaw nodes canvas a2ui push --node <id> --text "Hello from A2UI"
+grokbot nodes canvas a2ui push --node <id> --text "Hello from A2UI"
 ```
 
 ## Triggering agent runs from Canvas
 
-Canvas can trigger new agent runs via `openclaw://agent?...` deep links:
+Canvas can trigger new agent runs via `grokbot://agent?...` deep links:
 
 ```js
-window.location.href = "openclaw://agent?message=Review%20this%20design";
+window.location.href = "grokbot://agent?message=Review%20this%20design";
 ```
 
 Supported query parameters:

@@ -1,6 +1,6 @@
 /** Resolves daemon state, home, and generated task-script paths. */
 import path from "node:path";
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+import { normalizeOptionalString } from "@grokbot/normalization-core/string-coerce";
 import { resolveGatewayProfileSuffix } from "./constants.js";
 
 const windowsAbsolutePath = /^[a-zA-Z]:[\\/]/;
@@ -44,8 +44,8 @@ export function resolveGatewayStateDir(env: Record<string, string | undefined>):
   const home = resolveHomeDir(env);
   const suffix = resolveGatewayProfileSuffix(env.OPENCLAW_PROFILE);
   // Profile suffixes isolate managed service files while preserving the default
-  // historical ~/.openclaw state path.
-  return path.join(home, `.openclaw${suffix}`);
+  // historical ~/.grokbot state path.
+  return path.join(home, `.grokbot${suffix}`);
 }
 
 export function resolveGatewayTaskScriptPath(env: Record<string, string | undefined>): string {

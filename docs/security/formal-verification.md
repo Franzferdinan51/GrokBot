@@ -1,5 +1,5 @@
 ---
-summary: Machine-checked security models for OpenClaw's highest-risk paths.
+summary: Machine-checked security models for GrokBot's highest-risk paths.
 title: Formal verification (security models)
 read_when:
   - Reviewing formal security model guarantees or limits
@@ -7,7 +7,7 @@ read_when:
 permalink: /security/formal-verification/
 ---
 
-OpenClaw's formal security models (TLA+/TLC today) give a machine-checked argument that specific highest-risk paths — authorization, session isolation, tool gating, and misconfiguration safety — enforce their intended policy, under explicit stated assumptions.
+GrokBot's formal security models (TLA+/TLC today) give a machine-checked argument that specific highest-risk paths — authorization, session isolation, tool gating, and misconfiguration safety — enforce their intended policy, under explicit stated assumptions.
 
 > Note: some older links may refer to the previous project name.
 
@@ -18,14 +18,14 @@ An executable, attacker-driven security regression suite:
 - Each claim has a runnable model-check over a finite state space.
 - Many claims have a paired negative model that produces a counterexample trace for a realistic bug class.
 
-This is **not** a proof that OpenClaw is secure in all respects, and it does not verify the full TypeScript implementation.
+This is **not** a proof that GrokBot is secure in all respects, and it does not verify the full TypeScript implementation.
 
 ## Where the models live
 
-Models are maintained in a separate repo: [vignesh07/openclaw-formal-models](https://github.com/vignesh07/openclaw-formal-models).
+Models are maintained in a separate repo: [vignesh07/grokbot-formal-models](https://github.com/vignesh07/grokbot-formal-models).
 
 <Note>
-That repository is currently unreachable (GitHub returns "Repository not found" as of this writing). If it is still broken for you, ask in the OpenClaw maintainer channels for the current location before assuming the models were removed.
+That repository is currently unreachable (GitHub returns "Repository not found" as of this writing). If it is still broken for you, ask in the GrokBot maintainer channels for the current location before assuming the models were removed.
 </Note>
 
 ## Caveats
@@ -39,8 +39,8 @@ That repository is currently unreachable (GitHub returns "Repository not found" 
 Clone the models repo and run TLC:
 
 ```bash
-git clone https://github.com/vignesh07/openclaw-formal-models
-cd openclaw-formal-models
+git clone https://github.com/vignesh07/grokbot-formal-models
+cd grokbot-formal-models
 
 # Java 11+ required (TLC runs on the JVM).
 # The repo vendors a pinned tla2tools.jar and provides bin/tlc plus Make targets.

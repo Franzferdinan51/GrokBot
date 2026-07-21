@@ -1,4 +1,4 @@
-// Provider Auth script supports OpenClaw repository automation.
+// Provider Auth script supports GrokBot repository automation.
 import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
@@ -217,11 +217,11 @@ export function resolveLatestVersion(
   const runCommand = deps.runCommand ?? run;
   const resolveTempDir = deps.tempDir ?? tmpdir;
   const writeFile = deps.writeFile ?? writeFileSync;
-  const userConfigDir = createTempDir(path.join(resolveTempDir(), "openclaw-npm-"));
+  const userConfigDir = createTempDir(path.join(resolveTempDir(), "grokbot-npm-"));
   const userConfigPath = path.join(userConfigDir, "npmrc");
   try {
     writeFile(userConfigPath, "", "utf8");
-    return runCommand("npm", ["view", "openclaw", "version", "--userconfig", userConfigPath], {
+    return runCommand("npm", ["view", "grokbot", "version", "--userconfig", userConfigPath], {
       quiet: true,
     }).stdout.trim();
   } finally {

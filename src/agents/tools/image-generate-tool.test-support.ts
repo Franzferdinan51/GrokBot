@@ -1,4 +1,4 @@
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import type { AuthProfileStore } from "../auth-profiles/types.js";
 import type { ToolModelConfig } from "./model-config.helpers.js";
 import "./image-generate-tool.js";
@@ -14,7 +14,7 @@ type ImageGenerateToolTestApi = {
 
 function getTestApi(): ImageGenerateToolTestApi {
   return (globalThis as Record<PropertyKey, unknown>)[
-    Symbol.for("openclaw.imageGenerateToolTestApi")
+    Symbol.for("grokbot.imageGenerateToolTestApi")
   ] as ImageGenerateToolTestApi;
 }
 

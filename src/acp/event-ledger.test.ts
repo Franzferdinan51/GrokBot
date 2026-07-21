@@ -2,7 +2,7 @@
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import { requireNodeSqlite } from "../infra/node-sqlite.js";
-import { closeOpenClawStateDatabaseForTest } from "../state/openclaw-state-db.js";
+import { closeOpenClawStateDatabaseForTest } from "../state/grokbot-state-db.js";
 import { withTempDir } from "../test-helpers/temp-dir.js";
 import { createInMemoryAcpEventLedger, createSqliteAcpEventLedger } from "./event-ledger.js";
 
@@ -113,8 +113,8 @@ describe("ACP event ledger", () => {
   });
 
   it("persists SQLite-backed replay state across ledger instances", async () => {
-    await withTempDir({ prefix: "openclaw-acp-ledger-" }, async (dir) => {
-      const databasePath = path.join(dir, "openclaw.sqlite");
+    await withTempDir({ prefix: "grokbot-acp-ledger-" }, async (dir) => {
+      const databasePath = path.join(dir, "grokbot.sqlite");
       const first = createSqliteAcpEventLedger({ path: databasePath, now: () => 1000 });
       await first.startSession({
         sessionId: "session-1",
@@ -149,9 +149,9 @@ describe("ACP event ledger", () => {
   });
 
   it("marks SQLite-backed replay incomplete when event retention truncates history", async () => {
-    await withTempDir({ prefix: "openclaw-acp-ledger-" }, async (dir) => {
+    await withTempDir({ prefix: "grokbot-acp-ledger-" }, async (dir) => {
       const ledger = createSqliteAcpEventLedger({
-        path: path.join(dir, "openclaw.sqlite"),
+        path: path.join(dir, "grokbot.sqlite"),
         maxEventsPerSession: 1,
       });
       await ledger.startSession({
@@ -184,8 +184,8 @@ describe("ACP event ledger", () => {
   });
 
   it("keeps footprint aggregates consistent while the byte budget evicts", async () => {
-    await withTempDir({ prefix: "openclaw-acp-ledger-" }, async (dir) => {
-      const databasePath = path.join(dir, "openclaw.sqlite");
+    await withTempDir({ prefix: "grokbot-acp-ledger-" }, async (dir) => {
+      const databasePath = path.join(dir, "grokbot.sqlite");
       const ledger = createSqliteAcpEventLedger({
         path: databasePath,
         // Small enough that appends force byte-budget eviction repeatedly.

@@ -4,10 +4,10 @@ import type { IncomingMessage } from "node:http";
 import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalString,
-} from "@openclaw/normalization-core/string-coerce";
+} from "@grokbot/normalization-core/string-coerce";
 import { listAgentIds, resolveDefaultAgentId } from "../agents/agent-scope-config.js";
 import { listChannelPlugins } from "../channels/plugins/index.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { readJsonBodyWithLimit, requestBodyErrorToText } from "../infra/http-body.js";
 import { normalizeAgentId, parseAgentSessionKey } from "../routing/session-key.js";
 import type { HookExternalContentSource } from "../security/external-content.js";
@@ -149,7 +149,7 @@ export function isSessionKeyAllowedByPrefix(sessionKey: string, prefixes: string
   return prefixes.some((prefix) => normalized.startsWith(prefix));
 }
 
-/** Extract the hook bearer token from Authorization or x-openclaw-token headers. */
+/** Extract the hook bearer token from Authorization or x-grokbot-token headers. */
 export function extractHookToken(req: IncomingMessage): string | undefined {
   const auth = normalizeOptionalString(req.headers.authorization) ?? "";
   if (normalizeLowercaseStringOrEmpty(auth).startsWith("bearer ")) {
@@ -158,7 +158,7 @@ export function extractHookToken(req: IncomingMessage): string | undefined {
       return token;
     }
   }
-  const headerToken = normalizeOptionalString(req.headers["x-openclaw-token"]) ?? "";
+  const headerToken = normalizeOptionalString(req.headers["x-grokbot-token"]) ?? "";
   if (headerToken) {
     return headerToken;
   }
@@ -283,7 +283,7 @@ export function resolveHookIdempotencyKey(params: {
 }): string | undefined {
   return (
     resolveOptionalHookIdempotencyKey(params.headers?.["idempotency-key"]) ||
-    resolveOptionalHookIdempotencyKey(params.headers?.["x-openclaw-idempotency-key"]) ||
+    resolveOptionalHookIdempotencyKey(params.headers?.["x-grokbot-idempotency-key"]) ||
     resolveOptionalHookIdempotencyKey(params.payload.idempotencyKey)
   );
 }

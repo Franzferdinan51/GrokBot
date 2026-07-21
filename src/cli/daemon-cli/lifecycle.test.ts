@@ -194,7 +194,7 @@ vi.mock("./start-repair.js", () => ({
 vi.mock("../terminal-interactivity.js", () => ({
   isTerminalInteractive: () => isTerminalInteractive(),
   NON_INTERACTIVE_GATEWAY_STOP_MESSAGE:
-    "This stops the operator's running gateway service. Use an isolated dev gateway (openclaw gateway run --dev, or --profile <name> with a free port) for testing, or re-run with --force if you really mean it.",
+    "This stops the operator's running gateway service. Use an isolated dev gateway (grokbot gateway run --dev, or --profile <name> with a free port) for testing, or re-run with --force if you really mean it.",
 }));
 
 vi.mock("./lifecycle-audit.js", () => ({
@@ -307,7 +307,7 @@ describe("runDaemonRestart health checks", () => {
     createGatewayLifecycleMutationAudit.mockClear();
 
     service.readCommand.mockResolvedValue({
-      programArguments: ["openclaw", "gateway", "--port", "18789"],
+      programArguments: ["grokbot", "gateway", "--port", "18789"],
       environment: {},
     });
     service.restart.mockResolvedValue({ outcome: "completed" });
@@ -417,13 +417,13 @@ describe("runDaemonRestart health checks", () => {
   });
 
   it("uses the installed service environment for managed restart health", async () => {
-    process.env.OPENCLAW_STATE_DIR = "/tmp/openclaw-caller-state";
-    process.env.OPENCLAW_SYSTEMD_UNIT = "openclaw-gateway-maintenance.service";
+    process.env.OPENCLAW_STATE_DIR = "/tmp/grokbot-caller-state";
+    process.env.OPENCLAW_SYSTEMD_UNIT = "grokbot-gateway-maintenance.service";
     service.readCommand.mockResolvedValue({
-      programArguments: ["openclaw", "gateway", "--port", "18789"],
+      programArguments: ["grokbot", "gateway", "--port", "18789"],
       environment: {
-        OPENCLAW_STATE_DIR: "/tmp/openclaw-service-state",
-        OPENCLAW_SYSTEMD_UNIT: "openclaw-gateway.service",
+        OPENCLAW_STATE_DIR: "/tmp/grokbot-service-state",
+        OPENCLAW_SYSTEMD_UNIT: "grokbot-gateway.service",
       },
     });
 
@@ -433,8 +433,8 @@ describe("runDaemonRestart health checks", () => {
       waitForGatewayHealthyRestart,
       "waitForGatewayHealthyRestart",
     ) as { env?: NodeJS.ProcessEnv };
-    expect(waitParams.env?.OPENCLAW_STATE_DIR).toBe("/tmp/openclaw-service-state");
-    expect(waitParams.env?.OPENCLAW_SYSTEMD_UNIT).toBe("openclaw-gateway-maintenance.service");
+    expect(waitParams.env?.OPENCLAW_STATE_DIR).toBe("/tmp/grokbot-service-state");
+    expect(waitParams.env?.OPENCLAW_SYSTEMD_UNIT).toBe("grokbot-gateway-maintenance.service");
   });
 
   it("carries launchd KeepAlive supervision into managed restart health", async () => {
@@ -450,12 +450,12 @@ describe("runDaemonRestart health checks", () => {
   it("re-reads the installed service environment after restart repair", async () => {
     service.readCommand
       .mockResolvedValueOnce({
-        programArguments: ["openclaw", "gateway", "--port", "18789"],
-        environment: { OPENCLAW_STATE_DIR: "/tmp/openclaw-stale-state" },
+        programArguments: ["grokbot", "gateway", "--port", "18789"],
+        environment: { OPENCLAW_STATE_DIR: "/tmp/grokbot-stale-state" },
       })
       .mockResolvedValue({
-        programArguments: ["openclaw", "gateway", "--port", "19001"],
-        environment: { OPENCLAW_STATE_DIR: "/tmp/openclaw-repaired-state" },
+        programArguments: ["grokbot", "gateway", "--port", "19001"],
+        environment: { OPENCLAW_STATE_DIR: "/tmp/grokbot-repaired-state" },
       });
     repairLoadedGatewayServiceForStart.mockResolvedValue({
       result: "restarted",
@@ -486,7 +486,7 @@ describe("runDaemonRestart health checks", () => {
       expect.objectContaining({
         port: 19_001,
         env: expect.objectContaining({
-          OPENCLAW_STATE_DIR: "/tmp/openclaw-repaired-state",
+          OPENCLAW_STATE_DIR: "/tmp/grokbot-repaired-state",
         }),
       }),
     );
@@ -648,8 +648,8 @@ describe("runDaemonRestart health checks", () => {
     const error = await expectRestartError(runDaemonRestart({ json: true }));
     expect(error.message).toBe("Gateway restart timed out after 60s waiting for health checks.");
     expect(error.hints).toEqual([
-      formatCliCommand("openclaw gateway status --deep"),
-      formatCliCommand("openclaw doctor"),
+      formatCliCommand("grokbot gateway status --deep"),
+      formatCliCommand("grokbot doctor"),
     ]);
     expect(terminateStaleGatewayPids).not.toHaveBeenCalled();
     expect(renderRestartDiagnostics).toHaveBeenCalledTimes(1);
@@ -712,8 +712,8 @@ describe("runDaemonRestart health checks", () => {
       "Gateway restart failed after 13s: service stayed stopped and health checks never came up.",
     );
     expect(error.hints).toEqual([
-      formatCliCommand("openclaw gateway status --deep"),
-      formatCliCommand("openclaw doctor"),
+      formatCliCommand("grokbot gateway status --deep"),
+      formatCliCommand("grokbot doctor"),
     ]);
     expect(terminateStaleGatewayPids).not.toHaveBeenCalled();
     expect(renderRestartDiagnostics).toHaveBeenCalledTimes(1);
@@ -749,7 +749,7 @@ describe("runDaemonRestart health checks", () => {
     expect(writeJson).toHaveBeenCalledWith(
       expect.objectContaining({
         ok: false,
-        error: expect.stringContaining("openclaw gateway run --dev"),
+        error: expect.stringContaining("grokbot gateway run --dev"),
       }),
     );
     expect(runServiceStop).not.toHaveBeenCalled();
@@ -980,7 +980,7 @@ describe("runDaemonRestart health checks", () => {
   it("does not fall back to unmanaged restart when launchd repair reports headless GUI bootstrap failure", async () => {
     vi.spyOn(process, "platform", "get").mockReturnValue("darwin");
     recoverInstalledLaunchAgent.mockRejectedValue(
-      new Error("LaunchAgent openclaw gateway restart requires a logged-in macOS GUI session"),
+      new Error("LaunchAgent grokbot gateway restart requires a logged-in macOS GUI session"),
     );
     findVerifiedGatewayListenerPidsOnPortSync.mockReturnValue([4200]);
     mockUnmanagedRestart();
@@ -1046,12 +1046,12 @@ describe("runDaemonRestart health checks", () => {
     );
   });
 
-  it("delegates system-scope restart to systemctl without unmanaged signaling when root (openclaw#87577)", async () => {
+  it("delegates system-scope restart to systemctl without unmanaged signaling when root (grokbot#87577)", async () => {
     vi.spyOn(process, "platform", "get").mockReturnValue("linux");
     findInstalledSystemdGatewayScope.mockResolvedValue({
       scope: "system",
-      unitName: "openclaw.service",
-      unitPath: "/etc/systemd/system/openclaw.service",
+      unitName: "grokbot.service",
+      unitPath: "/etc/systemd/system/grokbot.service",
     });
     restartSystemdService.mockResolvedValue({ outcome: "completed" });
     findVerifiedGatewayListenerPidsOnPortSync.mockReturnValue([4200]);
@@ -1064,35 +1064,35 @@ describe("runDaemonRestart health checks", () => {
     expect(probeGateway).not.toHaveBeenCalled();
   });
 
-  it("surfaces systemd sudo guidance and never signals when restarting a system-scope unit as non-root (openclaw#87577)", async () => {
+  it("surfaces systemd sudo guidance and never signals when restarting a system-scope unit as non-root (grokbot#87577)", async () => {
     vi.spyOn(process, "platform", "get").mockReturnValue("linux");
     findInstalledSystemdGatewayScope.mockResolvedValue({
       scope: "system",
-      unitName: "openclaw.service",
-      unitPath: "/etc/systemd/system/openclaw.service",
+      unitName: "grokbot.service",
+      unitPath: "/etc/systemd/system/grokbot.service",
     });
     restartSystemdService.mockRejectedValue(
       new Error(
-        "openclaw.service is a system-scope unit (/etc/systemd/system/openclaw.service); run `sudo systemctl restart openclaw.service` to restart it",
+        "grokbot.service is a system-scope unit (/etc/systemd/system/grokbot.service); run `sudo systemctl restart grokbot.service` to restart it",
       ),
     );
     findVerifiedGatewayListenerPidsOnPortSync.mockReturnValue([4200]);
     mockUnmanagedRestart();
 
     await expect(runDaemonRestart({ json: true })).rejects.toThrow(
-      /sudo systemctl restart openclaw\.service/,
+      /sudo systemctl restart grokbot\.service/,
     );
 
     expect(signalVerifiedGatewayPidSync).not.toHaveBeenCalled();
     expect(probeGateway).not.toHaveBeenCalled();
   });
 
-  it("delegates system-scope stop to systemctl without unmanaged signaling when root (openclaw#87577)", async () => {
+  it("delegates system-scope stop to systemctl without unmanaged signaling when root (grokbot#87577)", async () => {
     vi.spyOn(process, "platform", "get").mockReturnValue("linux");
     findInstalledSystemdGatewayScope.mockResolvedValue({
       scope: "system",
-      unitName: "openclaw-gateway.service",
-      unitPath: "/etc/systemd/system/openclaw-gateway.service",
+      unitName: "grokbot-gateway.service",
+      unitPath: "/etc/systemd/system/grokbot-gateway.service",
     });
     stopSystemdService.mockResolvedValue(undefined);
     findVerifiedGatewayListenerPidsOnPortSync.mockReturnValue([4200]);
@@ -1103,21 +1103,21 @@ describe("runDaemonRestart health checks", () => {
     expect(signalVerifiedGatewayPidSync).not.toHaveBeenCalled();
   });
 
-  it("surfaces systemd sudo guidance and never signals when stopping a system-scope unit as non-root (openclaw#87577)", async () => {
+  it("surfaces systemd sudo guidance and never signals when stopping a system-scope unit as non-root (grokbot#87577)", async () => {
     vi.spyOn(process, "platform", "get").mockReturnValue("linux");
     findInstalledSystemdGatewayScope.mockResolvedValue({
       scope: "system",
-      unitName: "openclaw-gateway.service",
-      unitPath: "/etc/systemd/system/openclaw-gateway.service",
+      unitName: "grokbot-gateway.service",
+      unitPath: "/etc/systemd/system/grokbot-gateway.service",
     });
     stopSystemdService.mockRejectedValue(
       new Error(
-        "openclaw-gateway.service is a system-scope unit (/etc/systemd/system/openclaw-gateway.service); run `sudo systemctl stop openclaw-gateway.service` to stop it",
+        "grokbot-gateway.service is a system-scope unit (/etc/systemd/system/grokbot-gateway.service); run `sudo systemctl stop grokbot-gateway.service` to stop it",
       ),
     );
     findVerifiedGatewayListenerPidsOnPortSync.mockReturnValue([4200]);
     await expect(runUnmanagedStop()).rejects.toThrow(
-      /sudo systemctl stop openclaw-gateway\.service/,
+      /sudo systemctl stop grokbot-gateway\.service/,
     );
     expect(stopSystemdService).toHaveBeenCalled();
     expect(signalVerifiedGatewayPidSync).not.toHaveBeenCalled();

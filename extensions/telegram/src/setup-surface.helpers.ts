@@ -6,9 +6,9 @@ import {
   DEFAULT_ACCOUNT_ID,
   type OpenClawConfig,
   patchChannelConfigForAccount,
-} from "openclaw/plugin-sdk/setup";
-import { formatCliCommand, formatDocsLink } from "openclaw/plugin-sdk/setup-tools";
-import { normalizeOptionalString } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/setup";
+import { formatCliCommand, formatDocsLink } from "grokbot/plugin-sdk/setup-tools";
+import { normalizeOptionalString } from "grokbot/plugin-sdk/string-coerce-runtime";
 import {
   mergeTelegramAccountConfig,
   resolveDefaultTelegramAccountId,
@@ -61,8 +61,8 @@ export function buildTelegramDmAccessWarningLines(accountId: string): string[] {
     "Your bot is using DM policy: pairing.",
     "Any Telegram user who discovers the bot can send pairing requests.",
     "For private use, configure an allowlist with your Telegram user id:",
-    "  " + formatCliCommand(`openclaw config set ${configBase}.dmPolicy "allowlist"`),
-    "  " + formatCliCommand(`openclaw config set ${configBase}.allowFrom '["YOUR_USER_ID"]'`),
+    "  " + formatCliCommand(`grokbot config set ${configBase}.dmPolicy "allowlist"`),
+    "  " + formatCliCommand(`grokbot config set ${configBase}.allowFrom '["YOUR_USER_ID"]'`),
     `Docs: ${formatDocsLink("/channels/pairing", "channels/pairing")}`,
   ];
 }

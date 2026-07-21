@@ -1,11 +1,11 @@
-import { createChannelInboundEnvelopeBuilder } from "openclaw/plugin-sdk/channel-inbound";
-import { deriveDurableFinalDeliveryRequirements } from "openclaw/plugin-sdk/channel-outbound";
+import { createChannelInboundEnvelopeBuilder } from "grokbot/plugin-sdk/channel-inbound";
+import { deriveDurableFinalDeliveryRequirements } from "grokbot/plugin-sdk/channel-outbound";
 /**
- * Converts authorized ClickClack messages into OpenClaw agent/model replies and
+ * Converts authorized ClickClack messages into GrokBot agent/model replies and
  * routes resulting outbound text back to ClickClack.
  */
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { normalizeAgentId } from "openclaw/plugin-sdk/routing";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { normalizeAgentId } from "grokbot/plugin-sdk/routing";
 import { resolveClickClackInboundAccess, type ClickClackInboundAccess } from "./access.js";
 import { createClickClackActivityPublisher, type ClickClackActivityPublisher } from "./activity.js";
 import { resolveClickClackDiscussionRoute } from "./discussions/routing.js";

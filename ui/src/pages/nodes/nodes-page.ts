@@ -35,7 +35,7 @@ import {
   type ExecApprovalsTarget,
   type NodesPageDataState,
 } from "../../lib/nodes/index.ts";
-import { OpenClawLightDomElement } from "../../lit/openclaw-element.ts";
+import { OpenClawLightDomElement } from "../../lit/grokbot-element.ts";
 import { PollController } from "../../lit/poll-controller.ts";
 import { SubscriptionsController } from "../../lit/subscriptions-controller.ts";
 import { renderNodes } from "./view.ts";
@@ -471,6 +471,6 @@ class NodesPage extends OpenClawLightDomElement implements NodesPageDataState {
   }
 }
 
-if (!customElements.get("openclaw-nodes-page")) {
-  customElements.define("openclaw-nodes-page", NodesPage);
+if (!customElements.get("grokbot-nodes-page")) {
+  customElements.define("grokbot-nodes-page", NodesPage);
 }

@@ -133,7 +133,7 @@ describe("install.ps1 failure handling", () => {
           "",
           "$originalTemp = $env:TEMP",
           "$originalTmp = $env:TMP",
-          '$sandbox = Join-Path ([System.IO.Path]::GetTempPath()) ("openclaw-install-temp-test-" + [guid]::NewGuid().ToString("N"))',
+          '$sandbox = Join-Path ([System.IO.Path]::GetTempPath()) ("grokbot-install-temp-test-" + [guid]::NewGuid().ToString("N"))',
           '$longTemp = Join-Path $sandbox "Long Temp"',
           "try {",
           "  New-Item -ItemType Directory -Force -Path $longTemp | Out-Null",
@@ -175,7 +175,7 @@ describe("install.ps1 failure handling", () => {
         source: [
           scriptWithoutEntryPoint,
           "",
-          '$sandbox = Join-Path ([System.IO.Path]::GetTempPath()) ("openclaw-portable-git-test-" + [guid]::NewGuid().ToString("N"))',
+          '$sandbox = Join-Path ([System.IO.Path]::GetTempPath()) ("grokbot-portable-git-test-" + [guid]::NewGuid().ToString("N"))',
           '$portableRoot = Join-Path $sandbox "portable-git"',
           "try {",
           "  New-Item -ItemType Directory -Force -Path $sandbox | Out-Null",
@@ -195,7 +195,7 @@ describe("install.ps1 failure handling", () => {
           "  Install-PortableGit",
           "  if (-not (Test-Path -LiteralPath (Join-Path $portableRoot 'cmd/git.exe'))) { throw 'missing cmd/git.exe' }",
           "  if (-not (Test-Path -LiteralPath (Join-Path $portableRoot 'etc/gitconfig'))) { throw 'missing etc/gitconfig' }",
-          "  if (@(Get-ChildItem -LiteralPath $sandbox -Filter 'openclaw-portable-git-*').Count -ne 0) { throw 'temporary Git files remain' }",
+          "  if (@(Get-ChildItem -LiteralPath $sandbox -Filter 'grokbot-portable-git-*').Count -ne 0) { throw 'temporary Git files remain' }",
           "} finally {",
           "  if (Test-Path -LiteralPath $sandbox) { Remove-Item -LiteralPath $sandbox -Recurse -Force }",
           "}",
@@ -431,7 +431,7 @@ describe("install.ps1 failure handling", () => {
           "try {",
           ...ENTRYPOINT_LINES.map((line) => `  ${line}`),
           "} catch {",
-          "  if ($_.Exception.Message -ne 'OpenClaw installation failed with exit code 1.') { throw }",
+          "  if ($_.Exception.Message -ne 'GrokBot installation failed with exit code 1.') { throw }",
           "  $caught = $true",
           "}",
           "if (-not $caught) { throw 'Install failure did not reach the caller' }",
@@ -454,7 +454,7 @@ describe("install.ps1 failure handling", () => {
           "}",
           "function Ensure-OpenClawOnPath { throw 'should not continue after failed git install' }",
           "$InstallMethod = 'git'",
-          "$GitDir = 'C:\\\\openclaw-test'",
+          "$GitDir = 'C:\\\\grokbot-test'",
           "$NoOnboard = $true",
           "$result = Main",
           'if ($result -ne $false) { throw "Main returned $result" }',
@@ -472,10 +472,10 @@ describe("install.ps1 failure handling", () => {
           "function Check-Node { return $true }",
           "function Check-ExistingOpenClaw { return $false }",
           "function Add-ToPath { param([string]$Path) }",
-          "function Install-OpenClaw { Write-Output 'npm stdout'; return $true }",
+          "function Install-GrokBot { Write-Output 'npm stdout'; return $true }",
           "function Ensure-OpenClawOnPath { return $true }",
           "function Refresh-GatewayServiceIfLoaded { }",
-          "function Invoke-OpenClawCommand { return 'OpenClaw test-version' }",
+          "function Invoke-OpenClawCommand { return 'GrokBot test-version' }",
           "$NoOnboard = $true",
           "$result = Main",
           "if ($result -is [array]) { throw 'Main returned an array' }",
@@ -493,20 +493,20 @@ describe("install.ps1 failure handling", () => {
           "function Check-Node { return $true }",
           "function Check-ExistingOpenClaw { return $false }",
           "function Add-ToPath { param([string]$Path) }",
-          "function Install-OpenClaw {",
+          "function Install-GrokBot {",
           "  Write-Output 'native chatter'",
           "  return $true",
           "}",
           "function Ensure-OpenClawOnPath { return $true }",
           "function Refresh-GatewayServiceIfLoaded { }",
-          "function Invoke-OpenClawCommand { return 'OpenClaw test-version' }",
+          "function Invoke-OpenClawCommand { return 'GrokBot test-version' }",
           "$NoOnboard = $true",
           ...ENTRYPOINT_LINES,
           "",
         ].join("\n"),
       },
     ];
-    const tempDir = harness.createTempDir("openclaw-install-ps1-batch-");
+    const tempDir = harness.createTempDir("grokbot-install-ps1-batch-");
     const fixtures = cases.map((testCase, index) => {
       const scriptPath = join(tempDir, `case-${index}.ps1`);
       writeFileSync(scriptPath, testCase.source);
@@ -557,7 +557,7 @@ describe("install.ps1 failure handling", () => {
     const booleanSuccessBody = extractFunctionBody(source, "Test-BooleanSuccessResult");
     expect(completeInstallBody).toMatch(/\$PSCommandPath/);
     expect(completeInstallBody).toMatch(/\bexit \$script:InstallExitCode\b/);
-    expect(completeInstallBody).toMatch(/\bthrow "OpenClaw installation failed with exit code/);
+    expect(completeInstallBody).toMatch(/\bthrow "GrokBot installation failed with exit code/);
     expect(booleanSuccessBody).toContain("$Results.Count -gt 0");
     expect(source).toContain("$installSucceeded = Test-BooleanSuccessResult -Results $mainResults");
   });
@@ -617,7 +617,7 @@ describe("install.ps1 failure handling", () => {
   });
 
   it("runs npm install through the resolved command with quiet CI defaults", () => {
-    const npmInstallBody = extractFunctionBody(source, "Install-OpenClaw");
+    const npmInstallBody = extractFunctionBody(source, "Install-GrokBot");
     expect(npmInstallBody).toContain("$npmOutput = Invoke-NpmCommand -Arguments");
     expect(npmInstallBody).toContain("$npmDebugLogRoots = @(Get-NpmDebugLogRootCandidates)");
     expect(npmInstallBody).toContain('$npmInstallArguments = @("install", "-g")');
@@ -648,7 +648,7 @@ describe("install.ps1 failure handling", () => {
 
   it("does not force npm or pnpm lifecycle scripts through cmd.exe", () => {
     const ensurePnpmBody = extractFunctionBody(source, "Ensure-Pnpm");
-    const npmInstallBody = extractFunctionBody(source, "Install-OpenClaw");
+    const npmInstallBody = extractFunctionBody(source, "Install-GrokBot");
     const gitInstallBody = extractFunctionBody(source, "Install-OpenClawFromGit");
 
     expect(ensurePnpmBody).not.toContain("NPM_CONFIG_SCRIPT_SHELL");
@@ -675,7 +675,7 @@ describe("install.ps1 failure handling", () => {
       'Invoke-CorepackCommand -Arguments @("prepare", $pnpmSpec, "--activate")',
     );
     expect(ensurePnpmBody).toContain('Invoke-NpmCommand -Arguments @("install", "-g", $pnpmSpec)');
-    expect(mainBody).toContain('Invoke-NpmCommand -Arguments @("uninstall", "-g", "openclaw")');
+    expect(mainBody).toContain('Invoke-NpmCommand -Arguments @("uninstall", "-g", "grokbot")');
     expect(mainBody).toContain(
       'Invoke-NpmCommand -Arguments @("list", "-g", "--depth", "0", "--json")',
     );
@@ -705,13 +705,13 @@ describe("install.ps1 failure handling", () => {
     expect(source).not.toContain("Get-InstallerTempDirectory");
   });
 
-  it("rejects OpenClaw GitHub source targets for npm installs", () => {
-    const npmInstallBody = extractFunctionBody(source, "Install-OpenClaw");
+  it("rejects GrokBot GitHub source targets for npm installs", () => {
+    const npmInstallBody = extractFunctionBody(source, "Install-GrokBot");
     const sourceTargetBody = extractFunctionBody(source, "Test-OpenClawSourcePackageInstallSpec");
     expect(sourceTargetBody).toContain('$normalizedTag -eq "main"');
-    expect(sourceTargetBody).toContain("^github:openclaw/openclaw");
+    expect(sourceTargetBody).toContain("^github:grokbot/grokbot");
     expect(npmInstallBody).toContain("Test-OpenClawSourcePackageInstallSpec -RequestedTag $Tag");
-    expect(npmInstallBody).toContain("npm installs do not support OpenClaw GitHub source targets");
+    expect(npmInstallBody).toContain("npm installs do not support GrokBot GitHub source targets");
     expect(npmInstallBody).toContain("-InstallMethod git -Tag main");
   });
 
@@ -722,7 +722,7 @@ describe("install.ps1 failure handling", () => {
   });
 
   it("preserves the min-release-age probe status before raw npmrc detection", () => {
-    const npmInstallBody = extractFunctionBody(source, "Install-OpenClaw");
+    const npmInstallBody = extractFunctionBody(source, "Install-GrokBot");
     const probeStatusCapture = npmInstallBody.indexOf("$minReleaseAgeStatus = $LASTEXITCODE");
     const rawKeyProbe = npmInstallBody.indexOf("Test-NpmConfigRawKey -Key");
     expect(probeStatusCapture).toBeGreaterThan(-1);
@@ -770,7 +770,7 @@ describe("install.ps1 failure handling", () => {
     expect(installNodeBody).toContain("Install-PortableNode");
     expect(installNodeBody).toContain("Portable Node.js bootstrap failed");
     expect(installNodeBody).toContain("Error: Could not install Node.js automatically.");
-    expect(depsRootBody).toContain("OpenClaw\\deps");
+    expect(depsRootBody).toContain("GrokBot\\deps");
     expect(portableNodeRootBody).toContain("portable-node");
     expect(portableNodeBody).toContain("Ensure-PortableNodeOnUserPath");
     expect(portableNodeBody).toContain(
@@ -844,7 +844,7 @@ describe("install.ps1 failure handling", () => {
     expect(portableGitDownloadBody).toContain("'^MinGit-.*-arm64\\.zip$'");
     expect(portableGitDownloadBody).toContain("'^MinGit-.*-64-bit\\.zip$'");
     expect(portableGitBody).toContain(
-      '$tempName = "openclaw-portable-git-" + [guid]::NewGuid().ToString("N")',
+      '$tempName = "grokbot-portable-git-" + [guid]::NewGuid().ToString("N")',
     );
     expect(portableGitBody).toContain(
       'Join-Path $script:InstallerTempDirectory ($tempName + ".zip")',
@@ -901,7 +901,7 @@ describe("install.ps1 failure handling", () => {
     );
     expect(mainBody).toContain("$gitInstallResults = @(Install-OpenClawFromGit");
     expect(mainBody).toContain("Test-BooleanSuccessResult -Results $gitInstallResults");
-    expect(mainBody).toContain("$npmInstallResults = @(Install-OpenClaw)");
+    expect(mainBody).toContain("$npmInstallResults = @(Install-GrokBot)");
     expect(mainBody).toContain("Test-BooleanSuccessResult -Results $npmInstallResults");
     expect(gitInstallBody).toContain("Push-Location -LiteralPath $RepoDir");
     expect(gitInstallBody).toContain("$sourceInstallArgs = @(");
@@ -950,7 +950,7 @@ describe("install.ps1 failure handling", () => {
     expect(gitInstallBody).toContain('Write-Host "[!] pnpm build failed for the Git checkout"');
     expect(gitInstallBody).toContain('$entryPath = Join-Path $RepoDir "dist\\\\entry.js"');
     expect(gitInstallBody).toContain("Test-Path $entryPath");
-    expect(gitInstallBody).toContain('Write-Host "[!] OpenClaw build did not produce $entryPath"');
+    expect(gitInstallBody).toContain('Write-Host "[!] GrokBot build did not produce $entryPath"');
     expect(gitInstallBody).toContain('node ""$entryPath"" %*');
     expect(gitInstallBody).not.toContain("& $pnpmCommand -C $RepoDir install");
     expect(gitInstallBody).not.toContain('node ""$RepoDir\\\\dist\\\\entry.js"" %*');
@@ -979,7 +979,7 @@ describe("install.ps1 failure handling", () => {
   runConcurrentIfPowerShell(
     "fails install when interactive onboarding exits non-zero",
     async () => {
-      const tempDir = mkdtempSync(join(tmpdir(), "openclaw-install-ps1-"));
+      const tempDir = mkdtempSync(join(tmpdir(), "grokbot-install-ps1-"));
       const scriptPath = join(tempDir, "install.ps1");
       try {
         const scriptWithoutEntryPoint = source.replace(ENTRYPOINT_RE, "");
@@ -993,7 +993,7 @@ describe("install.ps1 failure handling", () => {
             "function Check-Node { return $true }",
             "function Check-ExistingOpenClaw { return $false }",
             "function Get-NpmCommandPath { return 'npm.cmd' }",
-            "function Install-OpenClaw { return $true }",
+            "function Install-GrokBot { return $true }",
             "function Ensure-OpenClawOnPath { return $true }",
             "function Add-ToUserPath { param([string]$Path) }",
             "function Get-OpenClawCommandPath { return 'cmd.exe' }",
@@ -1021,7 +1021,7 @@ describe("install.ps1 failure handling", () => {
 
         expect(result.status).toBe(1);
         expect(`${result.stdout}\n${result.stderr}`).toContain(
-          "openclaw onboard failed with exit code 17",
+          "grokbot onboard failed with exit code 17",
         );
       } finally {
         rmSync(tempDir, { force: true, recursive: true });
@@ -1030,7 +1030,7 @@ describe("install.ps1 failure handling", () => {
   );
 
   runConcurrentIfPowerShell("exits non-zero when run as a script file", async () => {
-    const tempDir = mkdtempSync(join(tmpdir(), "openclaw-install-ps1-"));
+    const tempDir = mkdtempSync(join(tmpdir(), "grokbot-install-ps1-"));
     const scriptPath = join(tempDir, "install.ps1");
     try {
       writeFileSync(scriptPath, createFailingNodeFixture(source));

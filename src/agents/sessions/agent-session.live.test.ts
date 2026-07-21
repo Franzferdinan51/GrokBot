@@ -2,7 +2,7 @@
 import { mkdir, mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import type { Model } from "openclaw/plugin-sdk/llm";
+import type { Model } from "grokbot/plugin-sdk/llm";
 import { Type } from "typebox";
 import { afterEach, describe, expect, it } from "vitest";
 import { getRuntimeConfig } from "../../config/config.js";
@@ -99,7 +99,7 @@ async function createLiveSession(
     handlers?: ExtensionHandlers;
   } = {},
 ) {
-  const root = await mkdtemp(join(tmpdir(), "openclaw-agent-session-live-"));
+  const root = await mkdtemp(join(tmpdir(), "grokbot-agent-session-live-"));
   tempRoots.push(root);
   const cwd = join(root, "workspace");
   const agentDir = join(root, "agent");

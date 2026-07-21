@@ -1,5 +1,5 @@
 // Chat-owned message thread presentation and thread-local interaction state.
-import { truncateUtf16Safe } from "@openclaw/normalization-core/utf16-slice";
+import { truncateUtf16Safe } from "@grokbot/normalization-core/utf16-slice";
 import { VirtualizerController } from "@tanstack/lit-virtual";
 import { defaultRangeExtractor, observeElementRect } from "@tanstack/virtual-core";
 import {
@@ -587,7 +587,7 @@ export function renderChatSearchBar(
           requestUpdate();
         }}
       />
-      <openclaw-tooltip .content=${t("chat.thread.closeSearch")}>
+      <grokbot-tooltip .content=${t("chat.thread.closeSearch")}>
         <button
           class="btn btn--ghost"
           aria-label=${t("chat.thread.closeSearch")}
@@ -599,7 +599,7 @@ export function renderChatSearchBar(
         >
           ${icons.x}
         </button>
-      </openclaw-tooltip>
+      </grokbot-tooltip>
     </div>
   `;
 }
@@ -668,7 +668,7 @@ export function renderChatPinnedMessages(
                     <span class="agent-chat__pinned-text"
                       >${truncateUtf16Safe(text, 100)}${text.length > 100 ? "..." : ""}</span
                     >
-                    <openclaw-tooltip .content=${t("chat.thread.unpin")}>
+                    <grokbot-tooltip .content=${t("chat.thread.unpin")}>
                       <button
                         class="btn btn--ghost"
                         aria-label=${t("chat.thread.unpin")}
@@ -679,7 +679,7 @@ export function renderChatPinnedMessages(
                       >
                         ${icons.x}
                       </button>
-                    </openclaw-tooltip>
+                    </grokbot-tooltip>
                   </div>
                 `,
               )}
@@ -767,7 +767,7 @@ function createMessageActionContextButton(params: {
   button.setAttribute("aria-label", params.label);
   button.textContent = params.label;
   button.addEventListener("click", params.onClick);
-  const tooltip = document.createElement("openclaw-tooltip");
+  const tooltip = document.createElement("grokbot-tooltip");
   tooltip.content = params.tooltip;
   tooltip.append(button);
   return { element: tooltip, button };

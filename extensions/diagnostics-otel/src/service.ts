@@ -12,7 +12,7 @@ import {
   TraceIdRatioBasedSampler,
 } from "@opentelemetry/sdk-trace-base";
 import { ATTR_SERVICE_NAME } from "@opentelemetry/semantic-conventions";
-import { registerUnhandledRejectionHandler } from "openclaw/plugin-sdk/runtime-env";
+import { registerUnhandledRejectionHandler } from "grokbot/plugin-sdk/runtime-env";
 import type { OpenClawPluginService } from "../api.js";
 import {
   DEFAULT_SERVICE_NAME,
@@ -253,8 +253,8 @@ export function createDiagnosticsOtelService(): OpenClawPluginService {
         ctx.logger.info("diagnostics-otel: using preloaded OpenTelemetry SDK");
       }
 
-      const meter = metrics.getMeter("openclaw");
-      const tracer = trace.getTracer("openclaw");
+      const meter = metrics.getMeter("grokbot");
+      const tracer = trace.getTracer("grokbot");
       const diagnosticsTrace = createDiagnosticsTraceRuntime(tracer);
       stopActiveTrustedSpans = diagnosticsTrace.stopActiveTrustedSpans;
       const diagnosticMetrics = createDiagnosticsMetrics(meter);

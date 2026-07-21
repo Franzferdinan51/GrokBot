@@ -1,4 +1,4 @@
-// Pure-logic tests for the OpenClaw Chrome extension. Runs under the
+// Pure-logic tests for the GrokBot Chrome extension. Runs under the
 // extension-browser vitest glob (extensions/browser/**/*.test.ts).
 import { describe, expect, it } from "vitest";
 import {
@@ -27,8 +27,8 @@ describe("parsePairingString", () => {
     }
     expect(parsed.relayUrl).toBe(`ws://127.0.0.1:${port}/extension`);
     expect(buildRelayWsProtocols(parsed.token)).toEqual([
-      "openclaw-extension-relay",
-      `openclaw-extension-token.${token}`,
+      "grokbot-extension-relay",
+      `grokbot-extension-token.${token}`,
     ]);
   });
 

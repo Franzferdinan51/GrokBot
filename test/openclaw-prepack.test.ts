@@ -1,4 +1,4 @@
-// OpenClaw prepack tests validate package prepack output.
+// GrokBot prepack tests validate package prepack output.
 import { spawnSync } from "node:child_process";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
@@ -12,21 +12,21 @@ import {
   resolvePrepackCommandStdio,
   resolvePrepackCommandTimeoutMs,
   runPrepackCommand,
-} from "../scripts/openclaw-prepack.ts";
+} from "../scripts/grokbot-prepack.ts";
 import { useAutoCleanupTempDirTracker } from "./helpers/temp-dir.js";
 
 const tempDirs = useAutoCleanupTempDirTracker(afterEach);
 
 describe("collectSourcePackWorkspaceDependencyErrors", () => {
-  it("rejects the plain source pack that pnpm rewrites without bundling @openclaw/ai", () => {
-    const rootDir = tempDirs.make("openclaw-source-pack-workspace-");
+  it("rejects the plain source pack that pnpm rewrites without bundling @grokbot/ai", () => {
+    const rootDir = tempDirs.make("grokbot-source-pack-workspace-");
     const aiDir = path.join(rootDir, "packages", "ai");
     const packDir = path.join(rootDir, "pack");
     const extractDir = path.join(rootDir, "extract");
     const version = "2099.1.2-test.0";
     const rootPackageJson = {
-      dependencies: { "@openclaw/ai": "workspace:*" },
-      name: "openclaw-source-pack-regression",
+      dependencies: { "@grokbot/ai": "workspace:*" },
+      name: "grokbot-source-pack-regression",
       version,
     };
     mkdirSync(aiDir, { recursive: true });
@@ -39,7 +39,7 @@ describe("collectSourcePackWorkspaceDependencyErrors", () => {
     writeFileSync(path.join(rootDir, "pnpm-workspace.yaml"), 'packages:\n  - "packages/*"\n');
     writeFileSync(
       path.join(aiDir, "package.json"),
-      `${JSON.stringify({ name: "@openclaw/ai", version }, null, 2)}\n`,
+      `${JSON.stringify({ name: "@grokbot/ai", version }, null, 2)}\n`,
     );
 
     const install = spawnSync(
@@ -78,14 +78,14 @@ describe("collectSourcePackWorkspaceDependencyErrors", () => {
       bundleDependencies?: string[];
       dependencies?: Record<string, string>;
     };
-    expect(packedPackageJson.dependencies?.["@openclaw/ai"]).toBe(version);
+    expect(packedPackageJson.dependencies?.["@grokbot/ai"]).toBe(version);
     expect(packedPackageJson.bundleDependencies).toBeUndefined();
-    expect(existsSync(path.join(extractDir, "package", "node_modules", "@openclaw", "ai"))).toBe(
+    expect(existsSync(path.join(extractDir, "package", "node_modules", "@grokbot", "ai"))).toBe(
       false,
     );
     expect(collectSourcePackWorkspaceDependencyErrors(rootPackageJson, {})).toEqual([
-      "plain root packing cannot safely resolve @openclaw/ai from workspace:*: pnpm rewrites the workspace dependency to an exact version without bundling the package",
-      "use `node scripts/package-openclaw-for-docker.mjs --allow-unreleased-changelog` for a self-contained source package; official npm release automation prepares and publishes @openclaw/ai separately",
+      "plain root packing cannot safely resolve @grokbot/ai from workspace:*: pnpm rewrites the workspace dependency to an exact version without bundling the package",
+      "use `node scripts/package-grokbot-for-docker.mjs --allow-unreleased-changelog` for a self-contained source package; official npm release automation prepares and publishes @grokbot/ai separately",
     ]);
     expect(
       collectSourcePackWorkspaceDependencyErrors(rootPackageJson, {

@@ -1,13 +1,13 @@
-// Voice Call plugin entrypoint registers its OpenClaw integration.
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
-import { ErrorCodes, errorShape } from "openclaw/plugin-sdk/gateway-runtime";
-import { timestampMsToIsoString } from "openclaw/plugin-sdk/number-runtime";
-import { normalizeAgentId } from "openclaw/plugin-sdk/routing";
+// Voice Call plugin entrypoint registers its GrokBot integration.
+import { formatErrorMessage } from "grokbot/plugin-sdk/error-runtime";
+import { ErrorCodes, errorShape } from "grokbot/plugin-sdk/gateway-runtime";
+import { timestampMsToIsoString } from "grokbot/plugin-sdk/number-runtime";
+import { normalizeAgentId } from "grokbot/plugin-sdk/routing";
 import {
   asOptionalRecord,
   normalizeOptionalString,
-} from "openclaw/plugin-sdk/string-coerce-runtime";
-import { jsonResult as json } from "openclaw/plugin-sdk/tool-results";
+} from "grokbot/plugin-sdk/string-coerce-runtime";
+import { jsonResult as json } from "grokbot/plugin-sdk/tool-results";
 import { Type } from "typebox";
 import {
   definePluginEntry,
@@ -187,9 +187,9 @@ const VoiceCallToolSchema = Type.Union([
     to: Type.Optional(Type.String({ description: "Call target" })),
     message: Type.String({ description: "Intro message" }),
     mode: Type.Optional(Type.Union([Type.Literal("notify"), Type.Literal("conversation")])),
-    sessionKey: Type.Optional(Type.String({ description: "OpenClaw session key for the call" })),
+    sessionKey: Type.Optional(Type.String({ description: "GrokBot session key for the call" })),
     requesterSessionKey: Type.Optional(
-      Type.String({ description: "OpenClaw session key that initiated the call" }),
+      Type.String({ description: "GrokBot session key that initiated the call" }),
     ),
     dtmfSequence: Type.Optional(Type.String({ description: "DTMF digits to play before connect" })),
   }),
@@ -221,9 +221,9 @@ const VoiceCallToolSchema = Type.Union([
     to: Type.Optional(Type.String({ description: "Call target" })),
     sid: Type.Optional(Type.String({ description: "Call SID" })),
     message: Type.Optional(Type.String({ description: "Optional intro message" })),
-    sessionKey: Type.Optional(Type.String({ description: "OpenClaw session key for the call" })),
+    sessionKey: Type.Optional(Type.String({ description: "GrokBot session key for the call" })),
     requesterSessionKey: Type.Optional(
-      Type.String({ description: "OpenClaw session key that initiated the call" }),
+      Type.String({ description: "GrokBot session key that initiated the call" }),
     ),
     dtmfSequence: Type.Optional(Type.String({ description: "DTMF digits to play before connect" })),
   }),
@@ -266,9 +266,9 @@ function toVoiceCallStatus(call: CallRecord): VoiceCallStatus {
   };
 }
 
-const VOICE_CALL_RUNTIME_KEY = Symbol.for("openclaw.voice-call.runtime");
-const VOICE_CALL_RUNTIME_PROMISE_KEY = Symbol.for("openclaw.voice-call.runtimePromise");
-const VOICE_CALL_RUNTIME_STOP_PROMISE_KEY = Symbol.for("openclaw.voice-call.runtimeStopPromise");
+const VOICE_CALL_RUNTIME_KEY = Symbol.for("grokbot.voice-call.runtime");
+const VOICE_CALL_RUNTIME_PROMISE_KEY = Symbol.for("grokbot.voice-call.runtimePromise");
+const VOICE_CALL_RUNTIME_STOP_PROMISE_KEY = Symbol.for("grokbot.voice-call.runtimeStopPromise");
 
 type VoiceCallRuntimeGlobalState = typeof globalThis & {
   [VOICE_CALL_RUNTIME_KEY]?: VoiceCallRuntime | null;

@@ -45,8 +45,8 @@ describe("safeRemoveAttachmentsDir", () => {
     await expect(
       safeRemoveAttachmentsDir(
         createRunEntry({
-          attachmentsDir: "/tmp/openclaw-child-attachments",
-          attachmentsRootDir: "/tmp/openclaw-attachments",
+          attachmentsDir: "/tmp/grokbot-child-attachments",
+          attachmentsRootDir: "/tmp/grokbot-attachments",
         }),
       ),
     ).resolves.toBe(false);

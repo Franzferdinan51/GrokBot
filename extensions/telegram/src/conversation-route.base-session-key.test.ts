@@ -1,11 +1,11 @@
 // Telegram tests cover conversation route.base session key plugin behavior.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import {
   testing as conversationBindingTesting,
   registerSessionBindingAdapter,
   type SessionBindingAdapter,
-} from "openclaw/plugin-sdk/conversation-runtime";
-import { resolveThreadSessionKeys } from "openclaw/plugin-sdk/routing";
+} from "grokbot/plugin-sdk/conversation-runtime";
+import { resolveThreadSessionKeys } from "grokbot/plugin-sdk/routing";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   resolveTelegramConversationBaseSessionKey,
@@ -171,7 +171,7 @@ describe("resolveTelegramConversationBaseSessionKey", () => {
       listBySession: () => [],
       resolveByConversation: () => ({
         bindingId: "binding-plugin-owned",
-        targetSessionKey: "plugin-binding:openclaw-codex-app-server:abc123",
+        targetSessionKey: "plugin-binding:grokbot-codex-app-server:abc123",
         targetKind: "session",
         conversation: {
           channel: "telegram",
@@ -182,8 +182,8 @@ describe("resolveTelegramConversationBaseSessionKey", () => {
         boundAt: 1,
         metadata: {
           pluginBindingOwner: "plugin",
-          pluginId: "openclaw-codex-app-server",
-          pluginRoot: "/tmp/openclaw-codex-app-server",
+          pluginId: "grokbot-codex-app-server",
+          pluginRoot: "/tmp/grokbot-codex-app-server",
         },
       }),
       touch,

@@ -6,7 +6,7 @@ import {
   GATEWAY_CLIENT_NAMES,
 } from "../../packages/gateway-protocol/src/client-info.js";
 import { resolveGatewayPort } from "../config/config.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { resolveGatewayAuth } from "../gateway/auth-resolve.js";
 import { callGateway } from "../gateway/call.js";
 import { resolveGatewayCredentialsWithSecretInputs } from "../gateway/credentials-secret-inputs.js";
@@ -183,7 +183,7 @@ async function probeDashboardPresence(
   timeoutMs: number,
 ): Promise<DashboardPresenceProbeResult> {
   try {
-    // Read presence over the same trusted local CLI path every `openclaw`
+    // Read presence over the same trusted local CLI path every `grokbot`
     // command uses. A raw shared-auth call with a (possibly SecretRef-managed)
     // token is rejected as an unpaired Control UI client with "device identity
     // required"; the CLI-mode loopback client is granted operator.read instead.
@@ -191,7 +191,7 @@ async function probeDashboardPresence(
       config: target.config,
       method: "system-presence",
       timeoutMs,
-      // Connect as a CLI-mode loopback client (what every `openclaw` command
+      // Connect as a CLI-mode loopback client (what every `grokbot` command
       // does) so the gateway grants operator.read via trusted local auth.
       clientName: GATEWAY_CLIENT_NAMES.CLI,
       mode: GATEWAY_CLIENT_MODES.CLI,

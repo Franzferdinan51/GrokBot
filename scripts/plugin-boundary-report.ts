@@ -24,7 +24,7 @@ const SKIPPED_DIRS = new Set([
 ]);
 const TEXT_FILE_PATTERN = /\.(?:[cm]?[jt]sx?|json|mdx?|ya?ml)$/u;
 const PLUGIN_SDK_SPECIFIER_PATTERN =
-  /\b(?:from\s*["']|import\s*\(\s*["']|require\s*\(\s*["']|vi\.(?:mock|doMock)\s*\(\s*["'])(openclaw\/plugin-sdk\/([a-z0-9][a-z0-9-]*))["']/g;
+  /\b(?:from\s*["']|import\s*\(\s*["']|require\s*\(\s*["']|vi\.(?:mock|doMock)\s*\(\s*["'])(grokbot\/plugin-sdk\/([a-z0-9][a-z0-9-]*))["']/g;
 
 type CliOptions = {
   json: boolean;
@@ -227,7 +227,7 @@ function collectWorkspaceTextFileSources(): WorkspaceTextFile[] {
 
 function collectSummaryWorkspaceTextFileSources(): WorkspaceTextFile[] {
   const pluginSdkFiles = collectWorkspaceTextFilesMatchingGit(
-    String.raw`openclaw/plugin-sdk/[a-z0-9][a-z0-9-]*`,
+    String.raw`grokbot/plugin-sdk/[a-z0-9][a-z0-9-]*`,
   );
   if (!pluginSdkFiles) {
     return collectWorkspaceTextFileSources();

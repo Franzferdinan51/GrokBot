@@ -1,5 +1,5 @@
 // Command path policy tests cover allowed CLI command path shapes and lazy imports.
-import { importFreshModule } from "openclaw/plugin-sdk/test-fixtures";
+import { importFreshModule } from "grokbot/plugin-sdk/test-fixtures";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import type { CliCommandCatalogEntry, CliCommandPathPolicy } from "./command-catalog.js";
 import {
@@ -93,13 +93,13 @@ describe("command-path-policy", () => {
     expectNetworkProxyResolver(channelsStatusPolicy);
     expect(
       channelsStatusPolicy.networkProxy({
-        argv: ["node", "openclaw", "channels", "status"],
+        argv: ["node", "grokbot", "channels", "status"],
         commandPath: ["channels", "status"],
       }),
     ).toBe("bypass");
     expect(
       channelsStatusPolicy.networkProxy({
-        argv: ["node", "openclaw", "channels", "status", "--probe"],
+        argv: ["node", "grokbot", "channels", "status", "--probe"],
         commandPath: ["channels", "status"],
       }),
     ).toBe("default");
@@ -137,34 +137,34 @@ describe("command-path-policy", () => {
     expectNetworkProxyResolver(agentPolicy);
     expect(
       agentPolicy.loadPlugins({
-        argv: ["node", "openclaw", "agent"],
+        argv: ["node", "grokbot", "agent"],
         commandPath: ["agent"],
         jsonOutputMode: false,
       }),
     ).toBe(true);
     expect(
       agentPolicy.loadPlugins({
-        argv: ["node", "openclaw", "agent", "--json"],
+        argv: ["node", "grokbot", "agent", "--json"],
         commandPath: ["agent"],
         jsonOutputMode: true,
       }),
     ).toBe(false);
     expect(
       agentPolicy.loadPlugins({
-        argv: ["node", "openclaw", "agent", "--local"],
+        argv: ["node", "grokbot", "agent", "--local"],
         commandPath: ["agent"],
         jsonOutputMode: true,
       }),
     ).toBe(true);
     expect(
       agentPolicy.networkProxy({
-        argv: ["node", "openclaw", "agent"],
+        argv: ["node", "grokbot", "agent"],
         commandPath: ["agent"],
       }),
     ).toBe("bypass");
     expect(
       agentPolicy.networkProxy({
-        argv: ["node", "openclaw", "agent", "--local"],
+        argv: ["node", "grokbot", "agent", "--local"],
         commandPath: ["agent"],
       }),
     ).toBe("default");
@@ -219,13 +219,13 @@ describe("command-path-policy", () => {
     });
     expect(
       doctorPolicy.networkProxy({
-        argv: ["node", "openclaw", "doctor"],
+        argv: ["node", "grokbot", "doctor"],
         commandPath: ["doctor"],
       }),
     ).toBe("default");
     expect(
       doctorPolicy.networkProxy({
-        argv: ["node", "openclaw", "doctor", "--state-sqlite=compact"],
+        argv: ["node", "grokbot", "doctor", "--state-sqlite=compact"],
         commandPath: ["doctor"],
       }),
     ).toBe("bypass");
@@ -279,45 +279,45 @@ describe("command-path-policy", () => {
   });
 
   it("defaults unknown command paths to network proxy routing", () => {
-    expect(resolveCliNetworkProxyPolicy(["node", "openclaw", "googlemeet", "login"])).toBe(
+    expect(resolveCliNetworkProxyPolicy(["node", "grokbot", "googlemeet", "login"])).toBe(
       "default",
     );
-    expect(resolveCliNetworkProxyPolicy(["node", "openclaw", "tool", "image_generate"])).toBe(
+    expect(resolveCliNetworkProxyPolicy(["node", "grokbot", "tool", "image_generate"])).toBe(
       "bypass",
     );
-    expect(resolveCliNetworkProxyPolicy(["node", "openclaw", "tools", "effective"])).toBe("bypass");
+    expect(resolveCliNetworkProxyPolicy(["node", "grokbot", "tools", "effective"])).toBe("bypass");
   });
 
   it("resolves static network proxy bypass policies from the catalog", () => {
-    expect(resolveCliNetworkProxyPolicy(["node", "openclaw", "status"])).toBe("bypass");
+    expect(resolveCliNetworkProxyPolicy(["node", "grokbot", "status"])).toBe("bypass");
     expect(
-      resolveCliNetworkProxyPolicy(["node", "openclaw", "config", "get", "proxy.enabled"]),
+      resolveCliNetworkProxyPolicy(["node", "grokbot", "config", "get", "proxy.enabled"]),
     ).toBe("bypass");
-    expect(resolveCliNetworkProxyPolicy(["node", "openclaw", "proxy", "start"])).toBe("bypass");
+    expect(resolveCliNetworkProxyPolicy(["node", "grokbot", "proxy", "start"])).toBe("bypass");
   });
 
   it("resolves mixed network proxy policies from argv-sensitive catalog entries", () => {
-    expect(resolveCliNetworkProxyPolicy(["node", "openclaw", "gateway"])).toBe("default");
-    expect(resolveCliNetworkProxyPolicy(["node", "openclaw", "gateway", "run"])).toBe("default");
-    expect(resolveCliNetworkProxyPolicy(["node", "openclaw", "gateway", "health"])).toBe("bypass");
-    expect(resolveCliNetworkProxyPolicy(["node", "openclaw", "node", "run"])).toBe("default");
-    expect(resolveCliNetworkProxyPolicy(["node", "openclaw", "node", "status"])).toBe("bypass");
-    expect(resolveCliNetworkProxyPolicy(["node", "openclaw", "agent", "--local"])).toBe("default");
-    expect(resolveCliNetworkProxyPolicy(["node", "openclaw", "agent", "run"])).toBe("bypass");
-    expect(resolveCliNetworkProxyPolicy(["node", "openclaw", "channels", "status"])).toBe("bypass");
+    expect(resolveCliNetworkProxyPolicy(["node", "grokbot", "gateway"])).toBe("default");
+    expect(resolveCliNetworkProxyPolicy(["node", "grokbot", "gateway", "run"])).toBe("default");
+    expect(resolveCliNetworkProxyPolicy(["node", "grokbot", "gateway", "health"])).toBe("bypass");
+    expect(resolveCliNetworkProxyPolicy(["node", "grokbot", "node", "run"])).toBe("default");
+    expect(resolveCliNetworkProxyPolicy(["node", "grokbot", "node", "status"])).toBe("bypass");
+    expect(resolveCliNetworkProxyPolicy(["node", "grokbot", "agent", "--local"])).toBe("default");
+    expect(resolveCliNetworkProxyPolicy(["node", "grokbot", "agent", "run"])).toBe("bypass");
+    expect(resolveCliNetworkProxyPolicy(["node", "grokbot", "channels", "status"])).toBe("bypass");
     expect(
-      resolveCliNetworkProxyPolicy(["node", "openclaw", "channels", "status", "--probe"]),
+      resolveCliNetworkProxyPolicy(["node", "grokbot", "channels", "status", "--probe"]),
     ).toBe("default");
-    expect(resolveCliNetworkProxyPolicy(["node", "openclaw", "models", "status"])).toBe("bypass");
-    expect(resolveCliNetworkProxyPolicy(["node", "openclaw", "models", "status", "--probe"])).toBe(
+    expect(resolveCliNetworkProxyPolicy(["node", "grokbot", "models", "status"])).toBe("bypass");
+    expect(resolveCliNetworkProxyPolicy(["node", "grokbot", "models", "status", "--probe"])).toBe(
       "default",
     );
-    expect(resolveCliNetworkProxyPolicy(["node", "openclaw", "skills", "info", "browser"])).toBe(
+    expect(resolveCliNetworkProxyPolicy(["node", "grokbot", "skills", "info", "browser"])).toBe(
       "bypass",
     );
-    expect(resolveCliNetworkProxyPolicy(["node", "openclaw", "skills", "check"])).toBe("bypass");
-    expect(resolveCliNetworkProxyPolicy(["node", "openclaw", "skills", "list"])).toBe("bypass");
-    expect(resolveCliNetworkProxyPolicy(["node", "openclaw", "skills", "search", "browser"])).toBe(
+    expect(resolveCliNetworkProxyPolicy(["node", "grokbot", "skills", "check"])).toBe("bypass");
+    expect(resolveCliNetworkProxyPolicy(["node", "grokbot", "skills", "list"])).toBe("bypass");
+    expect(resolveCliNetworkProxyPolicy(["node", "grokbot", "skills", "search", "browser"])).toBe(
       "default",
     );
   });
@@ -342,51 +342,51 @@ describe("command-path-policy", () => {
         "./command-path-policy.js?catalog-overrides",
       );
 
-    expect(resolveCliNetworkProxyPolicyLocal(["node", "openclaw", "nodes", "camera", "snap"])).toBe(
+    expect(resolveCliNetworkProxyPolicyLocal(["node", "grokbot", "nodes", "camera", "snap"])).toBe(
       "default",
     );
-    expect(resolveCliNetworkProxyPolicyLocal(["node", "openclaw", "nodes", "camera", "list"])).toBe(
+    expect(resolveCliNetworkProxyPolicyLocal(["node", "grokbot", "nodes", "camera", "list"])).toBe(
       "bypass",
     );
   });
 
   it("stops catalog policy resolution before positional arguments", () => {
     expect(
-      resolveCliNetworkProxyPolicy(["node", "openclaw", "config", "get", "proxy.enabled"]),
+      resolveCliNetworkProxyPolicy(["node", "grokbot", "config", "get", "proxy.enabled"]),
     ).toBe("bypass");
     expect(
-      resolveCliNetworkProxyPolicy(["node", "openclaw", "message", "send", "--to", "demo"]),
+      resolveCliNetworkProxyPolicy(["node", "grokbot", "message", "send", "--to", "demo"]),
     ).toBe("default");
   });
 
   it("treats bare gateway invocations with options as the gateway runtime", () => {
-    const argv = ["node", "openclaw", "gateway", "--port", "1234"];
+    const argv = ["node", "grokbot", "gateway", "--port", "1234"];
 
     expect(resolveCliNetworkProxyPolicy(argv)).toBe("default");
   });
 
   it("resolves gateway runs after root options with values", () => {
-    const argv = ["node", "openclaw", "--log-level", "debug", "gateway", "run"];
+    const argv = ["node", "grokbot", "--log-level", "debug", "gateway", "run"];
 
     expect(resolveCliNetworkProxyPolicy(argv)).toBe("default");
   });
 
   it("does not let gateway run option values spoof bypass subcommands", () => {
     for (const argv of [
-      ["node", "openclaw", "gateway", "--token", "status"],
-      ["node", "openclaw", "gateway", "--token=status"],
-      ["node", "openclaw", "gateway", "--password", "health"],
-      ["node", "openclaw", "gateway", "--password-file", "status"],
-      ["node", "openclaw", "gateway", "--ws-log", "compact"],
+      ["node", "grokbot", "gateway", "--token", "status"],
+      ["node", "grokbot", "gateway", "--token=status"],
+      ["node", "grokbot", "gateway", "--password", "health"],
+      ["node", "grokbot", "gateway", "--password-file", "status"],
+      ["node", "grokbot", "gateway", "--ws-log", "compact"],
     ]) {
       expect(resolveCliNetworkProxyPolicy(argv), argv.join(" ")).toBe("default");
     }
   });
 
   it("still resolves real gateway bypass subcommands after their command token", () => {
-    expect(resolveCliNetworkProxyPolicy(["node", "openclaw", "gateway", "status"])).toBe("bypass");
+    expect(resolveCliNetworkProxyPolicy(["node", "grokbot", "gateway", "status"])).toBe("bypass");
     expect(
-      resolveCliNetworkProxyPolicy(["node", "openclaw", "gateway", "status", "--token", "secret"]),
+      resolveCliNetworkProxyPolicy(["node", "grokbot", "gateway", "status", "--token", "secret"]),
     ).toBe("bypass");
   });
 });

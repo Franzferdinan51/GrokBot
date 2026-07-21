@@ -168,7 +168,7 @@ export function renderAgents(props: AgentsProps) {
       <section class="agents-toolbar">
         <div class="agents-toolbar-row">
           <div class="agents-control-select">
-            <openclaw-agent-select
+            <grokbot-agent-select
               .agents=${agents}
               .selectedId=${selectedId}
               .defaultId=${defaultId}
@@ -177,7 +177,7 @@ export function renderAgents(props: AgentsProps) {
               .disabled=${props.loading}
               .onSelect=${props.onSelectAgent}
               .onCreateAgent=${props.onCreateAgent}
-            ></openclaw-agent-select>
+            ></grokbot-agent-select>
           </div>
           <div class="agents-toolbar-actions">
             ${selectedAgent
@@ -370,9 +370,9 @@ export function renderAgents(props: AgentsProps) {
                         onClick: () => props.onOpenMemoryImport?.(),
                       })}
                     </div>
-                    <openclaw-agent-memory-panel
+                    <grokbot-agent-memory-panel
                       .agentId=${selectedAgent.id}
-                    ></openclaw-agent-memory-panel>
+                    ></grokbot-agent-memory-panel>
                   `
                 : nothing}
             `}

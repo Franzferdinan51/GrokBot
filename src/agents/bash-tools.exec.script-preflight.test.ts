@@ -6,7 +6,7 @@
 import { constants as fsConstants } from "node:fs";
 import fs from "node:fs/promises";
 import path from "node:path";
-import { __setFsSafeTestHooksForTest } from "@openclaw/fs-safe/test-hooks";
+import { __setFsSafeTestHooksForTest } from "@grokbot/fs-safe/test-hooks";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { detectUnsafeExecControlShellCommand } from "../infra/exec-control-command-guard.js";
 import { withTempDir } from "../test-utils/temp-dir.js";
@@ -42,7 +42,7 @@ afterEach(() => {
 async function expectSymlinkSwapDuringPreflightToAvoidErrors(params: {
   hookName: "afterPreOpenLstat" | "beforeOpen";
 }) {
-  await withTempDir("openclaw-exec-preflight-open-race-", async (parent) => {
+  await withTempDir("grokbot-exec-preflight-open-race-", async (parent) => {
     const workdir = path.join(parent, "workdir");
     const scriptPath = path.join(workdir, "script.js");
     const outsidePath = path.join(parent, "outside.js");
@@ -73,18 +73,18 @@ async function expectSymlinkSwapDuringPreflightToAvoidErrors(params: {
   });
 }
 
-describe("exec interactive OpenClaw channel login guard", () => {
+describe("exec interactive GrokBot channel login guard", () => {
   it("recognizes direct and package-runner channel login commands before execution", async () => {
     await expect(
-      detectUnsafeExecControlShellCommand("openclaw channels login --channel whatsapp"),
+      detectUnsafeExecControlShellCommand("grokbot channels login --channel whatsapp"),
     ).resolves.toBe("channel-login");
     expect(
       await detectUnsafeExecControlShellCommand(
-        "pnpm exec openclaw channels login --channel whatsapp --verbose",
+        "pnpm exec grokbot channels login --channel whatsapp --verbose",
       ),
     ).toBe("channel-login");
     await expect(
-      detectUnsafeExecControlShellCommand("openclaw channels status --deep"),
+      detectUnsafeExecControlShellCommand("grokbot channels status --deep"),
     ).resolves.toBeNull();
   });
 
@@ -92,36 +92,36 @@ describe("exec interactive OpenClaw channel login guard", () => {
     const tool = createPreflightTool();
 
     await expect(
-      tool.execute("call-openclaw-channel-login", {
-        command: "openclaw channels login --channel whatsapp --verbose",
+      tool.execute("call-grokbot-channel-login", {
+        command: "grokbot channels login --channel whatsapp --verbose",
       }),
-    ).rejects.toThrow(/exec cannot run interactive OpenClaw channel login commands/);
+    ).rejects.toThrow(/exec cannot run interactive GrokBot channel login commands/);
     await expect(
-      tool.execute("call-wrapped-openclaw-channel-login", {
-        command: "sudo -u openclaw bash -lc 'openclaw channels login --channel whatsapp'",
+      tool.execute("call-wrapped-grokbot-channel-login", {
+        command: "sudo -u grokbot bash -lc 'grokbot channels login --channel whatsapp'",
       }),
-    ).rejects.toThrow(/exec cannot run interactive OpenClaw channel login commands/);
+    ).rejects.toThrow(/exec cannot run interactive GrokBot channel login commands/);
     await expect(
       tool.execute("call-clustered-sudo-channel-login", {
-        command: "sudo -EH bash -lc 'openclaw channels login --channel whatsapp'",
+        command: "sudo -EH bash -lc 'grokbot channels login --channel whatsapp'",
       }),
-    ).rejects.toThrow(/exec cannot run interactive OpenClaw channel login commands/);
+    ).rejects.toThrow(/exec cannot run interactive GrokBot channel login commands/);
     await expect(
       tool.execute("call-deep-env-channel-login", {
-        command: "env env env env env env openclaw channels login --channel whatsapp",
+        command: "env env env env env env grokbot channels login --channel whatsapp",
       }),
-    ).rejects.toThrow(/exec cannot run interactive OpenClaw channel login commands/);
+    ).rejects.toThrow(/exec cannot run interactive GrokBot channel login commands/);
     await expect(
       tool.execute("call-env-s-trailing-channel-login", {
-        command: "env -S 'openclaw channels' login --channel whatsapp",
+        command: "env -S 'grokbot channels' login --channel whatsapp",
       }),
-    ).rejects.toThrow(/exec cannot run interactive OpenClaw channel login commands/);
+    ).rejects.toThrow(/exec cannot run interactive GrokBot channel login commands/);
   });
 });
 
 describeNonWin("exec script preflight", () => {
   it("blocks shell env var injection tokens in python scripts before execution", async () => {
-    await withTempDir("openclaw-exec-preflight-", async (tmp) => {
+    await withTempDir("grokbot-exec-preflight-", async (tmp) => {
       const pyPath = path.join(tmp, "bad.py");
 
       await fs.writeFile(
@@ -147,7 +147,7 @@ describeNonWin("exec script preflight", () => {
   });
 
   it("blocks obvious shell-as-js output before node execution", async () => {
-    await withTempDir("openclaw-exec-preflight-", async (tmp) => {
+    await withTempDir("grokbot-exec-preflight-", async (tmp) => {
       const jsPath = path.join(tmp, "bad.js");
 
       await fs.writeFile(
@@ -170,7 +170,7 @@ describeNonWin("exec script preflight", () => {
   });
 
   it("blocks shell env var injection when script path is quoted", async () => {
-    await withTempDir("openclaw-exec-preflight-", async (tmp) => {
+    await withTempDir("grokbot-exec-preflight-", async (tmp) => {
       const jsPath = path.join(tmp, "bad.js");
       await fs.writeFile(jsPath, "const value = $DM_JSON;", "utf-8");
 
@@ -185,7 +185,7 @@ describeNonWin("exec script preflight", () => {
   });
 
   it("validates in-workdir scripts whose names start with '..'", async () => {
-    await withTempDir("openclaw-exec-preflight-", async (tmp) => {
+    await withTempDir("grokbot-exec-preflight-", async (tmp) => {
       const jsPath = path.join(tmp, "..bad.js");
       await fs.writeFile(jsPath, "const value = $DM_JSON;", "utf-8");
 
@@ -200,7 +200,7 @@ describeNonWin("exec script preflight", () => {
   });
 
   it("validates in-workdir symlinked script entrypoints", async () => {
-    await withTempDir("openclaw-exec-preflight-", async (tmp) => {
+    await withTempDir("grokbot-exec-preflight-", async (tmp) => {
       const targetPath = path.join(tmp, "bad-target.js");
       const linkPath = path.join(tmp, "link.js");
       await fs.writeFile(targetPath, "const value = $DM_JSON;", "utf-8");
@@ -217,7 +217,7 @@ describeNonWin("exec script preflight", () => {
   });
 
   it("validates scripts under literal tilde directories in workdir", async () => {
-    await withTempDir("openclaw-exec-preflight-", async (tmp) => {
+    await withTempDir("grokbot-exec-preflight-", async (tmp) => {
       const literalTildeDir = path.join(tmp, "~");
       await fs.mkdir(literalTildeDir, { recursive: true });
       await fs.writeFile(path.join(literalTildeDir, "bad.js"), "const value = $DM_JSON;", "utf-8");
@@ -233,7 +233,7 @@ describeNonWin("exec script preflight", () => {
   });
 
   it("validates python scripts when interpreter is prefixed with env", async () => {
-    await withTempDir("openclaw-exec-preflight-", async (tmp) => {
+    await withTempDir("grokbot-exec-preflight-", async (tmp) => {
       const pyPath = path.join(tmp, "bad.py");
       await fs.writeFile(pyPath, "payload = $DM_JSON", "utf-8");
 
@@ -248,7 +248,7 @@ describeNonWin("exec script preflight", () => {
   });
 
   it("validates python scripts when interpreter is prefixed with path-qualified env", async () => {
-    await withTempDir("openclaw-exec-preflight-", async (tmp) => {
+    await withTempDir("grokbot-exec-preflight-", async (tmp) => {
       const pyPath = path.join(tmp, "bad.py");
       await fs.writeFile(pyPath, "payload = $DM_JSON", "utf-8");
 
@@ -263,7 +263,7 @@ describeNonWin("exec script preflight", () => {
   });
 
   it("validates node scripts when interpreter is prefixed with env", async () => {
-    await withTempDir("openclaw-exec-preflight-", async (tmp) => {
+    await withTempDir("grokbot-exec-preflight-", async (tmp) => {
       const jsPath = path.join(tmp, "bad.js");
       await fs.writeFile(jsPath, "const value = $DM_JSON;", "utf-8");
 
@@ -278,7 +278,7 @@ describeNonWin("exec script preflight", () => {
   });
 
   it("validates the first positional python script operand when extra args follow", async () => {
-    await withTempDir("openclaw-exec-preflight-", async (tmp) => {
+    await withTempDir("grokbot-exec-preflight-", async (tmp) => {
       await fs.writeFile(path.join(tmp, "bad.py"), "payload = $DM_JSON", "utf-8");
       await fs.writeFile(path.join(tmp, "ghost.py"), "print('ok')", "utf-8");
 
@@ -293,7 +293,7 @@ describeNonWin("exec script preflight", () => {
   });
 
   it("validates python script operand even when trailing option values look like scripts", async () => {
-    await withTempDir("openclaw-exec-preflight-", async (tmp) => {
+    await withTempDir("grokbot-exec-preflight-", async (tmp) => {
       await fs.writeFile(path.join(tmp, "script.py"), "payload = $DM_JSON", "utf-8");
       await fs.writeFile(path.join(tmp, "out.py"), "print('ok')", "utf-8");
 
@@ -308,7 +308,7 @@ describeNonWin("exec script preflight", () => {
   });
 
   it("validates the first positional node script operand when extra args follow", async () => {
-    await withTempDir("openclaw-exec-preflight-", async (tmp) => {
+    await withTempDir("grokbot-exec-preflight-", async (tmp) => {
       await fs.writeFile(path.join(tmp, "app.js"), "const value = $DM_JSON;", "utf-8");
       await fs.writeFile(path.join(tmp, "config.js"), "console.log('ok')", "utf-8");
 
@@ -323,7 +323,7 @@ describeNonWin("exec script preflight", () => {
   });
 
   it("still resolves node script when --require consumes a preceding .js option value", async () => {
-    await withTempDir("openclaw-exec-preflight-", async (tmp) => {
+    await withTempDir("grokbot-exec-preflight-", async (tmp) => {
       await fs.writeFile(path.join(tmp, "bootstrap.js"), "console.log('bootstrap')", "utf-8");
       await fs.writeFile(path.join(tmp, "app.js"), "const value = $DM_JSON;", "utf-8");
 
@@ -338,7 +338,7 @@ describeNonWin("exec script preflight", () => {
   });
 
   it("validates node --require preload modules before a benign entry script", async () => {
-    await withTempDir("openclaw-exec-preflight-", async (tmp) => {
+    await withTempDir("grokbot-exec-preflight-", async (tmp) => {
       await fs.writeFile(path.join(tmp, "bad-preload.js"), "const value = $DM_JSON;", "utf-8");
       await fs.writeFile(path.join(tmp, "app.js"), "console.log('ok')", "utf-8");
 
@@ -353,7 +353,7 @@ describeNonWin("exec script preflight", () => {
   });
 
   it("validates node --require preload modules when no entry script is provided", async () => {
-    await withTempDir("openclaw-exec-preflight-", async (tmp) => {
+    await withTempDir("grokbot-exec-preflight-", async (tmp) => {
       await fs.writeFile(path.join(tmp, "bad.js"), "const value = $DM_JSON;", "utf-8");
 
       const tool = createPreflightTool();
@@ -367,7 +367,7 @@ describeNonWin("exec script preflight", () => {
   });
 
   it("validates node --import preload modules when no entry script is provided", async () => {
-    await withTempDir("openclaw-exec-preflight-", async (tmp) => {
+    await withTempDir("grokbot-exec-preflight-", async (tmp) => {
       await fs.writeFile(path.join(tmp, "bad.js"), "const value = $DM_JSON;", "utf-8");
 
       const tool = createPreflightTool();
@@ -381,7 +381,7 @@ describeNonWin("exec script preflight", () => {
   });
 
   it("validates node --require preload modules even when -e is present", async () => {
-    await withTempDir("openclaw-exec-preflight-", async (tmp) => {
+    await withTempDir("grokbot-exec-preflight-", async (tmp) => {
       await fs.writeFile(path.join(tmp, "bad.js"), "const value = $DM_JSON;", "utf-8");
 
       const tool = createPreflightTool();
@@ -395,7 +395,7 @@ describeNonWin("exec script preflight", () => {
   });
 
   it("validates node --import preload modules even when -e is present", async () => {
-    await withTempDir("openclaw-exec-preflight-", async (tmp) => {
+    await withTempDir("grokbot-exec-preflight-", async (tmp) => {
       await fs.writeFile(path.join(tmp, "bad.js"), "const value = $DM_JSON;", "utf-8");
 
       const tool = createPreflightTool();
@@ -409,7 +409,7 @@ describeNonWin("exec script preflight", () => {
   });
 
   it("skips script-file preflight in yolo host mode", async () => {
-    await withTempDir("openclaw-exec-preflight-", async (tmp) => {
+    await withTempDir("grokbot-exec-preflight-", async (tmp) => {
       const jsPath = path.join(tmp, "bad.js");
       await fs.writeFile(jsPath, "const value = $DM_JSON;", "utf-8");
 
@@ -447,7 +447,7 @@ describeNonWin("exec script preflight", () => {
   });
 
   it("skips preflight file reads for script paths outside the workdir", async () => {
-    await withTempDir("openclaw-exec-preflight-parent-", async (parent) => {
+    await withTempDir("grokbot-exec-preflight-parent-", async (parent) => {
       const outsidePath = path.join(parent, "outside.js");
       const workdir = path.join(parent, "workdir");
       await fs.mkdir(workdir, { recursive: true });
@@ -475,7 +475,7 @@ describeNonWin("exec script preflight", () => {
   });
 
   it("opens preflight script reads with O_NONBLOCK to avoid FIFO stalls", async () => {
-    await withTempDir("openclaw-exec-preflight-nonblock-", async (tmp) => {
+    await withTempDir("grokbot-exec-preflight-nonblock-", async (tmp) => {
       const scriptPath = path.join(tmp, "script.js");
       await fs.writeFile(scriptPath, 'console.log("ok")', "utf-8");
       const scriptRealPath = await fs.realpath(scriptPath);
@@ -563,7 +563,7 @@ describeNonWin("exec script preflight", () => {
 
 describeWin("exec script preflight on windows path syntax", () => {
   it("preserves windows-style python relative path separators during script extraction", async () => {
-    await withTempDir("openclaw-exec-preflight-win-", async (tmp) => {
+    await withTempDir("grokbot-exec-preflight-win-", async (tmp) => {
       await fs.writeFile(path.join(tmp, "bad.py"), "payload = $DM_JSON", "utf-8");
 
       const tool = createPreflightTool();
@@ -577,7 +577,7 @@ describeWin("exec script preflight on windows path syntax", () => {
   });
 
   it("preserves windows-style node relative path separators during script extraction", async () => {
-    await withTempDir("openclaw-exec-preflight-win-", async (tmp) => {
+    await withTempDir("grokbot-exec-preflight-win-", async (tmp) => {
       await fs.writeFile(path.join(tmp, "bad.js"), "const value = $DM_JSON;", "utf-8");
 
       const tool = createPreflightTool();
@@ -591,7 +591,7 @@ describeWin("exec script preflight on windows path syntax", () => {
   });
 
   it("preserves windows-style python absolute drive paths during script extraction", async () => {
-    await withTempDir("openclaw-exec-preflight-win-", async (tmp) => {
+    await withTempDir("grokbot-exec-preflight-win-", async (tmp) => {
       const absPath = path.join(tmp, "bad.py");
       await fs.writeFile(absPath, "payload = $DM_JSON", "utf-8");
       const winAbsPath = absPath.replaceAll("/", "\\");
@@ -607,7 +607,7 @@ describeWin("exec script preflight on windows path syntax", () => {
   });
 
   it("preserves windows-style nested relative path separators during script extraction", async () => {
-    await withTempDir("openclaw-exec-preflight-win-", async (tmp) => {
+    await withTempDir("grokbot-exec-preflight-win-", async (tmp) => {
       await fs.mkdir(path.join(tmp, "subdir"), { recursive: true });
       await fs.writeFile(path.join(tmp, "subdir", "bad.py"), "payload = $DM_JSON", "utf-8");
 

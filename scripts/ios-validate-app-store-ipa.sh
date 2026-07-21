@@ -4,7 +4,7 @@ set -euo pipefail
 usage() {
   cat <<'EOF'
 Usage:
-  scripts/ios-validate-app-store-ipa.sh --ipa apps/ios/build/app-store/OpenClaw-<version>.ipa \
+  scripts/ios-validate-app-store-ipa.sh --ipa apps/ios/build/app-store/GrokBot-<version>.ipa \
     [--expected-commit <full-sha>] [--expected-build-timestamp <utc-iso>]
 
 Validates the exported iOS App Store IPA before App Store Connect upload.
@@ -16,7 +16,7 @@ EXPECTED_GIT_COMMIT=""
 EXPECTED_BUILD_TIMESTAMP=""
 EXPECTED_TEAM_ID="FWJYW4S8P8"
 EXPECTED_BUNDLE_ID="ai.openclawfoundation.app"
-EXPECTED_PROFILE_NAME="OpenClaw App Store ai.openclawfoundation.app"
+EXPECTED_PROFILE_NAME="GrokBot App Store ai.openclawfoundation.app"
 EXPECTED_APP_GROUP="group.ai.openclawfoundation.app.shared"
 EXPECTED_PUSH_MODE="appStore"
 
@@ -77,7 +77,7 @@ if [[ ! -f "${IPA_PATH}" ]]; then
   exit 1
 fi
 
-tmp_dir="$(mktemp -d -t openclaw-ios-ipa.XXXXXX)"
+tmp_dir="$(mktemp -d -t grokbot-ios-ipa.XXXXXX)"
 trap 'rm -rf "${tmp_dir}"' EXIT
 
 "${UNZIP_BIN}" -q "${IPA_PATH}" -d "${tmp_dir}"

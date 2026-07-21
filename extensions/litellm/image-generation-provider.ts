@@ -1,13 +1,13 @@
 import { isIP } from "node:net";
 // Litellm provider module implements model/runtime integration.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import {
   createOpenAiCompatibleImageGenerationProvider,
   type ImageGenerationProvider,
   type ImageGenerationSourceImage,
   toImageDataUrl,
-} from "openclaw/plugin-sdk/image-generation";
-import { normalizeOptionalString } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/image-generation";
+import { normalizeOptionalString } from "grokbot/plugin-sdk/string-coerce-runtime";
 import { LITELLM_BASE_URL } from "./onboard.js";
 
 const DEFAULT_SIZE = "1024x1024";

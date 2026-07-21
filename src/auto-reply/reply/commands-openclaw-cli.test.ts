@@ -1,11 +1,11 @@
 import { createRequire } from "node:module";
-// Verifies chat-facing CLI snippets execute the OpenClaw CLI even from harness-hosted gateways.
+// Verifies chat-facing CLI snippets execute the GrokBot CLI even from harness-hosted gateways.
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import {
   buildCurrentOpenClawCliArgv,
   buildCurrentOpenClawCliExecEnv,
-} from "./commands-openclaw-cli.js";
+} from "./commands-grokbot-cli.js";
 
 const requireFromHere = createRequire(import.meta.url);
 const originalArgv = [...process.argv];
@@ -34,19 +34,19 @@ describe("buildCurrentOpenClawCliArgv", () => {
     ]);
   });
 
-  it("preserves a real OpenClaw launcher entry", () => {
-    setArgv1("/opt/openclaw/openclaw.mjs");
+  it("preserves a real GrokBot launcher entry", () => {
+    setArgv1("/opt/grokbot/grokbot.mjs");
 
     expect(buildCurrentOpenClawCliArgv(["sessions", "export-trajectory"])).toEqual([
       process.execPath,
       ...process.execArgv,
-      "/opt/openclaw/openclaw.mjs",
+      "/opt/grokbot/grokbot.mjs",
       "sessions",
       "export-trajectory",
     ]);
   });
 
-  it("preserves OpenClaw dist entries from the package root", () => {
+  it("preserves GrokBot dist entries from the package root", () => {
     const distEntry = path.join(process.cwd(), "dist", "entry.js");
     setArgv1(distEntry);
 
@@ -59,7 +59,7 @@ describe("buildCurrentOpenClawCliArgv", () => {
     ]);
   });
 
-  it("preserves OpenClaw source entries from the package root", () => {
+  it("preserves GrokBot source entries from the package root", () => {
     const sourceEntry = path.join(process.cwd(), "src", "entry.ts");
     setArgv1(sourceEntry);
 
@@ -72,7 +72,7 @@ describe("buildCurrentOpenClawCliArgv", () => {
     ]);
   });
 
-  it("does not treat foreign dist entries as OpenClaw launchers", () => {
+  it("does not treat foreign dist entries as GrokBot launchers", () => {
     setArgv1("/app/dist/index.js");
 
     expect(buildCurrentOpenClawCliArgv(["sessions", "export-trajectory"])).toEqual([

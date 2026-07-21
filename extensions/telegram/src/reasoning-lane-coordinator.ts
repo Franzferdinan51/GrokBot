@@ -1,9 +1,9 @@
 // Telegram plugin module implements reasoning lane coordinator behavior.
-import { formatReasoningMessage } from "openclaw/plugin-sdk/agent-runtime";
-import type { ReplyPayload } from "openclaw/plugin-sdk/reply-runtime";
-import { normalizeLowercaseStringOrEmpty } from "openclaw/plugin-sdk/string-coerce-runtime";
-import { findCodeRegions, isInsideCode } from "openclaw/plugin-sdk/text-chunking";
-import { stripReasoningTagsFromText } from "openclaw/plugin-sdk/text-chunking";
+import { formatReasoningMessage } from "grokbot/plugin-sdk/agent-runtime";
+import type { ReplyPayload } from "grokbot/plugin-sdk/reply-runtime";
+import { normalizeLowercaseStringOrEmpty } from "grokbot/plugin-sdk/string-coerce-runtime";
+import { findCodeRegions, isInsideCode } from "grokbot/plugin-sdk/text-chunking";
+import { stripReasoningTagsFromText } from "grokbot/plugin-sdk/text-chunking";
 
 // A durable reasoning message already marked channel-side: 🧠 + italic body
 // (see markReasoningMessage). Detect it so a re-split passes it through

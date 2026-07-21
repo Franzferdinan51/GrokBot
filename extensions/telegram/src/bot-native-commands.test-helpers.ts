@@ -1,9 +1,9 @@
 // Telegram helper module supports bot native commands helpers behavior.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import type { ChannelGroupPolicy } from "openclaw/plugin-sdk/config-contracts";
-import type { TelegramAccountConfig } from "openclaw/plugin-sdk/config-contracts";
-import type { MockFn } from "openclaw/plugin-sdk/plugin-test-runtime";
-import type { RuntimeEnv } from "openclaw/plugin-sdk/runtime-env";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import type { ChannelGroupPolicy } from "grokbot/plugin-sdk/config-contracts";
+import type { TelegramAccountConfig } from "grokbot/plugin-sdk/config-contracts";
+import type { MockFn } from "grokbot/plugin-sdk/plugin-test-runtime";
+import type { RuntimeEnv } from "grokbot/plugin-sdk/runtime-env";
 import { vi } from "vitest";
 import type { TelegramNativeCommandDeps } from "./bot-native-command-deps.runtime.js";
 import { registerTelegramNativeCommands } from "./bot-native-commands.js";
@@ -16,7 +16,7 @@ type MatchPluginCommandFn = typeof import("./bot-native-commands.runtime.js").ma
 type ExecutePluginCommandFn =
   typeof import("./bot-native-commands.runtime.js").executePluginCommand;
 type DispatchReplyWithBufferedBlockDispatcherFn =
-  typeof import("openclaw/plugin-sdk/reply-dispatch-runtime").dispatchReplyWithBufferedBlockDispatcher;
+  typeof import("grokbot/plugin-sdk/reply-dispatch-runtime").dispatchReplyWithBufferedBlockDispatcher;
 type DispatchReplyWithBufferedBlockDispatcherResult = Awaited<
   ReturnType<DispatchReplyWithBufferedBlockDispatcherFn>
 >;
@@ -47,7 +47,7 @@ const pluginCommandMocks = vi.hoisted(() => ({
   matchPluginCommand: vi.fn<MatchPluginCommandFn>(() => null),
   executePluginCommand: vi.fn<ExecutePluginCommandFn>(async () => ({ text: "ok" })),
 }));
-vi.mock("openclaw/plugin-sdk/plugin-runtime", () => ({
+vi.mock("grokbot/plugin-sdk/plugin-runtime", () => ({
   getPluginCommandSpecs: pluginCommandMocks.getPluginCommandSpecs,
   matchPluginCommand: pluginCommandMocks.matchPluginCommand,
   executePluginCommand: pluginCommandMocks.executePluginCommand,
@@ -108,11 +108,11 @@ vi.mock("./bot-native-commands.delivery.runtime.js", () => ({
   deliverReplies: deliveryMocks.deliverReplies,
   emitTelegramMessageSentHooks: vi.fn(),
 }));
-vi.mock("openclaw/plugin-sdk/reply-dispatch-runtime", () => ({
+vi.mock("grokbot/plugin-sdk/reply-dispatch-runtime", () => ({
   dispatchReplyWithBufferedBlockDispatcher:
     replyPipelineMocks.dispatchReplyWithBufferedBlockDispatcher,
 }));
-vi.mock("openclaw/plugin-sdk/conversation-runtime", () => ({
+vi.mock("grokbot/plugin-sdk/conversation-runtime", () => ({
   readChannelAllowFromStore: vi.fn(async () => []),
   resolveConfiguredBindingRoute: vi.fn(({ route }: { route: unknown }) => ({
     route,

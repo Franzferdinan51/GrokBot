@@ -4,7 +4,7 @@ import { describe, expect, it } from "vitest";
 
 const SCRIPT = "scripts/android-screenshots.sh";
 const SCREENSHOT_FIXTURE =
-  "apps/android/app/src/main/java/ai/openclaw/app/AndroidScreenshotFixture.kt";
+  "apps/android/app/src/main/java/ai/grokbot/app/AndroidScreenshotFixture.kt";
 
 function runAndroidScreenshots(args: string[], env: NodeJS.ProcessEnv = {}) {
   return spawnSync("bash", [SCRIPT, ...args], {
@@ -47,10 +47,10 @@ describe("android screenshots script", () => {
     expect(script).toContain("chat) printf '%s\\n' \"Draft a short status update for the team.\"");
     expect(script).not.toContain("chat) printf '%s\\n' \"Ready when you are\"");
     expect(fixture).toContain('"Draft a short status update for the team."');
-    expect(script).toContain("settings) printf '%s\\n' \"OpenClaw mobile\"");
+    expect(script).toContain("settings) printf '%s\\n' \"GrokBot mobile\"");
     expect(script).not.toContain("settings) printf '%s\\n' \"Settings\"");
     expect(script).toContain(
-      "gateway) printf '%s\\n' \"Connection between this phone and OpenClaw.\"",
+      "gateway) printf '%s\\n' \"Connection between this phone and GrokBot.\"",
     );
     expect(script).not.toContain("gateway) printf '%s\\n' \"Add Gateway\"");
   });

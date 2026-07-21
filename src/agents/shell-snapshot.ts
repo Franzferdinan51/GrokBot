@@ -247,7 +247,7 @@ async function validateSnapshot(
 
 async function captureShellSnapshot(opts: ShellSnapshotWrapOptions): Promise<string | null> {
   const shellName = path.basename(opts.shell);
-  const captureOutputDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-shell-snapshot-"));
+  const captureOutputDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-shell-snapshot-"));
   await fs.chmod(captureOutputDir, 0o700);
   const captureOutputPath = path.join(captureOutputDir, "snapshot.out");
   const captureOutputFile = await fs.open(captureOutputPath, "wx", 0o600);
@@ -358,7 +358,7 @@ function buildSnapshotFile(stdout: string): string | null {
   const exports = parseSafeEnvExports(stdout.slice(envIndex + ENV_MARKER.length).trim());
 
   return [
-    "# OpenClaw exec shell snapshot. Generated; do not edit.",
+    "# GrokBot exec shell snapshot. Generated; do not edit.",
     'if [ -n "${BASH_VERSION:-}" ]; then shopt -s expand_aliases 2>/dev/null || true; fi',
     "unalias -a 2>/dev/null || true",
     shellState,

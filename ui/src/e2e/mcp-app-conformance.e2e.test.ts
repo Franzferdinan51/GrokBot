@@ -26,7 +26,7 @@ import {
   clearRuntimeConfigSnapshot,
   readConfigFileSnapshotWithPluginMetadata,
 } from "../../../src/config/config.js";
-import type { OpenClawConfig } from "../../../src/config/types.openclaw.js";
+import type { OpenClawConfig } from "../../../src/config/types.grokbot.js";
 import { startGatewayServer } from "../../../src/gateway/server.js";
 import { getFreeGatewayPort } from "../../../src/gateway/test-helpers.e2e.js";
 import { captureEnv, setTestEnvValue } from "../../../src/test-utils/env.js";
@@ -100,7 +100,7 @@ function appHtml(appModuleUrl: string): string {
 import { App, McpUiResourceTeardownResultSchema } from ${JSON.stringify(appModuleUrl)};
 const write = (id, value) => { document.getElementById(id).textContent = value; };
 try { void window.top.document; write("isolation", "failed"); } catch { write("isolation", "isolated"); }
-const app = new App({ name: "OpenClaw conformance fixture", version: "1.0.0" });
+const app = new App({ name: "GrokBot conformance fixture", version: "1.0.0" });
 app.ontoolinput = ({ arguments: args }) => write("input", JSON.stringify(args ?? {}));
 app.ontoolresult = (value) => write("result", JSON.stringify(value.structuredContent ?? value));
 app.onteardown = async () => {
@@ -359,9 +359,9 @@ describeConformance("MCP App Control UI and standalone host conformance", () => 
       "OPENCLAW_SKIP_PROVIDERS",
       "OPENCLAW_BUNDLED_PLUGINS_DIR",
     ]);
-    tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-mcp-app-conformance-"));
+    tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-mcp-app-conformance-"));
     const stateDir = path.join(tempRoot, "state");
-    const configPath = path.join(stateDir, "openclaw.json");
+    const configPath = path.join(stateDir, "grokbot.json");
     const fixturePath = path.join(tempRoot, "fixture-server.mjs");
     await fs.mkdir(path.join(tempRoot, "empty-plugins"), { recursive: true });
     controlUiServer = await startControlUiE2eServer();

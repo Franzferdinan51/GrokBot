@@ -1,14 +1,14 @@
-// Persists managed task-flow records through the OpenClaw SQLite state database.
+// Persists managed task-flow records through the GrokBot SQLite state database.
 import type { DatabaseSync } from "node:sqlite";
 import type { Insertable, Selectable } from "kysely";
 import { executeSqliteQuerySync, getNodeSqliteKysely } from "../infra/kysely-sync.js";
 import { normalizeSqliteNumber } from "../infra/sqlite-number.js";
-import type { DB as OpenClawStateKyselyDatabase } from "../state/openclaw-state-db.generated.js";
+import type { DB as OpenClawStateKyselyDatabase } from "../state/grokbot-state-db.generated.js";
 import {
   closeOpenClawStateDatabase,
   openOpenClawStateDatabase,
   runOpenClawStateWriteTransaction,
-} from "../state/openclaw-state-db.js";
+} from "../state/grokbot-state-db.js";
 import type { TaskFlowRegistryStoreSnapshot } from "./task-flow-registry.store.types.js";
 import {
   parseOptionalTaskFlowSyncMode,
@@ -34,7 +34,7 @@ type FlowRegistryDatabase = {
   path: string;
 };
 
-// SQLite-backed task-flow store mirrors the in-process registry into openclaw-state.db.
+// SQLite-backed task-flow store mirrors the in-process registry into grokbot-state.db.
 let cachedDatabase: FlowRegistryDatabase | null = null;
 
 function serializeJson(value: unknown): string | null {

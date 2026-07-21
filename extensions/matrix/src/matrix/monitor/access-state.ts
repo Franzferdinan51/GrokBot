@@ -3,7 +3,7 @@ import {
   createChannelIngressResolver,
   defineStableChannelIngressIdentity,
   type ResolvedChannelMessageIngress,
-} from "openclaw/plugin-sdk/channel-ingress-runtime";
+} from "grokbot/plugin-sdk/channel-ingress-runtime";
 import { normalizeMatrixAllowList, resolveMatrixAllowListMatch } from "./allowlist.js";
 
 type MatrixMonitorAccessState = {

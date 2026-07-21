@@ -1,22 +1,22 @@
-import type { WorkboardWorkspace, WorkboardWorkspaceAccess } from "@openclaw/workboard-contract";
+import type { WorkboardWorkspace, WorkboardWorkspaceAccess } from "@grokbot/workboard-contract";
 // Workboard workspace access follows the caller's canonical filesystem boundary.
 import {
   listAgentIds,
   resolveAgentConfig,
   resolveAgentWorkspaceDir,
   resolveDefaultAgentId,
-} from "openclaw/plugin-sdk/agent-runtime";
+} from "grokbot/plugin-sdk/agent-runtime";
 import type {
   AnyAgentTool,
   OpenClawPluginApi,
   OpenClawPluginToolContext,
-} from "openclaw/plugin-sdk/plugin-entry";
+} from "grokbot/plugin-sdk/plugin-entry";
 import {
   canonicalPathFromExistingAncestor,
   isPathInside,
-} from "openclaw/plugin-sdk/security-runtime";
+} from "grokbot/plugin-sdk/security-runtime";
 
-export type { WorkboardWorkspaceAccess } from "@openclaw/workboard-contract";
+export type { WorkboardWorkspaceAccess } from "@grokbot/workboard-contract";
 
 type WorkboardConfig = NonNullable<OpenClawPluginToolContext["config"]>;
 type ResolveSandboxWorkspaceAuthority =

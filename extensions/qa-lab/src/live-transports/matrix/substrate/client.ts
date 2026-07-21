@@ -1,10 +1,10 @@
 // Qa Lab Matrix module implements client behavior.
 import { randomUUID } from "node:crypto";
 import { setTimeout as sleep } from "node:timers/promises";
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
-import { expectDefined } from "openclaw/plugin-sdk/expect-runtime";
-import { readResponseWithLimit } from "openclaw/plugin-sdk/response-limit-runtime";
-import { uniqueValues } from "openclaw/plugin-sdk/string-coerce-runtime";
+import { formatErrorMessage } from "grokbot/plugin-sdk/error-runtime";
+import { expectDefined } from "grokbot/plugin-sdk/expect-runtime";
+import { readResponseWithLimit } from "grokbot/plugin-sdk/response-limit-runtime";
+import { uniqueValues } from "grokbot/plugin-sdk/string-coerce-runtime";
 import {
   buildMatrixQaMediaMessageContent,
   buildMatrixQaMessageContent,
@@ -583,19 +583,19 @@ export async function provisionMatrixQaRoom(params: {
   });
   const [driver, sut, observer] = await Promise.all([
     anonClient.registerWithToken({
-      deviceName: "OpenClaw Matrix QA Driver",
+      deviceName: "GrokBot Matrix QA Driver",
       localpart: params.driverLocalpart,
       password: `driver-${randomUUID()}`,
       registrationToken: params.registrationToken,
     }),
     anonClient.registerWithToken({
-      deviceName: "OpenClaw Matrix QA SUT",
+      deviceName: "GrokBot Matrix QA SUT",
       localpart: params.sutLocalpart,
       password: `sut-${randomUUID()}`,
       registrationToken: params.registrationToken,
     }),
     anonClient.registerWithToken({
-      deviceName: "OpenClaw Matrix QA Observer",
+      deviceName: "GrokBot Matrix QA Observer",
       localpart: params.observerLocalpart,
       password: `observer-${randomUUID()}`,
       registrationToken: params.registrationToken,

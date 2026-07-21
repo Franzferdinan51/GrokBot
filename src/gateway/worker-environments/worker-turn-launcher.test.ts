@@ -14,7 +14,7 @@ import {
   closeOpenClawStateDatabaseForTest,
   openOpenClawStateDatabase,
   type OpenClawStateDatabase,
-} from "../../state/openclaw-state-db.js";
+} from "../../state/grokbot-state-db.js";
 import {
   parseWorkerLaunchDescriptor,
   type WorkerLaunchDescriptor,
@@ -54,7 +54,7 @@ describe("worker turn launcher", () => {
   let sessionFile: string;
 
   beforeEach(async () => {
-    root = await fs.mkdtemp(path.join(await fs.realpath(os.tmpdir()), "openclaw-worker-turn-"));
+    root = await fs.mkdtemp(path.join(await fs.realpath(os.tmpdir()), "grokbot-worker-turn-"));
     database = openOpenClawStateDatabase({ env: { OPENCLAW_STATE_DIR: root } });
     placements = createWorkerSessionPlacementStore({ database });
     const manager = SessionManager.create(path.join(root, "sessions"), path.join(root, "sessions"));
@@ -224,7 +224,7 @@ describe("worker turn launcher", () => {
         agents: {
           defaults: {
             models: {
-              "openai/gpt-test": { agentRuntime: { id: "openclaw" } },
+              "openai/gpt-test": { agentRuntime: { id: "grokbot" } },
             },
           },
         },
@@ -462,7 +462,7 @@ describe("worker turn launcher", () => {
           },
           runLocal,
         ),
-      ).rejects.toThrow(`Cloud worker turns require the OpenClaw runtime, not ${runtimeId}`);
+      ).rejects.toThrow(`Cloud worker turns require the GrokBot runtime, not ${runtimeId}`);
 
       expect(runLocal).not.toHaveBeenCalled();
       expect(getEnvironment).not.toHaveBeenCalled();
@@ -522,8 +522,8 @@ describe("worker turn launcher", () => {
         expect(command.argv).toEqual([
           "sh",
           "-c",
-          'exec node "$HOME/.openclaw-worker/$1/openclaw.mjs" worker',
-          "openclaw-worker",
+          'exec node "$HOME/.grokbot-worker/$1/grokbot.mjs" worker',
+          "grokbot-worker",
           BUNDLE_HASH,
         ]);
         expect(command.argv.join(" ")).not.toContain(credential().credential);
@@ -609,14 +609,14 @@ describe("worker turn launcher", () => {
 
     expect(runLocal).not.toHaveBeenCalled();
     const conflictSummary =
-      "Cloud result applied with 1 conflict(s); kept local versions: src/local.ts. Cloud versions staged at refs/openclaw/worker-results/";
+      "Cloud result applied with 1 conflict(s); kept local versions: src/local.ts. Cloud versions staged at refs/grokbot/worker-results/";
     expect(result.payloads).toEqual([
       { text: expect.stringContaining(`Worker reply\n\n${conflictSummary}`) },
     ]);
     expect(placements.get(SESSION_ID)?.turnClaim).toBeNull();
     expect(placements.get(SESSION_ID)?.workspaceResultConflict).toMatchObject({
       paths: ["src/local.ts"],
-      stagedResultRef: expect.stringMatching(/^refs\/openclaw\/worker-results\//u),
+      stagedResultRef: expect.stringMatching(/^refs\/grokbot\/worker-results\//u),
     });
     expect(onAgentEvent).toHaveBeenCalledWith({
       stream: "assistant",

@@ -2,10 +2,10 @@
  * Handles embedded-agent assistant message events, block replies, reasoning
  * streams, reply directives, and pending tool media attachment handoff.
  */
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
-import { uniqueStrings } from "@openclaw/normalization-core/string-normalization";
-import { truncateUtf16Safe } from "@openclaw/normalization-core/utf16-slice";
-import { resolveSendableOutboundReplyParts } from "openclaw/plugin-sdk/reply-payload";
+import { normalizeOptionalString } from "@grokbot/normalization-core/string-coerce";
+import { uniqueStrings } from "@grokbot/normalization-core/string-normalization";
+import { truncateUtf16Safe } from "@grokbot/normalization-core/utf16-slice";
+import { resolveSendableOutboundReplyParts } from "grokbot/plugin-sdk/reply-payload";
 import { createInlineCodeState } from "../../packages/markdown-core/src/code-spans.js";
 import {
   parseReplyDirectives,
@@ -62,15 +62,15 @@ function isTranscriptOnlyOpenClawAssistantMessage(message: AgentMessage | undefi
   }
   const provider = normalizeOptionalString(message.provider) ?? "";
   const model = normalizeOptionalString(message.model) ?? "";
-  return provider === "openclaw" && (model === "delivery-mirror" || model === "gateway-injected");
+  return provider === "grokbot" && (model === "delivery-mirror" || model === "gateway-injected");
 }
 
 const RESPONSES_API_IDS = new Set([
   "openai-responses",
   "openai-chatgpt-responses",
   "azure-openai-responses",
-  "openclaw-openai-responses-transport",
-  "openclaw-azure-openai-responses-transport",
+  "grokbot-openai-responses-transport",
+  "grokbot-azure-openai-responses-transport",
 ]);
 
 function isResponsesApiAssistantMessage(message: AgentMessage | undefined): boolean {
@@ -94,7 +94,7 @@ function isOpenAiCompletionsAssistantMessage(message: AgentMessage | undefined):
     return false;
   }
   const api = normalizeOptionalString((message as { api?: unknown }).api) ?? "";
-  return api === "openai-completions" || api === "openclaw-openai-completions-transport";
+  return api === "openai-completions" || api === "grokbot-openai-completions-transport";
 }
 
 export function preservePendingAssistantUsage(
@@ -1135,7 +1135,7 @@ export function handleMessageUpdate(
 
 if (process.env.VITEST || process.env.NODE_ENV === "test") {
   (globalThis as Record<PropertyKey, unknown>)[
-    Symbol.for("openclaw.embeddedSubscribeMessagesTestApi")
+    Symbol.for("grokbot.embeddedSubscribeMessagesTestApi")
   ] = {
     buildAssistantStreamData,
     recordPendingAssistantReplyDirectives,

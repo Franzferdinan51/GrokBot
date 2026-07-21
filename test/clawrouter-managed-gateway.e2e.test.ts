@@ -7,7 +7,7 @@ import { afterEach, describe, expect, it } from "vitest";
 import {
   createOpenClawTestInstance,
   type OpenClawTestInstance,
-} from "./helpers/openclaw-test-instance.js";
+} from "./helpers/grokbot-test-instance.js";
 
 const API_KEY = "clawrouter-e2e-secret";
 const MODEL_ID = "openai/gpt-5.5";
@@ -181,7 +181,7 @@ describe("ClawRouter managed gateway contract", () => {
       body: { model: MODEL_ID, stream: true },
       headers: {
         "x-clawrouter-agent-id": "main",
-        "x-clawrouter-client": "openclaw",
+        "x-clawrouter-client": "grokbot",
         "x-clawrouter-project-id": "fakeco-e2e",
       },
     });

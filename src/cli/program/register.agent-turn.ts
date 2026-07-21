@@ -1,5 +1,5 @@
 // Single agent-turn command registration; delegates execution to the Gateway-backed agent command.
-import { normalizeLowercaseStringOrEmpty } from "@openclaw/normalization-core/string-coerce";
+import { normalizeLowercaseStringOrEmpty } from "@grokbot/normalization-core/string-coerce";
 import type { Command } from "commander";
 import { formatDocsLink } from "../../../packages/terminal-core/src/links.js";
 import { theme } from "../../../packages/terminal-core/src/theme.js";
@@ -26,7 +26,7 @@ async function loadSetVerbose(): Promise<GlobalStateModule["setVerbose"]> {
   return (await import("../../global-state.js")).setVerbose;
 }
 
-/** Register `openclaw agent` for one Gateway-backed agent turn. */
+/** Register `grokbot agent` for one Gateway-backed agent turn. */
 export function registerAgentTurnCommand(
   program: Command,
   args: { agentChannelOptions: string },
@@ -70,29 +70,29 @@ export function registerAgentTurnCommand(
         `
 ${theme.heading("Examples:")}
 ${formatHelpExamples([
-  ['openclaw agent --to +15555550123 --message "status update"', "Start a new session."],
-  ['openclaw agent --agent ops --message "Summarize logs"', "Use a specific agent."],
-  ["openclaw agent --agent ops --message-file ./task.md", "Read a multiline message file."],
+  ['grokbot agent --to +15555550123 --message "status update"', "Start a new session."],
+  ['grokbot agent --agent ops --message "Summarize logs"', "Use a specific agent."],
+  ["grokbot agent --agent ops --message-file ./task.md", "Read a multiline message file."],
   [
-    'openclaw agent --session-key agent:ops:incident-42 --message "Summarize status"',
+    'grokbot agent --session-key agent:ops:incident-42 --message "Summarize status"',
     "Target an exact session key.",
   ],
   [
-    'openclaw agent --session-id 1234 --message "Summarize inbox" --thinking medium',
+    'grokbot agent --session-id 1234 --message "Summarize inbox" --thinking medium',
     "Target a session with explicit thinking level.",
   ],
   [
-    'openclaw agent --to +15555550123 --message "Trace logs" --verbose on --json',
+    'grokbot agent --to +15555550123 --message "Trace logs" --verbose on --json',
     "Enable verbose logging and JSON output.",
   ],
-  ['openclaw agent --to +15555550123 --message "Summon reply" --deliver', "Deliver reply."],
+  ['grokbot agent --to +15555550123 --message "Summon reply" --deliver', "Deliver reply."],
   [
-    'openclaw agent --agent ops --message "Generate report" --deliver --reply-channel slack --reply-to "#reports"',
+    'grokbot agent --agent ops --message "Generate report" --deliver --reply-channel slack --reply-to "#reports"',
     "Send reply to a different channel/target.",
   ],
 ])}
 
-${theme.muted("Docs:")} ${formatDocsLink("/cli/agent", "docs.openclaw.ai/cli/agent")}`,
+${theme.muted("Docs:")} ${formatDocsLink("/cli/agent", "docs.grokbot.ai/cli/agent")}`,
     )
     .action(async (opts): Promise<void> => {
       const verboseLevel =

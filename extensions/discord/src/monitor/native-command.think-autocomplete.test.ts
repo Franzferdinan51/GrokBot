@@ -2,20 +2,20 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import {
   createEmptyPluginRegistry,
   setActivePluginRegistry,
-} from "openclaw/plugin-sdk/plugin-test-runtime";
+} from "grokbot/plugin-sdk/plugin-test-runtime";
 import {
   clearSessionStoreCacheForTest,
   upsertSessionEntry,
-} from "openclaw/plugin-sdk/session-store-runtime";
+} from "grokbot/plugin-sdk/session-store-runtime";
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { ChannelType, type AutocompleteInteraction } from "../internal/discord.js";
 import { createNoopThreadBindingManager } from "./thread-bindings.js";
 
-type ConversationRuntimeModule = typeof import("openclaw/plugin-sdk/conversation-binding-runtime");
+type ConversationRuntimeModule = typeof import("grokbot/plugin-sdk/conversation-binding-runtime");
 type ResolveConfiguredBindingRoute = ConversationRuntimeModule["resolveConfiguredBindingRoute"];
 type ConfiguredBindingRouteResult = ReturnType<ResolveConfiguredBindingRoute>;
 type EnsureConfiguredBindingRouteReady =
@@ -78,24 +78,24 @@ function createConfiguredRouteResult(
   };
 }
 
-vi.mock("openclaw/plugin-sdk/conversation-binding-runtime", async () => {
+vi.mock("grokbot/plugin-sdk/conversation-binding-runtime", async () => {
   const { createConfiguredBindingConversationRuntimeModuleMock } =
     await import("../test-support/configured-binding-runtime.js");
   return await createConfiguredBindingConversationRuntimeModuleMock<
-    typeof import("openclaw/plugin-sdk/conversation-binding-runtime")
+    typeof import("grokbot/plugin-sdk/conversation-binding-runtime")
   >(
     {
       ensureConfiguredBindingRouteReadyMock,
       resolveConfiguredBindingRouteMock,
     },
     () =>
-      vi.importActual<typeof import("openclaw/plugin-sdk/conversation-binding-runtime")>(
-        "openclaw/plugin-sdk/conversation-binding-runtime",
+      vi.importActual<typeof import("grokbot/plugin-sdk/conversation-binding-runtime")>(
+        "grokbot/plugin-sdk/conversation-binding-runtime",
       ),
   );
 });
 
-vi.mock("openclaw/plugin-sdk/agent-runtime", () => ({
+vi.mock("grokbot/plugin-sdk/agent-runtime", () => ({
   getPreparedModelCatalogSnapshot: vi.fn(() => ({ entries: [], routeVariants: [] })),
   loadPreparedModelCatalog: vi.fn(async () => []),
   normalizeProviderId: (value: string) => value.trim().toLowerCase(),
@@ -121,17 +121,17 @@ vi.mock("openclaw/plugin-sdk/agent-runtime", () => ({
   },
 }));
 
-vi.mock("openclaw/plugin-sdk/models-provider-runtime", () => ({
+vi.mock("grokbot/plugin-sdk/models-provider-runtime", () => ({
   buildModelsProviderData: buildModelsProviderDataMock,
 }));
 
 const STORE_PATH = path.join(
   os.tmpdir(),
-  `openclaw-discord-think-autocomplete-${process.pid}.json`,
+  `grokbot-discord-think-autocomplete-${process.pid}.json`,
 );
 const SESSION_KEY = "agent:main:main";
-let findCommandByNativeName: typeof import("openclaw/plugin-sdk/command-auth-native").findCommandByNativeName;
-let resolveCommandArgChoices: typeof import("openclaw/plugin-sdk/command-auth-native").resolveCommandArgChoices;
+let findCommandByNativeName: typeof import("grokbot/plugin-sdk/command-auth-native").findCommandByNativeName;
+let resolveCommandArgChoices: typeof import("grokbot/plugin-sdk/command-auth-native").resolveCommandArgChoices;
 let resolveDiscordNativeChoiceContext: typeof import("./native-command-model-picker-ui.js").resolveDiscordNativeChoiceContext;
 
 async function saveSessionOverride(params: {
@@ -175,7 +175,7 @@ function installProviderThinkingRegistryForTest(): void {
 
 async function loadDiscordThinkAutocompleteModulesForTest() {
   installProviderThinkingRegistryForTest();
-  const commandAuth = await import("openclaw/plugin-sdk/command-auth-native");
+  const commandAuth = await import("grokbot/plugin-sdk/command-auth-native");
   const nativeCommandUi = await import("./native-command-model-picker-ui.js");
   return {
     findCommandByNativeName: commandAuth.findCommandByNativeName,
@@ -329,7 +329,7 @@ describe("discord native /think autocomplete", () => {
 
   it.each([
     { sessionRuntime: undefined, expectedRuntime: "codex", supportsUltra: false },
-    { sessionRuntime: "openclaw", expectedRuntime: "openclaw", supportsUltra: true },
+    { sessionRuntime: "grokbot", expectedRuntime: "grokbot", supportsUltra: true },
   ])(
     "uses the effective $expectedRuntime runtime for Luna choices",
     async ({ sessionRuntime, expectedRuntime, supportsUltra }) => {
@@ -340,7 +340,7 @@ describe("discord native /think autocomplete", () => {
                 levels: [
                   { id: "off" },
                   { id: "max" },
-                  ...(context.agentRuntime === "openclaw" ? [{ id: "ultra" as const }] : []),
+                  ...(context.agentRuntime === "grokbot" ? [{ id: "ultra" as const }] : []),
                 ],
               }
             : undefined,

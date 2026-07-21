@@ -63,14 +63,14 @@ vi.mock("../internal/gateway.js", () => ({
   GatewayPlugin,
 }));
 
-vi.mock("openclaw/plugin-sdk/proxy-capture", () => ({
+vi.mock("grokbot/plugin-sdk/proxy-capture", () => ({
   captureHttpExchange: vi.fn(),
   captureWsEvent: vi.fn(),
   resolveEffectiveDebugProxyUrl: () => undefined,
   resolveDebugProxySettings: () => ({ enabled: false }),
 }));
 
-vi.mock("openclaw/plugin-sdk/runtime-env", () => ({
+vi.mock("grokbot/plugin-sdk/runtime-env", () => ({
   danger: (value: string) => value,
   warn: (value: string) => value,
 }));
@@ -222,7 +222,7 @@ describe("createDiscordGatewayPlugin", () => {
     );
   });
 
-  it("leaves autoInteractions disabled so OpenClaw owns interaction handoff", () => {
+  it("leaves autoInteractions disabled so GrokBot owns interaction handoff", () => {
     const plugin = createPlugin();
 
     expect(

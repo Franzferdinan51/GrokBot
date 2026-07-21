@@ -18,7 +18,7 @@ import {
   resolveSessionFilePath,
   resolveStorePath,
   type SessionEntry,
-} from "./openclaw-runtime-session.js";
+} from "./grokbot-runtime-session.js";
 
 type SessionTranscriptCorpusArtifactKind = "active-session" | "archive-artifact";
 

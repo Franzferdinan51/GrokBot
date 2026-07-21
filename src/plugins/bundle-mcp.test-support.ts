@@ -22,7 +22,7 @@ export function createBundleMcpTempHarness() {
 }
 
 export function resolveBundlePluginRoot(homeDir: string, pluginId: string) {
-  return path.join(homeDir, ".openclaw", "extensions", pluginId);
+  return path.join(homeDir, ".grokbot", "extensions", pluginId);
 }
 
 export async function writeBundleTextFiles(

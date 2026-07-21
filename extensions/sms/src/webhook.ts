@@ -1,10 +1,10 @@
 // Sms plugin module implements webhook behavior.
 import type { IncomingMessage, ServerResponse } from "node:http";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import {
   createFixedWindowRateLimiter,
   resolveRequestClientIp,
-} from "openclaw/plugin-sdk/webhook-ingress";
+} from "grokbot/plugin-sdk/webhook-ingress";
 import {
   readTwilioWebhookForm,
   respondTwiml,

@@ -9,12 +9,12 @@ import {
   executeSqliteQueryTakeFirstSync,
   getNodeSqliteKysely,
 } from "../infra/kysely-sync.js";
-import type { DB as OpenClawStateKyselyDatabase } from "../state/openclaw-state-db.generated.js";
+import type { DB as OpenClawStateKyselyDatabase } from "../state/grokbot-state-db.generated.js";
 import {
   openOpenClawStateDatabase,
   runOpenClawStateWriteTransaction,
   type OpenClawStateDatabaseOptions,
-} from "../state/openclaw-state-db.js";
+} from "../state/grokbot-state-db.js";
 
 /** Gateway endpoint metadata persisted with node-host config. */
 export type NodeHostGatewayConfig = {
@@ -22,7 +22,7 @@ export type NodeHostGatewayConfig = {
   port?: number;
   tls?: boolean;
   tlsFingerprint?: string;
-  /** Gateway WebSocket context path (e.g. "/openclaw-gw"). */
+  /** Gateway WebSocket context path (e.g. "/grokbot-gw"). */
   contextPath?: string;
 };
 
@@ -78,7 +78,7 @@ function assertNodeHostLegacyStateMigrated(env: NodeJS.ProcessEnv = process.env)
     return;
   }
   throw new Error(
-    `retired node-host state remains at ${sourcePath}; stop the node host and run \`openclaw doctor --fix\``,
+    `retired node-host state remains at ${sourcePath}; stop the node host and run \`grokbot doctor --fix\``,
   );
 }
 

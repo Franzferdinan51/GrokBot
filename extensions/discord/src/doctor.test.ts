@@ -1,5 +1,5 @@
 // Discord tests cover doctor plugin behavior.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import { describe, expect, it } from "vitest";
 import {
   collectDiscordMissingEnvTokenWarnings,
@@ -349,7 +349,7 @@ describe("discord doctor", () => {
     expect(result.changes).toEqual([
       "Shortened 1 unsupported channels.discord.accounts.work.voice.realtime.wakeNames entries to one or two words.",
       "Shortened 1 unsupported channels.discord.accounts.invalid.voice.realtime.wakeNames entries to one or two words.",
-      "Removed empty channels.discord.accounts.empty.voice.realtime.wakeNames; unset wake names use the default agent/OpenClaw fallback.",
+      "Removed empty channels.discord.accounts.empty.voice.realtime.wakeNames; unset wake names use the default agent/GrokBot fallback.",
       "Shortened 1 unsupported channels.discord.voice.realtime.wakeNames entries to one or two words.",
     ]);
     expect(result.config.channels?.discord?.voice?.realtime?.wakeNames).toEqual([
@@ -580,7 +580,7 @@ describe("discord doctor", () => {
       },
     } as unknown as OpenClawConfig;
 
-    const result = maybeRepairDiscordNumericIds(cfg, "openclaw doctor --fix");
+    const result = maybeRepairDiscordNumericIds(cfg, "grokbot doctor --fix");
     expect(result.config.channels?.discord?.allowFrom).toEqual(["123"]);
     expect(
       (result.config.channels?.discord?.dm as { allowFrom?: string[] } | undefined)?.allowFrom,
@@ -594,11 +594,11 @@ describe("discord doctor", () => {
   it("formats repair guidance for unsafe numeric ids", () => {
     const warnings = collectDiscordNumericIdWarnings({
       hits: [{ path: "channels.discord.allowFrom[0]", entry: 106232522769186816, safe: false }],
-      doctorFixCommand: "openclaw doctor --fix",
+      doctorFixCommand: "grokbot doctor --fix",
     });
 
     expect(warnings[0]).toContain("cannot be auto-repaired");
-    expect(warnings[1]).toContain("openclaw doctor --fix");
+    expect(warnings[1]).toContain("grokbot doctor --fix");
   });
 
   it("warns when default env fallback token is missing after migration", async () => {
@@ -621,7 +621,7 @@ describe("discord doctor", () => {
     expect(
       await discordDoctor.collectPreviewWarnings?.({
         cfg,
-        doctorFixCommand: "openclaw doctor --fix",
+        doctorFixCommand: "grokbot doctor --fix",
         env: {},
       }),
     ).toStrictEqual([missingTokenWarning]);

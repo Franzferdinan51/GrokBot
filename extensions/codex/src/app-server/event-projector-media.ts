@@ -1,9 +1,9 @@
 import {
   embeddedAgentLog,
   type EmbeddedRunAttemptParams,
-} from "openclaw/plugin-sdk/agent-harness-runtime";
-import { generatedImageAssetFromBase64 } from "openclaw/plugin-sdk/image-generation";
-import { saveMediaBuffer } from "openclaw/plugin-sdk/media-store";
+} from "grokbot/plugin-sdk/agent-harness-runtime";
+import { generatedImageAssetFromBase64 } from "grokbot/plugin-sdk/image-generation";
+import { saveMediaBuffer } from "grokbot/plugin-sdk/media-store";
 import { readItemString, readString } from "./event-projector-values.js";
 import type { CodexThreadItem, JsonObject } from "./protocol.js";
 

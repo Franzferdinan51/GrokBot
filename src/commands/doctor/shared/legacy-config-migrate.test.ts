@@ -1,6 +1,6 @@
 // Legacy config migration tests cover generic doctor repair of old config layouts.
 
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { describe, expect, it } from "vitest";
 import { findLegacyConfigIssues } from "../../../config/legacy.js";
 import type { OpenClawConfig } from "../../../config/types.js";
@@ -140,7 +140,7 @@ describe("legacy memory search config migrate", () => {
       memorySearch: {
         provider: "openai",
         store: {
-          path: "/tmp/openclaw-memory-{agentId}.sqlite",
+          path: "/tmp/grokbot-memory-{agentId}.sqlite",
           vector: { enabled: false },
         },
       },
@@ -260,7 +260,7 @@ describe("legacy memory search config migrate", () => {
             models: [
               { id: "gpt-missing" },
               { id: "gpt-auto", agentRuntime: { id: "auto" } },
-              { id: "gpt-openclaw", agentRuntime: { id: "openclaw" } },
+              { id: "gpt-grokbot", agentRuntime: { id: "grokbot" } },
             ],
           },
         },
@@ -270,7 +270,7 @@ describe("legacy memory search config migrate", () => {
     expect(res.config?.models?.providers?.openai?.models).toEqual([
       { id: "gpt-missing", agentRuntime: { id: "codex" } },
       { id: "gpt-auto", agentRuntime: { id: "codex" } },
-      { id: "gpt-openclaw", agentRuntime: { id: "openclaw" } },
+      { id: "gpt-grokbot", agentRuntime: { id: "grokbot" } },
     ]);
     expect(res.config?.models?.providers).not.toHaveProperty("codex");
   });
@@ -283,7 +283,7 @@ describe("legacy memory search config migrate", () => {
           codex: {
             models: [
               { id: "gpt-auto", agentRuntime: { id: "auto" } },
-              { id: "gpt-openclaw", agentRuntime: { id: "openclaw" } },
+              { id: "gpt-grokbot", agentRuntime: { id: "grokbot" } },
             ],
           },
         },
@@ -293,7 +293,7 @@ describe("legacy memory search config migrate", () => {
     expect(res.config?.models?.providers?.openai?.models).toEqual([
       { id: "text-embedding-3-small" },
       { id: "gpt-auto", agentRuntime: { id: "codex" } },
-      { id: "gpt-openclaw", agentRuntime: { id: "openclaw" } },
+      { id: "gpt-grokbot", agentRuntime: { id: "grokbot" } },
     ]);
     expect(res.config?.models?.providers).not.toHaveProperty("codex");
   });
@@ -1793,7 +1793,7 @@ describe("legacy migrate mention routing", () => {
         groupChat: {
           requireMention: false,
           historyLimit: 12,
-          mentionPatterns: ["@openclaw"],
+          mentionPatterns: ["@grokbot"],
         },
       },
       channels: {
@@ -1821,7 +1821,7 @@ describe("legacy migrate mention routing", () => {
     });
     expect(res.config?.messages?.groupChat).toEqual({
       historyLimit: 12,
-      mentionPatterns: ["@openclaw"],
+      mentionPatterns: ["@grokbot"],
     });
     expect(res.changes).toStrictEqual([
       "Moved routing.allowFrom → channels.whatsapp.allowFrom.",
@@ -1902,7 +1902,7 @@ describe("legacy migrate sandbox scope aliases", () => {
         list: [
           {
             id: "reviewer",
-            agentRuntime: { fallback: "openclaw" },
+            agentRuntime: { fallback: "grokbot" },
             embeddedHarness: {
               runtime: "codex",
               fallback: "none",
@@ -1989,7 +1989,7 @@ describe("legacy migrate sandbox scope aliases", () => {
           agentRuntime: { id: "claude-cli" },
           model: "anthropic/claude-opus-4-7",
           models: {
-            "anthropic/claude-opus-4-7": { agentRuntime: { id: "openclaw" } },
+            "anthropic/claude-opus-4-7": { agentRuntime: { id: "grokbot" } },
           },
         },
       },
@@ -2002,7 +2002,7 @@ describe("legacy migrate sandbox scope aliases", () => {
     expect(res.config?.agents?.defaults).toEqual({
       model: "anthropic/claude-opus-4-7",
       models: {
-        "anthropic/claude-opus-4-7": { agentRuntime: { id: "openclaw" } },
+        "anthropic/claude-opus-4-7": { agentRuntime: { id: "grokbot" } },
       },
       modelPolicy: { allow: ["anthropic/claude-opus-4-7"] },
     });
@@ -2096,7 +2096,7 @@ describe("legacy migrate sandbox scope aliases", () => {
       agents: {
         list: [
           {
-            id: "openclaw",
+            id: "grokbot",
             sandbox: {
               perSession: false,
             },
@@ -2152,7 +2152,7 @@ describe("legacy migrate sandbox scope aliases", () => {
 });
 
 describe("legacy migrate MCP server type aliases", () => {
-  it("moves CLI-native http type to OpenClaw streamable HTTP transport", () => {
+  it("moves CLI-native http type to GrokBot streamable HTTP transport", () => {
     const res = migrateLegacyConfigForTest({
       mcp: {
         servers: {

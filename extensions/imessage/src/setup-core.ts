@@ -3,7 +3,7 @@ import type {
   ChannelSetupAdapter,
   ChannelSetupWizard,
   ChannelSetupWizardTextInput,
-} from "openclaw/plugin-sdk/setup-runtime";
+} from "grokbot/plugin-sdk/setup-runtime";
 import {
   createCliPathTextInput,
   createDelegatedSetupWizardProxy,
@@ -18,9 +18,9 @@ import {
   createSetupTranslator,
   type OpenClawConfig,
   type WizardPrompter,
-} from "openclaw/plugin-sdk/setup-runtime";
-import { formatDocsLink } from "openclaw/plugin-sdk/setup-tools";
-import { normalizeLowercaseStringOrEmpty } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/setup-runtime";
+import { formatDocsLink } from "grokbot/plugin-sdk/setup-tools";
+import { normalizeLowercaseStringOrEmpty } from "grokbot/plugin-sdk/string-coerce-runtime";
 import { resolveDefaultIMessageAccountId, resolveIMessageAccount } from "./accounts.js";
 import { normalizeIMessageHandle } from "./targets.js";
 
@@ -209,13 +209,13 @@ export function createIMessageCliPathTextInput(
 export const imessageCompletionNote = {
   title: "iMessage next steps",
   lines: [
-    "For the usual setup, run OpenClaw on the Mac signed into Messages.",
+    "For the usual setup, run GrokBot on the Mac signed into Messages.",
     "If the Gateway runs elsewhere, set cliPath to a transparent SSH wrapper that runs imsg on the Messages Mac.",
     `Install imsg on the Messages Mac: ${IMESSAGE_INSTALL_COMMAND}`,
     `Update imsg after imsg fixes or missing-capability errors: ${IMESSAGE_UPDATE_COMMAND}`,
     "Private API mode is strongly encouraged for replies, tapbacks, effects, polls, attachments, and group actions.",
-    "After Private API setup, run `imsg launch`, then `openclaw channels status --probe`.",
-    "Ensure OpenClaw has Full Disk Access to Messages DB.",
+    "After Private API setup, run `imsg launch`, then `grokbot channels status --probe`.",
+    "Ensure GrokBot has Full Disk Access to Messages DB.",
     "Grant Automation permission for Messages when prompted.",
     "List chats with: imsg chats --limit 20",
     `Docs: ${formatDocsLink("/imessage", "imessage")}`,

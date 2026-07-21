@@ -69,7 +69,7 @@ const lobsterPlugin = {
   state: "not-installed",
   featured: true,
   order: 50,
-  install: { source: "clawhub", packageName: "@openclaw/lobster" },
+  install: { source: "clawhub", packageName: "@grokbot/lobster" },
 } satisfies PluginCatalogItem;
 
 const remoteIconPlugin = {
@@ -84,7 +84,7 @@ const remoteIconPlugin = {
   featured: true,
   order: 60,
   hasIcon: true,
-  install: { source: "clawhub", packageName: "@openclaw/firecrawl" },
+  install: { source: "clawhub", packageName: "@grokbot/firecrawl" },
 } satisfies PluginCatalogItem;
 
 const calendarPlugin = {
@@ -174,7 +174,7 @@ function configSnapshot(isWorkboardEnabled: boolean) {
     config,
     hash: isWorkboardEnabled ? "plugins-config-enabled" : "plugins-config-disabled",
     issues: [],
-    path: "/tmp/openclaw-e2e/openclaw.json",
+    path: "/tmp/grokbot-e2e/grokbot.json",
     raw: JSON.stringify(config, null, 2),
     resolved: config,
     sourceConfig: config,
@@ -564,7 +564,7 @@ describeControlUiE2e("Control UI Plugins mocked Gateway E2E", () => {
       if (await settingsSidebar.isVisible()) {
         await settingsSidebar.getByRole("button", { name: "Back to app" }).click();
       }
-      const sidebar = page.locator("openclaw-app-sidebar");
+      const sidebar = page.locator("grokbot-app-sidebar");
       await sidebar.waitFor({ state: "visible" });
       const pagesButton = sidebar.locator(".sidebar-nav__head-action");
       if ((await pagesButton.getAttribute("aria-expanded")) !== "true") {

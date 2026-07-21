@@ -105,11 +105,11 @@ describe("chat pane pull request refresh", () => {
       pullRequests: [
         {
           number: 111532,
-          owner: "openclaw",
-          repo: "openclaw",
+          owner: "grokbot",
+          repo: "grokbot",
           branch: "claude/pr-detection",
           title: "Detect pull requests",
-          url: "https://github.com/openclaw/openclaw/pull/111532",
+          url: "https://github.com/grokbot/grokbot/pull/111532",
           state: "open",
         },
       ],
@@ -142,11 +142,11 @@ describe("chat pane pull request refresh", () => {
     pane.sessionPullRequests = [
       {
         number: 111532,
-        owner: "openclaw",
-        repo: "openclaw",
+        owner: "grokbot",
+        repo: "grokbot",
         branch: "claude/pr-detection",
         title: "Detect pull requests",
-        url: "https://github.com/openclaw/openclaw/pull/111532",
+        url: "https://github.com/grokbot/grokbot/pull/111532",
         state: "open",
       },
     ];
@@ -183,11 +183,11 @@ describe("chat pane pull request refresh", () => {
       pullRequests: [
         {
           number: 111532,
-          owner: "openclaw",
-          repo: "openclaw",
+          owner: "grokbot",
+          repo: "grokbot",
           branch: "claude/pr-detection",
           title: "Detect pull requests",
-          url: "https://github.com/openclaw/openclaw/pull/111532",
+          url: "https://github.com/grokbot/grokbot/pull/111532",
           state: "merged",
         },
       ],
@@ -266,10 +266,10 @@ describe("chat pane header state", () => {
       updatedAt: 0,
     } satisfies GatewaySessionRow;
     const copy = vi.fn(async () => true);
-    pane.handleHeaderMenuAction("copy-path", session, "/src/openclaw", "feature/header", copy);
-    pane.handleHeaderMenuAction("copy-branch", session, "/src/openclaw", "feature/header", copy);
+    pane.handleHeaderMenuAction("copy-path", session, "/src/grokbot", "feature/header", copy);
+    pane.handleHeaderMenuAction("copy-branch", session, "/src/grokbot", "feature/header", copy);
     await Promise.resolve();
-    expect(copy).toHaveBeenNthCalledWith(1, "/src/openclaw");
+    expect(copy).toHaveBeenNthCalledWith(1, "/src/grokbot");
     expect(copy).toHaveBeenNthCalledWith(2, "feature/header");
   });
 
@@ -308,7 +308,7 @@ describe("chat pane header state", () => {
       key: "agent:main:worktree",
       kind: "direct",
       updatedAt: 0,
-      worktree: { id: "wt-1", branch: "feature", repoRoot: "/src/openclaw" },
+      worktree: { id: "wt-1", branch: "feature", repoRoot: "/src/grokbot" },
     } satisfies GatewaySessionRow;
     await pane.loadHeaderMenuData(session, "/src/default", true);
     await pane.loadHeaderMenuData(session, "/src/default", true);
@@ -329,8 +329,8 @@ describe("chat pane header state", () => {
       kind: "direct",
       updatedAt: 0,
     } satisfies GatewaySessionRow;
-    await pane.loadHeaderMenuData(session, "/src/openclaw", true);
-    await pane.loadHeaderMenuData(session, "/src/openclaw", true);
+    await pane.loadHeaderMenuData(session, "/src/grokbot", true);
+    await pane.loadHeaderMenuData(session, "/src/grokbot", true);
     expect(request).toHaveBeenCalledTimes(2);
   });
 
@@ -375,7 +375,7 @@ describe("chat pane header state", () => {
       key: "agent:main:reused",
       kind: "direct",
       updatedAt: 0,
-      worktree: { id: "wt-1", branch: "feature", repoRoot: "/src/openclaw" },
+      worktree: { id: "wt-1", branch: "feature", repoRoot: "/src/grokbot" },
     } satisfies GatewaySessionRow;
     await pane.loadHeaderMenuData(worktreeRow, "/src/agent-workspace", true);
 
@@ -404,7 +404,7 @@ describe("chat pane header state", () => {
       updatedAt: 0,
       placement: { state: "active" } as GatewaySessionRow["placement"],
     } satisfies GatewaySessionRow;
-    await pane.loadHeaderMenuData(dispatched, "/src/openclaw", true);
+    await pane.loadHeaderMenuData(dispatched, "/src/grokbot", true);
     expect(request).not.toHaveBeenCalled();
   });
 
@@ -422,8 +422,8 @@ describe("chat pane header state", () => {
       kind: "direct",
       updatedAt: 0,
     } satisfies GatewaySessionRow;
-    await pane.loadHeaderMenuData(session, "/src/openclaw", true);
-    await pane.loadHeaderMenuData(session, "/src/openclaw", true);
+    await pane.loadHeaderMenuData(session, "/src/grokbot", true);
+    await pane.loadHeaderMenuData(session, "/src/grokbot", true);
     expect(request).toHaveBeenCalledTimes(2);
   });
 
@@ -438,14 +438,14 @@ describe("chat pane header state", () => {
       kind: "direct",
       updatedAt: 0,
     } satisfies GatewaySessionRow;
-    pane.handleHeaderMenuAction("reveal", session, "/src/openclaw", null);
+    pane.handleHeaderMenuAction("reveal", session, "/src/grokbot", null);
     await vi.waitFor(() => expect(state.chatError).toBe("No desktop available."));
   });
 });
 
 describe("chat pane initialization", () => {
   it("sets the pane route before attaching outbox projection", () => {
-    const pane = document.createElement("openclaw-chat-pane") as unknown as TestChatPane;
+    const pane = document.createElement("grokbot-chat-pane") as unknown as TestChatPane;
     const targetSessionKey = "agent:main:pane-b";
     const sharedMessages = new Map();
     pane.sessionKey = targetSessionKey;
@@ -470,7 +470,7 @@ describe("chat pane initialization", () => {
   });
 
   it("hydrates a new split pane from the shared session snapshot before startup", () => {
-    const pane = document.createElement("openclaw-chat-pane") as unknown as TestChatPane;
+    const pane = document.createElement("grokbot-chat-pane") as unknown as TestChatPane;
     const targetSessionKey = "agent:main:pane-b";
     const messages = [nativeHistoryMessage(1, "retained split history")];
     const sharedMessages: ChatMessageCache = new Map();
@@ -712,11 +712,11 @@ describe("chat pane catalog session lifecycle", () => {
     const listener = (event: Event) => {
       detail = (event as CustomEvent).detail;
     };
-    window.addEventListener("openclaw:terminal-toggle", listener);
+    window.addEventListener("grokbot:terminal-toggle", listener);
     try {
       (container.querySelector('[aria-label="Open in terminal"]') as HTMLElement).click();
     } finally {
-      window.removeEventListener("openclaw:terminal-toggle", listener);
+      window.removeEventListener("grokbot:terminal-toggle", listener);
     }
     expect(detail).toEqual({ open: true, catalog: key });
   });

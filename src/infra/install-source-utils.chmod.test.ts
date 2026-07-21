@@ -5,8 +5,8 @@ import { useAutoCleanupTempDirTracker } from "../../test/helpers/temp-dir.js";
 
 const resolvePreferredOpenClawTmpDirMock = vi.hoisted(() => vi.fn());
 
-vi.mock("./tmp-openclaw-dir.js", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("./tmp-openclaw-dir.js")>();
+vi.mock("./tmp-grokbot-dir.js", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("./tmp-grokbot-dir.js")>();
   return {
     ...actual,
     resolvePreferredOpenClawTmpDir: resolvePreferredOpenClawTmpDirMock,
@@ -19,10 +19,10 @@ describe("withTempDir private root", () => {
   const tempDirs = useAutoCleanupTempDirTracker(afterEach);
 
   it.runIf(process.platform !== "win32")(
-    "preserves parent temp root permissions when using private OpenClaw temp root",
+    "preserves parent temp root permissions when using private GrokBot temp root",
     async () => {
-      const mockParentRoot = tempDirs.make("openclaw-chmod-test-");
-      const mockOpenClawDir = path.join(mockParentRoot, "openclaw");
+      const mockParentRoot = tempDirs.make("grokbot-chmod-test-");
+      const mockOpenClawDir = path.join(mockParentRoot, "grokbot");
 
       await fs.mkdir(mockOpenClawDir, { recursive: true });
       await fs.chmod(mockParentRoot, 0o1777);
@@ -31,7 +31,7 @@ describe("withTempDir private root", () => {
       resolvePreferredOpenClawTmpDirMock.mockReturnValue(mockOpenClawDir);
 
       let observedDir = "";
-      const value = await withTempDir("openclaw-test-", async (tmpDir) => {
+      const value = await withTempDir("grokbot-test-", async (tmpDir) => {
         observedDir = tmpDir;
         expect(path.dirname(tmpDir)).toBe(canonicalOpenClawDir);
         await fs.writeFile(path.join(tmpDir, "marker.txt"), "ok");

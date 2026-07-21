@@ -1,7 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { setTimeout as delay } from "node:timers/promises";
-import { withTempDir } from "openclaw/plugin-sdk/test-env";
+import { withTempDir } from "grokbot/plugin-sdk/test-env";
 import { describe, expect, it } from "vitest";
 import type { CodexAppServerClient } from "./app-server/client.js";
 import { resolveCodexAppServerRuntimeOptions } from "./app-server/config.js";
@@ -27,7 +27,7 @@ async function withClient<T>(
 
 describeLive("native Codex thread coexistence", () => {
   it("shares thread storage across independent app-server processes", async () => {
-    await withTempDir("openclaw-codex-coexistence-", async (root) => {
+    await withTempDir("grokbot-codex-coexistence-", async (root) => {
       try {
         const codexHome = path.join(root, "codex-home");
         const agentDir = path.join(root, "agent");
@@ -107,7 +107,7 @@ describeLive("native Codex thread coexistence", () => {
           }
           await first.request(
             "thread/name/set",
-            { threadId: response.thread.id, name: "OpenClaw coexistence source" },
+            { threadId: response.thread.id, name: "GrokBot coexistence source" },
             { timeoutMs: 60_000 },
           );
           return response;
@@ -161,7 +161,7 @@ describeLive("native Codex thread coexistence", () => {
           expect(response.thread.id).not.toBe(started.thread.id);
           await second.request(
             "thread/name/set",
-            { threadId: response.thread.id, name: "OpenClaw coexistence fork" },
+            { threadId: response.thread.id, name: "GrokBot coexistence fork" },
             { timeoutMs: 60_000 },
           );
           await second.request(
@@ -194,7 +194,7 @@ describeLive("native Codex thread coexistence", () => {
             expect.arrayContaining([
               expect.objectContaining({
                 id: forked.thread.id,
-                name: "OpenClaw coexistence fork",
+                name: "GrokBot coexistence fork",
               }),
             ]),
           );

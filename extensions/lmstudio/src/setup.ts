@@ -1,6 +1,6 @@
 // Lmstudio setup module handles plugin onboarding behavior.
-import { parseStrictPositiveInteger } from "openclaw/plugin-sdk/number-runtime";
-import type { ProviderAppGuidedSetupContext } from "openclaw/plugin-sdk/plugin-entry";
+import { parseStrictPositiveInteger } from "grokbot/plugin-sdk/number-runtime";
+import type { ProviderAppGuidedSetupContext } from "grokbot/plugin-sdk/plugin-entry";
 import {
   removeProviderAuthProfilesWithLock,
   buildApiKeyCredential,
@@ -10,13 +10,13 @@ import {
   type OpenClawConfig,
   type SecretInput,
   type SecretInputMode,
-} from "openclaw/plugin-sdk/provider-auth";
+} from "grokbot/plugin-sdk/provider-auth";
 import {
   selectPreferredLocalModelId,
   type ModelDefinitionConfig,
   type ModelProviderConfig,
-} from "openclaw/plugin-sdk/provider-model-shared";
-import { withAgentModelAliases } from "openclaw/plugin-sdk/provider-onboard";
+} from "grokbot/plugin-sdk/provider-model-shared";
+import { withAgentModelAliases } from "grokbot/plugin-sdk/provider-onboard";
 import {
   applyProviderDefaultModel,
   configureOpenAICompatibleSelfHostedProviderNonInteractive,
@@ -25,9 +25,9 @@ import {
   type ProviderCatalogContext,
   type ProviderPrepareDynamicModelContext,
   type ProviderRuntimeModel,
-} from "openclaw/plugin-sdk/provider-setup";
-import { WizardCancelledError, type WizardPrompter } from "openclaw/plugin-sdk/setup";
-import { normalizeStringEntries } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/provider-setup";
+import { WizardCancelledError, type WizardPrompter } from "grokbot/plugin-sdk/setup";
+import { normalizeStringEntries } from "grokbot/plugin-sdk/string-coerce-runtime";
 import {
   LMSTUDIO_DEFAULT_API_KEY_ENV_VAR,
   LMSTUDIO_DEFAULT_INFERENCE_BASE_URL,

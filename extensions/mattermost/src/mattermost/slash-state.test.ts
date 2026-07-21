@@ -49,7 +49,7 @@ const slashApi = {
   runtime: RuntimeEnv;
 };
 
-const ACCOUNT_STATES_KEY = Symbol.for("openclaw.mattermost.slash-account-states");
+const ACCOUNT_STATES_KEY = Symbol.for("grokbot.mattermost.slash-account-states");
 
 type AccountState = {
   handler: ((req: IncomingMessage, res: ServerResponse) => Promise<void>) | null;

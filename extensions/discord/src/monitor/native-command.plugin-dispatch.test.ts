@@ -1,24 +1,24 @@
 // Discord tests cover native command.plugin dispatch plugin behavior.
 import { ChannelType } from "discord-api-types/v10";
-import type { NativeCommandSpec } from "openclaw/plugin-sdk/command-auth-native";
-import { resolveDirectStatusReplyForSession } from "openclaw/plugin-sdk/command-status-runtime";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { NativeCommandSpec } from "grokbot/plugin-sdk/command-auth-native";
+import { resolveDirectStatusReplyForSession } from "grokbot/plugin-sdk/command-status-runtime";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import {
   clearPluginCommands,
   executePluginCommand,
   matchPluginCommand,
   registerPluginCommand,
-} from "openclaw/plugin-sdk/plugin-runtime";
+} from "grokbot/plugin-sdk/plugin-runtime";
 import {
   createTestRegistry,
   setActivePluginRegistry,
-} from "openclaw/plugin-sdk/plugin-test-runtime";
-import { dispatchReplyWithDispatcher } from "openclaw/plugin-sdk/reply-dispatch-runtime";
+} from "grokbot/plugin-sdk/plugin-test-runtime";
+import { dispatchReplyWithDispatcher } from "grokbot/plugin-sdk/reply-dispatch-runtime";
 import {
   clearRuntimeConfigSnapshot,
   setRuntimeConfigSnapshot,
-} from "openclaw/plugin-sdk/runtime-config-snapshot";
-import { getSessionEntry } from "openclaw/plugin-sdk/session-store-runtime";
+} from "grokbot/plugin-sdk/runtime-config-snapshot";
+import { getSessionEntry } from "grokbot/plugin-sdk/session-store-runtime";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { defineThrowingDiscordChannelGetter } from "../test-support/partial-channel.js";
 import { resolveDiscordNativeInteractionRouteState } from "./native-command-route.js";
@@ -442,9 +442,9 @@ describe("Discord native plugin command dispatch", () => {
     runtimeModuleMocks.getSessionEntry.mockReset();
     runtimeModuleMocks.getSessionEntry.mockReturnValue(undefined);
     nativeCommandRuntime.matchPluginCommand =
-      runtimeModuleMocks.matchPluginCommand as typeof import("openclaw/plugin-sdk/plugin-runtime").matchPluginCommand;
+      runtimeModuleMocks.matchPluginCommand as typeof import("grokbot/plugin-sdk/plugin-runtime").matchPluginCommand;
     nativeCommandRuntime.executePluginCommand =
-      runtimeModuleMocks.executePluginCommand as typeof import("openclaw/plugin-sdk/plugin-runtime").executePluginCommand;
+      runtimeModuleMocks.executePluginCommand as typeof import("grokbot/plugin-sdk/plugin-runtime").executePluginCommand;
     nativeCommandRuntime.dispatchReplyWithDispatcher =
       runtimeModuleMocks.dispatchReplyWithDispatcher as typeof dispatchReplyWithDispatcher;
     nativeCommandRuntime.resolveDirectStatusReplyForSession =
@@ -457,7 +457,7 @@ describe("Discord native plugin command dispatch", () => {
         accountId: params.accountId,
       });
     nativeCommandRuntime.getSessionEntry =
-      runtimeModuleMocks.getSessionEntry as typeof import("openclaw/plugin-sdk/session-store-runtime").getSessionEntry;
+      runtimeModuleMocks.getSessionEntry as typeof import("grokbot/plugin-sdk/session-store-runtime").getSessionEntry;
   });
 
   afterEach(() => {
@@ -567,7 +567,7 @@ describe("Discord native plugin command dispatch", () => {
   it("passes the configured binding agent to plugin-owned Discord command sessions", async () => {
     const cfg = createConfig();
     const interaction = createInteraction();
-    const pluginSessionKey = "plugin-binding:openclaw-codex-app-server:dm";
+    const pluginSessionKey = "plugin-binding:grokbot-codex-app-server:dm";
     nativeCommandRuntime.resolveDiscordNativeInteractionRouteState = async () => ({
       ...createConfiguredRouteState({
         sessionKey: pluginSessionKey,

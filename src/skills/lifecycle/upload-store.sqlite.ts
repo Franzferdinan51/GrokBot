@@ -9,12 +9,12 @@ import {
 import type {
   DB as OpenClawStateDatabase,
   SkillUploads,
-} from "../../state/openclaw-state-db.generated.js";
+} from "../../state/grokbot-state-db.generated.js";
 import {
   openOpenClawStateDatabase,
   runOpenClawStateWriteTransaction,
   type OpenClawStateDatabaseOptions,
-} from "../../state/openclaw-state-db.js";
+} from "../../state/grokbot-state-db.js";
 
 export const SKILL_UPLOAD_LEASE_SCOPE = "skill-upload-install";
 

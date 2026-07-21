@@ -2,9 +2,9 @@
 import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { expectDefined } from "@openclaw/normalization-core";
-import { resolveFetch } from "openclaw/plugin-sdk/fetch-runtime";
-import { MAX_DATE_TIMESTAMP_MS } from "openclaw/plugin-sdk/number-runtime";
+import { expectDefined } from "@grokbot/normalization-core";
+import { resolveFetch } from "grokbot/plugin-sdk/fetch-runtime";
+import { MAX_DATE_TIMESTAMP_MS } from "grokbot/plugin-sdk/number-runtime";
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
 const setDefaultResultOrder = vi.hoisted(() => vi.fn());
@@ -80,7 +80,7 @@ vi.mock("undici", async () => {
   };
 });
 
-vi.mock("openclaw/plugin-sdk/runtime-env", () => ({
+vi.mock("grokbot/plugin-sdk/runtime-env", () => ({
   createSubsystemLogger: () => ({
     info: loggerInfo,
     debug: loggerDebug,
@@ -203,7 +203,7 @@ function constructorOptions(ctor: ReturnType<typeof vi.fn>, label: string): unkn
 }
 
 function writeTempCa(contents: string): string {
-  const dir = mkdtempSync(path.join(os.tmpdir(), "openclaw-telegram-proxy-ca-"));
+  const dir = mkdtempSync(path.join(os.tmpdir(), "grokbot-telegram-proxy-ca-"));
   tempDirs.push(dir);
   const caFile = path.join(dir, "proxy-ca.pem");
   writeFileSync(caFile, contents, "utf8");
@@ -501,7 +501,7 @@ describe("resolveTelegramFetch", () => {
     expect(envProxyOptions.proxyTls?.autoSelectFamily).toBe(false);
   });
 
-  it("uses the OpenClaw debug proxy URL when no explicit proxy fetch is provided", async () => {
+  it("uses the GrokBot debug proxy URL when no explicit proxy fetch is provided", async () => {
     vi.stubEnv("OPENCLAW_DEBUG_PROXY_ENABLED", "1");
     vi.stubEnv("OPENCLAW_DEBUG_PROXY_URL", "http://127.0.0.1:7777");
     undiciFetch.mockResolvedValue({ ok: true } as Response);
@@ -532,7 +532,7 @@ describe("resolveTelegramFetch", () => {
     await transport.fetch("https://api.telegram.org/botTOKEN/getMe");
 
     expect(ProxyAgentCtor).toHaveBeenCalledTimes(1);
-    const proxyOptions = constructorOptions(ProxyAgentCtor, "OpenClaw proxy") as {
+    const proxyOptions = constructorOptions(ProxyAgentCtor, "GrokBot proxy") as {
       allowH2?: boolean;
       uri?: string;
       requestTls?: { autoSelectFamily?: boolean };
@@ -611,7 +611,7 @@ describe("resolveTelegramFetch", () => {
     expect(dispatcher?.options?.proxyTls?.autoSelectFamilyAttemptTimeout).toBe(300);
   });
 
-  it("keeps resolver-scoped transport policy for OpenClaw proxy fetches", async () => {
+  it("keeps resolver-scoped transport policy for GrokBot proxy fetches", async () => {
     const { makeProxyFetch } = await import("./proxy.js");
     const proxyFetch = makeProxyFetch("http://127.0.0.1:7890");
     ProxyAgentCtor.mockClear();

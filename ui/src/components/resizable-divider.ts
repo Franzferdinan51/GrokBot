@@ -1,7 +1,7 @@
 // Control UI component implements the resizable divider element.
 import { css, nothing } from "lit";
 import { property } from "lit/decorators.js";
-import { OpenClawLitElement } from "../lit/openclaw-element.ts";
+import { OpenClawLitElement } from "../lit/grokbot-element.ts";
 
 /**
  * An accessible draggable divider for resizable split views.

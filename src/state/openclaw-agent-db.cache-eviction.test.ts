@@ -10,14 +10,14 @@ import {
   listOpenClawRegisteredAgentDatabases,
   OPENCLAW_AGENT_DB_OPEN_HANDLE_CAP,
   openOpenClawAgentDatabase,
-} from "./openclaw-agent-db.js";
-import { closeOpenClawStateDatabaseForTest } from "./openclaw-state-db.js";
+} from "./grokbot-agent-db.js";
+import { closeOpenClawStateDatabaseForTest } from "./grokbot-state-db.js";
 
 const tempStateDirs: string[] = [];
 
 function createTempStateDir(): string {
   const stateDir = fs.realpathSync(
-    fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-agent-db-cache-")),
+    fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-agent-db-cache-")),
   );
   tempStateDirs.push(stateDir);
   return stateDir;
@@ -37,7 +37,7 @@ afterEach(() => {
   }
 });
 
-describe("openclaw agent database handle cache", () => {
+describe("grokbot agent database handle cache", () => {
   it("keeps only the capped number of open handles", () => {
     const env = { OPENCLAW_STATE_DIR: createTempStateDir() };
     const databases = Array.from({ length: OPENCLAW_AGENT_DB_OPEN_HANDLE_CAP + 1 }, (_, index) =>

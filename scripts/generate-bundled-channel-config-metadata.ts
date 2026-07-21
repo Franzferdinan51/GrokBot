@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Generate Bundled Channel Config Metadata script supports OpenClaw repository automation.
+// Generate Bundled Channel Config Metadata script supports GrokBot repository automation.
 import fs from "node:fs";
 import path from "node:path";
 import { loadBundledPluginPublicArtifactModuleSync } from "../src/plugins/public-surface-loader.js";
@@ -101,8 +101,8 @@ function resolvePackageChannelMeta(source: BundledPluginSource) {
     source.packageJson &&
     typeof source.packageJson === "object" &&
     !Array.isArray(source.packageJson) &&
-    "openclaw" in source.packageJson
-      ? (source.packageJson.openclaw as Record<string, unknown> | undefined)
+    "grokbot" in source.packageJson
+      ? (source.packageJson.grokbot as Record<string, unknown> | undefined)
       : undefined;
   const channelMeta =
     openclawMeta &&

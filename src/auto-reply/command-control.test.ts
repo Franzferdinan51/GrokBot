@@ -375,7 +375,7 @@ describe("resolveCommandAuthorization", () => {
       Provider: "webchat",
       Surface: "webchat",
       OriginatingChannel: "webchat",
-      SenderId: "openclaw-control-ui",
+      SenderId: "grokbot-control-ui",
     } as MsgContext;
 
     const auth = resolveCommandAuthorization({
@@ -1174,7 +1174,7 @@ describe("control command parsing", () => {
     });
 
     expect(shouldComputeCommandAuthorized("/ pair qr")).toBe(true);
-    expect(shouldComputeCommandAuthorized("@openclaw / pair qr")).toBe(true);
+    expect(shouldComputeCommandAuthorized("@grokbot / pair qr")).toBe(true);
     expect(shouldComputeCommandAuthorized("hey / pair qr")).toBe(true);
 
     clearPluginCommands();
@@ -1184,12 +1184,12 @@ describe("control command parsing", () => {
   it("ignores telegram commands addressed to other bots", () => {
     expect(
       hasControlCommand("/help@otherbot", undefined, {
-        botUsername: "openclaw",
+        botUsername: "grokbot",
       }),
     ).toBe(false);
     expect(
-      hasControlCommand("/help@openclaw", undefined, {
-        botUsername: "openclaw",
+      hasControlCommand("/help@grokbot", undefined, {
+        botUsername: "grokbot",
       }),
     ).toBe(true);
   });

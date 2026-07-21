@@ -58,8 +58,8 @@ describeControlUiE2e("Control UI route CSS mocked Gateway E2E", () => {
         },
         "cron.status": { enabled: true, jobs: 0, nextWakeAtMs: null },
         "skills.status": {
-          workspaceDir: "/tmp/openclaw-e2e/workspace",
-          managedSkillsDir: "/tmp/openclaw-e2e/skills",
+          workspaceDir: "/tmp/grokbot-e2e/workspace",
+          managedSkillsDir: "/tmp/grokbot-e2e/skills",
           skills: [],
         },
       },

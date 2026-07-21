@@ -4,8 +4,8 @@
  */
 
 import { readFile } from "node:fs/promises";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import type { describeImageFile as DescribeImageFileFn } from "openclaw/plugin-sdk/media-understanding-runtime";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import type { describeImageFile as DescribeImageFileFn } from "grokbot/plugin-sdk/media-understanding-runtime";
 import type { saveMediaBuffer as SaveMediaBufferFn } from "../sdk-setup-tools.js";
 import type { normalizeBrowserScreenshot as NormalizeBrowserScreenshotFn } from "./screenshot.js";
 

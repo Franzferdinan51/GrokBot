@@ -1,12 +1,12 @@
-# OpenClaw Cerebras Provider
+# GrokBot Cerebras Provider
 
-Official OpenClaw provider plugin for Cerebras.
+Official GrokBot provider plugin for Cerebras.
 
-Install from OpenClaw:
+Install from GrokBot:
 
 ```bash
-openclaw plugins install @openclaw/cerebras-provider
-openclaw gateway restart
+grokbot plugins install @grokbot/cerebras-provider
+grokbot gateway restart
 ```
 
-See <https://docs.openclaw.ai/providers/cerebras> for setup and configuration.
+See <https://docs.grokbot.ai/providers/cerebras> for setup and configuration.

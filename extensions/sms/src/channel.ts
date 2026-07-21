@@ -1,24 +1,24 @@
 // Sms plugin module implements channel behavior.
-import { DEFAULT_ACCOUNT_ID } from "openclaw/plugin-sdk/account-id";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/account-resolution";
+import { DEFAULT_ACCOUNT_ID } from "grokbot/plugin-sdk/account-id";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/account-resolution";
 import {
   createHybridChannelConfigAdapter,
   createScopedDmSecurityResolver,
-} from "openclaw/plugin-sdk/channel-config-helpers";
+} from "grokbot/plugin-sdk/channel-config-helpers";
 import {
   buildChannelOutboundSessionRoute,
   createChatChannelPlugin,
   type ChannelOutboundSessionRouteParams,
   type ChannelPlugin,
-} from "openclaw/plugin-sdk/channel-core";
+} from "grokbot/plugin-sdk/channel-core";
 import {
   createMessageReceiptFromOutboundResults,
   defineChannelMessageAdapter,
-} from "openclaw/plugin-sdk/channel-outbound";
-import { createConditionalWarningCollector } from "openclaw/plugin-sdk/channel-policy";
-import { createEmptyChannelDirectoryAdapter } from "openclaw/plugin-sdk/directory-runtime";
-import { normalizeStringEntries } from "openclaw/plugin-sdk/string-coerce-runtime";
-import { chunkTextForOutbound } from "openclaw/plugin-sdk/text-chunking";
+} from "grokbot/plugin-sdk/channel-outbound";
+import { createConditionalWarningCollector } from "grokbot/plugin-sdk/channel-policy";
+import { createEmptyChannelDirectoryAdapter } from "grokbot/plugin-sdk/directory-runtime";
+import { normalizeStringEntries } from "grokbot/plugin-sdk/string-coerce-runtime";
+import { chunkTextForOutbound } from "grokbot/plugin-sdk/text-chunking";
 import {
   inspectSmsAccount,
   isSmsAccountConfigured,
@@ -71,7 +71,7 @@ const resolveSmsDmPolicy = createScopedDmSecurityResolver<ResolvedSmsAccount>({
   resolveAllowFrom: (account) => account.allowFrom,
   policyPathSuffix: "dmPolicy",
   defaultPolicy: "pairing",
-  approveHint: "openclaw pairing approve sms <code>",
+  approveHint: "grokbot pairing approve sms <code>",
   normalizeEntry: normalizeSmsAllowFrom,
 });
 
@@ -313,7 +313,7 @@ export const smsPlugin: ChannelPlugin<ResolvedSmsAccount, SmsProbe> = createChat
   pairing: {
     text: {
       idLabel: "phoneNumber",
-      message: "OpenClaw: your SMS access has been approved.",
+      message: "GrokBot: your SMS access has been approved.",
       normalizeAllowEntry: normalizeSmsAllowFrom,
       notify: async ({ cfg, id, message, accountId }) => {
         const account = resolveSmsAccount(cfg, accountId);

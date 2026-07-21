@@ -10,8 +10,8 @@
  * Issue #69546.
  */
 
-import type { OpenClawConfig } from "openclaw/plugin-sdk/core";
-import { getRuntimeConfig } from "openclaw/plugin-sdk/runtime-config-snapshot";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/core";
+import { getRuntimeConfig } from "grokbot/plugin-sdk/runtime-config-snapshot";
 
 type GatewayCfgLoader = () => OpenClawConfig;
 

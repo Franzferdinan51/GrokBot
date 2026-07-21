@@ -5,7 +5,7 @@ import {
 /**
  * Resolves model extra parameters and transport overrides for embedded agents.
  */
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import { createGoogleThinkingPayloadWrapper } from "../../llm/providers/stream-wrappers/google.js";
 import { createMinimaxThinkingDisabledWrapper } from "../../llm/providers/stream-wrappers/minimax.js";
 import {
@@ -87,7 +87,7 @@ const testing = {
 };
 
 if (process.env.VITEST || process.env.NODE_ENV === "test") {
-  (globalThis as Record<PropertyKey, unknown>)[Symbol.for("openclaw.extraParamsTestApi")] = testing;
+  (globalThis as Record<PropertyKey, unknown>)[Symbol.for("grokbot.extraParamsTestApi")] = testing;
 }
 
 /**

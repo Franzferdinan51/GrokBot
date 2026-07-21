@@ -2,7 +2,7 @@
 import { createHash } from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
-import { root, type Root } from "@openclaw/fs-safe";
+import { root, type Root } from "@grokbot/fs-safe";
 import { formatErrorMessage } from "./errors.js";
 import { acquireGatewayLock, GatewayLockError } from "./gateway-lock.js";
 import {
@@ -295,7 +295,7 @@ export async function migrateLegacySubagentRegistry(params: {
     return {
       changes: [],
       warnings: [
-        `Failed migrating legacy subagent registry: ${detail}. Stop the Gateway, then run \`openclaw doctor --fix\` again.`,
+        `Failed migrating legacy subagent registry: ${detail}. Stop the Gateway, then run \`grokbot doctor --fix\` again.`,
       ],
     };
   }

@@ -1,6 +1,6 @@
 // Telegram tests cover setup surface plugin behavior.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { DEFAULT_ACCOUNT_ID } from "openclaw/plugin-sdk/setup";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { DEFAULT_ACCOUNT_ID } from "grokbot/plugin-sdk/setup";
 import { describe, expect, it, vi } from "vitest";
 import { promptTelegramAllowFromForAccount } from "./setup-core.js";
 import {
@@ -55,10 +55,10 @@ describe("telegram DM access warning helpers", () => {
     const lines = buildTelegramDmAccessWarningLines(DEFAULT_ACCOUNT_ID);
 
     expect(lines.join("\n")).toContain(
-      'openclaw config set channels.telegram.dmPolicy "allowlist"',
+      'grokbot config set channels.telegram.dmPolicy "allowlist"',
     );
     expect(lines.join("\n")).toContain(
-      `openclaw config set channels.telegram.allowFrom '["YOUR_USER_ID"]'`,
+      `grokbot config set channels.telegram.allowFrom '["YOUR_USER_ID"]'`,
     );
   });
 
@@ -66,10 +66,10 @@ describe("telegram DM access warning helpers", () => {
     const lines = buildTelegramDmAccessWarningLines("alerts");
 
     expect(lines.join("\n")).toContain(
-      'openclaw config set channels.telegram.accounts.alerts.dmPolicy "allowlist"',
+      'grokbot config set channels.telegram.accounts.alerts.dmPolicy "allowlist"',
     );
     expect(lines.join("\n")).toContain(
-      `openclaw config set channels.telegram.accounts.alerts.allowFrom '["YOUR_USER_ID"]'`,
+      `grokbot config set channels.telegram.accounts.alerts.allowFrom '["YOUR_USER_ID"]'`,
     );
   });
 

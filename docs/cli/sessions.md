@@ -1,29 +1,29 @@
 ---
-summary: "CLI reference for `openclaw sessions` (list stored sessions + usage)"
+summary: "CLI reference for `grokbot sessions` (list stored sessions + usage)"
 read_when:
   - You want to list stored sessions and see recent activity
 title: "Sessions"
 ---
 
-# `openclaw sessions`
+# `grokbot sessions`
 
 List stored conversation sessions.
 
 Session lists are not channel/provider liveness checks. They show persisted
 conversation rows from session stores. A quiet Discord, Slack, Telegram, or
 other channel can reconnect successfully without creating a new session row
-until a message is processed. Use `openclaw channels status --probe`,
-`openclaw status --deep`, or `openclaw health --verbose` when you need live
+until a message is processed. Use `grokbot channels status --probe`,
+`grokbot status --deep`, or `grokbot health --verbose` when you need live
 channel connectivity.
 
 ```bash
-openclaw sessions
-openclaw sessions --agent work
-openclaw sessions --all-agents
-openclaw sessions --active 120
-openclaw sessions --limit 25
-openclaw sessions --store ./tmp/sessions.json
-openclaw sessions --json
+grokbot sessions
+grokbot sessions --agent work
+grokbot sessions --all-agents
+grokbot sessions --active 120
+grokbot sessions --limit 25
+grokbot sessions --store ./tmp/sessions.json
+grokbot sessions --json
 ```
 
 Flags:
@@ -38,7 +38,7 @@ Flags:
 | `--json`             | Machine-readable output.                                               |
 | `--verbose`          | Verbose logging.                                                       |
 
-`openclaw sessions` and the Gateway `sessions.list` RPC are bounded by default
+`grokbot sessions` and the Gateway `sessions.list` RPC are bounded by default
 so large long-lived stores cannot monopolize the CLI process or Gateway event
 loop. The CLI returns the newest 100 sessions by default; pass `--limit <n>`
 for a smaller/larger window or `--limit all` when you intentionally need the
@@ -56,14 +56,14 @@ configured agent roots or a templated `session.store` root. Legacy selector
 paths must resolve inside the agent root; symlinks and out-of-root paths are
 skipped.
 
-`openclaw sessions --all-agents --json`:
+`grokbot sessions --all-agents --json`:
 
 ```json
 {
   "path": null,
   "stores": [
-    { "agentId": "main", "path": "/home/user/.openclaw/agents/main/sessions/sessions.json" },
-    { "agentId": "work", "path": "/home/user/.openclaw/agents/work/sessions/sessions.json" }
+    { "agentId": "main", "path": "/home/user/.grokbot/agents/main/sessions/sessions.json" },
+    { "agentId": "work", "path": "/home/user/.grokbot/agents/work/sessions/sessions.json" }
   ],
   "allAgents": true,
   "count": 2,
@@ -81,14 +81,14 @@ skipped.
 ## Tail trajectory progress
 
 ```bash
-openclaw sessions tail
-openclaw sessions tail --follow
-openclaw sessions tail --session-key "agent:main:telegram:direct:123" --tail 25
-openclaw sessions --agent work tail --follow
-openclaw sessions --all-agents tail --follow
+grokbot sessions tail
+grokbot sessions tail --follow
+grokbot sessions tail --session-key "agent:main:telegram:direct:123" --tail 25
+grokbot sessions --agent work tail --follow
+grokbot sessions --all-agents tail --follow
 ```
 
-`openclaw sessions tail` renders recent runtime trajectory events as compact
+`grokbot sessions tail` renders recent runtime trajectory events as compact
 progress lines. Without `--session-key`, it tails running sessions first, then
 the latest stored session. `--tail <count>` controls how many existing events
 print before follow mode; default `80`, and `0` starts at the current end.
@@ -103,32 +103,32 @@ model completion lines show provider/model and terminal status.
 ## Export a trajectory bundle
 
 ```bash
-openclaw sessions export-trajectory --session-key "agent:main:telegram:direct:123" --workspace .
-openclaw sessions export-trajectory --session-key "agent:main:telegram:direct:123" --output bug-123 --json
+grokbot sessions export-trajectory --session-key "agent:main:telegram:direct:123" --workspace .
+grokbot sessions export-trajectory --session-key "agent:main:telegram:direct:123" --output bug-123 --json
 ```
 
 This is the command path used by the `/export-trajectory` slash command after
 the owner approves the exec request. The output directory is always resolved
-inside `.openclaw/trajectory-exports/` under the selected workspace.
+inside `.grokbot/trajectory-exports/` under the selected workspace.
 
 ## Cleanup maintenance
 
 Run maintenance now instead of waiting for the next write cycle:
 
 ```bash
-openclaw sessions cleanup --dry-run
-openclaw sessions cleanup --agent work --dry-run
-openclaw sessions cleanup --all-agents --dry-run
-openclaw sessions cleanup --enforce
-openclaw sessions cleanup --enforce --active-key "agent:main:telegram:direct:123"
-openclaw sessions cleanup --dry-run --fix-dm-scope
-openclaw sessions cleanup --json
+grokbot sessions cleanup --dry-run
+grokbot sessions cleanup --agent work --dry-run
+grokbot sessions cleanup --all-agents --dry-run
+grokbot sessions cleanup --enforce
+grokbot sessions cleanup --enforce --active-key "agent:main:telegram:direct:123"
+grokbot sessions cleanup --dry-run --fix-dm-scope
+grokbot sessions cleanup --json
 ```
 
-`openclaw sessions cleanup` uses `session.maintenance` settings from config
+`grokbot sessions cleanup` uses `session.maintenance` settings from config
 ([Configuration reference](/gateway/config-agents#session)):
 
-- Scope note: `openclaw sessions cleanup` maintains session stores,
+- Scope note: `grokbot sessions cleanup` maintains session stores,
   transcripts, trajectory rows, and legacy trajectory sidecars. It does not
   prune cron run history, which automatically keeps the newest 2000 rows per job
   ([Cron configuration](/automation/cron-jobs#configuration)).
@@ -162,7 +162,7 @@ sent through the Gateway so it shares the same session-store writer as runtime
 traffic. Use `--store <path>` for explicit offline repair of a legacy store
 selector.
 
-`openclaw sessions cleanup --all-agents --dry-run --json`:
+`grokbot sessions cleanup --all-agents --dry-run --json`:
 
 ```json
 {
@@ -172,7 +172,7 @@ selector.
   "stores": [
     {
       "agentId": "main",
-      "storePath": "/home/user/.openclaw/agents/main/sessions/sessions.json",
+      "storePath": "/home/user/.grokbot/agents/main/sessions/sessions.json",
       "beforeCount": 120,
       "afterCount": 80,
       "missing": 0,
@@ -182,7 +182,7 @@ selector.
     },
     {
       "agentId": "work",
-      "storePath": "/home/user/.openclaw/agents/work/sessions/sessions.json",
+      "storePath": "/home/user/.grokbot/agents/work/sessions/sessions.json",
       "beforeCount": 18,
       "afterCount": 18,
       "missing": 0,
@@ -196,14 +196,14 @@ selector.
 
 ## Compact a session
 
-Reclaim context budget for a wedged or oversized session. `openclaw sessions
+Reclaim context budget for a wedged or oversized session. `grokbot sessions
 compact <key>` is the first-class wrapper around the `sessions.compact`
 Gateway RPC and requires a running Gateway.
 
 ```bash
-openclaw sessions compact "agent:main:main"
-openclaw sessions compact "agent:main:main" --max-lines 200
-openclaw sessions compact "agent:work:main" --agent work --json
+grokbot sessions compact "agent:main:main"
+grokbot sessions compact "agent:main:main" --max-lines 200
+grokbot sessions compact "agent:work:main" --agent work --json
 ```
 
 - Without `--max-lines`, the Gateway LLM-summarizes the transcript. The CLI
@@ -220,7 +220,7 @@ The command exits non-zero when the Gateway reports a failed compaction or is
 unreachable, so crons and scripts never mistake a silent no-op for success.
 
 <Note>
-`openclaw agent --message '/compact ...'` is **not** a compaction path. Slash
+`grokbot agent --message '/compact ...'` is **not** a compaction path. Slash
 commands from the CLI are rejected by the authorized-sender check; that
 invocation exits non-zero with guidance pointing here instead of silently
 no-opping.
@@ -228,7 +228,7 @@ no-opping.
 
 ### sessions.compact RPC
 
-`openclaw gateway call sessions.compact --params '<json>'` accepts:
+`grokbot gateway call sessions.compact --params '<json>'` accepts:
 
 | Field      | Type        | Required | Description                                                |
 | ---------- | ----------- | -------- | ---------------------------------------------------------- |
@@ -254,7 +254,7 @@ Example truncate response (`--max-lines 200`):
   "ok": true,
   "key": "agent:main:main",
   "compacted": true,
-  "archived": "/home/user/.openclaw/agents/main/sessions/transcripts/<id>.jsonl.bak",
+  "archived": "/home/user/.grokbot/agents/main/sessions/transcripts/<id>.jsonl.bak",
   "kept": 200
 }
 ```

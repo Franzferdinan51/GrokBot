@@ -5,7 +5,7 @@
   },
   "enabledByDefault": true,
   "name": "ACPX Runtime",
-  "description": "OpenClaw ACP runtime backend with plugin-owned session and transport management.",
+  "description": "GrokBot ACP runtime backend with plugin-owned session and transport management.",
   "skills": ["./skills"],
   "configSchema": {
     "type": "object",
@@ -121,12 +121,12 @@
     },
     "pluginToolsMcpBridge": {
       "label": "Plugin Tools MCP Bridge",
-      "help": "Default off. When enabled, inject the built-in OpenClaw plugin-tools MCP server into embedded ACP sessions so ACP agents can call plugin-registered tools.",
+      "help": "Default off. When enabled, inject the built-in GrokBot plugin-tools MCP server into embedded ACP sessions so ACP agents can call plugin-registered tools.",
       "advanced": true
     },
     "openClawToolsMcpBridge": {
-      "label": "OpenClaw Tools MCP Bridge",
-      "help": "Default off. When enabled, inject the built-in OpenClaw core-tools MCP server into embedded ACP sessions so ACP agents can call selected built-in tools such as cron.",
+      "label": "GrokBot Tools MCP Bridge",
+      "help": "Default off. When enabled, inject the built-in GrokBot core-tools MCP server into embedded ACP sessions so ACP agents can call selected built-in tools such as cron.",
       "advanced": true
     },
     "strictWindowsCmdWrapper": {
@@ -136,7 +136,7 @@
     },
     "timeoutSeconds": {
       "label": "Runtime Operation Timeout Seconds",
-      "help": "Timeout for embedded ACP runtime startup and control operations. ACP turns use OpenClaw agent/run timeouts.",
+      "help": "Timeout for embedded ACP runtime startup and control operations. ACP turns use GrokBot agent/run timeouts.",
       "advanced": true
     },
     "queueOwnerTtlSeconds": {

@@ -192,7 +192,7 @@ describe("Gateway startup SecretRef owner isolation", () => {
     if (process.platform === "win32") {
       return;
     }
-    const root = tempDirs.make("openclaw-gateway-provider-outage-");
+    const root = tempDirs.make("grokbot-gateway-provider-outage-");
     const callLogPath = path.join(root, "calls.log");
     const commandPath = path.join(root, "provider.sh");
     const resolverPath = path.resolve("extensions/vault/vault-secret-ref-resolver.js");
@@ -275,7 +275,7 @@ describe("Gateway startup SecretRef owner isolation", () => {
     if (process.platform === "win32") {
       return;
     }
-    const root = tempDirs.make("openclaw-gateway-vault-acl-");
+    const root = tempDirs.make("grokbot-gateway-vault-acl-");
     const commandPath = path.join(root, "provider.sh");
     const resolverPath = path.resolve("extensions/vault/vault-secret-ref-resolver.js");
     writeFileSync(

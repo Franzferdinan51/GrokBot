@@ -1,7 +1,7 @@
 import fs from "node:fs";
 import os from "node:os";
 import { join } from "node:path";
-import { createTestPluginApi } from "openclaw/plugin-sdk/plugin-test-api";
+import { createTestPluginApi } from "grokbot/plugin-sdk/plugin-test-api";
 import { afterAll, describe, expect, it, vi } from "vitest";
 import type { OpenClawConfig, OpenClawPluginApi, OpenClawPluginToolContext } from "../api.js";
 import { registerDiffsPlugin } from "./plugin.js";
@@ -24,14 +24,14 @@ describe("diffs plugin language-pack discovery", () => {
     "requires both the sibling manifest and generated runtime asset in %s",
     (assetDir) => {
       type RegisteredTool = { name?: string };
-      const root = fs.mkdtempSync(join(os.tmpdir(), "openclaw-diffs-language-pack-"));
+      const root = fs.mkdtempSync(join(os.tmpdir(), "grokbot-diffs-language-pack-"));
       try {
         const diffsRoot = join(root, "diffs");
         const languagePackRoot = join(root, "diffs-language-pack");
         fs.mkdirSync(diffsRoot, { recursive: true });
         fs.mkdirSync(languagePackRoot, { recursive: true });
         fs.writeFileSync(
-          join(languagePackRoot, "openclaw.plugin.json"),
+          join(languagePackRoot, "grokbot.plugin.json"),
           '{"id":"diffs-language-pack"}\n',
         );
         const config = { plugins: {} } as OpenClawConfig;

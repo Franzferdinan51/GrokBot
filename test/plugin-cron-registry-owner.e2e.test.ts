@@ -4,7 +4,7 @@ import { createServer, type IncomingMessage, type ServerResponse } from "node:ht
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../src/config/types.openclaw.js";
+import type { OpenClawConfig } from "../src/config/types.grokbot.js";
 import {
   connectGatewayClient,
   disconnectGatewayClient,
@@ -13,7 +13,7 @@ import {
 import {
   createOpenClawTestInstance,
   type OpenClawTestInstance,
-} from "./helpers/openclaw-test-instance.js";
+} from "./helpers/grokbot-test-instance.js";
 
 const PLUGIN_ID = "cron-registry-owner-proof";
 const SCHEDULE_METHOD = `${PLUGIN_ID}.schedule`;
@@ -186,7 +186,7 @@ async function writeBundledSchedulerPlugin(bundledRoot: string): Promise<void> {
   const pluginDir = path.join(bundledRoot, PLUGIN_ID);
   await mkdir(pluginDir, { recursive: true });
   await writeFile(
-    path.join(pluginDir, "openclaw.plugin.json"),
+    path.join(pluginDir, "grokbot.plugin.json"),
     `${JSON.stringify(
       {
         id: PLUGIN_ID,
@@ -267,7 +267,7 @@ describe("plugin cron registry ownership e2e", () => {
     "keeps recurring startup-plugin jobs through workspace registry churn",
     { timeout: E2E_TIMEOUT_MS },
     async () => {
-      const fixtureDir = await mkdtemp(path.join(tmpdir(), "openclaw-cron-owner-e2e-"));
+      const fixtureDir = await mkdtemp(path.join(tmpdir(), "grokbot-cron-owner-e2e-"));
       cleanupDirs.push(fixtureDir);
       const bundledRoot = path.join(fixtureDir, "bundled");
       const mainWorkspace = path.join(fixtureDir, "workspace-main");
@@ -296,7 +296,7 @@ describe("plugin cron registry ownership e2e", () => {
           defaults: {
             workspace: mainWorkspace,
             model: { primary: modelRef },
-            models: { [modelRef]: { agentRuntime: { id: "openclaw" } } },
+            models: { [modelRef]: { agentRuntime: { id: "grokbot" } } },
             skills: [],
           },
           list: [
@@ -374,7 +374,7 @@ describe("plugin cron registry ownership e2e", () => {
         }>("cron.status", {});
         expect(cronStatus).toMatchObject({ enabled: true, storage: "sqlite" });
         expect(cronStatus.sqlitePath).toBe(
-          path.join(instance.stateDir, "state", "openclaw.sqlite"),
+          path.join(instance.stateDir, "state", "grokbot.sqlite"),
         );
 
         const ownerResult = await client.request<ScheduleResult>(SCHEDULE_METHOD, {

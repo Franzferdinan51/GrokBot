@@ -1,10 +1,10 @@
-// Tests isolated OpenClaw test-state setup and cleanup behavior.
+// Tests isolated GrokBot test-state setup and cleanup behavior.
 import fs from "node:fs/promises";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { loadPersistedAuthProfileStore } from "../agents/auth-profiles/persisted.js";
 import { withEnvAsync } from "./env.js";
-import { createOpenClawTestState, withOpenClawTestState } from "./openclaw-test-state.js";
+import { createOpenClawTestState, withOpenClawTestState } from "./grokbot-test-state.js";
 
 async function expectPathMissing(targetPath: string): Promise<void> {
   try {
@@ -16,7 +16,7 @@ async function expectPathMissing(targetPath: string): Promise<void> {
   throw new Error(`expected missing path: ${targetPath}`);
 }
 
-describe("openclaw test state", () => {
+describe("grokbot test state", () => {
   it("creates an isolated home layout with spawn env and restores process env", async () => {
     const previousHome = process.env.HOME;
     const previousOpenClawHome = process.env.OPENCLAW_HOME;
@@ -30,8 +30,8 @@ describe("openclaw test state", () => {
 
     try {
       expect(state.home).toBe(path.join(state.root, "home"));
-      expect(state.stateDir).toBe(path.join(state.home, ".openclaw"));
-      expect(state.configPath).toBe(path.join(state.stateDir, "openclaw.json"));
+      expect(state.stateDir).toBe(path.join(state.home, ".grokbot"));
+      expect(state.configPath).toBe(path.join(state.stateDir, "grokbot.json"));
       expect(state.workspaceDir).toBe(path.join(state.home, "workspace"));
       expect(state.env.HOME).toBe(state.home);
       expect(state.env.OPENCLAW_HOME).toBe(state.home);
@@ -70,7 +70,7 @@ describe("openclaw test state", () => {
   });
 
   it("clears inherited agent-dir overrides by default", async () => {
-    await withEnvAsync({ OPENCLAW_AGENT_DIR: "/tmp/outside-openclaw-agent" }, async () => {
+    await withEnvAsync({ OPENCLAW_AGENT_DIR: "/tmp/outside-grokbot-agent" }, async () => {
       const state = await createOpenClawTestState({
         layout: "state-only",
       });
@@ -83,7 +83,7 @@ describe("openclaw test state", () => {
         await state.cleanup();
       }
 
-      expect(process.env.OPENCLAW_AGENT_DIR).toBe("/tmp/outside-openclaw-agent");
+      expect(process.env.OPENCLAW_AGENT_DIR).toBe("/tmp/outside-grokbot-agent");
     });
   });
 
@@ -91,12 +91,12 @@ describe("openclaw test state", () => {
     await withOpenClawTestState(
       {
         env: {
-          OPENCLAW_AGENT_DIR: "/tmp/explicit-openclaw-agent",
+          OPENCLAW_AGENT_DIR: "/tmp/explicit-grokbot-agent",
         },
       },
       async (state) => {
-        expect(process.env.OPENCLAW_AGENT_DIR).toBe("/tmp/explicit-openclaw-agent");
-        expect(state.env.OPENCLAW_AGENT_DIR).toBe("/tmp/explicit-openclaw-agent");
+        expect(process.env.OPENCLAW_AGENT_DIR).toBe("/tmp/explicit-grokbot-agent");
+        expect(state.env.OPENCLAW_AGENT_DIR).toBe("/tmp/explicit-grokbot-agent");
       },
     );
   });
@@ -137,7 +137,7 @@ describe("openclaw test state", () => {
           },
         });
 
-        expect(profilePath).toBe(path.join(state.agentDir(), "openclaw-agent.sqlite"));
+        expect(profilePath).toBe(path.join(state.agentDir(), "grokbot-agent.sqlite"));
         const profiles = loadPersistedAuthProfileStore(state.agentDir());
         expect(profiles?.version).toBe(1);
         expect(profiles?.profiles["openai:test"]?.provider).toBe("openai");

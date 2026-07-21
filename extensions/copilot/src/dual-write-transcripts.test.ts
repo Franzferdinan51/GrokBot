@@ -3,19 +3,19 @@ import { createHash } from "node:crypto";
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import type { AgentMessage } from "openclaw/plugin-sdk/agent-harness-runtime";
+import type { AgentMessage } from "grokbot/plugin-sdk/agent-harness-runtime";
 import {
   initializeGlobalHookRunner,
   resetGlobalHookRunner,
-} from "openclaw/plugin-sdk/hook-runtime";
-import { createMockPluginRegistry } from "openclaw/plugin-sdk/plugin-test-runtime";
-import { upsertSessionEntry } from "openclaw/plugin-sdk/session-store-runtime";
-import { readSessionTranscriptEvents } from "openclaw/plugin-sdk/session-transcript-runtime";
+} from "grokbot/plugin-sdk/hook-runtime";
+import { createMockPluginRegistry } from "grokbot/plugin-sdk/plugin-test-runtime";
+import { upsertSessionEntry } from "grokbot/plugin-sdk/session-store-runtime";
+import { readSessionTranscriptEvents } from "grokbot/plugin-sdk/session-transcript-runtime";
 import {
   castAgentMessage,
   makeAgentAssistantMessage,
   makeAgentUserMessage,
-} from "openclaw/plugin-sdk/test-fixtures";
+} from "grokbot/plugin-sdk/test-fixtures";
 import { afterEach, describe, expect, it } from "vitest";
 import {
   attachCopilotMirrorIdentity,
@@ -71,7 +71,7 @@ async function createSqliteMirrorTarget(prefix: string, options: { sessionId?: s
   const agentId = "main";
   const sessionId = options.sessionId ?? "session-1";
   const sessionKey = `agent:${agentId}:${sessionId}`;
-  const storePath = path.join(root, "openclaw-agent.sqlite");
+  const storePath = path.join(root, "grokbot-agent.sqlite");
   await upsertSessionEntry({
     agentId,
     sessionKey,
@@ -120,7 +120,7 @@ async function readMirrorMessages(target: {
 
 describe("mirrorCopilotTranscript", () => {
   it("mirrors user, assistant, and tool result messages by SQLite identity", async () => {
-    const target = await createSqliteMirrorTarget("openclaw-copilot-mirror-basic-");
+    const target = await createSqliteMirrorTarget("grokbot-copilot-mirror-basic-");
     const userMessage = makeAgentUserMessage({
       content: [{ type: "text", text: "hello" }],
       timestamp: Date.now(),
@@ -164,7 +164,7 @@ describe("mirrorCopilotTranscript", () => {
   });
 
   it("preserves gateway user-turn identity across Copilot transcript mirroring", async () => {
-    const target = await createSqliteMirrorTarget("openclaw-copilot-mirror-user-identity-");
+    const target = await createSqliteMirrorTarget("grokbot-copilot-mirror-user-identity-");
     const userMessage = castAgentMessage({
       ...makeAgentUserMessage({
         content: [{ type: "text", text: "client prompt" }],
@@ -193,7 +193,7 @@ describe("mirrorCopilotTranscript", () => {
   });
 
   it("deduplicates re-emits by idempotency scope", async () => {
-    const target = await createSqliteMirrorTarget("openclaw-copilot-mirror-dedupe-");
+    const target = await createSqliteMirrorTarget("grokbot-copilot-mirror-dedupe-");
     const messages = [
       makeAgentUserMessage({
         content: [{ type: "text", text: "hello" }],
@@ -233,7 +233,7 @@ describe("mirrorCopilotTranscript", () => {
         },
       ]),
     );
-    const target = await createSqliteMirrorTarget("openclaw-copilot-mirror-hook-");
+    const target = await createSqliteMirrorTarget("grokbot-copilot-mirror-hook-");
     const sourceMessage = makeAgentAssistantMessage({
       content: [{ type: "text", text: "hello" }],
       timestamp: Date.now(),
@@ -258,7 +258,7 @@ describe("mirrorCopilotTranscript", () => {
         { hookName: "before_message_write", handler: () => ({ block: true }) },
       ]),
     );
-    const target = await createSqliteMirrorTarget("openclaw-copilot-mirror-block-");
+    const target = await createSqliteMirrorTarget("grokbot-copilot-mirror-block-");
 
     await mirrorCopilotTranscript({
       ...target,
@@ -275,7 +275,7 @@ describe("mirrorCopilotTranscript", () => {
   });
 
   it("is a no-op when no mirrorable messages are present", async () => {
-    const target = await createSqliteMirrorTarget("openclaw-copilot-mirror-empty-");
+    const target = await createSqliteMirrorTarget("grokbot-copilot-mirror-empty-");
 
     await mirrorCopilotTranscript({
       ...target,
@@ -287,7 +287,7 @@ describe("mirrorCopilotTranscript", () => {
   });
 
   it("uses content fingerprint when no explicit mirror identity is attached", async () => {
-    const target = await createSqliteMirrorTarget("openclaw-copilot-mirror-fingerprint-");
+    const target = await createSqliteMirrorTarget("grokbot-copilot-mirror-fingerprint-");
     const message = makeAgentAssistantMessage({
       content: [{ type: "text", text: "fp" }],
       timestamp: Date.now(),
@@ -304,7 +304,7 @@ describe("mirrorCopilotTranscript", () => {
   });
 
   it("uses attached identity instead of content fingerprint when provided", async () => {
-    const target = await createSqliteMirrorTarget("openclaw-copilot-mirror-identity-");
+    const target = await createSqliteMirrorTarget("grokbot-copilot-mirror-identity-");
     const baseMessage = makeAgentAssistantMessage({
       content: [{ type: "text", text: "explicit" }],
       timestamp: Date.now(),
@@ -314,18 +314,18 @@ describe("mirrorCopilotTranscript", () => {
     await mirrorCopilotTranscript({
       ...target,
       messages: [tagged],
-      idempotencyScope: "copilot:openclaw-session-1",
+      idempotencyScope: "copilot:grokbot-session-1",
     });
 
     const raw = await readMirrorRaw(target);
     expect(raw).toContain(
-      '"idempotencyKey":"copilot:openclaw-session-1:sdk-session-1:assistant:0"',
+      '"idempotencyKey":"copilot:grokbot-session-1:sdk-session-1:assistant:0"',
     );
     expect(raw).not.toContain(expectedFingerprint(baseMessage));
   });
 
   it("omits idempotencyKey when no idempotencyScope is provided", async () => {
-    const target = await createSqliteMirrorTarget("openclaw-copilot-mirror-no-scope-");
+    const target = await createSqliteMirrorTarget("grokbot-copilot-mirror-no-scope-");
 
     await mirrorCopilotTranscript({
       ...target,
@@ -343,7 +343,7 @@ describe("mirrorCopilotTranscript", () => {
   });
 
   it("filters out non-mirrorable roles", async () => {
-    const target = await createSqliteMirrorTarget("openclaw-copilot-mirror-filter-");
+    const target = await createSqliteMirrorTarget("grokbot-copilot-mirror-filter-");
     const userMessage = makeAgentUserMessage({
       content: [{ type: "text", text: "u" }],
       timestamp: Date.now(),
@@ -366,7 +366,7 @@ describe("mirrorCopilotTranscript", () => {
   });
 
   it("preserves explicit identity across attachCopilotMirrorIdentity overrides", async () => {
-    const target = await createSqliteMirrorTarget("openclaw-copilot-mirror-override-");
+    const target = await createSqliteMirrorTarget("grokbot-copilot-mirror-override-");
     const base = makeAgentAssistantMessage({
       content: [{ type: "text", text: "x" }],
       timestamp: Date.now(),
@@ -388,7 +388,7 @@ describe("mirrorCopilotTranscript", () => {
 
 describe("dualWriteCopilotTranscriptBestEffort", () => {
   it("returns normally when mirror succeeds", async () => {
-    const target = await createSqliteMirrorTarget("openclaw-copilot-mirror-best-effort-");
+    const target = await createSqliteMirrorTarget("grokbot-copilot-mirror-best-effort-");
     await expect(
       dualWriteCopilotTranscriptBestEffort({
         ...target,
@@ -405,7 +405,7 @@ describe("dualWriteCopilotTranscriptBestEffort", () => {
   });
 
   it("swallows missing runtime identity and does not write JSONL", async () => {
-    const root = await makeRoot("openclaw-copilot-mirror-invalid-");
+    const root = await makeRoot("grokbot-copilot-mirror-invalid-");
     const sessionFile = path.join(root, "agents", "main", "sessions", "session-1.jsonl");
     await expect(
       dualWriteCopilotTranscriptBestEffort({

@@ -3,11 +3,11 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { resolveGatewayHealthProbeToken } from "./onboard-non-interactive/local.test-support.js";
 
 async function withTempDir<T>(run: (dir: string) => Promise<T>): Promise<T> {
-  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-gateway-health-auth-"));
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-gateway-health-auth-"));
   try {
     return await run(dir);
   } finally {

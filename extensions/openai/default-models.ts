@@ -1,10 +1,10 @@
 // Openai plugin module implements default models behavior.
-import { ensureModelAllowlistEntry } from "openclaw/plugin-sdk/provider-onboard";
+import { ensureModelAllowlistEntry } from "grokbot/plugin-sdk/provider-onboard";
 import {
   applyAgentDefaultModelPrimary,
   resolveAgentModelPrimaryValue,
   type OpenClawConfig,
-} from "openclaw/plugin-sdk/provider-onboard";
+} from "grokbot/plugin-sdk/provider-onboard";
 
 export const OPENAI_DEFAULT_MODEL = "openai/gpt-5.6";
 export const OPENAI_CODEX_DEFAULT_MODEL = "openai/gpt-5.6-sol";

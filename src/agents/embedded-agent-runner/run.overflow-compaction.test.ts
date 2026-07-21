@@ -2,7 +2,7 @@
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { createReplyOperation } from "../../auto-reply/reply/reply-run-registry.js";
 import {
@@ -192,7 +192,7 @@ function makeForwardedRuntimePlan(overrides: RuntimePlanOverrides = {}): AgentRu
     resolvedRef: {
       provider: "anthropic",
       modelId: "test-model",
-      harnessId: "openclaw",
+      harnessId: "grokbot",
     },
     tools: {
       normalize: vi.fn((tools) => tools),
@@ -369,7 +369,7 @@ describe("runEmbeddedAgent overflow compaction trigger routing", () => {
       provider: "openai",
       model: "gpt-5.6-sol",
       thinkLevel: "ultra",
-      agentHarnessRuntimeOverride: "openclaw",
+      agentHarnessRuntimeOverride: "grokbot",
       runId: "run-before-model-resolve-thinking-revalidation",
     });
 
@@ -473,7 +473,7 @@ describe("runEmbeddedAgent overflow compaction trigger routing", () => {
       mockedEnsureAuthProfileStoreWithoutExternalProfiles,
     ) as [string | undefined, { allowKeychainPrompt?: boolean } | undefined];
     expect(typeof agentDir).toBe("string");
-    expect(String(agentDir).replaceAll("\\", "/").endsWith("/.openclaw/agents/main/agent")).toBe(
+    expect(String(agentDir).replaceAll("\\", "/").endsWith("/.grokbot/agents/main/agent")).toBe(
       true,
     );
     expect(authStoreOptions).toEqual({ allowKeychainPrompt: false });
@@ -995,11 +995,11 @@ describe("runEmbeddedAgent overflow compaction trigger routing", () => {
     const attemptParams = mockCallArg(mockedRunEmbeddedAttempt) as EmbeddedRunAttemptParams;
     expect(attemptParams?.runtimePlan).toBe(runtimePlan);
     expect(attemptParams?.internalEvents).toBe(internalEvents);
-    expect(attemptParams?.agentHarnessId).toBe("openclaw");
-    expect(attemptParams?.agentHarnessRuntimeOverride).toBe("openclaw");
+    expect(attemptParams?.agentHarnessId).toBe("grokbot");
+    expect(attemptParams?.agentHarnessRuntimeOverride).toBe("grokbot");
   });
 
-  it("routes non-empty request stream params through OpenClaw before auth preparation", async () => {
+  it("routes non-empty request stream params through GrokBot before auth preparation", async () => {
     useOpenAIPlatformAuthFixture();
     mockedRunEmbeddedAttempt.mockResolvedValueOnce(makeAttemptResult({ promptError: null }));
 
@@ -1019,12 +1019,12 @@ describe("runEmbeddedAgent overflow compaction trigger routing", () => {
         },
       },
       streamParams: { maxTokens: 64 },
-      runId: "request-stream-params-use-openclaw",
+      runId: "request-stream-params-use-grokbot",
     });
 
-    expectMockCallFields(mockedRunEmbeddedAttempt, { agentHarnessId: "openclaw" });
+    expectMockCallFields(mockedRunEmbeddedAttempt, { agentHarnessId: "grokbot" });
     const runtimePlanInput = expectMockCallFields(mockedBuildAgentRuntimePlan, {
-      harnessId: "openclaw",
+      harnessId: "grokbot",
     });
     const preparedAuthPlan = expectRecordFields(runtimePlanInput.preparedAuthPlan, {});
     expectRecordFields(preparedAuthPlan.modelRoute, {
@@ -1140,7 +1140,7 @@ describe("runEmbeddedAgent overflow compaction trigger routing", () => {
   });
 
   it("revalidates reserved harness ownership after the global queue wait", async () => {
-    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-harness-admission-"));
+    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-harness-admission-"));
     const storePath = path.join(dir, "sessions.json");
     const sessionId = "native-session";
     const sessionKey = "agent:main:harness:codex:supervision:native-thread";
@@ -2005,7 +2005,7 @@ describe("runEmbeddedAgent overflow compaction trigger routing", () => {
     });
   });
 
-  it("keeps missing OpenClaw auth fatal for a Codex harness without owned bootstrap", async () => {
+  it("keeps missing GrokBot auth fatal for a Codex harness without owned bootstrap", async () => {
     const { clearAgentHarnesses, registerAgentHarness } = await import("../harness/registry.js");
     const pluginRunAttempt = vi.fn<AgentHarness["runAttempt"]>(async () =>
       makeAttemptResult({ assistantTexts: ["ok"] }),
@@ -2987,7 +2987,7 @@ describe("runEmbeddedAgent overflow compaction trigger routing", () => {
     });
   });
 
-  it("selects OpenClaw for a profile-to-direct subscription fallback plan", async () => {
+  it("selects GrokBot for a profile-to-direct subscription fallback plan", async () => {
     const { clearAgentHarnesses, registerAgentHarness } = await import("../harness/registry.js");
     const subscriptionLimit = new Error("subscription profile exhausted");
     const normalizedLimit = Object.assign(new Error(subscriptionLimit.message), {
@@ -3060,7 +3060,7 @@ describe("runEmbeddedAgent overflow compaction trigger routing", () => {
     mockedBuildAgentRuntimePlan
       .mockReturnValueOnce(
         makeForwardedRuntimePlan({
-          resolvedRef: { provider: "openai", modelId: "gpt-5.5", harnessId: "openclaw" },
+          resolvedRef: { provider: "openai", modelId: "gpt-5.5", harnessId: "grokbot" },
           auth: {
             providerForAuth: "openai",
             authProfileProviderForAuth: "openai",
@@ -3073,7 +3073,7 @@ describe("runEmbeddedAgent overflow compaction trigger routing", () => {
       )
       .mockReturnValueOnce(
         makeForwardedRuntimePlan({
-          resolvedRef: { provider: "openai", modelId: "gpt-5.5", harnessId: "openclaw" },
+          resolvedRef: { provider: "openai", modelId: "gpt-5.5", harnessId: "grokbot" },
           auth: {
             providerForAuth: "openai",
             authProfileProviderForAuth: "openai",
@@ -3115,7 +3115,7 @@ describe("runEmbeddedAgent overflow compaction trigger routing", () => {
             },
           },
         },
-        runId: "implicit-codex-full-plan-falls-back-openclaw",
+        runId: "implicit-codex-full-plan-falls-back-grokbot",
       });
     } finally {
       clearAgentHarnesses();
@@ -3124,14 +3124,14 @@ describe("runEmbeddedAgent overflow compaction trigger routing", () => {
     expect(pluginRunAttempt).not.toHaveBeenCalled();
     expect(mockedRunEmbeddedAttempt).toHaveBeenCalledTimes(2);
     expectMockCallFields(mockedRunEmbeddedAttempt, {
-      agentHarnessId: "openclaw",
+      agentHarnessId: "grokbot",
       authProfileId: "openai:sub",
       resolvedApiKey: "profile-subscription-token",
     });
     expectMockCallFields(
       mockedRunEmbeddedAttempt,
       {
-        agentHarnessId: "openclaw",
+        agentHarnessId: "grokbot",
         authProfileId: undefined,
         resolvedApiKey: "direct-subscription-token",
       },
@@ -3326,7 +3326,7 @@ describe("runEmbeddedAgent overflow compaction trigger routing", () => {
     expect(mockedCompactDirect).not.toHaveBeenCalled();
   });
 
-  it("preserves a locked OpenClaw model in overflow compaction context", async () => {
+  it("preserves a locked GrokBot model in overflow compaction context", async () => {
     useOpenAIPlatformAuthFixture();
     mockOverflowRetrySuccess({
       runEmbeddedAttempt: mockedRunEmbeddedAttempt,
@@ -3337,7 +3337,7 @@ describe("runEmbeddedAgent overflow compaction trigger routing", () => {
       ...overflowBaseRunParams,
       provider: "openai",
       model: "gpt-5.5",
-      agentHarnessId: "openclaw",
+      agentHarnessId: "grokbot",
       modelSelectionLocked: true,
       config: {
         agents: { defaults: { compaction: { model: "anthropic/claude-opus-4-6" } } },
@@ -3429,7 +3429,7 @@ describe("runEmbeddedAgent overflow compaction trigger routing", () => {
   });
 
   it("recovers preflight compaction when stale tokens point at an empty transcript", async () => {
-    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-empty-preflight-"));
+    const dir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-empty-preflight-"));
     const storePath = path.join(dir, "sessions.json");
     await replaceSessionEntry(
       { sessionKey: "test-key", storePath },

@@ -8,7 +8,7 @@ import {
   normalizeOptionalString,
   normalizeOptionalLowercaseString,
   normalizeStringifiedEntries,
-} from "@openclaw/normalization-core/string-coerce";
+} from "@grokbot/normalization-core/string-coerce";
 import { formatDocsLink } from "../../packages/terminal-core/src/links.js";
 import { colorize, isRich, theme } from "../../packages/terminal-core/src/theme.js";
 import {
@@ -31,7 +31,7 @@ import {
   type SessionEntry,
 } from "../config/sessions.js";
 import { loadSessionEntryReadOnly } from "../config/sessions/session-accessor.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import {
   buildAgentMainSessionKey,
   normalizeAgentId,
@@ -48,7 +48,7 @@ type SandboxExplainOptions = {
   json: boolean;
 };
 
-const SANDBOX_DOCS_URL = "https://docs.openclaw.ai/sandbox";
+const SANDBOX_DOCS_URL = "https://docs.grokbot.ai/sandbox";
 
 function normalizeExplainSessionKey(params: {
   cfg: OpenClawConfig;
@@ -433,7 +433,7 @@ export async function sandboxExplainCommand(
     lines.push(`  - ${keyLocal}`);
   }
   lines.push("");
-  lines.push(`${key("Docs:")} ${formatDocsLink("/sandbox", "docs.openclaw.ai/sandbox")}`);
+  lines.push(`${key("Docs:")} ${formatDocsLink("/sandbox", "docs.grokbot.ai/sandbox")}`);
 
   runtime.log(`${lines.join("\n")}\n`);
 }

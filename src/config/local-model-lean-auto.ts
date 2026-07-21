@@ -1,5 +1,5 @@
-import { normalizeProviderId } from "@openclaw/model-catalog-core/provider-id";
-import type { OpenClawConfig } from "./types.openclaw.js";
+import { normalizeProviderId } from "@grokbot/model-catalog-core/provider-id";
+import type { OpenClawConfig } from "./types.grokbot.js";
 
 const AUTO_LOCAL_MODEL_LEAN_PROVIDER_IDS = new Set(["lmstudio", "ollama"]);
 

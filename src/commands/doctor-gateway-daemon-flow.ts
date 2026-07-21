@@ -2,7 +2,7 @@
 import { note } from "../../packages/terminal-core/src/note.js";
 import { formatCliCommand } from "../cli/command-format.js";
 import { resolveGatewayPort } from "../config/config.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import {
   resolveGatewayLaunchAgentLabel,
   resolveNodeLaunchAgentLabel,
@@ -136,10 +136,10 @@ async function maybeRepairLaunchAgentBootstrap(params: {
 
 function renderBlockingSystemGatewayServices(services: ExtraGatewayService[]): string {
   return [
-    "System-level OpenClaw gateway service detected while the user gateway service is not installed.",
+    "System-level GrokBot gateway service detected while the user gateway service is not installed.",
     ...services.map((svc) => `- ${svc.label} (${svc.detail})`),
-    "OpenClaw will not install a second user-level gateway service automatically.",
-    "Run `openclaw gateway status --deep` or `openclaw doctor --deep` to inspect duplicate services.",
+    "GrokBot will not install a second user-level gateway service automatically.",
+    "Run `grokbot gateway status --deep` or `grokbot doctor --deep` to inspect duplicate services.",
     `Set ${SERVICE_REPAIR_POLICY_ENV}=external if a system supervisor owns the gateway lifecycle.`,
   ].join("\n");
 }
@@ -156,7 +156,7 @@ function renderEstablishedGatewayConnections(connections: PortConnection[]): str
       return `- ${pid} ${direction}${command}${address}${commandLine}`;
     }),
     ...(connections.length > 8 ? [`- ... ${connections.length - 8} more connection(s)`] : []),
-    "If logs show protocol mismatch after rollback, stop stale OpenClaw client processes listed here and rerun doctor.",
+    "If logs show protocol mismatch after rollback, stop stale GrokBot client processes listed here and rerun doctor.",
   ].join("\n");
 }
 
@@ -339,7 +339,7 @@ export async function maybeRepairGatewayDaemon(params: {
       );
       if (!install) {
         note(
-          `Run ${formatCliCommand("openclaw gateway install")} when you want to install the gateway service.`,
+          `Run ${formatCliCommand("grokbot gateway install")} when you want to install the gateway service.`,
           "Gateway",
         );
       }
@@ -432,7 +432,7 @@ export async function maybeRepairGatewayDaemon(params: {
   if (process.platform === "darwin") {
     const label = resolveGatewayLaunchAgentLabel(process.env.OPENCLAW_PROFILE);
     note(
-      `LaunchAgent loaded; stopping requires "${formatCliCommand("openclaw gateway stop")}" or launchctl bootout gui/$UID/${label}.`,
+      `LaunchAgent loaded; stopping requires "${formatCliCommand("grokbot gateway stop")}" or launchctl bootout gui/$UID/${label}.`,
       "Gateway",
     );
   }

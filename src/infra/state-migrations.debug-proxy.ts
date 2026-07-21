@@ -3,8 +3,8 @@ import fs from "node:fs";
 import path from "node:path";
 import type { DatabaseSync, SQLInputValue } from "node:sqlite";
 import { gunzipSync } from "node:zlib";
-import { runOpenClawStateWriteTransaction } from "../state/openclaw-state-db.js";
-import { resolveOpenClawStateSqlitePath } from "../state/openclaw-state-db.paths.js";
+import { runOpenClawStateWriteTransaction } from "../state/grokbot-state-db.js";
+import { resolveOpenClawStateSqlitePath } from "../state/grokbot-state-db.paths.js";
 import { sha256Hex } from "./crypto-digest.js";
 import { requireNodeSqlite } from "./node-sqlite.js";
 

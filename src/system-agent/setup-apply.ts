@@ -1,4 +1,4 @@
-// Applies OpenClaw's conversational setup: config, workspace files, gateway.
+// Applies GrokBot's conversational setup: config, workspace files, gateway.
 import { isDeepStrictEqual } from "node:util";
 import {
   readConfigFileSnapshot,
@@ -9,7 +9,7 @@ import {
 } from "../config/config.js";
 import { applyMergePatch } from "../config/merge-patch.js";
 import type { AgentModelEntryConfig } from "../config/types.agent-defaults.js";
-import type { ConfigFileSnapshot, OpenClawConfig } from "../config/types.openclaw.js";
+import type { ConfigFileSnapshot, OpenClawConfig } from "../config/types.grokbot.js";
 import { formatErrorMessage } from "../infra/errors.js";
 import { enablePluginInConfig } from "../plugins/enable.js";
 import { normalizeAgentId } from "../routing/session-key.js";
@@ -76,7 +76,7 @@ type SystemAgentSetupApplyHooks = {
 /** Prompter for quickstart-only flows: notes go to the log, prompts fail loud. */
 export function createQuickstartNotePrompter(runtime: RuntimeEnv): WizardPrompter {
   const unexpected = (kind: string) => {
-    throw new Error(`openclaw setup hit an interactive ${kind} prompt; quickstart must not ask`);
+    throw new Error(`grokbot setup hit an interactive ${kind} prompt; quickstart must not ask`);
   };
   return {
     intro: async () => {},
@@ -289,7 +289,7 @@ export async function applySystemAgentSetup(
   const snapshotConfig = requireValidSystemAgentSetupSnapshot(snapshot);
 
   if (hasExpectedConfigHash && resolveConfigSnapshotHash(snapshot) !== expectedConfigHash) {
-    throw new Error("OpenClaw config changed while AI access was being tested. Try setup again.");
+    throw new Error("GrokBot config changed while AI access was being tested. Try setup again.");
   }
 
   const guardModules =
@@ -359,8 +359,8 @@ export async function applySystemAgentSetup(
     if (!currentRoute || !sameDefaultInferenceRoute(currentRoute, expectedRoute)) {
       throw new Error(
         phase === "before"
-          ? "The default-agent inference route changed before setup could start, so no workspace or Gateway settings were changed. Retry setup from the current OpenClaw session."
-          : "The default-agent inference route changed after the config write, so no further setup effects were applied. Retry setup from the current OpenClaw session.",
+          ? "The default-agent inference route changed before setup could start, so no workspace or Gateway settings were changed. Retry setup from the current GrokBot session."
+          : "The default-agent inference route changed after the config write, so no further setup effects were applied. Retry setup from the current GrokBot session.",
       );
     }
   };
@@ -417,7 +417,7 @@ export async function applySystemAgentSetup(
           const currentSnapshot = requireValidSystemAgentSetupSnapshot(context.snapshot);
           if (hasExpectedConfigHash && context.previousHash !== expectedConfigHash) {
             throw new Error(
-              "OpenClaw config changed while AI access was being tested. Try setup again.",
+              "GrokBot config changed while AI access was being tested. Try setup again.",
             );
           }
           await assertVerifiedRoute(context.snapshot);
@@ -440,7 +440,7 @@ export async function applySystemAgentSetup(
               !isDeepStrictEqual(expectedSourceRoute.route, params.expectedInferenceRoute.route))
           ) {
             throw new Error(
-              "The setup candidate no longer preserves the exact verified inference route, so it was not saved. Retry setup from the current OpenClaw session.",
+              "The setup candidate no longer preserves the exact verified inference route, so it was not saved. Retry setup from the current GrokBot session.",
             );
           }
           // This is the auth/config operation's linearization point. Never hold
@@ -456,7 +456,7 @@ export async function applySystemAgentSetup(
   const nextConfig = committed.nextConfig;
   const settings = committed.result?.settings;
   if (!settings) {
-    throw new Error("OpenClaw setup committed without resolved Gateway settings.");
+    throw new Error("GrokBot setup committed without resolved Gateway settings.");
   }
   if (params.expectedInferenceRoute) {
     const afterRead = await readConfigFileSnapshotWithPluginMetadata();
@@ -470,7 +470,7 @@ export async function applySystemAgentSetup(
       const issue = expectedRuntime.issues[0];
       const detail = issue ? ` (${issue.path ? `${issue.path}: ` : ""}${issue.message})` : "";
       throw new Error(
-        `OpenClaw could not validate the setup route after its config write${detail}. No further setup effects were applied. Retry setup from the current OpenClaw session.`,
+        `GrokBot could not validate the setup route after its config write${detail}. No further setup effects were applied. Retry setup from the current GrokBot session.`,
       );
     }
     const expectedPersistedRoute = await projectDefaultInferenceRoute(expectedRuntime.config);
@@ -479,7 +479,7 @@ export async function applySystemAgentSetup(
     // metadata change that would make the committed config run differently.
     if (!isDeepStrictEqual(expectedPersistedRoute.route, params.expectedInferenceRoute.route)) {
       throw new Error(
-        "The materialized inference route no longer matches the exact verified route, so no further setup effects were applied. Retry setup from the current OpenClaw session.",
+        "The materialized inference route no longer matches the exact verified route, so no further setup effects were applied. Retry setup from the current GrokBot session.",
       );
     }
   }
@@ -520,27 +520,27 @@ export async function applySystemAgentSetup(
     (error) => lines.push(`Workspace files: ${formatErrorMessage(error)}`),
   );
 
-  // Setup approval includes consent for OpenClaw's local model harnesses.
+  // Setup approval includes consent for GrokBot's local model harnesses.
   // Keep the grant agent-scoped; regular agents retain interactive approvals.
   await runCommittedFollowUp(
     async () => {
       const { updateExecApprovals } = await import("../infra/exec-approvals.js");
       await updateExecApprovals({
         update: (approvals) =>
-          approvals.agents?.openclaw
+          approvals.agents?.grokbot
             ? null
             : {
                 ...approvals,
                 agents: {
                   ...approvals.agents,
-                  openclaw: { security: "full", ask: "off" },
+                  grokbot: { security: "full", ask: "off" },
                 },
               },
       });
     },
     (error) =>
       lines.push(
-        `OpenClaw exec approval: ${formatErrorMessage(error)}; local model harnesses may ask again.`,
+        `GrokBot exec approval: ${formatErrorMessage(error)}; local model harnesses may ask again.`,
       ),
   );
 
@@ -553,7 +553,7 @@ export async function applySystemAgentSetup(
           config: nextConfig,
           reason: "source-changed",
           workspaceDir: workspace,
-          traceCommand: "openclaw-setup",
+          traceCommand: "grokbot-setup",
           logger: {
             warn: (message) => lines.push(message),
           },

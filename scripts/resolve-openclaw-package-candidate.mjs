@@ -17,7 +17,7 @@ import { resolveWindowsTaskkillPath } from "./lib/windows-taskkill.mjs";
 import { resolveNpmRunner } from "./npm-runner.mjs";
 
 const ROOT_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const DEFAULT_OUTPUT_NAME = "openclaw-current.tgz";
+const DEFAULT_OUTPUT_NAME = "grokbot-current.tgz";
 const PACKAGE_URL_DOWNLOAD_TIMEOUT_MS = 60_000;
 const PACKAGE_URL_MAX_BYTES = 250 * 1024 * 1024;
 const PACKAGE_URL_MAX_REDIRECTS = 5;
@@ -63,10 +63,10 @@ for (const signal of Object.keys(SIGNAL_EXIT_CODES)) {
   });
 }
 export const OPENCLAW_PACKAGE_SPEC_RE =
-  /^openclaw@(alpha|beta|extended-stable|latest|[0-9]{4}\.[1-9][0-9]*\.[1-9][0-9]*(-[1-9][0-9]*|-(alpha|beta)\.[1-9][0-9]*)?)$/u;
+  /^grokbot@(alpha|beta|extended-stable|latest|[0-9]{4}\.[1-9][0-9]*\.[1-9][0-9]*(-[1-9][0-9]*|-(alpha|beta)\.[1-9][0-9]*)?)$/u;
 
 function usage() {
-  return `Usage: node scripts/resolve-openclaw-package-candidate.mjs --source <ref|npm|url|trusted-url|artifact> --output-dir <dir> [options]
+  return `Usage: node scripts/resolve-grokbot-package-candidate.mjs --source <ref|npm|url|trusted-url|artifact> --output-dir <dir> [options]
 
 Options:
   --package-spec <spec>       Published npm spec for source=npm.
@@ -161,13 +161,13 @@ function validateOutputName(value) {
 function resolvePackedOpenClawTarballFilename(value) {
   const filename = typeof value === "string" ? value.trim() : "";
   if (
-    !/^openclaw-[A-Za-z0-9._-]+\.tgz$/u.test(filename) ||
+    !/^grokbot-[A-Za-z0-9._-]+\.tgz$/u.test(filename) ||
     filename.includes("\0") ||
     filename !== path.basename(filename) ||
     filename !== path.win32.basename(filename)
   ) {
     throw new Error(
-      `npm pack reported unsafe OpenClaw tarball filename: ${JSON.stringify(filename)}`,
+      `npm pack reported unsafe GrokBot tarball filename: ${JSON.stringify(filename)}`,
     );
   }
   return filename;
@@ -176,7 +176,7 @@ function resolvePackedOpenClawTarballFilename(value) {
 export function validateOpenClawPackageSpec(spec) {
   if (!OPENCLAW_PACKAGE_SPEC_RE.test(spec)) {
     throw new Error(
-      `package_spec must be openclaw@alpha, openclaw@beta, openclaw@extended-stable, openclaw@latest, or an exact OpenClaw release version; got: ${spec}`,
+      `package_spec must be grokbot@alpha, grokbot@beta, grokbot@extended-stable, grokbot@latest, or an exact GrokBot release version; got: ${spec}`,
     );
   }
 }
@@ -606,7 +606,7 @@ async function resolveTrustedRepoRef(ref) {
   }
 
   throw new Error(
-    `package_ref ${ref} resolved to ${selectedSha}, which is not reachable from an OpenClaw branch or release tag`,
+    `package_ref ${ref} resolved to ${selectedSha}, which is not reachable from an GrokBot branch or release tag`,
   );
 }
 
@@ -614,7 +614,7 @@ async function preparePackageSourceWorktree(ref) {
   const { selectedSha, trustedReason } = await resolveTrustedRepoRef(ref);
   const sourceDir = path.join(
     process.env.RUNNER_TEMP || os.tmpdir(),
-    `openclaw-package-source-${process.pid}`,
+    `grokbot-package-source-${process.pid}`,
   );
   await fs.rm(sourceDir, { recursive: true, force: true });
   await run("git", ["worktree", "add", "--detach", sourceDir, selectedSha]);
@@ -672,7 +672,7 @@ async function moveNewestPackedTarball(outputDir, packOutput, outputName) {
       const trimmed = line.trim();
       if (
         trimmed.endsWith(".tgz") &&
-        (trimmed.startsWith("openclaw-") ||
+        (trimmed.startsWith("grokbot-") ||
           trimmed.includes(":") ||
           trimmed.includes("/") ||
           trimmed.includes("\\"))
@@ -695,7 +695,7 @@ async function moveNewestPackedTarball(outputDir, packOutput, outputName) {
       .at(-1);
   }
   if (!filename) {
-    throw new Error(`npm pack produced no OpenClaw tarball in ${outputDir}`);
+    throw new Error(`npm pack produced no GrokBot tarball in ${outputDir}`);
   }
   const packed = path.join(outputDir, filename);
   const target = path.join(outputDir, outputName);
@@ -1475,7 +1475,7 @@ async function resolveCandidate(options) {
       packageTrustedReason = packageSource.trustedReason;
       await installPackageSourceDeps(packageSource.sourceDir);
       await run("node", [
-        "scripts/package-openclaw-for-docker.mjs",
+        "scripts/package-grokbot-for-docker.mjs",
         "--allow-unreleased-changelog",
         "--source-dir",
         packageSource.sourceDir,
@@ -1554,13 +1554,13 @@ async function resolveCandidate(options) {
 
   const artifactSha256 = typeof artifactMetadata.sha256 === "string" ? artifactMetadata.sha256 : "";
   const digest = await assertExpectedSha256(target, options.packageSha256 || artifactSha256);
-  console.error(`Checking OpenClaw package tarball: ${target}`);
+  console.error(`Checking GrokBot package tarball: ${target}`);
   const checkStartedAt = Date.now();
-  await run("node", ["scripts/check-openclaw-package-tarball.mjs", target], {
+  await run("node", ["scripts/check-grokbot-package-tarball.mjs", target], {
     timeoutMs: 5 * 60 * 1000,
   });
   console.error(
-    `OpenClaw package tarball check finished in ${Math.round((Date.now() - checkStartedAt) / 1000)}s`,
+    `GrokBot package tarball check finished in ${Math.round((Date.now() - checkStartedAt) / 1000)}s`,
   );
   const pkg = await readPackageJson(target);
   if (!packageSourceSha) {
@@ -1582,8 +1582,8 @@ async function resolveCandidate(options) {
     version: pkg.version,
   };
 
-  if (pkg.name !== "openclaw") {
-    throw new Error(`package candidate must be named "openclaw"; got: ${pkg.name || "<missing>"}`);
+  if (pkg.name !== "grokbot") {
+    throw new Error(`package candidate must be named "grokbot"; got: ${pkg.name || "<missing>"}`);
   }
   if (!pkg.version) {
     throw new Error("package candidate package.json has no version");

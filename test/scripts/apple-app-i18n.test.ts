@@ -387,8 +387,8 @@ describe("Apple app i18n catalogs", () => {
     expect(french).toContain('"NSMicrophoneUsageDescription" = ');
     expect(french).toContain('"NSHealthUpdateUsageDescription" = ');
     expect(watchChinese).toContain('"NSLocalNetworkUsageDescription" = ');
-    expect(shareGerman).toContain('"CFBundleDisplayName" = "OpenClaw Share";');
-    expect(activityJapanese).toContain('"CFBundleDisplayName" = "OpenClaw Activity";');
+    expect(shareGerman).toContain('"CFBundleDisplayName" = "GrokBot Share";');
+    expect(activityJapanese).toContain('"CFBundleDisplayName" = "GrokBot Activity";');
   });
 
   it("refreshes InfoPlist copy from translations for the current source", () => {
@@ -403,11 +403,11 @@ describe("Apple app i18n catalogs", () => {
       ),
     ).toBe("Utilisez l’appareil photo pour scanner les codes de configuration.");
     expect(
-      selectInfoPlistTranslation("OpenClaw Share", [], {
-        source: "OpenClaw Share",
-        value: "OpenClaw Partager",
+      selectInfoPlistTranslation("GrokBot Share", [], {
+        source: "GrokBot Share",
+        value: "GrokBot Partager",
       }),
-    ).toBe("OpenClaw Partager");
+    ).toBe("GrokBot Partager");
     expect(
       selectInfoPlistTranslation(
         "Use the camera to scan setup codes.",
@@ -451,7 +451,7 @@ describe("Apple app i18n catalogs", () => {
   });
 
   it("compiles macOS catalogs into app-bundle localization directories", async () => {
-    const outputDir = await mkdtemp(path.join(os.tmpdir(), "openclaw-apple-i18n-"));
+    const outputDir = await mkdtemp(path.join(os.tmpdir(), "grokbot-apple-i18n-"));
     try {
       await compileMacosLocalizations(outputDir);
       const swedish = await readFile(

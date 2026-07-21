@@ -4,7 +4,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { isDeepStrictEqual } from "node:util";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { resolveAgentEffectiveModelPrimary, resolveDefaultAgentId } from "../agents/agent-scope.js";
 import { normalizeAuthProfileCredential } from "../agents/auth-profiles/credential-normalize.js";
 import { loadPersistedAuthProfileStore } from "../agents/auth-profiles/persisted.js";
@@ -41,7 +41,7 @@ import {
   normalizeAgentModelRefForConfig,
   resolveAgentModelPrimaryValue,
 } from "../config/model-input.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import type { PluginInstallRecord } from "../config/types.plugins.js";
 import { formatErrorMessage } from "../infra/errors.js";
 import { createSubsystemLogger } from "../logging/subsystem.js";
@@ -313,7 +313,7 @@ export type ActivateSetupInferenceDeps = {
   clearLoadInstalledPluginIndexInstallRecordsCache?: typeof import("../plugins/installed-plugin-index-records.js").clearLoadInstalledPluginIndexInstallRecordsCache;
   clearPluginMetadataLifecycleCaches?: typeof import("../plugins/plugin-metadata-lifecycle.js").clearPluginMetadataLifecycleCaches;
   invalidatePluginRuntimeDiscoveryAfterConfigMutation?: typeof import("../plugins/registry-refresh.js").invalidatePluginRuntimeDiscoveryAfterConfigMutation;
-  disposeOpenClawAgentDatabaseByPath?: typeof import("../state/openclaw-agent-db.js").disposeOpenClawAgentDatabaseByPath;
+  disposeOpenClawAgentDatabaseByPath?: typeof import("../state/grokbot-agent-db.js").disposeOpenClawAgentDatabaseByPath;
   createTempDir?: () => Promise<string>;
   removeTempDir?: (dir: string) => Promise<void>;
   timeoutMs?: number;
@@ -352,7 +352,7 @@ function invalidSetupConfigError(snapshot: {
 }): string {
   const issue = snapshot.issues?.[0];
   const detail = issue ? ` (${issue.path ? `${issue.path}: ` : ""}${issue.message})` : "";
-  return `OpenClaw config ${snapshot.path} is invalid${detail}. Fix it before running setup.`;
+  return `GrokBot config ${snapshot.path} is invalid${detail}. Fix it before running setup.`;
 }
 
 function resolveCandidatePresentation(
@@ -600,7 +600,7 @@ type SetupInferenceTestPlan = {
   model: string;
   modelRef: string;
   config: OpenClawConfig;
-  /** Execution identity used by the real OpenClaw turn. */
+  /** Execution identity used by the real GrokBot turn. */
   agentId?: string;
   /** Default-agent owner whose model/runtime config is being selected. */
   routeAgentId?: string;
@@ -825,7 +825,7 @@ function resolveSetupAgentRuntimeId(
     kind === "provider-auth" ||
     parseProviderAutoSetupChoiceId(kind) !== undefined
   ) {
-    return "openclaw";
+    return "grokbot";
   }
   return undefined;
 }
@@ -953,7 +953,7 @@ function findSelectedProviderConfigKey(
 
 /**
  * Provider auth hooks are untrusted setup input. Carry only the selected
- * inference route's config into the probe; OpenClaw owns every other setup
+ * inference route's config into the probe; GrokBot owns every other setup
  * surface after intelligence exists.
  */
 function projectManualInferenceConfig(params: {
@@ -1175,7 +1175,7 @@ async function buildTestPlan(params: {
         modelRef,
         agentDir: params.agentDir,
         config: prepared.config,
-        agentId: "openclaw",
+        agentId: "grokbot",
         routeAgentId: resolveDefaultAgentId(prepared.config),
         ...(prepared.selectedProfileId ? { authProfileId: prepared.selectedProfileId } : {}),
         persistModelRef: modelRef,
@@ -1218,7 +1218,7 @@ async function buildTestPlan(params: {
         model: route.model,
         modelRef: route.modelLabel,
         config: route.runConfig,
-        agentId: "openclaw",
+        agentId: "grokbot",
         routeAgentId: route.agentId,
         agentDir: route.agentDir,
         ...(route.runner === "embedded"
@@ -1238,7 +1238,7 @@ async function buildTestPlan(params: {
         ...ref,
         modelRef,
         config: cfg,
-        agentId: "openclaw",
+        agentId: "grokbot",
         routeAgentId: resolveDefaultAgentId(cfg),
         persistModelRef: modelRef,
       };
@@ -1254,7 +1254,7 @@ async function buildTestPlan(params: {
         ...ref,
         modelRef,
         config: cfg,
-        agentId: "openclaw",
+        agentId: "grokbot",
         routeAgentId: resolveDefaultAgentId(cfg),
         persistModelRef: modelRef,
       };
@@ -1271,7 +1271,7 @@ async function buildTestPlan(params: {
         modelRef,
         agentHarnessRuntimeOverride: "codex",
         config: cfg,
-        agentId: "openclaw",
+        agentId: "grokbot",
         routeAgentId: resolveDefaultAgentId(cfg),
         agentDir: params.agentDir,
         cleanupBundleMcpOnRunEnd: true,
@@ -1289,7 +1289,7 @@ async function buildTestPlan(params: {
         ...ref,
         modelRef,
         config: cfg,
-        agentId: "openclaw",
+        agentId: "grokbot",
         routeAgentId: resolveDefaultAgentId(cfg),
         persistModelRef: modelRef,
       };
@@ -1305,7 +1305,7 @@ async function buildTestPlan(params: {
         ...ref,
         modelRef,
         config: cfg,
-        agentId: "openclaw",
+        agentId: "grokbot",
         routeAgentId: resolveDefaultAgentId(cfg),
         persistModelRef: modelRef,
       };
@@ -1481,7 +1481,7 @@ async function buildTestPlan(params: {
         modelRef,
         agentDir: params.agentDir,
         config: preparedAuth.config,
-        agentId: "openclaw",
+        agentId: "grokbot",
         routeAgentId: resolveDefaultAgentId(preparedAuth.config),
         authProfileId: preparedAuth.selectedProfileId,
         persistModelRef: modelRef,
@@ -1640,7 +1640,7 @@ async function activateSetupInferenceUnredacted(
       ).workspace;
 
   const tempDir = await (
-    deps.createTempDir ?? (() => fs.mkdtemp(path.join(os.tmpdir(), "openclaw-setup-inference-")))
+    deps.createTempDir ?? (() => fs.mkdtemp(path.join(os.tmpdir(), "grokbot-setup-inference-")))
   )();
   const testAgentDir = path.join(tempDir, "agent");
   let pendingCodexInstall: PluginInstallRecord | undefined;
@@ -1784,7 +1784,7 @@ async function activateSetupInferenceUnredacted(
         reason: "source-changed",
         workspaceDir: workspace,
         policyPluginIds: ["codex"],
-        traceCommand: "openclaw-setup-probe",
+        traceCommand: "grokbot-setup-probe",
         logger: { warn: (message) => (registryRefreshWarning = message) },
       });
       const ensureHarnessPlugin =
@@ -1836,7 +1836,7 @@ async function activateSetupInferenceUnredacted(
       sourceCfg,
       stagedRoute.modelLabel,
     );
-    // OpenClaw executes through the reserved agent id but reuses the default
+    // GrokBot executes through the reserved agent id but reuses the default
     // route's agent directory. Only a submitted key stays in the isolated store.
     if (testPlan.runner === "embedded" && stagedRoute.runner === "embedded") {
       testPlan = {
@@ -1941,7 +1941,7 @@ async function activateSetupInferenceUnredacted(
         ok: false,
         status: "unknown",
         error:
-          "Inference succeeded, but its runtime did not report an owner that OpenClaw can safely reuse. No model or credential route was saved.",
+          "Inference succeeded, but its runtime did not report an owner that GrokBot can safely reuse. No model or credential route was saved.",
       };
     }
     if (
@@ -1970,7 +1970,7 @@ async function activateSetupInferenceUnredacted(
         };
       }
       if (
-        successfulHarnessId !== "openclaw" &&
+        successfulHarnessId !== "grokbot" &&
         (test.auth.runtimeOwnerKind !== "plugin-harness" ||
           test.auth.runtimeOwnerId?.trim() !== successfulHarnessId ||
           !test.auth.runtimeArtifactFingerprint ||
@@ -2141,7 +2141,7 @@ async function activateSetupInferenceUnredacted(
             };
           }
           throw new SetupInferenceActivationIndeterminateError(
-            "Inference activation could not confirm whether its verified credential was saved or rolled back. No config commit was attempted; run openclaw doctor --fix before retrying.",
+            "Inference activation could not confirm whether its verified credential was saved or rolled back. No config commit was attempted; run grokbot doctor --fix before retrying.",
           );
         }
         if (persistedManualAuth.status === "not-persisted") {
@@ -2255,7 +2255,7 @@ async function activateSetupInferenceUnredacted(
             const rolledBack = await rollbackManualAuthProfiles(manualAuthReceipt, deps);
             if (!rolledBack) {
               throw new SetupInferenceActivationIndeterminateError(
-                "Inference activation stopped before its config commit, but could not confirm removal of its staged credential. Run openclaw doctor --fix before retrying.",
+                "Inference activation stopped before its config commit, but could not confirm removal of its staged credential. Run grokbot doctor --fix before retrying.",
               );
             }
           }
@@ -2287,13 +2287,13 @@ async function activateSetupInferenceUnredacted(
               configReferencesManualAuthProfiles(reconciledRuntime, manualAuthReceipt)
             ) {
               throw new SetupInferenceActivationIndeterminateError(
-                "Inference activation could not confirm its config commit state. The verified credential was retained because the current config may reference it. Run openclaw doctor --fix before retrying.",
+                "Inference activation could not confirm its config commit state. The verified credential was retained because the current config may reference it. Run grokbot doctor --fix before retrying.",
               );
             }
             const rolledBack = await rollbackManualAuthProfiles(manualAuthReceipt, deps);
             if (!rolledBack) {
               throw new SetupInferenceActivationIndeterminateError(
-                "Inference activation failed and its staged credential could not be rolled back. Run openclaw doctor --fix before retrying.",
+                "Inference activation failed and its staged credential could not be rolled back. Run grokbot doctor --fix before retrying.",
               );
             }
           }
@@ -2326,8 +2326,8 @@ async function activateSetupInferenceUnredacted(
       const after = await readSnapshot().catch(() => null);
       try {
         await appendSystemAgentAuditEntry({
-          operation: "openclaw.setup",
-          summary: "Verified and configured AI access through OpenClaw setup",
+          operation: "grokbot.setup",
+          summary: "Verified and configured AI access through GrokBot setup",
           configPath: after?.path ?? snapshot.path,
           configHashBefore: snapshot.hash ?? null,
           configHashAfter: after?.hash ?? null,
@@ -2336,7 +2336,7 @@ async function activateSetupInferenceUnredacted(
       } catch (error) {
         // Inference is already verified and its route may already be durable.
         // Surface audit failure as a warning instead of misreporting setup failure.
-        const warning = `Inference setup completed, but OpenClaw could not record its audit entry: ${formatErrorMessage(error)}`;
+        const warning = `Inference setup completed, but GrokBot could not record its audit entry: ${formatErrorMessage(error)}`;
         params.runtime.error?.(warning);
         lines = [...lines, warning];
       }
@@ -2436,7 +2436,7 @@ export async function verifySetupInference(
     return {
       ok: false,
       status: "unavailable",
-      error: "No OpenClaw config exists. Run `openclaw onboard` first.",
+      error: "No GrokBot config exists. Run `grokbot onboard` first.",
     };
   }
   if (!snapshot.valid) {
@@ -2495,7 +2495,7 @@ export async function verifySetupInference(
       ok: false,
       status: "unknown",
       error:
-        "The successful inference run did not report an exact execution binding. Retry setup before starting OpenClaw.",
+        "The successful inference run did not report an exact execution binding. Retry setup before starting GrokBot.",
     };
   }
   return { ...verification, binding: verifiedBinding };
@@ -2602,11 +2602,11 @@ export async function verifySetupInferenceConfig(params: {
     return {
       ok: false,
       status: "unavailable",
-      error: "No agent model is configured. Run `openclaw onboard` first.",
+      error: "No agent model is configured. Run `grokbot onboard` first.",
     };
   }
   const tempDir = await (
-    deps.createTempDir ?? (() => fs.mkdtemp(path.join(os.tmpdir(), "openclaw-setup-inference-")))
+    deps.createTempDir ?? (() => fs.mkdtemp(path.join(os.tmpdir(), "grokbot-setup-inference-")))
   )();
   try {
     const builtPlan = await buildTestPlan({
@@ -2834,7 +2834,7 @@ export async function completeSetupInference(params: {
     (await import("../config/config.js")).readConfigFileSnapshot;
   const snapshot = await readSnapshot();
   if (!snapshot.exists) {
-    return { ok: false, status: "unavailable", error: "No OpenClaw config exists." };
+    return { ok: false, status: "unavailable", error: "No GrokBot config exists." };
   }
   if (!snapshot.valid) {
     return { ok: false, status: "format", error: invalidSetupConfigError(snapshot) };
@@ -2865,7 +2865,7 @@ export async function completeSetupInferenceConfig(params: {
     return { ok: false, status: "unavailable", error: "No agent model is configured." };
   }
   const tempDir = await (
-    deps.createTempDir ?? (() => fs.mkdtemp(path.join(os.tmpdir(), "openclaw-setup-inference-")))
+    deps.createTempDir ?? (() => fs.mkdtemp(path.join(os.tmpdir(), "grokbot-setup-inference-")))
   )();
   try {
     const plan = await buildTestPlan({
@@ -2919,8 +2919,8 @@ async function cleanupSetupInferenceTempDir(params: {
   try {
     const disposeDatabase =
       params.deps.disposeOpenClawAgentDatabaseByPath ??
-      (await import("../state/openclaw-agent-db.js")).disposeOpenClawAgentDatabaseByPath;
-    disposeDatabase(path.join(params.tempDir, "agent", "openclaw-agent.sqlite"));
+      (await import("../state/grokbot-agent-db.js")).disposeOpenClawAgentDatabaseByPath;
+    disposeDatabase(path.join(params.tempDir, "agent", "grokbot-agent.sqlite"));
   } catch {
     // Windows cannot remove an open SQLite file. Keep cleanup nonfatal, but
     // always try the directory removal so callers do not retain probe secrets.
@@ -2977,7 +2977,7 @@ async function retainUnownedCodexInstall(params: {
     const marked = await markRetained({
       packageDir: params.record.installPath,
       pluginId: "codex",
-      reason: "openclaw-inference-activation-not-committed",
+      reason: "grokbot-inference-activation-not-committed",
     });
     if (!marked) {
       log.warn("Could not retain the uncommitted Codex runtime package generation.");
@@ -3370,7 +3370,7 @@ async function runSetupInferenceTest(params: {
       result = (await runCli({
         sessionId,
         sessionKey: `temp:setup-inference:${runId}`,
-        agentId: plan.agentId ?? "openclaw",
+        agentId: plan.agentId ?? "grokbot",
         trigger: "manual",
         sessionFile,
         workspaceDir: tempDir,
@@ -3382,8 +3382,8 @@ async function runSetupInferenceTest(params: {
         ...(plan.authProfileId ? { authProfileId: plan.authProfileId } : {}),
         timeoutMs,
         runId,
-        messageChannel: "openclaw",
-        messageProvider: "openclaw",
+        messageChannel: "grokbot",
+        messageProvider: "grokbot",
         executionMode: "side-question",
         disableTools: true,
         cleanupCliLiveSessionOnRunEnd: true,
@@ -3398,7 +3398,7 @@ async function runSetupInferenceTest(params: {
       result = (await runEmbedded({
         sessionId,
         sessionKey: `temp:setup-inference:${runId}`,
-        agentId: plan.agentId ?? "openclaw",
+        agentId: plan.agentId ?? "grokbot",
         trigger: "manual",
         sessionFile,
         workspaceDir: tempDir,
@@ -3430,8 +3430,8 @@ async function runSetupInferenceTest(params: {
           : {}),
         disableTools: true,
         modelRun: true,
-        messageChannel: "openclaw",
-        messageProvider: "openclaw",
+        messageChannel: "grokbot",
+        messageProvider: "grokbot",
         onSuccessfulAuthBinding: (binding) => {
           successfulAuth = binding;
         },
@@ -3467,7 +3467,7 @@ async function runSetupInferenceTest(params: {
         ok: false,
         status: "unknown",
         error:
-          "Inference succeeded, but its runtime did not report an owner that OpenClaw can safely reuse.",
+          "Inference succeeded, but its runtime did not report an owner that GrokBot can safely reuse.",
       };
     }
     return {

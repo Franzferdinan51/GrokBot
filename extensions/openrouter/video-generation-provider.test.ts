@@ -1,16 +1,16 @@
 // Openrouter tests cover video generation provider plugin behavior.
-import { clearLiveCatalogCacheForTests } from "openclaw/plugin-sdk/provider-catalog-shared";
+import { clearLiveCatalogCacheForTests } from "grokbot/plugin-sdk/provider-catalog-shared";
 import {
   expectExplicitVideoGenerationCapabilities,
   expectUnifiedModelCatalogEntries,
-} from "openclaw/plugin-sdk/provider-test-contracts";
+} from "grokbot/plugin-sdk/provider-test-contracts";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   buildOpenRouterVideoGenerationProvider,
   listOpenRouterVideoModelCatalog,
 } from "./video-generation-provider.js";
 
-const SUPPORTED_DURATIONS_HINT = Symbol.for("openclaw.videoGeneration.supportedDurations");
+const SUPPORTED_DURATIONS_HINT = Symbol.for("grokbot.videoGeneration.supportedDurations");
 
 const {
   assertOkOrThrowHttpErrorMock,
@@ -61,13 +61,13 @@ const {
   waitProviderOperationPollIntervalMock: vi.fn(async () => {}),
 }));
 
-vi.mock("openclaw/plugin-sdk/provider-auth-runtime", () => ({
+vi.mock("grokbot/plugin-sdk/provider-auth-runtime", () => ({
   resolveApiKeyForProvider: resolveApiKeyForProviderMock,
 }));
 
-vi.mock("openclaw/plugin-sdk/provider-http", async () => {
-  const actual = await vi.importActual<typeof import("openclaw/plugin-sdk/provider-http")>(
-    "openclaw/plugin-sdk/provider-http",
+vi.mock("grokbot/plugin-sdk/provider-http", async () => {
+  const actual = await vi.importActual<typeof import("grokbot/plugin-sdk/provider-http")>(
+    "grokbot/plugin-sdk/provider-http",
   );
   return {
     ...actual,

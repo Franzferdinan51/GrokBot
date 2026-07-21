@@ -1,5 +1,5 @@
 // Whatsapp tests cover directory config plugin behavior.
-import { createDirectoryTestRuntime } from "openclaw/plugin-sdk/channel-test-helpers";
+import { createDirectoryTestRuntime } from "grokbot/plugin-sdk/channel-test-helpers";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { readWebAuthExistsForDecision } from "./auth-store.js";
 import { getWhatsAppConnectionController } from "./connection-controller-runtime-context.js";

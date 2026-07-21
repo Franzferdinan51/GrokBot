@@ -12,7 +12,7 @@ import {
 } from "../../internal-runtime-context.js";
 import type { CurrentInboundPromptContext } from "./params.js";
 
-const OPENCLAW_RUNTIME_EVENT_USER_PROMPT = "Continue the OpenClaw runtime event.";
+const OPENCLAW_RUNTIME_EVENT_USER_PROMPT = "Continue the GrokBot runtime event.";
 
 type RuntimeContextPromptParts = {
   prompt: string;
@@ -28,7 +28,7 @@ export type RuntimeContextCustomMessage = {
   customType: string;
   content: string;
   display: false;
-  details: { source: "openclaw-runtime-context"; runtimeContextCarrier: true };
+  details: { source: "grokbot-runtime-context"; runtimeContextCarrier: true };
   timestamp: number;
 };
 
@@ -279,7 +279,7 @@ export function buildRuntimeContextCustomMessage(
       kind: "next-turn",
     }),
     display: false,
-    details: { source: "openclaw-runtime-context", runtimeContextCarrier: true },
+    details: { source: "grokbot-runtime-context", runtimeContextCarrier: true },
     timestamp: Date.now(),
   };
 }

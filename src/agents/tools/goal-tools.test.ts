@@ -10,11 +10,11 @@ import {
   upsertSessionEntry as upsertAccessorSessionEntry,
 } from "../../config/sessions/session-accessor.js";
 import type { SessionEntry } from "../../config/sessions/types.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import { createCreateGoalTool, createGetGoalTool } from "./goal-tools.js";
 
 async function createStoreConfig(): Promise<{ config: OpenClawConfig; template: string }> {
-  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-goal-tools-"));
+  const dir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-goal-tools-"));
   const template = path.join(dir, "{agentId}", "sessions.json");
   return {
     config: { session: { store: template } } as OpenClawConfig,

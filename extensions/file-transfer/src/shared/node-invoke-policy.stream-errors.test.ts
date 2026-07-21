@@ -1,6 +1,6 @@
 // File Transfer tests cover archive-policy failures through the node invoke policy.
 import crypto from "node:crypto";
-import type { OpenClawPluginNodeInvokePolicyContext } from "openclaw/plugin-sdk/plugin-entry";
+import type { OpenClawPluginNodeInvokePolicyContext } from "grokbot/plugin-sdk/plugin-entry";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { projectBoundedTextTail } from "./append-bounded-text-tail.js";
 
@@ -8,7 +8,7 @@ const { runCommandWithTimeoutMock } = vi.hoisted(() => ({
   runCommandWithTimeoutMock: vi.fn(),
 }));
 
-vi.mock("openclaw/plugin-sdk/process-runtime", () => ({
+vi.mock("grokbot/plugin-sdk/process-runtime", () => ({
   runCommandWithTimeout: runCommandWithTimeoutMock,
 }));
 

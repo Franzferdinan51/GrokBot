@@ -13,7 +13,7 @@ import {
 } from "./minimal-gateway.test-helpers.js";
 import { probeGateway } from "./probe.js";
 
-const tempDirs = createSuiteTempRootTracker({ prefix: "openclaw-probe-close-drain-" });
+const tempDirs = createSuiteTempRootTracker({ prefix: "grokbot-probe-close-drain-" });
 
 function activeClientSocketsToPort(port: number): Socket[] {
   // Node has no public active-handle API; this regression must prove the probe

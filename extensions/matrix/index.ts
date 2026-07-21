@@ -1,9 +1,9 @@
-// Matrix plugin entrypoint registers its OpenClaw integration.
+// Matrix plugin entrypoint registers its GrokBot integration.
 import {
   defineBundledChannelEntry,
   type OpenClawPluginApi,
-} from "openclaw/plugin-sdk/channel-entry-contract";
-import { createLazyRuntimeModule } from "openclaw/plugin-sdk/lazy-runtime";
+} from "grokbot/plugin-sdk/channel-entry-contract";
+import { createLazyRuntimeModule } from "grokbot/plugin-sdk/lazy-runtime";
 import { registerMatrixCliMetadata } from "./cli-metadata.js";
 import { registerMatrixSubagentHooks } from "./subagent-hooks-api.js";
 

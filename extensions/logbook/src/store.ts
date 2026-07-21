@@ -7,8 +7,8 @@ import path from "node:path";
 import {
   configureSqliteConnectionPragmas,
   migrateSqliteSchemaToStrict,
-} from "openclaw/plugin-sdk/plugin-state-runtime";
-import { runSqliteImmediateTransactionSync } from "openclaw/plugin-sdk/sqlite-runtime";
+} from "grokbot/plugin-sdk/plugin-state-runtime";
+import { runSqliteImmediateTransactionSync } from "grokbot/plugin-sdk/sqlite-runtime";
 import type {
   LogbookBatch,
   LogbookBatchStatus,

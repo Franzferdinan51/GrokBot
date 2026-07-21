@@ -1,11 +1,11 @@
-// Covers OpenClaw's default fs-safe Python helper configuration.
+// Covers GrokBot's default fs-safe Python helper configuration.
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 const { configureFsSafePython } = vi.hoisted(() => ({
   configureFsSafePython: vi.fn(),
 }));
 
-vi.mock("@openclaw/fs-safe/config", () => ({
+vi.mock("@grokbot/fs-safe/config", () => ({
   configureFsSafePython,
 }));
 
@@ -21,7 +21,7 @@ describe("fs-safe defaults", () => {
     delete process.env.OPENCLAW_FS_SAFE_PYTHON_MODE;
   });
 
-  it("disables the Python helper by default in OpenClaw", async () => {
+  it("disables the Python helper by default in GrokBot", async () => {
     await importDefaults();
 
     expect(configureFsSafePython).toHaveBeenCalledWith({ mode: "off" });
@@ -35,7 +35,7 @@ describe("fs-safe defaults", () => {
     expect(configureFsSafePython).not.toHaveBeenCalled();
   });
 
-  it("honors the OpenClaw-specific env mode override", async () => {
+  it("honors the GrokBot-specific env mode override", async () => {
     process.env.OPENCLAW_FS_SAFE_PYTHON_MODE = "auto";
 
     await importDefaults();

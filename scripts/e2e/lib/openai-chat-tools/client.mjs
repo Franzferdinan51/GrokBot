@@ -108,10 +108,10 @@ try {
       headers: {
         authorization: `Bearer ${token}`,
         "content-type": "application/json",
-        "x-openclaw-model": backendModel,
+        "x-grokbot-model": backendModel,
       },
       body: JSON.stringify({
-        model: "openclaw",
+        model: "grokbot",
         stream: false,
         messages: [
           {

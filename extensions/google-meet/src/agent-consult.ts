@@ -1,18 +1,18 @@
 // Google Meet supplies surface labels; core owns generic meeting consult wiring.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import {
   consultMeetingAgent,
   handleMeetingRealtimeConsultToolCall,
   resolveMeetingRealtimeTools,
   type MeetingAgentConsultSurface,
-} from "openclaw/plugin-sdk/meeting-runtime";
-import type { PluginRuntime, RuntimeLogger } from "openclaw/plugin-sdk/plugin-runtime";
+} from "grokbot/plugin-sdk/meeting-runtime";
+import type { PluginRuntime, RuntimeLogger } from "grokbot/plugin-sdk/plugin-runtime";
 import type {
   RealtimeVoiceBridgeSession,
   RealtimeVoiceToolCallEvent,
   RealtimeVoiceTool,
   TalkEventInput,
-} from "openclaw/plugin-sdk/realtime-voice";
+} from "grokbot/plugin-sdk/realtime-voice";
 import type { GoogleMeetConfig, GoogleMeetToolPolicy } from "./config.js";
 
 const GOOGLE_MEET_CONSULT_SURFACE: MeetingAgentConsultSurface = {

@@ -24,7 +24,7 @@ function restoreEnv(): void {
 }
 
 function makeTempDir(): string {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-model-id-normalization-"));
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-model-id-normalization-"));
   tempDirs.push(dir);
   return dir;
 }
@@ -42,7 +42,7 @@ function writeInstallIndex(params: { stateDir: string; pluginDir: string }): voi
       plugins: [
         {
           pluginId: "normalizer",
-          manifestPath: path.join(params.pluginDir, "openclaw.plugin.json"),
+          manifestPath: path.join(params.pluginDir, "grokbot.plugin.json"),
           manifestHash: "normalizer-manifest",
           rootDir: params.pluginDir,
           origin: "global",
@@ -70,7 +70,7 @@ function writeNormalizerManifest(params: { pluginDir: string; prefix: string }):
     "utf-8",
   );
   fs.writeFileSync(
-    path.join(params.pluginDir, "openclaw.plugin.json"),
+    path.join(params.pluginDir, "grokbot.plugin.json"),
     JSON.stringify({
       id: "normalizer",
       configSchema: { type: "object" },

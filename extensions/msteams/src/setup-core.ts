@@ -1,5 +1,5 @@
 // Msteams plugin module implements setup core behavior.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import {
   createStandardChannelSetupStatus,
   DEFAULT_ACCOUNT_ID,
@@ -7,8 +7,8 @@ import {
   type ChannelSetupAdapter,
   type ChannelSetupWizard,
   type WizardPrompter,
-} from "openclaw/plugin-sdk/setup";
-import { formatDocsLink } from "openclaw/plugin-sdk/setup-tools";
+} from "grokbot/plugin-sdk/setup";
+import { formatDocsLink } from "grokbot/plugin-sdk/setup-tools";
 import { normalizeSecretInputString } from "./secret-input.js";
 import { hasConfiguredMSTeamsCredentials, resolveMSTeamsCredentials } from "./token.js";
 

@@ -5,8 +5,8 @@ import {
   DEFAULT_INGRESS_ADOPTION_STALL_MS,
   type ChannelIngressMonitorLifecycle,
   type ChannelIngressQueue,
-} from "openclaw/plugin-sdk/channel-outbound";
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
+} from "grokbot/plugin-sdk/channel-outbound";
+import { formatErrorMessage } from "grokbot/plugin-sdk/error-runtime";
 import {
   inspectNostrIngressEvent,
   isNostrIngressRecord,

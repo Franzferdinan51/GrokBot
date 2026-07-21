@@ -3,10 +3,10 @@ import {
   DEFAULT_ACCOUNT_ID,
   normalizeAccountId as normalizeSharedAccountId,
   normalizeOptionalAccountId,
-} from "openclaw/plugin-sdk/account-id";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/account-resolution";
-import { resolveAccountEntry } from "openclaw/plugin-sdk/account-resolution";
-import { tryReadSecretFileSync } from "openclaw/plugin-sdk/secret-file-runtime";
+} from "grokbot/plugin-sdk/account-id";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/account-resolution";
+import { resolveAccountEntry } from "grokbot/plugin-sdk/account-resolution";
+import { tryReadSecretFileSync } from "grokbot/plugin-sdk/secret-file-runtime";
 import type {
   LineAccountConfig,
   LineConfig,

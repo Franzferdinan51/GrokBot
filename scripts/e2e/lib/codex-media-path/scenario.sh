@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-source scripts/lib/openclaw-e2e-instance.sh
+source scripts/lib/grokbot-e2e-instance.sh
 openclaw_e2e_eval_test_state_from_b64 "${OPENCLAW_TEST_STATE_SCRIPT_B64:?missing OPENCLAW_TEST_STATE_SCRIPT_B64}"
 export OPENCLAW_SKIP_CHANNELS=1
 export OPENCLAW_SKIP_GMAIL_WATCHER=1
@@ -11,15 +11,15 @@ export OPENCLAW_SKIP_BROWSER_CONTROL_SERVER=1
 export OPENCLAW_SKIP_ACPX_RUNTIME=1
 export OPENCLAW_SKIP_ACPX_RUNTIME_PROBE=1
 export OPENCLAW_AGENT_HARNESS_FALLBACK=none
-export OPENCLAW_CODEX_MEDIA_PATH_APP_SERVER_LOG="/tmp/openclaw-codex-media-path-app-server.jsonl"
+export OPENCLAW_CODEX_MEDIA_PATH_APP_SERVER_LOG="/tmp/grokbot-codex-media-path-app-server.jsonl"
 
 PORT="${PORT:?missing PORT}"
 TOKEN="${OPENCLAW_GATEWAY_TOKEN:?missing OPENCLAW_GATEWAY_TOKEN}"
 PLUGIN_SPEC="${OPENCLAW_CODEX_MEDIA_PATH_PLUGIN_SPEC:?missing OPENCLAW_CODEX_MEDIA_PATH_PLUGIN_SPEC}"
-GATEWAY_LOG="/tmp/openclaw-codex-media-path-gateway.log"
-CLIENT_LOG="/tmp/openclaw-codex-media-path-client.log"
-PLUGIN_INSTALL_LOG="/tmp/openclaw-codex-media-path-plugin-install.log"
-PLUGIN_INSPECT_LOG="/tmp/openclaw-codex-media-path-plugin-inspect.json"
+GATEWAY_LOG="/tmp/grokbot-codex-media-path-gateway.log"
+CLIENT_LOG="/tmp/grokbot-codex-media-path-client.log"
+PLUGIN_INSTALL_LOG="/tmp/grokbot-codex-media-path-plugin-install.log"
+PLUGIN_INSPECT_LOG="/tmp/grokbot-codex-media-path-plugin-inspect.json"
 gateway_pid=""
 
 cleanup() {
@@ -41,8 +41,8 @@ rm -f "$OPENCLAW_CODEX_MEDIA_PATH_APP_SERVER_LOG"
 openclaw_e2e_enable_openclaw_cli_timeout
 
 echo "Installing Codex plugin: $PLUGIN_SPEC"
-openclaw plugins install "$PLUGIN_SPEC" --force >"$PLUGIN_INSTALL_LOG" 2>&1
-openclaw plugins inspect codex --runtime --json >"$PLUGIN_INSPECT_LOG"
+grokbot plugins install "$PLUGIN_SPEC" --force >"$PLUGIN_INSTALL_LOG" 2>&1
+grokbot plugins inspect codex --runtime --json >"$PLUGIN_INSPECT_LOG"
 
 node scripts/e2e/lib/codex-media-path/write-config.mjs
 

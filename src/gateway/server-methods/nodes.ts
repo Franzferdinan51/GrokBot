@@ -1,12 +1,12 @@
 // Node gateway methods manage paired node discovery, pairing lifecycle, command
 // invocation, wake delivery, events, pending work, and node metadata updates.
 import { randomUUID } from "node:crypto";
-import { resolveTimerTimeoutMs } from "@openclaw/normalization-core/number-coercion";
+import { resolveTimerTimeoutMs } from "@grokbot/normalization-core/number-coercion";
 import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalString,
-} from "@openclaw/normalization-core/string-coerce";
-import { normalizeUniqueTrimmedStringList } from "@openclaw/normalization-core/string-normalization";
+} from "@grokbot/normalization-core/string-coerce";
+import { normalizeUniqueTrimmedStringList } from "@grokbot/normalization-core/string-normalization";
 import {
   type ConnectParams,
   ErrorCodes,
@@ -26,7 +26,7 @@ import {
   validateNodeRenameParams,
 } from "../../../packages/gateway-protocol/src/index.js";
 import { getRuntimeConfig } from "../../config/io.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import {
   getPairedDevice,
   listApprovedPairedDeviceRoles,
@@ -892,8 +892,8 @@ export async function maybeSendNodeWakeNudge(
       result = await sendApnsAlert({
         registration,
         nodeId,
-        title: "OpenClaw needs a quick reopen",
-        body: "Tap to reopen OpenClaw and restore the node connection.",
+        title: "GrokBot needs a quick reopen",
+        body: "Tap to reopen GrokBot and restore the node connection.",
         relayConfig: relay.relayConfig,
       });
     } else {
@@ -909,8 +909,8 @@ export async function maybeSendNodeWakeNudge(
       result = await sendApnsAlert({
         registration,
         nodeId,
-        title: "OpenClaw needs a quick reopen",
-        body: "Tap to reopen OpenClaw and restore the node connection.",
+        title: "GrokBot needs a quick reopen",
+        body: "Tap to reopen GrokBot and restore the node connection.",
         auth: auth.auth,
       });
     }
@@ -1111,7 +1111,7 @@ export const nodeHandlers: GatewayRequestHandlers = {
       respond(true, rejected, undefined);
     });
   },
-  // Remove a node pairing (CLI: `openclaw nodes remove`). This revokes the
+  // Remove a node pairing (CLI: `grokbot nodes remove`). This revokes the
   // device's `node` role in devices/paired.json, which drops the approved node
   // surface with it, and disconnects the device's node-role sessions: a
   // mixed-role device keeps its row and only loses the `node` role, a

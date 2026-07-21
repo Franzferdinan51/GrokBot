@@ -3,18 +3,18 @@
  *
  * Resolves gateway URL/token overrides, local credentials, and least-privilege operator scopes.
  */
-import { asNullableRecord } from "@openclaw/normalization-core/record-coerce";
+import { asNullableRecord } from "@grokbot/normalization-core/record-coerce";
 import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalString,
-} from "@openclaw/normalization-core/string-coerce";
+} from "@grokbot/normalization-core/string-coerce";
 import {
   GATEWAY_CLIENT_MODES,
   GATEWAY_CLIENT_NAMES,
 } from "../../../packages/gateway-protocol/src/client-info.js";
 import { ErrorCodes } from "../../../packages/gateway-protocol/src/schema/error-codes.js";
 import { getRuntimeConfig, resolveGatewayPort } from "../../config/config.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import { mintAgentRuntimeIdentityToken } from "../../gateway/agent-runtime-identity-token.js";
 import { callGateway } from "../../gateway/call.js";
 import { resolveGatewayCredentialsFromConfig, trimToUndefined } from "../../gateway/credentials.js";
@@ -317,7 +317,7 @@ function resolveApprovalRequesterDeviceIdentityForGatewayTool(params: {
       throw new Error(
         [
           "approved node gateway calls require a stable device identity.",
-          "Fix the OpenClaw state directory permissions and retry the approval.",
+          "Fix the GrokBot state directory permissions and retry the approval.",
         ].join(" "),
         { cause: error },
       );
@@ -328,7 +328,7 @@ function resolveApprovalRequesterDeviceIdentityForGatewayTool(params: {
     throw new Error(
       [
         "remote approval gateway calls require a stable device identity.",
-        "Fix the OpenClaw state directory permissions or use the local approval-runtime gateway.",
+        "Fix the GrokBot state directory permissions or use the local approval-runtime gateway.",
       ].join(" "),
       { cause: error },
     );
@@ -490,8 +490,8 @@ function isStaleGatewayNodeInvokeTurnSourceRejection(error: unknown): boolean {
 function staleGatewayAgentRuntimeIdentityError(cause: unknown): Error {
   return new Error(
     [
-      "The running Gateway is from an older OpenClaw build and rejected current agent runtime connection metadata.",
-      "Restart the Gateway with `openclaw gateway restart`, then retry.",
+      "The running Gateway is from an older GrokBot build and rejected current agent runtime connection metadata.",
+      "Restart the Gateway with `grokbot gateway restart`, then retry.",
     ].join(" "),
     { cause },
   );

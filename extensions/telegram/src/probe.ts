@@ -1,10 +1,10 @@
 // Telegram plugin module implements probe behavior.
-import type { BaseProbeResult } from "openclaw/plugin-sdk/channel-contract";
-import type { TelegramNetworkConfig } from "openclaw/plugin-sdk/config-contracts";
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
-import { readResponseWithLimit } from "openclaw/plugin-sdk/response-limit-runtime";
-import { sleepWithAbort } from "openclaw/plugin-sdk/runtime-env";
-import { fetchWithTimeout } from "openclaw/plugin-sdk/text-utility-runtime";
+import type { BaseProbeResult } from "grokbot/plugin-sdk/channel-contract";
+import type { TelegramNetworkConfig } from "grokbot/plugin-sdk/config-contracts";
+import { formatErrorMessage } from "grokbot/plugin-sdk/error-runtime";
+import { readResponseWithLimit } from "grokbot/plugin-sdk/response-limit-runtime";
+import { sleepWithAbort } from "grokbot/plugin-sdk/runtime-env";
+import { fetchWithTimeout } from "grokbot/plugin-sdk/text-utility-runtime";
 import { normalizeTelegramBotInfo, type TelegramBotInfo } from "./bot-info.js";
 import {
   resolveTelegramApiBase,

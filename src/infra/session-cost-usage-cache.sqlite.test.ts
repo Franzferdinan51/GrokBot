@@ -6,11 +6,11 @@ import {
   closeOpenClawAgentDatabasesForTest,
   openOpenClawAgentDatabase,
   resolveOpenClawAgentSqlitePath,
-} from "../state/openclaw-agent-db.js";
+} from "../state/grokbot-agent-db.js";
 import {
   closeOpenClawStateDatabaseForTest,
   openOpenClawStateDatabase,
-} from "../state/openclaw-state-db.js";
+} from "../state/grokbot-state-db.js";
 import { withEnv } from "../test-utils/env.js";
 import {
   isSessionCostUsageRefreshRunning,
@@ -37,7 +37,7 @@ afterEach(() => {
 
 describe("session cost usage SQLite cache", () => {
   it("returns empty values without creating a missing agent database", () => {
-    const stateDir = makeTempDir(tempDirs, "openclaw-usage-cache-missing-");
+    const stateDir = makeTempDir(tempDirs, "grokbot-usage-cache-missing-");
 
     withEnv({ OPENCLAW_STATE_DIR: stateDir }, () => {
       const databasePath = resolveOpenClawAgentSqlitePath({ agentId: "worker-1" });
@@ -45,12 +45,12 @@ describe("session cost usage SQLite cache", () => {
       expect(readSessionCostUsageRollupRows("worker-1", databasePath)).toEqual([]);
       expect(isSessionCostUsageRefreshRunning("worker-1", databasePath)).toBe(false);
       expect(fs.existsSync(databasePath)).toBe(false);
-      expect(fs.existsSync(path.join(stateDir, "state", "openclaw.sqlite"))).toBe(false);
+      expect(fs.existsSync(path.join(stateDir, "state", "grokbot.sqlite"))).toBe(false);
     });
   });
 
   it("does not register readonly cache reads while writes still register", () => {
-    const stateDir = makeTempDir(tempDirs, "openclaw-usage-cache-registry-");
+    const stateDir = makeTempDir(tempDirs, "grokbot-usage-cache-registry-");
 
     withEnv({ OPENCLAW_STATE_DIR: stateDir }, () => {
       const agentId = "worker-1";

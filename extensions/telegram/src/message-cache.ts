@@ -1,11 +1,11 @@
 // Telegram plugin module implements message cache behavior.
 import { createHash } from "node:crypto";
 import type { Message } from "grammy/types";
-import { formatLocationText } from "openclaw/plugin-sdk/channel-inbound";
-import { parseStrictPositiveInteger } from "openclaw/plugin-sdk/number-runtime";
-import type { MsgContext } from "openclaw/plugin-sdk/reply-runtime";
-import { logVerbose } from "openclaw/plugin-sdk/runtime-env";
-import { isRecord } from "openclaw/plugin-sdk/string-coerce-runtime";
+import { formatLocationText } from "grokbot/plugin-sdk/channel-inbound";
+import { parseStrictPositiveInteger } from "grokbot/plugin-sdk/number-runtime";
+import type { MsgContext } from "grokbot/plugin-sdk/reply-runtime";
+import { logVerbose } from "grokbot/plugin-sdk/runtime-env";
+import { isRecord } from "grokbot/plugin-sdk/string-coerce-runtime";
 import {
   resolveTelegramPrimaryMedia,
   resolveTelegramRichMessageBody,
@@ -107,7 +107,7 @@ export const TELEGRAM_MESSAGE_CACHE_PERSISTENT_NAMESPACE = "telegram.message-cac
 // hydrate as markerless context only; they never imply transcript projection.
 export const TELEGRAM_MESSAGE_CACHE_PERSISTED_VERSION = 1;
 const PERSISTENT_BUCKET_KEY = `plugin-state:${TELEGRAM_MESSAGE_CACHE_PERSISTENT_NAMESPACE}`;
-const TELEGRAM_MESSAGE_CACHE_BUCKETS_KEY = Symbol.for("openclaw.telegram.messageCacheBuckets");
+const TELEGRAM_MESSAGE_CACHE_BUCKETS_KEY = Symbol.for("grokbot.telegram.messageCacheBuckets");
 
 function getPersistedMessageCacheBuckets(): Map<string, TelegramMessageCacheBucket> {
   const globalRecord = globalThis as Record<PropertyKey, unknown>;

@@ -1,14 +1,14 @@
 // Line tests cover setup surface plugin behavior.
 import { readFileSync } from "node:fs";
 import path from "node:path";
-import { createStartAccountContext } from "openclaw/plugin-sdk/channel-test-helpers";
+import { createStartAccountContext } from "grokbot/plugin-sdk/channel-test-helpers";
 import {
   createPluginSetupWizardConfigure,
   createTestWizardPrompter,
   runSetupWizardConfigure,
-} from "openclaw/plugin-sdk/plugin-test-runtime";
-import type { WizardPrompter } from "openclaw/plugin-sdk/plugin-test-runtime";
-import { bundledPluginRoot } from "openclaw/plugin-sdk/test-fixtures";
+} from "grokbot/plugin-sdk/plugin-test-runtime";
+import type { WizardPrompter } from "grokbot/plugin-sdk/plugin-test-runtime";
+import { bundledPluginRoot } from "grokbot/plugin-sdk/test-fixtures";
 import ts from "typescript";
 import { afterAll, afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { OpenClawConfig, PluginRuntime, ResolvedLineAccount } from "../api.js";
@@ -110,7 +110,7 @@ function collectRuntimeApiPreExports(runtimeApiPath: string): string[] {
   );
   const preExports = new Set<string>();
   let pluginSdkLineRuntimeSeen = false;
-  const removedLineRuntimeSpecifier = ["openclaw", "plugin-sdk", "line-runtime"].join("/");
+  const removedLineRuntimeSpecifier = ["grokbot", "plugin-sdk", "line-runtime"].join("/");
 
   for (const statement of runtimeApiFile.statements) {
     if (!ts.isExportDeclaration(statement)) {
@@ -335,9 +335,9 @@ describe("probeLineBot", () => {
 
   it("returns bot info when available", async () => {
     getBotInfoMock.mockResolvedValue({
-      displayName: "OpenClaw",
+      displayName: "GrokBot",
       userId: "U123",
-      basicId: "@openclaw",
+      basicId: "@grokbot",
       pictureUrl: "https://example.com/bot.png",
     });
 
@@ -357,9 +357,9 @@ describe("linePlugin status.probeAccount", () => {
       return { getBotInfo: getBotInfoMock };
     });
     getBotInfoMock.mockResolvedValue({
-      displayName: "OpenClaw",
+      displayName: "GrokBot",
       userId: "U123",
-      basicId: "@openclaw",
+      basicId: "@grokbot",
       pictureUrl: "https://example.com/bot.png",
     });
 

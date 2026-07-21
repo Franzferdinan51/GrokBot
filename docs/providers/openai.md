@@ -1,16 +1,16 @@
 ---
-summary: "Use OpenAI via API keys or Codex subscription in OpenClaw"
+summary: "Use OpenAI via API keys or Codex subscription in GrokBot"
 read_when:
-  - You want to use OpenAI models in OpenClaw
+  - You want to use OpenAI models in GrokBot
   - You want Codex subscription auth instead of API keys
   - You need stricter GPT-5 agent execution behavior
 title: "OpenAI"
 ---
 
-OpenClaw uses one provider id, `openai`, for both direct API-key auth and
+GrokBot uses one provider id, `openai`, for both direct API-key auth and
 ChatGPT/Codex subscription auth. `openai/*` is the canonical model route.
 For embedded agent turns with runtime policy unset or `auto`, OpenAI's route
-facts decide whether OpenClaw may select the bundled Codex app-server runtime
+facts decide whether GrokBot may select the bundled Codex app-server runtime
 implicitly. The `openai/*` prefix alone does not select a runtime.
 
 - **Agent models** - `openai/*` through the runtime selected by explicit
@@ -21,21 +21,21 @@ implicitly. The `openai/*` prefix alone does not select a runtime.
   through `OPENAI_API_KEY` or an `openai` API-key auth profile.
 - **Legacy config** - `codex/*` and `openai-codex/*` refs are repaired to
   `openai/*` plus model-scoped `agentRuntime.id: "codex"` by
-  `openclaw doctor --fix`.
+  `grokbot doctor --fix`.
 
 OpenAI explicitly supports subscription OAuth usage in external tools and
-workflows like OpenClaw.
+workflows like GrokBot.
 
 ## Usage and cost tracking
 
-OpenClaw keeps subscription quota and Platform API billing distinct:
+GrokBot keeps subscription quota and Platform API billing distinct:
 
 - ChatGPT/Codex OAuth shows the subscription plan, quota windows, and credit balance.
 - `OPENAI_ADMIN_KEY` shows 30 days of provider-reported organization cost and completions usage in Control UI **Usage**, including daily spend, request/token totals, top models, and cost categories.
 - `OPENAI_PROJECT_ID` optionally scopes Admin API history to one project.
-- OpenClaw never sends `OPENAI_API_KEY` or an `openai` inference profile to organization APIs; those credentials may belong to custom, Azure, or agent-local endpoints.
+- GrokBot never sends `OPENAI_API_KEY` or an `openai` inference profile to organization APIs; those credentials may belong to custom, Azure, or agent-local endpoints.
 
-An explicit Admin key takes precedence over OAuth. Provider-reported history is not merged with OpenClaw's session-derived estimated cost; it can include API activity from other clients and provider-side billing adjustments.
+An explicit Admin key takes precedence over OAuth. Provider-reported history is not merged with GrokBot's session-derived estimated cost; it can include API activity from other clients and provider-side billing adjustments.
 
 OpenAI's [API Usage Dashboard](https://help.openai.com/en/articles/10478918) documentation describes the organization-owner and explicit Usage Dashboard permission requirements for usage data.
 
@@ -50,8 +50,8 @@ changing config.
 | ChatGPT/Codex subscription, native Codex runtime  | `openai/gpt-5.6-sol`                                               | Fresh subscription setup; sign in with Codex auth.                  |
 | Direct API-key billing for agent turns            | `openai/gpt-5.6` plus an ordered API-key auth profile              | Fresh API-key setup; the bare direct-API id resolves to Sol.        |
 | Choose an exact GPT-5.6 tier                      | `openai/gpt-5.6-sol`, `-terra`, or `-luna`                         | Check `models list` for the tiers available to this account.        |
-| Account without GPT-5.6 access                    | `openai/gpt-5.5`                                                   | Explicit recovery choice; OpenClaw does not silently downgrade.     |
-| Direct API-key billing, explicit OpenClaw runtime | `openai/gpt-5.6` plus provider/model `agentRuntime.id: "openclaw"` | Select a normal `openai` API-key profile.                           |
+| Account without GPT-5.6 access                    | `openai/gpt-5.5`                                                   | Explicit recovery choice; GrokBot does not silently downgrade.     |
+| Direct API-key billing, explicit GrokBot runtime | `openai/gpt-5.6` plus provider/model `agentRuntime.id: "grokbot"` | Select a normal `openai` API-key profile.                           |
 | Latest ChatGPT Instant model alias                | `openai/chat-latest`                                               | Direct API-key only; moving alias, not the stable default.          |
 | Image generation or editing                       | `openai/gpt-image-2`                                               | Works with `OPENAI_API_KEY` or Codex OAuth.                         |
 | Transparent-background images                     | `openai/gpt-image-1.5`                                             | Set `outputFormat` to `png` or `webp` and `background=transparent`. |
@@ -75,19 +75,19 @@ endpoint and adapter:
 | Effective route facts                                                                                                                                                  | Implicit runtime      |
 | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------- |
 | Exact official Platform HTTPS endpoint with `openai-responses`, or exact official ChatGPT HTTPS endpoint with `openai-chatgpt-responses`; no authored request override | Codex may be selected |
-| Authored `openai-completions` adapter                                                                                                                                  | OpenClaw              |
-| Custom endpoint                                                                                                                                                        | OpenClaw              |
+| Authored `openai-completions` adapter                                                                                                                                  | GrokBot              |
+| Custom endpoint                                                                                                                                                        | GrokBot              |
 | Explicit exact official endpoint using HTTP                                                                                                                            | Rejected              |
-| Route with an authored provider/model request override                                                                                                                 | OpenClaw              |
+| Route with an authored provider/model request override                                                                                                                 | GrokBot              |
 
 An explicit non-default provider/model `agentRuntime.id` remains authoritative.
-For example, `agentRuntime.id: "openclaw"` keeps an otherwise Codex-eligible
-route on OpenClaw, while `agentRuntime.id: "codex"` requires Codex and fails
+For example, `agentRuntime.id: "grokbot"` keeps an otherwise Codex-eligible
+route on GrokBot, while `agentRuntime.id: "codex"` requires Codex and fails
 closed when the effective route is not declared Codex-compatible.
 Runtime selection does not change credential type or billing: Platform API-key
 auth and ChatGPT/Codex subscription auth remain distinct.
 
-`openclaw doctor --fix` migrates legacy `codex/*` and `openai-codex/*` model
+`grokbot doctor --fix` migrates legacy `codex/*` and `openai-codex/*` model
 refs, legacy Codex auth profile ids, and legacy Codex auth-order entries to the
 canonical `openai` route. Migrated model refs receive model-scoped
 `agentRuntime.id: "codex"`; use `auth.order.openai` for new auth-order config.
@@ -102,7 +102,7 @@ only when you want API-key auth for an agent model.
 
 ## GPT-5.6 limited preview
 
-OpenClaw recognizes the exact `openai/gpt-5.6-sol`,
+GrokBot recognizes the exact `openai/gpt-5.6-sol`,
 `openai/gpt-5.6-terra`, and `openai/gpt-5.6-luna` model ids. All three expose
 `xhigh` and `max` reasoning in the current catalog. OpenAI describes Sol as
 the flagship tier, Terra as the balanced tier, and Luna as the fast,
@@ -117,32 +117,32 @@ the exact Sol, Terra, and Luna ids. Fresh ChatGPT/Codex OAuth setup therefore
 uses `openai/gpt-5.6-sol`. Check the current account with:
 
 ```bash
-openclaw models list --provider openai
+grokbot models list --provider openai
 ```
 
 API organization and Codex workspace access can differ. If GPT-5.6 is not
 available, select GPT-5.5 explicitly:
 
 ```bash
-openclaw models set openai/gpt-5.5
+grokbot models set openai/gpt-5.5
 ```
 
-OpenClaw surfaces the upstream access error and does not silently replace a
+GrokBot surfaces the upstream access error and does not silently replace a
 GPT-5.6 selection with GPT-5.5.
 
 <Note>
 Eligible exact official HTTPS routes may select the bundled Codex app-server
 plugin when runtime policy is unset or `auto`; authored Completions routes,
-custom endpoints, and request-transport overrides remain on OpenClaw. Plaintext
+custom endpoints, and request-transport overrides remain on GrokBot. Plaintext
 official HTTP endpoints are rejected. Explicit provider/model runtime config remains
-authoritative. Run `openclaw doctor --fix` to repair stale legacy Codex model
+authoritative. Run `grokbot doctor --fix` to repair stale legacy Codex model
 refs, `codex-cli/*` refs, or old runtime session pins that were not set by
 explicit runtime config.
 </Note>
 
-## OpenClaw feature coverage
+## GrokBot feature coverage
 
-| OpenAI capability         | OpenClaw surface                                                                              | Status                                                          |
+| OpenAI capability         | GrokBot surface                                                                              | Status                                                          |
 | ------------------------- | --------------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
 | Chat / Responses          | `openai/<model>` model provider                                                               | Yes                                                             |
 | Codex subscription models | `openai/<model>` with OpenAI OAuth                                                            | Yes                                                             |
@@ -167,20 +167,20 @@ If API-key auth reports missing billing, top up Platform credits at
 [platform.openai.com/account/billing](https://platform.openai.com/account/billing)
 for the organization backing your realtime credentials when using API-key
 auth. Realtime voice accepts the `openai` API-key auth profile created by
-`openclaw onboard --auth-choice openai-api-key`, a Platform API key set via
+`grokbot onboard --auth-choice openai-api-key`, a Platform API key set via
 `talk.realtime.providers.openai.apiKey` for Control UI Talk, or
 `plugins.entries.voice-call.config.realtime.providers.openai.apiKey` for Voice
 Call, or the `OPENAI_API_KEY` environment variable.
 
 In Control UI Video Talk, OpenAI WebRTC receives camera context on demand:
 when the model calls `describe_view`, the browser sends one bounded JPEG over
-the realtime data channel. OpenClaw does not attach a continuous camera track
+the realtime data channel. GrokBot does not attach a continuous camera track
 to the OpenAI session.
 </Note>
 
 ## Memory embeddings
 
-OpenClaw can use OpenAI, or an OpenAI-compatible embedding endpoint, for
+GrokBot can use OpenAI, or an OpenAI-compatible embedding endpoint, for
 `memory_search` indexing and query embeddings:
 
 ```json5
@@ -197,7 +197,7 @@ OpenClaw can use OpenAI, or an OpenAI-compatible embedding endpoint, for
 ```
 
 For OpenAI-compatible endpoints that require asymmetric embedding labels, set
-`queryInputType` and `documentInputType` under `memorySearch`. OpenClaw
+`queryInputType` and `documentInputType` under `memorySearch`. GrokBot
 forwards these as provider-specific `input_type` request fields: query
 embeddings use `queryInputType`; indexed memory chunks and batch indexing use
 `documentInputType`. See the
@@ -216,18 +216,18 @@ for the full example.
       </Step>
       <Step title="Run onboarding">
         ```bash
-        openclaw onboard --auth-choice openai-api-key
+        grokbot onboard --auth-choice openai-api-key
         ```
 
         Or pass the key directly:
 
         ```bash
-        openclaw onboard --openai-api-key "$OPENAI_API_KEY"
+        grokbot onboard --openai-api-key "$OPENAI_API_KEY"
         ```
       </Step>
       <Step title="Verify the model is available">
         ```bash
-        openclaw models list --provider openai
+        grokbot models list --provider openai
         ```
       </Step>
     </Steps>
@@ -237,9 +237,9 @@ for the full example.
     | Model ref        | Runtime policy or route facts                                 | Route                     | Auth                              |
     | ---------------- | ------------------------------------------------------------- | ------------------------- | --------------------------------- |
     | `openai/gpt-5.6` | unset/`auto`, exact official HTTPS native route, no request override | Codex may be selected     | Ordered API-key auth profile      |
-    | `openai/gpt-5.6` | provider/model `agentRuntime.id: "openclaw"`                  | OpenClaw embedded runtime | Selected `openai` API-key profile |
+    | `openai/gpt-5.6` | provider/model `agentRuntime.id: "grokbot"`                  | GrokBot embedded runtime | Selected `openai` API-key profile |
     | `openai/gpt-5.5` | explicit provider/model `agentRuntime.id`                     | Selected agent runtime    | Selected OpenAI API-key profile   |
-    | `openai/*`       | authored Completions, custom, or request override | OpenClaw embedded runtime | Credential type remains unchanged |
+    | `openai/*`       | authored Completions, custom, or request override | GrokBot embedded runtime | Credential type remains unchanged |
     | `openai/*`       | plaintext official HTTP endpoint                  | Rejected                 | Credential is not sent             |
 
     <Note>
@@ -247,7 +247,7 @@ for the full example.
     route may select the Codex app-server harness implicitly. For API-key auth
     on an agent model, create an `openai` API-key auth profile and order it with
     `auth.order.openai`; `OPENAI_API_KEY` remains the direct fallback for
-    non-agent OpenAI API surfaces. Run `openclaw doctor --fix` to migrate older
+    non-agent OpenAI API surfaces. Run `grokbot doctor --fix` to migrate older
     legacy Codex auth-order entries.
     </Note>
 
@@ -277,11 +277,11 @@ for the full example.
     `chat-latest` is a moving alias. Fresh OpenAI API-key setup instead uses
     `openai/gpt-5.6`, whose bare direct-API id resolves to Sol. Existing
     explicit primaries, including `openai/gpt-5.5`, remain unchanged. The
-    `chat-latest` alias only accepts `medium` text verbosity; OpenClaw forces
+    `chat-latest` alias only accepts `medium` text verbosity; GrokBot forces
     any other requested verbosity to `medium` for this model.
 
     <Warning>
-    OpenClaw does **not** expose `gpt-5.3-codex-spark` on the direct OpenAI
+    GrokBot does **not** expose `gpt-5.3-codex-spark` on the direct OpenAI
     API-key route. It is available only through Codex subscription catalog
     entries when your signed-in account exposes it.
     </Warning>
@@ -296,13 +296,13 @@ for the full example.
     <Steps>
       <Step title="Run Codex OAuth">
         ```bash
-        openclaw onboard --auth-choice openai
+        grokbot onboard --auth-choice openai
         ```
 
         Or run OAuth directly:
 
         ```bash
-        openclaw models auth login --provider openai
+        grokbot models auth login --provider openai
         ```
 
         For headless or callback-hostile setups, add `--device-code` to sign
@@ -310,22 +310,22 @@ for the full example.
         callback:
 
         ```bash
-        openclaw models auth login --provider openai --device-code
+        grokbot models auth login --provider openai --device-code
         ```
       </Step>
       <Step title="Use the canonical OpenAI model route">
         ```bash
-        openclaw config set agents.defaults.model.primary openai/gpt-5.6-sol
+        grokbot config set agents.defaults.model.primary openai/gpt-5.6-sol
         ```
 
         No runtime config is required for this exact official HTTPS native
         route. It may select the Codex app-server runtime automatically, and
-        OpenClaw installs or repairs the bundled Codex plugin when that runtime
+        GrokBot installs or repairs the bundled Codex plugin when that runtime
         is chosen.
       </Step>
       <Step title="Verify Codex auth is available">
         ```bash
-        openclaw models list --provider openai
+        grokbot models list --provider openai
         ```
 
         After the gateway is running, send `/codex status` or `/codex models`
@@ -340,9 +340,9 @@ for the full example.
     | `openai/gpt-5.6-sol`     | unset/`auto`, exact official HTTPS native route, no request override | Codex may be selected                                    | Codex sign-in, or an ordered `openai` auth profile |
     | `openai/gpt-5.6-terra`   | unset/`auto`, exact official HTTPS native route, no request override | Codex may be selected                                    | Codex sign-in when the catalog exposes Terra       |
     | `openai/gpt-5.6-luna`    | unset/`auto`, exact official HTTPS native route, no request override | Codex may be selected                                    | Codex sign-in when the catalog exposes Luna        |
-    | `openai/gpt-5.6-sol`     | provider/model `agentRuntime.id: "openclaw"`                  | OpenClaw embedded runtime, internal Codex-auth transport | Selected `openai` OAuth profile                    |
+    | `openai/gpt-5.6-sol`     | provider/model `agentRuntime.id: "grokbot"`                  | GrokBot embedded runtime, internal Codex-auth transport | Selected `openai` OAuth profile                    |
     | `openai/gpt-5.5`         | explicit provider/model `agentRuntime.id`                     | Selected agent runtime                                   | Selected OpenAI auth profile                       |
-    | `openai/*`               | authored Completions, custom, or request override | OpenClaw embedded runtime                                | Credential requirement remains route-specific      |
+    | `openai/*`               | authored Completions, custom, or request override | GrokBot embedded runtime                                | Credential requirement remains route-specific      |
     | `openai/*`               | plaintext official HTTP endpoint                  | Rejected                                                 | Credential is not sent                              |
     | Legacy Codex GPT-5.5 ref | repaired by doctor                                            | Rewritten to `openai/gpt-5.5`                            | Migrated OpenAI OAuth profile                      |
     | `codex-cli/gpt-5.5`      | repaired by doctor                                            | Rewritten to `openai/gpt-5.5`                            | Codex app-server auth                              |
@@ -351,8 +351,8 @@ for the full example.
     Fresh subscription-backed setup uses exact `openai/gpt-5.6-sol`; the
     native Codex catalog may also expose exact Terra or Luna refs. If the
     account does not expose GPT-5.6, select `openai/gpt-5.5` explicitly. Older
-    Codex GPT refs are legacy OpenClaw routes, not the native Codex runtime
-    path; run `openclaw doctor --fix` to migrate them without upgrading an
+    Codex GPT refs are legacy GrokBot routes, not the native Codex runtime
+    path; run `grokbot doctor --fix` to migrate them without upgrading an
     existing explicit GPT-5.5 selection. `gpt-5.3-codex-spark` stays limited
     to accounts whose Codex subscription catalog advertises it; direct OpenAI
     API-key and Azure refs for it stay suppressed.
@@ -377,7 +377,7 @@ for the full example.
     ```
 
     With an API-key backup, keep the selected model under `openai/*` and put
-    the auth order under `openai`. OpenClaw tries the subscription first, then
+    the auth order under `openai`. GrokBot tries the subscription first, then
     the API key, while staying on the Codex harness:
 
     ```json5
@@ -401,51 +401,51 @@ for the full example.
 
     <Note>
     Onboarding no longer imports OAuth material from `~/.codex`. Sign in with
-    browser OAuth (default) or the device-code flow above; OpenClaw manages the
+    browser OAuth (default) or the device-code flow above; GrokBot manages the
     resulting credentials in its own agent auth store.
     </Note>
 
     ### Check and recover Codex OAuth routing
 
     ```bash
-    openclaw models status
-    openclaw models auth list --provider openai
-    openclaw config get agents.defaults.model --json
-    openclaw config get models.providers.openai.agentRuntime --json
+    grokbot models status
+    grokbot models auth list --provider openai
+    grokbot config get agents.defaults.model --json
+    grokbot config get models.providers.openai.agentRuntime --json
     ```
 
     For a specific agent, add `--agent <id>`:
 
     ```bash
-    openclaw models status --agent <id>
-    openclaw models auth list --agent <id> --provider openai
+    grokbot models status --agent <id>
+    grokbot models auth list --agent <id> --provider openai
     ```
 
     If an older config still has legacy Codex GPT refs, or a stale OpenAI
     runtime session pin without explicit runtime config, repair it:
 
     ```bash
-    openclaw doctor --fix
-    openclaw config validate
+    grokbot doctor --fix
+    grokbot config validate
     ```
 
     If `models auth list --provider openai` shows no usable profile, sign in
     again:
 
     ```bash
-    openclaw models auth login --provider openai
-    openclaw models status --probe --probe-provider openai
+    grokbot models auth login --provider openai
+    grokbot models status --probe --probe-provider openai
     ```
 
     Use `--profile-id` for multiple Codex OAuth logins in the same agent, then
     control them via auth ordering or `/model ...@<profileId>`:
 
     ```bash
-    openclaw models auth login --provider openai --profile-id openai:ritsuko
-    openclaw models auth login --provider openai --profile-id openai:lain
+    grokbot models auth login --provider openai --profile-id openai:ritsuko
+    grokbot models auth login --provider openai --profile-id openai:lain
     ```
 
-    Run `openclaw doctor --fix` to migrate older legacy OpenAI Codex prefix
+    Run `grokbot doctor --fix` to migrate older legacy OpenAI Codex prefix
     profile ids and order entries before relying on profile ordering.
 
     ### Status indicator
@@ -458,12 +458,12 @@ for the full example.
     ### Doctor warning
 
     If legacy Codex model refs or stale OpenAI runtime pins remain in config
-    or session state, `openclaw doctor --fix` rewrites them to `openai/*` with
-    the Codex runtime unless OpenClaw is explicitly configured.
+    or session state, `grokbot doctor --fix` rewrites them to `openai/*` with
+    the Codex runtime unless GrokBot is explicitly configured.
 
     ### Context window cap
 
-    OpenClaw treats model metadata and the runtime context cap as separate
+    GrokBot treats model metadata and the runtime context cap as separate
     values. For `openai/gpt-5.5` through the Codex OAuth catalog:
 
     - Native `contextWindow`: `400000`
@@ -493,9 +493,9 @@ for the full example.
 
     ### Catalog recovery
 
-    OpenClaw uses upstream Codex catalog metadata for `gpt-5.5` when it is
+    GrokBot uses upstream Codex catalog metadata for `gpt-5.5` when it is
     present. If live Codex discovery omits the `gpt-5.5` row while the account
-    is authenticated, OpenClaw synthesizes that OAuth model row so cron,
+    is authenticated, GrokBot synthesizes that OAuth model row so cron,
     sub-agent, and configured default-model runs do not fail with
     `Unknown model`.
 
@@ -507,13 +507,13 @@ for the full example.
 The native Codex app-server harness uses `openai/*` model refs when an eligible
 exact official HTTPS route selects it implicitly, or when provider/model
 `agentRuntime.id: "codex"` selects it explicitly. Its auth is still
-account-based. OpenClaw selects auth in this order:
+account-based. GrokBot selects auth in this order:
 
 1. Ordered OpenAI auth profiles for the agent, preferably under
-   `auth.order.openai`. Run `openclaw doctor --fix` to migrate older legacy
+   `auth.order.openai`. Run `grokbot doctor --fix` to migrate older legacy
    Codex auth profile ids and auth order.
 2. The app-server's existing account, such as a local Codex CLI ChatGPT
-   sign-in. For the default isolated agent home, OpenClaw bridges that native
+   sign-in. For the default isolated agent home, GrokBot bridges that native
    CLI account into the app-server through its login RPC; it does not share the
    CLI's config, plugins, or thread store.
 3. For local stdio app-server launches only, and only when the app-server
@@ -523,11 +523,11 @@ A local ChatGPT/Codex subscription sign-in is not replaced just because the
 gateway process also has `OPENAI_API_KEY` for direct OpenAI models or
 embeddings. The env API-key fallback applies only to the local stdio no-account
 path; it is never sent over WebSocket app-server connections. When a
-subscription-style Codex profile is selected, OpenClaw also keeps
+subscription-style Codex profile is selected, GrokBot also keeps
 `CODEX_API_KEY` and `OPENAI_API_KEY` out of the spawned stdio app-server child
 and sends the selected credentials through the app-server login RPC instead.
 
-When that subscription profile is blocked by a Codex usage limit, OpenClaw
+When that subscription profile is blocked by a Codex usage limit, GrokBot
 marks the profile blocked until Codex's advertised reset time and lets auth
 ordering rotate to the next `openai:*` profile, without changing the selected
 model or dropping out of the Codex harness. Once the reset time passes, the
@@ -573,7 +573,7 @@ transparent-background PNG/WebP output; the current `gpt-image-2` API rejects
 For a transparent-background request, call `image_generate` with
 `model: "openai/gpt-image-1.5"`, `outputFormat: "png"` or `"webp"`, and
 `background: "transparent"`; the older `openai.background` provider option is
-still accepted. OpenClaw also protects the public OpenAI and OpenAI Codex OAuth
+still accepted. GrokBot also protects the public OpenAI and OpenAI Codex OAuth
 routes by rewriting default `openai/gpt-image-2` transparent requests to
 `gpt-image-1.5`; Azure and custom OpenAI-compatible endpoints keep their
 configured deployment/model names.
@@ -581,7 +581,7 @@ configured deployment/model names.
 The same setting is exposed for headless CLI runs:
 
 ```bash
-openclaw infer image generate \
+grokbot infer image generate \
   --model openai/gpt-image-1.5 \
   --output-format png \
   --background transparent \
@@ -590,27 +590,27 @@ openclaw infer image generate \
 ```
 
 Use the same `--output-format` and `--background` flags with
-`openclaw infer image edit` when starting from an input file.
+`grokbot infer image edit` when starting from an input file.
 `--openai-background` remains available as an OpenAI-specific alias. Use
 `--quality low|medium|high|auto` to control OpenAI Images quality and cost.
 Use `--openai-moderation low|auto` to pass OpenAI's moderation hint from either
 `image generate` or `image edit`.
 
 For ChatGPT/Codex OAuth installs, keep the same `openai/gpt-image-2` ref. When
-an `openai` OAuth profile is configured, OpenClaw resolves that stored OAuth
+an `openai` OAuth profile is configured, GrokBot resolves that stored OAuth
 access token and sends image requests through the Codex Responses backend; it
 does not first try `OPENAI_API_KEY` or silently fall back to an API key.
 Configure `models.providers.openai` explicitly with an API key, custom base
 URL, or Azure endpoint when you want the direct OpenAI Images API route
 instead. If that custom image endpoint is on a trusted LAN/private address,
-also set `browser.ssrfPolicy.dangerouslyAllowPrivateNetwork: true`; OpenClaw
+also set `browser.ssrfPolicy.dangerouslyAllowPrivateNetwork: true`; GrokBot
 keeps private/internal OpenAI-compatible image endpoints blocked unless this
 opt-in is present.
 
 Generate:
 
 ```
-/tool image_generate model=openai/gpt-image-2 prompt="A polished launch poster for OpenClaw on macOS" size=3840x2160 count=1
+/tool image_generate model=openai/gpt-image-2 prompt="A polished launch poster for GrokBot on macOS" size=3840x2160 count=1
 ```
 
 Generate a transparent PNG:
@@ -658,7 +658,7 @@ See [Video Generation](/tools/video-generation) for shared tool parameters,
 provider selection, and failover behavior.
 
 The OpenAI provider declares `supportsSize` but not `supportsAspectRatio` or
-`supportsResolution`. OpenClaw's shared normalization layer converts a
+`supportsResolution`. GrokBot's shared normalization layer converts a
 requested `aspectRatio` into the closest matching OpenAI `size` before the
 request reaches the provider, so aspect-ratio requests generally still work.
 `resolution` has no size fallback and is dropped, surfaced to the caller as
@@ -667,7 +667,7 @@ request reaches the provider, so aspect-ratio requests generally still work.
 
 ## GPT-5 prompt contribution
 
-OpenClaw adds a shared GPT-5 prompt contribution for GPT-5-family models on
+GrokBot adds a shared GPT-5 prompt contribution for GPT-5-family models on
 the `openai` provider (including legacy pre-repair Codex refs that normalize
 to `openai/*`). Other providers that also serve GPT-5-family model ids, such
 as OpenRouter or opencode routes, do not receive this overlay; it is gated on
@@ -677,19 +677,19 @@ receive it.
 The native Codex app-server harness does not receive the persona/tool-
 discipline behavior contract or the friendly interaction-style overlay through
 developer instructions; native Codex keeps Codex-owned base, model, and
-project-doc behavior, and OpenClaw disables Codex's built-in personality for
+project-doc behavior, and GrokBot disables Codex's built-in personality for
 native threads so agent workspace personality files stay authoritative.
-OpenClaw contributes only runtime context to native Codex threads: channel
-delivery, OpenClaw dynamic tools, ACP delegation, workspace context, and
-OpenClaw skills. The heartbeat-guidance text from this same contribution is the
+GrokBot contributes only runtime context to native Codex threads: channel
+delivery, GrokBot dynamic tools, ACP delegation, workspace context, and
+GrokBot skills. The heartbeat-guidance text from this same contribution is the
 one exception: native Codex heartbeat turns do get it, injected as dedicated
 collaboration instructions rather than through the shared prompt-contribution
 hook.
 
 The GPT-5 contribution adds a tagged behavior contract for persona
 persistence, execution safety, tool discipline, output shape, completion
-checks, and verification on matching OpenClaw-assembled prompts. Channel-
-specific reply and silent-message behavior stays in the shared OpenClaw system
+checks, and verification on matching GrokBot-assembled prompts. Channel-
+specific reply and silent-message behavior stays in the shared GrokBot system
 prompt and outbound delivery policy. The friendly interaction-style layer is
 separate and configurable.
 
@@ -715,7 +715,7 @@ separate and configurable.
   </Tab>
   <Tab title="CLI">
     ```bash
-    openclaw config set agents.defaults.promptOverlays.gpt5.personality off
+    grokbot config set agents.defaults.promptOverlays.gpt5.personality off
     ```
   </Tab>
 </Tabs>
@@ -753,7 +753,7 @@ compatibility fallback when the shared
     `alloy`, `ash`, `ballad`, `cedar`, `coral`, `echo`, `fable`, `juniper`,
     `marin`, `onyx`, `nova`, `sage`, `shimmer`, `verse`.
 
-    `extraBody` is merged into `/audio/speech` request JSON after OpenClaw's
+    `extraBody` is merged into `/audio/speech` request JSON after GrokBot's
     generated fields, so use it for OpenAI-compatible endpoints that require
     additional keys such as `lang`. Prototype keys are ignored.
 
@@ -780,7 +780,7 @@ compatibility fallback when the shared
 
   <Accordion title="Speech-to-text">
     The bundled `openai` plugin registers batch speech-to-text through
-    OpenClaw's media-understanding transcription surface.
+    GrokBot's media-understanding transcription surface.
 
     - Default model: `gpt-4o-transcribe`
     - Endpoint: OpenAI REST `/v1/audio/transcriptions`
@@ -864,10 +864,10 @@ compatibility fallback when the shared
     <Note>
     **GPT-Live (upcoming).** OpenAI's full-duplex `gpt-live-1` and
     `gpt-live-1-mini` models replaced ChatGPT voice mode in July 2026; the
-    developer API is rolling out to early-access organizations. OpenClaw
+    developer API is rolling out to early-access organizations. GrokBot
     recognizes the model family but does not run it yet: GPT-Live sessions are
     WebRTC-only, own their turn-taking (no VAD), and delegate agent work
-    through a handoff event protocol that OpenClaw's realtime transports do
+    through a handoff event protocol that GrokBot's realtime transports do
     not implement yet. Configuring a `gpt-live-*` model fails closed with
     guidance on both the WebSocket bridge and Talk browser sessions instead of
     silently connecting audio without agent access. API access is also gated
@@ -886,7 +886,7 @@ compatibility fallback when the shared
     <Note>
     Realtime voice is selected when the session is created. OpenAI allows most
     session fields to change later, but the voice cannot be changed after the
-    model has emitted audio in that session. OpenClaw currently exposes the
+    model has emitted audio in that session. GrokBot currently exposes the
     built-in Realtime voice ids as strings.
     </Note>
 
@@ -911,7 +911,7 @@ compatibility fallback when the shared
 ## Azure OpenAI endpoints
 
 The bundled `openai` provider can target an Azure OpenAI resource for image
-generation by overriding the base URL. On the image-generation path, OpenClaw
+generation by overriding the base URL. On the image-generation path, GrokBot
 detects Azure hostnames on `models.providers.openai.baseUrl` and switches to
 Azure's request shape automatically.
 
@@ -949,14 +949,14 @@ the Azure OpenAI key (not an OpenAI Platform key):
 }
 ```
 
-OpenClaw recognizes these Azure host suffixes for the Azure image-generation
+GrokBot recognizes these Azure host suffixes for the Azure image-generation
 route:
 
 - `*.openai.azure.com`
 - `*.services.ai.azure.com`
 - `*.cognitiveservices.azure.com`
 
-For image-generation requests on a recognized Azure host, OpenClaw:
+For image-generation requests on a recognized Azure host, GrokBot:
 
 - Sends the `api-key` header instead of `Authorization: Bearer`
 - Uses deployment-scoped paths (`/openai/deployments/{deployment}/...`)
@@ -969,7 +969,7 @@ OpenAI image request shape.
 
 <Note>
 Azure routing for the `openai` provider's image-generation path requires
-OpenClaw 2026.4.22 or later. Earlier versions treat any custom
+GrokBot 2026.4.22 or later. Earlier versions treat any custom
 `openai.baseUrl` like the public OpenAI endpoint and fail against Azure image
 deployments.
 </Note>
@@ -988,7 +988,7 @@ The default is `2024-12-01-preview` when the variable is unset.
 ### Model names are deployment names
 
 Azure OpenAI binds models to deployments. For Azure image-generation requests
-routed through the bundled `openai` provider, the `model` field in OpenClaw
+routed through the bundled `openai` provider, the `model` field in GrokBot
 must be the **Azure deployment name** you configured in the Azure portal, not
 the public OpenAI model id.
 
@@ -1014,13 +1014,13 @@ Azure OpenAI and public OpenAI do not always accept the same image parameters.
 Azure may reject options public OpenAI allows (for example certain
 `background` values on `gpt-image-2`) or expose them only on specific model
 versions. These differences come from Azure and the underlying model, not
-OpenClaw. If an Azure request fails with a validation error, check the
+GrokBot. If an Azure request fails with a validation error, check the
 parameter set supported by your specific deployment and API version in the
 Azure portal.
 
 <Note>
 Azure OpenAI uses native transport and compat behavior but does not receive
-OpenClaw's hidden attribution headers - see the **Native vs OpenAI-compatible
+GrokBot's hidden attribution headers - see the **Native vs OpenAI-compatible
 routes** accordion under [Advanced configuration](#advanced-configuration).
 
 For chat or Responses traffic on Azure (beyond image generation), use the
@@ -1032,18 +1032,18 @@ accordion below.
 
 ## Advanced configuration
 
-The per-model `params` examples below shape OpenClaw's embedded provider
+The per-model `params` examples below shape GrokBot's embedded provider
 request. Configuring them is authored request behavior, so an otherwise eligible
-`auto` route stays on OpenClaw instead of selecting Codex implicitly. The native
+`auto` route stays on GrokBot instead of selecting Codex implicitly. The native
 Codex app-server harness owns its own transport and request settings; explicit
 `agentRuntime.id: "codex"` fails closed when the effective route is not declared
 Codex-compatible.
 
 <AccordionGroup>
   <Accordion title="Transport (WebSocket vs SSE)">
-    OpenClaw uses WebSocket-first with SSE fallback (`"auto"`) for `openai/*`.
+    GrokBot uses WebSocket-first with SSE fallback (`"auto"`) for `openai/*`.
 
-    In `"auto"` mode, OpenClaw:
+    In `"auto"` mode, GrokBot:
     - Retries one early WebSocket failure before falling back to SSE
     - After a failure, marks WebSocket as degraded for 60 seconds and uses SSE
       during cool-down
@@ -1079,12 +1079,12 @@ Codex-compatible.
   </Accordion>
 
   <Accordion title="Fast mode">
-    OpenClaw exposes a shared fast-mode toggle for `openai/*`:
+    GrokBot exposes a shared fast-mode toggle for `openai/*`:
 
     - **Chat/UI:** `/fast status|auto|on|off`
     - **Config:** `agents.defaults.models["<provider>/<model>"].params.fastMode`
 
-    When enabled, OpenClaw maps fast mode to OpenAI priority processing
+    When enabled, GrokBot maps fast mode to OpenAI priority processing
     (`service_tier = "priority"`). Existing `service_tier` values are
     preserved, and fast mode does not rewrite `reasoning` or
     `text.verbosity`. `fastMode: "auto"` starts new model calls fast until the
@@ -1113,7 +1113,7 @@ Codex-compatible.
 
   <Accordion title="Priority processing (service_tier)">
     OpenAI's API exposes priority processing via `service_tier`. Set it per
-    model in OpenClaw:
+    model in GrokBot:
 
     ```json5
     {
@@ -1132,7 +1132,7 @@ Codex-compatible.
     <Warning>
     `serviceTier` is forwarded only to native OpenAI endpoints
     (`api.openai.com`) and native Codex endpoints (`chatgpt.com/backend-api`).
-    If you route either provider through a proxy, OpenClaw leaves
+    If you route either provider through a proxy, GrokBot leaves
     `service_tier` untouched.
     </Warning>
 
@@ -1140,7 +1140,7 @@ Codex-compatible.
 
   <Accordion title="Server-side compaction (Responses API)">
     For direct OpenAI Responses models (`openai/*` on `api.openai.com`), the
-    OpenAI plugin's OpenClaw stream wrapper auto-enables server-side
+    OpenAI plugin's GrokBot stream wrapper auto-enables server-side
     compaction:
 
     - Forces `store: true` (unless model compat sets `supportsStore: false`)
@@ -1148,7 +1148,7 @@ Codex-compatible.
     - Default `compact_threshold`: 70% of `contextWindow` (or `80000` when
       unavailable)
 
-    This applies to the built-in OpenClaw runtime path and to OpenAI provider
+    This applies to the built-in GrokBot runtime path and to OpenAI provider
     hooks used by embedded runs. The native Codex app-server harness manages
     its own context through Codex and is not affected by this setting.
 
@@ -1214,8 +1214,8 @@ Codex-compatible.
   </Accordion>
 
   <Accordion title="Strict-agentic GPT mode">
-    For `openai` provider GPT-5-family models run through OpenClaw's embedded
-    runtime, OpenClaw already defaults to a stricter execution contract called
+    For `openai` provider GPT-5-family models run through GrokBot's embedded
+    runtime, GrokBot already defaults to a stricter execution contract called
     `strict-agentic`. It auto-activates whenever the resolved provider is
     `openai` and the model id matches the GPT-5 family, unless config
     explicitly opts back out:
@@ -1233,18 +1233,18 @@ Codex-compatible.
     Setting `"strict-agentic"` explicitly is a no-op on a supported lane (it
     is already the default) and inert on unsupported provider/model pairs.
 
-    With `strict-agentic` active, OpenClaw:
+    With `strict-agentic` active, GrokBot:
     - Auto-enables `update_plan` for substantial work
     - Retries structurally empty or reasoning-only turns with a visible-answer
       continuation
     - Uses explicit harness plan events when the selected harness provides
       them
 
-    OpenClaw does not classify assistant prose to decide whether a turn is a
+    GrokBot does not classify assistant prose to decide whether a turn is a
     plan, progress update, or final answer.
 
     <Note>
-    This contract lives entirely in OpenClaw's embedded agent runner. It does
+    This contract lives entirely in GrokBot's embedded agent runner. It does
     not apply to the native Codex app-server harness, which manages its own
     turn and plan behavior; the harness selection matters more than the
     execution-contract setting for native Codex runs.
@@ -1253,7 +1253,7 @@ Codex-compatible.
   </Accordion>
 
   <Accordion title="Native vs OpenAI-compatible routes">
-    OpenClaw treats direct OpenAI, Codex, and Azure OpenAI endpoints
+    GrokBot treats direct OpenAI, Codex, and Azure OpenAI endpoints
     differently from generic OpenAI-compatible `/v1` proxies:
 
     **Native routes** (`openai/*`, Azure OpenAI):

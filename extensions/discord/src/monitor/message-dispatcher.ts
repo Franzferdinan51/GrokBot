@@ -2,10 +2,10 @@
 import {
   createChannelInboundDebouncer,
   shouldDebounceTextInbound,
-} from "openclaw/plugin-sdk/channel-inbound";
-import { createLazyRuntimeModule } from "openclaw/plugin-sdk/lazy-runtime";
-import { danger } from "openclaw/plugin-sdk/runtime-env";
-import { resolveOpenProviderRuntimeGroupPolicy } from "openclaw/plugin-sdk/runtime-group-policy";
+} from "grokbot/plugin-sdk/channel-inbound";
+import { createLazyRuntimeModule } from "grokbot/plugin-sdk/lazy-runtime";
+import { danger } from "grokbot/plugin-sdk/runtime-env";
+import { resolveOpenProviderRuntimeGroupPolicy } from "grokbot/plugin-sdk/runtime-group-policy";
 import type { Client } from "../internal/discord.js";
 import { buildDiscordInboundJob } from "./inbound-job.js";
 import type {

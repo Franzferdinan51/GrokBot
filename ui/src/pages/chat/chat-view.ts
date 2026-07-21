@@ -541,7 +541,7 @@ export function renderChat(props: ChatProps) {
               <span class="chat-error__content">${props.error}</span>
               ${props.onDismissError
                 ? html`
-                    <openclaw-tooltip .content=${t("chat.actions.dismissError")}>
+                    <grokbot-tooltip .content=${t("chat.actions.dismissError")}>
                       <button
                         class="chat-error__dismiss"
                         type="button"
@@ -550,7 +550,7 @@ export function renderChat(props: ChatProps) {
                       >
                         ${icons.x}
                       </button>
-                    </openclaw-tooltip>
+                    </grokbot-tooltip>
                   `
                 : nothing}
             </div>
@@ -558,7 +558,7 @@ export function renderChat(props: ChatProps) {
         : nothing}
       ${props.focusMode && props.onToggleFocusMode
         ? html`
-            <openclaw-tooltip .content=${t("chat.actions.exitFocusMode")}>
+            <grokbot-tooltip .content=${t("chat.actions.exitFocusMode")}>
               <button
                 class="chat-focus-exit"
                 type="button"
@@ -567,7 +567,7 @@ export function renderChat(props: ChatProps) {
               >
                 ${icons.x}
               </button>
-            </openclaw-tooltip>
+            </grokbot-tooltip>
           `
         : nothing}
       ${renderChatSearchBar(props.paneId, requestUpdate)}
@@ -672,7 +672,7 @@ export function renderChat(props: ChatProps) {
                     splitRatio,
                     onResize: (event) => props.onSplitRatioChange?.(event.detail.splitRatio),
                   })}
-                  <openclaw-chat-detail-panel
+                  <grokbot-chat-detail-panel
                     class="chat-sidebar"
                     .content=${props.sidebarContent ?? null}
                     .loadFullMessage=${props.onLoadSidebarFullMessage ?? null}
@@ -682,7 +682,7 @@ export function renderChat(props: ChatProps) {
                     .onOpenWorkspaceFile=${props.onOpenWorkspaceFile ?? null}
                     .onRevealInWorkspace=${props.onRevealWorkspaceFile ?? null}
                     @chat-detail-panel-close=${() => props.onCloseSidebar?.()}
-                  ></openclaw-chat-detail-panel> `
+                  ></grokbot-chat-detail-panel> `
               : nothing}
           </div>
         </div>

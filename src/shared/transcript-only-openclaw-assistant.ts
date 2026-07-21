@@ -1,8 +1,8 @@
-// Identifies OpenClaw-authored assistant rows that are transcript bookkeeping,
+// Identifies GrokBot-authored assistant rows that are transcript bookkeeping,
 // not provider model output. Some history surfaces keep gateway-injected rows
 // visible, so use the narrower delivery-mirror predicate when visibility matters.
-export const OPENCLAW_TRANSCRIPT_ARTIFACT_API = "openclaw-transcript" as const;
-export const OPENCLAW_TRANSCRIPT_ARTIFACT_PROVIDER = "openclaw" as const;
+export const OPENCLAW_TRANSCRIPT_ARTIFACT_API = "grokbot-transcript" as const;
+export const OPENCLAW_TRANSCRIPT_ARTIFACT_PROVIDER = "grokbot" as const;
 export const OPENCLAW_DELIVERY_MIRROR_MODEL = "delivery-mirror" as const;
 const OPENCLAW_GATEWAY_INJECTED_MODEL = "gateway-injected" as const;
 
@@ -33,10 +33,10 @@ export function isTranscriptOnlyOpenClawAssistantModel(provider: unknown, model:
 }
 
 /**
- * Returns true when the message is an OpenClaw-authored transcript artifact
+ * Returns true when the message is an GrokBot-authored transcript artifact
  * that must not be replayed to providers.
  *
- * Primary check: provider="openclaw" + model in known transcript-only set.
+ * Primary check: provider="grokbot" + model in known transcript-only set.
  * Fallback: a valid openclawDeliveryMirror marker catches observed historical
  * rows whose provider/model provenance was stripped (#99470).
  */

@@ -3,8 +3,8 @@ import {
   normalizeAccountId,
   resolveNormalizedAccountEntry,
   type OpenClawConfig,
-} from "openclaw/plugin-sdk/account-core";
-import type { TelegramAccountConfig } from "openclaw/plugin-sdk/config-contracts";
+} from "grokbot/plugin-sdk/account-core";
+import type { TelegramAccountConfig } from "grokbot/plugin-sdk/config-contracts";
 
 function normalizeAllowFromEntry(value: string | number): string {
   return String(value).trim();

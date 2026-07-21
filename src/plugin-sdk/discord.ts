@@ -18,7 +18,7 @@ import {
 import { getRuntimeConfig, getRuntimeConfigSnapshot } from "./runtime-config-snapshot.js";
 
 /**
- * @deprecated Compatibility facade for the `openclaw/plugin-sdk/discord` subpath.
+ * @deprecated Compatibility facade for the `grokbot/plugin-sdk/discord` subpath.
  * New channel plugins should use generic channel SDK subpaths.
  */
 export type { ChannelMessageActionAdapter, ChannelMessageActionName } from "./channel-contract.js";
@@ -44,7 +44,7 @@ export {
 } from "./channel-status.js";
 export { DiscordConfigSchema } from "../config/zod-schema.providers-core.js";
 
-/** Discord channel config shape for one account in OpenClaw config. */
+/** Discord channel config shape for one account in GrokBot config. */
 export type DiscordAccountConfig = NonNullable<NonNullable<OpenClawConfig["channels"]>["discord"]>;
 
 /** Component-message request accepted by the deprecated Discord SDK facade. */
@@ -243,7 +243,7 @@ export function inspectDiscordAccount(params: {
   return loadDiscordApiFacadeModule().inspectDiscordAccount(params);
 }
 
-/** List configured Discord account ids from OpenClaw config. */
+/** List configured Discord account ids from GrokBot config. */
 export function listDiscordAccountIds(cfg: OpenClawConfig): string[] {
   return loadDiscordApiFacadeModule().listDiscordAccountIds(cfg);
 }

@@ -1,7 +1,7 @@
 // Server chat agent-event tests protect event fanout, heartbeat visibility,
 // session lifecycle persistence, and subscriber registry behavior.
 
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   INTERNAL_RUNTIME_CONTEXT_BEGIN,
@@ -1109,7 +1109,7 @@ describe("agent event handler", () => {
         "Visible before.",
         "",
         "<<<BEGIN_OPENCLAW_INTERNAL_CONTEXT>>>",
-        "OpenClaw runtime context (internal):",
+        "GrokBot runtime context (internal):",
         "[Internal task completion event]",
         "secret child result",
         "<<<END_OPENCLAW_INTERNAL_CONTEXT>>>",
@@ -2124,7 +2124,7 @@ describe("agent event handler", () => {
         name: "tool_search_code",
         toolCallId: "tool-search-node-1",
         args: {
-          code: 'return await openclaw.tools.call("openclaw:core:exec", { command: "echo hi" });',
+          code: 'return await grokbot.tools.call("grokbot:core:exec", { command: "echo hi" });',
         },
       },
     });
@@ -2139,7 +2139,7 @@ describe("agent event handler", () => {
       name: "exec",
       toolCallId: "tool-search-node-1",
       bridgeToolName: "tool_search_code",
-      bridgeTargetToolName: "openclaw:core:exec",
+      bridgeTargetToolName: "grokbot:core:exec",
       bridgeVerb: "call",
       args: { command: "echo hi" },
     });

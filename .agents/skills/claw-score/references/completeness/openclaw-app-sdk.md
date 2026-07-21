@@ -1,7 +1,7 @@
-# OpenClaw App SDK Completeness
+# GrokBot App SDK Completeness
 
 Use this rubric when assigning category Completeness scores for the
-`openclaw-app-sdk` surface.
+`grokbot-app-sdk` surface.
 
 ## Surface-Specific Scoring Questions
 

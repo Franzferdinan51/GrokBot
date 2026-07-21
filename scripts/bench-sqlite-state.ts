@@ -1,4 +1,4 @@
-// SQLite state benchmark seeds OpenClaw DBs and reports hot-query proof lines.
+// SQLite state benchmark seeds GrokBot DBs and reports hot-query proof lines.
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
@@ -8,11 +8,11 @@ import { expectDefined } from "../packages/normalization-core/src/expect.js";
 import {
   openOpenClawAgentDatabase,
   closeOpenClawAgentDatabasesForTest,
-} from "../src/state/openclaw-agent-db.js";
+} from "../src/state/grokbot-agent-db.js";
 import {
   closeOpenClawStateDatabaseForTest,
   openOpenClawStateDatabase,
-} from "../src/state/openclaw-state-db.js";
+} from "../src/state/grokbot-state-db.js";
 import { parseStrictIntegerOption } from "./lib/dev-tooling-safety.ts";
 import {
   CliUsageError,
@@ -131,7 +131,7 @@ function applyScale(config: ProfileConfig): ProfileConfig {
 }
 
 function printUsage(): void {
-  console.log(`OpenClaw SQLite state benchmark
+  console.log(`GrokBot SQLite state benchmark
 
 Usage:
   node --import tsx scripts/bench-sqlite-state.ts [options]
@@ -508,7 +508,7 @@ function main(): void {
   const { options } = cli;
   const config = applyScale(PROFILES[options.profile]);
   const stateDir =
-    options.stateDir ?? fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-sqlite-perf-"));
+    options.stateDir ?? fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-sqlite-perf-"));
   const env = { OPENCLAW_STATE_DIR: stateDir };
   const started = nowMs();
   try {

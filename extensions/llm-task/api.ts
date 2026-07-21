@@ -4,4 +4,4 @@ export {
   definePluginEntry,
   type AnyAgentTool,
   type OpenClawPluginApi,
-} from "openclaw/plugin-sdk/plugin-entry";
+} from "grokbot/plugin-sdk/plugin-entry";

@@ -32,7 +32,7 @@ function writeStartupMetadataSourceSignatureFixture(rootDir: string): void {
     ["extensions/canvas/src/a2ui-jsonl.ts", "export const a2uiJsonl = 'canvas';\n"],
     ["extensions/canvas/src/cli-helpers.ts", "export const canvasHelpers = 'canvas';\n"],
     ["extensions/canvas/src/cli.ts", "export const canvasCliHelp = 'canvas';\n"],
-    ["src/cli/banner.ts", "export const banner = 'openclaw';\n"],
+    ["src/cli/banner.ts", "export const banner = 'grokbot';\n"],
     [
       "src/cli/daemon-cli/register-service-commands.ts",
       "export const gatewayServiceCommands = 'gateway';\n",
@@ -123,16 +123,16 @@ describe("write-cli-startup-metadata", () => {
     const spawnSyncMock = vi.mocked(spawnSync);
     const successfulRender = {
       error: undefined,
-      output: [null, "Usage: openclaw\n", ""],
+      output: [null, "Usage: grokbot\n", ""],
       pid: 123,
       signal: null,
       status: 0,
       stderr: "",
-      stdout: "Usage: openclaw\n",
+      stdout: "Usage: grokbot\n",
     };
     spawnSyncMock.mockReturnValueOnce(successfulRender);
 
-    expect(__testing.renderSourceRootHelpText()).toBe("Usage: openclaw\n");
+    expect(__testing.renderSourceRootHelpText()).toBe("Usage: grokbot\n");
 
     expect(spawnSyncMock).toHaveBeenCalledOnce();
     expect(spawnSyncMock.mock.calls[0]?.[2]).toMatchObject({
@@ -258,7 +258,7 @@ describe("write-cli-startup-metadata", () => {
   it.runIf(process.platform !== "win32")(
     "kills descendant processes when command help rendering times out",
     async () => {
-      const tempRoot = createTempDir("openclaw-startup-metadata-timeout-");
+      const tempRoot = createTempDir("grokbot-startup-metadata-timeout-");
       const markerPath = path.join(tempRoot, "grandchild.pid");
       const grandchildScript = [
         "process.on('SIGTERM', () => {});",
@@ -292,7 +292,7 @@ describe("write-cli-startup-metadata", () => {
   it.runIf(process.platform !== "win32")(
     "waits for all command help descendants before re-raising parent signals",
     async () => {
-      const tempRoot = createTempDir("openclaw-startup-metadata-signal-");
+      const tempRoot = createTempDir("grokbot-startup-metadata-signal-");
       const fastCommandPath = path.join(tempRoot, "fast-command.mjs");
       const fastReadyPath = path.join(tempRoot, "fast-ready");
       const commandPath = path.join(tempRoot, "command.mjs");
@@ -404,7 +404,7 @@ describe("write-cli-startup-metadata", () => {
   );
 
   it("writes startup metadata with populated root help text when dist falls back to source rendering", async () => {
-    const tempRoot = createTempDir("openclaw-startup-metadata-");
+    const tempRoot = createTempDir("grokbot-startup-metadata-");
     const distDir = path.join(tempRoot, "dist");
     const extensionsDir = path.join(tempRoot, "extensions");
     const outputPath = path.join(distDir, "cli-startup-metadata.json");
@@ -414,7 +414,7 @@ describe("write-cli-startup-metadata", () => {
     writeFileSync(
       path.join(extensionsDir, "matrix", "package.json"),
       JSON.stringify({
-        openclaw: {
+        grokbot: {
           channel: {
             id: "matrix",
             order: 120,
@@ -432,17 +432,17 @@ describe("write-cli-startup-metadata", () => {
       renderBundledRootHelpText: async () => {
         throw new Error("dist root help unavailable");
       },
-      renderSourceRootHelpText: () => "Usage: openclaw\n",
-      renderSourceBrowserHelpText: () => "Usage: openclaw browser\n",
-      renderSourceSecretsHelpText: () => "Usage: openclaw secrets\n",
-      renderSourceNodesHelpText: () => "Usage: openclaw nodes\n",
+      renderSourceRootHelpText: () => "Usage: grokbot\n",
+      renderSourceBrowserHelpText: () => "Usage: grokbot browser\n",
+      renderSourceSecretsHelpText: () => "Usage: grokbot secrets\n",
+      renderSourceNodesHelpText: () => "Usage: grokbot nodes\n",
       renderSourceSubcommandHelpTextRecord: () => ({
-        doctor: "Usage: openclaw doctor\n",
-        gateway: "Usage: openclaw gateway\n",
-        models: "Usage: openclaw models\n",
-        plugins: "Usage: openclaw plugins\n",
-        sessions: "Usage: openclaw sessions\n",
-        tasks: "Usage: openclaw tasks\n",
+        doctor: "Usage: grokbot doctor\n",
+        gateway: "Usage: grokbot gateway\n",
+        models: "Usage: grokbot models\n",
+        plugins: "Usage: grokbot plugins\n",
+        sessions: "Usage: grokbot sessions\n",
+        tasks: "Usage: grokbot tasks\n",
       }),
     });
 
@@ -465,23 +465,23 @@ describe("write-cli-startup-metadata", () => {
     expect(written.channelOptions).toContain("matrix");
     expect(written.generatorSignature).toMatch(/^[a-f0-9]{40}$/u);
     expect(written.browserHelpText).toContain("Usage:");
-    expect(written.browserHelpText).toContain("openclaw browser");
+    expect(written.browserHelpText).toContain("grokbot browser");
     expect(written.secretsHelpText).toContain("Usage:");
-    expect(written.secretsHelpText).toContain("openclaw secrets");
+    expect(written.secretsHelpText).toContain("grokbot secrets");
     expect(written.nodesHelpText).toContain("Usage:");
-    expect(written.nodesHelpText).toContain("openclaw nodes");
+    expect(written.nodesHelpText).toContain("grokbot nodes");
     expect(written.rootHelpText).toContain("Usage:");
-    expect(written.rootHelpText).toContain("openclaw");
-    expect(written.subcommandHelpText.doctor).toContain("openclaw doctor");
-    expect(written.subcommandHelpText.gateway).toContain("openclaw gateway");
-    expect(written.subcommandHelpText.models).toContain("openclaw models");
-    expect(written.subcommandHelpText.plugins).toContain("openclaw plugins");
-    expect(written.subcommandHelpText.sessions).toContain("openclaw sessions");
-    expect(written.subcommandHelpText.tasks).toContain("openclaw tasks");
+    expect(written.rootHelpText).toContain("grokbot");
+    expect(written.subcommandHelpText.doctor).toContain("grokbot doctor");
+    expect(written.subcommandHelpText.gateway).toContain("grokbot gateway");
+    expect(written.subcommandHelpText.models).toContain("grokbot models");
+    expect(written.subcommandHelpText.plugins).toContain("grokbot plugins");
+    expect(written.subcommandHelpText.sessions).toContain("grokbot sessions");
+    expect(written.subcommandHelpText.tasks).toContain("grokbot tasks");
   });
 
   it("renders independent startup help snapshots concurrently", async () => {
-    const tempRoot = createTempDir("openclaw-startup-metadata-concurrency-");
+    const tempRoot = createTempDir("grokbot-startup-metadata-concurrency-");
     const distDir = path.join(tempRoot, "dist");
     const extensionsDir = path.join(tempRoot, "extensions");
     const outputPath = path.join(distDir, "cli-startup-metadata.json");
@@ -521,22 +521,22 @@ describe("write-cli-startup-metadata", () => {
       outputPath,
       extensionsDir,
       sourceRootDir: tempRoot,
-      renderBundledRootHelpText: async () => "Usage: openclaw\n",
-      renderSourceBrowserHelpText: renderAfterUnblock("browser", "Usage: openclaw browser\n"),
-      renderSourceSecretsHelpText: renderAfterUnblock("secrets", "Usage: openclaw secrets\n"),
-      renderSourceNodesHelpText: renderAfterUnblock("nodes", "Usage: openclaw nodes\n"),
+      renderBundledRootHelpText: async () => "Usage: grokbot\n",
+      renderSourceBrowserHelpText: renderAfterUnblock("browser", "Usage: grokbot browser\n"),
+      renderSourceSecretsHelpText: renderAfterUnblock("secrets", "Usage: grokbot secrets\n"),
+      renderSourceNodesHelpText: renderAfterUnblock("nodes", "Usage: grokbot nodes\n"),
       renderSourceSubcommandHelpTextRecord: async () => {
         started.push("subcommands");
         await new Promise<void>((resolve) => {
           unblockers.set("subcommands", resolve);
         });
         return {
-          doctor: "Usage: openclaw doctor\n",
-          gateway: "Usage: openclaw gateway\n",
-          models: "Usage: openclaw models\n",
-          plugins: "Usage: openclaw plugins\n",
-          sessions: "Usage: openclaw sessions\n",
-          tasks: "Usage: openclaw tasks\n",
+          doctor: "Usage: grokbot doctor\n",
+          gateway: "Usage: grokbot gateway\n",
+          models: "Usage: grokbot models\n",
+          plugins: "Usage: grokbot plugins\n",
+          sessions: "Usage: grokbot sessions\n",
+          tasks: "Usage: grokbot tasks\n",
         };
       },
     });
@@ -552,13 +552,13 @@ describe("write-cli-startup-metadata", () => {
       nodesHelpText: string;
       secretsHelpText: string;
     };
-    expect(written.browserHelpText).toContain("openclaw browser");
-    expect(written.secretsHelpText).toContain("openclaw secrets");
-    expect(written.nodesHelpText).toContain("openclaw nodes");
+    expect(written.browserHelpText).toContain("grokbot browser");
+    expect(written.secretsHelpText).toContain("grokbot secrets");
+    expect(written.nodesHelpText).toContain("grokbot nodes");
   });
 
   it("regenerates nodes help when bundled canvas CLI help sources change", async () => {
-    const tempRoot = createTempDir("openclaw-startup-metadata-signature-");
+    const tempRoot = createTempDir("grokbot-startup-metadata-signature-");
     const distDir = path.join(tempRoot, "dist");
     const extensionsDir = path.join(tempRoot, "extensions");
     const outputPath = path.join(distDir, "cli-startup-metadata.json");
@@ -573,20 +573,20 @@ describe("write-cli-startup-metadata", () => {
         outputPath,
         extensionsDir,
         sourceRootDir: tempRoot,
-        renderBundledRootHelpText: async () => "Usage: openclaw\n",
-        renderSourceBrowserHelpText: () => "Usage: openclaw browser\n",
-        renderSourceSecretsHelpText: () => "Usage: openclaw secrets\n",
+        renderBundledRootHelpText: async () => "Usage: grokbot\n",
+        renderSourceBrowserHelpText: () => "Usage: grokbot browser\n",
+        renderSourceSecretsHelpText: () => "Usage: grokbot secrets\n",
         renderSourceNodesHelpText: () => {
           nodesRenderCount += 1;
-          return `Usage: openclaw nodes ${nodesRenderCount}\n`;
+          return `Usage: grokbot nodes ${nodesRenderCount}\n`;
         },
         renderSourceSubcommandHelpTextRecord: () => ({
-          doctor: "Usage: openclaw doctor\n",
-          gateway: "Usage: openclaw gateway\n",
-          models: "Usage: openclaw models\n",
-          plugins: "Usage: openclaw plugins\n",
-          sessions: "Usage: openclaw sessions\n",
-          tasks: "Usage: openclaw tasks\n",
+          doctor: "Usage: grokbot doctor\n",
+          gateway: "Usage: grokbot gateway\n",
+          models: "Usage: grokbot models\n",
+          plugins: "Usage: grokbot plugins\n",
+          sessions: "Usage: grokbot sessions\n",
+          tasks: "Usage: grokbot tasks\n",
         }),
       });
     };
@@ -617,11 +617,11 @@ describe("write-cli-startup-metadata", () => {
       nodesHelpText: string;
     };
     expect(nodesRenderCount).toBe(3);
-    expect(written.nodesHelpText).toContain("openclaw nodes 3");
+    expect(written.nodesHelpText).toContain("grokbot nodes 3");
   });
 
   it("regenerates help when build version or commit changes", async () => {
-    const tempRoot = createTempDir("openclaw-startup-metadata-build-identity-");
+    const tempRoot = createTempDir("grokbot-startup-metadata-build-identity-");
     const distDir = path.join(tempRoot, "dist");
     const extensionsDir = path.join(tempRoot, "extensions");
     const outputPath = path.join(distDir, "cli-startup-metadata.json");
@@ -634,14 +634,14 @@ describe("write-cli-startup-metadata", () => {
         commit: string;
         version: string;
       };
-      const banner = `OpenClaw ${buildInfo.version} (${buildInfo.commit.slice(0, 7)})`;
+      const banner = `GrokBot ${buildInfo.version} (${buildInfo.commit.slice(0, 7)})`;
       return {
-        doctor: `${banner}\nUsage: openclaw doctor\n`,
-        gateway: `${banner}\nUsage: openclaw gateway\n`,
-        models: `${banner}\nUsage: openclaw models\n`,
-        plugins: `${banner}\nUsage: openclaw plugins\n`,
-        sessions: `${banner}\nUsage: openclaw sessions\n`,
-        tasks: `${banner}\nUsage: openclaw tasks\n`,
+        doctor: `${banner}\nUsage: grokbot doctor\n`,
+        gateway: `${banner}\nUsage: grokbot gateway\n`,
+        models: `${banner}\nUsage: grokbot models\n`,
+        plugins: `${banner}\nUsage: grokbot plugins\n`,
+        sessions: `${banner}\nUsage: grokbot sessions\n`,
+        tasks: `${banner}\nUsage: grokbot tasks\n`,
       };
     };
 
@@ -656,19 +656,19 @@ describe("write-cli-startup-metadata", () => {
         sourceRootDir: tempRoot,
         renderBundledRootHelpText: async () => {
           renderCount += 1;
-          return `Usage: openclaw ${renderCount}\n`;
+          return `Usage: grokbot ${renderCount}\n`;
         },
         renderSourceBrowserHelpText: () => {
           commandRenderCount += 1;
-          return "Usage: openclaw browser\n";
+          return "Usage: grokbot browser\n";
         },
         renderSourceSecretsHelpText: () => {
           commandRenderCount += 1;
-          return "Usage: openclaw secrets\n";
+          return "Usage: grokbot secrets\n";
         },
         renderSourceNodesHelpText: () => {
           commandRenderCount += 1;
-          return "Usage: openclaw nodes\n";
+          return "Usage: grokbot nodes\n";
         },
         renderSourceSubcommandHelpTextRecord: renderSubcommandHelp,
       });
@@ -683,7 +683,7 @@ describe("write-cli-startup-metadata", () => {
     await writeMetadata();
     expect(renderCount).toBe(1);
     expect(commandRenderCount).toBe(4);
-    expect(readFileSync(outputPath, "utf8")).toContain("OpenClaw 2026.7.2 (aaaaaaa)");
+    expect(readFileSync(outputPath, "utf8")).toContain("GrokBot 2026.7.2 (aaaaaaa)");
 
     writeFixtureFile(
       distDir,
@@ -693,7 +693,7 @@ describe("write-cli-startup-metadata", () => {
     await writeMetadata();
     expect(renderCount).toBe(2);
     expect(commandRenderCount).toBe(8);
-    expect(readFileSync(outputPath, "utf8")).toContain("OpenClaw 2026.7.2 (bbbbbbb)");
+    expect(readFileSync(outputPath, "utf8")).toContain("GrokBot 2026.7.2 (bbbbbbb)");
 
     writeFixtureFile(
       distDir,
@@ -706,6 +706,6 @@ describe("write-cli-startup-metadata", () => {
     const written = JSON.parse(readFileSync(outputPath, "utf8")) as {
       subcommandHelpText: { models: string };
     };
-    expect(written.subcommandHelpText.models).toContain("OpenClaw 2026.7.3 (bbbbbbb)");
+    expect(written.subcommandHelpText.models).toContain("GrokBot 2026.7.3 (bbbbbbb)");
   });
 });

@@ -11,7 +11,7 @@ export function compareOpenClawVersions(leftVersion, rightVersion) {
   const left = parseVersion(leftVersion);
   const right = parseVersion(rightVersion);
   if (!left || !right) {
-    throw new Error(`cannot compare OpenClaw versions: ${leftVersion} ${rightVersion}`);
+    throw new Error(`cannot compare GrokBot versions: ${leftVersion} ${rightVersion}`);
   }
   for (const key of ["year", "month", "patch"]) {
     const delta = left[key] - right[key];
@@ -42,23 +42,23 @@ function normalizePublishedVersions(publishedVersions) {
 export function resolveDefaultReleaseUpgradeBaseline(candidateVersion, publishedVersions) {
   const candidate = parseVersion(candidateVersion);
   if (!candidate) {
-    throw new Error(`invalid candidate OpenClaw version: ${candidateVersion}`);
+    throw new Error(`invalid candidate GrokBot version: ${candidateVersion}`);
   }
 
   const versions = normalizePublishedVersions(publishedVersions);
   const older = versions.find((version) => compareOpenClawVersions(version, candidate.version) < 0);
   if (older) {
-    return `openclaw@${older}`;
+    return `grokbot@${older}`;
   }
 
   const same = versions.find(
     (version) => compareOpenClawVersions(version, candidate.version) === 0,
   );
   if (same) {
-    return `openclaw@${same}`;
+    return `grokbot@${same}`;
   }
 
-  throw new Error(`no published OpenClaw baseline is <= candidate ${candidate.version}`);
+  throw new Error(`no published GrokBot baseline is <= candidate ${candidate.version}`);
 }
 
 export function parseArgs(argv) {
@@ -88,13 +88,13 @@ function readPublishedVersions(args) {
     }
     return parsed;
   }
-  const raw = execFileSync("npm", ["view", "openclaw", "versions", "--json", "--silent"], {
+  const raw = execFileSync("npm", ["view", "grokbot", "versions", "--json", "--silent"], {
     encoding: "utf8",
     stdio: ["ignore", "pipe", "inherit"],
   });
   const parsed = JSON.parse(raw);
   if (!Array.isArray(parsed)) {
-    throw new Error("npm returned a non-array openclaw versions payload");
+    throw new Error("npm returned a non-array grokbot versions payload");
   }
   return parsed;
 }

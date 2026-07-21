@@ -4,22 +4,22 @@ import path from "node:path";
 import type {
   OpenKeyedStoreOptions,
   PluginStateSyncKeyedStore,
-} from "openclaw/plugin-sdk/plugin-state-runtime";
+} from "grokbot/plugin-sdk/plugin-state-runtime";
 import {
   closeOpenClawStateDatabaseForTest,
   createChannelIngressQueueForTests,
   createPluginStateKeyedStoreForTests,
   createPluginStateSyncKeyedStoreForTests,
   resetPluginStateStoreForTests,
-} from "openclaw/plugin-sdk/plugin-state-test-runtime";
-import type { PluginRuntime } from "openclaw/plugin-sdk/runtime-store";
-import { resolvePreferredOpenClawTmpDir } from "openclaw/plugin-sdk/temp-path";
+} from "grokbot/plugin-sdk/plugin-state-test-runtime";
+import type { PluginRuntime } from "grokbot/plugin-sdk/runtime-store";
+import { resolvePreferredOpenClawTmpDir } from "grokbot/plugin-sdk/temp-path";
 import { vi } from "vitest";
 import { setIMessageRuntime } from "../runtime.js";
 
 function createIMessageTestEnv(): NodeJS.ProcessEnv & { OPENCLAW_STATE_DIR: string } {
   const stateDir = fs.realpathSync(
-    fs.mkdtempSync(path.join(resolvePreferredOpenClawTmpDir(), "openclaw-imessage-state-")),
+    fs.mkdtempSync(path.join(resolvePreferredOpenClawTmpDir(), "grokbot-imessage-state-")),
   );
   return { ...process.env, OPENCLAW_STATE_DIR: stateDir };
 }

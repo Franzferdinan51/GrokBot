@@ -2,8 +2,8 @@
 import {
   isProviderAuthProfileConfigured,
   type OpenClawConfig,
-} from "openclaw/plugin-sdk/provider-auth";
-import { resolveApiKeyForProvider } from "openclaw/plugin-sdk/provider-auth-runtime";
+} from "grokbot/plugin-sdk/provider-auth";
+import { resolveApiKeyForProvider } from "grokbot/plugin-sdk/provider-auth-runtime";
 import {
   createRealtimeTranscriptionWebSocketSession,
   type RealtimeTranscriptionProviderConfig,
@@ -11,13 +11,13 @@ import {
   type RealtimeTranscriptionSession,
   type RealtimeTranscriptionSessionCreateRequest,
   type RealtimeTranscriptionWebSocketTransport,
-} from "openclaw/plugin-sdk/realtime-transcription";
-import { normalizeResolvedSecretInputString } from "openclaw/plugin-sdk/secret-input";
+} from "grokbot/plugin-sdk/realtime-transcription";
+import { normalizeResolvedSecretInputString } from "grokbot/plugin-sdk/secret-input";
 import {
   normalizeOptionalString,
   parseBooleanValue as readBoolean,
   parseFiniteNumber as readFiniteNumber,
-} from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/string-coerce-runtime";
 import { XAI_BASE_URL } from "./model-definitions.js";
 import { xaiUserAgentHeaderFor } from "./src/xai-user-agent.js";
 
@@ -280,6 +280,6 @@ async function resolveXaiRealtimeApiKey(
     return oauthKey;
   }
   throw new Error(
-    "xAI credentials missing for realtime STT. Sign in with `openclaw onboard --auth-choice xai-oauth`, or run `openclaw onboard --auth-choice xai-api-key`, or set XAI_API_KEY.",
+    "xAI credentials missing for realtime STT. Sign in with `grokbot onboard --auth-choice xai-oauth`, or run `grokbot onboard --auth-choice xai-api-key`, or set XAI_API_KEY.",
   );
 }

@@ -8,4 +8,4 @@ export {
   type FileIdentityStat,
   sameFileIdentity,
   sanitizeUntrustedFileName,
-} from "@openclaw/fs-safe/advanced";
+} from "@grokbot/fs-safe/advanced";

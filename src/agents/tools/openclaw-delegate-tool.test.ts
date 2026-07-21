@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { GATEWAY_OWNER_ONLY_CORE_TOOLS } from "../../security/dangerous-tools.js";
 import { compactToolOutputHint } from "../tool-schema-hints.js";
 import { callInProcessGatewayTool } from "./in-process-gateway.js";
-import { createOpenClawDelegateToolsForRun } from "./openclaw-delegate-tool.js";
+import { createOpenClawDelegateToolsForRun } from "./grokbot-delegate-tool.js";
 
 vi.mock("./in-process-gateway.js", () => ({
   callInProcessGatewayTool: vi.fn(),
@@ -15,7 +15,7 @@ beforeEach(() => {
   callGateway.mockReset();
 });
 
-describe("openclaw delegation tool", () => {
+describe("grokbot delegation tool", () => {
   it("relays context and surfaces pending approval", async () => {
     callGateway.mockResolvedValue({
       sessionId: "ignored-by-client",
@@ -30,12 +30,12 @@ describe("openclaw delegation tool", () => {
       agentChannel: "webchat",
     })[0];
     if (!tool) {
-      throw new Error("expected OpenClaw delegation tool");
+      throw new Error("expected GrokBot delegation tool");
     }
 
     const result = await tool.execute("call-1", { message: "Add channel." });
 
-    expect(callGateway).toHaveBeenCalledWith("openclaw.chat", {
+    expect(callGateway).toHaveBeenCalledWith("grokbot.chat", {
       sessionId: expect.stringMatching(/^delegate-[a-f0-9]{32}$/),
       message: "Add channel.",
       delegation: {
@@ -67,7 +67,7 @@ describe("openclaw delegation tool", () => {
       runSessionKey: "agent:main:main",
     })[0];
     if (!tool) {
-      throw new Error("expected OpenClaw delegation tool");
+      throw new Error("expected GrokBot delegation tool");
     }
 
     await tool.execute("call-1", { message: "First." });
@@ -81,6 +81,6 @@ describe("openclaw delegation tool", () => {
   });
 
   it("uses the owner-only core gate", () => {
-    expect(GATEWAY_OWNER_ONLY_CORE_TOOLS).toContain("openclaw");
+    expect(GATEWAY_OWNER_ONLY_CORE_TOOLS).toContain("grokbot");
   });
 });

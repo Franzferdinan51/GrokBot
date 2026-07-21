@@ -11,11 +11,11 @@ import {
   executeSqliteQueryTakeFirstSync,
   getNodeSqliteKysely,
 } from "../../src/infra/kysely-sync.js";
-import type { DB as OpenClawStateKyselyDatabase } from "../../src/state/openclaw-state-db.generated.js";
+import type { DB as OpenClawStateKyselyDatabase } from "../../src/state/grokbot-state-db.generated.js";
 import {
   closeOpenClawStateDatabaseForTest,
   openOpenClawStateDatabase,
-} from "../../src/state/openclaw-state-db.js";
+} from "../../src/state/grokbot-state-db.js";
 import { registerStopChildBehaviorTests } from "./bench-gateway-child-test-support.js";
 
 type GatewayRestartIntentDatabase = Pick<OpenClawStateKyselyDatabase, "gateway_restart_intent">;
@@ -78,7 +78,7 @@ describe("gateway restart benchmark script", () => {
 
   it("prints help without running benchmark cases", () => {
     expect(helpResult.status).toBe(0);
-    expect(helpResult.stdout).toContain("OpenClaw Gateway restart benchmark");
+    expect(helpResult.stdout).toContain("GrokBot Gateway restart benchmark");
     expect(helpResult.stdout).toContain("--restarts <n>");
     expect(helpResult.stdout).toContain("Timeout for initial startup and each restart");
     expect(helpResult.stdout).toContain("--post-ready-delay-ms <ms>");
@@ -245,7 +245,7 @@ node    1234 user   12u  IPv4    0t0      TCP localhost:1234
   });
 
   it("enables both startup and restart trace in the child gateway environment", () => {
-    const env = testing.sanitizedEnv("/tmp/openclaw-bench", "/tmp/openclaw-bench/config.json", {
+    const env = testing.sanitizedEnv("/tmp/grokbot-bench", "/tmp/grokbot-bench/config.json", {
       config: {},
       id: "skipChannels",
       name: "gateway restart, skip channels",
@@ -259,8 +259,8 @@ node    1234 user   12u  IPv4    0t0      TCP localhost:1234
 
   it("can pin ACPX startup probe policy per benchmark case", () => {
     const probeOffEnv = testing.sanitizedEnv(
-      "/tmp/openclaw-bench",
-      "/tmp/openclaw-bench/config.json",
+      "/tmp/grokbot-bench",
+      "/tmp/grokbot-bench/config.json",
       {
         config: {},
         env: { OPENCLAW_ACPX_RUNTIME_STARTUP_PROBE: "0" },
@@ -710,7 +710,7 @@ node    1234 user   12u  IPv4    0t0      TCP localhost:1234
   });
 
   it("writes restart intent files for the target gateway pid", () => {
-    const root = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-restart-bench-test-"));
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-restart-bench-test-"));
     try {
       const env = { OPENCLAW_STATE_DIR: path.join(root, "state") };
 
@@ -808,7 +808,7 @@ node    1234 user   12u  IPv4    0t0      TCP localhost:1234
   });
 
   it("writes plugin fixtures as a parent load path with explicit startup activation", () => {
-    const root = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-restart-bench-config-test-"));
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-restart-bench-config-test-"));
     try {
       const configPath = testing.writeConfig(root, {
         config: {},
@@ -825,7 +825,7 @@ node    1234 user   12u  IPv4    0t0      TCP localhost:1234
       expect(config.plugins?.allow).toEqual(["bench-plugin-01", "bench-plugin-02"]);
       const manifest = JSON.parse(
         fs.readFileSync(
-          path.join(root, "plugins", "bench-plugin-01", "openclaw.plugin.json"),
+          path.join(root, "plugins", "bench-plugin-01", "grokbot.plugin.json"),
           "utf8",
         ),
       ) as { activation?: { onStartup?: boolean } };

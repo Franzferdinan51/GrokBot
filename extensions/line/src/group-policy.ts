@@ -2,7 +2,7 @@
 import {
   buildChannelGroupsScopeTree,
   resolveScopeRequireMention,
-} from "openclaw/plugin-sdk/channel-policy";
+} from "grokbot/plugin-sdk/channel-policy";
 import { resolveExactLineGroupConfigKey, type OpenClawConfig } from "./channel-api.js";
 
 type LineGroupContext = { cfg: OpenClawConfig; accountId?: string | null; groupId?: string | null };

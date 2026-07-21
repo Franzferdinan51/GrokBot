@@ -1,18 +1,18 @@
-title: Medium game plan OpenClaw harness
+title: Medium game plan GrokBot harness
 
 scenario:
-  id: medium-game-plan-openclaw-harness
+  id: medium-game-plan-grokbot-harness
   surface: workspace
   coverage:
     primary:
       - workspace.planning
     secondary:
-      - agents.openclaw-harness
-  objective: Verify GPT-5.6 Luna can use the OpenClaw harness to plan and build a medium-complex self-contained browser game.
+      - agents.grokbot-harness
+  objective: Verify GPT-5.6 Luna can use the GrokBot harness to plan and build a medium-complex self-contained browser game.
   successCriteria:
     - A live-frontier run fails fast unless the selected primary model is openai/gpt-5.6-luna.
-    - The scenario forces the embedded OpenClaw harness before the build turn.
-    - The OpenClaw harness records a successful `update_plan` tool call before the artifact assertion passes.
+    - The scenario forces the embedded GrokBot harness before the build turn.
+    - The GrokBot harness records a successful `update_plan` tool call before the artifact assertion passes.
     - The agent writes a self-contained HTML game with a canvas loop, controls, scoring, waves, pause, and restart.
   docsRefs:
     - docs/plugins/sdk-agent-harness.md
@@ -20,24 +20,24 @@ scenario:
     - docs/help/testing.md
   codeRefs:
     - src/agents/harness/selection.ts
-    - src/agents/harness/builtin-openclaw.ts
+    - src/agents/harness/builtin-grokbot.ts
     - extensions/qa-lab/src/suite-runtime-agent-session.ts
   execution:
     kind: flow
-    runtime: openclaw
-    summary: Run with `pnpm openclaw qa suite --provider-mode live-frontier --model openai/gpt-5.6-luna --alt-model openai/gpt-5.6-luna --fast --thinking medium --scenario medium-game-plan-openclaw-harness`.
+    runtime: grokbot
+    summary: Run with `pnpm grokbot qa suite --provider-mode live-frontier --model openai/gpt-5.6-luna --alt-model openai/gpt-5.6-luna --fast --thinking medium --scenario medium-game-plan-grokbot-harness`.
     config:
       requiredProviderMode: live-frontier
       requiredProvider: openai
       requiredModel: gpt-5.6-luna
-      harnessRuntime: openclaw
-      artifactFile: star-garden-defenders-openclaw.html
+      harnessRuntime: grokbot
+      artifactFile: star-garden-defenders-grokbot.html
       gameTitle: Star Garden Defenders
       minBytes: 5000
       buildPrompt: |-
         Call update_plan with a short implementation plan before editing.
 
-        Then build a medium-complex, self-contained browser game at ./star-garden-defenders-openclaw.html.
+        Then build a medium-complex, self-contained browser game at ./star-garden-defenders-grokbot.html.
 
         Game: Star Garden Defenders.
         Requirements:
@@ -52,7 +52,7 @@ scenario:
 
 flow:
   steps:
-    - name: confirms GPT-5.6 Luna OpenClaw harness target
+    - name: confirms GPT-5.6 Luna GrokBot harness target
       actions:
         - set: selected
           value:
@@ -77,13 +77,13 @@ flow:
           saveAs: transcriptBefore
           args:
             - ref: env
-            - agent:qa:medium-game-openclaw
+            - agent:qa:medium-game-grokbot
             - allowEmpty: true
         - call: runAgentPrompt
           saveAs: turn
           args:
             - ref: env
-            - sessionKey: agent:qa:medium-game-openclaw
+            - sessionKey: agent:qa:medium-game-grokbot
               message:
                 expr: config.buildPrompt
               provider:
@@ -104,12 +104,12 @@ flow:
           saveAs: transcript
           args:
             - ref: env
-            - agent:qa:medium-game-openclaw
+            - agent:qa:medium-game-grokbot
             - afterEventCursor:
                 expr: transcriptBefore.eventCursor
         - assert:
             expr: "(transcript.successfulToolCallCounts.update_plan ?? 0) > 0"
-            message: missing OpenClaw update_plan signal
+            message: missing GrokBot update_plan signal
         - set: artifactPath
           value:
             expr: "path.join(env.gateway.workspaceDir, config.artifactFile)"

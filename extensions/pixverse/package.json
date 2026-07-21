@@ -1,31 +1,31 @@
 {
-  "name": "@openclaw/pixverse-provider",
+  "name": "@grokbot/pixverse-provider",
   "version": "2026.7.2",
-  "description": "OpenClaw PixVerse video generation provider plugin.",
+  "description": "GrokBot PixVerse video generation provider plugin.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/openclaw/openclaw"
+    "url": "https://github.com/grokbot/grokbot"
   },
   "type": "module",
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*",
-    "openclaw": "workspace:*"
+    "@grokbot/plugin-sdk": "workspace:*",
+    "grokbot": "workspace:*"
   },
   "peerDependencies": {
-    "openclaw": ">=2026.7.2"
+    "grokbot": ">=2026.7.2"
   },
   "peerDependenciesMeta": {
-    "openclaw": {
+    "grokbot": {
       "optional": true
     }
   },
-  "openclaw": {
+  "grokbot": {
     "extensions": [
       "./index.ts"
     ],
     "install": {
-      "clawhubSpec": "clawhub:@openclaw/pixverse-provider",
-      "npmSpec": "@openclaw/pixverse-provider",
+      "clawhubSpec": "clawhub:@grokbot/pixverse-provider",
+      "npmSpec": "@grokbot/pixverse-provider",
       "defaultChoice": "npm",
       "minHostVersion": ">=2026.5.26"
     },

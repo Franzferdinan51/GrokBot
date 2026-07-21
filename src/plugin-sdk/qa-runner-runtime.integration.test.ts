@@ -56,9 +56,9 @@ describe("plugin-sdk qa-runner-runtime linked plugin smoke", () => {
   });
 
   it("loads an activated qa runner from a linked plugin path without a bundled install fallback", async () => {
-    const stateDir = makeTempDir("openclaw-qa-runner-state-");
+    const stateDir = makeTempDir("grokbot-qa-runner-state-");
     const pluginDir = path.join(stateDir, "extensions", "qa-linked");
-    const configPath = path.join(stateDir, "openclaw.json");
+    const configPath = path.join(stateDir, "grokbot.json");
 
     fs.writeFileSync(
       configPath,
@@ -72,7 +72,7 @@ describe("plugin-sdk qa-runner-runtime linked plugin smoke", () => {
 
     fs.mkdirSync(pluginDir, { recursive: true });
     fs.writeFileSync(
-      path.join(pluginDir, "openclaw.plugin.json"),
+      path.join(pluginDir, "grokbot.plugin.json"),
       JSON.stringify({
         id: "qa-linked",
         qaRunners: [
@@ -92,12 +92,12 @@ describe("plugin-sdk qa-runner-runtime linked plugin smoke", () => {
     fs.writeFileSync(
       path.join(pluginDir, "package.json"),
       JSON.stringify({
-        name: "@openclaw/qa-linked",
+        name: "@grokbot/qa-linked",
         type: "module",
-        openclaw: {
+        grokbot: {
           extensions: ["./index.js"],
           install: {
-            npmSpec: "@openclaw/qa-linked",
+            npmSpec: "@grokbot/qa-linked",
           },
         },
       }),
@@ -144,15 +144,15 @@ describe("plugin-sdk qa-runner-runtime linked plugin smoke", () => {
   });
 
   it("ignores operator runner metadata and state during private QA discovery", () => {
-    const stateDir = makeTempDir("openclaw-private-qa-operator-state-");
+    const stateDir = makeTempDir("grokbot-private-qa-operator-state-");
     const pluginDir = path.join(stateDir, "extensions", "operator-runner");
-    const stateDatabasePath = path.join(stateDir, "openclaw.sqlite");
+    const stateDatabasePath = path.join(stateDir, "grokbot.sqlite");
     const stateDatabaseSentinel = "operator-state-must-remain-unopened";
 
     fs.mkdirSync(pluginDir, { recursive: true });
     fs.writeFileSync(stateDatabasePath, stateDatabaseSentinel, "utf8");
     fs.writeFileSync(
-      path.join(pluginDir, "openclaw.plugin.json"),
+      path.join(pluginDir, "grokbot.plugin.json"),
       JSON.stringify({
         id: "operator-runner",
         qaRunners: [{ commandName: "operator-sentinel" }],
@@ -167,9 +167,9 @@ describe("plugin-sdk qa-runner-runtime linked plugin smoke", () => {
     fs.writeFileSync(
       path.join(pluginDir, "package.json"),
       JSON.stringify({
-        name: "@openclaw/operator-runner",
+        name: "@grokbot/operator-runner",
         type: "module",
-        openclaw: { extensions: ["./index.js"] },
+        grokbot: { extensions: ["./index.js"] },
       }),
       "utf8",
     );
@@ -178,7 +178,7 @@ describe("plugin-sdk qa-runner-runtime linked plugin smoke", () => {
     process.env.OPENCLAW_ENABLE_PRIVATE_QA_CLI = "1";
     process.env.OPENCLAW_DISABLE_BUNDLED_PLUGINS = "0";
     process.env.OPENCLAW_STATE_DIR = stateDir;
-    process.env.OPENCLAW_CONFIG_PATH = path.join(stateDir, "openclaw.json");
+    process.env.OPENCLAW_CONFIG_PATH = path.join(stateDir, "grokbot.json");
 
     const contributions = listQaRunnerCliContributions();
 

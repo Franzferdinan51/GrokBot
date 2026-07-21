@@ -5,8 +5,8 @@ import {
   loadTranscriptEventsSync,
   parseSqliteSessionFileMarker,
   upsertSessionEntry,
-} from "openclaw/plugin-sdk/session-store-runtime";
-import { appendSessionTranscriptMessageByIdentity } from "openclaw/plugin-sdk/session-transcript-runtime";
+} from "grokbot/plugin-sdk/session-store-runtime";
+import { appendSessionTranscriptMessageByIdentity } from "grokbot/plugin-sdk/session-transcript-runtime";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   createSession,
@@ -293,7 +293,7 @@ describe("qa suite runtime agent session helpers", () => {
     ]);
 
     await expect(
-      fs.stat(path.join(tempRoot, "state", "agents", "qa", "agent", "openclaw-agent.sqlite")),
+      fs.stat(path.join(tempRoot, "state", "agents", "qa", "agent", "grokbot-agent.sqlite")),
     ).resolves.toBeDefined();
     await expect(
       fs.stat(path.join(tempRoot, "state", "agents", "qa", "sessions", "sessions.json")),

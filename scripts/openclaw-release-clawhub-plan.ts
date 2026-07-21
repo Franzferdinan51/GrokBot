@@ -1,11 +1,11 @@
 #!/usr/bin/env -S node --import tsx
-// OpenClaw release ClawHub plan CLI emits release workflow routing as JSON.
+// GrokBot release ClawHub plan CLI emits release workflow routing as JSON.
 
 import { pathToFileURL } from "node:url";
 import {
   buildOpenClawReleaseClawHubPlan,
   parseOpenClawReleaseClawHubPlanArgs,
-} from "./lib/openclaw-release-clawhub-plan.ts";
+} from "./lib/grokbot-release-clawhub-plan.ts";
 
 if (import.meta.url === pathToFileURL(process.argv[1] ?? "").href) {
   const args = parseOpenClawReleaseClawHubPlanArgs(process.argv.slice(2));

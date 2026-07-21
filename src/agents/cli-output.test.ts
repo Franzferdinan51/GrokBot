@@ -974,11 +974,11 @@ describe("parseCliJsonl", () => {
     expect(
       formatCliOutputError(result!, {
         runId: "run-max-turns",
-        sessionId: "openclaw-session-max-turns",
+        sessionId: "grokbot-session-max-turns",
       }),
     ).toBe(
       "Claude CLI stopped after reaching the maximum number of turns (limit: 1). " +
-        "OpenClaw run: run-max-turns. OpenClaw session: openclaw-session-max-turns. " +
+        "GrokBot run: run-max-turns. GrokBot session: grokbot-session-max-turns. " +
         "Claude session: session-max-turns. Tool actions may already have run; verify their effects before retrying. " +
         "Retry with a higher --max-turns value or a narrower task.",
     );
@@ -2177,7 +2177,7 @@ describe("createCliJsonlStreamingParser", () => {
           event: {
             type: "content_block_delta",
             index: 0,
-            delta: { type: "input_json_delta", partial_json: '{"query":"openclaw"}' },
+            delta: { type: "input_json_delta", partial_json: '{"query":"grokbot"}' },
           },
         }),
         JSON.stringify({
@@ -2193,7 +2193,7 @@ describe("createCliJsonlStreamingParser", () => {
         toolCallId: "toolu_hosted",
         name: "web_search",
         kind: type,
-        args: { query: "openclaw" },
+        args: { query: "grokbot" },
       },
     ]);
   });
@@ -2204,8 +2204,8 @@ describe("createCliJsonlStreamingParser", () => {
       resultType: "web_search_tool_result",
       toolCallId: "srvtoolu_1",
       name: "web_search",
-      input: { query: "openclaw" },
-      result: [{ type: "web_search_result", title: "OpenClaw", url: "https://example.com" }],
+      input: { query: "grokbot" },
+      result: [{ type: "web_search_result", title: "GrokBot", url: "https://example.com" }],
       isError: false,
     },
     {

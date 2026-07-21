@@ -20,7 +20,7 @@ function makeUnregisteredGroupMsg(
       timestamp: 1700000000,
     },
     payload: {
-      body: "@openclaw hello",
+      body: "@grokbot hello",
     },
     platform: {
       chatJid: conversationId,

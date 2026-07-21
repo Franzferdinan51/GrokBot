@@ -1,17 +1,17 @@
 ---
-summary: "CLI reference for `openclaw onboard` (interactive onboarding)"
+summary: "CLI reference for `grokbot onboard` (interactive onboarding)"
 read_when:
-  - You want to establish inference, then finish setup with OpenClaw
+  - You want to establish inference, then finish setup with GrokBot
 title: "Onboard"
 ---
 
-# `openclaw onboard`
+# `grokbot onboard`
 
 Guided setup that establishes inference first: it detects existing AI access,
 requires a live completion, persists only the working route, and then starts
-OpenClaw to configure the rest. `openclaw setup` reaches this flow on fresh
+GrokBot to configure the rest. `grokbot setup` reaches this flow on fresh
 systems or whenever an onboarding option is present; configured systems use
-bare `openclaw setup` for system-agent chat. `openclaw setup --baseline` only
+bare `grokbot setup` for system-agent chat. `grokbot setup --baseline` only
 writes the baseline config/workspace.
 
 <CardGroup cols={2}>
@@ -19,7 +19,7 @@ writes the baseline config/workspace.
     Walkthrough of the interactive CLI flow.
   </Card>
   <Card title="Onboarding overview" href="/start/onboarding-overview" icon="map">
-    How OpenClaw onboarding fits together.
+    How GrokBot onboarding fits together.
   </Card>
   <Card title="CLI setup reference" href="/start/wizard-cli-reference" icon="book">
     Outputs, internals, and per-step behavior.
@@ -35,43 +35,43 @@ writes the baseline config/workspace.
 ## Examples
 
 ```bash
-openclaw onboard
-openclaw onboard --tui
-openclaw onboard --classic
-openclaw onboard --modern
-openclaw onboard --flow quickstart
-openclaw onboard --flow manual
-openclaw onboard --flow import
-openclaw onboard --import-from hermes --import-source ~/.hermes
-openclaw onboard --skip-bootstrap
-openclaw onboard recommendations --json
-openclaw onboard recommendations acknowledge
-openclaw onboard recommendations acknowledge --retry "<failed-id>"
-openclaw onboard recommendations refresh
-openclaw onboard --mode remote --remote-url wss://gateway-host:18789
+grokbot onboard
+grokbot onboard --tui
+grokbot onboard --classic
+grokbot onboard --modern
+grokbot onboard --flow quickstart
+grokbot onboard --flow manual
+grokbot onboard --flow import
+grokbot onboard --import-from hermes --import-source ~/.hermes
+grokbot onboard --skip-bootstrap
+grokbot onboard recommendations --json
+grokbot onboard recommendations acknowledge
+grokbot onboard recommendations acknowledge --retry "<failed-id>"
+grokbot onboard recommendations refresh
+grokbot onboard --mode remote --remote-url wss://gateway-host:18789
 ```
 
-`openclaw onboard recommendations` reads pending app-recommendation matches
+`grokbot onboard recommendations` reads pending app-recommendation matches
 stored during onboarding. Add `--json` for the machine-readable list used by
 the first-run bootstrap. The command does not rescan installed apps or call a
 model. Its output contains only validated install IDs, source, and tier; it
 intentionally omits untrusted marketplace prose, model reasons, and local app
 labels. After the recommendation offer has been answered, the command returns
 an empty list and future onboarding runs skip the step entirely.
-`openclaw onboard recommendations refresh` clears the stored offer so the next
+`grokbot onboard recommendations refresh` clears the stored offer so the next
 onboarding run rescans installed apps and creates a new offer.
 
 Fresh workspaces defer the recommendation choice to the bootstrap conversation.
 After that conversation handles the user's choices,
-`openclaw onboard recommendations acknowledge` marks the stored offer answered.
+`grokbot onboard recommendations acknowledge` marks the stored offer answered.
 The acknowledgement is idempotent. If a chosen install fails, pass each failed
 opaque ID with `--retry <id...>`; successful and declined matches are consumed,
 while failed matches remain pending for a later onboarding run. Unknown IDs
 fail without changing the stored offer. After an interrupted ClawHub skill
 install, an existing target counts as successful only when
-`openclaw skills verify "@owner/slug"` succeeds for the same
+`grokbot skills verify "@owner/slug"` succeeds for the same
 publisher-qualified recommendation ID and its JSON output reports
-`openclaw.resolution.source: "installed"`. Registry verification alone is not
+`grokbot.resolution.source: "installed"`. Registry verification alone is not
 proof of a local install. Otherwise keep that ID pending with `--retry` and do
 not overwrite the existing skill.
 
@@ -81,18 +81,18 @@ not overwrite the existing skill.
   auto-generates a gateway token.
 - `--flow manual` (alias `advanced`): opens the classic wizard with full prompts
   for port, bind, and auth.
-- `--flow import`: runs a detected migration provider (for example Hermes via `--import-from hermes`), previews the plan, then applies after confirmation. Import only runs against a fresh OpenClaw setup - reset config, credentials, sessions, and workspace state first if any exist. Use [`openclaw migrate`](/cli/migrate) for dry-run plans, overwrite mode, reports, and exact mappings.
+- `--flow import`: runs a detected migration provider (for example Hermes via `--import-from hermes`), previews the plan, then applies after confirmation. Import only runs against a fresh GrokBot setup - reset config, credentials, sessions, and workspace state first if any exist. Use [`grokbot migrate`](/cli/migrate) for dry-run plans, overwrite mode, reports, and exact mappings.
 - `--remote-url` and `--remote-token`: prefill the classic remote Gateway step and override stored remote values for this run. Changing the URL does not reuse stored credentials unless you also pass a token. The token stays masked in prompts and follows the wizard's existing plaintext or SecretRef storage choice.
 - `--tailscale-reset-on-exit` and `--no-tailscale-reset-on-exit`: explicitly control whether Tailscale Serve or Funnel configuration is reset when the Gateway exits. Omitting both preserves the current setting during non-interactive reruns.
-- `--modern` is a compatibility alias for the OpenClaw conversational setup
-  assistant. It uses the same live-inference gate as `openclaw setup` and
+- `--modern` is a compatibility alias for the GrokBot conversational setup
+  assistant. It uses the same live-inference gate as `grokbot setup` and
   accepts only `--workspace`, `--accept-risk`,
   `--non-interactive`, and `--json`. Other setup flags are rejected instead of
   being silently ignored.
 
 ## Guided flow
 
-Plain `openclaw onboard` starts the guided flow. It shows the security notice,
+Plain `grokbot onboard` starts the guided flow. It shows the security notice,
 then asks one question up front: **full access** (recommended — setup looks for
 AI apps, keys, and local runtimes automatically) or **ask first** (setup asks
 once before looking around, or lets you configure manually). The
@@ -108,16 +108,16 @@ If automatic detection is exhausted, the provider picker shows OpenAI,
 Anthropic, xAI (Grok), Google, and OpenRouter first. Choose **More…** for every
 other supported provider, grouped by provider; regions, plans, and auth methods
 then appear in a second menu. Supported browser or device sign-in and masked
-API-key or token methods use the same live completion path. OpenClaw persists
+API-key or token methods use the same live completion path. GrokBot persists
 only the verified model route and its credential after the test succeeds; a
 failed candidate does not replace the configured model or save the attempted
-credential. Choose **Skip for now** to exit without starting OpenClaw and
-rerun `openclaw onboard` when you are ready. Workspace and Gateway setup remain
-unchanged until OpenClaw starts.
+credential. Choose **Skip for now** to exit without starting GrokBot and
+rerun `grokbot onboard` when you are ready. Workspace and Gateway setup remain
+unchanged until GrokBot starts.
 
-In guided mode, `--workspace <dir>` supplies OpenClaw's proposed workspace
+In guided mode, `--workspace <dir>` supplies GrokBot's proposed workspace
 and the isolated inference context. It is not persisted until you approve the
-OpenClaw setup proposal. Classic and noninteractive onboarding persist their
+GrokBot setup proposal. Classic and noninteractive onboarding persist their
 workspace through their normal setup flow.
 
 After inference passes, onboarding checks for memories from supported local AI
@@ -126,13 +126,13 @@ files. When it finds any, one page offers to copy them into the agent workspace
 under `memory/imports/` for indexed recall. Nothing is imported without
 confirmation, previously imported files are skipped, and you can always import
 later from the Control UI [Memory import page](/web/control-ui), which offers
-the same memory-only scope. (A full [`openclaw migrate`](/cli/migrate) run is
+the same memory-only scope. (A full [`grokbot migrate`](/cli/migrate) run is
 broader: it can also import config, skills, and credentials.) The classic
 wizard shows the same page after it prepares the workspace.
 
 After inference passes (and the memory-import offer), guided onboarding
 applies the standard setup automatically — workspace, Gateway, and sessions,
-the same plan the conversational `openclaw setup` chat would apply on "yes" —
+the same plan the conversational `grokbot setup` chat would apply on "yes" —
 then offers plugin and skill recommendations from installed apps; app names
 are matched through your configured model and ClawHub search, and the step can
 be disabled with [`wizard.appRecommendations`](/gateway/configuration-reference#wizard).
@@ -143,48 +143,48 @@ dashboard URL, including an SSH port-forward command for a loopback Gateway,
 and waits up to five minutes. A successful connection continues in the browser;
 an unreachable Gateway or a timeout falls back to the same terminal hatch as
 before. Pass `--tui` to skip the browser handoff and force that terminal hatch.
-If applying setup fails, onboarding falls back to the conversational OpenClaw
+If applying setup fails, onboarding falls back to the conversational GrokBot
 chat to finish interactively. Channels, agents,
-plugins, and other optional features remain OpenClaw chat territory: run
-`openclaw` and use `open channel wizard for <channel>` to hand channel
+plugins, and other optional features remain GrokBot chat territory: run
+`grokbot` and use `open channel wizard for <channel>` to hand channel
 credential collection to a masked terminal wizard. To change the model
-provider or its authentication, exit OpenClaw and run `openclaw onboard`;
-OpenClaw does not open the guided or classic provider flows.
+provider or its authentication, exit GrokBot and run `grokbot onboard`;
+GrokBot does not open the guided or classic provider flows.
 
-On a configured install, running `openclaw onboard` again verifies the current
+On a configured install, running `grokbot onboard` again verifies the current
 default model first, so the same flow acts as a verification and repair pass —
 it does not re-apply setup, reinstall, or restart the Gateway service.
 If that check fails, the configured model is never replaced automatically —
 onboarding stops and asks how to continue. The check runs outside your
 workspace, so a model provided by a workspace plugin can fail here while still
 working in the agent.
-Use `openclaw onboard --classic` for provider-specific auth, channels, skills,
+Use `grokbot onboard --classic` for provider-specific auth, channels, skills,
 remote Gateway setup, imports, or full Gateway controls. For conversational
-non-inference setup and repair, run `openclaw setup`; `openclaw onboard
+non-inference setup and repair, run `grokbot setup`; `grokbot onboard
 --modern` is a compatibility alias through the same inference gate. The classic
 wizard can optionally verify the default model with a live completion, but
-OpenClaw will not start until its own live inference check passes.
+GrokBot will not start until its own live inference check passes.
 
-In an interactive terminal, bare `openclaw` (no subcommand) routes by config
+In an interactive terminal, bare `grokbot` (no subcommand) routes by config
 state:
 
 - If the active config file is missing or has no authored settings (empty or
   metadata-only), it starts guided onboarding.
 - If the config file exists but fails validation, it starts the classic
-  onboarding path with `openclaw doctor` guidance. OpenClaw needs working
+  onboarding path with `grokbot doctor` guidance. GrokBot needs working
   inference and is not used to repair this pre-inference state.
 - If the config file is valid, it opens the normal agent TUI. A reachable
   configured Gateway with an agent and model goes directly to that UI without
-  onboarding or OpenClaw. On a configured install, reach OpenClaw with
-  `/openclaw` inside the TUI or `openclaw setup`.
+  onboarding or GrokBot. On a configured install, reach GrokBot with
+  `/grokbot` inside the TUI or `grokbot setup`.
 
 Plaintext `ws://` is accepted for loopback, private IP literals, `.local`, and Tailnet `*.ts.net` gateway URLs. For other trusted private-DNS names, set `OPENCLAW_ALLOW_INSECURE_PRIVATE_WS=1` in the onboarding process environment.
 
 ## Reset
 
 ```bash
-openclaw onboard --reset
-openclaw onboard --reset --reset-scope full
+grokbot onboard --reset
+grokbot onboard --reset --reset-scope full
 ```
 
 `--reset` wipes state before running setup. `--reset-scope` controls how much: `config` (config only), `config+creds+sessions` (default when `--reset` is passed without a scope), or `full` (also resets the workspace). Workspace reset only happens with `--reset-scope full`.
@@ -202,8 +202,8 @@ Interactive onboarding uses the CLI wizard locale for fixed setup copy. It uses 
 Supported wizard locales are `en`, `zh-CN`, and `zh-TW`. Locale values may use underscore or POSIX suffix forms such as `zh_CN.UTF-8`. Product names, command names, config keys, URLs, provider IDs, model IDs, and plugin/channel labels remain literal.
 
 ```bash
-OPENCLAW_LOCALE=zh-CN openclaw onboard
-OPENCLAW_LOCALE=en openclaw onboard # Explicit English override
+OPENCLAW_LOCALE=zh-CN grokbot onboard
+OPENCLAW_LOCALE=en grokbot onboard # Explicit English override
 ```
 
 ## Non-interactive setup
@@ -211,7 +211,7 @@ OPENCLAW_LOCALE=en openclaw onboard # Explicit English override
 `--non-interactive` requires `--accept-risk` (acknowledges that agents are powerful and full system access is risky). `--mode` defaults to `local`.
 
 ```bash
-openclaw onboard --non-interactive \
+grokbot onboard --non-interactive \
   --auth-choice custom-api-key \
   --custom-base-url "https://llm.example.com/v1" \
   --custom-model-id "foo-large" \
@@ -221,12 +221,12 @@ openclaw onboard --non-interactive \
   --custom-image-input
 ```
 
-`--custom-api-key` is optional; if omitted, onboarding checks `CUSTOM_API_KEY` in env. OpenClaw marks common vision model IDs (GPT-4o/4.1/5.x, Claude 3/4, Gemini, Qwen-VL, LLaVA, Pixtral, and similar) as image-capable automatically. Pass `--custom-image-input` for unknown custom vision IDs, or `--custom-text-input` to force text-only metadata. Use `--custom-compatibility openai-responses` for OpenAI-compatible endpoints that support `/v1/responses` but not `/v1/chat/completions`; valid values are `openai` (default), `openai-responses`, `anthropic`.
+`--custom-api-key` is optional; if omitted, onboarding checks `CUSTOM_API_KEY` in env. GrokBot marks common vision model IDs (GPT-4o/4.1/5.x, Claude 3/4, Gemini, Qwen-VL, LLaVA, Pixtral, and similar) as image-capable automatically. Pass `--custom-image-input` for unknown custom vision IDs, or `--custom-text-input` to force text-only metadata. Use `--custom-compatibility openai-responses` for OpenAI-compatible endpoints that support `/v1/responses` but not `/v1/chat/completions`; valid values are `openai` (default), `openai-responses`, `anthropic`.
 
 LM Studio also has a provider-specific key flag:
 
 ```bash
-openclaw onboard --non-interactive \
+grokbot onboard --non-interactive \
   --auth-choice lmstudio \
   --custom-base-url "http://localhost:1234/v1" \
   --custom-model-id "qwen/qwen3.5-9b" \
@@ -237,7 +237,7 @@ openclaw onboard --non-interactive \
 Non-interactive Ollama:
 
 ```bash
-openclaw onboard --non-interactive \
+grokbot onboard --non-interactive \
   --auth-choice ollama \
   --custom-base-url "http://ollama-host:11434" \
   --custom-model-id "qwen3.5:27b" \
@@ -249,7 +249,7 @@ openclaw onboard --non-interactive \
 Store provider keys as refs instead of plaintext:
 
 ```bash
-openclaw onboard --non-interactive \
+grokbot onboard --non-interactive \
   --auth-choice openai-api-key \
   --secret-input-mode ref \
   --accept-risk
@@ -265,12 +265,12 @@ With `--secret-input-mode ref`, onboarding writes env-backed refs instead of pla
 - With `--install-daemon`: a SecretRef-managed `gateway.auth.token` is validated but not persisted as resolved plaintext in supervisor service environment metadata; if the ref is unresolved, install fails closed with remediation guidance. If both `gateway.auth.token` and `gateway.auth.password` are configured and `gateway.auth.mode` is unset, install blocks until mode is set explicitly.
 - Local onboarding writes `gateway.mode="local"` into the config. A later config file missing `gateway.mode` indicates config damage or an incomplete manual edit, not a valid local-mode shortcut.
 - Local onboarding installs downloadable plugins the chosen setup path requires (for example a Codex or Copilot runtime plugin for those auth choices). Remote onboarding only writes connection info for the remote Gateway - it never installs local plugin packages.
-- `--allow-unconfigured` is a separate `openclaw gateway run` escape hatch; it does not let onboarding skip `gateway.mode`.
+- `--allow-unconfigured` is a separate `grokbot gateway run` escape hatch; it does not let onboarding skip `gateway.mode`.
 
 ```bash
 export OPENAI_API_KEY="your-provider-key"
 export OPENCLAW_GATEWAY_TOKEN="your-token"
-openclaw onboard --non-interactive \
+grokbot onboard --non-interactive \
   --mode local \
   --auth-choice openai-api-key \
   --secret-input-mode ref \
@@ -282,7 +282,7 @@ openclaw onboard --non-interactive \
 ### Local gateway health
 
 - Unless you pass `--skip-health`, onboarding waits for a reachable local gateway before exiting successfully.
-- `--install-daemon` starts the managed gateway install path first. Without it, a local gateway must already be running (for example `openclaw gateway run`).
+- `--install-daemon` starts the managed gateway install path first. Without it, a local gateway must already be running (for example `grokbot gateway run`).
 - `--skip-health` skips the wait if you only want config/workspace/bootstrap writes in automation.
 - `--skip-bootstrap` sets `agents.defaults.skipBootstrap: true` and skips creating `AGENTS.md`, `SOUL.md`, `TOOLS.md`, `IDENTITY.md`, `USER.md`, `HEARTBEAT.md`, and `BOOTSTRAP.md`.
 - On native Windows, `--install-daemon` tries Scheduled Tasks first and falls back to a per-user Startup-folder login item if task creation is denied.
@@ -300,7 +300,7 @@ openclaw onboard --non-interactive \
 
 ```bash
 # Promptless endpoint selection
-openclaw onboard --non-interactive \
+grokbot onboard --non-interactive \
   --auth-choice zai-coding-global \
   --zai-api-key "$ZAI_API_KEY"
 
@@ -310,7 +310,7 @@ openclaw onboard --non-interactive \
 Mistral:
 
 ```bash
-openclaw onboard --non-interactive \
+grokbot onboard --non-interactive \
   --auth-choice mistral-api-key \
   --mistral-api-key "$MISTRAL_API_KEY"
 ```
@@ -338,7 +338,7 @@ Output: `--suppress-gateway-token-output` suppresses token-bearing Gateway/UI ou
 
 <Note>
 `--json` does not imply non-interactive mode in guided or classic onboarding.
-With `--modern`, JSON is a one-shot OpenClaw overview and exits after that
+With `--modern`, JSON is a one-shot GrokBot overview and exits after that
 single result. Use `--non-interactive` for other scripts.
 </Note>
 
@@ -356,18 +356,18 @@ Some web-search providers trigger provider-specific follow-up prompts during onb
 ## Other behaviors
 
 - Local onboarding DM scope behavior: [CLI setup reference](/start/wizard-cli-reference#outputs-and-internals).
-- Fastest first chat: `openclaw dashboard` (Control UI, no channel setup).
+- Fastest first chat: `grokbot dashboard` (Control UI, no channel setup).
 - Custom provider: connect any OpenAI- or Anthropic-compatible endpoint, including hosted providers not listed. Use **Unknown** compatibility to auto-detect via a live probe.
 - If Hermes state is detected, onboarding offers a migration flow (see `--flow import` above).
 
 ## Common follow-up commands
 
-Use `openclaw configure` later for targeted non-inference changes and `openclaw
+Use `grokbot configure` later for targeted non-inference changes and `grokbot
 channels add` for channel-only setup. For model provider or auth route changes,
-run `openclaw onboard` instead.
+run `grokbot onboard` instead.
 
 ```bash
-openclaw channels add
-openclaw configure
-openclaw agents add <name>
+grokbot channels add
+grokbot configure
+grokbot agents add <name>
 ```

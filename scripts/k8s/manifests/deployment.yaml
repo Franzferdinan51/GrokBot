@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: openclaw
+  name: grokbot
   labels:
-    app: openclaw
+    app: grokbot
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: openclaw
+      app: grokbot
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app: openclaw
+        app: grokbot
     spec:
       automountServiceAccountToken: false
       securityContext:
@@ -29,9 +29,9 @@ spec:
             - sh
             - -c
             - |
-              cp /config/openclaw.json /home/node/.openclaw/openclaw.json
-              mkdir -p /home/node/.openclaw/workspace
-              cp /config/AGENTS.md /home/node/.openclaw/workspace/AGENTS.md
+              cp /config/grokbot.json /home/node/.grokbot/grokbot.json
+              mkdir -p /home/node/.grokbot/workspace
+              cp /config/AGENTS.md /home/node/.grokbot/workspace/AGENTS.md
           securityContext:
             runAsUser: 1000
             runAsGroup: 1000
@@ -43,13 +43,13 @@ spec:
               memory: 64Mi
               cpu: 100m
           volumeMounts:
-            - name: openclaw-home
-              mountPath: /home/node/.openclaw
+            - name: grokbot-home
+              mountPath: /home/node/.grokbot
             - name: config
               mountPath: /config
       containers:
         - name: gateway
-          image: ghcr.io/openclaw/openclaw:slim
+          image: ghcr.io/grokbot/grokbot:slim
           imagePullPolicy: IfNotPresent
           command:
             - node
@@ -64,36 +64,36 @@ spec:
             - name: HOME
               value: /home/node
             - name: OPENCLAW_CONFIG_DIR
-              value: /home/node/.openclaw
+              value: /home/node/.grokbot
             - name: NODE_ENV
               value: production
             - name: OPENCLAW_GATEWAY_TOKEN
               valueFrom:
                 secretKeyRef:
-                  name: openclaw-secrets
+                  name: grokbot-secrets
                   key: OPENCLAW_GATEWAY_TOKEN
             - name: ANTHROPIC_API_KEY
               valueFrom:
                 secretKeyRef:
-                  name: openclaw-secrets
+                  name: grokbot-secrets
                   key: ANTHROPIC_API_KEY
                   optional: true
             - name: OPENAI_API_KEY
               valueFrom:
                 secretKeyRef:
-                  name: openclaw-secrets
+                  name: grokbot-secrets
                   key: OPENAI_API_KEY
                   optional: true
             - name: GEMINI_API_KEY
               valueFrom:
                 secretKeyRef:
-                  name: openclaw-secrets
+                  name: grokbot-secrets
                   key: GEMINI_API_KEY
                   optional: true
             - name: OPENROUTER_API_KEY
               valueFrom:
                 secretKeyRef:
-                  name: openclaw-secrets
+                  name: grokbot-secrets
                   key: OPENROUTER_API_KEY
                   optional: true
           resources:
@@ -122,8 +122,8 @@ spec:
             periodSeconds: 10
             timeoutSeconds: 5
           volumeMounts:
-            - name: openclaw-home
-              mountPath: /home/node/.openclaw
+            - name: grokbot-home
+              mountPath: /home/node/.grokbot
             - name: tmp-volume
               mountPath: /tmp
           securityContext:
@@ -136,11 +136,11 @@ spec:
               drop:
                 - ALL
       volumes:
-        - name: openclaw-home
+        - name: grokbot-home
           persistentVolumeClaim:
-            claimName: openclaw-home-pvc
+            claimName: grokbot-home-pvc
         - name: config
           configMap:
-            name: openclaw-config
+            name: grokbot-config
         - name: tmp-volume
           emptyDir: {}

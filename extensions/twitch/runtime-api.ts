@@ -14,9 +14,9 @@ export type {
   ChannelResolveKind,
   ChannelResolveResult,
   ChannelStatusAdapter,
-} from "openclaw/plugin-sdk/channel-contract";
-export type { ChannelPlugin } from "openclaw/plugin-sdk/channel-core";
-export type { OutboundDeliveryResult } from "openclaw/plugin-sdk/channel-send-result";
-export type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-export type { RuntimeEnv } from "openclaw/plugin-sdk/runtime";
-export type { WizardPrompter } from "openclaw/plugin-sdk/setup";
+} from "grokbot/plugin-sdk/channel-contract";
+export type { ChannelPlugin } from "grokbot/plugin-sdk/channel-core";
+export type { OutboundDeliveryResult } from "grokbot/plugin-sdk/channel-send-result";
+export type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+export type { RuntimeEnv } from "grokbot/plugin-sdk/runtime";
+export type { WizardPrompter } from "grokbot/plugin-sdk/setup";

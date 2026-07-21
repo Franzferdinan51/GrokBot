@@ -3,8 +3,8 @@
  *
  * Builds safe status snapshots and resolves enabled/configured account state.
  */
-import { normalizeStringEntries } from "@openclaw/normalization-core/string-normalization";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import { normalizeStringEntries } from "@grokbot/normalization-core/string-normalization";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { isRecord } from "../utils.js";
 import {
   projectSafeChannelAccountSnapshotFields,

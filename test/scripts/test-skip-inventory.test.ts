@@ -20,7 +20,7 @@ function writeRepoFile(repoRoot: string, relativePath: string, value: string): v
 }
 
 function makeSkipInventoryFixture(): string {
-  const repoRoot = createTempDir("openclaw-test-skip-inventory-");
+  const repoRoot = createTempDir("grokbot-test-skip-inventory-");
   writeRepoFile(
     repoRoot,
     "src/runtime.ts",
@@ -212,7 +212,7 @@ describe("collectTestSkipInventoryReport", () => {
 
     const rendered = renderTestSkipInventoryReport(report, { limit: 4 });
 
-    expect(rendered).toContain("OpenClaw test skip inventory");
+    expect(rendered).toContain("GrokBot test skip inventory");
     expect(rendered).toContain("Findings: 14 in 4 file(s)");
     expect(rendered).toContain("platform-gate: 6");
     expect(rendered).toContain("- src/example.test.ts (11)");
@@ -285,7 +285,7 @@ describe("collectTestSkipInventoryReport", () => {
         "--limit",
         "1e3",
         "--repo-root",
-        createTempDir("openclaw-skip-limit-"),
+        createTempDir("grokbot-skip-limit-"),
       ]),
     ).toThrow("--limit expects a non-negative integer");
   });

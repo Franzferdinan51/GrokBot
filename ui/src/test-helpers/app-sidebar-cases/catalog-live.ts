@@ -230,7 +230,7 @@ describe("AppSidebar session catalog pagination", () => {
     expect(section?.textContent).not.toContain("Offline Node");
   });
 
-  it("shows a catalog-owned OpenClaw session only in its catalog section", async () => {
+  it("shows a catalog-owned GrokBot session only in its catalog section", async () => {
     const gateway = createGateway({} as GatewayBrowserClient);
     const backingSessionKey = "agent:main:claude-bound";
     const { sidebar } = await mountSidebar(
@@ -300,7 +300,7 @@ describe("AppSidebar session catalog pagination", () => {
     expect(linkedRow?.querySelector('[data-session-menu="true"]')).not.toBeNull();
     linkedRow?.dispatchEvent(new MouseEvent("contextmenu", { bubbles: true, cancelable: true }));
     await sidebar.updateComplete;
-    const linkedMenu = sidebar.querySelector<TestSessionMenu>("openclaw-session-menu");
+    const linkedMenu = sidebar.querySelector<TestSessionMenu>("grokbot-session-menu");
     await linkedMenu?.updateComplete;
     expect(linkedMenu?.querySelector('[data-shortcut="a"]')).not.toBeNull();
     expect(linkedMenu?.querySelector('[data-shortcut="d"]')).not.toBeNull();

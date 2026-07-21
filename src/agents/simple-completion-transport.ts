@@ -1,10 +1,10 @@
-import type { ApiRegistry } from "@openclaw/ai";
+import type { ApiRegistry } from "@grokbot/ai";
 /**
  * Simple completion transport preparation.
  *
- * Registers provider-specific stream functions and rewrites models that need OpenClaw-managed transport semantics.
+ * Registers provider-specific stream functions and rewrites models that need GrokBot-managed transport semantics.
  */
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import type { Api, Model } from "../llm/types.js";
 import { wrapProviderSimpleCompletionStreamFn } from "../plugins/provider-runtime.js";
 import { createAnthropicVertexStreamFnForModel } from "./anthropic-vertex-stream.js";
@@ -19,11 +19,11 @@ import {
 } from "./provider-transport-stream.js";
 import type { StreamFn } from "./runtime/index.js";
 
-const PROVIDER_SIMPLE_COMPLETION_API_PREFIX = "openclaw-provider-simple:";
+const PROVIDER_SIMPLE_COMPLETION_API_PREFIX = "grokbot-provider-simple:";
 
 function resolveAnthropicVertexSimpleApi(baseUrl?: string): Api {
   const suffix = baseUrl?.trim() ? encodeURIComponent(baseUrl.trim()) : "default";
-  return `openclaw-anthropic-vertex-simple:${suffix}`;
+  return `grokbot-anthropic-vertex-simple:${suffix}`;
 }
 
 export function normalizeCodexResponsesBaseUrlForOpenAISdk(baseUrl?: string): string {
@@ -111,7 +111,7 @@ function prepareCodexSimpleTransportModel<TApi extends Api>(
   }
 
   // Static Codex provider catalogs intentionally omit credentials; the simple
-  // completion path must use OpenClaw's transport so resolved request auth is applied.
+  // completion path must use GrokBot's transport so resolved request auth is applied.
   const transportModel = {
     ...model,
     baseUrl: normalizeCodexResponsesBaseUrlForOpenAISdk(model.baseUrl),

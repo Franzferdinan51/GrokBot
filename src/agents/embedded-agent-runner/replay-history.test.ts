@@ -1,7 +1,7 @@
 // Coverage for normalizing assistant replay content before provider requests.
-import type { AgentMessage } from "openclaw/plugin-sdk/agent-core";
+import type { AgentMessage } from "grokbot/plugin-sdk/agent-core";
 import { describe, expect, it } from "vitest";
-import { OPENCLAW_TRANSCRIPT_ARTIFACT_API } from "../../shared/transcript-only-openclaw-assistant.js";
+import { OPENCLAW_TRANSCRIPT_ARTIFACT_API } from "../../shared/transcript-only-grokbot-assistant.js";
 import {
   INTERNAL_RUNTIME_CONTEXT_BEGIN,
   INTERNAL_RUNTIME_CONTEXT_END,
@@ -52,7 +52,7 @@ function openclawTranscriptAssistant(model: "delivery-mirror" | "gateway-injecte
     role: "assistant",
     content: [{ type: "text", text: "channel mirror" }],
     api: OPENCLAW_TRANSCRIPT_ARTIFACT_API,
-    provider: "openclaw",
+    provider: "grokbot",
     model,
     usage: {
       input: 0,
@@ -352,7 +352,7 @@ describe("normalizeAssistantReplayContent", () => {
     expect(JSON.stringify(out)).not.toContain("assistant copied inbound metadata omitted");
   });
 
-  it("filters openclaw delivery-mirror and gateway-injected assistant messages from replay", () => {
+  it("filters grokbot delivery-mirror and gateway-injected assistant messages from replay", () => {
     // Gateway mirror entries are transcript artifacts, not model-authored
     // assistant turns, so they must not be sent back to providers.
     const messages = [

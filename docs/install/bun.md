@@ -7,7 +7,7 @@ title: "Bun"
 ---
 
 <Warning>
-Bun cannot run the OpenClaw CLI or Gateway because it does not provide the required `node:sqlite` API. Install a supported Node version for all OpenClaw runtime commands.
+Bun cannot run the GrokBot CLI or Gateway because it does not provide the required `node:sqlite` API. Install a supported Node version for all GrokBot runtime commands.
 </Warning>
 
 Bun remains usable as an optional dependency installer and package-script runner. The default package manager remains `pnpm`, which is fully supported and used by docs tooling. Bun cannot use `pnpm-lock.yaml` and ignores it.
@@ -33,7 +33,7 @@ Bun remains usable as an optional dependency installer and package-script runner
     bun run vitest run
     ```
 
-    Commands that launch OpenClaw itself must still run through Node.
+    Commands that launch GrokBot itself must still run through Node.
 
   </Step>
 </Steps>
@@ -42,7 +42,7 @@ Bun remains usable as an optional dependency installer and package-script runner
 
 Bun blocks dependency lifecycle scripts unless explicitly trusted. For this repo, the commonly blocked scripts are not required:
 
-- `baileys` `preinstall`: checks Node major >= 20 (OpenClaw requires Node 22.22.3+, 24.15+, or 25.9+, with Node 24 recommended)
+- `baileys` `preinstall`: checks Node major >= 20 (GrokBot requires Node 22.22.3+, 24.15+, or 25.9+, with Node 24 recommended)
 - `protobufjs` `postinstall`: emits warnings about incompatible version schemes (no build artifacts)
 
 If you hit a runtime issue that needs these scripts, trust them explicitly:

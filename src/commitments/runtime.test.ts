@@ -4,7 +4,7 @@ import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import type { OpenClawConfig } from "../config/config.js";
-import { closeOpenClawStateDatabaseForTest } from "../state/openclaw-state-db.js";
+import { closeOpenClawStateDatabaseForTest } from "../state/grokbot-state-db.js";
 import { captureEnv, setTestEnvValue } from "../test-utils/env.js";
 import { enqueueCommitmentExtraction } from "./runtime.js";
 import {
@@ -36,11 +36,11 @@ function requireFirstEmbeddedAgentRequest(): {
 } {
   const [call] = runEmbeddedAgentMock.mock.calls;
   if (!call) {
-    throw new Error("expected embedded OpenClaw agent extraction request");
+    throw new Error("expected embedded GrokBot agent extraction request");
   }
   const [request] = call;
   if (!request || typeof request !== "object" || Array.isArray(request)) {
-    throw new Error("expected embedded OpenClaw agent extraction request");
+    throw new Error("expected embedded GrokBot agent extraction request");
   }
   return request as {
     provider?: string;
@@ -69,7 +69,7 @@ describe("commitment extraction runtime", () => {
   });
 
   async function createConfig(): Promise<OpenClawConfig> {
-    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-commitment-runtime-"));
+    const tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-commitment-runtime-"));
     tmpDirs.push(tmpDir);
     stateDirEnvSnapshot ??= captureEnv(["OPENCLAW_STATE_DIR"]);
     setTestEnvValue("OPENCLAW_STATE_DIR", tmpDir);

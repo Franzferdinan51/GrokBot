@@ -1,5 +1,5 @@
 // Voice Call tests cover runtime plugin behavior.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/core";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/core";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { VoiceCallConfig } from "./config.js";
 import type { CoreConfig } from "./core-bridge.js";
@@ -381,7 +381,7 @@ describe("createVoiceCallRuntime lifecycle", () => {
       from: "+15550001111",
       to: "+15550002222",
     });
-    expect(unknownInstructions).not.toContain("OpenClaw agent voice context:");
+    expect(unknownInstructions).not.toContain("GrokBot agent voice context:");
   });
 
   it.each(["twilio", "telnyx", "plivo"] as const)(
@@ -529,8 +529,8 @@ describe("createVoiceCallRuntime lifecycle", () => {
     });
     expect(runEmbeddedAgent).toHaveBeenCalledOnce();
     const consultParams = requireRecord(
-      firstCallParam(runEmbeddedAgent.mock.calls as unknown[][], "embedded OpenClaw consult"),
-      "embedded OpenClaw consult params",
+      firstCallParam(runEmbeddedAgent.mock.calls as unknown[][], "embedded GrokBot consult"),
+      "embedded GrokBot consult params",
     );
     expect(consultParams.agentId).toBe("support");
     expect(consultParams.sessionKey).toBe("agent:support:voice:15550009999");
@@ -596,9 +596,9 @@ describe("createVoiceCallRuntime lifecycle", () => {
     const consultParams = requireRecord(
       firstCallParam(
         runEmbeddedAgent.mock.calls as unknown[][],
-        "per-call embedded OpenClaw consult",
+        "per-call embedded GrokBot consult",
       ),
-      "per-call embedded OpenClaw consult params",
+      "per-call embedded GrokBot consult params",
     );
     expect(consultParams.sessionKey).toBe("agent:main:voice:call:call-1");
   });
@@ -682,7 +682,7 @@ describe("createVoiceCallRuntime lifecycle", () => {
     mocks.resolveRealtimeFastContextConsult.mockResolvedValue({
       handled: true,
       result: {
-        text: "Fast OpenClaw memory or session context found.\nThe caller's basement lights are on.",
+        text: "Fast GrokBot memory or session context found.\nThe caller's basement lights are on.",
       },
     });
 
@@ -764,9 +764,9 @@ describe("createVoiceCallRuntime lifecycle", () => {
     const consultParams = requireRecord(
       firstCallParam(
         runEmbeddedAgent.mock.calls as unknown[][],
-        "configured embedded OpenClaw consult",
+        "configured embedded GrokBot consult",
       ),
-      "configured embedded OpenClaw consult params",
+      "configured embedded GrokBot consult params",
     );
     expect(consultParams.thinkLevel).toBe("ultra");
     expect(consultParams.fastMode).toBe(true);

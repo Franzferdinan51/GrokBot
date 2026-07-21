@@ -1,6 +1,6 @@
 // Gateway startup logging helpers.
 // Produces the compact ready banner with resolved model and safety state.
-import { normalizeSortedUniqueStringEntries } from "@openclaw/normalization-core/string-normalization";
+import { normalizeSortedUniqueStringEntries } from "@grokbot/normalization-core/string-normalization";
 import chalk from "chalk";
 import { sanitizeForLog } from "../../packages/terminal-core/src/ansi.js";
 import { resolveDefaultAgentId, resolveAgentConfig } from "../agents/agent-scope.js";
@@ -13,7 +13,7 @@ import {
   resolveConfiguredModelRef,
 } from "../agents/model-selection-shared.js";
 import { resolveThinkingDefault } from "../agents/model-thinking-default.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { getResolvedLoggerSettings } from "../logging.js";
 import { collectEnabledInsecureOrDangerousFlagsFromCurrentSnapshot } from "../security/dangerous-config-flags-current.js";
 
@@ -82,7 +82,7 @@ export async function logGatewayStartup(params: {
   if (enabledDangerousFlags.length > 0) {
     const warning =
       `security warning: dangerous config flags enabled: ${enabledDangerousFlags.join(", ")}. ` +
-      "Run `openclaw security audit`.";
+      "Run `grokbot security audit`.";
     params.log.warn(warning);
   }
 }
@@ -222,7 +222,7 @@ function formatConfiguredChannelMissingOwnerStartupWarning(entry: {
   const reasons = normalizeSortedUniqueStringEntries(entry.blockedReasons).join(", ");
   return (
     `configured channel warning: channels.${channelId} is configured but no channel plugin ` +
-    `is installed or loadable (${reasons}). Run \`openclaw doctor --fix\` or install the ` +
+    `is installed or loadable (${reasons}). Run \`grokbot doctor --fix\` or install the ` +
     "channel plugin before relying on this channel."
   );
 }

@@ -33,14 +33,14 @@ describe("entry root version fast path", () => {
     }));
 
     expect(
-      tryHandleRootVersionFastPath(["node", "openclaw", "--version"], {
+      tryHandleRootVersionFastPath(["node", "grokbot", "--version"], {
         output,
         exit,
         resolveVersion,
       }),
     ).toBe(true);
     await flushVersionFastPath();
-    expect(output).toHaveBeenCalledWith("OpenClaw 9.9.9-test (abc1234)");
+    expect(output).toHaveBeenCalledWith("GrokBot 9.9.9-test (abc1234)");
     expect(exit).toHaveBeenCalledWith(0);
 
     output.mockClear();
@@ -51,20 +51,20 @@ describe("entry root version fast path", () => {
     });
 
     expect(
-      tryHandleRootVersionFastPath(["node", "openclaw", "--version"], {
+      tryHandleRootVersionFastPath(["node", "grokbot", "--version"], {
         output,
         exit,
         resolveVersion,
       }),
     ).toBe(true);
     await flushVersionFastPath();
-    expect(output).toHaveBeenCalledWith("OpenClaw 9.9.9-test");
+    expect(output).toHaveBeenCalledWith("GrokBot 9.9.9-test");
     expect(exit).toHaveBeenCalledWith(0);
 
     output.mockClear();
     exit.mockClear();
     expect(
-      tryHandleRootVersionFastPath(["node", "openclaw", "--container", "demo", "--version"], {
+      tryHandleRootVersionFastPath(["node", "grokbot", "--container", "demo", "--version"], {
         output,
         exit,
         resolveVersion,
@@ -75,7 +75,7 @@ describe("entry root version fast path", () => {
     expect(exit).not.toHaveBeenCalled();
 
     expect(
-      tryHandleRootVersionFastPath(["node", "openclaw", "--version"], {
+      tryHandleRootVersionFastPath(["node", "grokbot", "--version"], {
         env: { OPENCLAW_CONTAINER: "demo" },
         output,
         exit,
@@ -92,7 +92,7 @@ describe("entry root version fast path", () => {
       .mockRejectedValue(new Error("version resolution failed"));
 
     expect(
-      tryHandleRootVersionFastPath(["node", "openclaw", "--version"], {
+      tryHandleRootVersionFastPath(["node", "grokbot", "--version"], {
         output,
         exit,
         resolveVersion,
@@ -113,7 +113,7 @@ describe("entry root version fast path", () => {
       .mockRejectedValue(new Error("version resolution failed"));
 
     expect(
-      tryHandleRootVersionFastPath(["node", "openclaw", "--version"], {
+      tryHandleRootVersionFastPath(["node", "grokbot", "--version"], {
         exit,
         onError,
         resolveVersion,

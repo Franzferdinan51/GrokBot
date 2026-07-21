@@ -1,7 +1,7 @@
 // Xai provider module implements model/runtime integration.
-import { toImageDataUrl } from "openclaw/plugin-sdk/image-generation";
-import { isProviderApiKeyConfigured } from "openclaw/plugin-sdk/provider-auth";
-import { resolveApiKeyForProvider } from "openclaw/plugin-sdk/provider-auth-runtime";
+import { toImageDataUrl } from "grokbot/plugin-sdk/image-generation";
+import { isProviderApiKeyConfigured } from "grokbot/plugin-sdk/provider-auth";
+import { resolveApiKeyForProvider } from "grokbot/plugin-sdk/provider-auth-runtime";
 import {
   assertOkOrThrowHttpError,
   createProviderOperationDeadline,
@@ -12,13 +12,13 @@ import {
   resolveProviderHttpRequestConfig,
   sanitizeConfiguredModelProviderRequest,
   waitProviderOperationPollInterval,
-} from "openclaw/plugin-sdk/provider-http";
-import { isRecord, normalizeOptionalString } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/provider-http";
+import { isRecord, normalizeOptionalString } from "grokbot/plugin-sdk/string-coerce-runtime";
 import type {
   VideoGenerationProvider,
   VideoGenerationProviderCapabilities,
   VideoGenerationRequest,
-} from "openclaw/plugin-sdk/video-generation";
+} from "grokbot/plugin-sdk/video-generation";
 import {
   downloadXaiVideo,
   fetchXaiVideoResponse,

@@ -1,4 +1,4 @@
-import { isRecord } from "@openclaw/normalization-core/record-coerce";
+import { isRecord } from "@grokbot/normalization-core/record-coerce";
 import { projectRuntimeToolInputSchema } from "./tool-schema-json-projection.js";
 
 type AnthropicToolDescriptor = {

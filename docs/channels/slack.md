@@ -32,8 +32,8 @@ Socket Mode and HTTP Request URLs reach feature parity for messaging, slash comm
 | Horizontal scaling           | One Socket Mode session per app per host; multiple Gateways need separate Slack apps                                                                 | Stateless POST handler; multiple Gateway replicas can share one app behind a load balancer                     |
 | Multi-account on one Gateway | Supported; each account opens its own WS                                                                                                             | Supported; each account needs a unique `webhookPath` (default `/slack/events`) so registrations do not collide |
 | Slash command transport      | Delivered over the WS connection; `slash_commands[].url` is ignored                                                                                  | Slack POSTs to `slash_commands[].url`; field is required for the command to dispatch                           |
-| Request signing              | Not used (auth is the App-Level Token)                                                                                                               | Slack signs every request; OpenClaw verifies with `signingSecret`                                              |
-| Recovery on connection drop  | Slack SDK auto-reconnect is enabled; OpenClaw also restarts failed Socket Mode sessions with bounded backoff. Pong-timeout transport tuning applies. | No persistent connection to drop; retries are per-request from Slack                                           |
+| Request signing              | Not used (auth is the App-Level Token)                                                                                                               | Slack signs every request; GrokBot verifies with `signingSecret`                                              |
+| Recovery on connection drop  | Slack SDK auto-reconnect is enabled; GrokBot also restarts failed Socket Mode sessions with bounded backoff. Pong-timeout transport tuning applies. | No persistent connection to drop; retries are per-request from Slack                                           |
 
 <Note>
   **Pick Socket Mode** for single-Gateway hosts, dev laptops, and on-prem networks that can reach `*.slack.com` outbound but cannot accept inbound HTTPS.
@@ -42,12 +42,12 @@ Socket Mode and HTTP Request URLs reach feature parity for messaging, slash comm
 </Note>
 
 <Warning>
-  Slack can maintain multiple Socket Mode connections for one app and may deliver each payload to any connection. Separate OpenClaw gateways that share a Slack app therefore need equivalent routing and authorization configuration. Otherwise, use a separate Slack app per gateway, a single relay ingress, or HTTP Request URLs behind a load balancer. See [Using Socket Mode](https://docs.slack.dev/apis/events-api/using-socket-mode#using-multiple-connections).
+  Slack can maintain multiple Socket Mode connections for one app and may deliver each payload to any connection. Separate GrokBot gateways that share a Slack app therefore need equivalent routing and authorization configuration. Otherwise, use a separate Slack app per gateway, a single relay ingress, or HTTP Request URLs behind a load balancer. See [Using Socket Mode](https://docs.slack.dev/apis/events-api/using-socket-mode#using-multiple-connections).
 </Warning>
 
 ### Relay mode
 
-Relay mode separates Slack ingress from the OpenClaw gateway. A trusted router owns the single Slack Socket Mode connection, chooses a destination gateway, and forwards a typed event over an authenticated websocket. The gateway still uses its own bot token for outbound Slack Web API calls.
+Relay mode separates Slack ingress from the GrokBot gateway. A trusted router owns the single Slack Socket Mode connection, chooses a destination gateway, and forwards a typed event over an authenticated websocket. The gateway still uses its own bot token for outbound Slack Web API calls.
 
 ```json5
 {
@@ -80,11 +80,11 @@ event path, immediate replies, and listener-owned status reactions.
 ```json
 {
   "display_information": {
-    "name": "OpenClaw",
-    "description": "Slack connector for OpenClaw"
+    "name": "GrokBot",
+    "description": "Slack connector for GrokBot"
   },
   "features": {
-    "bot_user": { "display_name": "OpenClaw", "always_online": true }
+    "bot_user": { "display_name": "GrokBot", "always_online": true }
   },
   "oauth_config": {
     "scopes": {
@@ -125,7 +125,7 @@ event path, immediate replies, and listener-owned status reactions.
 Have an Enterprise Grid Org Admin or Org Owner approve the app, install it at
 the organization level, and choose the workspaces the installation covers.
 Confirm that the app is available in every intended workspace before starting
-OpenClaw. Generate an app-level token with `connections:write` for Socket Mode,
+GrokBot. Generate an app-level token with `connections:write` for Socket Mode,
 then copy the bot token from the org installation. Configure the account that
 uses the org-installed bot token:
 
@@ -158,11 +158,11 @@ Socket Mode connection. Replace the example URL with the Gateway's public
 ```json
 {
   "display_information": {
-    "name": "OpenClaw",
-    "description": "Slack connector for OpenClaw"
+    "name": "GrokBot",
+    "description": "Slack connector for GrokBot"
   },
   "features": {
-    "bot_user": { "display_name": "OpenClaw", "always_online": true }
+    "bot_user": { "display_name": "GrokBot", "always_online": true }
   },
   "oauth_config": {
     "scopes": {
@@ -231,10 +231,10 @@ the enterprise account with the same Request URL path:
 }
 ```
 
-At startup, OpenClaw verifies `enterpriseOrgInstall` with Slack `auth.test`.
+At startup, GrokBot verifies `enterpriseOrgInstall` with Slack `auth.test`.
 An org-installed token without the flag, or a workspace token with the flag,
 fails startup. Slack remains the source of truth for which workspaces have
-granted the installation; OpenClaw then applies the configured channel, user,
+granted the installation; GrokBot then applies the configured channel, user,
 DM, and mention policies to each delivered event. Enterprise V1 rejects all
 bot-authored `message` and `app_mention` events before dispatch, regardless of
 `allowBots`, because org installs do not provide a stable workspace-qualified
@@ -256,7 +256,7 @@ in-memory send queue and thread-participation records are partitioned by that
 event's workspace; the client itself is never serialized or persisted.
 
 Channel policy keys and `dm.groupChannels` entries must use raw stable Slack channel IDs or the
-`channel:<id>` form. OpenClaw normalizes either form to the raw channel ID for
+`channel:<id>` form. GrokBot normalizes either form to the raw channel ID for
 runtime matching; `slack:`, `group:`, and `mpim:` prefixes fail startup.
 User policy entries must use stable Slack user IDs; names, slugs, display names,
 and email addresses fail startup. IDs must use Slack's canonical uppercase
@@ -283,7 +283,7 @@ continues to apply to channel messages.
 ## Install
 
 ```bash
-openclaw plugins install @openclaw/slack
+grokbot plugins install @grokbot/slack
 ```
 
 `plugins install` registers and enables the plugin. It does nothing until you configure the Slack app and channel settings below. See [Plugins](/tools/plugin) for general plugin install rules.
@@ -305,18 +305,18 @@ Enterprise Grid organization installation, use the dedicated
 ```json Recommended
 {
   "display_information": {
-    "name": "OpenClaw",
-    "description": "Slack connector for OpenClaw"
+    "name": "GrokBot",
+    "description": "Slack connector for GrokBot"
   },
   "features": {
-    "bot_user": { "display_name": "OpenClaw", "always_online": true },
+    "bot_user": { "display_name": "GrokBot", "always_online": true },
     "app_home": {
       "home_tab_enabled": true,
       "messages_tab_enabled": true,
       "messages_tab_read_only_enabled": false
     },
     "assistant_view": {
-      "assistant_description": "OpenClaw connects Slack assistant threads to OpenClaw agents.",
+      "assistant_description": "GrokBot connects Slack assistant threads to GrokBot agents.",
       "suggested_prompts": [
         { "title": "What can you do?", "message": "What can you help me with?" },
         {
@@ -328,8 +328,8 @@ Enterprise Grid organization installation, use the dedicated
     },
     "slash_commands": [
       {
-        "command": "/openclaw",
-        "description": "Send a message to OpenClaw",
+        "command": "/grokbot",
+        "description": "Send a message to GrokBot",
         "should_escape": false
       }
     ]
@@ -391,18 +391,18 @@ Enterprise Grid organization installation, use the dedicated
 ```json Minimal
 {
   "display_information": {
-    "name": "OpenClaw",
-    "description": "Slack connector for OpenClaw"
+    "name": "GrokBot",
+    "description": "Slack connector for GrokBot"
   },
   "features": {
-    "bot_user": { "display_name": "OpenClaw", "always_online": true },
+    "bot_user": { "display_name": "GrokBot", "always_online": true },
     "app_home": {
       "home_tab_enabled": true,
       "messages_tab_enabled": true,
       "messages_tab_read_only_enabled": false
     },
     "assistant_view": {
-      "assistant_description": "OpenClaw connects Slack assistant threads to OpenClaw agents.",
+      "assistant_description": "GrokBot connects Slack assistant threads to GrokBot agents.",
       "suggested_prompts": [
         { "title": "What can you do?", "message": "What can you help me with?" },
         {
@@ -414,8 +414,8 @@ Enterprise Grid organization installation, use the dedicated
     },
     "slash_commands": [
       {
-        "command": "/openclaw",
-        "description": "Send a message to OpenClaw",
+        "command": "/grokbot",
+        "description": "Send a message to GrokBot",
         "should_escape": false
       }
     ]
@@ -468,7 +468,7 @@ Enterprise Grid organization installation, use the dedicated
 
       </Step>
 
-      <Step title="Configure OpenClaw">
+      <Step title="Configure GrokBot">
 
         Recommended SecretRef setup:
 
@@ -487,8 +487,8 @@ cat > slack.socket.patch.json5 <<'JSON5'
   },
 }
 JSON5
-openclaw config patch --file ./slack.socket.patch.json5 --dry-run
-openclaw config patch --file ./slack.socket.patch.json5
+grokbot config patch --file ./slack.socket.patch.json5 --dry-run
+grokbot config patch --file ./slack.socket.patch.json5
 ```
 
         Env fallback (default account only):
@@ -503,7 +503,7 @@ SLACK_BOT_TOKEN=slack-bot-token-example
       <Step title="Start gateway">
 
 ```bash
-openclaw gateway
+grokbot gateway
 ```
 
       </Step>
@@ -521,18 +521,18 @@ openclaw gateway
 ```json Recommended
 {
   "display_information": {
-    "name": "OpenClaw",
-    "description": "Slack connector for OpenClaw"
+    "name": "GrokBot",
+    "description": "Slack connector for GrokBot"
   },
   "features": {
-    "bot_user": { "display_name": "OpenClaw", "always_online": true },
+    "bot_user": { "display_name": "GrokBot", "always_online": true },
     "app_home": {
       "home_tab_enabled": true,
       "messages_tab_enabled": true,
       "messages_tab_read_only_enabled": false
     },
     "assistant_view": {
-      "assistant_description": "OpenClaw connects Slack assistant threads to OpenClaw agents.",
+      "assistant_description": "GrokBot connects Slack assistant threads to GrokBot agents.",
       "suggested_prompts": [
         { "title": "What can you do?", "message": "What can you help me with?" },
         {
@@ -544,8 +544,8 @@ openclaw gateway
     },
     "slash_commands": [
       {
-        "command": "/openclaw",
-        "description": "Send a message to OpenClaw",
+        "command": "/grokbot",
+        "description": "Send a message to GrokBot",
         "should_escape": false,
         "url": "https://gateway-host.example.com/slack/events"
       }
@@ -613,18 +613,18 @@ openclaw gateway
 ```json Minimal
 {
   "display_information": {
-    "name": "OpenClaw",
-    "description": "Slack connector for OpenClaw"
+    "name": "GrokBot",
+    "description": "Slack connector for GrokBot"
   },
   "features": {
-    "bot_user": { "display_name": "OpenClaw", "always_online": true },
+    "bot_user": { "display_name": "GrokBot", "always_online": true },
     "app_home": {
       "home_tab_enabled": true,
       "messages_tab_enabled": true,
       "messages_tab_read_only_enabled": false
     },
     "assistant_view": {
-      "assistant_description": "OpenClaw connects Slack assistant threads to OpenClaw agents.",
+      "assistant_description": "GrokBot connects Slack assistant threads to GrokBot agents.",
       "suggested_prompts": [
         { "title": "What can you do?", "message": "What can you help me with?" },
         {
@@ -636,8 +636,8 @@ openclaw gateway
     },
     "slash_commands": [
       {
-        "command": "/openclaw",
-        "description": "Send a message to OpenClaw",
+        "command": "/grokbot",
+        "description": "Send a message to GrokBot",
         "should_escape": false,
         "url": "https://gateway-host.example.com/slack/events"
       }
@@ -690,7 +690,7 @@ openclaw gateway
         </Note>
 
         <Info>
-          The three URL fields (`slash_commands[].url`, `event_subscriptions.request_url`, and `interactivity.request_url` / `message_menu_options_url`) all point at the same OpenClaw endpoint. Slack's manifest schema requires them named separately, but OpenClaw routes by payload type so a single `webhookPath` (default `/slack/events`) is enough. Slash commands without `slash_commands[].url` silently no-op in HTTP mode.
+          The three URL fields (`slash_commands[].url`, `event_subscriptions.request_url`, and `interactivity.request_url` / `message_menu_options_url`) all point at the same GrokBot endpoint. Slack's manifest schema requires them named separately, but GrokBot routes by payload type so a single `webhookPath` (default `/slack/events`) is enough. Slash commands without `slash_commands[].url` silently no-op in HTTP mode.
         </Info>
 
         After Slack creates the app:
@@ -700,7 +700,7 @@ openclaw gateway
 
       </Step>
 
-      <Step title="Configure OpenClaw">
+      <Step title="Configure GrokBot">
 
         Recommended SecretRef setup:
 
@@ -720,8 +720,8 @@ cat > slack.http.patch.json5 <<'JSON5'
   },
 }
 JSON5
-openclaw config patch --file ./slack.http.patch.json5 --dry-run
-openclaw config patch --file ./slack.http.patch.json5
+grokbot config patch --file ./slack.http.patch.json5 --dry-run
+grokbot config patch --file ./slack.http.patch.json5
 ```
 
         <Note>
@@ -735,7 +735,7 @@ openclaw config patch --file ./slack.http.patch.json5
       <Step title="Start gateway">
 
 ```bash
-openclaw gateway
+grokbot gateway
 ```
 
       </Step>
@@ -746,7 +746,7 @@ openclaw gateway
 
 ## User identity (post as a real person)
 
-User identity lets OpenClaw read and post as the human who authorizes the Slack app. The `userToken` is the acting identity; a companion Slack app carries Events API traffic over Socket Mode or an HTTP Request URL. The companion app does not need a bot user or bot token.
+User identity lets GrokBot read and post as the human who authorizes the Slack app. The `userToken` is the acting identity; a companion Slack app carries Events API traffic over Socket Mode or an HTTP Request URL. The companion app does not need a bot user or bot token.
 
 Set up the companion app as follows:
 
@@ -768,7 +768,7 @@ Set up the companion app as follows:
 3. Choose one event transport:
 
    - **Socket Mode:** enable Socket Mode and create an app-level token with `connections:write`. Configure it as `appToken`.
-   - **HTTP Request URL:** point Event Subscriptions at the public OpenClaw Slack endpoint and copy **Basic Information -> App Credentials -> Signing Secret**. Configure it as `signingSecret`.
+   - **HTTP Request URL:** point Event Subscriptions at the public GrokBot Slack endpoint and copy **Basic Information -> App Credentials -> Signing Secret**. Configure it as `signingSecret`.
 
 4. Install or reinstall the app, authorize it as the intended human, and copy the resulting user OAuth token into `userToken`.
 
@@ -803,14 +803,14 @@ HTTP Request URL configuration:
 ```
 
 <Warning>
-  DMs and group DMs work only through the user-scope event subscription above. A bot cannot join a human 1:1 DM or be inserted into an existing group DM. The companion app is invisible plumbing: other Slack members see messages from the authorizing human, not from an OpenClaw bot.
+  DMs and group DMs work only through the user-scope event subscription above. A bot cannot join a human 1:1 DM or be inserted into an existing group DM. The companion app is invisible plumbing: other Slack members see messages from the authorizing human, not from an GrokBot bot.
 </Warning>
 
-OpenClaw automatically drops user-scope message events authored by the resolved human identity, so messages it sends do not trigger self-replies.
+GrokBot automatically drops user-scope message events authored by the resolved human identity, so messages it sends do not trigger self-replies.
 
 ## Socket Mode transport tuning
 
-OpenClaw sets the Slack SDK client pong timeout to 15 seconds by default for Socket Mode. Override the transport settings only when you need workspace- or host-specific tuning:
+GrokBot sets the Slack SDK client pong timeout to 15 seconds by default for Socket Mode. Override the transport settings only when you need workspace- or host-specific tuning:
 
 ```json5
 {
@@ -833,7 +833,7 @@ Notes:
 
 - `socketMode` is ignored in HTTP Request URL mode.
 - Base `channels.slack.socketMode` settings apply to all Slack accounts unless overridden. Per-account overrides use `channels.slack.accounts.<accountId>.socketMode`; because this is an object override, include every socket tuning field you want for that account.
-- Only `clientPingTimeout` has an OpenClaw default (`15000`). `serverPingTimeout` and `pingPongLoggingEnabled` are passed to the Slack SDK only when configured.
+- Only `clientPingTimeout` has an GrokBot default (`15000`). `serverPingTimeout` and `pingPongLoggingEnabled` are passed to the Slack SDK only when configured.
 - Socket Mode restart backoff starts around 2 seconds and caps around 30 seconds. Recoverable start, start-wait, and disconnect failures retry until the channel stops. Permanent account and credential errors such as invalid auth, revoked tokens, or missing scopes fail fast instead of retrying forever.
 
 ## Manifest and scope checklist
@@ -845,18 +845,18 @@ Base manifest (Socket Mode default):
 ```json
 {
   "display_information": {
-    "name": "OpenClaw",
-    "description": "Slack connector for OpenClaw"
+    "name": "GrokBot",
+    "description": "Slack connector for GrokBot"
   },
   "features": {
-    "bot_user": { "display_name": "OpenClaw", "always_online": true },
+    "bot_user": { "display_name": "GrokBot", "always_online": true },
     "app_home": {
       "home_tab_enabled": true,
       "messages_tab_enabled": true,
       "messages_tab_read_only_enabled": false
     },
     "assistant_view": {
-      "assistant_description": "OpenClaw connects Slack assistant threads to OpenClaw agents.",
+      "assistant_description": "GrokBot connects Slack assistant threads to GrokBot agents.",
       "suggested_prompts": [
         { "title": "What can you do?", "message": "What can you help me with?" },
         {
@@ -868,8 +868,8 @@ Base manifest (Socket Mode default):
     },
     "slash_commands": [
       {
-        "command": "/openclaw",
-        "description": "Send a message to OpenClaw",
+        "command": "/grokbot",
+        "description": "Send a message to GrokBot",
         "should_escape": false
       }
     ]
@@ -935,8 +935,8 @@ For **HTTP Request URLs mode**, replace `settings` with the HTTP variant and add
   "features": {
     "slash_commands": [
       {
-        "command": "/openclaw",
-        "description": "Send a message to OpenClaw",
+        "command": "/grokbot",
+        "description": "Send a message to GrokBot",
         "should_escape": false,
         "url": "https://gateway-host.example.com/slack/events"
       }
@@ -976,7 +976,7 @@ For **HTTP Request URLs mode**, replace `settings` with the HTTP variant and add
 
 Surface different features that extend the above defaults.
 
-The default manifest enables the Slack App Home **Home** tab and subscribes to `app_home_opened`. When a workspace member opens the Home tab, OpenClaw publishes a safe default Home view with `views.publish`; no conversation payload or private configuration is included. When single slash command mode is enabled, the command hint uses `channels.slack.slashCommand.name`; installations using native commands or no slash commands omit that hint. The **Messages** tab remains enabled for Slack DMs. The manifest also enables Slack assistant threads with `features.assistant_view`, `assistant:write`, `assistant_thread_started`, and `assistant_thread_context_changed`; assistant threads route to their own OpenClaw thread sessions and keep Slack-provided thread context available to the agent.
+The default manifest enables the Slack App Home **Home** tab and subscribes to `app_home_opened`. When a workspace member opens the Home tab, GrokBot publishes a safe default Home view with `views.publish`; no conversation payload or private configuration is included. When single slash command mode is enabled, the command hint uses `channels.slack.slashCommand.name`; installations using native commands or no slash commands omit that hint. The **Messages** tab remains enabled for Slack DMs. The manifest also enables Slack assistant threads with `features.assistant_view`, `assistant:write`, `assistant_thread_started`, and `assistant_thread_context_changed`; assistant threads route to their own GrokBot thread sessions and keep Slack-provided thread context available to the agent.
 
 <AccordionGroup>
   <Accordion title="Optional native slash commands">
@@ -986,7 +986,7 @@ The default manifest enables the Slack App Home **Home** tab and subscribes to `
     - Use `/agentstatus` instead of `/status` because the `/status` command is reserved.
     - No more than 25 slash commands can be registered on a Slack app at once (Slack platform limit).
 
-    OpenClaw registers handlers for enabled native commands, but Slack manifest entries remain administrator-managed and are not synchronized at runtime. Add `/login` to the manifest manually; the example below includes it instead of the optional `/side` alias to remain at 25 commands. `/login` can be surfaced anywhere, but it issues pairing codes only in private chats or the Web UI.
+    GrokBot registers handlers for enabled native commands, but Slack manifest entries remain administrator-managed and are not synchronized at runtime. Add `/login` to the manifest manually; the example below includes it instead of the optional `/side` alias to remain at 25 commands. `/login` can be surfaced anywhere, but it issues pairing codes only in private chats or the Web UI.
 
     Replace your existing `features.slash_commands` section with a subset of [available commands](/tools/slash-commands#command-list):
 
@@ -1234,9 +1234,9 @@ Current Slack message actions include `send`, `upload-file`, `download-file`, `r
     - Named accounts inherit `channels.slack.allowFrom` when their own `allowFrom` is unset.
     - Named accounts do not inherit `channels.slack.accounts.default.allowFrom`.
 
-    Legacy `channels.slack.dm.policy` and `channels.slack.dm.allowFrom` still read for compatibility. `openclaw doctor --fix` migrates them to `dmPolicy` and `allowFrom` when it can do so without changing access.
+    Legacy `channels.slack.dm.policy` and `channels.slack.dm.allowFrom` still read for compatibility. `grokbot doctor --fix` migrates them to `dmPolicy` and `allowFrom` when it can do so without changing access.
 
-    Pairing in DMs uses `openclaw pairing approve slack <code>`.
+    Pairing in DMs uses `grokbot pairing approve slack <code>`.
 
   </Tab>
 
@@ -1321,7 +1321,7 @@ Current Slack message actions include `send`, `upload-file`, `download-file`, `r
 
     `ignoreOtherMentions` (default `false`) drops channel messages that mention another user or user group but not this bot. DMs and group DMs (MPIMs) are unaffected. The filter requires a resolved bot user ID from `auth.test`; if that identity is unavailable (for example a user-token-only identity), the gate fails open and messages pass through unchanged.
 
-    `allowBots` is conservative for channels and private channels: bot-authored room messages are accepted only when the sending bot is explicitly listed in that room's `users` allowlist, or when at least one explicit Slack owner ID from `channels.slack.allowFrom` is currently a room member. Wildcards and display-name owner entries do not satisfy owner presence. Owner presence uses Slack `conversations.members`; make sure the app has the matching read scope for the room type (`channels:read` for public channels, `groups:read` for private channels). If the member lookup fails, OpenClaw drops the bot-authored room message.
+    `allowBots` is conservative for channels and private channels: bot-authored room messages are accepted only when the sending bot is explicitly listed in that room's `users` allowlist, or when at least one explicit Slack owner ID from `channels.slack.allowFrom` is currently a room member. Wildcards and display-name owner entries do not satisfy owner presence. Owner presence uses Slack `conversations.members`; make sure the app has the matching read scope for the room type (`channels:read` for public channels, `groups:read` for private channels). If the member lookup fails, GrokBot drops the bot-authored room message.
 
     Accepted bot-authored Slack messages use shared [bot loop protection](/channels/bot-loop-protection). Configure `channels.defaults.botLoopProtection` for the default budget, then override with `channels.slack.botLoopProtection` or `channels.slack.channels.<id>.botLoopProtection` when a workspace or channel needs a different limit.
 
@@ -1336,11 +1336,11 @@ Current Slack message actions include `send`, `upload-file`, `download-file`, `r
 - Channel sessions: `agent:<agentId>:slack:channel:<channelId>`.
 - Ordinary top-level channel messages stay on the per-channel session, even when `replyToMode` is non-`off`.
 - Slack thread replies use the parent Slack `thread_ts` for session suffixes (`:thread:<threadTs>`), even when outbound reply threading is disabled with `replyToMode="off"`.
-- OpenClaw seeds an eligible top-level channel root into `agent:<agentId>:slack:channel:<channelId>:thread:<rootTs>` when that root is expected to start a visible Slack thread, so the root and later thread replies share one OpenClaw session. This applies to `app_mention` events, explicit bot or configured mention-pattern matches, and `requireMention: false` channels with non-`off` `replyToMode`.
+- GrokBot seeds an eligible top-level channel root into `agent:<agentId>:slack:channel:<channelId>:thread:<rootTs>` when that root is expected to start a visible Slack thread, so the root and later thread replies share one GrokBot session. This applies to `app_mention` events, explicit bot or configured mention-pattern matches, and `requireMention: false` channels with non-`off` `replyToMode`.
 - `channels.slack.thread.historyScope` default is `thread`; `thread.inheritParent` default is `false`.
 - `channels.slack.thread.initialHistoryLimit` controls how many existing thread messages are fetched when a new thread session starts (default `20`; set `0` to disable).
 - `channels.slack.implicitMentions.replyToBot` controls whether a reply to the bot's own message bypasses mention gating (default `true`).
-- `channels.slack.implicitMentions.threadParticipation` controls whether follow-ups in a thread where the bot has replied bypass mention gating (default `true`). Set it to `false` to require a new explicit mention in those follow-ups. `openclaw doctor --fix` migrates the former `channels.slack.thread.requireExplicitMention` key to this positive canonical flag.
+- `channels.slack.implicitMentions.threadParticipation` controls whether follow-ups in a thread where the bot has replied bypass mention gating (default `true`). Set it to `false` to require a new explicit mention in those follow-ups. `grokbot doctor --fix` migrates the former `channels.slack.thread.requireExplicitMention` key to this positive canonical flag.
 - Account overrides live at `channels.slack.accounts.<id>.implicitMentions`; shared defaults live at `channels.defaults.implicitMentions`.
 
 Reply threading controls:
@@ -1357,7 +1357,7 @@ Manual reply tags are supported:
 
 For explicit Slack thread replies from the `message` tool, set `replyBroadcast: true` with `action: "send"` and `threadId` or `replyTo` to ask Slack to also broadcast the thread reply to the parent channel. This maps to Slack's `chat.postMessage` `reply_broadcast` flag and is only supported for text or Block Kit sends, not media uploads.
 
-When a `message` tool call runs inside a Slack thread and targets the same channel, OpenClaw normally inherits the current Slack thread according to the effective account, chat-type, or per-channel `replyToMode`. Automatic replies and same-channel `send` or `upload-file` calls use the same per-channel override. Set `topLevel: true` on `action: "send"` or `action: "upload-file"` to force a new parent-channel message instead. `threadId: null` is accepted as the same top-level opt-out.
+When a `message` tool call runs inside a Slack thread and targets the same channel, GrokBot normally inherits the current Slack thread according to the effective account, chat-type, or per-channel `replyToMode`. Automatic replies and same-channel `send` or `upload-file` calls use the same per-channel override. Set `topLevel: true` on `action: "send"` or `action: "upload-file"` to force a new parent-channel message instead. `threadId: null` is accepted as the same top-level opt-out.
 
 <Note>
 `replyToMode="off"` disables outbound Slack reply threading, including explicit `[[reply_to_*]]` tags. It does not flatten inbound Slack thread sessions: messages already posted inside a Slack thread still route to the `:thread:<threadTs>` session. This differs from Telegram, where explicit tags are still honored in `"off"` mode. Slack threads hide messages from the channel while Telegram replies stay visible inline.
@@ -1365,7 +1365,7 @@ When a `message` tool call runs inside a Slack thread and targets the same chann
 
 ## Ack reactions
 
-`ackReaction` sends an acknowledgement emoji while OpenClaw is processing an inbound message. `ackReactionScope` decides _when_ that emoji is actually sent.
+`ackReaction` sends an acknowledgement emoji while GrokBot is processing an inbound message. `ackReactionScope` decides _when_ that emoji is actually sent.
 
 By default, the acknowledgement stays static while Slack's native assistant thread status shows progress with rotating loading messages. Set `messages.statusReactions.enabled: true` to opt into the queued/thinking/tool/done/error reaction lifecycle instead.
 
@@ -1443,10 +1443,10 @@ Slack native progress task cards are opt-in for progress mode. Set `channels.sla
 
 - A reply thread must be available for native text streaming and Slack assistant thread status to appear. Thread selection still follows `replyToMode`.
 - Channel, group-chat, and top-level DM roots can still use the normal draft preview when native streaming is unavailable or no reply thread exists.
-- Top-level Slack DMs stay off-thread by default, so they do not show Slack's thread-style native stream/status preview; OpenClaw posts and edits a draft preview in the DM instead.
+- Top-level Slack DMs stay off-thread by default, so they do not show Slack's thread-style native stream/status preview; GrokBot posts and edits a draft preview in the DM instead.
 - Media and non-text payloads fall back to normal delivery.
 - Media/error finals cancel pending preview edits; eligible text/block finals flush only when they can edit the preview in place.
-- If streaming fails mid-reply, OpenClaw falls back to normal delivery for remaining payloads.
+- If streaming fails mid-reply, GrokBot falls back to normal delivery for remaining payloads.
 
 Use draft preview instead of Slack native text streaming:
 
@@ -1486,11 +1486,11 @@ Legacy keys:
 - `channels.slack.streamMode` (`replace | status_final | append`) is a legacy alias for `channels.slack.streaming.mode`.
 - boolean `channels.slack.streaming` is a legacy alias for `channels.slack.streaming.mode` and `channels.slack.streaming.nativeTransport`.
 - top-level `channels.slack.chunkMode` and `channels.slack.nativeStreaming` are legacy aliases for `channels.slack.streaming.chunkMode` and `channels.slack.streaming.nativeTransport`.
-- Legacy aliases are not read at runtime; run `openclaw doctor --fix` to rewrite persisted Slack streaming config to the canonical keys.
+- Legacy aliases are not read at runtime; run `grokbot doctor --fix` to rewrite persisted Slack streaming config to the canonical keys.
 
 ## Typing reaction fallback
 
-`typingReaction` adds a temporary reaction to the inbound Slack message while OpenClaw is processing a reply, then removes it when the run finishes. This is most useful outside of thread replies, which use a default "is typing..." status indicator.
+`typingReaction` adds a temporary reaction to the inbound Slack message while GrokBot is processing a reply, then removes it when the run finishes. This is most useful outside of thread replies, which use a default "is typing..." status indicator.
 
 Resolution order:
 
@@ -1504,14 +1504,14 @@ Notes:
 
 ## Voice input
 
-To speak to OpenClaw in Slack today, send a Slack audio clip to the OpenClaw app. Slackbot's dictation microphone is a separate Slack-owned feature, not an app API.
+To speak to GrokBot in Slack today, send a Slack audio clip to the GrokBot app. Slackbot's dictation microphone is a separate Slack-owned feature, not an app API.
 
-- **[Slackbot voice dictation](https://slack.com/help/articles/202026038-How-to-use-Slackbot)** lives inside the user's private Slackbot conversation. Slack turns the recording into a Slackbot prompt but does not emit an audio file, dictation event, prompt, or input-source marker to third-party Slack apps through the Events API. The OpenClaw Slack plugin cannot enable or receive it.
-- **[Slack audio clips](https://slack.com/help/articles/4406235165587-Record-audio-and-video-clips-in-Slack)** are stored Slack files that can be posted in an OpenClaw DM, channel, or thread. OpenClaw downloads an accessible clip with the bot token, normalizes Slack's clip MIME metadata, and sends it through the shared [audio transcription pipeline](/nodes/audio). The recommended app manifest includes the required `files:read` scope.
+- **[Slackbot voice dictation](https://slack.com/help/articles/202026038-How-to-use-Slackbot)** lives inside the user's private Slackbot conversation. Slack turns the recording into a Slackbot prompt but does not emit an audio file, dictation event, prompt, or input-source marker to third-party Slack apps through the Events API. The GrokBot Slack plugin cannot enable or receive it.
+- **[Slack audio clips](https://slack.com/help/articles/4406235165587-Record-audio-and-video-clips-in-Slack)** are stored Slack files that can be posted in an GrokBot DM, channel, or thread. GrokBot downloads an accessible clip with the bot token, normalizes Slack's clip MIME metadata, and sends it through the shared [audio transcription pipeline](/nodes/audio). The recommended app manifest includes the required `files:read` scope.
 
-Audio clips and Slackbot dictation have different privacy semantics: clips follow Slack file-retention policy and OpenClaw downloads them for transcription, while Slack says dictation audio is not stored.
+Audio clips and Slackbot dictation have different privacy semantics: clips follow Slack file-retention policy and GrokBot downloads them for transcription, while Slack says dictation audio is not stored.
 
-In a channel with `requireMention: true`, a captionless audio clip can satisfy the gate by speaking a configured mention pattern (`agents.list[].groupChat.mentionPatterns`, falling back to `messages.groupChat.mentionPatterns`). OpenClaw authorizes the sender before downloading or transcribing the clip, then admits it only when the transcript matches. A failed or nonmatching speculative transcript is discarded with the downloaded clip; it is not retained in channel history. Native Slack `@bot` identity cannot be inferred from speech, so configure a spoken-name pattern or include a typed mention. If transcript echoing is enabled, the echo is sent only after admission.
+In a channel with `requireMention: true`, a captionless audio clip can satisfy the gate by speaking a configured mention pattern (`agents.list[].groupChat.mentionPatterns`, falling back to `messages.groupChat.mentionPatterns`). GrokBot authorizes the sender before downloading or transcribing the clip, then admits it only when the transcript matches. A failed or nonmatching speculative transcript is discarded with the downloaded clip; it is not retained in channel history. Native Slack `@bot` identity cannot be inferred from speech, so configure a spoken-name pattern or include a typed mention. If transcript echoing is enabled, the echo is sent only after admission.
 
 ## Media, chunking, and delivery
 
@@ -1519,7 +1519,7 @@ In a channel with `requireMention: true`, a captionless audio clip can satisfy t
   <Accordion title="Inbound attachments">
     Slack file attachments are downloaded from Slack-hosted private URLs (token-authenticated request flow) and written to the media store when fetch succeeds and size limits permit. File placeholders include the Slack `fileId` so agents can fetch the original file with `download-file`.
 
-    Downloads use bounded idle and total timeouts. If Slack file retrieval stalls or fails, OpenClaw keeps processing the message and falls back to the file placeholder.
+    Downloads use bounded idle and total timeouts. If Slack file retrieval stalls or fails, GrokBot keeps processing the message and falls back to the file placeholder.
 
     Runtime inbound size cap defaults to `20MB` unless overridden by `channels.slack.mediaMaxMb`.
 
@@ -1550,12 +1550,12 @@ In a channel with `requireMention: true`, a captionless audio clip can satisfy t
 Slash commands appear in Slack as either a single configured command or multiple native commands. Configure `channels.slack.slashCommand` to change command defaults:
 
 - `enabled: false`
-- `name: "openclaw"`
+- `name: "grokbot"`
 - `sessionPrefix: "slack:slash"`
 - `ephemeral: true`
 
 ```txt
-/openclaw /help
+/grokbot /help
 ```
 
 Native commands require [additional manifest settings](#additional-manifest-settings) in your Slack app and are enabled with `channels.slack.commands.native: true` or `commands.native: true` in global configurations instead.
@@ -1582,7 +1582,7 @@ Slash sessions use isolated keys like `agent:<agentId>:slack:slash:<userId>` and
 ## Native charts
 
 Slack's public [`data_visualization` Block Kit block](https://docs.slack.dev/reference/block-kit/blocks/data-visualization-block/)
-renders line, bar, area, and pie charts in messages. OpenClaw maps the portable
+renders line, bar, area, and pie charts in messages. GrokBot maps the portable
 `presentation` `chart` block to that native shape; no additional OAuth scope,
 file upload, image renderer, or Slack configuration is required beyond normal
 `chat:write` message access.
@@ -1613,14 +1613,14 @@ Slack's limits are enforced before native rendering:
 
 Every native chart also carries a top-level text representation for screen
 readers, notifications, session mirroring, and clients that cannot render the
-block. Standard presentation sends to other OpenClaw channels receive that same
+block. Standard presentation sends to other GrokBot channels receive that same
 deterministic chart data as text unless they advertise native chart support. If
-Slack rejects the chart with `invalid_blocks` during a phased rollout, OpenClaw
+Slack rejects the chart with `invalid_blocks` during a phased rollout, GrokBot
 removes the rejected native data blocks, keeps any sibling controls, and sends
 the complete chart representation as visible text.
 
 Slack currently accepts up to two `data_visualization` blocks per message. When
-a presentation contains more than two valid charts, OpenClaw keeps their order
+a presentation contains more than two valid charts, GrokBot keeps their order
 and continues native rendering in follow-up messages, with no more than two
 charts in each message.
 
@@ -1634,7 +1634,7 @@ Home, modal, or Canvas content.
 ## Native tables
 
 Slack's current [`data_table` Block Kit block](https://docs.slack.dev/reference/block-kit/blocks/data-table-block/)
-renders structured rows and columns in messages. OpenClaw maps an explicit
+renders structured rows and columns in messages. GrokBot maps an explicit
 portable `presentation` `table` block to `data_table`; it does not use Slack's
 legacy [`table` block](https://docs.slack.dev/reference/block-kit/blocks/table-block/).
 No additional OAuth scope or Slack configuration is required beyond normal
@@ -1657,7 +1657,7 @@ No additional OAuth scope or Slack configuration is required beyond normal
 }
 ```
 
-OpenClaw maps header and string cells to Slack `raw_text` cells. Numeric cells
+GrokBot maps header and string cells to Slack `raw_text` cells. Numeric cells
 map to `raw_number`, with the finite numeric value preserved for native sorting
 and filtering. `rowHeaderColumnIndex`, when present, marks that zero-based
 column as Slack row headers.
@@ -1680,7 +1680,7 @@ Every native table produced from portable presentation also carries a top-level
 text representation for screen readers, notifications, session mirroring, and
 clients that cannot render the block. Raw chart and table values stay literal
 in the fallback, so cell data such as `<@U123>` does not become a Slack mention.
-If Slack rejects native chart or table blocks with `invalid_blocks`, OpenClaw
+If Slack rejects native chart or table blocks with `invalid_blocks`, GrokBot
 removes every native data block in one bounded recovery step, retains valid
 sibling blocks such as buttons and selects, and sends complete visible chart
 and table text with Slack formatting disabled. Slash-command delivery
@@ -1689,9 +1689,9 @@ reply batch, it selects a complete plan that fits the remaining calls or fails
 before posting that batch.
 
 Only explicit `presentation` table blocks are promoted to native tables.
-Markdown pipe tables remain authored text; OpenClaw does not guess at table
+Markdown pipe tables remain authored text; GrokBot does not guess at table
 structure or cell types. Existing trusted Slack-native producers can continue
-to pass raw blocks through `channelData.slack.blocks`; OpenClaw derives fallback
+to pass raw blocks through `channelData.slack.blocks`; GrokBot derives fallback
 text from valid raw `data_table` cells, while malformed custom blocks may
 degrade to their caption or general Block Kit fallback. Portable agent, CLI,
 and plugin output should use `presentation`.
@@ -1759,17 +1759,17 @@ Notes:
 
 - This is Slack-specific legacy UI. Other channels do not translate Slack Block
   Kit directives into their own button systems.
-- The interactive callback values are OpenClaw-generated opaque tokens, not raw agent-authored values.
-- If generated interactive blocks would exceed Slack Block Kit limits, OpenClaw falls back to the original text reply instead of sending an invalid blocks payload.
+- The interactive callback values are GrokBot-generated opaque tokens, not raw agent-authored values.
+- If generated interactive blocks would exceed Slack Block Kit limits, GrokBot falls back to the original text reply instead of sending an invalid blocks payload.
 
 ### Plugin-owned modal submissions
 
 Slack plugins that register an interactive handler can also receive modal
-`view_submission` and `view_closed` lifecycle events before OpenClaw compacts
+`view_submission` and `view_closed` lifecycle events before GrokBot compacts
 the payload for the agent-visible system event. Use one of these routing
 patterns when opening a Slack modal:
 
-- Set `callback_id` to `openclaw:<namespace>:<payload>`.
+- Set `callback_id` to `grokbot:<namespace>:<payload>`.
 - Or keep an existing `callback_id` and put `pluginInteractiveData:
 "<namespace>:<payload>"` in the modal `private_metadata`.
 
@@ -1795,7 +1795,7 @@ Slack can act as a native approval client with interactive buttons and interacti
 - Approver authorization is still enforced: exec-only approvers cannot approve plugin requests unless they are also plugin approvers.
 
 This uses the same shared approval button surface as other channels. When `interactivity` is enabled in your Slack app settings, approval prompts render as Block Kit buttons directly in the conversation.
-When those buttons are present, they are the primary approval UX; OpenClaw
+When those buttons are present, they are the primary approval UX; GrokBot
 should only include a manual `/approve` command when the tool result says chat
 approvals are unavailable or manual approval is the only path.
 
@@ -1864,11 +1864,11 @@ Same-chat `/approve` also works in Slack channels and DMs that already support c
   - message shortcuts: callback, actor, channel, thread, and selected-message context
   - modal `view_submission` and `view_closed` events with routed channel metadata and form inputs
 
-Define global or message shortcuts in your Slack app configuration and use any non-empty callback ID. OpenClaw acknowledges matching shortcut payloads, applies the same DM/channel sender policy as other Slack interactions, and queues the sanitized event for the routed agent session. Trigger IDs and response URLs are redacted from agent context.
+Define global or message shortcuts in your Slack app configuration and use any non-empty callback ID. GrokBot acknowledges matching shortcut payloads, applies the same DM/channel sender policy as other Slack interactions, and queues the sanitized event for the routed agent session. Trigger IDs and response URLs are redacted from agent context.
 
 ### Presence events
 
-Slack does not send presence changes through the Events API or Socket Mode. OpenClaw can instead poll [`users.getPresence`](https://docs.slack.dev/reference/methods/users.getPresence/) for human participants whose messages passed normal Slack access and routing checks.
+Slack does not send presence changes through the Events API or Socket Mode. GrokBot can instead poll [`users.getPresence`](https://docs.slack.dev/reference/methods/users.getPresence/) for human participants whose messages passed normal Slack access and routing checks.
 
 ```json5
 {
@@ -1888,7 +1888,7 @@ Slack does not send presence changes through the Events API or Socket Mode. Open
 - `auto`: monitor DMs, MPIMs, and Slack threads active in the last 24 hours with at most 8 observed human participants. Top-level channel sessions are excluded.
 - `on`: monitor the same conversations without the participant cap and include top-level channel sessions. Use a per-channel override to force or suppress one channel.
 
-OpenClaw polls at most 45 unique users per minute per Slack account, seeds the first result without waking the agent, and only wakes on an observed `away` to `active` transition. A durable 8-hour cooldown applies per Slack account and user, even if that person participates in several threads. The event routes only to that person's most recently active eligible conversation and tells the agent to consult memory/wiki and known timezone context before deciding whether to send one short greeting. The agent may stay silent.
+GrokBot polls at most 45 unique users per minute per Slack account, seeds the first result without waking the agent, and only wakes on an observed `away` to `active` transition. A durable 8-hour cooldown applies per Slack account and user, even if that person participates in several threads. The event routes only to that person's most recently active eligible conversation and tells the agent to consult memory/wiki and known timezone context before deciding whether to send one short greeting. The agent may stay silent.
 
 The bot token needs `users:read`, which is already included in the recommended manifest. Presence events are unavailable for Enterprise Grid org-wide installs.
 
@@ -1936,9 +1936,9 @@ Primary reference: [Configuration reference - Slack](/gateway/config-channels#sl
     Useful commands:
 
 ```bash
-openclaw channels status --probe
-openclaw logs --follow
-openclaw doctor
+grokbot channels status --probe
+grokbot logs --follow
+grokbot doctor
 ```
 
   </Accordion>
@@ -1955,7 +1955,7 @@ openclaw doctor
       recoverable human sender in message metadata
 
 ```bash
-openclaw pairing list slack
+grokbot pairing list slack
 ```
 
   </Accordion>
@@ -1965,7 +1965,7 @@ openclaw pairing list slack
     The App-Level Token needs `connections:write`, and the Bot User OAuth Token
     bot token must belong to the same Slack app/workspace as the app token.
 
-    If `openclaw channels status --probe --json` shows `botTokenStatus` or
+    If `grokbot channels status --probe --json` shows `botTokenStatus` or
     `appTokenStatus: "configured_unavailable"`, the Slack account is
     configured but the current runtime could not resolve the SecretRef-backed
     value.
@@ -2033,7 +2033,7 @@ Slack can attach downloaded media to the agent turn when Slack file downloads su
 
 When a Slack message with file attachments arrives:
 
-1. OpenClaw downloads the file from Slack's private URL using the bot token.
+1. GrokBot downloads the file from Slack's private URL using the bot token.
 2. The file is written to the media store on success.
 3. Downloaded media paths and content types are added to the inbound context.
 4. Audio clips are routed to the shared transcription pipeline; image-capable model/tool paths can use image attachments from the same context.
@@ -2073,7 +2073,7 @@ When a single Slack message contains multiple file attachments:
 | Captionless clip does not pass a mention gate | Dropped after private speculative transcription; transcript and download discarded | Configure a spoken-name mention pattern, add a typed bot mention, or use a DM |
 | Vision model not configured                   | Image attachments are stored as media references, but not analyzed as images       | Configure `agents.defaults.imageModel` or use a vision-capable reply model    |
 | Very large images (> 20 MB by default)        | Skipped per size cap                                                               | Increase `channels.slack.mediaMaxMb` if Slack allows                          |
-| Forwarded/shared attachments                  | Text and Slack-hosted image/file media are best-effort                             | Re-share directly in the OpenClaw thread                                      |
+| Forwarded/shared attachments                  | Text and Slack-hosted image/file media are best-effort                             | Re-share directly in the GrokBot thread                                      |
 | PDF attachments                               | Stored as file/media context, not automatically routed through image vision        | Use `download-file` for file metadata or the `pdf` tool for PDF analysis      |
 
 ### Related documentation

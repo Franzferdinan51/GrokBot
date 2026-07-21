@@ -1,8 +1,8 @@
-// Update status helpers for `openclaw status`.
+// Update status helpers for `grokbot status`.
 // Wraps registry/git update checks and formats compact update rows/hints.
 
 import { formatCliCommand } from "../cli/command-format.js";
-import { resolveOpenClawPackageRoot } from "../infra/openclaw-root.js";
+import { resolveOpenClawPackageRoot } from "../infra/grokbot-root.js";
 import { normalizeUpdateChannel, resolveRegistryUpdateChannel } from "../infra/update-channels.js";
 import {
   checkUpdateStatus,
@@ -79,7 +79,7 @@ export function formatUpdateAvailableHint(update: UpdateCheckResult): string | n
     details.push(`npm ${availability.latestVersion}`);
   }
   const suffix = details.length > 0 ? ` (${details.join(" · ")})` : "";
-  return `Update available${suffix}. Run: ${formatCliCommand("openclaw update")}`;
+  return `Update available${suffix}. Run: ${formatCliCommand("grokbot update")}`;
 }
 
 /** Formats a compact one-line update summary for overview rows. */

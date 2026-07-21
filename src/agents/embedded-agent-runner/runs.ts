@@ -507,7 +507,7 @@ function prepareEmbeddedAgentQueueMessage(
 }
 
 /**
- * Abort embedded OpenClaw runs.
+ * Abort embedded GrokBot runs.
  *
  * - With a sessionId, aborts that single run.
  * - With no sessionId, supports targeted abort modes (for example, compacting runs only).
@@ -963,7 +963,7 @@ const testing = {
 };
 
 if (process.env.VITEST || process.env.NODE_ENV === "test") {
-  (globalThis as Record<PropertyKey, unknown>)[Symbol.for("openclaw.embeddedRunsTestApi")] =
+  (globalThis as Record<PropertyKey, unknown>)[Symbol.for("grokbot.embeddedRunsTestApi")] =
     testing;
 }
 /* oxlint-disable max-lines -- TODO: split this grandfathered oversized file. */

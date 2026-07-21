@@ -50,8 +50,8 @@ describeControlUiE2e("Control UI mount recovery E2E", () => {
         documentRequests += 1;
         const response = await route.fetch();
         const body = (await response.text()).replace(
-          'data-openclaw-mount-timeout-ms="12000"',
-          'data-openclaw-mount-timeout-ms="50"',
+          'data-grokbot-mount-timeout-ms="12000"',
+          'data-grokbot-mount-timeout-ms="50"',
         );
         await route.fulfill({ response, body });
         return;
@@ -69,7 +69,7 @@ describeControlUiE2e("Control UI mount recovery E2E", () => {
       expect(
         (await page.goto(`${server.baseUrl}chat`, { waitUntil: "domcontentloaded" }))?.status(),
       ).toBe(200);
-      await page.locator("openclaw-app-shell").waitFor();
+      await page.locator("grokbot-app-shell").waitFor();
       await page.locator(".agent-chat__welcome").waitFor();
 
       expect(documentRequests).toBe(2);

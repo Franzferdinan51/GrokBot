@@ -1,20 +1,20 @@
-import { createLlmRuntime, type LlmRuntime } from "@openclaw/ai";
-import type { OpenAICompletionsOptions } from "@openclaw/ai/internal/openai";
-import { getEnvApiKey } from "@openclaw/ai/internal/runtime";
-import { registerBuiltInApiProviders } from "@openclaw/ai/providers";
-import { normalizeProviderId } from "@openclaw/model-catalog-core/provider-id";
+import { createLlmRuntime, type LlmRuntime } from "@grokbot/ai";
+import type { OpenAICompletionsOptions } from "@grokbot/ai/internal/openai";
+import { getEnvApiKey } from "@grokbot/ai/internal/runtime";
+import { registerBuiltInApiProviders } from "@grokbot/ai/providers";
+import { normalizeProviderId } from "@grokbot/model-catalog-core/provider-id";
 import {
   asDateTimestampMs,
   resolveTimerTimeoutMs,
-} from "@openclaw/normalization-core/number-coercion";
+} from "@grokbot/normalization-core/number-coercion";
 import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalString,
-} from "@openclaw/normalization-core/string-coerce";
+} from "@grokbot/normalization-core/string-coerce";
 import {
   normalizeStringEntries,
   uniqueStrings,
-} from "@openclaw/normalization-core/string-normalization";
+} from "@grokbot/normalization-core/string-normalization";
 import pMap from "p-map";
 import { Type } from "typebox";
 import { formatErrorMessage } from "../infra/errors.js";

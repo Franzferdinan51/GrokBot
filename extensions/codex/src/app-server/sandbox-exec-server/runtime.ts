@@ -2,7 +2,7 @@
  * Runtime guards for sandbox exec-server handlers that need backend-specific
  * execution and filesystem bridges.
  */
-import type { SandboxContext } from "openclaw/plugin-sdk/sandbox";
+import type { SandboxContext } from "grokbot/plugin-sdk/sandbox";
 import type { OpenClawExecServer } from "./types.js";
 
 /** Returns the configured sandbox backend or fails the current JSON-RPC request. */
@@ -11,7 +11,7 @@ export function requireBackend(
 ): NonNullable<SandboxContext["backend"]> {
   const backend = execServer.sandbox.backend;
   if (!backend) {
-    throw new Error("OpenClaw sandbox backend is unavailable.");
+    throw new Error("GrokBot sandbox backend is unavailable.");
   }
   return backend;
 }

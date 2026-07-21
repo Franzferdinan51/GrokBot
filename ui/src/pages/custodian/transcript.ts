@@ -1,7 +1,7 @@
 import type {
   SystemAgentChatHistoryResult,
   SystemAgentChatHistoryTurn,
-} from "@openclaw/gateway-protocol";
+} from "@grokbot/gateway-protocol";
 import { nothing } from "lit";
 import type { GatewayBrowserClient } from "../../api/gateway.ts";
 import { t } from "../../i18n/index.ts";
@@ -85,7 +85,7 @@ export async function readCustodianTranscript(
   try {
     return (
       await client.request<SystemAgentChatHistoryResult>(
-        "openclaw.chat.history",
+        "grokbot.chat.history",
         {},
         {
           timeoutMs: CUSTODIAN_TRANSCRIPT_TIMEOUT_MS,

@@ -1,10 +1,10 @@
 // Qqbot plugin module implements remind behavior.
-import { callGatewayTool } from "openclaw/plugin-sdk/agent-harness-runtime";
+import { callGatewayTool } from "grokbot/plugin-sdk/agent-harness-runtime";
 import type {
   AnyAgentTool,
   OpenClawPluginApi,
   OpenClawPluginToolContext,
-} from "openclaw/plugin-sdk/core";
+} from "grokbot/plugin-sdk/core";
 import { RemindSchema, executeScheduledRemind } from "../../engine/tools/remind-logic.js";
 import type { RemindCronAction, RemindParams } from "../../engine/tools/remind-logic.js";
 import { getRequestContext } from "../../engine/utils/request-context.js";

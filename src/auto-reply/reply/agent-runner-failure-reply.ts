@@ -1,6 +1,6 @@
-import { expectDefined } from "@openclaw/normalization-core";
-import { normalizeLowercaseStringOrEmpty } from "@openclaw/normalization-core/string-coerce";
-import { truncateUtf16Safe } from "@openclaw/normalization-core/utf16-slice";
+import { expectDefined } from "@grokbot/normalization-core";
+import { normalizeLowercaseStringOrEmpty } from "@grokbot/normalization-core/string-coerce";
+import { truncateUtf16Safe } from "@grokbot/normalization-core/utf16-slice";
 import { formatAuthProfileFailureMessage } from "../../agents/auth-profiles/failure-copy.js";
 import {
   buildOAuthRefreshFailureLoginCommand,
@@ -26,7 +26,7 @@ import {
 import { isMissingProviderAuthError } from "../../agents/model-auth.js";
 import { isFallbackSummaryError } from "../../agents/model-fallback.js";
 import { resolveSilentReplyPolicy } from "../../config/silent-reply.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import { formatErrorMessage } from "../../infra/errors.js";
 import { markReplyPayloadForSourceSuppressionDelivery } from "../reply-payload.js";
 import type { TemplateContext } from "../templating.js";
@@ -230,10 +230,10 @@ function buildCodexAppServerFailureText(message: string): string | null {
     return "⚠️ This Codex session changed before your message could run. Please send it again.";
   }
   if (CODEX_APP_SERVER_CLIENT_CLOSED_BEFORE_REPLY_RE.test(normalizedMessage)) {
-    return "⚠️ Codex app-server connection closed before this turn finished. OpenClaw retried once when the stdio turn was still replay-safe; please try again if this keeps happening.";
+    return "⚠️ Codex app-server connection closed before this turn finished. GrokBot retried once when the stdio turn was still replay-safe; please try again if this keeps happening.";
   }
   if (CODEX_APP_SERVER_TURN_COMPLETION_IDLE_TIMEOUT_RE.test(normalizedMessage)) {
-    return "⚠️ Codex app-server stopped before confirming turn completion. OpenClaw did not replay the turn automatically because it may still be active; try again, or use /new if the session stays stuck.";
+    return "⚠️ Codex app-server stopped before confirming turn completion. GrokBot did not replay the turn automatically because it may still be active; try again, or use /new if the session stays stuck.";
   }
   return null;
 }
@@ -294,7 +294,7 @@ function buildCliBackendTimeoutFailureText(input: {
       " The CLI had already begun work, so effects may be partial; check before retrying.";
   }
   if (input.replayPrevented) {
-    workStatus += " OpenClaw did not replay this turn automatically.";
+    workStatus += " GrokBot did not replay this turn automatically.";
   }
   if (mode === "no-output") {
     const backendId = cliTimeoutError?.provider ?? "<id>";
@@ -307,7 +307,7 @@ function buildCliBackendTimeoutFailureText(input: {
   }
   return (
     `⚠️ CLI turn${routingSuffix}: timed out after ${seconds}s (overall turn limit). The gateway is unaffected.${workStatus} ` +
-    "For long work, use a detached OpenClaw sub-agent (no run timeout by default), or raise `agents.defaults.timeoutSeconds`."
+    "For long work, use a detached GrokBot sub-agent (no run timeout by default), or raise `agents.defaults.timeoutSeconds`."
   );
 }
 
@@ -326,7 +326,7 @@ function buildMissingApiKeyFailureText(input: { message: string; error?: unknown
     return "⚠️ Missing API key for OpenAI on the gateway. Use `openai/gpt-5.6-sol` with the OpenAI OAuth profile, or set `OPENAI_API_KEY` for direct OpenAI API-key runs.";
   }
   if (provider === "openai") {
-    return '⚠️ Missing API key for provider "openai". Run `openclaw doctor --fix` to repair stale OpenAI model/session routes, restart the gateway if doctor asks, then try again. If doctor has nothing to repair or the error persists, re-auth with `openclaw models auth login --provider openai` or run `openclaw configure`.';
+    return '⚠️ Missing API key for provider "openai". Run `grokbot doctor --fix` to repair stale OpenAI model/session routes, restart the gateway if doctor asks, then try again. If doctor has nothing to repair or the error persists, re-auth with `grokbot models auth login --provider openai` or run `grokbot configure`.';
   }
   if (SAFE_MISSING_API_KEY_PROVIDERS.has(provider)) {
     return `⚠️ Missing API key for provider "${provider}". Configure the gateway auth for that provider, then try again.`;

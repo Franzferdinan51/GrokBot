@@ -14,12 +14,12 @@ import {
   resolveSessionTranscriptRuntimeTarget,
   upsertSessionEntry,
 } from "../../config/sessions/session-accessor.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import { onSessionTranscriptUpdate } from "../../sessions/transcript-events.js";
 import {
   closeOpenClawStateDatabaseForTest,
   openOpenClawStateDatabase,
-} from "../../state/openclaw-state-db.js";
+} from "../../state/grokbot-state-db.js";
 import type { WorkerConnectionIdentity } from "./connection-identity.js";
 import {
   createWorkerTranscriptCommitStore,
@@ -150,7 +150,7 @@ describe("worker transcript commit application", () => {
   let unsubscribe: (() => void) | undefined;
 
   beforeEach(async () => {
-    root = await fs.mkdtemp(path.join(await fs.realpath(os.tmpdir()), "openclaw-worker-turn-"));
+    root = await fs.mkdtemp(path.join(await fs.realpath(os.tmpdir()), "grokbot-worker-turn-"));
     sessionsDir = path.join(root, "agents", "main", "sessions");
     storePath = path.join(sessionsDir, "sessions.json");
     cfg = {

@@ -1,9 +1,9 @@
 /**
  * Implements filesystem JSON-RPC handlers for the Codex sandbox exec-server
- * with OpenClaw sandbox policy checks before every bridge operation.
+ * with GrokBot sandbox policy checks before every bridge operation.
  */
 import { posix as pathPosix } from "node:path";
-import type { SandboxFsStat } from "openclaw/plugin-sdk/sandbox";
+import type { SandboxFsStat } from "grokbot/plugin-sdk/sandbox";
 import type { JsonObject, JsonValue } from "../protocol.js";
 import {
   assertFsSandboxAccess,

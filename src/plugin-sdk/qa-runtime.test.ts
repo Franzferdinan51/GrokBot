@@ -18,7 +18,7 @@ vi.mock("./facade-runtime.js", () => ({
   loadBundledPluginPublicSurfaceModuleSync,
 }));
 
-vi.mock("../infra/openclaw-root.js", () => ({
+vi.mock("../infra/grokbot-root.js", () => ({
   resolveOpenClawPackageRootSync,
 }));
 
@@ -175,7 +175,7 @@ describe("plugin-sdk qa-runtime", () => {
 
     await qa.parseAsync([
       "node",
-      "openclaw",
+      "grokbot",
       "telegram",
       "--repo-root",
       "/tmp/repo",

@@ -68,8 +68,8 @@ jobs:
           github.event.issue.pull_request &&
           contains(github.event.issue.labels.*.name, 'mantis: telegram-visible-proof') &&
           (
-            contains(github.event.comment.body, '@openclaw-mantis') ||
-            contains(github.event.comment.body, '/openclaw-mantis')
+            contains(github.event.comment.body, '@grokbot-mantis') ||
+            contains(github.event.comment.body, '/grokbot-mantis')
           )
         )
       }}
@@ -156,7 +156,7 @@ jobs:
             if (eventName === "issue_comment") {
               const normalized = body.toLowerCase();
               const requestedDesktopProof =
-                (normalized.includes("@openclaw-mantis") || normalized.includes("/openclaw-mantis")) &&
+                (normalized.includes("@grokbot-mantis") || normalized.includes("/grokbot-mantis")) &&
                 (normalized.includes("desktop proof") ||
                   normalized.includes("desktop-proof") ||
                   normalized.includes("telegram desktop") ||
@@ -374,7 +374,7 @@ jobs:
           install_dir="${RUNNER_TEMP}/crabbox"
           mkdir -p "$install_dir/src"
           git init "$install_dir/src"
-          git -C "$install_dir/src" remote add origin https://github.com/openclaw/crabbox.git
+          git -C "$install_dir/src" remote add origin https://github.com/grokbot/crabbox.git
           timeout --signal=TERM --kill-after=10s 120s git -C "$install_dir/src" fetch --depth 1 origin "$CRABBOX_REF"
           git -C "$install_dir/src" checkout --detach FETCH_HEAD
           go build -C "$install_dir/src" -o "$install_dir/crabbox" ./cmd/crabbox
@@ -387,14 +387,14 @@ jobs:
         run: |
           set -euo pipefail
           test -f scripts/e2e/telegram-user-driver.py
-          cat >"${RUNNER_TEMP}/openclaw-telegram-user-crabbox-proof" <<'EOF'
+          cat >"${RUNNER_TEMP}/grokbot-telegram-user-crabbox-proof" <<'EOF'
           #!/usr/bin/env bash
           set -euo pipefail
           exec node --import tsx "${GITHUB_WORKSPACE}/scripts/e2e/telegram-user-crabbox-proof.ts" "$@"
           EOF
-          chmod 0755 "${RUNNER_TEMP}/openclaw-telegram-user-crabbox-proof"
-          sudo install -m 0755 "${RUNNER_TEMP}/openclaw-telegram-user-crabbox-proof" /usr/local/bin/openclaw-telegram-user-crabbox-proof
-          /usr/local/bin/openclaw-telegram-user-crabbox-proof --help >/dev/null
+          chmod 0755 "${RUNNER_TEMP}/grokbot-telegram-user-crabbox-proof"
+          sudo install -m 0755 "${RUNNER_TEMP}/grokbot-telegram-user-crabbox-proof" /usr/local/bin/grokbot-telegram-user-crabbox-proof
+          /usr/local/bin/grokbot-telegram-user-crabbox-proof --help >/dev/null
           media_tools="${RUNNER_TEMP}/mantis-media-tools"
           install -d "$media_tools"
           curl --fail --location --retry 3 --retry-delay 2 \
@@ -472,7 +472,7 @@ jobs:
           OPENCLAW_TELEGRAM_USER_CRABBOX_BIN: /usr/local/bin/crabbox
           OPENCLAW_TELEGRAM_USER_CRABBOX_PROVIDER: ${{ needs.resolve_request.outputs.crabbox_provider }}
           OPENCLAW_TELEGRAM_USER_DRIVER_SCRIPT: ${{ github.workspace }}/scripts/e2e/telegram-user-driver.py
-          OPENCLAW_TELEGRAM_USER_PROOF_CMD: /usr/local/bin/openclaw-telegram-user-crabbox-proof
+          OPENCLAW_TELEGRAM_USER_PROOF_CMD: /usr/local/bin/grokbot-telegram-user-crabbox-proof
         with:
           openai-api-key: ${{ secrets.OPENCLAW_MANTIS_AGENT_OPENAI_API_KEY || secrets.OPENAI_API_KEY }}
           prompt-file: .github/codex/prompts/mantis-telegram-desktop-proof.md
@@ -576,9 +576,9 @@ jobs:
           ARTIFACT_URL: ${{ steps.upload_artifact.outputs.artifact-url }}
           GH_TOKEN: ${{ steps.mantis_app_token.outputs.token }}
           MANTIS_ARTIFACT_R2_ACCESS_KEY_ID: ${{ secrets.MANTIS_ARTIFACT_R2_ACCESS_KEY_ID }}
-          MANTIS_ARTIFACT_R2_BUCKET: openclaw-crabbox-artifacts
+          MANTIS_ARTIFACT_R2_BUCKET: grokbot-crabbox-artifacts
           MANTIS_ARTIFACT_R2_ENDPOINT: ${{ vars.MANTIS_ARTIFACT_R2_ENDPOINT }}
-          MANTIS_ARTIFACT_R2_PUBLIC_BASE_URL: https://artifacts.openclaw.ai
+          MANTIS_ARTIFACT_R2_PUBLIC_BASE_URL: https://artifacts.grokbot.ai
           MANTIS_ARTIFACT_R2_REGION: auto
           MANTIS_ARTIFACT_R2_SECRET_ACCESS_KEY: ${{ secrets.MANTIS_ARTIFACT_R2_SECRET_ACCESS_KEY }}
           REQUEST_SOURCE: ${{ needs.resolve_request.outputs.request_source }}
@@ -676,9 +676,9 @@ jobs:
         env:
           GH_TOKEN: ${{ steps.mantis_app_token.outputs.token }}
           MANTIS_ARTIFACT_R2_ACCESS_KEY_ID: ${{ secrets.MANTIS_ARTIFACT_R2_ACCESS_KEY_ID }}
-          MANTIS_ARTIFACT_R2_BUCKET: openclaw-crabbox-artifacts
+          MANTIS_ARTIFACT_R2_BUCKET: grokbot-crabbox-artifacts
           MANTIS_ARTIFACT_R2_ENDPOINT: ${{ vars.MANTIS_ARTIFACT_R2_ENDPOINT }}
-          MANTIS_ARTIFACT_R2_PUBLIC_BASE_URL: https://artifacts.openclaw.ai
+          MANTIS_ARTIFACT_R2_PUBLIC_BASE_URL: https://artifacts.grokbot.ai
           MANTIS_ARTIFACT_R2_REGION: auto
           MANTIS_ARTIFACT_R2_SECRET_ACCESS_KEY: ${{ secrets.MANTIS_ARTIFACT_R2_SECRET_ACCESS_KEY }}
           REQUEST_SOURCE: ${{ needs.resolve_request.outputs.request_source }}

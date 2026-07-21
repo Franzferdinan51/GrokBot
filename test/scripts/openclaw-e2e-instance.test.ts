@@ -1,12 +1,12 @@
-// Openclaw E2E Instance tests cover openclaw e2e instance script behavior.
+// Openclaw E2E Instance tests cover grokbot e2e instance script behavior.
 import { execFileSync, spawnSync } from "node:child_process";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { describe, expect, it } from "vitest";
 
-const helperPath = path.resolve("scripts/lib/openclaw-e2e-instance.sh");
+const helperPath = path.resolve("scripts/lib/grokbot-e2e-instance.sh");
 const hostPath = [
   path.dirname(process.execPath),
   "/usr/local/bin",
@@ -72,13 +72,13 @@ function expectShellSuccess(result: ReturnType<typeof spawnSync>) {
 }
 
 function writePackageFixture(packagePath: string): void {
-  const root = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-e2e-package-"));
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-e2e-package-"));
   try {
     const packageDir = path.join(root, "package");
     fs.mkdirSync(packageDir);
     fs.writeFileSync(
       path.join(packageDir, "package.json"),
-      JSON.stringify({ name: "openclaw-e2e-fixture", version: "0.0.0" }),
+      JSON.stringify({ name: "grokbot-e2e-fixture", version: "0.0.0" }),
     );
     execFileSync("tar", ["-czf", packagePath, "-C", root, "package"]);
   } finally {
@@ -135,11 +135,11 @@ function expectNpmInstallObserved(argsPath: string, expectedArgs: string, prefix
     return;
   }
   expect(
-    fs.existsSync(path.join(prefix, "lib/node_modules/openclaw-e2e-fixture/package.json")),
+    fs.existsSync(path.join(prefix, "lib/node_modules/grokbot-e2e-fixture/package.json")),
   ).toBe(true);
 }
 
-describe("scripts/lib/openclaw-e2e-instance.sh", () => {
+describe("scripts/lib/grokbot-e2e-instance.sh", () => {
   it("sources decoded test-state scripts", () => {
     const result = runHelper(base64('export OPENCLAW_E2E_INSTANCE_TEST="ok"\n'));
 
@@ -152,7 +152,7 @@ describe("scripts/lib/openclaw-e2e-instance.sh", () => {
 
     expect(result.status).not.toBe(0);
     expect(result.stdout).not.toContain("value=");
-    expect(result.stderr).toContain("Invalid OpenClaw test-state base64 payload");
+    expect(result.stderr).toContain("Invalid GrokBot test-state base64 payload");
   });
 
   it("fails when the test-state payload decodes to an empty script", () => {
@@ -206,7 +206,7 @@ describe("scripts/lib/openclaw-e2e-instance.sh", () => {
   });
 
   it("probes default and explicit mock OpenAI base URLs", () => {
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-e2e-mock-openai-url-"));
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-e2e-mock-openai-url-"));
     try {
       const probePath = path.join(tempDir, "probe-url.txt");
       const result = runSourcedHelper(
@@ -228,7 +228,7 @@ describe("scripts/lib/openclaw-e2e-instance.sh", () => {
   });
 
   it("requires /readyz after the gateway ready log", () => {
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-e2e-readyz-required-"));
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-e2e-readyz-required-"));
     try {
       const logPath = path.join(tempDir, "gateway.log");
       const result = spawnSync(
@@ -266,7 +266,7 @@ describe("scripts/lib/openclaw-e2e-instance.sh", () => {
   });
 
   it("probes /readyz on the explicit gateway port", () => {
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-e2e-readyz-port-"));
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-e2e-readyz-port-"));
     try {
       const logPath = path.join(tempDir, "gateway.log");
       const probePath = path.join(tempDir, "probe-url.txt");
@@ -300,7 +300,7 @@ describe("scripts/lib/openclaw-e2e-instance.sh", () => {
   });
 
   it("allows explicit legacy ready-log mode without /readyz", () => {
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-e2e-readyz-legacy-"));
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-e2e-readyz-legacy-"));
     try {
       const logPath = path.join(tempDir, "gateway.log");
       const result = spawnSync(
@@ -332,12 +332,12 @@ describe("scripts/lib/openclaw-e2e-instance.sh", () => {
   });
 
   it("wraps package installs with the configured timeout", () => {
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-e2e-instance-"));
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-e2e-instance-"));
     try {
       const timeoutArgsPath = path.join(tempDir, "timeout-args.txt");
       const npmArgsPath = path.join(tempDir, "npm-args.txt");
       const logPath = path.join(tempDir, "install.log");
-      const packagePath = path.join(tempDir, "openclaw.tgz");
+      const packagePath = path.join(tempDir, "grokbot.tgz");
       const prefixPath = path.join(tempDir, "prefix");
       writePackageFixture(packagePath);
       writeFakeTimeout(path.join(tempDir, "timeout"), true);
@@ -382,12 +382,12 @@ describe("scripts/lib/openclaw-e2e-instance.sh", () => {
   });
 
   it("falls back to plain timeout when kill-after is unavailable", () => {
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-e2e-instance-plain-timeout-"));
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-e2e-instance-plain-timeout-"));
     try {
       const timeoutArgsPath = path.join(tempDir, "timeout-args.txt");
       const npmArgsPath = path.join(tempDir, "npm-args.txt");
       const logPath = path.join(tempDir, "install.log");
-      const packagePath = path.join(tempDir, "openclaw.tgz");
+      const packagePath = path.join(tempDir, "grokbot.tgz");
       const prefixPath = path.join(tempDir, "prefix");
       writePackageFixture(packagePath);
       writeFakeTimeout(path.join(tempDir, "timeout"), false);
@@ -431,12 +431,12 @@ describe("scripts/lib/openclaw-e2e-instance.sh", () => {
   });
 
   it("uses gtimeout when GNU timeout is not on PATH", () => {
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-e2e-instance-gtimeout-"));
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-e2e-instance-gtimeout-"));
     try {
       const timeoutArgsPath = path.join(tempDir, "timeout-args.txt");
       const npmArgsPath = path.join(tempDir, "npm-args.txt");
       const logPath = path.join(tempDir, "install.log");
-      const packagePath = path.join(tempDir, "openclaw.tgz");
+      const packagePath = path.join(tempDir, "grokbot.tgz");
       const prefixPath = path.join(tempDir, "prefix");
       writePackageFixture(packagePath);
       writeFakeTimeout(path.join(tempDir, "gtimeout"), true);
@@ -480,11 +480,11 @@ describe("scripts/lib/openclaw-e2e-instance.sh", () => {
   });
 
   it("uses the Node watchdog when timeout is unavailable", () => {
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-e2e-instance-no-timeout-"));
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-e2e-instance-no-timeout-"));
     try {
       const npmArgsPath = path.join(tempDir, "npm-args.txt");
       const logPath = path.join(tempDir, "install.log");
-      const packagePath = path.join(tempDir, "openclaw.tgz");
+      const packagePath = path.join(tempDir, "grokbot.tgz");
       const prefixPath = path.join(tempDir, "prefix");
       writePackageFixture(packagePath);
       writeNodeShim(tempDir);
@@ -524,11 +524,11 @@ describe("scripts/lib/openclaw-e2e-instance.sh", () => {
   });
 
   it("bounds npm install failure logs to the configured tail", () => {
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-e2e-instance-install-log-"));
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-e2e-instance-install-log-"));
     try {
       const timeoutArgsPath = path.join(tempDir, "timeout-args.txt");
       const logPath = path.join(tempDir, "install.log");
-      const packagePath = path.join(tempDir, "openclaw.tgz");
+      const packagePath = path.join(tempDir, "grokbot.tgz");
       const prefixPath = path.join(tempDir, "prefix");
       writePackageFixture(packagePath);
       writeFakeTimeout(path.join(tempDir, "timeout"), true);
@@ -575,7 +575,7 @@ describe("scripts/lib/openclaw-e2e-instance.sh", () => {
     ["bytes", "OPENCLAW_E2E_LOG_TAIL_BYTES", "64kb"],
     ["lines", "OPENCLAW_E2E_LOG_TAIL_LINES", "25 lines"],
   ])("rejects invalid E2E log tail %s before invoking tail", (_label, envName, value) => {
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-e2e-instance-log-tail-"));
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-e2e-instance-log-tail-"));
     try {
       const logPath = path.join(tempDir, "install.log");
       fs.writeFileSync(logPath, "old log\nrecent log\n", "utf8");
@@ -593,7 +593,7 @@ describe("scripts/lib/openclaw-e2e-instance.sh", () => {
   });
 
   it("bounds commands with the Node watchdog when timeout is unavailable", () => {
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-e2e-instance-node-watchdog-"));
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-e2e-instance-node-watchdog-"));
     try {
       writeNodeShim(tempDir);
       const startedAt = Date.now();
@@ -620,7 +620,7 @@ describe("scripts/lib/openclaw-e2e-instance.sh", () => {
       expect(result.status).toBe(124);
       expect(elapsedMs).toBeLessThan(4_000);
       expect(result.stderr).toContain("using Node watchdog");
-      expect(result.stderr).toContain("OpenClaw E2E command timed out after 200ms");
+      expect(result.stderr).toContain("GrokBot E2E command timed out after 200ms");
     } finally {
       fs.rmSync(tempDir, { force: true, recursive: true });
     }
@@ -632,7 +632,7 @@ describe("scripts/lib/openclaw-e2e-instance.sh", () => {
   ] as const) {
     it(`escalates Node watchdog children that ignore parent SIG${shellSignal}`, () => {
       const tempDir = fs.mkdtempSync(
-        path.join(os.tmpdir(), "openclaw-e2e-instance-node-watchdog-signal-"),
+        path.join(os.tmpdir(), "grokbot-e2e-instance-node-watchdog-signal-"),
       );
       try {
         writeNodeShim(tempDir);
@@ -695,7 +695,7 @@ exit 1
   }
 
   it("terminates only the tracked gateway process", () => {
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-e2e-gateway-terminate-"));
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-e2e-gateway-terminate-"));
     try {
       const forbiddenToolLog = path.join(tempDir, "process-tools.log");
       fs.writeFileSync(forbiddenToolLog, "");
@@ -738,7 +738,7 @@ fi
   });
 
   it("terminates descendants in the tracked process group", () => {
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-e2e-process-group-"));
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-e2e-process-group-"));
     const parentPidPath = path.join(tempDir, "parent.pid");
     const childPidPath = path.join(tempDir, "child.pid");
     const childTermPath = path.join(tempDir, "child.term");
@@ -829,7 +829,7 @@ exit 1
   });
 
   it("bounds HTTP readiness probes when a server accepts connections but never responds", () => {
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-e2e-http-probe-"));
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-e2e-http-probe-"));
     try {
       const portPath = path.join(tempDir, "port.txt");
       const serverPath = path.join(tempDir, "stalling-server.cjs");
@@ -881,7 +881,7 @@ exit 1
   });
 
   it("does not repeatedly grep the full gateway log while waiting for readiness", () => {
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-e2e-readyz-incremental-"));
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-e2e-readyz-incremental-"));
     try {
       const logPath = path.join(tempDir, "gateway.log");
       const grepArgsPath = path.join(tempDir, "grep-args.txt");
@@ -924,7 +924,7 @@ exit 1
   });
 
   it("detects gateway ready markers split across incremental log reads", () => {
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-e2e-readyz-split-marker-"));
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-e2e-readyz-split-marker-"));
     try {
       const logPath = path.join(tempDir, "gateway.log");
       const result = spawnSync(
@@ -958,7 +958,7 @@ exit 1
   });
 
   it("derives the readiness port only from gateway ready log lines", () => {
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-e2e-readyz-port-"));
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-e2e-readyz-port-"));
     try {
       const logPath = path.join(tempDir, "gateway.log");
       const probePath = path.join(tempDir, "probe-url.txt");
@@ -992,8 +992,8 @@ exit 1
     }
   });
 
-  it("wraps logged OpenClaw E2E commands with the configured timeout", () => {
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-e2e-instance-run-logged-"));
+  it("wraps logged GrokBot E2E commands with the configured timeout", () => {
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-e2e-instance-run-logged-"));
     const logLabel = path.basename(tempDir);
     const logDir = path.join(tempDir, "logs");
     const logPathFile = path.join(tempDir, "log-path.txt");
@@ -1058,7 +1058,7 @@ exit 1
       expect(fs.readFileSync(commandArgsPath, "utf8").trim()).toBe("one two");
       const logPath = fs.readFileSync(logPathFile, "utf8");
       expect(logPath.startsWith(`${logDir}${path.sep}`)).toBe(true);
-      expect(path.basename(logPath)).toMatch(new RegExp(`^openclaw-${logLabel}\\..+\\.log$`, "u"));
+      expect(path.basename(logPath)).toMatch(new RegExp(`^grokbot-${logLabel}\\..+\\.log$`, "u"));
       expect(fs.readFileSync(logPath, "utf8")).toContain("fixture output");
     } finally {
       fs.rmSync(tempDir, { force: true, recursive: true });
@@ -1066,7 +1066,7 @@ exit 1
   });
 
   it("bounds logged command failure output to the configured tail", () => {
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-e2e-instance-run-log-tail-"));
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-e2e-instance-run-log-tail-"));
     const logLabel = path.basename(tempDir);
     const logDir = path.join(tempDir, "logs");
     try {
@@ -1104,7 +1104,7 @@ exit 1
       expect(result.status).toBe(1);
       expect(result.stdout).toContain("recent command tail");
       expect(result.stdout).not.toContain("DO_NOT_PRINT_OLD_COMMAND_LOG");
-      const logFile = expectDefined(fs.readdirSync(logDir)[0], "OpenClaw E2E command log file");
+      const logFile = expectDefined(fs.readdirSync(logDir)[0], "GrokBot E2E command log file");
       expect(fs.readFileSync(path.join(logDir, logFile), "utf8")).toContain(
         "DO_NOT_PRINT_OLD_COMMAND_LOG",
       );
@@ -1114,7 +1114,7 @@ exit 1
   });
 
   it("installs the trash shim under isolated test state", () => {
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-e2e-trash-shim-"));
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-e2e-trash-shim-"));
     try {
       const homeDir = path.join(tempDir, "home");
       const stateDir = path.join(tempDir, "state");
@@ -1151,7 +1151,7 @@ exit 1
       const binDir = fs.readFileSync(binDirFile, "utf8");
       const pathEntries = fs.readFileSync(pathFile, "utf8").split(path.delimiter);
       expect(binDir).toBe(path.join(stateDir, "e2e-bin"));
-      expect(binDir).not.toBe("/tmp/openclaw-bin");
+      expect(binDir).not.toBe("/tmp/grokbot-bin");
       expect(pathEntries.filter((entry) => entry === binDir)).toHaveLength(1);
       expect(fs.existsSync(path.join(binDir, "trash"))).toBe(true);
     } finally {
@@ -1159,11 +1159,11 @@ exit 1
     }
   });
 
-  it("wraps package-installed OpenClaw CLI calls with the configured timeout", () => {
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-e2e-instance-openclaw-cli-"));
+  it("wraps package-installed GrokBot CLI calls with the configured timeout", () => {
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-e2e-instance-grokbot-cli-"));
     try {
       const timeoutArgsPath = path.join(tempDir, "timeout-args.txt");
-      const commandArgsPath = path.join(tempDir, "openclaw-args.txt");
+      const commandArgsPath = path.join(tempDir, "grokbot-args.txt");
       fs.writeFileSync(
         path.join(tempDir, "timeout"),
         [
@@ -1171,7 +1171,7 @@ exit 1
           "set -euo pipefail",
           'if [ "${1:-}" = "--kill-after=1s" ]; then exit 0; fi',
           'printf "%s\\n" "$*" >"$OPENCLAW_TEST_TIMEOUT_ARGS"',
-          `while [ "$#" -gt 0 ] && [ "$1" != ${shellQuote(path.join(tempDir, "openclaw"))} ]; do shift; done`,
+          `while [ "$#" -gt 0 ] && [ "$1" != ${shellQuote(path.join(tempDir, "grokbot"))} ]; do shift; done`,
           '[ "$#" -gt 0 ] || exit 127',
           "shift",
           'exec "$OPENCLAW_TEST_OPENCLAW_BIN" "$@"',
@@ -1179,7 +1179,7 @@ exit 1
         ].join("\n"),
       );
       fs.writeFileSync(
-        path.join(tempDir, "openclaw"),
+        path.join(tempDir, "grokbot"),
         [
           "#!/usr/bin/env bash",
           "set -euo pipefail",
@@ -1188,7 +1188,7 @@ exit 1
         ].join("\n"),
       );
       fs.chmodSync(path.join(tempDir, "timeout"), 0o755);
-      fs.chmodSync(path.join(tempDir, "openclaw"), 0o755);
+      fs.chmodSync(path.join(tempDir, "grokbot"), 0o755);
 
       const result = spawnSync(
         "/bin/bash",
@@ -1199,7 +1199,7 @@ exit 1
             `source ${shellQuote(helperPath)}`,
             "openclaw_e2e_enable_openclaw_cli_timeout",
             "openclaw_e2e_enable_openclaw_cli_timeout",
-            "openclaw plugins list --json",
+            "grokbot plugins list --json",
           ].join("; "),
         ],
         {
@@ -1209,14 +1209,14 @@ exit 1
             OPENCLAW_E2E_COMMAND_TIMEOUT: "23s",
             OPENCLAW_TEST_TIMEOUT_ARGS: timeoutArgsPath,
             OPENCLAW_TEST_COMMAND_ARGS: commandArgsPath,
-            OPENCLAW_TEST_OPENCLAW_BIN: path.join(tempDir, "openclaw"),
+            OPENCLAW_TEST_OPENCLAW_BIN: path.join(tempDir, "grokbot"),
           }),
         },
       );
 
       expect(result.status).toBe(0);
       expect(fs.readFileSync(timeoutArgsPath, "utf8").trim()).toBe(
-        `--kill-after=30s 23s ${path.join(tempDir, "openclaw")} plugins list --json`,
+        `--kill-after=30s 23s ${path.join(tempDir, "grokbot")} plugins list --json`,
       );
       expect(fs.readFileSync(commandArgsPath, "utf8").trim()).toBe("plugins list --json");
     } finally {
@@ -1225,7 +1225,7 @@ exit 1
   });
 
   it("wraps interactive PTY scripts with the configured timeout", () => {
-    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-e2e-instance-pty-timeout-"));
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-e2e-instance-pty-timeout-"));
     try {
       const timeoutArgsPath = path.join(tempDir, "timeout-args.txt");
       const scriptArgsPath = path.join(tempDir, "script-args.txt");

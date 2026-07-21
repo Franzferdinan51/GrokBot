@@ -42,7 +42,7 @@ function buildFocusSessionBindingService() {
   };
 }
 
-vi.mock("@openclaw/acp-core/runtime/session-identifiers", () => ({
+vi.mock("@grokbot/acp-core/runtime/session-identifiers", () => ({
   resolveAcpSessionCwd: () => undefined,
   resolveAcpThreadSessionDetailLines: (params: {
     meta?: { identity?: Record<string, unknown> };
@@ -219,7 +219,7 @@ function buildCommandParams(params?: {
     elevated: { enabled: false, allowed: false, failures: [] },
     sessionEntry: params?.sessionEntry,
     sessionKey: "agent:main:main",
-    workspaceDir: "/tmp/openclaw-subagents-focus",
+    workspaceDir: "/tmp/grokbot-subagents-focus",
     defaultGroupActivation: () => "mention",
     resolvedVerboseLevel: "off",
     resolvedReasoningLevel: "off",

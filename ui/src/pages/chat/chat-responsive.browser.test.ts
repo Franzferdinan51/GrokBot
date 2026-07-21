@@ -1625,7 +1625,7 @@ describeBrowserLayout.concurrent("chat responsive browser layout", () => {
                   <strong>Workspace</strong>
                 </div>
               </div>
-              <div class="chat-workspace-rail__path">/Users/steipete/.openclaw/workspace</div>
+              <div class="chat-workspace-rail__path">/Users/steipete/.grokbot/workspace</div>
               <div class="chat-workspace-rail__summary">
                 <span>0 changed</span><span>0 read</span><span>0 artifacts</span><span>15 shown</span>
               </div>

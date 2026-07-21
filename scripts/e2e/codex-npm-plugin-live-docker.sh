@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Installs OpenClaw from a prepared package tarball, installs @openclaw/codex
+# Installs GrokBot from a prepared package tarball, installs @grokbot/codex
 # from a registry/git/tarball spec, and verifies a live Codex app-server turn.
 set -Eeuo pipefail
 
@@ -12,11 +12,11 @@ ROOT_DIR="$TRUSTED_HARNESS_DIR"
 source "$TRUSTED_HARNESS_DIR/scripts/lib/docker-e2e-image.sh"
 source "$TRUSTED_HARNESS_DIR/scripts/lib/docker-e2e-package.sh"
 
-IMAGE_NAME="$(docker_e2e_resolve_image "openclaw-codex-npm-plugin-live-e2e" OPENCLAW_CODEX_NPM_PLUGIN_E2E_IMAGE)"
+IMAGE_NAME="$(docker_e2e_resolve_image "grokbot-codex-npm-plugin-live-e2e" OPENCLAW_CODEX_NPM_PLUGIN_E2E_IMAGE)"
 DOCKER_TARGET="${OPENCLAW_CODEX_NPM_PLUGIN_DOCKER_TARGET:-bare}"
 HOST_BUILD="${OPENCLAW_CODEX_NPM_PLUGIN_HOST_BUILD:-1}"
 PACKAGE_TGZ="${OPENCLAW_CURRENT_PACKAGE_TGZ:-}"
-PROFILE_FILE="${OPENCLAW_CODEX_NPM_PLUGIN_PROFILE_FILE:-${OPENCLAW_TESTBOX_PROFILE_FILE:-$HOME/.openclaw-testbox-live.profile}}"
+PROFILE_FILE="${OPENCLAW_CODEX_NPM_PLUGIN_PROFILE_FILE:-${OPENCLAW_TESTBOX_PROFILE_FILE:-$HOME/.grokbot-testbox-live.profile}}"
 CODEX_PLUGIN_SPEC="${OPENCLAW_CODEX_NPM_PLUGIN_SPEC:-}"
 CODEX_PLUGIN_MOUNT=()
 CODEX_PLUGIN_PACK_DIR=""
@@ -96,20 +96,20 @@ prepare_codex_plugin_spec() {
   local pack_output
 
   if [ -z "$CODEX_PLUGIN_SPEC" ]; then
-    CODEX_PLUGIN_PACK_DIR="$(mktemp -d "${TMPDIR:-/tmp}/openclaw-codex-plugin-pack.XXXXXX")"
+    CODEX_PLUGIN_PACK_DIR="$(mktemp -d "${TMPDIR:-/tmp}/grokbot-codex-plugin-pack.XXXXXX")"
     (
       cd "$CANDIDATE_ROOT"
       node scripts/lib/plugin-npm-runtime-build.mjs extensions/codex
       node scripts/lib/plugin-npm-package-manifest.mjs --run extensions/codex -- \
         npm pack --json --ignore-scripts --pack-destination "$CODEX_PLUGIN_PACK_DIR"
-    ) >/tmp/openclaw-codex-plugin-pack.log 2>&1
+    ) >/tmp/grokbot-codex-plugin-pack.log 2>&1
     pack_output=()
     while IFS= read -r packed_file; do
       pack_output+=("$packed_file")
     done < <(find "$CODEX_PLUGIN_PACK_DIR" -maxdepth 1 -type f -name '*.tgz' | sort)
     if [ "${#pack_output[@]}" -ne 1 ]; then
       echo "Expected one packed Codex plugin tarball; found ${#pack_output[@]}." >&2
-      docker_e2e_print_log /tmp/openclaw-codex-plugin-pack.log >&2
+      docker_e2e_print_log /tmp/grokbot-codex-plugin-pack.log >&2
       exit 1
     fi
     source_path="${pack_output[0]}"
@@ -182,7 +182,7 @@ if ! docker_e2e_run_with_harness \
   -i "$IMAGE_NAME" bash -s >"$run_log" 2>&1 <<'EOF'; then
 set -Eeuo pipefail
 
-source scripts/lib/openclaw-e2e-instance.sh
+source scripts/lib/grokbot-e2e-instance.sh
 openclaw_e2e_eval_test_state_from_b64 "${OPENCLAW_TEST_STATE_SCRIPT_B64:?missing OPENCLAW_TEST_STATE_SCRIPT_B64}"
 export NPM_CONFIG_PREFIX="$HOME/.npm-global"
 export npm_config_prefix="$NPM_CONFIG_PREFIX"
@@ -224,45 +224,45 @@ dump_debug_logs() {
   local status="$1"
   echo "Codex npm plugin live scenario failed with exit code $status" >&2
   openclaw_e2e_dump_logs \
-    /tmp/openclaw-install.log \
-    /tmp/openclaw-codex-plugin-install.log \
-    /tmp/openclaw-codex-plugin-enable.log \
-    /tmp/openclaw-codex-plugins-list.json \
-    /tmp/openclaw-codex-plugin-inspect.json \
-    /tmp/openclaw-codex-preflight.log \
-    /tmp/openclaw-codex-agent.json \
-    /tmp/openclaw-codex-agent.err \
-    /tmp/openclaw-codex-agent-turn1.json \
-    /tmp/openclaw-codex-agent-turn1.err \
-    /tmp/openclaw-codex-agent-turn2.json \
-    /tmp/openclaw-codex-agent-turn2.err \
-    /tmp/openclaw-codex-followthrough.json \
-    /tmp/openclaw-codex-followthrough.log \
-    /tmp/openclaw-codex-followthrough.err \
-    /tmp/openclaw-codex-plugin-uninstall.log \
-    /tmp/openclaw-codex-plugins-list-after-uninstall.json \
-    /tmp/openclaw-codex-agent-after-uninstall.json \
-    /tmp/openclaw-codex-agent-after-uninstall.err
+    /tmp/grokbot-install.log \
+    /tmp/grokbot-codex-plugin-install.log \
+    /tmp/grokbot-codex-plugin-enable.log \
+    /tmp/grokbot-codex-plugins-list.json \
+    /tmp/grokbot-codex-plugin-inspect.json \
+    /tmp/grokbot-codex-preflight.log \
+    /tmp/grokbot-codex-agent.json \
+    /tmp/grokbot-codex-agent.err \
+    /tmp/grokbot-codex-agent-turn1.json \
+    /tmp/grokbot-codex-agent-turn1.err \
+    /tmp/grokbot-codex-agent-turn2.json \
+    /tmp/grokbot-codex-agent-turn2.err \
+    /tmp/grokbot-codex-followthrough.json \
+    /tmp/grokbot-codex-followthrough.log \
+    /tmp/grokbot-codex-followthrough.err \
+    /tmp/grokbot-codex-plugin-uninstall.log \
+    /tmp/grokbot-codex-plugins-list-after-uninstall.json \
+    /tmp/grokbot-codex-agent-after-uninstall.json \
+    /tmp/grokbot-codex-agent-after-uninstall.err
 }
 trap 'status=$?; dump_debug_logs "$status"; exit "$status"' ERR
 
 mkdir -p "$NPM_CONFIG_PREFIX" "$XDG_CACHE_HOME" "$NPM_CONFIG_CACHE"
 chmod 700 "$XDG_CACHE_HOME" "$NPM_CONFIG_CACHE" || true
 
-openclaw_e2e_install_package /tmp/openclaw-install.log
-command -v openclaw >/dev/null
+openclaw_e2e_install_package /tmp/grokbot-install.log
+command -v grokbot >/dev/null
 openclaw_e2e_enable_openclaw_cli_timeout
 
 echo "Installing Codex plugin: $CODEX_PLUGIN_SPEC"
-openclaw plugins install "$CODEX_PLUGIN_SPEC" "${PLUGIN_INSTALL_FLAGS[@]}" >/tmp/openclaw-codex-plugin-install.log 2>&1
+grokbot plugins install "$CODEX_PLUGIN_SPEC" "${PLUGIN_INSTALL_FLAGS[@]}" >/tmp/grokbot-codex-plugin-install.log 2>&1
 
 node scripts/e2e/lib/codex-npm-plugin-live/assertions.mjs configure "$MODEL_REF"
 
 echo "Enabling Codex plugin..."
-openclaw plugins enable codex >/tmp/openclaw-codex-plugin-enable.log 2>&1
+grokbot plugins enable codex >/tmp/grokbot-codex-plugin-enable.log 2>&1
 
-openclaw plugins list --json >/tmp/openclaw-codex-plugins-list.json
-openclaw plugins inspect codex --runtime --json >/tmp/openclaw-codex-plugin-inspect.json
+grokbot plugins list --json >/tmp/grokbot-codex-plugins-list.json
+grokbot plugins inspect codex --runtime --json >/tmp/grokbot-codex-plugin-inspect.json
 node scripts/e2e/lib/codex-npm-plugin-live/assertions.mjs assert-plugin "$CODEX_PLUGIN_SPEC"
 node scripts/e2e/lib/codex-npm-plugin-live/assertions.mjs assert-npm-deps
 
@@ -298,7 +298,7 @@ run_agent_turn() {
   local status
 
   echo "${label}_prompt: $message"
-  if openclaw agent --local \
+  if grokbot agent --local \
     --agent main \
     --session-id "$SESSION_ID" \
     --model "$MODEL_REF" \
@@ -328,29 +328,29 @@ echo "codex_cli_prompt: Reply exactly: ${SUCCESS_MARKER}-PREFLIGHT"
   --json \
   --color never \
   --skip-git-repo-check \
-  "Reply exactly: ${SUCCESS_MARKER}-PREFLIGHT" >/tmp/openclaw-codex-preflight.log 2>&1 </dev/null
+  "Reply exactly: ${SUCCESS_MARKER}-PREFLIGHT" >/tmp/grokbot-codex-preflight.log 2>&1 </dev/null
 node scripts/e2e/lib/codex-npm-plugin-live/assertions.mjs assert-preflight "${SUCCESS_MARKER}-PREFLIGHT"
 echo "codex_cli_reply: ${SUCCESS_MARKER}-PREFLIGHT"
 
-echo "Running OpenClaw local agent turns through npm-installed Codex plugin..."
+echo "Running GrokBot local agent turns through npm-installed Codex plugin..."
 run_agent_turn \
   "turn1" \
   "${SUCCESS_MARKER}-TURN-1" \
-  "Reply in one short sentence. Include token ${SUCCESS_MARKER}-TURN-1 and say hello from the OpenClaw Codex plugin." \
-  /tmp/openclaw-codex-agent-turn1.json \
-  /tmp/openclaw-codex-agent-turn1.err
+  "Reply in one short sentence. Include token ${SUCCESS_MARKER}-TURN-1 and say hello from the GrokBot Codex plugin." \
+  /tmp/grokbot-codex-agent-turn1.json \
+  /tmp/grokbot-codex-agent-turn1.err
 run_agent_turn \
   "turn2" \
   "${SUCCESS_MARKER}-TURN-2" \
   "Using this same conversation, name the exact token from your previous reply, then include token ${SUCCESS_MARKER}-TURN-2." \
-  /tmp/openclaw-codex-agent-turn2.json \
-  /tmp/openclaw-codex-agent-turn2.err
+  /tmp/grokbot-codex-agent-turn2.json \
+  /tmp/grokbot-codex-agent-turn2.err
 run_agent_turn \
   "turn3" \
   "$SUCCESS_MARKER" \
   "Answer 7 plus 8, include token $SUCCESS_MARKER, and mention whether you saw ${SUCCESS_MARKER}-TURN-2 earlier." \
-  /tmp/openclaw-codex-agent.json \
-  /tmp/openclaw-codex-agent.err
+  /tmp/grokbot-codex-agent.json \
+  /tmp/grokbot-codex-agent.err
 
 node scripts/e2e/lib/codex-npm-plugin-live/assertions.mjs assert-agent-turn "$SUCCESS_MARKER" "$SESSION_ID" "$MODEL_REF"
 
@@ -393,15 +393,15 @@ if node scripts/e2e/lib/codex-npm-plugin-live/followthrough-turn.mjs \
   "$FOLLOWTHROUGH_SESSION_ID" \
   "$MODEL_REF" \
   "$AGENT_TURN_TIMEOUT_SECONDS" \
-  /tmp/openclaw-codex-followthrough.json \
+  /tmp/grokbot-codex-followthrough.json \
   "$FOLLOWTHROUGH_PROMPT" \
-  >/tmp/openclaw-codex-followthrough.log \
-  2>/tmp/openclaw-codex-followthrough.err </dev/null; then
+  >/tmp/grokbot-codex-followthrough.log \
+  2>/tmp/grokbot-codex-followthrough.err </dev/null; then
   followthrough_status=0
 else
   followthrough_status=$?
 fi
-echo "followthrough_agent_status: $followthrough_status stdout_bytes=$(wc -c </tmp/openclaw-codex-followthrough.json 2>/dev/null || printf 0) stderr_bytes=$(wc -c </tmp/openclaw-codex-followthrough.err 2>/dev/null || printf 0)"
+echo "followthrough_agent_status: $followthrough_status stdout_bytes=$(wc -c </tmp/grokbot-codex-followthrough.json 2>/dev/null || printf 0) stderr_bytes=$(wc -c </tmp/grokbot-codex-followthrough.err 2>/dev/null || printf 0)"
 if [ "$followthrough_status" -ne 0 ]; then
   dump_debug_logs "$followthrough_status"
   exit "$followthrough_status"
@@ -420,18 +420,18 @@ echo "followthrough_reply: ${FOLLOWTHROUGH_PROGRESS_MARKER} -> ${FOLLOWTHROUGH_C
 echo "TRANSCRIPT_END"
 
 echo "Uninstalling Codex plugin and verifying the configured harness now fails..."
-openclaw plugins uninstall codex --force >/tmp/openclaw-codex-plugin-uninstall.log 2>&1
-openclaw plugins list --json >/tmp/openclaw-codex-plugins-list-after-uninstall.json
+grokbot plugins uninstall codex --force >/tmp/grokbot-codex-plugin-uninstall.log 2>&1
+grokbot plugins list --json >/tmp/grokbot-codex-plugins-list-after-uninstall.json
 node scripts/e2e/lib/codex-npm-plugin-live/assertions.mjs assert-uninstalled
 
-if openclaw agent --local \
+if grokbot agent --local \
   --agent main \
   --session-id "${SESSION_ID}-after-uninstall" \
   --model "$POST_UNINSTALL_MODEL_REF" \
   --message "Reply exactly: ${SUCCESS_MARKER}-AFTER-UNINSTALL" \
   --thinking low \
   --timeout 120 \
-  --json >/tmp/openclaw-codex-agent-after-uninstall.json 2>/tmp/openclaw-codex-agent-after-uninstall.err; then
+  --json >/tmp/grokbot-codex-agent-after-uninstall.json 2>/tmp/grokbot-codex-agent-after-uninstall.err; then
   post_uninstall_status=0
 else
   post_uninstall_status=$?

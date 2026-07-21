@@ -1,7 +1,7 @@
 import { createServer } from "node:http";
-import { SYSTEM_PROMPT_CACHE_BOUNDARY } from "@openclaw/ai/internal/shared";
+import { SYSTEM_PROMPT_CACHE_BOUNDARY } from "@grokbot/ai/internal/shared";
 import type { ChatCompletionChunk } from "openai/resources/chat/completions.js";
-import type { Api, Model } from "openclaw/plugin-sdk/llm";
+import type { Api, Model } from "grokbot/plugin-sdk/llm";
 import { describe, expect, it } from "vitest";
 import {
   buildOpenAICompletionsParams,
@@ -1039,12 +1039,12 @@ describe("openai transport stream", () => {
     expect(params).not.toHaveProperty("top_p");
   });
 
-  it("keeps Codex response shaping when simple completions use the OpenClaw transport alias", () => {
+  it("keeps Codex response shaping when simple completions use the GrokBot transport alias", () => {
     const params = buildOpenAIResponsesParams(
       {
         id: "gpt-5.5",
         name: "GPT-5.5",
-        api: "openclaw-openai-responses-transport" as Api,
+        api: "grokbot-openai-responses-transport" as Api,
         provider: "openai",
         baseUrl: "https://chatgpt.com/backend-api/codex",
         reasoning: true,

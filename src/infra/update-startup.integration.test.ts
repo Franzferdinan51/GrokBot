@@ -1,18 +1,18 @@
 // Proves startup update discovery through the real extended-stable registry resolver.
 import http from "node:http";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { closeOpenClawStateDatabaseForTest } from "../state/openclaw-state-db.js";
+import { closeOpenClawStateDatabaseForTest } from "../state/grokbot-state-db.js";
 import {
   createOpenClawTestState,
   type OpenClawTestState,
-} from "../test-utils/openclaw-test-state.js";
+} from "../test-utils/grokbot-test-state.js";
 import type { UpdateCheckResult } from "./update-check.js";
 
-vi.mock("./openclaw-root.js", async () => {
-  const actual = await vi.importActual<typeof import("./openclaw-root.js")>("./openclaw-root.js");
+vi.mock("./grokbot-root.js", async () => {
+  const actual = await vi.importActual<typeof import("./grokbot-root.js")>("./grokbot-root.js");
   return {
     ...actual,
-    resolveOpenClawPackageRoot: vi.fn(async () => "/opt/openclaw"),
+    resolveOpenClawPackageRoot: vi.fn(async () => "/opt/grokbot"),
   };
 });
 
@@ -23,7 +23,7 @@ vi.mock("./update-check.js", async () => {
     checkUpdateStatus: vi.fn(
       async () =>
         ({
-          root: "/opt/openclaw",
+          root: "/opt/grokbot",
           installKind: "package",
           packageManager: "npm",
         }) satisfies UpdateCheckResult,
@@ -43,7 +43,7 @@ describe("extended-stable startup update integration", () => {
     server = undefined;
     testState = await createOpenClawTestState({
       layout: "state-only",
-      prefix: "openclaw-update-startup-integration-",
+      prefix: "grokbot-update-startup-integration-",
       env: {
         NODE_ENV: "test",
         NPM_CONFIG_REGISTRY: undefined,
@@ -79,7 +79,7 @@ describe("extended-stable startup update integration", () => {
     if (!address || typeof address === "string") {
       throw new Error("expected loopback registry address");
     }
-    process.env.OPENCLAW_UPDATE_PACKAGE_SPEC = "openclaw";
+    process.env.OPENCLAW_UPDATE_PACKAGE_SPEC = "grokbot";
     process.env.NPM_CONFIG_REGISTRY = `http://127.0.0.1:${address.port}/`;
 
     const { runGatewayUpdateCheck, resetUpdateAvailableStateForTest } =
@@ -98,14 +98,14 @@ describe("extended-stable startup update integration", () => {
       runAutoUpdate,
     });
 
-    expect(requests).toEqual(["/openclaw/extended-stable", "/openclaw/2.0.0"]);
+    expect(requests).toEqual(["/grokbot/extended-stable", "/grokbot/2.0.0"]);
     expect(onUpdateAvailableChange).toHaveBeenCalledWith({
       currentVersion: "1.0.0",
       latestVersion: "2.0.0",
       channel: "extended-stable",
     });
     expect(log.info).toHaveBeenCalledWith(
-      "update available (extended-stable): v2.0.0 (current v1.0.0). Run: openclaw update",
+      "update available (extended-stable): v2.0.0 (current v1.0.0). Run: grokbot update",
     );
     expect(runAutoUpdate).not.toHaveBeenCalled();
   });

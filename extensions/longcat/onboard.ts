@@ -2,7 +2,7 @@
 import {
   createModelCatalogPresetAppliers,
   type OpenClawConfig,
-} from "openclaw/plugin-sdk/provider-onboard";
+} from "grokbot/plugin-sdk/provider-onboard";
 import { LONGCAT_BASE_URL, LONGCAT_DEFAULT_MODEL_REF, LONGCAT_MODEL_CATALOG } from "./models.js";
 
 const longCatPresetAppliers = createModelCatalogPresetAppliers({

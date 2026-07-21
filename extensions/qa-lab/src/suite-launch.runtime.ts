@@ -172,7 +172,7 @@ async function resolveQaFlowChannelGroups(
   // Package-only live lanes mount the QA harness without its dev tree. Load
   // Crabline only for Crabline-owned runs so unrelated transports stay isolated.
   const { OPENCLAW_CRABLINE_DEFAULT_CHANNEL, resolveOpenClawCrablineChannelDriverSelection } =
-    await import("@openclaw/crabline");
+    await import("@grokbot/crabline");
   const channels = resolveQaSuiteScenarioChannels({
     defaultChannel: OPENCLAW_CRABLINE_DEFAULT_CHANNEL,
     explicitChannel: runParams.channelDriverSelection?.channel,
@@ -471,7 +471,7 @@ function renderUnifiedQaSuiteReport(params: {
   startedAt: Date;
 }) {
   return renderQaMarkdownReport({
-    title: "OpenClaw QA Scenario Suite",
+    title: "GrokBot QA Scenario Suite",
     startedAt: params.startedAt,
     finishedAt: params.finishedAt,
     checks: [],

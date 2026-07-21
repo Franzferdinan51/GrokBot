@@ -23,7 +23,7 @@ function shellQuote(value: string): string {
 }
 
 function runGatewayPortCheck(fakeLsof: string) {
-  const root = mkdtempSync(join(tmpdir(), "openclaw-restart-mac-test-"));
+  const root = mkdtempSync(join(tmpdir(), "grokbot-restart-mac-test-"));
   tempRoots.push(root);
 
   const binDir = join(root, "bin");
@@ -46,7 +46,7 @@ function runGatewayPortCheck(fakeLsof: string) {
 }
 
 function runCleanupFunction(fakePs: string) {
-  const root = mkdtempSync(join(tmpdir(), "openclaw-restart-mac-test-"));
+  const root = mkdtempSync(join(tmpdir(), "grokbot-restart-mac-test-"));
   tempRoots.push(root);
 
   const binDir = join(root, "bin");
@@ -74,10 +74,10 @@ function runCleanupFunction(fakePs: string) {
       cleanupFunction,
       'ROOT_DIR="/worktree"',
       'APP_BUNDLE=""',
-      'APP_EXECUTABLE_RELATIVE_PATH="Contents/MacOS/OpenClaw"',
-      'DEBUG_PROCESS_PATTERN="/worktree/apps/macos/.build/debug/OpenClaw"',
-      'LOCAL_PROCESS_PATTERN="/worktree/apps/macos/.build-local/debug/OpenClaw"',
-      'RELEASE_PROCESS_PATTERN="/worktree/apps/macos/.build/release/OpenClaw"',
+      'APP_EXECUTABLE_RELATIVE_PATH="Contents/MacOS/GrokBot"',
+      'DEBUG_PROCESS_PATTERN="/worktree/apps/macos/.build/debug/GrokBot"',
+      'LOCAL_PROCESS_PATTERN="/worktree/apps/macos/.build-local/debug/GrokBot"',
+      'RELEASE_PROCESS_PATTERN="/worktree/apps/macos/.build/release/GrokBot"',
       "kill() {",
       '  printf "%s\\n" "$*" >> "$OPENCLAW_TEST_KILL_CALLS"',
       "  return 0",
@@ -103,7 +103,7 @@ function runManagedSupervisorClassifier(
   records: Array<{ domain: string; label: string; program: string; properties?: string }>,
   options: { failEnumeration?: boolean } = {},
 ) {
-  const root = mkdtempSync(join(tmpdir(), "openclaw-restart-mac-supervisor-test-"));
+  const root = mkdtempSync(join(tmpdir(), "grokbot-restart-mac-supervisor-test-"));
   tempRoots.push(root);
   const recordsPath = join(root, "loaded-jobs.txt");
   writeFileSync(
@@ -135,8 +135,8 @@ function runManagedSupervisorClassifier(
       '  grep "^$1|$2|" "$OPENCLAW_TEST_LOADED_JOBS" |',
       "    awk -F'|' '{ print \"program = \" $3; print \"properties = \" $4 }'",
       "}",
-      'TARGET_EXECUTABLE="/worktree/dist/OpenClaw.app/Contents/MacOS/OpenClaw"',
-      'INSTALLED_EXECUTABLE="/Applications/OpenClaw.app/Contents/MacOS/OpenClaw"',
+      'TARGET_EXECUTABLE="/worktree/dist/GrokBot.app/Contents/MacOS/GrokBot"',
+      'INSTALLED_EXECUTABLE="/Applications/GrokBot.app/Contents/MacOS/GrokBot"',
       "managed_openclaw_supervisor_labels",
     ].join("\n"),
   );
@@ -152,7 +152,7 @@ function runManagedSupervisorClassifier(
 }
 
 function runCanonicalizeAppBundle(appBundle: string) {
-  const root = mkdtempSync(join(tmpdir(), "openclaw-restart-mac-test-"));
+  const root = mkdtempSync(join(tmpdir(), "grokbot-restart-mac-test-"));
   tempRoots.push(root);
 
   const script = readFileSync(restartScriptPath, "utf8");
@@ -185,7 +185,7 @@ function runCanonicalizeAppBundle(appBundle: string) {
 }
 
 function runRestartArgParser(...args: string[]) {
-  const root = mkdtempSync(join(tmpdir(), "openclaw-restart-mac-test-"));
+  const root = mkdtempSync(join(tmpdir(), "grokbot-restart-mac-test-"));
   tempRoots.push(root);
 
   const script = readFileSync(restartScriptPath, "utf8");
@@ -217,7 +217,7 @@ function runRestartArgParser(...args: string[]) {
 }
 
 function runRestartLockHarness(lockDir: string) {
-  const root = mkdtempSync(join(tmpdir(), "openclaw-restart-mac-test-"));
+  const root = mkdtempSync(join(tmpdir(), "grokbot-restart-mac-test-"));
   tempRoots.push(root);
 
   const script = readFileSync(restartScriptPath, "utf8");
@@ -247,7 +247,7 @@ function runRestartLockHarness(lockDir: string) {
 }
 
 function runForeignProcessClassifier(fakePs: string) {
-  const root = mkdtempSync(join(tmpdir(), "openclaw-restart-mac-test-"));
+  const root = mkdtempSync(join(tmpdir(), "grokbot-restart-mac-test-"));
   tempRoots.push(root);
   const binDir = join(root, "bin");
   mkdirSync(binDir);
@@ -266,9 +266,9 @@ function runForeignProcessClassifier(fakePs: string) {
     [
       "#!/usr/bin/env bash",
       functions,
-      'APP_EXECUTABLE_RELATIVE_PATH="Contents/MacOS/OpenClaw"',
-      'TARGET_EXECUTABLE="/Users/steipete/openclaw/dist/OpenClaw.app/Contents/MacOS/OpenClaw"',
-      'INSTALLED_EXECUTABLE="/Applications/OpenClaw.app/Contents/MacOS/OpenClaw"',
+      'APP_EXECUTABLE_RELATIVE_PATH="Contents/MacOS/GrokBot"',
+      'TARGET_EXECUTABLE="/Users/steipete/grokbot/dist/GrokBot.app/Contents/MacOS/GrokBot"',
+      'INSTALLED_EXECUTABLE="/Applications/GrokBot.app/Contents/MacOS/GrokBot"',
       "foreign_openclaw_process_pids",
     ].join("\n"),
   );
@@ -352,15 +352,15 @@ describe("scripts/restart-mac.sh", () => {
     const script = readFileSync(restartScriptPath, "utf8");
 
     expect(script).toContain(
-      'LOG_PATH="${OPENCLAW_RESTART_LOG:-${TMPDIR:-/tmp}/openclaw-restart-${LOCK_KEY}.log}"',
+      'LOG_PATH="${OPENCLAW_RESTART_LOG:-${TMPDIR:-/tmp}/grokbot-restart-${LOCK_KEY}.log}"',
     );
-    expect(script).not.toContain('LOG_PATH="${OPENCLAW_RESTART_LOG:-/tmp/openclaw-restart.log}"');
+    expect(script).not.toContain('LOG_PATH="${OPENCLAW_RESTART_LOG:-/tmp/grokbot-restart.log}"');
   });
 
   it("does not remove a live restart lock it did not acquire", () => {
-    const root = mkdtempSync(join(tmpdir(), "openclaw-restart-mac-test-"));
+    const root = mkdtempSync(join(tmpdir(), "grokbot-restart-mac-test-"));
     tempRoots.push(root);
-    const lockDir = join(root, "openclaw-restart-lock");
+    const lockDir = join(root, "grokbot-restart-lock");
     mkdirSync(lockDir);
     writeFileSync(join(lockDir, "pid"), String(process.pid), "utf8");
 
@@ -376,9 +376,9 @@ describe("scripts/restart-mac.sh", () => {
   });
 
   it("removes the restart lock it acquired", () => {
-    const root = mkdtempSync(join(tmpdir(), "openclaw-restart-mac-test-"));
+    const root = mkdtempSync(join(tmpdir(), "grokbot-restart-mac-test-"));
     tempRoots.push(root);
-    const lockDir = join(root, "openclaw-restart-lock");
+    const lockDir = join(root, "grokbot-restart-lock");
 
     const result = runRestartLockHarness(lockDir);
 
@@ -397,14 +397,14 @@ describe("scripts/restart-mac.sh", () => {
 
     expect(script).toContain('fail "OPENCLAW_APP_BUNDLE does not exist: ${APP_BUNDLE}"');
     expect(chooseBlock).toContain("canonicalize_app_bundle");
-    expect(chooseBlock.indexOf("${ROOT_DIR}/dist/OpenClaw.app")).toBeGreaterThan(-1);
-    expect(chooseBlock.indexOf("/Applications/OpenClaw.app")).toBeGreaterThan(-1);
-    expect(chooseBlock.indexOf("${ROOT_DIR}/dist/OpenClaw.app")).toBeLessThan(
-      chooseBlock.indexOf("/Applications/OpenClaw.app"),
+    expect(chooseBlock.indexOf("${ROOT_DIR}/dist/GrokBot.app")).toBeGreaterThan(-1);
+    expect(chooseBlock.indexOf("/Applications/GrokBot.app")).toBeGreaterThan(-1);
+    expect(chooseBlock.indexOf("${ROOT_DIR}/dist/GrokBot.app")).toBeLessThan(
+      chooseBlock.indexOf("/Applications/GrokBot.app"),
     );
   });
 
-  it("keeps restart cleanup scoped to known OpenClaw app and build paths", () => {
+  it("keeps restart cleanup scoped to known GrokBot app and build paths", () => {
     const script = readFileSync(restartScriptPath, "utf8");
     const cleanupBlock = script.slice(
       script.indexOf("kill_all_openclaw()"),
@@ -413,17 +413,17 @@ describe("scripts/restart-mac.sh", () => {
 
     expect(cleanupBlock).toContain("ps axww -o pid=,command=");
     expect(cleanupBlock).toContain(
-      '"${ROOT_DIR}/dist/OpenClaw.app/${APP_EXECUTABLE_RELATIVE_PATH}"',
+      '"${ROOT_DIR}/dist/GrokBot.app/${APP_EXECUTABLE_RELATIVE_PATH}"',
     );
-    expect(cleanupBlock).toContain('"/Applications/OpenClaw.app/${APP_EXECUTABLE_RELATIVE_PATH}"');
+    expect(cleanupBlock).toContain('"/Applications/GrokBot.app/${APP_EXECUTABLE_RELATIVE_PATH}"');
     expect(cleanupBlock).toContain('"${DEBUG_PROCESS_PATTERN}"');
     expect(cleanupBlock).toContain('"${LOCAL_PROCESS_PATTERN}"');
     expect(cleanupBlock).toContain('"${RELEASE_PROCESS_PATTERN}"');
     expect(cleanupBlock).not.toContain("APP_PROCESS_PATTERN");
     expect(cleanupBlock).not.toContain("pkill");
-    expect(cleanupBlock).not.toContain('pkill -x "OpenClaw"');
+    expect(cleanupBlock).not.toContain('pkill -x "GrokBot"');
     expect(cleanupBlock).not.toContain("pgrep");
-    expect(cleanupBlock).not.toContain('pgrep -x "OpenClaw"');
+    expect(cleanupBlock).not.toContain('pgrep -x "GrokBot"');
   });
 
   it("stops launchd supervision before killing app processes", () => {
@@ -462,20 +462,20 @@ describe("scripts/restart-mac.sh", () => {
     const result = runManagedSupervisorClassifier([
       {
         domain: "gui/501",
-        label: "ai.openclaw.mac.custom",
-        program: "/Applications/OpenClaw.app/Contents/MacOS/OpenClaw",
+        label: "ai.grokbot.mac.custom",
+        program: "/Applications/GrokBot.app/Contents/MacOS/GrokBot",
         properties: "keepalive | runatload",
       },
       {
         domain: "user/501",
-        label: "ai.openclaw.mac.target",
-        program: "/worktree/dist/OpenClaw.app/Contents/MacOS/OpenClaw",
+        label: "ai.grokbot.mac.target",
+        program: "/worktree/dist/GrokBot.app/Contents/MacOS/GrokBot",
         properties: "keepalive",
       },
       {
         domain: "gui/501",
-        label: "application.ai.openclaw.mac.123",
-        program: "/Applications/OpenClaw.app/Contents/MacOS/OpenClaw",
+        label: "application.ai.grokbot.mac.123",
+        program: "/Applications/GrokBot.app/Contents/MacOS/GrokBot",
       },
       {
         domain: "system",
@@ -487,8 +487,8 @@ describe("scripts/restart-mac.sh", () => {
 
     expect(result.status).toBe(0);
     expect(result.stdout.trim().split("\n").toSorted()).toEqual([
-      "ai.openclaw.mac.custom",
-      "ai.openclaw.mac.target",
+      "ai.grokbot.mac.custom",
+      "ai.grokbot.mac.target",
     ]);
     expect(result.stderr).toBe("");
   });
@@ -563,10 +563,10 @@ describe("scripts/restart-mac.sh", () => {
     const result = runForeignProcessClassifier(
       [
         "#!/usr/bin/env bash",
-        "printf '%s\\n' '  101 /Applications/OpenClaw.app/Contents/MacOS/OpenClaw --attach-only'",
-        "printf '%s\\n' '  102 /Users/steipete/openclaw/dist/OpenClaw.app/Contents/MacOS/OpenClaw --attach-only'",
-        "printf '%s\\n' '  103 /tmp/agent/OpenClaw.app/Contents/MacOS/OpenClaw --attach-only'",
-        "printf '%s\\n' '  104 /bin/sh test.sh /Applications/OpenClaw.app/Contents/MacOS/OpenClaw'",
+        "printf '%s\\n' '  101 /Applications/GrokBot.app/Contents/MacOS/GrokBot --attach-only'",
+        "printf '%s\\n' '  102 /Users/steipete/grokbot/dist/GrokBot.app/Contents/MacOS/GrokBot --attach-only'",
+        "printf '%s\\n' '  103 /tmp/agent/GrokBot.app/Contents/MacOS/GrokBot --attach-only'",
+        "printf '%s\\n' '  104 /bin/sh test.sh /Applications/GrokBot.app/Contents/MacOS/GrokBot'",
       ].join("\n"),
     );
 
@@ -594,12 +594,12 @@ describe("scripts/restart-mac.sh", () => {
   });
 
   it("normalizes custom app bundle paths before process matching", () => {
-    const root = mkdtempSync(join(tmpdir(), "openclaw-restart-mac-test-"));
+    const root = mkdtempSync(join(tmpdir(), "grokbot-restart-mac-test-"));
     tempRoots.push(root);
-    const appBundle = join(root, "dist", "OpenClaw.app");
+    const appBundle = join(root, "dist", "GrokBot.app");
     mkdirSync(appBundle, { recursive: true });
 
-    const { result } = runCanonicalizeAppBundle(`${appBundle}/../OpenClaw.app/`);
+    const { result } = runCanonicalizeAppBundle(`${appBundle}/../GrokBot.app/`);
 
     expect(result.status).toBe(0);
     expect(result.stdout.trim()).toBe(realpathSync(appBundle));
@@ -610,7 +610,7 @@ describe("scripts/restart-mac.sh", () => {
     const { killCalls, result } = runCleanupFunction(
       [
         "#!/usr/bin/env bash",
-        "printf '%s\\n' '  321 /worktree/dist/OpenClaw.app/Contents/MacOS/OpenClaw --attach-only'",
+        "printf '%s\\n' '  321 /worktree/dist/GrokBot.app/Contents/MacOS/GrokBot --attach-only'",
       ].join("\n"),
     );
 
@@ -626,7 +626,7 @@ describe("scripts/restart-mac.sh", () => {
         "#!/usr/bin/env bash",
         'kill_count="$(wc -l < "$OPENCLAW_TEST_KILL_CALLS" 2>/dev/null || echo 0)"',
         'if [[ "$kill_count" -lt 10 ]]; then',
-        "  printf '%s\\n' '  321 /worktree/dist/OpenClaw.app/Contents/MacOS/OpenClaw --attach-only'",
+        "  printf '%s\\n' '  321 /worktree/dist/GrokBot.app/Contents/MacOS/GrokBot --attach-only'",
         "fi",
       ].join("\n"),
     );
@@ -646,11 +646,11 @@ describe("scripts/restart-mac.sh", () => {
     expect(result.stderr).toBe("");
   });
 
-  it("does not kill unrelated OpenClaw app bundles", () => {
+  it("does not kill unrelated GrokBot app bundles", () => {
     const { killCalls, result } = runCleanupFunction(
       [
         "#!/usr/bin/env bash",
-        "printf '%s\\n' '  654 /tmp/Other/OpenClaw.app/Contents/MacOS/OpenClaw'",
+        "printf '%s\\n' '  654 /tmp/Other/GrokBot.app/Contents/MacOS/GrokBot'",
       ].join("\n"),
     );
 

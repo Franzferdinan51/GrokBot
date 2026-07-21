@@ -2,9 +2,9 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { normalizeProviderId } from "@openclaw/model-catalog-core/provider-id";
-import { asNullableRecord } from "@openclaw/normalization-core/record-coerce";
-import { normalizeTrimmedStringList } from "@openclaw/normalization-core/string-normalization";
+import { normalizeProviderId } from "@grokbot/model-catalog-core/provider-id";
+import { asNullableRecord } from "@grokbot/normalization-core/record-coerce";
+import { normalizeTrimmedStringList } from "@grokbot/normalization-core/string-normalization";
 import type { LegacyConfigRule } from "../config/legacy.shared.js";
 import type { OpenClawConfig } from "../config/types.js";
 import type {

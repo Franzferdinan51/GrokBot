@@ -7,7 +7,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 const createAmbientNodeProxyAgentMock = vi.hoisted(() => vi.fn(() => ({ proxy: true })));
 const hasAmbientNodeProxyConfiguredMock = vi.hoisted(() => vi.fn(() => true));
 
-vi.mock("@openclaw/proxyline", () => ({
+vi.mock("@grokbot/proxyline", () => ({
   createAmbientNodeProxyAgent: createAmbientNodeProxyAgentMock,
   hasAmbientNodeProxyConfigured: hasAmbientNodeProxyConfiguredMock,
 }));
@@ -42,7 +42,7 @@ describe("resolveAmbientNodeProxyAgent", () => {
   });
 
   function writeTempCa(contents: string): string {
-    const dir = mkdtempSync(path.join(os.tmpdir(), "openclaw-extension-shared-proxy-ca-"));
+    const dir = mkdtempSync(path.join(os.tmpdir(), "grokbot-extension-shared-proxy-ca-"));
     tempDirs.push(dir);
     const caFile = path.join(dir, "proxy-ca.pem");
     writeFileSync(caFile, contents, "utf8");

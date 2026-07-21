@@ -4,17 +4,17 @@ import { constants as fsConstants } from "node:fs";
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { mergeInboundPathRoots } from "@openclaw/media-core/inbound-path-policy";
-import { findNormalizedProviderValue } from "@openclaw/model-catalog-core/provider-id";
+import { mergeInboundPathRoots } from "@grokbot/media-core/inbound-path-policy";
+import { findNormalizedProviderValue } from "@grokbot/model-catalog-core/provider-id";
 import {
   normalizeLowercaseStringOrEmpty,
   normalizeNullableString,
   normalizeOptionalString,
-} from "@openclaw/normalization-core/string-coerce";
+} from "@grokbot/normalization-core/string-coerce";
 import {
   normalizeStringEntries,
   uniqueStrings,
-} from "@openclaw/normalization-core/string-normalization";
+} from "@grokbot/normalization-core/string-normalization";
 import type { ActiveMediaModel } from "../../packages/media-understanding-common/src/active-model.js";
 import { isMediaUnderstandingSkipError } from "../../packages/media-understanding-common/src/errors.js";
 import { providerSupportsCapability } from "../../packages/media-understanding-common/src/provider-supports.js";
@@ -36,7 +36,7 @@ import type {
   MediaUnderstandingModelConfig,
 } from "../config/types.tools.js";
 import { logVerbose, shouldLogVerbose } from "../globals.js";
-import { resolvePreferredOpenClawTmpDir } from "../infra/tmp-openclaw-dir.js";
+import { resolvePreferredOpenClawTmpDir } from "../infra/tmp-grokbot-dir.js";
 import { logWarn } from "../logger.js";
 import { resolveChannelInboundAttachmentRoots } from "../media/channel-inbound-roots.js";
 import { getDefaultMediaLocalRoots } from "../media/local-roots.js";
@@ -368,7 +368,7 @@ function clearMediaUnderstandingBinaryCacheForTests(): void {
 
 if (process.env.VITEST || process.env.NODE_ENV === "test") {
   (globalThis as Record<PropertyKey, unknown>)[
-    Symbol.for("openclaw.mediaUnderstandingRunnerTestApi")
+    Symbol.for("grokbot.mediaUnderstandingRunnerTestApi")
   ] = { clearMediaUnderstandingBinaryCacheForTests };
 }
 
@@ -460,7 +460,7 @@ async function probeAntigravityCliCandidate(command: string): Promise<string | n
     return null;
   }
   const probeDir = await fs.mkdtemp(
-    path.join(resolvePreferredOpenClawTmpDir(), "openclaw-antigravity-probe-"),
+    path.join(resolvePreferredOpenClawTmpDir(), "grokbot-antigravity-probe-"),
   );
   try {
     const { stdout } = await runExec(resolved, ["--help"], {

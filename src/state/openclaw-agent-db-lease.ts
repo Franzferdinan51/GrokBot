@@ -11,10 +11,10 @@ import {
   assertAgentDeletionPathFence,
   prepareAgentDeletionPathFence,
 } from "./agent-deletion-journal.js";
-import type { OpenClawStateDatabaseOptions } from "./openclaw-state-db-contract.js";
-import { ensureAgentDatabaseLeaseSchema } from "./openclaw-state-db-schema-additive.js";
-import type { DB as OpenClawStateKyselyDatabase } from "./openclaw-state-db.generated.js";
-import { runOpenClawStateWriteTransaction } from "./openclaw-state-db.js";
+import type { OpenClawStateDatabaseOptions } from "./grokbot-state-db-contract.js";
+import { ensureAgentDatabaseLeaseSchema } from "./grokbot-state-db-schema-additive.js";
+import type { DB as OpenClawStateKyselyDatabase } from "./grokbot-state-db.generated.js";
+import { runOpenClawStateWriteTransaction } from "./grokbot-state-db.js";
 
 type AgentDatabaseLeaseDatabase = Pick<
   OpenClawStateKyselyDatabase,

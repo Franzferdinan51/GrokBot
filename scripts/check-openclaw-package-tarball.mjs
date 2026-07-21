@@ -17,7 +17,7 @@ import {
 import { WORKSPACE_TEMPLATE_PACK_PATHS } from "./lib/workspace-bootstrap-smoke.mjs";
 
 function usage() {
-  return "Usage: node scripts/check-openclaw-package-tarball.mjs [--require-bundled-workspace-deps] <openclaw.tgz>";
+  return "Usage: node scripts/check-grokbot-package-tarball.mjs [--require-bundled-workspace-deps] <grokbot.tgz>";
 }
 
 function fail(message) {
@@ -39,10 +39,10 @@ function parseArgs(argv) {
       continue;
     }
     if (arg.startsWith("-")) {
-      throw new Error(`Unknown OpenClaw package tarball check option: ${arg}`);
+      throw new Error(`Unknown GrokBot package tarball check option: ${arg}`);
     }
     if (tarball) {
-      throw new Error(`Unexpected OpenClaw package tarball check argument: ${arg}`);
+      throw new Error(`Unexpected GrokBot package tarball check argument: ${arg}`);
     }
     tarball = arg;
   }
@@ -65,7 +65,7 @@ if (cliArgs.help) {
 
 const { tarball } = cliArgs;
 if (!fs.existsSync(tarball)) {
-  fail(`OpenClaw package tarball does not exist: ${tarball}`);
+  fail(`GrokBot package tarball does not exist: ${tarball}`);
 }
 
 const PACKAGE_DEPENDENCY_SECTIONS = [
@@ -74,18 +74,18 @@ const PACKAGE_DEPENDENCY_SECTIONS = [
   "peerDependencies",
   "devDependencies",
 ];
-const REQUIRED_BUNDLED_WORKSPACE_DEPENDENCIES = ["@openclaw/ai"];
+const REQUIRED_BUNDLED_WORKSPACE_DEPENDENCIES = ["@grokbot/ai"];
 // Strict Docker artifacts bundle this private runtime rather than resolving it
 // from npm. Keep the concrete load-bearing entries explicit instead of
 // reimplementing Node's conditional package-exports resolver here.
 const REQUIRED_BUNDLED_WORKSPACE_RUNTIME_ENTRIES = new Map([
   [
-    "@openclaw/ai",
+    "@grokbot/ai",
     [
-      { specifier: "@openclaw/ai", entry: "dist/index.mjs" },
-      { specifier: "@openclaw/ai/providers", entry: "dist/providers.mjs" },
+      { specifier: "@grokbot/ai", entry: "dist/index.mjs" },
+      { specifier: "@grokbot/ai/providers", entry: "dist/providers.mjs" },
       {
-        specifier: "@openclaw/ai/internal/runtime",
+        specifier: "@grokbot/ai/internal/runtime",
         entry: "dist/internal/runtime.mjs",
       },
     ],
@@ -236,7 +236,7 @@ function collectRequiredBundledWorkspaceDependencyErrors(
     }
     if (!bundledDependencies.has(name)) {
       errors.push(
-        `package.json dependencies.${name} must be listed in bundleDependencies because it is private to the OpenClaw workspace`,
+        `package.json dependencies.${name} must be listed in bundleDependencies because it is private to the GrokBot workspace`,
       );
     }
     if (!entrySet.has(`node_modules/${name}/package.json`)) {
@@ -267,7 +267,7 @@ function runPhase(label, action) {
   } finally {
     if (phaseTimingsEnabled) {
       const durationMs = Math.round(performance.now() - startedAt);
-      console.error(`check-openclaw-package-tarball: ${label} completed in ${durationMs}ms`);
+      console.error(`check-grokbot-package-tarball: ${label} completed in ${durationMs}ms`);
     }
   }
 }
@@ -283,7 +283,7 @@ if (list.status !== 0) {
   fail(`tar -tf failed for ${tarball}: ${list.stderr || list.error?.message || list.status}`);
 }
 
-const extractDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-package-tarball-"));
+const extractDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-package-tarball-"));
 try {
   const extract = runPhase("tar extract", () =>
     spawnSync("tar", ["-xf", tarball, "-C", extractDir], {
@@ -309,7 +309,7 @@ const entrySet = new Set(normalized);
 const errors = [];
 const warnings = [];
 const REQUIRED_TARBALL_ENTRIES = ["dist/control-ui/index.html", ...WORKSPACE_TEMPLATE_PACK_PATHS];
-const PACKAGE_INSTALL_GUARD_RELATIVE_PATH = "dist/openclaw-install-guard";
+const PACKAGE_INSTALL_GUARD_RELATIVE_PATH = "dist/grokbot-install-guard";
 const REQUIRED_TARBALL_ENTRY_PREFIXES = ["dist/control-ui/assets/"];
 const LEGACY_PACKAGE_ACCEPTANCE_COMPAT_MAX = { year: 2026, month: 4, day: 25 };
 const LEGACY_LOCAL_BUILD_METADATA_COMPAT_MAX = { year: 2026, month: 4, day: 26 };
@@ -470,16 +470,16 @@ if (!entrySet.has("npm-shrinkwrap.json")) {
   try {
     const shrinkwrap = JSON.parse(readTarEntry("npm-shrinkwrap.json"));
     const rootPackage = shrinkwrap.packages?.[""];
-    if (shrinkwrap.name !== "openclaw") {
-      errors.push("npm-shrinkwrap.json root name must be openclaw");
+    if (shrinkwrap.name !== "grokbot") {
+      errors.push("npm-shrinkwrap.json root name must be grokbot");
     }
     if (shrinkwrap.version !== packageVersion) {
       errors.push(
         `npm-shrinkwrap.json version ${shrinkwrap.version ?? "<missing>"} does not match package.json version ${packageVersion || "<missing>"}`,
       );
     }
-    if (!rootPackage || rootPackage.name !== "openclaw") {
-      errors.push("npm-shrinkwrap.json packages root must name openclaw");
+    if (!rootPackage || rootPackage.name !== "grokbot") {
+      errors.push("npm-shrinkwrap.json packages root must name grokbot");
     }
     if (rootPackage?.version !== packageVersion) {
       errors.push(
@@ -586,11 +586,11 @@ errors.push(
 
 if (errors.length > 0) {
   fs.rmSync(extractDir, { recursive: true, force: true });
-  fail(`OpenClaw package tarball integrity failed:\n${errors.join("\n")}`);
+  fail(`GrokBot package tarball integrity failed:\n${errors.join("\n")}`);
 }
 
 for (const warning of warnings) {
-  console.warn(`OpenClaw package tarball integrity warning: ${warning}`);
+  console.warn(`GrokBot package tarball integrity warning: ${warning}`);
 }
 fs.rmSync(extractDir, { recursive: true, force: true });
-console.log("OpenClaw package tarball integrity passed.");
+console.log("GrokBot package tarball integrity passed.");

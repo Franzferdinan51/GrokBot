@@ -1,4 +1,4 @@
-// Tui Pty Test Watch script supports OpenClaw repository automation.
+// Tui Pty Test Watch script supports GrokBot repository automation.
 import { spawn, spawnSync } from "node:child_process";
 import { mkdir, open, writeFile } from "node:fs/promises";
 import { createRequire } from "node:module";
@@ -416,7 +416,7 @@ async function main(): Promise<void> {
     process.stdout.write(
       [
         "\x1b[2J\x1b[H",
-        "openclaw TUI PTY tests",
+        "grokbot TUI PTY tests",
         "",
         `Mode: ${options.mode}`,
         `Waiting for the first TUI frame... ${elapsedSeconds}s`,

@@ -21,8 +21,8 @@ const {
   closeOpenClawAgentDatabasesForTest,
   openOpenClawAgentDatabase,
   runOpenClawAgentWriteTransaction,
-} = await import("./openclaw-agent-db.js");
-const { closeOpenClawStateDatabaseForTest } = await import("./openclaw-state-db.js");
+} = await import("./grokbot-agent-db.js");
+const { closeOpenClawStateDatabaseForTest } = await import("./grokbot-state-db.js");
 const tempDirs = useAutoCleanupTempDirTracker(afterEach);
 
 describe("agent database permission repair", () => {
@@ -33,7 +33,7 @@ describe("agent database permission repair", () => {
   });
 
   it("rolls back an outer write when pre-commit permission repair fails", () => {
-    const stateDir = tempDirs.make("openclaw-agent-chmod-");
+    const stateDir = tempDirs.make("grokbot-agent-chmod-");
     const options = {
       agentId: "worker-1",
       env: { OPENCLAW_STATE_DIR: stateDir },

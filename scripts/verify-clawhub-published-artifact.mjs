@@ -290,7 +290,7 @@ async function verifyEntryOnce(entry, options, context) {
     );
     requireExact(
       trustedPublisher?.repository,
-      "openclaw/openclaw",
+      "grokbot/grokbot",
       `${entry.packageName} trusted publisher repository`,
     );
     requireExact(

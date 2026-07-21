@@ -1,5 +1,5 @@
-// Shipped apps stamp `openclaw-native-nav`; current apps advertise web chrome
-// at document start and stamp `openclaw-native-web-chrome` at document end.
+// Shipped apps stamp `grokbot-native-nav`; current apps advertise web chrome
+// at document start and stamp `grokbot-native-web-chrome` at document end.
 // Plain browsers keep their normal in-page controls.
 import { chromium, type Browser, type BrowserContext } from "playwright";
 import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
@@ -68,7 +68,7 @@ describeControlUiE2e("Control UI native-nav sidebar toggle E2E", () => {
           },
         });
         const stamp = () =>
-          document.documentElement.classList.add("openclaw-native-macos", "openclaw-native-nav");
+          document.documentElement.classList.add("grokbot-native-macos", "grokbot-native-nav");
         if (document.documentElement) {
           stamp();
         } else {
@@ -89,8 +89,8 @@ describeControlUiE2e("Control UI native-nav sidebar toggle E2E", () => {
         };
         const stamp = () =>
           document.documentElement.classList.add(
-            "openclaw-native-macos",
-            "openclaw-native-web-chrome",
+            "grokbot-native-macos",
+            "grokbot-native-web-chrome",
           );
         if (document.documentElement) {
           stamp();
@@ -155,7 +155,7 @@ describeControlUiE2e("Control UI native-nav sidebar toggle E2E", () => {
     // Collapse through the native titlebar path; the floating expand control
     // must stay hidden (the titlebar button is the only expand affordance).
     await page.evaluate(() => {
-      window.dispatchEvent(new CustomEvent("openclaw:native-toggle-sidebar"));
+      window.dispatchEvent(new CustomEvent("grokbot:native-toggle-sidebar"));
     });
     await expect
       .poll(() => page.locator(".shell").getAttribute("class"))
@@ -177,12 +177,12 @@ describeControlUiE2e("Control UI native-nav sidebar toggle E2E", () => {
       .toBe(true);
 
     await page.evaluate(() => {
-      window.dispatchEvent(new CustomEvent("openclaw:native-open-search"));
+      window.dispatchEvent(new CustomEvent("grokbot:native-open-search"));
     });
     await expect.poll(() => page.locator(".cmd-palette-overlay").isVisible()).toBe(true);
 
     await page.evaluate(() => {
-      window.dispatchEvent(new CustomEvent("openclaw:native-new-session"));
+      window.dispatchEvent(new CustomEvent("grokbot:native-new-session"));
     });
     await expect.poll(() => new URL(page.url()).pathname).toBe("/new");
   });
@@ -214,7 +214,7 @@ describeControlUiE2e("Control UI native-nav sidebar toggle E2E", () => {
 
     await page.evaluate(() => {
       window.dispatchEvent(
-        new CustomEvent("openclaw:native-history-state", {
+        new CustomEvent("grokbot:native-history-state", {
           detail: { canGoBack: true, canGoForward: false },
         }),
       );
@@ -223,7 +223,7 @@ describeControlUiE2e("Control UI native-nav sidebar toggle E2E", () => {
     await expect.poll(() => forward.isDisabled()).toBe(true);
     await page.evaluate(() => {
       window.dispatchEvent(
-        new CustomEvent("openclaw:native-history-state", {
+        new CustomEvent("grokbot:native-history-state", {
           detail: { canGoBack: false, canGoForward: true },
         }),
       );
@@ -343,7 +343,7 @@ describeControlUiE2e("Control UI native-nav sidebar toggle E2E", () => {
     // the web hamburger would be a duplicate control.
     await expect.poll(() => page.locator(".topbar-nav-toggle").isVisible()).toBe(false);
     await page.evaluate(() => {
-      window.dispatchEvent(new CustomEvent("openclaw:native-toggle-sidebar"));
+      window.dispatchEvent(new CustomEvent("grokbot:native-toggle-sidebar"));
     });
     await expect
       .poll(() => page.locator(".shell").getAttribute("class"))
@@ -351,7 +351,7 @@ describeControlUiE2e("Control UI native-nav sidebar toggle E2E", () => {
     // Closing through the native toggle restores focus to the content anchor,
     // not the hidden hamburger the drawer recorded as its trigger.
     await page.evaluate(() => {
-      window.dispatchEvent(new CustomEvent("openclaw:native-toggle-sidebar"));
+      window.dispatchEvent(new CustomEvent("grokbot:native-toggle-sidebar"));
     });
     await expect
       .poll(() => page.locator(".shell").getAttribute("class"))

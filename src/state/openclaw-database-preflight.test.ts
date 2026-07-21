@@ -6,13 +6,13 @@ import {
   closeOpenClawAgentDatabasesForTest,
   OPENCLAW_AGENT_SCHEMA_VERSION,
   openOpenClawAgentDatabase,
-} from "./openclaw-agent-db.js";
-import { preflightOpenClawDatabaseSchemas } from "./openclaw-database-preflight.js";
+} from "./grokbot-agent-db.js";
+import { preflightOpenClawDatabaseSchemas } from "./grokbot-database-preflight.js";
 import {
   closeOpenClawStateDatabaseForTest,
   OPENCLAW_STATE_SCHEMA_VERSION,
   openOpenClawStateDatabase,
-} from "./openclaw-state-db.js";
+} from "./grokbot-state-db.js";
 
 const tempDirs: string[] = [];
 
@@ -23,16 +23,16 @@ afterEach(() => {
 
 afterAll(() => cleanupTempDirs(tempDirs));
 
-describe("OpenClaw database schema preflight", () => {
+describe("GrokBot database schema preflight", () => {
   it("keeps package schema support metadata aligned", () => {
-    expect(packageJson.openclaw.schemaVersions).toEqual({
+    expect(packageJson.grokbot.schemaVersions).toEqual({
       state: OPENCLAW_STATE_SCHEMA_VERSION,
       agent: OPENCLAW_AGENT_SCHEMA_VERSION,
     });
   });
 
   it("collects newer state and registered agent schemas with writer builds", () => {
-    const stateDir = makeTempDir(tempDirs, "openclaw-database-preflight-");
+    const stateDir = makeTempDir(tempDirs, "grokbot-database-preflight-");
     const env = { OPENCLAW_STATE_DIR: stateDir };
     const statePath = openOpenClawStateDatabase({ env }).path;
     const agentPath = openOpenClawAgentDatabase({ agentId: "worker-1", env }).path;
@@ -90,7 +90,7 @@ describe("OpenClaw database schema preflight", () => {
   });
 
   it("reports an existing unreadable state database as indeterminate", () => {
-    const stateDir = makeTempDir(tempDirs, "openclaw-database-preflight-unreadable-state-");
+    const stateDir = makeTempDir(tempDirs, "grokbot-database-preflight-unreadable-state-");
     const env = { OPENCLAW_STATE_DIR: stateDir };
     const statePath = openOpenClawStateDatabase({ env }).path;
     closeOpenClawStateDatabaseForTest();
@@ -113,7 +113,7 @@ describe("OpenClaw database schema preflight", () => {
   });
 
   it("reports a failed agent registry query as indeterminate", () => {
-    const stateDir = makeTempDir(tempDirs, "openclaw-database-preflight-registry-");
+    const stateDir = makeTempDir(tempDirs, "grokbot-database-preflight-registry-");
     const env = { OPENCLAW_STATE_DIR: stateDir };
     const statePath = openOpenClawStateDatabase({ env }).path;
     closeOpenClawStateDatabaseForTest();
@@ -146,7 +146,7 @@ describe("OpenClaw database schema preflight", () => {
   });
 
   it("reports an existing unreadable registered agent database as indeterminate", () => {
-    const stateDir = makeTempDir(tempDirs, "openclaw-database-preflight-unreadable-agent-");
+    const stateDir = makeTempDir(tempDirs, "grokbot-database-preflight-unreadable-agent-");
     const env = { OPENCLAW_STATE_DIR: stateDir };
     const agentPath = openOpenClawAgentDatabase({ agentId: "worker-1", env }).path;
     closeOpenClawAgentDatabasesForTest();

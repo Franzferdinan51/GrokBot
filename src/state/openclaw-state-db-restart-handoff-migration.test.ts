@@ -8,7 +8,7 @@ import {
   openOpenClawStateDatabase,
   OPENCLAW_STATE_SCHEMA_VERSION,
   repairOpenClawStateDatabaseSchema,
-} from "./openclaw-state-db.js";
+} from "./grokbot-state-db.js";
 
 const tempDirs = useAutoCleanupTempDirTracker(afterEach);
 
@@ -18,7 +18,7 @@ afterEach(() => {
 
 describe("gateway restart handoff state migration", () => {
   it("repairs fractional trace timestamps while doctor migrates version 2 to STRICT", () => {
-    const stateDir = tempDirs.make("openclaw-state-restart-handoff-");
+    const stateDir = tempDirs.make("grokbot-state-restart-handoff-");
     const options = { env: { OPENCLAW_STATE_DIR: stateDir } };
     const databasePath = openOpenClawStateDatabase(options).path;
     closeOpenClawStateDatabaseForTest();

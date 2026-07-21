@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it } from "vitest";
-import { closeOpenClawStateDatabase } from "../state/openclaw-state-db.js";
+import { closeOpenClawStateDatabase } from "../state/grokbot-state-db.js";
 import { withTempDir } from "../test-helpers/temp-dir.js";
 import { appendTranscriptTurn, readTranscriptTail } from "./transcript-store.js";
 
@@ -12,7 +12,7 @@ describe("system-agent transcript store", () => {
   });
 
   it("appends turns and returns a bounded tail oldest-first", async () => {
-    await withTempDir({ prefix: "openclaw-system-agent-transcript-" }, async (stateDir) => {
+    await withTempDir({ prefix: "grokbot-system-agent-transcript-" }, async (stateDir) => {
       const env = { ...process.env, OPENCLAW_STATE_DIR: stateDir };
       appendTranscriptTurn({ role: "assistant", text: "welcome", at: 1 }, { env });
       appendTranscriptTurn({ role: "user", text: "status", at: 2 }, { env });
@@ -28,7 +28,7 @@ describe("system-agent transcript store", () => {
   });
 
   it("prunes the oldest rows beyond the rolling retention limit", async () => {
-    await withTempDir({ prefix: "openclaw-system-agent-transcript-prune-" }, async (stateDir) => {
+    await withTempDir({ prefix: "grokbot-system-agent-transcript-prune-" }, async (stateDir) => {
       const env = { ...process.env, OPENCLAW_STATE_DIR: stateDir };
       for (let index = 0; index <= SYSTEM_AGENT_TRANSCRIPT_MAX_ENTRIES; index += 1) {
         appendTranscriptTurn({ role: "user", text: `turn-${index}`, at: index }, { env });
@@ -42,7 +42,7 @@ describe("system-agent transcript store", () => {
   });
 
   it("hides reset markers and seeds only turns after a marker within the tail window", async () => {
-    await withTempDir({ prefix: "openclaw-system-agent-transcript-reset-" }, async (stateDir) => {
+    await withTempDir({ prefix: "grokbot-system-agent-transcript-reset-" }, async (stateDir) => {
       const env = { ...process.env, OPENCLAW_STATE_DIR: stateDir };
       appendTranscriptTurn({ role: "user", text: "before reset", at: 1 }, { env });
       appendTranscriptTurn({ role: "assistant", text: "old answer", at: 2 }, { env });
@@ -66,7 +66,7 @@ describe("system-agent transcript store", () => {
 
   it("does not let a reset marker older than the requested tail truncate newer turns", async () => {
     await withTempDir(
-      { prefix: "openclaw-system-agent-transcript-old-reset-" },
+      { prefix: "grokbot-system-agent-transcript-old-reset-" },
       async (stateDir) => {
         const env = { ...process.env, OPENCLAW_STATE_DIR: stateDir };
         appendTranscriptTurn({ role: "user", text: "before reset", at: 1 }, { env });

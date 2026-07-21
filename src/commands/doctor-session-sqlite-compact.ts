@@ -7,7 +7,7 @@ import {
   ensureOpenClawAgentDatabasePermissions,
   isOpenClawAgentDatabaseOpen,
   migrateOpenClawAgentDatabaseForMaintenance,
-} from "../state/openclaw-agent-db.js";
+} from "../state/grokbot-agent-db.js";
 import { resolveTargetSqlitePath } from "./doctor-session-sqlite-readers.js";
 import type { DoctorSessionSqliteCompactReport } from "./doctor-session-sqlite-types.js";
 import { compactDoctorSqliteFile } from "./doctor-sqlite-compact.js";
@@ -34,17 +34,17 @@ export function compactDoctorSessionSqliteTarget(
     };
   }
   if (!stat.isFile()) {
-    throw new Error(`OpenClaw agent database is not a regular file: ${sqlitePath}`);
+    throw new Error(`GrokBot agent database is not a regular file: ${sqlitePath}`);
   }
   if (isOpenClawAgentDatabaseOpen(sqlitePath)) {
     throw new Error(
-      `OpenClaw agent database ${sqlitePath} is already open in this process. Stop OpenClaw and retry.`,
+      `GrokBot agent database ${sqlitePath} is already open in this process. Stop GrokBot and retry.`,
     );
   }
   const requireQuarantineCleared = () => {
     if (!clearOpenClawAgentDatabaseOpenFailure(sqlitePath, { env: options.env })) {
       throw new Error(
-        `OpenClaw agent database ${sqlitePath} was repaired, but its persisted quarantine record could not be cleared. Rerun openclaw doctor --fix so the database is not refused again.`,
+        `GrokBot agent database ${sqlitePath} was repaired, but its persisted quarantine record could not be cleared. Rerun grokbot doctor --fix so the database is not refused again.`,
       );
     }
   };

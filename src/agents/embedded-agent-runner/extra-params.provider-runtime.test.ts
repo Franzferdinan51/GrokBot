@@ -96,8 +96,8 @@ describe("extra-params: provider runtime handoff", () => {
     });
   });
 
-  it("keeps unsupported upstream transport values out of OpenClaw runtime hooks", () => {
-    // Upstream transports can name modes OpenClaw does not own; unresolved values
+  it("keeps unsupported upstream transport values out of GrokBot runtime hooks", () => {
+    // Upstream transports can name modes GrokBot does not own; unresolved values
     // must be filtered before plugin runtime hooks receive them.
     const settingsManager = {
       getGlobalSettings: () => ({}),

@@ -4,7 +4,7 @@
  * auto-review, and follow-up execution paths.
  */
 import crypto from "node:crypto";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import type { ExecAllowlistEntry } from "../infra/exec-approvals.types.js";
 import { MAX_SAFE_TIMEOUT_DELAY_MS } from "../utils/timer-delay.js";
@@ -1779,10 +1779,10 @@ describe("executeNodeHostCommand", () => {
 
   it("requires human approval when prepared shell payload has multiple commands", async () => {
     const chainPlan = {
-      argv: ["/bin/sh", "-lc", "openclaw status; id"],
+      argv: ["/bin/sh", "-lc", "grokbot status; id"],
       cwd: "/tmp/work",
-      commandText: `/bin/sh -lc "openclaw status; id"`,
-      commandPreview: "openclaw status; id",
+      commandText: `/bin/sh -lc "grokbot status; id"`,
+      commandPreview: "grokbot status; id",
       agentId: "prepared-agent",
       sessionKey: "prepared-session",
     };
@@ -1800,15 +1800,15 @@ describe("executeNodeHostCommand", () => {
           ? [
               {
                 resolution: null,
-                argv: ["/bin/sh", "-lc", "openclaw status; id"],
-                raw: `/bin/sh -lc "openclaw status; id"`,
+                argv: ["/bin/sh", "-lc", "grokbot status; id"],
+                raw: `/bin/sh -lc "grokbot status; id"`,
               },
             ]
           : [
               {
                 resolution: null,
-                argv: ["openclaw", "status"],
-                raw: "openclaw status",
+                argv: ["grokbot", "status"],
+                raw: "grokbot status",
               },
               {
                 resolution: null,
@@ -1832,7 +1832,7 @@ describe("executeNodeHostCommand", () => {
     });
 
     const result = await executeNodeHostCommand({
-      command: "openclaw status; id",
+      command: "grokbot status; id",
       workdir: "/tmp/work",
       env: {},
       security: "allowlist",
@@ -1853,10 +1853,10 @@ describe("executeNodeHostCommand", () => {
 
   it("does not treat read-only suppression inspections as wrapper writes", async () => {
     const wrapperPlan = {
-      argv: ["/bin/sh", "-lc", "openclaw config get security.audit.suppressions"],
+      argv: ["/bin/sh", "-lc", "grokbot config get security.audit.suppressions"],
       cwd: "/tmp/work",
-      commandText: `/bin/sh -lc "openclaw config get security.audit.suppressions"`,
-      commandPreview: "openclaw config get security.audit.suppressions",
+      commandText: `/bin/sh -lc "grokbot config get security.audit.suppressions"`,
+      commandPreview: "grokbot config get security.audit.suppressions",
       agentId: "prepared-agent",
       sessionKey: "prepared-session",
     };
@@ -1874,13 +1874,13 @@ describe("executeNodeHostCommand", () => {
           command.startsWith("/bin/sh")
             ? {
                 resolution: null,
-                argv: ["/bin/sh", "-lc", "openclaw config get security.audit.suppressions"],
-                raw: `/bin/sh -lc "openclaw config get security.audit.suppressions"`,
+                argv: ["/bin/sh", "-lc", "grokbot config get security.audit.suppressions"],
+                raw: `/bin/sh -lc "grokbot config get security.audit.suppressions"`,
               }
             : {
                 resolution: null,
-                argv: ["openclaw", "config", "get", "security.audit.suppressions"],
-                raw: "openclaw config get security.audit.suppressions",
+                argv: ["grokbot", "config", "get", "security.audit.suppressions"],
+                raw: "grokbot config get security.audit.suppressions",
               },
         ],
         segmentAllowlistEntries: [],
@@ -1898,7 +1898,7 @@ describe("executeNodeHostCommand", () => {
     });
 
     const result = await executeNodeHostCommand({
-      command: "openclaw config get security.audit.suppressions",
+      command: "grokbot config get security.audit.suppressions",
       workdir: "/tmp/work",
       env: {},
       security: "allowlist",
@@ -2294,7 +2294,7 @@ describe("executeNodeHostCommand", () => {
     });
 
     const result = await executeNodeHostCommand({
-      command: "openclaw config set security.audit.suppressions '[]'",
+      command: "grokbot config set security.audit.suppressions '[]'",
       workdir: "/tmp/work",
       env: {},
       security: "allowlist",

@@ -1,5 +1,5 @@
-import type { OpenClawPluginApi, OpenClawPluginService } from "openclaw/plugin-sdk/plugin-entry";
-import { registerSandboxBackend } from "openclaw/plugin-sdk/sandbox";
+import type { OpenClawPluginApi, OpenClawPluginService } from "grokbot/plugin-sdk/plugin-entry";
+import { registerSandboxBackend } from "grokbot/plugin-sdk/sandbox";
 import { resolveMxcBinaryPath } from "./binary-resolver.js";
 import { resolveConfig } from "./config.js";
 import { createMxcSandboxBackendFactory } from "./mxc-backend-factory.js";

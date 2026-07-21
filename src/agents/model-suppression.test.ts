@@ -118,10 +118,10 @@ describe("model suppression", () => {
       .mockReturnValueOnce(firstResolver)
       .mockReturnValueOnce(secondResolver);
 
-    process.env.OPENCLAW_BUNDLED_PLUGINS_DIR = "/tmp/openclaw-bundled-a";
+    process.env.OPENCLAW_BUNDLED_PLUGINS_DIR = "/tmp/grokbot-bundled-a";
     expect(shouldSuppressBuiltInModel({ provider: "openai", id: "gpt-5.3", config })).toBe(false);
 
-    process.env.OPENCLAW_BUNDLED_PLUGINS_DIR = "/tmp/openclaw-bundled-b";
+    process.env.OPENCLAW_BUNDLED_PLUGINS_DIR = "/tmp/grokbot-bundled-b";
     expect(shouldSuppressBuiltInModel({ provider: "openai", id: "gpt-5.3", config })).toBe(false);
 
     expect(mocks.buildManifestBuiltInModelSuppressionResolver).toHaveBeenCalledTimes(2);
@@ -132,14 +132,14 @@ describe("model suppression", () => {
   it("refreshes manifest suppression resolver when config plugin inputs mutate in place", () => {
     const firstResolver = vi.fn().mockReturnValue(undefined);
     const secondResolver = vi.fn().mockReturnValue(undefined);
-    const config = { plugins: { load: { paths: ["/tmp/openclaw-plugin-a"] } } };
+    const config = { plugins: { load: { paths: ["/tmp/grokbot-plugin-a"] } } };
     mocks.buildManifestBuiltInModelSuppressionResolver
       .mockReturnValueOnce(firstResolver)
       .mockReturnValueOnce(secondResolver);
 
     expect(shouldSuppressBuiltInModel({ provider: "openai", id: "gpt-5.3", config })).toBe(false);
 
-    config.plugins.load.paths = ["/tmp/openclaw-plugin-b"];
+    config.plugins.load.paths = ["/tmp/grokbot-plugin-b"];
     expect(shouldSuppressBuiltInModel({ provider: "openai", id: "gpt-5.3", config })).toBe(false);
 
     expect(mocks.buildManifestBuiltInModelSuppressionResolver).toHaveBeenCalledTimes(2);

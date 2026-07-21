@@ -1,4 +1,4 @@
-/** Thin regular-agent client for the OpenClaw system agent. */
+/** Thin regular-agent client for the GrokBot system agent. */
 import { createHash, randomUUID } from "node:crypto";
 import { Type } from "typebox";
 import { SYSTEM_AGENT_ID } from "../../system-agent/agent-id.js";
@@ -7,7 +7,7 @@ import { callInProcessGatewayTool, type InProcessGatewayCaller } from "./in-proc
 
 const OpenClawDelegateSchema = Type.Object({
   message: Type.String({ description: "What system must do." }),
-  sessionId: Type.Optional(Type.String({ description: "Continue prior OpenClaw talk." })),
+  sessionId: Type.Optional(Type.String({ description: "Continue prior GrokBot talk." })),
 });
 
 const OpenClawDelegateOutputSchema = Type.Object(
@@ -45,8 +45,8 @@ function createOpenClawDelegateTool(options?: {
 }): AnyAgentTool {
   const defaultSessionId = stableDelegationSessionId(options?.agentSessionKey);
   return {
-    name: "openclaw",
-    label: "OpenClaw",
+    name: "grokbot",
+    label: "GrokBot",
     description:
       "Ask system expert. Config, channels, plugins, agents, models/providers, updates. Writes need human approval.",
     parameters: OpenClawDelegateSchema,
@@ -56,7 +56,7 @@ function createOpenClawDelegateTool(options?: {
       const message = readStringParam(params, "message", { required: true });
       const sessionId = readStringParam(params, "sessionId") ?? defaultSessionId;
       const callGateway = options?.callGateway ?? callInProcessGatewayTool;
-      const result = await callGateway<OpenClawDelegateResult>("openclaw.chat", {
+      const result = await callGateway<OpenClawDelegateResult>("grokbot.chat", {
         sessionId,
         message,
         delegation: {

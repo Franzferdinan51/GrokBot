@@ -4,7 +4,7 @@
  * compatible with Codex's MCP config shape.
  */
 import crypto from "node:crypto";
-import { normalizeOptionalLowercaseString } from "@openclaw/normalization-core/string-coerce";
+import { normalizeOptionalLowercaseString } from "@grokbot/normalization-core/string-coerce";
 import {
   loadEnabledBundleMcpConfig,
   type BundleMcpConfig,
@@ -26,7 +26,7 @@ import { partitionMcpServersByConnectionScope } from "./mcp-connection-resolver.
 
 function isOpenClawLoopbackMcpServer(name: string, server: BundleMcpServerConfig): boolean {
   return (
-    name === "openclaw" &&
+    name === "grokbot" &&
     typeof server.url === "string" &&
     /^https?:\/\/(?:127\.0\.0\.1|localhost):\d+\/mcp(?:[?#].*)?$/.test(server.url)
   );
@@ -118,7 +118,7 @@ export function normalizeCodexMcpServerConfig(
   if (defaultToolsApprovalMode) {
     next.default_tools_approval_mode = defaultToolsApprovalMode;
   } else if (isOpenClawLoopbackMcpServer(name, server)) {
-    // OpenClaw's loopback MCP exposes local tools; Codex should ask for approval
+    // GrokBot's loopback MCP exposes local tools; Codex should ask for approval
     // unless plugin metadata explicitly selected another approval mode.
     next.default_tools_approval_mode = "approve";
   }

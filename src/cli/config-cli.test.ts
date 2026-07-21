@@ -13,7 +13,7 @@ import { createCliRuntimeCapture, mockRuntimeModule } from "./test-runtime-captu
 
 /**
  * Test for issue #6070:
- * `openclaw config set/unset` must update snapshot.resolved (user config after $include/${ENV},
+ * `grokbot config set/unset` must update snapshot.resolved (user config after $include/${ENV},
  * but before runtime defaults), so runtime defaults don't leak into the written config.
  */
 
@@ -127,7 +127,7 @@ function buildSnapshot(params: {
   config: OpenClawConfig;
 }): ConfigFileSnapshot {
   return {
-    path: "/tmp/openclaw.json",
+    path: "/tmp/grokbot.json",
     exists: true,
     raw: JSON.stringify(params.resolved),
     parsed: params.resolved,
@@ -183,7 +183,7 @@ function createPluginManifestRecord(
     channels: [],
     cliBackends: [],
     hooks: [],
-    manifestPath: `/tmp/${overrides.id}/openclaw.plugin.json`,
+    manifestPath: `/tmp/${overrides.id}/grokbot.plugin.json`,
     origin: "bundled",
     providers: [],
     rootDir: `/tmp/${overrides.id}`,
@@ -300,7 +300,7 @@ function setExternalFeishuSchema() {
       diagnostics: [],
       plugins: [
         createPluginManifestRecord({
-          id: "openclaw-lark",
+          id: "grokbot-lark",
           origin: "global",
           channels: ["feishu"],
           channelConfigs: {
@@ -335,7 +335,7 @@ function makeInvalidSnapshot(params: {
 }): ConfigFileSnapshot {
   const parsed = params.parsed ?? {};
   return {
-    path: params.path ?? "/tmp/custom-openclaw.json",
+    path: params.path ?? "/tmp/custom-grokbot.json",
     exists: true,
     raw: params.raw ?? "{}",
     parsed,
@@ -702,7 +702,7 @@ describe("config cli", () => {
         refsChecked: 1,
         refsTotal: 1,
         errors: [
-          'Cannot set model reference "missing/nope" at agents.defaults.model.primary: Unknown model: missing/nope. Run openclaw models list to list available models.',
+          'Cannot set model reference "missing/nope" at agents.defaults.model.primary: Unknown model: missing/nope. Run grokbot models list to list available models.',
         ],
       });
 
@@ -712,7 +712,7 @@ describe("config cli", () => {
 
       expect(mockWriteConfigFile).not.toHaveBeenCalled();
       expectErrorIncludes('Cannot set model reference "missing/nope"');
-      expectErrorIncludes("openclaw models list");
+      expectErrorIncludes("grokbot models list");
     });
 
     it("preserves an authored env placeholder after model validation", async () => {
@@ -752,7 +752,7 @@ describe("config cli", () => {
         refsChecked: 1,
         refsTotal: 1,
         errors: [
-          'Cannot set model reference "missing/nope" at agents.defaults.model.primary: Unknown model: missing/nope. Run openclaw models list to list available models.',
+          'Cannot set model reference "missing/nope" at agents.defaults.model.primary: Unknown model: missing/nope. Run grokbot models list to list available models.',
         ],
       });
 
@@ -906,16 +906,16 @@ describe("config cli", () => {
         runConfigCommand([
           "config",
           "set",
-          'plugins.installs["openclaw-web-search"].spec',
-          '"@ollama/openclaw-web-search@0.2.2"',
+          'plugins.installs["grokbot-web-search"].spec',
+          '"@ollama/grokbot-web-search@0.2.2"',
           "--strict-json",
           "--dry-run",
         ]),
       ).rejects.toThrow(ExitError);
 
       expect(mockWriteConfigFile).not.toHaveBeenCalled();
-      expectErrorIncludes("openclaw plugins install <spec>");
-      expectErrorIncludes("openclaw plugins update <plugin-id>");
+      expectErrorIncludes("grokbot plugins install <spec>");
+      expectErrorIncludes("grokbot plugins update <plugin-id>");
     });
 
     it("rejects auto-managed meta.lastTouchedVersion config updates (#80849)", async () => {
@@ -1263,7 +1263,7 @@ describe("config cli", () => {
 
     it("prints warnings while still reporting a valid config", async () => {
       setSnapshotOnce({
-        path: "/tmp/openclaw.json",
+        path: "/tmp/grokbot.json",
         exists: true,
         raw: "{}",
         parsed: {},
@@ -1336,7 +1336,7 @@ describe("config cli", () => {
       expectErrorIncludes("This is a plugin packaging issue, not a local config problem.");
       expectErrorIncludes("disable/uninstall the plugin");
       expect(mockError.mock.calls.map((call) => String(call[0])).join("\n")).not.toContain(
-        "openclaw doctor --fix",
+        "grokbot doctor --fix",
       );
       expect(mockLog).not.toHaveBeenCalled();
     });
@@ -1363,7 +1363,7 @@ describe("config cli", () => {
         makeInvalidSnapshot({
           raw,
           parsed,
-          path: "/tmp/openclaw.json",
+          path: "/tmp/grokbot.json",
           issues: [
             {
               path: "agents.list.3.tools.profile",
@@ -1378,7 +1378,7 @@ describe("config cli", () => {
       await expect(runConfigCommand(["config", "validate"])).rejects.toThrow(ExitError);
 
       expectErrorIncludes(
-        'openclaw.json:7 — agents.list[3].tools.profile: Invalid input (allowed: "minimal", "coding", "messaging", "full"), got: "none"',
+        'grokbot.json:7 — agents.list[3].tools.profile: Invalid input (allowed: "minimal", "coding", "messaging", "full"), got: "none"',
       );
     });
 
@@ -1391,7 +1391,7 @@ describe("config cli", () => {
 
       const payload = await runValidateJsonAndGetPayload();
       expect(payload.valid).toBe(false);
-      expect(payload.path).toBe("/tmp/custom-openclaw.json");
+      expect(payload.path).toBe("/tmp/custom-grokbot.json");
       expect(payload.issues).toEqual([{ path: "gateway.bind", message: "Invalid enum value" }]);
       expect(mockError).not.toHaveBeenCalled();
     });
@@ -1412,7 +1412,7 @@ describe("config cli", () => {
 
       const payload = await runValidateJsonAndGetPayload();
       expect(payload.valid).toBe(false);
-      expect(payload.path).toBe("/tmp/custom-openclaw.json");
+      expect(payload.path).toBe("/tmp/custom-grokbot.json");
       expect(payload.issues).toEqual([
         {
           path: "update.channel",
@@ -1425,7 +1425,7 @@ describe("config cli", () => {
 
     it("prints file-not-found and exits 1 when config file is missing", async () => {
       setSnapshotOnce({
-        path: "/tmp/openclaw.json",
+        path: "/tmp/grokbot.json",
         exists: false,
         raw: null,
         parsed: {},
@@ -1875,13 +1875,13 @@ describe("config cli", () => {
         },
       };
       setSnapshot(resolved, resolved);
-      const pathname = writeTempJson5File("openclaw-config-plugin-channel-schema", {
+      const pathname = writeTempJson5File("grokbot-config-plugin-channel-schema", {
         channels: {
           feishu: {
             appId: "app-id",
             appSecret: "secret",
             replyMode: "thread",
-            footer: "OpenClaw",
+            footer: "GrokBot",
           },
         },
       });
@@ -2089,7 +2089,7 @@ describe("config cli", () => {
     it("rejects --allow-exec without --dry-run", async () => {
       const nonexistentBatchPath = path.join(
         os.tmpdir(),
-        `openclaw-config-batch-nonexistent-${Date.now()}-${Math.random().toString(16).slice(2)}.json`,
+        `grokbot-config-batch-nonexistent-${Date.now()}-${Math.random().toString(16).slice(2)}.json`,
       );
       await expect(
         runConfigCommand(["config", "set", "--batch-file", nonexistentBatchPath, "--allow-exec"]),
@@ -2240,7 +2240,7 @@ describe("config cli", () => {
 
       const pathname = path.join(
         os.tmpdir(),
-        `openclaw-config-batch-${Date.now()}-${Math.random().toString(16).slice(2)}.json`,
+        `grokbot-config-batch-${Date.now()}-${Math.random().toString(16).slice(2)}.json`,
       );
       fs.writeFileSync(pathname, '[{"path":"gateway.auth.mode","value":"token"}]', "utf8");
       try {
@@ -2275,7 +2275,7 @@ describe("config cli", () => {
 
       const pathname = path.join(
         os.tmpdir(),
-        `openclaw-config-memory-${Date.now()}-${Math.random().toString(16).slice(2)}.json`,
+        `grokbot-config-memory-${Date.now()}-${Math.random().toString(16).slice(2)}.json`,
       );
       fs.writeFileSync(
         pathname,
@@ -2308,7 +2308,7 @@ describe("config cli", () => {
     it("rejects malformed batch-file payloads", async () => {
       const pathname = path.join(
         os.tmpdir(),
-        `openclaw-config-batch-invalid-${Date.now()}-${Math.random().toString(16).slice(2)}.json`,
+        `grokbot-config-batch-invalid-${Date.now()}-${Math.random().toString(16).slice(2)}.json`,
       );
       fs.writeFileSync(pathname, '{"path":"gateway.auth.mode","value":"token"}', "utf8");
       try {
@@ -2341,7 +2341,7 @@ describe("config cli", () => {
 
       const pathname = path.join(
         os.tmpdir(),
-        `openclaw-config-patch-${Date.now()}-${Math.random().toString(16).slice(2)}.json5`,
+        `grokbot-config-patch-${Date.now()}-${Math.random().toString(16).slice(2)}.json5`,
       );
       fs.writeFileSync(
         pathname,
@@ -2412,7 +2412,7 @@ describe("config cli", () => {
       } as unknown as OpenClawConfig;
       setSnapshot(resolved, resolved);
 
-      const pathname = writeTempJson5File("openclaw-config-patch-empty-object", {
+      const pathname = writeTempJson5File("grokbot-config-patch-empty-object", {
         agents: {
           defaults: {
             models: {
@@ -2447,7 +2447,7 @@ describe("config cli", () => {
       } as unknown as OpenClawConfig;
       setSnapshot(resolved, resolved);
 
-      const pathname = writeTempJson5File("openclaw-config-patch-empty-merge", {
+      const pathname = writeTempJson5File("grokbot-config-patch-empty-merge", {
         channels: {
           slack: {},
         },
@@ -2475,7 +2475,7 @@ describe("config cli", () => {
       } as unknown as OpenClawConfig;
       setSnapshot(resolved, resolved);
 
-      const pathname = writeTempJson5File("openclaw-config-patch-numeric-object-key", {
+      const pathname = writeTempJson5File("grokbot-config-patch-numeric-object-key", {
         channels: {
           discord: {
             guilds: {
@@ -2514,7 +2514,7 @@ describe("config cli", () => {
 
       const pathname = path.join(
         os.tmpdir(),
-        `openclaw-config-patch-dry-${Date.now()}-${Math.random().toString(16).slice(2)}.json5`,
+        `grokbot-config-patch-dry-${Date.now()}-${Math.random().toString(16).slice(2)}.json5`,
       );
       fs.writeFileSync(
         pathname,
@@ -2541,15 +2541,15 @@ describe("config cli", () => {
     });
 
     it("emits the resolved config path in config patch JSON", async () => {
-      const home = path.join(os.tmpdir(), "openclaw-home-token-config-patch");
-      const configPath = path.join(home, ".openclaw", "openclaw.json");
+      const home = path.join(os.tmpdir(), "grokbot-home-token-config-patch");
+      const configPath = path.join(home, ".grokbot", "grokbot.json");
       const resolved: OpenClawConfig = { gateway: { port: 18789 } };
       const snapshot = buildSnapshot({ resolved, config: resolved });
       snapshot.path = configPath;
       mockReadConfigFileSnapshot.mockResolvedValueOnce(snapshot);
       vi.stubEnv("OPENCLAW_HOME", home);
 
-      const patch = writeTempJson5File("openclaw-config-patch-resolved-path", {
+      const patch = writeTempJson5File("grokbot-config-patch-resolved-path", {
         gateway: { port: 18790 },
       });
       try {
@@ -2578,7 +2578,7 @@ describe("config cli", () => {
     it("rejects --file patches above the config mutation limit", async () => {
       const pathname = path.join(
         os.tmpdir(),
-        `openclaw-config-patch-oversized-${Date.now()}-${Math.random().toString(16).slice(2)}.json5`,
+        `grokbot-config-patch-oversized-${Date.now()}-${Math.random().toString(16).slice(2)}.json5`,
       );
       fs.writeFileSync(pathname, " ".repeat(8 * 1024 * 1024 + 1), "utf8");
       try {
@@ -2595,7 +2595,7 @@ describe("config cli", () => {
 
     it("dry-runs pluginIntegration provider patches against manifest integration metadata", async () => {
       const pluginId = "secret-provider-proof";
-      const rootDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-config-plugin-provider-"));
+      const rootDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-config-plugin-provider-"));
       try {
         writeSecurePluginEntrypoint(path.join(rootDir, "index.js"), "export default {};\n");
         writeSecurePluginEntrypoint(path.join(rootDir, "resolve.mjs"), "process.stdin.resume();\n");
@@ -2614,7 +2614,7 @@ describe("config cli", () => {
                 origin: "bundled",
                 rootDir,
                 source: path.join(rootDir, "index.js"),
-                manifestPath: path.join(rootDir, "openclaw.plugin.json"),
+                manifestPath: path.join(rootDir, "grokbot.plugin.json"),
                 secretProviderIntegrations: {
                   vault: {
                     source: "exec",
@@ -2628,7 +2628,7 @@ describe("config cli", () => {
         );
 
         setSnapshot(resolved, resolved);
-        const validPatch = writeTempJson5File("openclaw-config-plugin-provider-valid", {
+        const validPatch = writeTempJson5File("grokbot-config-plugin-provider-valid", {
           secrets: {
             providers: {
               team: {
@@ -2654,7 +2654,7 @@ describe("config cli", () => {
         expect(mockWriteConfigFile).not.toHaveBeenCalled();
 
         setSnapshot(resolved, resolved);
-        const invalidPatch = writeTempJson5File("openclaw-config-plugin-provider-invalid", {
+        const invalidPatch = writeTempJson5File("grokbot-config-plugin-provider-invalid", {
           secrets: {
             providers: {
               team: {
@@ -2716,7 +2716,7 @@ describe("config cli", () => {
       } as unknown as OpenClawConfig;
       setSnapshot(resolved, resolved);
 
-      const patch = writeTempJson5File("openclaw-config-plugin-disable", {
+      const patch = writeTempJson5File("grokbot-config-plugin-disable", {
         plugins: {
           entries: {
             [pluginId]: { enabled: false },
@@ -2749,7 +2749,7 @@ describe("config cli", () => {
       } as unknown as OpenClawConfig;
       setSnapshot(resolved, resolved);
 
-      const patch = writeTempJson5File("openclaw-config-plugin-provider-ref", {
+      const patch = writeTempJson5File("grokbot-config-plugin-provider-ref", {
         gateway: {
           auth: {
             token: { source: "exec", provider: "team", id: "gateway/token" },
@@ -2784,7 +2784,7 @@ describe("config cli", () => {
 
       const pathname = path.join(
         os.tmpdir(),
-        `openclaw-config-patch-ref-schema-${Date.now()}-${Math.random()
+        `grokbot-config-patch-ref-schema-${Date.now()}-${Math.random()
           .toString(16)
           .slice(2)}.json5`,
       );
@@ -2830,7 +2830,7 @@ describe("config cli", () => {
 
       const pathname = path.join(
         os.tmpdir(),
-        `openclaw-config-patch-nested-ref-${Date.now()}-${Math.random()
+        `grokbot-config-patch-nested-ref-${Date.now()}-${Math.random()
           .toString(16)
           .slice(2)}.json5`,
       );
@@ -2898,7 +2898,7 @@ describe("config cli", () => {
 
       const pathname = path.join(
         os.tmpdir(),
-        `openclaw-config-patch-replace-${Date.now()}-${Math.random().toString(16).slice(2)}.json5`,
+        `grokbot-config-patch-replace-${Date.now()}-${Math.random().toString(16).slice(2)}.json5`,
       );
       fs.writeFileSync(
         pathname,
@@ -2949,7 +2949,7 @@ describe("config cli", () => {
     it("rejects unused config patch replace paths", async () => {
       const pathname = path.join(
         os.tmpdir(),
-        `openclaw-config-patch-unused-replace-${Date.now()}-${Math.random()
+        `grokbot-config-patch-unused-replace-${Date.now()}-${Math.random()
           .toString(16)
           .slice(2)}.json5`,
       );
@@ -3587,7 +3587,7 @@ describe("config cli", () => {
       await runConfigCommand(["config", "unset", "tools.alsoAllow", "--dry-run"]);
 
       expect(mockWriteConfigFile).not.toHaveBeenCalled();
-      expectLogIncludes("Dry run successful: 1 update(s) validated against /tmp/openclaw.json.");
+      expectLogIncludes("Dry run successful: 1 update(s) validated against /tmp/grokbot.json.");
       expect(mockReadConfigFileSnapshot).toHaveBeenCalledTimes(2);
     });
 
@@ -3607,7 +3607,7 @@ describe("config cli", () => {
         refsChecked: 1,
         refsTotal: 1,
         errors: [
-          'Cannot set model reference "backup" at agents.defaults.model.fallbacks.0: Unknown model: openai/backup. Run openclaw models list to list available models.',
+          'Cannot set model reference "backup" at agents.defaults.model.fallbacks.0: Unknown model: openai/backup. Run grokbot models list to list available models.',
         ],
       });
 
@@ -3644,7 +3644,7 @@ describe("config cli", () => {
         refsChecked: 1,
         refsTotal: 1,
         errors: [
-          'Cannot set model reference "backup" at agents.defaults.model.fallbacks.0: Unknown model: openai/backup. Run openclaw models list to list available models.',
+          'Cannot set model reference "backup" at agents.defaults.model.fallbacks.0: Unknown model: openai/backup. Run grokbot models list to list available models.',
         ],
       });
 
@@ -3767,9 +3767,9 @@ describe("config cli", () => {
 
       expectErrorIncludes(`Config path not found in authored config: ${aliasPath}.`);
       expectErrorIncludes("It only exists after runtime defaults are applied");
-      expectErrorIncludes("openclaw config set <path> <value>");
+      expectErrorIncludes("grokbot config set <path> <value>");
       expect(mockError.mock.calls.map((call) => String(call[0])).join("\n")).not.toContain(
-        "Run openclaw config get <path>",
+        "Run grokbot config get <path>",
       );
 
       setSnapshot(resolved, runtimeMerged);
@@ -3856,7 +3856,7 @@ describe("config cli", () => {
         provider: "default",
         id: "WEB_SEARCH_API_KEY",
       });
-      expectLogIncludes("Dry run successful: 1 update(s) validated against /tmp/openclaw.json.");
+      expectLogIncludes("Dry run successful: 1 update(s) validated against /tmp/grokbot.json.");
     });
 
     it("rejects config unset --json without --dry-run", async () => {
@@ -4052,7 +4052,7 @@ describe("config cli", () => {
       const resolved: OpenClawConfig = {
         plugins: {
           load: {
-            paths: ["/tmp/openclaw-plugins-a"],
+            paths: ["/tmp/grokbot-plugins-a"],
           },
           entries: {
             canvas: { enabled: true },
@@ -4065,7 +4065,7 @@ describe("config cli", () => {
         "config",
         "set",
         "plugins",
-        '{"load":{"paths":["/tmp/openclaw-plugins-b"]},"entries":{"canvas":{"enabled":true}}}',
+        '{"load":{"paths":["/tmp/grokbot-plugins-b"]},"entries":{"canvas":{"enabled":true}}}',
         "--strict-json",
         "--replace",
       ]);
@@ -4099,7 +4099,7 @@ describe("config cli", () => {
       const resolved: OpenClawConfig = {
         plugins: {
           load: {
-            paths: ["/tmp/openclaw-plugins-a"],
+            paths: ["/tmp/grokbot-plugins-a"],
           },
           entries: {
             canvas: { enabled: true },
@@ -4165,10 +4165,10 @@ describe("config cli", () => {
 
   describe("config file", () => {
     it("resolves the active path without initializing state", async () => {
-      const home = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-config-file-"));
+      const home = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-config-file-"));
       const profile = "configfile-probe";
-      const stateDir = path.join(home, `.openclaw-${profile}`);
-      const configPath = path.join(stateDir, "openclaw.json");
+      const stateDir = path.join(home, `.grokbot-${profile}`);
+      const configPath = path.join(stateDir, "grokbot.json");
       vi.stubEnv("OPENCLAW_HOME", home);
       vi.stubEnv("OPENCLAW_CONFIG_PATH", "");
       vi.stubEnv("OPENCLAW_PROFILE", "");
@@ -4177,7 +4177,7 @@ describe("config cli", () => {
       applyCliProfileEnv({ profile });
       mockReadConfigFileSnapshot.mockImplementationOnce(async () => {
         fs.mkdirSync(path.join(stateDir, "state"), { recursive: true });
-        fs.writeFileSync(path.join(stateDir, "state", "openclaw.sqlite"), "initialized");
+        fs.writeFileSync(path.join(stateDir, "state", "grokbot.sqlite"), "initialized");
         const snapshot = buildSnapshot({ resolved: {}, config: {} });
         snapshot.path = configPath;
         return snapshot;
@@ -4192,7 +4192,7 @@ describe("config cli", () => {
         expect(output).not.toContain("~");
         expect(mockReadConfigFileSnapshot).not.toHaveBeenCalled();
         expect(fs.existsSync(stateDir)).toBe(false);
-        expect(fs.existsSync(path.join(stateDir, "state", "openclaw.sqlite"))).toBe(false);
+        expect(fs.existsSync(path.join(stateDir, "state", "grokbot.sqlite"))).toBe(false);
       } finally {
         vi.unstubAllEnvs();
         fs.rmSync(home, { recursive: true, force: true });

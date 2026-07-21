@@ -1,5 +1,5 @@
 ---
-summary: "Adds Moonshot model provider support to OpenClaw."
+summary: "Adds Moonshot model provider support to GrokBot."
 read_when:
   - You are installing, configuring, or auditing the moonshot plugin
 title: "Moonshot plugin"
@@ -7,12 +7,12 @@ title: "Moonshot plugin"
 
 # Moonshot plugin
 
-Adds Moonshot model provider support to OpenClaw.
+Adds Moonshot model provider support to GrokBot.
 
 ## Distribution
 
-- Package: `@openclaw/moonshot-provider`
-- Install route: npm; ClawHub: `clawhub:@openclaw/moonshot-provider`
+- Package: `@grokbot/moonshot-provider`
+- Install route: npm; ClawHub: `clawhub:@grokbot/moonshot-provider`
 
 ## Surface
 

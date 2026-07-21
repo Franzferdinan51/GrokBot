@@ -1,6 +1,6 @@
 /** Shared test harness for CLI runner bundle-MCP config preparation tests. */
 import { afterAll, beforeAll } from "vitest";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import {
   createBundleMcpTempHarness,
   createBundleProbePlugin,
@@ -44,9 +44,9 @@ export function setupCliBundleMcpTestHarness(): void {
   beforeAll(async () => {
     // Use an empty bundled-dir override so only temp fixture plugins participate.
     envSnapshot = captureEnv(["OPENCLAW_BUNDLED_PLUGINS_DIR"]);
-    bundleProbeHomeDir = await tempHarness.createTempDir("openclaw-cli-bundle-mcp-home-");
-    bundleProbeWorkspaceDir = await tempHarness.createTempDir("openclaw-cli-bundle-mcp-workspace-");
-    const emptyBundledDir = await tempHarness.createTempDir("openclaw-cli-bundle-mcp-bundled-");
+    bundleProbeHomeDir = await tempHarness.createTempDir("grokbot-cli-bundle-mcp-home-");
+    bundleProbeWorkspaceDir = await tempHarness.createTempDir("grokbot-cli-bundle-mcp-workspace-");
+    const emptyBundledDir = await tempHarness.createTempDir("grokbot-cli-bundle-mcp-bundled-");
     setTestEnvValue("OPENCLAW_BUNDLED_PLUGINS_DIR", emptyBundledDir);
     ({ serverPath: bundleProbeServerPath } = await createBundleProbePlugin(bundleProbeHomeDir));
   });

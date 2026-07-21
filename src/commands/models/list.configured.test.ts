@@ -121,14 +121,14 @@ describe("resolveConfiguredEntries", () => {
   });
 
   it("recovers bundled source aliases when stale dist metadata omits them", () => {
-    const root = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-model-alias-source-"));
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-model-alias-source-"));
     try {
       const distPluginRoot = path.join(root, "dist", "extensions", "zai");
       const sourcePluginRoot = path.join(root, "extensions", "zai");
       fs.mkdirSync(distPluginRoot, { recursive: true });
       fs.mkdirSync(sourcePluginRoot, { recursive: true });
       fs.writeFileSync(
-        path.join(sourcePluginRoot, "openclaw.plugin.json"),
+        path.join(sourcePluginRoot, "grokbot.plugin.json"),
         JSON.stringify({
           id: "zai",
           configSchema: { type: "object" },
@@ -166,7 +166,7 @@ describe("resolveConfiguredEntries", () => {
                 skills: [],
                 hooks: [],
                 modelCatalog: { providers: {}, discovery: { zai: "static" } },
-                manifestPath: path.join(distPluginRoot, "openclaw.plugin.json"),
+                manifestPath: path.join(distPluginRoot, "grokbot.plugin.json"),
               },
             ],
           },

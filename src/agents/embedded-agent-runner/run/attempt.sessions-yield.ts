@@ -1,4 +1,4 @@
-import { isTranscriptOnlyOpenClawAssistantMessage } from "../../../shared/transcript-only-openclaw-assistant.js";
+import { isTranscriptOnlyOpenClawAssistantMessage } from "../../../shared/transcript-only-grokbot-assistant.js";
 import type { AgentMessage } from "../../runtime/index.js";
 /**
  * Handles sessions-yield interruption, persistence, and artifact cleanup.
@@ -7,8 +7,8 @@ import { isRunnerAbortError } from "../abort.js";
 import { log } from "../logger.js";
 import { resolveEmbeddedAbortSettleTimeoutMs } from "./attempt.abort-settle-timeout.js";
 
-const SESSIONS_YIELD_INTERRUPT_CUSTOM_TYPE = "openclaw.sessions_yield_interrupt";
-const SESSIONS_YIELD_CONTEXT_CUSTOM_TYPE = "openclaw.sessions_yield";
+const SESSIONS_YIELD_INTERRUPT_CUSTOM_TYPE = "grokbot.sessions_yield_interrupt";
+const SESSIONS_YIELD_CONTEXT_CUSTOM_TYPE = "grokbot.sessions_yield";
 
 const SESSIONS_YIELD_ABORT_SETTLE_TIMEOUT_MS = resolveEmbeddedAbortSettleTimeoutMs();
 

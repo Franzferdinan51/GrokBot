@@ -37,7 +37,7 @@ describe("displayString", () => {
 
   it("uses OPENCLAW_HOME as the display prefix", () => {
     const home = path.resolve("test-home", "alice");
-    const openclawHome = path.resolve("test-openclaw-home");
+    const openclawHome = path.resolve("test-grokbot-home");
     stubHome(home, openclawHome);
 
     expect(displayString(openclawHome)).toBe("$OPENCLAW_HOME");

@@ -5,8 +5,8 @@ import type { Dirent } from "node:fs";
 import fs from "node:fs/promises";
 import path from "node:path";
 import type { DatabaseSync } from "node:sqlite";
-import { reclaimDefinitelyStaleFileLock } from "openclaw/plugin-sdk/file-lock";
-import { resolveUserPath, root } from "openclaw/plugin-sdk/memory-core-host-engine-foundation";
+import { reclaimDefinitelyStaleFileLock } from "grokbot/plugin-sdk/file-lock";
+import { resolveUserPath, root } from "grokbot/plugin-sdk/memory-core-host-engine-foundation";
 import {
   ensureMemoryIndexSchema,
   loadSqliteVecExtension,
@@ -17,23 +17,23 @@ import {
   MEMORY_INDEX_SOURCES_TABLE,
   MEMORY_INDEX_VECTOR_TABLE,
   requireNodeSqlite,
-} from "openclaw/plugin-sdk/memory-core-host-engine-storage";
-import { resolveMemoryDreamingWorkspaces } from "openclaw/plugin-sdk/memory-core-host-status";
+} from "grokbot/plugin-sdk/memory-core-host-engine-storage";
+import { resolveMemoryDreamingWorkspaces } from "grokbot/plugin-sdk/memory-core-host-status";
 import {
   normalizeMemoryHostEventRecordForStorage,
   resolveMemoryHostEventLogPath,
-} from "openclaw/plugin-sdk/memory-host-events";
-import { normalizeAgentId } from "openclaw/plugin-sdk/routing";
+} from "grokbot/plugin-sdk/memory-host-events";
+import { normalizeAgentId } from "grokbot/plugin-sdk/routing";
 import {
   archiveLegacyStateSource,
   legacyStateFileExists,
   type PluginDoctorStateMigrationContext,
   type PluginDoctorStateMigration,
-} from "openclaw/plugin-sdk/runtime-doctor";
+} from "grokbot/plugin-sdk/runtime-doctor";
 import {
   ensureOpenClawAgentDatabaseSchema,
   resolveOpenClawAgentSqlitePath,
-} from "openclaw/plugin-sdk/sqlite-runtime";
+} from "grokbot/plugin-sdk/sqlite-runtime";
 import {
   DAILY_INGESTION_STATE_RELATIVE_PATH,
   SESSION_INGESTION_STATE_RELATIVE_PATH,
@@ -1872,7 +1872,7 @@ async function migrateLegacyMemoryHostEventSource(params: {
     }
     if (source.storage !== "archive" && (await source.root.exists(activeRelativePath))) {
       params.warnings.push(
-        "An old writer recreated the Memory Core host event source; rerun openclaw doctor --fix to import the retained rows",
+        "An old writer recreated the Memory Core host event source; rerun grokbot doctor --fix to import the retained rows",
       );
     }
     return "completed";

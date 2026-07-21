@@ -3,16 +3,16 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { formatCliCommand } from "../cli/command-format.js";
-import type { DB as OpenClawStateKyselyDatabase } from "../state/openclaw-state-db.generated.js";
+import type { DB as OpenClawStateKyselyDatabase } from "../state/grokbot-state-db.generated.js";
 import {
   closeOpenClawStateDatabaseForTest,
   openOpenClawStateDatabase,
   runOpenClawStateWriteTransaction,
-} from "../state/openclaw-state-db.js";
+} from "../state/grokbot-state-db.js";
 import {
   createOpenClawTestState,
   type OpenClawTestState,
-} from "../test-utils/openclaw-test-state.js";
+} from "../test-utils/grokbot-test-state.js";
 import {
   executeSqliteQuerySync,
   executeSqliteQueryTakeFirstSync,
@@ -34,8 +34,8 @@ const {
   >(async () => ({
     status: "started" as const,
     pid: 12345,
-    command: "openclaw update --yes --channel beta --timeout 2700",
-    logPath: "/tmp/openclaw-handoff.log",
+    command: "grokbot update --yes --channel beta --timeout 2700",
+    logPath: "/tmp/grokbot-handoff.log",
   })),
 }));
 
@@ -43,8 +43,8 @@ vi.mock("../config/config.js", () => ({
   getRuntimeConfig: getRuntimeConfigMock,
 }));
 
-vi.mock("./openclaw-root.js", async () => {
-  const actual = await vi.importActual<typeof import("./openclaw-root.js")>("./openclaw-root.js");
+vi.mock("./grokbot-root.js", async () => {
+  const actual = await vi.importActual<typeof import("./grokbot-root.js")>("./grokbot-root.js");
   return {
     ...actual,
     resolveOpenClawPackageRoot: vi.fn(),
@@ -131,7 +131,7 @@ describe("update-startup", () => {
   let tempDir: string;
   let testState: OpenClawTestState;
 
-  let resolveOpenClawPackageRoot: (typeof import("./openclaw-root.js"))["resolveOpenClawPackageRoot"];
+  let resolveOpenClawPackageRoot: (typeof import("./grokbot-root.js"))["resolveOpenClawPackageRoot"];
   let checkUpdateStatus: (typeof import("./update-check.js"))["checkUpdateStatus"];
   let resolveNpmChannelTag: (typeof import("./update-check.js"))["resolveNpmChannelTag"];
   let runCommandWithTimeout: (typeof import("../process/exec.js"))["runCommandWithTimeout"];
@@ -214,7 +214,7 @@ describe("update-startup", () => {
     vi.setSystemTime(new Date("2026-01-17T10:00:00Z"));
     testState = await createOpenClawTestState({
       layout: "state-only",
-      prefix: "openclaw-update-check-suite-",
+      prefix: "grokbot-update-check-suite-",
       env: {
         OPENCLAW_NO_AUTO_UPDATE: undefined,
         OPENCLAW_SUPERVISOR_MODE: undefined,
@@ -233,7 +233,7 @@ describe("update-startup", () => {
 
     // Perf: load mocked modules once (after timers/env are set up).
     if (!loaded) {
-      ({ resolveOpenClawPackageRoot } = await import("./openclaw-root.js"));
+      ({ resolveOpenClawPackageRoot } = await import("./grokbot-root.js"));
       ({ checkUpdateStatus, resolveNpmChannelTag } = await import("./update-check.js"));
       ({ runCommandWithTimeout } = await import("../process/exec.js"));
       ({
@@ -257,8 +257,8 @@ describe("update-startup", () => {
     startManagedServiceUpdateHandoffMock.mockResolvedValue({
       status: "started",
       pid: 12345,
-      command: "openclaw update --yes --channel beta --timeout 2700",
-      logPath: "/tmp/openclaw-handoff.log",
+      command: "grokbot update --yes --channel beta --timeout 2700",
+      logPath: "/tmp/grokbot-handoff.log",
     });
     resetUpdateAvailableStateForTest();
   });
@@ -276,9 +276,9 @@ describe("update-startup", () => {
   }
 
   function mockPackageInstallStatus() {
-    vi.mocked(resolveOpenClawPackageRoot).mockResolvedValue("/opt/openclaw");
+    vi.mocked(resolveOpenClawPackageRoot).mockResolvedValue("/opt/grokbot");
     vi.mocked(checkUpdateStatus).mockResolvedValue({
-      root: "/opt/openclaw",
+      root: "/opt/grokbot",
       installKind: "package",
       packageManager: "npm",
     } satisfies UpdateCheckResult);
@@ -444,7 +444,7 @@ describe("update-startup", () => {
     const { log, parsed } = await runUpdateCheckAndReadState(channel);
 
     expect(log.info).toHaveBeenCalledWith(
-      `update available (latest): v2.0.0 (current v1.0.0). Run: ${formatCliCommand("openclaw update")}`,
+      `update available (latest): v2.0.0 (current v1.0.0). Run: ${formatCliCommand("grokbot update")}`,
     );
     expect(parsed?.lastNotifiedVersion).toBe("2.0.0");
     expect(parsed?.lastAvailableVersion).toBe("2.0.0");
@@ -723,7 +723,7 @@ describe("update-startup", () => {
     });
     expect(log.info).toHaveBeenCalledTimes(1);
     expect(log.info).toHaveBeenCalledWith(
-      `update available (extended-stable): v2.0.0 (current v1.0.0). Run: ${formatCliCommand("openclaw update")}`,
+      `update available (extended-stable): v2.0.0 (current v1.0.0). Run: ${formatCliCommand("grokbot update")}`,
     );
     expect(onUpdateAvailableChange).toHaveBeenCalledTimes(1);
     expect(onUpdateAvailableChange).toHaveBeenCalledWith({
@@ -866,9 +866,9 @@ describe("update-startup", () => {
     vi.mocked(resolveOpenClawPackageRoot).mockClear();
     vi.mocked(checkUpdateStatus).mockClear();
     vi.mocked(resolveNpmChannelTag).mockClear();
-    vi.mocked(resolveOpenClawPackageRoot).mockResolvedValue("/opt/openclaw");
+    vi.mocked(resolveOpenClawPackageRoot).mockResolvedValue("/opt/grokbot");
     vi.mocked(checkUpdateStatus).mockResolvedValue({
-      root: "/opt/openclaw",
+      root: "/opt/grokbot",
       installKind: "git",
       packageManager: "unknown",
     } satisfies UpdateCheckResult);
@@ -940,7 +940,7 @@ describe("update-startup", () => {
       channel: "stable",
       timeoutMs: 45 * 60 * 1000,
       restartDrainTimeoutMs: 300_000,
-      root: "/opt/openclaw",
+      root: "/opt/grokbot",
     });
   });
 
@@ -957,7 +957,7 @@ describe("update-startup", () => {
       channel: "beta",
       timeoutMs: 45 * 60 * 1000,
       restartDrainTimeoutMs: 300_000,
-      root: "/opt/openclaw",
+      root: "/opt/grokbot",
     });
   });
 
@@ -1035,7 +1035,7 @@ describe("update-startup", () => {
     });
 
     const originalArgv = process.argv.slice();
-    process.argv = [process.execPath, "/opt/openclaw/dist/entry.js"];
+    process.argv = [process.execPath, "/opt/grokbot/dist/entry.js"];
     try {
       await runAutoUpdateCheckWithDefaults({
         cfg: createBetaAutoUpdateConfig(),
@@ -1053,7 +1053,7 @@ describe("update-startup", () => {
     const [argv, options] = requireFirstRunCommandCall();
     expect(argv).toEqual([
       process.execPath,
-      "/opt/openclaw/dist/entry.js",
+      "/opt/grokbot/dist/entry.js",
       "update",
       "--yes",
       "--channel",
@@ -1084,7 +1084,7 @@ describe("update-startup", () => {
     expect(runCommandWithTimeout).not.toHaveBeenCalled();
     expect(startManagedServiceUpdateHandoffMock).toHaveBeenCalledWith(
       expect.objectContaining({
-        root: "/opt/openclaw",
+        root: "/opt/grokbot",
         timeoutMs: 45 * 60 * 1000,
         restartDrainTimeoutMs: 300_000,
         channel: "beta",
@@ -1117,8 +1117,8 @@ describe("update-startup", () => {
       channel: "beta",
       version: "2.0.0-beta.1",
       tag: "beta",
-      command: "openclaw update --yes --channel beta --timeout 2700",
-      logPath: "/tmp/openclaw-handoff.log",
+      command: "grokbot update --yes --channel beta --timeout 2700",
+      logPath: "/tmp/grokbot-handoff.log",
     });
   });
 
@@ -1154,8 +1154,8 @@ describe("update-startup", () => {
     startManagedServiceUpdateHandoffMock.mockResolvedValueOnce({
       status: "joined",
       pid: 12345,
-      command: "openclaw update --yes --channel beta --timeout 2700",
-      logPath: "/tmp/openclaw-handoff.log",
+      command: "grokbot update --yes --channel beta --timeout 2700",
+      logPath: "/tmp/grokbot-handoff.log",
       handoffId: "handoff-existing",
     });
 
@@ -1181,7 +1181,7 @@ describe("update-startup", () => {
     });
     expect(startManagedServiceUpdateHandoffMock).toHaveBeenCalledWith(
       expect.objectContaining({
-        root: "/opt/openclaw",
+        root: "/opt/grokbot",
         timeoutMs: 45 * 60 * 1000,
         channel: "beta",
         restartDelayMs: 2000,

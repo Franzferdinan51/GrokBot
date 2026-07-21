@@ -3,13 +3,13 @@ import type { DatabaseSync } from "node:sqlite";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { requireNodeSqlite } from "../infra/node-sqlite.js";
 import { MAX_TIMER_TIMEOUT_MS } from "../shared/number-coercion.js";
-import { openOpenClawAgentDatabase } from "../state/openclaw-agent-db.js";
-import { closeOpenClawAgentDatabasesForTest } from "../state/openclaw-agent-db.js";
+import { openOpenClawAgentDatabase } from "../state/grokbot-agent-db.js";
+import { closeOpenClawAgentDatabasesForTest } from "../state/grokbot-agent-db.js";
 import {
   closeOpenClawStateDatabaseForTest,
   openOpenClawStateDatabase,
-} from "../state/openclaw-state-db.js";
-import { withOpenClawTestState } from "../test-utils/openclaw-test-state.js";
+} from "../state/grokbot-state-db.js";
+import { withOpenClawTestState } from "../test-utils/grokbot-test-state.js";
 import { withPluginStateLease } from "./plugin-state-lease.js";
 
 function deferred<T = void>() {

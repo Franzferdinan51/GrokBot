@@ -1,6 +1,6 @@
 // Covers config scanning for agent harness runtime requirements.
 import { describe, expect, it } from "vitest";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { collectConfiguredAgentHarnessRuntimes } from "./harness-runtimes.js";
 
 describe("collectConfiguredAgentHarnessRuntimes", () => {
@@ -61,13 +61,13 @@ describe("collectConfiguredAgentHarnessRuntimes", () => {
     expect(collectConfiguredAgentHarnessRuntimes(config)).toEqual(["codex"]);
   });
 
-  it("respects explicit OpenClaw runtime policy on selectable OpenAI agent models", () => {
+  it("respects explicit GrokBot runtime policy on selectable OpenAI agent models", () => {
     const config = {
       agents: {
         defaults: {
           model: { primary: "anthropic/claude-sonnet-4-6" },
           models: {
-            "openai/gpt-5.5": { agentRuntime: { id: "openclaw" } },
+            "openai/gpt-5.5": { agentRuntime: { id: "grokbot" } },
           },
         },
       },

@@ -1,13 +1,13 @@
 /**
  * Active Memory plugin entry. Runtime behavior lives in focused sibling modules.
  */
-import { resolveAgentDir, resolveAgentWorkspaceDir } from "openclaw/plugin-sdk/agent-runtime";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import { resolveAgentDir, resolveAgentWorkspaceDir } from "grokbot/plugin-sdk/agent-runtime";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import {
   normalizePluginsConfig,
   resolveLivePluginConfigObject,
-} from "openclaw/plugin-sdk/plugin-config-runtime";
-import { definePluginEntry, type OpenClawPluginApi } from "openclaw/plugin-sdk/plugin-entry";
+} from "grokbot/plugin-sdk/plugin-config-runtime";
+import { definePluginEntry, type OpenClawPluginApi } from "grokbot/plugin-sdk/plugin-entry";
 import {
   applyCliRuntimeRecallTimeoutDefault,
   hasDeprecatedModelFallbackPolicy,

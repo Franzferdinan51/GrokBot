@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-source scripts/lib/openclaw-e2e-instance.sh
+source scripts/lib/grokbot-e2e-instance.sh
 
 KITCHEN_SINK_SWEEP_SOURCE_ONLY="${KITCHEN_SINK_SWEEP_SOURCE_ONLY:-0}"
 if [[ -z "${OPENCLAW_ENTRY:-}" && "$KITCHEN_SINK_SWEEP_SOURCE_ONLY" != "1" ]]; then
@@ -10,7 +10,7 @@ fi
 export OPENCLAW_ENTRY
 KITCHEN_SINK_CREATED_TMP_DIR=0
 if [[ -z "${KITCHEN_SINK_TMP_DIR:-}" ]]; then
-  KITCHEN_SINK_TMP_DIR="$(mktemp -d "/tmp/openclaw-kitchen-sink.XXXXXX")"
+  KITCHEN_SINK_TMP_DIR="$(mktemp -d "/tmp/grokbot-kitchen-sink.XXXXXX")"
   KITCHEN_SINK_CREATED_TMP_DIR=1
 else
   mkdir -p "$KITCHEN_SINK_TMP_DIR"

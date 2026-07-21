@@ -43,7 +43,7 @@ type CompileCacheTestApi = {
 
 function getTestApi(): CompileCacheTestApi {
   return (globalThis as Record<PropertyKey, unknown>)[
-    Symbol.for("openclaw.entryCompileCacheTestApi")
+    Symbol.for("grokbot.entryCompileCacheTestApi")
   ] as CompileCacheTestApi;
 }
 

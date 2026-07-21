@@ -3,7 +3,7 @@ import { spawn, spawnSync, type ChildProcess } from "node:child_process";
 import { existsSync, mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
-import { MAX_TIMER_TIMEOUT_MS } from "@openclaw/normalization-core/number-coercion";
+import { MAX_TIMER_TIMEOUT_MS } from "@grokbot/normalization-core/number-coercion";
 import { describe, expect, it, vi } from "vitest";
 import {
   isRunWithEnvHelpRequest,
@@ -267,7 +267,7 @@ describe("run-with-env", () => {
   it.runIf(process.platform !== "win32").each(["SIGTERM", "SIGHUP", "SIGINT"] as const)(
     "forwards parent %s to the wrapped command",
     async (signal) => {
-      const tempDir = mkdtempSync(path.join(tmpdir(), "openclaw-run-with-env-signals-"));
+      const tempDir = mkdtempSync(path.join(tmpdir(), "grokbot-run-with-env-signals-"));
       const readyFile = path.join(tempDir, "ready");
       const signaledFile = path.join(tempDir, "signaled");
       const handlerLines = ["SIGTERM", "SIGHUP", "SIGINT"].flatMap((handledSignal) => [
@@ -314,7 +314,7 @@ describe("run-with-env", () => {
   it.runIf(process.platform !== "win32")(
     "cleans up wrapped command descendants on wrapper shutdown",
     async () => {
-      const tempDir = mkdtempSync(path.join(tmpdir(), "openclaw-run-with-env-descendants-"));
+      const tempDir = mkdtempSync(path.join(tmpdir(), "grokbot-run-with-env-descendants-"));
       const readyFile = path.join(tempDir, "ready");
       const grandchildReadyFile = path.join(tempDir, "grandchild-ready");
       const grandchildPidFile = path.join(tempDir, "grandchild-pid");
@@ -385,7 +385,7 @@ describe("run-with-env", () => {
   it.runIf(process.platform !== "win32")(
     "lets wrapped command descendants finish during the shutdown grace period",
     async () => {
-      const tempDir = mkdtempSync(path.join(tmpdir(), "openclaw-run-with-env-grace-"));
+      const tempDir = mkdtempSync(path.join(tmpdir(), "grokbot-run-with-env-grace-"));
       const readyFile = path.join(tempDir, "ready");
       const gracefulFile = path.join(tempDir, "graceful");
       const grandchildReadyFile = path.join(tempDir, "grandchild-ready");

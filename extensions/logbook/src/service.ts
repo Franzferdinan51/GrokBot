@@ -2,12 +2,12 @@
 import { createHash } from "node:crypto";
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import path from "node:path";
-import { canonicalizeBase64 } from "openclaw/plugin-sdk/media-runtime";
+import { canonicalizeBase64 } from "grokbot/plugin-sdk/media-runtime";
 import type {
   OpenClawConfig,
   OpenClawPluginApi,
   PluginLogger,
-} from "openclaw/plugin-sdk/plugin-entry";
+} from "grokbot/plugin-sdk/plugin-entry";
 import {
   CARD_LOOKBACK_MS,
   MAX_FRAMES_PER_CALL,

@@ -32,7 +32,7 @@ type BoardSessionSurfaceProps = {
 let boardViewLoad: Promise<unknown> | null = null;
 
 export async function ensureBoardViewElement(): Promise<boolean> {
-  if (customElements.get("openclaw-board-view")) {
+  if (customElements.get("grokbot-board-view")) {
     return false;
   }
   boardViewLoad ??= isMockBoardEnabled()
@@ -135,7 +135,7 @@ export function renderBoardDockMenu(
 function renderBoardView(props: BoardSessionSurfaceProps) {
   return html`
     <div class="board-session-surface__board">
-      <openclaw-board-view
+      <grokbot-board-view
         .snapshot=${props.snapshot}
         .activeTabId=${props.activeTabId}
         .widgetFrameUrl=${props.widgetFrameUrl}
@@ -143,7 +143,7 @@ function renderBoardView(props: BoardSessionSurfaceProps) {
         .sessions=${props.sessions}
         .canMutate=${props.canMutate}
         .canGrant=${props.canGrant}
-      ></openclaw-board-view>
+      ></grokbot-board-view>
     </div>
   `;
 }

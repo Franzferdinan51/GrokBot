@@ -160,7 +160,7 @@ describe("refreshQueuedFollowupSession", () => {
       key: QUEUE_KEY,
       nextProvider: "custom",
       nextModel: "reasoner",
-      nextThinking: { level: "ultra", agentRuntime: "openclaw" },
+      nextThinking: { level: "ultra", agentRuntime: "grokbot" },
     });
 
     expect(queue.items[0]?.run.thinkLevel).toBe("high");

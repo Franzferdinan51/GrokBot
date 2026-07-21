@@ -1,9 +1,9 @@
-import type { AnyAgentTool, OpenClawPluginToolContext } from "openclaw/plugin-sdk/plugin-entry";
-import { jsonResult } from "openclaw/plugin-sdk/tool-results";
+import type { AnyAgentTool, OpenClawPluginToolContext } from "grokbot/plugin-sdk/plugin-entry";
+import { jsonResult } from "grokbot/plugin-sdk/tool-results";
 import type {
   PluginHookToolResultPersistEvent,
   PluginHookToolResultPersistResult,
-} from "openclaw/plugin-sdk/types";
+} from "grokbot/plugin-sdk/types";
 import { parseToolInput, type OnePasswordBroker } from "./broker.js";
 import { OnePasswordError } from "./errors.js";
 import { AUTHORIZATION_NONCE_PARAM } from "./pending-authorization.js";

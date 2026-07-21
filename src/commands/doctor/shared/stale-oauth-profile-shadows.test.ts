@@ -14,7 +14,7 @@ import {
   saveAuthProfileStore,
 } from "../../../agents/auth-profiles/store.js";
 import type { AuthProfileStore, OAuthCredential } from "../../../agents/auth-profiles/types.js";
-import type { OpenClawConfig } from "../../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../../config/types.grokbot.js";
 import { captureEnv } from "../../../test-utils/env.js";
 import {
   collectStaleOAuthProfileShadowWarnings,
@@ -61,7 +61,7 @@ describe("stale OAuth profile shadow doctor repair", () => {
 
   beforeEach(async () => {
     clearRuntimeAuthProfileStoreSnapshots();
-    tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-stale-oauth-shadow-"));
+    tempRoot = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-stale-oauth-shadow-"));
     stateDir = path.join(tempRoot, "state");
     process.env.OPENCLAW_STATE_DIR = stateDir;
     process.env.OPENCLAW_HOME = stateDir;
@@ -107,12 +107,12 @@ describe("stale OAuth profile shadow doctor repair", () => {
     });
     const warnings = collectStaleOAuthProfileShadowWarnings({
       hits,
-      doctorFixCommand: "openclaw doctor --fix",
+      doctorFixCommand: "grokbot doctor --fix",
     });
 
     expect(hits).toHaveLength(1);
     expect(warnings[0]).toContain("stale OAuth auth profile anthropic:default");
-    expect(warnings[0]).toContain("openclaw doctor --fix");
+    expect(warnings[0]).toContain("grokbot doctor --fix");
     expect(loadPersistedAuthProfileStore(childAgentDir)?.profiles[profileId]).toBeDefined();
   });
 
@@ -232,7 +232,7 @@ describe("stale OAuth profile shadow doctor repair", () => {
           accountId: "acct-shared",
           expires: now - 60_000,
           oauthRef: {
-            source: "openclaw-credentials",
+            source: "grokbot-credentials",
             provider: "openai-codex",
             id: "0123456789abcdef0123456789abcdef",
           },

@@ -1,6 +1,6 @@
 // Google Meet plugin module implements create behavior.
-import type { OpenClawPluginApi } from "openclaw/plugin-sdk/plugin-entry";
-import { normalizeOptionalString } from "openclaw/plugin-sdk/string-coerce-runtime";
+import type { OpenClawPluginApi } from "grokbot/plugin-sdk/plugin-entry";
+import { normalizeOptionalString } from "grokbot/plugin-sdk/string-coerce-runtime";
 import type { GoogleMeetConfig, GoogleMeetMode, GoogleMeetTransport } from "./config.js";
 import {
   createGoogleMeetSpace,
@@ -153,7 +153,7 @@ export async function createAndJoinMeetFromParams(params: {
   return {
     ...created,
     joined: true,
-    nextAction: "Share meetingUri with participants; the OpenClaw agent has started the join flow.",
+    nextAction: "Share meetingUri with participants; the GrokBot agent has started the join flow.",
     join,
   };
 }

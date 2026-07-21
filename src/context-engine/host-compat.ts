@@ -20,8 +20,8 @@ const GENERIC_CLI_CONTEXT_ENGINE_HOST_CAPABILITIES = [
 ] as const satisfies readonly ContextEngineHostCapability[];
 
 export const OPENCLAW_EMBEDDED_CONTEXT_ENGINE_HOST = {
-  id: "openclaw-embedded",
-  label: "OpenClaw embedded runner",
+  id: "grokbot-embedded",
+  label: "GrokBot embedded runner",
   capabilities: [
     "bootstrap",
     "assemble-before-prompt",

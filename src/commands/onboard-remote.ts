@@ -4,7 +4,7 @@
  * It can discover gateways, validate remote WebSocket security, and store
  * remote token/password auth as plaintext or secret references.
  */
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import type { SecretInput } from "../config/types.secrets.js";
 import { isSecureWebSocketUrl } from "../gateway/net.js";
 import { discoverGatewayBeacons, type GatewayBonjourBeacon } from "../infra/bonjour-discovery.js";
@@ -74,7 +74,7 @@ export async function promptRemoteGatewayConfig(
     await prompter.note(
       [
         "Bonjour discovery requires dns-sd (macOS) or avahi-browse (Linux).",
-        "Docs: https://docs.openclaw.ai/gateway/discovery",
+        "Docs: https://docs.grokbot.ai/gateway/discovery",
       ].join("\n"),
       "Discovery",
     );
@@ -160,7 +160,7 @@ export async function promptRemoteGatewayConfig(
           [
             "Start a tunnel before using the CLI:",
             `ssh -N -L 18789:127.0.0.1:18789 <user>@${host}${target.sshPort ? ` -p ${target.sshPort}` : ""}`,
-            "Docs: https://docs.openclaw.ai/gateway/remote",
+            "Docs: https://docs.grokbot.ai/gateway/remote",
           ].join("\n"),
           t("wizard.remote.sshTunnelTitle"),
         );

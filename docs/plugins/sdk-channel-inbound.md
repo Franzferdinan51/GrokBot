@@ -13,9 +13,9 @@ Channel receive paths follow one flow:
 platform event -> inbound facts/context -> agent reply -> message delivery
 ```
 
-Use `openclaw/plugin-sdk/channel-inbound` for inbound event normalization,
+Use `grokbot/plugin-sdk/channel-inbound` for inbound event normalization,
 formatting, roots, and orchestration. Use
-`openclaw/plugin-sdk/channel-outbound` for native send, receipt, durable
+`grokbot/plugin-sdk/channel-outbound` for native send, receipt, durable
 delivery, and live preview behavior.
 
 ## Core helpers
@@ -25,7 +25,7 @@ import {
   buildChannelInboundEventContext,
   runChannelInboundEvent,
   dispatchChannelInboundReply,
-} from "openclaw/plugin-sdk/channel-inbound";
+} from "grokbot/plugin-sdk/channel-inbound";
 ```
 
 - `buildChannelInboundEventContext(...)`: projects normalized channel facts

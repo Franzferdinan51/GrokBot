@@ -5,7 +5,7 @@ import type { DatabaseSync } from "node:sqlite";
 import { requireNodeSqlite } from "../infra/node-sqlite.js";
 import { applyPrivateModeSync } from "../infra/private-mode.js";
 import { VERSION } from "../version.js";
-import { resolveOpenClawStateSqliteDir } from "./openclaw-state-db.paths.js";
+import { resolveOpenClawStateSqliteDir } from "./grokbot-state-db.paths.js";
 
 const OPENCLAW_QUARANTINE_SCHEMA_VERSION = 1;
 const OPENCLAW_QUARANTINE_BUSY_TIMEOUT_MS = 5_000;
@@ -21,7 +21,7 @@ type OpenClawDatabaseQuarantine = {
 };
 
 function resolveQuarantineStorePath(env: NodeJS.ProcessEnv): string {
-  return path.join(resolveOpenClawStateSqliteDir(env), "openclaw-quarantine.sqlite");
+  return path.join(resolveOpenClawStateSqliteDir(env), "grokbot-quarantine.sqlite");
 }
 
 function ensureQuarantineStoreDirectory(storePath: string): void {
@@ -39,7 +39,7 @@ function configureQuarantineWriter(database: DatabaseSync, storePath: string): v
   const userVersion = readQuarantineSchemaVersion(database, storePath);
   if (userVersion > OPENCLAW_QUARANTINE_SCHEMA_VERSION) {
     throw new Error(
-      `OpenClaw quarantine store ${storePath} uses newer schema version ${userVersion}.`,
+      `GrokBot quarantine store ${storePath} uses newer schema version ${userVersion}.`,
     );
   }
   if (userVersion === OPENCLAW_QUARANTINE_SCHEMA_VERSION) {
@@ -65,7 +65,7 @@ function readQuarantineSchemaVersion(database: DatabaseSync, storePath: string):
     | undefined;
   const userVersion = row?.user_version;
   if (typeof userVersion !== "number" || !Number.isInteger(userVersion)) {
-    throw new Error(`OpenClaw quarantine store ${storePath} has an invalid schema version.`);
+    throw new Error(`GrokBot quarantine store ${storePath} has an invalid schema version.`);
   }
   return userVersion;
 }
@@ -113,7 +113,7 @@ export function readOpenClawDatabaseQuarantine(
     }
     if (userVersion !== OPENCLAW_QUARANTINE_SCHEMA_VERSION) {
       throw new Error(
-        `OpenClaw quarantine store ${storePath} uses newer schema version ${userVersion}.`,
+        `GrokBot quarantine store ${storePath} uses newer schema version ${userVersion}.`,
       );
     }
     const row = database
@@ -132,7 +132,7 @@ export function readOpenClawDatabaseQuarantine(
       typeof row.quarantined_at !== "number" ||
       !Number.isInteger(row.quarantined_at)
     ) {
-      throw new Error(`OpenClaw quarantine store ${storePath} contains an invalid row.`);
+      throw new Error(`GrokBot quarantine store ${storePath} contains an invalid row.`);
     }
     return { kind: row.kind, quarantinedAt: row.quarantined_at, reason: row.reason };
   } finally {

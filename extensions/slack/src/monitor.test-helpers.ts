@@ -1,10 +1,10 @@
 import fs from "node:fs";
 import path from "node:path";
-import type { ChannelRuntimeSurface } from "openclaw/plugin-sdk/channel-contract";
+import type { ChannelRuntimeSurface } from "grokbot/plugin-sdk/channel-contract";
 // Slack helper module supports monitor helpers behavior.
-import { closeOpenClawStateDatabaseForTest } from "openclaw/plugin-sdk/plugin-state-test-runtime";
-import type { RuntimeEnv } from "openclaw/plugin-sdk/runtime-env";
-import { resolvePreferredOpenClawTmpDir } from "openclaw/plugin-sdk/temp-path";
+import { closeOpenClawStateDatabaseForTest } from "grokbot/plugin-sdk/plugin-state-test-runtime";
+import type { RuntimeEnv } from "grokbot/plugin-sdk/runtime-env";
+import { resolvePreferredOpenClawTmpDir } from "grokbot/plugin-sdk/temp-path";
 import { vi } from "vitest";
 import type { Mock } from "vitest";
 
@@ -318,7 +318,7 @@ export function resetSlackTestState(config: Record<string, unknown> = defaultSla
     fs.rmSync(lastSlackTestStateDir, { recursive: true, force: true });
   }
   lastSlackTestStateDir = fs.realpathSync(
-    fs.mkdtempSync(path.join(resolvePreferredOpenClawTmpDir(), "openclaw-slack-monitor-state-")),
+    fs.mkdtempSync(path.join(resolvePreferredOpenClawTmpDir(), "grokbot-slack-monitor-state-")),
   );
   process.env.OPENCLAW_STATE_DIR = lastSlackTestStateDir;
   slackTestState.config = config;
@@ -374,13 +374,13 @@ vi.mock("./monitor/config.runtime.js", async () => {
     loadConfig: () => slackTestState.config,
     readSessionUpdatedAt: vi.fn(() => undefined),
     recordSessionMetaFromInbound: vi.fn().mockResolvedValue(undefined),
-    resolveStorePath: vi.fn(() => "/tmp/openclaw-sessions.json"),
+    resolveStorePath: vi.fn(() => "/tmp/grokbot-sessions.json"),
     updateLastRoute: (...args: unknown[]) => slackTestState.updateLastRouteMock(...args),
   };
 });
 
-vi.mock("openclaw/plugin-sdk/channel-inbound", async (importOriginal) => {
-  const actual = await importOriginal<typeof import("openclaw/plugin-sdk/channel-inbound")>();
+vi.mock("grokbot/plugin-sdk/channel-inbound", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("grokbot/plugin-sdk/channel-inbound")>();
   type DispatchParams = Parameters<typeof actual.dispatchChannelInboundTurn>[0];
   type ReplyResolver = NonNullable<DispatchParams["replyResolver"]>;
   const replyResolver: ReplyResolver = (...args) =>

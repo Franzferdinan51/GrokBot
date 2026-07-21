@@ -1,4 +1,4 @@
-import { definePluginEntry, type OpenClawPluginApi } from "openclaw/plugin-sdk/plugin-entry";
+import { definePluginEntry, type OpenClawPluginApi } from "grokbot/plugin-sdk/plugin-entry";
 import {
   LLAMA_CPP_PROVIDER_ID,
   LLAMA_CPP_PROVIDER_LABEL,
@@ -65,7 +65,7 @@ export default definePluginEntry({
         },
         modelPicker: {
           label: "llama.cpp (local GGUF)",
-          hint: "Run a GGUF model in the OpenClaw process",
+          hint: "Run a GGUF model in the GrokBot process",
           methodId: "local",
         },
       },

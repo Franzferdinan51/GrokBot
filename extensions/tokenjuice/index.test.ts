@@ -1,7 +1,7 @@
 // Tokenjuice tests cover index plugin behavior.
 import fs from "node:fs";
-import { createAgentToolResultMiddlewareRunner } from "openclaw/plugin-sdk/agent-harness";
-import { createTestPluginApi } from "openclaw/plugin-sdk/plugin-test-api";
+import { createAgentToolResultMiddlewareRunner } from "grokbot/plugin-sdk/agent-harness";
+import { createTestPluginApi } from "grokbot/plugin-sdk/plugin-test-api";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const { tokenjuiceFactory, createTokenjuiceOpenClawEmbeddedExtension } = vi.hoisted(() => {
@@ -28,13 +28,13 @@ describe("tokenjuice plugin", () => {
 
   it("is opt-in by default", () => {
     const manifest = JSON.parse(
-      fs.readFileSync(new URL("./openclaw.plugin.json", import.meta.url), "utf8"),
+      fs.readFileSync(new URL("./grokbot.plugin.json", import.meta.url), "utf8"),
     ) as { enabledByDefault?: unknown };
 
     expect(manifest.enabledByDefault).toBeUndefined();
   });
 
-  it("registers tokenjuice tool result middleware for OpenClaw and Codex runtimes", () => {
+  it("registers tokenjuice tool result middleware for GrokBot and Codex runtimes", () => {
     const registerAgentToolResultMiddleware = vi.fn();
 
     plugin.register(
@@ -53,7 +53,7 @@ describe("tokenjuice plugin", () => {
     expect(tokenjuiceFactory).toHaveBeenCalledTimes(1);
     const registration = registerAgentToolResultMiddleware.mock.calls[0];
     expect(typeof registration?.[0]).toBe("function");
-    expect(registration?.[1]).toEqual({ runtimes: ["openclaw", "codex"] });
+    expect(registration?.[1]).toEqual({ runtimes: ["grokbot", "codex"] });
   });
 
   it("synthesises exec status when bash provides metadata-only details", async () => {
@@ -75,7 +75,7 @@ describe("tokenjuice plugin", () => {
       {
         toolCallId: "tool-call-tokenjuice-bash-meta",
         toolName: "bash",
-        args: { command: "cat /tmp/out.txt", workdir: "/tmp/openclaw-tokenjuice-test" },
+        args: { command: "cat /tmp/out.txt", workdir: "/tmp/grokbot-tokenjuice-test" },
         result: {
           content: [{ type: "text", text: "file contents\n" }],
           details: {
@@ -85,7 +85,7 @@ describe("tokenjuice plugin", () => {
         },
         isError: false,
       },
-      { runtime: "openclaw" },
+      { runtime: "grokbot" },
     );
 
     expect(received?.details).toMatchObject({
@@ -130,7 +130,7 @@ describe("tokenjuice plugin", () => {
         },
         isError: false,
       },
-      { runtime: "openclaw" },
+      { runtime: "grokbot" },
     );
 
     expect(received?.details).toEqual({
@@ -151,7 +151,7 @@ describe("tokenjuice plugin", () => {
       },
     );
 
-    const runner = createAgentToolResultMiddlewareRunner({ runtime: "openclaw" }, [
+    const runner = createAgentToolResultMiddlewareRunner({ runtime: "grokbot" }, [
       createTokenjuiceAgentToolResultMiddleware(),
     ]);
     const result = await runner.applyToolResultMiddleware({
@@ -208,7 +208,7 @@ describe("tokenjuice plugin", () => {
           },
           isError: false,
         },
-        { runtime: "openclaw" },
+        { runtime: "grokbot" },
       );
 
       expect(received?.details).toMatchObject({
@@ -243,11 +243,11 @@ describe("tokenjuice plugin", () => {
       {
         toolCallId: "tool-call-tokenjuice-bash",
         toolName: "bash",
-        args: { command: "printf 'hello\\n'", workdir: "/tmp/openclaw-tokenjuice-test" },
+        args: { command: "printf 'hello\\n'", workdir: "/tmp/grokbot-tokenjuice-test" },
         result: { content: [{ type: "text", text: "hello\n" }], details: undefined },
         isError: false,
       },
-      { runtime: "openclaw" },
+      { runtime: "grokbot" },
     );
 
     expect(received?.toolName).toBe("bash");

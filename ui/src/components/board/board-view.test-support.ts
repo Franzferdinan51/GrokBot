@@ -6,8 +6,8 @@ import type { BoardWidget } from "../../lib/board/types.ts";
 import type { BoardViewCallbacks, BoardViewSnapshot } from "../../lib/board/view-types.ts";
 import { createApplicationContextProvider } from "../../test-helpers/application-context.ts";
 
-type OpenClawBoardView = HTMLElementTagNameMap["openclaw-board-view"];
-type OpenClawBoardWidgetCell = HTMLElementTagNameMap["openclaw-board-widget-cell"];
+type OpenClawBoardView = HTMLElementTagNameMap["grokbot-board-view"];
+type OpenClawBoardWidgetCell = HTMLElementTagNameMap["grokbot-board-widget-cell"];
 
 export function boardWidget(overrides: Partial<BoardWidget> = {}): BoardWidget {
   return {
@@ -97,7 +97,7 @@ export function deferredValue<T>(): {
 
 export async function settleCells(view: OpenClawBoardView): Promise<OpenClawBoardWidgetCell[]> {
   await view.updateComplete;
-  const cells = [...view.querySelectorAll("openclaw-board-widget-cell")];
+  const cells = [...view.querySelectorAll("grokbot-board-widget-cell")];
   await Promise.all(cells.map((cell) => cell.updateComplete));
   return cells;
 }
@@ -114,7 +114,7 @@ export async function mount(
     canGrant?: boolean;
   } = {},
 ): Promise<OpenClawBoardView> {
-  const view = document.createElement("openclaw-board-view");
+  const view = document.createElement("grokbot-board-view");
   view.snapshot = options.snapshot ?? snapshot();
   view.activeTabId = options.activeTabId ?? "main";
   view.widgetFrameUrl = options.widgetFrameUrl ?? (() => "about:blank");

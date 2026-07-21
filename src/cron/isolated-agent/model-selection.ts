@@ -1,7 +1,7 @@
 import { resolveConfiguredModelPolicyAllow } from "../../agents/model-selection-shared.js";
 /** Resolves provider/model precedence for isolated cron runs. */
 import type { AgentConfig } from "../../config/types.agents.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import type { CronJob } from "../types.js";
 import {
   DEFAULT_MODEL,

@@ -365,9 +365,9 @@ describe("qa scenario catalog", () => {
     expect(readQaScenarioExecutionConfig(webSearch.id)).toMatchObject({
       toolName: "web_search",
       toolCoverage: {
-        bucket: "openclaw-dynamic-integration",
-        expectedLayer: "openclaw-dynamic",
-        capabilityLayer: "openclaw-dynamic-direct",
+        bucket: "grokbot-dynamic-integration",
+        expectedLayer: "grokbot-dynamic",
+        capabilityLayer: "grokbot-dynamic-direct",
         required: true,
       },
     });
@@ -395,9 +395,9 @@ describe("qa scenario catalog", () => {
       requiredProviderMode: "mock-openai",
       toolName: "image_generate",
       toolCoverage: {
-        bucket: "openclaw-dynamic-integration",
-        expectedLayer: "openclaw-dynamic",
-        capabilityLayer: "openclaw-dynamic-direct",
+        bucket: "grokbot-dynamic-integration",
+        expectedLayer: "grokbot-dynamic",
+        capabilityLayer: "grokbot-dynamic-direct",
         required: false,
       },
     });
@@ -466,7 +466,7 @@ describe("qa scenario catalog", () => {
     expect(gatewayRestartContract).toContain("interruptedMatches.length === 1");
     expect(gatewayRestartContract).toContain("restartNotices.length === 0");
     expect(gatewayRestartContract).toContain("dispatching restart-safe recovery");
-    expect(gatewayRestartContract).toContain("[OpenClaw heartbeat poll]");
+    expect(gatewayRestartContract).toContain("[GrokBot heartbeat poll]");
     expect(gatewayRestartContract).toContain("liveTurnTimeoutMs(env, 180000)");
     expect(gatewayRestartContract).toContain("dmScope: 'per-channel-peer'");
     const liveMultiRestart = readQaScenarioById("gateway-restart-multi-live");
@@ -542,7 +542,7 @@ describe("qa scenario catalog", () => {
 
   it("accepts the update.run producer's blocked evidence without destructive opt-in", async () => {
     const outputDir = await fs.promises.mkdtemp(
-      path.join(os.tmpdir(), "openclaw-update-run-blocked-"),
+      path.join(os.tmpdir(), "grokbot-update-run-blocked-"),
     );
     try {
       const result = await runQaTestFileScenarios({
@@ -729,9 +729,9 @@ describe("qa scenario catalog", () => {
     expect(scenario.sourcePath).toBe("qa/scenarios/plugins/kitchen-sink-live-openai.yaml");
     expect(config?.requiredProviderMode).toBe("live-frontier");
     expect(config?.requiredProvider).toBe("openai");
-    expect(config?.pluginSpec).toBe("npm:@openclaw/kitchen-sink@latest");
+    expect(config?.pluginSpec).toBe("npm:@grokbot/kitchen-sink@latest");
     expect(JSON.stringify(scenario.execution.flow)).toContain('"--force"');
-    expect(config?.pluginId).toBe("openclaw-kitchen-sink-fixture");
+    expect(config?.pluginId).toBe("grokbot-kitchen-sink-fixture");
     expect(config?.pluginPersonality).toBe("conformance");
     expect(config?.adversarialPersonality).toBe("adversarial");
     expect(config?.expectedSurfaceIds?.webSearchProviderIds).toContain(

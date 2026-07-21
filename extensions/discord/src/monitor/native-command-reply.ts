@@ -1,11 +1,11 @@
 // Discord plugin module implements native command reply behavior.
-import type { ReplyPayload } from "openclaw/plugin-sdk/reply-dispatch-runtime";
+import type { ReplyPayload } from "grokbot/plugin-sdk/reply-dispatch-runtime";
 import {
   resolveSendableOutboundReplyParts,
   resolveTextChunksWithFallback,
-} from "openclaw/plugin-sdk/reply-payload";
-import { logVerbose } from "openclaw/plugin-sdk/runtime-env";
-import { loadWebMedia } from "openclaw/plugin-sdk/web-media";
+} from "grokbot/plugin-sdk/reply-payload";
+import { logVerbose } from "grokbot/plugin-sdk/runtime-env";
+import { loadWebMedia } from "grokbot/plugin-sdk/web-media";
 import { chunkDiscordTextWithMode } from "../chunk.js";
 import type {
   ButtonInteraction,

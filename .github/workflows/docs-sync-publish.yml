@@ -37,7 +37,7 @@ jobs:
         if: env.OPENCLAW_DOCS_SYNC_TOKEN != ''
         uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
         with:
-          repository: openclaw/clawhub
+          repository: grokbot/clawhub
           ref: main
           path: clawhub-source
           fetch-depth: 1
@@ -57,7 +57,7 @@ jobs:
           for attempt in 1 2 3 4 5; do
             rm -rf publish
             if timeout --signal=TERM --kill-after=10s 120s git clone \
-              "https://x-access-token:${OPENCLAW_DOCS_SYNC_TOKEN}@github.com/openclaw/docs.git" \
+              "https://x-access-token:${OPENCLAW_DOCS_SYNC_TOKEN}@github.com/grokbot/docs.git" \
               publish; then
               exit 0
             fi
@@ -77,7 +77,7 @@ jobs:
             --source-repo "$GITHUB_REPOSITORY" \
             --source-sha "$GITHUB_SHA" \
             --clawhub-repo "$GITHUB_WORKSPACE/clawhub-source" \
-            --clawhub-source-repo "openclaw/clawhub" \
+            --clawhub-source-repo "grokbot/clawhub" \
             --clawhub-source-sha "$clawhub_sha"
 
       - name: Install docs MDX checker dependency
@@ -87,7 +87,7 @@ jobs:
 
       - name: Check publish docs MDX
         if: env.OPENCLAW_DOCS_SYNC_TOKEN != ''
-        run: node "$GITHUB_WORKSPACE/publish/.openclaw-sync/check-docs-mdx.mjs" "$GITHUB_WORKSPACE/publish/docs"
+        run: node "$GITHUB_WORKSPACE/publish/.grokbot-sync/check-docs-mdx.mjs" "$GITHUB_WORKSPACE/publish/docs"
 
       - name: Commit publish repo sync
         if: env.OPENCLAW_DOCS_SYNC_TOKEN != ''
@@ -95,7 +95,7 @@ jobs:
         run: |
           set -euo pipefail
           remote_source_sha() {
-            git show refs/remotes/origin/main:.openclaw-sync/source.json 2>/dev/null \
+            git show refs/remotes/origin/main:.grokbot-sync/source.json 2>/dev/null \
               | node -e 'const fs = require("node:fs"); try { const data = JSON.parse(fs.readFileSync(0, "utf8")); if (data.sha) process.stdout.write(data.sha); } catch {}' \
               || true
           }
@@ -112,7 +112,7 @@ jobs:
             fi
           }
 
-          if git diff --quiet -- docs .openclaw-sync; then
+          if git diff --quiet -- docs .grokbot-sync; then
             echo "No publish-repo changes."
             exit 0
           fi
@@ -121,9 +121,9 @@ jobs:
             skip_stale_source
           fi
 
-          git config user.name "openclaw-docs-sync[bot]"
-          git config user.email "openclaw-docs-sync[bot]@users.noreply.github.com"
-          git add docs .openclaw-sync
+          git config user.name "grokbot-docs-sync[bot]"
+          git config user.email "grokbot-docs-sync[bot]@users.noreply.github.com"
+          git add docs .grokbot-sync
           git commit -m "chore(sync): mirror docs from $GITHUB_REPOSITORY@$GITHUB_SHA"
           for attempt in 1 2 3 4 5; do
             if git fetch origin main:refs/remotes/origin/main; then

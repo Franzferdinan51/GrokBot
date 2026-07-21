@@ -1,5 +1,5 @@
 /**
- * OpenClaw Memory (LanceDB) Plugin
+ * GrokBot Memory (LanceDB) Plugin
  *
  * Long-term memory with vector search for AI conversations.
  * Uses LanceDB for storage and OpenAI for embeddings.
@@ -7,34 +7,34 @@
  */
 
 import { Buffer } from "node:buffer";
-import type { AgentToolResult } from "openclaw/plugin-sdk/agent-core";
+import type { AgentToolResult } from "grokbot/plugin-sdk/agent-core";
 import {
   resolveAgentConfig,
   resolveDefaultAgentId as resolveConfiguredDefaultAgentId,
-} from "openclaw/plugin-sdk/agent-runtime";
+} from "grokbot/plugin-sdk/agent-runtime";
 import {
   optionalFiniteNumberSchema,
   optionalPositiveIntegerSchema,
-} from "openclaw/plugin-sdk/channel-actions";
-import { BUNDLED_CHAT_CHANNEL_ENVELOPE_PREFIXES } from "openclaw/plugin-sdk/chat-channel-ids";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { expectDefined } from "openclaw/plugin-sdk/expect-runtime";
-import { createLazyRuntimeModule } from "openclaw/plugin-sdk/lazy-runtime";
-import type { MemoryEmbeddingProvider } from "openclaw/plugin-sdk/memory-core-host-engine-embeddings";
-import { MESSAGE_TOOL_DELIVERY_HINTS } from "openclaw/plugin-sdk/message-tool-delivery-hints";
+} from "grokbot/plugin-sdk/channel-actions";
+import { BUNDLED_CHAT_CHANNEL_ENVELOPE_PREFIXES } from "grokbot/plugin-sdk/chat-channel-ids";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { expectDefined } from "grokbot/plugin-sdk/expect-runtime";
+import { createLazyRuntimeModule } from "grokbot/plugin-sdk/lazy-runtime";
+import type { MemoryEmbeddingProvider } from "grokbot/plugin-sdk/memory-core-host-engine-embeddings";
+import { MESSAGE_TOOL_DELIVERY_HINTS } from "grokbot/plugin-sdk/message-tool-delivery-hints";
 import {
   parseStrictPositiveInteger,
   resolveTimerTimeoutMs,
-} from "openclaw/plugin-sdk/number-runtime";
-import { readFiniteNumberParam, readPositiveIntegerParam } from "openclaw/plugin-sdk/param-readers";
-import { resolveLivePluginConfigObject } from "openclaw/plugin-sdk/plugin-config-runtime";
-import { normalizeAgentId } from "openclaw/plugin-sdk/routing";
-import { ensureGlobalUndiciEnvProxyDispatcher } from "openclaw/plugin-sdk/runtime-env";
+} from "grokbot/plugin-sdk/number-runtime";
+import { readFiniteNumberParam, readPositiveIntegerParam } from "grokbot/plugin-sdk/param-readers";
+import { resolveLivePluginConfigObject } from "grokbot/plugin-sdk/plugin-config-runtime";
+import { normalizeAgentId } from "grokbot/plugin-sdk/routing";
+import { ensureGlobalUndiciEnvProxyDispatcher } from "grokbot/plugin-sdk/runtime-env";
 import {
   asOptionalRecord as asRecord,
   normalizeLowercaseStringOrEmpty,
-} from "openclaw/plugin-sdk/string-coerce-runtime";
-import { truncateUtf16Safe } from "openclaw/plugin-sdk/text-utility-runtime";
+} from "grokbot/plugin-sdk/string-coerce-runtime";
+import { truncateUtf16Safe } from "grokbot/plugin-sdk/text-utility-runtime";
 import { Type } from "typebox";
 import { definePluginEntry, type OpenClawPluginApi } from "./api.js";
 import {
@@ -72,10 +72,10 @@ type OpenAiEmbeddingClient = {
 };
 const loadOpenAiModule = createLazyRuntimeModule(() => import("openai"));
 const loadMemoryEmbeddingProviderModule = createLazyRuntimeModule(
-  () => import("openclaw/plugin-sdk/memory-core-host-engine-embeddings"),
+  () => import("grokbot/plugin-sdk/memory-core-host-engine-embeddings"),
 );
 const loadMemoryHostCoreModule = createLazyRuntimeModule(
-  () => import("openclaw/plugin-sdk/memory-host-core"),
+  () => import("grokbot/plugin-sdk/memory-host-core"),
 );
 
 function extractUserTextContent(message: unknown): string[] {
@@ -783,7 +783,7 @@ const LEADING_CURRENT_MESSAGE_ID_SENDER_RE = /^#\d+\s+[^\n:]{1,100}:\s*/;
 const UNTRUSTED_CONTEXT_HEADER_RE = /^Untrusted context \(metadata/m;
 
 /**
- * Matches JSON blobs that look like OpenClaw transport envelope metadata.
+ * Matches JSON blobs that look like GrokBot transport envelope metadata.
  * Allows `{` on its own line so pretty-printed JSON (the `JSON.stringify(..., null, 2)`
  * output produced by `formatUntrustedJsonBlock` in core) is also caught when it
  * leaks outside its ```json fence. Key list mirrors envelope identifiers used
@@ -898,7 +898,7 @@ function matchKnownChannelMarkerFreeEnvelopePrefix(
 }
 
 /**
- * Returns true if `text` looks like it contains OpenClaw-injected envelope or
+ * Returns true if `text` looks like it contains GrokBot-injected envelope or
  * transport metadata that should never be persisted as a long-term memory.
  */
 export function looksLikeEnvelopeSludge(text: string): boolean {
@@ -1186,7 +1186,7 @@ function stripLeadingChronologicalContextBlocks(text: string): string {
 }
 
 /**
- * Strips OpenClaw-injected envelope metadata from a user message so that only
+ * Strips GrokBot-injected envelope metadata from a user message so that only
  * the user's actual intent text remains. Returns empty string if nothing
  * meaningful survives.
  */

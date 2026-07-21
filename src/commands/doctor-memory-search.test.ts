@@ -226,7 +226,7 @@ describe("noteMemorySearchHealth", () => {
     expect(note).toHaveBeenCalledTimes(1);
     const message = firstNoteMessage();
     expect(message).toContain('Memory search provider is set to "local"');
-    expect(message).toContain("openclaw plugins install @openclaw/llama-cpp-provider");
+    expect(message).toContain("grokbot plugins install @grokbot/llama-cpp-provider");
   });
 
   it("supports silent structured collection through an injected note sink", async () => {
@@ -411,7 +411,7 @@ describe("noteMemorySearchHealth", () => {
         checked: false,
         ready: false,
         error:
-          "memory embedding readiness not checked; run `openclaw memory status --deep` to probe",
+          "memory embedding readiness not checked; run `grokbot memory status --deep` to probe",
         skipped: true,
       },
     });
@@ -422,7 +422,7 @@ describe("noteMemorySearchHealth", () => {
   it("warns when local provider skipped readiness but configured local model is missing", async () => {
     resolveMemorySearchConfig.mockReturnValue({
       provider: "local",
-      local: { modelPath: "/definitely/missing/openclaw-memory-model.gguf" },
+      local: { modelPath: "/definitely/missing/grokbot-memory-model.gguf" },
       remote: {},
     });
 
@@ -431,7 +431,7 @@ describe("noteMemorySearchHealth", () => {
         checked: false,
         ready: false,
         error:
-          "memory embedding readiness not checked; run `openclaw memory status --deep` to probe",
+          "memory embedding readiness not checked; run `grokbot memory status --deep` to probe",
         skipped: true,
       },
     });
@@ -501,7 +501,7 @@ describe("noteMemorySearchHealth", () => {
       session: { dmScope: "per-peer" },
       plugins: {
         slots: { memory: "memory-lancedb" },
-        entries: { "memory-lancedb": { enabled: true, config: { dbPath: ".openclaw/memory" } } },
+        entries: { "memory-lancedb": { enabled: true, config: { dbPath: ".grokbot/memory" } } },
       },
     } as unknown as OpenClawConfig;
 
@@ -938,7 +938,7 @@ describe("noteMemorySearchHealth", () => {
     const message = String(note.mock.calls[0]?.[0] ?? "");
     expect(message).toContain("memorySearch.sources with sessions");
     expect(message).toContain("memory.qmd.sessions.enabled is not true");
-    expect(message).toContain("openclaw config set memory.qmd.sessions.enabled true");
+    expect(message).toContain("grokbot config set memory.qmd.sessions.enabled true");
   });
 
   it("warns when QMD session export is explicitly disabled", async () => {
@@ -1175,11 +1175,11 @@ describe("noteMemorySearchHealth", () => {
   });
 
   it("does not warn when key-optional provider (lmstudio) probe was skipped (skipped: true)", async () => {
-    // When `openclaw doctor` runs without --deep, the probe is skipped and returns
+    // When `grokbot doctor` runs without --deep, the probe is skipped and returns
     // { checked: false, ready: false, skipped: true }. This must NOT produce a
     // false-positive warning — it means readiness was never checked, not that
     // embeddings are unavailable.
-    // Regression test for: https://github.com/openclaw/openclaw/issues/74608
+    // Regression test for: https://github.com/grokbot/grokbot/issues/74608
     resolveMemorySearchConfig.mockReturnValue({
       provider: "lmstudio",
       local: {},
@@ -1238,7 +1238,7 @@ describe("noteMemorySearchHealth", () => {
     const message = firstNoteMessage();
     expect(message).toContain('provider is set to "openai-compatible"');
     expect(message).toContain("remote.baseUrl");
-    expect(message).toContain("openclaw config set");
+    expect(message).toContain("grokbot config set");
     expect(resolveApiKeyForProvider).not.toHaveBeenCalled();
   });
 
@@ -1257,7 +1257,7 @@ describe("noteMemorySearchHealth", () => {
     const message = firstNoteMessage();
     expect(message).toContain('provider is set to "openai-compatible"');
     expect(message).toContain("memorySearch.model");
-    expect(message).toContain("openclaw config set");
+    expect(message).toContain("grokbot config set");
     expect(resolveApiKeyForProvider).not.toHaveBeenCalled();
   });
 
@@ -1504,7 +1504,7 @@ describe("noteMemorySearchHealth", () => {
   it("warns for key-optional provider (lmstudio) when gateway probe timed out", async () => {
     // A gateway timeout sets checked: false but skipped: false/absent. This is a
     // real diagnostic signal — embeddings may be unavailable — so we should warn.
-    // Regression guard: https://github.com/openclaw/openclaw/issues/74608
+    // Regression guard: https://github.com/grokbot/grokbot/issues/74608
     resolveMemorySearchConfig.mockReturnValue({
       provider: "lmstudio",
       local: {},
@@ -1556,8 +1556,8 @@ describe("noteMemorySearchHealth", () => {
 
     const message = firstNoteMessage();
     expect(message).toContain("Gateway memory probe for default agent is not ready");
-    expect(message).toContain("openclaw configure --section model");
-    expect(message).not.toContain("openclaw auth add --provider");
+    expect(message).toContain("grokbot configure --section model");
+    expect(message).not.toContain("grokbot auth add --provider");
   });
 
   it("warns for legacy auto mode as OpenAI when no API key is configured", async () => {
@@ -1573,7 +1573,7 @@ describe("noteMemorySearchHealth", () => {
     const message = firstNoteMessage();
     expect(message).toContain('provider is set to "openai"');
     expect(message).toContain("OPENAI_API_KEY");
-    expect(message).toContain("openclaw configure --section model");
+    expect(message).toContain("grokbot configure --section model");
   });
 
   it("does not probe unrelated embedding providers for legacy auto mode", async () => {
@@ -1814,7 +1814,7 @@ describe("memory recall doctor integration", () => {
     });
     repairDreamingArtifacts.mockResolvedValueOnce({
       changed: true,
-      archiveDir: "/tmp/agent-default/workspace/.openclaw-repair/dreaming/2026-04-11T21-35-00-000Z",
+      archiveDir: "/tmp/agent-default/workspace/.grokbot-repair/dreaming/2026-04-11T21-35-00-000Z",
       archivedDreamsDiary: false,
       archivedSessionCorpus: true,
       archivedSessionIngestion: true,

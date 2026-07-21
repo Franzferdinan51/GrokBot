@@ -1,7 +1,7 @@
 // Matrix plugin module implements credentials read behavior.
-import { normalizeAccountId } from "openclaw/plugin-sdk/account-id";
-import type { PluginStateSyncKeyedStore } from "openclaw/plugin-sdk/plugin-state-runtime";
-import { createPluginStateSyncKeyedStore } from "openclaw/plugin-sdk/runtime-doctor";
+import { normalizeAccountId } from "grokbot/plugin-sdk/account-id";
+import type { PluginStateSyncKeyedStore } from "grokbot/plugin-sdk/plugin-state-runtime";
+import { createPluginStateSyncKeyedStore } from "grokbot/plugin-sdk/runtime-doctor";
 import { getOptionalMatrixRuntime } from "../runtime.js";
 
 export { resolveMatrixCredentialsDir, resolveMatrixCredentialsPath } from "../storage-paths.js";

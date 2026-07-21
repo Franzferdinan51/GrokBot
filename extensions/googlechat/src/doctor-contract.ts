@@ -3,10 +3,10 @@ import { isDeepStrictEqual } from "node:util";
 import type {
   ChannelDoctorConfigMutation,
   ChannelDoctorLegacyConfigRule,
-} from "openclaw/plugin-sdk/channel-contract";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { mergeDeep } from "openclaw/plugin-sdk/plugin-config-runtime";
-import { asObjectRecord, defineChannelAliasMigration } from "openclaw/plugin-sdk/runtime-doctor";
+} from "grokbot/plugin-sdk/channel-contract";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { mergeDeep } from "grokbot/plugin-sdk/plugin-config-runtime";
+import { asObjectRecord, defineChannelAliasMigration } from "grokbot/plugin-sdk/runtime-doctor";
 
 type GoogleChatChannelsConfig = NonNullable<OpenClawConfig["channels"]>;
 
@@ -124,13 +124,13 @@ export const legacyConfigRules: ChannelDoctorLegacyConfigRule[] = [
   {
     path: ["channels", "googlechat"],
     message:
-      'channels.googlechat.actions.reactions is retired and ignored. Run "openclaw doctor --fix".',
+      'channels.googlechat.actions.reactions is retired and ignored. Run "grokbot doctor --fix".',
     match: hasRetiredReactions,
   },
   {
     path: ["channels", "googlechat", "accounts"],
     message:
-      'channels.googlechat.accounts.<id>.actions.reactions is retired and ignored. Run "openclaw doctor --fix".',
+      'channels.googlechat.accounts.<id>.actions.reactions is retired and ignored. Run "grokbot doctor --fix".',
     match: (value) => hasLegacyAccountAliases(value, hasRetiredReactions),
   },
   {
@@ -147,13 +147,13 @@ export const legacyConfigRules: ChannelDoctorLegacyConfigRule[] = [
   {
     path: ["channels", "googlechat"],
     message:
-      'channels.googlechat.groups.<id>.allow is legacy; use channels.googlechat.groups.<id>.enabled instead. Run "openclaw doctor --fix".',
+      'channels.googlechat.groups.<id>.allow is legacy; use channels.googlechat.groups.<id>.enabled instead. Run "grokbot doctor --fix".',
     match: hasLegacyGoogleChatGroupAllowAlias,
   },
   {
     path: ["channels", "googlechat", "accounts"],
     message:
-      'channels.googlechat.accounts.<id>.groups.<id>.allow is legacy; use channels.googlechat.accounts.<id>.groups.<id>.enabled instead. Run "openclaw doctor --fix".',
+      'channels.googlechat.accounts.<id>.groups.<id>.allow is legacy; use channels.googlechat.accounts.<id>.groups.<id>.enabled instead. Run "grokbot doctor --fix".',
     match: (value) => hasLegacyAccountAliases(value, hasLegacyGoogleChatGroupAllowAlias),
   },
   ...streamingAliasMigration.legacyConfigRules,

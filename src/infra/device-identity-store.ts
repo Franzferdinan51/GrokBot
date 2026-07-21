@@ -3,14 +3,14 @@ import crypto from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import type { Insertable, Selectable } from "kysely";
-import { withOpenClawStateDatabaseReadOnly } from "../state/openclaw-state-db-readonly.js";
-import type { DB as OpenClawStateKyselyDatabase } from "../state/openclaw-state-db.generated.js";
+import { withOpenClawStateDatabaseReadOnly } from "../state/grokbot-state-db-readonly.js";
+import type { DB as OpenClawStateKyselyDatabase } from "../state/grokbot-state-db.generated.js";
 import {
   openOpenClawStateDatabase,
   runOpenClawStateWriteTransaction,
   type OpenClawStateDatabaseOptions,
-} from "../state/openclaw-state-db.js";
-import { resolveOpenClawStateSqlitePath } from "../state/openclaw-state-db.paths.js";
+} from "../state/grokbot-state-db.js";
+import { resolveOpenClawStateSqlitePath } from "../state/grokbot-state-db.paths.js";
 import {
   deriveCanonicalEd25519PrivateKeyRaw,
   deriveCanonicalEd25519PublicKeyRaw,
@@ -66,7 +66,7 @@ function invalidStoredIdentityError(
   cause?: unknown,
 ): DeviceIdentityStorageError {
   return new DeviceIdentityStorageError(
-    `SQLite contains an invalid persisted device identity "${identityKey}". Run "openclaw doctor --fix" before starting the gateway or connecting this client.`,
+    `SQLite contains an invalid persisted device identity "${identityKey}". Run "grokbot doctor --fix" before starting the gateway or connecting this client.`,
     cause === undefined ? undefined : { cause },
   );
 }

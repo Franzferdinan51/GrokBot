@@ -1,6 +1,6 @@
 // Status scan config tests cover scan command config loading and cold-start resolution.
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { loadStatusScanCommandConfig } from "./status.scan.config-shared.js";
 
 const mocks = vi.hoisted(() => ({
@@ -15,7 +15,7 @@ describe("status.scan.config-shared", () => {
   beforeEach(() => {
     vi.clearAllMocks();
     mocks.resolveConfigPath.mockReturnValue(
-      `/tmp/openclaw-status-scan-config-shared-missing-${process.pid}.json`,
+      `/tmp/grokbot-status-scan-config-shared-missing-${process.pid}.json`,
     );
   });
 
@@ -134,7 +134,7 @@ describe("status.scan.config-shared", () => {
     });
 
     expect(result.secretDiagnostics).toEqual([
-      "OPENCLAW_GATEWAY_TOKEN conflicts with gateway.auth.token: Remove OPENCLAW_GATEWAY_TOKEN from the shell, ~/.openclaw/.env, or launchctl env if gateway.auth.token is intended, or point gateway.auth.token at ${OPENCLAW_GATEWAY_TOKEN} if the env var should be canonical.",
+      "OPENCLAW_GATEWAY_TOKEN conflicts with gateway.auth.token: Remove OPENCLAW_GATEWAY_TOKEN from the shell, ~/.grokbot/.env, or launchctl env if gateway.auth.token is intended, or point gateway.auth.token at ${OPENCLAW_GATEWAY_TOKEN} if the env var should be canonical.",
     ]);
   });
 

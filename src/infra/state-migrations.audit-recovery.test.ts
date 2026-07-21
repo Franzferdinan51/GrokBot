@@ -3,7 +3,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { resetPluginStateStoreForTests } from "../plugin-state/plugin-state-store.js";
-import { runOpenClawStateWriteTransaction } from "../state/openclaw-state-db.js";
+import { runOpenClawStateWriteTransaction } from "../state/grokbot-state-db.js";
 import { listSystemAgentAuditEntriesForTests } from "../system-agent/audit.test-support.js";
 import { withTempDir } from "../test-helpers/temp-dir.js";
 import { openLegacyAuditRawCheckpointStore } from "./state-migrations.audit-checkpoints.js";
@@ -61,13 +61,13 @@ describe("legacy audit recovery byte handling", () => {
   });
 
   it("blanks a zero-slack source within the fixed-size recovery inode", async () => {
-    await withTempDir({ prefix: "openclaw-audit-migration-short-secret-" }, async (stateDir) => {
+    await withTempDir({ prefix: "grokbot-audit-migration-short-secret-" }, async (stateDir) => {
       const sourcePath = path.join(stateDir, "logs", "config-audit.jsonl");
       const record = {
         ts: "2026-07-01T00:00:00.000Z",
         source: "config-io",
         event: "config.write",
-        argv: ["openclaw", "config", "set", "token", "x"],
+        argv: ["grokbot", "config", "set", "token", "x"],
         execArgv: [],
       };
       const original = `${JSON.stringify(record)}\n`;
@@ -84,7 +84,7 @@ describe("legacy audit recovery byte handling", () => {
       const recovery = await fs.readFile(`${sourcePath}.migrated.raw`, "utf8");
       expect(Buffer.byteLength(recovery)).toBe(Buffer.byteLength(original));
       expect(JSON.parse(sanitized.trim())).toMatchObject({
-        argv: ["openclaw", "config", "set", "token", "***"],
+        argv: ["grokbot", "config", "set", "token", "***"],
       });
       expect(recovery.trim()).toBe("");
       await expect(
@@ -94,7 +94,7 @@ describe("legacy audit recovery byte handling", () => {
   });
 
   it("uses original byte offsets when decoded audit text contains replacement characters", async () => {
-    await withTempDir({ prefix: "openclaw-audit-migration-invalid-utf8-" }, async (stateDir) => {
+    await withTempDir({ prefix: "grokbot-audit-migration-invalid-utf8-" }, async (stateDir) => {
       const sourcePath = path.join(stateDir, "audit", "system-agent.jsonl");
       const rawPath = `${sourcePath}.migrated.raw`;
       const original = Buffer.concat([
@@ -141,7 +141,7 @@ describe("legacy audit recovery byte handling", () => {
 
   it("upgrades a legacy nonzero raw checkpoint to the blank append pad", async () => {
     await withTempDir(
-      { prefix: "openclaw-audit-migration-checkpoint-upgrade-" },
+      { prefix: "grokbot-audit-migration-checkpoint-upgrade-" },
       async (stateDir) => {
         const sourcePath = path.join(stateDir, "audit", "system-agent.jsonl");
         await fs.mkdir(path.dirname(sourcePath), { recursive: true });
@@ -191,7 +191,7 @@ describe("legacy audit recovery byte handling", () => {
 
   it("does not confuse an older prefix checkpoint with a later scrub generation", async () => {
     await withTempDir(
-      { prefix: "openclaw-audit-migration-scrub-generation-" },
+      { prefix: "grokbot-audit-migration-scrub-generation-" },
       async (stateDir) => {
         const sourcePath = path.join(stateDir, "audit", "system-agent.jsonl");
         const rawPath = `${sourcePath}.migrated.raw`;
@@ -244,7 +244,7 @@ describe("legacy audit recovery byte handling", () => {
   });
 
   it("does not replay a scrub journal over an equal-width space redaction", async () => {
-    await withTempDir({ prefix: "openclaw-audit-migration-scrub-redacted-" }, async (stateDir) => {
+    await withTempDir({ prefix: "grokbot-audit-migration-scrub-redacted-" }, async (stateDir) => {
       const sourcePath = path.join(stateDir, "audit", "system-agent.jsonl");
       const rawPath = `${sourcePath}.migrated.raw`;
       const restorePath = `${rawPath}.doctor-scrub-restore`;
@@ -274,7 +274,7 @@ describe("legacy audit recovery byte handling", () => {
   });
 
   it("resumes a one-byte scrub interruption using exact journal progress", async () => {
-    await withTempDir({ prefix: "openclaw-audit-migration-scrub-one-byte-" }, async (stateDir) => {
+    await withTempDir({ prefix: "grokbot-audit-migration-scrub-one-byte-" }, async (stateDir) => {
       const sourcePath = path.join(stateDir, "audit", "system-agent.jsonl");
       const rawPath = `${sourcePath}.migrated.raw`;
       const restorePath = `${rawPath}.doctor-scrub-restore`;
@@ -308,7 +308,7 @@ describe("legacy audit recovery byte handling", () => {
   });
 
   it("resumes restoration after an interrupted rollback write", async () => {
-    await withTempDir({ prefix: "openclaw-audit-migration-restore-restart-" }, async (stateDir) => {
+    await withTempDir({ prefix: "grokbot-audit-migration-restore-restart-" }, async (stateDir) => {
       const sourcePath = path.join(stateDir, "audit", "system-agent.jsonl");
       const rawPath = `${sourcePath}.migrated.raw`;
       const restorePath = `${rawPath}.doctor-scrub-restore`;
@@ -348,7 +348,7 @@ describe("legacy audit recovery byte handling", () => {
 
   it("retries raw archive recovery when sanitized archive hardening fails", async () => {
     await withTempDir(
-      { prefix: "openclaw-audit-migration-recovery-permissions-" },
+      { prefix: "grokbot-audit-migration-recovery-permissions-" },
       async (stateDir) => {
         const sourcePath = path.join(stateDir, "audit", "system-agent.jsonl");
         const event = (summary: string) => ({
@@ -429,7 +429,7 @@ describe("legacy audit recovery byte handling", () => {
 
   it("completes a verified partial sanitized tail after an interrupted write", async () => {
     await withTempDir(
-      { prefix: "openclaw-audit-migration-partial-sanitized-tail-" },
+      { prefix: "grokbot-audit-migration-partial-sanitized-tail-" },
       async (stateDir) => {
         const sourcePath = path.join(stateDir, "audit", "system-agent.jsonl");
         const sanitizedPath = `${sourcePath}.migrated`;
@@ -480,7 +480,7 @@ describe("legacy audit recovery byte handling", () => {
   });
 
   it("preserves identical appends and blocks checkpointless whitespace ambiguity", async () => {
-    await withTempDir({ prefix: "openclaw-audit-migration-duplicate-tail-" }, async (stateDir) => {
+    await withTempDir({ prefix: "grokbot-audit-migration-duplicate-tail-" }, async (stateDir) => {
       const sourcePath = path.join(stateDir, "audit", "system-agent.jsonl");
       const rawPath = `${sourcePath}.migrated.raw`;
       const event = {

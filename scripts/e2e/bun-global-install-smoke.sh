@@ -44,16 +44,16 @@ prepare_ai_candidate() {
   local root_manifest
 
   if [ -z "$PACK_DIR" ]; then
-    PACK_DIR="$(mktemp -d "${TMPDIR:-/tmp}/openclaw-bun-pack.XXXXXX")"
+    PACK_DIR="$(mktemp -d "${TMPDIR:-/tmp}/grokbot-bun-pack.XXXXXX")"
   fi
-  echo "==> Extract bundled candidate @openclaw/ai package"
+  echo "==> Extract bundled candidate @grokbot/ai package"
   ai_package_dir="$PACK_DIR/ai-candidate"
   mkdir -p "$ai_package_dir"
   tar -xzf "$PACKAGE_TGZ" \
     -C "$ai_package_dir" \
     --strip-components=4 \
-    package/node_modules/@openclaw/ai
-  root_manifest="$PACK_DIR/openclaw-package.json"
+    package/node_modules/@grokbot/ai
+  root_manifest="$PACK_DIR/grokbot-package.json"
   ai_manifest="$ai_package_dir/package.json"
   tar -xOf "$PACKAGE_TGZ" package/package.json >"$root_manifest"
   node scripts/e2e/lib/bun-global-install/assertions.mjs \
@@ -62,9 +62,9 @@ prepare_ai_candidate() {
     "$ai_manifest" \
     >/dev/null
   npm pack --ignore-scripts --silent --pack-destination "$PACK_DIR" "$ai_package_dir" >/dev/null
-  ai_tarballs=("$PACK_DIR"/openclaw-ai-*.tgz)
+  ai_tarballs=("$PACK_DIR"/grokbot-ai-*.tgz)
   if [ "${#ai_tarballs[@]}" -ne 1 ] || [ ! -f "${ai_tarballs[0]}" ]; then
-    echo "expected one packed @openclaw/ai candidate in $PACK_DIR" >&2
+    echo "expected one packed @grokbot/ai candidate in $PACK_DIR" >&2
     exit 1
   fi
   AI_PACKAGE_TGZ="${ai_tarballs[0]}"
@@ -103,22 +103,22 @@ resolve_package_tgz() {
     exit 1
   fi
 
-  PACK_DIR="$(mktemp -d "${TMPDIR:-/tmp}/openclaw-bun-pack.XXXXXX")"
+  PACK_DIR="$(mktemp -d "${TMPDIR:-/tmp}/grokbot-bun-pack.XXXXXX")"
 
-  echo "==> Pack OpenClaw tarball"
+  echo "==> Pack GrokBot tarball"
   package_args=(
     --skip-build
     --output-dir "$PACK_DIR"
-    --output-name openclaw-current.tgz
+    --output-name grokbot-current.tgz
   )
   if [[ "${OPENCLAW_BUN_GLOBAL_SMOKE_ALLOW_UNRELEASED_CHANGELOG:-true}" == "true" ]]; then
     package_args+=(--allow-unreleased-changelog)
   fi
   PACKAGE_TGZ="$(
-    node scripts/package-openclaw-for-docker.mjs "${package_args[@]}"
+    node scripts/package-grokbot-for-docker.mjs "${package_args[@]}"
   )"
   if [ -z "$PACKAGE_TGZ" ] || [ ! -f "$PACKAGE_TGZ" ]; then
-    echo "missing packed OpenClaw tarball" >&2
+    echo "missing packed GrokBot tarball" >&2
     exit 1
   fi
 }
@@ -137,7 +137,7 @@ main() {
   local bun_path
   local openclaw_bin
   bun_path="$(command -v "$BUN_BIN")"
-  SMOKE_DIR="$(mktemp -d "${TMPDIR:-/tmp}/openclaw-bun-global.XXXXXX")"
+  SMOKE_DIR="$(mktemp -d "${TMPDIR:-/tmp}/grokbot-bun-global.XXXXXX")"
 
   export HOME="$SMOKE_DIR/home"
   export BUN_INSTALL="$HOME/.bun"
@@ -147,7 +147,7 @@ main() {
   export NO_COLOR=1
   mkdir -p "$HOME" "$BUN_INSTALL/bin" "$BUN_INSTALL/install/global" "$XDG_CACHE_HOME"
   export PATH="$BUN_INSTALL/bin:$(dirname "$(command -v node)"):$PATH"
-  # Release publishes @openclaw/ai first. Bun 1.3.14 ignores bundled deps in
+  # Release publishes @grokbot/ai first. Bun 1.3.14 ignores bundled deps in
   # local tarballs, so resolve that one package from the exact candidate bytes.
   node --input-type=module - \
     "$BUN_INSTALL/install/global/package.json" \
@@ -157,29 +157,29 @@ import fs from "node:fs";
 const [, , packageJsonPath, aiPackageTarball] = process.argv;
 fs.writeFileSync(
   packageJsonPath,
-  `${JSON.stringify({ private: true, overrides: { "@openclaw/ai": `file:${aiPackageTarball}` } })}\n`,
+  `${JSON.stringify({ private: true, overrides: { "@grokbot/ai": `file:${aiPackageTarball}` } })}\n`,
 );
 NODE
 
   echo "==> Bun version"
   "$bun_path" --version
 
-  echo "==> Bun global install packed OpenClaw"
+  echo "==> Bun global install packed GrokBot"
   "$bun_path" install -g "$PACKAGE_TGZ" --no-progress
 
-  openclaw_bin="$BUN_INSTALL/bin/openclaw"
+  openclaw_bin="$BUN_INSTALL/bin/grokbot"
   if [ ! -x "$openclaw_bin" ]; then
-    openclaw_bin="$(command -v openclaw || true)"
+    openclaw_bin="$(command -v grokbot || true)"
   fi
   if [ -z "$openclaw_bin" ] || [ ! -x "$openclaw_bin" ]; then
-    echo "Bun global install did not create an executable openclaw binary" >&2
+    echo "Bun global install did not create an executable grokbot binary" >&2
     exit 1
   fi
 
-  echo "==> OpenClaw version through Bun global install"
+  echo "==> GrokBot version through Bun global install"
   run_with_timeout "$COMMAND_TIMEOUT_MS" "$openclaw_bin" --version
 
-  echo "==> OpenClaw image providers through Bun global install"
+  echo "==> GrokBot image providers through Bun global install"
   local providers_json
   providers_json="$(run_with_timeout "$COMMAND_TIMEOUT_MS" "$openclaw_bin" infer image providers --json)"
   OPENCLAW_IMAGE_PROVIDERS_JSON="$providers_json" node scripts/e2e/lib/bun-global-install/assertions.mjs assert-image-providers

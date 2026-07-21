@@ -1,5 +1,5 @@
 #!/usr/bin/env -S node --import tsx
-// Openclaw Npm Postpublish Verify script supports OpenClaw repository automation.
+// Openclaw Npm Postpublish Verify script supports GrokBot repository automation.
 
 import { createPublicKey, verify as verifySignature } from "node:crypto";
 import {
@@ -36,7 +36,7 @@ import {
   packageNameFromSpecifier,
 } from "./lib/plugin-package-dependencies.mjs";
 import { runInstalledWorkspaceBootstrapSmoke } from "./lib/workspace-bootstrap-smoke.mjs";
-import { parseReleaseVersion, resolveNpmCommandInvocation } from "./openclaw-npm-release-check.ts";
+import { parseReleaseVersion, resolveNpmCommandInvocation } from "./grokbot-npm-release-check.ts";
 import { buildCmdExeCommandLine, resolveWindowsCmdExePath } from "./windows-cmd-helpers.mjs";
 
 type InstalledPackageJson = {
@@ -112,7 +112,7 @@ type OpenClawNpmPostpublishVerifyArgs =
     };
 
 export function openClawNpmPostpublishVerifyUsage(): string {
-  return "Usage: node --import tsx scripts/openclaw-npm-postpublish-verify.ts <version>";
+  return "Usage: node --import tsx scripts/grokbot-npm-postpublish-verify.ts <version>";
 }
 
 export function parseOpenClawNpmPostpublishVerifyArgs(
@@ -127,11 +127,11 @@ export function parseOpenClawNpmPostpublishVerifyArgs(
     throw new Error(openClawNpmPostpublishVerifyUsage());
   }
   if (version.startsWith("-")) {
-    throw new Error(`Unknown openclaw npm postpublish verifier option: ${version}`);
+    throw new Error(`Unknown grokbot npm postpublish verifier option: ${version}`);
   }
   const extraArg = args[1]?.trim();
   if (extraArg) {
-    throw new Error(`Unexpected openclaw npm postpublish verifier argument: ${extraArg}`);
+    throw new Error(`Unexpected grokbot npm postpublish verifier argument: ${extraArg}`);
   }
   return { help: false, version };
 }
@@ -142,7 +142,7 @@ export function buildPublishedInstallScenarios(version: string): PublishedInstal
     throw new Error(`Unsupported release version "${version}".`);
   }
 
-  const exactSpec = `openclaw@${version}`;
+  const exactSpec = `grokbot@${version}`;
   const scenarios: PublishedInstallScenario[] = [
     {
       name: "fresh-exact",
@@ -154,7 +154,7 @@ export function buildPublishedInstallScenarios(version: string): PublishedInstal
   if (parsed.channel === "stable" && parsed.correctionNumber !== undefined) {
     scenarios.push({
       name: "upgrade-from-base-stable",
-      installSpecs: [`openclaw@${parsed.baseVersion}`, exactSpec],
+      installSpecs: [`grokbot@${parsed.baseVersion}`, exactSpec],
       expectedVersion: version,
     });
   }
@@ -221,8 +221,8 @@ type NpmProvenanceStatement = {
 };
 
 const NPM_PROVENANCE_PREDICATE_TYPE = "https://slsa.dev/provenance/v1";
-const NPM_PROVENANCE_REPOSITORY = "https://github.com/openclaw/openclaw";
-const NPM_PROVENANCE_WORKFLOW_PATH = ".github/workflows/openclaw-npm-release.yml";
+const NPM_PROVENANCE_REPOSITORY = "https://github.com/grokbot/grokbot";
+const NPM_PROVENANCE_WORKFLOW_PATH = ".github/workflows/grokbot-npm-release.yml";
 const NPM_PROVENANCE_CERTIFICATE_ISSUER = "https://token.actions.githubusercontent.com";
 const NPM_PROVENANCE_BUILDER_ID = "https://github.com/actions/runner/github-hosted";
 const NPM_REGISTRY_REQUEST_TIMEOUT_MS = 30_000;
@@ -338,7 +338,7 @@ function resolveNpmProvenanceVerificationPolicy(
     statement.predicate?.runDetails?.builder?.id !== NPM_PROVENANCE_BUILDER_ID
   ) {
     throw new Error(
-      `npm provenance attestation does not bind ${version} to the trusted OpenClaw GitHub release workflow.`,
+      `npm provenance attestation does not bind ${version} to the trusted GrokBot GitHub release workflow.`,
     );
   }
 
@@ -694,7 +694,7 @@ export function collectInstalledPluginSdkZodArtifactErrors(packageRoot: string):
 function collectInstalledPluginSdkDeclarationErrors(packageRoot: string): string[] {
   const pluginSdkDistRoot = join(packageRoot, "dist", "plugin-sdk");
   const errors: string[] = [];
-  const forbiddenPrivateWorkspaceSpecifiers = ["@openclaw/llm-core"];
+  const forbiddenPrivateWorkspaceSpecifiers = ["@grokbot/llm-core"];
 
   if (!existsSync(pluginSdkDistRoot)) {
     return [];
@@ -909,8 +909,8 @@ function isBundledExtensionOwnedRuntimeImport(params: {
 
 export function resolveInstalledBinaryPath(prefixDir: string, platform = process.platform): string {
   return platform === "win32"
-    ? pathWin32.join(prefixDir, "openclaw.cmd")
-    : pathPosix.join(prefixDir, "bin", "openclaw");
+    ? pathWin32.join(prefixDir, "grokbot.cmd")
+    : pathPosix.join(prefixDir, "bin", "grokbot");
 }
 
 export function resolveInstalledBinaryCommandInvocation(
@@ -1130,7 +1130,7 @@ async function verifyPublishedRegistryProvenanceOnce(version: string): Promise<v
   if (!registry.pathname.endsWith("/")) {
     registry.pathname = `${registry.pathname}/`;
   }
-  const packageName = "openclaw";
+  const packageName = "grokbot";
   const packageDocument = (await fetchRegistryJson(
     new URL(
       `${encodeURIComponent(packageName)}/${encodeURIComponent(version)}`,
@@ -1204,7 +1204,7 @@ async function verifyPublishedRegistryProvenanceOnce(version: string): Promise<v
     expectedWorkflowSha: process.env.OPENCLAW_NPM_EXPECTED_WORKFLOW_SHA,
   });
   console.log(
-    `openclaw-npm-postpublish-verify: registry signature and provenance attestation verified (${version})`,
+    `grokbot-npm-postpublish-verify: registry signature and provenance attestation verified (${version})`,
   );
 }
 
@@ -1218,7 +1218,7 @@ function readInstalledBinaryVersion(prefixDir: string, cwd: string): string {
 }
 
 function verifyScenario(version: string, scenario: PublishedInstallScenario): void {
-  const workingDir = mkdtempSync(join(tmpdir(), `openclaw-postpublish-${scenario.name}.`));
+  const workingDir = mkdtempSync(join(tmpdir(), `grokbot-postpublish-${scenario.name}.`));
   const prefixDir = join(workingDir, "prefix");
 
   try {
@@ -1227,7 +1227,7 @@ function verifyScenario(version: string, scenario: PublishedInstallScenario): vo
     }
 
     const globalRoot = resolveGlobalRoot(prefixDir, workingDir);
-    const packageRoot = join(globalRoot, "openclaw");
+    const packageRoot = join(globalRoot, "grokbot");
     const pkg = JSON.parse(
       readFileSync(join(packageRoot, "package.json"), "utf8"),
     ) as InstalledPackageJson;
@@ -1240,7 +1240,7 @@ function verifyScenario(version: string, scenario: PublishedInstallScenario): vo
 
     if (normalizeInstalledBinaryVersion(installedBinaryVersion) !== scenario.expectedVersion) {
       errors.push(
-        `installed openclaw binary version mismatch: expected ${scenario.expectedVersion}, found ${installedBinaryVersion || "<missing>"}.`,
+        `installed grokbot binary version mismatch: expected ${scenario.expectedVersion}, found ${installedBinaryVersion || "<missing>"}.`,
       );
     }
 
@@ -1252,7 +1252,7 @@ function verifyScenario(version: string, scenario: PublishedInstallScenario): vo
       throw new Error(`${scenario.name} failed:\n- ${errors.join("\n- ")}`);
     }
 
-    console.log(`openclaw-npm-postpublish-verify: ${scenario.name} OK (${version})`);
+    console.log(`grokbot-npm-postpublish-verify: ${scenario.name} OK (${version})`);
   } finally {
     rmSync(workingDir, { force: true, recursive: true });
   }
@@ -1273,7 +1273,7 @@ async function main(argv = process.argv.slice(2)): Promise<void> {
   }
 
   console.log(
-    `openclaw-npm-postpublish-verify: verified published npm install paths for ${version}.`,
+    `grokbot-npm-postpublish-verify: verified published npm install paths for ${version}.`,
   );
 }
 
@@ -1282,7 +1282,7 @@ if (entrypoint !== null && import.meta.url === entrypoint) {
   try {
     await main();
   } catch (error) {
-    console.error(`openclaw-npm-postpublish-verify: ${formatErrorMessage(error)}`);
+    console.error(`grokbot-npm-postpublish-verify: ${formatErrorMessage(error)}`);
     process.exitCode = 1;
   }
 }

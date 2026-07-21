@@ -1,16 +1,16 @@
 // Telegram plugin module implements account inspect behavior.
-import { resolveAccountWithDefaultFallback } from "openclaw/plugin-sdk/account-core";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import type { TelegramAccountConfig } from "openclaw/plugin-sdk/config-contracts";
-import { resolveDefaultSecretProviderAlias } from "openclaw/plugin-sdk/provider-auth";
-import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "openclaw/plugin-sdk/routing";
-import { tryReadSecretFileSync } from "openclaw/plugin-sdk/secret-file-runtime";
+import { resolveAccountWithDefaultFallback } from "grokbot/plugin-sdk/account-core";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import type { TelegramAccountConfig } from "grokbot/plugin-sdk/config-contracts";
+import { resolveDefaultSecretProviderAlias } from "grokbot/plugin-sdk/provider-auth";
+import { DEFAULT_ACCOUNT_ID, normalizeAccountId } from "grokbot/plugin-sdk/routing";
+import { tryReadSecretFileSync } from "grokbot/plugin-sdk/secret-file-runtime";
 import {
   hasConfiguredSecretInput,
   normalizeSecretInputString,
-} from "openclaw/plugin-sdk/secret-input";
-import { coerceSecretRef } from "openclaw/plugin-sdk/secret-input-runtime";
-import { normalizeOptionalString } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/secret-input";
+import { coerceSecretRef } from "grokbot/plugin-sdk/secret-input-runtime";
+import { normalizeOptionalString } from "grokbot/plugin-sdk/string-coerce-runtime";
 import {
   mergeTelegramAccountConfig,
   resolveDefaultTelegramAccountId,

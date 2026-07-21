@@ -1,11 +1,11 @@
-// Resolves the configured default agent route shared by OpenClaw inference calls.
+// Resolves the configured default agent route shared by GrokBot inference calls.
 import { isDeepStrictEqual } from "node:util";
-import { normalizeProviderId } from "@openclaw/model-catalog-core/provider-id";
+import { normalizeProviderId } from "@grokbot/model-catalog-core/provider-id";
 import {
   cliBackendAcceptsAuthProfileForwarding,
   resolveCliExecutionAuthProfileId,
 } from "../agents/cli-execution-auth.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { normalizeAgentId } from "../routing/session-key.js";
 
 export type SystemAgentConfiguredRoute = {
@@ -44,7 +44,7 @@ export type DefaultInferenceRouteProjection = {
   tools: OpenClawConfig["tools"];
 };
 
-const SYSTEM_AGENT_EXECUTION_AGENT_ID = "openclaw";
+const SYSTEM_AGENT_EXECUTION_AGENT_ID = "grokbot";
 
 function projectSystemAgentExecutionConfig(
   config: OpenClawConfig,

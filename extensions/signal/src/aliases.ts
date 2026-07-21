@@ -1,7 +1,7 @@
-// Signal alias helpers keep OpenClaw-side names inside the Signal plugin boundary.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import type { ChannelDirectoryEntry } from "openclaw/plugin-sdk/core";
-import { normalizeLowercaseStringOrEmpty } from "openclaw/plugin-sdk/string-coerce-runtime";
+// Signal alias helpers keep GrokBot-side names inside the Signal plugin boundary.
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import type { ChannelDirectoryEntry } from "grokbot/plugin-sdk/core";
+import { normalizeLowercaseStringOrEmpty } from "grokbot/plugin-sdk/string-coerce-runtime";
 import { resolveSignalAccount } from "./accounts.js";
 import { looksLikeSignalTargetId, normalizeSignalMessagingTarget } from "./normalize.js";
 

@@ -1,5 +1,5 @@
-import type { OpenClawPluginApi } from "openclaw/plugin-sdk/plugin-entry";
-import { normalizeOptionalString, uniqueStrings } from "openclaw/plugin-sdk/string-coerce-runtime";
+import type { OpenClawPluginApi } from "grokbot/plugin-sdk/plugin-entry";
+import { normalizeOptionalString, uniqueStrings } from "grokbot/plugin-sdk/string-coerce-runtime";
 import {
   ACTIVE_MEMORY_DEBUG_PREFIX,
   ACTIVE_MEMORY_STATUS_PREFIX,

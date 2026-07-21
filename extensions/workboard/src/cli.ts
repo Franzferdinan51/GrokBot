@@ -2,14 +2,14 @@ import {
   WORKBOARD_STATUSES,
   type WorkboardCard,
   type WorkboardStatus,
-} from "@openclaw/workboard-contract";
+} from "@grokbot/workboard-contract";
 // Workboard plugin module implements cli behavior.
 import type { Command } from "commander";
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
-import { addGatewayClientOptions, callGatewayFromCli } from "openclaw/plugin-sdk/gateway-runtime";
-import { parseStrictPositiveInteger } from "openclaw/plugin-sdk/number-runtime";
-import { getRuntimeConfig } from "openclaw/plugin-sdk/runtime-config-snapshot";
-import { isRecord } from "openclaw/plugin-sdk/string-coerce-runtime";
+import { formatErrorMessage } from "grokbot/plugin-sdk/error-runtime";
+import { addGatewayClientOptions, callGatewayFromCli } from "grokbot/plugin-sdk/gateway-runtime";
+import { parseStrictPositiveInteger } from "grokbot/plugin-sdk/number-runtime";
+import { getRuntimeConfig } from "grokbot/plugin-sdk/runtime-config-snapshot";
+import { isRecord } from "grokbot/plugin-sdk/string-coerce-runtime";
 import { resolveWorkboardCardByIdOrPrefix } from "./card-lookup.js";
 import type { WorkboardDispatchResult, WorkboardStore } from "./store.js";
 

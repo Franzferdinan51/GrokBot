@@ -2,9 +2,9 @@
 import {
   isProviderAuthProfileConfigured,
   type OpenClawConfig,
-} from "openclaw/plugin-sdk/provider-auth";
-import { resolveApiKeyForProvider } from "openclaw/plugin-sdk/provider-auth-runtime";
-import { normalizeResolvedSecretInputString } from "openclaw/plugin-sdk/secret-input";
+} from "grokbot/plugin-sdk/provider-auth";
+import { resolveApiKeyForProvider } from "grokbot/plugin-sdk/provider-auth-runtime";
+import { normalizeResolvedSecretInputString } from "grokbot/plugin-sdk/secret-input";
 import {
   trimToUndefined,
   type SpeechDirectiveTokenParseContext,
@@ -12,12 +12,12 @@ import {
   type SpeechProviderOverrides,
   type SpeechProviderPlugin,
   type SpeechSynthesisTarget,
-} from "openclaw/plugin-sdk/speech";
-import { resolveSpeechProviderApiKey } from "openclaw/plugin-sdk/speech-core";
+} from "grokbot/plugin-sdk/speech";
+import { resolveSpeechProviderApiKey } from "grokbot/plugin-sdk/speech-core";
 import {
   asFiniteNumberInRange,
   normalizeLowercaseStringOrEmpty,
-} from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/string-coerce-runtime";
 import {
   isValidXaiTtsVoice,
   listXaiTtsVoices,
@@ -344,6 +344,6 @@ async function resolveXaiAudioApiKey(
     return apiKey;
   }
   throw new Error(
-    "xAI credentials missing for TTS. Sign in with `openclaw onboard --auth-choice xai-oauth`, or run `openclaw onboard --auth-choice xai-api-key`, or set XAI_API_KEY.",
+    "xAI credentials missing for TTS. Sign in with `grokbot onboard --auth-choice xai-oauth`, or run `grokbot onboard --auth-choice xai-api-key`, or set XAI_API_KEY.",
   );
 }

@@ -1,5 +1,5 @@
 // Hook frontmatter helpers parse metadata blocks from hook files.
-import { readStringValue } from "@openclaw/normalization-core/string-coerce";
+import { readStringValue } from "@grokbot/normalization-core/string-coerce";
 import { parseFrontmatterBlock } from "../../packages/markdown-core/src/frontmatter.js";
 import {
   applyOpenClawManifestInstallCommonFields,
@@ -47,7 +47,7 @@ function parseInstallSpec(input: unknown): HookInstallSpec | undefined {
   return spec;
 }
 
-/** Resolve OpenClaw hook metadata from the manifest block in HOOK.md frontmatter. */
+/** Resolve GrokBot hook metadata from the manifest block in HOOK.md frontmatter. */
 export function resolveOpenClawMetadata(
   frontmatter: ParsedHookFrontmatter,
 ): OpenClawHookMetadata | undefined {

@@ -68,7 +68,7 @@ vi.mock("../config/paths.js", () => ({
   get isNixMode() {
     return configMocks.isNixMode.value;
   },
-  resolveStateDir: vi.fn(() => "/tmp/openclaw-state"),
+  resolveStateDir: vi.fn(() => "/tmp/grokbot-state"),
 }));
 
 vi.mock("../config/runtime-overrides.js", () => ({
@@ -87,7 +87,7 @@ let loadGatewayStartupConfigSnapshot: typeof import("./server-startup-config.js"
 let configIo: typeof import("../config/io.js");
 let configMutate: typeof import("../config/mutate.js");
 
-const configPath = "/tmp/openclaw-startup-recovery.json";
+const configPath = "/tmp/grokbot-startup-recovery.json";
 const telegramAutoEnableChange = "Telegram configured, enabled automatically.";
 const runtimeOnlyAutoEnableLog = `gateway: auto-enabled plugins for this runtime without writing config:\n- ${telegramAutoEnableChange}`;
 const validConfig = {
@@ -480,7 +480,7 @@ describe("gateway startup config validation", () => {
     vi.mocked(configIo.readConfigFileSnapshot).mockResolvedValueOnce(invalidSnapshot);
 
     await expectStartupRejects(
-      `Invalid config at ${configPath}:\ngateway.mode: Expected 'local' or 'remote'\nRun "openclaw doctor --fix" to repair, then retry.\nIf startup is still blocked, inspect the adjacent .bak backup before restoring it manually.`,
+      `Invalid config at ${configPath}:\ngateway.mode: Expected 'local' or 'remote'\nRun "grokbot doctor --fix" to repair, then retry.\nIf startup is still blocked, inspect the adjacent .bak backup before restoring it manually.`,
     );
   });
 
@@ -510,7 +510,7 @@ describe("gateway startup config validation", () => {
       `Invalid config at ${configPath}:\nplugins.slots.memory: plugin not found: source-only-pack\nThis is a plugin packaging issue, not a local config problem.\nUpdate or reinstall the plugin after the publisher ships compiled JavaScript, or disable/uninstall the plugin until then.`,
     );
     await start.catch((error: unknown) => {
-      expect(String(error)).not.toContain("openclaw doctor --fix");
+      expect(String(error)).not.toContain("grokbot doctor --fix");
     });
   });
 
@@ -539,7 +539,7 @@ describe("gateway startup config validation", () => {
     });
     vi.mocked(configIo.readConfigFileSnapshot).mockResolvedValueOnce(invalidSnapshot);
 
-    await expectStartupRejects('Run "openclaw doctor --fix" to repair, then retry.');
+    await expectStartupRejects('Run "grokbot doctor --fix" to repair, then retry.');
   });
 
   it("rejects legacy config entries in Nix mode", async () => {
@@ -580,7 +580,7 @@ describe("gateway startup config validation", () => {
         {
           path: "plugins.entries.feishu",
           message:
-            "plugin feishu: plugin requires OpenClaw >=2026.4.23, but this host is 2026.4.22; skipping load",
+            "plugin feishu: plugin requires GrokBot >=2026.4.23, but this host is 2026.4.22; skipping load",
         },
       ],
     });

@@ -2,7 +2,7 @@
 import { chmodSync, existsSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
-import { MAX_TIMER_TIMEOUT_MS } from "@openclaw/normalization-core/number-coercion";
+import { MAX_TIMER_TIMEOUT_MS } from "@grokbot/normalization-core/number-coercion";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   posixAgentWorkspaceScript,
@@ -38,7 +38,7 @@ const TEST_AUTH = {
 const tempDirs: string[] = [];
 
 function makeTempDir(): string {
-  const root = mkdtempSync(path.join(tmpdir(), "openclaw-parallels-npm-update-"));
+  const root = mkdtempSync(path.join(tmpdir(), "grokbot-parallels-npm-update-"));
   tempDirs.push(root);
   return root;
 }
@@ -113,20 +113,20 @@ describe("parallels npm update smoke", () => {
     expect(
       parseArgs([
         "--target-tarball",
-        "/tmp/openclaw-candidate.tgz",
+        "/tmp/grokbot-candidate.tgz",
         "--dependency-tarball",
-        "/tmp/openclaw-ai-candidate.tgz",
+        "/tmp/grokbot-ai-candidate.tgz",
       ]),
     ).toMatchObject({
-      dependencyTarballs: ["/tmp/openclaw-ai-candidate.tgz"],
-      targetTarball: "/tmp/openclaw-candidate.tgz",
+      dependencyTarballs: ["/tmp/grokbot-ai-candidate.tgz"],
+      targetTarball: "/tmp/grokbot-candidate.tgz",
       updateTarget: "",
       freshTargetSpec: undefined,
     });
     expect(() =>
-      parseArgs(["--target-tarball", "/tmp/openclaw-candidate.tgz", "--update-target", "beta"]),
+      parseArgs(["--target-tarball", "/tmp/grokbot-candidate.tgz", "--update-target", "beta"]),
     ).toThrow("--target-tarball cannot be combined");
-    expect(() => parseArgs(["--dependency-tarball", "/tmp/openclaw-ai-candidate.tgz"])).toThrow(
+    expect(() => parseArgs(["--dependency-tarball", "/tmp/grokbot-ai-candidate.tgz"])).toThrow(
       "--dependency-tarball requires --target-tarball",
     );
   });
@@ -159,7 +159,7 @@ describe("parallels npm update smoke", () => {
         ...TEST_AUTH,
         dependencyTarballs: [],
         json: false,
-        packageSpec: "openclaw@latest",
+        packageSpec: "grokbot@latest",
         platforms: new Set<Platform>(["linux"]),
         provider: "openai",
         updateTarget: "local-main",
@@ -182,15 +182,15 @@ set -euo pipefail
 log_path=${JSON.stringify(logPath)}
 printf '%s\\n' "$*" >>"$log_path"
 args=" $* "
-if [[ "$args" == *" /usr/bin/tee /tmp/openclaw-parallels-npm-update-linux-"* ]]; then
+if [[ "$args" == *" /usr/bin/tee /tmp/grokbot-parallels-npm-update-linux-"* ]]; then
   cat >/dev/null
   exit 0
 fi
-if [[ "$args" == *" /bin/chmod 755 /tmp/openclaw-parallels-npm-update-linux-"* ]]; then
+if [[ "$args" == *" /bin/chmod 755 /tmp/grokbot-parallels-npm-update-linux-"* ]]; then
   echo "chmod denied" >&2
   exit 7
 fi
-if [[ "$args" == *" /bin/rm -f /tmp/openclaw-parallels-npm-update-linux-"* ]]; then
+if [[ "$args" == *" /bin/rm -f /tmp/grokbot-parallels-npm-update-linux-"* ]]; then
   printf 'cleanup\\n' >>"$log_path"
   exit 0
 fi
@@ -209,7 +209,7 @@ exit 1
           ...TEST_AUTH,
           dependencyTarballs: [],
           json: false,
-          packageSpec: "openclaw@latest",
+          packageSpec: "grokbot@latest",
           platforms: new Set<Platform>(["linux"]),
           provider: "openai",
           updateTarget: "local-main",
@@ -225,15 +225,15 @@ exit 1
             smoke,
             "Linux VM",
             "echo update",
-            "openclaw-parallels-npm-update-linux",
+            "grokbot-parallels-npm-update-linux",
           ),
         ).toThrow("failed to chmod guest script");
       },
     );
 
     const log = readFileSync(logPath, "utf8");
-    expect(log).toContain("/bin/chmod 755 /tmp/openclaw-parallels-npm-update-linux-");
-    expect(log).toContain("/bin/rm -f /tmp/openclaw-parallels-npm-update-linux-");
+    expect(log).toContain("/bin/chmod 755 /tmp/grokbot-parallels-npm-update-linux-");
+    expect(log).toContain("/bin/rm -f /tmp/grokbot-parallels-npm-update-linux-");
     expect(log.match(/^cleanup$/gm)).toHaveLength(1);
   });
 
@@ -243,7 +243,7 @@ exit 1
     expect(script).toContain("--beta-validation [target]");
     expect(script).toContain("resolveOpenClawRegistryVersion");
     expect(script).toContain("this.options.updateTarget = version");
-    expect(script).toContain("this.options.freshTargetSpec = `openclaw@${version}`");
+    expect(script).toContain("this.options.freshTargetSpec = `grokbot@${version}`");
     expect(script).toContain("runFreshTargetInstalls");
     expect(script).toContain("freshTargetStatus");
   });
@@ -303,13 +303,13 @@ exit 1
       parseRegistryPackageMetadata(
         JSON.stringify({
           version: "2026.5.20-beta.1",
-          "dist.tarball": "https://registry.example/openclaw-keyed.tgz",
+          "dist.tarball": "https://registry.example/grokbot-keyed.tgz",
           gitHead: "abcdef0123456789",
         }),
       ),
     ).toEqual({
       version: "2026.5.20-beta.1",
-      tarball: "https://registry.example/openclaw-keyed.tgz",
+      tarball: "https://registry.example/grokbot-keyed.tgz",
       gitHead: "abcdef0123456789",
     });
 
@@ -317,12 +317,12 @@ exit 1
       parseRegistryPackageMetadata(
         JSON.stringify({
           version: "2026.5.20-beta.1",
-          dist: { tarball: "https://registry.example/openclaw-nested.tgz" },
+          dist: { tarball: "https://registry.example/grokbot-nested.tgz" },
         }),
       ),
     ).toEqual({
       version: "2026.5.20-beta.1",
-      tarball: "https://registry.example/openclaw-nested.tgz",
+      tarball: "https://registry.example/grokbot-nested.tgz",
       gitHead: "",
     });
   });
@@ -385,10 +385,10 @@ exit 1
     expect(scripts).toContain("print_log_tail()");
     expect(scripts).toContain("OPENCLAW_PARALLELS_NPM_UPDATE_LOG_TAIL_BYTES");
     expect(scripts).toContain('print_log_tail "$output_file"');
-    expect(scripts).toContain("print_log_tail /tmp/openclaw-parallels-macos-gateway.log >&2");
-    expect(scripts).toContain("print_log_tail /tmp/openclaw-parallels-linux-gateway.log >&2");
+    expect(scripts).toContain("print_log_tail /tmp/grokbot-parallels-macos-gateway.log >&2");
+    expect(scripts).toContain("print_log_tail /tmp/grokbot-parallels-linux-gateway.log >&2");
     expect(scripts).not.toContain('cat "$output_file"');
-    expect(scripts).not.toContain("cat /tmp/openclaw-parallels-");
+    expect(scripts).not.toContain("cat /tmp/grokbot-parallels-");
   });
 
   it("passes platform model timeouts to POSIX update agent turns", () => {
@@ -566,7 +566,7 @@ exit 1
           ...TEST_AUTH,
           dependencyTarballs: [],
           json: false,
-          packageSpec: "openclaw@latest",
+          packageSpec: "grokbot@latest",
           platforms: new Set<Platform>(["linux"]),
           provider: "openai",
           updateTarget: "local-main",
@@ -584,7 +584,7 @@ exit 1
     ) => Promise<number>;
 
     await expect(
-      runStreamingToJobLog.call(smoke, "openclaw-definitely-missing-command", [], 60 * 60 * 1000, {
+      runStreamingToJobLog.call(smoke, "grokbot-definitely-missing-command", [], 60 * 60 * 1000, {
         append: () => undefined,
         logPath: "",
         signal: new AbortController().signal,
@@ -607,7 +607,7 @@ exit 1
             ...TEST_AUTH,
             dependencyTarballs: [],
             json: false,
-            packageSpec: "openclaw@latest",
+            packageSpec: "grokbot@latest",
             platforms: new Set<Platform>(["linux"]),
             provider: "openai",
             updateTarget: "local-main",
@@ -840,7 +840,7 @@ exit 7
           ...TEST_AUTH,
           dependencyTarballs: [],
           json: false,
-          packageSpec: "openclaw@latest",
+          packageSpec: "grokbot@latest",
           platforms: new Set<Platform>(["macos"]),
           provider: "openai",
           updateTarget: "local-main",
@@ -882,7 +882,7 @@ exit 7
           ...TEST_AUTH,
           dependencyTarballs: [],
           json: false,
-          packageSpec: "openclaw@latest",
+          packageSpec: "grokbot@latest",
           platforms: new Set<Platform>(["macos"]),
           provider: "openai",
           updateTarget: "local-main",
@@ -929,18 +929,18 @@ exit 7
     expect(windowsScript).toContain("Remove-FuturePluginEntries\nStop-OpenClawGatewayProcesses");
     expect(script).toContain("scrub_future_plugin_entries\nstop_openclaw_gateway_processes");
     expect(script).toContain("Invoke-WithScopedEnv @{ OPENCLAW_DISABLE_BUNDLED_PLUGINS = '1'");
-    expect(macosScript).toContain('OPENCLAW_BIN="$(resolve_required_command openclaw)"');
+    expect(macosScript).toContain('OPENCLAW_BIN="$(resolve_required_command grokbot)"');
     expect(macosScript).toContain("/usr/local/bin:/usr/local/sbin");
     expect(macosScript).toContain(
       'OPENCLAW_DISABLE_BUNDLED_PLUGINS=1 "$OPENCLAW_BIN" update --tag',
     );
-    expect(macosScript).not.toContain("/opt/homebrew/bin/openclaw");
-    expect(script).toContain("OPENCLAW_DISABLE_BUNDLED_PLUGINS=1 openclaw update --tag");
+    expect(macosScript).not.toContain("/opt/homebrew/bin/grokbot");
+    expect(script).toContain("OPENCLAW_DISABLE_BUNDLED_PLUGINS=1 grokbot update --tag");
     expect(macosScript).toContain(
       'OPENCLAW_DISABLE_BUNDLED_PLUGINS=1 "$OPENCLAW_BIN" gateway stop',
     );
     expect(script).toContain(
-      "OPENCLAW_DISABLE_BUNDLED_PLUGINS=1 OPENCLAW_ALLOW_ROOT=1 openclaw gateway stop",
+      "OPENCLAW_DISABLE_BUNDLED_PLUGINS=1 OPENCLAW_ALLOW_ROOT=1 grokbot gateway stop",
     );
   });
 
@@ -951,11 +951,11 @@ exit 7
       updateTarget: "2026.5.3-beta.2",
     });
 
-    const updateIndex = script.indexOf("Invoke-OpenClaw update --tag");
+    const updateIndex = script.indexOf("Invoke-GrokBot update --tag");
     const scopedIndex = script.indexOf("Invoke-WithScopedEnv @{ OPENCLAW_DISABLE_BUNDLED_PLUGINS");
-    const versionIndex = script.indexOf("Invoke-OpenClaw --version", scopedIndex);
-    const restartIndex = script.indexOf("Invoke-OpenClaw gateway restart");
-    const agentIndex = script.indexOf("Invoke-OpenClaw agent --local");
+    const versionIndex = script.indexOf("Invoke-GrokBot --version", scopedIndex);
+    const restartIndex = script.indexOf("Invoke-GrokBot gateway restart");
+    const agentIndex = script.indexOf("Invoke-GrokBot agent --local");
 
     expect(updateIndex).toBeGreaterThanOrEqual(0);
     expect(scopedIndex).toBeGreaterThanOrEqual(0);
@@ -985,13 +985,13 @@ exit 7
     expect(staleImportLine).toContain("$updateText -match 'ERR_MODULE_NOT_FOUND'");
     expect(staleImportLine).toContain(`$updateText -match '${staleImportPattern}'`);
     expect(staleImportPattern).toBe(
-      String.raw`node_modules\\openclaw\\dist\\[^\\]+-[A-Za-z0-9_-]+\.js`,
+      String.raw`node_modules\\grokbot\\dist\\[^\\]+-[A-Za-z0-9_-]+\.js`,
     );
-    expect(staleImportPattern).not.toContain("node_modules\\openclaw\\dist\\");
+    expect(staleImportPattern).not.toContain("node_modules\\grokbot\\dist\\");
     expect(staleImportPattern.match(/\\\\/g)).toHaveLength(4);
-    const representativeUpdateFailure = String.raw`Error [ERR_MODULE_NOT_FOUND]: Cannot find module 'C:\Users\runner\AppData\Roaming\npm\node_modules\openclaw\dist\main-a1_B2.js' imported from C:\Users\runner\AppData\Roaming\npm\node_modules\openclaw\dist\cli.js`;
+    const representativeUpdateFailure = String.raw`Error [ERR_MODULE_NOT_FOUND]: Cannot find module 'C:\Users\runner\AppData\Roaming\npm\node_modules\grokbot\dist\main-a1_B2.js' imported from C:\Users\runner\AppData\Roaming\npm\node_modules\grokbot\dist\cli.js`;
     const generatedRegex = new RegExp(staleImportPattern);
     expect(generatedRegex.test(representativeUpdateFailure)).toBe(true);
-    expect(generatedRegex.test(String.raw`node_modules\openclaw\dist\main.js`)).toBe(false);
+    expect(generatedRegex.test(String.raw`node_modules\grokbot\dist\main.js`)).toBe(false);
   });
 });

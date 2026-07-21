@@ -1,12 +1,12 @@
 // Workshop types define generated skill draft, policy, and config contracts.
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import type { SkillScanFinding } from "../security/scanner.js";
 
 /** Schema id for persisted skill workshop proposal records. */
-export const SKILL_WORKSHOP_SCHEMA = "openclaw.skill-workshop.proposal.v1" as const;
+export const SKILL_WORKSHOP_SCHEMA = "grokbot.skill-workshop.proposal.v1" as const;
 export const SKILL_WORKSHOP_MANIFEST_SCHEMA =
-  "openclaw.skill-workshop.proposals-manifest.v1" as const;
-export const SKILL_WORKSHOP_ROLLBACK_SCHEMA = "openclaw.skill-workshop.rollback.v1" as const;
+  "grokbot.skill-workshop.proposals-manifest.v1" as const;
+export const SKILL_WORKSHOP_ROLLBACK_SCHEMA = "grokbot.skill-workshop.rollback.v1" as const;
 export const MAX_SKILL_PROPOSAL_ORIGIN_RUN_IDS = 4096;
 
 type SkillProposalKind = "create" | "update";

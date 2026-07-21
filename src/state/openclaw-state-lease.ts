@@ -9,17 +9,17 @@ import {
 } from "../infra/kysely-sync.js";
 import { isSqliteLockError } from "../infra/sqlite-transaction.js";
 import { MAX_TIMER_TIMEOUT_MS } from "../shared/number-coercion.js";
-import type { DB as OpenClawAgentKyselyDatabase } from "./openclaw-agent-db.generated.js";
+import type { DB as OpenClawAgentKyselyDatabase } from "./grokbot-agent-db.generated.js";
 import {
   openOpenClawAgentDatabase,
   runOpenClawAgentWriteTransaction,
-} from "./openclaw-agent-db.js";
-import type { DB as OpenClawStateKyselyDatabase } from "./openclaw-state-db.generated.js";
+} from "./grokbot-agent-db.js";
+import type { DB as OpenClawStateKyselyDatabase } from "./grokbot-state-db.generated.js";
 import {
   openOpenClawStateDatabase,
   runOpenClawStateWriteTransaction,
   type OpenClawStateDatabaseOptions,
-} from "./openclaw-state-db.js";
+} from "./grokbot-state-db.js";
 
 type LeaseDatabase = Pick<OpenClawStateKyselyDatabase, "state_leases">;
 type AgentLeaseDatabase = Pick<OpenClawAgentKyselyDatabase, "state_leases">;

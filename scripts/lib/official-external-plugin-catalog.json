@@ -1,33 +1,33 @@
 {
   "schemaVersion": 1,
-  "id": "openclaw-official-external-plugins",
+  "id": "grokbot-official-external-plugins",
   "generatedAt": "2026-06-22T00:00:00.000Z",
   "sequence": 1,
-  "description": "Bundled fallback feed for official external OpenClaw plugins.",
+  "description": "Bundled fallback feed for official external GrokBot plugins.",
   "entries": [
     {
-      "name": "@openclaw/acpx",
-      "description": "OpenClaw ACP runtime backend",
+      "name": "@grokbot/acpx",
+      "description": "GrokBot ACP runtime backend",
       "source": "official",
       "kind": "plugin",
-      "openclaw": {
+      "grokbot": {
         "plugin": {
           "id": "acpx",
           "label": "ACPX Runtime"
         },
         "install": {
-          "npmSpec": "@openclaw/acpx",
+          "npmSpec": "@grokbot/acpx",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.4.25"
         }
       }
     },
     {
-      "name": "@openclaw/brave-plugin",
-      "description": "OpenClaw Brave plugin",
+      "name": "@grokbot/brave-plugin",
+      "description": "GrokBot Brave plugin",
       "source": "official",
       "kind": "plugin",
-      "openclaw": {
+      "grokbot": {
         "plugin": {
           "id": "brave",
           "label": "Brave"
@@ -42,13 +42,13 @@
             "envVars": ["BRAVE_API_KEY"],
             "placeholder": "BSA...",
             "signupUrl": "https://api-dashboard.search.brave.com/app/keys",
-            "docsUrl": "https://docs.openclaw.ai/tools/brave-search",
+            "docsUrl": "https://docs.grokbot.ai/tools/brave-search",
             "credentialPath": "plugins.entries.brave.config.webSearch.apiKey",
             "autoDetectOrder": 10
           }
         ],
         "install": {
-          "npmSpec": "@openclaw/brave-plugin",
+          "npmSpec": "@grokbot/brave-plugin",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.4.10",
           "allowInvalidConfigRecovery": true
@@ -56,11 +56,11 @@
       }
     },
     {
-      "name": "@openclaw/codex",
-      "description": "OpenClaw Codex app-server harness and native session catalog",
+      "name": "@grokbot/codex",
+      "description": "GrokBot Codex app-server harness and native session catalog",
       "source": "official",
       "kind": "plugin",
-      "openclaw": {
+      "grokbot": {
         "plugin": {
           "id": "codex",
           "label": "Codex"
@@ -69,72 +69,72 @@
           "migrationProviders": ["codex"]
         },
         "install": {
-          "npmSpec": "@openclaw/codex",
+          "npmSpec": "@grokbot/codex",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.5.1-beta.1"
         }
       }
     },
     {
-      "name": "@openclaw/copilot",
-      "description": "OpenClaw GitHub Copilot agent runtime plugin",
+      "name": "@grokbot/copilot",
+      "description": "GrokBot GitHub Copilot agent runtime plugin",
       "source": "official",
       "kind": "plugin",
-      "openclaw": {
+      "grokbot": {
         "plugin": {
           "id": "copilot",
           "label": "GitHub Copilot agent runtime"
         },
         "install": {
-          "clawhubSpec": "clawhub:@openclaw/copilot",
-          "npmSpec": "@openclaw/copilot",
+          "clawhubSpec": "clawhub:@grokbot/copilot",
+          "npmSpec": "@grokbot/copilot",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.5.28"
         }
       }
     },
     {
-      "name": "@openclaw/diagnostics-otel",
-      "description": "OpenClaw diagnostics OpenTelemetry exporter",
+      "name": "@grokbot/diagnostics-otel",
+      "description": "GrokBot diagnostics OpenTelemetry exporter",
       "source": "official",
       "kind": "plugin",
-      "openclaw": {
+      "grokbot": {
         "plugin": {
           "id": "diagnostics-otel",
           "label": "Diagnostics OpenTelemetry"
         },
         "install": {
-          "clawhubSpec": "clawhub:@openclaw/diagnostics-otel",
-          "npmSpec": "@openclaw/diagnostics-otel",
+          "clawhubSpec": "clawhub:@grokbot/diagnostics-otel",
+          "npmSpec": "@grokbot/diagnostics-otel",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.4.25"
         }
       }
     },
     {
-      "name": "@openclaw/diagnostics-prometheus",
-      "description": "OpenClaw diagnostics Prometheus exporter",
+      "name": "@grokbot/diagnostics-prometheus",
+      "description": "GrokBot diagnostics Prometheus exporter",
       "source": "official",
       "kind": "plugin",
-      "openclaw": {
+      "grokbot": {
         "plugin": {
           "id": "diagnostics-prometheus",
           "label": "Diagnostics Prometheus"
         },
         "install": {
-          "clawhubSpec": "clawhub:@openclaw/diagnostics-prometheus",
-          "npmSpec": "@openclaw/diagnostics-prometheus",
+          "clawhubSpec": "clawhub:@grokbot/diagnostics-prometheus",
+          "npmSpec": "@grokbot/diagnostics-prometheus",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.4.25"
         }
       }
     },
     {
-      "name": "@openclaw/diffs",
-      "description": "OpenClaw diff viewer plugin",
+      "name": "@grokbot/diffs",
+      "description": "GrokBot diff viewer plugin",
       "source": "official",
       "kind": "plugin",
-      "openclaw": {
+      "grokbot": {
         "plugin": {
           "id": "diffs",
           "label": "Diffs"
@@ -144,37 +144,37 @@
           "order": 40
         },
         "install": {
-          "clawhubSpec": "clawhub:@openclaw/diffs",
-          "npmSpec": "@openclaw/diffs",
+          "clawhubSpec": "clawhub:@grokbot/diffs",
+          "npmSpec": "@grokbot/diffs",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.4.30"
         }
       }
     },
     {
-      "name": "@openclaw/diffs-language-pack",
-      "description": "OpenClaw diffs viewer syntax highlighting language pack",
+      "name": "@grokbot/diffs-language-pack",
+      "description": "GrokBot diffs viewer syntax highlighting language pack",
       "source": "official",
       "kind": "plugin",
-      "openclaw": {
+      "grokbot": {
         "plugin": {
           "id": "diffs-language-pack",
           "label": "Diff Viewer Language Pack"
         },
         "install": {
-          "npmSpec": "@openclaw/diffs-language-pack",
-          "clawhubSpec": "clawhub:@openclaw/diffs-language-pack",
+          "npmSpec": "@grokbot/diffs-language-pack",
+          "clawhubSpec": "clawhub:@grokbot/diffs-language-pack",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.5.27"
         }
       }
     },
     {
-      "name": "@openclaw/exa-plugin",
-      "description": "OpenClaw Exa plugin.",
+      "name": "@grokbot/exa-plugin",
+      "description": "GrokBot Exa plugin.",
       "source": "official",
       "kind": "plugin",
-      "openclaw": {
+      "grokbot": {
         "plugin": {
           "id": "exa",
           "label": "Exa"
@@ -198,25 +198,25 @@
             ],
             "placeholder": "exa-...",
             "signupUrl": "https://exa.ai/",
-            "docsUrl": "https://docs.openclaw.ai/tools/web",
+            "docsUrl": "https://docs.grokbot.ai/tools/web",
             "credentialPath": "plugins.entries.exa.config.webSearch.apiKey",
             "autoDetectOrder": 65
           }
         ],
         "install": {
-          "clawhubSpec": "clawhub:@openclaw/exa-plugin",
-          "npmSpec": "@openclaw/exa-plugin",
+          "clawhubSpec": "clawhub:@grokbot/exa-plugin",
+          "npmSpec": "@grokbot/exa-plugin",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.6.8"
         }
       }
     },
     {
-      "name": "@openclaw/firecrawl-plugin",
-      "description": "OpenClaw Firecrawl plugin.",
+      "name": "@grokbot/firecrawl-plugin",
+      "description": "GrokBot Firecrawl plugin.",
       "source": "official",
       "kind": "plugin",
-      "openclaw": {
+      "grokbot": {
         "plugin": {
           "id": "firecrawl",
           "label": "Firecrawl"
@@ -248,7 +248,7 @@
             ],
             "placeholder": "fc-...",
             "signupUrl": "https://www.firecrawl.dev/",
-            "docsUrl": "https://docs.openclaw.ai/tools/firecrawl",
+            "docsUrl": "https://docs.grokbot.ai/tools/firecrawl",
             "credentialPath": "plugins.entries.firecrawl.config.webSearch.apiKey",
             "autoDetectOrder": 60
           },
@@ -263,41 +263,41 @@
             "envVars": [],
             "placeholder": "(no key needed)",
             "signupUrl": "https://www.firecrawl.dev/",
-            "docsUrl": "https://docs.openclaw.ai/tools/firecrawl",
+            "docsUrl": "https://docs.grokbot.ai/tools/firecrawl",
             "credentialPath": ""
           }
         ],
         "install": {
-          "clawhubSpec": "clawhub:@openclaw/firecrawl-plugin",
-          "npmSpec": "@openclaw/firecrawl-plugin",
+          "clawhubSpec": "clawhub:@grokbot/firecrawl-plugin",
+          "npmSpec": "@grokbot/firecrawl-plugin",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.6.8"
         }
       }
     },
     {
-      "name": "@openclaw/google-meet",
-      "description": "OpenClaw Google Meet participant plugin",
+      "name": "@grokbot/google-meet",
+      "description": "GrokBot Google Meet participant plugin",
       "source": "official",
       "kind": "plugin",
-      "openclaw": {
+      "grokbot": {
         "plugin": {
           "id": "google-meet",
           "label": "Google Meet"
         },
         "install": {
-          "npmSpec": "@openclaw/google-meet",
+          "npmSpec": "@grokbot/google-meet",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.4.20"
         }
       }
     },
     {
-      "name": "@openclaw/gradium-speech",
-      "description": "OpenClaw Gradium speech plugin.",
+      "name": "@grokbot/gradium-speech",
+      "description": "GrokBot Gradium speech plugin.",
       "source": "official",
       "kind": "plugin",
-      "openclaw": {
+      "grokbot": {
         "plugin": {
           "id": "gradium",
           "label": "Gradium"
@@ -308,19 +308,19 @@
           ]
         },
         "install": {
-          "clawhubSpec": "clawhub:@openclaw/gradium-speech",
-          "npmSpec": "@openclaw/gradium-speech",
+          "clawhubSpec": "clawhub:@grokbot/gradium-speech",
+          "npmSpec": "@grokbot/gradium-speech",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.6.8"
         }
       }
     },
     {
-      "name": "@openclaw/inworld-speech",
-      "description": "OpenClaw Inworld speech plugin.",
+      "name": "@grokbot/inworld-speech",
+      "description": "GrokBot Inworld speech plugin.",
       "source": "official",
       "kind": "plugin",
-      "openclaw": {
+      "grokbot": {
         "plugin": {
           "id": "inworld",
           "label": "Inworld"
@@ -331,19 +331,19 @@
           ]
         },
         "install": {
-          "clawhubSpec": "clawhub:@openclaw/inworld-speech",
-          "npmSpec": "@openclaw/inworld-speech",
+          "clawhubSpec": "clawhub:@grokbot/inworld-speech",
+          "npmSpec": "@grokbot/inworld-speech",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.6.8"
         }
       }
     },
     {
-      "name": "@openclaw/lobster",
+      "name": "@grokbot/lobster",
       "description": "Lobster workflow tool plugin (typed pipelines + resumable approvals)",
       "source": "official",
       "kind": "plugin",
-      "openclaw": {
+      "grokbot": {
         "plugin": {
           "id": "lobster",
           "label": "Lobster"
@@ -353,19 +353,19 @@
           "order": 50
         },
         "install": {
-          "clawhubSpec": "clawhub:@openclaw/lobster",
-          "npmSpec": "@openclaw/lobster",
+          "clawhubSpec": "clawhub:@grokbot/lobster",
+          "npmSpec": "@grokbot/lobster",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.4.25"
         }
       }
     },
     {
-      "name": "@openclaw/memory-lancedb",
-      "description": "OpenClaw LanceDB-backed long-term memory plugin with auto-recall/capture",
+      "name": "@grokbot/memory-lancedb",
+      "description": "GrokBot LanceDB-backed long-term memory plugin with auto-recall/capture",
       "source": "official",
       "kind": "plugin",
-      "openclaw": {
+      "grokbot": {
         "plugin": {
           "id": "memory-lancedb",
           "label": "Memory LanceDB"
@@ -375,19 +375,19 @@
           "order": 70
         },
         "install": {
-          "clawhubSpec": "clawhub:@openclaw/memory-lancedb",
-          "npmSpec": "@openclaw/memory-lancedb",
+          "clawhubSpec": "clawhub:@grokbot/memory-lancedb",
+          "npmSpec": "@grokbot/memory-lancedb",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.5.31"
         }
       }
     },
     {
-      "name": "@openclaw/llama-cpp-provider",
-      "description": "OpenClaw llama.cpp embedding provider plugin",
+      "name": "@grokbot/llama-cpp-provider",
+      "description": "GrokBot llama.cpp embedding provider plugin",
       "source": "official",
       "kind": "plugin",
-      "openclaw": {
+      "grokbot": {
         "plugin": {
           "id": "llama-cpp",
           "label": "llama.cpp Provider"
@@ -396,35 +396,35 @@
           "embeddingProviders": ["local"]
         },
         "install": {
-          "npmSpec": "@openclaw/llama-cpp-provider",
+          "npmSpec": "@grokbot/llama-cpp-provider",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.6.2"
         }
       }
     },
     {
-      "name": "@openclaw/openshell-sandbox",
-      "description": "OpenClaw OpenShell sandbox backend",
+      "name": "@grokbot/openshell-sandbox",
+      "description": "GrokBot OpenShell sandbox backend",
       "source": "official",
       "kind": "plugin",
-      "openclaw": {
+      "grokbot": {
         "plugin": {
           "id": "openshell",
           "label": "OpenShell Sandbox"
         },
         "install": {
-          "npmSpec": "@openclaw/openshell-sandbox",
+          "npmSpec": "@grokbot/openshell-sandbox",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.5.12-beta.1"
         }
       }
     },
     {
-      "name": "@openclaw/parallel-plugin",
-      "description": "OpenClaw Parallel web search plugin.",
+      "name": "@grokbot/parallel-plugin",
+      "description": "GrokBot Parallel web search plugin.",
       "source": "official",
       "kind": "plugin",
-      "openclaw": {
+      "grokbot": {
         "plugin": {
           "id": "parallel",
           "label": "Parallel"
@@ -449,7 +449,7 @@
             ],
             "placeholder": "par-...",
             "signupUrl": "https://platform.parallel.ai",
-            "docsUrl": "https://docs.openclaw.ai/tools/parallel-search",
+            "docsUrl": "https://docs.grokbot.ai/tools/parallel-search",
             "credentialPath": "plugins.entries.parallel.config.webSearch.apiKey",
             "autoDetectOrder": 75
           },
@@ -464,24 +464,24 @@
             "envVars": [],
             "placeholder": "(no key needed)",
             "signupUrl": "https://parallel.ai",
-            "docsUrl": "https://docs.openclaw.ai/tools/parallel-search",
+            "docsUrl": "https://docs.grokbot.ai/tools/parallel-search",
             "credentialPath": ""
           }
         ],
         "install": {
-          "clawhubSpec": "clawhub:@openclaw/parallel-plugin",
-          "npmSpec": "@openclaw/parallel-plugin",
+          "clawhubSpec": "clawhub:@grokbot/parallel-plugin",
+          "npmSpec": "@grokbot/parallel-plugin",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.6.8"
         }
       }
     },
     {
-      "name": "@openclaw/perplexity-plugin",
-      "description": "OpenClaw Perplexity plugin.",
+      "name": "@grokbot/perplexity-plugin",
+      "description": "GrokBot Perplexity plugin.",
       "source": "official",
       "kind": "plugin",
-      "openclaw": {
+      "grokbot": {
         "plugin": {
           "id": "perplexity",
           "label": "Perplexity"
@@ -506,43 +506,43 @@
             ],
             "placeholder": "pplx-...",
             "signupUrl": "https://www.perplexity.ai/settings/api",
-            "docsUrl": "https://docs.openclaw.ai/perplexity",
+            "docsUrl": "https://docs.grokbot.ai/perplexity",
             "credentialPath": "plugins.entries.perplexity.config.webSearch.apiKey",
             "autoDetectOrder": 50
           }
         ],
         "install": {
-          "clawhubSpec": "clawhub:@openclaw/perplexity-plugin",
-          "npmSpec": "@openclaw/perplexity-plugin",
+          "clawhubSpec": "clawhub:@grokbot/perplexity-plugin",
+          "npmSpec": "@grokbot/perplexity-plugin",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.6.8"
         }
       }
     },
     {
-      "name": "@openclaw/pixverse-provider",
-      "description": "OpenClaw PixVerse video generation provider plugin",
+      "name": "@grokbot/pixverse-provider",
+      "description": "GrokBot PixVerse video generation provider plugin",
       "source": "official",
       "kind": "plugin",
-      "openclaw": {
+      "grokbot": {
         "plugin": {
           "id": "pixverse",
           "label": "PixVerse"
         },
         "install": {
-          "clawhubSpec": "clawhub:@openclaw/pixverse-provider",
-          "npmSpec": "@openclaw/pixverse-provider",
+          "clawhubSpec": "clawhub:@grokbot/pixverse-provider",
+          "npmSpec": "@grokbot/pixverse-provider",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.5.26"
         }
       }
     },
     {
-      "name": "@openclaw/searxng-plugin",
-      "description": "OpenClaw SearXNG plugin",
+      "name": "@grokbot/searxng-plugin",
+      "description": "GrokBot SearXNG plugin",
       "source": "official",
       "kind": "plugin",
-      "openclaw": {
+      "grokbot": {
         "plugin": {
           "id": "searxng",
           "label": "SearXNG"
@@ -567,14 +567,14 @@
             ],
             "placeholder": "http://localhost:8080",
             "signupUrl": "https://docs.searxng.org/",
-            "docsUrl": "https://docs.openclaw.ai/tools/searxng-search",
+            "docsUrl": "https://docs.grokbot.ai/tools/searxng-search",
             "credentialPath": "plugins.entries.searxng.config.webSearch.baseUrl",
             "autoDetectOrder": 200
           }
         ],
         "install": {
-          "clawhubSpec": "clawhub:@openclaw/searxng-plugin",
-          "npmSpec": "@openclaw/searxng-plugin",
+          "clawhubSpec": "clawhub:@grokbot/searxng-plugin",
+          "npmSpec": "@grokbot/searxng-plugin",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.6.9",
           "allowInvalidConfigRecovery": true
@@ -582,11 +582,11 @@
       }
     },
     {
-      "name": "@openclaw/tavily-plugin",
-      "description": "OpenClaw Tavily plugin",
+      "name": "@grokbot/tavily-plugin",
+      "description": "GrokBot Tavily plugin",
       "source": "official",
       "kind": "plugin",
-      "openclaw": {
+      "grokbot": {
         "plugin": {
           "id": "tavily",
           "label": "Tavily"
@@ -614,14 +614,14 @@
             ],
             "placeholder": "tvly-...",
             "signupUrl": "https://tavily.com/",
-            "docsUrl": "https://docs.openclaw.ai/tools/tavily",
+            "docsUrl": "https://docs.grokbot.ai/tools/tavily",
             "credentialPath": "plugins.entries.tavily.config.webSearch.apiKey",
             "autoDetectOrder": 70
           }
         ],
         "install": {
-          "clawhubSpec": "clawhub:@openclaw/tavily-plugin",
-          "npmSpec": "@openclaw/tavily-plugin",
+          "clawhubSpec": "clawhub:@grokbot/tavily-plugin",
+          "npmSpec": "@grokbot/tavily-plugin",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.6.9",
           "allowInvalidConfigRecovery": true
@@ -629,11 +629,11 @@
       }
     },
     {
-      "name": "@openclaw/tokenjuice",
-      "description": "OpenClaw tokenjuice exec output compaction plugin",
+      "name": "@grokbot/tokenjuice",
+      "description": "GrokBot tokenjuice exec output compaction plugin",
       "source": "official",
       "kind": "plugin",
-      "openclaw": {
+      "grokbot": {
         "plugin": {
           "id": "tokenjuice",
           "label": "Tokenjuice"
@@ -643,25 +643,25 @@
           "order": 60
         },
         "install": {
-          "clawhubSpec": "clawhub:@openclaw/tokenjuice",
-          "npmSpec": "@openclaw/tokenjuice",
+          "clawhubSpec": "clawhub:@grokbot/tokenjuice",
+          "npmSpec": "@grokbot/tokenjuice",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.5.28"
         }
       }
     },
     {
-      "name": "@openclaw/voice-call",
-      "description": "OpenClaw voice-call plugin",
+      "name": "@grokbot/voice-call",
+      "description": "GrokBot voice-call plugin",
       "source": "official",
       "kind": "plugin",
-      "openclaw": {
+      "grokbot": {
         "plugin": {
           "id": "voice-call",
           "label": "Voice Call"
         },
         "install": {
-          "npmSpec": "@openclaw/voice-call",
+          "npmSpec": "@grokbot/voice-call",
           "defaultChoice": "npm",
           "minHostVersion": ">=2026.4.10"
         }

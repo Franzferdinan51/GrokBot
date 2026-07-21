@@ -1024,7 +1024,7 @@ describe("createInboundDebouncer", () => {
 });
 
 const senderMetaTempDirs = createSuiteTempRootTracker({
-  prefix: "openclaw-sender-meta-",
+  prefix: "grokbot-sender-meta-",
 });
 
 describe("initSessionState BodyStripped", () => {
@@ -1088,11 +1088,11 @@ describe("mention helpers", () => {
       },
     });
     expect(regexes).toHaveLength(1);
-    expect(regexes[0]?.test("openclaw")).toBe(true);
+    expect(regexes[0]?.test("grokbot")).toBe(true);
   });
 
   it("normalizes zero-width characters", () => {
-    expect(normalizeMentionText("open\u200bclaw")).toBe("openclaw");
+    expect(normalizeMentionText("open\u200bclaw")).toBe("grokbot");
   });
 
   it("matches patterns case-insensitively", () => {
@@ -1161,8 +1161,8 @@ describe("mention helpers", () => {
       conversationId: "C999",
     });
 
-    expect(matchesMentionPatterns("openclaw: hi", allowed)).toBe(true);
-    expect(matchesMentionPatterns("openclaw: hi", denied)).toBe(false);
+    expect(matchesMentionPatterns("grokbot: hi", allowed)).toBe(true);
+    expect(matchesMentionPatterns("grokbot: hi", denied)).toBe(false);
   });
 
   it("preserves mention patterns for callers without scoped policy facts", () => {
@@ -1174,7 +1174,7 @@ describe("mention helpers", () => {
       },
     });
 
-    expect(matchesMentionPatterns("openclaw", regexes)).toBe(true);
+    expect(matchesMentionPatterns("grokbot", regexes)).toBe(true);
   });
 
   it("lets provider deny lists override globally allowed mention patterns", () => {
@@ -1201,7 +1201,7 @@ describe("mention helpers", () => {
     ).toEqual([]);
     expect(
       matchesMentionPatterns(
-        "openclaw",
+        "grokbot",
         buildMentionRegexes(cfg, undefined, {
           provider: "telegram",
           conversationId: "-100:topic:8",
@@ -1211,7 +1211,7 @@ describe("mention helpers", () => {
   });
 
   it("strips safe mention patterns and ignores unsafe ones", () => {
-    const stripped = stripMentions("openclaw " + "a".repeat(28) + "!", {} as MsgContext, {
+    const stripped = stripMentions("grokbot " + "a".repeat(28) + "!", {} as MsgContext, {
       messages: {
         groupChat: { mentionPatterns: ["\\bopenclaw\\b", "(a+)+$"] },
       },

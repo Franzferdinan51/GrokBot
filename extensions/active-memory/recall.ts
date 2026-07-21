@@ -1,6 +1,6 @@
-import { resolveAgentConfig } from "openclaw/plugin-sdk/agent-runtime";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import type { OpenClawPluginApi } from "openclaw/plugin-sdk/plugin-entry";
+import { resolveAgentConfig } from "grokbot/plugin-sdk/agent-runtime";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import type { OpenClawPluginApi } from "grokbot/plugin-sdk/plugin-entry";
 import { normalizeActiveMemoryFastMode } from "./config.js";
 import { getModelRef } from "./query.js";
 import { runRecallSubagent } from "./recall-run.js";

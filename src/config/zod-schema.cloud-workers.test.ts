@@ -25,7 +25,7 @@ describe("OpenClawSchema cloudWorkers config", () => {
             settings: {
               host: "worker.example.test",
               port: 22,
-              user: "openclaw",
+              user: "grokbot",
               keyRef: {
                 source: "file",
                 provider: "default",
@@ -47,7 +47,7 @@ describe("OpenClawSchema cloudWorkers config", () => {
           settings: {
             host: "worker.example.test",
             port: 22,
-            user: "openclaw",
+            user: "grokbot",
             keyRef: {
               source: "file",
               provider: "default",

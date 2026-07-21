@@ -1,7 +1,7 @@
 import {
   isHostScopedAgentToolActive,
   type EmbeddedRunAttemptParams,
-} from "openclaw/plugin-sdk/agent-harness-runtime";
+} from "grokbot/plugin-sdk/agent-harness-runtime";
 import type { CodexAppServerClient } from "./client.js";
 import type { CodexAppServerRuntimeOptions } from "./config.js";
 import {
@@ -141,7 +141,7 @@ export function buildThreadStartParams(
   },
 ): CodexThreadStartParams {
   const ringZeroActive =
-    (options.hostSystemAgentActive ?? isHostScopedAgentToolActive("openclaw")) &&
+    (options.hostSystemAgentActive ?? isHostScopedAgentToolActive("grokbot")) &&
     isSystemAgentOnlyCodexDynamicToolAllowlist(params.toolsAllow);
   const resolvedModelProvider = resolveCodexAppServerModelProvider({
     provider: params.provider,
@@ -169,7 +169,7 @@ export function buildThreadStartParams(
       ? { serviceTier: options.appServer.serviceTier }
       : {}),
     personality: CODEX_NATIVE_PERSONALITY_NONE,
-    serviceName: "OpenClaw",
+    serviceName: "GrokBot",
     ...(ringZeroActive ? { baseInstructions: CODEX_RING_ZERO_BASE_INSTRUCTIONS } : {}),
     config: buildCodexRuntimeThreadConfigForRun(params, options.config, {
       nativeCodeModeEnabled: options.nativeCodeModeEnabled,
@@ -365,7 +365,7 @@ export function buildCodexRuntimeThreadConfigForRun(
   } = {},
 ): JsonObject {
   const ringZeroActive =
-    (options.hostSystemAgentActive ?? isHostScopedAgentToolActive("openclaw")) &&
+    (options.hostSystemAgentActive ?? isHostScopedAgentToolActive("grokbot")) &&
     isSystemAgentOnlyCodexDynamicToolAllowlist(params.toolsAllow);
   const configMcpServers = config?.mcp_servers;
   if (ringZeroActive && configMcpServers !== undefined && !isJsonObject(configMcpServers)) {
@@ -415,13 +415,13 @@ export function buildCodexRuntimeThreadConfigForRun(
 
 export function buildCodexRingZeroThreadConfigPatch(
   params: Pick<EmbeddedRunAttemptParams, "toolsAllow">,
-  hostSystemAgentActive = isHostScopedAgentToolActive("openclaw"),
+  hostSystemAgentActive = isHostScopedAgentToolActive("grokbot"),
   inheritedMcpServerNames: readonly string[] = [],
 ): JsonObject | undefined {
   if (!hostSystemAgentActive || !isSystemAgentOnlyCodexDynamicToolAllowlist(params.toolsAllow)) {
     return undefined;
   }
-  // Narrow OpenClaw allowlists already send environments: [] and disable
+  // Narrow GrokBot allowlists already send environments: [] and disable
   // native code mode. Also remove every configurable Codex-owned tool source;
   // upstream still adds its inert update_plan utility unconditionally.
   const mcpServers = Object.fromEntries(

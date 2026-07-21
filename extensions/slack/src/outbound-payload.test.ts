@@ -1,6 +1,6 @@
 // Slack tests cover outbound payload plugin behavior.
-import { installChannelOutboundPayloadContractSuite } from "openclaw/plugin-sdk/channel-contract-testing";
-import type { ReplyPayload } from "openclaw/plugin-sdk/reply-runtime";
+import { installChannelOutboundPayloadContractSuite } from "grokbot/plugin-sdk/channel-contract-testing";
+import type { ReplyPayload } from "grokbot/plugin-sdk/reply-runtime";
 import { describe, expect, it, vi } from "vitest";
 import { createSlackOutboundPayloadHarness, slackOutbound } from "../test-api.js";
 import { createSlackSendTestClient } from "./blocks.test-helpers.js";
@@ -537,7 +537,7 @@ describe("slackOutbound sendPayload", () => {
         {
           type: "actions",
           block_id: "openclaw_reply_select_1",
-          elements: [expect.objectContaining({ action_id: "openclaw:reply_select:1" })],
+          elements: [expect.objectContaining({ action_id: "grokbot:reply_select:1" })],
         },
         {
           type: "actions",
@@ -547,7 +547,7 @@ describe("slackOutbound sendPayload", () => {
         {
           type: "actions",
           block_id: "openclaw_reply_select_2",
-          elements: [expect.objectContaining({ action_id: "openclaw:reply_select:2" })],
+          elements: [expect.objectContaining({ action_id: "grokbot:reply_select:2" })],
         },
       ],
     });
@@ -654,12 +654,12 @@ describe("slackOutbound sendPayload", () => {
           elements: [
             expect.objectContaining({
               type: "button",
-              action_id: "openclaw:reply_link:1:1",
+              action_id: "grokbot:reply_link:1:1",
               url: "https://node.tailnet.ts.net/__openclaw__/mcp-app#opaque-ticket",
             }),
             expect.objectContaining({
               type: "button",
-              action_id: "openclaw:reply_link:1:2",
+              action_id: "grokbot:reply_link:1:2",
               url: "https://example.com/view",
             }),
           ],
@@ -1205,9 +1205,9 @@ describe("slackOutbound sendPayload", () => {
     expect(blocks?.[0]?.block_id).toBe("openclaw_reply_buttons_1");
     expect(blocks?.[1]?.type).toBe("section");
     expect(blocks?.[2]?.block_id).toBe("openclaw_reply_buttons_2");
-    expect(blocks?.[2]?.elements?.[0]?.action_id).toBe("openclaw:reply_button:2:1");
+    expect(blocks?.[2]?.elements?.[0]?.action_id).toBe("grokbot:reply_button:2:1");
     expect(blocks?.[3]?.block_id).toBe("openclaw_reply_buttons_3");
-    expect(blocks?.[3]?.elements?.[0]?.action_id).toBe("openclaw:reply_button:3:1");
+    expect(blocks?.[3]?.elements?.[0]?.action_id).toBe("grokbot:reply_button:3:1");
   });
 });
 

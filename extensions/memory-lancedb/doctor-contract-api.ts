@@ -2,9 +2,9 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { resolveDefaultAgentId } from "openclaw/plugin-sdk/agent-runtime";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import type { PluginDoctorStateMigration } from "openclaw/plugin-sdk/runtime-doctor";
+import { resolveDefaultAgentId } from "grokbot/plugin-sdk/agent-runtime";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import type { PluginDoctorStateMigration } from "grokbot/plugin-sdk/runtime-doctor";
 import {
   hasAgentScopeColumn,
   memoryAgentPredicate,
@@ -41,7 +41,7 @@ function resolveConfiguredDbPath(
   const pluginConfig = asRecord(config.plugins?.entries?.["memory-lancedb"]?.config);
   const configured = typeof pluginConfig?.dbPath === "string" ? pluginConfig.dbPath.trim() : "";
   if (!configured) {
-    return path.join(resolveHome(env), ".openclaw", "memory", "lancedb");
+    return path.join(resolveHome(env), ".grokbot", "memory", "lancedb");
   }
   if (configured.includes("://")) {
     return configured;

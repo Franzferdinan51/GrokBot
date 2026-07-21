@@ -4,7 +4,7 @@
 import {
   createModelCatalogPresetAppliers,
   type OpenClawConfig,
-} from "openclaw/plugin-sdk/provider-onboard";
+} from "grokbot/plugin-sdk/provider-onboard";
 import {
   buildCerebrasModelDefinition,
   CEREBRAS_BASE_URL,

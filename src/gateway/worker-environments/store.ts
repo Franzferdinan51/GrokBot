@@ -1,5 +1,5 @@
 import type { DatabaseSync } from "node:sqlite";
-import { normalizeSortedUniqueTrimmedStringList } from "@openclaw/normalization-core/string-normalization";
+import { normalizeSortedUniqueTrimmedStringList } from "@grokbot/normalization-core/string-normalization";
 import type { Insertable, Selectable, Updateable } from "kysely";
 import {
   type WorkerAdmissionHandshake,
@@ -18,12 +18,12 @@ import type {
   DB as StateDatabase,
   WorkerEnvironmentCredentials,
   WorkerEnvironments,
-} from "../../state/openclaw-state-db.generated.js";
+} from "../../state/grokbot-state-db.generated.js";
 import {
   openOpenClawStateDatabase,
   runOpenClawStateWriteTransaction,
   type OpenClawStateDatabase,
-} from "../../state/openclaw-state-db.js";
+} from "../../state/grokbot-state-db.js";
 import type { WorkerCredentialRecord } from "./credential.js";
 import {
   canTransitionWorkerEnvironment,
@@ -163,7 +163,7 @@ function normalizeBootstrapReceipt(value: {
   }
   return {
     bundleHash,
-    openclawVersion: required(value.openclawVersion, "bootstrap OpenClaw version"),
+    openclawVersion: required(value.openclawVersion, "bootstrap GrokBot version"),
     protocolFeatures: normalizeSortedUniqueTrimmedStringList(value.protocolFeatures),
   };
 }

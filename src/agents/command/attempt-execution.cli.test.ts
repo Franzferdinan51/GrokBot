@@ -16,10 +16,10 @@ import {
   parseSqliteSessionFileMarker,
 } from "../../config/sessions/sqlite-marker.js";
 import { clearSessionStoreCacheForTest } from "../../config/sessions/store.js";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import { createUserTurnTranscriptRecorder } from "../../sessions/user-turn-transcript.js";
 import { createTestUserTurnTranscriptTarget } from "../../sessions/user-turn-transcript.test-support.js";
-import { closeOpenClawAgentDatabasesForTest } from "../../state/openclaw-agent-db.js";
+import { closeOpenClawAgentDatabasesForTest } from "../../state/grokbot-agent-db.js";
 import { registerGeneratedMediaTaskActivity } from "../../tasks/generated-media-task-activity.js";
 import { resetGeneratedMediaTaskActivityForTests } from "../../tasks/task-runtime.test-helpers.js";
 import { captureEnv, setTestEnvValue } from "../../test-utils/env.js";
@@ -242,7 +242,7 @@ function firstRunCliAgentArg(callIndex = 0) {
 }
 
 function firstEmbeddedAgentArg(callIndex = 0) {
-  return requireMockArg(runEmbeddedAgentMock, callIndex, "embedded OpenClaw agent argument");
+  return requireMockArg(runEmbeddedAgentMock, callIndex, "embedded GrokBot agent argument");
 }
 
 describe("CLI attempt execution", () => {
@@ -319,7 +319,7 @@ describe("CLI attempt execution", () => {
 
   beforeEach(async () => {
     homeEnvSnapshot = captureEnv(["HOME", "OPENCLAW_STATE_DIR"]);
-    tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-cli-attempt-"));
+    tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-cli-attempt-"));
     storePath = path.join(tmpDir, "sessions.json");
     runCliAgentMock.mockReset();
     runEmbeddedAgentMock.mockReset();
@@ -707,7 +707,7 @@ describe("CLI attempt execution", () => {
     const homeDir = path.join(tmpDir, "home");
     setTestEnvValue("HOME", homeDir);
     const sessionEntry: SessionEntry = {
-      sessionId: "openclaw-session-123",
+      sessionId: "grokbot-session-123",
       updatedAt: Date.now(),
       cliSessionBindings: {
         "claude-cli": {
@@ -763,7 +763,7 @@ describe("CLI attempt execution", () => {
     setTestEnvValue("HOME", homeDir);
     await fs.mkdir(projectsDir, { recursive: true });
     // Intentionally do NOT write `${cliSessionId}.jsonl` (no native transcript).
-    const sessionEntry = makeClaudeCliSessionEntry("openclaw-sid", cliSessionId);
+    const sessionEntry = makeClaudeCliSessionEntry("grokbot-sid", cliSessionId);
     const sessionStore: Record<string, SessionEntry> = { [sessionKey]: sessionEntry };
     await fs.writeFile(storePath, JSON.stringify(sessionStore, null, 2), "utf-8");
     hasClaudeLiveSessionForOwnerMock.mockReturnValue(true);
@@ -790,7 +790,7 @@ describe("CLI attempt execution", () => {
       agentAccountId: undefined,
       agentId: "main",
       authProfileId: "anthropic:claude-cli",
-      sessionId: "openclaw-sid",
+      sessionId: "grokbot-sid",
       sessionKey,
     });
     expect(sessionStore[sessionKey]?.cliSessionBindings?.["claude-cli"]?.sessionId).toBe(
@@ -825,7 +825,7 @@ describe("CLI attempt execution", () => {
       "utf-8",
     );
     const sessionEntry: SessionEntry = {
-      sessionId: "openclaw-session-456",
+      sessionId: "grokbot-session-456",
       updatedAt: Date.now(),
       cliSessionBindings: {
         "claude-cli": {
@@ -880,7 +880,7 @@ describe("CLI attempt execution", () => {
       })}\n`,
       "utf-8",
     );
-    const sessionEntry = makeClaudeCliSessionEntry("openclaw-session-cwd", cliSessionId);
+    const sessionEntry = makeClaudeCliSessionEntry("grokbot-session-cwd", cliSessionId);
     const sessionStore: Record<string, SessionEntry> = { [sessionKey]: sessionEntry };
     await writeSessionStoreSeed(sessionStore);
     runCliAgentMock.mockResolvedValueOnce(makeCliResult("resumed cli response"));
@@ -903,7 +903,7 @@ describe("CLI attempt execution", () => {
   it("passes session-bound OpenAI Codex auth profile to codex-cli aliases", async () => {
     const sessionKey = "agent:main:direct:codex-cli-auth-alias";
     const sessionEntry: SessionEntry = {
-      sessionId: "openclaw-session-codex",
+      sessionId: "grokbot-session-codex",
       updatedAt: Date.now(),
       authProfileOverride: "openai:work",
       authProfileOverrideSource: "user",
@@ -949,7 +949,7 @@ describe("CLI attempt execution", () => {
   it("skips auto auth-profile resolution for CLI-owned transport", async () => {
     const sessionKey = "agent:main:direct:codex-cli-owned-transport";
     const sessionEntry: SessionEntry = {
-      sessionId: "openclaw-session-codex-owned",
+      sessionId: "grokbot-session-codex-owned",
       updatedAt: Date.now(),
     };
     const sessionStore: Record<string, SessionEntry> = { [sessionKey]: sessionEntry };
@@ -1001,7 +1001,7 @@ describe("CLI attempt execution", () => {
   it("selects a google-gemini-cli auth profile for canonical Google models routed through Gemini CLI", async () => {
     const sessionKey = "agent:main:direct:gemini-cli-auth-bridge";
     const sessionEntry: SessionEntry = {
-      sessionId: "openclaw-session-gemini",
+      sessionId: "grokbot-session-gemini",
       updatedAt: Date.now(),
     };
     const sessionStore: Record<string, SessionEntry> = { [sessionKey]: sessionEntry };
@@ -1077,7 +1077,7 @@ describe("CLI attempt execution", () => {
   it("forwards pinned canonical Google API-key profiles to Google models routed through Gemini CLI", async () => {
     const sessionKey = "agent:main:direct:gemini-cli-google-api-key";
     const sessionEntry: SessionEntry = {
-      sessionId: "openclaw-session-gemini-api-key",
+      sessionId: "grokbot-session-gemini-api-key",
       updatedAt: Date.now(),
       authProfileOverride: "google:api-key",
       authProfileOverrideSource: "user",
@@ -1147,7 +1147,7 @@ describe("CLI attempt execution", () => {
   it("rejects incompatible pinned profiles before selecting another CLI identity", async () => {
     const sessionKey = "agent:main:direct:gemini-cli-incompatible-auth";
     const sessionEntry: SessionEntry = {
-      sessionId: "openclaw-session-gemini-incompatible-auth",
+      sessionId: "grokbot-session-gemini-incompatible-auth",
       updatedAt: Date.now(),
       authProfileOverride: "vercel-ai-gateway:default",
       authProfileOverrideSource: "user",
@@ -1215,7 +1215,7 @@ describe("CLI attempt execution", () => {
   it("ignores stale auto-selected profiles when resolving Gemini CLI auth order", async () => {
     const sessionKey = "agent:main:direct:gemini-cli-stale-auto-auth";
     const sessionEntry: SessionEntry = {
-      sessionId: "openclaw-session-gemini-stale-auto-auth",
+      sessionId: "grokbot-session-gemini-stale-auto-auth",
       updatedAt: Date.now(),
       authProfileOverride: "openai:work",
       authProfileOverrideSource: "auto",
@@ -1297,7 +1297,7 @@ describe("CLI attempt execution", () => {
   it("selects canonical Google API-key auth order for Google models routed through Gemini CLI", async () => {
     const sessionKey = "agent:main:direct:gemini-cli-google-api-key-order";
     const sessionEntry: SessionEntry = {
-      sessionId: "openclaw-session-gemini-api-key-order",
+      sessionId: "grokbot-session-gemini-api-key-order",
       updatedAt: Date.now(),
     };
     const sessionStore: Record<string, SessionEntry> = { [sessionKey]: sessionEntry };
@@ -1710,7 +1710,7 @@ describe("CLI attempt execution", () => {
     expect(messages).toHaveLength(1);
   });
 
-  it("embedded assistant gap-fill skips trailing openclaw.cache-ttl custom entries (regression for #83427)", async () => {
+  it("embedded assistant gap-fill skips trailing grokbot.cache-ttl custom entries (regression for #83427)", async () => {
     const sessionKey = "agent:main:subagent:embedded-gap-fill-cache-ttl";
     const sessionEntry: SessionEntry = {
       sessionId: "session-embedded-gap-fill-cache-ttl",
@@ -1749,7 +1749,7 @@ describe("CLI attempt execution", () => {
       { agentId: "main", sessionId: sessionEntry.sessionId, sessionKey, storePath },
       {
         type: "custom",
-        customType: "openclaw.cache-ttl",
+        customType: "grokbot.cache-ttl",
         timestamp: new Date().toISOString(),
         data: {
           provider: "anthropic",
@@ -1890,7 +1890,7 @@ describe("CLI attempt execution", () => {
   it("forwards separate user trigger, channel, and provider context to CLI runs", async () => {
     const sessionKey = "agent:main:direct:claude-channel-context";
     const sessionEntry: SessionEntry = {
-      sessionId: "openclaw-session-channel",
+      sessionId: "grokbot-session-channel",
       updatedAt: Date.now(),
     };
     const sessionStore: Record<string, SessionEntry> = { [sessionKey]: sessionEntry };
@@ -1955,7 +1955,7 @@ describe("CLI attempt execution", () => {
   it("forwards message-tool-only policy and requires explicit subagent targets", async () => {
     const sessionKey = "agent:main:subagent:claude-message-policy";
     const sessionEntry: SessionEntry = {
-      sessionId: "openclaw-session-cli-message-policy",
+      sessionId: "grokbot-session-cli-message-policy",
       updatedAt: Date.now(),
     };
     const sessionStore: Record<string, SessionEntry> = { [sessionKey]: sessionEntry };
@@ -2003,7 +2003,7 @@ describe("CLI attempt execution", () => {
   it("does not pass auth-order profiles to CLI backends that do not stage them", async () => {
     const sessionKey = "agent:main:direct:claude-auth-order";
     const sessionEntry: SessionEntry = {
-      sessionId: "openclaw-session-claude-auth-order",
+      sessionId: "grokbot-session-claude-auth-order",
       updatedAt: Date.now(),
     };
     const sessionStore: Record<string, SessionEntry> = { [sessionKey]: sessionEntry };
@@ -2053,7 +2053,7 @@ describe("CLI attempt execution", () => {
   it("does not pass auth-order profiles to configured CLI runtimes that do not stage them", async () => {
     const sessionKey = "agent:main:direct:anthropic-claude-runtime-auth-order";
     const sessionEntry: SessionEntry = {
-      sessionId: "openclaw-session-anthropic-claude-runtime-auth-order",
+      sessionId: "grokbot-session-anthropic-claude-runtime-auth-order",
       updatedAt: Date.now(),
     };
     const sessionStore: Record<string, SessionEntry> = { [sessionKey]: sessionEntry };
@@ -2153,7 +2153,7 @@ describe("CLI attempt execution", () => {
   it("forwards runtime toolsAllow into CLI attempts so the CLI harness can fail closed", async () => {
     const sessionKey = "agent:main:direct:claude-tools-allow";
     const sessionEntry: SessionEntry = {
-      sessionId: "openclaw-session-cli-tools-allow",
+      sessionId: "grokbot-session-cli-tools-allow",
       updatedAt: Date.now(),
     };
     const sessionStore: Record<string, SessionEntry> = { [sessionKey]: sessionEntry };
@@ -2203,7 +2203,7 @@ describe("CLI attempt execution", () => {
     vi.setSystemTime(new Date("2024-06-05T15:30:00Z"));
     const sessionKey = "agent:main:direct:claude-timestamp";
     const sessionEntry: SessionEntry = {
-      sessionId: "openclaw-session-cli-timestamp",
+      sessionId: "grokbot-session-cli-timestamp",
       updatedAt: Date.now(),
     };
     const sessionStore: Record<string, SessionEntry> = { [sessionKey]: sessionEntry };
@@ -2264,7 +2264,7 @@ describe("CLI attempt execution", () => {
   it("routes canonical Anthropic models through the configured Claude CLI runtime", async () => {
     const sessionKey = "agent:main:direct:canonical-claude-cli";
     const sessionEntry: SessionEntry = {
-      sessionId: "openclaw-session-canonical-cli",
+      sessionId: "grokbot-session-canonical-cli",
       updatedAt: Date.now(),
     };
     const sessionStore: Record<string, SessionEntry> = { [sessionKey]: sessionEntry };
@@ -2335,7 +2335,7 @@ describe("CLI attempt execution", () => {
   it("routes provider-qualified Anthropic shorthand through the configured Claude CLI runtime", async () => {
     const sessionKey = "agent:main:direct:shorthand-claude-cli";
     const sessionEntry: SessionEntry = {
-      sessionId: "openclaw-session-shorthand-cli",
+      sessionId: "grokbot-session-shorthand-cli",
       updatedAt: Date.now(),
     };
     const sessionStore: Record<string, SessionEntry> = { [sessionKey]: sessionEntry };
@@ -2390,7 +2390,7 @@ describe("CLI attempt execution", () => {
   it("routes canonical OpenAI models through the configured embedded Codex runtime", async () => {
     const sessionKey = "agent:main:direct:canonical-codex-cli";
     const sessionEntry: SessionEntry = {
-      sessionId: "openclaw-session-canonical-codex-cli",
+      sessionId: "grokbot-session-canonical-codex-cli",
       updatedAt: Date.now(),
     };
     const sessionStore: Record<string, SessionEntry> = { [sessionKey]: sessionEntry };
@@ -2400,7 +2400,7 @@ describe("CLI attempt execution", () => {
       meta: {
         durationMs: 5,
         finalAssistantVisibleText: "canonical codex embedded",
-        executionTrace: { runner: "openclaw" },
+        executionTrace: { runner: "grokbot" },
       },
     });
 
@@ -2566,7 +2566,7 @@ describe("CLI attempt execution", () => {
   it("forwards selected auth profiles through metadata-scoped provider aliases", async () => {
     const sessionKey = "agent:main:direct:metadata-auth-alias";
     const sessionEntry: SessionEntry = {
-      sessionId: "openclaw-session-metadata-auth-alias",
+      sessionId: "grokbot-session-metadata-auth-alias",
       updatedAt: Date.now(),
       authProfileOverride: "openai:work",
       authProfileOverrideSource: "user",
@@ -2644,7 +2644,7 @@ describe("CLI attempt execution", () => {
     const { clearAgentHarnesses, registerAgentHarness } = await import("../harness/registry.js");
     const sessionKey = "agent:main:direct:openai-chatgpt-api-key";
     const sessionEntry: SessionEntry = {
-      sessionId: "openclaw-session-openai-chatgpt-api-key",
+      sessionId: "grokbot-session-openai-chatgpt-api-key",
       updatedAt: Date.now(),
       authProfileOverride: "openai:backup",
       authProfileOverrideSource: "user",
@@ -2720,7 +2720,7 @@ describe("CLI attempt execution", () => {
   it("keeps one-shot model runs on the raw embedded provider path", async () => {
     const sessionKey = "agent:main:direct:model-run-raw";
     const sessionEntry: SessionEntry = {
-      sessionId: "openclaw-session-model-run-raw",
+      sessionId: "grokbot-session-model-run-raw",
       updatedAt: Date.now(),
     };
     const sessionStore: Record<string, SessionEntry> = { [sessionKey]: sessionEntry };
@@ -2778,7 +2778,7 @@ describe("CLI attempt execution", () => {
     expectMockArgFields(runEmbeddedAgentMock, {
       provider: "anthropic",
       model: "claude-opus-4-7",
-      agentHarnessId: "openclaw",
+      agentHarnessId: "grokbot",
       prompt: "raw prompt",
       messageChannel: "discord",
       messageProvider: "discord-voice",
@@ -2792,7 +2792,7 @@ describe("CLI attempt execution", () => {
   it("forwards trusted elevated defaults to embedded agent runs", async () => {
     const sessionKey = "agent:main:telegram:direct:123";
     const sessionEntry: SessionEntry = {
-      sessionId: "openclaw-session-elevated-followup",
+      sessionId: "grokbot-session-elevated-followup",
       updatedAt: Date.now(),
     };
     const sessionStore: Record<string, SessionEntry> = { [sessionKey]: sessionEntry };
@@ -2848,7 +2848,7 @@ describe("CLI attempt execution", () => {
   it("forwards one-shot CLI cleanup to CLI providers", async () => {
     const sessionKey = "agent:main:direct:cleanup-claude-cli";
     const sessionEntry: SessionEntry = {
-      sessionId: "openclaw-session-cleanup-cli",
+      sessionId: "grokbot-session-cleanup-cli",
       updatedAt: Date.now(),
     };
     const sessionStore: Record<string, SessionEntry> = { [sessionKey]: sessionEntry };
@@ -2932,7 +2932,7 @@ describe("embedded attempt harness pinning", () => {
   let tmpDir: string;
 
   beforeEach(async () => {
-    tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-embedded-attempt-"));
+    tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-embedded-attempt-"));
     runCliAgentMock.mockReset();
     runEmbeddedAgentMock.mockReset();
   });
@@ -3346,11 +3346,11 @@ describe("embedded attempt harness pinning", () => {
     expectMockArgFields(runEmbeddedAgentMock, { agentHarnessId: undefined });
   });
 
-  it("honors a resolved persisted OpenClaw harness", async () => {
+  it("honors a resolved persisted GrokBot harness", async () => {
     const sessionEntry: SessionEntry = {
       sessionId: "stale-agent-session",
       updatedAt: Date.now(),
-      agentHarnessId: "openclaw",
+      agentHarnessId: "grokbot",
     };
     runEmbeddedAgentMock.mockResolvedValueOnce({
       meta: { durationMs: 1 },
@@ -3362,7 +3362,7 @@ describe("embedded attempt harness pinning", () => {
       modelOverride: "gpt-5.4",
       cfg: {} as OpenClawConfig,
       sessionEntry,
-      agentHarnessRuntimeOverride: "openclaw",
+      agentHarnessRuntimeOverride: "grokbot",
       sessionId: sessionEntry.sessionId,
       sessionKey: "agent:main:main",
       sessionAgentId: "main",
@@ -3387,16 +3387,16 @@ describe("embedded attempt harness pinning", () => {
 
     expectMockArgFields(runEmbeddedAgentMock, {
       provider: "openai",
-      agentHarnessId: "openclaw",
-      agentHarnessRuntimeOverride: "openclaw",
+      agentHarnessId: "grokbot",
+      agentHarnessRuntimeOverride: "grokbot",
     });
   });
 
-  it("honors an explicit OpenClaw session runtime override", async () => {
+  it("honors an explicit GrokBot session runtime override", async () => {
     const sessionEntry: SessionEntry = {
-      sessionId: "explicit-openclaw-session",
+      sessionId: "explicit-grokbot-session",
       updatedAt: Date.now(),
-      agentRuntimeOverride: "openclaw",
+      agentRuntimeOverride: "grokbot",
       agentHarnessId: "codex",
     };
     runEmbeddedAgentMock.mockResolvedValueOnce({
@@ -3409,7 +3409,7 @@ describe("embedded attempt harness pinning", () => {
       modelOverride: "gpt-5.6-luna",
       cfg: {} as OpenClawConfig,
       sessionEntry,
-      agentHarnessRuntimeOverride: "openclaw",
+      agentHarnessRuntimeOverride: "grokbot",
       sessionId: sessionEntry.sessionId,
       sessionKey: "agent:main:main",
       sessionAgentId: "main",
@@ -3419,7 +3419,7 @@ describe("embedded attempt harness pinning", () => {
       isFallbackRetry: false,
       resolvedThinkLevel: "ultra",
       timeoutMs: 1_000,
-      runId: "run-explicit-openclaw-runtime",
+      runId: "run-explicit-grokbot-runtime",
       opts: {} as Parameters<typeof runAgentAttempt>[0]["opts"],
       runContext: {} as Parameters<typeof runAgentAttempt>[0]["runContext"],
       spawnedBy: undefined,
@@ -3435,13 +3435,13 @@ describe("embedded attempt harness pinning", () => {
     expectMockArgFields(runEmbeddedAgentMock, {
       provider: "openai",
       model: "gpt-5.6-luna",
-      agentHarnessId: "openclaw",
-      agentHarnessRuntimeOverride: "openclaw",
+      agentHarnessId: "grokbot",
+      agentHarnessRuntimeOverride: "grokbot",
       thinkLevel: "ultra",
     });
   });
 
-  it("routes explicit OpenAI native runs with legacy Codex OAuth through OpenClaw", async () => {
+  it("routes explicit OpenAI native runs with legacy Codex OAuth through GrokBot", async () => {
     const sessionEntry: SessionEntry = {
       sessionId: "explicit-agent-codex-oauth-session",
       updatedAt: Date.now(),
@@ -3461,7 +3461,7 @@ describe("embedded attempt harness pinning", () => {
           providers: {
             openai: {
               baseUrl: "https://api.openai.com/v1",
-              agentRuntime: { id: "openclaw" },
+              agentRuntime: { id: "grokbot" },
               models: [],
             },
           },
@@ -3493,8 +3493,8 @@ describe("embedded attempt harness pinning", () => {
     expectMockArgFields(runEmbeddedAgentMock, {
       provider: "openai",
       model: "gpt-5.4",
-      agentHarnessId: "openclaw",
-      agentHarnessRuntimeOverride: "openclaw",
+      agentHarnessId: "grokbot",
+      agentHarnessRuntimeOverride: "grokbot",
       authProfileId: "openai:work",
       authProfileIdSource: "user",
     });

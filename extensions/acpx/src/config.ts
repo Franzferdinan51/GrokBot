@@ -6,8 +6,8 @@ import fs from "node:fs";
 import { createRequire } from "node:module";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { formatPluginConfigIssue } from "openclaw/plugin-sdk/extension-shared";
-import { normalizeLowercaseStringOrEmpty } from "openclaw/plugin-sdk/string-coerce-runtime";
+import { formatPluginConfigIssue } from "grokbot/plugin-sdk/extension-shared";
+import { normalizeLowercaseStringOrEmpty } from "grokbot/plugin-sdk/string-coerce-runtime";
 import { AcpxPluginConfigSchema, DEFAULT_ACPX_TIMEOUT_SECONDS } from "./config-schema.js";
 import type {
   AcpxPluginConfig,
@@ -19,13 +19,13 @@ import type {
 } from "./config-schema.js";
 export { type ResolvedAcpxPluginConfig } from "./config-schema.js";
 
-const ACPX_PLUGIN_TOOLS_MCP_SERVER_NAME = "openclaw-plugin-tools";
-const ACPX_OPENCLAW_TOOLS_MCP_SERVER_NAME = "openclaw-tools";
+const ACPX_PLUGIN_TOOLS_MCP_SERVER_NAME = "grokbot-plugin-tools";
+const ACPX_OPENCLAW_TOOLS_MCP_SERVER_NAME = "grokbot-tools";
 const requireFromHere = createRequire(import.meta.url);
 
 function isAcpxPluginRoot(dir: string): boolean {
   return (
-    fs.existsSync(path.join(dir, "openclaw.plugin.json")) &&
+    fs.existsSync(path.join(dir, "grokbot.plugin.json")) &&
     fs.existsSync(path.join(dir, "package.json"))
   );
 }
@@ -93,7 +93,7 @@ export function resolveAcpxPluginRoot(moduleUrl: string = import.meta.url): stri
     resolveWorkspaceAcpxPluginRoot(resolvedRoot) ??
     resolveRepoAcpxPluginRoot(resolvedRoot) ??
     // Shared dist/dist-runtime chunks can load this module outside the plugin tree.
-    // Scan common OpenClaw layouts before falling back to the nearest path guess.
+    // Scan common GrokBot layouts before falling back to the nearest path guess.
     resolveAcpxPluginRootFromOpenClawLayout(moduleUrl) ??
     resolvedRoot
   );
@@ -171,14 +171,14 @@ function resolvePluginToolsMcpServerConfig(moduleUrl: string = import.meta.url):
 function resolveOpenClawToolsMcpServerConfig(moduleUrl: string = import.meta.url): McpServerConfig {
   const pluginRoot = resolveAcpxPluginRoot(moduleUrl);
   const openClawRoot = resolveOpenClawRoot(pluginRoot);
-  const distEntry = path.join(openClawRoot, "dist", "mcp", "openclaw-tools-serve.js");
+  const distEntry = path.join(openClawRoot, "dist", "mcp", "grokbot-tools-serve.js");
   if (fs.existsSync(distEntry)) {
     return {
       command: process.execPath,
       args: [distEntry],
     };
   }
-  const sourceEntry = path.join(openClawRoot, "src", "mcp", "openclaw-tools-serve.ts");
+  const sourceEntry = path.join(openClawRoot, "src", "mcp", "grokbot-tools-serve.ts");
   return {
     command: process.execPath,
     args: ["--import", resolveTsxImportSpecifier(), sourceEntry],
@@ -215,7 +215,7 @@ function resolveConfiguredMcpServers(params: {
   return resolved;
 }
 
-/** Convert OpenClaw MCP server config into ACPX runtime MCP server entries. */
+/** Convert GrokBot MCP server config into ACPX runtime MCP server entries. */
 export function toAcpMcpServers(mcpServers: Record<string, McpServerConfig>): AcpxMcpServer[] {
   return Object.entries(mcpServers).map(([name, server]) => ({
     name,

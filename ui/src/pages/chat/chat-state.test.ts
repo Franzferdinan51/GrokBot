@@ -394,7 +394,7 @@ describe("session pull request refresh", () => {
           content: [
             {
               type: "text",
-              text: "Opened `https://github.com/openclaw/openclaw/pull/111532`.",
+              text: "Opened `https://github.com/grokbot/grokbot/pull/111532`.",
             },
           ],
         },
@@ -422,7 +422,7 @@ describe("session pull request refresh", () => {
           content: [
             {
               type: "text",
-              text: "Opened https://github.com/openclaw/openclaw/pull/111532",
+              text: "Opened https://github.com/grokbot/grokbot/pull/111532",
             },
           ],
         },
@@ -437,7 +437,7 @@ describe("session pull request refresh", () => {
     const refreshSessionPullRequests = vi.fn(async () => undefined);
     const state = createFinalReplyState(refreshSessionPullRequests);
     state.chatRunId = "active-run";
-    state.chatStream = "Opened https://github.com/openclaw/openclaw/pull/111532";
+    state.chatStream = "Opened https://github.com/grokbot/grokbot/pull/111532";
 
     handlePageGatewayEvent(state, {
       type: "event",
@@ -472,7 +472,7 @@ describe("session pull request refresh", () => {
           content: [
             {
               type: "text",
-              text: "Tracked in https://github.com/openclaw/openclaw/issues/111532.",
+              text: "Tracked in https://github.com/grokbot/grokbot/issues/111532.",
             },
           ],
         },
@@ -498,7 +498,7 @@ describe("session pull request refresh", () => {
           content: [
             {
               type: "text",
-              text: "Opened https://github.com/openclaw/openclaw/pull/111532",
+              text: "Opened https://github.com/grokbot/grokbot/pull/111532",
             },
           ],
         },

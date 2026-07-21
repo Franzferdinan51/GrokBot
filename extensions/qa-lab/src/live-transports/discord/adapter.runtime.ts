@@ -1,5 +1,5 @@
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import type { QaRunnerCliRegistration } from "openclaw/plugin-sdk/qa-runner-runtime";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import type { QaRunnerCliRegistration } from "grokbot/plugin-sdk/qa-runner-runtime";
 import {
   acquireQaCredentialLease,
   startQaCredentialLeaseHeartbeat,
@@ -118,7 +118,7 @@ export async function createDiscordQaTransportAdapter(
       heartbeat.throwIfFailed();
     },
     async sendInbound(input) {
-      const text = input.text.replaceAll("@openclaw", `<@${runtimeEnv.sutApplicationId}>`);
+      const text = input.text.replaceAll("@grokbot", `<@${runtimeEnv.sutApplicationId}>`);
       const sent = await discordQaScenarioSupport.testing.sendChannelMessage(
         runtimeEnv.driverBotToken,
         runtimeEnv.channelId,

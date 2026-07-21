@@ -7,16 +7,16 @@ import { readCronTaskRunHistoryPage } from "../cron/task-run-history.js";
 import {
   closeOpenClawStateDatabaseForTest,
   openOpenClawStateDatabase,
-} from "../state/openclaw-state-db.js";
+} from "../state/grokbot-state-db.js";
 import { resetTaskRegistryForTests } from "../tasks/task-runtime.test-helpers.js";
-import { withOpenClawTestState } from "../test-utils/openclaw-test-state.js";
+import { withOpenClawTestState } from "../test-utils/grokbot-test-state.js";
 
 const CRON_RUN_LOG_TASK_IMPORT_MIGRATION_ID = "state:cron-run-logs-to-task-runs:v1";
 
 describe("cron run-log task import", () => {
   it("imports legacy cron history into task runs once at state database open", async () => {
     await withOpenClawTestState(
-      { layout: "state-only", prefix: "openclaw-cron-run-log-import-" },
+      { layout: "state-only", prefix: "grokbot-cron-run-log-import-" },
       async (state) => {
         const storePath = state.path("cron", "jobs.json");
         const storeKey = cronStoreKey(storePath);

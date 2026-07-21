@@ -458,7 +458,7 @@ describeLive("gateway live trajectory export", () => {
       const { startGatewayServer } = await import("./server.js");
 
       const previousEnv = snapshotEnv();
-      const tempDir = await fs.mkdtemp(path.join(process.cwd(), ".tmp-openclaw-trajectory-live-"));
+      const tempDir = await fs.mkdtemp(path.join(process.cwd(), ".tmp-grokbot-trajectory-live-"));
       cleanup.push(async () => {
         restoreEnv(previousEnv);
         clearRuntimeConfigSnapshot();
@@ -468,7 +468,7 @@ describeLive("gateway live trajectory export", () => {
       const stateDir = path.join(tempDir, "state");
       const trajectoryDir = path.join(tempDir, "runtime-traces");
       const { workspaceDir } = await createBootstrapWorkspace(tempDir);
-      const configPath = path.join(tempDir, "openclaw.json");
+      const configPath = path.join(tempDir, "grokbot.json");
       const token = `test-${randomUUID()}`;
       const port = await getFreeGatewayPort();
       const modelKey = process.env.OPENCLAW_LIVE_CODEX_HARNESS_MODEL ?? DEFAULT_CODEX_MODEL;
@@ -549,7 +549,7 @@ describeLive("gateway live trajectory export", () => {
       });
       expect(runtimeEvents.length).toBeGreaterThan(0);
 
-      const bundleDir = path.join(workspaceDir, ".openclaw", "trajectory-exports", "bundle");
+      const bundleDir = path.join(workspaceDir, ".grokbot", "trajectory-exports", "bundle");
       const beforeExport = new Set(await listDirectoryNames(tempDir));
       const exportRunId = `chat-export-${randomUUID()}`;
       const exportEventStartIndex = gatewayEvents.length;

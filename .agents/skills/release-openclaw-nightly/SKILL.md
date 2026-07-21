@@ -1,11 +1,11 @@
 ---
-name: release-openclaw-nightly
-description: "OpenClaw Tideclaw alpha/nightly release automation: isolated branches, local fixes, release CI, branch retention, and forward-port to main."
+name: release-grokbot-nightly
+description: "GrokBot Tideclaw alpha/nightly release automation: isolated branches, local fixes, release CI, branch retention, and forward-port to main."
 ---
 
 # Nightly Release
 
-Use for Tideclaw/OpenClaw alpha/nightly release automation, manual alpha triggers, beta prep, release-branch repair, and post-release forward-port. Load `$release-private` if it exists before using Tideclaw host paths, cron ids, or Discord routing ids.
+Use for Tideclaw/GrokBot alpha/nightly release automation, manual alpha triggers, beta prep, release-branch repair, and post-release forward-port. Load `$release-private` if it exists before using Tideclaw host paths, cron ids, or Discord routing ids.
 
 ## Policy
 
@@ -26,7 +26,7 @@ Tideclaw should commit under its own machine identity on release branches and fo
 
 ```bash
 git config user.name "Tideclaw"
-git config user.email "tideclaw@openclaw.ai"
+git config user.email "tideclaw@grokbot.ai"
 ```
 
 This is good for auditability if commits are clearly machine-authored and gated by CI. Avoid direct pushes to protected `main`; forward-port via PR/automerge unless the repo policy explicitly allows the bot to push after green checks. Include human `Co-authored-by` only when a human supplied the patch or explicit commit text.
@@ -69,7 +69,7 @@ Manual trigger:
 
 ```bash
 CRON_ID="<from release-private>"
-OPENCLAW_ALLOW_ROOT=1 openclaw cron run "$CRON_ID" --expect-final --timeout 21600000
+OPENCLAW_ALLOW_ROOT=1 grokbot cron run "$CRON_ID" --expect-final --timeout 21600000
 ```
 
 ## Discord Alpha Trigger
@@ -177,12 +177,12 @@ SHA="$(git rev-parse HEAD)"
 TAG="v$(node -p "require('./package.json').version")"
 BRANCH="$(git branch --show-current)"
 
-"$GH" workflow run full-release-validation.yml --repo openclaw/openclaw --ref "$BRANCH" \
+"$GH" workflow run full-release-validation.yml --repo grokbot/grokbot --ref "$BRANCH" \
   -f ref="$BRANCH" \
   -f release_profile=beta \
   -f rerun_group=all
 
-"$GH" workflow run openclaw-npm-release.yml --repo openclaw/openclaw --ref "$BRANCH" \
+"$GH" workflow run grokbot-npm-release.yml --repo grokbot/grokbot --ref "$BRANCH" \
   -f tag="$SHA" \
   -f preflight_only=true \
   -f npm_dist_tag=alpha
@@ -195,7 +195,7 @@ BRANCH="$(git branch --show-current)"
 7. After full validation and npm preflight are green on the same branch head, create and push the release tag from that exact commit:
 
 ```bash
-git tag -a "$TAG" "$SHA" -m "openclaw ${TAG#v}"
+git tag -a "$TAG" "$SHA" -m "grokbot ${TAG#v}"
 git push origin "$TAG"
 ```
 
@@ -203,9 +203,9 @@ git push origin "$TAG"
 
 ```bash
 FULL_RELEASE_VALIDATION_RUN_ATTEMPT="$(gh api \
-  "repos/openclaw/openclaw/actions/runs/${FULL_RELEASE_VALIDATION_RUN_ID}" \
+  "repos/grokbot/grokbot/actions/runs/${FULL_RELEASE_VALIDATION_RUN_ID}" \
   --jq .run_attempt)"
-"$GH" workflow run openclaw-release-publish.yml --repo openclaw/openclaw --ref "$BRANCH" \
+"$GH" workflow run grokbot-release-publish.yml --repo grokbot/grokbot --ref "$BRANCH" \
   -f tag="$TAG" \
   -f preflight_run_id="$NPM_PREFLIGHT_RUN_ID" \
   -f full_release_validation_run_id="$FULL_RELEASE_VALIDATION_RUN_ID" \
@@ -217,10 +217,10 @@ FULL_RELEASE_VALIDATION_RUN_ATTEMPT="$(gh api \
   -f wait_for_clawhub=false
 ```
 
-9. Watch the publish wrapper plus child runs. If `openclaw-npm-release.yml` is waiting on the `npm-release` environment and Tideclaw cannot approve it, report that as the only blocker; do not call the release done.
+9. Watch the publish wrapper plus child runs. If `grokbot-npm-release.yml` is waiting on the `npm-release` environment and Tideclaw cannot approve it, report that as the only blocker; do not call the release done.
 10. Do not publish npm directly from the host; use GitHub Actions/OIDC.
 
-Important: `openclaw-npm-release.yml` with `preflight_only=true` only prepares artifacts. It does not publish. A successful alpha requires the later `openclaw-release-publish.yml` wrapper, a pushed git tag, npm `alpha` dist-tag proof, and a GitHub prerelease.
+Important: `grokbot-npm-release.yml` with `preflight_only=true` only prepares artifacts. It does not publish. A successful alpha requires the later `grokbot-release-publish.yml` wrapper, a pushed git tag, npm `alpha` dist-tag proof, and a GitHub prerelease.
 
 ## Verify Published Alpha
 
@@ -229,7 +229,7 @@ Release is not done until all are true:
 - GitHub tag exists.
 - GitHub Release exists and is marked prerelease.
 - Release body links npm version page, registry tarball, integrity, and CI/proof.
-- `npm view openclaw@<version>` shows the exact version, dist-tag `alpha`, tarball, integrity, and publish time.
+- `npm view grokbot@<version>` shows the exact version, dist-tag `alpha`, tarball, integrity, and publish time.
 - Installed/package smoke follows repo release docs.
 - The Tideclaw state file from `$release-private` records version, tag, base SHA, branch, fix commit SHAs, workflow run IDs, npm integrity, and timestamp.
 

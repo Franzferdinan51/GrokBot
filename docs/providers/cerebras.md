@@ -2,7 +2,7 @@
 summary: "Cerebras setup (auth + model selection)"
 title: "Cerebras"
 read_when:
-  - You want to use Cerebras with OpenClaw
+  - You want to use Cerebras with GrokBot
   - You need the Cerebras API key env var or CLI auth choice
 ---
 
@@ -11,7 +11,7 @@ read_when:
 | Property        | Value                                                     |
 | --------------- | --------------------------------------------------------- |
 | Provider id     | `cerebras`                                                |
-| Plugin          | official external package (`@openclaw/cerebras-provider`) |
+| Plugin          | official external package (`@grokbot/cerebras-provider`) |
 | Auth env var    | `CEREBRAS_API_KEY`                                        |
 | Onboarding flag | `--auth-choice cerebras-api-key`                          |
 | Direct CLI flag | `--cerebras-api-key <key>`                                |
@@ -22,8 +22,8 @@ read_when:
 ## Install plugin
 
 ```bash
-openclaw plugins install @openclaw/cerebras-provider
-openclaw gateway restart
+grokbot plugins install @grokbot/cerebras-provider
+grokbot gateway restart
 ```
 
 ## Getting started
@@ -36,11 +36,11 @@ openclaw gateway restart
     <CodeGroup>
 
 ```bash Onboarding
-openclaw onboard --auth-choice cerebras-api-key
+grokbot onboard --auth-choice cerebras-api-key
 ```
 
 ```bash Direct flag
-openclaw onboard --non-interactive \
+grokbot onboard --non-interactive \
   --auth-choice cerebras-api-key \
   --cerebras-api-key "$CEREBRAS_API_KEY"
 ```
@@ -54,10 +54,10 @@ export CEREBRAS_API_KEY=csk-...
   </Step>
   <Step title="Verify models are available">
     ```bash
-    openclaw models list --provider cerebras
+    grokbot models list --provider cerebras
     ```
 
-    Lists both static models. If `CEREBRAS_API_KEY` is unresolved, `openclaw models status --json` reports the missing credential under `auth.unusableProfiles`.
+    Lists both static models. If `CEREBRAS_API_KEY` is unresolved, `grokbot models status --json` reports the missing credential under `auth.unusableProfiles`.
 
   </Step>
 </Steps>
@@ -65,7 +65,7 @@ export CEREBRAS_API_KEY=csk-...
 ## Non-interactive setup
 
 ```bash
-openclaw onboard --non-interactive \
+grokbot onboard --non-interactive \
   --mode local \
   --auth-choice cerebras-api-key \
   --cerebras-api-key "$CEREBRAS_API_KEY"
@@ -110,7 +110,7 @@ Most setups only need the API key. Use explicit `models.providers.cerebras` conf
 ```
 
 <Note>
-If the Gateway runs as a daemon (launchd, systemd, Docker), make sure `CEREBRAS_API_KEY` is available to that process — for example in `~/.openclaw/.env` or through `env.shellEnv`. A key exported only in an interactive shell will not help a managed service unless the env is imported separately.
+If the Gateway runs as a daemon (launchd, systemd, Docker), make sure `CEREBRAS_API_KEY` is available to that process — for example in `~/.grokbot/.env` or through `env.shellEnv`. A key exported only in an interactive shell will not help a managed service unless the env is imported separately.
 </Note>
 
 ## Related

@@ -66,7 +66,7 @@ vi.mock("./reply/agent-runner.runtime.js", () => ({
         return "⚠️ Context overflow — prompt too large for this model. Try a shorter message or a larger-context model.";
       }
       const trimmed = message.replace(/\.\s*$/, "");
-      return `⚠️ Agent failed before reply: ${trimmed}.\nLogs: openclaw logs --follow`;
+      return `⚠️ Agent failed before reply: ${trimmed}.\nLogs: grokbot logs --follow`;
     };
     const stripHeartbeat = (text?: string) => {
       const trimmed = text?.trim();
@@ -259,7 +259,7 @@ async function expectNextRunUsesTargetSession(
   );
 
   expect(params.runEmbeddedAgentMock).toHaveBeenCalledOnce();
-  const runParams = firstMockCallArg(params.runEmbeddedAgentMock, "embedded OpenClaw agent");
+  const runParams = firstMockCallArg(params.runEmbeddedAgentMock, "embedded GrokBot agent");
   for (const [key, value] of Object.entries(expected)) {
     expect(runParams[key]).toEqual(value);
   }
@@ -362,7 +362,7 @@ describe("trigger handling", () => {
     {
       error: "sandbox is not defined.",
       expected:
-        "⚠️ Agent failed before reply: sandbox is not defined.\nLogs: openclaw logs --follow",
+        "⚠️ Agent failed before reply: sandbox is not defined.\nLogs: grokbot logs --follow",
     },
     {
       error: "Context window exceeded",
@@ -410,7 +410,7 @@ describe("trigger handling", () => {
 
   it("acknowledges bare /new without invoking the model or loading startup memory", async () => {
     await withTempHome(async (home) => {
-      const workspaceDir = join(home, "openclaw");
+      const workspaceDir = join(home, "grokbot");
       const nowMs = Date.now();
       const todayStamp = formatDateStampForZone(nowMs, TEST_TIME_ZONE);
       const yesterdayStamp = formatDateStampForZone(nowMs - 24 * 60 * 60 * 1000, TEST_TIME_ZONE);
@@ -432,7 +432,7 @@ describe("trigger handling", () => {
 
   it("acknowledges normalized bare /RESET without invoking the model", async () => {
     await withTempHome(async (home) => {
-      const workspaceDir = join(home, "openclaw");
+      const workspaceDir = join(home, "grokbot");
       const nowMs = Date.now();
       const todayStamp = formatDateStampForZone(nowMs, TEST_TIME_ZONE);
       await writeDailyMemoryNotes(workspaceDir, [
@@ -492,7 +492,7 @@ describe("trigger handling", () => {
         expect(runEmbeddedAgentMock, testCase.label).toHaveBeenCalledOnce();
         if (testCase.assertPrompt) {
           const prompt =
-            firstMockCallArg(runEmbeddedAgentMock, "embedded OpenClaw agent").prompt ?? "";
+            firstMockCallArg(runEmbeddedAgentMock, "embedded GrokBot agent").prompt ?? "";
           expect(prompt).toContain("Give me the status");
           expect(prompt).not.toContain("/thinking high");
           expect(prompt).not.toContain("/think high");
@@ -534,7 +534,7 @@ describe("trigger handling", () => {
         testCase.setup(cfg);
         await getReplyFromConfig(BASE_MESSAGE, { isHeartbeat: true }, cfg);
 
-        const call = firstMockCallArg(runEmbeddedAgentMock, "embedded OpenClaw agent");
+        const call = firstMockCallArg(runEmbeddedAgentMock, "embedded GrokBot agent");
         expect(call?.provider).toBe(testCase.expected.provider);
         expect(call?.model).toBe(testCase.expected.model);
       }
@@ -593,10 +593,10 @@ describe("trigger handling", () => {
       expect(getCompactEmbeddedAgentSessionMock()).toHaveBeenCalledOnce();
       const sessionFile = firstMockCallArg(
         getCompactEmbeddedAgentSessionMock(),
-        "embedded OpenClaw compaction",
+        "embedded GrokBot compaction",
       ).sessionFile;
       if (typeof sessionFile !== "string") {
-        throw new Error("expected embedded OpenClaw compaction sessionFile");
+        throw new Error("expected embedded GrokBot compaction sessionFile");
       }
       expect(parseSqliteSessionFileMarker(sessionFile)).toMatchObject({
         agentId: "worker1",
@@ -776,7 +776,7 @@ describe("trigger handling", () => {
       const runEmbeddedAgentMock = getRunEmbeddedAgentMock();
       runEmbeddedAgentMock.mockReset();
       const storePath = requireSessionStorePath(cfg);
-      const authDir = join(home, ".openclaw", "agents", "main", "agent");
+      const authDir = join(home, ".grokbot", "agents", "main", "agent");
       saveAuthProfileStore(
         {
           version: 1,

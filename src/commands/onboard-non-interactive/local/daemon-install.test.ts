@@ -1,6 +1,6 @@
 // Non-interactive daemon install tests cover gateway service planning, token resolution, and systemd handling.
 
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { OpenClawConfig } from "../../../config/config.js";
 import { installGatewayDaemonNonInteractive } from "./daemon-install.js";
@@ -50,7 +50,7 @@ describe("installGatewayDaemonNonInteractive", () => {
       warnings: [],
     });
     buildGatewayInstallPlan.mockResolvedValue({
-      programArguments: ["openclaw", "gateway", "run"],
+      programArguments: ["grokbot", "gateway", "run"],
       workingDirectory: "/tmp",
       environment: {},
     });
@@ -139,7 +139,7 @@ describe("installGatewayDaemonNonInteractive", () => {
       });
       expect(runtime.log.mock.calls).toEqual([
         [
-          "Systemd user services are unavailable; skipping service install. Use a direct shell run (`openclaw gateway run`) or rerun without --install-daemon on this session.",
+          "Systemd user services are unavailable; skipping service install. Use a direct shell run (`grokbot gateway run`) or rerun without --install-daemon on this session.",
         ],
       ]);
       expect(buildGatewayInstallPlan).not.toHaveBeenCalled();

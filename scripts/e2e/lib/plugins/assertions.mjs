@@ -126,7 +126,7 @@ function getInstallRecords() {
 }
 
 function openClawConfigPath() {
-  return path.join(process.env.HOME, ".openclaw", "openclaw.json");
+  return path.join(process.env.HOME, ".grokbot", "grokbot.json");
 }
 
 function readOpenClawConfig() {
@@ -140,7 +140,7 @@ function readRequiredOpenClawConfig() {
     return readJson(configPath);
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
-    throw new Error(`failed to read OpenClaw config ${configPath}: ${message}`, { cause: error });
+    throw new Error(`failed to read GrokBot config ${configPath}: ${message}`, { cause: error });
   }
 }
 
@@ -216,7 +216,7 @@ function recordFixturePluginTrust() {
   const pluginId = process.argv[3];
   const pluginRoot = process.argv[4];
   const enabled = process.argv[5] === "1";
-  const configPath = path.join(process.env.HOME, ".openclaw", "openclaw.json");
+  const configPath = path.join(process.env.HOME, ".grokbot", "grokbot.json");
   const config = fs.existsSync(configPath) ? readJson(configPath) : {};
   const plugins = (config.plugins ??= {});
   const entries = (plugins.entries ??= {});
@@ -499,7 +499,7 @@ function assertGitPlugin() {
   if (!installPath || !fs.existsSync(installPath)) {
     throw new Error(`git install path missing on disk: ${installPath}`);
   }
-  const gitRoot = path.join(process.env.HOME, ".openclaw", "git");
+  const gitRoot = path.join(process.env.HOME, ".grokbot", "git");
   if (!installPath.endsWith(`${path.sep}repo`)) {
     throw new Error(`git install path should point at cloned repo root: ${installPath}`);
   }
@@ -548,17 +548,17 @@ function assertRealPathInside(parentPath, childPath, label) {
 }
 
 function assertClawHubExternalInstallContract(installPath) {
-  const openclawPeerPath = path.join(installPath, "node_modules", "openclaw");
+  const openclawPeerPath = path.join(installPath, "node_modules", "grokbot");
   if (!fs.existsSync(openclawPeerPath)) {
-    throw new Error(`missing ClawHub openclaw peer symlink: ${openclawPeerPath}`);
+    throw new Error(`missing ClawHub grokbot peer symlink: ${openclawPeerPath}`);
   }
   if (!fs.lstatSync(openclawPeerPath).isSymbolicLink()) {
-    throw new Error(`ClawHub openclaw peer is not a symlink: ${openclawPeerPath}`);
+    throw new Error(`ClawHub grokbot peer is not a symlink: ${openclawPeerPath}`);
   }
   const hostRoot = fs.realpathSync(process.cwd());
   const linkedHostRoot = fs.realpathSync(openclawPeerPath);
   if (linkedHostRoot !== hostRoot) {
-    throw new Error(`expected ClawHub openclaw peer ${linkedHostRoot} to target ${hostRoot}`);
+    throw new Error(`expected ClawHub grokbot peer ${linkedHostRoot} to target ${hostRoot}`);
   }
 
   const dependencyPackagePath = path.join(installPath, "node_modules", "is-number", "package.json");
@@ -669,10 +669,10 @@ function assertNpmPlugin() {
   if (record.source !== "npm") {
     throw new Error(`unexpected npm install source: ${record.source}`);
   }
-  if (record.spec !== "@openclaw/demo-plugin-npm@0.0.1") {
+  if (record.spec !== "@grokbot/demo-plugin-npm@0.0.1") {
     throw new Error(`unexpected npm spec: ${record.spec}`);
   }
-  if (record.resolvedName !== "@openclaw/demo-plugin-npm") {
+  if (record.resolvedName !== "@grokbot/demo-plugin-npm") {
     throw new Error(`unexpected npm resolved name: ${record.resolvedName}`);
   }
   if (record.resolvedVersion !== "0.0.1") {
@@ -748,15 +748,15 @@ function assertNpmPluginRemoved() {
 
 function assertInvalidOpenClawExtensionsRejected() {
   const pluginId = "demo-plugin-invalid-metadata";
-  for (const expected of ["openclaw.extensions[1]", "non-empty string"]) {
+  for (const expected of ["grokbot.extensions[1]", "non-empty string"]) {
     assertTextFileIncludes(
-      scratchFile("plugins-invalid-openclaw-extensions.log"),
+      scratchFile("plugins-invalid-grokbot-extensions.log"),
       expected,
       "malformed metadata install output",
     );
   }
 
-  const list = readJson(scratchFile("plugins-invalid-openclaw-extensions-list.json"));
+  const list = readJson(scratchFile("plugins-invalid-grokbot-extensions-list.json"));
   if ((list.plugins || []).some((entry) => entry.id === pluginId)) {
     throw new Error(`${pluginId} listed after rejected install`);
   }
@@ -766,7 +766,7 @@ function assertInvalidOpenClawExtensionsRejected() {
     throw new Error(`${pluginId} install record persisted after rejected install`);
   }
 
-  const managedInstallPath = path.join(process.env.HOME, ".openclaw", "extensions", pluginId);
+  const managedInstallPath = path.join(process.env.HOME, ".grokbot", "extensions", pluginId);
   if (fs.existsSync(managedInstallPath)) {
     throw new Error(`${pluginId} managed install directory exists after rejected install`);
   }
@@ -916,7 +916,7 @@ function assertClawHubInstalled() {
     throw new Error(`unexpected ClawHub inspect plugin id: ${inspect.plugin?.id}`);
   }
 
-  const configPath = path.join(process.env.HOME, ".openclaw", "openclaw.json");
+  const configPath = path.join(process.env.HOME, ".grokbot", "grokbot.json");
   const config = fs.existsSync(configPath) ? readJson(configPath) : {};
   const allowLegacyCompat = process.env.OPENCLAW_PACKAGE_ACCEPTANCE_LEGACY_COMPAT === "1";
   const index = readPluginInstallIndex({
@@ -951,7 +951,7 @@ function assertClawHubInstalled() {
   if (!fs.existsSync(installPath)) {
     throw new Error(`ClawHub install path missing on disk: ${installPath}`);
   }
-  const extensionsRoot = path.join(process.env.HOME, ".openclaw", "extensions");
+  const extensionsRoot = path.join(process.env.HOME, ".grokbot", "extensions");
   assertRealPathInside(extensionsRoot, installPath, "ClawHub install path");
   if (record.artifactKind === "npm-pack") {
     assertClawHubExternalInstallContract(installPath);
@@ -969,7 +969,7 @@ function assertClawHubRemoved() {
     throw new Error(`ClawHub plugin still listed after uninstall: ${pluginId}`);
   }
 
-  const configPath = path.join(process.env.HOME, ".openclaw", "openclaw.json");
+  const configPath = path.join(process.env.HOME, ".grokbot", "grokbot.json");
   const config = fs.existsSync(configPath) ? readJson(configPath) : {};
   const installRecords = readPluginInstallRecords({
     configPath,
@@ -979,7 +979,7 @@ function assertClawHubRemoved() {
     throw new Error(`ClawHub install record still present after uninstall: ${pluginId}`);
   }
 
-  const configAfterUninstallPath = path.join(process.env.HOME, ".openclaw", "openclaw.json");
+  const configAfterUninstallPath = path.join(process.env.HOME, ".grokbot", "grokbot.json");
   const configAfterUninstall = fs.existsSync(configAfterUninstallPath)
     ? readJson(configAfterUninstallPath)
     : {};
@@ -1023,7 +1023,7 @@ const commands = {
   "plugin-npm": assertNpmPlugin,
   "plugin-npm-update": assertNpmPluginUpdateUnchanged,
   "plugin-npm-removed": assertNpmPluginRemoved,
-  "invalid-openclaw-extensions": assertInvalidOpenClawExtensionsRejected,
+  "invalid-grokbot-extensions": assertInvalidOpenClawExtensionsRejected,
   "bundle-disabled": assertClaudeBundleDisabled,
   "bundle-inspect": assertClaudeBundleInspect,
   "slash-install": assertSlashInstall,

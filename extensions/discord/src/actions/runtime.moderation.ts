@@ -1,5 +1,5 @@
 // Discord plugin module implements runtime.moderation behavior.
-import type { AgentToolResult } from "openclaw/plugin-sdk/agent-core";
+import type { AgentToolResult } from "grokbot/plugin-sdk/agent-core";
 import {
   type ActionGate,
   jsonResult,

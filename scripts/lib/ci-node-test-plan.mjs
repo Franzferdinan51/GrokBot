@@ -173,7 +173,7 @@ const STRIPE_FILE_SECONDS_HINTS = new Map([
   ["test/scripts/find-reusable-release-validation.test.ts", 8],
   ["test/scripts/install-sh.test.ts", 6],
   ["test/scripts/kitchen-sink-rpc-walk.test.ts", 5],
-  ["test/scripts/openclaw-live-updater.test.ts", 18],
+  ["test/scripts/grokbot-live-updater.test.ts", 18],
   ["test/scripts/parallels-smoke-model.test.ts", 8],
   ["test/scripts/plugin-clawhub-release.test.ts", 5],
   ["test/scripts/plugin-gateway-gauntlet.test.ts", 5],
@@ -475,7 +475,7 @@ function resolveAgentCoreShardName(file) {
   }
   if (
     name.startsWith("agent-tools") ||
-    name.startsWith("openclaw-tools") ||
+    name.startsWith("grokbot-tools") ||
     name.startsWith("bash-tools") ||
     name.startsWith("tool") ||
     name.startsWith("apply-patch") ||
@@ -821,7 +821,7 @@ function resolveInfraShardName(file) {
     name.startsWith("json") ||
     name.startsWith("path") ||
     name.startsWith("shell") ||
-    name.startsWith("tmp-openclaw-dir")
+    name.startsWith("tmp-grokbot-dir")
   ) {
     return "core-runtime-infra-files-commands";
   }
@@ -864,7 +864,7 @@ function resolveInfraShardName(file) {
     name.startsWith("google-api") ||
     name.startsWith("home-dir") ||
     name.startsWith("host-env") ||
-    name.startsWith("openclaw-exec-env") ||
+    name.startsWith("grokbot-exec-env") ||
     name.startsWith("secret") ||
     name.startsWith("secure-random")
   ) {
@@ -876,7 +876,7 @@ function resolveInfraShardName(file) {
     name.startsWith("clawhub") ||
     name.startsWith("detect-package-manager") ||
     name.startsWith("git-") ||
-    name.startsWith("openclaw-root") ||
+    name.startsWith("grokbot-root") ||
     name.startsWith("tsdown") ||
     name.startsWith("vitest")
   ) {

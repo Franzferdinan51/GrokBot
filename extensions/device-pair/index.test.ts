@@ -5,8 +5,8 @@ import path from "node:path";
 import type {
   OpenClawPluginCommandDefinition,
   PluginCommandContext,
-} from "openclaw/plugin-sdk/core";
-import { createTestPluginApi } from "openclaw/plugin-sdk/plugin-test-api";
+} from "grokbot/plugin-sdk/core";
+import { createTestPluginApi } from "grokbot/plugin-sdk/plugin-test-api";
 import { afterAll, afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import type { OpenClawPluginApi } from "./api.js";
 
@@ -20,7 +20,7 @@ const pluginApiMocks = vi.hoisted(() => ({
   renderQrPngDataUrl: vi.fn(async () => "data:image/png;base64,ZmFrZXBuZw=="),
   resolveGatewayPort: vi.fn(() => 18789),
   resolveTailscaleServeGatewayUrlsWithRunner: vi.fn(async () => []),
-  resolvePreferredOpenClawTmpDir: vi.fn(() => path.join(os.tmpdir(), "openclaw-device-pair-tests")),
+  resolvePreferredOpenClawTmpDir: vi.fn(() => path.join(os.tmpdir(), "grokbot-device-pair-tests")),
   writeQrPngTempFile: vi.fn(async (dataValue: string, opts: { tmpRoot: string }) => {
     const dirPath = await fs.mkdtemp(path.join(opts.tmpRoot, "device-pair-qr-"));
     const filePath = path.join(dirPath, "pair-qr.png");
@@ -318,7 +318,7 @@ describe("device-pair /pair qr", () => {
         purpose: "mobile-full",
       },
     });
-    expect(text).toContain("Scan this QR code with the OpenClaw iOS app:");
+    expect(text).toContain("Scan this QR code with the GrokBot iOS app:");
     expect(payload.mediaUrl).toBeUndefined();
     expect(payload.channelData?.openclawPairingQr).toEqual({
       setupCode: expect.any(String),
@@ -328,7 +328,7 @@ describe("device-pair /pair qr", () => {
     expect(text).toContain("- Security: single-use bootstrap token");
     expect(text).toContain("**Important:** Run `/pair cleanup` after pairing finishes.");
     expect(text).toContain("If this QR code leaks, run `/pair cleanup` immediately.");
-    expect(text).not.toContain("![OpenClaw pairing QR]");
+    expect(text).not.toContain("![GrokBot pairing QR]");
   });
 
   it("rejects qr setup for internal gateway callers without operator.pairing", async () => {
@@ -534,7 +534,7 @@ describe("device-pair /pair qr", () => {
       } & Record<string, unknown>,
     ];
     expect(target).toBe(testCase.expectedTarget);
-    expect(caption).toContain("Scan this QR code with the OpenClaw iOS app:");
+    expect(caption).toContain("Scan this QR code with the GrokBot iOS app:");
     expect(caption).toContain("IMPORTANT: After pairing finishes, run /pair cleanup.");
     expect(caption).toContain("If this QR code leaks, run /pair cleanup immediately.");
     const mediaUrl = requireMediaUrl(opts);
@@ -974,7 +974,7 @@ describe("device-pair /pair default setup code", () => {
   it("allows mdns cleartext setup urls", async () => {
     const command = registerPairCommand({
       pluginConfig: {
-        publicUrl: "ws://openclaw.local:18789",
+        publicUrl: "ws://grokbot.local:18789",
       },
     });
     const result = await command.handler(
@@ -987,7 +987,7 @@ describe("device-pair /pair default setup code", () => {
     );
 
     expect(pluginApiMocks.issueDeviceBootstrapToken).toHaveBeenCalledTimes(1);
-    expect(requireText(result)).toContain("Gateway: ws://openclaw.local:18789");
+    expect(requireText(result)).toContain("Gateway: ws://grokbot.local:18789");
   });
 
   it("uses the advertised LAN helper for bind-derived setup urls", async () => {

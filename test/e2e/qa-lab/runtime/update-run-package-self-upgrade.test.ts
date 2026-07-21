@@ -37,13 +37,13 @@ describe("update.run package self-upgrade producer", () => {
 
     expect(script).toContain("source scripts/e2e/lib/upgrade-survivor/update-restart-auth.sh");
     expect(script).toContain("-u OPENCLAW_SKIP_PROVIDERS");
-    expect(script).toContain("systemctl --user start openclaw-gateway.service");
-    expect(script).toContain("OPENCLAW_SYSTEMD_UNIT=openclaw-gateway.service");
+    expect(script).toContain("systemctl --user start grokbot-gateway.service");
+    expect(script).toContain("OPENCLAW_SYSTEMD_UNIT=grokbot-gateway.service");
     expect(script).toContain("restart mode: update process respawn (supervisor restart)");
     expect(script).toContain("service-owned target environment unexpectedly suppresses providers");
     expect(script).not.toContain("target_gateway_pid");
     expect(script).not.toContain("openclaw_e2e_stop_process");
-    expect(script).toContain("systemctl --user stop openclaw-gateway.service");
+    expect(script).toContain("systemctl --user stop grokbot-gateway.service");
     expect(script).toContain(': >"$SYSTEMCTL_SHIM_LOG"');
     const runCleanup = script.slice(
       script.indexOf("rm -f \\"),
@@ -51,8 +51,8 @@ describe("update.run package self-upgrade producer", () => {
     );
     expect(runCleanup).toContain('"$UPDATE_STATUS_JSON"');
     expect(runCleanup).toContain('"$ARTIFACT_DIR/update-status.candidate.json"');
-    expect(script.indexOf("openclaw gateway install --force --json")).toBeLessThan(
-      script.indexOf("OPENCLAW_SYSTEMD_UNIT=openclaw-gateway.service"),
+    expect(script.indexOf("grokbot gateway install --force --json")).toBeLessThan(
+      script.indexOf("OPENCLAW_SYSTEMD_UNIT=grokbot-gateway.service"),
     );
   });
 

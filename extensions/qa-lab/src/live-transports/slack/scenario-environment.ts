@@ -1,7 +1,7 @@
 import path from "node:path";
 import type { WebClient } from "@slack/web-api";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import type { QaRunnerCliRegistration } from "openclaw/plugin-sdk/qa-runner-runtime";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import type { QaRunnerCliRegistration } from "grokbot/plugin-sdk/qa-runner-runtime";
 import {
   patchLiveQaGatewayConfig,
   readLiveQaGatewayConfig,

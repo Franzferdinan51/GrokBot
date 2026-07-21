@@ -22,7 +22,7 @@ describe("filesystem tool output contracts", () => {
   let tmpDir = "";
 
   beforeEach(async () => {
-    tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-filesystem-contract-"));
+    tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-filesystem-contract-"));
   });
 
   afterEach(async () => {

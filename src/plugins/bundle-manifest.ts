@@ -1,10 +1,10 @@
-/** Reads Codex/Claude/Cursor bundle manifests into OpenClaw plugin manifest metadata. */
+/** Reads Codex/Claude/Cursor bundle manifests into GrokBot plugin manifest metadata. */
 import path from "node:path";
 import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalString,
-} from "@openclaw/normalization-core/string-coerce";
-import { normalizeUniqueSingleOrTrimmedStringList } from "@openclaw/normalization-core/string-normalization";
+} from "@grokbot/normalization-core/string-coerce";
+import { normalizeUniqueSingleOrTrimmedStringList } from "@grokbot/normalization-core/string-normalization";
 import JSON5 from "json5";
 import { matchRootFileOpenFailure } from "../infra/boundary-file-read.js";
 import { readRootStructuredFileSync } from "../infra/json-files.js";
@@ -31,7 +31,7 @@ type BundlePluginManifest = {
   version?: string;
   skills: string[];
   settingsFiles?: string[];
-  // Only include hook roots that OpenClaw can execute via HOOK.md + handler files.
+  // Only include hook roots that GrokBot can execute via HOOK.md + handler files.
   hooks: string[];
   bundleFormat: PluginBundleFormat;
   activation?: PluginManifestActivation;

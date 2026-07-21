@@ -1,5 +1,5 @@
 // Unified operator approval lookup and first-answer resolution handlers.
-import { normalizeOptionalString } from "@openclaw/normalization-core/string-coerce";
+import { normalizeOptionalString } from "@grokbot/normalization-core/string-coerce";
 import {
   ErrorCodes,
   errorShape,
@@ -20,7 +20,7 @@ import type {
 } from "../../infra/exec-approvals.js";
 import type { PluginApprovalRequestPayload } from "../../infra/plugin-approvals.js";
 import type { SystemAgentApprovalRequestPayload } from "../../infra/system-agent-approvals.js";
-import type { OpenClawStateDatabaseOptions } from "../../state/openclaw-state-db.js";
+import type { OpenClawStateDatabaseOptions } from "../../state/grokbot-state-db.js";
 import { normalizeControlUiBasePath } from "../control-ui-shared.js";
 import type { ExecApprovalManager, ExecApprovalRecord } from "../exec-approval-manager.js";
 import {

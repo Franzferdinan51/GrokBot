@@ -1,10 +1,10 @@
-import { supportsOpenAIReasoningEffort } from "@openclaw/ai/internal/openai";
+import { supportsOpenAIReasoningEffort } from "@grokbot/ai/internal/openai";
 /**
  * OpenAI Responses payload policy.
  * Classifies endpoint capabilities and applies store, prompt-cache,
  * server-compaction, service-tier, and reasoning payload rules.
  */
-import { readStringValue } from "@openclaw/normalization-core/string-coerce";
+import { readStringValue } from "@grokbot/normalization-core/string-coerce";
 import { parseStrictPositiveInteger } from "../infra/parse-finite-number.js";
 import { asBoolean } from "../utils/boolean.js";
 
@@ -71,7 +71,7 @@ const OPENAI_RESPONSES_APIS = new Set([
   "openai-responses",
   "azure-openai-responses",
   "openai-chatgpt-responses",
-  "openclaw-openai-responses-transport",
+  "grokbot-openai-responses-transport",
 ]);
 const OPENAI_RESPONSES_PROVIDERS = new Set(["openai", "azure-openai", "azure-openai-responses"]);
 const LOCAL_ENDPOINT_HOSTS = new Set(["localhost", "127.0.0.1", "::1", "[::1]"]);
@@ -253,12 +253,12 @@ function resolveOpenAIResponsesPayloadCapabilities(
   return {
     allowsOpenAIServiceTier:
       (provider === "openai" &&
-        (api === "openai-responses" || api === "openclaw-openai-responses-transport") &&
+        (api === "openai-responses" || api === "grokbot-openai-responses-transport") &&
         endpointClass === "openai-public") ||
       (isOpenAIProvider &&
         (api === "openai-chatgpt-responses" ||
           api === "openai-responses" ||
-          api === "openclaw-openai-responses-transport") &&
+          api === "grokbot-openai-responses-transport") &&
         endpointClass === "openai"),
     allowsResponsesStore:
       supportsResponsesStoreField &&

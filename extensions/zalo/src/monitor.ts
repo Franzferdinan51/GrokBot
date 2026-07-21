@@ -1,30 +1,30 @@
 // Zalo plugin module implements monitor behavior.
 import type { IncomingMessage, ServerResponse } from "node:http";
-import { logTypingFailure } from "openclaw/plugin-sdk/channel-feedback";
+import { logTypingFailure } from "grokbot/plugin-sdk/channel-feedback";
 import {
   formatInboundMediaUnavailableText,
   resolveChannelInboundRouteEnvelope,
   type ChannelInboundMediaInput,
-} from "openclaw/plugin-sdk/channel-inbound";
-import { resolveStableChannelMessageIngress } from "openclaw/plugin-sdk/channel-ingress-runtime";
-import { createChannelPairingController } from "openclaw/plugin-sdk/channel-pairing";
-import type { MarkdownTableMode, OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+} from "grokbot/plugin-sdk/channel-inbound";
+import { resolveStableChannelMessageIngress } from "grokbot/plugin-sdk/channel-ingress-runtime";
+import { createChannelPairingController } from "grokbot/plugin-sdk/channel-pairing";
+import type { MarkdownTableMode, OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import {
   createLazyRuntimeModule,
   createLazyRuntimeNamedExport,
-} from "openclaw/plugin-sdk/lazy-runtime";
+} from "grokbot/plugin-sdk/lazy-runtime";
 import {
   deliverTextOrMediaReply,
   resolveSendableOutboundReplyParts,
   type OutboundReplyPayload,
-} from "openclaw/plugin-sdk/reply-payload";
-import { sleepWithAbort, waitForAbortSignal } from "openclaw/plugin-sdk/runtime-env";
+} from "grokbot/plugin-sdk/reply-payload";
+import { sleepWithAbort, waitForAbortSignal } from "grokbot/plugin-sdk/runtime-env";
 import {
   resolveDefaultGroupPolicy,
   warnMissingProviderGroupPolicyFallbackOnce,
-} from "openclaw/plugin-sdk/runtime-group-policy";
-import { normalizeStringEntries } from "openclaw/plugin-sdk/string-coerce-runtime";
-import { registerPluginHttpRoute, resolveWebhookPath } from "openclaw/plugin-sdk/webhook-ingress";
+} from "grokbot/plugin-sdk/runtime-group-policy";
+import { normalizeStringEntries } from "grokbot/plugin-sdk/string-coerce-runtime";
+import { registerPluginHttpRoute, resolveWebhookPath } from "grokbot/plugin-sdk/webhook-ingress";
 import type { ResolvedZaloAccount } from "./accounts.js";
 import {
   ZaloApiError,

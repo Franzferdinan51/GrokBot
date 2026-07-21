@@ -1,5 +1,5 @@
 #!/usr/bin/env -S node --import tsx
-// Openclaw Npm Prepublish Verify script supports OpenClaw repository automation.
+// Openclaw Npm Prepublish Verify script supports GrokBot repository automation.
 
 import { mkdirSync, mkdtempSync, readFileSync, realpathSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
@@ -13,13 +13,13 @@ import {
   collectInstalledPackageErrors,
   normalizeInstalledBinaryVersion,
   resolveInstalledBinaryCommandInvocation,
-} from "./openclaw-npm-postpublish-verify.ts";
-import { resolveNpmCommandInvocation } from "./openclaw-npm-release-check.ts";
+} from "./grokbot-npm-postpublish-verify.ts";
+import { resolveNpmCommandInvocation } from "./grokbot-npm-release-check.ts";
 import {
   assertPreparedOpenClawNpmShrinkwrap,
   npmTarballIntegrity,
   readTarballJson,
-} from "./prepare-openclaw-npm-shrinkwrap.ts";
+} from "./prepare-grokbot-npm-shrinkwrap.ts";
 import { buildCmdExeCommandLine, resolveWindowsCmdExePath } from "./windows-cmd-helpers.mjs";
 
 type InstalledPackageJson = {
@@ -41,7 +41,7 @@ type OpenClawNpmPrepublishVerifyArgs =
     };
 
 export function openClawNpmPrepublishVerifyUsage(): string {
-  return "Usage: node --import tsx scripts/openclaw-npm-prepublish-verify.ts <tarball.tgz> [expected-version] [dependency.tgz ...]";
+  return "Usage: node --import tsx scripts/grokbot-npm-prepublish-verify.ts <tarball.tgz> [expected-version] [dependency.tgz ...]";
 }
 
 export function parseOpenClawNpmPrepublishVerifyArgs(
@@ -56,12 +56,12 @@ export function parseOpenClawNpmPrepublishVerifyArgs(
     throw new Error(openClawNpmPrepublishVerifyUsage());
   }
   if (tarballPath.startsWith("-")) {
-    throw new Error(`Unknown openclaw npm prepublish verifier option: ${tarballPath}`);
+    throw new Error(`Unknown grokbot npm prepublish verifier option: ${tarballPath}`);
   }
 
   const expectedVersion = args[1]?.trim();
   if (expectedVersion?.startsWith("-")) {
-    throw new Error(`Unknown openclaw npm prepublish verifier option: ${expectedVersion}`);
+    throw new Error(`Unknown grokbot npm prepublish verifier option: ${expectedVersion}`);
   }
   const dependencyTarballPaths = args.slice(2).map((value) => value.trim());
   const invalidDependency = dependencyTarballPaths.find(
@@ -98,7 +98,7 @@ function main(argv = process.argv.slice(2)): void {
     return;
   }
 
-  const workingDir = mkdtempSync(join(tmpdir(), "openclaw-prepublish-"));
+  const workingDir = mkdtempSync(join(tmpdir(), "grokbot-prepublish-"));
   const prefixDir = join(workingDir, "prefix");
   try {
     let binaryInvocation: NpmVerifyCommandInvocation;
@@ -120,8 +120,8 @@ function main(argv = process.argv.slice(2)): void {
           {
             private: true,
             dependencies: {
-              "@openclaw/ai": pathToFileURL(aiTarballPath).href,
-              openclaw: pathToFileURL(realpathSync(args.tarballPath)).href,
+              "@grokbot/ai": pathToFileURL(aiTarballPath).href,
+              grokbot: pathToFileURL(realpathSync(args.tarballPath)).href,
             },
           },
           null,
@@ -129,12 +129,12 @@ function main(argv = process.argv.slice(2)): void {
         )}\n`,
       );
       npmExec(["install", "--prefix", prefixDir, "--no-fund", "--no-audit"], workingDir);
-      packageRoot = join(prefixDir, "node_modules", "openclaw");
+      packageRoot = join(prefixDir, "node_modules", "grokbot");
       const binaryPath = join(
         prefixDir,
         "node_modules",
         ".bin",
-        process.platform === "win32" ? "openclaw.cmd" : "openclaw",
+        process.platform === "win32" ? "grokbot.cmd" : "grokbot",
       );
       binaryInvocation =
         process.platform === "win32"
@@ -159,7 +159,7 @@ function main(argv = process.argv.slice(2)): void {
         workingDir,
       );
       const globalRoot = npmExec(["root", "-g", "--prefix", prefixDir], workingDir);
-      packageRoot = join(globalRoot, "openclaw");
+      packageRoot = join(globalRoot, "grokbot");
       binaryInvocation = resolveInstalledBinaryCommandInvocation(prefixDir, ["--version"]);
     }
     const pkg = JSON.parse(
@@ -174,7 +174,7 @@ function main(argv = process.argv.slice(2)): void {
     const installedBinaryVersion = runNpmVerifyCommand(binaryInvocation, workingDir);
     if (normalizeInstalledBinaryVersion(installedBinaryVersion) !== resolvedExpectedVersion) {
       errors.push(
-        `installed openclaw binary version mismatch: expected ${resolvedExpectedVersion}, found ${installedBinaryVersion || "<missing>"}.`,
+        `installed grokbot binary version mismatch: expected ${resolvedExpectedVersion}, found ${installedBinaryVersion || "<missing>"}.`,
       );
     }
     if (errors.length === 0) {
@@ -184,7 +184,7 @@ function main(argv = process.argv.slice(2)): void {
       throw new Error(`prepared tarball install failed:\n- ${errors.join("\n- ")}`);
     }
     console.log(
-      `openclaw-npm-prepublish-verify: prepared tarball install OK (${resolvedExpectedVersion}).`,
+      `grokbot-npm-prepublish-verify: prepared tarball install OK (${resolvedExpectedVersion}).`,
     );
   } finally {
     rmSync(workingDir, { force: true, recursive: true });
@@ -196,7 +196,7 @@ if (entrypoint !== null && import.meta.url === entrypoint) {
   try {
     main();
   } catch (error) {
-    console.error(`openclaw-npm-prepublish-verify: ${formatErrorMessage(error)}`);
+    console.error(`grokbot-npm-prepublish-verify: ${formatErrorMessage(error)}`);
     process.exitCode = 1;
   }
 }

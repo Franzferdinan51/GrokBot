@@ -1,11 +1,11 @@
 ---
 name: crabbox
-description: "Crabbox/Testbox remote proof for OpenClaw: trusted-source routing, untrusted isolation, Linux/macOS/Windows/WSL2, live E2E, desktop, diagnostics, cleanup."
+description: "Crabbox/Testbox remote proof for GrokBot: trusted-source routing, untrusted isolation, Linux/macOS/Windows/WSL2, live E2E, desktop, diagnostics, cleanup."
 ---
 
 # Crabbox
 
-Remote OpenClaw proof. Heavy tests. Builds. Typecheck/lint fan-out. Docker.
+Remote GrokBot proof. Heavy tests. Builds. Typecheck/lint fan-out. Docker.
 Packages. Live providers. Desktop. Cross-OS.
 
 Backends:
@@ -29,7 +29,7 @@ Source trust before test size.
 - Never run untrusted repo wrapper/config locally.
 - No speculative warmup. Acquire when first heavy command ready. Reuse id. Stop.
 
-Need direct AWS semantics? Pass `--provider aws`. Need normal trusted OpenClaw
+Need direct AWS semantics? Pass `--provider aws`. Need normal trusted GrokBot
 heavy proof? Pass `--provider blacksmith-testbox`.
 
 ## Preflight
@@ -131,7 +131,7 @@ reviewed full head SHA. No instance role. No Tailscale. No hydration. Only `CI`
 forwarded. Trusted bootstrap uploaded beside `--fresh-pr`.
 
 ```sh
-cd <clean-trusted-openclaw-main>
+cd <clean-trusted-grokbot-main>
 env -u CRABBOX_AWS_INSTANCE_PROFILE \
   "$CRABBOX" config show --json | \
   jq -e '.aws.instanceProfile == ""' >/dev/null
@@ -202,7 +202,7 @@ Broker auth, not cloud keys:
 "$CRABBOX" config show
 "$CRABBOX" doctor
 "$CRABBOX" whoami
-"$CRABBOX" login --url https://crabbox.openclaw.ai --provider aws
+"$CRABBOX" login --url https://crabbox.grokbot.ai --provider aws
 ```
 
 Normal validation asking for AWS keys usually means wrong path.
@@ -218,7 +218,7 @@ No remote provider? Local Docker fallback:
 node scripts/crabbox-wrapper.mjs run \
   --provider local-container \
   --local-container-image node:24-bookworm \
-  --no-hydrate --fresh-pr openclaw/openclaw#123 \
+  --no-hydrate --fresh-pr grokbot/grokbot#123 \
   --timing-json --shell -- \
   "corepack pnpm install --frozen-lockfile --store-dir .pnpm-store && \
    corepack pnpm test <path-or-filter>"
@@ -349,4 +349,4 @@ Crabbox stop wrapper: no `--timing-json`.
 ## Boundary
 
 Crabbox stays generic: lease, sync, command, logs, results, timing, cleanup.
-OpenClaw setup belongs hydration workflow/repo scripts.
+GrokBot setup belongs hydration workflow/repo scripts.

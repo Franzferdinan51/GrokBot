@@ -1,5 +1,5 @@
 // Google Meet plugin module implements chrome behavior.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 import {
   createLocalMeetingRealtimeAudioTransport,
   createNodeMeetingRealtimeAudioTransport,
@@ -14,10 +14,10 @@ import {
   type MeetingRealtimeAudioEngineHandle,
   type MeetingRealtimeToolCallParams,
   type MeetingRuntimePlatform,
-} from "openclaw/plugin-sdk/meeting-runtime";
-import { addTimerTimeoutGraceMs } from "openclaw/plugin-sdk/number-runtime";
-import type { PluginRuntime } from "openclaw/plugin-sdk/plugin-runtime";
-import type { RuntimeLogger } from "openclaw/plugin-sdk/plugin-runtime";
+} from "grokbot/plugin-sdk/meeting-runtime";
+import { addTimerTimeoutGraceMs } from "grokbot/plugin-sdk/number-runtime";
+import type { PluginRuntime } from "grokbot/plugin-sdk/plugin-runtime";
+import type { RuntimeLogger } from "grokbot/plugin-sdk/plugin-runtime";
 import {
   consultOpenClawAgentForGoogleMeet,
   handleGoogleMeetRealtimeConsultToolCall,
@@ -111,7 +111,7 @@ export async function assertBlackHole2chAvailable(params: {
     throw new Error(
       [
         "BlackHole 2ch audio device not found.",
-        "Install BlackHole 2ch and route Chrome input/output through the OpenClaw audio bridge.",
+        "Install BlackHole 2ch and route Chrome input/output through the GrokBot audio bridge.",
         hint,
       ]
         .filter(Boolean)
@@ -170,7 +170,7 @@ export async function launchChromeMeet(params: {
     if (params.config.chrome.audioBridgeCommand) {
       if (params.mode === "agent") {
         throw new Error(
-          "Chrome agent mode requires chrome.audioInputCommand and chrome.audioOutputCommand so OpenClaw can run STT and regular TTS directly.",
+          "Chrome agent mode requires chrome.audioInputCommand and chrome.audioOutputCommand so GrokBot can run STT and regular TTS directly.",
         );
       }
       const bridge = await params.runtime.system.runCommandWithTimeout(

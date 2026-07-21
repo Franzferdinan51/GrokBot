@@ -1,10 +1,10 @@
 // Discord plugin module implements listeners behavior.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { requestHeartbeat } from "openclaw/plugin-sdk/heartbeat-runtime";
-import type { PluginStateSyncKeyedStore } from "openclaw/plugin-sdk/plugin-state-runtime";
-import { resolveAgentRoute } from "openclaw/plugin-sdk/routing";
-import { danger } from "openclaw/plugin-sdk/runtime-env";
-import { enqueueSystemEvent } from "openclaw/plugin-sdk/system-event-runtime";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { requestHeartbeat } from "grokbot/plugin-sdk/heartbeat-runtime";
+import type { PluginStateSyncKeyedStore } from "grokbot/plugin-sdk/plugin-state-runtime";
+import { resolveAgentRoute } from "grokbot/plugin-sdk/routing";
+import { danger } from "grokbot/plugin-sdk/runtime-env";
+import { enqueueSystemEvent } from "grokbot/plugin-sdk/system-event-runtime";
 import {
   type Client,
   type DiscordMessageDispatchData,
@@ -36,7 +36,7 @@ import { DiscordPresenceBaselineCache } from "./presence-transition-cache.js";
 import { isThreadArchived } from "./thread-bindings.discord-api.js";
 import { closeDiscordThreadSessions } from "./thread-session-close.js";
 
-type Logger = ReturnType<typeof import("openclaw/plugin-sdk/runtime-env").createSubsystemLogger>;
+type Logger = ReturnType<typeof import("grokbot/plugin-sdk/runtime-env").createSubsystemLogger>;
 
 type DiscordRawMessageEvent = Parameters<MessageCreateListener["handle"]>[0];
 export type DiscordMessageEvent = DiscordMessageDispatchData;

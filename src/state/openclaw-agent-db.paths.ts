@@ -1,7 +1,7 @@
 // Agent database path helpers resolve per-agent persisted database paths.
 import path from "node:path";
 import { normalizeAgentId } from "../routing/session-key.js";
-import { resolveOpenClawStateSqliteDir } from "./openclaw-state-db.paths.js";
+import { resolveOpenClawStateSqliteDir } from "./grokbot-state-db.paths.js";
 
 /**
  * Path helpers for per-agent SQLite state.
@@ -26,7 +26,7 @@ export function resolveOpenClawAgentSqlitePath(options: OpenClawAgentSqlitePathO
         "agents",
         agentId,
         "agent",
-        "openclaw-agent.sqlite",
+        "grokbot-agent.sqlite",
       ),
   );
 }

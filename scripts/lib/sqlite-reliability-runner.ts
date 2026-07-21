@@ -13,12 +13,12 @@ import {
   assertOpenClawAgentDatabaseForMaintenance,
   closeOpenClawAgentDatabasesForTest,
   openOpenClawAgentDatabase,
-} from "../../src/state/openclaw-agent-db.js";
+} from "../../src/state/grokbot-agent-db.js";
 import {
   assertOpenClawStateDatabaseForMaintenance,
   closeOpenClawStateDatabaseForTest,
   openOpenClawStateDatabase,
-} from "../../src/state/openclaw-state-db.js";
+} from "../../src/state/grokbot-state-db.js";
 import {
   COMMITTED_WAL_SENTINEL,
   PROFILES,
@@ -498,7 +498,7 @@ export async function runReliabilityStress(options: CliOptions): Promise<Reliabi
   const ownsStateDir = options.stateDir === null;
   const cleanupIterationArtifacts = ownsStateDir && options.repository === null;
   const stateDir =
-    options.stateDir ?? fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-sqlite-reliability-"));
+    options.stateDir ?? fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-sqlite-reliability-"));
   const repository = options.repository ?? path.join(stateDir, "snapshots");
   const runScratch = path.join(stateDir, "sqlite-reliability-runs", randomUUID());
   const syncedRepository = path.join(runScratch, "synced-snapshots");

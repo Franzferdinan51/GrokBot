@@ -1,4 +1,4 @@
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
 // Imessage tests cover targets plugin behavior.
 import { describe, expect, it } from "vitest";
 import {

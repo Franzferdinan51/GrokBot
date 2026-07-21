@@ -7,4 +7,4 @@ export {
   resolvePathViaExistingAncestorSync,
   resolveRootPath,
   resolveRootPathSync,
-} from "@openclaw/fs-safe/advanced";
+} from "@grokbot/fs-safe/advanced";

@@ -1,7 +1,7 @@
 // Qa Lab tests cover suite plugin behavior.
 import fs from "node:fs/promises";
 import path from "node:path";
-import { CRABLINE_SERVER_CHANNELS } from "@openclaw/crabline";
+import { CRABLINE_SERVER_CHANNELS } from "@grokbot/crabline";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { QA_EVIDENCE_FILENAME, QA_EVIDENCE_SUMMARY_KIND } from "./evidence-summary.js";
 import type { QaLabServerHandle } from "./lab-server.types.js";
@@ -13,7 +13,7 @@ import { createTempDirHarness } from "./temp-dir.test-helper.js";
 const fetchWithSsrFGuardMock = vi.hoisted(() => vi.fn());
 const tempDirs = createTempDirHarness();
 
-vi.mock("openclaw/plugin-sdk/ssrf-runtime", () => ({
+vi.mock("grokbot/plugin-sdk/ssrf-runtime", () => ({
   fetchWithSsrFGuard: fetchWithSsrFGuardMock,
 }));
 
@@ -824,12 +824,12 @@ describe("qa suite", () => {
     expect(
       qaSuiteProgressTesting.buildQaRuntimeEnvPatch({
         providerMode: "mock-openai",
-        forcedRuntime: "openclaw",
+        forcedRuntime: "grokbot",
         mockBaseUrl: "http://127.0.0.1:44080",
       }),
     ).toEqual({
       OPENCLAW_BUILD_PRIVATE_QA: "1",
-      OPENCLAW_QA_FORCE_RUNTIME: "openclaw",
+      OPENCLAW_QA_FORCE_RUNTIME: "grokbot",
     });
   });
 
@@ -851,7 +851,7 @@ describe("qa suite", () => {
       },
     });
     const sutOpenClawCommand = {
-      executablePath: "/usr/local/bin/openclaw-telegram-sut-launcher",
+      executablePath: "/usr/local/bin/grokbot-telegram-sut-launcher",
       usePackagedPlugins: true,
     };
 
@@ -966,7 +966,7 @@ describe("qa suite", () => {
       qaSuiteProgressTesting.remapModelRefForForcedRuntime({
         modelRef: "mock-openai/gpt-5.6-luna",
         providerMode: "mock-openai",
-        forcedRuntime: "openclaw",
+        forcedRuntime: "grokbot",
       }),
     ).toBe("mock-openai/gpt-5.6-luna");
   });

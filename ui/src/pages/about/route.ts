@@ -1,4 +1,4 @@
-import { definePage } from "@openclaw/uirouter";
+import { definePage } from "@grokbot/uirouter";
 import { html } from "lit";
 
 export const page = definePage({
@@ -7,6 +7,6 @@ export const page = definePage({
   component: () =>
     import("./about-page.ts").then(() => ({
       header: true,
-      render: () => html`<openclaw-about-page></openclaw-about-page>`,
+      render: () => html`<grokbot-about-page></grokbot-about-page>`,
     })),
 });

@@ -25,8 +25,8 @@ export { type TrajectoryEvent as SqliteTrajectoryRuntimeEventForTest } from "../
 export {
   closeOpenClawAgentDatabasesForTest,
   openOpenClawAgentDatabase,
-} from "../state/openclaw-agent-db.js";
+} from "../state/grokbot-agent-db.js";
 export {
   closeOpenClawStateDatabaseForTest,
   openOpenClawStateDatabase,
-} from "../state/openclaw-state-db.js";
+} from "../state/grokbot-state-db.js";

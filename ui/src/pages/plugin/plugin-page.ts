@@ -15,7 +15,7 @@ import { applicationContext, type ApplicationContext } from "../../app/context.t
 import { hasOperatorApprovalsAccess } from "../../app/operator-access.ts";
 import { t } from "../../i18n/index.ts";
 import { resolveEmbedSandbox } from "../../lib/chat/tool-display.ts";
-import { OpenClawLightDomContentsElement } from "../../lit/openclaw-element.ts";
+import { OpenClawLightDomContentsElement } from "../../lit/grokbot-element.ts";
 import { SubscriptionsController } from "../../lit/subscriptions-controller.ts";
 import { pluginTabKey } from "./route.ts";
 
@@ -607,6 +607,6 @@ export class PluginPage extends OpenClawLightDomContentsElement {
   }
 }
 
-if (!customElements.get("openclaw-plugin-page")) {
-  customElements.define("openclaw-plugin-page", PluginPage);
+if (!customElements.get("grokbot-plugin-page")) {
+  customElements.define("grokbot-plugin-page", PluginPage);
 }

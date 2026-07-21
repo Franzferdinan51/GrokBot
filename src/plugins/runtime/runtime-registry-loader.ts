@@ -1,5 +1,5 @@
 // Runtime registry loader assembles activated plugin runtimes from config and registry metadata.
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import { withActivatedPluginIds } from "../activation-context.js";
 import {
   getLoadedRuntimePluginRegistry,

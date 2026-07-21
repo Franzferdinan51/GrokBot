@@ -4,7 +4,7 @@ import os from "node:os";
 import path from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import webPush from "web-push";
-import { closeOpenClawStateDatabase } from "../state/openclaw-state-db.js";
+import { closeOpenClawStateDatabase } from "../state/grokbot-state-db.js";
 import { captureEnv, setTestEnvValue } from "../test-utils/env.js";
 import {
   createWebPushVapidKeyPair,
@@ -56,7 +56,7 @@ describe("resolveVapidKeys", () => {
       createWebPushVapidKeyPair(
         "test-public-key-base64url",
         "test-private-key-base64url",
-        "https://openclaw.ai",
+        "https://grokbot.ai",
       ),
     );
     expect(readPersistedVapidKeyPair(tmpDir)).toEqual(keys);
@@ -75,17 +75,17 @@ describe("resolveVapidKeys", () => {
     await fs.mkdir(pushDir, { recursive: true });
     await fs.writeFile(legacyPath, "{}", "utf8");
 
-    await expect(resolveVapidKeys(tmpDir)).rejects.toThrow("openclaw doctor --fix");
+    await expect(resolveVapidKeys(tmpDir)).rejects.toThrow("grokbot doctor --fix");
     expect(readPersistedVapidKeyPair(tmpDir)).toBeNull();
     expect(vi.mocked(webPush.generateVAPIDKeys)).not.toHaveBeenCalled();
 
     await fs.rename(legacyPath, `${legacyPath}.doctor-importing`);
-    await expect(resolveVapidKeys(tmpDir)).rejects.toThrow("openclaw doctor --fix");
+    await expect(resolveVapidKeys(tmpDir)).rejects.toThrow("grokbot doctor --fix");
     expect(vi.mocked(webPush.generateVAPIDKeys)).not.toHaveBeenCalled();
 
     await fs.rm(`${legacyPath}.doctor-importing`);
     await fs.symlink(path.join(tmpDir, "missing-vapid-keys.json"), legacyPath);
-    await expect(resolveVapidKeys(tmpDir)).rejects.toThrow("openclaw doctor --fix");
+    await expect(resolveVapidKeys(tmpDir)).rejects.toThrow("grokbot doctor --fix");
     expect(vi.mocked(webPush.generateVAPIDKeys)).not.toHaveBeenCalled();
   });
 
@@ -139,7 +139,7 @@ describe("resolveVapidKeys", () => {
         createWebPushVapidKeyPair(
           "test-public-key-base64url",
           "test-private-key-base64url",
-          "https://openclaw.ai",
+          "https://grokbot.ai",
         ),
       );
       expect(readPersistedVapidKeyPair(tmpDir)).toEqual(keys);
@@ -157,7 +157,7 @@ describe("resolveVapidKeys", () => {
         ...initial,
         subject: "mailto:changed@test.com",
       });
-      expect(readPersistedVapidKeyPair(tmpDir)?.subject).toBe("https://openclaw.ai");
+      expect(readPersistedVapidKeyPair(tmpDir)?.subject).toBe("https://grokbot.ai");
     } finally {
       delete process.env.OPENCLAW_VAPID_SUBJECT;
     }
@@ -252,7 +252,7 @@ describe("subscription CRUD", () => {
 
     expect(listWebPushSubscriptions(tmpDir)).toEqual([]);
     await expect(broadcastWebPush({ title: "Blocked" }, tmpDir)).rejects.toThrow(
-      "openclaw doctor --fix",
+      "grokbot doctor --fix",
     );
     expect(vi.mocked(webPush.sendNotification)).not.toHaveBeenCalled();
   });
@@ -265,7 +265,7 @@ describe("subscription CRUD", () => {
     await fs.writeFile(claimPath, "{}", "utf8");
 
     await expect(clearWebPushSubscriptionByEndpoint(endpoint, tmpDir)).rejects.toThrow(
-      "openclaw doctor --fix",
+      "grokbot doctor --fix",
     );
     await expect(
       registerWebPushSubscription({
@@ -273,7 +273,7 @@ describe("subscription CRUD", () => {
         keys,
         baseDir: tmpDir,
       }),
-    ).rejects.toThrow("openclaw doctor --fix");
+    ).rejects.toThrow("grokbot doctor --fix");
     expect(listWebPushSubscriptions(tmpDir)).toEqual([existing]);
   });
 });
@@ -368,7 +368,7 @@ describe("sending", () => {
     const broadcast = broadcastWebPush({ title: "Expired" }, tmpDir);
     await vi.waitFor(() => expect(rejectSend).toBeTypeOf("function"));
     closeOpenClawStateDatabase();
-    const databasePath = path.join(tmpDir, "state", "openclaw.sqlite");
+    const databasePath = path.join(tmpDir, "state", "grokbot.sqlite");
     await fs.rename(databasePath, `${databasePath}.backup`);
     await fs.mkdir(databasePath);
     rejectSend?.(Object.assign(new Error("gone"), { statusCode: 410 }));

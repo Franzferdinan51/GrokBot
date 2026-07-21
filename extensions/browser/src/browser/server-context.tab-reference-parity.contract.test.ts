@@ -71,17 +71,17 @@ function createParityFetchMock(): ReturnType<typeof vi.fn> {
 function setupProfile() {
   const fetchMock = createParityFetchMock();
   global.fetch = withBrowserFetchPreconnect(fetchMock);
-  const state = makeState("openclaw");
+  const state = makeState("grokbot");
   const ctx = createTestBrowserRouteContext({ getState: () => state });
-  return { fetchMock, openclaw: ctx.forProfile("openclaw") };
+  return { fetchMock, grokbot: ctx.forProfile("grokbot") };
 }
 
 // Labels are agent-assigned via labelTab, not returned by /json/list, so seed
 // them once per profile before asserting label-based resolution.
 async function setupProfileWithLabels() {
   const ctx = setupProfile();
-  await ctx.openclaw.labelTab("ABCDEF123456", "docs");
-  await ctx.openclaw.labelTab("ABC999", "app");
+  await ctx.grokbot.labelTab("ABCDEF123456", "docs");
+  await ctx.grokbot.labelTab("ABC999", "app");
   return ctx;
 }
 
@@ -97,8 +97,8 @@ function backendTargetIds(
 
 describe("tab reference parity contract", () => {
   it("listTabs attaches tabId, label, and suggestedTargetId for every fixture tab", async () => {
-    const { openclaw } = await setupProfileWithLabels();
-    const tabs = await openclaw.listTabs();
+    const { grokbot } = await setupProfileWithLabels();
+    const tabs = await grokbot.listTabs();
     expect(tabs).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
@@ -134,38 +134,38 @@ describe("tab reference parity contract", () => {
   for (const { name, input, expected } of resolveCases) {
     it(`resolves "${name}" to ${expected} across label/ensure/focus/close`, async () => {
       const labelCtx = await setupProfileWithLabels();
-      const labeled = await labelCtx.openclaw.labelTab(input, "parity");
+      const labeled = await labelCtx.grokbot.labelTab(input, "parity");
       expect(labeled.targetId).toBe(expected);
 
       const ensureCtx = await setupProfileWithLabels();
-      const ensured = await ensureCtx.openclaw.ensureTabAvailable(input);
+      const ensured = await ensureCtx.grokbot.ensureTabAvailable(input);
       expect(ensured.targetId).toBe(expected);
 
       const focusCtx = await setupProfileWithLabels();
-      await focusCtx.openclaw.focusTab(input);
+      await focusCtx.grokbot.focusTab(input);
       expect(backendTargetIds(focusCtx.fetchMock, "/json/activate/")).toContain(expected);
 
       const closeCtx = await setupProfileWithLabels();
-      await closeCtx.openclaw.closeTab(input);
+      await closeCtx.grokbot.closeTab(input);
       expect(backendTargetIds(closeCtx.fetchMock, "/json/close/")).toContain(expected);
     });
   }
 
   it("rejects an ambiguous raw prefix consistently across label/ensure/focus/close", async () => {
     const labelCtx = await setupProfileWithLabels();
-    await expect(labelCtx.openclaw.labelTab("ABC", "parity")).rejects.toBeInstanceOf(
+    await expect(labelCtx.grokbot.labelTab("ABC", "parity")).rejects.toBeInstanceOf(
       BrowserTargetAmbiguousError,
     );
     const ensureCtx = await setupProfileWithLabels();
-    await expect(ensureCtx.openclaw.ensureTabAvailable("ABC")).rejects.toBeInstanceOf(
+    await expect(ensureCtx.grokbot.ensureTabAvailable("ABC")).rejects.toBeInstanceOf(
       BrowserTargetAmbiguousError,
     );
     const focusCtx = await setupProfileWithLabels();
-    await expect(focusCtx.openclaw.focusTab("ABC")).rejects.toBeInstanceOf(
+    await expect(focusCtx.grokbot.focusTab("ABC")).rejects.toBeInstanceOf(
       BrowserTargetAmbiguousError,
     );
     const closeCtx = await setupProfileWithLabels();
-    await expect(closeCtx.openclaw.closeTab("ABC")).rejects.toBeInstanceOf(
+    await expect(closeCtx.grokbot.closeTab("ABC")).rejects.toBeInstanceOf(
       BrowserTargetAmbiguousError,
     );
   });

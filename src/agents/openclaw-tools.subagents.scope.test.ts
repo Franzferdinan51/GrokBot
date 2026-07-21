@@ -7,7 +7,7 @@ import {
   callGatewayMock,
   resetSubagentsConfigOverride,
   setSubagentsConfigOverride,
-} from "./openclaw-tools.subagents.test-harness.js";
+} from "./grokbot-tools.subagents.test-harness.js";
 import {
   addSubagentRunForTests,
   resetSubagentRegistryForTests,
@@ -21,7 +21,7 @@ function writeStore(storePath: string, store: Record<string, unknown>) {
   fs.writeFileSync(storePath, JSON.stringify(store, null, 2), "utf-8");
 }
 
-describe("openclaw-tools: subagents scope isolation", () => {
+describe("grokbot-tools: subagents scope isolation", () => {
   let storePath = "";
 
   beforeEach(() => {
@@ -30,7 +30,7 @@ describe("openclaw-tools: subagents scope isolation", () => {
     callGatewayMock.mockReset();
     storePath = path.join(
       os.tmpdir(),
-      `openclaw-subagents-scope-${Date.now()}-${Math.random().toString(16).slice(2)}.json`,
+      `grokbot-subagents-scope-${Date.now()}-${Math.random().toString(16).slice(2)}.json`,
     );
     setSubagentsConfigOverride({
       session: createPerSenderSessionConfig({ store: storePath }),

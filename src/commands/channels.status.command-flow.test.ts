@@ -10,7 +10,7 @@ const resolveDefaultAccountId = () => DEFAULT_ACCOUNT_ID;
 const mocks = vi.hoisted(() => ({
   callGateway: vi.fn(),
   resolveCommandConfigWithSecrets: vi.fn(),
-  readConfigFileSnapshot: vi.fn(async () => ({ path: "/tmp/openclaw.json" })),
+  readConfigFileSnapshot: vi.fn(async () => ({ path: "/tmp/grokbot.json" })),
   requireValidConfigSnapshot: vi.fn(),
   listChannelPlugins: vi.fn(),
   listConfiguredAnnounceChannelIdsForConfig: vi.fn((_params: unknown) => ["discord"]),
@@ -52,11 +52,11 @@ vi.mock("../plugins/official-external-plugin-repair-hints.js", () => ({
           pluginId: channelId,
           channelId,
           label: "Feishu",
-          installSpec: "@openclaw/feishu",
-          installCommand: "openclaw plugins install @openclaw/feishu",
-          doctorFixCommand: "openclaw doctor --fix",
+          installSpec: "@grokbot/feishu",
+          installCommand: "grokbot plugins install @grokbot/feishu",
+          doctorFixCommand: "grokbot doctor --fix",
           repairHint:
-            "Install the official external plugin with: openclaw plugins install @openclaw/feishu, or run: openclaw doctor --fix.",
+            "Install the official external plugin with: grokbot plugins install @grokbot/feishu, or run: grokbot doctor --fix.",
         }
       : null,
 }));
@@ -330,7 +330,7 @@ describe("channelsStatusCommand SecretRef fallback flow", () => {
     const joined = logs.join("\n");
     expect(joined).toContain("Missing official external plugins:");
     expect(joined).toContain(
-      "Feishu: Install the official external plugin with: openclaw plugins install @openclaw/feishu, or run: openclaw doctor --fix.",
+      "Feishu: Install the official external plugin with: grokbot plugins install @grokbot/feishu, or run: grokbot doctor --fix.",
     );
   });
 

@@ -32,7 +32,7 @@ import {
   type SkillOperation,
   type SkillMessageMap,
 } from "../../lib/skills/index.ts";
-import { OpenClawLightDomElement } from "../../lit/openclaw-element.ts";
+import { OpenClawLightDomElement } from "../../lit/grokbot-element.ts";
 import { SubscriptionsController } from "../../lit/subscriptions-controller.ts";
 import { renderSkills, type SkillDetailTab, type SkillsStatusFilter } from "./view.ts";
 
@@ -421,6 +421,6 @@ class SkillsPage extends OpenClawLightDomElement {
   }
 }
 
-if (!customElements.get("openclaw-skills-page")) {
-  customElements.define("openclaw-skills-page", SkillsPage);
+if (!customElements.get("grokbot-skills-page")) {
+  customElements.define("grokbot-skills-page", SkillsPage);
 }

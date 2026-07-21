@@ -388,7 +388,7 @@ describe("telegram message cache", () => {
         message_id: 9125,
         date: 1736380725,
         text: "Projection-aware state message",
-        from: { id: 999, is_bot: true, first_name: "OpenClaw" },
+        from: { id: 999, is_bot: true, first_name: "GrokBot" },
       } as Message,
       promptContextProjection: projection,
     });
@@ -420,7 +420,7 @@ describe("telegram message cache", () => {
         date: 1736380725,
         edit_date: 1736380730,
         text: "Edited projection-aware state message",
-        from: { id: 999, is_bot: true, first_name: "OpenClaw" },
+        from: { id: 999, is_bot: true, first_name: "GrokBot" },
       } as Message,
     });
     expect(edited).toMatchObject({
@@ -482,7 +482,7 @@ describe("telegram message cache", () => {
         date: 1736380725,
         edit_date: 1736380731,
         text: "Edited malformed projection state message",
-        from: { id: 999, is_bot: true, first_name: "OpenClaw" },
+        from: { id: 999, is_bot: true, first_name: "GrokBot" },
       } as Message,
     });
     expect(entries.values().next().value?.promptContextProjection).toEqual({
@@ -513,7 +513,7 @@ describe("telegram message cache", () => {
       date: 1736380728,
       text: "Business reply",
       from: { id: 700, is_bot: false, first_name: "Business User" },
-      sender_business_bot: { id: 42, is_bot: true, first_name: "OpenClaw" },
+      sender_business_bot: { id: 42, is_bot: true, first_name: "GrokBot" },
     } as Message;
     const cache = createTelegramMessageCache({ bucketKey, persistentStore: store });
 
@@ -562,11 +562,11 @@ describe("telegram message cache", () => {
       botUserId: 42,
       chatId: 7,
       msg: {
-        chat: { id: 7, type: "private", first_name: "OpenClaw" },
+        chat: { id: 7, type: "private", first_name: "GrokBot" },
         message_id: 9132,
         date: 1736380732,
         text,
-        from: { id: 42, is_bot: true, first_name: "OpenClaw" },
+        from: { id: 42, is_bot: true, first_name: "GrokBot" },
       } as Message,
       promptContextProjection: projection,
     });
@@ -616,11 +616,11 @@ describe("telegram message cache", () => {
         accountId: "default",
         chatId: 7,
         msg: {
-          chat: { id: 7, type: "private", first_name: "OpenClaw" },
+          chat: { id: 7, type: "private", first_name: "GrokBot" },
           message_id: 9127,
           date: 1736380727,
           text: "Projected context",
-          from: { id: 999, is_bot: true, first_name: "OpenClaw" },
+          from: { id: 999, is_bot: true, first_name: "GrokBot" },
         } as Message,
         promptContextProjection: projection,
       }),
@@ -647,11 +647,11 @@ describe("telegram message cache", () => {
       finalPart: true,
     };
     const botMessage = {
-      chat: { id: 7, type: "private", first_name: "OpenClaw" },
+      chat: { id: 7, type: "private", first_name: "GrokBot" },
       message_id: 9130,
       date: 1736380730,
       text: "Projected answer",
-      from: { id: 999, is_bot: true, first_name: "OpenClaw" },
+      from: { id: 999, is_bot: true, first_name: "GrokBot" },
     } as Message;
     const values: Record<string, [string, PersistedCacheValue]> = {
       projected: [
@@ -720,11 +720,11 @@ describe("telegram message cache", () => {
       accountId: "default",
       chatId: 7,
       msg: {
-        chat: { id: 7, type: "private", first_name: "OpenClaw" },
+        chat: { id: 7, type: "private", first_name: "GrokBot" },
         message_id: 9126,
         date: 1736380726,
         text: "Pre-projection state message",
-        from: { id: 999, is_bot: true, first_name: "OpenClaw" },
+        from: { id: 999, is_bot: true, first_name: "GrokBot" },
       } as Message,
     });
 

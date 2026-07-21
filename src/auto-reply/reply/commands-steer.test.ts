@@ -1,6 +1,6 @@
 // Tests steer command persistence and retrieval for session guidance.
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import { buildCommandTestParams } from "./commands.test-harness.js";
 
 const steerRuntimeMocks = vi.hoisted(() => ({
@@ -148,7 +148,7 @@ describe("handleSteerCommand", () => {
     params.sessionStore = {
       "agent:main:telegram:topic:5907": {
         sessionId: "stored-session-id",
-        sessionFile: "/tmp/openclaw-topic-5907.jsonl",
+        sessionFile: "/tmp/grokbot-topic-5907.jsonl",
         updatedAt: Date.now(),
       },
     };
@@ -159,7 +159,7 @@ describe("handleSteerCommand", () => {
       "agent:main:telegram:topic:5907",
     );
     expect(steerRuntimeMocks.resolveActiveEmbeddedRunSessionIdBySessionFile).toHaveBeenCalledWith(
-      "/tmp/openclaw-topic-5907.jsonl",
+      "/tmp/grokbot-topic-5907.jsonl",
     );
     expect(steerRuntimeMocks.isEmbeddedAgentRunActive).not.toHaveBeenCalledWith(
       "stored-session-id",

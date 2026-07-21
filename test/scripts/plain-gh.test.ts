@@ -101,7 +101,7 @@ describe("plain gh helpers", () => {
 
   it("routes explicit GET reads through the PATH shim", () => {
     const ghPath = makeFakeGh();
-    const output = execGhApiRead("repos/openclaw/openclaw/pulls/1", {
+    const output = execGhApiRead("repos/grokbot/grokbot/pulls/1", {
       encoding: "utf8",
       env: {
         ...process.env,
@@ -110,7 +110,7 @@ describe("plain gh helpers", () => {
       },
     });
 
-    expect(output).toContain("argv=api repos/openclaw/openclaw/pulls/1 --method GET");
+    expect(output).toContain("argv=api repos/grokbot/grokbot/pulls/1 --method GET");
     expect(output).toContain("OPENCLAW_GH_BIN_SET=");
   });
 

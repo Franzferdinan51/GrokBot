@@ -2,7 +2,7 @@
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import type { OpenClawConfig } from "../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../config/types.grokbot.js";
 import { resolveBrewExecutable as defaultResolveBrewExecutable } from "../../infra/brew.js";
 import { isContainerEnvironment as defaultIsContainerEnvironment } from "../../infra/container-environment.js";
 import { formatErrorMessage } from "../../infra/errors.js";
@@ -123,9 +123,9 @@ function resolveDefaultNodeInstallStateDir({
   platform?: NodeJS.Platform;
 } = {}): string {
   if (platform !== "win32" && getuid?.() === 0) {
-    return path.join(path.parse(cwd).root, "var", "lib", "openclaw");
+    return path.join(path.parse(cwd).root, "var", "lib", "grokbot");
   }
-  return path.join(homedir(), ".openclaw");
+  return path.join(homedir(), ".grokbot");
 }
 
 async function buildNodeInstallEnv(prefs: SkillsInstallPreferences): Promise<NodeJS.ProcessEnv> {
@@ -709,10 +709,10 @@ export async function installSkill(params: SkillInstallRequest): Promise<SkillIn
       installId: params.installId,
     },
     source:
-      skillSource === "openclaw-bundled"
-        ? { kind: "bundled", authority: "openclaw", mutable: false, network: false }
-        : skillSource === "openclaw-managed" || skillSource === "openclaw-extra"
-          ? { kind: "managed", authority: "openclaw", mutable: false, network: false }
+      skillSource === "grokbot-bundled"
+        ? { kind: "bundled", authority: "grokbot", mutable: false, network: false }
+        : skillSource === "grokbot-managed" || skillSource === "grokbot-extra"
+          ? { kind: "managed", authority: "grokbot", mutable: false, network: false }
           : { kind: "workspace", authority: "user", mutable: true, network: false },
     requestedSpecifier: `${params.skillName}:${params.installId}`,
     skillName: params.skillName,
@@ -732,7 +732,7 @@ export async function installSkill(params: SkillInstallRequest): Promise<SkillIn
   }
   // Warn when install is triggered from a non-bundled source.
   // Workspace/project/personal agent skills can contain attacker-controlled metadata.
-  const trustedInstallSources = new Set(["openclaw-bundled", "openclaw-managed", "openclaw-extra"]);
+  const trustedInstallSources = new Set(["grokbot-bundled", "grokbot-managed", "grokbot-extra"]);
   if (!trustedInstallSources.has(skillSource)) {
     warnings.push(
       `WARNING: Skill "${params.skillName}" install triggered from non-bundled source "${skillSource}". Verify the install recipe is trusted.`,
@@ -830,7 +830,7 @@ const testing = {
 };
 
 if (process.env.VITEST || process.env.NODE_ENV === "test") {
-  (globalThis as Record<PropertyKey, unknown>)[Symbol.for("openclaw.skillsInstallTestApi")] =
+  (globalThis as Record<PropertyKey, unknown>)[Symbol.for("grokbot.skillsInstallTestApi")] =
     testing;
 }
 /* oxlint-disable max-lines -- TODO: split this grandfathered oversized file. */

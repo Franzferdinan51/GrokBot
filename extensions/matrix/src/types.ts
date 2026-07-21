@@ -2,7 +2,7 @@
 import type {
   ChannelBotLoopProtectionConfig,
   MentionPatternsPolicyConfig,
-} from "openclaw/plugin-sdk/config-contracts";
+} from "grokbot/plugin-sdk/config-contracts";
 import type {
   ContextVisibilityMode,
   DmPolicy,
@@ -97,8 +97,8 @@ export type MatrixStreamingConfig = {
   /** Chunking mode: "length" (default) splits by size; "newline" splits on every newline. */
   chunkMode?: "length" | "newline";
   /** Block streaming delivery controls (separate from the preview mode). Default: disabled. */
-  block?: import("openclaw/plugin-sdk/channel-outbound").ChannelStreamingBlockConfig;
-  progress?: import("openclaw/plugin-sdk/channel-outbound").ChannelStreamingProgressConfig;
+  block?: import("grokbot/plugin-sdk/channel-outbound").ChannelStreamingBlockConfig;
+  progress?: import("grokbot/plugin-sdk/channel-outbound").ChannelStreamingProgressConfig;
   preview?: {
     /** Show tool/progress activity in the live draft preview. Default: true. */
     toolProgress?: boolean;
@@ -223,7 +223,7 @@ export type MatrixConfig = {
    *   lines in progress mode. `streaming.preview.toolProgress: false` keeps
    *   legacy answer preview edits but hides interim tool/progress lines.
    * Legacy scalar/boolean spellings and the flat `blockStreaming`/`chunkMode`
-   * keys migrate via `openclaw doctor --fix`.
+   * keys migrate via `grokbot doctor --fix`.
    * Default: `mode: "off"`.
    */
   streaming?: MatrixStreamingConfig;

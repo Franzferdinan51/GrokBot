@@ -18,7 +18,7 @@ import type {
 } from "../../api/types.ts";
 import { icons } from "../../components/icons.ts";
 import { highlightJsonHtml } from "../../components/markdown.ts";
-import "../../components/openclaw-mascot.ts";
+import "../../components/grokbot-mascot.ts";
 import {
   renderSettingsEmpty,
   renderSettingsPage,
@@ -87,7 +87,7 @@ export function renderChannels(props: ChannelsProps) {
           ? html`
               <div class="channels-empty">
                 <!-- No configured transports is a true empty state, so Clawd rests here. -->
-                <openclaw-mascot mood="sleepy" .size=${80}></openclaw-mascot>
+                <grokbot-mascot mood="sleepy" .size=${80}></grokbot-mascot>
                 ${renderSettingsEmpty(t("channels.hub.noneConnected"))}
               </div>
             `

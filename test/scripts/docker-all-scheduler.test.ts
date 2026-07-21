@@ -46,7 +46,7 @@ const limits = {
 const posixIt = process.platform === "win32" ? it.skip : it;
 const { createTempDir } = createScriptTestHarness();
 const tempDirs = useAutoCleanupTempDirTracker(afterEach);
-const LIVE_E2E_WORKFLOW = ".github/workflows/openclaw-live-and-e2e-checks-reusable.yml";
+const LIVE_E2E_WORKFLOW = ".github/workflows/grokbot-live-and-e2e-checks-reusable.yml";
 
 function writeFrozenScenarioContract(root: string, scenarios: string[]): string {
   const assertionsFile = path.join(root, "scripts/e2e/lib/upgrade-survivor/assertions.mjs");
@@ -164,7 +164,7 @@ describe("scripts/test-docker-all scheduler", () => {
   });
 
   it("plans from an isolated release harness without installed dependencies", () => {
-    const root = tempDirs.make("openclaw-docker-plan-isolated-harness-");
+    const root = tempDirs.make("grokbot-docker-plan-isolated-harness-");
     const scriptsDir = path.join(root, "scripts");
     const libDir = path.join(scriptsDir, "lib");
     mkdirSync(libDir, { recursive: true });
@@ -212,8 +212,8 @@ describe("scripts/test-docker-all scheduler", () => {
     const localCommand = githubWorkflowRerunCommand(["install-e2e"], "a".repeat(40), {
       GITHUB_REF_NAME: "full-release-validation-temp-deleted",
       GITHUB_RUN_ID: "12345",
-      OPENCLAW_DOCKER_E2E_BARE_IMAGE: "openclaw-docker-e2e-bare:local",
-      OPENCLAW_DOCKER_E2E_FUNCTIONAL_IMAGE: "openclaw-docker-e2e-functional:local",
+      OPENCLAW_DOCKER_E2E_BARE_IMAGE: "grokbot-docker-e2e-bare:local",
+      OPENCLAW_DOCKER_E2E_FUNCTIONAL_IMAGE: "grokbot-docker-e2e-functional:local",
       OPENCLAW_DOCKER_E2E_PACKAGE_ARTIFACT_NAME: "docker-e2e-package",
     });
     expect(localCommand).not.toContain("--ref 'full-release-validation-temp-deleted'");
@@ -225,20 +225,20 @@ describe("scripts/test-docker-all scheduler", () => {
     expectDeclaredDispatchInputs(localCommand);
 
     const registryCommand = githubWorkflowRerunCommand(["install-e2e"], "b".repeat(40), {
-      OPENCLAW_DOCKER_E2E_BARE_IMAGE: "ghcr.io/openclaw/openclaw-docker-e2e-bare:test",
-      OPENCLAW_DOCKER_E2E_FUNCTIONAL_IMAGE: "ghcr.io/openclaw/openclaw-docker-e2e-functional:test",
+      OPENCLAW_DOCKER_E2E_BARE_IMAGE: "ghcr.io/grokbot/grokbot-docker-e2e-bare:test",
+      OPENCLAW_DOCKER_E2E_FUNCTIONAL_IMAGE: "ghcr.io/grokbot/grokbot-docker-e2e-functional:test",
       OPENCLAW_DOCKER_E2E_ALLOW_UNRELEASED_CHANGELOG: "true",
       OPENCLAW_DOCKER_E2E_WORKFLOW_REF: "main",
-      OPENCLAW_UPGRADE_SURVIVOR_BASELINE_SPEC: "openclaw@2026.5.3",
-      OPENCLAW_UPGRADE_SURVIVOR_BASELINE_SPECS: "openclaw@2026.5.3 openclaw@2026.5.2",
+      OPENCLAW_UPGRADE_SURVIVOR_BASELINE_SPEC: "grokbot@2026.5.3",
+      OPENCLAW_UPGRADE_SURVIVOR_BASELINE_SPECS: "grokbot@2026.5.3 grokbot@2026.5.2",
       OPENCLAW_UPGRADE_SURVIVOR_SCENARIOS: "plugin-dependency-cleanup",
     });
     expect(registryCommand).toContain("--ref 'main'");
     expect(registryCommand).toContain(
-      "docker_e2e_bare_image='ghcr.io/openclaw/openclaw-docker-e2e-bare:test'",
+      "docker_e2e_bare_image='ghcr.io/grokbot/grokbot-docker-e2e-bare:test'",
     );
     expect(registryCommand).toContain(
-      "docker_e2e_functional_image='ghcr.io/openclaw/openclaw-docker-e2e-functional:test'",
+      "docker_e2e_functional_image='ghcr.io/grokbot/grokbot-docker-e2e-functional:test'",
     );
     expect(registryCommand).toContain("shared_image_policy=existing-only");
     expect(registryCommand).toContain("allow_unreleased_changelog=true");
@@ -246,7 +246,7 @@ describe("scripts/test-docker-all scheduler", () => {
   });
 
   it("preserves ephemeral package intent in generated summary and failure reruns", async () => {
-    const logDir = createTempDir("openclaw-docker-all-rerun-intent-");
+    const logDir = createTempDir("grokbot-docker-all-rerun-intent-");
     try {
       const selectedSha = "c".repeat(40);
       await writeRunSummary(
@@ -287,7 +287,7 @@ describe("scripts/test-docker-all scheduler", () => {
   });
 
   it("rejects loose numeric resource limit env vars before scheduling lanes", () => {
-    const logDir = mkdtempSync(`${tmpdir()}/openclaw-docker-all-`);
+    const logDir = mkdtempSync(`${tmpdir()}/grokbot-docker-all-`);
     try {
       const result = spawnSync(process.execPath, ["scripts/test-docker-all.mjs"], {
         cwd: process.cwd(),
@@ -314,7 +314,7 @@ describe("scripts/test-docker-all scheduler", () => {
   });
 
   it("rejects release-path configs that schedule zero Docker lanes", () => {
-    const logDir = mkdtempSync(`${tmpdir()}/openclaw-docker-all-`);
+    const logDir = mkdtempSync(`${tmpdir()}/grokbot-docker-all-`);
     try {
       const result = spawnSync(process.execPath, ["scripts/test-docker-all.mjs"], {
         cwd: process.cwd(),
@@ -344,7 +344,7 @@ describe("scripts/test-docker-all scheduler", () => {
   });
 
   it("rejects candidate-controlled survivor omissions without trusted opt-in", () => {
-    const root = tempDirs.make("openclaw-docker-all-untrusted-filter-");
+    const root = tempDirs.make("grokbot-docker-all-untrusted-filter-");
     try {
       const assertionsFile = writeFrozenScenarioContract(root, ["unrelated"]);
       const executionMarker = path.join(root, "candidate-contract-executed");
@@ -379,7 +379,7 @@ describe("scripts/test-docker-all scheduler", () => {
   });
 
   it("writes a passing summary when a frozen target cannot run selected survivor lanes", () => {
-    const root = tempDirs.make("openclaw-docker-all-filtered-");
+    const root = tempDirs.make("grokbot-docker-all-filtered-");
     const logDir = path.join(root, "logs");
     try {
       writeFrozenScenarioContract(root, ["unrelated"]);
@@ -414,7 +414,7 @@ describe("scripts/test-docker-all scheduler", () => {
   });
 
   it("reports omitted frozen-target lanes when another selected lane remains runnable", () => {
-    const root = tempDirs.make("openclaw-docker-all-mixed-filtered-");
+    const root = tempDirs.make("grokbot-docker-all-mixed-filtered-");
     try {
       writeFrozenScenarioContract(root, ["unrelated"]);
       const result = spawnSync(process.execPath, ["scripts/test-docker-all.mjs"], {
@@ -441,7 +441,7 @@ describe("scripts/test-docker-all scheduler", () => {
   });
 
   posixIt("writes Docker run artifacts when cleanup smoke fails", async () => {
-    const root = mkdtempSync(`${tmpdir()}/openclaw-docker-all-cleanup-`);
+    const root = mkdtempSync(`${tmpdir()}/grokbot-docker-all-cleanup-`);
     const logDir = path.join(root, "logs");
     const fakePnpm = path.join(root, "pnpm");
     const phases: Array<Record<string, unknown>> = [];
@@ -463,7 +463,7 @@ process.exit(0);
     try {
       const baseEnv = {
         ...process.env,
-        OPENCLAW_DOCKER_E2E_IMAGE: "openclaw-test-image",
+        OPENCLAW_DOCKER_E2E_IMAGE: "grokbot-test-image",
         PATH: `${root}${path.delimiter}${process.env.PATH ?? ""}`,
       };
       const cleanupFailure = await runCleanupSmokePhase(baseEnv, logDir, phases);
@@ -475,8 +475,8 @@ process.exit(0);
         failures: [cleanupFailure],
         image: baseEnv.OPENCLAW_DOCKER_E2E_IMAGE,
         images: {
-          bare: "openclaw-test-bare",
-          functional: "openclaw-test-image",
+          bare: "grokbot-test-bare",
+          functional: "grokbot-test-image",
         },
         lanes: [],
         phases,
@@ -663,22 +663,22 @@ process.exit(0);
   it("cleans stale stopped containers from all named Docker E2E lanes", () => {
     expect(
       dockerPreflightContainerNames(`
-openclaw-gateway-e2e-123 Exited (1) 2 minutes ago
-openclaw-config-reload-e2e-234 Created
-openclaw-plugin-binding-command-escape-e2e-345 Dead
-openclaw-kitchen-sink-rpc-e2e-456 Exited (137) 10 seconds ago
-openclaw-openwebui-gateway-567 Exited (1) 3 minutes ago
-openclaw-openwebui-678 Created
-openclaw-not-an-e2e-container Exited (1) 2 minutes ago
+grokbot-gateway-e2e-123 Exited (1) 2 minutes ago
+grokbot-config-reload-e2e-234 Created
+grokbot-plugin-binding-command-escape-e2e-345 Dead
+grokbot-kitchen-sink-rpc-e2e-456 Exited (137) 10 seconds ago
+grokbot-openwebui-gateway-567 Exited (1) 3 minutes ago
+grokbot-openwebui-678 Created
+grokbot-not-an-e2e-container Exited (1) 2 minutes ago
 postgres Created
 `),
     ).toEqual([
-      "openclaw-gateway-e2e-123",
-      "openclaw-config-reload-e2e-234",
-      "openclaw-plugin-binding-command-escape-e2e-345",
-      "openclaw-kitchen-sink-rpc-e2e-456",
-      "openclaw-openwebui-gateway-567",
-      "openclaw-openwebui-678",
+      "grokbot-gateway-e2e-123",
+      "grokbot-config-reload-e2e-234",
+      "grokbot-plugin-binding-command-escape-e2e-345",
+      "grokbot-kitchen-sink-rpc-e2e-456",
+      "grokbot-openwebui-gateway-567",
+      "grokbot-openwebui-678",
     ]);
   });
 
@@ -703,7 +703,7 @@ postgres Created
   });
 
   it("reads bounded lane log tails instead of full noisy logs", async () => {
-    const root = mkdtempSync(path.join(tmpdir(), "openclaw-docker-all-log-tail-"));
+    const root = mkdtempSync(path.join(tmpdir(), "grokbot-docker-all-log-tail-"));
     try {
       const logPath = path.join(root, "lane.log");
       writeFileSync(
@@ -776,7 +776,7 @@ postgres Created
   });
 
   posixIt("kills timed-out shell command groups when the leader exits first", async () => {
-    const root = mkdtempSync(path.join(tmpdir(), "openclaw-docker-all-timeout-"));
+    const root = mkdtempSync(path.join(tmpdir(), "grokbot-docker-all-timeout-"));
     const scriptPath = path.join(root, "leader-exits.mjs");
     const grandchildPidPath = path.join(root, "grandchild.pid");
     let grandchildPid = 0;
@@ -825,7 +825,7 @@ setInterval(() => {}, 1000);
   });
 
   posixIt("clamps oversized shell command kill grace before scheduling", async () => {
-    const root = createTempDir("openclaw-docker-all-oversized-grace-");
+    const root = createTempDir("grokbot-docker-all-oversized-grace-");
     const scriptPath = path.join(root, "leader-exits.mjs");
     const donePath = path.join(root, "done");
     const readyPath = path.join(root, "ready");
@@ -863,7 +863,7 @@ setInterval(() => {}, 1000);
   });
 
   posixIt("lets timed-out shell command descendants exit during kill grace", async () => {
-    const root = createTempDir("openclaw-docker-all-grace-");
+    const root = createTempDir("grokbot-docker-all-grace-");
     const scriptPath = path.join(root, "leader-exits.mjs");
     const donePath = path.join(root, "done");
     const readyPath = path.join(root, "ready");
@@ -903,7 +903,7 @@ setInterval(() => {}, 1000);
   });
 
   posixIt("lets timed-out shell capture descendants exit during kill grace", async () => {
-    const root = createTempDir("openclaw-docker-all-capture-grace-");
+    const root = createTempDir("grokbot-docker-all-capture-grace-");
     const scriptPath = path.join(root, "leader-exits.mjs");
     const donePath = path.join(root, "done");
     const readyPath = path.join(root, "ready");
@@ -943,7 +943,7 @@ setInterval(() => {}, 1000);
   });
 
   posixIt("cleans active shell command groups before parent signal exit", async () => {
-    const root = createTempDir("openclaw-docker-all-parent-signal-");
+    const root = createTempDir("grokbot-docker-all-parent-signal-");
     const leaderPath = path.join(root, "leader-exits.mjs");
     const runnerPath = path.join(root, "runner.mjs");
     const grandchildPidPath = path.join(root, "grandchild.pid");

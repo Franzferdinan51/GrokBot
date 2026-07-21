@@ -2,8 +2,8 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { DatabaseSync } from "node:sqlite";
-import { loadAuthProfileStoreWithoutExternalProfiles } from "openclaw/plugin-sdk/agent-runtime";
-import { MIGRATION_REASON_TARGET_EXISTS } from "openclaw/plugin-sdk/migration";
+import { loadAuthProfileStoreWithoutExternalProfiles } from "grokbot/plugin-sdk/agent-runtime";
+import { MIGRATION_REASON_TARGET_EXISTS } from "grokbot/plugin-sdk/migration";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { buildAuthItems } from "./auth.js";
 import { buildHermesMigrationProvider } from "./provider.js";
@@ -220,7 +220,7 @@ describe("Hermes migration file and skill items", () => {
     ]);
   });
 
-  it("maps supported OAuth model providers and requests fresh OpenClaw authentication", async () => {
+  it("maps supported OAuth model providers and requests fresh GrokBot authentication", async () => {
     const root = await makeTempRoot();
     const source = path.join(root, "hermes");
     const xaiProvider = ["xai", "oauth"].join("-");
@@ -257,11 +257,11 @@ describe("Hermes migration file and skill items", () => {
       (item) => item.kind === "manual" && item.message?.includes("credentials cannot be reused"),
     );
     expect(reauthItems.map((item) => item.reason)).toEqual([
-      "Authenticate anthropic in OpenClaw after migration.",
-      "Authenticate nous in OpenClaw after migration.",
-      "Authenticate qwen with an API key after migration: openclaw onboard --auth-choice qwen-api-key.",
-      "Authenticate minimax-portal in OpenClaw after migration.",
-      "Authenticate xai in OpenClaw after migration.",
+      "Authenticate anthropic in GrokBot after migration.",
+      "Authenticate nous in GrokBot after migration.",
+      "Authenticate qwen with an API key after migration: grokbot onboard --auth-choice qwen-api-key.",
+      "Authenticate minimax-portal in GrokBot after migration.",
+      "Authenticate xai in GrokBot after migration.",
     ]);
   });
 
@@ -502,7 +502,7 @@ describe("Hermes migration file and skill items", () => {
     }
     expect(plan.items.find((item) => item.id === "archive:auth.json")).toBeUndefined();
     expect(plan.warnings).toEqual([
-      "Some Hermes files are archive-only. They will be copied into the migration report for manual review, not loaded into OpenClaw.",
+      "Some Hermes files are archive-only. They will be copied into the migration report for manual review, not loaded into GrokBot.",
     ]);
 
     const result = await provider.apply(makeContext({ source, stateDir, workspaceDir, reportDir }));
@@ -725,7 +725,7 @@ describe("Hermes migration file and skill items", () => {
       }),
     );
     expect(plan.warnings).toContain(
-      "Hermes and OpenClaw must not keep using the same imported OpenAI OAuth refresh grant after migration; reauthenticate one side before running both.",
+      "Hermes and GrokBot must not keep using the same imported OpenAI OAuth refresh grant after migration; reauthenticate one side before running both.",
     );
   });
 

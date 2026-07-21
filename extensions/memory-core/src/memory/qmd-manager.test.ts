@@ -5,13 +5,13 @@ import os from "node:os";
 import path from "node:path";
 import type { DatabaseSync } from "node:sqlite";
 import { setTimeout as scheduleNativeTimeout } from "node:timers";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import type {
   PluginStateLeaseContext,
   PluginStateLeaseOptions,
   PluginStateLeaseRunner,
-} from "openclaw/plugin-sdk/plugin-state-runtime";
-import { withMockedWindowsPlatform } from "openclaw/plugin-sdk/test-node-mocks";
+} from "grokbot/plugin-sdk/plugin-state-runtime";
+import { withMockedWindowsPlatform } from "grokbot/plugin-sdk/test-node-mocks";
 import type { Mock } from "vitest";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -45,10 +45,10 @@ const { withLeaseMock } = vi.hoisted(() => {
     withLeaseMock: vi.fn(implementation) as Mock<PluginStateLeaseRunner> & PluginStateLeaseRunner,
   };
 });
-const MEMORY_EMBEDDING_PROVIDERS_KEY = Symbol.for("openclaw.memoryEmbeddingProviders");
-const MCPORTER_STATE_KEY = Symbol.for("openclaw.mcporterState");
-const QMD_EMBED_QUEUE_KEY = Symbol.for("openclaw.qmdEmbedQueueTail");
-const QMD_UPDATE_QUEUE_KEY = Symbol.for("openclaw.qmdUpdateQueueState");
+const MEMORY_EMBEDDING_PROVIDERS_KEY = Symbol.for("grokbot.memoryEmbeddingProviders");
+const MCPORTER_STATE_KEY = Symbol.for("grokbot.mcporterState");
+const QMD_EMBED_QUEUE_KEY = Symbol.for("grokbot.qmdEmbedQueueTail");
+const QMD_UPDATE_QUEUE_KEY = Symbol.for("grokbot.qmdUpdateQueueState");
 const BUILT_IN_WATCH_DEBOUNCE_MS = 1_500;
 
 type WatchOptions = {
@@ -167,10 +167,10 @@ function firstWriteLeaseCall(): LeaseCall {
   return call;
 }
 
-vi.mock("openclaw/plugin-sdk/memory-core-host-engine-foundation", async () => {
+vi.mock("grokbot/plugin-sdk/memory-core-host-engine-foundation", async () => {
   const actual = await vi.importActual<
-    typeof import("openclaw/plugin-sdk/memory-core-host-engine-foundation")
-  >("openclaw/plugin-sdk/memory-core-host-engine-foundation");
+    typeof import("grokbot/plugin-sdk/memory-core-host-engine-foundation")
+  >("grokbot/plugin-sdk/memory-core-host-engine-foundation");
   return {
     ...actual,
     createSubsystemLogger: () => {
@@ -199,21 +199,21 @@ vi.mock("chokidar", () => ({
 }));
 
 import { spawn as mockedSpawn } from "node:child_process";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/memory-core-host-engine-foundation";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/memory-core-host-engine-foundation";
 import {
   type MemorySearchRuntimeDebug,
   requireNodeSqlite,
   resolveMemoryBackendConfig,
-} from "openclaw/plugin-sdk/memory-core-host-engine-storage";
-import { MAX_TIMER_TIMEOUT_MS } from "openclaw/plugin-sdk/number-runtime";
-import { PluginStateLeaseError } from "openclaw/plugin-sdk/plugin-state-runtime";
+} from "grokbot/plugin-sdk/memory-core-host-engine-storage";
+import { MAX_TIMER_TIMEOUT_MS } from "grokbot/plugin-sdk/number-runtime";
+import { PluginStateLeaseError } from "grokbot/plugin-sdk/plugin-state-runtime";
 import {
   formatSqliteSessionFileMarker,
   upsertSessionEntry,
-} from "openclaw/plugin-sdk/session-store-runtime";
-import { formatSessionTranscriptMemoryHitKey } from "openclaw/plugin-sdk/session-transcript-hit";
-import { appendSessionTranscriptMessageByIdentity } from "openclaw/plugin-sdk/session-transcript-runtime";
-import { closeOpenClawAgentDatabasesForTest } from "openclaw/plugin-sdk/sqlite-runtime-testing";
+} from "grokbot/plugin-sdk/session-store-runtime";
+import { formatSessionTranscriptMemoryHitKey } from "grokbot/plugin-sdk/session-transcript-hit";
+import { appendSessionTranscriptMessageByIdentity } from "grokbot/plugin-sdk/session-transcript-runtime";
+import { closeOpenClawAgentDatabasesForTest } from "grokbot/plugin-sdk/sqlite-runtime-testing";
 import { configureMemoryCoreDreamingState } from "../dreaming-state.js";
 import { resolveQmdSessionArtifactIdentity } from "../qmd-session-artifacts.js";
 import {
@@ -7818,10 +7818,10 @@ describe("QmdMemoryManager", () => {
 
   it("rebinds a stale in-container collection root to the host workspace (sandbox-mode transition)", async () => {
     // Sandbox coverage: an agent that previously ran with its workspace bind-mounted under
-    // /home/node/.openclaw/... stored that in-container path as the collection root. Resolved
+    // /home/node/.grokbot/... stored that in-container path as the collection root. Resolved
     // with host paths, `collection show` reveals the stale container path; the rebind is
     // path-namespace-agnostic and re-binds to the current host root.
-    const containerRoot = "/home/node/.openclaw/teams/x/workspace";
+    const containerRoot = "/home/node/.grokbot/teams/x/workspace";
     const newWorkspaceDir = workspaceDir; // host path the manager is configured for
 
     cfg = {
@@ -7884,13 +7884,13 @@ describe("QmdMemoryManager", () => {
   it("parseShownQmdCollection extracts path and pattern from qmd collection show output", () => {
     const sampleOutput = [
       "Collection: memory-dir-example",
-      "  Path:     /home/node/.openclaw/teams/example-team/workspace-example/memory",
+      "  Path:     /home/node/.grokbot/teams/example-team/workspace-example/memory",
       "  Pattern:  **/*.md",
       "  Include:  yes (default)",
     ].join("\n");
 
     const result = parseShownQmdCollection(sampleOutput);
-    expect(result.path).toBe("/home/node/.openclaw/teams/example-team/workspace-example/memory");
+    expect(result.path).toBe("/home/node/.grokbot/teams/example-team/workspace-example/memory");
     expect(result.pattern).toBe("**/*.md");
 
     // Tolerant of missing fields.

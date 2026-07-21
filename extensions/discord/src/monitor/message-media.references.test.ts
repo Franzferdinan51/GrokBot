@@ -5,9 +5,9 @@ import type { Message } from "../internal/discord.js";
 const readRemoteMediaBuffer = vi.fn();
 const saveMediaBuffer = vi.fn();
 
-vi.mock("openclaw/plugin-sdk/media-runtime", async () => {
-  const actual = await vi.importActual<typeof import("openclaw/plugin-sdk/media-runtime")>(
-    "openclaw/plugin-sdk/media-runtime",
+vi.mock("grokbot/plugin-sdk/media-runtime", async () => {
+  const actual = await vi.importActual<typeof import("grokbot/plugin-sdk/media-runtime")>(
+    "grokbot/plugin-sdk/media-runtime",
   );
   return {
     ...actual,

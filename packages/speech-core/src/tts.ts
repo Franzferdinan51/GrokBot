@@ -1,23 +1,23 @@
 // Speech Core module implements tts behavior.
-import { resolveChannelTtsVoiceDelivery } from "openclaw/plugin-sdk/channel-targets";
+import { resolveChannelTtsVoiceDelivery } from "grokbot/plugin-sdk/channel-targets";
 import type {
   OpenClawConfig,
   ResolvedTtsPersona,
   TtsConfig,
   TtsProvider,
-} from "openclaw/plugin-sdk/config-contracts";
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
-import { redactSensitiveText } from "openclaw/plugin-sdk/logging-core";
-import { transcodeAudioBuffer } from "openclaw/plugin-sdk/media-runtime";
-import { clampTimerTimeoutMs } from "openclaw/plugin-sdk/number-runtime";
-import { mergeDeep } from "openclaw/plugin-sdk/plugin-config-runtime";
+} from "grokbot/plugin-sdk/config-contracts";
+import { formatErrorMessage } from "grokbot/plugin-sdk/error-runtime";
+import { redactSensitiveText } from "grokbot/plugin-sdk/logging-core";
+import { transcodeAudioBuffer } from "grokbot/plugin-sdk/media-runtime";
+import { clampTimerTimeoutMs } from "grokbot/plugin-sdk/number-runtime";
+import { mergeDeep } from "grokbot/plugin-sdk/plugin-config-runtime";
 import {
   markReplyPayloadAsTtsSupplement,
   resolveSendableOutboundReplyParts,
   type ReplyPayload,
-} from "openclaw/plugin-sdk/reply-payload";
-import { isVerbose, logVerbose } from "openclaw/plugin-sdk/runtime-env";
-import { tempWorkspaceSync, resolvePreferredOpenClawTmpDir } from "openclaw/plugin-sdk/sandbox";
+} from "grokbot/plugin-sdk/reply-payload";
+import { isVerbose, logVerbose } from "grokbot/plugin-sdk/runtime-env";
+import { tempWorkspaceSync, resolvePreferredOpenClawTmpDir } from "grokbot/plugin-sdk/sandbox";
 import {
   canonicalizeSpeechProviderId,
   getSpeechProvider,
@@ -32,12 +32,12 @@ import {
   type SpeechVoiceOption,
   type TtsDirectiveOverrides,
   type TtsDirectiveParseResult,
-} from "openclaw/plugin-sdk/speech-core";
+} from "grokbot/plugin-sdk/speech-core";
 import {
   normalizeLowercaseStringOrEmpty,
   normalizeOptionalString,
-} from "openclaw/plugin-sdk/string-coerce-runtime";
-import { truncateUtf16Safe } from "openclaw/plugin-sdk/text-utility-runtime";
+} from "grokbot/plugin-sdk/string-coerce-runtime";
+import { truncateUtf16Safe } from "grokbot/plugin-sdk/text-utility-runtime";
 import { withSpeakerSelectionCompat } from "../speaker.js";
 import {
   resolvePrimaryVoiceProviderCandidate,

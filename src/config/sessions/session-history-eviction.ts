@@ -8,7 +8,7 @@ import {
   openOpenClawAgentDatabase,
   runOpenClawAgentWriteTransaction,
   type OpenClawAgentDatabase,
-} from "../../state/openclaw-agent-db.js";
+} from "../../state/grokbot-agent-db.js";
 import {
   hasRetainedSessionTranscriptArchives,
   measureSessionPhysicalDiskUsage,

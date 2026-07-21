@@ -10,8 +10,8 @@ import type { RuntimeParityComparisonMode } from "./runtime-tool-metadata.js";
 
 type HarnessVariant = Parameters<typeof buildHarnessParityCell>[0]["variant"];
 
-const LEFT: HarnessVariant = { id: "left", label: "Left", runtime: "openclaw" };
-const RIGHT: HarnessVariant = { id: "right", label: "Right", runtime: "openclaw" };
+const LEFT: HarnessVariant = { id: "left", label: "Left", runtime: "grokbot" };
+const RIGHT: HarnessVariant = { id: "right", label: "Right", runtime: "grokbot" };
 
 const BASE_PROMPT_REPORT = {
   systemPrompt: {
@@ -65,12 +65,12 @@ function classify(
     scenarioId: "scenario",
     left: buildHarnessParityCell({
       variant: LEFT,
-      cell: makeCell("openclaw", left),
+      cell: makeCell("grokbot", left),
       tokenUsageSource: "live-usage",
     }),
     right: buildHarnessParityCell({
       variant: RIGHT,
-      cell: makeCell("openclaw", right),
+      cell: makeCell("grokbot", right),
       tokenUsageSource: "live-usage",
     }),
     ...(comparisonMode ? { comparisonMode } : {}),
@@ -268,7 +268,7 @@ describe("harness parity", () => {
   });
 
   it("labels mock token estimates separately from live usage", () => {
-    const sourceCell = makeCell("openclaw", {
+    const sourceCell = makeCell("grokbot", {
       usage: { inputTokens: 0, outputTokens: 0, totalTokens: 0 },
     });
     const cell = buildHarnessParityCell({

@@ -37,7 +37,7 @@ import {
 import { cleanupStaleManagedServiceUpdateHandoffs } from "../../infra/update-managed-service-handoff-cleanup.js";
 import { loadInstalledPluginIndexInstallRecords } from "../../plugins/installed-plugin-index-records.js";
 import { defaultRuntime } from "../../runtime.js";
-import type { OpenClawSchemaVersions } from "../../state/openclaw-schema-versions.js";
+import type { OpenClawSchemaVersions } from "../../state/grokbot-schema-versions.js";
 import { resolveCliName } from "../cli-name.js";
 import { createUpdateProgress } from "./progress.js";
 import {
@@ -265,7 +265,7 @@ async function updateCommandInternal(
         );
         defaultRuntime.log(
           theme.warn(
-            `Shell OpenClaw root differs from the managed gateway service root: ${managedServiceRootRedirect.previousRoot}`,
+            `Shell GrokBot root differs from the managed gateway service root: ${managedServiceRootRedirect.previousRoot}`,
           ),
         );
         defaultRuntime.log(
@@ -400,7 +400,7 @@ async function updateCommandInternal(
       });
       if (targetMetadata.error || targetMetadata.version !== targetVersion) {
         defaultRuntime.error(
-          `Update refused: could not inspect exact package target openclaw@${targetVersion}: ${targetMetadata.error ?? `registry returned version ${targetMetadata.version ?? "unknown"}`}.`,
+          `Update refused: could not inspect exact package target grokbot@${targetVersion}: ${targetMetadata.error ?? `registry returned version ${targetMetadata.version ?? "unknown"}`}.`,
         );
         defaultRuntime.exit(1);
         return;
@@ -514,7 +514,7 @@ async function updateCommandInternal(
     if (runtimeSelection.replacedNodeRunner && !opts.json) {
       defaultRuntime.log(
         theme.warn(
-          `Managed gateway service Node (${runtimeSelection.replacedNodeRunner}) cannot run openclaw@${runtimeSelection.targetVersion ?? tag}.`,
+          `Managed gateway service Node (${runtimeSelection.replacedNodeRunner}) cannot run grokbot@${runtimeSelection.targetVersion ?? tag}.`,
         ),
       );
       defaultRuntime.log(
@@ -529,7 +529,7 @@ async function updateCommandInternal(
 
   const showProgress = !opts.json && process.stdout.isTTY;
   if (!opts.json) {
-    defaultRuntime.log(theme.heading("Updating OpenClaw..."));
+    defaultRuntime.log(theme.heading("Updating GrokBot..."));
     defaultRuntime.log("");
   }
 

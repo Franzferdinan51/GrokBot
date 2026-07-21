@@ -1,5 +1,5 @@
 /**
- * Knip configuration for OpenClaw root and bundled plugin dependency hygiene.
+ * Knip configuration for GrokBot root and bundled plugin dependency hygiene.
  */
 const BUNDLED_PLUGIN_ROOT_DIR = "extensions";
 
@@ -59,13 +59,13 @@ const repositoryScriptEntries = [
   "scripts/fixtures/packed-plugin-sdk-type-smoke.ts!",
   "scripts/ios-release-signing.mjs!",
   "scripts/lib/docker-plugin-selection.mjs!",
-  "scripts/lib/openclaw-test-state.mjs!",
+  "scripts/lib/grokbot-test-state.mjs!",
   "scripts/list-prod-store-packages.mjs!",
   // Invoked by scripts/lib/live-docker-stage.sh during container validation.
   "scripts/live-docker-normalize-config.ts!",
   "scripts/mcp-code-mode-gateway-e2e.ts!",
-  "scripts/openclaw-release-clawhub-plan.ts!",
-  "scripts/openclaw-release-clawhub-runtime-state.ts!",
+  "scripts/grokbot-release-clawhub-plan.ts!",
+  "scripts/grokbot-release-clawhub-runtime-state.ts!",
   // Oxlint loads this JS plugin by path from config/oxlint/boundary-guards.json.
   "scripts/oxlint-boundary-guards.mjs!",
   "scripts/plugin-prerelease-liveish-matrix.mjs!",
@@ -80,7 +80,7 @@ const repositoryScriptEntries = [
   "scripts/qa-parity-report.ts!",
   "scripts/repro/tsx-name-repro.ts!",
   "scripts/resolve-frozen-codex-live-suite.mjs!",
-  "scripts/secrets/openclaw-bws-resolver.mjs!",
+  "scripts/secrets/grokbot-bws-resolver.mjs!",
   "scripts/sync-labels.ts!",
   "scripts/test-built-bundled-channel-entry-smoke.mjs!",
   "scripts/update-clawtributors.ts!",
@@ -98,7 +98,7 @@ const rootEntries = [
   "config/knip.config.ts!",
   "config/knip.all-exports.config.ts!",
   "config/knip.scripts-exports.config.ts!",
-  "openclaw.mjs!",
+  "grokbot.mjs!",
   "src/index.ts!",
   "src/entry.ts!",
   "src/cli/daemon-cli.ts!",
@@ -110,14 +110,14 @@ const rootEntries = [
   "scripts/repro/tool-schema-hint-bench.ts!",
   "scripts/repro/tool-surface-live-bench.ts!",
   // Workflow/package-script entrypoints are not imported from production modules.
-  "scripts/openclaw-cross-os-release-checks.ts!",
+  "scripts/grokbot-cross-os-release-checks.ts!",
   "scripts/bench-transcript-cursors.ts!",
   "scripts/bench-sqlite-reliability.ts!",
   // Docker/manual E2E executables and their nested assertion/probe entrypoints.
   "scripts/e2e/*.{js,mjs,ts}!",
   "scripts/e2e/lib/**/{assertions,probe,mock-server}.{js,mjs,ts}!",
   "src/audit/audit-event-writer.worker.ts!",
-  "src/state/openclaw-database-verify.worker.ts!",
+  "src/state/grokbot-database-verify.worker.ts!",
   "src/agents/model-provider-auth.worker.ts!",
   // Loaded by URL from setup-inference-detection.ts; no static import edge exists.
   "src/system-agent/setup-inference-detection.worker.ts!",
@@ -133,7 +133,7 @@ const rootEntries = [
   "src/infra/warning-filter.ts!",
   "src/infra/command-explainer/index.ts!",
   // Runtime modules loaded by path or namespace; static export tracing cannot see their contract.
-  // Jiti virtualizes openclaw/plugin-sdk/agent-sessions through this cycle-safe barrel.
+  // Jiti virtualizes grokbot/plugin-sdk/agent-sessions through this cycle-safe barrel.
   "src/agents/sessions/extension-sdk.ts!",
   // Plugin-SDK ACP facades expose the registry's runtime signatures.
   "src/acp/runtime/registry.ts!",
@@ -141,7 +141,7 @@ const rootEntries = [
   "src/plugins/source-display.ts!",
   "src/mcp/codex-supervision-tools-serve.ts!",
   // Spawned by generated system-agent MCP configs; this stdio entry is not statically imported.
-  "src/mcp/openclaw-tools-serve.ts!",
+  "src/mcp/grokbot-tools-serve.ts!",
   // Spawned by ACPX and QA Lab from a generated plugin-tool MCP command line.
   "src/mcp/plugin-tools-serve.ts!",
   // Dedicated tsdown entry exercised against built plugin singletons.
@@ -220,7 +220,7 @@ const bundledPluginIgnoredRuntimeDependencies = [
   "json5",
   "lit",
   "linkedom",
-  "openclaw",
+  "grokbot",
   "clawpdf",
 ] as const;
 
@@ -255,7 +255,7 @@ const rootToolingAndWorkspaceDependencies = [
   // scripts/ui.js anchors these lookups at ui/package.json before invoking the UI workspace.
   "@vitest/browser-playwright",
   "dompurify",
-  // Root typecheck/test projects compile @openclaw/net-policy source directly.
+  // Root typecheck/test projects compile @grokbot/net-policy source directly.
   // Keep its exact dependency available without externalizing it from packaged builds.
   "ipaddr.js",
   "jscpd",
@@ -368,8 +368,8 @@ const config = {
   workspaces: {
     ".": {
       ignoreDependencies: [
-        "@openclaw/*",
-        // Docker packaging stages @openclaw/ai without nested dependencies after
+        "@grokbot/*",
+        // Docker packaging stages @grokbot/ai without nested dependencies after
         // verifying the root owns its exact runtime dependency versions.
         "@mistralai/mistralai",
         "cross-spawn",
@@ -563,7 +563,7 @@ const config = {
     "packages/speech-core": {
       entry: ["api.ts!", "runtime-api.ts!", "speaker.ts!", "voice-models.ts!"],
       project: ["**/*.ts!"],
-      ignoreDependencies: ["openclaw"],
+      ignoreDependencies: ["grokbot"],
     },
     "packages/*": {
       entry: ["index.js!", "scripts/postinstall.js!"],

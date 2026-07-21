@@ -1,10 +1,10 @@
 /**
  * Resolves whether Codex app-server native execution can own shell/file work,
- * or whether OpenClaw must keep exec/process on a configured node host.
+ * or whether GrokBot must keep exec/process on a configured node host.
  */
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { resolveSandboxRuntimeStatus } from "openclaw/plugin-sdk/sandbox";
-import { getSessionEntry, type SessionEntry } from "openclaw/plugin-sdk/session-store-runtime";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { resolveSandboxRuntimeStatus } from "grokbot/plugin-sdk/sandbox";
+import { getSessionEntry, type SessionEntry } from "grokbot/plugin-sdk/session-store-runtime";
 
 type ExecHost = "sandbox" | "gateway" | "node";
 type ExecTarget = "auto" | ExecHost;
@@ -100,7 +100,7 @@ export function resolveCodexNativeExecutionPolicy(params: {
     effectiveExecHost,
     node,
     blockReason:
-      "OpenClaw exec host=node is active for this session. Codex app-server native execution cannot route shell, filesystem, MCP, or app-backed work through the selected OpenClaw node.",
+      "GrokBot exec host=node is active for this session. Codex app-server native execution cannot route shell, filesystem, MCP, or app-backed work through the selected GrokBot node.",
   };
 }
 
@@ -110,10 +110,10 @@ export function formatCodexNativeNodeExecBlock(params: {
   reason?: string;
 }): string {
   return [
-    `Codex-native ${params.surface} is unavailable because OpenClaw exec host=node is active for this session.`,
+    `Codex-native ${params.surface} is unavailable because GrokBot exec host=node is active for this session.`,
     params.reason ??
-      "Codex app-server native execution cannot route execution through the selected OpenClaw node.",
-    "Use a normal Codex harness turn so OpenClaw exec/process tools run on the node, or switch exec host to gateway for native Codex app-server execution.",
+      "Codex app-server native execution cannot route execution through the selected GrokBot node.",
+    "Use a normal Codex harness turn so GrokBot exec/process tools run on the node, or switch exec host to gateway for native Codex app-server execution.",
   ].join(" ");
 }
 

@@ -171,10 +171,10 @@ When enabled, `memory-core` auto-manages one cron job for a full dreaming sweep,
 <Tabs>
   <Tab title="Promotion preview / apply">
     ```bash
-    openclaw memory promote
-    openclaw memory promote --apply
-    openclaw memory promote --limit 5
-    openclaw memory status --deep
+    grokbot memory promote
+    grokbot memory promote --apply
+    grokbot memory promote --limit 5
+    grokbot memory status --deep
     ```
 
     Manual `memory promote` uses deep-phase thresholds by default unless overridden with CLI flags.
@@ -184,8 +184,8 @@ When enabled, `memory-core` auto-manages one cron job for a full dreaming sweep,
     Explain why a specific candidate would or would not promote:
 
     ```bash
-    openclaw memory promote-explain "router vlan"
-    openclaw memory promote-explain "router vlan" --json
+    grokbot memory promote-explain "router vlan"
+    grokbot memory promote-explain "router vlan" --json
     ```
 
   </Tab>
@@ -193,8 +193,8 @@ When enabled, `memory-core` auto-manages one cron job for a full dreaming sweep,
     Preview REM reflections, candidate truths, and deep promotion output without writing anything:
 
     ```bash
-    openclaw memory rem-harness
-    openclaw memory rem-harness --json
+    grokbot memory rem-harness
+    grokbot memory rem-harness --json
     ```
 
   </Tab>

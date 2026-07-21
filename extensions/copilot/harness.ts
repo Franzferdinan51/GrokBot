@@ -13,8 +13,8 @@ import {
   type AgentHarnessCompactParams,
   type AgentHarnessCompactResult,
   type AgentHarnessResetParams,
-} from "openclaw/plugin-sdk/agent-harness-runtime";
-import type { PluginStateSyncKeyedStore } from "openclaw/plugin-sdk/plugin-state-runtime";
+} from "grokbot/plugin-sdk/agent-harness-runtime";
+import type { PluginStateSyncKeyedStore } from "grokbot/plugin-sdk/plugin-state-runtime";
 import type { CopilotSessionConfig } from "./src/attempt.js";
 import { createCopilotByokAuth, resolveCopilotAuth, tokenFingerprint } from "./src/auth-bridge.js";
 import { createCopilotByokProxy } from "./src/byok-proxy.js";
@@ -576,7 +576,7 @@ export function createCopilotAgentHarness(
     string,
     Map<Promise<DeferredCompactionCleanupOutcome>, DeferredCompactionCleanup>
   >();
-  // Maps OpenClaw session id (from AgentHarnessAttemptParams.sessionId) to
+  // Maps GrokBot session id (from AgentHarnessAttemptParams.sessionId) to
   // the SDK session id + client that owns it. Populated by
   // runCopilotAttempt via the onSessionEstablished callback so that
   // reset(params) can call client.deleteSession on the right client.
@@ -731,7 +731,7 @@ export function createCopilotAgentHarness(
           typeof params.sessionId === "string" ? params.sessionId : undefined;
 
         // Dogfood finding #4: reuse the SDK session across turns within
-        // the same OpenClaw session so that the GitHub Copilot agent runtime's prompt
+        // the same GrokBot session so that the GitHub Copilot agent runtime's prompt
         // cache, tool-call history, and any server-side compaction state
         // survive turn boundaries. Without this, every turn called
         // `createSession()` and lost cache + thread continuity — the
@@ -920,9 +920,9 @@ export function createCopilotAgentHarness(
     async compact(
       params: AgentHarnessCompactParams,
     ): Promise<AgentHarnessCompactResult | undefined> {
-      // The SDK owns Copilot history compaction. OpenClaw only resumes
+      // The SDK owns Copilot history compaction. GrokBot only resumes
       // the tracked SDK session and calls the session-scoped RPC; durable
-      // OpenClaw session/transcript state stays in SQLite, with no marker
+      // GrokBot session/transcript state stays in SQLite, with no marker
       // sidecars under the workspace.
       const openclawSessionId = typeof params.sessionId === "string" ? params.sessionId : undefined;
       if (!openclawSessionId) {
@@ -967,7 +967,7 @@ export function createCopilotAgentHarness(
           : undefined;
       if (!compatibleTracked) {
         // Durable bindings only carry SDK session ids. Manual SDK compaction also
-        // needs the live SessionConfig with OpenClaw hooks/tools, so preserve the
+        // needs the live SessionConfig with GrokBot hooks/tools, so preserve the
         // binding for the next attempt and let the host compact transcript state.
         return {
           ok: false,

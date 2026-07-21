@@ -1,8 +1,8 @@
 // Nextcloud Talk plugin module implements doctor contract behavior.
-import type { ChannelDoctorConfigMutation } from "openclaw/plugin-sdk/channel-contract";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { defineChannelAliasMigration } from "openclaw/plugin-sdk/runtime-doctor";
-import { createLegacyPrivateNetworkDoctorContract } from "openclaw/plugin-sdk/ssrf-runtime";
+import type { ChannelDoctorConfigMutation } from "grokbot/plugin-sdk/channel-contract";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { defineChannelAliasMigration } from "grokbot/plugin-sdk/runtime-doctor";
+import { createLegacyPrivateNetworkDoctorContract } from "grokbot/plugin-sdk/ssrf-runtime";
 
 const networkContract = createLegacyPrivateNetworkDoctorContract({
   channelKey: "nextcloud-talk",

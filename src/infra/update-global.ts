@@ -3,7 +3,7 @@ import fsSync from "node:fs";
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { normalizeLowercaseStringOrEmpty } from "@openclaw/normalization-core/string-coerce";
+import { normalizeLowercaseStringOrEmpty } from "@grokbot/normalization-core/string-coerce";
 import { BUNDLED_RUNTIME_SIDECAR_PATHS } from "../plugins/runtime-sidecar-paths.js";
 import { pathExists } from "../utils.js";
 import {
@@ -20,7 +20,7 @@ import { readPackageVersion } from "./package-json.js";
 import { applyPathPrepend } from "./path-prepend.js";
 import { parseSemver } from "./runtime-guard.js";
 
-/** Supported package managers for OpenClaw global install and update flows. */
+/** Supported package managers for GrokBot global install and update flows. */
 export type GlobalInstallManager = "npm" | "pnpm" | "bun";
 
 /** Runs package-manager commands with timeout and environment control. */
@@ -55,11 +55,11 @@ export type ResolvedGlobalInstallTarget = ResolvedGlobalInstallCommand & {
   directNodeModulesRoot?: boolean;
 };
 
-const PRIMARY_PACKAGE_NAME = "openclaw";
+const PRIMARY_PACKAGE_NAME = "grokbot";
 const ALL_PACKAGE_NAMES = [PRIMARY_PACKAGE_NAME] as const;
 const GLOBAL_RENAME_PREFIX = ".";
 /** npm-compatible spec used when the user asks to install the moving main branch. */
-const OPENCLAW_MAIN_PACKAGE_SPEC = "github:openclaw/openclaw#main";
+const OPENCLAW_MAIN_PACKAGE_SPEC = "github:grokbot/grokbot#main";
 const COREPACK_ENABLE_DOWNLOAD_PROMPT_DEFAULT = "0";
 const NPM_GLOBAL_INSTALL_QUIET_FLAGS = ["--no-fund", "--no-audit", "--loglevel=error"] as const;
 const PNPM_OPENCLAW_BUILD_ALLOWLIST_FLAG = `--allow-build=${PRIMARY_PACKAGE_NAME}`;
@@ -186,7 +186,7 @@ function stripPrimaryPackageAlias(spec: string): string {
 }
 
 /**
- * Extracts a pinned installed version from package specs like `openclaw@1.2.3`.
+ * Extracts a pinned installed version from package specs like `grokbot@1.2.3`.
  * Moving tags, URLs, git refs, and aliases return null because they cannot be
  * compared reliably after install.
  */
@@ -213,7 +213,7 @@ export function resolveExpectedInstalledVersionFromSpec(
 }
 
 /**
- * Verifies that a global package root looks like a packaged OpenClaw install
+ * Verifies that a global package root looks like a packaged GrokBot install
  * and, when supplied, matches the expected concrete version.
  */
 export async function collectInstalledGlobalPackageErrors(params: {
@@ -345,7 +345,7 @@ async function collectCriticalInstalledPackageDistPaths(packageRoot: string): Pr
       }
       if (
         (await pathExists(path.join(packageRoot, pluginRoot, "package.json"))) ||
-        (await pathExists(path.join(packageRoot, pluginRoot, "openclaw.plugin.json")))
+        (await pathExists(path.join(packageRoot, pluginRoot, "grokbot.plugin.json")))
       ) {
         expectedFiles.add(relativePath);
       }
@@ -408,7 +408,7 @@ async function resolvePortableGitPathPrepend(): Promise<string[]> {
   if (!localAppData) {
     return [];
   }
-  const portableGitRoot = path.join(localAppData, "OpenClaw", "deps", "portable-git");
+  const portableGitRoot = path.join(localAppData, "GrokBot", "deps", "portable-git");
   const candidates = [
     path.join(portableGitRoot, "mingw64", "bin"),
     path.join(portableGitRoot, "usr", "bin"),
@@ -564,7 +564,7 @@ export function resolveNpmGlobalPrefixLayoutFromGlobalRoot(
 
 /**
  * Derives npm's global package and bin directories from a prefix root.
- * Used for staged installs where OpenClaw creates the prefix itself.
+ * Used for staged installs where GrokBot creates the prefix itself.
  */
 export function resolveNpmGlobalPrefixLayoutFromPrefix(prefix: string): NpmGlobalPrefixLayout {
   const resolvedPrefix = path.resolve(prefix);
@@ -962,7 +962,7 @@ function resolveBunGlobalInstallSpec(spec: string): string {
   const hasScheme = /^[a-z][a-z0-9+.-]*:/iu.test(trimmed) && !isWindowsAbsolutePath;
   const target = /\.(?:tgz|tar\.gz)$/iu.test(trimmed) && !hasScheme ? `file:${trimmed}` : trimmed;
   // Bun needs an alias to replace the existing global dependency. A bare
-  // tarball is added beside it and can form an openclaw dependency loop.
+  // tarball is added beside it and can form an grokbot dependency loop.
   return `${PRIMARY_PACKAGE_NAME}@${target}`;
 }
 
@@ -1184,7 +1184,7 @@ export async function detectGlobalInstallManagerForRoot(
 }
 
 /**
- * Detects an installed global OpenClaw package by probing package-manager roots
+ * Detects an installed global GrokBot package by probing package-manager roots
  * when no trusted package root is already available.
  */
 export async function detectGlobalInstallManagerByPresence(
@@ -1213,8 +1213,8 @@ export async function detectGlobalInstallManagerByPresence(
 }
 
 /**
- * Builds the primary package-manager argv for a global OpenClaw install.
- * npm receives quiet/freshness-bypass flags; pnpm and Bun approve OpenClaw's lifecycle.
+ * Builds the primary package-manager argv for a global GrokBot install.
+ * npm receives quiet/freshness-bypass flags; pnpm and Bun approve GrokBot's lifecycle.
  */
 export function globalInstallArgs(
   managerOrCommand: GlobalInstallManager | ResolvedGlobalInstallCommand,

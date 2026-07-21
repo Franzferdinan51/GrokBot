@@ -1,12 +1,12 @@
 import { afterEach, describe, expect, it } from "vitest";
 import type { OpenClawConfig } from "../config/config.js";
 import { createOnboardingRecommendationsStore } from "../state/onboarding-recommendations.js";
-import type { DB as OpenClawStateKyselyDatabase } from "../state/openclaw-state-db.generated.js";
+import type { DB as OpenClawStateKyselyDatabase } from "../state/grokbot-state-db.generated.js";
 import {
   closeOpenClawStateDatabaseForTest,
   runOpenClawStateWriteTransaction,
-} from "../state/openclaw-state-db.js";
-import { withOpenClawTestState } from "../test-utils/openclaw-test-state.js";
+} from "../state/grokbot-state-db.js";
+import { withOpenClawTestState } from "../test-utils/grokbot-test-state.js";
 import {
   executeSqliteQuerySync,
   executeSqliteQueryTakeFirstSync,

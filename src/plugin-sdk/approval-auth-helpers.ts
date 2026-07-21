@@ -30,7 +30,7 @@ type ApprovalAuthorizationResult = {
   reason?: string;
 };
 const IMPLICIT_SAME_CHAT_APPROVAL_AUTHORIZATION = Symbol(
-  "openclaw.implicitSameChatApprovalAuthorization",
+  "grokbot.implicitSameChatApprovalAuthorization",
 );
 
 /**

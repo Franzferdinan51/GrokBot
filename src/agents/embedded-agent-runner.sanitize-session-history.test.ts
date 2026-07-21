@@ -1,13 +1,13 @@
 // Behavior coverage for replay-history sanitization across provider policies.
-import type { AgentMessage } from "openclaw/plugin-sdk/agent-core";
+import type { AgentMessage } from "grokbot/plugin-sdk/agent-core";
 import type {
   AssistantMessage,
   ThinkingContent,
   UserMessage,
   Usage,
-} from "openclaw/plugin-sdk/llm";
+} from "grokbot/plugin-sdk/llm";
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
-import { OPENCLAW_TRANSCRIPT_ARTIFACT_API } from "../shared/transcript-only-openclaw-assistant.js";
+import { OPENCLAW_TRANSCRIPT_ARTIFACT_API } from "../shared/transcript-only-grokbot-assistant.js";
 import {
   expectOpenAIResponsesStrictSanitizeCall,
   loadSanitizeSessionHistoryWithCleanMocks,
@@ -937,7 +937,7 @@ describe("sanitizeSessionHistory", () => {
       ),
       castAgentMessage({
         role: "assistant",
-        provider: "openclaw",
+        provider: "grokbot",
         model: "delivery-mirror",
         api: OPENCLAW_TRANSCRIPT_ARTIFACT_API,
         content: [{ type: "text", text: "visible reply" }],
@@ -1503,7 +1503,7 @@ describe("sanitizeSessionHistory", () => {
           text: [
             "Conversation info (untrusted metadata):",
             "```json",
-            '{"chat_id":"channel:123","sender":"OpenClaw"}',
+            '{"chat_id":"channel:123","sender":"GrokBot"}',
             "```",
             "",
             "Pong",
@@ -1538,7 +1538,7 @@ describe("sanitizeSessionHistory", () => {
     const metadataOnlyText = [
       "Conversation info (untrusted metadata):",
       "```json",
-      '{"chat_id":"channel:123","sender":"OpenClaw"}',
+      '{"chat_id":"channel:123","sender":"GrokBot"}',
       "```",
     ].join("\n");
     const messages = castAgentMessages([

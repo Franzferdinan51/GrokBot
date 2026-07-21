@@ -109,13 +109,13 @@ const representativeConfigSteps = [
 
 const scenarioConfigSteps = new Map([
   [
-    "acpx-openclaw-tools-bridge",
+    "acpx-grokbot-tools-bridge",
     [
       configSetJsonFile(
-        "plugins-acpx-openclaw-tools-bridge",
-        "acpx-openclaw-tools-bridge",
+        "plugins-acpx-grokbot-tools-bridge",
+        "acpx-grokbot-tools-bridge",
         "plugins",
-        "plugins-acpx-openclaw-tools-bridge.json",
+        "plugins-acpx-grokbot-tools-bridge.json",
       ),
     ],
   ],
@@ -137,7 +137,7 @@ const scenarioConfigSteps = new Map([
       {
         id: "logging-file",
         intent: "logging",
-        argv: ["config", "set", "logging.file", "~/openclaw-upgrade-survivor/gateway.jsonl"],
+        argv: ["config", "set", "logging.file", "~/grokbot-upgrade-survivor/gateway.jsonl"],
       },
     ],
   ],
@@ -206,11 +206,11 @@ function selectedScenario() {
 
 function adaptStepForBaseline(step, baselineVersion, summary) {
   if (
-    step.intent === "acpx-openclaw-tools-bridge" &&
+    step.intent === "acpx-grokbot-tools-bridge" &&
     isReleaseBefore(baselineVersion, "2026.4.22")
   ) {
-    if (!summary.skippedIntents.includes("acpx-openclaw-tools-bridge")) {
-      summary.skippedIntents.push("acpx-openclaw-tools-bridge");
+    if (!summary.skippedIntents.includes("acpx-grokbot-tools-bridge")) {
+      summary.skippedIntents.push("acpx-grokbot-tools-bridge");
     }
     return null;
   }
@@ -258,16 +258,16 @@ export function resolveUpgradeSurvivorOpenClawCommand(argv, params = {}) {
     const comSpec = params.comSpec ?? resolveWindowsCmdExePath(params.env ?? process.env);
     return {
       command: comSpec,
-      args: ["/d", "/s", "/c", buildCmdExeCommandLine("openclaw.cmd", argv)],
-      commandLabel: ["openclaw", ...argv].join(" "),
+      args: ["/d", "/s", "/c", buildCmdExeCommandLine("grokbot.cmd", argv)],
+      commandLabel: ["grokbot", ...argv].join(" "),
       shell: false,
       windowsVerbatimArguments: true,
     };
   }
   return {
-    command: "openclaw",
+    command: "grokbot",
     args: argv,
-    commandLabel: ["openclaw", ...argv].join(" "),
+    commandLabel: ["grokbot", ...argv].join(" "),
     shell: false,
   };
 }

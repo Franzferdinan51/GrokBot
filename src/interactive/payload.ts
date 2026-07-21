@@ -1,9 +1,9 @@
 // Interactive payload helpers normalize structured interactive UI payloads.
-import { asOptionalRecord as toRecord } from "@openclaw/normalization-core/record-coerce";
+import { asOptionalRecord as toRecord } from "@grokbot/normalization-core/record-coerce";
 import {
   normalizeOptionalLowercaseString,
   normalizeOptionalString,
-} from "@openclaw/normalization-core/string-coerce";
+} from "@grokbot/normalization-core/string-coerce";
 import { isWellFormedApprovalId } from "../../packages/gateway-protocol/src/schema/approval-id.js";
 
 export type InteractiveButtonStyle = "primary" | "secondary" | "success" | "danger";
@@ -49,7 +49,7 @@ export type MessagePresentationAction =
       type: "web-app";
       /** External web app URL for channels that launch web apps by URL. */
       url: string;
-      /** OpenClaw hosted-widget ID whose launch mechanics are owned by the channel. */
+      /** GrokBot hosted-widget ID whose launch mechanics are owned by the channel. */
       widgetId?: string;
     }
   | {
@@ -57,7 +57,7 @@ export type MessagePresentationAction =
       type: "web-app";
       /** External web app URL for channels that launch web apps by URL. */
       url?: string;
-      /** OpenClaw hosted-widget ID whose launch mechanics are owned by the channel. */
+      /** GrokBot hosted-widget ID whose launch mechanics are owned by the channel. */
       widgetId: string;
     };
 

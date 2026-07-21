@@ -7,7 +7,7 @@ import type {
 import { icons } from "../../../components/icons.ts";
 import "../../../components/tooltip.ts";
 import { t } from "../../../i18n/index.ts";
-import { OpenClawLightDomElement } from "../../../lit/openclaw-element.ts";
+import { OpenClawLightDomElement } from "../../../lit/grokbot-element.ts";
 
 export type SessionDiscussionInfoLoader = (sessionKey: string) => Promise<SessionDiscussionInfo>;
 export type SessionDiscussionOpener = (sessionKey: string) => Promise<SessionDiscussionInfo>;
@@ -149,7 +149,7 @@ class SessionDiscussionPanel extends OpenClawLightDomElement {
           <span>${t("chat.sessionDiscussion.opened")}</span>
           ${openUrl
             ? html`
-                <openclaw-tooltip .content=${t("chat.sessionDiscussion.openExternal")}>
+                <grokbot-tooltip .content=${t("chat.sessionDiscussion.openExternal")}>
                   <a
                     class="btn btn--ghost btn--icon session-discussion__external"
                     href=${openUrl}
@@ -159,7 +159,7 @@ class SessionDiscussionPanel extends OpenClawLightDomElement {
                   >
                     ${icons.externalLink}
                   </a>
-                </openclaw-tooltip>
+                </grokbot-tooltip>
               `
             : nothing}
         </div>
@@ -204,12 +204,12 @@ class SessionDiscussionPanel extends OpenClawLightDomElement {
   }
 }
 
-if (!customElements.get("openclaw-session-discussion")) {
-  customElements.define("openclaw-session-discussion", SessionDiscussionPanel);
+if (!customElements.get("grokbot-session-discussion")) {
+  customElements.define("grokbot-session-discussion", SessionDiscussionPanel);
 }
 
 declare global {
   interface HTMLElementTagNameMap {
-    "openclaw-session-discussion": SessionDiscussionPanel;
+    "grokbot-session-discussion": SessionDiscussionPanel;
   }
 }

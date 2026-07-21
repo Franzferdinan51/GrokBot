@@ -1,8 +1,8 @@
 // Doctor cleanup for per-agent OAuth profiles shadowing fresher main-agent credentials.
 import fs from "node:fs/promises";
 import path from "node:path";
-import { expectDefined } from "@openclaw/normalization-core";
-import { isRecord } from "@openclaw/normalization-core/record-coerce";
+import { expectDefined } from "@grokbot/normalization-core";
+import { isRecord } from "@grokbot/normalization-core/record-coerce";
 import {
   resolveAgentDir,
   resolveDefaultAgentDir,
@@ -22,7 +22,7 @@ import { loadPersistedAuthProfileStore } from "../../../agents/auth-profiles/per
 import { updateAuthProfileStoreWithLock } from "../../../agents/auth-profiles/store.js";
 import type { AuthProfileStore, OAuthCredential } from "../../../agents/auth-profiles/types.js";
 import { resolveStateDir } from "../../../config/paths.js";
-import type { OpenClawConfig } from "../../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../../config/types.grokbot.js";
 import { shortenHomePath } from "../../../utils.js";
 
 type StaleOAuthProfileShadow = {
@@ -334,6 +334,6 @@ const testing = {
 
 if (process.env.VITEST || process.env.NODE_ENV === "test") {
   (globalThis as Record<PropertyKey, unknown>)[
-    Symbol.for("openclaw.staleOAuthProfileShadowsTestApi")
+    Symbol.for("grokbot.staleOAuthProfileShadowsTestApi")
   ] = testing;
 }

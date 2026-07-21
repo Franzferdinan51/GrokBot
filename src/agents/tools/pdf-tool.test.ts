@@ -190,7 +190,7 @@ async function withManagedInboundPdf(
 ) {
   // Managed inbound PDFs live under state and may be addressed by claim-check
   // IDs or absolute paths even when workspace-only policy is active.
-  const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-pdf-managed-inbound-"));
+  const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-pdf-managed-inbound-"));
   const inboundDir = path.join(stateDir, "media", "inbound");
   const mediaId = "claim-check-test.pdf";
   const mediaPath = path.join(inboundDir, mediaId);
@@ -408,8 +408,8 @@ describe("createPdfTool", () => {
 
   it("respects fsPolicy.workspaceOnly for non-sandbox pdf paths", async () => {
     await withTempPdfAgentDir(async (agentDir) => {
-      const workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-pdf-ws-"));
-      const outsideDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-pdf-out-"));
+      const workspaceDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-pdf-ws-"));
+      const outsideDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-pdf-out-"));
       try {
         const cfg = withPdfModel(ANTHROPIC_PDF_MODEL);
         const tool = requirePdfTool(

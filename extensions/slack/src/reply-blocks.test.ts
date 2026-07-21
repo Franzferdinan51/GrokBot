@@ -1,7 +1,7 @@
 import {
   presentationToInteractiveControlsReply,
   type MessagePresentation,
-} from "openclaw/plugin-sdk/interactive-runtime";
+} from "grokbot/plugin-sdk/interactive-runtime";
 import { describe, expect, it } from "vitest";
 import { renderSlackMessagePresentationFallbackText } from "./presentation-fallback.js";
 import { resolveSlackReplyBlockResolution } from "./reply-blocks.js";
@@ -233,22 +233,22 @@ describe("renderSlackMessagePresentationFallbackText", () => {
         {
           type: "actions",
           block_id: "openclaw_reply_buttons_2",
-          elements: [{ action_id: "openclaw:reply_button:2:1", value: "stage" }],
+          elements: [{ action_id: "grokbot:reply_button:2:1", value: "stage" }],
         },
         {
           type: "actions",
           block_id: "openclaw_reply_select_2",
-          elements: [{ action_id: "openclaw:reply_select:2" }],
+          elements: [{ action_id: "grokbot:reply_select:2" }],
         },
         {
           type: "actions",
           block_id: "openclaw_reply_buttons_3",
-          elements: [{ action_id: "openclaw:reply_button:3:1", value: "refresh" }],
+          elements: [{ action_id: "grokbot:reply_button:3:1", value: "refresh" }],
         },
         {
           type: "actions",
           block_id: "openclaw_reply_select_3",
-          elements: [{ action_id: "openclaw:reply_select:3" }],
+          elements: [{ action_id: "grokbot:reply_select:3" }],
         },
       ],
     });
@@ -582,13 +582,13 @@ describe("renderSlackMessagePresentationFallbackText", () => {
     expect(segments).toHaveLength(1);
     expect(blocks).toHaveLength(3);
     expect(actionIds).toEqual([
-      "openclaw:reply_button:1:1",
-      "openclaw:callback_button:1:2",
-      "openclaw:approval_button:1:3",
-      "openclaw:reply_link:1:4",
-      "openclaw:reply_link:1:5",
-      "openclaw:reply_select:1",
-      "openclaw:callback_select:2",
+      "grokbot:reply_button:1:1",
+      "grokbot:callback_button:1:2",
+      "grokbot:approval_button:1:3",
+      "grokbot:reply_link:1:4",
+      "grokbot:reply_link:1:5",
+      "grokbot:reply_select:1",
+      "grokbot:callback_select:2",
     ]);
   });
 
@@ -613,7 +613,7 @@ describe("renderSlackMessagePresentationFallbackText", () => {
       blocks.map(
         (block) => (block as { elements?: Array<{ action_id?: string }> }).elements?.[0]?.action_id,
       ),
-    ).toEqual(["openclaw:callback_button:1:1", "openclaw:reply_button:2:1"]);
+    ).toEqual(["grokbot:callback_button:1:1", "grokbot:reply_button:2:1"]);
   });
 
   it("subtracts mirrors as a multiset and keeps surplus or changed rows", () => {
@@ -708,7 +708,7 @@ describe("renderSlackMessagePresentationFallbackText", () => {
     ).toMatchObject([
       {
         block_id: "openclaw_reply_buttons_3",
-        elements: [{ action_id: "openclaw:reply_button:3:1", value: "later" }],
+        elements: [{ action_id: "grokbot:reply_button:3:1", value: "later" }],
       },
     ]);
   });

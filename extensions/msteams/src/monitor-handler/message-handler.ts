@@ -1,5 +1,5 @@
 // Msteams plugin module implements message handler behavior.
-import { formatAllowlistMatchMeta } from "openclaw/plugin-sdk/allow-from";
+import { formatAllowlistMatchMeta } from "grokbot/plugin-sdk/allow-from";
 import {
   buildChannelInboundEventContext,
   createChannelInboundEnvelopeBuilder,
@@ -8,22 +8,22 @@ import {
   resolveInboundMentionDecision,
   resolveInboundSupplementalSenderAllowed,
   toInboundMediaFacts,
-} from "openclaw/plugin-sdk/channel-inbound";
+} from "grokbot/plugin-sdk/channel-inbound";
 import {
   hasFinalInboundReplyDispatch,
   resolveInboundReplyDispatchCounts,
-} from "openclaw/plugin-sdk/channel-inbound";
-import { bindIngressLifecycleToReplyOptions } from "openclaw/plugin-sdk/channel-outbound";
+} from "grokbot/plugin-sdk/channel-inbound";
+import { bindIngressLifecycleToReplyOptions } from "grokbot/plugin-sdk/channel-outbound";
 import {
   filterSupplementalContextItems,
   resolveChannelContextVisibilityMode,
-} from "openclaw/plugin-sdk/context-visibility-runtime";
+} from "grokbot/plugin-sdk/context-visibility-runtime";
 import {
   DEFAULT_GROUP_HISTORY_LIMIT,
   createChannelHistoryWindow,
   type HistoryEntry,
-} from "openclaw/plugin-sdk/reply-history";
-import { sliceUtf16Safe, truncateUtf16Safe } from "openclaw/plugin-sdk/text-utility-runtime";
+} from "grokbot/plugin-sdk/reply-history";
+import { sliceUtf16Safe, truncateUtf16Safe } from "grokbot/plugin-sdk/text-utility-runtime";
 import { serializeMSTeamsAdaptiveCardActionValue } from "../adaptive-card-submit.js";
 import {
   resolveMSTeamsAdvertisedMedia,

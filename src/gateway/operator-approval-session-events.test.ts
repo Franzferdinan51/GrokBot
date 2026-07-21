@@ -6,7 +6,7 @@ import { buildApprovalResolutionRef } from "../infra/approval-resolution-ref.js"
 import {
   closeOpenClawStateDatabaseForTest,
   type OpenClawStateDatabaseOptions,
-} from "../state/openclaw-state-db.js";
+} from "../state/grokbot-state-db.js";
 import { ExecApprovalManager } from "./exec-approval-manager.js";
 import { createOperatorApprovalSessionEventRuntime } from "./operator-approval-session-events.js";
 import {
@@ -25,7 +25,7 @@ const tempDirs: string[] = [];
 type NewOperatorApproval = Parameters<typeof insertOperatorApproval>[0]["approval"];
 
 function createDatabaseOptions(): OpenClawStateDatabaseOptions {
-  const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-approval-events-"));
+  const stateDir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-approval-events-"));
   tempDirs.push(stateDir);
   return { env: { ...process.env, OPENCLAW_STATE_DIR: stateDir } };
 }

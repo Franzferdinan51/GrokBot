@@ -1,7 +1,7 @@
 // Session utility performance tests protect resolver cache scaling for large
 // session lists with repeated provider/model tuples.
 import path from "node:path";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { beforeAll, describe, test, expect, vi } from "vitest";
 import * as thinking from "../auto-reply/thinking.js";
 import type { OpenClawConfig } from "../config/config.js";
@@ -26,7 +26,7 @@ import { listSessionsFromStore } from "./session-utils.js";
  */
 describe("listSessionsFromStore resolver cache", () => {
   beforeAll(async () => {
-    await withStateDirEnv("openclaw-perf-warm-", async ({ stateDir }) => {
+    await withStateDirEnv("grokbot-perf-warm-", async ({ stateDir }) => {
       resetPluginRuntimeStateForTest();
       setActivePluginRegistry(createEmptyPluginRegistry());
       const cfg = {
@@ -69,7 +69,7 @@ describe("listSessionsFromStore resolver cache", () => {
   });
 
   test("collapses non-lightweight per-row resolver work to O(unique provider/model tuples)", async () => {
-    await withStateDirEnv("openclaw-perf-", async ({ stateDir }) => {
+    await withStateDirEnv("grokbot-perf-", async ({ stateDir }) => {
       resetPluginRuntimeStateForTest();
       setActivePluginRegistry(createEmptyPluginRegistry());
       const cfg: OpenClawConfig = {

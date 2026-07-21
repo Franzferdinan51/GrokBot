@@ -6,7 +6,7 @@
  */
 import type { ApiKeyCredential } from "../../../agents/auth-profiles/types.js";
 import { formatCliCommand } from "../../../cli/command-format.js";
-import type { OpenClawConfig } from "../../../config/types.openclaw.js";
+import type { OpenClawConfig } from "../../../config/types.grokbot.js";
 import type { SecretInput } from "../../../config/types.secrets.js";
 import { formatErrorMessage } from "../../../infra/errors.js";
 import { resolveManifestDeprecatedProviderAuthChoice } from "../../../plugins/provider-auth-choices.js";
@@ -37,7 +37,7 @@ type ResolvedNonInteractiveApiKey = NonNullable<
 
 const GENERIC_NON_INTERACTIVE_AUTH_CHOICES = ["oauth", "setup-token", "token", "apiKey"];
 
-/** Applies a local non-interactive auth choice to the pending OpenClaw config. */
+/** Applies a local non-interactive auth choice to the pending GrokBot config. */
 export async function applyNonInteractiveAuthChoice(params: {
   nextConfig: OpenClawConfig;
   authChoice: AuthChoice;
@@ -57,7 +57,7 @@ export async function applyNonInteractiveAuthChoice(params: {
   const requestedSecretInputMode = normalizeSecretInputModeInput(opts.secretInputMode);
   if (opts.secretInputMode && !requestedSecretInputMode) {
     runtime.error(
-      `Invalid --secret-input-mode. Use "plaintext" or "ref", or run ${formatCliCommand("openclaw onboard")} for interactive setup.`,
+      `Invalid --secret-input-mode. Use "plaintext" or "ref", or run ${formatCliCommand("grokbot onboard")} for interactive setup.`,
     );
     runtime.exit(1);
     return null;

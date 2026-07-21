@@ -6,14 +6,14 @@ import {
   resolveSessionAgentIds,
   resolveUserPath,
   type FastModeAutoProgressState,
-} from "openclaw/plugin-sdk/agent-harness-runtime";
-import { resolveAgentDir } from "openclaw/plugin-sdk/agent-runtime";
+} from "grokbot/plugin-sdk/agent-harness-runtime";
+import { resolveAgentDir } from "grokbot/plugin-sdk/agent-runtime";
 import {
   createDiagnosticTraceContextFromActiveScope,
   freezeDiagnosticTraceContext,
   resolveDiagnosticModelContentCapturePolicy,
-} from "openclaw/plugin-sdk/diagnostic-runtime";
-import { loadExecApprovals } from "openclaw/plugin-sdk/exec-approvals-runtime";
+} from "grokbot/plugin-sdk/diagnostic-runtime";
+import { loadExecApprovals } from "grokbot/plugin-sdk/exec-approvals-runtime";
 import {
   resolveCodexAppServerForModelProvider,
   resolveCodexAppServerForOpenClawToolPolicy,
@@ -53,7 +53,7 @@ function applyStoredBindingPermissions(params: {
   if (params.execPolicyTouched || params.binding?.connectionScope === "supervision") {
     return params.appServer;
   }
-  // `/codex permissions` owns per-session policy. Explicit OpenClaw exec config
+  // `/codex permissions` owns per-session policy. Explicit GrokBot exec config
   // and supervised private connections remain authoritative when present.
   return {
     ...params.appServer,
@@ -268,7 +268,7 @@ export async function prepareCodexAttemptConnection({ params, options }: CodexRu
     agentDir,
   });
   if (configuredAppServer.approvalPolicy === "never" && appServer.approvalPolicy === "untrusted") {
-    embeddedAgentLog.info("codex app-server approval policy promoted for OpenClaw tool policy", {
+    embeddedAgentLog.info("codex app-server approval policy promoted for GrokBot tool policy", {
       from: "never",
       to: "untrusted",
       beforeToolCallHook: beforeToolCallPolicy.hasBeforeToolCallHook,

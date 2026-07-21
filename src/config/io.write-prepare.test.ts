@@ -71,11 +71,11 @@ describe("config io write prepare", () => {
           plugins: {
             entries: {},
             installs: {
-              "openclaw-web-search": {
+              "grokbot-web-search": {
                 source: "npm",
-                spec: "@ollama/openclaw-web-search",
-                installPath: "/tmp/openclaw-web-search",
-                resolvedName: "@ollama/openclaw-web-search",
+                spec: "@ollama/grokbot-web-search",
+                installPath: "/tmp/grokbot-web-search",
+                resolvedName: "@ollama/grokbot-web-search",
                 resolvedVersion: "0.2.2",
               },
             },
@@ -85,11 +85,11 @@ describe("config io write prepare", () => {
           plugins: {
             entries: {},
             installs: {
-              "openclaw-web-search": {
+              "grokbot-web-search": {
                 source: "npm",
-                spec: "@ollama/openclaw-web-search@0.2.2",
-                installPath: "/tmp/openclaw-web-search",
-                resolvedName: "@ollama/openclaw-web-search",
+                spec: "@ollama/grokbot-web-search@0.2.2",
+                installPath: "/tmp/grokbot-web-search",
+                resolvedName: "@ollama/grokbot-web-search",
                 resolvedVersion: "0.2.2",
               },
             },
@@ -857,8 +857,8 @@ describe("config io write prepare", () => {
       'channels.telegram.dmPolicy = "open" requires channels.telegram.allowFrom to include "*"',
     );
 
-    expect(message).toContain("openclaw config set channels.telegram.allowFrom '[\"*\"]'");
-    expect(message).toContain('openclaw config set channels.telegram.dmPolicy "pairing"');
+    expect(message).toContain("grokbot config set channels.telegram.allowFrom '[\"*\"]'");
+    expect(message).toContain('grokbot config set channels.telegram.dmPolicy "pairing"');
   });
 
   it("preserves env refs on unchanged paths while keeping changed paths resolved", () => {
@@ -1083,8 +1083,8 @@ describe("config io write prepare", () => {
     const snapshot = { OPENAI_API_KEY: "sk-secret" };
     expect(
       resolveWriteEnvSnapshotForPath({
-        actualConfigPath: "/tmp/openclaw.json",
-        expectedConfigPath: "/tmp/openclaw.json",
+        actualConfigPath: "/tmp/grokbot.json",
+        expectedConfigPath: "/tmp/grokbot.json",
         envSnapshotForRestore: snapshot,
       }),
     ).toBe(snapshot);
@@ -1093,7 +1093,7 @@ describe("config io write prepare", () => {
   it("drops the read-time env snapshot when writing a different config path", () => {
     expect(
       resolveWriteEnvSnapshotForPath({
-        actualConfigPath: "/tmp/openclaw.json",
+        actualConfigPath: "/tmp/grokbot.json",
         expectedConfigPath: "/tmp/other.json",
         envSnapshotForRestore: { OPENAI_API_KEY: "sk-secret" },
       }),
@@ -1244,7 +1244,7 @@ describe("config io write prepare", () => {
 
   it("preserves root $schema during unrelated partial writes", () => {
     const sourceConfig: OpenClawConfig = {
-      $schema: "https://openclaw.ai/config.json",
+      $schema: "https://grokbot.ai/config.json",
       gateway: { mode: "local" },
     } satisfies OpenClawConfig;
 
@@ -1256,13 +1256,13 @@ describe("config io write prepare", () => {
       } satisfies OpenClawConfig,
     }) as OpenClawConfig;
 
-    expect(persisted.$schema).toBe("https://openclaw.ai/config.json");
+    expect(persisted.$schema).toBe("https://grokbot.ai/config.json");
     expect(persisted.gateway).toEqual({ mode: "local", port: 18789 });
   });
 
   it("rejects writes that would flatten a root include", () => {
     const sourceConfig = {
-      $schema: "https://openclaw.ai/config-from-include.json",
+      $schema: "https://grokbot.ai/config-from-include.json",
       gateway: { mode: "local" },
     };
 
@@ -1283,7 +1283,7 @@ describe("config io write prepare", () => {
 
   it("does not restore root $schema when the next config explicitly clears it", () => {
     const sourceConfig = {
-      $schema: "https://openclaw.ai/config.json",
+      $schema: "https://grokbot.ai/config.json",
       gateway: { mode: "local" },
     };
 
@@ -1302,7 +1302,7 @@ describe("config io write prepare", () => {
 
   it("does not restore root $schema when the next config sets an invalid value", () => {
     const sourceConfig = {
-      $schema: "https://openclaw.ai/config.json",
+      $schema: "https://grokbot.ai/config.json",
       gateway: { mode: "local" },
     };
 

@@ -3,7 +3,7 @@
  */
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { CliDeps } from "../cli/deps.types.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import type { GatewayCronServiceContract } from "./server-cron-contract.js";
 import type { GatewayCronState } from "./server-cron.js";
 
@@ -38,7 +38,7 @@ describe("createLazyGatewayCronState", () => {
   });
 
   it("resolves its default store path from the prepared env", () => {
-    const stateRoot = "/tmp/openclaw-candidate-state";
+    const stateRoot = "/tmp/grokbot-candidate-state";
     const lazy = createLazyGatewayCronState({
       ...createParams(),
       env: { ...process.env, OPENCLAW_STATE_DIR: stateRoot },
@@ -301,7 +301,7 @@ function createParams(overrides: Partial<OpenClawConfig> = {}) {
 function createCronState(cron: GatewayCronServiceContract): GatewayCronState {
   return {
     cron,
-    storePath: "/tmp/openclaw-cron.json",
+    storePath: "/tmp/grokbot-cron.json",
     cronEnabled: true,
   } as GatewayCronState;
 }

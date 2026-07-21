@@ -1,4 +1,4 @@
 interface:
-  display_name: "OpenClaw Testing"
-  short_description: "Choose cheap, targeted OpenClaw validation"
-  default_prompt: "Use $openclaw-testing to choose the cheapest safe test or CI verification path, inspect failures, and rerun only the relevant OpenClaw lane."
+  display_name: "GrokBot Testing"
+  short_description: "Choose cheap, targeted GrokBot validation"
+  default_prompt: "Use $grokbot-testing to choose the cheapest safe test or CI verification path, inspect failures, and rerun only the relevant GrokBot lane."

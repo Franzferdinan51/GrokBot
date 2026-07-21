@@ -1,5 +1,5 @@
 // Parses npm registry specs into package, version, and tag references.
-import { normalizeLowercaseStringOrEmpty } from "@openclaw/normalization-core/string-coerce";
+import { normalizeLowercaseStringOrEmpty } from "@grokbot/normalization-core/string-coerce";
 import {
   parse as parseSemver,
   prerelease as parseSemverPrerelease,
@@ -118,10 +118,10 @@ export function parseRegistryNpmSpec(rawSpec: string): ParsedRegistryNpmSpec | n
   return parsed.ok ? parsed.parsed : null;
 }
 
-/** Returns whether a user-provided npm spec resolves to the official OpenClaw npm scope. */
+/** Returns whether a user-provided npm spec resolves to the official GrokBot npm scope. */
 export function isOpenClawOrgNpmSpec(rawSpec: string | undefined): boolean {
   const parsed = rawSpec ? parseRegistryNpmSpec(rawSpec) : null;
-  return parsed?.name.startsWith("@openclaw/") === true;
+  return parsed?.name.startsWith("@grokbot/") === true;
 }
 
 /** Validates a registry-only npm spec and returns a user-facing error when rejected. */
@@ -135,7 +135,7 @@ export function isExactSemverVersion(value: string): boolean {
   return validSemver(value.trim()) !== null;
 }
 
-/** Parses OpenClaw's monthly patch stable/alpha/beta/correction version format. */
+/** Parses GrokBot's monthly patch stable/alpha/beta/correction version format. */
 function parseOpenClawReleaseVersion(value: string): SemVer | null {
   const trimmed = value.trim();
   const parsed = OPENCLAW_RELEASE_PREFIX_RE.test(trimmed) ? parseSemver(trimmed) : null;
@@ -165,13 +165,13 @@ function parseOpenClawReleaseVersion(value: string): SemVer | null {
   return parsed;
 }
 
-/** Returns whether a version is an OpenClaw monthly patch stable correction release. */
+/** Returns whether a version is an GrokBot monthly patch stable correction release. */
 function isOpenClawStableCorrectionVersion(value: string): boolean {
   const parsed = parseOpenClawReleaseVersion(value);
   return parsed !== null && isOpenClawCorrectionSemver(parsed);
 }
 
-/** Compares OpenClaw monthly patch release versions across alpha, beta, stable, and corrections. */
+/** Compares GrokBot monthly patch release versions across alpha, beta, stable, and corrections. */
 export function compareOpenClawReleaseVersions(left: string, right: string): number | null {
   const parsedLeft = parseOpenClawReleaseVersion(left);
   const parsedRight = parseOpenClawReleaseVersion(right);
@@ -187,7 +187,7 @@ export function isPrereleaseSemverVersion(value: string): boolean {
 /**
  * Enforces explicit opt-in before an npm spec may resolve to a prerelease.
  * Bare specs and `latest` stay on stable releases unless the resolved version
- * is an OpenClaw stable correction.
+ * is an GrokBot stable correction.
  */
 export function isPrereleaseResolutionAllowed(params: {
   spec: ParsedRegistryNpmSpec;

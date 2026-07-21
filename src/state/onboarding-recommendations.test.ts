@@ -1,11 +1,11 @@
 import fs from "node:fs";
 import { afterEach, describe, expect, it } from "vitest";
-import { withOpenClawTestState } from "../test-utils/openclaw-test-state.js";
+import { withOpenClawTestState } from "../test-utils/grokbot-test-state.js";
 import {
   createOnboardingRecommendationsStore,
   type OnboardingRecommendationMatch,
 } from "./onboarding-recommendations.js";
-import { closeOpenClawStateDatabaseForTest } from "./openclaw-state-db.js";
+import { closeOpenClawStateDatabaseForTest } from "./grokbot-state-db.js";
 
 const matches: OnboardingRecommendationMatch[] = [
   {
@@ -62,7 +62,7 @@ describe("onboarding recommendations store", () => {
       const inventory = [{ label: "Chat", bundleId: "com.example.chat" }];
 
       expect(store.read()).toBeNull();
-      expect(fs.existsSync(state.statePath("state", "openclaw.sqlite"))).toBe(false);
+      expect(fs.existsSync(state.statePath("state", "grokbot.sqlite"))).toBe(false);
       const written = store.writeOffer({
         inventory,
         matches,

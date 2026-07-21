@@ -1,8 +1,8 @@
 // Whatsapp tests cover web auto reply utils plugin behavior.
 import fs from "node:fs/promises";
 import path from "node:path";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { normalizeMainKey } from "openclaw/plugin-sdk/routing";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { normalizeMainKey } from "grokbot/plugin-sdk/routing";
 import {
   evaluateSessionFreshness,
   getSessionEntry,
@@ -13,8 +13,8 @@ import {
   resolveStorePath,
   resolveThreadFlag,
   upsertSessionEntry,
-} from "openclaw/plugin-sdk/session-store-runtime";
-import { withTempDir } from "openclaw/plugin-sdk/test-env";
+} from "grokbot/plugin-sdk/session-store-runtime";
+import { withTempDir } from "grokbot/plugin-sdk/test-env";
 import { describe, expect, it, vi } from "vitest";
 import { createTestWebInboundMessage } from "../inbound/test-message.test-helper.js";
 import type { AdmittedWebInboundMessage } from "../inbound/types.js";
@@ -141,7 +141,7 @@ describe("isBotMentionedFromTargets", () => {
     // gate to false before mentionPatterns were evaluated, silently dropping
     // messages like "marlow, look at @SomeoneElse's message".
     const msg = makeMsg({
-      body: "@OpenClaw please help",
+      body: "@GrokBot please help",
       mentionedJids: ["19998887777@s.whatsapp.net"],
       selfE164: "+15551234567",
       selfJid: "15551234567@s.whatsapp.net",
@@ -184,7 +184,7 @@ describe("isBotMentionedFromTargets", () => {
 
   it("falls back to regex when no mentions are present", () => {
     const msg = makeMsg({
-      body: "openclaw can you help?",
+      body: "grokbot can you help?",
       selfE164: "+15551234567",
       selfJid: "15551234567@s.whatsapp.net",
     });
@@ -217,7 +217,7 @@ describe("isBotMentionedFromTargets", () => {
           id: "999@s.whatsapp.net",
         },
       },
-      body: "openclaw ping",
+      body: "grokbot ping",
       selfE164: "+999",
       selfJid: "999@s.whatsapp.net",
     });
@@ -270,7 +270,7 @@ describe("isBotMentionedFromTargets", () => {
 
 describe("resolveMentionTargets with @lid mapping", () => {
   it("uses @lid reverse mapping for mentions and self identity", async () => {
-    await withTempDir("openclaw-lid-mapping-", async (authDir) => {
+    await withTempDir("grokbot-lid-mapping-", async (authDir) => {
       await fs.writeFile(
         path.join(authDir, "lid-mapping-777_reverse.json"),
         JSON.stringify("+1777"),
@@ -310,7 +310,7 @@ describe("getSessionSnapshot", () => {
     vi.useFakeTimers();
     vi.setSystemTime(new Date(2026, 0, 18, 5, 0, 0));
     try {
-      await withTempDir("openclaw-snapshot-", async (root) => {
+      await withTempDir("grokbot-snapshot-", async (root) => {
         const storePath = path.join(root, "sessions.json");
         const sessionKey = "agent:main:whatsapp:dm:s1";
 
@@ -358,13 +358,13 @@ describe("web auto-reply util", () => {
             id: "777@lid",
           },
         },
-        body: "openclaw ping",
+        body: "grokbot ping",
         selfE164: "+15551234567",
         selfJid: "15551234567@s.whatsapp.net",
       });
       const result = debugMention(msg, { mentionRegexes: [/\bopenclaw\b/i] });
       expect(result.wasMentioned).toBe(true);
-      expect(result.details.bodyClean).toBe("openclaw ping");
+      expect(result.details.bodyClean).toBe("grokbot ping");
       expect(result.details.normalizedMentionedJids).toBeNull();
     });
 

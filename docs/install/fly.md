@@ -1,12 +1,12 @@
 ---
-summary: "Step-by-step Fly.io deployment for OpenClaw with persistent storage and HTTPS"
+summary: "Step-by-step Fly.io deployment for GrokBot with persistent storage and HTTPS"
 title: Fly.io
 read_when:
-  - Deploying OpenClaw on Fly.io
+  - Deploying GrokBot on Fly.io
   - Setting up Fly volumes, secrets, and first-run config
 ---
 
-**Goal:** OpenClaw Gateway running on a [Fly.io](https://fly.io) machine with persistent storage, automatic HTTPS, and Discord/channel access.
+**Goal:** GrokBot Gateway running on a [Fly.io](https://fly.io) machine with persistent storage, automatic HTTPS, and Discord/channel access.
 
 ## What you need
 
@@ -25,11 +25,11 @@ read_when:
 <Steps>
   <Step title="Create the Fly app">
     ```bash
-    git clone https://github.com/openclaw/openclaw.git
-    cd openclaw
+    git clone https://github.com/grokbot/grokbot.git
+    cd grokbot
 
     # pick your own name
-    fly apps create my-openclaw
+    fly apps create my-grokbot
 
     # 1GB is usually enough
     fly volumes create openclaw_data --size 1 --region iad
@@ -43,7 +43,7 @@ read_when:
     Edit `fly.toml` to match your app name and requirements. The repo's tracked `fly.toml` is the public template shown below; `deploy/fly.private.toml` is the hardened, no-public-IP variant (see [Private deployment](#private-deployment-hardened)).
 
     ```toml
-    app = "my-openclaw"  # your app name
+    app = "my-grokbot"  # your app name
     primary_region = "iad"
 
     [build]
@@ -75,7 +75,7 @@ read_when:
       destination = "/data"
     ```
 
-    The OpenClaw Docker image entrypoint is `tini`, running `node openclaw.mjs gateway` by default. Fly `[processes]` replaces the Docker `CMD` (here it runs `node dist/index.js gateway ...` directly, the same compiled entrypoint) without touching `ENTRYPOINT`, so the process still runs under `tini`.
+    The GrokBot Docker image entrypoint is `tini`, running `node grokbot.mjs gateway` by default. Fly `[processes]` replaces the Docker `CMD` (here it runs `node dist/index.js gateway ...` directly, the same compiled entrypoint) without touching `ENTRYPOINT`, so the process still runs under `tini`.
 
     **Key settings:**
 
@@ -107,7 +107,7 @@ read_when:
 
     Non-loopback binds (`--bind lan`) require a valid gateway auth path. This example uses `OPENCLAW_GATEWAY_TOKEN`, but `gateway.auth.password` or a correctly configured non-loopback trusted-proxy deployment also satisfy the requirement. See [Secrets management](/gateway/secrets) for the SecretRef contract.
 
-    Treat these tokens like passwords. Prefer env vars/`fly secrets` over the config file for API keys and tokens so secrets stay out of `openclaw.json`.
+    Treat these tokens like passwords. Prefer env vars/`fly secrets` over the config file for API keys and tokens so secrets stay out of `grokbot.json`.
 
   </Step>
 
@@ -136,7 +136,7 @@ read_when:
 
     ```bash
     mkdir -p /data
-    cat > /data/openclaw.json << 'EOF'
+    cat > /data/grokbot.json << 'EOF'
     {
       "agents": {
         "defaults": {
@@ -182,7 +182,7 @@ read_when:
         "bind": "auto",
         "controlUi": {
           "allowedOrigins": [
-            "https://my-openclaw.fly.dev",
+            "https://my-grokbot.fly.dev",
             "http://localhost:3000",
             "http://127.0.0.1:3000"
           ]
@@ -193,9 +193,9 @@ read_when:
     EOF
     ```
 
-    With `OPENCLAW_STATE_DIR=/data`, the config path is `/data/openclaw.json`.
+    With `OPENCLAW_STATE_DIR=/data`, the config path is `/data/grokbot.json`.
 
-    Replace `https://my-openclaw.fly.dev` with your real Fly app origin. Gateway startup seeds local Control UI origins from the runtime `--bind` and `--port` values so first boot can proceed before config exists, but browser access through Fly still needs the exact HTTPS origin listed in `gateway.controlUi.allowedOrigins`.
+    Replace `https://my-grokbot.fly.dev` with your real Fly app origin. Gateway startup seeds local Control UI origins from the runtime `--bind` and `--port` values so first boot can proceed before config exists, but browser access through Fly still needs the exact HTTPS origin listed in `gateway.controlUi.allowedOrigins`.
 
     The Discord token can come from either:
 
@@ -218,7 +218,7 @@ read_when:
     fly open
     ```
 
-    Or visit `https://my-openclaw.fly.dev/`.
+    Or visit `https://my-grokbot.fly.dev/`.
 
     Authenticate with the configured shared secret: the gateway token from `OPENCLAW_GATEWAY_TOKEN`, or your password if you switched to password auth.
 
@@ -275,27 +275,27 @@ fly machine update <machine-id> --vm-memory 2048 -y
 
 Gateway refuses to start with "already running" errors after a container restart.
 
-The runtime lock files live at `<tmpdir>/openclaw-<uid>/gateway.<hash>.lock`
+The runtime lock files live at `<tmpdir>/grokbot-<uid>/gateway.<hash>.lock`
 and `gateway.state.<hash>.lock` (Linux:
-`/tmp/openclaw-<uid>/gateway.*.lock`), not on the persistent `/data` volume, so
+`/tmp/grokbot-<uid>/gateway.*.lock`), not on the persistent `/data` volume, so
 a full container restart normally clears them along with the rest of the
 container filesystem. If a lock survives (for example a `fly machine restart`
 that preserves the container filesystem) and blocks startup, remove it
 manually:
 
 ```bash
-fly ssh console --command "rm -f /tmp/openclaw-*/gateway.*.lock"
+fly ssh console --command "rm -f /tmp/grokbot-*/gateway.*.lock"
 fly machine restart <machine-id>
 ```
 
 ### Config not being read
 
-`--allow-unconfigured` only bypasses the startup guard. It does not create or repair `/data/openclaw.json`, so make sure your real config exists and includes `"gateway": { "mode": "local" }` for a normal local gateway start.
+`--allow-unconfigured` only bypasses the startup guard. It does not create or repair `/data/grokbot.json`, so make sure your real config exists and includes `"gateway": { "mode": "local" }` for a normal local gateway start.
 
 Verify the config exists:
 
 ```bash
-fly ssh console --command "cat /data/openclaw.json"
+fly ssh console --command "cat /data/grokbot.json"
 ```
 
 ### Writing config via SSH
@@ -304,17 +304,17 @@ fly ssh console --command "cat /data/openclaw.json"
 
 ```bash
 # echo + tee (pipe from local to remote)
-echo '{"your":"config"}' | fly ssh console -C "tee /data/openclaw.json"
+echo '{"your":"config"}' | fly ssh console -C "tee /data/grokbot.json"
 
 # or sftp
 fly sftp shell
-> put /local/path/config.json /data/openclaw.json
+> put /local/path/config.json /data/grokbot.json
 ```
 
 `fly sftp` may fail if the file already exists; delete first:
 
 ```bash
-fly ssh console --command "rm /data/openclaw.json"
+fly ssh console --command "rm /data/grokbot.json"
 ```
 
 ### State not persisting
@@ -332,7 +332,7 @@ fly status
 fly logs
 ```
 
-`git pull` + `fly deploy` is the supervised path here: it rebuilds the image from the Dockerfile, so the CLI/gateway version, the base OS image, and any Dockerfile changes all update together. `openclaw update` inside the running container is not the same operation, since the image ships as a Docker-built `dist/` tree with no `.git` checkout and no npm-managed global install for it to detect; see [Updating](/install/updating) for that flow on VM-style installs.
+`git pull` + `fly deploy` is the supervised path here: it rebuilds the image from the Dockerfile, so the CLI/gateway version, the base OS image, and any Dockerfile changes all update together. `grokbot update` inside the running container is not the same operation, since the image ships as a Docker-built `dist/` tree with no `.git` checkout and no npm-managed global install for it to detect; see [Updating](/install/updating) for that flow on VM-style installs.
 
 ### Updating the machine command
 
@@ -371,17 +371,17 @@ Or convert an existing deployment:
 
 ```bash
 # list current IPs
-fly ips list -a my-openclaw
+fly ips list -a my-grokbot
 
 # release public IPs
-fly ips release <public-ipv4> -a my-openclaw
-fly ips release <public-ipv6> -a my-openclaw
+fly ips release <public-ipv4> -a my-grokbot
+fly ips release <public-ipv6> -a my-grokbot
 
 # switch to the private config so future deploys do not re-allocate public IPs
 fly deploy -c deploy/fly.private.toml
 
 # allocate private-only IPv6
-fly ips allocate-v6 --private -a my-openclaw
+fly ips allocate-v6 --private -a my-grokbot
 ```
 
 After this, `fly ips list` should show only a `private` type IP:
@@ -396,7 +396,7 @@ v6       fdaa:x:x:x:x::x      private          global
 **Option 1: local proxy (simplest)**
 
 ```bash
-fly proxy 3000:3000 -a my-openclaw
+fly proxy 3000:3000 -a my-grokbot
 # open http://localhost:3000 in a browser
 ```
 
@@ -411,7 +411,7 @@ fly wireguard create
 **Option 3: SSH only**
 
 ```bash
-fly ssh console -a my-openclaw
+fly ssh console -a my-grokbot
 ```
 
 ### Webhooks with private deployment
@@ -469,7 +469,7 @@ With the recommended config (`shared-cpu-2x`, 2GB RAM), expect roughly $10-15/mo
 
 - Set up messaging channels: [Channels](/channels)
 - Configure the Gateway: [Gateway configuration](/gateway/configuration)
-- Keep OpenClaw up to date: [Updating](/install/updating)
+- Keep GrokBot up to date: [Updating](/install/updating)
 
 ## Related
 

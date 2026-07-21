@@ -1,5 +1,5 @@
-import type { OpenClawPluginApi } from "openclaw/plugin-sdk/plugin-entry";
-import type { SessionUpstreamProbe } from "openclaw/plugin-sdk/session-catalog";
+import type { OpenClawPluginApi } from "grokbot/plugin-sdk/plugin-entry";
+import type { SessionUpstreamProbe } from "grokbot/plugin-sdk/session-catalog";
 import { describe, expect, it, vi } from "vitest";
 import { CodexAppServerRpcError } from "./app-server/client.js";
 import type { CodexTurn } from "./app-server/protocol.js";
@@ -292,7 +292,7 @@ describe("Codex upstream activity", () => {
     ]);
   });
 
-  it("filters OpenClaw-authored user items by normalized transcript text", async () => {
+  it("filters GrokBot-authored user items by normalized transcript text", async () => {
     await expect(
       checkTurns({
         probe: probe({
@@ -323,7 +323,7 @@ describe("Codex upstream activity", () => {
     ]);
   });
 
-  it("filters a batched OpenClaw steer by its component transcript texts", async () => {
+  it("filters a batched GrokBot steer by its component transcript texts", async () => {
     await expect(
       checkTurns({
         probe: probe({

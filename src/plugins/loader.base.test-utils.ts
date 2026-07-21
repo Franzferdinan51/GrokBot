@@ -429,7 +429,7 @@ describe("loadOpenClawPlugins", () => {
       },
     };
     const manifestRegistry = loadPluginManifestRegistry({ config });
-    fs.rmSync(path.join(plugin.dir, "openclaw.plugin.json"));
+    fs.rmSync(path.join(plugin.dir, "grokbot.plugin.json"));
 
     const registry = loadOpenClawPlugins({
       cache: false,
@@ -511,7 +511,7 @@ describe("loadOpenClawPlugins", () => {
     fs.mkdirSync(pluginRoot, { recursive: true });
     fs.writeFileSync(
       path.join(packageRoot, "package.json"),
-      JSON.stringify({ name: "openclaw", version: "2026.4.22", type: "module" }),
+      JSON.stringify({ name: "grokbot", version: "2026.4.22", type: "module" }),
       "utf-8",
     );
     fs.writeFileSync(
@@ -519,13 +519,13 @@ describe("loadOpenClawPlugins", () => {
       "export const normalizeLowercaseStringOrEmpty = (value) => String(value).toLowerCase();\n",
       "utf-8",
     );
-    const aliasRoot = path.join(bundledDir, "node_modules", "openclaw");
+    const aliasRoot = path.join(bundledDir, "node_modules", "grokbot");
     const aliasPluginSdkDir = path.join(aliasRoot, "plugin-sdk");
     fs.mkdirSync(aliasPluginSdkDir, { recursive: true });
     fs.writeFileSync(
       path.join(aliasRoot, "package.json"),
       JSON.stringify({
-        name: "openclaw",
+        name: "grokbot",
         type: "module",
         exports: {
           "./plugin-sdk/string-coerce-runtime": "./plugin-sdk/string-coerce-runtime.js",
@@ -541,7 +541,7 @@ describe("loadOpenClawPlugins", () => {
     fs.writeFileSync(
       path.join(pluginRoot, "index.js"),
       [
-        `import { normalizeLowercaseStringOrEmpty } from "openclaw/plugin-sdk/string-coerce-runtime";`,
+        `import { normalizeLowercaseStringOrEmpty } from "grokbot/plugin-sdk/string-coerce-runtime";`,
         `export default {`,
         `  id: "discord",`,
         `  register(api) {`,
@@ -556,10 +556,10 @@ describe("loadOpenClawPlugins", () => {
       path.join(pluginRoot, "package.json"),
       JSON.stringify(
         {
-          name: "@openclaw/discord",
+          name: "@grokbot/discord",
           version: "1.0.0",
           type: "module",
-          openclaw: { extensions: ["./index.js"] },
+          grokbot: { extensions: ["./index.js"] },
         },
         null,
         2,
@@ -567,7 +567,7 @@ describe("loadOpenClawPlugins", () => {
       "utf-8",
     );
     fs.writeFileSync(
-      path.join(pluginRoot, "openclaw.plugin.json"),
+      path.join(pluginRoot, "grokbot.plugin.json"),
       JSON.stringify(
         {
           id: "discord",
@@ -876,7 +876,7 @@ describe("loadOpenClawPlugins", () => {
   it("preserves package.json metadata for bundled memory plugins", () => {
     const registry = loadBundledMemoryPluginRegistry({
       packageMeta: {
-        name: "@openclaw/memory-core",
+        name: "@grokbot/memory-core",
         version: "1.2.3",
         description: "Memory plugin package",
       },
@@ -1191,7 +1191,7 @@ describe("loadOpenClawPlugins", () => {
   module.exports = { id: "manifest-surfaces-plugin", register() { throw new Error("manifest-only snapshot should not register"); } };`,
         });
         fs.writeFileSync(
-          path.join(plugin.dir, "openclaw.plugin.json"),
+          path.join(plugin.dir, "grokbot.plugin.json"),
           JSON.stringify(
             {
               id: "manifest-surfaces-plugin",
@@ -1248,7 +1248,7 @@ describe("loadOpenClawPlugins", () => {
   };`,
         });
         fs.writeFileSync(
-          path.join(memoryPlugin.dir, "openclaw.plugin.json"),
+          path.join(memoryPlugin.dir, "grokbot.plugin.json"),
           JSON.stringify(
             {
               id: "memory-demo",
@@ -1725,7 +1725,7 @@ describe("loadOpenClawPlugins", () => {
             auth: [],
           });
           api.registerAgentToolResultMiddleware(() => undefined, {
-            runtimes: ["openclaw"],
+            runtimes: ["grokbot"],
           });
           api.on("gateway_stop", async () => {});
         },
@@ -1733,7 +1733,7 @@ describe("loadOpenClawPlugins", () => {
     });
     updatePluginManifest(plugin, {
       providers: ["rollback-provider"],
-      contracts: { agentToolResultMiddleware: ["openclaw"] },
+      contracts: { agentToolResultMiddleware: ["grokbot"] },
     });
 
     const loadOptions = {
@@ -1937,7 +1937,7 @@ describe("loadOpenClawPlugins", () => {
         };`,
     });
     fs.writeFileSync(
-      path.join(plugin.dir, "openclaw.plugin.json"),
+      path.join(plugin.dir, "grokbot.plugin.json"),
       JSON.stringify(
         {
           id: "hook-config-context",

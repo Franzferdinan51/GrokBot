@@ -1,6 +1,6 @@
 // Qa Lab plugin module implements Telegram live transport adapter behavior.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import type { QaRunnerCliRegistration } from "openclaw/plugin-sdk/qa-runner-runtime";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import type { QaRunnerCliRegistration } from "grokbot/plugin-sdk/qa-runner-runtime";
 import {
   assertQaGatewayCredentialLeaseQuarantine,
   shouldRetainQaGatewayCredentialLease,
@@ -168,7 +168,7 @@ export async function createTelegramQaTransportAdapter(
       logicalConversationId = input.conversation.id;
       logicalConversationKind = input.conversation.kind;
       const text = sutIdentity.username
-        ? input.text.replaceAll("@openclaw", `@${sutIdentity.username}`)
+        ? input.text.replaceAll("@grokbot", `@${sutIdentity.username}`)
         : input.text;
       const nativeReplyToId = input.replyToId ? nativeMessageIds.get(input.replyToId) : undefined;
       const sent = await callTelegramApi<{ message_id: number }>(

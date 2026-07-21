@@ -1,12 +1,12 @@
-# OpenClaw Cloudflare AI Gateway Provider
+# GrokBot Cloudflare AI Gateway Provider
 
-Official OpenClaw provider plugin for Cloudflare AI Gateway.
+Official GrokBot provider plugin for Cloudflare AI Gateway.
 
-Install from OpenClaw:
+Install from GrokBot:
 
 ```bash
-openclaw plugins install @openclaw/cloudflare-ai-gateway-provider
-openclaw gateway restart
+grokbot plugins install @grokbot/cloudflare-ai-gateway-provider
+grokbot gateway restart
 ```
 
-See <https://docs.openclaw.ai/providers/cloudflare-ai-gateway> for setup and configuration.
+See <https://docs.grokbot.ai/providers/cloudflare-ai-gateway> for setup and configuration.

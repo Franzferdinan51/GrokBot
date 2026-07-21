@@ -2,8 +2,8 @@
 import {
   asDateTimestampMs,
   resolveExpiresAtMsFromDurationMs,
-} from "openclaw/plugin-sdk/number-runtime";
-import { generateSecureToken } from "openclaw/plugin-sdk/secure-random-runtime";
+} from "grokbot/plugin-sdk/number-runtime";
+import { generateSecureToken } from "grokbot/plugin-sdk/secure-random-runtime";
 
 const SLACK_EXTERNAL_ARG_MENU_TOKEN_BYTES = 18;
 const SLACK_EXTERNAL_ARG_MENU_TOKEN_LENGTH = Math.ceil(

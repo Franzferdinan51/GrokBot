@@ -2,7 +2,7 @@
 import { readFile } from "node:fs/promises";
 import { join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { BUNDLED_PLUGIN_ROOT_DIR } from "openclaw/plugin-sdk/test-fixtures";
+import { BUNDLED_PLUGIN_ROOT_DIR } from "grokbot/plugin-sdk/test-fixtures";
 import { describe, expect, it } from "vitest";
 
 const repoRoot = resolve(fileURLToPath(new URL(".", import.meta.url)), "..");
@@ -183,10 +183,10 @@ describe("Dockerfile", () => {
     expect(dockerfile).toContain(
       'node /tmp/docker-plugin-selection.mjs "/tmp/${OPENCLAW_BUNDLED_PLUGIN_DIR}" "$OPENCLAW_EXTENSIONS"',
     );
-    expect(dockerfile).toContain("done < /out/openclaw-selected-plugin-dirs");
+    expect(dockerfile).toContain("done < /out/grokbot-selected-plugin-dirs");
     expect(dockerfile).toContain(`if [ -f "$ext_dir/package.json" ]; then`);
     expect(dockerfile).toContain(
-      "COPY --from=workspace-deps /out/openclaw-selected-plugin-dirs /tmp/openclaw-selected-plugin-dirs",
+      "COPY --from=workspace-deps /out/grokbot-selected-plugin-dirs /tmp/grokbot-selected-plugin-dirs",
     );
     expect(postinstallIndex).toBeLessThan(installIndex);
     expect(prepareIndex).toBeLessThan(installIndex);
@@ -198,19 +198,19 @@ describe("Dockerfile", () => {
   it("keeps validated plugin selection outside the build-context copy destination", async () => {
     const dockerfile = await readFile(dockerfilePath, "utf8");
     const selectionCopyIndex = dockerfile.indexOf(
-      "COPY --from=workspace-deps /out/openclaw-selected-plugin-dirs /tmp/openclaw-selected-plugin-dirs",
+      "COPY --from=workspace-deps /out/grokbot-selected-plugin-dirs /tmp/grokbot-selected-plugin-dirs",
     );
     const buildContextCopyIndex = dockerfile.indexOf("COPY . .");
 
     expect(selectionCopyIndex).toBeGreaterThan(-1);
     expect(buildContextCopyIndex).toBeGreaterThan(selectionCopyIndex);
-    expect(dockerfile).not.toContain("/app/.openclaw-selected-plugin-dirs");
-    expect(dockerfile).not.toContain("./.openclaw-selected-plugin-dirs");
-    expect(dockerfile).toContain("grep -qx 'matrix' /tmp/openclaw-selected-plugin-dirs");
+    expect(dockerfile).not.toContain("/app/.grokbot-selected-plugin-dirs");
+    expect(dockerfile).not.toContain("./.grokbot-selected-plugin-dirs");
+    expect(dockerfile).toContain("grep -qx 'matrix' /tmp/grokbot-selected-plugin-dirs");
     expect(dockerfile).toContain(
-      'selected_plugin_dirs="$(cat /tmp/openclaw-selected-plugin-dirs)"',
+      'selected_plugin_dirs="$(cat /tmp/grokbot-selected-plugin-dirs)"',
     );
-    expect(dockerfile).toContain('OPENCLAW_EXTENSIONS="$(cat /tmp/openclaw-selected-plugin-dirs)"');
+    expect(dockerfile).toContain('OPENCLAW_EXTENSIONS="$(cat /tmp/grokbot-selected-plugin-dirs)"');
   });
 
   it("copies root package lifecycle scripts before pnpm install", async () => {
@@ -337,21 +337,21 @@ describe("Dockerfile", () => {
       'Example: docker build --build-arg OPENCLAW_EXTENSIONS="diagnostics-otel,matrix" .',
     );
     expect(dockerfile).toContain(
-      "RUN --mount=type=cache,id=openclaw-pnpm-store,target=/root/.local/share/pnpm/store,sharing=locked \\",
+      "RUN --mount=type=cache,id=grokbot-pnpm-store,target=/root/.local/share/pnpm/store,sharing=locked \\",
     );
     expect(dockerfile).toContain("COPY --from=workspace-deps /out/packages/ ./packages/");
     expect(dockerfile).toContain(
       "COPY --from=workspace-deps /out/${OPENCLAW_BUNDLED_PLUGIN_DIR}/ ./${OPENCLAW_BUNDLED_PLUGIN_DIR}/",
     );
     expect(dockerfile).toContain(
-      'OPENCLAW_EXTENSIONS="$(cat /tmp/openclaw-selected-plugin-dirs)" OPENCLAW_BUNDLED_PLUGIN_DIR="$OPENCLAW_BUNDLED_PLUGIN_DIR" node scripts/prune-docker-plugin-dist.mjs',
+      'OPENCLAW_EXTENSIONS="$(cat /tmp/grokbot-selected-plugin-dirs)" OPENCLAW_BUNDLED_PLUGIN_DIR="$OPENCLAW_BUNDLED_PLUGIN_DIR" node scripts/prune-docker-plugin-dist.mjs',
     );
-    expect(dockerfile).toContain("readlink -f /app/node_modules/@openclaw/ai");
-    expect(dockerfile).toContain('mv "$ai_runtime_tmp/ai" /app/node_modules/@openclaw/ai');
+    expect(dockerfile).toContain("readlink -f /app/node_modules/@grokbot/ai");
+    expect(dockerfile).toContain('mv "$ai_runtime_tmp/ai" /app/node_modules/@grokbot/ai');
     expect(dockerfile).toContain("CI=true pnpm prune --prod \\");
     expect(dockerfile.indexOf("CI=true pnpm prune --prod \\")).toBeLessThan(
       dockerfile.indexOf(
-        'OPENCLAW_EXTENSIONS="$(cat /tmp/openclaw-selected-plugin-dirs)" OPENCLAW_BUNDLED_PLUGIN_DIR="$OPENCLAW_BUNDLED_PLUGIN_DIR" node scripts/prune-docker-plugin-dist.mjs',
+        'OPENCLAW_EXTENSIONS="$(cat /tmp/grokbot-selected-plugin-dirs)" OPENCLAW_BUNDLED_PLUGIN_DIR="$OPENCLAW_BUNDLED_PLUGIN_DIR" node scripts/prune-docker-plugin-dist.mjs',
       ),
     );
     expect(dockerfile).toContain("--config.offline=true");
@@ -470,7 +470,7 @@ describe("Dockerfile", () => {
 
     expect(workflow).toContain("REGISTRY: ghcr.io");
     expect(workflow).toContain("DOCKERHUB_REGISTRY: docker.io");
-    expect(workflow).toContain("DOCKERHUB_IMAGE_NAME: openclaw/openclaw");
+    expect(workflow).toContain("DOCKERHUB_IMAGE_NAME: grokbot/grokbot");
     expect(workflow).toContain("Validate Docker Hub publish credentials");
     expect(workflow).toContain("DOCKERHUB_USERNAME and DOCKERHUB_TOKEN secrets");
     expect(workflow).toContain("Login to GitHub Container Registry");
@@ -502,7 +502,7 @@ describe("Dockerfile", () => {
     expect(workflow).toContain("Smoke test arm64 runtime workspace templates");
     expect(workflow).toContain("test -f /app/src/agents/templates/HEARTBEAT.md");
     expect(workflow).toContain('grep -F "Missing workspace template:"');
-    expect(workflow).toContain('test -f "${temp_root}/home/.openclaw/workspace/HEARTBEAT.md"');
+    expect(workflow).toContain('test -f "${temp_root}/home/.grokbot/workspace/HEARTBEAT.md"');
   });
 
   it("keeps only the runtime-assets prune proof in full release validation", async () => {
@@ -513,7 +513,7 @@ describe("Dockerfile", () => {
     expect(workflow).not.toContain("Build and smoke test final Docker runtime image");
     expect(workflow).not.toContain("test -f /app/src/agents/templates/HEARTBEAT.md");
     expect(workflow).not.toContain('grep -F "Missing workspace template:"');
-    expect(workflow).not.toContain('test -f "${temp_root}/home/.openclaw/workspace/HEARTBEAT.md"');
+    expect(workflow).not.toContain('test -f "${temp_root}/home/.grokbot/workspace/HEARTBEAT.md"');
     expect(workflow).not.toContain("scripts/docker/runtime-workspace-template-smoke.sh");
   });
 
@@ -582,7 +582,7 @@ describe("Dockerfile", () => {
 
     expect(runtimeStageIndex).toBeGreaterThan(-1);
     // Regression: /home/node/.config parent must be created with node ownership
-    // before the leaf .config/openclaw dir (issue #85968).
+    // before the leaf .config/grokbot dir (issue #85968).
     expect(parentConfigDirIndex).toBeGreaterThan(-1);
     expect(stateDirIndex).toBeGreaterThan(-1);
     expect(userIndex).toBeGreaterThan(-1);
@@ -590,21 +590,21 @@ describe("Dockerfile", () => {
     expect(parentConfigDirIndex).toBeLessThan(stateDirIndex);
     expect(stateDirIndex).toBeGreaterThan(runtimeStageIndex);
     expect(stateDirIndex).toBeLessThan(userIndex);
-    expect(dockerfile).not.toContain("mkdir -p /home/node/.openclaw");
-    expect(dockerfile).toContain("/home/node/.openclaw/workspace");
-    expect(dockerfile).toContain("/home/node/.config/openclaw");
+    expect(dockerfile).not.toContain("mkdir -p /home/node/.grokbot");
+    expect(dockerfile).toContain("/home/node/.grokbot/workspace");
+    expect(dockerfile).toContain("/home/node/.config/grokbot");
     expect(dockerfile).toContain(
-      "stat -c '%U:%G %a' /home/node/.openclaw | grep -qx 'node:node 700'",
+      "stat -c '%U:%G %a' /home/node/.grokbot | grep -qx 'node:node 700'",
     );
     expect(dockerfile).toContain(
-      "stat -c '%U:%G %a' /home/node/.openclaw/workspace | grep -qx 'node:node 700'",
+      "stat -c '%U:%G %a' /home/node/.grokbot/workspace | grep -qx 'node:node 700'",
     );
     // Regression: assert parent /home/node/.config is also node-owned (issue #85968).
     expect(dockerfile).toContain(
       "stat -c '%U:%G %a' /home/node/.config | grep -qx 'node:node 755'",
     );
     expect(dockerfile).toContain(
-      "stat -c '%U:%G %a' /home/node/.config/openclaw | grep -qx 'node:node 700'",
+      "stat -c '%U:%G %a' /home/node/.config/grokbot | grep -qx 'node:node 700'",
     );
   });
 });

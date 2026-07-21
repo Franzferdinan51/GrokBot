@@ -1,16 +1,16 @@
 // Lmstudio provider module implements model/runtime integration.
-import { createSubsystemLogger } from "openclaw/plugin-sdk/logging-core";
+import { createSubsystemLogger } from "grokbot/plugin-sdk/logging-core";
 import {
   buildRemoteBaseUrlPolicy,
   createRemoteEmbeddingProvider,
   normalizeEmbeddingModelWithPrefixes,
   type MemoryEmbeddingProvider,
   type MemoryEmbeddingProviderCreateOptions,
-} from "openclaw/plugin-sdk/memory-core-host-engine-embeddings";
-import { resolveMemorySecretInputString } from "openclaw/plugin-sdk/memory-core-host-secret";
-import { normalizeProviderId } from "openclaw/plugin-sdk/provider-model-shared";
-import { formatErrorMessage, type SsrFPolicy } from "openclaw/plugin-sdk/ssrf-runtime";
-import { asPositiveSafeInteger } from "openclaw/plugin-sdk/string-coerce-runtime";
+} from "grokbot/plugin-sdk/memory-core-host-engine-embeddings";
+import { resolveMemorySecretInputString } from "grokbot/plugin-sdk/memory-core-host-secret";
+import { normalizeProviderId } from "grokbot/plugin-sdk/provider-model-shared";
+import { formatErrorMessage, type SsrFPolicy } from "grokbot/plugin-sdk/ssrf-runtime";
+import { asPositiveSafeInteger } from "grokbot/plugin-sdk/string-coerce-runtime";
 import { LMSTUDIO_DEFAULT_EMBEDDING_MODEL, LMSTUDIO_PROVIDER_ID } from "./defaults.js";
 import { ensureLmstudioModelLoaded } from "./models.fetch.js";
 import {

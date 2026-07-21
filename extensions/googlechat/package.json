@@ -1,10 +1,10 @@
 {
-  "name": "@openclaw/googlechat",
+  "name": "@grokbot/googlechat",
   "version": "2026.7.2",
-  "description": "OpenClaw Google Chat channel plugin for spaces and direct messages.",
+  "description": "GrokBot Google Chat channel plugin for spaces and direct messages.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/openclaw/openclaw"
+    "url": "https://github.com/grokbot/grokbot"
   },
   "type": "module",
   "dependencies": {
@@ -12,18 +12,18 @@
     "zod": "4.4.3"
   },
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*",
-    "openclaw": "workspace:*"
+    "@grokbot/plugin-sdk": "workspace:*",
+    "grokbot": "workspace:*"
   },
   "peerDependencies": {
-    "openclaw": ">=2026.7.2"
+    "grokbot": ">=2026.7.2"
   },
   "peerDependenciesMeta": {
-    "openclaw": {
+    "grokbot": {
       "optional": true
     }
   },
-  "openclaw": {
+  "grokbot": {
     "extensions": [
       "./index.ts"
     ],
@@ -78,7 +78,7 @@
       ]
     },
     "install": {
-      "npmSpec": "@openclaw/googlechat",
+      "npmSpec": "@grokbot/googlechat",
       "defaultChoice": "npm",
       "minHostVersion": ">=2026.4.10"
     },

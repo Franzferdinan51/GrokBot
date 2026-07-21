@@ -4,8 +4,8 @@
  * transport against the configured provider.
  */
 import http from "node:http";
-import { streamAnthropic } from "@openclaw/ai/internal/anthropic";
-import type { Model } from "openclaw/plugin-sdk/llm";
+import { streamAnthropic } from "@grokbot/ai/internal/anthropic";
+import type { Model } from "grokbot/plugin-sdk/llm";
 import { describe, expect, it } from "vitest";
 import { createAnthropicMessagesTransportStreamFn } from "./anthropic-transport-stream.js";
 import { isLiveTestEnabled } from "./live-test-helpers.js";

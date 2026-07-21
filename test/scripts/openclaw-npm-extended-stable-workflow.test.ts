@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { parse } from "yaml";
 
-const workflowPath = ".github/workflows/openclaw-npm-release.yml";
+const workflowPath = ".github/workflows/grokbot-npm-release.yml";
 
 type Step = {
   env?: Record<string, string>;
@@ -73,21 +73,21 @@ describe("minimal npm extended-stable workflow", () => {
     const parsed = workflow();
     const raw = readFileSync(workflowPath, "utf8");
     expect(raw).toContain("version: 1");
-    expect(raw).toContain("openclaw-npm-preflight-${{ inputs.tag }}");
-    expect(raw.match(/openclaw-npm-extended-stable-release\.mjs validate-request/g)).toHaveLength(
+    expect(raw).toContain("grokbot-npm-preflight-${{ inputs.tag }}");
+    expect(raw.match(/grokbot-npm-extended-stable-release\.mjs validate-request/g)).toHaveLength(
       3,
     );
     expect(step(parsed.jobs?.preflight_openclaw_npm, "Validate npm release request").run).toContain(
-      "openclaw-npm-extended-stable-release.mjs validate-request",
+      "grokbot-npm-extended-stable-release.mjs validate-request",
     );
     expect(
       step(parsed.jobs?.preflight_openclaw_npm, "Validate npm release request").env?.PREFLIGHT_ONLY,
     ).toBe("${{ inputs.preflight_only }}");
     expect(
       step(parsed.jobs?.validate_publish_request, "Validate npm release request").run,
-    ).toContain("openclaw-npm-extended-stable-release.mjs validate-request");
+    ).toContain("grokbot-npm-extended-stable-release.mjs validate-request");
     expect(step(parsed.jobs?.publish_openclaw_npm, "Recheck npm release request").run).toContain(
-      "openclaw-npm-extended-stable-release.mjs validate-request",
+      "grokbot-npm-extended-stable-release.mjs validate-request",
     );
     expect(
       parsed.jobs?.validate_publish_request?.steps?.map((candidate) => candidate.name),
@@ -196,8 +196,8 @@ describe("minimal npm extended-stable workflow", () => {
       '"$run_attempt" != "$FULL_RELEASE_VALIDATION_RUN_ATTEMPT"',
     );
     expect(fullValidationRun.run).toContain('echo "attempt=$run_attempt" >> "$GITHUB_OUTPUT"');
-    expect(raw.match(/openclaw-npm-extended-stable-release\.mjs verify-run/g)).toHaveLength(3);
-    expect(raw).toContain("openclaw-npm-extended-stable-release.mjs verify-manifest");
+    expect(raw.match(/grokbot-npm-extended-stable-release\.mjs verify-run/g)).toHaveLength(3);
+    expect(raw).toContain("grokbot-npm-extended-stable-release.mjs verify-manifest");
   });
 
   it("requires and authenticates the plugin npm run before an extended-stable core publish", () => {
@@ -221,7 +221,7 @@ describe("minimal npm extended-stable workflow", () => {
     expect(verify.run).toContain(
       "--json workflowName,displayTitle,headBranch,headSha,event,status,conclusion,url",
     );
-    expect(verify.run).toContain("openclaw-npm-extended-stable-release.mjs verify-run");
+    expect(verify.run).toContain("grokbot-npm-extended-stable-release.mjs verify-run");
   });
 
   it("captures selector fail closed, publishes extended-stable, retries, and summarizes", () => {
@@ -230,11 +230,11 @@ describe("minimal npm extended-stable workflow", () => {
     const capture = step(publish, "Capture previous extended-stable selector");
     const readback = step(publish, "Verify extended-stable registry readback");
     const summary = step(publish, "Summarize extended-stable npm publication");
-    expect(capture.run).toContain("openclaw-npm-extended-stable-release.mjs capture-selector");
-    expect(step(publish, "Publish").run).toContain("openclaw-npm-publish.sh");
-    expect(readback.run).toContain("openclaw-npm-extended-stable-release.mjs verify-readback");
+    expect(capture.run).toContain("grokbot-npm-extended-stable-release.mjs capture-selector");
+    expect(step(publish, "Publish").run).toContain("grokbot-npm-publish.sh");
+    expect(readback.run).toContain("grokbot-npm-extended-stable-release.mjs verify-readback");
     expect(summary.if).toContain("always()");
-    expect(summary.run).toContain("openclaw-npm-extended-stable-release.mjs repair-command");
+    expect(summary.run).toContain("grokbot-npm-extended-stable-release.mjs repair-command");
     expect(summary.run).toContain('EXPECTED_VERSION="$RELEASE_TAG"');
     expect(publish?.environment).toBe("npm-release");
   });
@@ -268,10 +268,10 @@ describe("minimal npm extended-stable workflow", () => {
     expect(preflightPack.env?.CORE_PACKAGE_DIRS).toBe(
       "packages/ai packages/gateway-protocol packages/gateway-client",
     );
-    expect(readFileSync(workflowPath, "utf8")).toContain('packageName: "@openclaw/gateway-client"');
+    expect(readFileSync(workflowPath, "utf8")).toContain('packageName: "@grokbot/gateway-client"');
     expect(publish.run).toContain(".corePackageTarballs[] | [.packageName, .tarballName] | @tsv");
     expect(publish.run).toContain(
-      'bash scripts/openclaw-npm-publish.sh --publish "${publish_target}"',
+      'bash scripts/grokbot-npm-publish.sh --publish "${publish_target}"',
     );
   });
 });

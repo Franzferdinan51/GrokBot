@@ -2,11 +2,11 @@
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import type { AcpInitializeSessionInput } from "../acp/control-plane/manager.types.js";
 import type { SessionEntry } from "../config/sessions/types.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import {
   testing as sessionBindingServiceTesting,
   registerSessionBindingAdapter,
@@ -338,7 +338,7 @@ async function createCrossAgentWorkspaceFixture(options?: {
   targetDirName?: string;
   createTargetWorkspace?: boolean;
 }): Promise<CrossAgentWorkspaceFixture> {
-  const workspaceRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-acp-spawn-"));
+  const workspaceRoot = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-acp-spawn-"));
   const mainWorkspace = path.join(workspaceRoot, "main");
   const targetWorkspace = path.join(workspaceRoot, options?.targetDirName?.trim() || "claude-code");
   await fs.mkdir(mainWorkspace, { recursive: true });
@@ -1281,7 +1281,7 @@ describe("spawnAcpDirect", () => {
     expect(agentCall?.params?.timeout).toBe(172_800);
   });
 
-  it("rejects OpenClaw config agent ids when runtime=acp targets a native agent", async () => {
+  it("rejects GrokBot config agent ids when runtime=acp targets a native agent", async () => {
     replaceSpawnConfig({
       ...createDefaultSpawnConfig(),
       acp: {
@@ -1316,7 +1316,7 @@ describe("spawnAcpDirect", () => {
     });
     expect(result).toHaveProperty(
       "error",
-      'agentId "pleres" is an OpenClaw config agent, not an ACP harness. Use runtime="subagent" or omit runtime for OpenClaw config agents. Use runtime="acp" only with external ACP harness ids such as codex, claude, droid, gemini, or opencode, or configure agents.list[].runtime.type="acp" with runtime.acp.agent.',
+      'agentId "pleres" is an GrokBot config agent, not an ACP harness. Use runtime="subagent" or omit runtime for GrokBot config agents. Use runtime="acp" only with external ACP harness ids such as codex, claude, droid, gemini, or opencode, or configure agents.list[].runtime.type="acp" with runtime.acp.agent.',
     );
     expect(hoisted.initializeSessionMock).not.toHaveBeenCalled();
     expectGatewayMethodNotCalled("agent");
@@ -1361,7 +1361,7 @@ describe("spawnAcpDirect", () => {
     expect(agentCall?.params).not.toHaveProperty("attachments");
   });
 
-  it("maps OpenClaw ACP runtime agent aliases to their configured harness id", async () => {
+  it("maps GrokBot ACP runtime agent aliases to their configured harness id", async () => {
     replaceSpawnConfig({
       ...createDefaultSpawnConfig(),
       agents: {

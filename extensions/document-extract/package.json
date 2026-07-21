@@ -1,16 +1,16 @@
 {
-  "name": "@openclaw/document-extract-plugin",
+  "name": "@grokbot/document-extract-plugin",
   "version": "2026.7.2",
   "private": true,
-  "description": "OpenClaw local document extraction plugin",
+  "description": "GrokBot local document extraction plugin",
   "type": "module",
   "dependencies": {
     "clawpdf": "0.3.0"
   },
   "devDependencies": {
-    "@openclaw/plugin-sdk": "workspace:*"
+    "@grokbot/plugin-sdk": "workspace:*"
   },
-  "openclaw": {
+  "grokbot": {
     "extensions": [
       "./index.ts"
     ]

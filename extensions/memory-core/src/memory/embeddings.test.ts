@@ -1,7 +1,7 @@
 // Memory Core tests cover embeddings plugin behavior.
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import type { EmbeddingProviderAdapter } from "openclaw/plugin-sdk/embedding-providers";
-import type { MemoryEmbeddingProviderAdapter } from "openclaw/plugin-sdk/memory-core-host-engine-embeddings";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import type { EmbeddingProviderAdapter } from "grokbot/plugin-sdk/embedding-providers";
+import type { MemoryEmbeddingProviderAdapter } from "grokbot/plugin-sdk/memory-core-host-engine-embeddings";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createEmbeddingProvider, resolveEmbeddingProviderFallbackModel } from "./embeddings.js";
 
@@ -12,7 +12,7 @@ const mockEmbeddingRegistry = vi.hoisted(() => ({
   acquireLocalService: vi.fn(async () => undefined),
 }));
 
-vi.mock("openclaw/plugin-sdk/embedding-providers", () => ({
+vi.mock("grokbot/plugin-sdk/embedding-providers", () => ({
   getEmbeddingProvider: (id: string, config?: OpenClawConfig) => {
     mockEmbeddingRegistry.genericLookupConfigs.push(config);
     return mockEmbeddingRegistry.genericAdapters.find((adapter) => adapter.id === id);
@@ -20,7 +20,7 @@ vi.mock("openclaw/plugin-sdk/embedding-providers", () => ({
   listEmbeddingProviders: () => [...mockEmbeddingRegistry.genericAdapters],
 }));
 
-vi.mock("openclaw/plugin-sdk/memory-core-host-engine-embeddings", () => ({
+vi.mock("grokbot/plugin-sdk/memory-core-host-engine-embeddings", () => ({
   DEFAULT_LOCAL_MODEL: "nomic-embed-text",
   createLocalEmbeddingProvider: async () => {
     throw new Error("local embedding provider is not used by these tests");
@@ -57,7 +57,7 @@ function createOptions(
         ],
       },
     } as OpenClawConfig,
-    agentDir: "/tmp/openclaw-agent",
+    agentDir: "/tmp/grokbot-agent",
     provider,
     fallback: "none",
     model: "",
@@ -259,7 +259,7 @@ describe("createEmbeddingProvider", () => {
 
   it("reports the llama.cpp plugin install command when local is unregistered", async () => {
     await expect(createEmbeddingProvider(createOptions("local"))).rejects.toThrow(
-      "openclaw plugins install @openclaw/llama-cpp-provider",
+      "grokbot plugins install @grokbot/llama-cpp-provider",
     );
   });
 

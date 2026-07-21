@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-source scripts/lib/openclaw-e2e-instance.sh
+source scripts/lib/grokbot-e2e-instance.sh
 openclaw_e2e_eval_test_state_from_b64 "${OPENCLAW_TEST_STATE_SCRIPT_B64:?missing OPENCLAW_TEST_STATE_SCRIPT_B64}"
 export OPENCLAW_SKIP_CHANNELS=1
 export OPENCLAW_SKIP_GMAIL_WATCHER=1
@@ -33,8 +33,8 @@ fi
 PORT="${PORT:?missing PORT}"
 TOKEN="${OPENCLAW_GATEWAY_TOKEN:?missing OPENCLAW_GATEWAY_TOKEN}"
 MODEL_REF="${OPENCLAW_OPENAI_CHAT_TOOLS_MODEL:?missing OPENCLAW_OPENAI_CHAT_TOOLS_MODEL}"
-GATEWAY_LOG="/tmp/openclaw-openai-chat-tools-gateway.log"
-CLIENT_LOG="/tmp/openclaw-openai-chat-tools-client.log"
+GATEWAY_LOG="/tmp/grokbot-openai-chat-tools-gateway.log"
+CLIENT_LOG="/tmp/grokbot-openai-chat-tools-client.log"
 gateway_pid=""
 
 cleanup() {

@@ -14,7 +14,7 @@ async function verifiedInference(
   const openClawRuntime = model.startsWith("openai/")
     ? {
         models: {
-          "openai/gpt-5.5": { agentRuntime: { id: "openclaw" } },
+          "openai/gpt-5.5": { agentRuntime: { id: "grokbot" } },
         },
       }
     : {};

@@ -1,4 +1,4 @@
-import { createRouter, definePage, type Router } from "@openclaw/uirouter";
+import { createRouter, definePage, type Router } from "@grokbot/uirouter";
 import { html, type LitElement } from "lit";
 import { ref } from "lit/directives/ref.js";
 import { afterEach, describe, expect, it, vi } from "vitest";
@@ -32,7 +32,7 @@ function deferred<T>(): Deferred<T> {
 }
 
 function createOutlet(router: TestRouter, context: TestContext): RouterOutletElement {
-  const outlet = document.createElement("openclaw-router-outlet") as RouterOutletElement;
+  const outlet = document.createElement("grokbot-router-outlet") as RouterOutletElement;
   outlet.router = router;
   outlet.retryContext = context;
   document.body.append(outlet);
@@ -52,7 +52,7 @@ async function settleOutlet(outlet: RouterOutletElement): Promise<void> {
   }
 }
 
-describe("openclaw-router-outlet", () => {
+describe("grokbot-router-outlet", () => {
   it("keeps the current route mounted until nested MCP Apps finish teardown", async () => {
     const teardown = deferred<void>();
     const teardownView = vi.fn(() => teardown.promise);

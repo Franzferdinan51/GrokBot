@@ -56,7 +56,7 @@ function createAuditRecordBase(configPath: string, argv?: string[]) {
 
 function createRenameAuditRecord(home: string) {
   return finalizeConfigWriteAuditRecord({
-    base: createAuditRecordBase(path.join(home, ".openclaw", "openclaw.json")),
+    base: createAuditRecordBase(path.join(home, ".grokbot", "grokbot.json")),
     result: "rename",
     nextMetadata: {
       dev: "12",
@@ -70,7 +70,7 @@ function createRenameAuditRecord(home: string) {
 }
 
 function readLegacyAuditLog(home: string): unknown[] {
-  const auditPath = path.join(home, ".openclaw", "logs", "config-audit.jsonl");
+  const auditPath = path.join(home, ".grokbot", "logs", "config-audit.jsonl");
   return fs
     .readFileSync(auditPath, "utf-8")
     .trim()
@@ -86,7 +86,7 @@ function requireAuditRecord(value: unknown): Record<string, unknown> {
 }
 
 describe("config io audit helpers", () => {
-  const suiteRootTracker = createSuiteTempRootTracker({ prefix: "openclaw-config-audit-" });
+  const suiteRootTracker = createSuiteTempRootTracker({ prefix: "grokbot-config-audit-" });
 
   beforeAll(async () => {
     await suiteRootTracker.setup();
@@ -98,7 +98,7 @@ describe("config io audit helpers", () => {
       source: "config-io",
       event: "config.external",
       detectedBy: "watch",
-      configPath: "/tmp/openclaw.json",
+      configPath: "/tmp/grokbot.json",
       previousHash: "previous",
       nextHash: null,
       valid: false,
@@ -128,26 +128,26 @@ describe("config io audit helpers", () => {
       } as NodeJS.ProcessEnv,
       () => home,
     );
-    expect(auditPath).toBe(path.join(home, ".openclaw", "logs", "config-audit.jsonl"));
+    expect(auditPath).toBe(path.join(home, ".grokbot", "logs", "config-audit.jsonl"));
     expect(auditPath.startsWith(path.resolve("undefined"))).toBe(false);
   });
 
   it("formats overwrite warnings with hash transition and backup path", () => {
     expect(
       formatConfigOverwriteLogMessage({
-        configPath: "/tmp/openclaw.json",
+        configPath: "/tmp/grokbot.json",
         previousHash: "prev-hash",
         nextHash: "next-hash",
         changedPathCount: 3,
       }),
     ).toBe(
-      "Config overwrite: /tmp/openclaw.json (sha256 prev-hash -> next-hash, backup=/tmp/openclaw.json.bak, changedPaths=3)",
+      "Config overwrite: /tmp/grokbot.json (sha256 prev-hash -> next-hash, backup=/tmp/grokbot.json.bak, changedPaths=3)",
     );
   });
 
   it("captures watch markers and next stat metadata for successful writes", () => {
     const base = createConfigWriteAuditRecordBase({
-      configPath: "/tmp/openclaw.json",
+      configPath: "/tmp/grokbot.json",
       env: {
         OPENCLAW_WATCH_MODE: "1",
         OPENCLAW_WATCH_SESSION: "watch-session-1",
@@ -177,7 +177,7 @@ describe("config io audit helpers", () => {
         pid: 101,
         ppid: 99,
         cwd: "/work",
-        argv: ["node", "openclaw"],
+        argv: ["node", "grokbot"],
         execArgv: ["--loader"],
       },
     });
@@ -205,7 +205,7 @@ describe("config io audit helpers", () => {
   });
 
   it("drops next-file metadata and preserves error details for failed writes", () => {
-    const base = createAuditRecordBase("/tmp/openclaw.json");
+    const base = createAuditRecordBase("/tmp/grokbot.json");
     const err = Object.assign(new Error("disk full"), { code: "ENOSPC" });
     const record = finalizeConfigWriteAuditRecord({
       base,
@@ -246,7 +246,7 @@ describe("config io audit helpers", () => {
     const home = await suiteRootTracker.make("append-redacted");
     const record = finalizeConfigWriteAuditRecord({
       base: {
-        ...createAuditRecordBase(path.join(home, ".openclaw", "openclaw.json")),
+        ...createAuditRecordBase(path.join(home, ".grokbot", "grokbot.json")),
         suspicious: [
           "provider returned ya29.fake-access-token-with-enough-length",
           "plugin returned AIzaSyD-very-real-looking-google-api-key-123",
@@ -276,7 +276,7 @@ describe("config io audit helpers", () => {
   it("caps caller-supplied processInfo argv at 8 entries before redaction", () => {
     const longArgv = [
       "node",
-      "openclaw",
+      "grokbot",
       "--api-key",
       "secret",
       "--port",
@@ -287,7 +287,7 @@ describe("config io audit helpers", () => {
       "this-must-not-land-in-audit-1234567890",
     ];
     const base = createConfigWriteAuditRecordBase({
-      configPath: "/tmp/openclaw.json",
+      configPath: "/tmp/grokbot.json",
       env: {} as NodeJS.ProcessEnv,
       existsBefore: true,
       previousHash: "prev",
@@ -324,7 +324,7 @@ describe("config io audit helpers", () => {
 
   it("redacts processInfo.argv when explicitly supplied to createConfigWriteAuditRecordBase", () => {
     const base = createConfigWriteAuditRecordBase({
-      configPath: "/tmp/openclaw.json",
+      configPath: "/tmp/grokbot.json",
       env: {} as NodeJS.ProcessEnv,
       existsBefore: true,
       previousHash: "prev",
@@ -350,53 +350,53 @@ describe("config io audit helpers", () => {
         pid: 1,
         ppid: 1,
         cwd: "/work",
-        argv: ["node", "openclaw", "--token", "leaked-but-not-anymore-12345"],
+        argv: ["node", "grokbot", "--token", "leaked-but-not-anymore-12345"],
         execArgv: [],
       },
     });
-    expect(base.argv).toEqual(["node", "openclaw", "--token", "***"]);
+    expect(base.argv).toEqual(["node", "grokbot", "--token", "***"]);
   });
 
   it.each([
     {
       name: "inline known secret",
-      argv: ["openclaw", "--token=fake", "--port=8080"],
-      expected: ["openclaw", "--token=***", "--port=8080"],
+      argv: ["grokbot", "--token=fake", "--port=8080"],
+      expected: ["grokbot", "--token=***", "--port=8080"],
     },
     {
       name: "custom credential suffix",
-      argv: ["openclaw", "--tenant-credential", "fake", "--bind", "lan"],
-      expected: ["openclaw", "--tenant-credential", "***", "--bind", "lan"],
+      argv: ["grokbot", "--tenant-credential", "fake", "--bind", "lan"],
+      expected: ["grokbot", "--tenant-credential", "***", "--bind", "lan"],
     },
     {
       name: "underscore key suffix",
-      argv: ["openclaw", "--provider_api_key", "fake"],
-      expected: ["openclaw", "--provider_api_key", "***"],
+      argv: ["grokbot", "--provider_api_key", "fake"],
+      expected: ["grokbot", "--provider_api_key", "***"],
     },
     {
       name: "dash-leading secret value",
-      argv: ["openclaw", "--password", "-fake"],
-      expected: ["openclaw", "--password", "***"],
+      argv: ["grokbot", "--password", "-fake"],
+      expected: ["grokbot", "--password", "***"],
     },
     {
       name: "secret flag without a value",
-      argv: ["openclaw", "--token"],
-      expected: ["openclaw", "--token"],
+      argv: ["grokbot", "--token"],
+      expected: ["grokbot", "--token"],
     },
     {
       name: "sensitive config set positional value",
-      argv: ["openclaw", "config", "set", "channels.slack.token", "secret-value"],
-      expected: ["openclaw", "config", "set", "channels.slack.token", "***"],
+      argv: ["grokbot", "config", "set", "channels.slack.token", "secret-value"],
+      expected: ["grokbot", "config", "set", "channels.slack.token", "***"],
     },
     {
       name: "sensitive config set value after boolean option",
-      argv: ["openclaw", "config", "set", "--json", "channels.slack.token", '"secret-value"'],
-      expected: ["openclaw", "config", "set", "--json", "channels.slack.token", "***"],
+      argv: ["grokbot", "config", "set", "--json", "channels.slack.token", '"secret-value"'],
+      expected: ["grokbot", "config", "set", "--json", "channels.slack.token", "***"],
     },
     {
       name: "sensitive config set value after root value option",
       argv: [
-        "openclaw",
+        "grokbot",
         "config",
         "set",
         "--profile",
@@ -404,12 +404,12 @@ describe("config io audit helpers", () => {
         "channels.slack.token",
         "secret-value",
       ],
-      expected: ["openclaw", "config", "set", "--profile", "work", "channels.slack.token", "***"],
+      expected: ["grokbot", "config", "set", "--profile", "work", "channels.slack.token", "***"],
     },
     {
       name: "sensitive config set value after option before subcommand",
       argv: [
-        "openclaw",
+        "grokbot",
         "config",
         "--profile",
         "work",
@@ -417,12 +417,12 @@ describe("config io audit helpers", () => {
         "channels.slack.token",
         "secret-value",
       ],
-      expected: ["openclaw", "config", "--profile", "work", "set", "channels.slack.token", "***"],
+      expected: ["grokbot", "config", "--profile", "work", "set", "channels.slack.token", "***"],
     },
     {
       name: "sensitive config set value after config parent option",
       argv: [
-        "openclaw",
+        "grokbot",
         "config",
         "--section",
         "channels",
@@ -431,7 +431,7 @@ describe("config io audit helpers", () => {
         "secret-value",
       ],
       expected: [
-        "openclaw",
+        "grokbot",
         "config",
         "--section",
         "channels",
@@ -443,7 +443,7 @@ describe("config io audit helpers", () => {
     {
       name: "sensitive config set value when a root option value is config",
       argv: [
-        "openclaw",
+        "grokbot",
         "--profile",
         "config",
         "config",
@@ -451,33 +451,33 @@ describe("config io audit helpers", () => {
         "channels.slack.token",
         "secret-value",
       ],
-      expected: ["openclaw", "--profile", "config", "config", "set", "channels.slack.token", "***"],
+      expected: ["grokbot", "--profile", "config", "config", "set", "channels.slack.token", "***"],
     },
     {
       name: "sensitive config set value after interleaved option",
       argv: [
-        "openclaw",
+        "grokbot",
         "config",
         "set",
         "channels.slack.token",
         "--strict-json",
         '"secret-value"',
       ],
-      expected: ["openclaw", "config", "set", "channels.slack.token", "--strict-json", "***"],
+      expected: ["grokbot", "config", "set", "channels.slack.token", "--strict-json", "***"],
     },
     {
       name: "config set batch JSON",
       argv: [
-        "openclaw",
+        "grokbot",
         "config",
         "set",
         "--batch-json",
         '[{"path":"channels.slack.token","value":"secret-value"}]',
       ],
-      expected: ["openclaw", "config", "set", "--batch-json", "***"],
+      expected: ["grokbot", "config", "set", "--batch-json", "***"],
     },
   ])("redacts $name in persisted audit process info", ({ argv, expected }) => {
-    expect(createAuditRecordBase("/tmp/openclaw.json", argv).argv).toEqual(expected);
+    expect(createAuditRecordBase("/tmp/grokbot.json", argv).argv).toEqual(expected);
   });
 
   it("also accepts flattened audit record params from legacy call sites", async () => {
@@ -503,19 +503,19 @@ describe("config io audit helpers", () => {
 
   it("rewrites historical config-audit entries through redactConfigAuditArgv and preserves 0600 mode", async () => {
     const home = await suiteRootTracker.make("scrub-historical");
-    const auditPath = path.join(home, ".openclaw", "logs", "config-audit.jsonl");
+    const auditPath = path.join(home, ".grokbot", "logs", "config-audit.jsonl");
     fs.mkdirSync(path.dirname(auditPath), { recursive: true, mode: 0o700 });
     const unredactedRecord = {
       ts: "2026-05-02T00:03:48.471Z",
       source: "config-io",
       event: "config.write",
-      configPath: path.join(home, ".openclaw", "openclaw.json"),
+      configPath: path.join(home, ".grokbot", "grokbot.json"),
       pid: 1590563,
       ppid: 1590548,
       cwd: home,
       argv: [
         "/usr/bin/node",
-        "/usr/local/bin/openclaw.mjs",
+        "/usr/local/bin/grokbot.mjs",
         "config",
         "set",
         "channels.slack.botToken",
@@ -529,11 +529,11 @@ describe("config io audit helpers", () => {
       ts: "2026-05-08T12:00:00.000Z",
       source: "config-io",
       event: "config.write",
-      configPath: path.join(home, ".openclaw", "openclaw.json"),
+      configPath: path.join(home, ".grokbot", "grokbot.json"),
       pid: 1,
       ppid: 1,
       cwd: home,
-      argv: ["/usr/bin/node", "/usr/local/bin/openclaw.mjs", "config", "set", "ui.theme", "dark"],
+      argv: ["/usr/bin/node", "/usr/local/bin/grokbot.mjs", "config", "set", "ui.theme", "dark"],
       execArgv: ["--disable-warning=ExperimentalWarning"],
       suspicious: [],
       result: "rename",
@@ -584,18 +584,18 @@ describe("config io audit helpers", () => {
       homedir: () => home,
     });
     expect(result).toEqual({ scanned: 0, rewritten: 0, skipped: 0, aborted: false });
-    const auditPath = path.join(home, ".openclaw", "logs", "config-audit.jsonl");
+    const auditPath = path.join(home, ".grokbot", "logs", "config-audit.jsonl");
     expect(fs.existsSync(auditPath)).toBe(false);
   });
 
   it("preserves malformed lines verbatim and counts them as skipped", async () => {
     const home = await suiteRootTracker.make("scrub-malformed");
-    const auditPath = path.join(home, ".openclaw", "logs", "config-audit.jsonl");
+    const auditPath = path.join(home, ".grokbot", "logs", "config-audit.jsonl");
     fs.mkdirSync(path.dirname(auditPath), { recursive: true, mode: 0o700 });
     const malformed = "{this is not valid json";
     const validUnredacted = {
       ts: "2026-05-02T00:03:48.471Z",
-      argv: ["node", "openclaw.mjs", "config", "set", "x", "xoxb-bad-token-1234567890abcdef"],
+      argv: ["node", "grokbot.mjs", "config", "set", "x", "xoxb-bad-token-1234567890abcdef"],
     };
     fs.writeFileSync(auditPath, `${malformed}\n${JSON.stringify(validUnredacted)}\n`, {
       encoding: "utf-8",
@@ -616,13 +616,13 @@ describe("config io audit helpers", () => {
 
   it("does not write when dryRun is true even if records would change", async () => {
     const home = await suiteRootTracker.make("scrub-dryrun");
-    const auditPath = path.join(home, ".openclaw", "logs", "config-audit.jsonl");
+    const auditPath = path.join(home, ".grokbot", "logs", "config-audit.jsonl");
     fs.mkdirSync(path.dirname(auditPath), { recursive: true, mode: 0o700 });
     const unredacted = {
       ts: "2026-05-02T00:03:48.471Z",
       argv: [
         "node",
-        "openclaw.mjs",
+        "grokbot.mjs",
         "config",
         "set",
         "channels.slack.appToken",
@@ -648,13 +648,13 @@ describe("config io audit helpers", () => {
 
   it("aborts without overwriting when the audit log was appended to mid-scrub", async () => {
     const home = await suiteRootTracker.make("scrub-race-abort");
-    const auditPath = path.join(home, ".openclaw", "logs", "config-audit.jsonl");
+    const auditPath = path.join(home, ".grokbot", "logs", "config-audit.jsonl");
     fs.mkdirSync(path.dirname(auditPath), { recursive: true, mode: 0o700 });
     const unredacted = {
       ts: "2026-05-02T00:03:48.471Z",
       argv: [
         "node",
-        "openclaw.mjs",
+        "grokbot.mjs",
         "config",
         "set",
         "channels.slack.botToken",
@@ -697,13 +697,13 @@ describe("config io audit helpers", () => {
 
   it("aborts without overwriting when the audit log is appended to after temp write", async () => {
     const home = await suiteRootTracker.make("scrub-race-after-temp-write");
-    const auditPath = path.join(home, ".openclaw", "logs", "config-audit.jsonl");
+    const auditPath = path.join(home, ".grokbot", "logs", "config-audit.jsonl");
     fs.mkdirSync(path.dirname(auditPath), { recursive: true, mode: 0o700 });
     const unredacted = {
       ts: "2026-05-02T00:03:48.471Z",
       argv: [
         "node",
-        "openclaw.mjs",
+        "grokbot.mjs",
         "config",
         "set",
         "channels.slack.botToken",
@@ -713,7 +713,7 @@ describe("config io audit helpers", () => {
     };
     const appended = {
       ts: "2026-05-02T00:04:00.000Z",
-      argv: ["node", "openclaw.mjs", "config", "set", "theme", "dark"],
+      argv: ["node", "grokbot.mjs", "config", "set", "theme", "dark"],
       execArgv: [],
     };
     const original = `${JSON.stringify(unredacted)}\n`;

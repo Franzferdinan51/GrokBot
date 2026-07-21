@@ -1,7 +1,7 @@
 /** Gateway health probes used by doctor before deeper daemon and memory diagnostics. */
 import { note } from "../../packages/terminal-core/src/note.js";
 import { probeGatewayStatus } from "../cli/daemon-cli/probe.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import {
   buildGatewayConnectionDetails,
   buildGatewayProbeConnectionDetails,
@@ -55,11 +55,11 @@ function noteCliGatewayVersionSkew(status: StatusSummary | undefined): void {
   }
   note(
     [
-      `This command is OpenClaw ${VERSION}; the running Gateway is OpenClaw ${gatewayVersion}.`,
-      "Check `openclaw --version`, `which openclaw`, and `openclaw gateway status --deep`.",
-      "If this mismatch is unexpected, update PATH so `openclaw` points to the version you want, or reinstall the Gateway service from that same OpenClaw install.",
+      `This command is GrokBot ${VERSION}; the running Gateway is GrokBot ${gatewayVersion}.`,
+      "Check `grokbot --version`, `which grokbot`, and `grokbot gateway status --deep`.",
+      "If this mismatch is unexpected, update PATH so `grokbot` points to the version you want, or reinstall the Gateway service from that same GrokBot install.",
     ].join("\n"),
-    "OpenClaw version mismatch",
+    "GrokBot version mismatch",
   );
 }
 
@@ -93,7 +93,7 @@ export async function checkGatewayHealth(params: {
           .map(
             (owner) =>
               `- ${owner.degradationState ?? "cold"} ${owner.ownerKind}:${owner.ownerId} (${owner.paths.join(", ")}): ${redactSecretDegradationReason(owner.reason)}` +
-              "\n  Retry: openclaw secrets reload",
+              "\n  Retry: grokbot secrets reload",
           )
           .join("\n"),
         "Secret runtime degradation",

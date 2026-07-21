@@ -1,15 +1,15 @@
-name: OpenClaw Cross-OS Release Checks (Reusable)
+name: GrokBot Cross-OS Release Checks (Reusable)
 
 on:
   workflow_dispatch:
     inputs:
       ref:
-        description: Public OpenClaw ref to validate (tag, branch, or full commit SHA)
+        description: Public GrokBot ref to validate (tag, branch, or full commit SHA)
         required: true
         default: main
         type: string
       workflow_ref:
-        description: Optional openclaw/openclaw ref that provides the reusable workflow harness
+        description: Optional grokbot/grokbot ref that provides the reusable workflow harness
         required: false
         default: ""
         type: string
@@ -57,7 +57,7 @@ on:
         default: ""
         type: string
       candidate_artifact_name:
-        description: Optional artifact name containing the candidate OpenClaw tarball
+        description: Optional artifact name containing the candidate GrokBot tarball
         required: false
         default: ""
         type: string
@@ -87,7 +87,7 @@ on:
         default: ""
         type: string
       candidate_version:
-        description: Optional candidate OpenClaw package version
+        description: Optional candidate GrokBot package version
         required: false
         default: ""
         type: string
@@ -119,11 +119,11 @@ on:
         default: false
         type: boolean
       ref:
-        description: Public OpenClaw ref to validate (tag, branch, or full commit SHA)
+        description: Public GrokBot ref to validate (tag, branch, or full commit SHA)
         required: true
         type: string
       workflow_ref:
-        description: Optional openclaw/openclaw ref that provides the reusable workflow harness
+        description: Optional grokbot/grokbot ref that provides the reusable workflow harness
         required: false
         default: ""
         type: string
@@ -161,7 +161,7 @@ on:
         default: ""
         type: string
       candidate_artifact_name:
-        description: Optional artifact name containing the candidate OpenClaw tarball
+        description: Optional artifact name containing the candidate GrokBot tarball
         required: false
         default: ""
         type: string
@@ -191,7 +191,7 @@ on:
         default: ""
         type: string
       candidate_version:
-        description: Optional candidate OpenClaw package version
+        description: Optional candidate GrokBot package version
         required: false
         default: ""
         type: string
@@ -227,13 +227,13 @@ on:
 permissions: read-all
 
 concurrency:
-  group: openclaw-cross-os-release-checks-${{ inputs.ref }}-${{ inputs.provider }}-${{ inputs.mode }}
+  group: grokbot-cross-os-release-checks-${{ inputs.ref }}-${{ inputs.provider }}-${{ inputs.mode }}
   cancel-in-progress: ${{ inputs.ref == 'main' }}
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
   NODE_VERSION: "24.15.0"
-  OPENCLAW_REPOSITORY: openclaw/openclaw
+  OPENCLAW_REPOSITORY: grokbot/grokbot
   OPENCLAW_CROSS_OS_OPENAI_MODEL: ${{ inputs.openai_model || vars.OPENCLAW_CROSS_OS_OPENAI_MODEL || 'openai/gpt-5.6-luna' }}
 
 jobs:
@@ -488,9 +488,9 @@ jobs:
       - name: Build candidate artifact once
         if: inputs.candidate_artifact_name == ''
         env:
-          OUTPUT_DIR: ${{ runner.temp }}/openclaw-cross-os-release-checks/prepare
+          OUTPUT_DIR: ${{ runner.temp }}/grokbot-cross-os-release-checks/prepare
         run: |
-          bash workflow/scripts/github/run-openclaw-cross-os-release-checks.sh \
+          bash workflow/scripts/github/run-grokbot-cross-os-release-checks.sh \
             --prepare-only \
             --source-dir source \
             --output-dir "${OUTPUT_DIR}"
@@ -500,24 +500,24 @@ jobs:
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
         with:
           artifact-ids: ${{ inputs.candidate_artifact_id }}
-          path: ${{ runner.temp }}/openclaw-cross-os-release-checks/prepare/input
+          path: ${{ runner.temp }}/grokbot-cross-os-release-checks/prepare/input
           run-id: ${{ inputs.candidate_artifact_run_id }}
           github-token: ${{ github.token }}
 
       - name: Resolve provided candidate package
         if: inputs.candidate_artifact_name != ''
         env:
-          INPUT_DIR: ${{ runner.temp }}/openclaw-cross-os-release-checks/prepare/input
-          OUTPUT_DIR: ${{ runner.temp }}/openclaw-cross-os-release-checks/prepare/package
+          INPUT_DIR: ${{ runner.temp }}/grokbot-cross-os-release-checks/prepare/input
+          OUTPUT_DIR: ${{ runner.temp }}/grokbot-cross-os-release-checks/prepare/package
           INPUT_CANDIDATE_FILE_NAME: ${{ inputs.candidate_file_name }}
           INPUT_CANDIDATE_SHA256: ${{ inputs.candidate_sha256 }}
           INPUT_CANDIDATE_VERSION: ${{ inputs.candidate_version }}
           INPUT_CANDIDATE_SOURCE_SHA: ${{ inputs.candidate_source_sha }}
-          CANDIDATE_JSON: ${{ runner.temp }}/openclaw-cross-os-release-checks/prepare/candidate.json
+          CANDIDATE_JSON: ${{ runner.temp }}/grokbot-cross-os-release-checks/prepare/candidate.json
         shell: bash
         run: |
           set -euo pipefail
-          node workflow/scripts/resolve-openclaw-package-candidate.mjs \
+          node workflow/scripts/resolve-grokbot-package-candidate.mjs \
             --source artifact \
             --artifact-dir "$INPUT_DIR" \
             --package-sha256 "$INPUT_CANDIDATE_SHA256" \
@@ -570,17 +570,17 @@ jobs:
         run: |
           set -euo pipefail
           if [[ -n "${INPUT_PREVIOUS_VERSION}" ]]; then
-            echo "value=openclaw@${INPUT_PREVIOUS_VERSION}" >> "$GITHUB_OUTPUT"
+            echo "value=grokbot@${INPUT_PREVIOUS_VERSION}" >> "$GITHUB_OUTPUT"
             exit 0
           fi
-          BASELINE_VERSION="$(npm view openclaw@latest version)"
-          echo "value=openclaw@${BASELINE_VERSION}" >> "$GITHUB_OUTPUT"
+          BASELINE_VERSION="$(npm view grokbot@latest version)"
+          echo "value=grokbot@${BASELINE_VERSION}" >> "$GITHUB_OUTPUT"
 
       - name: Pack baseline artifact
         if: ${{ inputs.mode != 'fresh' }}
         env:
           BASELINE_SPEC: ${{ steps.baseline.outputs.value }}
-          OUTPUT_DIR: ${{ runner.temp }}/openclaw-cross-os-release-checks/prepare/baseline
+          OUTPUT_DIR: ${{ runner.temp }}/grokbot-cross-os-release-checks/prepare/baseline
         run: |
           mkdir -p "${OUTPUT_DIR}"
           timeout --preserve-status 300s npm pack --ignore-scripts --json "${BASELINE_SPEC}" --pack-destination "${OUTPUT_DIR}" > "${OUTPUT_DIR}/pack.json"
@@ -588,8 +588,8 @@ jobs:
       - name: Capture candidate metadata
         id: candidate_metadata
         env:
-          CANDIDATE_JSON: ${{ runner.temp }}/openclaw-cross-os-release-checks/prepare/candidate.json
-          PACKAGE_DIR: ${{ runner.temp }}/openclaw-cross-os-release-checks/prepare/package
+          CANDIDATE_JSON: ${{ runner.temp }}/grokbot-cross-os-release-checks/prepare/candidate.json
+          PACKAGE_DIR: ${{ runner.temp }}/grokbot-cross-os-release-checks/prepare/package
         run: |
           node <<'NODE' >>"$GITHUB_OUTPUT"
           const crypto = require("node:crypto");
@@ -632,7 +632,7 @@ jobs:
         if: ${{ inputs.mode != 'fresh' }}
         id: baseline_metadata
         env:
-          BASELINE_PACK_JSON: ${{ runner.temp }}/openclaw-cross-os-release-checks/prepare/baseline/pack.json
+          BASELINE_PACK_JSON: ${{ runner.temp }}/grokbot-cross-os-release-checks/prepare/baseline/pack.json
         run: |
           node <<'NODE' >>"$GITHUB_OUTPUT"
           const crypto = require("node:crypto");
@@ -665,8 +665,8 @@ jobs:
         id: upload_candidate
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
-          name: openclaw-cross-os-release-checks-candidate-${{ github.run_id }}-${{ github.run_attempt }}
-          path: ${{ runner.temp }}/openclaw-cross-os-release-checks/prepare/package/${{ steps.candidate_metadata.outputs.file_name }}
+          name: grokbot-cross-os-release-checks-candidate-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/grokbot-cross-os-release-checks/prepare/package/${{ steps.candidate_metadata.outputs.file_name }}
           if-no-files-found: error
 
       - name: Upload baseline artifact
@@ -674,8 +674,8 @@ jobs:
         id: upload_baseline
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
-          name: openclaw-cross-os-release-checks-baseline-${{ github.run_id }}-${{ github.run_attempt }}
-          path: ${{ runner.temp }}/openclaw-cross-os-release-checks/prepare/baseline/${{ steps.baseline_metadata.outputs.file_name }}
+          name: grokbot-cross-os-release-checks-baseline-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/grokbot-cross-os-release-checks/prepare/baseline/${{ steps.baseline_metadata.outputs.file_name }}
           if-no-files-found: error
 
       - name: Resolve runner matrix
@@ -691,7 +691,7 @@ jobs:
           VAR_WINDOWS_RUNNER: ${{ vars.OPENCLAW_RELEASE_CHECKS_WINDOWS_RUNNER }}
           VAR_MACOS_RUNNER: ${{ vars.OPENCLAW_RELEASE_CHECKS_MACOS_RUNNER }}
         run: |
-          MATRIX_JSON="$(bash workflow/scripts/github/run-openclaw-cross-os-release-checks.sh \
+          MATRIX_JSON="$(bash workflow/scripts/github/run-grokbot-cross-os-release-checks.sh \
             --resolve-matrix \
             --ref "${INPUT_REF}" \
             --mode "${INPUT_MODE}" \
@@ -737,12 +737,12 @@ jobs:
         env:
           ARTIFACT_DIGEST: ${{ needs.prepare.outputs.candidate_artifact_digest }}
           ARTIFACT_ID: ${{ needs.prepare.outputs.candidate_artifact_id }}
-          ARTIFACT_NAME: ${{ format('openclaw-cross-os-release-checks-candidate-{0}-{1}', needs.prepare.outputs.candidate_artifact_run_id, needs.prepare.outputs.candidate_artifact_run_attempt) }}
+          ARTIFACT_NAME: ${{ format('grokbot-cross-os-release-checks-candidate-{0}-{1}', needs.prepare.outputs.candidate_artifact_run_id, needs.prepare.outputs.candidate_artifact_run_attempt) }}
           ARTIFACT_RUN_ATTEMPT: ${{ needs.prepare.outputs.candidate_artifact_run_attempt }}
           ARTIFACT_RUN_ID: ${{ needs.prepare.outputs.candidate_artifact_run_id }}
           BASELINE_ARTIFACT_DIGEST: ${{ needs.prepare.outputs.baseline_artifact_digest }}
           BASELINE_ARTIFACT_ID: ${{ needs.prepare.outputs.baseline_artifact_id }}
-          BASELINE_ARTIFACT_NAME: ${{ format('openclaw-cross-os-release-checks-baseline-{0}-{1}', needs.prepare.outputs.baseline_artifact_run_id, needs.prepare.outputs.baseline_artifact_run_attempt) }}
+          BASELINE_ARTIFACT_NAME: ${{ format('grokbot-cross-os-release-checks-baseline-{0}-{1}', needs.prepare.outputs.baseline_artifact_run_id, needs.prepare.outputs.baseline_artifact_run_attempt) }}
           BASELINE_ARTIFACT_RUN_ATTEMPT: ${{ needs.prepare.outputs.baseline_artifact_run_attempt }}
           BASELINE_ARTIFACT_RUN_ID: ${{ needs.prepare.outputs.baseline_artifact_run_id }}
           BASELINE_SHA256: ${{ needs.prepare.outputs.baseline_sha256 }}
@@ -855,7 +855,7 @@ jobs:
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
         with:
           artifact-ids: ${{ needs.prepare.outputs.candidate_artifact_id }}
-          path: ${{ runner.temp }}/openclaw-cross-os-release-checks/candidate
+          path: ${{ runner.temp }}/grokbot-cross-os-release-checks/candidate
           run-id: ${{ needs.prepare.outputs.candidate_artifact_run_id }}
           github-token: ${{ github.token }}
 
@@ -864,7 +864,7 @@ jobs:
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
         with:
           artifact-ids: ${{ needs.prepare.outputs.candidate_artifact_id }}
-          path: ${{ runner.temp }}/openclaw-cross-os-release-checks/candidate
+          path: ${{ runner.temp }}/grokbot-cross-os-release-checks/candidate
           run-id: ${{ needs.prepare.outputs.candidate_artifact_run_id }}
           github-token: ${{ github.token }}
 
@@ -875,7 +875,7 @@ jobs:
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
         with:
           artifact-ids: ${{ needs.prepare.outputs.baseline_artifact_id }}
-          path: ${{ runner.temp }}/openclaw-cross-os-release-checks/baseline
+          path: ${{ runner.temp }}/grokbot-cross-os-release-checks/baseline
           run-id: ${{ needs.prepare.outputs.baseline_artifact_run_id }}
           github-token: ${{ github.token }}
 
@@ -884,18 +884,18 @@ jobs:
         uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
         with:
           artifact-ids: ${{ needs.prepare.outputs.baseline_artifact_id }}
-          path: ${{ runner.temp }}/openclaw-cross-os-release-checks/baseline
+          path: ${{ runner.temp }}/grokbot-cross-os-release-checks/baseline
           run-id: ${{ needs.prepare.outputs.baseline_artifact_run_id }}
           github-token: ${{ github.token }}
 
       - name: Verify release-check inputs
         shell: bash
         env:
-          CANDIDATE_TGZ: ${{ runner.temp }}/openclaw-cross-os-release-checks/candidate/${{ needs.prepare.outputs.candidate_file_name }}
+          CANDIDATE_TGZ: ${{ runner.temp }}/grokbot-cross-os-release-checks/candidate/${{ needs.prepare.outputs.candidate_file_name }}
           EXPECTED_CANDIDATE_SHA256: ${{ needs.prepare.outputs.candidate_sha256 }}
-          BASELINE_TGZ: ${{ runner.temp }}/openclaw-cross-os-release-checks/baseline/${{ needs.prepare.outputs.baseline_file_name }}
+          BASELINE_TGZ: ${{ runner.temp }}/grokbot-cross-os-release-checks/baseline/${{ needs.prepare.outputs.baseline_file_name }}
           EXPECTED_BASELINE_SHA256: ${{ needs.prepare.outputs.baseline_sha256 }}
-          OUTPUT_DIR: ${{ runner.temp }}/openclaw-cross-os-release-checks/${{ matrix.artifact_name }}-${{ matrix.suite }}
+          OUTPUT_DIR: ${{ runner.temp }}/grokbot-cross-os-release-checks/${{ matrix.artifact_name }}-${{ matrix.suite }}
           SUITE: ${{ matrix.suite }}
         run: |
           mkdir -p "${OUTPUT_DIR}"
@@ -949,23 +949,23 @@ jobs:
           OPENCLAW_DISCORD_SMOKE_CHANNEL_ID: ${{ secrets.OPENCLAW_DISCORD_SMOKE_CHANNEL_ID }}
           OPENCLAW_RELEASE_CHECK_OS: ${{ matrix.os_id }}
           OPENCLAW_RELEASE_CHECK_RUNNER: ${{ matrix.runner }}
-          CANDIDATE_TGZ: ${{ runner.temp }}/openclaw-cross-os-release-checks/candidate/${{ needs.prepare.outputs.candidate_file_name }}
+          CANDIDATE_TGZ: ${{ runner.temp }}/grokbot-cross-os-release-checks/candidate/${{ needs.prepare.outputs.candidate_file_name }}
           CANDIDATE_VERSION: ${{ needs.prepare.outputs.candidate_version }}
           SOURCE_SHA: ${{ needs.prepare.outputs.source_sha }}
           BASELINE_SPEC: ${{ needs.prepare.outputs.baseline_spec }}
           PREVIOUS_VERSION: ${{ inputs.previous_version }}
-          BASELINE_TGZ: ${{ runner.temp }}/openclaw-cross-os-release-checks/baseline/${{ needs.prepare.outputs.baseline_file_name }}
+          BASELINE_TGZ: ${{ runner.temp }}/grokbot-cross-os-release-checks/baseline/${{ needs.prepare.outputs.baseline_file_name }}
           PROVIDER: ${{ inputs.provider }}
           MODE: ${{ matrix.lane }}
           SUITE: ${{ matrix.suite }}
           REF: ${{ inputs.ref }}
-          OUTPUT_DIR: ${{ runner.temp }}/openclaw-cross-os-release-checks/${{ matrix.artifact_name }}-${{ matrix.suite }}
+          OUTPUT_DIR: ${{ runner.temp }}/grokbot-cross-os-release-checks/${{ matrix.artifact_name }}-${{ matrix.suite }}
         run: |
           DISCORD_ARGS=()
           if [[ -n "${OPENCLAW_DISCORD_SMOKE_BOT_TOKEN}" ]] && [[ -n "${OPENCLAW_DISCORD_SMOKE_GUILD_ID}" ]] && [[ -n "${OPENCLAW_DISCORD_SMOKE_CHANNEL_ID}" ]]; then
             DISCORD_ARGS+=(--run-discord-roundtrip true)
           fi
-          bash workflow/scripts/github/run-openclaw-cross-os-release-checks.sh \
+          bash workflow/scripts/github/run-grokbot-cross-os-release-checks.sh \
             --candidate-tgz "${CANDIDATE_TGZ}" \
             --candidate-version "${CANDIDATE_VERSION}" \
             --source-sha "${SOURCE_SHA}" \
@@ -983,7 +983,7 @@ jobs:
         if: always()
         shell: bash
         env:
-          SUMMARY_PATH: ${{ runner.temp }}/openclaw-cross-os-release-checks/${{ matrix.artifact_name }}-${{ matrix.suite }}/summary.md
+          SUMMARY_PATH: ${{ runner.temp }}/grokbot-cross-os-release-checks/${{ matrix.artifact_name }}-${{ matrix.suite }}/summary.md
         run: |
           if [[ -f "${SUMMARY_PATH}" ]]; then
             cat "${SUMMARY_PATH}" >> "$GITHUB_STEP_SUMMARY"
@@ -996,6 +996,6 @@ jobs:
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
         with:
-          name: openclaw-cross-os-release-checks-${{ matrix.artifact_name }}-${{ matrix.suite }}-${{ github.run_id }}
-          path: ${{ runner.temp }}/openclaw-cross-os-release-checks/${{ matrix.artifact_name }}-${{ matrix.suite }}
+          name: grokbot-cross-os-release-checks-${{ matrix.artifact_name }}-${{ matrix.suite }}-${{ github.run_id }}
+          path: ${{ runner.temp }}/grokbot-cross-os-release-checks/${{ matrix.artifact_name }}-${{ matrix.suite }}
           if-no-files-found: error

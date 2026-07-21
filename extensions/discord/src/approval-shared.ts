@@ -1,13 +1,13 @@
 // Discord plugin module implements approval shared behavior.
-import { doesApprovalRequestMatchChannelAccount } from "openclaw/plugin-sdk/approval-native-runtime";
+import { doesApprovalRequestMatchChannelAccount } from "grokbot/plugin-sdk/approval-native-runtime";
 import type {
   ExecApprovalRequest,
   PluginApprovalRequest,
-} from "openclaw/plugin-sdk/approval-runtime";
+} from "grokbot/plugin-sdk/approval-runtime";
 import type {
   DiscordExecApprovalConfig,
   OpenClawConfig,
-} from "openclaw/plugin-sdk/config-contracts";
+} from "grokbot/plugin-sdk/config-contracts";
 import { resolveDiscordAccount } from "./accounts.js";
 import {
   isChannelExecApprovalClientEnabledFromConfig,

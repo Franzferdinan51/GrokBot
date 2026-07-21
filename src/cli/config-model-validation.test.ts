@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { checkTouchedTextModelRefs } from "./config-model-validation.js";
 
 type ResolverInput = {
@@ -30,7 +30,7 @@ describe("config model validation", () => {
       refsChecked: 1,
       refsTotal: 1,
       errors: [
-        'Cannot set model reference "missing/nope" at agents.defaults.model.primary: Unknown model: missing/nope. Run openclaw models list to list available models.',
+        'Cannot set model reference "missing/nope" at agents.defaults.model.primary: Unknown model: missing/nope. Run grokbot models list to list available models.',
       ],
     });
   });

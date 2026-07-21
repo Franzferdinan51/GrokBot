@@ -187,9 +187,9 @@ const BLOCKED_WORKSPACE_DOTENV_PREFIXES = [
   // Workspace .env must not steer gcloud subprocess interpreters or args.
   "CLOUDSDK_",
   "OPENAI_API_KEY_",
-  // Workspace .env is untrusted; reserve the full OpenClaw runtime namespace
-  // for shell/global config so new OPENCLAW_* controls are fail-closed by default.
-  "OPENCLAW_",
+  // Workspace .env is untrusted; reserve the full GrokBot runtime namespace
+  // for shell/global config so new GROKBOT_* controls are fail-closed by default.
+  "GROKBOT_",
   "OPENCLAW_CLAWHUB_",
   "OPENCLAW_DISABLE_",
   "OPENCLAW_SKIP_",
@@ -258,7 +258,7 @@ export function loadDotEnv(opts?: { quiet?: boolean }) {
     loadWorkspaceDotEnvFile(path.join(cwd, ".env"), { quiet });
   }
 
-  // Then load global fallback: ~/.openclaw/.env (or OPENCLAW_STATE_DIR/.env),
+  // Then load global fallback: ~/.grokbot/.env (or OPENCLAW_STATE_DIR/.env),
   // without overriding any env vars already present.
   loadGlobalRuntimeDotEnvFiles({ quiet });
 }

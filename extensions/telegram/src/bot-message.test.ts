@@ -1,5 +1,5 @@
 // Telegram tests cover bot message plugin behavior.
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import type { TelegramBotDeps } from "./bot-deps.js";
 import type { TelegramMessageProcessingResult } from "./bot-processing-outcome.js";
@@ -18,7 +18,7 @@ function requireInvocationOrder(mock: { invocationCallOrder: number[] }, context
   return expectDefined(mock.invocationCallOrder[0], context);
 }
 
-vi.mock("openclaw/plugin-sdk/runtime-env", () => ({
+vi.mock("grokbot/plugin-sdk/runtime-env", () => ({
   createSubsystemLogger: () => ({
     child: () => ({
       info: telegramInboundInfo,

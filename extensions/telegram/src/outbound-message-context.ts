@@ -1,8 +1,8 @@
 // Telegram plugin module implements outbound message context behavior.
 import type { Message } from "grammy/types";
-import type { OpenClawConfig } from "openclaw/plugin-sdk/config-contracts";
-import { logVerbose } from "openclaw/plugin-sdk/runtime-env";
-import { resolveStorePath } from "openclaw/plugin-sdk/session-store-runtime";
+import type { OpenClawConfig } from "grokbot/plugin-sdk/config-contracts";
+import { logVerbose } from "grokbot/plugin-sdk/runtime-env";
+import { resolveStorePath } from "grokbot/plugin-sdk/session-store-runtime";
 import { buildTelegramSelfSenderName } from "./group-history-window.js";
 import { createTelegramMessageCache, resolveTelegramMessageCacheScope } from "./message-cache.js";
 import type { TelegramPromptContextProjection } from "./prompt-context-projection.js";

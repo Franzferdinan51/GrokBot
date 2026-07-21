@@ -48,7 +48,7 @@ async function buildGitHubSkillZip(): Promise<Buffer> {
   return await zip.generateAsync({ type: "nodebuffer" });
 }
 
-describe("openclaw skills install ClawHub GitHub-backed E2E", () => {
+describe("grokbot skills install ClawHub GitHub-backed E2E", () => {
   it("installs from the install resolver and reports install telemetry", async () => {
     const commit = "c".repeat(40);
     const telemetryBodies: unknown[] = [];
@@ -106,7 +106,7 @@ describe("openclaw skills install ClawHub GitHub-backed E2E", () => {
     });
 
     const registry = `http://127.0.0.1:${(server.address() as AddressInfo).port}`;
-    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-clawhub-cli-e2e-"));
+    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-clawhub-cli-e2e-"));
     try {
       const result = await spawnOpenClaw(
         ["skills", "install", "@demo-owner/aiq-deploy", "--global"],
@@ -115,7 +115,7 @@ describe("openclaw skills install ClawHub GitHub-backed E2E", () => {
           env: {
             ...process.env,
             OPENCLAW_STATE_DIR: stateDir,
-            OPENCLAW_CONFIG_PATH: path.join(stateDir, "openclaw.json"),
+            OPENCLAW_CONFIG_PATH: path.join(stateDir, "grokbot.json"),
             OPENCLAW_CLAWHUB_URL: registry,
             CLAWHUB_TOKEN: "test-token",
             CLAWHUB_GITHUB_CODELOAD_BASE_URL: registry,

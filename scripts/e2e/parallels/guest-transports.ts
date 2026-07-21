@@ -1,4 +1,4 @@
-// Guest Transports script supports OpenClaw repository automation.
+// Guest Transports script supports GrokBot repository automation.
 import { randomUUID } from "node:crypto";
 import { sleep } from "../../lib/sleep.mjs";
 import { run } from "./host-command.ts";
@@ -26,7 +26,7 @@ interface WindowsBackgroundPowerShellOptions {
 }
 
 function guestScriptName(extension: string): string {
-  return `openclaw-parallels-${randomUUID()}.${extension}`;
+  return `grokbot-parallels-${randomUUID()}.${extension}`;
 }
 
 function appendOutput(
@@ -110,13 +110,13 @@ export async function runWindowsBackgroundPowerShell(
   const runCommand = options.runCommand ?? run;
   const safeLabel = options.label.replaceAll(/[^A-Za-z0-9_-]/g, "-");
   const nonce = `${safeLabel}-${randomUUID()}`;
-  const guestRunDir = `openclaw-parallels\\${nonce}`;
+  const guestRunDir = `grokbot-parallels\\${nonce}`;
   const windowsDonePath = `%WINDIR%\\Temp\\${guestRunDir}\\done`;
   const windowsLogPath = `%WINDIR%\\Temp\\${guestRunDir}\\run.log`;
   const backgroundExitPrefix = `__OPENCLAW_BACKGROUND_EXIT__:${nonce}:`;
   const backgroundDoneMarker = `__OPENCLAW_BACKGROUND_DONE__:${nonce}`;
   const deadline = Date.now() + options.timeoutMs;
-  const pathsScript = `$runDir = Join-Path (Join-Path $env:WINDIR 'Temp\\openclaw-parallels') ${psSingleQuote(nonce)}
+  const pathsScript = `$runDir = Join-Path (Join-Path $env:WINDIR 'Temp\\grokbot-parallels') ${psSingleQuote(nonce)}
 $scriptPath = Join-Path $runDir 'run.ps1'
 $logPath = Join-Path $runDir 'run.log'
 $donePath = Join-Path $runDir 'done'

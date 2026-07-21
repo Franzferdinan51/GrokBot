@@ -1,6 +1,6 @@
 // Collects daemon status from service files, config snapshots, ports, probes, and plugin drift.
 import fs from "node:fs/promises";
-import { uniqueStrings } from "@openclaw/normalization-core/string-normalization";
+import { uniqueStrings } from "@grokbot/normalization-core/string-normalization";
 import JSON5 from "json5";
 import {
   createConfigIO,
@@ -349,8 +349,8 @@ export type DaemonStatus = {
   /**
    * Plugin version drift report. Surfaces active official external plugins
    * whose installed version does not match the running gateway version, which
-   * can happen after `npm install -g openclaw@<v>` updates the gateway binary
-   * without a corresponding `openclaw plugins update`.
+   * can happen after `npm install -g grokbot@<v>` updates the gateway binary
+   * without a corresponding `grokbot plugins update`.
    */
   pluginVersionDrift?: PluginVersionDriftReport;
 };

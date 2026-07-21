@@ -2,7 +2,7 @@
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 import { testing as sessionMcpTesting } from "../../agents/agent-bundle-mcp-runtime.js";
 import { getOrCreateSessionMcpRuntime } from "../../agents/agent-bundle-mcp-tools.js";
@@ -228,7 +228,7 @@ let suiteRoot = "";
 let suiteCase = 0;
 
 beforeAll(async () => {
-  suiteRoot = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-session-suite-"));
+  suiteRoot = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-session-suite-"));
 });
 
 afterAll(async () => {
@@ -334,7 +334,7 @@ describe("resolveReplySessionPreprocessingState", () => {
   }
 
   it("returns the valid durable harness owner lock before preprocessing", async () => {
-    const storePath = await createStorePath("openclaw-media-preflight-valid-");
+    const storePath = await createStorePath("grokbot-media-preflight-valid-");
     await writeSessionStoreFast(storePath, {
       [sessionKey]: {
         sessionId: "native-media-session",
@@ -370,7 +370,7 @@ describe("resolveReplySessionPreprocessingState", () => {
       },
     ],
   ] as const)("rejects a reserved %s before preprocessing", async (_label, entry) => {
-    const storePath = await createStorePath(`openclaw-media-preflight-invalid-${_label}-`);
+    const storePath = await createStorePath(`grokbot-media-preflight-invalid-${_label}-`);
     await writeSessionStoreFast(storePath, entry ? { [sessionKey]: entry } : {});
 
     expect(() => resolvePreprocessingState(storePath)).toThrow();
@@ -584,7 +584,7 @@ afterEach(async () => {
 });
 describe("initSessionState guarded initialization", () => {
   it("rejects inbound work for an archived session", async () => {
-    const storePath = await createStorePath("openclaw-session-init-archived-");
+    const storePath = await createStorePath("grokbot-session-init-archived-");
     const sessionKey = "agent:main:telegram:chat:archived";
     await writeSessionStoreFast(storePath, {
       [sessionKey]: {
@@ -609,7 +609,7 @@ describe("initSessionState guarded initialization", () => {
   });
 
   it("serializes concurrent initializers before reading the guarded snapshot", async () => {
-    const storePath = await createStorePath("openclaw-session-init-race-");
+    const storePath = await createStorePath("grokbot-session-init-race-");
     const sessionKey = "agent:main:telegram:chat:42";
     await writeSessionStoreFast(storePath, {
       [sessionKey]: {
@@ -653,7 +653,7 @@ describe("initSessionState guarded initialization", () => {
 describe("initSessionState thread forking", () => {
   it("forks a new SQLite session from the parent session", async () => {
     const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
-    const root = await makeCaseDir("openclaw-thread-session-");
+    const root = await makeCaseDir("grokbot-thread-session-");
     const sessionsDir = path.join(root, "sessions");
     await fs.mkdir(sessionsDir);
 
@@ -737,7 +737,7 @@ describe("initSessionState thread forking", () => {
 
   it("forks from parent when thread session key already exists but was not forked yet", async () => {
     const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
-    const root = await makeCaseDir("openclaw-thread-session-existing-");
+    const root = await makeCaseDir("grokbot-thread-session-existing-");
     const sessionsDir = path.join(root, "sessions");
     await fs.mkdir(sessionsDir);
 
@@ -837,7 +837,7 @@ describe("initSessionState thread forking", () => {
   });
 
   it("skips fork and creates fresh session when parent tokens exceed threshold", async () => {
-    const root = await makeCaseDir("openclaw-thread-session-overflow-");
+    const root = await makeCaseDir("grokbot-thread-session-overflow-");
     const sessionsDir = path.join(root, "sessions");
     await fs.mkdir(sessionsDir);
 
@@ -908,7 +908,7 @@ describe("initSessionState thread forking", () => {
   });
 
   it("skips fork when resolved parent token estimate exceeds threshold", async () => {
-    const root = await makeCaseDir("openclaw-thread-session-overflow-estimated-");
+    const root = await makeCaseDir("grokbot-thread-session-overflow-estimated-");
     const sessionsDir = path.join(root, "sessions");
     await fs.mkdir(sessionsDir);
 
@@ -969,7 +969,7 @@ describe("initSessionState thread forking", () => {
   });
 
   it("records topic-specific SQLite session identity when MessageThreadId is present", async () => {
-    const root = await makeCaseDir("openclaw-topic-session-");
+    const root = await makeCaseDir("grokbot-topic-session-");
     const storePath = path.join(root, "sessions.json");
 
     const cfg = {
@@ -997,7 +997,7 @@ describe("initSessionState thread forking", () => {
   });
 
   it("records topic-specific SQLite session identity from SessionKey", async () => {
-    const root = await makeCaseDir("openclaw-topic-session-key-");
+    const root = await makeCaseDir("grokbot-topic-session-key-");
     const storePath = path.join(root, "sessions.json");
 
     const cfg = {
@@ -1031,7 +1031,7 @@ describe("initSessionState thread forking", () => {
 
 describe("initSessionState RawBody", () => {
   it("uses RawBody for command extraction and reset triggers when Body contains wrapped context", async () => {
-    const root = await makeCaseDir("openclaw-rawbody-");
+    const root = await makeCaseDir("grokbot-rawbody-");
     const storePath = path.join(root, "sessions.json");
     const cfg = { session: { store: storePath } } as OpenClawConfig;
 
@@ -1062,7 +1062,7 @@ describe("initSessionState RawBody", () => {
   });
 
   it("preserves argument casing while still matching reset triggers case-insensitively", async () => {
-    const root = await makeCaseDir("openclaw-rawbody-reset-case-");
+    const root = await makeCaseDir("grokbot-rawbody-reset-case-");
     const storePath = path.join(root, "sessions.json");
 
     const cfg = {
@@ -1090,7 +1090,7 @@ describe("initSessionState RawBody", () => {
   });
 
   it("drops cached skills snapshot when /new rotates an existing session", async () => {
-    const root = await makeCaseDir("openclaw-rawbody-reset-skills-");
+    const root = await makeCaseDir("grokbot-rawbody-reset-skills-");
     const storePath = path.join(root, "sessions.json");
     const sessionKey = "agent:main:signal:direct:uuid:reset-skills";
     const existingSessionId = "session-with-stale-skills";
@@ -1202,7 +1202,7 @@ describe("initSessionState RawBody", () => {
   });
 
   it("drains stale system events when /new rotates an existing session", async () => {
-    const root = await makeCaseDir("openclaw-rawbody-reset-system-events-");
+    const root = await makeCaseDir("grokbot-rawbody-reset-system-events-");
     const storePath = path.join(root, "sessions.json");
     const sessionKey = "agent:main:whatsapp:dm:system-events";
     const existingSessionId = "session-with-stale-events";
@@ -1254,7 +1254,7 @@ describe("initSessionState RawBody", () => {
     // rollover. Previously the carryover was gated on resetTriggered, so the
     // next non-/new turn dropped the override and reverted to the default
     // model despite the "Model set to ... for this session" ack.
-    const root = await makeCaseDir("openclaw-daily-rollover-model-");
+    const root = await makeCaseDir("grokbot-daily-rollover-model-");
     const storePath = path.join(root, "sessions.json");
     const sessionKey = "agent:main:discord:channel:daily-rollover";
     const existingSessionId = "session-before-daily-reset";
@@ -1315,7 +1315,7 @@ describe("initSessionState RawBody", () => {
     // resetTriggered while the implicit stale rollover runs with
     // resetTriggered === false. The model override on this same path was already
     // fixed (#90119); the behavior overrides must follow suit.
-    const root = await makeCaseDir("openclaw-daily-rollover-behavior-");
+    const root = await makeCaseDir("grokbot-daily-rollover-behavior-");
     const storePath = path.join(root, "sessions.json");
     const sessionKey = "agent:main:discord:channel:daily-rollover-behavior";
     const existingSessionId = "session-before-daily-reset-behavior";
@@ -1386,7 +1386,7 @@ describe("initSessionState RawBody", () => {
   });
 
   it("preserves usage footer mode across daily rollover", async () => {
-    const root = await makeCaseDir("openclaw-daily-rollover-usage-");
+    const root = await makeCaseDir("grokbot-daily-rollover-usage-");
     const storePath = path.join(root, "sessions.json");
     const sessionKey = "agent:main:discord:channel:daily-rollover-usage";
     const existingSessionId = "session-before-daily-reset-usage";
@@ -1420,7 +1420,7 @@ describe("initSessionState RawBody", () => {
   });
 
   it("preserves user labels across dashboard session stale rollover (#101451)", async () => {
-    const root = await makeCaseDir("openclaw-dashboard-rollover-label-");
+    const root = await makeCaseDir("grokbot-dashboard-rollover-label-");
     const storePath = path.join(root, "sessions.json");
     const sessionKey = "agent:main:dashboard:8c0b2b68-05e1-4b25-a8c2-ef6f43a01f77";
     const existingSessionId = "dashboard-session-before-rollover";
@@ -1466,7 +1466,7 @@ describe("initSessionState RawBody", () => {
   it("clears an auto-fallback model override on an implicit daily stale rollover (#90119)", async () => {
     // Counterpart: auto-created fallback overrides must still be cleared on a
     // daily rollover so stale sessions return to the configured default.
-    const root = await makeCaseDir("openclaw-daily-rollover-fallback-");
+    const root = await makeCaseDir("grokbot-daily-rollover-fallback-");
     const storePath = path.join(root, "sessions.json");
     const sessionKey = "agent:main:discord:channel:daily-rollover-fallback";
     const existingSessionId = "session-before-daily-reset-fallback";
@@ -1514,7 +1514,7 @@ describe("initSessionState RawBody", () => {
     // auto-fallback model override is dropped back to the configured default.
     // The two travel separate paths (direct carry vs resolveResetPreservedSelection),
     // so they must not interfere.
-    const root = await makeCaseDir("openclaw-daily-rollover-mixed-");
+    const root = await makeCaseDir("grokbot-daily-rollover-mixed-");
     const storePath = path.join(root, "sessions.json");
     const sessionKey = "agent:main:discord:channel:daily-rollover-mixed";
     const existingSessionId = "session-before-daily-reset-mixed";
@@ -1561,7 +1561,7 @@ describe("initSessionState RawBody", () => {
   });
 
   it("rotates local session state for /new on bound ACP sessions", async () => {
-    const root = await makeCaseDir("openclaw-rawbody-acp-reset-");
+    const root = await makeCaseDir("grokbot-rawbody-acp-reset-");
     const storePath = path.join(root, "sessions.json");
     const sessionKey = "agent:codex:acp:binding:discord:default:feedface";
     const existingSessionId = "session-existing";
@@ -1617,7 +1617,7 @@ describe("initSessionState RawBody", () => {
   });
 
   it("rotates local session state for ACP /new when no matching conversation binding exists", async () => {
-    const root = await makeCaseDir("openclaw-rawbody-acp-reset-no-conversation-");
+    const root = await makeCaseDir("grokbot-rawbody-acp-reset-no-conversation-");
     const storePath = path.join(root, "sessions.json");
     const sessionKey = "agent:codex:acp:binding:discord:default:feedface";
     const existingSessionId = "session-existing";
@@ -1662,7 +1662,7 @@ describe("initSessionState RawBody", () => {
   });
 
   it("keeps custom reset triggers working on bound ACP sessions", async () => {
-    const root = await makeCaseDir("openclaw-rawbody-acp-custom-reset-");
+    const root = await makeCaseDir("grokbot-rawbody-acp-custom-reset-");
     const storePath = path.join(root, "sessions.json");
     const sessionKey = "agent:codex:acp:binding:discord:default:feedface";
     const existingSessionId = "session-existing";
@@ -1721,7 +1721,7 @@ describe("initSessionState RawBody", () => {
   });
 
   it("keeps normal /new behavior for unbound ACP-shaped session keys", async () => {
-    const root = await makeCaseDir("openclaw-rawbody-acp-unbound-reset-");
+    const root = await makeCaseDir("grokbot-rawbody-acp-unbound-reset-");
     const storePath = path.join(root, "sessions.json");
     const sessionKey = "agent:codex:acp:binding:discord:default:feedface";
     const existingSessionId = "session-existing";
@@ -1765,7 +1765,7 @@ describe("initSessionState RawBody", () => {
   });
 
   it("does not suppress /new when active conversation binding points to a non-ACP session", async () => {
-    const root = await makeCaseDir("openclaw-rawbody-acp-nonacp-binding-");
+    const root = await makeCaseDir("grokbot-rawbody-acp-nonacp-binding-");
     const storePath = path.join(root, "sessions.json");
     const sessionKey = "agent:codex:acp:binding:discord:default:feedface";
     const existingSessionId = "session-existing";
@@ -1851,7 +1851,7 @@ describe("initSessionState RawBody", () => {
   });
 
   it("does not suppress /new when active target session key is non-ACP even with configured ACP binding", async () => {
-    const root = await makeCaseDir("openclaw-rawbody-acp-configured-fallback-target-");
+    const root = await makeCaseDir("grokbot-rawbody-acp-configured-fallback-target-");
     const storePath = path.join(root, "sessions.json");
     const channelId = "1478836151241412759";
     const fallbackSessionKey = "agent:main:discord:channel:focus-target";
@@ -1955,8 +1955,8 @@ describe("initSessionState RawBody", () => {
   });
 
   it("uses the default per-agent sessions store when config store is unset", async () => {
-    const root = await makeCaseDir("openclaw-session-store-default-");
-    const stateDir = path.join(root, ".openclaw");
+    const root = await makeCaseDir("grokbot-session-store-default-");
+    const stateDir = path.join(root, ".grokbot");
     const agentId = "worker1";
     const sessionKey = `agent:${agentId}:telegram:12345`;
     const sessionId = "sess-worker-1";
@@ -2056,7 +2056,7 @@ describe("initSessionState RawBody", () => {
       channel: conversation.channel as "slack" | "signal" | "googlechat",
       accountId: "default",
     });
-    const storePath = await createStorePath("openclaw-generic-current-binding-");
+    const storePath = await createStorePath("grokbot-generic-current-binding-");
     const boundSessionKey = `agent:codex:acp:binding:${conversation.channel}:default:test`;
 
     await getSessionBindingService().bind({
@@ -2099,7 +2099,7 @@ describe("initSessionState reset policy", () => {
 
   it("keeps the current session across the former daily boundary by default", async () => {
     vi.setSystemTime(new Date(2026, 0, 18, 5, 0, 0));
-    const root = await makeCaseDir("openclaw-reset-daily-");
+    const root = await makeCaseDir("grokbot-reset-daily-");
     const storePath = path.join(root, "sessions.json");
     const sessionKey = "agent:main:whatsapp:dm:s1";
     const existingSessionId = "daily-session-id";
@@ -2127,7 +2127,7 @@ describe("initSessionState reset policy", () => {
 
   it("treats sessions as stale before the daily reset when updated before yesterday's boundary", async () => {
     vi.setSystemTime(new Date(2026, 0, 18, 3, 0, 0));
-    const root = await makeCaseDir("openclaw-reset-daily-edge-");
+    const root = await makeCaseDir("grokbot-reset-daily-edge-");
     const storePath = path.join(root, "sessions.json");
     const sessionKey = "agent:main:whatsapp:dm:s-edge";
     const existingSessionId = "daily-edge-session";
@@ -2154,7 +2154,7 @@ describe("initSessionState reset policy", () => {
 
   it("expires sessions when idle timeout wins over daily reset", async () => {
     vi.setSystemTime(new Date(2026, 0, 18, 5, 30, 0));
-    const root = await makeCaseDir("openclaw-reset-idle-");
+    const root = await makeCaseDir("grokbot-reset-idle-");
     const storePath = path.join(root, "sessions.json");
     const sessionKey = "agent:main:whatsapp:dm:s2";
     const existingSessionId = "idle-session-id";
@@ -2184,7 +2184,7 @@ describe("initSessionState reset policy", () => {
 
   it("preserves idle rollover when an ordinary send asserts the current session id", async () => {
     vi.setSystemTime(new Date(2026, 0, 18, 5, 30, 0));
-    const root = await makeCaseDir("openclaw-reset-idle-requested-session-ordinary-");
+    const root = await makeCaseDir("grokbot-reset-idle-requested-session-ordinary-");
     const storePath = path.join(root, "sessions.json");
     const sessionKey = "agent:main:main";
     const existingSessionId = "webchat-ordinary-session-id";
@@ -2215,7 +2215,7 @@ describe("initSessionState reset policy", () => {
 
   it("pins a durably admitted session across an idle reset boundary", async () => {
     vi.setSystemTime(new Date(2026, 0, 18, 5, 30, 0));
-    const root = await makeCaseDir("openclaw-reset-idle-pinned-admission-");
+    const root = await makeCaseDir("grokbot-reset-idle-pinned-admission-");
     const storePath = path.join(root, "sessions.json");
     const sessionKey = "agent:main:main";
     const existingSessionId = "durably-admitted-session-id";
@@ -2246,7 +2246,7 @@ describe("initSessionState reset policy", () => {
 
   it("reuses an idle-expired session when a reconnecting client requests current session resume", async () => {
     vi.setSystemTime(new Date(2026, 0, 18, 5, 30, 0));
-    const root = await makeCaseDir("openclaw-reset-idle-requested-session-");
+    const root = await makeCaseDir("grokbot-reset-idle-requested-session-");
     const storePath = path.join(root, "sessions.json");
     const sessionKey = "agent:main:main";
     const existingSessionId = "webchat-reconnect-session-id";
@@ -2278,7 +2278,7 @@ describe("initSessionState reset policy", () => {
 
   it("does not reuse an idle-expired session for a stale asserted session id", async () => {
     vi.setSystemTime(new Date(2026, 0, 18, 5, 30, 0));
-    const root = await makeCaseDir("openclaw-reset-idle-stale-requested-session-");
+    const root = await makeCaseDir("grokbot-reset-idle-stale-requested-session-");
     const storePath = path.join(root, "sessions.json");
     const sessionKey = "agent:main:main";
     const existingSessionId = "webchat-current-session-id";
@@ -2310,7 +2310,7 @@ describe("initSessionState reset policy", () => {
 
   it("drains stale system events when idle rollover creates a new session", async () => {
     vi.setSystemTime(new Date(2026, 0, 18, 5, 30, 0));
-    const root = await makeCaseDir("openclaw-reset-idle-system-events-");
+    const root = await makeCaseDir("grokbot-reset-idle-system-events-");
     const storePath = path.join(root, "sessions.json");
     const sessionKey = "agent:main:whatsapp:dm:idle-system-events";
     const existingSessionId = "idle-system-events-session";
@@ -2354,7 +2354,7 @@ describe("initSessionState reset policy", () => {
 
   it("reuses completed run entries while the session is still fresh", async () => {
     vi.setSystemTime(new Date(2026, 0, 18, 5, 30, 0));
-    const root = await makeCaseDir("openclaw-reset-terminal-entry-");
+    const root = await makeCaseDir("grokbot-reset-terminal-entry-");
     const storePath = path.join(root, "sessions.json");
     const sessionKey = "agent:main:whatsapp:dm:terminal-entry";
     const existingSessionId = "terminal-entry-old";
@@ -2442,7 +2442,7 @@ describe("initSessionState reset policy", () => {
     },
   ])("$name", async (scenario) => {
     vi.setSystemTime(new Date(2026, 0, 18, 5, 30, 0));
-    const root = await makeCaseDir("openclaw-reset-terminal-entry-");
+    const root = await makeCaseDir("grokbot-reset-terminal-entry-");
     const storePath = path.join(root, "sessions.json");
     const existingSessionId = "terminal-entry-old";
     const now = Date.now();
@@ -2493,7 +2493,7 @@ describe("initSessionState reset policy", () => {
 
   it("recovers failed group sessions without rotating the transcript", async () => {
     vi.setSystemTime(new Date(2026, 0, 18, 5, 30, 0));
-    const root = await makeCaseDir("openclaw-reset-failed-entry-");
+    const root = await makeCaseDir("grokbot-reset-failed-entry-");
     const storePath = path.join(root, "sessions.json");
     const sessionKey = "agent:main:telegram:group:-1001";
     const existingSessionId = "failed-entry-old";
@@ -2513,13 +2513,13 @@ describe("initSessionState reset policy", () => {
     const cfg = { session: { store: storePath } } as OpenClawConfig;
     const result = await initSessionState({
       ctx: {
-        Body: "@openclaw hello",
-        RawBody: "@openclaw hello",
-        CommandBody: "@openclaw hello",
+        Body: "@grokbot hello",
+        RawBody: "@grokbot hello",
+        CommandBody: "@grokbot hello",
         SessionKey: sessionKey,
         ChatType: "group",
         Provider: "telegram",
-        BotUsername: "openclaw",
+        BotUsername: "grokbot",
       },
       cfg,
       commandAuthorized: true,
@@ -2541,7 +2541,7 @@ describe("initSessionState reset policy", () => {
 
   it("keeps the existing stale session for /reset soft", async () => {
     vi.setSystemTime(new Date(2026, 0, 18, 5, 30, 0));
-    const root = await makeCaseDir("openclaw-reset-soft-stale-");
+    const root = await makeCaseDir("grokbot-reset-soft-stale-");
     const storePath = path.join(root, "sessions.json");
     const sessionKey = "agent:main:whatsapp:dm:soft-stale";
     const existingSessionId = "soft-stale-session-id";
@@ -2581,7 +2581,7 @@ describe("initSessionState reset policy", () => {
 
   it("keeps the existing stale session for /reset: soft", async () => {
     vi.setSystemTime(new Date(2026, 0, 18, 5, 30, 0));
-    const root = await makeCaseDir("openclaw-reset-soft-colon-stale-");
+    const root = await makeCaseDir("grokbot-reset-soft-colon-stale-");
     const storePath = path.join(root, "sessions.json");
     const sessionKey = "agent:main:whatsapp:dm:soft-colon-stale";
     const existingSessionId = "soft-colon-stale-session-id";
@@ -2621,7 +2621,7 @@ describe("initSessionState reset policy", () => {
 
   it("keeps the existing stale session for multiline /reset soft tails", async () => {
     vi.setSystemTime(new Date(2026, 0, 18, 5, 30, 0));
-    const root = await makeCaseDir("openclaw-reset-soft-multiline-stale-");
+    const root = await makeCaseDir("grokbot-reset-soft-multiline-stale-");
     const storePath = path.join(root, "sessions.json");
     const sessionKey = "agent:main:whatsapp:dm:soft-multiline-stale";
     const existingSessionId = "soft-multiline-stale-session-id";
@@ -2660,7 +2660,7 @@ describe("initSessionState reset policy", () => {
   });
 
   it("keeps multiline slash skill payloads on the current session", async () => {
-    const root = await makeCaseDir("openclaw-skill-multiline-session-");
+    const root = await makeCaseDir("grokbot-skill-multiline-session-");
     const storePath = path.join(root, "sessions.json");
     const sessionKey = "agent:main:whatsapp:dm:skill-multiline";
     const existingSessionId = "skill-multiline-session-id";
@@ -2692,7 +2692,7 @@ describe("initSessionState reset policy", () => {
 
   it("does not preserve a stale session for unauthorized /reset soft", async () => {
     vi.setSystemTime(new Date(2026, 0, 18, 5, 30, 0));
-    const root = await makeCaseDir("openclaw-reset-soft-stale-unauthorized-");
+    const root = await makeCaseDir("grokbot-reset-soft-stale-unauthorized-");
     const storePath = path.join(root, "sessions.json");
     const sessionKey = "agent:main:whatsapp:dm:soft-stale-unauthorized";
     const existingSessionId = "soft-stale-unauthorized-session-id";
@@ -2734,7 +2734,7 @@ describe("initSessionState reset policy", () => {
 
   it("uses per-type overrides for thread sessions", async () => {
     vi.setSystemTime(new Date(2026, 0, 18, 5, 0, 0));
-    const root = await makeCaseDir("openclaw-reset-thread-");
+    const root = await makeCaseDir("grokbot-reset-thread-");
     const storePath = path.join(root, "sessions.json");
     const sessionKey = "agent:main:slack:channel:c1:thread:123";
     const existingSessionId = "thread-session-id";
@@ -2765,7 +2765,7 @@ describe("initSessionState reset policy", () => {
 
   it("detects thread sessions without thread key suffix", async () => {
     vi.setSystemTime(new Date(2026, 0, 18, 5, 0, 0));
-    const root = await makeCaseDir("openclaw-reset-thread-nosuffix-");
+    const root = await makeCaseDir("grokbot-reset-thread-nosuffix-");
     const storePath = path.join(root, "sessions.json");
     const sessionKey = "agent:main:discord:channel:c1";
     const existingSessionId = "thread-nosuffix";
@@ -2795,7 +2795,7 @@ describe("initSessionState reset policy", () => {
 
   it("keeps the no-reset default for types without an override", async () => {
     vi.setSystemTime(new Date(2026, 0, 18, 5, 0, 0));
-    const root = await makeCaseDir("openclaw-reset-type-default-");
+    const root = await makeCaseDir("grokbot-reset-type-default-");
     const storePath = path.join(root, "sessions.json");
     const sessionKey = "agent:main:whatsapp:dm:s4";
     const existingSessionId = "type-default-session";
@@ -2825,7 +2825,7 @@ describe("initSessionState reset policy", () => {
 
   it("keeps legacy idleMinutes behavior without reset config", async () => {
     vi.setSystemTime(new Date(2026, 0, 18, 5, 0, 0));
-    const root = await makeCaseDir("openclaw-reset-legacy-");
+    const root = await makeCaseDir("grokbot-reset-legacy-");
     const storePath = path.join(root, "sessions.json");
     const sessionKey = "agent:main:whatsapp:dm:s3";
     const existingSessionId = "legacy-session-id";
@@ -2861,7 +2861,7 @@ describe("initSessionState reset policy", () => {
 describe("initSessionState browser tab cleanup", () => {
   it("closes tracked browser tabs when idle session expires", async () => {
     vi.setSystemTime(new Date(2026, 0, 18, 5, 30, 0));
-    const storePath = await createStorePath("openclaw-tab-cleanup-idle-");
+    const storePath = await createStorePath("grokbot-tab-cleanup-idle-");
     const sessionKey = "agent:main:whatsapp:dm:tab-idle";
     const existingSessionId = "tab-idle-session-id";
 
@@ -2894,7 +2894,7 @@ describe("initSessionState browser tab cleanup", () => {
 
   it("skips browser tab cleanup when root browser support is disabled", async () => {
     vi.setSystemTime(new Date(2026, 0, 18, 5, 30, 0));
-    const storePath = await createStorePath("openclaw-tab-cleanup-browser-disabled-");
+    const storePath = await createStorePath("grokbot-tab-cleanup-browser-disabled-");
     const sessionKey = "agent:main:webchat:dm:tab-disabled";
     const existingSessionId = "tab-disabled-session-id";
 
@@ -2924,7 +2924,7 @@ describe("initSessionState browser tab cleanup", () => {
 
   it("skips browser tab cleanup when the browser plugin entry is disabled", async () => {
     vi.setSystemTime(new Date(2026, 0, 18, 5, 30, 0));
-    const storePath = await createStorePath("openclaw-tab-cleanup-browser-plugin-disabled-");
+    const storePath = await createStorePath("grokbot-tab-cleanup-browser-plugin-disabled-");
     const sessionKey = "agent:main:webchat:dm:tab-plugin-disabled";
     const existingSessionId = "tab-plugin-disabled-session-id";
 
@@ -2953,7 +2953,7 @@ describe("initSessionState browser tab cleanup", () => {
   });
 
   it("closes tracked browser tabs on explicit /new reset", async () => {
-    const storePath = await createStorePath("openclaw-tab-cleanup-reset-");
+    const storePath = await createStorePath("grokbot-tab-cleanup-reset-");
     const sessionKey = "agent:main:telegram:dm:tab-reset";
     const existingSessionId = "tab-reset-session-id";
 
@@ -2987,7 +2987,7 @@ describe("initSessionState browser tab cleanup", () => {
   });
 
   it("does not close browser tabs for a fresh session without previous state", async () => {
-    const storePath = await createStorePath("openclaw-tab-cleanup-fresh-");
+    const storePath = await createStorePath("grokbot-tab-cleanup-fresh-");
     const sessionKey = "agent:main:telegram:dm:tab-fresh";
 
     const cfg = {
@@ -3007,7 +3007,7 @@ describe("initSessionState browser tab cleanup", () => {
   });
 
   it("includes the peer-scoped runtime key for direct-message cleanup", async () => {
-    const storePath = await createStorePath("openclaw-tab-cleanup-peer-key-");
+    const storePath = await createStorePath("grokbot-tab-cleanup-peer-key-");
     const canonicalKey = "agent:main:main";
     const existingSessionId = "tab-peer-key-session-id";
     await writeSessionStoreFast(storePath, {
@@ -3046,7 +3046,7 @@ describe("initSessionState browser tab cleanup", () => {
 
 describe("initSessionState channel reset overrides", () => {
   it("uses channel-specific reset policy when configured", async () => {
-    const root = await makeCaseDir("openclaw-channel-idle-");
+    const root = await makeCaseDir("grokbot-channel-idle-");
     const storePath = path.join(root, "sessions.json");
     const sessionKey = "agent:main:discord:dm:123";
     const sessionId = "session-override";
@@ -3112,7 +3112,7 @@ describe("initSessionState reset triggers in WhatsApp groups", () => {
   it("applies WhatsApp group reset authorization across sender variants", async () => {
     const sessionKey = "agent:main:whatsapp:group:120363406150318674@g.us";
     const existingSessionId = "existing-session-123";
-    const storePath = await createStorePath("openclaw-group-reset");
+    const storePath = await createStorePath("grokbot-group-reset");
     const cases = [
       {
         name: "authorized sender",
@@ -3178,7 +3178,7 @@ describe("initSessionState reset triggers in WhatsApp groups", () => {
   it("preserves scoped WhatsApp group activation state across stale rollover", async () => {
     const sessionKey =
       "agent:main:whatsapp:group:120363406150318674@g.us:thread:whatsapp-account-work";
-    const storePath = await createStorePath("openclaw-group-activation-backfill-");
+    const storePath = await createStorePath("grokbot-group-activation-backfill-");
     await writeSessionStoreFast(storePath, {
       [sessionKey]: {
         sessionId: "old-group-activation-session",
@@ -3239,7 +3239,7 @@ describe("initSessionState reset triggers in Slack channels", () => {
     const existingSessionId = "existing-session-123";
     const sessionKey = "agent:main:slack:channel:c2";
     const body = "<@U123> /new take notes";
-    const storePath = await createStorePath("openclaw-slack-channel-new-");
+    const storePath = await createStorePath("grokbot-slack-channel-new-");
     await seedSessionStore({
       storePath,
       sessionKey,
@@ -3293,7 +3293,7 @@ describe("initSessionState preserves behavior overrides across /new and /reset",
   }
 
   it("rejects explicit resets without replacing a model-locked session", async () => {
-    const storePath = await createStorePath("openclaw-reset-model-locked-");
+    const storePath = await createStorePath("grokbot-reset-model-locked-");
     const sessionKey = "agent:main:telegram:dm:model-locked";
     const existingSessionId = "existing-model-locked-session";
 
@@ -3343,7 +3343,7 @@ describe("initSessionState preserves behavior overrides across /new and /reset",
   });
 
   it("does not implicitly expire a model-locked session", async () => {
-    const storePath = await createStorePath("openclaw-expiry-model-locked-");
+    const storePath = await createStorePath("grokbot-expiry-model-locked-");
     const sessionKey = "agent:main:telegram:dm:model-locked-expiry";
     const existingSessionId = "existing-model-locked-expiry-session";
     await writeSessionStoreFast(storePath, {
@@ -3388,7 +3388,7 @@ describe("initSessionState preserves behavior overrides across /new and /reset",
   });
 
   it("preserves behavior overrides across /new and /reset", async () => {
-    const storePath = await createStorePath("openclaw-reset-overrides-");
+    const storePath = await createStorePath("grokbot-reset-overrides-");
     const sessionKey = "agent:main:telegram:dm:user-overrides";
     const existingSessionId = "existing-session-overrides";
     const overrides = {
@@ -3444,7 +3444,7 @@ describe("initSessionState preserves behavior overrides across /new and /reset",
   });
 
   it("preserves usage family metadata across /new and /reset", async () => {
-    const storePath = await createStorePath("openclaw-reset-usage-family-");
+    const storePath = await createStorePath("grokbot-reset-usage-family-");
     const sessionKey = "agent:main:telegram:dm:user-usage-family";
     const existingSessionId = "existing-session-usage-family";
     const cases = [
@@ -3510,7 +3510,7 @@ describe("initSessionState preserves behavior overrides across /new and /reset",
   });
 
   it("preserves selected auth profile overrides across /new and /reset", async () => {
-    const storePath = await createStorePath("openclaw-reset-model-auth-");
+    const storePath = await createStorePath("grokbot-reset-model-auth-");
     const sessionKey = "agent:main:telegram:dm:user-model-auth";
     const existingSessionId = "existing-session-model-auth";
     const overrides = {
@@ -3599,7 +3599,7 @@ describe("initSessionState preserves behavior overrides across /new and /reset",
   });
 
   it("clears auto-sourced model/provider/auth overrides on /new and /reset (#69301)", async () => {
-    const storePath = await createStorePath("openclaw-reset-auto-overrides-");
+    const storePath = await createStorePath("grokbot-reset-auto-overrides-");
     const sessionKey = "agent:main:telegram:direct:6761477233";
     const existingSessionId = "existing-session-auto-overrides";
     const autoOverrides = {
@@ -3659,7 +3659,7 @@ describe("initSessionState preserves behavior overrides across /new and /reset",
   });
 
   it("clears recovered auto fallback model overrides without modelOverrideSource on /new and /reset", async () => {
-    const storePath = await createStorePath("openclaw-reset-recovered-auto-fallback-");
+    const storePath = await createStorePath("grokbot-reset-recovered-auto-fallback-");
     const sessionKey = "agent:main:telegram:direct:6761477233";
     const existingSessionId = "existing-session-recovered-auto-fallback";
     const autoOverrides = {
@@ -3718,7 +3718,7 @@ describe("initSessionState preserves behavior overrides across /new and /reset",
   });
 
   it("clears recovered Codex fallback metadata for Discord channel sessions on /new", async () => {
-    const storePath = await createStorePath("openclaw-reset-discord-codex-fallback-");
+    const storePath = await createStorePath("grokbot-reset-discord-codex-fallback-");
     const sessionKey = "agent:main:discord:channel:1488013357016420522";
     const existingSessionId = "existing-discord-codex-fallback";
     await seedSessionStoreWithOverrides({
@@ -3776,7 +3776,7 @@ describe("initSessionState preserves behavior overrides across /new and /reset",
   });
 
   it("clears stale runtime model cache fields on /new and /reset (#77322)", async () => {
-    const storePath = await createStorePath("openclaw-reset-runtime-model-cache-");
+    const storePath = await createStorePath("grokbot-reset-runtime-model-cache-");
     const sessionKey = "agent:main:telegram:direct:runtime-model-cache";
     const existingSessionId = "existing-session-runtime-model-cache";
     const runtimeModelCache = {
@@ -3925,7 +3925,7 @@ describe("initSessionState preserves behavior overrides across /new and /reset",
   });
 
   it("preserves spawned session ownership metadata across /new and /reset", async () => {
-    const storePath = await createStorePath("openclaw-reset-spawned-metadata-");
+    const storePath = await createStorePath("grokbot-reset-spawned-metadata-");
     const sessionKey = "subagent:owned-child";
     const existingSessionId = "existing-session-owned-child";
     const overrides = {
@@ -3979,7 +3979,7 @@ describe("initSessionState preserves behavior overrides across /new and /reset",
   });
 
   it("requires operator.admin when Provider is internal even if Surface carries external metadata", async () => {
-    const storePath = await createStorePath("openclaw-internal-reset-provider-authoritative-");
+    const storePath = await createStorePath("grokbot-internal-reset-provider-authoritative-");
     const sessionKey = "agent:main:telegram:dm:provider-authoritative";
     const existingSessionId = "existing-session-provider-authoritative";
 
@@ -4016,7 +4016,7 @@ describe("initSessionState preserves behavior overrides across /new and /reset",
   });
 
   it("keeps the existing session for /reset soft", async () => {
-    const storePath = await createStorePath("openclaw-soft-reset-session-");
+    const storePath = await createStorePath("grokbot-soft-reset-session-");
     const sessionKey = "agent:main:telegram:dm:user-soft-reset";
     const existingSessionId = "existing-session-soft-reset";
 
@@ -4059,7 +4059,7 @@ describe("initSessionState preserves behavior overrides across /new and /reset",
   });
 
   it("keeps the existing session for /reset newline soft", async () => {
-    const storePath = await createStorePath("openclaw-reset-newline-soft-");
+    const storePath = await createStorePath("grokbot-reset-newline-soft-");
     const sessionKey = "agent:main:telegram:dm:user-reset-newline-soft";
     const existingSessionId = "existing-session-reset-newline-soft";
 
@@ -4094,7 +4094,7 @@ describe("initSessionState preserves behavior overrides across /new and /reset",
   });
 
   it("archives the old session store entry on /new", async () => {
-    const storePath = await createStorePath("openclaw-archive-old-");
+    const storePath = await createStorePath("grokbot-archive-old-");
     const sessionKey = "agent:main:telegram:dm:user-archive";
     const existingSessionId = "existing-session-archive";
     const transcriptPath = path.join(path.dirname(storePath), `${existingSessionId}.jsonl`);
@@ -4136,7 +4136,7 @@ describe("initSessionState preserves behavior overrides across /new and /reset",
   });
 
   it("drains foreign work before replacing a reply session", async () => {
-    const storePath = await createStorePath("openclaw-rollover-admission-");
+    const storePath = await createStorePath("grokbot-rollover-admission-");
     const sessionKey = "agent:main:telegram:dm:rollover-admission";
     const existingSessionId = "session-before-admitted-rollover";
     const transcriptPath = path.join(path.dirname(storePath), `${existingSessionId}.jsonl`);
@@ -4190,7 +4190,7 @@ describe("initSessionState preserves behavior overrides across /new and /reset",
   });
 
   it("keeps the initiating reply admission during an in-band rollover", async () => {
-    const storePath = await createStorePath("openclaw-rollover-initiator-");
+    const storePath = await createStorePath("grokbot-rollover-initiator-");
     const sessionKey = "agent:main:telegram:dm:rollover-initiator";
     const existingSessionId = "session-before-initiating-rollover";
     await writeSessionStoreFast(storePath, {
@@ -4231,7 +4231,7 @@ describe("initSessionState preserves behavior overrides across /new and /reset",
   });
 
   it("cancels a competing admitted rollover without deadlocking the session", async () => {
-    const storePath = await createStorePath("openclaw-rollover-contenders-");
+    const storePath = await createStorePath("grokbot-rollover-contenders-");
     const sessionKey = "agent:main:telegram:dm:rollover-contenders";
     const existingSessionId = "session-before-competing-rollovers";
     await writeSessionStoreFast(storePath, {
@@ -4295,7 +4295,7 @@ describe("initSessionState preserves behavior overrides across /new and /reset",
       expectedInterruption: true,
     },
   ])("$name", async ({ body, expectedInterruption }) => {
-    const storePath = await createStorePath("openclaw-rollover-revalidation-");
+    const storePath = await createStorePath("grokbot-rollover-revalidation-");
     const sessionKey = "agent:main:telegram:dm:rollover-revalidation";
     const staleSessionId = "stale-session-before-revalidation";
     const replacementSessionId = "fresh-replacement-before-revalidation";
@@ -4465,7 +4465,7 @@ describe("initSessionState preserves behavior overrides across /new and /reset",
     try {
       // Simulate: it is 5am, session was last active at 3am (before 4am daily boundary)
       vi.setSystemTime(new Date(2026, 0, 18, 5, 0, 0));
-      const storePath = await createStorePath("openclaw-stale-archive-");
+      const storePath = await createStorePath("grokbot-stale-archive-");
       const sessionKey = "agent:main:telegram:dm:archive-stale-user";
       const existingSessionId = "stale-session-to-be-archived";
       const transcriptPath = path.join(path.dirname(storePath), `${existingSessionId}.jsonl`);
@@ -4516,7 +4516,7 @@ describe("initSessionState preserves behavior overrides across /new and /reset",
     let operation: ReturnType<typeof replyRunRegistry.begin> | undefined;
     try {
       vi.setSystemTime(new Date(2026, 0, 18, 5, 0, 0));
-      const storePath = await createStorePath("openclaw-active-stale-archive-");
+      const storePath = await createStorePath("grokbot-active-stale-archive-");
       const sessionKey = "agent:main:telegram:dm:active-stale-user";
       const transcriptPath = path.join(path.dirname(storePath), `${existingSessionId}.jsonl`);
       const sessionStartedAt = new Date(2026, 0, 18, 3, 0, 0).getTime();
@@ -4576,7 +4576,7 @@ describe("initSessionState preserves behavior overrides across /new and /reset",
     let operation: ReturnType<typeof replyRunRegistry.begin> | undefined;
     try {
       vi.setSystemTime(new Date(2026, 0, 18, 5, 0, 0));
-      const storePath = await createStorePath("openclaw-queued-stale-archive-");
+      const storePath = await createStorePath("grokbot-queued-stale-archive-");
       const sessionKey = "agent:main:telegram:dm:queued-stale-user";
       const existingSessionId = "queued-stale-session";
       const transcriptPath = path.join(path.dirname(storePath), `${existingSessionId}.jsonl`);
@@ -4634,7 +4634,7 @@ describe("initSessionState preserves behavior overrides across /new and /reset",
     let operation: ReturnType<typeof replyRunRegistry.begin> | undefined;
     try {
       vi.setSystemTime(new Date(2026, 0, 18, 5, 0, 0));
-      const storePath = await createStorePath("openclaw-active-other-stale-archive-");
+      const storePath = await createStorePath("grokbot-active-other-stale-archive-");
       const sessionKey = "agent:main:telegram:dm:active-other-stale-user";
       const existingSessionId = "inactive-stale-session";
       const transcriptPath = path.join(path.dirname(storePath), `${existingSessionId}.jsonl`);
@@ -4691,7 +4691,7 @@ describe("initSessionState preserves behavior overrides across /new and /reset",
     vi.useFakeTimers();
     try {
       vi.setSystemTime(new Date(2026, 0, 18, 5, 0, 0));
-      const storePath = await createStorePath("openclaw-cli-implicit-reset-");
+      const storePath = await createStorePath("grokbot-cli-implicit-reset-");
       const sessionKey = "agent:main:telegram:dm:claude-cli-user";
       const existingSessionId = "provider-owned-session";
       const transcriptPath = path.join(path.dirname(storePath), `${existingSessionId}.jsonl`);
@@ -4752,7 +4752,7 @@ describe("initSessionState preserves behavior overrides across /new and /reset",
   });
 
   it("honors explicit reset policies for provider-owned CLI sessions", async () => {
-    const storePath = await createStorePath("openclaw-cli-explicit-reset-");
+    const storePath = await createStorePath("grokbot-cli-explicit-reset-");
     const sessionKey = "agent:main:telegram:dm:claude-cli-explicit-user";
     const existingSessionId = "provider-owned-explicit-session";
     const cfg = {
@@ -4797,7 +4797,7 @@ describe("initSessionState preserves behavior overrides across /new and /reset",
   });
 
   it("disposes the previous bundle MCP runtime on session rollover", async () => {
-    const storePath = await createStorePath("openclaw-stale-runtime-dispose-");
+    const storePath = await createStorePath("grokbot-stale-runtime-dispose-");
     const sessionKey = "agent:main:telegram:dm:runtime-stale-user";
     const existingSessionId = "stale-runtime-session";
     const cfg = {
@@ -4843,7 +4843,7 @@ describe("initSessionState preserves behavior overrides across /new and /reset",
   });
 
   it("idle-based new session does NOT preserve overrides (no entry to read)", async () => {
-    const storePath = await createStorePath("openclaw-idle-no-preserve-");
+    const storePath = await createStorePath("grokbot-idle-no-preserve-");
     const sessionKey = "agent:main:telegram:dm:new-user";
 
     const cfg = {
@@ -4981,7 +4981,7 @@ describe("persistSessionUsageUpdate", () => {
   }
 
   it("uses lastCallUsage for totalTokens when provided", async () => {
-    const storePath = await createStorePath("openclaw-usage-");
+    const storePath = await createStorePath("grokbot-usage-");
     const sessionKey = "main";
     await seedSessionStore({
       storePath,
@@ -5016,7 +5016,7 @@ describe("persistSessionUsageUpdate", () => {
   });
 
   it("keeps the prior total stale when last-call context is unavailable", async () => {
-    const storePath = await createStorePath("openclaw-usage-unavailable-context-");
+    const storePath = await createStorePath("grokbot-usage-unavailable-context-");
     const sessionKey = "main";
     await seedSessionStore({
       storePath,
@@ -5060,7 +5060,7 @@ describe("persistSessionUsageUpdate", () => {
   });
 
   it("marks a fresh zero stale when a completed run has no context snapshot", async () => {
-    const storePath = await createStorePath("openclaw-usage-no-snapshot-");
+    const storePath = await createStorePath("grokbot-usage-no-snapshot-");
     const sessionKey = "main";
     await seedSessionStore({
       storePath,
@@ -5090,7 +5090,7 @@ describe("persistSessionUsageUpdate", () => {
   });
 
   it("preserves fresh post-compaction totalTokens across model-only updates", async () => {
-    const storePath = await createStorePath("openclaw-usage-no-snapshot-");
+    const storePath = await createStorePath("grokbot-usage-no-snapshot-");
     const sessionKey = "main";
     await seedSessionStore({
       storePath,
@@ -5121,7 +5121,7 @@ describe("persistSessionUsageUpdate", () => {
   });
 
   it("accounts exhausted-run usage without committing its model and persists CLI binding", async () => {
-    const storePath = await createStorePath("openclaw-usage-exhausted-");
+    const storePath = await createStorePath("grokbot-usage-exhausted-");
     const sessionKey = "main";
     await seedSessionStore({
       storePath,
@@ -5174,7 +5174,7 @@ describe("persistSessionUsageUpdate", () => {
   });
 
   it("accounts goal usage when fresh token snapshots are persisted", async () => {
-    const storePath = await createStorePath("openclaw-usage-goal-");
+    const storePath = await createStorePath("grokbot-usage-goal-");
     const sessionKey = "main";
     await seedSessionStore({
       storePath,
@@ -5229,7 +5229,7 @@ describe("persistSessionUsageUpdate", () => {
   });
 
   it("uses lastCallUsage cache counters when available", async () => {
-    const storePath = await createStorePath("openclaw-usage-cache-");
+    const storePath = await createStorePath("grokbot-usage-cache-");
     const sessionKey = "main";
     await seedSessionStore({
       storePath,
@@ -5271,7 +5271,7 @@ describe("persistSessionUsageUpdate", () => {
   });
 
   it("marks totalTokens as unknown when no fresh context snapshot is available", async () => {
-    const storePath = await createStorePath("openclaw-usage-");
+    const storePath = await createStorePath("grokbot-usage-");
     const sessionKey = "main";
     await seedSessionStore({
       storePath,
@@ -5296,7 +5296,7 @@ describe("persistSessionUsageUpdate", () => {
   });
 
   it("preserves fresh post-compaction totalTokens across stale usage updates", async () => {
-    const storePath = await createStorePath("openclaw-usage-");
+    const storePath = await createStorePath("grokbot-usage-");
     const sessionKey = "main";
     await seedSessionStore({
       storePath,
@@ -5327,7 +5327,7 @@ describe("persistSessionUsageUpdate", () => {
   });
 
   it("marks older fresh totalTokens stale when no compaction preservation is requested", async () => {
-    const storePath = await createStorePath("openclaw-usage-");
+    const storePath = await createStorePath("grokbot-usage-");
     const sessionKey = "main";
     await seedSessionStore({
       storePath,
@@ -5357,7 +5357,7 @@ describe("persistSessionUsageUpdate", () => {
   });
 
   it("uses promptTokens when available without lastCallUsage", async () => {
-    const storePath = await createStorePath("openclaw-usage-");
+    const storePath = await createStorePath("grokbot-usage-");
     const sessionKey = "main";
     await seedSessionStore({
       storePath,
@@ -5383,7 +5383,7 @@ describe("persistSessionUsageUpdate", () => {
   });
 
   it("treats CLI usage as a fresh context snapshot when requested", async () => {
-    const storePath = await createStorePath("openclaw-usage-cli-");
+    const storePath = await createStorePath("grokbot-usage-cli-");
     const sessionKey = "main";
     await seedSessionStore({
       storePath,
@@ -5431,7 +5431,7 @@ describe("persistSessionUsageUpdate", () => {
   });
 
   it("clears stale CLI binding when usage update reports an unflushed replacement", async () => {
-    const storePath = await createStorePath("openclaw-usage-cli-clear-");
+    const storePath = await createStorePath("grokbot-usage-cli-clear-");
     const sessionKey = "main";
     await seedSessionStore({
       storePath,
@@ -5495,7 +5495,7 @@ describe("persistSessionUsageUpdate", () => {
   });
 
   it("prefers fresh final usage over zero compactionTokensAfter", async () => {
-    const storePath = await createStorePath("openclaw-usage-compaction-reset-");
+    const storePath = await createStorePath("grokbot-usage-compaction-reset-");
     const sessionKey = "main";
     await seedSessionStore({
       storePath,
@@ -5545,7 +5545,7 @@ describe("persistSessionUsageUpdate", () => {
   });
 
   it("prefers fresh lastCallUsage over positive compactionTokensAfter", async () => {
-    const storePath = await createStorePath("openclaw-usage-compaction-positive-");
+    const storePath = await createStorePath("grokbot-usage-compaction-positive-");
     const sessionKey = "main";
     await seedSessionStore({
       storePath,
@@ -5587,7 +5587,7 @@ describe("persistSessionUsageUpdate", () => {
   });
 
   it("uses positive compactionTokensAfter when final usage has no prompt total", async () => {
-    const storePath = await createStorePath("openclaw-usage-compaction-fallback-");
+    const storePath = await createStorePath("grokbot-usage-compaction-fallback-");
     const sessionKey = "main";
     await seedSessionStore({
       storePath,
@@ -5653,7 +5653,7 @@ describe("persistSessionUsageUpdate", () => {
   });
 
   it("persists totalTokens from promptTokens when usage is unavailable", async () => {
-    const storePath = await createStorePath("openclaw-usage-");
+    const storePath = await createStorePath("grokbot-usage-");
     const sessionKey = "main";
     await seedSessionStore({
       storePath,
@@ -5690,7 +5690,7 @@ describe("persistSessionUsageUpdate", () => {
   });
 
   it("keeps non-clamped lastCallUsage totalTokens when exceeding context window", async () => {
-    const storePath = await createStorePath("openclaw-usage-");
+    const storePath = await createStorePath("grokbot-usage-");
     const sessionKey = "main";
     await seedSessionStore({
       storePath,
@@ -5716,7 +5716,7 @@ describe("persistSessionUsageUpdate", () => {
   });
 
   it("snapshots estimatedCostUsd instead of accumulating (fixes #69347)", async () => {
-    const storePath = await createStorePath("openclaw-usage-cost-");
+    const storePath = await createStorePath("grokbot-usage-cost-");
     const sessionKey = "main";
     await seedSessionStore({
       storePath,
@@ -5788,7 +5788,7 @@ describe("persistSessionUsageUpdate", () => {
   });
 
   it("preserves the displayed session model when heartbeat usage uses a heartbeat model", async () => {
-    const storePath = await createStorePath("openclaw-usage-heartbeat-model-");
+    const storePath = await createStorePath("grokbot-usage-heartbeat-model-");
     const sessionKey = "main";
     await seedSessionStore({
       storePath,
@@ -5834,7 +5834,7 @@ describe("persistSessionUsageUpdate", () => {
   });
 
   it("persists heartbeat CLI binding while preserving displayed session model", async () => {
-    const storePath = await createStorePath("openclaw-usage-heartbeat-cli-binding-");
+    const storePath = await createStorePath("grokbot-usage-heartbeat-cli-binding-");
     const sessionKey = "main";
     await seedSessionStore({
       storePath,
@@ -5895,7 +5895,7 @@ describe("persistSessionUsageUpdate", () => {
   });
 
   it("honors heartbeat CLI binding clears while preserving displayed session model", async () => {
-    const storePath = await createStorePath("openclaw-usage-heartbeat-cli-clear-");
+    const storePath = await createStorePath("grokbot-usage-heartbeat-cli-clear-");
     const sessionKey = "main";
     await seedSessionStore({
       storePath,
@@ -5964,7 +5964,7 @@ describe("persistSessionUsageUpdate", () => {
   });
 
   it("preserves the displayed session model when an internal announce uses fallback", async () => {
-    const storePath = await createStorePath("openclaw-usage-internal-announce-model-");
+    const storePath = await createStorePath("grokbot-usage-internal-announce-model-");
     const sessionKey = "agent:main:telegram:group:-1003871627242:topic:6823";
     await seedSessionStore({
       storePath,
@@ -6068,7 +6068,7 @@ describe("persistSessionUsageUpdate", () => {
   });
 
   it("persists zero estimatedCostUsd for free priced models", async () => {
-    const storePath = await createStorePath("openclaw-usage-free-cost-");
+    const storePath = await createStorePath("grokbot-usage-free-cost-");
     const sessionKey = "main";
     await seedSessionStore({
       storePath,

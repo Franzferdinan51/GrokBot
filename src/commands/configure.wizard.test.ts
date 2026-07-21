@@ -61,14 +61,14 @@ vi.mock("@clack/prompts", () => ({
 }));
 
 vi.mock("../config/config.js", () => ({
-  CONFIG_PATH: "~/.openclaw/openclaw.json",
+  CONFIG_PATH: "~/.grokbot/grokbot.json",
   createConfigIO: () => ({
     readConfigFileSnapshotForWrite: async () => ({
       snapshot: await mocks.readConfigFileSnapshot(),
       writeOptions: {
         assertConfigPathForWrite: mocks.assertConfigPathForWrite,
-        expectedConfigPath: "/tmp/openclaw.json",
-        ownedConfigPathForWrite: "/tmp/openclaw.json",
+        expectedConfigPath: "/tmp/grokbot.json",
+        ownedConfigPathForWrite: "/tmp/grokbot.json",
       },
     }),
   }),
@@ -78,9 +78,9 @@ vi.mock("../config/config.js", () => ({
     writeOptions: {
       assertConfigPathForWrite: mocks.assertConfigPathForWrite,
       envSnapshotForRestore: { SECRET: "resolved-secret" },
-      expectedConfigPath: "/tmp/openclaw.json",
+      expectedConfigPath: "/tmp/grokbot.json",
       includeFileHashesForWrite: { "/tmp/plugins.json5": "stale-hash" },
-      ownedConfigPathForWrite: "/tmp/openclaw.json",
+      ownedConfigPathForWrite: "/tmp/grokbot.json",
     },
   }),
   writeConfigFile: mocks.writeConfigFile,
@@ -97,7 +97,7 @@ vi.mock("../infra/windows-gateway-firewall-diagnostics.js", () => ({
   formatWindowsGatewayFirewallGuidance: (params: { bind?: string }) =>
     params.bind === "lan"
       ? [
-          "Windows firewall: if another device cannot connect to the LAN URL, run `openclaw gateway status --deep` from this Windows host.",
+          "Windows firewall: if another device cannot connect to the LAN URL, run `grokbot gateway status --deep` from this Windows host.",
         ]
       : [],
 }));
@@ -111,7 +111,7 @@ vi.mock("../../packages/terminal-core/src/note.js", () => ({
 }));
 
 vi.mock("./onboard-helpers.js", () => ({
-  DEFAULT_WORKSPACE: "~/.openclaw/workspace",
+  DEFAULT_WORKSPACE: "~/.grokbot/workspace",
   applyWizardMetadata: (cfg: OpenClawConfig) => cfg,
   ensureWorkspaceAndSessions: vi.fn(),
   guardCancel: <T>(value: T) => value,
@@ -489,7 +489,7 @@ describe("runConfigureWizard", () => {
       [
         "Remote Gateway:",
         "wss://gateway.example.test",
-        "Docs: https://docs.openclaw.ai/gateway/remote",
+        "Docs: https://docs.grokbot.ai/gateway/remote",
       ].join("\n"),
       "Gateway",
     );
@@ -597,7 +597,7 @@ describe("runConfigureWizard", () => {
       [
         "No web search providers are currently available under this plugin policy.",
         "Enable plugins or remove deny rules, then rerun configure.",
-        "Docs: https://docs.openclaw.ai/tools/web",
+        "Docs: https://docs.grokbot.ai/tools/web",
       ].join("\n"),
       "Web search",
     );
@@ -651,7 +651,7 @@ describe("runConfigureWizard", () => {
         envVars: [],
         placeholder: "(no key needed)",
         signupUrl: "https://duckduckgo.com/",
-        docsUrl: "https://docs.openclaw.ai/tools/web",
+        docsUrl: "https://docs.grokbot.ai/tools/web",
         credentialPath: "",
       }),
     ]);
@@ -835,7 +835,7 @@ describe("runConfigureWizard", () => {
     };
     const agents = requireRecord(retryCall.nextConfig.agents, "agents config");
     const defaults = requireRecord(agents.defaults, "agent defaults");
-    expect(String(defaults.workspace)).toContain("/.openclaw/workspace");
+    expect(String(defaults.workspace)).toContain("/.grokbot/workspace");
     const githubCopilot = getPluginEntry(retryCall.nextConfig, "github-copilot");
     expect(githubCopilot.enabled).toBe(false);
     const pluginConfig = requireRecord(githubCopilot.config, "github-copilot config");

@@ -9,16 +9,16 @@ describe("buildPlatformRuntimeLogHints", () => {
         platform: "darwin",
         env: {
           HOME: "/Users/test",
-          OPENCLAW_STATE_DIR: "/tmp/openclaw-state",
+          OPENCLAW_STATE_DIR: "/tmp/grokbot-state",
           OPENCLAW_LOG_PREFIX: "gateway",
         },
-        systemdServiceName: "openclaw-gateway",
-        windowsTaskName: "OpenClaw Gateway",
+        systemdServiceName: "grokbot-gateway",
+        windowsTaskName: "GrokBot Gateway",
       }),
     ).toEqual([
-      "Launchd stdout (if installed): /Users/test/Library/Logs/openclaw/gateway.log",
+      "Launchd stdout (if installed): /Users/test/Library/Logs/grokbot/gateway.log",
       "Launchd stderr (if installed): suppressed",
-      "Restart attempts: /tmp/openclaw-state/logs/gateway-restart.log",
+      "Restart attempts: /tmp/grokbot-state/logs/gateway-restart.log",
     ]);
   });
 
@@ -27,27 +27,27 @@ describe("buildPlatformRuntimeLogHints", () => {
       buildPlatformRuntimeLogHints({
         platform: "linux",
         env: {
-          OPENCLAW_STATE_DIR: "/tmp/openclaw-state",
+          OPENCLAW_STATE_DIR: "/tmp/grokbot-state",
         },
-        systemdServiceName: "openclaw-gateway",
-        windowsTaskName: "OpenClaw Gateway",
+        systemdServiceName: "grokbot-gateway",
+        windowsTaskName: "GrokBot Gateway",
       }),
     ).toEqual([
-      "Logs: journalctl --user -u openclaw-gateway.service -n 200 --no-pager",
-      "Restart attempts: /tmp/openclaw-state/logs/gateway-restart.log",
+      "Logs: journalctl --user -u grokbot-gateway.service -n 200 --no-pager",
+      "Restart attempts: /tmp/grokbot-state/logs/gateway-restart.log",
     ]);
     expect(
       buildPlatformRuntimeLogHints({
         platform: "win32",
         env: {
-          OPENCLAW_STATE_DIR: "/tmp/openclaw-state",
+          OPENCLAW_STATE_DIR: "/tmp/grokbot-state",
         },
-        systemdServiceName: "openclaw-gateway",
-        windowsTaskName: "OpenClaw Gateway",
+        systemdServiceName: "grokbot-gateway",
+        windowsTaskName: "GrokBot Gateway",
       }),
     ).toEqual([
-      'Logs: schtasks /Query /TN "OpenClaw Gateway" /V /FO LIST',
-      "Restart attempts: /tmp/openclaw-state/logs/gateway-restart.log",
+      'Logs: schtasks /Query /TN "GrokBot Gateway" /V /FO LIST',
+      "Restart attempts: /tmp/grokbot-state/logs/gateway-restart.log",
     ]);
   });
 });
@@ -57,30 +57,30 @@ describe("buildPlatformServiceStartHints", () => {
     expect(
       buildPlatformServiceStartHints({
         platform: "darwin",
-        installCommand: "openclaw gateway install",
-        startCommand: "openclaw gateway",
-        launchAgentPlistPath: "~/Library/LaunchAgents/com.openclaw.gateway.plist",
-        systemdServiceName: "openclaw-gateway",
-        windowsTaskName: "OpenClaw Gateway",
+        installCommand: "grokbot gateway install",
+        startCommand: "grokbot gateway",
+        launchAgentPlistPath: "~/Library/LaunchAgents/com.grokbot.gateway.plist",
+        systemdServiceName: "grokbot-gateway",
+        windowsTaskName: "GrokBot Gateway",
       }),
     ).toEqual([
-      "openclaw gateway install",
-      "openclaw gateway",
-      "launchctl bootstrap gui/$UID ~/Library/LaunchAgents/com.openclaw.gateway.plist",
+      "grokbot gateway install",
+      "grokbot gateway",
+      "launchctl bootstrap gui/$UID ~/Library/LaunchAgents/com.grokbot.gateway.plist",
     ]);
     expect(
       buildPlatformServiceStartHints({
         platform: "linux",
-        installCommand: "openclaw gateway install",
-        startCommand: "openclaw gateway",
-        launchAgentPlistPath: "~/Library/LaunchAgents/com.openclaw.gateway.plist",
-        systemdServiceName: "openclaw-gateway",
-        windowsTaskName: "OpenClaw Gateway",
+        installCommand: "grokbot gateway install",
+        startCommand: "grokbot gateway",
+        launchAgentPlistPath: "~/Library/LaunchAgents/com.grokbot.gateway.plist",
+        systemdServiceName: "grokbot-gateway",
+        windowsTaskName: "GrokBot Gateway",
       }),
     ).toEqual([
-      "openclaw gateway install",
-      "openclaw gateway",
-      "systemctl --user start openclaw-gateway.service",
+      "grokbot gateway install",
+      "grokbot gateway",
+      "systemctl --user start grokbot-gateway.service",
     ]);
   });
 });

@@ -2,7 +2,7 @@
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import type { ChunkMode } from "openclaw/plugin-sdk/reply-runtime";
+import type { ChunkMode } from "grokbot/plugin-sdk/reply-runtime";
 import { describe, expect, it, vi } from "vitest";
 import type { OpenClawConfig, PluginRuntime } from "../../runtime-api.js";
 import {
@@ -226,7 +226,7 @@ describe("deliverMattermostReplyPayload", () => {
 
   it("passes agent-scoped mediaLocalRoots when sending media paths", async () => {
     const previousStateDir = process.env.OPENCLAW_STATE_DIR;
-    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-mm-state-"));
+    const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-mm-state-"));
     process.env.OPENCLAW_STATE_DIR = stateDir;
 
     try {

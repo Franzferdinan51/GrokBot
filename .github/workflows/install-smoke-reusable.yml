@@ -18,7 +18,7 @@ on:
         default: true
         type: boolean
       update_baseline_version:
-        description: Baseline openclaw version or dist-tag for installer update smoke
+        description: Baseline grokbot version or dist-tag for installer update smoke
         required: false
         default: latest
         type: string
@@ -103,7 +103,7 @@ jobs:
           run_bun_global_install_smoke="$workflow_bun_global_install_smoke"
           run_install_smoke=true
           target_sha="$(git rev-parse HEAD)"
-          dockerfile_image="openclaw-dockerfile-smoke-local:${target_sha}"
+          dockerfile_image="grokbot-dockerfile-smoke-local:${target_sha}"
           {
             echo "docs_only=$docs_only"
             echo "run_install_smoke=$run_install_smoke"
@@ -143,16 +143,16 @@ jobs:
             --progress=plain \
             --load \
             --build-arg OPENCLAW_EXTENSIONS=matrix \
-            -t openclaw-dockerfile-smoke:local \
-            -t openclaw-ext-smoke:local \
+            -t grokbot-dockerfile-smoke:local \
+            -t grokbot-ext-smoke:local \
             -f ./Dockerfile \
             .
 
       - name: Run root Dockerfile CLI smoke
         run: |
-          timeout --kill-after=30s 20m docker run --rm --entrypoint sh openclaw-dockerfile-smoke:local -lc '
-            which openclaw &&
-            openclaw --version &&
+          timeout --kill-after=30s 20m docker run --rm --entrypoint sh grokbot-dockerfile-smoke:local -lc '
+            which grokbot &&
+            grokbot --version &&
             node -e "
               const fs = require(\"node:fs\");
               const path = require(\"node:path\");
@@ -169,21 +169,21 @@ jobs:
 
       - name: Run agents delete shared workspace Docker CLI smoke
         env:
-          OPENCLAW_AGENTS_DELETE_SHARED_WORKSPACE_E2E_IMAGE: openclaw-dockerfile-smoke:local
+          OPENCLAW_AGENTS_DELETE_SHARED_WORKSPACE_E2E_IMAGE: grokbot-dockerfile-smoke:local
           OPENCLAW_AGENTS_DELETE_SHARED_WORKSPACE_E2E_SKIP_BUILD: "1"
         run: bash scripts/e2e/agents-delete-shared-workspace-docker.sh
 
       - name: Run Docker gateway network e2e
         env:
-          OPENCLAW_GATEWAY_NETWORK_E2E_IMAGE: openclaw-dockerfile-smoke:local
+          OPENCLAW_GATEWAY_NETWORK_E2E_IMAGE: grokbot-dockerfile-smoke:local
           OPENCLAW_GATEWAY_NETWORK_E2E_SKIP_BUILD: "1"
         run: bash scripts/e2e/gateway-network-docker.sh
 
       - name: Smoke test Dockerfile with matrix extension build arg
         run: |
-          timeout --kill-after=30s 20m docker run --rm --entrypoint sh openclaw-ext-smoke:local -lc '
-            which openclaw &&
-            openclaw --version &&
+          timeout --kill-after=30s 20m docker run --rm --entrypoint sh grokbot-ext-smoke:local -lc '
+            which grokbot &&
+            grokbot --version &&
             node -e "
               const Module = require(\"node:module\");
               const matrixPackage = require(\"/app/extensions/matrix/package.json\");
@@ -198,7 +198,7 @@ jobs:
                 requireFromMatrix.resolve(dep);
               }
               const { spawnSync } = require(\"node:child_process\");
-              const run = spawnSync(\"openclaw\", [\"plugins\", \"list\", \"--json\"], { encoding: \"utf8\" });
+              const run = spawnSync(\"grokbot\", [\"plugins\", \"list\", \"--json\"], { encoding: \"utf8\" });
               if (run.status !== 0) {
                 process.stderr.write(run.stderr || run.stdout || \"plugins list failed\\n\");
                 process.exit(run.status ?? 1);
@@ -480,8 +480,8 @@ jobs:
           IMAGE_REF: ${{ needs.root_dockerfile_image.outputs.image_ref }}
         run: |
           timeout --kill-after=30s 20m docker run --rm --entrypoint sh "$IMAGE_REF" -lc '
-            which openclaw &&
-            openclaw --version &&
+            which grokbot &&
+            grokbot --version &&
             node -e "
               const fs = require(\"node:fs\");
               const path = require(\"node:path\");
@@ -513,8 +513,8 @@ jobs:
           IMAGE_REF: ${{ needs.root_dockerfile_image.outputs.image_ref }}
         run: |
           timeout --kill-after=30s 20m docker run --rm --entrypoint sh "$IMAGE_REF" -lc '
-            which openclaw &&
-            openclaw --version &&
+            which grokbot &&
+            grokbot --version &&
             node -e "
               const Module = require(\"node:module\");
               const matrixPackage = require(\"/app/extensions/matrix/package.json\");
@@ -529,7 +529,7 @@ jobs:
                 requireFromMatrix.resolve(dep);
               }
               const { spawnSync } = require(\"node:child_process\");
-              const run = spawnSync(\"openclaw\", [\"plugins\", \"list\", \"--json\"], { encoding: \"utf8\" });
+              const run = spawnSync(\"grokbot\", [\"plugins\", \"list\", \"--json\"], { encoding: \"utf8\" });
               if (run.status !== 0) {
                 process.stderr.write(run.stderr || run.stdout || \"plugins list failed\\n\");
                 process.exit(run.status ?? 1);
@@ -689,7 +689,7 @@ jobs:
           timeout --kill-after=30s 20m docker buildx build \
             --progress=plain \
             --load \
-            -t openclaw-install-smoke:local \
+            -t grokbot-install-smoke:local \
             -f ./scripts/docker/install-sh-smoke/Dockerfile \
             ./scripts/docker
 
@@ -698,7 +698,7 @@ jobs:
           timeout --kill-after=30s 20m docker buildx build \
             --progress=plain \
             --load \
-            -t openclaw-install-nonroot:local \
+            -t grokbot-install-nonroot:local \
             -f ./scripts/docker/install-sh-nonroot/Dockerfile \
             ./scripts/docker
 
@@ -711,8 +711,8 @@ jobs:
       - name: Run installer docker tests
         env:
           OPENCLAW_INSTALL_SMOKE_ALLOW_UNRELEASED_CHANGELOG: ${{ inputs.allow_unreleased_changelog }}
-          OPENCLAW_INSTALL_URL: file:///tmp/openclaw-install.sh
-          OPENCLAW_INSTALL_CLI_URL: file:///tmp/openclaw-install-cli.sh
+          OPENCLAW_INSTALL_URL: file:///tmp/grokbot-install.sh
+          OPENCLAW_INSTALL_CLI_URL: file:///tmp/grokbot-install-cli.sh
           OPENCLAW_NO_ONBOARD: "1"
           OPENCLAW_INSTALL_SMOKE_SKIP_CLI: "0"
           OPENCLAW_INSTALL_SMOKE_SKIP_IMAGE_BUILD: "1"
@@ -734,7 +734,7 @@ jobs:
             -e OPENCLAW_NO_PROMPT=1 \
             -v "$PWD/candidate/scripts/install.sh:/tmp/install.sh:ro" \
             rockylinux:9@sha256:d644d203142cd5b54ad2a83a203e1dee68af2229f8fe32f52a30c6e1d3c3a9e0 \
-            bash -lc 'dnf install -y -q ca-certificates tar gzip xz findutils which sudo >/dev/null && bash /tmp/install.sh --install-method npm --version latest --no-onboard --no-prompt --verify && openclaw --version'
+            bash -lc 'dnf install -y -q ca-certificates tar gzip xz findutils which sudo >/dev/null && bash /tmp/install.sh --install-method npm --version latest --no-onboard --no-prompt --verify && grokbot --version'
 
       - name: Run Rocky Linux CLI installer smoke
         run: |
@@ -744,7 +744,7 @@ jobs:
             -e OPENCLAW_NO_PROMPT=1 \
             -v "$PWD/candidate/scripts/install-cli.sh:/tmp/install-cli.sh:ro" \
             rockylinux:9@sha256:d644d203142cd5b54ad2a83a203e1dee68af2229f8fe32f52a30c6e1d3c3a9e0 \
-            bash -lc 'dnf install -y -q ca-certificates tar gzip xz findutils which sudo >/dev/null && bash /tmp/install-cli.sh --prefix /tmp/openclaw-cli --version latest --no-onboard && /tmp/openclaw-cli/bin/openclaw --version'
+            bash -lc 'dnf install -y -q ca-certificates tar gzip xz findutils which sudo >/dev/null && bash /tmp/install-cli.sh --prefix /tmp/grokbot-cli --version latest --no-onboard && /tmp/grokbot-cli/bin/grokbot --version'
 
   bun_global_install_smoke:
     needs: [preflight, root_dockerfile_image, root_dockerfile_image_ready]

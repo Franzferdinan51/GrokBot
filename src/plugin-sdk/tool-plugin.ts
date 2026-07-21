@@ -15,11 +15,11 @@ import {
 const EMPTY_TOOL_PLUGIN_CONFIG_SCHEMA = Type.Object({}, { additionalProperties: false });
 
 /** Non-enumerable metadata symbol attached to entries created by `defineToolPlugin`. */
-export const toolPluginMetadataSymbol = Symbol.for("openclaw.plugin-sdk.tool-plugin.metadata");
+export const toolPluginMetadataSymbol = Symbol.for("grokbot.plugin-sdk.tool-plugin.metadata");
 
 /** Runtime context supplied to a concrete tool plugin execution handler. */
 export type ToolPluginExecutionContext = {
-  /** Plugin runtime API for tool implementations that need OpenClaw services. */
+  /** Plugin runtime API for tool implementations that need GrokBot services. */
   api: OpenClawPluginApi;
   /** Abort signal for the current tool call. */
   signal?: AbortSignal;

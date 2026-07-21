@@ -8,7 +8,7 @@ import {
   type ConversationRegistryScope,
 } from "../config/sessions/conversation-registry.js";
 import { resolveStorePath } from "../config/sessions/paths.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import {
   ConversationDeliveryRejectedError,
   defaultConversationDeliveryDeps,

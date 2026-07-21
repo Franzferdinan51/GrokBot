@@ -1,6 +1,6 @@
 import type { MsgContext } from "../auto-reply/templating.js";
 import { applyTemplate } from "../auto-reply/templating.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import type { LinkModelConfig, LinkToolsConfig } from "../config/types.tools.js";
 import { logVerbose, shouldLogVerbose } from "../globals.js";
 // Link-understanding runner fetches allowed URLs and invokes configured commands with bounded content.
@@ -96,7 +96,7 @@ async function fetchLinkContent(params: {
     init: {
       headers: {
         Accept: "text/*,application/json,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-        "User-Agent": "OpenClaw-LinkUnderstanding/1.0",
+        "User-Agent": "GrokBot-LinkUnderstanding/1.0",
       },
     },
   });

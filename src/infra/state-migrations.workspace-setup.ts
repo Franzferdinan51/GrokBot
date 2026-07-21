@@ -4,7 +4,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { TextDecoder } from "node:util";
-import { root, type Root } from "@openclaw/fs-safe";
+import { root, type Root } from "@grokbot/fs-safe";
 import { listAgentWorkspaceDirs } from "../agents/workspace-dirs.js";
 import {
   LEGACY_WORKSPACE_ATTESTATION_DIRNAME,
@@ -16,7 +16,7 @@ import {
 } from "../agents/workspace-legacy-state.js";
 import { resolveWorkspaceStateIdentity } from "../agents/workspace-state-store.js";
 import { resolveLegacyStateDirs } from "../config/paths.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { formatErrorMessage } from "./errors.js";
 import { acquireGatewayLock, GatewayLockError } from "./gateway-lock.js";
 import type { MigrationMessages } from "./state-migrations.types.js";
@@ -669,7 +669,7 @@ export async function migrateLegacyWorkspaceState(params: {
     return {
       changes: [],
       warnings: [
-        `Failed migrating legacy workspace state: ${detail}. Stop the Gateway and run \`openclaw doctor --fix\` again.`,
+        `Failed migrating legacy workspace state: ${detail}. Stop the Gateway and run \`grokbot doctor --fix\` again.`,
       ],
     };
   }

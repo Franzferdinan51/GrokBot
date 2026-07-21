@@ -1,11 +1,11 @@
-// Verifies OpenClaw-owned tool hooks preserve adjusted params and telemetry.
-import type { AgentTool } from "openclaw/plugin-sdk/agent-core";
+// Verifies GrokBot-owned tool hooks preserve adjusted params and telemetry.
+import type { AgentTool } from "grokbot/plugin-sdk/agent-core";
 import {
   installOpenClawOwnedToolHooks,
   resetOpenClawOwnedToolHooks,
   textToolResult,
-} from "openclaw/plugin-sdk/agent-runtime-test-contracts";
-import type { ExtensionContext } from "openclaw/plugin-sdk/agent-sessions";
+} from "grokbot/plugin-sdk/agent-runtime-test-contracts";
+import type { ExtensionContext } from "grokbot/plugin-sdk/agent-sessions";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { toToolDefinitions } from "./agent-tool-definition-adapter.js";
 import { createBaseToolHandlerState } from "./agent-tool-handler-state.test-helpers.js";
@@ -105,7 +105,7 @@ async function waitForAfterToolCall(hooks: {
   return call as [Record<string, unknown>, Record<string, unknown>];
 }
 
-describe("OpenClaw-owned tool runtime contract - embedded agent adapter", () => {
+describe("GrokBot-owned tool runtime contract - embedded agent adapter", () => {
   afterEach(() => {
     resetOpenClawOwnedToolHooks();
   });
@@ -251,7 +251,7 @@ describe("OpenClaw-owned tool runtime contract - embedded agent adapter", () => 
     const originalParams = {
       action: "send",
       content: "hello from embedded agent",
-      mediaUrl: "/tmp/openclaw-reply.png",
+      mediaUrl: "/tmp/grokbot-reply.png",
       provider: "telegram",
       to: "chat-1",
     };
@@ -282,7 +282,7 @@ describe("OpenClaw-owned tool runtime contract - embedded agent adapter", () => 
     );
 
     expect(ctx.state.messagingToolSentTexts).toEqual(["hello from embedded agent"]);
-    expect(ctx.state.messagingToolSentMediaUrls).toEqual(["/tmp/openclaw-reply.png"]);
+    expect(ctx.state.messagingToolSentMediaUrls).toEqual(["/tmp/grokbot-reply.png"]);
     expect(
       ctx.state.messagingToolSentTargets.map((target) => ({
         tool: "message",
@@ -297,7 +297,7 @@ describe("OpenClaw-owned tool runtime contract - embedded agent adapter", () => 
         provider: "telegram",
         to: "chat-1",
         text: "hello from embedded agent",
-        mediaUrls: ["/tmp/openclaw-reply.png"],
+        mediaUrls: ["/tmp/grokbot-reply.png"],
       },
     ]);
     const [afterPayload, afterContext] = await waitForAfterToolCall(hooks);

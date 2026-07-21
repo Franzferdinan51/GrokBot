@@ -2,9 +2,9 @@
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
-import { expectDefined } from "@openclaw/normalization-core";
+import { expectDefined } from "@grokbot/normalization-core";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { closeOpenClawStateDatabaseForTest } from "../../state/openclaw-state-db.js";
+import { closeOpenClawStateDatabaseForTest } from "../../state/grokbot-state-db.js";
 import {
   bindIngressLifecycleToReplyOptions,
   createChannelIngressDrain,
@@ -25,7 +25,7 @@ import {
 type Payload = { text: string };
 
 async function withTempState<T>(fn: (stateDir: string) => Promise<T>): Promise<T> {
-  const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "openclaw-ingress-drain-"));
+  const stateDir = await fs.mkdtemp(path.join(os.tmpdir(), "grokbot-ingress-drain-"));
   try {
     return await fn(stateDir);
   } finally {

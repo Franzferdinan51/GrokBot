@@ -1,5 +1,5 @@
 /**
- * Standalone MCP server that exposes OpenClaw plugin-registered tools
+ * Standalone MCP server that exposes GrokBot plugin-registered tools
  * (e.g. memory-lancedb's memory_recall, memory_store, memory_forget)
  * so ACP sessions running Claude Code can use them.
  *
@@ -17,7 +17,7 @@ import {
 } from "../agents/tool-policy.js";
 import type { AnyAgentTool } from "../agents/tools/common.js";
 import { getRuntimeConfig } from "../config/config.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { formatErrorMessage } from "../infra/errors.js";
 import { routeLogsToStderr } from "../logging/console.js";
 import { ensureStandalonePluginToolRegistryLoaded, resolvePluginTools } from "../plugins/tools.js";
@@ -84,7 +84,7 @@ export function createPluginToolsMcpServer(
   const tools =
     params.tools ??
     resolvePluginToolsForMcp({ config: cfg, agentSessionKey: params.agentSessionKey });
-  return createToolsMcpServer({ name: "openclaw-plugin-tools", tools });
+  return createToolsMcpServer({ name: "grokbot-plugin-tools", tools });
 }
 
 export async function servePluginToolsMcp(): Promise<void> {

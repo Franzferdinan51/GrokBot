@@ -1,8 +1,8 @@
 import type { DatabaseSync } from "node:sqlite";
 import { normalizeAgentId } from "../routing/session-key.js";
-import { withOpenClawAgentDatabaseReadOnly } from "../state/openclaw-agent-db-readonly.js";
-import type { DB as OpenClawAgentKyselyDatabase } from "../state/openclaw-agent-db.generated.js";
-import { runOpenClawAgentWriteTransaction } from "../state/openclaw-agent-db.js";
+import { withOpenClawAgentDatabaseReadOnly } from "../state/grokbot-agent-db-readonly.js";
+import type { DB as OpenClawAgentKyselyDatabase } from "../state/grokbot-agent-db.generated.js";
+import { runOpenClawAgentWriteTransaction } from "../state/grokbot-agent-db.js";
 // Per-agent SQLite storage for rebuildable per-session usage rollups.
 import { executeSqliteQuerySync, getNodeSqliteKysely } from "./kysely-sync.js";
 import { isTransientSqliteError } from "./unhandled-rejections.js";

@@ -2,7 +2,7 @@ import type {
   AnyAgentTool,
   OpenClawPluginApi,
   OpenClawPluginToolContext,
-} from "openclaw/plugin-sdk/core";
+} from "grokbot/plugin-sdk/core";
 // Qqbot tests cover remind plugin behavior.
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -10,7 +10,7 @@ const { callGatewayToolMock } = vi.hoisted(() => ({
   callGatewayToolMock: vi.fn(),
 }));
 
-vi.mock("openclaw/plugin-sdk/agent-harness-runtime", () => ({
+vi.mock("grokbot/plugin-sdk/agent-harness-runtime", () => ({
   callGatewayTool: callGatewayToolMock,
 }));
 

@@ -16,9 +16,9 @@ import {
   type LegacySandboxRegistryMigrationResult,
 } from "../agents/sandbox/registry.js";
 import { formatCliCommand } from "../cli/command-format.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import type { HealthFinding, HealthRepairEffect } from "../flows/health-checks.js";
-import { resolveOpenClawPackageRootsSync } from "../infra/openclaw-root.js";
+import { resolveOpenClawPackageRootsSync } from "../infra/grokbot-root.js";
 import { runCommandWithTimeout, runExec } from "../process/exec.js";
 import type { RuntimeEnv } from "../runtime.js";
 import { shortenHomePath } from "../utils.js";
@@ -35,7 +35,7 @@ function resolveSandboxScript(
   scriptRel: string,
   options: { argv1?: string; cwd?: string } = {},
 ): SandboxScriptInfo | null {
-  // Scan every openclaw package root the shared resolver finds (symlinked launcher via realpath,
+  // Scan every grokbot package root the shared resolver finds (symlinked launcher via realpath,
   // then cwd) and return the first that actually holds the script. The resolver follows npm/pnpm
   // global bins and version-manager links, but a published package root can resolve first and ship
   // without scripts/sandbox-setup.sh (the npm files allowlist drops scripts/); stopping at the
@@ -54,7 +54,7 @@ function resolveSandboxScript(
 }
 
 if (process.env.VITEST || process.env.NODE_ENV === "test") {
-  (globalThis as Record<PropertyKey, unknown>)[Symbol.for("openclaw.doctorSandboxTestApi")] = {
+  (globalThis as Record<PropertyKey, unknown>)[Symbol.for("grokbot.doctorSandboxTestApi")] = {
     resolveSandboxScript,
   };
 }
@@ -166,8 +166,8 @@ async function noteCodexBwrapNamespaceWarning(cfg: OpenClawConfig): Promise<void
     `Probe command: ${probe.command}`,
     `Probe result: ${probe.reason}`,
     "",
-    "Fix the host namespace policy for the OpenClaw service user, then restart the gateway.",
-    "Prefer an AppArmor profile that grants the required namespaces to the OpenClaw service process.",
+    "Fix the host namespace policy for the GrokBot service user, then restart the gateway.",
+    "Prefer an AppArmor profile that grants the required namespaces to the GrokBot service process.",
     "`kernel.apparmor_restrict_unprivileged_userns=0` is a host-wide fallback with security tradeoffs; use it only when that host posture is acceptable.",
     "Do not add broad Docker container privileges just to satisfy nested bwrap; that weakens the outer sandbox.",
   ];
@@ -315,7 +315,7 @@ export async function maybeRepairSandboxImages(
       "",
       "Options:",
       "- Install Docker and restart the gateway",
-      "- Disable sandbox mode: openclaw config set agents.defaults.sandbox.mode off",
+      "- Disable sandbox mode: grokbot config set agents.defaults.sandbox.mode off",
     ];
     note(lines.join("\n"), "Sandbox");
     return cfg;
@@ -409,7 +409,7 @@ export function legacySandboxRegistryInspectionToHealthFinding(
     message: `Legacy sandbox registry file detected.
 ${formatLegacyRegistryInspectionLine(file)}`,
     path: legacySandboxRegistryInspectionSourcePath(file),
-    fixHint: `Run ${formatCliCommand("openclaw doctor --fix")} to migrate valid entries to SQLite.`,
+    fixHint: `Run ${formatCliCommand("grokbot doctor --fix")} to migrate valid entries to SQLite.`,
   };
 }
 
@@ -441,7 +441,7 @@ export async function maybeRepairSandboxRegistryFiles(prompter: DoctorPrompter):
       [
         "Legacy sandbox registry files detected.",
         ...legacyFiles.map(formatLegacyRegistryInspectionLine),
-        `Run ${formatCliCommand("openclaw doctor --fix")} to migrate them to SQLite.`,
+        `Run ${formatCliCommand("grokbot doctor --fix")} to migrate them to SQLite.`,
       ].join("\n"),
       "Sandbox",
     );

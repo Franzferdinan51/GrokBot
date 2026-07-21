@@ -1,11 +1,11 @@
 // Device Pair plugin module implements notify behavior.
 import { randomUUID } from "node:crypto";
-import type { OpenClawPluginService } from "openclaw/plugin-sdk/core";
-import { listDevicePairing } from "openclaw/plugin-sdk/device-bootstrap";
-import { formatErrorMessage } from "openclaw/plugin-sdk/error-runtime";
-import type { OpenClawPluginApi } from "openclaw/plugin-sdk/plugin-entry";
-import type { PluginStateKeyedStore } from "openclaw/plugin-sdk/plugin-state-runtime";
-import { normalizeOptionalString } from "openclaw/plugin-sdk/string-coerce-runtime";
+import type { OpenClawPluginService } from "grokbot/plugin-sdk/core";
+import { listDevicePairing } from "grokbot/plugin-sdk/device-bootstrap";
+import { formatErrorMessage } from "grokbot/plugin-sdk/error-runtime";
+import type { OpenClawPluginApi } from "grokbot/plugin-sdk/plugin-entry";
+import type { PluginStateKeyedStore } from "grokbot/plugin-sdk/plugin-state-runtime";
+import { normalizeOptionalString } from "grokbot/plugin-sdk/string-coerce-runtime";
 import {
   DEVICE_PAIR_NOTIFY_MAX_SEEN_AGE_MS,
   DEVICE_PAIR_NOTIFY_SEEN_REQUEST_MAX_ENTRIES,

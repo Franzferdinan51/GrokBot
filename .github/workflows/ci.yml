@@ -52,7 +52,7 @@ permissions:
 run-name: ${{ github.event_name == 'workflow_dispatch' && inputs.dispatch_id != '' && format('CI {0}', inputs.dispatch_id) || (github.event_name == 'workflow_dispatch' && inputs.release_gate && format('CI release gate {0}', inputs.target_ref) || 'CI') }}
 
 concurrency:
-  group: ${{ github.event_name == 'workflow_dispatch' && format('{0}-manual-v1-{1}', github.workflow, github.run_id) || (github.event_name == 'pull_request' && format('{0}-v7-{1}', github.workflow, github.event.pull_request.number) || (github.repository == 'openclaw/openclaw' && format('{0}-v7-{1}', github.workflow, github.ref) || format('{0}-v7-{1}-{2}', github.workflow, github.ref, github.sha))) }}
+  group: ${{ github.event_name == 'workflow_dispatch' && format('{0}-manual-v1-{1}', github.workflow, github.run_id) || (github.event_name == 'pull_request' && format('{0}-v7-{1}', github.workflow, github.event.pull_request.number) || (github.repository == 'grokbot/grokbot' && format('{0}-v7-{1}', github.workflow, github.ref) || format('{0}-v7-{1}-{2}', github.workflow, github.ref, github.sha))) }}
   # PRs want newest-head feedback. Canonical main instead runs one complete
   # integration cycle while GitHub's single pending slot coalesces later pushes.
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
@@ -67,7 +67,7 @@ jobs:
     permissions:
       contents: read
     if: github.event_name != 'pull_request' || !github.event.pull_request.draft
-    runs-on: ${{ github.event_name == 'workflow_dispatch' && 'ubuntu-24.04' || (github.repository == 'openclaw/openclaw' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'openclaw/openclaw') && 'blacksmith-4vcpu-ubuntu-2404' || 'ubuntu-24.04') }}
+    runs-on: ${{ github.event_name == 'workflow_dispatch' && 'ubuntu-24.04' || (github.repository == 'grokbot/grokbot' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'grokbot/grokbot') && 'blacksmith-4vcpu-ubuntu-2404' || 'ubuntu-24.04') }}
     timeout-minutes: 20
     outputs:
       checkout_revision: ${{ steps.checkout_ref.outputs.sha }}
@@ -289,7 +289,7 @@ jobs:
         run: |
           set -euo pipefail
           if [[ ! "$HISTORICAL_TARGET_TAG" =~ ^v[0-9]{4}\.[0-9]+\.[0-9]+(-(alpha|beta)\.[0-9]+)?$ ]]; then
-            echo "historical_target_tag must be a canonical OpenClaw release tag." >&2
+            echo "historical_target_tag must be a canonical GrokBot release tag." >&2
             exit 1
           fi
           tag_ref="refs/tags/${HISTORICAL_TARGET_TAG}"
@@ -313,7 +313,7 @@ jobs:
         run: |
           set -euo pipefail
           if [[ ! "$RELEASE_CANDIDATE_REF" =~ ^(release/[0-9]{4}\.[0-9]+\.[0-9]+|extended-stable/[0-9]{4}\.[0-9]+\.33)$ ]]; then
-            echo "release_candidate_ref must be a canonical OpenClaw release branch." >&2
+            echo "release_candidate_ref must be a canonical GrokBot release branch." >&2
             exit 1
           fi
           remote="$(git remote get-url origin)"
@@ -466,7 +466,7 @@ jobs:
           const outputPath = process.env.GITHUB_OUTPUT;
           const packageScripts = JSON.parse(readFileSync("package.json", "utf8")).scripts ?? {};
           const hasPackageScript = (name) => typeof packageScripts[name] === "string";
-          const isCanonicalRepository = process.env.OPENCLAW_CI_REPOSITORY === "openclaw/openclaw";
+          const isCanonicalRepository = process.env.OPENCLAW_CI_REPOSITORY === "grokbot/grokbot";
           const changedPaths = (() => {
             try {
               const value = JSON.parse(process.env.OPENCLAW_CI_CHANGED_PATHS_JSON ?? "null");
@@ -750,7 +750,7 @@ jobs:
       # dependency snapshot here before fanout. Blacksmith may expose a fresh
       # commit only to a later run; readers retain the marker-checked fallback.
       - name: Refresh sticky dependency snapshot
-        if: github.repository == 'openclaw/openclaw' && github.event_name == 'push' && github.ref == 'refs/heads/main' && steps.manifest.outputs.run_node == 'true'
+        if: github.repository == 'grokbot/grokbot' && github.event_name == 'push' && github.ref == 'refs/heads/main' && steps.manifest.outputs.run_node == 'true'
         uses: ./.github/actions/setup-node-env
         with:
           install-bun: "false"
@@ -759,7 +759,7 @@ jobs:
           use-actions-cache: "false"
 
       - name: Maintain sticky dependency store budget
-        if: github.repository == 'openclaw/openclaw' && github.event_name == 'push' && github.ref == 'refs/heads/main' && steps.manifest.outputs.run_node == 'true'
+        if: github.repository == 'grokbot/grokbot' && github.event_name == 'push' && github.ref == 'refs/heads/main' && steps.manifest.outputs.run_node == 'true'
         shell: bash
         env:
           OPENCLAW_PNPM_STORE_MAX_KIB: "8388608"
@@ -961,8 +961,8 @@ jobs:
     permissions:
       contents: read
     needs: [preflight]
-    if: ${{ (needs.preflight.outputs.run_node == 'true' || needs.preflight.outputs.run_check_docs == 'true') && !(github.repository == 'openclaw/openclaw' && github.event_name == 'push' && github.ref == 'refs/heads/main') }}
-    runs-on: ${{ github.event_name == 'workflow_dispatch' && 'ubuntu-24.04' || (github.repository == 'openclaw/openclaw' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'openclaw/openclaw') && 'blacksmith-4vcpu-ubuntu-2404' || 'ubuntu-24.04') }}
+    if: ${{ (needs.preflight.outputs.run_node == 'true' || needs.preflight.outputs.run_check_docs == 'true') && !(github.repository == 'grokbot/grokbot' && github.event_name == 'push' && github.ref == 'refs/heads/main') }}
+    runs-on: ${{ github.event_name == 'workflow_dispatch' && 'ubuntu-24.04' || (github.repository == 'grokbot/grokbot' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'grokbot/grokbot') && 'blacksmith-4vcpu-ubuntu-2404' || 'ubuntu-24.04') }}
     timeout-minutes: 20
     steps:
       - &linux_node_checkout_step
@@ -1027,7 +1027,7 @@ jobs:
     # 32 vCPU: the dist build sits on the light-run critical path alongside
     # check-lint/check-dependencies; tsdown parallelizes across the extra
     # cores for roughly the same billed core-minutes.
-    runs-on: ${{ github.event_name == 'workflow_dispatch' && 'ubuntu-24.04' || (github.repository == 'openclaw/openclaw' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'openclaw/openclaw') && 'blacksmith-32vcpu-ubuntu-2404' || 'ubuntu-24.04') }}
+    runs-on: ${{ github.event_name == 'workflow_dispatch' && 'ubuntu-24.04' || (github.repository == 'grokbot/grokbot' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'grokbot/grokbot') && 'blacksmith-32vcpu-ubuntu-2404' || 'ubuntu-24.04') }}
     timeout-minutes: 20
     outputs:
       channels-result: ${{ steps.built_artifact_checks.outputs['channels-result'] }}
@@ -1051,8 +1051,8 @@ jobs:
           # Blacksmith same-repo runs clone dependencies from a sticky disk.
           # Fork PRs must keep actions/cache: sticky snapshots are writable,
           # repository-global state and must never be produced by fork code.
-          sticky-disk: ${{ github.event_name != 'workflow_dispatch' && github.repository == 'openclaw/openclaw' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'openclaw/openclaw') && 'true' || 'false' }}
-          use-actions-cache: ${{ github.event_name != 'workflow_dispatch' && github.repository == 'openclaw/openclaw' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'openclaw/openclaw') && 'false' || 'true' }}
+          sticky-disk: ${{ github.event_name != 'workflow_dispatch' && github.repository == 'grokbot/grokbot' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'grokbot/grokbot') && 'true' || 'false' }}
+          use-actions-cache: ${{ github.event_name != 'workflow_dispatch' && github.repository == 'grokbot/grokbot' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'grokbot/grokbot') && 'false' || 'true' }}
           save-node-compile-cache: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && 'true' || 'false' }}
 
       - name: Restore build-all step cache
@@ -1102,10 +1102,10 @@ jobs:
           retention-days: 1
 
       - name: Smoke test CLI launcher help
-        run: node openclaw.mjs --help
+        run: node grokbot.mjs --help
 
       - name: Smoke test CLI launcher status json
-        run: node openclaw.mjs status --json --timeout 1
+        run: node grokbot.mjs status --json --timeout 1
 
       - name: Smoke test built bundled plugin singleton
         run: pnpm test:build:singleton
@@ -1257,7 +1257,7 @@ jobs:
       contents: read
     needs: [preflight]
     if: ${{ !cancelled() && always() && needs.preflight.outputs.run_native_i18n == 'true' }}
-    runs-on: ${{ github.event_name == 'workflow_dispatch' && 'ubuntu-24.04' || (github.repository == 'openclaw/openclaw' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'openclaw/openclaw') && 'blacksmith-4vcpu-ubuntu-2404' || 'ubuntu-24.04') }}
+    runs-on: ${{ github.event_name == 'workflow_dispatch' && 'ubuntu-24.04' || (github.repository == 'grokbot/grokbot' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'grokbot/grokbot') && 'blacksmith-4vcpu-ubuntu-2404' || 'ubuntu-24.04') }}
     timeout-minutes: 10
     steps:
       - name: Checkout
@@ -1273,8 +1273,8 @@ jobs:
           # Blacksmith same-repo runs clone dependencies from a sticky disk.
           # Fork PRs must keep actions/cache: sticky snapshots are writable,
           # repository-global state and must never be produced by fork code.
-          sticky-disk: ${{ github.event_name != 'workflow_dispatch' && github.repository == 'openclaw/openclaw' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'openclaw/openclaw') && 'true' || 'false' }}
-          use-actions-cache: ${{ github.event_name != 'workflow_dispatch' && github.repository == 'openclaw/openclaw' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'openclaw/openclaw') && 'false' || 'true' }}
+          sticky-disk: ${{ github.event_name != 'workflow_dispatch' && github.repository == 'grokbot/grokbot' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'grokbot/grokbot') && 'true' || 'false' }}
+          use-actions-cache: ${{ github.event_name != 'workflow_dispatch' && github.repository == 'grokbot/grokbot' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'grokbot/grokbot') && 'false' || 'true' }}
 
       - name: Verify native app i18n source
         run: |
@@ -1302,7 +1302,7 @@ jobs:
     name: checks-ui
     needs: [preflight]
     if: needs.preflight.outputs.run_ui_tests == 'true'
-    runs-on: ${{ github.event_name == 'workflow_dispatch' && 'ubuntu-24.04' || (github.repository == 'openclaw/openclaw' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'openclaw/openclaw') && 'blacksmith-4vcpu-ubuntu-2404' || 'ubuntu-24.04') }}
+    runs-on: ${{ github.event_name == 'workflow_dispatch' && 'ubuntu-24.04' || (github.repository == 'grokbot/grokbot' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'grokbot/grokbot') && 'blacksmith-4vcpu-ubuntu-2404' || 'ubuntu-24.04') }}
     timeout-minutes: 20
     env:
       COMPATIBILITY_TARGET: ${{ needs.preflight.outputs.compatibility_target }}
@@ -1316,8 +1316,8 @@ jobs:
           # Blacksmith same-repo runs clone dependencies from a sticky disk.
           # Fork PRs must keep actions/cache: sticky snapshots are writable,
           # repository-global state and must never be produced by fork code.
-          sticky-disk: ${{ github.event_name != 'workflow_dispatch' && github.repository == 'openclaw/openclaw' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'openclaw/openclaw') && 'true' || 'false' }}
-          use-actions-cache: ${{ github.event_name != 'workflow_dispatch' && github.repository == 'openclaw/openclaw' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'openclaw/openclaw') && 'false' || 'true' }}
+          sticky-disk: ${{ github.event_name != 'workflow_dispatch' && github.repository == 'grokbot/grokbot' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'grokbot/grokbot') && 'true' || 'false' }}
+          use-actions-cache: ${{ github.event_name != 'workflow_dispatch' && github.repository == 'grokbot/grokbot' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'grokbot/grokbot') && 'false' || 'true' }}
 
       - name: Install Playwright Chromium
         run: |
@@ -1352,7 +1352,7 @@ jobs:
     name: control-ui-i18n
     needs: [preflight]
     if: needs.preflight.outputs.run_control_ui_i18n == 'true'
-    runs-on: ${{ github.event_name == 'workflow_dispatch' && 'ubuntu-24.04' || (github.repository == 'openclaw/openclaw' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'openclaw/openclaw') && 'blacksmith-4vcpu-ubuntu-2404' || 'ubuntu-24.04') }}
+    runs-on: ${{ github.event_name == 'workflow_dispatch' && 'ubuntu-24.04' || (github.repository == 'grokbot/grokbot' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'grokbot/grokbot') && 'blacksmith-4vcpu-ubuntu-2404' || 'ubuntu-24.04') }}
     timeout-minutes: 10
     steps:
       - *linux_node_checkout_step
@@ -1364,8 +1364,8 @@ jobs:
           # Blacksmith same-repo runs clone dependencies from a sticky disk.
           # Fork PRs must keep actions/cache: sticky snapshots are writable,
           # repository-global state and must never be produced by fork code.
-          sticky-disk: ${{ github.event_name != 'workflow_dispatch' && github.repository == 'openclaw/openclaw' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'openclaw/openclaw') && 'true' || 'false' }}
-          use-actions-cache: ${{ github.event_name != 'workflow_dispatch' && github.repository == 'openclaw/openclaw' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'openclaw/openclaw') && 'false' || 'true' }}
+          sticky-disk: ${{ github.event_name != 'workflow_dispatch' && github.repository == 'grokbot/grokbot' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'grokbot/grokbot') && 'true' || 'false' }}
+          use-actions-cache: ${{ github.event_name != 'workflow_dispatch' && github.repository == 'grokbot/grokbot' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'grokbot/grokbot') && 'false' || 'true' }}
 
       - name: Check Control UI locale parity
         # Source-only drift stays advisory because the post-merge bot owns
@@ -1380,7 +1380,7 @@ jobs:
     name: ${{ matrix.check_name }}
     needs: [preflight]
     if: needs.preflight.outputs.run_checks_fast_core == 'true'
-    runs-on: ${{ github.event_name == 'workflow_dispatch' && 'ubuntu-24.04' || (github.repository == 'openclaw/openclaw' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'openclaw/openclaw') && (matrix.runner || 'blacksmith-4vcpu-ubuntu-2404') || 'ubuntu-24.04') }}
+    runs-on: ${{ github.event_name == 'workflow_dispatch' && 'ubuntu-24.04' || (github.repository == 'grokbot/grokbot' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'grokbot/grokbot') && (matrix.runner || 'blacksmith-4vcpu-ubuntu-2404') || 'ubuntu-24.04') }}
     timeout-minutes: 60
     strategy:
       fail-fast: false
@@ -1440,8 +1440,8 @@ jobs:
           # Blacksmith same-repo runs clone dependencies from a sticky disk.
           # Fork PRs must keep actions/cache: sticky snapshots are writable,
           # repository-global state and must never be produced by fork code.
-          sticky-disk: ${{ github.event_name != 'workflow_dispatch' && github.repository == 'openclaw/openclaw' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'openclaw/openclaw') && 'true' || 'false' }}
-          use-actions-cache: ${{ github.event_name != 'workflow_dispatch' && github.repository == 'openclaw/openclaw' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'openclaw/openclaw') && 'false' || 'true' }}
+          sticky-disk: ${{ github.event_name != 'workflow_dispatch' && github.repository == 'grokbot/grokbot' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'grokbot/grokbot') && 'true' || 'false' }}
+          use-actions-cache: ${{ github.event_name != 'workflow_dispatch' && github.repository == 'grokbot/grokbot' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'grokbot/grokbot') && 'false' || 'true' }}
 
       - name: Resolve manual protocol base
         id: protocol_manual_base
@@ -1575,7 +1575,7 @@ jobs:
               fi
               ;;
             bun-launcher)
-              OPENCLAW_TEST_BUN_LAUNCHER=1 pnpm test test/openclaw-launcher.e2e.test.ts
+              OPENCLAW_TEST_BUN_LAUNCHER=1 pnpm test test/grokbot-launcher.e2e.test.ts
               ;;
             *)
               echo "Unsupported checks-fast task: $TASK" >&2
@@ -1589,7 +1589,7 @@ jobs:
     name: QA Smoke CI (${{ matrix.name }})
     needs: [preflight]
     if: needs.preflight.outputs.run_qa_smoke_ci == 'true'
-    runs-on: ${{ github.event_name == 'workflow_dispatch' && 'ubuntu-24.04' || (github.repository == 'openclaw/openclaw' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'openclaw/openclaw') && 'blacksmith-16vcpu-ubuntu-2404' || 'ubuntu-24.04') }}
+    runs-on: ${{ github.event_name == 'workflow_dispatch' && 'ubuntu-24.04' || (github.repository == 'grokbot/grokbot' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'grokbot/grokbot') && 'blacksmith-16vcpu-ubuntu-2404' || 'ubuntu-24.04') }}
     timeout-minutes: 60
     strategy:
       fail-fast: false
@@ -1618,11 +1618,11 @@ jobs:
           # Blacksmith same-repo runs clone dependencies from a sticky disk.
           # Fork PRs must keep actions/cache: sticky snapshots are writable,
           # repository-global state and must never be produced by fork code.
-          sticky-disk: ${{ github.event_name != 'workflow_dispatch' && github.repository == 'openclaw/openclaw' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'openclaw/openclaw') && 'true' || 'false' }}
-          use-actions-cache: ${{ github.event_name != 'workflow_dispatch' && github.repository == 'openclaw/openclaw' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'openclaw/openclaw') && 'false' || 'true' }}
+          sticky-disk: ${{ github.event_name != 'workflow_dispatch' && github.repository == 'grokbot/grokbot' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'grokbot/grokbot') && 'true' || 'false' }}
+          use-actions-cache: ${{ github.event_name != 'workflow_dispatch' && github.repository == 'grokbot/grokbot' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'grokbot/grokbot') && 'false' || 'true' }}
 
       - name: Set up Blacksmith Docker layer cache
-        if: ${{ matrix.docker_cache == true && github.event_name != 'workflow_dispatch' && github.repository == 'openclaw/openclaw' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'openclaw/openclaw') }}
+        if: ${{ matrix.docker_cache == true && github.event_name != 'workflow_dispatch' && github.repository == 'grokbot/grokbot' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'grokbot/grokbot') }}
         uses: useblacksmith/setup-docker-builder@ab5c1da94f53f5cd75c1038092aa276dddfccbba # v1
         with:
           max-cache-size-mb: 800000
@@ -1637,18 +1637,18 @@ jobs:
           package_args=(
             --skip-build
             --output-dir .artifacts/qa-e2e/smoke-ci-package
-            --output-name openclaw-current.tgz
+            --output-name grokbot-current.tgz
           )
-          if grep -Fq -- '--allow-unreleased-changelog' scripts/package-openclaw-for-docker.mjs; then
+          if grep -Fq -- '--allow-unreleased-changelog' scripts/package-grokbot-for-docker.mjs; then
             package_args=(--allow-unreleased-changelog "${package_args[@]}")
           fi
-          node scripts/package-openclaw-for-docker.mjs "${package_args[@]}"
+          node scripts/package-grokbot-for-docker.mjs "${package_args[@]}"
 
       - name: Run smoke profile part
         env:
           PROFILE_PART: ${{ matrix.lane }}
           PROFILE_PART_SLUG: ${{ matrix.slug }}
-          OPENCLAW_QA_SUITE_WORKER_START_STAGGER_MS: ${{ github.event_name != 'workflow_dispatch' && github.repository == 'openclaw/openclaw' && '0' || '1500' }}
+          OPENCLAW_QA_SUITE_WORKER_START_STAGGER_MS: ${{ github.event_name != 'workflow_dispatch' && github.repository == 'grokbot/grokbot' && '0' || '1500' }}
         shell: bash
         run: |
           set -euo pipefail
@@ -1659,7 +1659,7 @@ jobs:
           export OPENCLAW_QA_REDACT_PUBLIC_METADATA=1
           export OPENCLAW_QA_TRANSPORT_READY_TIMEOUT_MS=180000
           export NODE_OPTIONS=--max-old-space-size=16384
-          export OPENCLAW_CURRENT_PACKAGE_TGZ="$PWD/.artifacts/qa-e2e/smoke-ci-package/openclaw-current.tgz"
+          export OPENCLAW_CURRENT_PACKAGE_TGZ="$PWD/.artifacts/qa-e2e/smoke-ci-package/grokbot-current.tgz"
           PROFILE_RUNS_TSV="$(
             node --import tsx --input-type=module <<'EOF'
           const smokePlan = await import("./extensions/qa-lab/src/ci-smoke-plan.ts");
@@ -1751,7 +1751,7 @@ jobs:
             for scenario_id in "${scenario_ids[@]}"; do
               scenario_args+=(--scenario "$scenario_id")
             done
-            timeout --signal=TERM --kill-after=15s 10m node openclaw.mjs qa run \
+            timeout --signal=TERM --kill-after=15s 10m node grokbot.mjs qa run \
               --repo-root . \
               --qa-profile smoke-ci \
               --concurrency 10 \
@@ -1779,7 +1779,7 @@ jobs:
     name: ${{ matrix.checkName }}
     needs: [preflight]
     if: needs.preflight.outputs.run_plugin_contracts_shards == 'true'
-    runs-on: ${{ github.event_name == 'workflow_dispatch' && 'ubuntu-24.04' || (github.repository == 'openclaw/openclaw' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'openclaw/openclaw') && 'blacksmith-4vcpu-ubuntu-2404' || 'ubuntu-24.04') }}
+    runs-on: ${{ github.event_name == 'workflow_dispatch' && 'ubuntu-24.04' || (github.repository == 'grokbot/grokbot' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'grokbot/grokbot') && 'blacksmith-4vcpu-ubuntu-2404' || 'ubuntu-24.04') }}
     timeout-minutes: 60
     strategy:
       fail-fast: false
@@ -1794,8 +1794,8 @@ jobs:
           # Blacksmith same-repo runs clone dependencies from a sticky disk.
           # Fork PRs must keep actions/cache: sticky snapshots are writable,
           # repository-global state and must never be produced by fork code.
-          sticky-disk: ${{ github.event_name != 'workflow_dispatch' && github.repository == 'openclaw/openclaw' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'openclaw/openclaw') && 'true' || 'false' }}
-          use-actions-cache: ${{ github.event_name != 'workflow_dispatch' && github.repository == 'openclaw/openclaw' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'openclaw/openclaw') && 'false' || 'true' }}
+          sticky-disk: ${{ github.event_name != 'workflow_dispatch' && github.repository == 'grokbot/grokbot' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'grokbot/grokbot') && 'true' || 'false' }}
+          use-actions-cache: ${{ github.event_name != 'workflow_dispatch' && github.repository == 'grokbot/grokbot' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'grokbot/grokbot') && 'false' || 'true' }}
 
       - name: Run plugin contract shard
         env:
@@ -1822,7 +1822,7 @@ jobs:
     name: ${{ matrix.checkName }}
     needs: [preflight]
     if: needs.preflight.outputs.run_channel_contracts_shards == 'true'
-    runs-on: ${{ github.event_name == 'workflow_dispatch' && 'ubuntu-24.04' || (github.repository == 'openclaw/openclaw' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'openclaw/openclaw') && 'blacksmith-4vcpu-ubuntu-2404' || 'ubuntu-24.04') }}
+    runs-on: ${{ github.event_name == 'workflow_dispatch' && 'ubuntu-24.04' || (github.repository == 'grokbot/grokbot' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'grokbot/grokbot') && 'blacksmith-4vcpu-ubuntu-2404' || 'ubuntu-24.04') }}
     timeout-minutes: 60
     strategy:
       fail-fast: false
@@ -1837,8 +1837,8 @@ jobs:
           # Blacksmith same-repo runs clone dependencies from a sticky disk.
           # Fork PRs must keep actions/cache: sticky snapshots are writable,
           # repository-global state and must never be produced by fork code.
-          sticky-disk: ${{ github.event_name != 'workflow_dispatch' && github.repository == 'openclaw/openclaw' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'openclaw/openclaw') && 'true' || 'false' }}
-          use-actions-cache: ${{ github.event_name != 'workflow_dispatch' && github.repository == 'openclaw/openclaw' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'openclaw/openclaw') && 'false' || 'true' }}
+          sticky-disk: ${{ github.event_name != 'workflow_dispatch' && github.repository == 'grokbot/grokbot' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'grokbot/grokbot') && 'true' || 'false' }}
+          use-actions-cache: ${{ github.event_name != 'workflow_dispatch' && github.repository == 'grokbot/grokbot' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'grokbot/grokbot') && 'false' || 'true' }}
 
       - name: Run channel contract shard
         env:
@@ -1865,7 +1865,7 @@ jobs:
     name: checks-node-compat-node22
     needs: [preflight]
     if: needs.preflight.outputs.run_build_artifacts == 'true' && github.event_name == 'workflow_dispatch'
-    runs-on: ${{ github.event_name == 'workflow_dispatch' && 'ubuntu-24.04' || (github.repository == 'openclaw/openclaw' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'openclaw/openclaw') && 'blacksmith-4vcpu-ubuntu-2404' || 'ubuntu-24.04') }}
+    runs-on: ${{ github.event_name == 'workflow_dispatch' && 'ubuntu-24.04' || (github.repository == 'grokbot/grokbot' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'grokbot/grokbot') && 'blacksmith-4vcpu-ubuntu-2404' || 'ubuntu-24.04') }}
     timeout-minutes: 60
     steps:
       - *linux_node_checkout_step
@@ -1885,8 +1885,8 @@ jobs:
         run: |
           pnpm build
           pnpm ui:build
-          node openclaw.mjs --help
-          node openclaw.mjs status --json --timeout 1
+          node grokbot.mjs --help
+          node grokbot.mjs status --json --timeout 1
           pnpm test:build:singleton
 
   checks-node-core-test-nondist-shard:
@@ -1895,7 +1895,7 @@ jobs:
     name: ${{ matrix.check_name }}
     needs: [preflight]
     if: needs.preflight.outputs.run_checks_node_core_nondist == 'true'
-    runs-on: ${{ github.event_name == 'workflow_dispatch' && 'ubuntu-24.04' || (github.repository == 'openclaw/openclaw' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'openclaw/openclaw') && (matrix.runner || 'blacksmith-4vcpu-ubuntu-2404') || 'ubuntu-24.04') }}
+    runs-on: ${{ github.event_name == 'workflow_dispatch' && 'ubuntu-24.04' || (github.repository == 'grokbot/grokbot' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'grokbot/grokbot') && (matrix.runner || 'blacksmith-4vcpu-ubuntu-2404') || 'ubuntu-24.04') }}
     timeout-minutes: ${{ matrix.timeout_minutes || 60 }}
     strategy:
       fail-fast: false
@@ -1913,8 +1913,8 @@ jobs:
           # Blacksmith same-repo runs clone dependencies from a sticky disk.
           # Fork PRs must keep actions/cache: sticky snapshots are writable,
           # repository-global state and must never be produced by fork code.
-          sticky-disk: ${{ (matrix.node_version == null || matrix.node_version == '24.x') && github.event_name != 'workflow_dispatch' && github.repository == 'openclaw/openclaw' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'openclaw/openclaw') && 'true' || 'false' }}
-          use-actions-cache: ${{ (matrix.node_version == null || matrix.node_version == '24.x') && github.event_name != 'workflow_dispatch' && github.repository == 'openclaw/openclaw' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'openclaw/openclaw') && 'false' || 'true' }}
+          sticky-disk: ${{ (matrix.node_version == null || matrix.node_version == '24.x') && github.event_name != 'workflow_dispatch' && github.repository == 'grokbot/grokbot' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'grokbot/grokbot') && 'true' || 'false' }}
+          use-actions-cache: ${{ (matrix.node_version == null || matrix.node_version == '24.x') && github.event_name != 'workflow_dispatch' && github.repository == 'grokbot/grokbot' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'grokbot/grokbot') && 'false' || 'true' }}
           vitest-fs-cache: "true"
           node-compile-cache: "true"
           node-compile-cache-scope: "test"
@@ -1994,7 +1994,7 @@ jobs:
               echo "invalid job workflow SHA: $job_workflow_sha" >&2
               exit 1
             fi
-            harness_root="${RUNNER_TEMP}/openclaw-ci-shard-runner"
+            harness_root="${RUNNER_TEMP}/grokbot-ci-shard-runner"
             workflow_remote="https://github.com/${job_workflow_repository}.git"
             timeout --signal=TERM --kill-after=10s 120s git fetch --no-tags --depth=1 "$workflow_remote" "$job_workflow_sha"
             for file in \
@@ -2015,7 +2015,7 @@ jobs:
     name: ${{ matrix.check_name }}
     needs: [preflight]
     if: ${{ !cancelled() && always() && needs.preflight.outputs.run_check == 'true' }}
-    runs-on: ${{ github.event_name == 'workflow_dispatch' && 'ubuntu-24.04' || (github.repository == 'openclaw/openclaw' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'openclaw/openclaw') && (matrix.runner || 'blacksmith-4vcpu-ubuntu-2404') || 'ubuntu-24.04') }}
+    runs-on: ${{ github.event_name == 'workflow_dispatch' && 'ubuntu-24.04' || (github.repository == 'grokbot/grokbot' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'grokbot/grokbot') && (matrix.runner || 'blacksmith-4vcpu-ubuntu-2404') || 'ubuntu-24.04') }}
     timeout-minutes: 20
     strategy:
       fail-fast: false
@@ -2058,15 +2058,15 @@ jobs:
           # Blacksmith same-repo runs clone dependencies from a sticky disk.
           # Fork PRs must keep actions/cache: sticky snapshots are writable,
           # repository-global state and must never be produced by fork code.
-          sticky-disk: ${{ github.event_name != 'workflow_dispatch' && github.repository == 'openclaw/openclaw' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'openclaw/openclaw') && 'true' || 'false' }}
-          use-actions-cache: ${{ github.event_name != 'workflow_dispatch' && github.repository == 'openclaw/openclaw' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'openclaw/openclaw') && 'false' || 'true' }}
+          sticky-disk: ${{ github.event_name != 'workflow_dispatch' && github.repository == 'grokbot/grokbot' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'grokbot/grokbot') && 'true' || 'false' }}
+          use-actions-cache: ${{ github.event_name != 'workflow_dispatch' && github.repository == 'grokbot/grokbot' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'grokbot/grokbot') && 'false' || 'true' }}
 
       # check-lint's shard runner rebuilds the same plugin-sdk boundary
       # artifacts the boundary lane snapshots (~72s cold); restore them from
       # the shared sticky. Strictly read-only (commit: false): only the
       # protected boundary lane may publish this repository-global snapshot.
       - name: Mount extension boundary sticky disk
-        if: matrix.task == 'lint' && github.event_name != 'workflow_dispatch' && github.repository == 'openclaw/openclaw' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'openclaw/openclaw')
+        if: matrix.task == 'lint' && github.event_name != 'workflow_dispatch' && github.repository == 'grokbot/grokbot' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'grokbot/grokbot')
         uses: useblacksmith/stickydisk@6d373c96a74cbde0c99fedc5ea5d3a7ba66ba494 # main (post-v1.4.0 hot-attach fix)
         with:
           # One stable disk for the whole repository. The v1 per-PR/per-config
@@ -2075,11 +2075,11 @@ jobs:
           # budget, 429-failing every mount. Snapshot validity lives in the
           # in-job marker checked below instead of the key.
           key: ${{ github.repository }}-ext-boundary-v2
-          path: /var/tmp/openclaw-ext-boundary
+          path: /var/tmp/grokbot-ext-boundary
           commit: "false"
 
       - name: Restore extension boundary artifacts from sticky disk
-        if: matrix.task == 'lint' && github.event_name != 'workflow_dispatch' && github.repository == 'openclaw/openclaw' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'openclaw/openclaw')
+        if: matrix.task == 'lint' && github.event_name != 'workflow_dispatch' && github.repository == 'grokbot/grokbot' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'grokbot/grokbot')
         shell: bash
         env:
           # Config/toolchain inputs the tree-OID gate below cannot see; must
@@ -2087,7 +2087,7 @@ jobs:
           BOUNDARY_CONFIG_HASH: ${{ hashFiles('tsconfig.json', 'tsconfig.plugin-sdk.dts.json', 'packages/plugin-sdk/tsconfig.json', 'scripts/check-extension-package-tsc-boundary.mjs', 'scripts/prepare-extension-package-boundary-artifacts.mjs', 'scripts/write-plugin-sdk-entry-dts.ts', 'scripts/lib/plugin-sdk-entrypoints.json', 'scripts/lib/plugin-sdk-entries.mjs', 'package.json', 'pnpm-lock.yaml') }}
         run: |
           set -euo pipefail
-          sticky_root=/var/tmp/openclaw-ext-boundary
+          sticky_root=/var/tmp/grokbot-ext-boundary
           if [ ! -f "$sticky_root/.snapshot-ready" ]; then
             echo "boundary artifact snapshot not seeded yet; lint prepares cold"
             exit 0
@@ -2248,7 +2248,7 @@ jobs:
     name: ${{ matrix.check_name }}
     needs: [preflight]
     if: ${{ !cancelled() && always() && needs.preflight.outputs.run_check_additional == 'true' }}
-    runs-on: ${{ github.event_name == 'workflow_dispatch' && 'ubuntu-24.04' || (github.repository == 'openclaw/openclaw' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'openclaw/openclaw') && (matrix.runner || 'blacksmith-4vcpu-ubuntu-2404') || 'ubuntu-24.04') }}
+    runs-on: ${{ github.event_name == 'workflow_dispatch' && 'ubuntu-24.04' || (github.repository == 'grokbot/grokbot' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'grokbot/grokbot') && (matrix.runner || 'blacksmith-4vcpu-ubuntu-2404') || 'ubuntu-24.04') }}
     timeout-minutes: 20
     strategy:
       fail-fast: false
@@ -2303,8 +2303,8 @@ jobs:
           # Blacksmith same-repo runs clone dependencies from a sticky disk.
           # Fork PRs must keep actions/cache: sticky snapshots are writable,
           # repository-global state and must never be produced by fork code.
-          sticky-disk: ${{ github.event_name != 'workflow_dispatch' && github.repository == 'openclaw/openclaw' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'openclaw/openclaw') && 'true' || 'false' }}
-          use-actions-cache: ${{ github.event_name != 'workflow_dispatch' && github.repository == 'openclaw/openclaw' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'openclaw/openclaw') && 'false' || 'true' }}
+          sticky-disk: ${{ github.event_name != 'workflow_dispatch' && github.repository == 'grokbot/grokbot' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'grokbot/grokbot') && 'true' || 'false' }}
+          use-actions-cache: ${{ github.event_name != 'workflow_dispatch' && github.repository == 'grokbot/grokbot' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'grokbot/grokbot') && 'false' || 'true' }}
 
       # Same-repo runs carry boundary artifacts on a Blacksmith sticky disk:
       # the GitHub cache below is evicted so quickly under the repo quota that
@@ -2312,7 +2312,7 @@ jobs:
       # plugin-sdk declarations. Fork PRs must never produce writable
       # repository-global snapshots, so they keep the GitHub cache path.
       - name: Mount extension boundary sticky disk
-        if: matrix.group == 'extension-package-boundary' && github.event_name != 'workflow_dispatch' && github.repository == 'openclaw/openclaw' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'openclaw/openclaw')
+        if: matrix.group == 'extension-package-boundary' && github.event_name != 'workflow_dispatch' && github.repository == 'grokbot/grokbot' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'grokbot/grokbot')
         uses: useblacksmith/stickydisk@6d373c96a74cbde0c99fedc5ea5d3a7ba66ba494 # main (post-v1.4.0 hot-attach fix)
         with:
           # One stable disk for the whole repository. The v1 per-PR/per-config
@@ -2322,7 +2322,7 @@ jobs:
           # in-job marker checked below instead of the key, so source and
           # toolchain changes refresh this disk in place.
           key: ${{ github.repository }}-ext-boundary-v2
-          path: /var/tmp/openclaw-ext-boundary
+          path: /var/tmp/grokbot-ext-boundary
           # Single semantic writer: only protected pushes commit, so
           # pull_request clones stay read-only and the snapshot tracks main.
           # Explicit true (not on-change/if-missing) because the allocated-byte
@@ -2333,7 +2333,7 @@ jobs:
 
       - name: Restore extension boundary artifacts from sticky disk
         id: boundary-sticky-restore
-        if: matrix.group == 'extension-package-boundary' && github.event_name != 'workflow_dispatch' && github.repository == 'openclaw/openclaw' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'openclaw/openclaw')
+        if: matrix.group == 'extension-package-boundary' && github.event_name != 'workflow_dispatch' && github.repository == 'grokbot/grokbot' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'grokbot/grokbot')
         shell: bash
         env:
           # Config/toolchain inputs the tree-OID gate below cannot see; must
@@ -2341,7 +2341,7 @@ jobs:
           BOUNDARY_CONFIG_HASH: ${{ hashFiles('tsconfig.json', 'tsconfig.plugin-sdk.dts.json', 'packages/plugin-sdk/tsconfig.json', 'scripts/check-extension-package-tsc-boundary.mjs', 'scripts/prepare-extension-package-boundary-artifacts.mjs', 'scripts/write-plugin-sdk-entry-dts.ts', 'scripts/lib/plugin-sdk-entrypoints.json', 'scripts/lib/plugin-sdk-entries.mjs', 'package.json', 'pnpm-lock.yaml') }}
         run: |
           set -euo pipefail
-          sticky_root=/var/tmp/openclaw-ext-boundary
+          sticky_root=/var/tmp/grokbot-ext-boundary
           if [ ! -f "$sticky_root/.snapshot-ready" ]; then
             echo "restored=false" >> "$GITHUB_OUTPUT"
             exit 0
@@ -2530,14 +2530,14 @@ jobs:
       # clone). Seed the payload before the sticky post-action flushes.
       # rsync -aR mirrors the repo-relative layout the restore step replays.
       - name: Seed extension boundary sticky disk
-        if: success() && steps.boundary-sticky-restore.outputs.restored == 'false' && matrix.group == 'extension-package-boundary' && github.event_name != 'workflow_dispatch' && github.event_name != 'pull_request' && github.repository == 'openclaw/openclaw'
+        if: success() && steps.boundary-sticky-restore.outputs.restored == 'false' && matrix.group == 'extension-package-boundary' && github.event_name != 'workflow_dispatch' && github.event_name != 'pull_request' && github.repository == 'grokbot/grokbot'
         shell: bash
         env:
           # Must stay identical to the restore gates above.
           BOUNDARY_CONFIG_HASH: ${{ hashFiles('tsconfig.json', 'tsconfig.plugin-sdk.dts.json', 'packages/plugin-sdk/tsconfig.json', 'scripts/check-extension-package-tsc-boundary.mjs', 'scripts/prepare-extension-package-boundary-artifacts.mjs', 'scripts/write-plugin-sdk-entry-dts.ts', 'scripts/lib/plugin-sdk-entrypoints.json', 'scripts/lib/plugin-sdk-entries.mjs', 'package.json', 'pnpm-lock.yaml') }}
         run: |
           set -euo pipefail
-          sticky_root=/var/tmp/openclaw-ext-boundary
+          sticky_root=/var/tmp/grokbot-ext-boundary
           # A stale marker must not survive a mid-seed failure: drop readiness
           # first so a partial payload can never be restored as valid.
           rm -rf "$sticky_root/.snapshot-ready" "$sticky_root/.source-trees" "$sticky_root/dist" "$sticky_root/packages" "$sticky_root/extensions"
@@ -2558,7 +2558,7 @@ jobs:
       contents: read
     needs: [preflight]
     if: needs.preflight.outputs.run_check_docs == 'true'
-    runs-on: ${{ github.event_name == 'workflow_dispatch' && 'ubuntu-24.04' || (github.repository == 'openclaw/openclaw' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'openclaw/openclaw') && 'blacksmith-4vcpu-ubuntu-2404' || 'ubuntu-24.04') }}
+    runs-on: ${{ github.event_name == 'workflow_dispatch' && 'ubuntu-24.04' || (github.repository == 'grokbot/grokbot' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'grokbot/grokbot') && 'blacksmith-4vcpu-ubuntu-2404' || 'ubuntu-24.04') }}
     timeout-minutes: 20
     steps:
       - *linux_node_checkout_step
@@ -2569,8 +2569,8 @@ jobs:
           # Blacksmith same-repo runs clone dependencies from a sticky disk.
           # Fork PRs must keep actions/cache: sticky snapshots are writable,
           # repository-global state and must never be produced by fork code.
-          sticky-disk: ${{ github.event_name != 'workflow_dispatch' && github.repository == 'openclaw/openclaw' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'openclaw/openclaw') && 'true' || 'false' }}
-          use-actions-cache: ${{ github.event_name != 'workflow_dispatch' && github.repository == 'openclaw/openclaw' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'openclaw/openclaw') && 'false' || 'true' }}
+          sticky-disk: ${{ github.event_name != 'workflow_dispatch' && github.repository == 'grokbot/grokbot' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'grokbot/grokbot') && 'true' || 'false' }}
+          use-actions-cache: ${{ github.event_name != 'workflow_dispatch' && github.repository == 'grokbot/grokbot' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'grokbot/grokbot') && 'false' || 'true' }}
 
       - name: Check formatting
         if: needs.preflight.outputs.run_format_check == 'true'
@@ -2594,7 +2594,7 @@ jobs:
             reset_checkout_dir
             git init "$workdir" >/dev/null
             git -C "$workdir" config gc.auto 0
-            git -C "$workdir" remote add origin "https://github.com/openclaw/clawhub.git"
+            git -C "$workdir" remote add origin "https://github.com/grokbot/clawhub.git"
 
             timeout --signal=TERM --kill-after=10s 120s git -C "$workdir" \
               -c protocol.version=2 \
@@ -2628,7 +2628,7 @@ jobs:
       contents: read
     needs: [preflight]
     if: needs.preflight.outputs.run_skills_python_job == 'true'
-    runs-on: ${{ github.event_name == 'workflow_dispatch' && 'ubuntu-24.04' || (github.repository == 'openclaw/openclaw' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'openclaw/openclaw') && 'blacksmith-4vcpu-ubuntu-2404' || 'ubuntu-24.04') }}
+    runs-on: ${{ github.event_name == 'workflow_dispatch' && 'ubuntu-24.04' || (github.repository == 'grokbot/grokbot' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'grokbot/grokbot') && 'blacksmith-4vcpu-ubuntu-2404' || 'ubuntu-24.04') }}
     timeout-minutes: 20
     steps:
       - name: Checkout
@@ -2683,7 +2683,7 @@ jobs:
     name: ${{ matrix.check_name }}
     needs: [preflight]
     if: needs.preflight.outputs.run_checks_windows == 'true'
-    runs-on: ${{ github.event_name == 'workflow_dispatch' && 'windows-2025' || (github.repository == 'openclaw/openclaw' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'openclaw/openclaw') && (matrix.runner || 'blacksmith-8vcpu-windows-2025') || 'windows-2025') }}
+    runs-on: ${{ github.event_name == 'workflow_dispatch' && 'windows-2025' || (github.repository == 'grokbot/grokbot' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'grokbot/grokbot') && (matrix.runner || 'blacksmith-8vcpu-windows-2025') || 'windows-2025') }}
     timeout-minutes: 60
     env:
       NODE_OPTIONS: --max-old-space-size=8192
@@ -2829,7 +2829,7 @@ jobs:
     name: ${{ matrix.check_name }}
     needs: [preflight]
     if: ${{ !cancelled() && always() && needs.preflight.outputs.run_macos_node == 'true' }}
-    runs-on: ${{ (github.event_name == 'workflow_dispatch' || github.run_attempt > 1) && 'macos-15' || (github.repository == 'openclaw/openclaw' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'openclaw/openclaw') && 'blacksmith-6vcpu-macos-15' || 'macos-15') }}
+    runs-on: ${{ (github.event_name == 'workflow_dispatch' || github.run_attempt > 1) && 'macos-15' || (github.repository == 'grokbot/grokbot' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'grokbot/grokbot') && 'blacksmith-6vcpu-macos-15' || 'macos-15') }}
     timeout-minutes: 20
     strategy:
       fail-fast: false
@@ -2868,7 +2868,7 @@ jobs:
     name: "macos-swift"
     needs: [preflight]
     if: needs.preflight.outputs.run_macos_swift == 'true'
-    runs-on: ${{ (github.event_name == 'workflow_dispatch' || github.run_attempt > 1) && 'macos-26' || (github.repository == 'openclaw/openclaw' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'openclaw/openclaw') && 'blacksmith-12vcpu-macos-26' || 'macos-26') }}
+    runs-on: ${{ (github.event_name == 'workflow_dispatch' || github.run_attempt > 1) && 'macos-26' || (github.repository == 'grokbot/grokbot' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'grokbot/grokbot') && 'blacksmith-12vcpu-macos-26' || 'macos-26') }}
     # Hosted runs may still be finalizing large Swift caches after every test
     # passes; keep that post-job work non-blocking.
     timeout-minutes: ${{ (github.event_name == 'workflow_dispatch' || github.run_attempt > 1) && 30 || 20 }}
@@ -2880,7 +2880,7 @@ jobs:
       - name: Install XcodeGen / SwiftLint / SwiftFormat
         run: |
           if [[ -x ./scripts/install-xcodegen.sh && -x ./scripts/install-swift-tools.sh ]]; then
-            swift_tools_dir="$RUNNER_TEMP/openclaw-swift-tools"
+            swift_tools_dir="$RUNNER_TEMP/grokbot-swift-tools"
             ./scripts/install-xcodegen.sh "$swift_tools_dir"
             ./scripts/install-swift-tools.sh "$swift_tools_dir"
             echo "$swift_tools_dir" >> "$GITHUB_PATH"
@@ -2908,7 +2908,7 @@ jobs:
                 ;;
             esac
             swiftformat_archive="$RUNNER_TEMP/swiftformat-$swiftformat_version.zip"
-            swift_tools_dir="$RUNNER_TEMP/openclaw-legacy-swift-tools"
+            swift_tools_dir="$RUNNER_TEMP/grokbot-legacy-swift-tools"
             curl --fail --location --silent --show-error \
               --connect-timeout 10 --max-time 120 \
               --retry 3 --retry-max-time 120 \
@@ -3019,7 +3019,7 @@ jobs:
             # The macOS lane validates the desktop app build; the CLI product is
             # intentionally left to its own narrower surfaces instead of making
             # this lane rebuild the whole package graph.
-            if swift build --package-path apps/macos --product OpenClaw --configuration release; then
+            if swift build --package-path apps/macos --product GrokBot --configuration release; then
               exit 0
             fi
             if [[ "$attempt" -eq 3 ]]; then
@@ -3076,7 +3076,7 @@ jobs:
     name: "ios-build"
     needs: [preflight]
     if: needs.preflight.outputs.run_ios_build == 'true'
-    runs-on: ${{ (github.event_name == 'workflow_dispatch' || github.run_attempt > 1) && 'macos-26' || (github.repository == 'openclaw/openclaw' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'openclaw/openclaw') && 'blacksmith-12vcpu-macos-26' || 'macos-26') }}
+    runs-on: ${{ (github.event_name == 'workflow_dispatch' || github.run_attempt > 1) && 'macos-26' || (github.repository == 'grokbot/grokbot' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'grokbot/grokbot') && 'blacksmith-12vcpu-macos-26' || 'macos-26') }}
     timeout-minutes: 45
     env:
       HISTORICAL_TARGET: ${{ needs.preflight.outputs.compatibility_target }}
@@ -3108,7 +3108,7 @@ jobs:
       - name: Install iOS Swift tooling
         run: |
           if [[ -x ./scripts/install-xcodegen.sh && -x ./scripts/install-swift-tools.sh ]]; then
-            swift_tools_dir="$RUNNER_TEMP/openclaw-swift-tools"
+            swift_tools_dir="$RUNNER_TEMP/grokbot-swift-tools"
             ./scripts/install-xcodegen.sh "$swift_tools_dir"
             ./scripts/install-swift-tools.sh "$swift_tools_dir"
             echo "$swift_tools_dir" >> "$GITHUB_PATH"
@@ -3136,7 +3136,7 @@ jobs:
                 ;;
             esac
             swiftformat_archive="$RUNNER_TEMP/swiftformat-$swiftformat_version.zip"
-            swift_tools_dir="$RUNNER_TEMP/openclaw-legacy-swift-tools"
+            swift_tools_dir="$RUNNER_TEMP/grokbot-legacy-swift-tools"
             curl --fail --location --silent --show-error \
               --connect-timeout 10 --max-time 120 \
               --retry 3 --retry-max-time 120 \
@@ -3180,7 +3180,7 @@ jobs:
     name: ${{ matrix.check_name }}
     needs: [preflight]
     if: needs.preflight.outputs.run_android_job == 'true'
-    runs-on: ${{ github.event_name == 'workflow_dispatch' && 'ubuntu-24.04' || (github.repository == 'openclaw/openclaw' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'openclaw/openclaw') && 'blacksmith-8vcpu-ubuntu-2404' || 'ubuntu-24.04') }}
+    runs-on: ${{ github.event_name == 'workflow_dispatch' && 'ubuntu-24.04' || (github.repository == 'grokbot/grokbot' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'grokbot/grokbot') && 'blacksmith-8vcpu-ubuntu-2404' || 'ubuntu-24.04') }}
     timeout-minutes: 20
     strategy:
       fail-fast: false
@@ -3252,7 +3252,7 @@ jobs:
       # repository-global snapshots, so they keep the GitHub cache path (their
       # runs-on already selects non-Blacksmith ubuntu-24.04 runners).
       - name: Mount Gradle sticky disk
-        if: github.event_name != 'workflow_dispatch' && github.repository == 'openclaw/openclaw' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'openclaw/openclaw')
+        if: github.event_name != 'workflow_dispatch' && github.repository == 'grokbot/grokbot' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'grokbot/grokbot')
         uses: useblacksmith/stickydisk@6d373c96a74cbde0c99fedc5ea5d3a7ba66ba494 # main (post-v1.4.0 hot-attach fix)
         with:
           # One stable disk per matrix task. The v1 per-PR/per-dependency-hash
@@ -3264,7 +3264,7 @@ jobs:
           # build lanes can never repair. Dependency-file changes live in the
           # runtime fingerprint marker below instead of the key.
           key: ${{ github.repository }}-gradle-v2-${{ matrix.task }}
-          path: /var/tmp/openclaw-gradle
+          path: /var/tmp/grokbot-gradle
           # Single semantic writer: only protected pushes commit, so
           # pull_request clones stay read-only and the snapshot tracks main.
           # Explicit true (not on-change) because the allocated-byte heuristic
@@ -3274,7 +3274,7 @@ jobs:
           commit: ${{ github.event_name != 'pull_request' && 'true' || 'false' }}
 
       - name: Point Gradle at the sticky disk
-        if: github.event_name != 'workflow_dispatch' && github.repository == 'openclaw/openclaw' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'openclaw/openclaw')
+        if: github.event_name != 'workflow_dispatch' && github.repository == 'grokbot/grokbot' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == 'grokbot/grokbot')
         shell: bash
         env:
           # Gradle caches are content-addressed, so a stale snapshot is safe
@@ -3286,8 +3286,8 @@ jobs:
           STICKY_WRITER: ${{ github.event_name != 'pull_request' && 'true' || 'false' }}
         run: |
           set -euo pipefail
-          sticky_root=/var/tmp/openclaw-gradle
-          marker="$sticky_root/.openclaw-gradle-deps-fingerprint"
+          sticky_root=/var/tmp/grokbot-gradle
+          marker="$sticky_root/.grokbot-gradle-deps-fingerprint"
           disk_fingerprint=""
           if [ -f "$marker" ]; then
             disk_fingerprint="$(<"$marker")"
@@ -3365,7 +3365,7 @@ jobs:
   ci-gate:
     permissions:
       contents: read
-    name: openclaw/ci-gate
+    name: grokbot/ci-gate
     needs:
       - preflight
       - security-fast

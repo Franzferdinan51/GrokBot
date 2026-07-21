@@ -27,14 +27,14 @@ const mocks = vi.hoisted(() => ({
   resolveNodeIdFromList: vi.fn(() => "node-1"),
 }));
 
-vi.mock("openclaw/plugin-sdk/agent-harness-runtime", () => ({
+vi.mock("grokbot/plugin-sdk/agent-harness-runtime", () => ({
   callGatewayTool: mocks.callGatewayTool,
   listNodes: mocks.listNodes,
   resolveNodeIdFromList: mocks.resolveNodeIdFromList,
 }));
 
-vi.mock("openclaw/plugin-sdk/channel-actions", async (importOriginal) => ({
-  ...(await importOriginal<typeof import("openclaw/plugin-sdk/channel-actions")>()),
+vi.mock("grokbot/plugin-sdk/channel-actions", async (importOriginal) => ({
+  ...(await importOriginal<typeof import("grokbot/plugin-sdk/channel-actions")>()),
   imageResultFromFile: mocks.imageResultFromFile,
 }));
 
@@ -60,7 +60,7 @@ describe("Canvas tool", () => {
   it.skipIf(process.platform === "win32")(
     "rejects jsonlPath symlinks that resolve outside the workspace",
     async () => {
-      tempRoot = await mkdtemp(path.join(os.tmpdir(), "openclaw-canvas-tool-"));
+      tempRoot = await mkdtemp(path.join(os.tmpdir(), "grokbot-canvas-tool-"));
       const workspaceDir = path.join(tempRoot, "workspace");
       await mkdir(workspaceDir);
       const outsidePath = path.join(tempRoot, "outside.jsonl");
@@ -109,7 +109,7 @@ describe("Canvas tool", () => {
         }
       | undefined;
     expect(imageResultParams?.label).toBe("canvas:snapshot");
-    expect(imageResultParams?.path).toMatch(/openclaw-canvas-snapshot-.*\.png$/);
+    expect(imageResultParams?.path).toMatch(/grokbot-canvas-snapshot-.*\.png$/);
     expect(imageResultParams?.details).toEqual({ format: "png" });
     expect(imageResultParams?.imageSanitization).toEqual({ maxDimensionPx: 1600 });
   });
@@ -216,17 +216,17 @@ describe("Canvas tool", () => {
           catalogId: "https://a2ui.org/specification/v0_9/catalogs/basic/catalog.json",
         },
       }),
-      /OpenClaw currently supports v0\.8 only/,
+      /GrokBot currently supports v0\.8 only/,
     ],
     [
       "legacy createSurface JSONL",
       JSON.stringify({ createSurface: { surfaceId: "main", root: "root" } }),
-      /OpenClaw currently supports v0\.8 only/,
+      /GrokBot currently supports v0\.8 only/,
     ],
     [
       "A2UI v0.9 deleteSurface JSONL",
       JSON.stringify({ version: "v0.9", deleteSurface: { surfaceId: "main" } }),
-      /OpenClaw currently supports v0\.8 only/,
+      /GrokBot currently supports v0\.8 only/,
     ],
     [
       "an unsupported explicit A2UI version",

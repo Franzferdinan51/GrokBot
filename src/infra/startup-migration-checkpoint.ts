@@ -3,10 +3,10 @@ import { randomUUID } from "node:crypto";
 import { existsSync } from "node:fs";
 import { createRequire } from "node:module";
 import type { DatabaseSync } from "node:sqlite";
-import { withOpenClawStateDatabaseReadOnly } from "../state/openclaw-state-db-readonly.js";
-import type { DB as OpenClawStateKyselyDatabase } from "../state/openclaw-state-db.generated.js";
-import { withOpenClawStateStartupMigrationCheckpointDatabase } from "../state/openclaw-state-db.js";
-import { resolveOpenClawStateSqlitePath } from "../state/openclaw-state-db.paths.js";
+import { withOpenClawStateDatabaseReadOnly } from "../state/grokbot-state-db-readonly.js";
+import type { DB as OpenClawStateKyselyDatabase } from "../state/grokbot-state-db.generated.js";
+import { withOpenClawStateStartupMigrationCheckpointDatabase } from "../state/grokbot-state-db.js";
+import { resolveOpenClawStateSqlitePath } from "../state/grokbot-state-db.paths.js";
 import { VERSION } from "../version.js";
 import {
   executeSqliteQuerySync,
@@ -180,7 +180,7 @@ export function acquireStartupMigrationLease(
     );
     if (existing) {
       throw new Error(
-        `OpenClaw startup migrations are already running for this state directory; retry after the other gateway finishes or after ${new Date(existing.expiresAt ?? expiresAt).toISOString()}.`,
+        `GrokBot startup migrations are already running for this state directory; retry after the other gateway finishes or after ${new Date(existing.expiresAt ?? expiresAt).toISOString()}.`,
       );
     }
     executeSqliteQuerySync(
@@ -221,7 +221,7 @@ export function acquireStartupMigrationLease(
         );
         if (result.numAffectedRows !== 1n) {
           throw new Error(
-            "OpenClaw startup migration lease was lost before startup migrations completed; restart the gateway so migrations can run under a fresh lease.",
+            "GrokBot startup migration lease was lost before startup migrations completed; restart the gateway so migrations can run under a fresh lease.",
           );
         }
       });
@@ -275,7 +275,7 @@ export function recordSuccessfulStartupMigrations(
       );
       if (!activeLease) {
         throw new Error(
-          "OpenClaw startup migration lease was lost before checkpoint recording; restart the gateway so migrations can run under a fresh lease.",
+          "GrokBot startup migration lease was lost before checkpoint recording; restart the gateway so migrations can run under a fresh lease.",
         );
       }
     }

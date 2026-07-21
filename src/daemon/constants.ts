@@ -1,17 +1,17 @@
 /** Cross-platform daemon service names, labels, and profile-aware descriptions. */
-import { normalizeLowercaseStringOrEmpty } from "@openclaw/normalization-core/string-coerce";
+import { normalizeLowercaseStringOrEmpty } from "@grokbot/normalization-core/string-coerce";
 
 // Default service labels (canonical + legacy compatibility)
-export const GATEWAY_LAUNCH_AGENT_LABEL = "ai.openclaw.gateway";
-const GATEWAY_SYSTEMD_SERVICE_NAME = "openclaw-gateway";
-const GATEWAY_WINDOWS_TASK_NAME = "OpenClaw Gateway";
-export const GATEWAY_SERVICE_MARKER = "openclaw";
+export const GATEWAY_LAUNCH_AGENT_LABEL = "ai.grokbot.gateway";
+const GATEWAY_SYSTEMD_SERVICE_NAME = "grokbot-gateway";
+const GATEWAY_WINDOWS_TASK_NAME = "GrokBot Gateway";
+export const GATEWAY_SERVICE_MARKER = "grokbot";
 export const GATEWAY_SERVICE_KIND = "gateway";
 export const GATEWAY_SERVICE_RUNTIME_PID_ENV = "OPENCLAW_GATEWAY_SERVICE_PID";
-const NODE_LAUNCH_AGENT_LABEL = "ai.openclaw.node";
-const NODE_SYSTEMD_SERVICE_NAME = "openclaw-node";
-const NODE_WINDOWS_TASK_NAME = "OpenClaw Node";
-export const NODE_SERVICE_MARKER = "openclaw";
+const NODE_LAUNCH_AGENT_LABEL = "ai.grokbot.node";
+const NODE_SYSTEMD_SERVICE_NAME = "grokbot-node";
+const NODE_WINDOWS_TASK_NAME = "GrokBot Node";
+export const NODE_SERVICE_MARKER = "grokbot";
 export const NODE_SERVICE_KIND = "node";
 export const NODE_WINDOWS_TASK_SCRIPT_NAME = "node.cmd";
 export const LEGACY_GATEWAY_SYSTEMD_SERVICE_NAMES: string[] = ["clawdbot-gateway"];
@@ -35,7 +35,7 @@ export function resolveGatewayLaunchAgentLabel(profile?: string): string {
   if (!normalized) {
     return GATEWAY_LAUNCH_AGENT_LABEL;
   }
-  return `ai.openclaw.${normalized}`;
+  return `ai.grokbot.${normalized}`;
 }
 
 export function resolveLegacyGatewayLaunchAgentLabels(profile?: string): string[] {
@@ -48,7 +48,7 @@ export function resolveGatewaySystemdServiceName(profile?: string): string {
   if (!suffix) {
     return GATEWAY_SYSTEMD_SERVICE_NAME;
   }
-  return `openclaw-gateway${suffix}`;
+  return `grokbot-gateway${suffix}`;
 }
 
 export function resolveGatewayWindowsTaskName(profile?: string): string {
@@ -56,7 +56,7 @@ export function resolveGatewayWindowsTaskName(profile?: string): string {
   if (!normalized) {
     return GATEWAY_WINDOWS_TASK_NAME;
   }
-  return `OpenClaw Gateway (${normalized})`;
+  return `GrokBot Gateway (${normalized})`;
 }
 
 function formatGatewayServiceDescription(params?: { profile?: string; version?: string }): string {
@@ -70,9 +70,9 @@ function formatGatewayServiceDescription(params?: { profile?: string; version?: 
     parts.push(`v${version}`);
   }
   if (parts.length === 0) {
-    return "OpenClaw Gateway";
+    return "GrokBot Gateway";
   }
-  return `OpenClaw Gateway (${parts.join(", ")})`;
+  return `GrokBot Gateway (${parts.join(", ")})`;
 }
 
 export function resolveGatewayServiceDescription(params: {
@@ -104,7 +104,7 @@ export function resolveNodeWindowsTaskName(): string {
 export function formatNodeServiceDescription(params?: { version?: string }): string {
   const version = params?.version?.trim();
   if (!version) {
-    return "OpenClaw Node Host";
+    return "GrokBot Node Host";
   }
-  return `OpenClaw Node Host (v${version})`;
+  return `GrokBot Node Host (v${version})`;
 }

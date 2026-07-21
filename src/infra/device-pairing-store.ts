@@ -10,12 +10,12 @@ import type {
   DevicePairingPaired,
   DevicePairingPending,
   DeviceBootstrapTokens,
-} from "../state/openclaw-state-db.generated.js";
+} from "../state/grokbot-state-db.generated.js";
 import {
   openOpenClawStateDatabase,
   runOpenClawStateWriteTransaction,
   type OpenClawStateDatabaseOptions,
-} from "../state/openclaw-state-db.js";
+} from "../state/grokbot-state-db.js";
 import type {
   DeviceAuthToken,
   DeviceBootstrapTokenRecord,

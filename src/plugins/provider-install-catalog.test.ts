@@ -92,9 +92,9 @@ function vllmPluginWithPackageInstall(): InstalledPluginIndexRecord {
   return {
     pluginId: "vllm",
     origin: "global",
-    manifestPath: "/Users/test/.openclaw/plugins/vllm/openclaw.plugin.json",
+    manifestPath: "/Users/test/.grokbot/plugins/vllm/grokbot.plugin.json",
     manifestHash: "hash",
-    rootDir: "/Users/test/.openclaw/plugins/vllm",
+    rootDir: "/Users/test/.grokbot/plugins/vllm",
     enabled: true,
     startup: {
       sidecar: false,
@@ -103,11 +103,11 @@ function vllmPluginWithPackageInstall(): InstalledPluginIndexRecord {
       agentHarnesses: [],
     },
     compat: [],
-    packageName: "@openclaw/vllm",
+    packageName: "@grokbot/vllm",
     packageInstall: {
       npm: {
-        spec: "@openclaw/vllm-fork@1.0.0",
-        packageName: "@openclaw/vllm-fork",
+        spec: "@grokbot/vllm-fork@1.0.0",
+        packageName: "@grokbot/vllm-fork",
         selector: "1.0.0",
         selectorKind: "exact-version",
         exactVersion: true,
@@ -164,7 +164,7 @@ describe("provider install catalog", () => {
         {
           pluginId: "openai",
           origin: "bundled",
-          manifestPath: "/repo/extensions/openai/openclaw.plugin.json",
+          manifestPath: "/repo/extensions/openai/grokbot.plugin.json",
           manifestHash: "hash",
           rootDir: "/repo/extensions/openai",
           enabled: true,
@@ -175,12 +175,12 @@ describe("provider install catalog", () => {
             agentHarnesses: [],
           },
           compat: [],
-          packageName: "@openclaw/openai",
+          packageName: "@grokbot/openai",
           packageInstall: {
             defaultChoice: "npm",
             npm: {
-              spec: "@openclaw/openai@1.2.3",
-              packageName: "@openclaw/openai",
+              spec: "@grokbot/openai@1.2.3",
+              packageName: "@grokbot/openai",
               selector: "1.2.3",
               selectorKind: "exact-version",
               exactVersion: true,
@@ -220,7 +220,7 @@ describe("provider install catalog", () => {
         label: "OpenAI",
         origin: "bundled",
         install: {
-          npmSpec: "@openclaw/openai@1.2.3",
+          npmSpec: "@grokbot/openai@1.2.3",
           localPath: "extensions/openai",
           defaultChoice: "npm",
           expectedIntegrity: "sha512-openai",
@@ -228,8 +228,8 @@ describe("provider install catalog", () => {
         installSource: {
           defaultChoice: "npm",
           npm: {
-            spec: "@openclaw/openai@1.2.3",
-            packageName: "@openclaw/openai",
+            spec: "@grokbot/openai@1.2.3",
+            packageName: "@grokbot/openai",
             selector: "1.2.3",
             selectorKind: "exact-version",
             exactVersion: true,
@@ -251,8 +251,8 @@ describe("provider install catalog", () => {
         installRecords: {
           vllm: {
             source: "npm",
-            spec: "@openclaw/vllm",
-            resolvedSpec: "@openclaw/vllm@2.0.0",
+            spec: "@grokbot/vllm",
+            resolvedSpec: "@grokbot/vllm@2.0.0",
             integrity: "sha512-vllm",
           },
         },
@@ -271,15 +271,15 @@ describe("provider install catalog", () => {
       label: "vLLM",
       origin: "global",
       install: {
-        npmSpec: "@openclaw/vllm@2.0.0",
+        npmSpec: "@grokbot/vllm@2.0.0",
         expectedIntegrity: "sha512-vllm",
         defaultChoice: "npm",
       },
       installSource: {
         defaultChoice: "npm",
         npm: {
-          spec: "@openclaw/vllm@2.0.0",
-          packageName: "@openclaw/vllm",
+          spec: "@grokbot/vllm@2.0.0",
+          packageName: "@grokbot/vllm",
           selector: "2.0.0",
           selectorKind: "exact-version",
           exactVersion: true,
@@ -297,9 +297,9 @@ describe("provider install catalog", () => {
         installRecords: {
           vllm: {
             source: "clawhub",
-            spec: "clawhub:openclaw/vllm@2026.5.2",
+            spec: "clawhub:grokbot/vllm@2026.5.2",
             integrity: "sha256-clawpack",
-            clawhubPackage: "openclaw/vllm",
+            clawhubPackage: "grokbot/vllm",
           },
         },
         plugins: [vllmPluginWithPackageInstall()],
@@ -317,14 +317,14 @@ describe("provider install catalog", () => {
       label: "vLLM",
       origin: "global",
       install: {
-        clawhubSpec: "clawhub:openclaw/vllm@2026.5.2",
+        clawhubSpec: "clawhub:grokbot/vllm@2026.5.2",
         defaultChoice: "clawhub",
       },
       installSource: {
         defaultChoice: "clawhub",
         clawhub: {
-          spec: "clawhub:openclaw/vllm@2026.5.2",
-          packageName: "openclaw/vllm",
+          spec: "clawhub:grokbot/vllm@2026.5.2",
+          packageName: "grokbot/vllm",
           version: "2026.5.2",
           exactVersion: true,
         },
@@ -346,9 +346,9 @@ describe("provider install catalog", () => {
         {
           pluginId: "demo-provider",
           origin: "global",
-          manifestPath: "/Users/test/.openclaw/plugins/demo-provider/openclaw.plugin.json",
+          manifestPath: "/Users/test/.grokbot/plugins/demo-provider/grokbot.plugin.json",
           manifestHash: "hash",
-          rootDir: "/Users/test/.openclaw/plugins/demo-provider",
+          rootDir: "/Users/test/.grokbot/plugins/demo-provider",
           enabled: true,
           startup: {
             sidecar: false,
@@ -400,7 +400,7 @@ describe("provider install catalog", () => {
         {
           pluginId: "openai",
           origin: "bundled",
-          manifestPath: "/repo/extensions/openai/openclaw.plugin.json",
+          manifestPath: "/repo/extensions/openai/grokbot.plugin.json",
           manifestHash: "hash",
           rootDir: "/repo/extensions/openai",
           enabled: true,
@@ -411,12 +411,12 @@ describe("provider install catalog", () => {
             agentHarnesses: [],
           },
           compat: [],
-          packageName: "@openclaw/openai",
+          packageName: "@grokbot/openai",
           packageInstall: {
             defaultChoice: "npm",
             npm: {
               spec: 12,
-              packageName: "@openclaw/openai",
+              packageName: "@grokbot/openai",
               selectorKind: "exact-version",
               exactVersion: true,
               pinState: "exact-with-integrity",
@@ -453,7 +453,7 @@ describe("provider install catalog", () => {
         {
           pluginId: "demo-provider",
           origin: "workspace",
-          manifestPath: "/repo/extensions/demo-provider/openclaw.plugin.json",
+          manifestPath: "/repo/extensions/demo-provider/grokbot.plugin.json",
           manifestHash: "hash",
           rootDir: "/repo/extensions/demo-provider",
           enabled: false,
@@ -505,9 +505,9 @@ describe("provider install catalog", () => {
           name: "Moonshot AI",
           plugin: {
             id: "moonshot",
-            package: "@openclaw/plugin-moonshot",
+            package: "@grokbot/plugin-moonshot",
             install: {
-              npmSpec: "@openclaw/plugin-moonshot@1.2.3",
+              npmSpec: "@grokbot/plugin-moonshot@1.2.3",
               defaultChoice: "npm",
               expectedIntegrity: "sha512-moonshot",
             },
@@ -538,15 +538,15 @@ describe("provider install catalog", () => {
       label: "Moonshot AI",
       origin: "bundled",
       install: {
-        npmSpec: "@openclaw/plugin-moonshot@1.2.3",
+        npmSpec: "@grokbot/plugin-moonshot@1.2.3",
         defaultChoice: "npm",
         expectedIntegrity: "sha512-moonshot",
       },
       installSource: {
         defaultChoice: "npm",
         npm: {
-          spec: "@openclaw/plugin-moonshot@1.2.3",
-          packageName: "@openclaw/plugin-moonshot",
+          spec: "@grokbot/plugin-moonshot@1.2.3",
+          packageName: "@grokbot/plugin-moonshot",
           selector: "1.2.3",
           selectorKind: "exact-version",
           exactVersion: true,
@@ -561,10 +561,10 @@ describe("provider install catalog", () => {
   it("surfaces official external provider install metadata when the provider plugin is not installed", () => {
     listOfficialExternalProviderCatalogEntries.mockReturnValue([
       {
-        name: "@openclaw/codex",
+        name: "@grokbot/codex",
         source: "official",
         kind: "provider",
-        openclaw: {
+        grokbot: {
           plugin: { id: "codex", label: "Codex" },
           providers: [
             {
@@ -584,7 +584,7 @@ describe("provider install catalog", () => {
             },
           ],
           install: {
-            npmSpec: "@openclaw/codex",
+            npmSpec: "@grokbot/codex",
             defaultChoice: "npm",
           },
         },
@@ -604,14 +604,14 @@ describe("provider install catalog", () => {
       label: "Codex",
       origin: "bundled",
       install: {
-        npmSpec: "@openclaw/codex",
+        npmSpec: "@grokbot/codex",
         defaultChoice: "npm",
       },
       installSource: {
         defaultChoice: "npm",
         npm: {
-          spec: "@openclaw/codex",
-          packageName: "@openclaw/codex",
+          spec: "@grokbot/codex",
+          packageName: "@grokbot/codex",
           selectorKind: "none",
           exactVersion: false,
           pinState: "floating-without-integrity",
@@ -624,10 +624,10 @@ describe("provider install catalog", () => {
   it("preserves official external provider aliases for configured-plugin repair", () => {
     listOfficialExternalProviderCatalogEntries.mockReturnValue([
       {
-        name: "@openclaw/gmi-provider",
+        name: "@grokbot/gmi-provider",
         source: "official",
         kind: "provider",
-        openclaw: {
+        grokbot: {
           plugin: { id: "gmi", label: "GMI Cloud" },
           providers: [
             {
@@ -644,7 +644,7 @@ describe("provider install catalog", () => {
             },
           ],
           install: {
-            npmSpec: "@openclaw/gmi-provider",
+            npmSpec: "@grokbot/gmi-provider",
             defaultChoice: "npm",
           },
         },
@@ -661,10 +661,10 @@ describe("provider install catalog", () => {
   it("resolves deprecated official external auth choices before their plugin is installed", () => {
     listOfficialExternalProviderCatalogEntries.mockReturnValue([
       {
-        name: "@openclaw/qwen-provider",
+        name: "@grokbot/qwen-provider",
         source: "official",
         kind: "provider",
-        openclaw: {
+        grokbot: {
           plugin: { id: "qwen", label: "Qwen Cloud" },
           providers: [
             {
@@ -681,7 +681,7 @@ describe("provider install catalog", () => {
             },
           ],
           install: {
-            npmSpec: "@openclaw/qwen-provider",
+            npmSpec: "@grokbot/qwen-provider",
             defaultChoice: "npm",
           },
         },
@@ -703,10 +703,10 @@ describe("provider install catalog", () => {
           name: "Moonshot AI",
           plugin: {
             id: "moonshot",
-            package: "@openclaw/plugin-moonshot",
+            package: "@grokbot/plugin-moonshot",
             install: {
-              clawhubSpec: "clawhub:openclaw/moonshot@2026.5.2",
-              npmSpec: "@openclaw/plugin-moonshot@2026.5.2",
+              clawhubSpec: "clawhub:grokbot/moonshot@2026.5.2",
+              npmSpec: "@grokbot/plugin-moonshot@2026.5.2",
               defaultChoice: "clawhub",
               expectedIntegrity: "sha512-moonshot",
             },
@@ -735,22 +735,22 @@ describe("provider install catalog", () => {
       label: "Moonshot AI",
       origin: "bundled",
       install: {
-        clawhubSpec: "clawhub:openclaw/moonshot@2026.5.2",
-        npmSpec: "@openclaw/plugin-moonshot@2026.5.2",
+        clawhubSpec: "clawhub:grokbot/moonshot@2026.5.2",
+        npmSpec: "@grokbot/plugin-moonshot@2026.5.2",
         defaultChoice: "clawhub",
         expectedIntegrity: "sha512-moonshot",
       },
       installSource: {
         defaultChoice: "clawhub",
         clawhub: {
-          spec: "clawhub:openclaw/moonshot@2026.5.2",
-          packageName: "openclaw/moonshot",
+          spec: "clawhub:grokbot/moonshot@2026.5.2",
+          packageName: "grokbot/moonshot",
           version: "2026.5.2",
           exactVersion: true,
         },
         npm: {
-          spec: "@openclaw/plugin-moonshot@2026.5.2",
-          packageName: "@openclaw/plugin-moonshot",
+          spec: "@grokbot/plugin-moonshot@2026.5.2",
+          packageName: "@grokbot/plugin-moonshot",
           selector: "2026.5.2",
           selectorKind: "exact-version",
           exactVersion: true,
@@ -775,7 +775,7 @@ describe("provider install catalog", () => {
         {
           pluginId: "moonshot",
           origin: "bundled",
-          manifestPath: "/repo/extensions/moonshot/openclaw.plugin.json",
+          manifestPath: "/repo/extensions/moonshot/grokbot.plugin.json",
           manifestHash: "hash",
           rootDir: "/repo/extensions/moonshot",
           enabled: true,
@@ -798,9 +798,9 @@ describe("provider install catalog", () => {
           name: "Moonshot AI",
           plugin: {
             id: "moonshot",
-            package: "@openclaw/plugin-moonshot",
+            package: "@grokbot/plugin-moonshot",
             install: {
-              npmSpec: "@openclaw/plugin-moonshot@1.2.3",
+              npmSpec: "@grokbot/plugin-moonshot@1.2.3",
               expectedIntegrity: "sha512-moonshot",
             },
           },
@@ -831,7 +831,7 @@ describe("provider install catalog", () => {
         {
           pluginId: "moonshot",
           origin: "bundled",
-          manifestPath: "/repo/extensions/moonshot/openclaw.plugin.json",
+          manifestPath: "/repo/extensions/moonshot/grokbot.plugin.json",
           manifestHash: "hash",
           rootDir: "/repo/extensions/moonshot",
           enabled: true,
@@ -854,9 +854,9 @@ describe("provider install catalog", () => {
           name: "Groq",
           plugin: {
             id: "groq",
-            package: "@openclaw/plugin-groq",
+            package: "@grokbot/plugin-groq",
             install: {
-              npmSpec: "@openclaw/plugin-groq@1.0.0",
+              npmSpec: "@grokbot/plugin-groq@1.0.0",
               defaultChoice: "npm",
             },
           },
@@ -873,10 +873,10 @@ describe("provider install catalog", () => {
           name: "Moonshot AI",
           plugin: {
             id: "moonshot",
-            package: "@openclaw/plugin-moonshot",
+            package: "@grokbot/plugin-moonshot",
             install: {
-              clawhubSpec: "clawhub:openclaw/moonshot@2026.5.2",
-              npmSpec: "@openclaw/plugin-moonshot@2026.5.2",
+              clawhubSpec: "clawhub:grokbot/moonshot@2026.5.2",
+              npmSpec: "@grokbot/plugin-moonshot@2026.5.2",
               defaultChoice: "clawhub",
             },
           },
@@ -893,10 +893,10 @@ describe("provider install catalog", () => {
           name: "vLLM",
           plugin: {
             id: "vllm",
-            package: "@openclaw/plugin-vllm",
+            package: "@grokbot/plugin-vllm",
             install: {
-              clawhubSpec: "clawhub:openclaw/vllm@2026.5.2",
-              npmSpec: "@openclaw/plugin-vllm@2026.5.2",
+              clawhubSpec: "clawhub:grokbot/vllm@2026.5.2",
+              npmSpec: "@grokbot/plugin-vllm@2026.5.2",
               defaultChoice: "clawhub",
             },
           },
@@ -924,21 +924,21 @@ describe("provider install catalog", () => {
       label: "vLLM",
       origin: "bundled",
       install: {
-        clawhubSpec: "clawhub:openclaw/vllm@2026.5.2",
-        npmSpec: "@openclaw/plugin-vllm@2026.5.2",
+        clawhubSpec: "clawhub:grokbot/vllm@2026.5.2",
+        npmSpec: "@grokbot/plugin-vllm@2026.5.2",
         defaultChoice: "clawhub",
       },
       installSource: {
         defaultChoice: "clawhub",
         clawhub: {
-          spec: "clawhub:openclaw/vllm@2026.5.2",
-          packageName: "openclaw/vllm",
+          spec: "clawhub:grokbot/vllm@2026.5.2",
+          packageName: "grokbot/vllm",
           version: "2026.5.2",
           exactVersion: true,
         },
         npm: {
-          spec: "@openclaw/plugin-vllm@2026.5.2",
-          packageName: "@openclaw/plugin-vllm",
+          spec: "@grokbot/plugin-vllm@2026.5.2",
+          packageName: "@grokbot/plugin-vllm",
           selector: "2026.5.2",
           selectorKind: "exact-version",
           exactVersion: true,

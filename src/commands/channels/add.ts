@@ -1,5 +1,5 @@
-// Implements guided and non-interactive `openclaw channels add` account setup.
-import { normalizeOptionalLowercaseString } from "@openclaw/normalization-core/string-coerce";
+// Implements guided and non-interactive `grokbot channels add` account setup.
+import { normalizeOptionalLowercaseString } from "@grokbot/normalization-core/string-coerce";
 import { resolveAgentWorkspaceDir, resolveDefaultAgentId } from "../../agents/agent-scope.js";
 import { getBundledChannelSetupPlugin } from "../../channels/plugins/bundled.js";
 import { parseOptionalDelimitedEntries } from "../../channels/plugins/helpers.js";
@@ -245,7 +245,7 @@ async function channelsAddCommandImpl(
 
   if (!channel) {
     const hint = catalogEntry
-      ? `Plugin ${catalogEntry.meta.label} could not be loaded after install. Run openclaw doctor --fix, then retry openclaw channels add.`
+      ? `Plugin ${catalogEntry.meta.label} could not be loaded after install. Run grokbot doctor --fix, then retry grokbot channels add.`
       : formatUnknownChannelMessage({ channel: rawChannel });
     runtime.error(hint);
     runtime.exit(1);
@@ -258,7 +258,7 @@ async function channelsAddCommandImpl(
       `${formatUnsupportedChannelActionMessage({
         channel,
         action: "non-interactive add",
-      })} Run ${formatCliCommand("openclaw channels add")} with no flags for guided setup.`,
+      })} Run ${formatCliCommand("grokbot channels add")} with no flags for guided setup.`,
     );
     runtime.exit(1);
     return;

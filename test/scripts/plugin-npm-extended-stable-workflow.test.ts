@@ -4,7 +4,7 @@ import { parse } from "yaml";
 
 const workflowPath = ".github/workflows/plugin-npm-release.yml";
 const metaPackagePath = "extensions/meta/package.json";
-const metaManifestPath = "extensions/meta/openclaw.plugin.json";
+const metaManifestPath = "extensions/meta/grokbot.plugin.json";
 
 type Step = {
   env?: Record<string, string>;
@@ -181,7 +181,7 @@ describe("plugin npm extended-stable workflow", () => {
       "fs.writeFileSync(process.argv[3], `${JSON.stringify(pack, null, 2)}\\n`)",
     );
     expect(prepare.run).toContain('path.join(process.env.ARTIFACT_DIR, "preflight-manifest.json")');
-    expect(prepare.run).toContain('kind: "openclaw-plugin-npm-preflight"');
+    expect(prepare.run).toContain('kind: "grokbot-plugin-npm-preflight"');
     expect(prepare.run).toContain('mode: "preflight-only"');
     expect(prepare.run).toContain("source_package_json_sha256=");
     expect(prepare.run).toContain("packed_package_json_sha256=");
@@ -306,15 +306,15 @@ describe("plugin npm extended-stable workflow", () => {
   it("attests the canonical Meta provider package and install route", () => {
     const packageJson = JSON.parse(readFileSync(metaPackagePath, "utf8")) as {
       name?: string;
-      openclaw?: {
+      grokbot?: {
         install?: { npmSpec?: string };
         release?: { publishToClawHub?: boolean; publishToNpm?: boolean };
       };
     };
     const pluginManifest = JSON.parse(readFileSync(metaManifestPath, "utf8")) as { id?: string };
-    expect(packageJson.name).toBe("@openclaw/meta-provider");
-    expect(packageJson.openclaw?.install?.npmSpec).toBe("@openclaw/meta-provider");
-    expect(packageJson.openclaw?.release).toEqual({
+    expect(packageJson.name).toBe("@grokbot/meta-provider");
+    expect(packageJson.grokbot?.install?.npmSpec).toBe("@grokbot/meta-provider");
+    expect(packageJson.grokbot?.release).toEqual({
       publishToClawHub: true,
       publishToNpm: true,
     });
@@ -360,7 +360,7 @@ describe("plugin npm extended-stable workflow", () => {
     );
     expect(bootstrap.env?.NPM_TOKEN).toBe("${{ secrets.NPM_TOKEN }}");
     expect(bootstrap.env?.PACKAGE_NAME).toContain("publication_evidence.outputs.package_name");
-    expect(bootstrap.run).not.toContain("@openclaw/meta-provider");
+    expect(bootstrap.run).not.toContain("@grokbot/meta-provider");
     expect(bootstrap.run).toContain("NPM_CONFIG_USERCONFIG");
     expect(bootstrap.run).toContain("unset NODE_AUTH_TOKEN NPM_TOKEN NODE_OPTIONS");
     expect(bootstrap.run).toContain('npm publish "$TARBALL_PATH"');

@@ -6,7 +6,7 @@ import {
   getRuntimeAuthProfileStoreSnapshot,
   setRuntimeAuthProfileStoreSnapshot,
 } from "../agents/auth-profiles/runtime-snapshots.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import {
   activateSecretsRuntimeSnapshot,
   clearSecretsRuntimeSnapshot,
@@ -432,7 +432,7 @@ describe("gateway aux handlers", () => {
   });
 
   it("rolls back stopped channels when a later restart fails", async () => {
-    const authAgentDir = "/tmp/openclaw-secrets-reload-concurrent-oauth";
+    const authAgentDir = "/tmp/grokbot-secrets-reload-concurrent-oauth";
     const buildReloadPlan = buildRestartChannelsPlan("slack", "zalo");
     activateSnapshot(slackZaloConfig("old-slack-secret", "old-zalo-secret"));
     const activateRuntimeSecrets = mockResolvedSecrets(

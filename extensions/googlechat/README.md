@@ -1,11 +1,11 @@
-# OpenClaw Google Chat
+# GrokBot Google Chat
 
-Official OpenClaw channel plugin for Google Chat spaces and direct messages.
+Official GrokBot channel plugin for Google Chat spaces and direct messages.
 
-Install from OpenClaw:
+Install from GrokBot:
 
 ```bash
-openclaw plugin add @openclaw/googlechat
+grokbot plugin add @grokbot/googlechat
 ```
 
-Configure the Google Chat app credentials and allowed spaces in OpenClaw. The plugin lets agents receive Google Chat events and reply through the configured app.
+Configure the Google Chat app credentials and allowed spaces in GrokBot. The plugin lets agents receive Google Chat events and reply through the configured app.

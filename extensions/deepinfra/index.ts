@@ -1,15 +1,15 @@
-// Deepinfra plugin entrypoint registers its OpenClaw integration.
+// Deepinfra plugin entrypoint registers its GrokBot integration.
 import {
   type ProviderCatalogContext,
   type ConfiguredProviderCatalogEntry,
   readConfiguredProviderCatalogEntries,
-} from "openclaw/plugin-sdk/provider-catalog-shared";
-import { defineSingleProviderPluginEntry } from "openclaw/plugin-sdk/provider-entry";
-import { buildProviderReplayFamilyHooks } from "openclaw/plugin-sdk/provider-model-shared";
+} from "grokbot/plugin-sdk/provider-catalog-shared";
+import { defineSingleProviderPluginEntry } from "grokbot/plugin-sdk/provider-entry";
+import { buildProviderReplayFamilyHooks } from "grokbot/plugin-sdk/provider-model-shared";
 import {
   createOpenRouterWrapper,
   isProxyReasoningUnsupported,
-} from "openclaw/plugin-sdk/provider-stream";
+} from "grokbot/plugin-sdk/provider-stream";
 import { createDeepInfraAnthropicCacheWrapper } from "./cache-wrapper.js";
 import { buildDeepInfraImageGenerationProvider } from "./image-generation-provider.js";
 import { buildDeepInfraMediaUnderstandingProvider } from "./media-understanding-provider.js";

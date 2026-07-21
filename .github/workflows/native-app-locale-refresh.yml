@@ -34,7 +34,7 @@ concurrency:
 jobs:
   resolve-base:
     if: >-
-      github.repository == 'openclaw/openclaw' &&
+      github.repository == 'grokbot/grokbot' &&
       (github.event_name != 'workflow_dispatch' || github.ref == 'refs/heads/main')
     runs-on: ubuntu-latest
     outputs:
@@ -305,7 +305,7 @@ jobs:
           generated-paths: |
             apps/.i18n/native
             apps/.i18n/apple-translation-contradictions.json
-            apps/android/app/src/main/java/ai/openclaw/app/i18n/NativeStringResources.kt
+            apps/android/app/src/main/java/ai/grokbot/app/i18n/NativeStringResources.kt
             apps/android/app/src/main/res/values*/assistant.xml
             apps/android/app/src/main/res/values*/strings.xml
             apps/ios/Resources/Localizable.xcstrings

@@ -8,7 +8,7 @@ import type { SessionEntry } from "../config/sessions/types.js";
 import { createSubsystemLogger } from "../logging/subsystem.js";
 import { getPluginRegistryState } from "../plugins/runtime-state.js";
 import type { SessionCatalogProvider, SessionUpstreamProbe } from "../plugins/session-catalog.js";
-import type { OpenClawStateDatabaseOptions } from "../state/openclaw-state-db.js";
+import type { OpenClawStateDatabaseOptions } from "../state/grokbot-state-db.js";
 import {
   recordSessionHumanDirectMessage,
   recordSessionStateEvent,
@@ -377,6 +377,6 @@ export function startSessionUpstreamMonitor(
 
 if (process.env.VITEST || process.env.NODE_ENV === "test") {
   (globalThis as Record<PropertyKey, unknown>)[
-    Symbol.for("openclaw.sessionUpstreamMonitorTestApi")
+    Symbol.for("grokbot.sessionUpstreamMonitorTestApi")
   ] = { runSessionUpstreamMonitorTick };
 }

@@ -9,7 +9,7 @@ describe("xaiUserAgent", () => {
 
   it("prefers OPENCLAW_VERSION env over the bundled package version", () => {
     vi.stubEnv("OPENCLAW_VERSION", "2026.3.22");
-    expect(xaiUserAgent()).toBe("openclaw/2026.3.22");
+    expect(xaiUserAgent()).toBe("grokbot/2026.3.22");
   });
 
   it("falls back to OPENCLAW_SERVICE_VERSION when OPENCLAW_VERSION is unset", () => {
@@ -20,13 +20,13 @@ describe("xaiUserAgent", () => {
     // assert "unknown" here. We just lock the prefix to ensure the env-first
     // contract holds whenever the bundle resolves to 0.0.0/empty.
     const result = xaiUserAgent();
-    expect(result.startsWith("openclaw/")).toBe(true);
-    expect(result).not.toBe("openclaw/");
+    expect(result.startsWith("grokbot/")).toBe(true);
+    expect(result).not.toBe("grokbot/");
   });
 
-  it("returns the openclaw/<version> shape", () => {
+  it("returns the grokbot/<version> shape", () => {
     vi.stubEnv("OPENCLAW_VERSION", "2026.5.16");
-    expect(xaiUserAgent()).toMatch(/^openclaw\/\d+\.\d+\.\d+$/u);
+    expect(xaiUserAgent()).toMatch(/^grokbot\/\d+\.\d+\.\d+$/u);
   });
 });
 
@@ -38,10 +38,10 @@ describe("xaiUserAgentHeaderFor", () => {
   it("emits User-Agent for the xAI-native host", () => {
     vi.stubEnv("OPENCLAW_VERSION", "2026.3.22");
     expect(xaiUserAgentHeaderFor("https://api.x.ai/v1")).toEqual({
-      "User-Agent": "openclaw/2026.3.22",
+      "User-Agent": "grokbot/2026.3.22",
     });
     expect(xaiUserAgentHeaderFor("https://api.x.ai/v1/tts")).toEqual({
-      "User-Agent": "openclaw/2026.3.22",
+      "User-Agent": "grokbot/2026.3.22",
     });
   });
 

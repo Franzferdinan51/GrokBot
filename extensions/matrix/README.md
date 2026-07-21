@@ -1,11 +1,11 @@
-# OpenClaw Matrix
+# GrokBot Matrix
 
-Official OpenClaw channel plugin for Matrix rooms and direct messages.
+Official GrokBot channel plugin for Matrix rooms and direct messages.
 
-Install from OpenClaw:
+Install from GrokBot:
 
 ```bash
-openclaw plugin add @openclaw/matrix
+grokbot plugin add @grokbot/matrix
 ```
 
-Configure the Matrix homeserver and bot credentials in OpenClaw. The plugin lets agents join configured rooms, receive messages, and reply through Matrix.
+Configure the Matrix homeserver and bot credentials in GrokBot. The plugin lets agents join configured rooms, receive messages, and reply through Matrix.

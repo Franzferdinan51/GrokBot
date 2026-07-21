@@ -7,7 +7,7 @@ import { setTimeout as delay } from "node:timers/promises";
 import { pathToFileURL } from "node:url";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
-import { MAX_TIMER_TIMEOUT_MS } from "@openclaw/normalization-core/number-coercion";
+import { MAX_TIMER_TIMEOUT_MS } from "@grokbot/normalization-core/number-coercion";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   COMMAND_TIMEOUT_MS,
@@ -40,7 +40,7 @@ function expectedTaskkillPath(): string {
 }
 
 function makeTempDir(): string {
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "openclaw-telegram-proof-"));
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "grokbot-telegram-proof-"));
   tempDirs.push(dir);
   return dir;
 }
@@ -107,7 +107,7 @@ describe("telegram user Crabbox proof log polling", () => {
     });
 
     expect(spec.command).toBe("/opt/node/bin/node");
-    expect(spec.args).toEqual([fakePnpm, "openclaw", "gateway", "--port", "19042"]);
+    expect(spec.args).toEqual([fakePnpm, "grokbot", "gateway", "--port", "19042"]);
     expect(spec.options.cwd).toBe(root);
     expect(spec.options.env?.OPENCLAW_TELEGRAM_PROOF_SENTINEL).toBe("1");
     expect(spec.options.shell).toBe(false);
@@ -171,8 +171,8 @@ describe("telegram user Crabbox proof log polling", () => {
       parseArgs(["--output-dir", ".artifacts/one", "--output-dir", ".artifacts/two"]),
     ).toThrow("--output-dir was provided more than once");
 
-    expect(parseArgs(["--expect", "OpenClaw", "--expect", "ready"]).expect).toEqual([
-      "OpenClaw",
+    expect(parseArgs(["--expect", "GrokBot", "--expect", "ready"]).expect).toEqual([
+      "GrokBot",
       "ready",
     ]);
   });
@@ -393,7 +393,7 @@ describe("telegram user Crabbox proof log polling", () => {
   });
 
   it("shell-quotes generated remote setup and chat literals", () => {
-    const payload = "name $(touch /tmp/openclaw-proof-injected) `touch /tmp/also-injected`";
+    const payload = "name $(touch /tmp/grokbot-proof-injected) `touch /tmp/also-injected`";
 
     expect(renderRemoteSetup({ tdlibSha256: payload, tdlibUrl: payload })).toContain(
       `tdlib_url='${payload}'`,
@@ -409,7 +409,7 @@ describe("telegram user Crabbox proof log polling", () => {
     fs.mkdirSync(path.join(outputDir, "publish-gif-only"));
     fs.writeFileSync(
       path.join(outputDir, "session.json"),
-      '{"sshKey":"/private/tmp/openclaw/key"}',
+      '{"sshKey":"/private/tmp/grokbot/key"}',
     );
     fs.writeFileSync(path.join(outputDir, "lease.json"), '{"token":"secret"}');
     fs.writeFileSync(path.join(outputDir, "status.json"), '{"ok":true}');
@@ -445,7 +445,7 @@ describe("telegram user Crabbox proof log polling", () => {
     const outputDir = makeTempDir();
     fs.writeFileSync(
       path.join(outputDir, "session.json"),
-      '{"sshKey":"/private/tmp/openclaw/key"}',
+      '{"sshKey":"/private/tmp/grokbot/key"}',
     );
     fs.writeFileSync(path.join(outputDir, "status.json"), '{"ok":true}');
     fs.writeFileSync(path.join(outputDir, "telegram-desktop.log"), "log");

@@ -2,11 +2,11 @@
 import tls from "node:tls";
 import { note } from "../../packages/terminal-core/src/note.js";
 import { formatCliCommand } from "../cli/command-format.js";
-import type { OpenClawConfig } from "../config/types.openclaw.js";
+import type { OpenClawConfig } from "../config/types.grokbot.js";
 import { resolveGatewayService, type GatewayService } from "../daemon/service.js";
 import { hasEnvHttpProxyConfigured } from "../infra/net/proxy-env.js";
 
-const DIRECT_PROBE_HOST = "docs.openclaw.ai";
+const DIRECT_PROBE_HOST = "docs.grokbot.ai";
 const DIRECT_PROBE_PORT = 443;
 const DIRECT_PROBE_TIMEOUT_MS = 3_000;
 const HTTP_PROXY_ENV_KEYS = ["HTTP_PROXY", "HTTPS_PROXY", "http_proxy", "https_proxy"] as const;
@@ -100,8 +100,8 @@ async function collectWebFetchProxyDiagnostic(params: {
     "- web_fetch still uses direct connections because tools.web.fetch.useTrustedEnvProxy is not enabled.",
     directProbe,
     "- If direct web_fetch requests time out and the proxy is operator-controlled, enable the explicit opt-in:",
-    `  ${formatCliCommand("openclaw config set tools.web.fetch.useTrustedEnvProxy true")}`,
-    "- Keep the opt-in disabled for untrusted proxies; enabling it lets the proxy resolve DNS after OpenClaw's hostname checks.",
+    `  ${formatCliCommand("grokbot config set tools.web.fetch.useTrustedEnvProxy true")}`,
+    "- Keep the opt-in disabled for untrusted proxies; enabling it lets the proxy resolve DNS after GrokBot's hostname checks.",
   ].join("\n");
 }
 

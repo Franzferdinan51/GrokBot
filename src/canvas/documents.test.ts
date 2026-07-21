@@ -16,7 +16,7 @@ afterEach(async () => {
   await Promise.all(tempDirs.splice(0).map((dir) => rm(dir, { recursive: true, force: true })));
 });
 
-async function createTempDir(label = "openclaw-canvas-documents-"): Promise<string> {
+async function createTempDir(label = "grokbot-canvas-documents-"): Promise<string> {
   const dir = await mkdtemp(path.join(tmpdir(), label));
   tempDirs.push(dir);
   return dir;
@@ -29,7 +29,7 @@ function resolveCanvasDocumentDir(stateDir: string, documentId: string): string 
 describe("canvas documents", () => {
   it("builds entry urls for materialized path documents under managed storage", async () => {
     const stateDir = await createTempDir();
-    const workspaceDir = await createTempDir("openclaw-canvas-documents-workspace-");
+    const workspaceDir = await createTempDir("grokbot-canvas-documents-workspace-");
     await mkdir(path.join(workspaceDir, "player"), { recursive: true });
     await writeFile(path.join(workspaceDir, "player/index.html"), "<div>ok</div>", "utf8");
 
@@ -122,7 +122,7 @@ describe("canvas documents", () => {
 
   it("copies declared assets into managed storage", async () => {
     const stateDir = await createTempDir();
-    const workspaceDir = await createTempDir("openclaw-canvas-documents-workspace-");
+    const workspaceDir = await createTempDir("grokbot-canvas-documents-workspace-");
     await mkdir(path.join(workspaceDir, "collection.media"), { recursive: true });
     await writeFile(path.join(workspaceDir, "collection.media/audio.mp3"), "audio", "utf8");
 
@@ -154,7 +154,7 @@ describe("canvas documents", () => {
 
   it("wraps local and remote PDF documents in index viewer pages", async () => {
     const stateDir = await createTempDir();
-    const workspaceDir = await createTempDir("openclaw-canvas-documents-workspace-");
+    const workspaceDir = await createTempDir("grokbot-canvas-documents-workspace-");
     await writeFile(path.join(workspaceDir, "demo.pdf"), "%PDF-1.4", "utf8");
     const localDocument = await createCanvasDocument(
       { kind: "document", entrypoint: { type: "path", value: "demo.pdf" } },
