@@ -16,7 +16,7 @@ import {
   type DiagnosticTraceContext,
 } from "../../infra/diagnostic-trace-context.js";
 import type { EmbeddedRunAttemptResult } from "../embedded-agent-runner/run/types.js";
-import { createOpenClawAgentHarness } from "./builtin-grokbot.js";
+import { createGrokBotAgentHarness } from "./builtin-grokbot.js";
 import { runAgentHarnessLifecycleAttempt } from "./lifecycle.js";
 import type { AgentHarness, AgentHarnessAttemptParams } from "./types.js";
 
@@ -191,7 +191,7 @@ describe("AgentHarness lifecycle runner", () => {
   });
 
   it("advertises GrokBot embedded host capabilities", async () => {
-    const harness = createOpenClawAgentHarness();
+    const harness = createGrokBotAgentHarness();
 
     expect(harness.contextEngineHostCapabilities).toEqual(
       OPENCLAW_EMBEDDED_CONTEXT_ENGINE_HOST.capabilities,

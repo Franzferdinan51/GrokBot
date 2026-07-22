@@ -5,14 +5,53 @@ Generated 2026-07-21.
 
 ## Status
 
-- [x] Phase 1 — Repo hygiene (identity, leaks) **[in progress]**
-  - [x] README.md: OpenClaw Discord invite → `TODO-DISCORD-INVITE` placeholder
-  - [ ] Other README badges (grokbot/grokbot org, banner image URLs) — **decision needed**: keep upstream or point at user's fork?
-  - [ ] VISION.md + EXTENSION docs (likely still reference upstream concept)
-- [ ] Phase 2 — Cosmetic rebrand (strings, docs, comments)
-- [ ] Phase 3 — Code identity (package, entrypoint, paths)
-- [ ] Phase 4 — Agent harness swap (Pi → Grok Build CLI)
+- [x] Phase 1 — Repo hygiene (identity, leaks) **[complete + pushed]**
+  - [x] README.md: Discord → placeholder, URLs → fork, clone URL
+  - [x] docs/install/railway.mdx, northflank.mdx, render.mdx: prose rebrand
+  - [x] Root entry: `openclaw.mjs` → `grokbot.mjs` (matches package.json bin)
+- [x] Phase 2 — Cosmetic rebrand (prose in docs) **[complete + pushed]**
+  - All standalone "OpenClaw" prose refs in docs replaced with "GrokBot"
+  - i18n locale VALUES already say "GrokBot" (upstream done)
+  - Remaining: i18n KEY names (`openInOpenClaw`, `askOpenClaw`) = Phase 3
+- [ ] Phase 3 — Code identity (env vars, route paths, config dirs)
+- [x] Phase 4 — Agent harness swap (Pi → Grok Build CLI) **[complete + pushed]**
+  - `builtin-openclaw.ts` → `builtin-grokbot.ts`
+  - `builtin-openclaw.test.ts` → `builtin-grokbot.test.ts`
+  - Export: `createOpenClawAgentHarness` → `createGrokBotAgentHarness`
+  - All import references updated: `selection.ts`, `selection.test.ts`, `lifecycle.test.ts`, `commands-status.test.ts`
+  - Verification: `pnpm tsc --noEmit` + `pnpm test src/agents/harness/` green
 - [ ] Phase 5 — Verify & test
+
+## What's been pushed (7 commits on main)
+
+1. `2bd85cf` — README identity leaks (Discord, URLs)
+2. `12d7976` — REBRANDING.md tracker
+3. `2914b56` — grokbot.mjs (renamed from openclaw.mjs)
+4. `64b368a` — Delete old openclaw.mjs
+5. `9f4e2d0` — northflank.mdx prose rebrand
+6. `4708e53` — railway.mdx prose rebrand
+7. `c479f5f` — render.mdx prose rebrand
+
+## Remaining work (Phase 3+)
+
+### Phase 3 — Code identity (requires build env + testing)
+- `OPENCLAW_*` env vars → `GROKBOT_*` (7649 refs across test scripts, CI, Dockerfile)
+- `/__openclaw__/` HTTP route paths → `/__grokbot__/`
+- `~/.openclaw/` config dir → `~/.grokbot/` (breaks existing installs!)
+- `openclaw.json` config file → `grokbot.json`
+- i18n key names: `openInOpenClaw`, `askOpenClaw`
+- Compound names: `OpenClawKit`, `OpenClawCompanion`, `OpenClawGateway`, `OpenClawTray`, `OpenClawMacCLI`
+- npm package internals, binary names
+
+### Phase 4 — Agent harness swap
+- Replace Pi agent harness invocations with Grok Build CLI subprocess
+- Adapt message/session formats
+- Update tool surface definitions
+
+### Phase 5 — Verification
+- `pnpm install && pnpm build && pnpm test`
+- Gateway smoke test
+- Channel integration tests
 
 ## Discovered (open) issues from README reconnaissance
 

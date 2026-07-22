@@ -5,9 +5,9 @@ const runEmbeddedAttempt = vi.hoisted(() => vi.fn());
 
 vi.mock("../embedded-agent-runner/run/attempt.js", () => ({ runEmbeddedAttempt }));
 
-import { createOpenClawAgentHarness } from "./builtin-grokbot.js";
+import { createGrokBotAgentHarness } from "./builtin-grokbot.js";
 
-describe("createOpenClawAgentHarness", () => {
+describe("createGrokBotAgentHarness", () => {
   beforeEach(() => {
     runEmbeddedAttempt.mockReset();
     runEmbeddedAttempt.mockResolvedValue({});
@@ -16,7 +16,7 @@ describe("createOpenClawAgentHarness", () => {
   it("preserves logical Ultra for the embedded attempt", async () => {
     const params = { thinkLevel: "ultra" } as never;
 
-    await createOpenClawAgentHarness().runAttempt(params);
+    await createGrokBotAgentHarness().runAttempt(params);
 
     expect(runEmbeddedAttempt).toHaveBeenCalledWith(params);
   });

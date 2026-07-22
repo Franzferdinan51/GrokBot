@@ -90,7 +90,7 @@ vi.mock("../../plugins/provider-thinking-active.js", async (importOriginal) => (
 vi.mock("../../status/status-plugin-health.runtime.js", () => pluginHealthRuntimeMock);
 
 vi.mock("../../agents/harness/builtin-grokbot.js", () => ({
-  createOpenClawAgentHarness: () => ({
+  createGrokBotAgentHarness: () => ({
     id: "grokbot",
     label: "GrokBot Default",
     supports: () => ({ supported: true, priority: 0 }),

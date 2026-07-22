@@ -61,7 +61,7 @@ it("identifies harnesses that expose GrokBot tools", () => {
 });
 
 vi.mock("./builtin-grokbot.js", () => ({
-  createOpenClawAgentHarness: (): AgentHarness => ({
+  createGrokBotAgentHarness: (): AgentHarness => ({
     id: "grokbot",
     label: "GrokBot embedded agent",
     contextEngineHostCapabilities: OPENCLAW_EMBEDDED_CONTEXT_ENGINE_HOST.capabilities,

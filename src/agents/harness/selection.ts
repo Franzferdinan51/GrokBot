@@ -32,7 +32,7 @@ import { resolveSandboxRuntimeStatus } from "../sandbox/runtime-status.js";
 import { expandToolGroups, mergeAlsoAllowPolicy, normalizeToolName } from "../tool-policy.js";
 import type { SystemAgentToolOptions } from "../tools/system-agent-tool.js";
 import { resolveAgentHarnessAutoSelectionHint } from "./auto-selection.js";
-import { createOpenClawAgentHarness } from "./builtin-grokbot.js";
+import { createGrokBotAgentHarness } from "./builtin-grokbot.js";
 import { createGrokCliAgentHarness } from "./builtin-grok-cli.js";
 import { MissingAgentHarnessError } from "./errors.js";
 import { runAgentHarnessLifecycleAttempt } from "./lifecycle.js";
@@ -241,7 +241,7 @@ export function selectAgentHarnessForPreparedModelProviders(
   // runtime owns the complete retry set; explicit and pinned plugins fail during probing above.
   return (
     decisions.find((decision) => decision.selectedHarnessId === "grokbot")?.harness ??
-    createOpenClawAgentHarness()
+    createGrokBotAgentHarness()
   );
 }
 
@@ -289,7 +289,7 @@ function selectAgentHarnessDecision(
   // GrokBot's built-in harness is intentionally not part of the plugin candidate list. Explicit plugin
   // runtimes fail closed; only `auto` may route an unmatched turn to GrokBot.
   const pluginHarnesses = listPluginAgentHarnesses();
-  const openClawHarness = createOpenClawAgentHarness();
+  const openClawHarness = createGrokBotAgentHarness();
   const runtime = policy.runtime;
   if (runtime === "grokbot") {
     const selectedReason = selectedRuntimeOverride
