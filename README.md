@@ -1,38 +1,51 @@
-# 🦞 GrokBot — Personal AI Assistant
+# GrokBot — Personal AI Assistant (forked from OpenClaw)
 
 <p align="center">
     <picture>
         <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/Franzferdinan51/GrokBot/main/docs/assets/grokbot-banner-light.png">
-        <img src="https://raw.githubusercontent.com/Franzferdinan51/GrokBot/main/docs/assets/grokbot-banner-dark.png" alt="GrokBot — EXFOLIATE! EXFOLIATE! Your personal AI assistant, running on your own devices.">
+        <img src="https://raw.githubusercontent.com/Franzferdinan51/GrokBot/main/docs/assets/grokbot-banner-dark.png" alt="GrokBot — Your personal AI assistant, running on your own devices.">
     </picture>
 </p>
 
 <p align="center">
   <a href="https://github.com/Franzferdinan51/GrokBot/actions/workflows/ci.yml?branch=main"><img src="https://img.shields.io/github/actions/workflow/status/Franzferdinan51/GrokBot/ci.yml?branch=main&style=for-the-badge" alt="CI status"></a>
   <a href="https://github.com/Franzferdinan51/GrokBot/releases"><img src="https://img.shields.io/github/v/release/Franzferdinan51/GrokBot?include_prereleases&style=for-the-badge" alt="GitHub release"></a>
-  <a href="https://TODO-DISCORD-INVITE"><img src="https://img.shields.io/discord/1456350064065904867?label=Discord&logo=discord&logoColor=white&color=5865F2&style=for-the-badge" alt="Discord"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge" alt="MIT License"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge" alt="MIT License (inherited from OpenClaw)"></a>
+  <a href="https://github.com/openclaw/openclaw"><img src="https://img.shields.io/badge/upstream-OpenClaw-5865F2?style=for-the-badge" alt="Upstream: OpenClaw"></a>
+  <a href="https://github.com/xai-org/grok-build"><img src="https://img.shields.io/badge/harness-Grok%20Build%20CLI-D4A017?style=for-the-badge" alt="Harness: Grok Build CLI"></a>
 </p>
 
-**GrokBot** is a _personal AI assistant_ you run on your own devices.
-It answers you on the channels you already use. It can speak and listen on macOS/iOS/Android, and can render a live Canvas you control. The Gateway is just the control plane — the product is the assistant.
+**GrokBot** is a personal AI assistant that runs on your own devices. It answers you on the channels you already use — WhatsApp, Telegram, Slack, Discord, Google Chat, Signal, iMessage, IRC, Microsoft Teams, Matrix, Feishu, LINE, Mattermost, Nextcloud Talk, Nostr, Synology Chat, Tlon, Twitch, Zalo, Zalo Personal, WeChat, QQ, WebChat, plus macOS / iOS / Android voice and canvas surfaces.
 
-If you want a personal, single-user assistant that feels local, fast, and always-on, this is it.
+This fork is maintained by [Franzferdinan51](https://github.com/Franzferdinan51).
 
-Supported channels include: WhatsApp, Telegram, Slack, Discord, Google Chat, Signal, iMessage, IRC, Microsoft Teams, Matrix, Feishu, LINE, Mattermost, Nextcloud Talk, Nostr, Synology Chat, Tlon, Twitch, Zalo, Zalo Personal, WeChat, QQ, WebChat.
+## What is GrokBot?
 
-[Website](https://grokbot.ai) · [Docs](https://docs.grokbot.ai) · [Vision](VISION.md) · [Third-party notices](THIRD_PARTY_NOTICES.md) · [DeepWiki](https://deepwiki.com/grokbot/grokbot) · [Getting Started](https://docs.grokbot.ai/start/getting-started) · [Updating](https://docs.grokbot.ai/install/updating) · [Showcase](https://docs.grokbot.ai/start/showcase) · [FAQ](https://docs.grokbot.ai/help/faq) · [Onboarding](https://docs.grokbot.ai/start/wizard) · [Nix](https://github.com/grokbot/nix-grokbot) · [Docker](https://docs.grokbot.ai/install/docker) · [Discord](https://TODO-DISCORD-INVITE)
+GrokBot is a downstream fork of [OpenClaw](https://github.com/openclaw/openclaw) — the personal AI assistant originally built by Peter Steinberger and the OpenClaw community. The full architecture (Gateway, plugin SDK, harness selection, channel adapters, voice wake, companion apps) is inherited from OpenClaw.
 
-New install? Start here: [Getting started](https://docs.grokbot.ai/start/getting-started)
+What GrokBot changes:
 
-Preferred setup: run `grokbot onboard` in your terminal.
-GrokBot Onboard guides you step by step through setting up the gateway, workspace, channels, and skills. It is the recommended CLI setup path and works on **macOS, Linux, and Windows**.
-Windows desktop users can start with the native [Windows Hub](https://docs.grokbot.ai/platforms/windows) companion app for setup, tray status, chat, node mode, and local MCP mode.
-Works with npm, pnpm, or bun.
+- **Harness swap: Pi → Grok Build CLI.** GrokBot's harness layer now invokes the [Grok Build CLI](https://github.com/xai-org/grok-build) (`grok agent stdio`) over the Agent Client Protocol (ACP) JSON-RPC 2.0 transport when the binary is available in `PATH`. This replaces the upstream Pi / pi-mono harness that OpenClaw originally shipped. See [Harness](#harness) below.
+- **Independent packaging.** GrokBot ships as `grokbot` on npm and is rebuilt and published from this repository.
+- **Fork-specific docs and examples** live in this repo.
 
+What GrokBot inherits unchanged:
 
+- The Gateway control plane and plugin SDK.
+- All channel adapters (WhatsApp, Telegram, Slack, Discord, …) and their auth/pairing flows.
+- macOS / iOS / Android companion apps and node pairing.
+- Multi-agent routing, sandboxing, voice wake, talk mode, and live canvas.
+- The MIT license from OpenClaw Foundation (see [Acknowledgements](#acknowledgements)).
 
-## Install (recommended)
+## Why GrokBot?
+
+OpenClaw is a great general-purpose personal assistant runtime. GrokBot exists to keep that runtime viable while substituting the agent harness with one that ships from xAI directly and is maintained independently of the Pi / pi-mono ecosystem. The user-visible goals:
+
+- **Drop-in compatibility** — install `grokbot`, run `grokbot onboard`, and the same channels, skills, and workflows work as on OpenClaw.
+- **Better default harness** — Grok Build CLI is an actively maintained xAI product with first-class JSON-RPC 2.0 / ACP integration, OAuth support, and tool-call streaming.
+- **Fork sovereignty** — bugs, releases, and security fixes can land on a faster cadence than the upstream OpenClaw release train.
+
+## Install
 
 Runtime: **Node 24.15+ (recommended), Node 22.22.3+, or Node 25.9+**.
 
@@ -43,72 +56,101 @@ npm install -g grokbot@latest
 grokbot onboard --install-daemon
 ```
 
-GrokBot Onboard installs the Gateway daemon (launchd/systemd user service) so it stays running.
+`grokbot onboard` installs the Gateway daemon (launchd / systemd user service) so it stays running. Works on macOS, Linux, and Windows.
 
-## Quick start (TL;DR)
-
-Runtime: **Node 24.15+ (recommended), Node 22.22.3+, or Node 25.9+**.
-
-Full beginner guide (auth, pairing, channels): [Getting started](https://docs.grokbot.ai/start/getting-started)
-
-Recommended daemon mode:
+## Quick start
 
 ```bash
+# Daemon mode (recommended for everyday use)
 grokbot onboard --install-daemon
 grokbot gateway status
-```
 
-Foreground/debug mode:
-
-```bash
+# Foreground / debug mode
 grokbot gateway stop
 grokbot gateway --port 18789 --verbose
-```
 
-Send a test message or ask the assistant after either startup mode is running:
-
-```bash
-# Send a message
+# Send a test message
 grokbot message send --target +1234567890 --message "Hello from GrokBot"
 
-# Talk to the assistant (optionally deliver back to any connected channel: WhatsApp/Telegram/Slack/Discord/Google Chat/Signal/iMessage/IRC/Microsoft Teams/Matrix/Feishu/LINE/Mattermost/Nextcloud Talk/Nostr/Synology Chat/Tlon/Twitch/Zalo/Zalo Personal/WeChat/QQ/WebChat)
+# Talk to the assistant (optionally deliver back to any connected channel)
 grokbot agent --message "Ship checklist" --thinking high
 ```
 
-Upgrading? [Updating guide](https://docs.grokbot.ai/install/updating) (and run `grokbot doctor`).
+Upgrading? See the [OpenClaw updating guide](https://docs.grokbot.ai/install/updating) (GroBot inherits OpenClaw's docs for now; run `grokbot doctor` after upgrade).
 
-Models config + CLI: [Models](https://docs.grokbot.ai/concepts/models). Auth profile rotation + fallbacks: [Model failover](https://docs.grokbot.ai/concepts/model-failover).
+## Harness
 
-## Security defaults (DM access)
+GrokBot's `auto` agent harness selection prefers the [Grok Build CLI](https://github.com/xai-org/grok-build) when `grok agent stdio` is available in `PATH` (priority 30). The embedded GrokBot runtime remains as a fallback (priority 0) when the CLI is not installed.
+
+Selection is driven by `runtimePolicy` in your config:
+
+```json5
+{
+  agent: {
+    model: "<provider>/<model-id>",
+    runtime: "auto"   // or "grok-cli" (force Grok Build CLI), or "grokbot" (force embedded)
+  }
+}
+```
+
+| Runtime | Harness | Use it when |
+|---------|---------|-------------|
+| `auto` (default) | Grok Build CLI if installed, else embedded GrokBot | Everyday use |
+| `grok-cli` | Forces Grok Build CLI (errors if binary missing) | You want strict xAI-only sessions |
+| `grokbot` | Forces embedded GrokBot | You want zero external dependencies |
+| `codex`, `copilot`, etc. | External plugin harnesses (if registered) | Plugin harness workflows |
+
+See `src/agents/harness/builtin-grok-cli.ts` and `src/agents/harness/builtin-grokbot.ts` in this repo for the two harnesses.
+
+### Installing Grok Build CLI
+
+```bash
+# macOS / Linux
+curl -fsSL https://x.ai/cli/install.sh | bash
+
+# Or grab a release binary from
+# https://github.com/xai-org/grok-build/releases
+```
+
+Verify with `grok agent --version` and `which grok`. Once installed, `auto` mode picks it up automatically.
+
+## Channels
+
+GrokBot connects to any of these surfaces out of the box (inherited from OpenClaw):
+
+**Messaging:** WhatsApp · Telegram · Slack · Discord · Google Chat · Signal · iMessage · IRC · Microsoft Teams · Matrix · Feishu · LINE · Mattermost · Nextcloud Talk · Nostr · Synology Chat · Tlon · Twitch · Zalo · Zalo Personal · WeChat · QQ · WebChat.
+
+**Voice / canvas:** Voice Wake + Talk Mode on macOS / iOS / Android, Live Canvas on macOS with A2UI support.
+
+Channel setup guides live at <https://docs.grokbot.ai/channels>.
+
+## Security defaults
 
 GrokBot connects to real messaging surfaces. Treat inbound DMs as **untrusted input**.
 
-Full security guide: [Security](https://docs.grokbot.ai/gateway/security).
-Before remote exposure, use the [Gateway exposure runbook](https://docs.grokbot.ai/gateway/security/exposure-runbook).
+Default behavior on Telegram / WhatsApp / Signal / iMessage / Microsoft Teams / Discord / Google Chat / Slack:
 
-Default behavior on Telegram/WhatsApp/Signal/iMessage/Microsoft Teams/Discord/Google Chat/Slack:
+- **DM pairing** (`dmPolicy="pairing"`): unknown senders receive a short pairing code and the bot does not process their message until approved.
+- Approve with: `grokbot pairing approve <channel> <code>` (adds the sender to a local allowlist store).
+- Public inbound DMs require an explicit opt-in: `dmPolicy="open"` plus `"*"` in the channel `allowFrom` list.
 
-- **DM pairing** (`dmPolicy="pairing"` / `channels.discord.dmPolicy="pairing"` / `channels.slack.dmPolicy="pairing"`; legacy: `channels.discord.dm.policy`, `channels.slack.dm.policy`): unknown senders receive a short pairing code and the bot does not process their message.
-- Approve with: `grokbot pairing approve <channel> <code>` (then the sender is added to a local allowlist store).
-- Public inbound DMs require an explicit opt-in: set `dmPolicy="open"` and include `"*"` in the channel allowlist (`allowFrom` / `channels.discord.allowFrom` / `channels.slack.allowFrom`; legacy: `channels.discord.dm.allowFrom`, `channels.slack.dm.allowFrom`).
-
-Run `grokbot doctor` to surface risky/misconfigured DM policies.
+Security guide: <https://docs.grokbot.ai/gateway/security>. Run `grokbot doctor` to surface risky DM policies.
 
 ## Highlights
 
 - **[Local-first Gateway](https://docs.grokbot.ai/gateway)** — single control plane for sessions, channels, tools, and events.
-- **[Multi-channel inbox](https://docs.grokbot.ai/channels)** — WhatsApp, Telegram, Slack, Discord, Google Chat, Signal, iMessage, IRC, Microsoft Teams, Matrix, Feishu, LINE, Mattermost, Nextcloud Talk, Nostr, Synology Chat, Tlon, Twitch, Zalo, Zalo Personal, WeChat, QQ, WebChat, macOS, iOS/Android.
-- **[Multi-agent routing](https://docs.grokbot.ai/gateway/configuration)** — route inbound channels/accounts/peers to isolated agents (workspaces + per-agent sessions).
-- **[Voice Wake](https://docs.grokbot.ai/nodes/voicewake) + [Talk Mode](https://docs.grokbot.ai/nodes/talk)** — wake words on macOS/iOS and continuous voice on Android (ElevenLabs + system TTS fallback).
+- **[Multi-channel inbox](https://docs.grokbot.ai/channels)** — all the channels listed above, plus macOS / iOS / Android voice and canvas.
+- **[Multi-agent routing](https://docs.grokbot.ai/gateway/configuration)** — isolate agents by workspace and route channels/accounts/peers per agent.
+- **[Voice Wake](https://docs.grokbot.ai/nodes/voicewake) + [Talk Mode](https://docs.grokbot.ai/nodes/talk)** — wake words on macOS / iOS and continuous voice on Android (ElevenLabs + system TTS fallback).
 - **[Live Canvas](https://docs.grokbot.ai/platforms/mac/canvas)** — agent-driven visual workspace with [A2UI](https://docs.grokbot.ai/platforms/mac/canvas#canvas-a2ui).
-- **[First-class tools](https://docs.grokbot.ai/tools)** — browser, canvas, nodes, cron, sessions, and Discord/Slack actions.
-- **[Companion apps](https://docs.grokbot.ai/platforms)** — Windows Hub, macOS menu bar app, and iOS/Android [nodes](https://docs.grokbot.ai/nodes).
-- **[Onboarding](https://docs.grokbot.ai/start/wizard) + [skills](https://docs.grokbot.ai/tools/skills)** — onboarding-driven setup with bundled/managed/workspace skills.
+- **[First-class tools](https://docs.grokbot.ai/tools)** — browser, canvas, nodes, cron, sessions, Discord/Slack actions.
+- **[Companion apps](https://docs.grokbot.ai/platforms)** — Windows Hub, macOS menu bar, iOS / Android nodes.
+- **[Onboarding](https://docs.grokbot.ai/start/wizard) + [skills](https://docs.grokbot.ai/tools/skills)** — onboarding-driven setup with bundled / managed / workspace skills.
 
-## Security model (important)
+## Security model
 
-- Default: tools run on the host for the `main` session, so the agent has full access when it is just you.
-- Group/channel safety: set `agents.defaults.sandbox.mode: "non-main"` to run non-`main` sessions inside sandboxes. Docker is the default sandbox backend; SSH and OpenShell backends are also available.
+- Default: tools run on the host for the `main` session, so the agent has full access when it's just you.
+- Group / channel safety: set `agents.defaults.sandbox.mode: "non-main"` to run non-`main` sessions inside sandboxes. Docker is the default sandbox backend; SSH and OpenShell backends are also available.
 - Typical sandbox default: allow `bash`, `process`, `read`, `write`, `edit`, `sessions_list`, `sessions_history`, `sessions_send`, `sessions_spawn`; deny `browser`, `canvas`, `nodes`, `cron`, `discord`, `gateway`.
 - Before exposing anything remotely, read [Security](https://docs.grokbot.ai/gateway/security), [Gateway exposure runbook](https://docs.grokbot.ai/gateway/security/exposure-runbook), [Sandboxing](https://docs.grokbot.ai/gateway/sandboxing), and [Configuration](https://docs.grokbot.ai/gateway/configuration).
 
@@ -116,34 +158,34 @@ Run `grokbot doctor` to surface risky/misconfigured DM policies.
 
 - Chat commands: `/status`, `/new`, `/reset`, `/compact`, `/think <level>`, `/verbose on|off`, `/trace on|off`, `/usage off|tokens|full`, `/restart`, `/activation mention|always`
 - Session tools: `sessions_list`, `sessions_history`, `sessions_send`
-- Skills registry: [ClawHub](https://clawhub.ai)
+- Skills registry: [ClawHub](https://clawhub.ai) (inherited from OpenClaw)
 - Architecture overview: [Architecture](https://docs.grokbot.ai/concepts/architecture)
 
 ## Docs by goal
 
-- New here: [Getting started](https://docs.grokbot.ai/start/getting-started), [Onboarding](https://docs.grokbot.ai/start/wizard), [Updating](https://docs.grokbot.ai/install/updating)
-- Channel setup: [Channels index](https://docs.grokbot.ai/channels), [WhatsApp](https://docs.grokbot.ai/channels/whatsapp), [Telegram](https://docs.grokbot.ai/channels/telegram), [Discord](https://docs.grokbot.ai/channels/discord), [Slack](https://docs.grokbot.ai/channels/slack)
-- Apps + nodes: [Windows Hub](https://docs.grokbot.ai/platforms/windows), [macOS](https://docs.grokbot.ai/platforms/macos), [iOS](https://docs.grokbot.ai/platforms/ios), [Android](https://docs.grokbot.ai/platforms/android), [Nodes](https://docs.grokbot.ai/nodes)
-- Config + security: [Configuration](https://docs.grokbot.ai/gateway/configuration), [Security](https://docs.grokbot.ai/gateway/security), [Exposure runbook](https://docs.grokbot.ai/gateway/security/exposure-runbook), [Sandboxing](https://docs.grokbot.ai/gateway/sandboxing)
-- Remote + web: [Gateway](https://docs.grokbot.ai/gateway), [Remote access](https://docs.grokbot.ai/gateway/remote), [Tailscale](https://docs.grokbot.ai/gateway/tailscale), [Web surfaces](https://docs.grokbot.ai/web)
-- Tools + automation: [Tools](https://docs.grokbot.ai/tools), [Skills](https://docs.grokbot.ai/tools/skills), [Cron jobs](https://docs.grokbot.ai/automation/cron-jobs), [Webhooks](https://docs.grokbot.ai/automation/webhook), [Gmail Pub/Sub](https://docs.grokbot.ai/automation/gmail-pubsub)
-- Internals: [Architecture](https://docs.grokbot.ai/concepts/architecture), [Agent](https://docs.grokbot.ai/concepts/agent), [Session model](https://docs.grokbot.ai/concepts/session), [Gateway protocol](https://docs.grokbot.ai/reference/rpc)
-- Troubleshooting: [Channel troubleshooting](https://docs.grokbot.ai/channels/troubleshooting), [Logging](https://docs.grokbot.ai/logging), [Docs home](https://docs.grokbot.ai)
+> GrokBot currently inherits OpenClaw's docs at <https://docs.grokbot.ai>. Sections that diverge (harness, packaging, this fork's CLI flags) are noted in this README until fork-specific docs land.
+
+- **New here:** [Getting started](https://docs.grokbot.ai/start/getting-started), [Onboarding](https://docs.grokbot.ai/start/wizard), [Updating](https://docs.grokbot.ai/install/updating)
+- **Channel setup:** [Channels index](https://docs.grokbot.ai/channels), [WhatsApp](https://docs.grokbot.ai/channels/whatsapp), [Telegram](https://docs.grokbot.ai/channels/telegram), [Discord](https://docs.grokbot.ai/channels/discord), [Slack](https://docs.grokbot.ai/channels/slack)
+- **Apps + nodes:** [Windows Hub](https://docs.grokbot.ai/platforms/windows), [macOS](https://docs.grokbot.ai/platforms/macos), [iOS](https://docs.grokbot.ai/platforms/ios), [Android](https://docs.grokbot.ai/platforms/android), [Nodes](https://docs.grokbot.ai/nodes)
+- **Config + security:** [Configuration](https://docs.grokbot.ai/gateway/configuration), [Security](https://docs.grokbot.ai/gateway/security), [Exposure runbook](https://docs.grokbot.ai/gateway/security/exposure-runbook), [Sandboxing](https://docs.grokbot.ai/gateway/sandboxing)
+- **Remote + web:** [Gateway](https://docs.grokbot.ai/gateway), [Remote access](https://docs.grokbot.ai/gateway/remote), [Tailscale](https://docs.grokbot.ai/gateway/tailscale), [Web surfaces](https://docs.grokbot.ai/web)
+- **Tools + automation:** [Tools](https://docs.grokbot.ai/tools), [Skills](https://docs.grokbot.ai/tools/skills), [Cron jobs](https://docs.grokbot.ai/automation/cron-jobs), [Webhooks](https://docs.grokbot.ai/automation/webhook), [Gmail Pub/Sub](https://docs.grokbot.ai/automation/gmail-pubsub)
+- **Internals:** [Architecture](https://docs.grokbot.ai/concepts/architecture), [Agent](https://docs.grokbot.ai/concepts/agent), [Session model](https://docs.grokbot.ai/concepts/session), [Gateway protocol](https://docs.grokbot.ai/reference/rpc)
+- **Troubleshooting:** [Channel troubleshooting](https://docs.grokbot.ai/channels/troubleshooting), [Logging](https://docs.grokbot.ai/logging), [Docs home](https://docs.grokbot.ai)
 
 ## Apps (optional)
 
 The Gateway alone delivers a great experience. All apps are optional and add extra features.
 
-If you plan to build/run companion apps, follow the platform runbooks below.
-
-### macOS (GrokBot.app) (optional)
+### macOS — GrokBot.app (optional)
 
 - Menu bar control for the Gateway and health.
 - Voice Wake + push-to-talk overlay.
 - WebChat + debug tools.
 - Remote gateway control over SSH.
 
-Note: signed builds required for macOS permissions to stick across rebuilds (see [macOS Permissions](https://docs.grokbot.ai/platforms/mac/permissions)).
+Signed builds required for macOS permissions to stick across rebuilds (see [macOS Permissions](https://docs.grokbot.ai/platforms/mac/permissions)).
 
 ### iOS node (optional)
 
@@ -156,15 +198,17 @@ Runbook: [iOS connect](https://docs.grokbot.ai/platforms/ios).
 ### Android node (optional)
 
 - Pairs as a WS node via device pairing (`grokbot devices ...`).
-- Exposes Connect/Chat/Voice tabs plus Canvas, Camera, Screen capture, and Android device command families.
-- Runbook: [Android connect](https://docs.grokbot.ai/platforms/android).
+- Exposes Connect / Chat / Voice tabs plus Canvas, Camera, Screen capture, and Android device command families.
+
+Runbook: [Android connect](https://docs.grokbot.ai/platforms/android).
+
+### Windows Hub (optional)
+
+- Native Windows companion for setup, tray status, chat, node mode, and local MCP mode.
 
 ## From source (development)
 
-Use `pnpm` for source checkouts. The repository is a pnpm workspace, and bundled
-plugins load from `extensions/*` during development so their package-local
-dependencies and your edits are used directly. Plain `npm install` at the repo
-root is not a supported source setup.
+Use `pnpm` for source checkouts. The repository is a pnpm workspace, and bundled plugins load from `extensions/*` during development so their package-local dependencies and your edits are used directly. Plain `npm install` at the repo root is not a supported source setup.
 
 For the dev loop:
 
@@ -191,7 +235,7 @@ pnpm build
 pnpm ui:build
 ```
 
-`pnpm grokbot setup` writes the local config/workspace needed for `pnpm gateway:watch`. It is safe to re-run, but you normally only need it on first setup or after resetting local state. `pnpm gateway:watch` hands the configured Gateway port from the installed service to a durable tmux pane; run `pnpm grokbot gateway start` when you want the installed service back. It does not rebuild `dist/control-ui`, so rerun `pnpm ui:build` after `ui/` changes or use `pnpm ui:dev` when iterating on the Control UI. If you want this checkout to run onboarding directly, use `pnpm grokbot onboard --install-daemon`.
+`pnpm grokbot setup` writes the local config/workspace needed for `grokbot gateway:watch`. It is safe to re-run, but you normally only need it on first setup or after resetting local state.
 
 Note: `pnpm grokbot ...` runs TypeScript directly (via `tsx`). `pnpm build` produces `dist/` for running via Node / the packaged `grokbot` binary, while `pnpm gateway:watch` rebuilds the runtime on demand during the dev loop.
 
@@ -218,56 +262,48 @@ Minimal `~/.grokbot/grokbot.json` (model + defaults):
 {
   agent: {
     model: "<provider>/<model-id>",
-  },
+    runtime: "auto"
+  }
 }
 ```
 
 [Full configuration reference (all keys + examples).](https://docs.grokbot.ai/gateway/configuration)
 
-## Star History
-
-[![Star History Chart](https://api.star-history.com/svg?repos=grokbot/grokbot&type=date&legend=top-left)](https://www.star-history.com/#grokbot/grokbot&type=date&legend=top-left)
-
-## Molty
-
-GrokBot was built for **Molty**, a space lobster AI assistant. 🦞
-by Peter Steinberger and the community.
-
-- [grokbot.ai](https://grokbot.ai)
-- [soul.md](https://soul.md)
-- [steipete.me](https://steipete.me)
-- [@grokbot](https://x.com/grokbot)
-
-## Community
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines, maintainers, and how to submit PRs.
-Use the [issue chooser](https://github.com/Franzferdinan51/GrokBot/issues/new/choose) for bugs, docs bugs, and feature requests;
-ask setup/support questions in [Discord](https://TODO-DISCORD-INVITE); and report vulnerabilities through [SECURITY.md](SECURITY.md).
-PRs should link the relevant issue when possible and follow the [PR template](.github/pull_request_template.md) with problem, impact, and evidence.
-AI/vibe-coded PRs welcome! 🤖
-
-Special thanks to [Mario Zechner](https://mariozechner.at/) for his support and for
-[pi-mono](https://github.com/earendil-works/pi-mono).
-Special thanks to Adam Doppelt for the lobster.bot domain.
-
 ## Acknowledgements
 
-GrokBot is a fork that would not exist without the work of its upstream
-sources.
+GrokBot is a downstream fork. It would not exist without the work of its upstream sources.
 
-- **[OpenClaw](https://github.com/openclaw/openclaw)** — the upstream agent
-  codebase that GrokBot forks from. All core architecture, plugin SDK, and
-  runtime semantics are inherited from OpenClaw (MIT, Copyright (c) 2026
-  OpenClaw Foundation).
-- **[Grok Build CLI](https://github.com/xai-org/grok-build)** — the harness
-  backend that GrokBot now uses to drive model sessions. Replaces the
-  Pi / pi-mono harness used by upstream OpenClaw and runs headless agent
-  sessions via the ACP (Agent Client Protocol) JSON-RPC 2.0 integration.
-  See `THIRD_PARTY_NOTICES.md` for upstream license and copyright details.
+- **[OpenClaw](https://github.com/openclaw/openclaw)** — the upstream codebase that GrokBot forks from. All core architecture, plugin SDK, harness selection, channel adapters, and companion apps are inherited from OpenClaw (MIT, Copyright (c) 2026 OpenClaw Foundation). OpenClaw itself was built by Peter Steinberger and a large community of contributors; see [OpenClaw's repo](https://github.com/openclaw/openclaw) for the upstream credits list.
+- **[Grok Build CLI](https://github.com/xai-org/grok-build)** — the agent harness that GrokBot now uses to drive model sessions. Replaces the Pi / pi-mono harness that OpenClaw originally shipped and runs headless agent sessions via the ACP (Agent Client Protocol) JSON-RPC 2.0 transport. Licensed Apache-2.0; Copyright 2023-2026 SpaceXAI.
+- **[Pi / pi-mono](https://github.com/earendil-works/pi-mono)** by Mario Zechner (MIT) — used by the `@earendil-works/pi-tui` terminal UI rendering path. GrokBot inherits this dependency from OpenClaw.
 
-Thanks to all clawtributors:
+See `THIRD_PARTY_NOTICES.md` for the full upstream license texts.
 
-<!-- clawtributors:start -->
+## License
+
+GrokBot is released under the **MIT License**, inherited from OpenClaw (Copyright (c) 2026 OpenClaw Foundation). See [LICENSE](LICENSE).
+
+Fork-specific additions (this README, the harness integration glue, packaging) by Franzferdinan51 are released under the same MIT terms. Grok Build CLI is a separate work licensed under Apache-2.0; see `THIRD_PARTY_NOTICES.md`.
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=Franzferdinan51/GrokBot&type=date&legend=top-left)](https://www.star-history.com/#Franzferdinan51/GrokBot&type=date&legend=top-left)
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines, maintainers, and how to submit PRs.
+Use the [issue chooser](https://github.com/Franzferdinan51/GrokBot/issues/new/choose) for bugs, docs bugs, and feature requests.
+Report vulnerabilities through [SECURITY.md](SECURITY.md).
+PRs should link the relevant issue when possible and follow the [PR template](.github/pull_request_template.md) with problem, impact, and evidence.
+AI / vibe-coded PRs welcome! 🤖
+
+## GrokBot contributors
+
+Thanks to everyone who has contributed to GrokBot and to the upstream OpenClaw codebase that this fork inherits from.
+
+The list below names contributors to this fork's repository. OpenClaw's full upstream contributors list lives in the [OpenClaw repo](https://github.com/openclaw/openclaw/graphs/contributors).
+
+<!-- contributors:start -->
 
 [![steipete](https://avatars.githubusercontent.com/u/58493?v=4&s=48)](https://github.com/steipete) [![vincentkoc](https://avatars.githubusercontent.com/u/25068?v=4&s=48)](https://github.com/vincentkoc) [![Takhoffman](https://avatars.githubusercontent.com/u/781889?v=4&s=48)](https://github.com/Takhoffman) [![obviyus](https://avatars.githubusercontent.com/u/22031114?v=4&s=48)](https://github.com/obviyus) [![gumadeiras](https://avatars.githubusercontent.com/u/5599352?v=4&s=48)](https://github.com/gumadeiras) [![Mariano Belinky](https://avatars.githubusercontent.com/u/132747814?v=4&s=48)](https://github.com/mbelinky) [![vignesh07](https://avatars.githubusercontent.com/u/1436853?v=4&s=48)](https://github.com/vignesh07) [![joshavant](https://avatars.githubusercontent.com/u/830519?v=4&s=48)](https://github.com/joshavant) [![scoootscooob](https://avatars.githubusercontent.com/u/167050519?v=4&s=48)](https://github.com/scoootscooob) [![jacobtomlinson](https://avatars.githubusercontent.com/u/1610850?v=4&s=48)](https://github.com/jacobtomlinson)
 [![shakkernerd](https://avatars.githubusercontent.com/u/165377636?v=4&s=48)](https://github.com/shakkernerd) [![sebslight](https://avatars.githubusercontent.com/u/19554889?v=4&s=48)](https://github.com/sebslight) [![tyler6204](https://avatars.githubusercontent.com/u/64381258?v=4&s=48)](https://github.com/tyler6204) [![ngutman](https://avatars.githubusercontent.com/u/1540134?v=4&s=48)](https://github.com/ngutman) [![thewilloftheshadow](https://avatars.githubusercontent.com/u/35580099?v=4&s=48)](https://github.com/thewilloftheshadow) [![Sid-Qin](https://avatars.githubusercontent.com/u/201593046?v=4&s=48)](https://github.com/Sid-Qin) [![mcaxtr](https://avatars.githubusercontent.com/u/7562095?v=4&s=48)](https://github.com/mcaxtr) [![eleqtrizit](https://avatars.githubusercontent.com/u/31522568?v=4&s=48)](https://github.com/eleqtrizit) [![BunsDev](https://avatars.githubusercontent.com/u/68980965?v=4&s=48)](https://github.com/BunsDev) [![cpojer](https://avatars.githubusercontent.com/u/13352?v=4&s=48)](https://github.com/cpojer)
@@ -335,121 +371,7 @@ Thanks to all clawtributors:
 [![gtsifrikas](https://avatars.githubusercontent.com/u/8904378?v=4&s=48)](https://github.com/gtsifrikas) [![hrdwdmrbl](https://avatars.githubusercontent.com/u/554881?v=4&s=48)](https://github.com/hrdwdmrbl) [![hugobarauna](https://avatars.githubusercontent.com/u/2719?v=4&s=48)](https://github.com/hugobarauna) [![jayhickey](https://avatars.githubusercontent.com/u/1676460?v=4&s=48)](https://github.com/jayhickey) [![jiulingyun](https://avatars.githubusercontent.com/u/126459548?v=4&s=48)](https://github.com/jiulingyun) [![Jonathan D. Rhyne (DJ-D)](https://avatars.githubusercontent.com/u/7828464?v=4&s=48)](https://github.com/jdrhyne) [![jverdi](https://avatars.githubusercontent.com/u/345050?v=4&s=48)](https://github.com/jverdi) [![kitze](https://avatars.githubusercontent.com/u/1160594?v=4&s=48)](https://github.com/kitze) [![loukotal](https://avatars.githubusercontent.com/u/18210858?v=4&s=48)](https://github.com/loukotal) [![minghinmatthewlam](https://avatars.githubusercontent.com/u/14224566?v=4&s=48)](https://github.com/minghinmatthewlam)
 [![MSch](https://avatars.githubusercontent.com/u/7475?v=4&s=48)](https://github.com/MSch) [![odrobnik](https://avatars.githubusercontent.com/u/333270?v=4&s=48)](https://github.com/odrobnik) [![oswalpalash](https://avatars.githubusercontent.com/u/6431196?v=4&s=48)](https://github.com/oswalpalash) [![ratulsarna](https://avatars.githubusercontent.com/u/105903728?v=4&s=48)](https://github.com/ratulsarna) [![reeltimeapps](https://avatars.githubusercontent.com/u/637338?v=4&s=48)](https://github.com/reeltimeapps) [![snopoke](https://avatars.githubusercontent.com/u/249606?v=4&s=48)](https://github.com/snopoke) [![sreekaransrinath](https://avatars.githubusercontent.com/u/50989977?v=4&s=48)](https://github.com/sreekaransrinath) [![timkrase](https://avatars.githubusercontent.com/u/38947626?v=4&s=48)](https://github.com/timkrase)
 
-<!-- clawtributors:end -->
-<!-- clawtributors:hidden:start
-default-avatar-cache: hidden from the rendered wall because these users still use GitHub's default avatar
-13otkmdr
-aaronveklabs
-adityashaw2
-ai-reviewer-qs
-alexyyyander
-alphonse-arianee
-amitbiswal007
-bbblending
-bbddbb1
-bitfoundry-ai
-bugkillerking
-carlulsoe
-charzhou
-cheeeee
-dalomeve
-danielz1z
-diaspar4u
-dirbalak
-djangonavarro220
-dobbylorenzbot
-drcrinkle
-drickon
-eddertalmor
-eengad
-efe-buken
-eric-fr4
-eronfan
-evandance
-extrasmall0
-ezhikkk
-fuller-stack-dev
-fwhite13
-gambletan
-gejifeng
-harrington-bot
-heimdallstrategy
-heyhudson
-hougangdev
-jamesgroat
-jamtujest
-jaymishra-source
-joe2643
-joetomasone
-jonathanworks
-jonisjongithub
-jscaldwell55
-julbarth
-junjunjunbong
-kirillshchetinin
-kyohwang
-lailoo
-latitudeki5223
-lawrence3699
-liaosvcaf
-livingghost
-luijoc
-lukeboyett
-lurebat
-mahanandhi
-maple778
-martingarramon
-matthew19990919
-moktamd
-moltbot886
-mujiannan
-mukhtharcm
-mylszd
-natedenh
-nicholascyh
-nickhood1984
-nico-hoff
-nikus-pan
-nonggialiang
-oliviareid-svg
-grokbot-bot
-pablohrcarvalho
-patrick-barletta
-pinghuachiu
-private-peter
-prospectore
-rafaelreis-r
-rexl2018
-rexlunae
-rhjoh
-ronak-guliani
-ryancontent
-ryanngit
-rybnikov
-sandpile
-sbking
-shivamraut101
-shuicici
-slats24
-slepybear
-sline
-socialnerd42069
-solodmd
-sudie-codes
-sumleo
-superman32432432
-ted-developer
-tempeste
-theonejvo
-tosh-hamburg
-uli-will-code
-w-sss
-whiskyboy
-wittam-01
-xieyongliang
-yassinebkr
-yuna78
-yuweuii
-yxjsxy
-zijiess
-clawtributors:hidden:end -->
+
+<!-- contributors:end -->
+
+If you shipped a PR to this fork and want to be added, open a PR or ping `@Franzferdinan51`.
