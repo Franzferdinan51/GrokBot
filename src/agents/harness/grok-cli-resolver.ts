@@ -88,6 +88,37 @@ export async function grokCliAvailable(): Promise<boolean> {
   return status.available;
 }
 
+/**
+ * Sync check for Grok CLI availability — used by harness supports() which
+ * must return synchronously. Checks env override and filesystem paths only;
+ * skips version lookup since that requires a subprocess.
+ */
+export function grokCliAvailableSync(): boolean {
+  // 1. Explicit override
+  const override = process.env.GROK_BUILD_PATH;
+  if (override) {
+    return existsSync(override);
+  }
+  // 2. PATH search (manual: split PATH and check each entry for grok/Grok)
+  const pathEntries = (process.env.PATH ?? "").split(":");
+  for (const dir of pathEntries) {
+    if (!dir) continue;
+    for (const name of ["grok", "Grok"]) {
+      const candidate = path.join(dir, name);
+      if (existsSync(candidate)) {
+        return true;
+      }
+    }
+  }
+  // 3. Fallback install locations
+  for (const fallbackPath of FALLBACK_PATHS) {
+    if (existsSync(fallbackPath)) {
+      return true;
+    }
+  }
+  return false;
+}
+
 /** Resolves the Grok CLI path, throwing if unavailable. */
 export async function resolveGrokCliPath(): Promise<string> {
   const status = await grokCliStatus();

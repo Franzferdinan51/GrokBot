@@ -49,6 +49,15 @@ const providerOwnerMocks = vi.hoisted(() => ({
   resolveProviderRefOwnership: vi.fn(),
 }));
 
+// Mock grok-cli-resolver so grokCliAvailableSync() is toggleable per-test.
+// Must be hoisted so it is defined when vi.mock factory runs.
+const mockGrokCliAvailableSync = vi.hoisted(() => vi.fn(() => false));
+// Built after mockGrokCliAvailableSync so the factory can reference it.
+vi.mock("./grok-cli-resolver.js", () => ({
+  grokCliAvailableSync: (): boolean => mockGrokCliAvailableSync(),
+  resolveGrokCliPath: async () => "/fake/grok",
+}));
+
 it("identifies harnesses that expose GrokBot tools", () => {
   expect(agentHarnessBuildsOpenClawTools("grokbot")).toBe(false);
   expect(agentHarnessBuildsOpenClawTools("codex")).toBe(true);
@@ -2677,6 +2686,25 @@ describe("selectAgentHarness", () => {
         agentHarnessRuntimeOverride: "google-gemini-cli",
       }),
     ).toThrow('Requested agent harness "google-gemini-cli" is not registered');
+  });
+
+  it("auto mode prefers grok-cli (priority 30) over embedded grokbot (priority 0)", () => {
+    // Toggle grokCliAvailableSync to return true so grok-cli harness reports supported.
+    vi.mocked(mockGrokCliAvailableSync).mockReturnValue(true);
+    const harness = selectAgentHarness({
+      provider: "xai",
+      modelId: "grok-3",
+    });
+    expect(harness.id).toBe("grok-cli");
+  });
+
+  it("auto mode falls back to embedded grokbot when grok-cli harness is not available", () => {
+    // grokCliAvailableSync defaults to false in this test file's vi.mock.
+    const harness = selectAgentHarness({
+      provider: "xai",
+      modelId: "grok-3",
+    });
+    expect(harness.id).toBe("grokbot");
   });
 });
 /* oxlint-disable max-lines -- TODO: split this grandfathered oversized file. */

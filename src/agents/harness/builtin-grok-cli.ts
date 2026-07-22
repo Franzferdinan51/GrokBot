@@ -26,7 +26,7 @@
 
 import { spawn } from "node:child_process";
 import { createInterface } from "node:readline";
-import { resolveGrokCliPath, grokCliAvailable } from "./grok-cli-resolver.js";
+import { resolveGrokCliPath, grokCliAvailableSync } from "./grok-cli-resolver.js";
 import type { AgentHarness } from "./types.js";
 import type {
   EmbeddedRunAttemptParams,
@@ -257,8 +257,8 @@ export function createGrokCliAgentHarness(): AgentHarness {
     id: "grok-cli",
     label: "Grok Build CLI (ACP)",
 
-    supports: async () => {
-      const available = await grokCliAvailable().catch(() => false);
+    supports: () => {
+      const available = grokCliAvailableSync();
       if (!available) {
         return {
           supported: false,
