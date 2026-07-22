@@ -27,7 +27,7 @@ Generated 2026-07-21.
   - Phase 1-4 status table preserved; commit list below refreshed to match current `origin/main` HEAD
   - Note: full `pnpm install && pnpm build && pnpm test` blocked by pre-existing missing `@grokbot/*` packages in node_modules (private scoped packages not on npm); verification done via TypeScript parse + targeted static checks + committed tests
 
-## What's been pushed (5 commits on main, current HEAD `940be82`)
+## What's been pushed (7 commits on main, current HEAD `587a2f68`)
 
 1. `0ad8bd4` — checkpoint: pre-rebrand baseline
 2. `ef05528` — rebrand: rename openclaw.mjs → grokbot.mjs, fix README identity leaks
@@ -35,7 +35,7 @@ Generated 2026-07-21.
 4. `3ff4a9c` — rebrand: include grok-cli in auto-mode harness selection
 5. `a718afd` — rebrand: make grok-cli supports() synchronous — fix auto-mode selection
 6. `940be82` — fix: mock lifecycle, type correctness for grok-cli auto-mode
-7. Wrap-up — REBRANDING.md / README.md / THIRD_PARTY_NOTICES.md (this commit)
+7. `587a2f68` — docs: credit OpenClaw upstream and Grok Build CLI harness backend
 
 ## Remaining work (Phase 3+)
 
