@@ -134,4 +134,71 @@ describe("xai responses tool helpers", () => {
       "xAI tool failed: malformed JSON response",
     );
   });
+
+  it("assembles the full default xAI Responses tool body with all four native tools", () => {
+    // Mirrors the dispatcher used by extensions/xai/{web-search,x-search,code-execution,collections-search}.ts:
+    //   each per-tool module constructs its own tool spec, and the caller passes the
+    //   assembled list into buildXaiResponsesToolBody. This test pins the contract that
+    //   a default Grok turn sends {web_search, x_search, code_execution, collections_search}.
+    const tools = [
+      { type: "web_search" },
+      { type: "x_search" },
+      { type: "code_interpreter" },
+      { type: "collections_search" },
+    ];
+
+    const body = buildXaiResponsesToolBody({
+      model: "grok-4.3",
+      inputText: "Plan my Q4 product launch.",
+      tools,
+      maxTurns: 4,
+      reasoningEffort: "low",
+    });
+
+    expect(body.tools).toHaveLength(4);
+    expect(body.tools.map((t) => t.type)).toEqual([
+      "web_search",
+      "x_search",
+      "code_interpreter",
+      "collections_search",
+    ]);
+    expect(body).toEqual({
+      model: "grok-4.3",
+      input: [{ role: "user", content: "Plan my Q4 product launch." }],
+      tools: [
+        { type: "web_search" },
+        { type: "x_search" },
+        { type: "code_interpreter" },
+        { type: "collections_search" },
+      ],
+      store: false,
+      reasoning: { effort: "low" },
+      max_turns: 4,
+    });
+  });
+
+  it("supports omitting individual tools via the explicit-disable path", () => {
+    // Same dispatcher with one tool explicitly dropped — must not be silently re-added.
+    const tools = [
+      { type: "web_search" },
+      { type: "x_search" },
+      { type: "code_interpreter" },
+      // collections_search intentionally omitted — caller has disabled it via
+      // plugins.entries.xai.config.collectionsSearch.enabled: false.
+    ];
+
+    const body = buildXaiResponsesToolBody({
+      model: "grok-4.3",
+      inputText: "lookup only.",
+      tools,
+    });
+
+    expect(body.tools.map((t) => t.type)).toEqual([
+      "web_search",
+      "x_search",
+      "code_interpreter",
+    ]);
+    expect(body.tools).toHaveLength(3);
+    expect(body.tools.find((t) => t.type === "collections_search")).toBeUndefined();
+  });
 });

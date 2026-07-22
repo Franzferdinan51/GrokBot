@@ -15,6 +15,10 @@ import {
   buildMissingCodeExecutionApiKeyPayload,
   createCodeExecutionToolDefinition,
 } from "./code-execution-tool-shared.js";
+import {
+  buildMissingCollectionsSearchApiKeyPayload,
+  createCollectionsSearchToolDefinition,
+} from "./collections-search-tool-shared.js";
 import { applyXaiConfig, XAI_DEFAULT_MODEL_REF } from "./onboard.js";
 import {
   buildLiveXaiOAuthProvider,
@@ -37,6 +41,7 @@ import {
   type XaiToolAuthContext,
 } from "./src/tool-auth-shared.js";
 import { resolveEffectiveXSearchConfig } from "./src/x-search-config.js";
+import { resolveEffectiveCollectionsSearchConfig } from "./src/collections-search-config.js";
 import { wrapXaiProviderStream } from "./stream.js";
 import { buildXaiMediaUnderstandingProvider } from "./stt.js";
 import { buildXaiVideoGenerationProvider } from "./video-generation-provider.js";
@@ -60,6 +65,8 @@ const XAI_RATE_LIMIT_RE = /\b(?:rate limit exceeded|too many requests)\b/i;
 const loadCodeExecutionModule = createLazyRuntimeModule(() => import("./code-execution.js"));
 
 const loadXSearchModule = createLazyRuntimeModule(() => import("./x-search.js"));
+
+const loadCollectionsSearchModule = createLazyRuntimeModule(() => import("./collections-search.js"));
 
 function classifyXaiFailoverReason(errorMessage: string) {
   if (XAI_CREDIT_OR_SPENDING_LIMIT_RE.test(errorMessage)) {
@@ -166,6 +173,46 @@ function createLazyXSearchTool(ctx: OpenClawPluginToolContext) {
     }
     return await tool.execute(toolCallId, args);
   });
+}
+
+function createLazyCollectionsSearchTool(ctx: OpenClawPluginToolContext) {
+  const effectiveConfig = ctx.runtimeConfig ?? ctx.config;
+  const collectionsSearchConfig = resolveEffectiveCollectionsSearchConfig(
+    effectiveConfig as never,
+  );
+  if (
+    !shouldExposeXaiBilledTool({
+      activeProvider: ctx.activeModel?.provider,
+      enabled: collectionsSearchConfig?.enabled,
+    })
+  ) {
+    return null;
+  }
+  if (
+    !isXaiToolEnabled({
+      enabled: collectionsSearchConfig?.enabled as boolean | undefined,
+      runtimeConfig: effectiveConfig as never,
+      sourceConfig: ctx.config as never,
+      auth: ctx,
+    })
+  ) {
+    return null;
+  }
+
+  return createCollectionsSearchToolDefinition(
+    async (toolCallId: string, args: Record<string, unknown>) => {
+      const { createCollectionsSearchTool } = await loadCollectionsSearchModule();
+      const tool = createCollectionsSearchTool({
+        config: ctx.config as never,
+        runtimeConfig: (ctx.runtimeConfig as never) ?? null,
+        auth: ctx,
+      });
+      if (!tool) {
+        return jsonResult(buildMissingCollectionsSearchApiKeyPayload());
+      }
+      return await tool.execute(toolCallId, args);
+    },
+  );
 }
 
 export default defineSingleProviderPluginEntry({
@@ -287,5 +334,6 @@ export default defineSingleProviderPluginEntry({
     api.registerRealtimeVoiceProvider(buildXaiRealtimeVoiceProvider());
     api.registerTool((ctx) => createLazyCodeExecutionTool(ctx), { name: "code_execution" });
     api.registerTool((ctx) => createLazyXSearchTool(ctx), { name: "x_search" });
+    api.registerTool((ctx) => createLazyCollectionsSearchTool(ctx), { name: "collections_search" });
   },
 });
