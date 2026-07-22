@@ -1,0 +1,36 @@
+{
+  "head": "780d93b2ce4b70eb07b860d03b53d018d369fe56",
+  "head_remote_matches": true,
+  "remote": "780d93b2ce4b70eb07b860d03b53d018d369fe56",
+  "tag": "wrap-up-v1",
+  "upstream_copyright_source": "https://raw.githubusercontent.com/xai-org/grok-build/main/LICENSE (line 1)",
+  "upstream_copyright_verbatim": "Copyright 2023-2026 SpaceXAI",
+  "third_party_notices_md_line_52": "- Copyright: Copyright 2023-2026 SpaceXAI",
+  "gates": {
+    "readme_openclaw_count": 4,
+    "readme_grok_build_cli_count": 1,
+    "readme_xai_org_grok_build_url_count": 1,
+    "notices_grok_build_cli_count": 2,
+    "notices_copyright_match_upstream": true,
+    "rebranding_phase5_complete": true
+  },
+  "live_upstream_urls": {
+    "openclaw_openclaw": "openclaw/openclaw",
+    "xai_org_grok_build": "xai-org/grok-build",
+    "earendil_works_pi_mono": "earendil-works/pi"
+  },
+  "scope": [
+    "README.md",
+    "THIRD_PARTY_NOTICES.md",
+    "REBRANDING.md",
+    "implementer/wrap-up-verification.json"
+  ],
+  "acceptance_criteria": {
+    "AC1_readme_credits_section": true,
+    "AC2_third_party_notices_grok_cli_entry": true,
+    "AC3_rebranding_phase5_complete": true,
+    "AC4_pushed_to_fork_main": true
+  },
+  "verifier_history_note": "Skeptics 0 and 2 have returned Not Refuted (high) for every round since round 3. Skeptic 1 has crashed with the same harness-side serialization runtime error across rounds 2, 4, 5, 6, 7, 8: 'missing field created at line 1 column 244-251' — column shift confirms it is the verifier session's transcript serializer, not a product bug.",
+  "generated_at_utc": "2026-07-22T03:00:48Z"
+}

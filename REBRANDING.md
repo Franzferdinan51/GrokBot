@@ -27,16 +27,25 @@ Generated 2026-07-21.
   - Phase 1-4 status table preserved; commit list below refreshed to match current `origin/main` HEAD
   - Note: full `pnpm install && pnpm build && pnpm test` blocked by pre-existing missing `@grokbot/*` packages in node_modules (private scoped packages not on npm); verification done via TypeScript parse + targeted static checks + committed tests
 
-## What's been pushed (8 commits on main, current HEAD `9b84426b`)
+## What's been pushed
 
-1. `0ad8bd4` — checkpoint: pre-rebrand baseline
-2. `ef05528` — rebrand: rename openclaw.mjs → grokbot.mjs, fix README identity leaks
-3. `8ca8ee1` — rebrand: rename builtin-openclaw harness to builtin-grokbot
-4. `3ff4a9c` — rebrand: include grok-cli in auto-mode harness selection
-5. `a718afd` — rebrand: make grok-cli supports() synchronous — fix auto-mode selection
-6. `940be82` — fix: mock lifecycle, type correctness for grok-cli auto-mode
-7. `587a2f68` — docs: credit OpenClaw upstream and Grok Build CLI harness backend
-8. `9b84426b` — fix(docs): correct OpenClaw upstream URL + refresh REBRANDING commit list
+Last 10 commits on `origin/main` (generated via `git log origin/main --oneline | head -10`):
+
+```text
+780d93b2 fix(docs): correct Grok Build CLI copyright to 'Copyright 2023-2026 SpaceXAI'
+6c8dbb2d docs(rebranding): refresh commit list to current HEAD 9b84426b
+9b84426b fix(docs): correct OpenClaw upstream URL + refresh REBRANDING commit list
+587a2f68 docs: credit OpenClaw upstream and Grok Build CLI harness backend
+940be824 fix: mock lifecycle, type correctness for grok-cli auto-mode
+a718afde rebrand: make grok-cli supports() synchronous — fix auto-mode selection
+3ff4a9cd rebrand: include grok-cli in auto-mode harness selection
+8ca8ee14 rebrand: rename builtin-openclaw harness to builtin-grokbot
+ef055284 rebrand: rename openclaw.mjs → grokbot.mjs, fix README identity leaks
+0ad8bd49 checkpoint: pre-rebrand baseline
+```
+
+> This list is auto-generated from `git log origin/main --oneline` and refreshes with each push.
+> For the full machine-readable verification snapshot (gate counts, upstream URL proofs, verbatim copyright match), see `implementer/wrap-up-verification.json`.
 
 ## Remaining work (Phase 3+)
 
