@@ -183,6 +183,34 @@
     "codeExecution.timeoutSeconds": {
       "label": "Code Execution Timeout",
       "help": "Timeout in seconds for code_execution requests."
+    },
+    "collectionsSearch.enabled": {
+      "label": "Enable Collections Search",
+      "help": "Expose collections_search on active xAI models; true opts in when the active provider is known non-xAI, false disables, and missing provider fails closed. Requires xAI auth."
+    },
+    "collectionsSearch.model": {
+      "label": "Collections Search Model",
+      "help": "xAI model override for collections_search."
+    },
+    "collectionsSearch.baseUrl": {
+      "label": "Collections Search Base URL",
+      "help": "Optional xAI Responses API base URL for collections_search requests."
+    },
+    "collectionsSearch.inlineCitations": {
+      "label": "Collections Search Inline Citations",
+      "help": "Keep inline markdown citations from xAI in collections_search responses when available."
+    },
+    "collectionsSearch.maxTurns": {
+      "label": "Collections Search Max Turns",
+      "help": "Optional max internal tool turns xAI may use per collections_search request."
+    },
+    "collectionsSearch.timeoutSeconds": {
+      "label": "Collections Search Timeout",
+      "help": "Timeout in seconds for collections_search requests."
+    },
+    "collectionsSearch.collectionIds": {
+      "label": "Collections Search Collection IDs",
+      "help": "Restrict the search to specific xAI collection IDs (max 50). Omit to search all collections the xAI account has access to."
     }
   },
   "contracts": {
@@ -193,7 +221,7 @@
     "realtimeTranscriptionProviders": ["xai"],
     "realtimeVoiceProviders": ["xai"],
     "imageGenerationProviders": ["xai"],
-    "tools": ["code_execution", "x_search"]
+    "tools": ["code_execution", "x_search", "collections_search"]
   },
   "mediaUnderstandingProviderMetadata": {
     "xai": {
@@ -219,6 +247,21 @@
       ]
     },
     "x_search": {
+      "replaySafe": true,
+      "authSignals": [
+        {
+          "provider": "xai"
+        }
+      ],
+      "configSignals": [
+        {
+          "rootPath": "plugins.entries.xai.config",
+          "overlayPath": "webSearch",
+          "required": ["apiKey"]
+        }
+      ]
+    },
+    "collections_search": {
       "replaySafe": true,
       "authSignals": [
         {
@@ -298,6 +341,38 @@
           },
           "timeoutSeconds": {
             "type": "number"
+          }
+        }
+      },
+      "collectionsSearch": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          },
+          "model": {
+            "type": "string"
+          },
+          "baseUrl": {
+            "type": "string"
+          },
+          "inlineCitations": {
+            "type": "boolean"
+          },
+          "maxTurns": {
+            "type": "number"
+          },
+          "timeoutSeconds": {
+            "type": "number"
+          },
+          "collectionIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "maxItems": 50
           }
         }
       }

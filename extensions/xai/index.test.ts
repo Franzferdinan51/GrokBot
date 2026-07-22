@@ -74,7 +74,7 @@ function requireEntry<T extends { id?: string }>(entries: T[], id: string): T {
   return entry;
 }
 
-type XaiBilledToolName = "code_execution" | "x_search";
+type XaiBilledToolName = "code_execution" | "x_search" | "collections_search";
 
 function registerXaiBilledToolFactories() {
   const tools = new Map<string, Parameters<OpenClawPluginApi["registerTool"]>[0]>();
@@ -99,17 +99,28 @@ function registerXaiBilledToolFactories() {
   return {
     code_execution: requireFactory("code_execution"),
     x_search: requireFactory("x_search"),
+    collections_search: requireFactory("collections_search"),
   };
 }
 
 function createXaiBilledToolConfig(name: XaiBilledToolName, enabled?: boolean) {
   const toolConfig = enabled === undefined ? {} : { enabled };
+  // Map the tool name to its corresponding plugin config block. The three
+  // xAI billed tools each read from a different section under
+  // plugins.entries.xai.config.
+  let configBlock: Record<string, unknown>;
+  if (name === "code_execution") {
+    configBlock = { codeExecution: toolConfig };
+  } else if (name === "x_search") {
+    configBlock = { xSearch: toolConfig };
+  } else {
+    configBlock = { collectionsSearch: toolConfig };
+  }
   return {
     plugins: {
       entries: {
         xai: {
-          config:
-            name === "code_execution" ? { codeExecution: toolConfig } : { xSearch: toolConfig },
+          config: configBlock,
         },
       },
     },
@@ -508,7 +519,9 @@ describe("xai provider plugin", () => {
     expect(realtimeVoiceProvider.capabilities?.transports).toEqual(["gateway-relay"]);
   });
 
-  describe.each(["code_execution", "x_search"] as const)("%s exposure", (toolName) => {
+  describe.each(["code_execution", "x_search", "collections_search"] as const)(
+    "%s exposure",
+    (toolName) => {
     it.each([
       {
         label: "exposes by default for an xAI model with auth",
@@ -624,9 +637,7 @@ describe("xai provider plugin", () => {
       expect(tool).toEqual(expected ? expect.objectContaining({ name: toolName }) : null);
     });
   });
-
   it("declares setup auto-enable reasons for plugin-owned tool config", () => {
-    const probe = registerXaiAutoEnableProbe();
 
     expect(
       probe({
