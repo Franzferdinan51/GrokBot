@@ -30,7 +30,11 @@ export type AgentToolModelConfig =
 
 /** Runtime selection policy attached to providers, models, and agent defaults. */
 export type AgentRuntimePolicyConfig = {
-  /** Agent runtime id. Omitted uses "grokbot"; "auto" opts into plugin harness auto-selection. */
+  /** Agent runtime id. Pi is entirely replaced with Grok Build CLI:
+   *  "grok-cli" forces Grok Build CLI, "auto" (recommended) selects Grok Build
+   *  CLI when available on PATH and falls back to a plugin harness otherwise,
+   *  "grokbot" is the legacy embedded harness retained only for explicit opt-in. */
+
   id?: string;
 };
 

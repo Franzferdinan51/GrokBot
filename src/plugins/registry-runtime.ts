@@ -761,11 +761,6 @@ export function createPluginRuntimeResolver(state: PluginRegistryState) {
               enumerable: true,
               value: runEmbeddedAgent,
             },
-            runEmbeddedPiAgent: {
-              configurable: true,
-              enumerable: true,
-              value: runEmbeddedAgent,
-            },
             session: {
               configurable: true,
               enumerable: true,

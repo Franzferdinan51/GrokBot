@@ -121,9 +121,7 @@ type AgentHarnessSelectionDecision = {
     // Auto mode chose a registered plugin harness that supports the provider/model.
     | "auto_plugin"
     // Auto mode found grok-cli available (priority 30) and selected it.
-    | "auto_grok_cli"
-    // Auto mode found no supporting plugin harness, so GrokBot handled the run.
-    | "auto_openclaw";
+    | "auto_grok_cli";
   candidates: AgentHarnessSelectionCandidate[];
 };
 
@@ -292,8 +290,11 @@ function selectAgentHarnessDecision(
   // GrokBot's built-in harness is intentionally not part of the plugin candidate list. Explicit plugin
   // runtimes fail closed; only `auto` may route an unmatched turn to GrokBot.
   const pluginHarnesses = listPluginAgentHarnesses();
-  const openClawHarness = createGrokBotAgentHarness();
   const runtime = policy.runtime;
+  // Embedded grogbot harness — retained only for the explicit runtime === "grokbot" branch
+  // (used by tests + boot). The Pi agent SDK this used to depend on has been
+  // entirely replaced by the Grok Build CLI in extensions/xai/.
+  const openClawHarness = createGrokBotAgentHarness();
   if (runtime === "grokbot") {
     const selectedReason = selectedRuntimeOverride
       ? "forced_openclaw"
@@ -473,12 +474,13 @@ function selectAgentHarnessDecision(
       candidates: candidates.map(toSelectionCandidate),
     });
   }
-  return buildSelectionDecision({
-    harness: openClawHarness,
-    policy,
-    selectedReason: "auto_openclaw",
-    candidates: candidates.map(toSelectionCandidate),
-  });
+  // Pi is entirely replaced with Grok Build CLI — auto selection never falls back
+  // to the embedded grokbot harness. If Grok Build CLI is missing from PATH and no
+  // plugin harness supports the request, throw so the caller can install grok-cli
+  // instead of silently dispatching to a removed agent surface.
+  throw new Error(
+    "Auto agent harness selection found no supported harness. Install the Grok Build CLI (`curl -fsSL https://x.ai/cli/install.sh | bash`) so the grok-cli harness is on PATH, or register a plugin harness for the provider/model.",
+  );
 }
 
 export async function runAgentHarnessAttempt(

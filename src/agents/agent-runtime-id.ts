@@ -13,7 +13,7 @@ export function normalizeEmbeddedAgentRuntime(raw: string | undefined): Embedded
   if (!value) {
     return OPENCLAW_AGENT_RUNTIME_ID;
   }
-  if (value === "grokbot" || value === "pi") {
+  if (value === "grokbot") {
     return OPENCLAW_AGENT_RUNTIME_ID;
   }
   if (value === "auto") {

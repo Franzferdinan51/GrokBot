@@ -502,21 +502,14 @@ async function readPiTranscript(
   };
 }
 
+// Pi is entirely replaced with Grok Build CLI. The historical Pi session catalog
+// is kept as a no-op so existing extension imports stay valid; new sessions use
+// the Grok Build CLI integration (see extensions/xai/) and this registry stays
+// inert until the acpx extension is fully renamed to remove the Pi naming.
 export function registerPiSessionCatalog(api: OpenClawPluginApi): void {
-  if (!isPiSessionCatalogEnabled(api.pluginConfig)) {
-    return;
-  }
-  api.registerSessionCatalog({
-    id: "pi",
-    label: "Pi",
-    list: async (query) => await listPiHosts(api.runtime, query),
-    read: async (request) => await readPiTranscript(api.runtime, request),
-    openTerminal: async (request) => await openPiTerminal({ runtime: api.runtime, ...request }),
-  });
-  for (const command of createPiSessionNodeHostCommands()) {
-    api.registerNodeHostCommand(command);
-  }
-  for (const policy of createPiSessionNodeInvokePolicies()) {
-    api.registerNodeInvokePolicy(policy);
-  }
+  // Intentionally no-op: Pi agent harness is replaced by Grok Build CLI.
+  // openTerminal / listPiHosts / readPiTranscript still exist for any external
+  // callers that imported them, but the session catalog id "pi" is no longer
+  // registered as a live product surface.
+  void api;
 }

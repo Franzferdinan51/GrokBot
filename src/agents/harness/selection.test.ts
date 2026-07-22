@@ -2703,13 +2703,18 @@ describe("selectAgentHarness", () => {
     expect(harness.id).toBe("grok-cli");
   });
 
-  it("auto mode falls back to embedded grokbot when grok-cli harness is not available", () => {
-    // grokCliAvailableSync defaults to false in this test file's vi.mock.
-    const harness = selectAgentHarness({
-      provider: "xai",
-      modelId: "grok-3",
-    });
-    expect(harness.id).toBe("grokbot");
+  it("auto mode throws when no Grok Build CLI or plugin harness is available (no Pi fallback)", () => {
+    // Pi agent SDK is entirely replaced by Grok Build CLI — auto selection must
+    // never silently dispatch to the removed Pi agent harness. If neither
+    // grok-cli nor any registered plugin harness supports the request, fail loud
+    // so the operator can install grok-cli (curl -fsSL https://x.ai/cli/install.sh | bash)
+    // or register a plugin harness, instead of the call silently succeeding.
+    expect(() =>
+      selectAgentHarness({
+        provider: "xai",
+        modelId: "grok-3",
+      }),
+    ).toThrow(/Install the Grok Build CLI|register a plugin harness/);
   });
 });
 /* oxlint-disable max-lines -- TODO: split this grandfathered oversized file. */

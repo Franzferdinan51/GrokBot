@@ -1192,11 +1192,12 @@ const PLUGIN_COMPAT_RECORDS = [
   },
   {
     code: "embedded-pi-agent-sdk-aliases",
-    status: "deprecated",
+    status: "removed",
     owner: "agent-runtime",
     introduced: "2026-05-21",
     deprecated: "2026-05-21",
     warningStarts: "2026-05-21",
+    removed: "2026-07-22",
     removeAfter: "2026-08-21",
     replacement: "`runEmbeddedAgent` and `EmbeddedAgent*` SDK/runtime names",
     docsPath: "/plugins/sdk-runtime",
