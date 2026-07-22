@@ -97,6 +97,10 @@ const originalRuntime = process.env.OPENCLAW_AGENT_RUNTIME;
 
 beforeEach(() => {
   clearAgentHarnesses();
+  // Reset grok-cli mock to unavailable (false) so each test starts with a clean slate.
+  // Tests that need grok-cli available must explicitly call mockReturnValue(true).
+  mockGrokCliAvailableSync.mockReset();
+  mockGrokCliAvailableSync.mockReturnValue(false);
   compactAuthMocks.ensureAuthProfileStore.mockReturnValue({ version: 1, profiles: {} });
   compactAuthMocks.ensureAuthProfileStoreWithoutExternalProfiles.mockReturnValue({
     version: 1,
@@ -137,6 +141,7 @@ afterEach(() => {
   clearAgentHarnesses();
   cliBackendsTesting.resetDepsForTest();
   agentRunAttempt.mockClear();
+  mockGrokCliAvailableSync.mockReset();
   compactAuthMocks.resolveModelAsync.mockReset();
   compactAuthMocks.getApiKeyForModel.mockReset();
   compactAuthMocks.ensureAuthProfileStore.mockReset();

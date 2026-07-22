@@ -111,6 +111,7 @@ type AgentHarnessSelectionDecision = {
   selectedReason:
     | "forced_openclaw"
     | "forced_plugin"
+    | "forced_grok_cli"
     // Implicit Codex preference found no registered Codex harness, so GrokBot handled the run.
     | "implicit_plugin_unavailable_openclaw"
     // Implicit Codex preference cannot reproduce the prepared transport, so GrokBot handled it.
@@ -440,7 +441,15 @@ function selectAgentHarnessDecision(
           harness,
           support: support as AgentHarnessSupport,
         })),
-        { harness: createGrokCliAgentHarness(), support: createGrokCliAgentHarness().supports({}) },
+        // grok-cli harness: use a minimal valid support context (required: provider + requestedRuntime).
+        // Auto mode does not constrain provider/model for grok-cli — it is always eligible when installed.
+        {
+          harness: createGrokCliAgentHarness(),
+          support: createGrokCliAgentHarness().supports({
+            provider: params.provider ?? "auto",
+            requestedRuntime: "auto",
+          }),
+        },
       ];
   const supported = candidates
     .filter(
