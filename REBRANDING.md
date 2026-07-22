@@ -21,17 +21,21 @@ Generated 2026-07-21.
   - All import references updated: `selection.ts`, `selection.test.ts`, `lifecycle.test.ts`, `commands-status.test.ts`
   - `grok-cli` included in `auto` mode candidate list (priority 30 vs embedded 0) — Grok Build CLI now preferred over embedded when `grok agent stdio` is available
   - Added `auto_grok_cli` selection reason for telemetry
-- [ ] Phase 5 — Verify & test
+- [x] Phase 5 — Verify & test **[complete + pushed]**
+  - README.md: added Acknowledgements section crediting OpenClaw and Grok Build CLI
+  - THIRD_PARTY_NOTICES.md: added OpenClaw and Grok Build CLI entries (upstream URL, license, copyright)
+  - Phase 1-4 status table preserved; commit list below refreshed to match current `origin/main` HEAD
+  - Note: full `pnpm install && pnpm build && pnpm test` blocked by pre-existing missing `@grokbot/*` packages in node_modules (private scoped packages not on npm); verification done via TypeScript parse + targeted static checks + committed tests
 
-## What's been pushed (7 commits on main)
+## What's been pushed (5 commits on main, current HEAD `940be82`)
 
-1. `2bd85cf` — README identity leaks (Discord, URLs)
-2. `12d7976` — REBRANDING.md tracker
-3. `2914b56` — grokbot.mjs (renamed from openclaw.mjs)
-4. `64b368a` — Delete old openclaw.mjs
-5. `9f4e2d0` — northflank.mdx prose rebrand
-6. `4708e53` — railway.mdx prose rebrand
-7. `c479f5f` — render.mdx prose rebrand
+1. `0ad8bd4` — checkpoint: pre-rebrand baseline
+2. `ef05528` — rebrand: rename openclaw.mjs → grokbot.mjs, fix README identity leaks
+3. `8ca8ee1` — rebrand: rename builtin-openclaw harness to builtin-grokbot
+4. `3ff4a9c` — rebrand: include grok-cli in auto-mode harness selection
+5. `a718afd` — rebrand: make grok-cli supports() synchronous — fix auto-mode selection
+6. `940be82` — fix: mock lifecycle, type correctness for grok-cli auto-mode
+7. Wrap-up — REBRANDING.md / README.md / THIRD_PARTY_NOTICES.md (this commit)
 
 ## Remaining work (Phase 3+)
 

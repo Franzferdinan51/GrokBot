@@ -4,6 +4,31 @@ This file records third-party notices for code or substantial implementation
 portions incorporated into GrokBot source, beyond normal package-manager
 dependency metadata.
 
+## OpenClaw (upstream fork base)
+
+GrokBot is a downstream fork of [OpenClaw](https://github.com/grokbot/grokbot).
+The GrokBot core architecture, plugin SDK, harness selection, and runtime
+semantics are inherited from OpenClaw. Adaptations made in this fork are
+documented in `REBRANDING.md`.
+
+- Upstream: https://github.com/grokbot/grokbot
+- License: MIT
+- Copyright: Copyright (c) 2025 OpenClaw contributors
+
+## Grok Build CLI (harness backend)
+
+GrokBot's harness layer invokes the [Grok Build CLI](https://github.com/xai-org/grok-build)
+headless agent CLI as the primary model runtime when available. The Grok CLI
+harness (`src/agents/harness/builtin-grok-cli.ts`) spawns `grok agent stdio`
+and exchanges JSON-RPC 2.0 / ACP (Agent Client Protocol) messages for
+session lifecycle, tool calls, and streaming updates. This replaces the
+upstream Pi / pi-mono harness that OpenClaw originally shipped.
+
+- Upstream: https://github.com/xai-org/grok-build
+- Package family: `grok` CLI binary (distributed separately)
+- License: Apache-2.0
+- Copyright: Copyright (c) 2025 xAI
+
 ## Pi / pi-mono
 
 Portions of GrokBot were adapted from Pi / pi-mono, and GrokBot also depends

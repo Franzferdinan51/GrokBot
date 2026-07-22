@@ -250,6 +250,20 @@ Special thanks to [Mario Zechner](https://mariozechner.at/) for his support and 
 [pi-mono](https://github.com/earendil-works/pi-mono).
 Special thanks to Adam Doppelt for the lobster.bot domain.
 
+## Acknowledgements
+
+GrokBot is a fork that would not exist without the work of its upstream
+sources.
+
+- **[OpenClaw](https://github.com/grokbot/grokbot)** — the upstream agent
+  codebase that GrokBot forks from. All core architecture, plugin SDK, and
+  runtime semantics are inherited from OpenClaw.
+- **[Grok Build CLI](https://github.com/xai-org/grok-build)** — the harness
+  backend that GrokBot now uses to drive model sessions. Replaces the
+  Pi / pi-mono harness used by upstream OpenClaw and runs headless agent
+  sessions via the ACP (Agent Client Protocol) JSON-RPC 2.0 integration.
+  See `THIRD_PARTY_NOTICES.md` for upstream license and copyright details.
+
 Thanks to all clawtributors:
 
 <!-- clawtributors:start -->
