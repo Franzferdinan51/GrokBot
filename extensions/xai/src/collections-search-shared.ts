@@ -81,9 +81,12 @@ export function resolveXaiCollectionsSearchIds(
 }
 
 function buildCollectionsSearchTool(options: XaiCollectionsSearchOptions): Record<string, unknown> {
+  // Wire format: the xAI Responses API exposes collections_search under the
+  // file_search tool type with vector_store_ids (the OpenAI-Responses shim
+  // xAI adopts). See https://docs.x.ai/developers/tools/collections-search.
   return {
-    type: "collections_search",
-    ...(options.collectionIds?.length ? { collection_ids: options.collectionIds } : {}),
+    type: "file_search",
+    ...(options.collectionIds?.length ? { vector_store_ids: options.collectionIds } : {}),
   };
 }
 

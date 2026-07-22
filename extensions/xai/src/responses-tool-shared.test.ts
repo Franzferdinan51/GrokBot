@@ -270,12 +270,16 @@ describe("xai Responses tool body assembly — 4 native tools", () => {
   // (via isXaiToolEnabled) and assembles the tools[] array, buildXaiResponsesToolBody
   // emits the contract body the xAI Responses API expects.
 
-  it("assembles the 4-tool default body (web_search + x_search + code_execution + collections_search)", () => {
+  it("assembles the 4-tool default body (web_search + x_search + code_execution + file_search)", () => {
+    // Wire format: the agent-facing name "collections_search" maps to xAI's
+    // OpenAI-Responses shim type "file_search" with vector_store_ids. The spec
+    // builder in extensions/xai/src/collections-search-shared.ts:buildCollectionsSearchTool
+    // emits this format.
     const tools = [
       { type: "web_search" },
       { type: "x_search" },
       { type: "code_interpreter" },
-      { type: "collections_search" },
+      { type: "file_search" },
     ];
 
     const body = buildXaiResponsesToolBody({
@@ -291,7 +295,7 @@ describe("xai Responses tool body assembly — 4 native tools", () => {
       "web_search",
       "x_search",
       "code_interpreter",
-      "collections_search",
+      "file_search",
     ]);
     expect(body).toEqual({
       model: "grok-4.3",
@@ -300,7 +304,7 @@ describe("xai Responses tool body assembly — 4 native tools", () => {
         { type: "web_search" },
         { type: "x_search" },
         { type: "code_interpreter" },
-        { type: "collections_search" },
+        { type: "file_search" },
       ],
       store: false,
       reasoning: { effort: "low" },
@@ -326,6 +330,6 @@ describe("xai Responses tool body assembly — 4 native tools", () => {
     });
 
     expect(body.tools).toHaveLength(3);
-    expect(body.tools.find((t) => t.type === "collections_search")).toBeUndefined();
+    expect(body.tools.find((t) => t.type === "file_search")).toBeUndefined();
   });
 });
