@@ -49,7 +49,7 @@ upstream Pi / pi-mono harness that OpenClaw originally shipped.
 - Upstream: https://github.com/xai-org/grok-build
 - Package family: `grok` CLI binary (distributed separately)
 - License: Apache-2.0
-- Copyright: Copyright (c) 2025 xAI
+- Copyright: Copyright 2023-2026 SpaceXAI
 
 ## Pi / pi-mono
 
