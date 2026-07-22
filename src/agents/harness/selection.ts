@@ -119,6 +119,8 @@ type AgentHarnessSelectionDecision = {
     | "cli_runtime_passthrough_openclaw"
     // Auto mode chose a registered plugin harness that supports the provider/model.
     | "auto_plugin"
+    // Auto mode found grok-cli available (priority 30) and selected it.
+    | "auto_grok_cli"
     // Auto mode found no supporting plugin harness, so GrokBot handled the run.
     | "auto_openclaw";
   candidates: AgentHarnessSelectionCandidate[];
@@ -420,15 +422,26 @@ function selectAgentHarnessDecision(
             config: params.config,
           }),
         });
-        return hintedCandidates.map(({ harness, support }) => ({
-          harness,
-          support: support ?? harness.supports(supportContext),
-        }));
+        // Grok CLI harness is evaluated in auto mode alongside plugin harnesses.
+        // It carries priority 30 vs embedded grokbot's priority 0, so it wins
+        // automatically when grok agent stdio is available in PATH.
+        const grokCliHarness = createGrokCliAgentHarness();
+        const grokCliSupport = grokCliHarness.supports(supportContext);
+        return [
+          ...hintedCandidates.map(({ harness, support }) => ({
+            harness,
+            support: support ?? harness.supports(supportContext),
+          })),
+          { harness: grokCliHarness, support: grokCliSupport },
+        ];
       })()
-    : hintedCandidates.map(({ harness, support }) => ({
-        harness,
-        support: support as AgentHarnessSupport,
-      }));
+    : [
+        ...hintedCandidates.map(({ harness, support }) => ({
+          harness,
+          support: support as AgentHarnessSupport,
+        })),
+        { harness: createGrokCliAgentHarness(), support: createGrokCliAgentHarness().supports({}) },
+      ];
   const supported = candidates
     .filter(
       (
@@ -442,10 +455,12 @@ function selectAgentHarnessDecision(
 
   const selected = supported[0]?.harness;
   if (selected) {
+    const selectedReason =
+      selected.id === "grok-cli" ? "auto_grok_cli" : "auto_plugin";
     return buildSelectionDecision({
       harness: selected,
       policy,
-      selectedReason: "auto_plugin",
+      selectedReason,
       candidates: candidates.map(toSelectionCandidate),
     });
   }

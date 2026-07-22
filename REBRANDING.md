@@ -19,7 +19,8 @@ Generated 2026-07-21.
   - `builtin-openclaw.test.ts` → `builtin-grokbot.test.ts`
   - Export: `createOpenClawAgentHarness` → `createGrokBotAgentHarness`
   - All import references updated: `selection.ts`, `selection.test.ts`, `lifecycle.test.ts`, `commands-status.test.ts`
-  - Verification: `pnpm tsc --noEmit` + `pnpm test src/agents/harness/` green
+  - `grok-cli` included in `auto` mode candidate list (priority 30 vs embedded 0) — Grok Build CLI now preferred over embedded when `grok agent stdio` is available
+  - Added `auto_grok_cli` selection reason for telemetry
 - [ ] Phase 5 — Verify & test
 
 ## What's been pushed (7 commits on main)
@@ -44,9 +45,11 @@ Generated 2026-07-21.
 - npm package internals, binary names
 
 ### Phase 4 — Agent harness swap
-- Replace Pi agent harness invocations with Grok Build CLI subprocess
-- Adapt message/session formats
-- Update tool surface definitions
+- [x] Built-in harness rename: `builtin-openclaw.ts` → `builtin-grokbot.ts`
+- [x] grok-cli harness included in `auto` mode selection (priority 30 > embedded 0)
+- [ ] Remove deprecated `OPENCLAW_EMBEDDED_CONTEXT_ENGINE_HOST` import from `builtin-grokbot.ts` (post-embedded deprecation)
+- [ ] Adapt message/session formats for grok-cli ACP output
+- [ ] Update tool surface definitions for grok-cli ACP tool calls
 
 ### Phase 5 — Verification
 - `pnpm install && pnpm build && pnpm test`
