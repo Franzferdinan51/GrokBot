@@ -24,6 +24,8 @@ Core calls the built-in runtime through GrokBot modules and SDK barrels; no exte
 
 `@earendil-works/pi-tui` remains a third-party dependency: a terminal component toolkit used by the local TUI and session tool renderers. Internalizing it would be a separate vendoring effort.
 
+The **Pi / pi-mono agent harness** has been entirely replaced by the [Grok Build CLI](https://github.com/xai-org/grok-build) via the Agent Client Protocol (ACP) JSON-RPC 2.0 transport (see `extensions/xai/`). No `pi-agent-core`, `pi-ai`, or other Pi agent SDK packages remain in GrokBot's runtime. The only Pi / pi-mono surface in use is the `@earendil-works/pi-tui` UI component library above.
+
 ## Manifests
 
 Resource packages declare GrokBot resources in `package.json` metadata. Entries are file paths or globs relative to the package root:

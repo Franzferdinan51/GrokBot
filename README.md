@@ -25,7 +25,7 @@ GrokBot is a downstream fork of [OpenClaw](https://github.com/openclaw/openclaw)
 
 What GrokBot changes:
 
-- **Harness swap: Pi → Grok Build CLI.** GrokBot's harness layer now invokes the [Grok Build CLI](https://github.com/xai-org/grok-build) (`grok agent stdio`) over the Agent Client Protocol (ACP) JSON-RPC 2.0 transport when the binary is available in `PATH`. This replaces the upstream Pi / pi-mono harness that OpenClaw originally shipped. See [Harness](#harness) below.
+- **Harness swap: Pi → Grok Build CLI.** GrokBot's agent harness is now the [Grok Build CLI](https://github.com/xai-org/grok-build) (`grok agent stdio`) over the Agent Client Protocol (ACP) JSON-RPC 2.0 transport when the binary is available in `PATH`. This **entirely replaces** the upstream Pi / pi-mono harness that OpenClaw originally shipped — no `pi-agent-core`, `pi-ai`, or Pi agent SDK remains in GrokBot's runtime. The only Pi / pi-mono surface still in use is `@earendil-works/pi-tui` (terminal UI rendering, a separate component). See [Harness](#harness) below.
 - **Independent packaging.** GrokBot ships as `grokbot` on npm and is rebuilt and published from this repository.
 - **Fork-specific docs and examples** live in this repo.
 
@@ -275,7 +275,7 @@ GrokBot is a downstream fork. It would not exist without the work of its upstrea
 
 - **[OpenClaw](https://github.com/openclaw/openclaw)** — the upstream codebase that GrokBot forks from. All core architecture, plugin SDK, harness selection, channel adapters, and companion apps are inherited from OpenClaw (MIT, Copyright (c) 2026 OpenClaw Foundation). OpenClaw itself was built by Peter Steinberger and a large community of contributors; see [OpenClaw's repo](https://github.com/openclaw/openclaw) for the upstream credits list.
 - **[Grok Build CLI](https://github.com/xai-org/grok-build)** — the agent harness that GrokBot now uses to drive model sessions. Replaces the Pi / pi-mono harness that OpenClaw originally shipped and runs headless agent sessions via the ACP (Agent Client Protocol) JSON-RPC 2.0 transport. Licensed Apache-2.0; Copyright 2023-2026 SpaceXAI.
-- **[Pi / pi-mono](https://github.com/earendil-works/pi-mono)** by Mario Zechner (MIT) — used by the `@earendil-works/pi-tui` terminal UI rendering path. GrokBot inherits this dependency from OpenClaw.
+- **[Pi / pi-mono](https://github.com/earendil-works/pi-mono)** by Mario Zechner (MIT) — used **only** by the `@earendil-works/pi-tui` terminal UI rendering path (no `pi-agent-core`, `pi-ai`, or other Pi agent SDKs remain). The Pi / pi-mono agent harness has been entirely replaced by Grok Build CLI (above).
 
 See `THIRD_PARTY_NOTICES.md` for the full upstream license texts.
 

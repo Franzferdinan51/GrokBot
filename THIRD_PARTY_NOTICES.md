@@ -51,13 +51,20 @@ upstream Pi / pi-mono harness that OpenClaw originally shipped.
 - License: Apache-2.0
 - Copyright: Copyright 2023-2026 SpaceXAI
 
-## Pi / pi-mono
+## Pi / pi-mono (TUI rendering only)
 
-Portions of GrokBot were adapted from Pi / pi-mono, and GrokBot also depends
-on `@earendil-works/pi-tui` for terminal UI rendering.
+The Pi / pi-mono **agent harness** has been entirely replaced by the
+[Grok Build CLI](https://github.com/xai-org/grok-build) — see the
+"Grok Build CLI" section above. The only remaining Pi / pi-mono surface in
+GrokBot is the `@earendil-works/pi-tui` **terminal UI rendering library**
+(used by the local TUI and session tool renderers). This is a separate
+component from the agent harness replacement and is intentionally retained
+as a third-party dependency; internalizing it would be a separate vendoring
+effort documented in `docs/agent-runtime-architecture.md`.
 
 - Upstream: https://github.com/earendil-works/pi-mono
-- Package family: `@earendil-works/pi-*`
+- Package family: `@earendil-works/pi-tui` (only; no `pi-agent-core`, `pi-ai`,
+  or other Pi agent SDKs)
 - License: MIT
 - Copyright: Copyright (c) 2025 Mario Zechner
 
