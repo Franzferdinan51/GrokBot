@@ -288,7 +288,7 @@ describe("xai Responses tool body assembly — 4 native tools", () => {
       tools,
       maxTurns: 4,
       reasoningEffort: "low",
-    });
+    }) as { tools: Array<{ type: string }> }
 
     expect(body.tools).toHaveLength(4);
     expect(body.tools.map((t) => t.type)).toEqual([
@@ -327,7 +327,7 @@ describe("xai Responses tool body assembly — 4 native tools", () => {
       model: "grok-4.3",
       inputText: "lookup only.",
       tools,
-    });
+    }) as { tools: Array<{ type: string }> }
 
     expect(body.tools).toHaveLength(3);
     expect(body.tools.find((t) => t.type === "file_search")).toBeUndefined();

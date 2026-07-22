@@ -46,7 +46,8 @@ describe("xai collections search config", () => {
       collectionIds: ["col-1"],
     });
     // Must not be the same reference — callers must not mutate the source config.
-    expect(resolved).not.toBe((cfg.plugins as never).entries.xai.config.collectionsSearch);
+    const original = cfg.plugins!.entries!.xai!.config!.collectionsSearch!;
+expect(resolved).not.toBe(original);
   });
 
   it("setPluginCollectionsSearchConfigValue creates the nested structure when missing", () => {

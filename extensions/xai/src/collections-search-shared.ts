@@ -142,7 +142,7 @@ export async function requestXaiCollectionsSearch(params: {
       }),
       errorLabel: "xAI",
     },
-    async (response) => {
+    async (response: Response) => {
       const data = (await readProviderJsonObjectResponse(
         response,
         "xAI collections search failed",
