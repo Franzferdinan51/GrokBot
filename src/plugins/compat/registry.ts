@@ -1212,7 +1212,7 @@ const PLUGIN_COMPAT_RECORDS = [
       "src/plugins/contracts/plugin-sdk-subpaths.test.ts",
     ],
     releaseNote:
-      "Legacy `runEmbeddedPiAgent` and `EmbeddedPi*` plugin aliases remain as deprecated SDK compatibility only.",
+      "Legacy `runEmbeddedPiAgent` and `EmbeddedPi*` plugin aliases were removed on 2026-07-22 in the Pi→Grok Build CLI replacement (no longer in shipped code).",
   },
   {
     code: "agent-harness-id-alias",

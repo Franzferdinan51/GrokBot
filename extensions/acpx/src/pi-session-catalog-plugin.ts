@@ -27,6 +27,18 @@ import {
 } from "./pi-session-catalog.js";
 import { piSessionStoreAvailable } from "./pi-session-paths.js";
 
+// ============================================================================
+// FILE-LEVEL QUARANTINE — Pi is entirely replaced with Grok Build CLI.
+// ----------------------------------------------------------------------------
+// The exported helpers below (openPiTerminal, createPiSessionNodeHostCommands,
+// createPiSessionNodeInvokePolicies) used to launch the Pi CLI as part of the
+// acpx extension's Pi session catalog. They are NOT exported from this file
+// and have no callers (registerPiSessionCatalog is now a no-op). They are kept
+// ONLY as a safety net for any external code that imported them by path.
+// New code MUST use the Grok Build CLI integration in extensions/xai/ instead.
+// ============================================================================
+
+
 const PI_SESSIONS_LIST_COMMAND = "acpx.pi.sessions.list.v1";
 const PI_SESSION_READ_COMMAND = "acpx.pi.sessions.read.v1";
 const PI_TERMINAL_RESUME_COMMAND = "acpx.pi.terminal.resume.v1";

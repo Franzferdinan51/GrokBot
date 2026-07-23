@@ -238,11 +238,17 @@ export function selectAgentHarnessForPreparedModelProviders(
   ) {
     return first?.harness ?? selectAgentHarness(selectionParams);
   }
-  // Only implicit/auto selection can produce different supported harnesses. One embedded
-  // runtime owns the complete retry set; explicit and pinned plugins fail during probing above.
-  return (
-    decisions.find((decision) => decision.selectedHarnessId === "grokbot")?.harness ??
-    createGrokBotAgentHarness()
+  // Pi is entirely replaced with Grok Build CLI — never silently fall back to the
+  // embedded grokbot harness when multi-provider decisions disagree. If decisions
+  // disagree and no Grok Build CLI or plugin harness owns them all, throw so the
+  // operator must explicitly pick a harness instead of the call silently
+  // dispatching to the removed Pi agent surface.
+  const grokCliDecision = decisions.find((d) => d.selectedHarnessId === "grok-cli");
+  if (grokCliDecision) {
+    return grokCliDecision.harness;
+  }
+  throw new Error(
+    "Multi-provider agent harness decisions disagree and no Grok Build CLI harness covers all providers. Configure an explicit agentHarnessRuntimeOverride instead of relying on implicit selection.",
   );
 }
 
