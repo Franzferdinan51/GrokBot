@@ -1,4 +1,0 @@
-interface:
-  display_name: "GrokBot Release Announcement"
-  short_description: "Draft Discord beta/stable release announcements from evidence."
-  default_prompt: "Use this skill to draft an GrokBot beta or stable Discord announcement from changelog, release notes, npm/GitHub release proof, and validation evidence."
