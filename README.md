@@ -230,10 +230,10 @@ Minimal `~/.grokbot/grokbot.json`:
 
 ## Acknowledgements
 
+GrokBot is a fork of [OpenClaw](https://github.com/openclaw/openclaw) and builds on its foundational work. The core architecture — Gateway, plugin SDK, channel adapters, voice wake, and companion apps — is inherited from OpenClaw. MIT Licensed; Copyright (c) 2026 OpenClaw Foundation.
+
 - **[Grok Build CLI](https://github.com/xai-org/grok-build)** — the agent harness that powers GrokBot. Runs headless agent sessions via the ACP (Agent Client Protocol) JSON-RPC 2.0 transport. Licensed Apache-2.0; Copyright 2023-2026 SpaceXAI.
 - **[@earendil-works/pi-tui](https://github.com/earendil-works/pi-mono)** by Mario Zechner (MIT) — used only by the terminal UI rendering path.
-
-GrokBot is released under the **MIT License** (Copyright (c) 2026). See [LICENSE](LICENSE) and `THIRD_PARTY_NOTICES.md` for full license texts.
 
 ## License
 
