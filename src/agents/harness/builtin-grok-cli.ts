@@ -26,7 +26,11 @@
 
 import { spawn } from "node:child_process";
 import { createInterface } from "node:readline";
+import fs from "node:fs";
+import path from "node:path";
+import { createRequire } from "node:module";
 import { resolveGrokCliPath, grokCliAvailableSync } from "./grok-cli-resolver.js";
+import { resolveOpenClawPackageRootSync } from "../../infra/grokbot-root.js";
 import type { AgentHarness } from "./types.js";
 import type {
   EmbeddedRunAttemptParams,
@@ -53,6 +57,56 @@ interface AcpResponse {
   id: number;
   result?: Record<string, unknown>;
   error?: { code: number; message: string; data?: unknown };
+}
+
+// ---------------------------------------------------------------------------
+// MCP server config — passed to session/new
+// ---------------------------------------------------------------------------
+
+/** ACP McpServer entry for session/new. */
+interface McpServer {
+  name: string;
+  command: string;
+  args: string[];
+  env?: Record<string, string>;
+}
+
+/** Resolve the grokbot-tools MCP stdio server for built-in CLI harness sessions. */
+function resolveBuiltinGrokCliMcpServers(): McpServer[] {
+  const packageRoot = resolveOpenClawPackageRootSync({
+    argv1: process.argv[1],
+    moduleUrl: import.meta.url,
+    cwd: process.cwd(),
+  });
+  if (!packageRoot) return [];
+
+  const distEntry = path.join(packageRoot, "dist", "mcp", "grokbot-tools-serve.js");
+  if (fs.existsSync(distEntry)) {
+    return [{ name: "grokbot", command: process.execPath, args: [distEntry] }];
+  }
+
+  const sourceEntry = path.join(packageRoot, "src", "mcp", "grokbot-tools-serve.ts");
+  if (!fs.existsSync(sourceEntry)) return [];
+
+  if (process.versions.bun) {
+    return [{ name: "grokbot", command: process.execPath, args: [sourceEntry] }];
+  }
+
+  const tsx = (() => {
+    try {
+      return createRequire(import.meta.url).resolve("tsx");
+    } catch {
+      return "tsx";
+    }
+  })();
+
+  return [
+    {
+      name: "grokbot",
+      command: process.execPath,
+      args: ["--import", tsx, sourceEntry],
+    },
+  ];
 }
 
 // ---------------------------------------------------------------------------
@@ -163,8 +217,8 @@ class GrokAgentAcpClient {
   }
 
   /** Create a new headless session */
-  async sessionNew(cwd: string, modelId?: string): Promise<string> {
-    const params: Record<string, unknown> = { cwd, mcpServers: [] };
+  async sessionNew(cwd: string, modelId?: string, mcpServers?: McpServer[]): Promise<string> {
+    const params: Record<string, unknown> = { cwd, mcpServers: mcpServers ?? [] };
     if (modelId) params.model = modelId;
     const result = await this.send("session/new", params) as { sessionId: string };
     return result.sessionId;
@@ -372,7 +426,8 @@ async function runGrokCliAttempt(
     const modelId = params.modelId
       ? (params.modelId.includes("/") ? params.modelId.split("/")[1] : params.modelId)
       : undefined;
-    grokSessionId = await client.sessionNew(cwd, modelId);
+    const mcpServers = resolveBuiltinGrokCliMcpServers();
+    grokSessionId = await client.sessionNew(cwd, modelId, mcpServers);
 
     // 4. Send prompt
     await client.sessionPrompt(grokSessionId, prompt, timeoutMs);
