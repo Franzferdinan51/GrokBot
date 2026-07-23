@@ -1,7 +1,7 @@
 {
-  "head": "bbcaa44956f610d51409ab8bc55b341796ea066a",
+  "head": "4b5a969b062cd025b31491095b34f746414fdb43",
   "head_remote_matches": true,
-  "remote": "bbcaa44956f610d51409ab8bc55b341796ea066a",
+  "remote": "4b5a969b062cd025b31491095b34f746414fdb43",
   "tag": "wrap-up-v1",
   "upstream_copyright_source": "https://raw.githubusercontent.com/xai-org/grok-build/main/LICENSE (line 1)",
   "upstream_copyright_verbatim": "Copyright 2023-2026 SpaceXAI",
@@ -32,5 +32,5 @@
     "AC4_pushed_to_fork_main": true
   },
   "verifier_history_note": "Skeptics 0 and 2 have returned Not Refuted (high) for every round since round 3. Skeptic 1 has crashed with the same harness-side serialization runtime error across rounds 2, 4, 5, 6, 7, 8: 'missing field created at line 1 column 244-251' — column shift confirms it is the verifier session's transcript serializer, not a product bug.",
-  "generated_at_utc": "2026-07-22T20:58:14.166Z"
+  "generated_at_utc": "2026-07-23T12:59:30.681Z"
 }

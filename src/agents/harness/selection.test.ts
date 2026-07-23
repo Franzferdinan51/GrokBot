@@ -609,7 +609,7 @@ describe("runAgentHarnessAttempt", () => {
     // With Grok Build CLI available on PATH, grok-cli harness (priority 30) wins
     // over embedded grokbot (priority 0). The Pi agent harness is entirely replaced —
     // there is no longer a third option to fall back to.
-    mockGrokCliAvailable.mockReturnValue(true);
+    mockGrokCliAvailableSync.mockReturnValue(true);
     const result = await runAgentHarnessAttempt(createAttemptParams());
 
     expect(result.sessionIdUsed).toBe("grok-cli");
@@ -622,7 +622,7 @@ describe("runAgentHarnessAttempt", () => {
     // registered plugin harness supports the request, fail loud so the operator
     // can install grok-cli (curl -fsSL https://x.ai/cli/install.sh | bash) or
     // register a plugin harness, instead of the call silently succeeding.
-    mockGrokCliAvailable.mockReturnValue(false);
+    mockGrokCliAvailableSync.mockReturnValue(false);
     await expect(runAgentHarnessAttempt(createAttemptParams())).rejects.toThrow(
       /Install the Grok Build CLI|register a plugin harness/,
     );
@@ -797,7 +797,7 @@ describe("runAgentHarnessAttempt", () => {
     // No codex plugin harness registered, no Grok Build CLI installed. The Pi
     // agent fallback path is entirely replaced — auto selection must throw so
     // the operator can install grok-cli instead of the call silently succeeding.
-    mockGrokCliAvailable.mockReturnValue(false);
+    mockGrokCliAvailableSync.mockReturnValue(false);
     expect(resolveAgentHarnessPolicy({ provider: "openai", modelId: "gpt-5.4" })).toEqual({
       runtime: "codex",
       runtimeSource: "implicit",
@@ -1517,7 +1517,7 @@ describe("selectAgentHarness", () => {
     // Without a registered codex plugin harness and no Grok Build CLI installed,
     // the implicit selection has no fallback target — the Pi agent surface is
     // entirely replaced by Grok Build CLI, so this must throw.
-    mockGrokCliAvailable.mockReturnValue(false);
+    mockGrokCliAvailableSync.mockReturnValue(false);
     expect(
       resolveAvailableAgentHarnessPolicy({
         provider: "openai",
@@ -1575,7 +1575,7 @@ describe("selectAgentHarness", () => {
       },
     } as OpenClawConfig;
 
-    mockGrokCliAvailable.mockReturnValue(false);
+    mockGrokCliAvailableSync.mockReturnValue(false);
     expect(
       resolveAvailableAgentHarnessPolicy({ provider: "openai", modelId: "gpt-5.5", config }),
     ).toEqual({ runtime: "grokbot", runtimeSource: "implicit" });
@@ -1911,7 +1911,7 @@ describe("selectAgentHarness", () => {
     // No Grok Build CLI installed + no codex plugin harness + implicit selection
     // would have routed to grokbot. Pi agent fallback is entirely replaced —
     // auto selection must throw so the operator installs grok-cli.
-    mockGrokCliAvailable.mockReturnValue(false);
+    mockGrokCliAvailableSync.mockReturnValue(false);
     expect(() =>
       selectAgentHarness({ provider: "openai", modelId: "gpt-5.4" }),
     ).toThrow(/Install the Grok Build CLI|register a plugin harness/);
@@ -1924,7 +1924,7 @@ describe("selectAgentHarness", () => {
       expect(resolveAgentHarnessPolicy({ provider: "openai", modelId: "gpt-5.4", config })).toEqual(
         { runtime: "codex", runtimeSource: "implicit" },
       );
-      mockGrokCliAvailable.mockReturnValue(false);
+      mockGrokCliAvailableSync.mockReturnValue(false);
       expect(() =>
         selectAgentHarness({ provider: "openai", modelId: "gpt-5.4", config }),
       ).toThrow(/Install the Grok Build CLI|register a plugin harness/);
