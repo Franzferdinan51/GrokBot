@@ -1,4 +1,4 @@
-# GrokBot — Personal AI Assistant (forked from OpenClaw)
+# GrokBot — Personal AI Assistant
 
 <p align="center">
     <picture>
@@ -10,40 +10,33 @@
 <p align="center">
   <a href="https://github.com/Franzferdinan51/GrokBot/actions/workflows/ci.yml?branch=main"><img src="https://img.shields.io/github/actions/workflow/status/Franzferdinan51/GrokBot/ci.yml?branch=main&style=for-the-badge" alt="CI status"></a>
   <a href="https://github.com/Franzferdinan51/GrokBot/releases"><img src="https://img.shields.io/github/v/release/Franzferdinan51/GrokBot?include_prereleases&style=for-the-badge" alt="GitHub release"></a>
-  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge" alt="MIT License (inherited from OpenClaw)"></a>
-  <a href="https://github.com/openclaw/openclaw"><img src="https://img.shields.io/badge/upstream-OpenClaw-5865F2?style=for-the-badge" alt="Upstream: OpenClaw"></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge" alt="MIT License"></a>
   <a href="https://github.com/xai-org/grok-build"><img src="https://img.shields.io/badge/harness-Grok%20Build%20CLI-D4A017?style=for-the-badge" alt="Harness: Grok Build CLI"></a>
 </p>
 
 **GrokBot** is a personal AI assistant that runs on your own devices. It answers you on the channels you already use — WhatsApp, Telegram, Slack, Discord, Google Chat, Signal, iMessage, IRC, Microsoft Teams, Matrix, Feishu, LINE, Mattermost, Nextcloud Talk, Nostr, Synology Chat, Tlon, Twitch, Zalo, Zalo Personal, WeChat, QQ, WebChat, plus macOS / iOS / Android voice and canvas surfaces.
 
-This fork is maintained by [Franzferdinan51](https://github.com/Franzferdinan51).
-
 ## What is GrokBot?
 
-GrokBot is a downstream fork of [OpenClaw](https://github.com/openclaw/openclaw) — the personal AI assistant originally built by Peter Steinberger and the OpenClaw community. The full architecture (Gateway, plugin SDK, harness selection, channel adapters, voice wake, companion apps) is inherited from OpenClaw.
+GrokBot is a self-hosted gateway that connects messaging channels to AI model providers. The gateway runs locally on your machine (macOS, Linux, Windows via WSL2), speaks to your configured models via their APIs, and delivers responses back through your connected channels.
 
-What GrokBot changes:
+**Key differences from the upstream OpenClaw project GrokBot is derived from:**
+- **Harness: Grok Build CLI.** GrokBot uses the [Grok Build CLI](https://github.com/xai-org/grok-build) (`grok agent stdio`) via the Agent Client Protocol (ACP) JSON-RPC 2.0 transport as its primary agent harness. This is an actively maintained xAI product with first-class tool-call streaming and OAuth support. See [Harness](#harness) below.
+- **Independent packaging.** Published as `grokbot` on npm, rebuilt from this repository.
+- **Fork-specific docs** live in this repo.
 
-- **Harness swap: Pi → Grok Build CLI.** GrokBot's agent harness is now the [Grok Build CLI](https://github.com/xai-org/grok-build) (`grok agent stdio`) over the Agent Client Protocol (ACP) JSON-RPC 2.0 transport when the binary is available in `PATH`. This **entirely replaces** the upstream Pi / pi-mono harness that OpenClaw originally shipped — no `pi-agent-core`, `pi-ai`, or Pi agent SDK remains in GrokBot's runtime. The only Pi / pi-mono surface still in use is `@earendil-works/pi-tui` (terminal UI rendering, a separate component). See [Harness](#harness) below.
-- **Independent packaging.** GrokBot ships as `grokbot` on npm and is rebuilt and published from this repository.
-- **Fork-specific docs and examples** live in this repo.
-
-What GrokBot inherits unchanged:
-
+**What GrokBot inherits unchanged from its upstream:**
 - The Gateway control plane and plugin SDK.
 - All channel adapters (WhatsApp, Telegram, Slack, Discord, …) and their auth/pairing flows.
 - macOS / iOS / Android companion apps and node pairing.
 - Multi-agent routing, sandboxing, voice wake, talk mode, and live canvas.
-- The MIT license from OpenClaw Foundation (see [Acknowledgements](#acknowledgements)).
+- The MIT license from the OpenClaw Foundation (see [Acknowledgements](#acknowledgements)).
 
 ## Why GrokBot?
 
-OpenClaw is a great general-purpose personal assistant runtime. GrokBot exists to keep that runtime viable while substituting the agent harness with one that ships from xAI directly and is maintained independently of the Pi / pi-mono ecosystem. The user-visible goals:
-
-- **Drop-in compatibility** — install `grokbot`, run `grokbot onboard`, and the same channels, skills, and workflows work as on OpenClaw.
-- **Better default harness** — Grok Build CLI is an actively maintained xAI product with first-class JSON-RPC 2.0 / ACP integration, OAuth support, and tool-call streaming.
-- **Fork sovereignty** — bugs, releases, and security fixes can land on a faster cadence than the upstream OpenClaw release train.
+- **Drop-in compatibility** — install `grokbot`, run `grokbot onboard`, and the same channels, skills, and workflows work.
+- **Better default harness** — Grok Build CLI is maintained by xAI with first-class ACP integration.
+- **Independent release cadence** — bugs, releases, and security fixes can land on a faster train than the upstream OpenClaw release train.
 
 ## Install
 
@@ -56,7 +49,7 @@ npm install -g grokbot@latest
 grokbot onboard --install-daemon
 ```
 
-`grokbot onboard` installs the Gateway daemon (launchd / systemd user service) so it stays running. Works on macOS, Linux, and Windows.
+`grokbot onboard` installs the Gateway daemon (launchd / systemd user service) so it stays running. Works on macOS, Linux, and Windows (WSL2).
 
 ## Quick start
 
@@ -76,7 +69,7 @@ grokbot message send --target +1234567890 --message "Hello from GrokBot"
 grokbot agent --message "Ship checklist" --thinking high
 ```
 
-Upgrading? See the [OpenClaw updating guide](https://docs.grokbot.ai/install/updating) (GroBot inherits OpenClaw's docs for now; run `grokbot doctor` after upgrade).
+Upgrading? See the [Updating guide](https://docs.grokbot.ai/install/updating) and run `grokbot doctor` after upgrade.
 
 ## Harness
 
@@ -100,8 +93,6 @@ Selection is driven by `runtimePolicy` in your config:
 | `grokbot` | Forces embedded GrokBot | You want zero external dependencies |
 | `codex`, `copilot`, etc. | External plugin harnesses (if registered) | Plugin harness workflows |
 
-See `src/agents/harness/builtin-grok-cli.ts` and `src/agents/harness/builtin-grokbot.ts` in this repo for the two harnesses.
-
 ### Installing Grok Build CLI
 
 ```bash
@@ -116,7 +107,7 @@ Verify with `grok agent --version` and `which grok`. Once installed, `auto` mode
 
 ## Channels
 
-GrokBot connects to any of these surfaces out of the box (inherited from OpenClaw):
+GrokBot connects to any of these surfaces out of the box:
 
 **Messaging:** WhatsApp · Telegram · Slack · Discord · Google Chat · Signal · iMessage · IRC · Microsoft Teams · Matrix · Feishu · LINE · Mattermost · Nextcloud Talk · Nostr · Synology Chat · Tlon · Twitch · Zalo · Zalo Personal · WeChat · QQ · WebChat.
 
@@ -158,12 +149,10 @@ Security guide: <https://docs.grokbot.ai/gateway/security>. Run `grokbot doctor`
 
 - Chat commands: `/status`, `/new`, `/reset`, `/compact`, `/think <level>`, `/verbose on|off`, `/trace on|off`, `/usage off|tokens|full`, `/restart`, `/activation mention|always`
 - Session tools: `sessions_list`, `sessions_history`, `sessions_send`
-- Skills registry: [ClawHub](https://clawhub.ai) (inherited from OpenClaw)
+- Skills registry: [ClawHub](https://clawhub.ai)
 - Architecture overview: [Architecture](https://docs.grokbot.ai/concepts/architecture)
 
 ## Docs by goal
-
-> GrokBot currently inherits OpenClaw's docs at <https://docs.grokbot.ai>. Sections that diverge (harness, packaging, this fork's CLI flags) are noted in this README until fork-specific docs land.
 
 - **New here:** [Getting started](https://docs.grokbot.ai/start/getting-started), [Onboarding](https://docs.grokbot.ai/start/wizard), [Updating](https://docs.grokbot.ai/install/updating)
 - **Channel setup:** [Channels index](https://docs.grokbot.ai/channels), [WhatsApp](https://docs.grokbot.ai/channels/whatsapp), [Telegram](https://docs.grokbot.ai/channels/telegram), [Discord](https://docs.grokbot.ai/channels/discord), [Slack](https://docs.grokbot.ai/channels/slack)
@@ -214,7 +203,7 @@ For the dev loop:
 
 ```bash
 git clone https://github.com/Franzferdinan51/GrokBot.git
-cd grokbot
+cd GrokBot
 
 pnpm install
 
@@ -271,11 +260,11 @@ Minimal `~/.grokbot/grokbot.json` (model + defaults):
 
 ## Acknowledgements
 
-GrokBot is a downstream fork. It would not exist without the work of its upstream sources.
+GrokBot is derived from the upstream [OpenClaw](https://github.com/openclaw/openclaw) project. It would not exist without the foundational work of the OpenClaw community.
 
-- **[OpenClaw](https://github.com/openclaw/openclaw)** — the upstream codebase that GrokBot forks from. All core architecture, plugin SDK, harness selection, channel adapters, and companion apps are inherited from OpenClaw (MIT, Copyright (c) 2026 OpenClaw Foundation). OpenClaw itself was built by Peter Steinberger and a large community of contributors; see [OpenClaw's repo](https://github.com/openclaw/openclaw) for the upstream credits list.
-- **[Grok Build CLI](https://github.com/xai-org/grok-build)** — the agent harness that GrokBot now uses to drive model sessions. Replaces the Pi / pi-mono harness that OpenClaw originally shipped and runs headless agent sessions via the ACP (Agent Client Protocol) JSON-RPC 2.0 transport. Licensed Apache-2.0; Copyright 2023-2026 SpaceXAI.
-- **[Pi / pi-mono](https://github.com/earendil-works/pi-mono)** by Mario Zechner (MIT) — used **only** by the `@earendil-works/pi-tui` terminal UI rendering path (no `pi-agent-core`, `pi-ai`, or other Pi agent SDKs remain). The Pi / pi-mono agent harness has been entirely replaced by Grok Build CLI (above).
+- **[OpenClaw](https://github.com/openclaw/openclaw)** — the upstream codebase that GrokBot builds upon. The core architecture (Gateway, plugin SDK, harness selection, channel adapters, voice wake, companion apps) is inherited from OpenClaw. Licensed under the MIT License (Copyright (c) 2026 OpenClaw Foundation). See [OpenClaw's repo](https://github.com/openclaw/openclaw) for the full upstream credits list.
+- **[Grok Build CLI](https://github.com/xai-org/grok-build)** — the agent harness that GrokBot uses by default. Runs headless agent sessions via the ACP (Agent Client Protocol) JSON-RPC 2.0 transport. Licensed Apache-2.0; Copyright 2023-2026 SpaceXAI.
+- **[Pi / pi-mono](https://github.com/earendil-works/pi-mono)** by Mario Zechner (MIT) — used **only** by the `@earendil-works/pi-tui` terminal UI rendering path. The Pi / pi-mono agent harness has been entirely replaced by Grok Build CLI.
 
 See `THIRD_PARTY_NOTICES.md` for the full upstream license texts.
 
@@ -283,7 +272,7 @@ See `THIRD_PARTY_NOTICES.md` for the full upstream license texts.
 
 GrokBot is released under the **MIT License**, inherited from OpenClaw (Copyright (c) 2026 OpenClaw Foundation). See [LICENSE](LICENSE).
 
-Fork-specific additions (this README, the harness integration glue, packaging) by Franzferdinan51 are released under the same MIT terms. Grok Build CLI is a separate work licensed under Apache-2.0; see `THIRD_PARTY_NOTICES.md`.
+Fork-specific additions (this README, harness integration glue, npm packaging) by Franzferdinan51 are released under the same MIT terms. Grok Build CLI is a separate work licensed under Apache-2.0; see `THIRD_PARTY_NOTICES.md`.
 
 ## Star History
 
@@ -291,17 +280,16 @@ Fork-specific additions (this README, the harness integration glue, packaging) b
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines, maintainers, and how to submit PRs.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines and how to submit PRs.
 Use the [issue chooser](https://github.com/Franzferdinan51/GrokBot/issues/new/choose) for bugs, docs bugs, and feature requests.
 Report vulnerabilities through [SECURITY.md](SECURITY.md).
 PRs should link the relevant issue when possible and follow the [PR template](.github/pull_request_template.md) with problem, impact, and evidence.
-AI / vibe-coded PRs welcome! 🤖
 
 ## GrokBot contributors
 
-Thanks to everyone who has contributed to GrokBot and to the upstream OpenClaw codebase that this fork inherits from.
+Thanks to everyone who has contributed to GrokBot and to the upstream OpenClaw codebase that this project inherits from.
 
-The list below names contributors to this fork's repository. OpenClaw's full upstream contributors list lives in the [OpenClaw repo](https://github.com/openclaw/openclaw/graphs/contributors).
+The list below names contributors to this repository. OpenClaw's full upstream contributors list lives in the [OpenClaw repo](https://github.com/openclaw/openclaw/graphs/contributors).
 
 <!-- contributors:start -->
 
@@ -369,8 +357,7 @@ The list below names contributors to this fork's repository. OpenClaw's full ups
 [![tmchow](https://avatars.githubusercontent.com/u/517103?v=4&s=48)](https://github.com/tmchow) [![Marc Gratch](https://avatars.githubusercontent.com/u/2238658?v=4&s=48)](https://github.com/mgratch) [![xtao](https://avatars.githubusercontent.com/u/1050163?v=4&s=48)](https://github.com/xtao) [![JackyWay](https://avatars.githubusercontent.com/u/53031570?v=4&s=48)](https://github.com/JackyWay) [![Josh Phillips](https://avatars.githubusercontent.com/u/3744255?v=4&s=48)](https://github.com/j1philli) [![T5-AndyML](https://avatars.githubusercontent.com/u/22801233?v=4&s=48)](https://github.com/T5-AndyML) [![huohua-dev](https://avatars.githubusercontent.com/u/258873123?v=4&s=48)](https://github.com/huohua-dev) [![imfing](https://avatars.githubusercontent.com/u/5097752?v=4&s=48)](https://github.com/imfing) [![Randy Torres](https://avatars.githubusercontent.com/u/149904821?v=4&s=48)](https://github.com/RandyVentures) [![Marco Di Dionisio](https://avatars.githubusercontent.com/u/3519682?v=4&s=48)](https://github.com/marcodd23)
 [![iamadig](https://avatars.githubusercontent.com/u/102129234?v=4&s=48)](https://github.com/Iamadig) [![humanwritten](https://avatars.githubusercontent.com/u/206531610?v=4&s=48)](https://github.com/humanwritten) [![Rob Axelsen](https://avatars.githubusercontent.com/u/13132899?v=4&s=48)](https://github.com/robaxelsen) [![Pratham Dubey](https://avatars.githubusercontent.com/u/134331217?v=4&s=48)](https://github.com/prathamdby) [![0oAstro](https://avatars.githubusercontent.com/u/79555780?v=4&s=48)](https://github.com/0oAstro) [![aaronn](https://avatars.githubusercontent.com/u/1653630?v=4&s=48)](https://github.com/aaronn) [![Arturo](https://avatars.githubusercontent.com/u/34192856?v=4&s=48)](https://github.com/afern247) [![Asleep123](https://avatars.githubusercontent.com/u/122379135?v=4&s=48)](https://github.com/Asleep123) [![dantelex](https://avatars.githubusercontent.com/u/631543?v=4&s=48)](https://github.com/dantelex) [![fcatuhe](https://avatars.githubusercontent.com/u/17382215?v=4&s=48)](https://github.com/fcatuhe)
 [![gtsifrikas](https://avatars.githubusercontent.com/u/8904378?v=4&s=48)](https://github.com/gtsifrikas) [![hrdwdmrbl](https://avatars.githubusercontent.com/u/554881?v=4&s=48)](https://github.com/hrdwdmrbl) [![hugobarauna](https://avatars.githubusercontent.com/u/2719?v=4&s=48)](https://github.com/hugobarauna) [![jayhickey](https://avatars.githubusercontent.com/u/1676460?v=4&s=48)](https://github.com/jayhickey) [![jiulingyun](https://avatars.githubusercontent.com/u/126459548?v=4&s=48)](https://github.com/jiulingyun) [![Jonathan D. Rhyne (DJ-D)](https://avatars.githubusercontent.com/u/7828464?v=4&s=48)](https://github.com/jdrhyne) [![jverdi](https://avatars.githubusercontent.com/u/345050?v=4&s=48)](https://github.com/jverdi) [![kitze](https://avatars.githubusercontent.com/u/1160594?v=4&s=48)](https://github.com/kitze) [![loukotal](https://avatars.githubusercontent.com/u/18210858?v=4&s=48)](https://github.com/loukotal) [![minghinmatthewlam](https://avatars.githubusercontent.com/u/14224566?v=4&s=48)](https://github.com/minghinmatthewlam)
-[![MSch](https://avatars.githubusercontent.com/u/7475?v=4&s=48)](https://github.com/MSch) [![odrobnik](https://avatars.githubusercontent.com/u/333270?v=4&s=48)](https://github.com/odrobnik) [![oswalpalash](https://avatars.githubusercontent.com/u/6431196?v=4&s=48)](https://github.com/oswalpalash) [![ratulsarna](https://avatars.githubusercontent.com/u/105903728?v=4&s=48)](https://github.com/ratulsarna) [![reeltimeapps](https://avatars.githubusercontent.com/u/637338?v=4&s=48)](https://github.com/reeltimeapps) [![snopoke](https://avatars.githubusercontent.com/u/249606?v=4&s=48)](https://github.com/snopoke) [![sreekaransrinath](https://avatars.githubusercontent.com/u/50989977?v=4&s=48)](https://github.com/sreekaransrinath) [![timkrase](https://avatars.githubusercontent.com/u/38947626?v=4&s=48)](https://github.com/timkrase)
-
+[![MSch](https://avatars.githubusercontent.com/u/7475?v=4&s=48)](https://github.com/MSch) [![odrobnik](https://avatars.githubusercontent.com/u/333270?v=4&s=48)](https://github.com/odrobnik) [![oswalpalash](https://avatars.githubusercontent.com/u/6431196?v=4&s=48)](https://github.com/oswalpalash) [![ratulsarna](https://avatars.githubusercontent.com/u/105903728?v=4&s=48)](https://github.com/ratulsarna) [![reeltimeapps](https://avatars.githubusercontent.com/u/637338?v=4&s=48)](https://github.com/reeltimeapps) [![snopoke](https://avatars.githubusercontent.com/u/249606?v=4&s=48)](https://github.com/snopoke) [![sreekaransrinath](https://avatars.githubusercontent.com/u/50989977?v=4&s=48)](https://github.com/sreekaransrinath) [![timkrase](https://avatars.githubusercontent.com/u/38947626?v=4&s=48)](https://github.com/timkrase) [![Franzferdinan51](https://avatars.githubusercontent.com/u/193758015?v=4&s=48)](https://github.com/Franzferdinan51)
 
 <!-- contributors:end -->
 

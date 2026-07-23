@@ -38,7 +38,7 @@ automatic pass. Detected local runtimes are auto-tested after CLI and API-key
 candidates; when several local models are available, GrokBot prefers the
 strongest tool-calling instruct family. The selected candidate must answer a
 real completion before its provider and model configuration is saved.
-Installed Gemini, Antigravity, Pi, and OpenCode CLIs are also reported when
+Installed Gemini, Antigravity, Grok Build CLI, and OpenCode CLIs are also reported when
 they cannot serve as the reusable inference route for guided setup.
 
 `setup` accepts the same onboarding flags as `grokbot onboard`, including

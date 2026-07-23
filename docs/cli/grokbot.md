@@ -44,7 +44,7 @@ It does not dump secrets or load plugin CLI commands just to start.
 
 Use `status` for the detailed inventory: config path, docs/source paths, local CLI probes, key/token presence, agents, model, and Gateway details.
 
-GrokBot uses the same reference discovery as regular agents: in a Git checkout it points at local `docs/` and the source tree; in an npm install it uses bundled docs and links to [https://github.com/grokbot/grokbot](https://github.com/grokbot/grokbot), with guidance to check source when docs are not enough.
+GrokBot uses the same reference discovery as regular agents: in a Git checkout it points at local `docs/` and the source tree; in an npm install it uses bundled docs and links to [https://github.com/Franzferdinan51/GrokBot](https://github.com/Franzferdinan51/GrokBot), with guidance to check source when docs are not enough.
 
 ## Examples
 
@@ -226,9 +226,7 @@ Embedded runtimes and the Codex app-server harness enforce the ring-zero
 restriction directly: the run carries an GrokBot tool allow-list with only
 the `grokbot` tool. For Codex, GrokBot also disables environments, native
 execution, multi-agent, goal, app/plugin, skill/MCP, web-search, and
-`request_user_input` surfaces for that run. Codex still injects its inert native `update_plan`
-utility; it can update the model's temporary checklist but cannot write files
-or GrokBot configuration. CLI harnesses do not consume GrokBot's allow-list,
+`request_user_input` surfaces for that run. CLI harnesses do not consume GrokBot's allow-list,
 so GrokBot admits only backends whose own tool-selection contract can prove
 the same restriction:
 
