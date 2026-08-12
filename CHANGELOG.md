@@ -16,6 +16,55 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## Unreleased
 
+### Cost: Microsoft Phi-4 family (Phi-4, Mini, Multimodal, Reasoning) priced (were $0/$0 unknown)
+
+The cost table picked up Microsoft Research's Phi-4
+family (Azure AI Foundry Global Standard, May 2026
+re-pricing — Microsoft published a "new Phi pricing"
+announcement that supersedes the launch-day
+$0.065/$0.140 rate for Phi-4):
+
+- `phi-4-reasoning-plus` — $0.125 / $0.500 (32K ctx)
+- `phi-4-reasoning` — $0.125 / $0.500 (32K ctx)
+- `phi-4-mini-reasoning` — $0.080 / $0.320 (128K ctx)
+- `phi-4-multimodal-audio` — $4.000 / $0.320 (128K ctx; audio input is 50x the text+image rate)
+- `phi-4-multimodal` — $0.080 / $0.320 (text + image, 128K ctx)
+- `phi-4-mini` — $0.075 / $0.300 (128K ctx)
+- `microsoft/phi-4` — $0.07 / $0.14 (OpenRouter / DeepInfra gateway, cheapest)
+- `phi-4` (catch-all) — $0.125 / $0.500 (Azure direct, 16K ctx)
+
+Pre-fix: no Phi-4 entries existed, so every call
+fell through to the unknown-model `$0/$0` fallback.
+The audio variant (`phi-4-multimodal-audio`) MUST
+come BEFORE the text+image variant
+(`phi-4-multimodal`) — otherwise the cheaper text
+rate would under-charge audio calls by ~50x on input
+($4.00 vs $0.08). The more-specific patterns
+(reasoning-plus, reasoning, mini-reasoning,
+multimodal-audio, multimodal, mini, microsoft/) all
+come BEFORE the bare `^phi-4/` catch-all (same
+prefix-stealing discipline as o1-mini vs o1 / gpt-5.6
+vs gpt-5).
+
+The Azure API uses mixed-case model ids
+(`Phi-4`, `Phi-4-mini`, `Phi-4-multimodal`); OpenRouter
+and Hugging Face use lowercase (`microsoft/phi-4`,
+`phi-4`). The patterns use the `/i` (case-insensitive)
+flag so one pattern covers both spellings — a new
+convention for this block. The existing `MiniMax-M3`
+and `Mistral Leanstral` entries maintain their
+explicit per-case patterns for backward compatibility.
+
+One new test in `src/__tests__/cost-approval.test.ts`
+pins the 8 Phi-4 entries (Azure-direct capital-P form,
+lowercase form, OpenRouter gateway form, and the
+audio-vs-text multimodal split), with `callCost`
+sanity checks for Phi-4 14B, Phi-4 mini, Phi-4
+multimodal audio, and the OpenRouter gateway form.
+
+868 → 869 pass / 0 fail across 54 files (+1 test).
+5/5 stable full-suite runs.
+
 ### Cost: Llama 3.3 70B / 8B + Llama 3.2 family priced (were $0/$0 unknown fallback)
 
 The cost table picked up Meta's Llama 3.3 (Dec 2024)

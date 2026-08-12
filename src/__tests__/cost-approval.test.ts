@@ -774,6 +774,123 @@ test("priceFor: Mistral Leanstral 1.5 (Lean 4 prover) priced (was $0/$0 unknown 
   assert.equal(callCost("leanstral-1.5", 1_000_000, 1_000_000), 0);
 });
 
+test("priceFor: Microsoft Phi-4 family (Phi-4, Mini, Multimodal, Reasoning) priced (were $0/$0 unknown)", () => {
+  // Microsoft Research's Phi-4 family (released Jan 2025, with
+  // the 4-mini / 4-multimodal / 4-reasoning variants added
+  // through May 2025). Per Microsoft's "Announcing new Phi
+  // pricing" post on techcommunity.microsoft.com and the
+  // Azure AI Foundry catalog (verified May/July 2026):
+  //   phi-4-reasoning-plus    $0.125 / $0.500  (32K ctx)
+  //   phi-4-reasoning         $0.125 / $0.500  (32K ctx)
+  //   phi-4-mini-reasoning    $0.080 / $0.320  (128K ctx)
+  //   phi-4-multimodal-audio  $4.000 / $0.320  (audio input is
+  //                                             50x text rate)
+  //   phi-4-multimodal        $0.080 / $0.320  (text + image, 128K)
+  //   phi-4-mini              $0.075 / $0.300  (128K ctx)
+  //   phi-4 (14B)             $0.125 / $0.500  (16K ctx)
+  // OpenRouter / DeepInfra route the base phi-4 at
+  // $0.07 / $0.14 (cheapest gateway). Pre-fix: no Phi-4
+  // entries existed, so every call fell through to the
+  // unknown-model $0/$0 fallback. The specific patterns
+  // (mini-reasoning, reasoning-plus, reasoning,
+  // multimodal-audio, multimodal, mini) MUST come BEFORE
+  // the bare `^phi-4/` catch-all (same prefix-stealing
+  // class as o1-mini vs o1 / gpt-5.6 vs gpt-5). The
+  // `^phi-4-multimodal-audio/i` pattern MUST come BEFORE
+  // `^phi-4-multimodal/i` — otherwise the cheaper text
+  // rate would under-charge audio calls by ~50x.
+  //
+  // The patterns use the `/i` (case-insensitive) flag so
+  // one pattern covers both Azure's mixed-case id
+  // (`Phi-4`, `Phi-4-mini`, `Phi-4-multimodal`) and the
+  // OpenRouter / Hugging Face lowercase form (`phi-4`,
+  // `microsoft/phi-4`).
+  const phi4 = priceFor("phi-4");
+  assert.equal(phi4.input, 0.125, "Phi-4 14B input $0.125");
+  assert.equal(phi4.output, 0.500, "Phi-4 14B output $0.500");
+  assert.equal(phi4.provider, "microsoft");
+  assert.match(phi4.label!, /Phi-4 14B/);
+
+  // Capital-P Azure direct form (also matches the case-insensitive
+  // catch-all).
+  const phi4Azure = priceFor("Phi-4");
+  assert.equal(phi4Azure.input, 0.125);
+  assert.equal(phi4Azure.output, 0.500);
+  assert.equal(phi4Azure.provider, "microsoft");
+
+  // Phi-4 mini.
+  const phi4mini = priceFor("phi-4-mini");
+  assert.equal(phi4mini.input, 0.075);
+  assert.equal(phi4mini.output, 0.300);
+  assert.equal(phi4mini.provider, "microsoft");
+  assert.match(phi4mini.label!, /Mini/);
+
+  // Azure direct form (capital P) of phi-4-mini.
+  const phi4miniAzure = priceFor("Phi-4-mini-instruct");
+  assert.equal(phi4miniAzure.input, 0.075);
+  assert.equal(phi4miniAzure.output, 0.300);
+
+  // Phi-4 multimodal (text + image).
+  const phi4mm = priceFor("phi-4-multimodal");
+  assert.equal(phi4mm.input, 0.080);
+  assert.equal(phi4mm.output, 0.320);
+  assert.equal(phi4mm.provider, "microsoft");
+  assert.match(phi4mm.label!, /Multimodal/);
+
+  // Phi-4 multimodal AUDIO — input is 50x the text+image rate.
+  // This pattern must come BEFORE the bare `^phi-4-multimodal/i`
+  // entry (otherwise the text+image rate of $0.08/$0.32 would
+  // be reported for an audio call, under-charging by 50x on
+  // input).
+  const phi4audio = priceFor("phi-4-multimodal-audio");
+  assert.equal(phi4audio.input, 4.000, "Phi-4 multimodal audio input $4.0 (50x text rate)");
+  assert.equal(phi4audio.output, 0.320, "Phi-4 multimodal audio output $0.32 (same as text)");
+  assert.equal(phi4audio.provider, "microsoft");
+  assert.match(phi4audio.label!, /audio/i);
+
+  // Phi-4 reasoning.
+  const phi4reason = priceFor("phi-4-reasoning");
+  assert.equal(phi4reason.input, 0.125);
+  assert.equal(phi4reason.output, 0.500);
+  assert.equal(phi4reason.provider, "microsoft");
+  assert.match(phi4reason.label!, /Reasoning/);
+
+  // Phi-4 reasoning-plus — same rate, distinct label.
+  const phi4plus = priceFor("phi-4-reasoning-plus");
+  assert.equal(phi4plus.input, 0.125);
+  assert.equal(phi4plus.output, 0.500);
+  assert.match(phi4plus.label!, /Plus/);
+
+  // Phi-4 mini-reasoning.
+  const phi4minireason = priceFor("phi-4-mini-reasoning");
+  assert.equal(phi4minireason.input, 0.080);
+  assert.equal(phi4minireason.output, 0.320);
+  assert.equal(phi4minireason.provider, "microsoft");
+  assert.match(phi4minireason.label!, /Mini Reasoning/);
+
+  // OpenRouter / DeepInfra gateway form — cheapest rate for
+  // the base Phi-4 14B. Note: this also matches
+  // `microsoft/phi-4-mini-instruct` (gateway form of the
+  // mini), which is priced at the base gateway rate, not
+  // the Azure direct mini rate. A small known under-count
+  // for the gateway-served mini variant (~7%).
+  const phi4OR = priceFor("microsoft/phi-4");
+  assert.equal(phi4OR.input, 0.07);
+  assert.equal(phi4OR.output, 0.14);
+  assert.equal(phi4OR.provider, "openrouter");
+  assert.match(phi4OR.label!, /OpenRouter|DeepInfra/);
+
+  // callCost sanity checks.
+  // Phi-4 14B 1M/1M = $0.125 + $0.500 = $0.625.
+  assert.ok(Math.abs(callCost("phi-4", 1_000_000, 1_000_000) - 0.625) < 0.01);
+  // Phi-4 mini 1M/1M = $0.075 + $0.300 = $0.375.
+  assert.ok(Math.abs(callCost("phi-4-mini", 1_000_000, 1_000_000) - 0.375) < 0.01);
+  // Phi-4 multimodal audio 1M/1M = $4.000 + $0.320 = $4.320.
+  assert.ok(Math.abs(callCost("phi-4-multimodal-audio", 1_000_000, 1_000_000) - 4.320) < 0.01);
+  // OpenRouter gateway phi-4 1M/1M = $0.07 + $0.14 = $0.21.
+  assert.ok(Math.abs(callCost("microsoft/phi-4", 1_000_000, 1_000_000) - 0.21) < 0.01);
+});
+
 test("priceFor: Qwen 3.6 / 3.7 + Qwen-Plus + Qwen-Turbo match (2026 line — were $0/$0)", () => {
   // Alibaba's Qwen family (verified via OpenRouter +
   // eesel.ai's pricing summary, July 2026):

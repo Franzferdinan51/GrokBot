@@ -379,6 +379,65 @@ const TABLE: Array<{ match: RegExp; price: ModelPrice }> = [
   { match: /^leanstral-1\.5/,              price: { input: 0.00,  output: 0.00,  provider: "mistral", label: "Mistral Leanstral 1.5 (Lean 4 prover, free API)" } },
   { match: /^leanstral/,                   price: { input: 0.00,  output: 0.00,  provider: "mistral", label: "Mistral Leanstral (unknown version; free API)" } },
   { match: /^mistral-medium/,        price: { input: 1.50,  output: 7.50,  provider: "mistral", label: "Mistral Medium (unknown tier; default 3.5 rate)" } },
+  // Microsoft Phi-4 family (Microsoft Research SLM, released
+  // January 2025; current pricing per Microsoft Azure AI Foundry
+  // Global Standard as of May 2026 — Microsoft published a
+  // "new Phi pricing" announcement that supersedes the
+  // launch-day $0.065/$0.140 rate for Phi-4):
+  //   phi-4-reasoning-plus    $0.125 / $0.500  (32K ctx)
+  //   phi-4-reasoning         $0.125 / $0.500  (32K ctx)
+  //   phi-4-mini-reasoning    $0.080 / $0.320  (128K ctx)
+  //   phi-4-multimodal-audio  $4.000 / $0.320  (audio input is 50x
+  //                                             more expensive than
+  //                                             text — MUST come
+  //                                             BEFORE the text+
+  //                                             image multimodal
+  //                                             entry, otherwise the
+  //                                             cheaper text rate
+  //                                             would under-charge
+  //                                             audio calls by
+  //                                             ~50x)
+  //   phi-4-multimodal        $0.080 / $0.320  (text + image, 128K)
+  //   phi-4-mini              $0.075 / $0.300  (128K ctx)
+  //   phi-4 (14B)             $0.125 / $0.500  (16K ctx)
+  // OpenRouter / DeepInfra route the base phi-4 at
+  // $0.07 / $0.14 (cheapest gateway). Pre-fix: no Phi-4
+  // entries existed, so every call fell through to the
+  // unknown-model $0/$0 fallback. The Azure API uses
+  // mixed-case model ids (`Phi-4`, `Phi-4-mini`, etc.);
+  // OpenRouter and Hugging Face use lowercase
+  // (`microsoft/phi-4`). The patterns below use the
+  // `/i` (case-insensitive) flag so one pattern covers
+  // both spellings — a new convention for this block,
+  // the existing `Mistral Leanstral` and `MiniMax-M3`
+  // entries maintain their explicit per-case patterns
+  // for backwards compatibility. The specific patterns
+  // (reasoning-plus, reasoning, mini-reasoning,
+  // multimodal-audio, multimodal, mini, microsoft/)
+  // MUST come BEFORE the bare `^phi-4/` catch-all (same
+  // prefix-stealing class as o1-mini vs o1 / gpt-5.6 vs
+  // gpt-5).
+  { match: /^phi-4-mini-reasoning/i,   price: { input: 0.080, output: 0.320, provider: "microsoft", label: "Phi-4 Mini Reasoning ($0.08/$0.32, 128K ctx)" } },
+  { match: /^phi-4-reasoning-plus/i,   price: { input: 0.125, output: 0.500, provider: "microsoft", label: "Phi-4 Reasoning Plus ($0.125/$0.50, 32K ctx)" } },
+  { match: /^phi-4-reasoning/i,        price: { input: 0.125, output: 0.500, provider: "microsoft", label: "Phi-4 Reasoning ($0.125/$0.50, 32K ctx)" } },
+  // Audio input is 50x more expensive than text — MUST come
+  // BEFORE the text+image multimodal entry below.
+  { match: /^phi-4-multimodal-audio/i, price: { input: 4.000, output: 0.320, provider: "microsoft", label: "Phi-4 Multimodal audio input ($4.0/$0.32, 128K ctx; audio 50x text rate)" } },
+  { match: /^phi-4-multimodal/i,       price: { input: 0.080, output: 0.320, provider: "microsoft", label: "Phi-4 Multimodal text+image ($0.08/$0.32, 128K ctx)" } },
+  { match: /^phi-4-mini/i,             price: { input: 0.075, output: 0.300, provider: "microsoft", label: "Phi-4 Mini ($0.075/$0.30, 128K ctx)" } },
+  // OpenRouter / DeepInfra gateway form for the base Phi-4.
+  // Note: this also matches `microsoft/phi-4-mini-instruct`
+  // and similar gateway-served variants — the gateway form
+  // is priced at the base Phi-4 gateway rate ($0.07/$0.14),
+  // not the Azure direct mini rate ($0.075/$0.30). Users on
+  // the gateway will see a small (~7%) under-count on mini
+  // calls; a future audit can split the gateway pattern
+  // per-variant if a precise rate difference matters.
+  { match: /^microsoft\/phi-4/i,       price: { input: 0.07,  output: 0.14,  provider: "openrouter", label: "Phi-4 14B (OpenRouter / DeepInfra gateway, $0.07/$0.14)" } },
+  // Bare catch-all — matches both `phi-4` (lowercase, OpenRouter
+  // gateway form / HF / LM Studio) and `Phi-4` (mixed case,
+  // Azure direct API).
+  { match: /^phi-4/i,                  price: { input: 0.125, output: 0.500, provider: "microsoft", label: "Phi-4 14B (Azure direct, $0.125/$0.50, 16K ctx)" } },
   // OpenRouter passthrough prices (rough)
   { match: /llama-3\.1-405b/,         price: { input: 3.50,  output: 3.50,  provider: "openrouter", label: "Llama 3.1 405B" } },
   { match: /llama-3\.1-70b/,          price: { input: 0.88,  output: 0.88,  provider: "openrouter", label: "Llama 3.1 70B" } },
