@@ -16,6 +16,46 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## Unreleased
 
+### Trajectory: share format now redacts Slack extra prefixes + Supabase + Notion + Shopify + Cloudflare (13 more vendor key prefixes)
+
+`SECRET_RE` picked up 13 more vendor key prefixes that
+are common in agent / SaaS workflows but were silently
+leaked through `share`-format exports:
+
+- `xoxr-` / `xoxo-` / `xoxs-` / `xoxe-` — Slack refresh
+  / legacy OAuth / scope-restricted / token-rotation
+  prefixes (the existing `xoxb-` / `xoxp-` / `xoxa-` /
+  `xapp-` covered the common ones, but these four
+  missed the rest of the Slack token family)
+- `xwfp-` — Slack workflow "just in time" tokens
+- `sb_secret_` — Supabase server-side admin key
+  (bypasses Row Level Security; full read/write on
+  every table; June 2025 rollout)
+- `ntn_` — Notion public API token (Sept 2024
+  reformat from legacy `secret_`; new tokens all use
+  `ntn_`. Legacy `secret_` is too generic to
+  safely redact — Notion's docs explicitly advise
+  against regex-matching the legacy form)
+- `shpat_` / `shpca_` / `shppa_` / `shpss_` —
+  Shopify admin API tokens (32 hex chars each;
+  shpca = custom app, shppa = partner, shpss =
+  shared secret, shpat = public app; all are
+  store-scoped with full admin API access)
+- `cfk_` / `cfut_` / `cfat_` — Cloudflare API
+  credentials (40 chars + CRC32 checksum each;
+  cfk = legacy global key, cfut = user API token,
+  cfat = account API token; all scannable format,
+  auto-revoked by GitHub secret scanning when
+  leaked)
+
+Pre-fix: any of these pasted into a user message
+and exported in `share` format would leak the key
+verbatim. Fix: extend `SECRET_RE` with all 13
+patterns. The test pins the redaction for each.
+
+869 → 870 pass / 0 fail across 54 files (+1 test).
+5/5 stable full-suite runs.
+
 ### Cost: Microsoft Phi-4 family (Phi-4, Mini, Multimodal, Reasoning) priced (were $0/$0 unknown)
 
 The cost table picked up Microsoft Research's Phi-4

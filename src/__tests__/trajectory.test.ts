@@ -349,6 +349,114 @@ test("export: share format redacts Discord bot tokens, Vercel tokens, and Google
   }
 });
 
+test("export: share format redacts Slack extra prefixes + Supabase + Notion + Shopify + Cloudflare (xoxr-/xoxo-/xoxs-/xoxe-/xwfp-/sb_secret_/ntn_/shpat_/shpca_/shppa_/shpss_/cfk_/cfut_/cfat_)", async () => {
+  // Pre-fix: SECRET_RE covered 35 vendor prefixes through 2026-08-11
+  // but missed a final wave of common SaaS / cloud / channel
+  // prefixes that show up in real agent workflows:
+  //
+  //   xoxr- / xoxo- / xoxs- / xoxe-   Slack additional token
+  //                                    formats (refresh, legacy
+  //                                    OAuth, scope-restricted,
+  //                                    token-rotation prefix —
+  //                                    the existing xoxb-/xoxp-/
+  //                                    xoxa-/xapp- covered the
+  //                                    most common ones but
+  //                                    missed the rest)
+  //   xwfp-                           Slack workflow token (used
+  //                                    for just-in-time bot
+  //                                    tokens in workflow steps)
+  //   sb_secret_                      Supabase server-side admin
+  //                                    key — bypasses Row Level
+  //                                    Security, full read/write
+  //                                    on every table. June 2025
+  //                                    rollout; new default is
+  //                                    sb_secret_/sb_publishable_
+  //                                    (the publishable variant
+  //                                    is NOT redacted because
+  //                                    it is meant to be public)
+  //   ntn_                            Notion public API token
+  //                                    (Sept 2024 reformat from
+  //                                    legacy `secret_` — new
+  //                                    tokens all use ntn_).
+  //                                    `secret_` itself is too
+  //                                    generic to redact safely
+  //                                    (would match unrelated
+  //                                    env vars); Notion's docs
+  //                                    explicitly advise against
+  //                                    regex matching the legacy
+  //                                    form
+  //   shpat_ / shpca_ / shppa_ / shpss_
+  //                                    Shopify admin API tokens
+  //                                    (32 hex chars each; shpca_
+  //                                    = custom app, shppa_ =
+  //                                    partner, shpss_ = shared
+  //                                    secret, shpat_ = public
+  //                                    app). All four are
+  //                                    store-scoped secrets with
+  //                                    full admin API access
+  //   cfk_ / cfut_ / cfat_            Cloudflare API credentials
+  //                                    (40 chars + CRC32 checksum
+  //                                    each; cfk_ = legacy global
+  //                                    key, cfut_ = user API
+  //                                    token, cfat_ = account API
+  //                                    token). All have the
+  //                                    scannable format and are
+  //                                    auto-revoked by GitHub
+  //                                    secret scanning when leaked
+  //
+  // A session that pasted any of these into a user message
+  // and then exported in `share` format would have leaked
+  // the key verbatim. Fix: extend SECRET_RE with all 13
+  // patterns. The test pins the redaction for each.
+  const cwd = freshDir();
+  try {
+    const s = await makeSession(cwd, "share-vendor-keys-6");
+    await s.append({
+      kind: "message",
+      message: {
+        role: "user",
+        content:
+          "xoxr-" + "A".repeat(24) +
+          " xoxo-" + "B".repeat(24) +
+          " xoxs-" + "C".repeat(24) +
+          " xoxe-" + "D".repeat(24) +
+          " xwfp-" + "E".repeat(24) +
+          " sb_secret_" + "F".repeat(24) +
+          " ntn_" + "G".repeat(24) +
+          " shpat_" + "1".repeat(32) +
+          " shpca_" + "2".repeat(32) +
+          " shppa_" + "3".repeat(32) +
+          " shpss_" + "4".repeat(32) +
+          " cfk_" + "H".repeat(40) +
+          " cfut_" + "I".repeat(40) +
+          " cfat_" + "J".repeat(40),
+      },
+    });
+    const out = freshDir();
+    const r = await exportSession(s, { format: "share", outDir: out });
+    const content = readFileSync(r.path, "utf-8");
+    assert.ok(!content.includes("xoxr-" + "A".repeat(24)), "xoxr- key should be redacted");
+    assert.ok(!content.includes("xoxo-" + "B".repeat(24)), "xoxo- key should be redacted");
+    assert.ok(!content.includes("xoxs-" + "C".repeat(24)), "xoxs- key should be redacted");
+    assert.ok(!content.includes("xoxe-" + "D".repeat(24)), "xoxe- key should be redacted");
+    assert.ok(!content.includes("xwfp-" + "E".repeat(24)), "xwfp- key should be redacted");
+    assert.ok(!content.includes("sb_secret_" + "F".repeat(24)), "sb_secret_ key should be redacted");
+    assert.ok(!content.includes("ntn_" + "G".repeat(24)), "ntn_ key should be redacted");
+    assert.ok(!content.includes("shpat_" + "1".repeat(32)), "shpat_ key should be redacted");
+    assert.ok(!content.includes("shpca_" + "2".repeat(32)), "shpca_ key should be redacted");
+    assert.ok(!content.includes("shppa_" + "3".repeat(32)), "shppa_ key should be redacted");
+    assert.ok(!content.includes("shpss_" + "4".repeat(32)), "shpss_ key should be redacted");
+    assert.ok(!content.includes("cfk_" + "H".repeat(40)), "cfk_ key should be redacted");
+    assert.ok(!content.includes("cfut_" + "I".repeat(40)), "cfut_ key should be redacted");
+    assert.ok(!content.includes("cfat_" + "J".repeat(40)), "cfat_ key should be redacted");
+    // All 14 should be replaced with the [REDACTED] marker.
+    const redactions = content.match(/\[REDACTED\]/g) ?? [];
+    assert.ok(redactions.length >= 14, "expected at least 14 redactions, got " + redactions.length);
+  } finally {
+    rmSync(cwd, { recursive: true, force: true });
+  }
+});
+
 test("export: share format replaces absolute cwd paths with relative", async () => {
   const cwd = freshDir();
   try {
