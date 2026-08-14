@@ -457,6 +457,95 @@ test("export: share format redacts Slack extra prefixes + Supabase + Notion + Sh
   }
 });
 
+test("export: share format redacts AWS STS + Figma + Netlify + HashiCorp Vault + Atlassian scoped (ASIA/figd_/nfp_/nfc_/nfo_/nfu_/nfb_/hvs./hvb./hvr./ATATT)", async () => {
+  // Pre-fix: SECRET_RE covered 48 vendor prefixes through 2026-08-12
+  // but missed a critical class of high-impact prefixes:
+  //
+  //   ASIA[16 chars]      AWS STS TEMPORARY access key id (20 chars
+  //                       total). These are the keys that show up
+  //                       in env dumps when someone accidentally
+  //                       shares their CLI session — a temporary
+  //                       key + secret + session token grants
+  //                       whatever the assumed role allows. The
+  //                       existing AKIA entry covers only the
+  //                       permanent IAM user keys, missing the
+  //                       entire STS-issued (role-assumed) key
+  //                       population
+  //   figd_               Figma personal access token (used by
+  //                       design-system MCP servers and design
+  //                       automation agents). Single prefix,
+  //                       40+ char body
+  //   nfp_ / nfc_ / nfo_ / nfu_ / nfb_
+  //                       Netlify auth tokens (all 5 prefixes per
+  //                       Netlify's 2024 reformat). 40 chars total.
+  //                       nfp = Personal Access Token, nfc = CLI,
+  //                       nfo = OAuth, nfu = app.netlify.com,
+  //                       nfb = build
+  //   hvs. / hvb. / hvr.  HashiCorp Vault tokens (Vault 1.10+).
+  //                       hvs = service (most common, 95+ bytes
+  //                       after prefix), hvb = batch, hvr = recovery.
+  //                       Vault secrets unlock every secret stored
+  //                       in the vault path the token can read —
+  //                       highest blast radius of any single secret
+  //   ATATT               Atlassian scoped API token (replaces
+  //                       legacy unscoped tokens + app passwords,
+  //                       which Atlassian fully retired on
+  //                       2026-07-28). Used for Bitbucket Cloud
+  //                       + Jira Cloud + Confluence Cloud REST
+  //                       API auth via HTTP basic (email + token)
+  //
+  // A session that pasted any of these into a user message
+  // and then exported in `share` format would have leaked
+  // the key verbatim. Fix: extend SECRET_RE with all 11
+  // patterns. The test pins the redaction for each.
+  const cwd = freshDir();
+  try {
+    const s = await makeSession(cwd, "share-vendor-keys-7");
+    await s.append({
+      kind: "message",
+      message: {
+        role: "user",
+        content:
+          // AWS STS temporary key id — 4-char prefix + 16 uppercase alphanum.
+          "ASIA" + "A".repeat(16) +
+          // Figma PAT.
+          " figd_" + "B".repeat(40) +
+          // Netlify 5 prefixes.
+          " nfp_" + "C".repeat(36) +
+          " nfc_" + "D".repeat(36) +
+          " nfo_" + "E".repeat(36) +
+          " nfu_" + "F".repeat(36) +
+          " nfb_" + "G".repeat(36) +
+          // HashiCorp Vault 3 prefixes.
+          " hvs." + "H".repeat(40) +
+          " hvb." + "I".repeat(40) +
+          " hvr." + "J".repeat(40) +
+          // Atlassian scoped API token.
+          " ATATT" + "K".repeat(24),
+      },
+    });
+    const out = freshDir();
+    const r = await exportSession(s, { format: "share", outDir: out });
+    const content = readFileSync(r.path, "utf-8");
+    assert.ok(!content.includes("ASIA" + "A".repeat(16)), "ASIA STS temp key should be redacted");
+    assert.ok(!content.includes("figd_" + "B".repeat(40)), "figd_ Figma key should be redacted");
+    assert.ok(!content.includes("nfp_" + "C".repeat(36)), "nfp_ Netlify PAT should be redacted");
+    assert.ok(!content.includes("nfc_" + "D".repeat(36)), "nfc_ Netlify CLI should be redacted");
+    assert.ok(!content.includes("nfo_" + "E".repeat(36)), "nfo_ Netlify OAuth should be redacted");
+    assert.ok(!content.includes("nfu_" + "F".repeat(36)), "nfu_ Netlify app should be redacted");
+    assert.ok(!content.includes("nfb_" + "G".repeat(36)), "nfb_ Netlify build should be redacted");
+    assert.ok(!content.includes("hvs." + "H".repeat(40)), "hvs. Vault service should be redacted");
+    assert.ok(!content.includes("hvb." + "I".repeat(40)), "hvb. Vault batch should be redacted");
+    assert.ok(!content.includes("hvr." + "J".repeat(40)), "hvr. Vault recovery should be redacted");
+    assert.ok(!content.includes("ATATT" + "K".repeat(24)), "ATATT Atlassian scoped should be redacted");
+    // All 11 should be replaced with the [REDACTED] marker.
+    const redactions = content.match(/\[REDACTED\]/g) ?? [];
+    assert.ok(redactions.length >= 11, "expected at least 11 redactions, got " + redactions.length);
+  } finally {
+    rmSync(cwd, { recursive: true, force: true });
+  }
+});
+
 test("export: share format replaces absolute cwd paths with relative", async () => {
   const cwd = freshDir();
   try {

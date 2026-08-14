@@ -16,6 +16,50 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## Unreleased
 
+### Trajectory: share format now redacts AWS STS + Figma + Netlify + HashiCorp Vault + Atlassian scoped (11 more vendor key prefixes)
+
+`SECRET_RE` picked up 11 more high-impact vendor key
+prefixes that are common in agent / SaaS / cloud
+workflows but were silently leaked through `share`-
+format exports:
+
+- `ASIA[16 chars]` — AWS STS temporary access key
+  id (20 chars total). The existing `AKIA` entry
+  covered only permanent IAM user keys, missing
+  the entire STS-issued (role-assumed) key
+  population. STS temp keys are what show up in
+  env dumps when someone shares their CLI session
+  — a leaked temp key + secret + session token
+  grants whatever the assumed role allows for up
+  to 12 hours
+- `figd_` — Figma personal access token (used by
+  design-system MCP servers and design automation
+  agents)
+- `nfp_` / `nfc_` / `nfo_` / `nfu_` / `nfb_` —
+  Netlify auth tokens (all 5 prefixes per Netlify's
+  2024 reformat). 40 chars total. nfp = Personal
+  Access Token, nfc = CLI, nfo = OAuth, nfu =
+  app.netlify.com, nfb = build
+- `hvs.` / `hvb.` / `hvr.` — HashiCorp Vault tokens
+  (Vault 1.10+). hvs = service (most common, 95+
+  bytes after prefix), hvb = batch, hvr = recovery.
+  Vault secrets unlock every secret stored in the
+  vault path the token can read — highest blast
+  radius of any single secret
+- `ATATT` — Atlassian scoped API token (replaces
+  legacy unscoped tokens + app passwords, which
+  Atlassian fully retired on 2026-07-28). Used for
+  Bitbucket Cloud + Jira Cloud + Confluence Cloud
+  REST API auth
+
+Pre-fix: any of these pasted into a user message
+and exported in `share` format would leak the key
+verbatim. Fix: extend `SECRET_RE` with all 11
+patterns. The test pins the redaction for each.
+
+870 → 871 pass / 0 fail across 54 files (+1 test).
+5/5 stable full-suite runs.
+
 ### Trajectory: share format now redacts Slack extra prefixes + Supabase + Notion + Shopify + Cloudflare (13 more vendor key prefixes)
 
 `SECRET_RE` picked up 13 more vendor key prefixes that
