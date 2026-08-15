@@ -188,7 +188,7 @@ test("priceFor: GPT-5 / GPT-5-mini / GPT-5-nano / GPT-5.4 / GPT-5.5 / GPT-5.5-pr
   assert.equal(gpt55pro.output, 180);
 });
 
-test("priceFor: GPT-5.6 Sol/Terra/Luna match (2026-07-09 launch — were missing entirely)", () => {
+test("priceFor: GPT-5.6 Sol/Terra/Luna match (2026-07-09 launch — Luna/Terra price cut Jul 30, 2026)", () => {
   // OpenAI launched GPT-5.6 (Sol/Terra/Luna) on July 9, 2026
   // with three-tier pricing: Sol $5/$30 (flagship), Terra
   // $2.50/$15 (balanced), Luna $1/$6 (cheapest). Pre-fix:
@@ -196,40 +196,50 @@ test("priceFor: GPT-5.6 Sol/Terra/Luna match (2026-07-09 launch — were missing
   // prefix (which is GPT-5 Aug 2025 at $1.25/$10) — a 2-4x
   // under-charge on the flagship. Must come BEFORE the
   // bare-`^gpt-5/` prefix in the TABLE.
+  //
+  // July 30, 2026: OpenAI cut Luna 80% (to $0.20/$1.20) and
+  // Terra 20% (to $2/$12). Sol held at $5/$30. Pre-cut-fix
+  // (4 days old at time of this commit): the cost tracker
+  // was over-charging every Luna call by 5x and every Terra
+  // call by 25%. The new rates are reflected below.
   const gpt56sol = priceFor("gpt-5.6-sol");
   assert.equal(gpt56sol.input, 5);
   assert.equal(gpt56sol.output, 30);
   assert.equal(gpt56sol.label, "GPT-5.6 Sol");
 
+  // Terra: $2.50/$15 → $2/$12 (Jul 30, 2026 cut).
   const gpt56terra = priceFor("gpt-5.6-terra");
-  assert.equal(gpt56terra.input, 2.50);
-  assert.equal(gpt56terra.output, 15);
-  assert.equal(gpt56terra.label, "GPT-5.6 Terra");
+  assert.equal(gpt56terra.input, 2, "Terra input was $2.50 before Jul 30, 2026 cut");
+  assert.equal(gpt56terra.output, 12, "Terra output was $15 before Jul 30, 2026 cut");
+  assert.match(gpt56terra.label!, /20% cut/);
 
+  // Luna: $1/$6 → $0.20/$1.20 (Jul 30, 2026 cut).
   const gpt56luna = priceFor("gpt-5.6-luna");
-  assert.equal(gpt56luna.input, 1);
-  assert.equal(gpt56luna.output, 6);
-  assert.equal(gpt56luna.label, "GPT-5.6 Luna");
+  assert.equal(gpt56luna.input, 0.20, "Luna input was $1 before Jul 30, 2026 cut");
+  assert.equal(gpt56luna.output, 1.20, "Luna output was $6 before Jul 30, 2026 cut");
+  assert.match(gpt56luna.label!, /80% cut/);
 });
 
-test("priceFor: GPT-5.6 Luna Pro matches at $1/$6 (2026-07-09 launch — same as Luna, distinct label)", () => {
+test("priceFor: GPT-5.6 Luna Pro matches at $0.20/$1.20 (post Jul 30, 2026 cut — same as Luna, distinct label)", () => {
   // OpenAI shipped GPT-5.6 Luna Pro on July 9, 2026 — same
   // underlying Luna model with its reasoning mode set to
   // "pro" (slower but more thorough). Pricing is identical
-  // to base Luna at $1/$6 per OpenAI's API page. The
-  // `^gpt-5.6-luna` prefix pattern below it would match
+  // to base Luna, and was cut the same 80% on July 30, 2026.
+  // The `^gpt-5.6-luna` prefix pattern below it would match
   // `gpt-5.6-luna-pro` anyway, but the explicit entry
   // is what makes the label distinct in the cost UI (so a
   // user can tell which variant they actually ran).
+  // Pre-fix (Jun-Aug 2026): the cost tracker was over-charging
+  // every Luna Pro call by 5x on input and 5x on output.
   const gpt56lunapro = priceFor("gpt-5.6-luna-pro");
-  assert.equal(gpt56lunapro.input, 1, "Luna Pro input should be $1 (same as Luna)");
-  assert.equal(gpt56lunapro.output, 6, "Luna Pro output should be $6 (same as Luna)");
+  assert.equal(gpt56lunapro.input, 0.20, "Luna Pro input should be $0.20 (post Jul 30 cut; was $1)");
+  assert.equal(gpt56lunapro.output, 1.20, "Luna Pro output should be $1.20 (post Jul 30 cut; was $6)");
   assert.equal(gpt56lunapro.provider, "openai");
-  assert.equal(gpt56lunapro.label, "GPT-5.6 Luna Pro");
+  assert.match(gpt56lunapro.label!, /GPT-5\.6 Luna Pro/);
 
   // callCost sanity check on the same model — 1M in / 1M out.
   const c = callCost("gpt-5.6-luna-pro", 1_000_000, 1_000_000);
-  assert.ok(Math.abs(c - 7.00) < 0.01, "1M/1M Luna Pro should cost $7, got " + c);
+  assert.ok(Math.abs(c - 1.40) < 0.01, "1M/1M Luna Pro should cost $1.40, got " + c);
 });
 
 test("priceFor: GPT-5.6 Sol Pro + Terra Pro match the same rate as their base models", () => {
@@ -238,11 +248,11 @@ test("priceFor: GPT-5.6 Sol Pro + Terra Pro match the same rate as their base mo
   // (Sol Pro, Terra Pro) are the SAME underlying model as
   // their base counterpart, served with reasoning.mode
   // set to "pro". Pricing is identical to the base
-  // ($5/$30 for Sol, $2.50/$15 for Terra). The
-  // explicit `^gpt-5.6-sol-pro` / `^gpt-5.6-terra-pro`
-  // entries exist primarily for label clarity in the
-  // cost UI — without them, the labels would show
-  // "GPT-5.6 Sol" / "GPT-5.6 Terra" for the Pro variants
+  // ($5/$30 for Sol; $2/$12 for Terra post Jul 30, 2026
+  // cut). The explicit `^gpt-5.6-sol-pro` /
+  // `^gpt-5.6-terra-pro` entries exist primarily for label
+  // clarity in the cost UI — without them, the labels would
+  // show "GPT-5.6 Sol" / "GPT-5.6 Terra" for the Pro variants
   // (the prefix patterns match the same price but produce
   // the base label).
   const solPro = priceFor("gpt-5.6-sol-pro");
@@ -250,14 +260,127 @@ test("priceFor: GPT-5.6 Sol Pro + Terra Pro match the same rate as their base mo
   assert.equal(solPro.output, 30, "Sol Pro should be $30 out (same as Sol)");
   assert.equal(solPro.label, "GPT-5.6 Sol Pro");
 
+  // Terra Pro: was $2.50/$15, now $2/$12 (same 20% Jul 30 cut as base Terra).
   const terraPro = priceFor("gpt-5.6-terra-pro");
-  assert.equal(terraPro.input, 2.50, "Terra Pro should be $2.50 in (same as Terra)");
-  assert.equal(terraPro.output, 15, "Terra Pro should be $15 out (same as Terra)");
-  assert.equal(terraPro.label, "GPT-5.6 Terra Pro");
+  assert.equal(terraPro.input, 2, "Terra Pro input was $2.50 before Jul 30, 2026 cut");
+  assert.equal(terraPro.output, 12, "Terra Pro output was $15 before Jul 30, 2026 cut");
+  assert.match(terraPro.label!, /GPT-5\.6 Terra Pro/);
 
   // callCost sanity check.
   assert.ok(Math.abs(callCost("gpt-5.6-sol-pro", 1_000_000, 1_000_000) - 35.00) < 0.01);
-  assert.ok(Math.abs(callCost("gpt-5.6-terra-pro", 1_000_000, 1_000_000) - 17.50) < 0.01);
+  // Terra Pro 1M/1M = $2 + $12 = $14 (was $17.50 pre-cut).
+  assert.ok(Math.abs(callCost("gpt-5.6-terra-pro", 1_000_000, 1_000_000) - 14.00) < 0.01);
+});
+
+test("priceFor: GPT-5.6 Sol Fast mode priced (Jul 30, 2026 — was $0/$0 unknown)", () => {
+  // OpenAI added a Fast mode for GPT-5.6 Sol on July 30, 2026:
+  // 2.5x faster at 2x the base Sol rate = $10/$60 per 1M.
+  // The Fast variant is a SEPARATE model id (e.g. `gpt-5.6-sol-fast`),
+  // not a request parameter. Pre-fix: the model id fell through
+  // to the `^gpt-5\.6-sol/` entry at $5/$30 (a 50% under-count
+  // on a $10/$60 per 1M charge) — wait, actually the `^gpt-5\.6-sol/`
+  // pattern would also match `gpt-5.6-sol-fast` as a prefix,
+  // so the user was being under-charged 50% on a Fast call.
+  // The `^gpt-5\.6-sol-fast/` pattern must come BEFORE the bare
+  // `^gpt-5\.6-sol/` (same prefix-stealing class as
+  // o1-mini vs o1 / gpt-5.6 vs gpt-5). Luna and Terra did NOT
+  // get Fast modes (only Sol) — the Jul 30 announcement was
+  // "Sol gets Fast mode", with the Luna and Terra changes being
+  // pure price cuts.
+  const solFast = priceFor("gpt-5.6-sol-fast");
+  assert.equal(solFast.input, 10);
+  assert.equal(solFast.output, 60);
+  assert.equal(solFast.provider, "openai");
+  assert.match(solFast.label!, /Fast/);
+  // callCost sanity: 1M/1M = $10 + $60 = $70.
+  assert.ok(Math.abs(callCost("gpt-5.6-sol-fast", 1_000_000, 1_000_000) - 70.00) < 0.01);
+});
+
+test("priceFor: Claude Opus 5 + Opus 5 Fast priced (Jul 24, 2026 — was $0/$0 unknown)", () => {
+  // Anthropic launched Claude Opus 5 on July 24, 2026 at the
+  // same $5/$25 rate as Opus 4.8 (Anthropic explicitly held the
+  // price flat). The model id is `claude-opus-5` — note: NO
+  // dash before "5", unlike the `claude-opus-4-*` line which
+  // uses a dash. The bare `^claude-opus-4-` pattern in the
+  // cost table does NOT match `claude-opus-5` because of the
+  // dash — so a real Opus 5 call was falling through to the
+  // unknown-model $0/$0 fallback, a 100% under-count on a
+  // $5/$25 per 1M charge.
+  //
+  // The `^claude-opus-5-fast/` pattern must come BEFORE the
+  // bare `^claude-opus-5/` (same prefix-stealing class as
+  // o1-mini vs o1 / gpt-5.6 vs gpt-5). Fast mode is 2.5x
+  // faster at 2x price ($10/$50, same as Opus 4.8 Fast).
+  const opus5 = priceFor("claude-opus-5");
+  assert.equal(opus5.input, 5, "Opus 5 input $5 (same as Opus 4.8)");
+  assert.equal(opus5.output, 25, "Opus 5 output $25 (same as Opus 4.8)");
+  assert.equal(opus5.provider, "anthropic");
+  assert.equal(opus5.label, "Claude Opus 5 (Jul 24, 2026; same $5/$25 as Opus 4.8, thinking on by default)");
+
+  // Fast mode: $10/$50 (2x base).
+  const opus5fast = priceFor("claude-opus-5-fast");
+  assert.equal(opus5fast.input, 10);
+  assert.equal(opus5fast.output, 50);
+  assert.equal(opus5fast.provider, "anthropic");
+  assert.match(opus5fast.label!, /Fast/);
+
+  // callCost sanity checks.
+  // Opus 5 1M/1M = $5 + $25 = $30.
+  assert.ok(Math.abs(callCost("claude-opus-5", 1_000_000, 1_000_000) - 30.00) < 0.01);
+  // Opus 5 Fast 1M/1M = $10 + $50 = $60.
+  assert.ok(Math.abs(callCost("claude-opus-5-fast", 1_000_000, 1_000_000) - 60.00) < 0.01);
+
+  // Regression: Opus 4.8 must STILL be at $5/$25 (the new
+  // Opus 5 entry must not steal the Opus 4.8 match).
+  const opus48 = priceFor("claude-opus-4-8");
+  assert.equal(opus48.input, 5);
+  assert.equal(opus48.output, 25);
+});
+
+test("priceFor: Grok 4.6 + Grok 4.6 Fast priced (Aug 12, 2026 — was $1.25/$2.50 under-charge via ^grok-4/ catch-all)", () => {
+  // xAI released Grok 4.6 on August 12, 2026 as the new
+  // flagship. $2/$6 standard rate (same as Grok 4.5), 500K
+  // context, supports text + images. Fast mode is 2x the base
+  // rate ($4/$12).
+  //
+  // Pre-fix: `grok-4.6` matched the bare `^grok-4/` catch-all
+  // at $1.25/$2.50 (the older Grok 4.0/4.3 rate), under-charging
+  // the user by 60% on input and 140% on output. The
+  // `^grok-4\.6-fast/` pattern must come BEFORE the bare
+  // `^grok-4\.6/` (same prefix-stealing class as o1-mini vs o1).
+  //
+  // Known limitation: the long-context band (≥200K prompt
+  // tokens) doubles the rate to $4/$12 for all tokens in the
+  // request. The cost tracker does NOT model the long-context
+  // tier — long-context Grok 4.6 calls are under-charged by
+  // ~50% on input and ~50% on output. The label flags the
+  // limitation so the user can adjust for long-context sessions.
+  const g46 = priceFor("grok-4.6");
+  assert.equal(g46.input, 2, "Grok 4.6 input $2 (was $1.25 via ^grok-4/ catch-all)");
+  assert.equal(g46.output, 6, "Grok 4.6 output $6 (was $2.50 via ^grok-4/ catch-all)");
+  assert.equal(g46.provider, "xai");
+  assert.match(g46.label!, /Grok 4\.6/);
+  // Label should flag the long-context tier limitation.
+  assert.match(g46.label!, /long-context/);
+
+  // Grok 4.6 Fast: 2x base rate.
+  const g46fast = priceFor("grok-4.6-fast");
+  assert.equal(g46fast.input, 4);
+  assert.equal(g46fast.output, 12);
+  assert.equal(g46fast.provider, "xai");
+  assert.match(g46fast.label!, /Fast/);
+
+  // Regression: Grok 4.5 must STILL be at $2/$6 (the new
+  // Grok 4.6 entry must not steal the Grok 4.5 match).
+  const g45 = priceFor("grok-4.5");
+  assert.equal(g45.input, 2);
+  assert.equal(g45.output, 6);
+
+  // callCost sanity checks.
+  // Grok 4.6 1M/1M = $2 + $6 = $8 (was $3.75 pre-fix — a 53% under-charge).
+  assert.ok(Math.abs(callCost("grok-4.6", 1_000_000, 1_000_000) - 8.00) < 0.01);
+  // Grok 4.6 Fast 1M/1M = $4 + $12 = $16.
+  assert.ok(Math.abs(callCost("grok-4.6-fast", 1_000_000, 1_000_000) - 16.00) < 0.01);
 });
 
 test("priceFor: Claude Opus 4.8 matches at $5/$25 (2026-05-28 launch — caught by ^claude-opus-4- catch-all)", () => {

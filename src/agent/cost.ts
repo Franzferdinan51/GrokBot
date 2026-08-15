@@ -30,18 +30,29 @@ const TABLE: Array<{ match: RegExp; price: ModelPrice }> = [
   // Must precede the bare /^gpt-5/ prefix (which would
   // otherwise match at the GPT-5 (Aug 2025) $1.25/$10 rate
   // — same prefix-stealing class as o1-mini vs o1).
+  // GPT-5.6 Sol Fast mode (July 30, 2026 launch) — 2.5x faster
+  // at 2x the base Sol rate ($10/$60). Must come BEFORE the
+  // bare `^gpt-5\.6-sol/` entry so the Fast suffix wins on
+  // first-match-wins iteration.
+  { match: /^gpt-5\.6-sol-fast/,     price: { input: 10.00, output: 60.00, provider: "openai", label: "GPT-5.6 Sol Fast (2.5x faster, 2x base rate, Jul 30, 2026)" } },
   { match: /^gpt-5\.6-sol-pro/,      price: { input: 5.00,  output: 30.00, provider: "openai", label: "GPT-5.6 Sol Pro" } },
   { match: /^gpt-5\.6-sol/,          price: { input: 5.00,  output: 30.00, provider: "openai", label: "GPT-5.6 Sol" } },
-  { match: /^gpt-5\.6-terra-pro/,    price: { input: 2.50,  output: 15.00, provider: "openai", label: "GPT-5.6 Terra Pro" } },
-  { match: /^gpt-5\.6-terra/,        price: { input: 2.50,  output: 15.00, provider: "openai", label: "GPT-5.6 Terra" } },
-  { match: /^gpt-5\.6-luna-pro/,     price: { input: 1.00,  output: 6.00,  provider: "openai", label: "GPT-5.6 Luna Pro" } },
+  // GPT-5.6 Terra Pro and Terra were both cut 20% on July 30,
+  // 2026 (from $2.50/$15 to $2/$12). Pre-fix: the cost tracker
+  // was over-charging every Terra / Terra Pro call by 25% on
+  // input and 25% on output. Updated label documents the cut.
+  { match: /^gpt-5\.6-terra-pro/,    price: { input: 2.00,  output: 12.00, provider: "openai", label: "GPT-5.6 Terra Pro (was $2.50/$15; 20% cut Jul 30, 2026)" } },
+  { match: /^gpt-5\.6-terra/,        price: { input: 2.00,  output: 12.00, provider: "openai", label: "GPT-5.6 Terra (was $2.50/$15; 20% cut Jul 30, 2026)" } },
+  { match: /^gpt-5\.6-luna-pro/,     price: { input: 0.20,  output: 1.20,  provider: "openai", label: "GPT-5.6 Luna Pro (was $1/$6; 80% cut Jul 30, 2026)" } },
   // GPT-5.6 Luna Pro is the same underlying model as Luna
   // with its reasoning mode set to "pro" — pricing is
-  // identical at $1/$6 per OpenAI's API. The bare `^gpt-5.6-luna`
-  // entry below also matches `gpt-5.6-luna-pro` (it's a
-  // prefix match), so this specific entry is for clarity /
-  // test-pinning; the pricing would be correct either way.
-  { match: /^gpt-5\.6-luna/,         price: { input: 1.00,  output: 6.00,  provider: "openai", label: "GPT-5.6 Luna" } },
+  // identical at $0.20/$1.20 post the July 30, 2026 cut.
+  // The bare `^gpt-5.6-luna` entry below also matches
+  // `gpt-5.6-luna-pro` (it's a prefix match), so this
+  // specific entry is for clarity / test-pinning.
+  // Pre-fix (Jun-Aug 2026): the cost tracker was over-charging
+  // every Luna / Luna Pro call by 5x on input and 5x on output.
+  { match: /^gpt-5\.6-luna/,         price: { input: 0.20,  output: 1.20,  provider: "openai", label: "GPT-5.6 Luna (was $1/$6; 80% cut Jul 30, 2026)" } },
   { match: /^gpt-5\.6/,              price: { input: 5.00,  output: 30.00, provider: "openai", label: "GPT-5.6" } },
   { match: /^gpt-5\.5/,              price: { input: 5.00,  output: 30.00, provider: "openai", label: "GPT-5.5" } },
   { match: /^gpt-5\.4-pro/,          price: { input: 30.00, output: 180.00, provider: "openai", label: "GPT-5.4 pro" } },
@@ -144,6 +155,19 @@ const TABLE: Array<{ match: RegExp; price: ModelPrice }> = [
   // (same prefix-stealing class as o1-mini vs o1).
   { match: /claude-opus-4[\.\-]8-fast/, price: { input: 10.00, output: 50.00, provider: "openrouter",  label: "Claude Opus 4.8 Fast (research preview, $10/$50)" } },
   { match: /^claude-opus-4-/,        price: { input: 5.00,  output: 25.00, provider: "anthropic", label: "Claude Opus 4.x" } },
+  // Claude Opus 5 (launched July 24, 2026) — same $5/$25 as
+  // Opus 4.8 (Anthropic explicitly held the price flat). Model
+  // id is `claude-opus-5` (note: NO dash before "5", unlike the
+  // `claude-opus-4-*` line which uses a dash). The bare
+  // `^claude-opus-4-` pattern above does NOT match `claude-opus-5`
+  // because of the dash — so a real Opus 5 call was falling
+  // through to the unknown-model $0/$0 fallback, a 100%
+  // under-count on a $5/$25 per 1M charge. The
+  // `^claude-opus-5-fast/` pattern must come BEFORE the bare
+  // `^claude-opus-5/` (same prefix-stealing class as
+  // o1-mini vs o1). Fast mode is 2.5x faster at 2x price.
+  { match: /^claude-opus-5-fast/,    price: { input: 10.00, output: 50.00, provider: "anthropic", label: "Claude Opus 5 Fast (research preview, $10/$50)" } },
+  { match: /^claude-opus-5/,         price: { input: 5.00,  output: 25.00, provider: "anthropic", label: "Claude Opus 5 (Jul 24, 2026; same $5/$25 as Opus 4.8, thinking on by default)" } },
   // Claude Sonnet 5 (launched July 2026). Introductory
   // pricing $2/$10 through August 31, 2026; standard $3/$15
   // thereafter. We track the standard rate; the model itself
@@ -212,6 +236,23 @@ const TABLE: Array<{ match: RegExp; price: ModelPrice }> = [
   // 4.5 (a rebrand of the same model, no new pricing).
   { match: /^grok-4\.5-fast/,        price: { input: 4.00,  output: 18.00, provider: "xai", label: "Grok 4.5 Fast" } },
   { match: /^grok-4\.5/,             price: { input: 2.00,  output: 6.00,  provider: "xai", label: "Grok 4.5" } },
+  // Grok 4.6 (released August 12, 2026) — xAI's current flagship.
+  // $2/$6 standard rate (same as 4.5), 500K context, supports
+  // text + images. Long-context band (≥200K prompt tokens)
+  // doubles the rate to $4/$12 for all tokens in the request —
+  // the cost tracker does NOT model the long-context tier, so
+  // long-context Grok 4.6 calls are under-charged by ~50% on
+  // input and ~50% on output. The label flags the limitation
+  // so the user can adjust manually for long-context sessions.
+  // Pre-fix: `grok-4.6` matched the bare `^grok-4/` catch-all
+  // at $1.25/$2.50 (the older Grok 4.0/4.3 rate), under-charging
+  // the user by 60% on input and 140% on output. The
+  // `^grok-4\.6-fast/` pattern must come BEFORE the bare
+  // `^grok-4\.6/` (same prefix-stealing class as
+  // o1-mini vs o1 / gpt-5.6 vs gpt-5). Fast mode is 2x the
+  // base rate.
+  { match: /^grok-4\.6-fast/,        price: { input: 4.00,  output: 12.00, provider: "xai", label: "Grok 4.6 Fast (2x base rate; long-context tier $8/$24 not modeled)" } },
+  { match: /^grok-4\.6/,             price: { input: 2.00,  output: 6.00,  provider: "xai", label: "Grok 4.6 (Aug 12, 2026; 500K ctx; long-context tier $4/$12 not modeled)" } },
   { match: /^grok-4\.1-fast/,        price: { input: 0.20,  output: 0.50,  provider: "xai", label: "Grok 4.1 Fast (volume tier, $0.20/$0.50; 2M ctx)" } },
   { match: /^grok-4\.20/,            price: { input: 2.00,  output: 6.00,  provider: "xai", label: "Grok 4.20 (rebrand of 4.5, same $2/$6 rate)" } },
   { match: /^grok-4/,                price: { input: 1.25,  output: 2.50,  provider: "xai", label: "Grok 4.x" } },

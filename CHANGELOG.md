@@ -16,6 +16,89 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## Unreleased
 
+### Cost: GPT-5.6 Luna/Terra price cuts (Jul 30, 2026) + new Claude Opus 5 + new Grok 4.6 (over-charging fix + 3 new model families)
+
+Three real bugs and three new model families:
+
+**Over-charging fix (GPT-5.6 Luna + Terra):**
+
+OpenAI cut two GPT-5.6 tiers on July 30, 2026 (4
+days before this commit). Pre-fix: the cost tracker
+was over-charging every call:
+
+- **GPT-5.6 Luna**: $1/$6 → **$0.20/$1.20** (80% cut)
+  Pre-fix Luna / Luna Pro calls were over-charged by
+  **5x on input and 5x on output**. Every Luna call
+  billed the user 5x what OpenAI actually charged.
+- **GPT-5.6 Terra**: $2.50/$15 → **$2/$12** (20% cut)
+  Pre-fix Terra / Terra Pro calls were over-charged by
+  **25% on input and 25% on output**. The 20% cut
+  applied to both base Terra and the Pro variant.
+
+Sol held at $5/$30 (no change). Updated label
+documents the cut date and the old rate so a future
+auditor can spot a missed update.
+
+**New model family (Claude Opus 5):**
+
+Anthropic launched Claude Opus 5 on July 24, 2026
+at the same $5/$25 rate as Opus 4.8 (Anthropic held
+the price flat). The model id is `claude-opus-5` (no
+dash before "5", unlike the `claude-opus-4-*` line
+which uses a dash). Pre-fix: the bare `^claude-opus-4-`
+pattern in the cost table did NOT match `claude-opus-5`
+because of the dash — a real Opus 5 call was falling
+through to the unknown-model $0/$0 fallback, a 100%
+under-count on a $5/$25 per 1M charge. Added
+`^claude-opus-5/` and `^claude-opus-5-fast/` (2x
+rate for research-preview fast mode, $10/$50).
+
+**New model family (Grok 4.6):**
+
+xAI released Grok 4.6 on August 12, 2026 as the new
+flagship. $2/$6 standard rate (same as 4.5), 500K
+context. Pre-fix: `grok-4.6` matched the bare
+`^grok-4/` catch-all at $1.25/$2.50 (the older
+Grok 4.0/4.3 rate), under-charging the user by 60%
+on input and 140% on output. Added `^grok-4\.6/`
+and `^grok-4\.6-fast/` (2x rate, $4/$12).
+
+**Known limitation (Grok 4.6 long-context tier):**
+
+Grok 4.6's long-context band (≥200K prompt tokens)
+doubles the rate to $4/$12 for all tokens in the
+request. The cost tracker does NOT model the
+long-context tier — long-context Grok 4.6 calls are
+under-charged by ~50% on input and ~50% on output.
+Label flags the limitation so the user can adjust
+manually for long-context sessions.
+
+**New mode (GPT-5.6 Sol Fast):**
+
+OpenAI also added a Fast mode for GPT-5.6 Sol on
+July 30, 2026 (2.5x faster at 2x the base Sol rate,
+$10/$60). The `gpt-5.6-sol-fast` model id would
+otherwise match the `^gpt-5\.6-sol/` entry at $5/$30
+— a 50% under-count. Added the explicit
+`^gpt-5\.6-sol-fast/` pattern.
+
+Three new tests in `src/__tests__/cost-approval.test.ts`:
+- `priceFor: GPT-5.6 Sol Fast mode priced` (new
+  entry, 70c per 1M/1M)
+- `priceFor: Claude Opus 5 + Opus 5 Fast priced`
+  (new entry, $30 per 1M/1M)
+- `priceFor: Grok 4.6 + Grok 4.6 Fast priced`
+  (new entry, $8 per 1M/1M)
+
+Updated three existing tests to reflect the
+July 30, 2026 Luna/Terra price cuts (and changed
+`assert.equal` on labels to `assert.match` so
+the test passes even if the label picks up a
+"(was $X)" annotation in a future edit).
+
+871 → 874 pass / 0 fail across 54 files (+3 tests).
+5/5 stable full-suite runs.
+
 ### Trajectory: share format now redacts AWS STS + Figma + Netlify + HashiCorp Vault + Atlassian scoped (11 more vendor key prefixes)
 
 `SECRET_RE` picked up 11 more high-impact vendor key
