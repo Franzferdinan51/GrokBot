@@ -16,6 +16,63 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## Unreleased
 
+### Cost: Grok 4.20 over-charge fix + Grok Build 0.1 priced (Aug 2026)
+
+**Over-charging fix (Grok 4.20):**
+
+Per xAI's `docs.x.ai` pricing page (Aug 2026), the
+dated Grok 4.20 SKUs are at $1.25/$2.50 — the same
+rate as Grok 4.3. Pre-fix: the cost table had the
+bare `^grok-4\.20/` entry at $2/$6 (a "rebrand of
+4.5" assumption from an earlier commit that turned
+out to be wrong), which **over-charged every Grok
+4.20 call by 60% on input and 140% on output**.
+
+The dated SKUs that resolve to the bare `^grok-4\.20/`
+pattern:
+
+- `grok-4.20-multi-agent-0309` — $1.25/$2.50
+- `grok-4.20-0309-reasoning` — $1.25/$2.50
+- `grok-4.20-0309-non-reasoning` — $1.25/$2.50
+
+Updated the entry to the actual rate. Updated label
+documents the old rate so a future auditor can spot
+a missed update.
+
+**New model family (Grok Build 0.1):**
+
+xAI's coding-focused agentic model (the model
+behind the Grok Build CLI). $1/$2 per 1M tokens,
+256K context, supports text + image input. The
+model id is `grok-build-0.1` (with dashes, not
+dots) — does NOT match the `^grok-4/` catch-all
+(different prefix) and does NOT match
+`^grok-code-fast-1/` (different family). Pre-fix:
+every Grok Build 0.1 call fell through to the
+unknown-model $0/$0 fallback, a 100% under-count
+on a $1/$2 per 1M charge.
+
+**Known limitation (Grok Build 0.1 long-context tier):**
+
+The long-context band (≥200K prompt tokens) doubles
+the rate to $2/$4. The cost tracker does NOT model
+the long-context tier — long-context Grok Build 0.1
+calls are under-charged by 50% on input and 50% on
+output. Label flags the limitation so the user can
+adjust manually for long-context sessions.
+
+Two new tests in `src/__tests__/cost-approval.test.ts`:
+- `priceFor: Grok Build 0.1 priced at $1/$2` (new
+  entry, $3 per 1M/1M)
+- Updated `priceFor: xAI Grok 4.1 Fast + 4.20 + Code
+  Fast 1 priced` test to reflect the actual $1.25/$2.5
+  rate (was $2/$6) + asserted on the three dated
+  Grok 4.20 SKUs (multi-agent, reasoning,
+  non-reasoning)
+
+874 → 875 pass / 0 fail across 54 files (+1 test).
+5/5 stable full-suite runs.
+
 ### Cost: GPT-5.6 Luna/Terra price cuts (Jul 30, 2026) + new Claude Opus 5 + new Grok 4.6 (over-charging fix + 3 new model families)
 
 Three real bugs and three new model families:

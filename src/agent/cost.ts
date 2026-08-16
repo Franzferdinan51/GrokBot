@@ -254,8 +254,31 @@ const TABLE: Array<{ match: RegExp; price: ModelPrice }> = [
   { match: /^grok-4\.6-fast/,        price: { input: 4.00,  output: 12.00, provider: "xai", label: "Grok 4.6 Fast (2x base rate; long-context tier $8/$24 not modeled)" } },
   { match: /^grok-4\.6/,             price: { input: 2.00,  output: 6.00,  provider: "xai", label: "Grok 4.6 (Aug 12, 2026; 500K ctx; long-context tier $4/$12 not modeled)" } },
   { match: /^grok-4\.1-fast/,        price: { input: 0.20,  output: 0.50,  provider: "xai", label: "Grok 4.1 Fast (volume tier, $0.20/$0.50; 2M ctx)" } },
-  { match: /^grok-4\.20/,            price: { input: 2.00,  output: 6.00,  provider: "xai", label: "Grok 4.20 (rebrand of 4.5, same $2/$6 rate)" } },
+  // Grok 4.20 — per xAI's docs.x.ai pricing page (Aug 2026),
+  // the dated Grok 4.20 SKUs (grok-4.20-multi-agent-0309,
+  // grok-4.20-0309-reasoning, grok-4.20-0309-non-reasoning)
+  // are at $1.25/$2.50 — the same rate as Grok 4.3. Pre-fix
+  // this entry was at $2/$6 (a "rebrand of 4.5" assumption from
+  // an earlier commit), which over-charged every Grok 4.20 call
+  // by 60% on input and 140% on output. The bare `^grok-4\.20/`
+  // pattern matches the dated SKUs (which all start with
+  // `grok-4.20-`) and a hypothetical bare `grok-4.20` alias.
+  { match: /^grok-4\.20/,            price: { input: 1.25,  output: 2.50,  provider: "xai", label: "Grok 4.20 (dated SKUs, $1.25/$2.50; was $2/$6 over-charge pre-fix)" } },
   { match: /^grok-4/,                price: { input: 1.25,  output: 2.50,  provider: "xai", label: "Grok 4.x" } },
+  // Grok Build 0.1 — xAI's coding-focused agentic model
+  // (the model behind the Grok Build CLI). $1/$2 per 1M, 256K
+  // context, supports text + image input. Long-context band
+  // (≥200K prompt tokens) doubles the rate to $2/$4. The
+  // model id is `grok-build-0.1` (with dashes, not dots) —
+  // does NOT match the `^grok-4/` catch-all (different prefix)
+  // and does NOT match `^grok-code-fast-1/` (different
+  // family). Pre-fix: every Grok Build 0.1 call fell through
+  // to the unknown-model $0/$0 fallback — a 100% under-count
+  // on a $1/$2 per 1M charge. The bare `^grok-build/` catch-all
+  // sits AFTER the specific `^grok-build-0\.1/` pattern so
+  // future grok-build-X.Y versions land at the same rate.
+  { match: /^grok-build-0\.1/,       price: { input: 1.00,  output: 2.00,  provider: "xai", label: "Grok Build 0.1 (xAI coding model, 256K ctx; long-context tier $2/$4 not modeled)" } },
+  { match: /^grok-build/,            price: { input: 1.00,  output: 2.00,  provider: "xai", label: "Grok Build (unknown version; default 0.1 rate)" } },
   // Grok Code Fast 1 — a separate xAI family for code
   // generation, $0.20/$1.50 per 1M. Does NOT match the
   // bare /^grok-4/ catch-all (different prefix), so it

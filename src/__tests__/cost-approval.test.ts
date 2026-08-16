@@ -1470,12 +1470,32 @@ test("priceFor: xAI Grok 4.1 Fast + 4.20 + Code Fast 1 priced (were under-charge
   assert.equal(g41fast.provider, "xai");
   assert.match(g41fast.label!, /4\.1 Fast/);
 
-  // Grok 4.20 — xAI's rebrand of the 4.5 model with the
-  // same $2/$6 rate.
+  // Grok 4.20 — per xAI's docs.x.ai pricing page, the dated
+  // Grok 4.20 SKUs (grok-4.20-multi-agent-0309,
+  // grok-4.20-0309-reasoning, grok-4.20-0309-non-reasoning)
+  // are at $1.25/$2.50 — the same rate as Grok 4.3. Pre-fix
+  // this entry was at $2/$6 (a "rebrand of 4.5" assumption
+  // from an earlier commit), which over-charged every
+  // Grok 4.20 call by 60% on input and 140% on output.
+  // The bare `^grok-4\.20/` pattern matches the dated SKUs
+  // (which all start with `grok-4.20-`) and a hypothetical
+  // bare `grok-4.20` alias.
   const g420 = priceFor("grok-4.20");
-  assert.equal(g420.input, 2.00);
-  assert.equal(g420.output, 6.00);
+  assert.equal(g420.input, 1.25, "Grok 4.20 input $1.25 (was $2.00 pre-fix, 60% over-charge)");
+  assert.equal(g420.output, 2.50, "Grok 4.20 output $2.50 (was $6.00 pre-fix, 140% over-charge)");
   assert.equal(g420.provider, "xai");
+  assert.match(g420.label!, /was \$2\/\$6 over-charge/);
+
+  // Dated SKUs all match the bare `^grok-4\.20/` pattern.
+  const g420ma = priceFor("grok-4.20-multi-agent-0309");
+  assert.equal(g420ma.input, 1.25);
+  assert.equal(g420ma.output, 2.50);
+  const g420r = priceFor("grok-4.20-0309-reasoning");
+  assert.equal(g420r.input, 1.25);
+  assert.equal(g420r.output, 2.50);
+  const g420nr = priceFor("grok-4.20-0309-non-reasoning");
+  assert.equal(g420nr.input, 1.25);
+  assert.equal(g420nr.output, 2.50);
 
   // Grok Code Fast 1 — a SEPARATE xAI family for code
   // generation, $0.20/$1.50 per 1M (256K context). Does
@@ -1500,6 +1520,39 @@ test("priceFor: xAI Grok 4.1 Fast + 4.20 + Code Fast 1 priced (were under-charge
   assert.ok(Math.abs(callCost("grok-4.1-fast", 1_000_000, 1_000_000) - 0.70) < 0.01);
   // Code Fast 1 1M/1M = $0.20 + $1.50 = $1.70.
   assert.ok(Math.abs(callCost("grok-code-fast-1", 1_000_000, 1_000_000) - 1.70) < 0.01);
+});
+
+test("priceFor: Grok Build 0.1 priced at $1/$2 (xAI coding model — was $0/$0 unknown)", () => {
+  // xAI's coding-focused agentic model (the model behind the
+  // Grok Build CLI). $1/$2 per 1M tokens, 256K context, supports
+  // text + image input. The model id is `grok-build-0.1` (with
+  // dashes, not dots) — does NOT match the `^grok-4/` catch-all
+  // (different prefix), and does NOT match `^grok-code-fast-1/`
+  // (different family). Pre-fix: every Grok Build 0.1 call fell
+  // through to the unknown-model $0/$0 fallback — a 100%
+  // under-count on a $1/$2 per 1M charge.
+  //
+  // Known limitation: the long-context band (≥200K prompt
+  // tokens) doubles the rate to $2/$4. The cost tracker does
+  // NOT model the long-context tier.
+  const build01 = priceFor("grok-build-0.1");
+  assert.equal(build01.input, 1.00);
+  assert.equal(build01.output, 2.00);
+  assert.equal(build01.provider, "xai");
+  assert.match(build01.label!, /Grok Build 0\.1/);
+  // Label should flag the long-context tier limitation.
+  assert.match(build01.label!, /long-context/);
+
+  // Bare `grok-build` (no version) — the catch-all covers
+  // future `grok-build-X.Y` versions at the same rate.
+  const buildFuture = priceFor("grok-build");
+  assert.equal(buildFuture.input, 1.00);
+  assert.equal(buildFuture.output, 2.00);
+  assert.match(buildFuture.label!, /unknown version/);
+
+  // callCost sanity check.
+  // Grok Build 0.1 1M/1M = $1 + $2 = $3.
+  assert.ok(Math.abs(callCost("grok-build-0.1", 1_000_000, 1_000_000) - 3.00) < 0.01);
 });
 
 test("priceFor: Meta Muse Spark 1.1 matches at $1.25/$4.25 (2026-07-09 launch — were $0/$0)", () => {
