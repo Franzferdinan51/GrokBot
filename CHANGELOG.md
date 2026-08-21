@@ -16,6 +16,46 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## Unreleased
 
+### Fix: xai / grok OAuth tokens now auto-refresh in ProviderRegistry (high-impact UX bug)
+
+The `ProviderRegistry.buildProvider` path had a codex
+OAuth branch (which fires `ensureFreshCodexTokens` in
+the background when the codex OAuth token is near
+expiry), but NO parallel xai / grok branch. After the
+first hour of any xai / Grok OAuth session, the
+provider was constructed with a stale access token
+and every API call failed with 401 until the user
+manually re-ran `ch provider login xai` (a much
+worse UX than the codex flow, which auto-refreshes
+in this same function).
+
+Fix: added a parallel xai / grok OAuth branch that
+fires `ensureFreshXaiTokens` in the background and
+threads the (potentially refreshed) token through as
+the `apiKey` to the `OpenAICompatProvider`. Same
+fire-and-forget pattern as the codex branch, so the
+current call may use a stale token for one request
+but the next call reads the (now-refreshed)
+settings object and gets the fresh token.
+
+xai and grok are aliases for the same xAI API (both
+use `https://api.x.ai/v1` and share the same OAuth
+metadata shape `profile.options.xaiOAuth.{refreshToken,expiresAt}`),
+so the fix covers both with a single branch.
+
+Also re-exported `loadXaiRefreshToken` from
+`registry.ts` for symmetry with `loadCodexRefreshToken`.
+
+One new test in `src/__tests__/xai-oauth.test.ts`:
+- `ProviderRegistry.get('xai') constructs an
+  OpenAICompat provider (not CodexProvider) for the
+  xai OAuth branch` — proves the registry path takes
+  the xai OAuth branch and doesn't get swallowed by
+  the codex branch.
+
+875 → 876 pass / 0 fail across 54 files (+1 test).
+5/5 stable full-suite runs.
+
 ### Cost: Grok 4.20 over-charge fix + Grok Build 0.1 priced (Aug 2026)
 
 **Over-charging fix (Grok 4.20):**

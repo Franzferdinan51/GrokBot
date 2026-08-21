@@ -9,6 +9,7 @@ import { CodexProvider } from "./codex.js";
 import { firstEnvValue, getProviderPreset } from "./presets.js";
 import { resolveProviderCapabilities } from "./omni.js";
 import { ensureFreshCodexTokens, loadCodexRefreshToken } from "./oauth/codex.js";
+import { ensureFreshXaiTokens, loadXaiRefreshToken } from "./oauth/xai.js";
 import { log } from "../util/logger.js";
 
 export class ProviderRegistry {
@@ -93,6 +94,32 @@ function buildProvider(id: string, profile: Settings["providers"][string], setti
     });
   }
 
+  // xAI / Grok OAuth → auto-refresh the access token, then
+  // build an OpenAICompat provider with the (potentially
+  // refreshed) token as the apiKey. Same fire-and-forget
+  // pattern as the codex branch above. Pre-fix: xAI / Grok
+  // OAuth tokens were NEVER auto-refreshed, so after the
+  // first hour the provider was constructed with a stale
+  // access token and every API call failed with 401 until
+  // the user manually re-ran `ch provider login xai` (a
+  // much worse UX than the codex flow, which auto-refreshes
+  // in this same function). The fire-and-forget pattern
+  // means the current call may use a stale token for one
+  // request (the refresh completes in the background), but
+  // the next call to get("xai") or get("grok") gets the
+  // fresh token. Same caveat as the codex branch.
+  //
+  // xai and grok are aliases for the same xAI API (both use
+  // https://api.x.ai/v1); the OAuth refresh is symmetric
+  // because both presets share the same OAuth metadata
+  // shape (profile.options.xaiOAuth.{refreshToken,expiresAt}).
+  let xaiRefreshedToken: string | undefined;
+  if ((id === "xai" || id === "grok") && authMode === "oauth" && oauthToken) {
+    void ensureFreshXaiTokens(settings).catch(() => { /* best-effort refresh */ });
+    const refreshed = settings.providers[id] ?? profile;
+    xaiRefreshedToken = refreshed.oauthToken ?? oauthToken;
+  }
+
   // Everything else: openai-compat.
   const baseUrl =
     profile.baseUrl ??
@@ -106,7 +133,11 @@ function buildProvider(id: string, profile: Settings["providers"][string], setti
   return new OpenAICompatProvider({
     id,
     baseUrl,
-    apiKey,
+    // Use the (potentially refreshed) xAI OAuth token as the
+    // apiKey if the xai / grok OAuth branch ran above. For
+    // non-xAI / grok providers, this falls back to the
+    // `apiKey` resolved at the top of this function.
+    apiKey: xaiRefreshedToken ?? apiKey,
     defaultModel: profile.model ?? settings.defaultModel ?? firstEnvValue(preset?.modelEnv) ?? preset?.defaultModel ?? "gpt-4o",
     capabilities,
   });
@@ -133,4 +164,4 @@ export function shouldUseCodexProvider(id: string, profile: Settings["providers"
   return (id === "codex" || Boolean(preset?.capabilities?.responsesApi)) && authMode === "oauth" && Boolean(oauthToken);
 }
 
-export { loadCodexRefreshToken };
+export { loadCodexRefreshToken, loadXaiRefreshToken };

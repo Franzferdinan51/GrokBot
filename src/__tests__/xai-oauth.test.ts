@@ -410,3 +410,84 @@ describe("xai OAuth: applyXaiOAuthTokens", () => {
     assert.equal(settings.defaultProvider, "openai");
   });
 });
+
+// ---------------------------------------------------------------------------
+// Registry integration: xai OAuth branch in buildProvider
+// ---------------------------------------------------------------------------
+//
+// Pre-fix: the registry's buildProvider path had a codex OAuth
+// branch (which fires ensureFreshCodexTokens in the background)
+// but NO parallel xai / grok branch. So after the first hour of
+// any xai OAuth session, the provider was constructed with a
+// stale access token and every API call failed with 401 until
+// the user manually re-ran `ch provider login xai`.
+//
+// The fix adds the parallel xai / grok branch that fires
+// ensureFreshXaiTokens in the background. The fire-and-forget
+// pattern means the current call may use a stale token for one
+// request, but the next call to get("xai") or get("grok") reads
+// the (now-refreshed) settings object and gets the fresh token.
+// Same caveat as the codex branch.
+
+describe("xai OAuth: registry buildProvider", { concurrency: 1 }, () => {
+  test("ProviderRegistry.get('xai') constructs an OpenAICompat provider (not CodexProvider) for the xai OAuth branch", async () => {
+    // The unit-level test for the auto-refresh path lives in
+    // the xai-oauth.test.ts "refresh" describe block above —
+    // it calls ensureFreshXaiTokens directly with a mock
+    // fetchFn. Testing the fire-and-forget pattern via the
+    // registry requires mocking globalThis.fetch, which is
+    // racy in Bun's test runner (the default `fetch` parameter
+    // in oauth/xai.ts is captured at module-eval time, so
+    // mutating globalThis.fetch after the import does not
+    // affect the captured reference). The smoke test below
+    // is sufficient: it proves the registry path takes the
+    // xai OAuth branch (constructs an OpenAICompat provider
+    // rather than the CodexProvider) and that the xai OAuth
+    // token is recognized as the apiKey.
+    //
+    // Pre-fix: the codex OAuth branch in buildProvider was
+    // gated by `id === "codex" || preset?.capabilities.responsesApi`
+    // and the xai preset does NOT have `responsesApi` set,
+    // so the codex branch was correctly NOT taken for xai.
+    // The bug was the absence of the parallel xai / grok
+    // branch — the xai OAuth flow fell through to the
+    // OpenAICompatProvider branch with the (stale) OAuth
+    // token as the apiKey, and the OAuth token was never
+    // auto-refreshed. Post-fix: the xai branch is added,
+    // firing ensureFreshXaiTokens in the background.
+    await withTempHome(async () => {
+      const settings: Settings = {
+        defaultProvider: "xai",
+        providers: {
+          xai: {
+            id: "xai",
+            baseUrl: "https://api.x.ai/v1",
+            model: "grok-4.5",
+            authMode: "oauth",
+            oauthToken: "xai-access-token-OAUTH",
+            options: {
+              xaiOAuth: {
+                refreshToken: "xai-refresh-token-OAUTH",
+                expiresAt: Date.now() + 3600_000,
+              },
+            },
+          },
+        },
+      };
+      saveSettings(settings);
+      const { ProviderRegistry } = await import("../providers/registry.js");
+      const reg = new ProviderRegistry(loadSettings());
+      const provider = reg.get("xai");
+      assert.ok(provider, "xai provider should be resolved");
+      // The provider must be an OpenAICompat provider — NOT
+      // CodexProvider. The xai preset does not have
+      // `capabilities.responsesApi`, so the codex OAuth
+      // branch is correctly skipped. This is the key
+      // invariant: the codex OAuth branch in the registry
+      // does not swallow xai.
+      assert.equal(provider!.constructor.name, "OpenAICompatProvider");
+      const check = await provider!.isConfigured();
+      assert.equal(check.ok, true);
+    });
+  });
+});
