@@ -1522,6 +1522,92 @@ test("priceFor: xAI Grok 4.1 Fast + 4.20 + Code Fast 1 priced (were under-charge
   assert.ok(Math.abs(callCost("grok-code-fast-1", 1_000_000, 1_000_000) - 1.70) < 0.01);
 });
 
+test("priceFor: Qwen 3.8 Max + Muse Spark 1.2 + Gemini 3.7 Flash + GLM-5.3 + DeepSeek V4 Flash Vision + Hy-MT2 + Ox Alpha priced (August 2026 model wave — were $0/$0 unknown)", () => {
+  // Eight new model families landed in August 2026. Pre-fix
+  // every call fell through to the unknown-model $0/$0
+  // fallback — a 100% under-count on every real charge.
+  //
+  //   qwen3.8-max            $2.00 / $6.00   Aug 3   (Alibaba 2.4T MoE flagship)
+  //   muse-spark-1.2         $1.25 / $4.25   Aug 5   (Meta paid agentic)
+  //   gemini-3.7-flash       $0.75 / $3.75   Aug 13  (Google efficient tier; intro rate doubles Jan 1 2027)
+  //   glm-5.3                $1.40 / $4.40   Aug 14  (Z.ai coding flagship on 5.2 base)
+  //   deepseek-v4-flash-vision $0.15 / $0.29  Aug 21  (DeepSeek first vision V4, experimental)
+  //   hy-mt2-1.8b            $0.044 / $0.177 Aug 20  (Tencent translation, compact)
+  //   hy-mt2-30b-a3b          $0.074 / $0.295 Aug 20  (Tencent translation, flagship)
+  //   stealth/ox-alpha       $0 / $0         Aug 20  (OpenRouter stealth model, free preview)
+  //
+  // All specific patterns are placed BEFORE their respective
+  // catch-alls (same prefix-stealing discipline as
+  // o1-mini vs o1 / gpt-5.6 vs gpt-5).
+  const qwen38 = priceFor("qwen3.8");
+  assert.equal(qwen38.input, 2.00);
+  assert.equal(qwen38.output, 6.00);
+  assert.equal(qwen38.provider, "alibaba");
+  assert.match(qwen38.label!, /Qwen 3\.8 Max/);
+
+  const muse12 = priceFor("muse-spark-1.2");
+  assert.equal(muse12.input, 1.25);
+  assert.equal(muse12.output, 4.25);
+  assert.equal(muse12.provider, "meta");
+  assert.match(muse12.label!, /Muse Spark 1\.2/);
+
+  // Regression: Muse Spark 1.1 must STILL match (regression).
+  const muse11 = priceFor("muse-spark-1.1");
+  assert.equal(muse11.input, 1.25);
+  assert.equal(muse11.output, 4.25);
+
+  const gemini37 = priceFor("gemini-3.7-flash");
+  assert.equal(gemini37.input, 0.75);
+  assert.equal(gemini37.output, 3.75);
+  assert.equal(gemini37.provider, "google");
+  assert.match(gemini37.label!, /3\.7 Flash/);
+
+  const glm53 = priceFor("glm-5.3");
+  assert.equal(glm53.input, 1.40);
+  assert.equal(glm53.output, 4.40);
+  assert.equal(glm53.provider, "zhipu");
+  assert.match(glm53.label!, /GLM-5\.3/);
+
+  const dsfv = priceFor("deepseek-v4-flash-vision");
+  assert.equal(dsfv.input, 0.15);
+  assert.equal(dsfv.output, 0.29);
+  assert.equal(dsfv.provider, "deepseek");
+  assert.match(dsfv.label!, /V4 Flash Vision/);
+
+  // Regression: bare deepseek-v4-flash still matches the text-only rate.
+  const dsf = priceFor("deepseek-v4-flash");
+  assert.equal(dsf.input, 0.14);
+  assert.equal(dsf.output, 0.28);
+
+  const hymn18 = priceFor("hy-mt2-1.8b");
+  assert.equal(hymn18.input, 0.044);
+  assert.equal(hymn18.output, 0.177);
+  assert.equal(hymn18.provider, "tencent");
+
+  const hymn30 = priceFor("hy-mt2-30b-a3b");
+  assert.equal(hymn30.input, 0.074);
+  assert.equal(hymn30.output, 0.295);
+
+  // Bare hy-mt2 catch-all uses the flagship 30B rate.
+  const hymnCatchAll = priceFor("hy-mt2");
+  assert.equal(hymnCatchAll.input, 0.074);
+  assert.equal(hymnCatchAll.output, 0.295);
+
+  const oxAlpha = priceFor("stealth/ox-alpha");
+  assert.equal(oxAlpha.input, 0);
+  assert.equal(oxAlpha.output, 0);
+  assert.equal(oxAlpha.provider, "openrouter");
+  assert.match(oxAlpha.label!, /Ox Alpha/);
+
+  // callCost sanity checks.
+  // Qwen 3.8 Max 1M/1M = $2 + $6 = $8.
+  assert.ok(Math.abs(callCost("qwen3.8", 1_000_000, 1_000_000) - 8.00) < 0.01);
+  // Gemini 3.7 Flash 1M/1M = $0.75 + $3.75 = $4.50.
+  assert.ok(Math.abs(callCost("gemini-3.7-flash", 1_000_000, 1_000_000) - 4.50) < 0.01);
+  // Hy-MT2 1.8B 1M/1M = $0.044 + $0.177 = $0.221.
+  assert.ok(Math.abs(callCost("hy-mt2-1.8b", 1_000_000, 1_000_000) - 0.221) < 0.001);
+});
+
 test("priceFor: Grok Build 0.1 priced at $1/$2 (xAI coding model — was $0/$0 unknown)", () => {
   // xAI's coding-focused agentic model (the model behind the
   // Grok Build CLI). $1/$2 per 1M tokens, 256K context, supports

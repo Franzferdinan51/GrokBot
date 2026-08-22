@@ -197,6 +197,14 @@ const TABLE: Array<{ match: RegExp; price: ModelPrice }> = [
   // preserved at their V3.x rates for callers still on
   // the V3 API.
   { match: /^deepseek-v4-pro/,       price: { input: 0.435, output: 0.87,  provider: "deepseek", label: "DeepSeek V4 Pro (75% permanent price cut, June 2026)" } },
+  // DeepSeek V4 Flash Vision (Aug 21, 2026) — DeepSeek's first
+  // vision-capable V4 entry. Billed at the same $0.15/$0.29
+  // per-million-token rate as text V4-Flash (no separate
+  // image surcharge; images cost up to 384 tokens each).
+  // Experimental release. Must come BEFORE the bare
+  // `^deepseek-v4-flash/` catch-all (same prefix-stealing
+  // class as o1-mini vs o1).
+  { match: /^deepseek-v4-flash-vision/, price: { input: 0.15, output: 0.29, provider: "deepseek", label: "DeepSeek V4 Flash Vision (Aug 21, 2026; experimental; $0.15/$0.29)" } },
   { match: /^deepseek-v4-flash/,     price: { input: 0.14,  output: 0.28,  provider: "deepseek", label: "DeepSeek V4 Flash (cheapest frontier-ish)" } },
   { match: /^deepseek-v4/,           price: { input: 0.27,  output: 0.55,  provider: "deepseek", label: "DeepSeek V4 (1T base)" } },
   { match: /^deepseek-chat/,         price: { input: 0.27,  output: 1.10,  provider: "deepseek", label: "DeepSeek Chat (V3.x)" } },
@@ -294,6 +302,7 @@ const TABLE: Array<{ match: RegExp; price: ModelPrice }> = [
   // (muse-spark, muse-spark-1.1, future muse-spark-1.2)
   // must come BEFORE the catch-all to avoid the same
   // prefix-stealing class as o1-mini vs o1.
+  { match: /^muse-spark-1\.2/,       price: { input: 1.25,  output: 4.25,  provider: "meta", label: "Meta Muse Spark 1.2 (Aug 5, 2026; same rate as 1.1)" } },
   { match: /^muse-spark-1\.1/,       price: { input: 1.25,  output: 4.25,  provider: "meta", label: "Meta Muse Spark 1.1" } },
   { match: /^muse-spark/,            price: { input: 1.25,  output: 4.25,  provider: "meta", label: "Meta Muse Spark" } },
   { match: /^muse/,                  price: { input: 1.25,  output: 4.25,  provider: "meta", label: "Meta Muse" } },
@@ -322,6 +331,13 @@ const TABLE: Array<{ match: RegExp; price: ModelPrice }> = [
   // models the standard rate; long-context requests are
   // under-charged — call out in the label so the user can
   // adjust if needed.
+  // Gemini 3.7 Flash (Aug 13, 2026) — Google's new efficient
+  // tier. Introductory rate $0.75/$3.75 (lower than 3.6 Flash
+  // at $1.50/$7.50); the rate doubles on Jan 1, 2027 per
+  // Google's pricing page. MUST come BEFORE the 3.6 Flash
+  // pattern (different major.minor, so the regex doesn't
+  // shadow, but the order is for clarity / future-proofing).
+  { match: /^gemini-3\.7-flash/,     price: { input: 0.75,  output: 3.75,  provider: "google", label: "Gemini 3.7 Flash (Aug 13, 2026; intro rate, doubles Jan 1 2027)" } },
   { match: /^gemini-3\.6-flash/,     price: { input: 1.50,  output: 7.50,  provider: "google", label: "Gemini 3.6 Flash (Jul 21, 2026; replaces 3.5 Flash)" } },
   { match: /^gemini-3\.5-flash-lite/,price: { input: 0.30,  output: 2.50,  provider: "google", label: "Gemini 3.5 Flash-Lite (Jul 21, 2026)" } },
   { match: /^gemini-3\.5-flash/,     price: { input: 1.50,  output: 9.00,  provider: "google", label: "Gemini 3.5 Flash (deprecated by 3.6 Flash)" } },
@@ -519,6 +535,7 @@ const TABLE: Array<{ match: RegExp; price: ModelPrice }> = [
   // 3.7 patterns must come BEFORE the 3.6 patterns (same
   // prefix-stealing class as o1-mini vs o1 / gpt-5.6 vs
   // gpt-5 / muse-spark vs muse).
+  { match: /^qwen3\.8/,             price: { input: 2.00,  output: 6.00,  provider: "alibaba", label: "Qwen 3.8 Max (Aug 3, 2026; 2.4T MoE flagship, $2/$6)" } },
   { match: /^qwen3\.7-max/,         price: { input: 1.25,  output: 3.75,  provider: "alibaba", label: "Qwen 3.7 Max (50% promo off $2.50/$7.50 list)" } },
   { match: /^qwen3\.7-plus/,        price: { input: 0.32,  output: 1.28,  provider: "alibaba", label: "Qwen 3.7 Plus (Jun 1, 2026; tiered by context)" } },
   { match: /^qwen3\.6-plus/,        price: { input: 0.325, output: 1.95,  provider: "alibaba", label: "Qwen 3.6 Plus (Apr 2, 2026, OpenRouter)" } },
@@ -573,6 +590,13 @@ const TABLE: Array<{ match: RegExp; price: ModelPrice }> = [
   // and 5.1 patterns MUST come BEFORE the bare `^glm-5/`
   // and `^glm-5$` catch-alls (same prefix-stealing class
   // as o1-mini vs o1 / gpt-5.6 vs gpt-5).
+  // GLM-5.3 (Aug 14, 2026) — Z.ai's coding / agent flagship
+  // on the GLM-5.2 base. Priced at the same $1.40/$4.40 as
+  // GLM-5.2 (no premium over the previous gen). Must come
+  // BEFORE the bare `^glm-5\.2/` pattern so the explicit
+  // entry wins on first-match-wins iteration.
+  { match: /^zai\/glm-5\.3/,        price: { input: 1.40,  output: 4.40,  provider: "zhipu", label: "Z.ai GLM-5.3 (Aug 14, 2026; coding flagship on 5.2 base)" } },
+  { match: /^glm-5\.3/,             price: { input: 1.40,  output: 4.40,  provider: "zhipu", label: "Z.ai GLM-5.3" } },
   { match: /^zai\/glm-5\.2-fast/,   price: { input: 2.10,  output: 6.60,  provider: "zhipu", label: "Z.ai GLM-5.2 Fast (Jun 23, 2026)" } },
   { match: /^glm-5\.2-fast/,        price: { input: 2.10,  output: 6.60,  provider: "zhipu", label: "Z.ai GLM-5.2 Fast" } },
   { match: /^zai\/glm-5\.2/,         price: { input: 1.40,  output: 4.40,  provider: "zhipu", label: "Z.ai GLM-5.2 (Jun 16, 2026)" } },
@@ -641,6 +665,24 @@ const TABLE: Array<{ match: RegExp; price: ModelPrice }> = [
   { match: /^tencent\/hy3/,            price: { input: 0.14, output: 0.58, provider: "tencent", label: "Tencent Hy3 (Hunyuan 3, 295B MoE / 21B active, 256K ctx)" } },
   { match: /^hunyuan/,                 price: { input: 0.14, output: 0.58, provider: "tencent", label: "Hunyuan 3 / Hy3 (Tencent)" } },
   { match: /^hy3/,                     price: { input: 0.14, output: 0.58, provider: "tencent", label: "Hy3 (Tencent Hunyuan 3)" } },
+  // Hy-MT2 translation models (Aug 20, 2026) — Tencent's
+  // translation-specific line. 33 language pairs, 8K
+  // context. Two tiers:
+  //   hy-mt2-1.8b    $0.044 / $0.177 (compact, 1.8B dense)
+  //   hy-mt2-30b-a3b $0.074 / $0.295 (flagship, 30B MoE / 3B active)
+  // The 30b-a3b pattern must come BEFORE the bare `^hy-mt2/`
+  // catch-all. The `^hy-mt2-1\.8b/` pattern must also come
+  // before the catch-all (it would otherwise match).
+  { match: /^hy-mt2-1\.8b/,          price: { input: 0.044, output: 0.177, provider: "tencent", label: "Tencent Hy-MT2 1.8B (translation, $0.044/$0.177, 8K ctx)" } },
+  { match: /^hy-mt2-30b-a3b/,        price: { input: 0.074, output: 0.295, provider: "tencent", label: "Tencent Hy-MT2 30B-A3B (translation, $0.074/$0.295, 8K ctx)" } },
+  { match: /^hy-mt2/,                price: { input: 0.074, output: 0.295, provider: "tencent", label: "Tencent Hy-MT2 (unknown version; default 30B rate)" } },
+  // Ox Alpha (Aug 20, 2026) — OpenRouter stealth model,
+  // free preview ($0/$0 per million tokens). 1M context,
+  // multimodal (text + image + video), tool calling. The
+  // identity of the provider is undisclosed during the
+  // preview window. Must come BEFORE the bare `^stealth/`
+  // catch-all if/when more stealth models are added.
+  { match: /^stealth\/ox-alpha/,     price: { input: 0,     output: 0,     provider: "openrouter", label: "Ox Alpha (stealth/ox-alpha; $0/$0 free preview through ~Aug 27)" } },
 ];
 
 const FALLBACK: ModelPrice = { input: 0, output: 0, label: "unknown" };

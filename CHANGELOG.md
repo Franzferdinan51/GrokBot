@@ -16,6 +16,54 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## Unreleased
 
+### Cost: 8 new model families priced (August 2026 model wave — were $0/$0 unknown)
+
+Eight new model families landed in August 2026. Pre-fix:
+every call fell through to the unknown-model $0/$0
+fallback — a 100% under-count on every real charge.
+
+- `qwen3.8-max` — $2.00 / $6.00 (Aug 3, 2026; Alibaba
+  2.4T MoE flagship). Matches the bare `^qwen3\.8/`
+  catch-all as well (so `qwen3.8-plus`,
+  `qwen3.8-mini`, etc. land at the same rate until
+  per-tier entries are added)
+- `muse-spark-1.2` — $1.25 / $4.25 (Aug 5, 2026; Meta
+  paid agentic, same rate as 1.1)
+- `gemini-3.7-flash` — $0.75 / $3.75 (Aug 13, 2026;
+  Google efficient tier; **introductory rate that
+  doubles on Jan 1, 2027** — the label flags this so a
+  future auditor knows to update the rate)
+- `glm-5.3` — $1.40 / $4.40 (Aug 14, 2026; Z.ai
+  coding / agent flagship on the GLM-5.2 base, same
+  rate as 5.2 — no premium over the previous gen)
+- `deepseek-v4-flash-vision` — $0.15 / $0.29
+  (Aug 21, 2026; DeepSeek's first vision-capable V4
+  entry, experimental. Billed at the same per-million-
+  token rate as text V4-Flash; images cost up to 384
+  tokens each, no separate image surcharge)
+- `hy-mt2-1.8b` — $0.044 / $0.177 (Aug 20, 2026;
+  Tencent translation flagship, compact tier)
+- `hy-mt2-30b-a3b` — $0.074 / $0.295 (Aug 20, 2026;
+  Tencent translation flagship, 30B MoE / 3B active)
+- `stealth/ox-alpha` — $0 / $0 (Aug 20, 2026;
+  OpenRouter stealth model, free preview through
+  ~Aug 27. 1M context, multimodal, tool calling.
+  Provider identity undisclosed during preview)
+
+All specific patterns are placed BEFORE their respective
+catch-alls (same prefix-stealing discipline as
+o1-mini vs o1 / gpt-5.6 vs gpt-5).
+
+One new test in `src/__tests__/cost-approval.test.ts`:
+- `priceFor: Qwen 3.8 Max + Muse Spark 1.2 + Gemini 3.7
+  Flash + GLM-5.3 + DeepSeek V4 Flash Vision + Hy-MT2
+  + Ox Alpha priced` (one test covers all 8 families
+  for compactness, with per-family `assert.equal` and
+  `callCost` sanity checks for 3 of them)
+
+876 → 877 pass / 0 fail across 54 files (+1 test).
+5/5 stable full-suite runs.
+
 ### Fix: xai / grok OAuth tokens now auto-refresh in ProviderRegistry (high-impact UX bug)
 
 The `ProviderRegistry.buildProvider` path had a codex
