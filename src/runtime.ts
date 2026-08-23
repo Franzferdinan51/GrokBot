@@ -354,7 +354,15 @@ export class HarnessRuntime implements SlashRuntime {
       return { ok: false, reason: "missing OAuth tokens" };
     }
     persist(this.settings, tokens, opts);
+    // Invalidate BOTH the "xai" and "grok" cache entries —
+    // they are aliases for the same xAI API (both use
+    // https://api.x.ai/v1 and share the same OAuth metadata
+    // shape). Without invalidating both, a subsequent
+    // `providerRegistry.get("grok")` would return a
+    // cached `grok` provider holding the stale OAuth token
+    // — even though the `xai` cache entry was just refreshed.
     this.providerRegistry.invalidate("xai");
+    this.providerRegistry.invalidate("grok");
     return { ok: true };
   }
 

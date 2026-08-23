@@ -16,6 +16,40 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## Unreleased
 
+### Fix: saveXaiOAuthTokens now invalidates BOTH xai AND grok cache entries (high-impact alias bug)
+
+`HarnessRuntime.saveXaiOAuthTokens` called
+`providerRegistry.invalidate("xai")` but did NOT
+invalidate `"grok"` — even though `grok` is an alias
+preset for the same xAI API (both use
+`https://api.x.ai/v1` and share the same OAuth
+metadata shape `profile.options.xaiOAuth.{refreshToken,expiresAt}`).
+
+Impact: a user who has both xai and grok cached, then
+runs `ch provider login xai` to refresh xai OAuth
+tokens, would see the xai provider correctly
+rebuilt with the new token — but the next
+`get("grok")` call would return the CACHED grok
+provider holding the STALE OAuth token. The user
+would get 401s on every grok call until the
+registry TTL expired. Pre-fix, the only way to
+clear this was to restart the process.
+
+Fix: invalidate both `"xai"` and `"grok"` cache
+entries in `saveXaiOAuthTokens`. Symmetric with
+the registry's `buildProvider` xai / grok OAuth
+branch (which already treats both as aliases for
+the same xAI API).
+
+One new test in `src/__tests__/xai-oauth.test.ts`:
+- `saveXaiOAuthTokens invalidates BOTH xai and
+  grok cache entries` — builds both providers
+  (caches them), calls `saveXaiOAuthTokens`, and
+  asserts the cache is cleared for both ids.
+
+877 → 878 pass / 0 fail across 54 files (+1 test).
+5/5 stable full-suite runs.
+
 ### Cost: 8 new model families priced (August 2026 model wave — were $0/$0 unknown)
 
 Eight new model families landed in August 2026. Pre-fix:

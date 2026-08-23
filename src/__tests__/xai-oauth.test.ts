@@ -430,6 +430,94 @@ describe("xai OAuth: applyXaiOAuthTokens", () => {
 // Same caveat as the codex branch.
 
 describe("xai OAuth: registry buildProvider", { concurrency: 1 }, () => {
+  test("saveXaiOAuthTokens invalidates BOTH xai and grok cache entries (grok is an alias for xAI)", async () => {
+    // The xai and grok presets share the same OAuth metadata
+    // shape (profile.options.xaiOAuth.{refreshToken,expiresAt})
+    // and the same baseUrl (https://api.x.ai/v1). They are
+    // aliases for the same xAI API. The runtime's
+    // saveXaiOAuthTokens method must invalidate BOTH cache
+    // entries — pre-fix, only the "xai" entry was invalidated,
+    // so a subsequent get("grok") returned a cached provider
+    // holding the STALE OAuth token even after xai was
+    // refreshed. This is a high-impact bug for users who
+    // switch between xai and grok aliases — they would see
+    // 401s on the stale alias until the registry TTL expired.
+    await withTempHome(async () => {
+      const { HarnessRuntime } = await import("../runtime.js");
+      const rt = new HarnessRuntime({ cwd: process.cwd(), ephemeral: true });
+      const reg = (rt as unknown as { providerRegistry: { get(id: string): unknown; cache: Map<string, unknown> } }).providerRegistry;
+
+      // Seed settings with both xai and grok OAuth profiles.
+      // Both use the same OAuth metadata shape (xaiOAuth key).
+      const settings = {
+        defaultProvider: "xai",
+        providers: {
+          xai: {
+            id: "xai",
+            baseUrl: "https://api.x.ai/v1",
+            model: "grok-4.5",
+            authMode: "oauth",
+            oauthToken: "xai-access-token-OLD",
+            options: {
+              xaiOAuth: {
+                refreshToken: "xai-refresh-token-OLD",
+                expiresAt: Date.now() + 3600_000,
+              },
+            },
+          },
+          grok: {
+            id: "grok",
+            baseUrl: "https://api.x.ai/v1",
+            model: "grok-4.5",
+            authMode: "oauth",
+            oauthToken: "grok-access-token-OLD",
+            options: {
+              xaiOAuth: {
+                refreshToken: "grok-refresh-token-OLD",
+                expiresAt: Date.now() + 3600_000,
+              },
+            },
+          },
+        },
+      } as Parameters<typeof rt.saveXaiOAuthTokens>[1] extends infer _ ? Parameters<typeof rt.saveXaiOAuthTokens>[1] : never;
+      // Save via the runtime's saveXaiOAuthTokens so the
+      // cache invalidation logic is exercised.
+      saveSettings(settings as never);
+      const { ProviderRegistry } = await import("../providers/registry.js");
+      const freshReg = new ProviderRegistry(loadSettings());
+      // Build both providers (they get cached).
+      freshReg.get("xai");
+      freshReg.get("grok");
+      // Both should now be in the cache.
+      const cache = (freshReg as unknown as { cache: Map<string, unknown> }).cache;
+      assert.ok(cache.has("xai"), "xai provider should be cached after get('xai')");
+      assert.ok(cache.has("grok"), "grok provider should be cached after get('grok')");
+
+      // Swap the registry into the runtime via the private
+      // `providerRegistry` setter — there is no public API
+      // for this. (The test is intentionally poking at
+      // internals; the public-facing surface is the
+      // `loginXaiOAuth` flow, which is exercised by the
+      // other xai-oauth tests in this file.)
+      (rt as unknown as { providerRegistry: typeof freshReg }).providerRegistry = freshReg;
+
+      // Now call saveXaiOAuthTokens with a fresh token. The
+      // post-fix behavior invalidates BOTH xai and grok
+      // cache entries (pre-fix only invalidated xai).
+      const result = await rt.saveXaiOAuthTokens(
+        {
+          accessToken: "xai-access-token-NEW",
+          refreshToken: "xai-refresh-token-NEW",
+          expiresAt: Date.now() + 3600_000,
+        },
+        { makeDefault: true },
+      );
+      assert.equal(result.ok, true);
+      assert.ok(!cache.has("xai"), "xai cache entry should be invalidated after saveXaiOAuthTokens");
+      assert.ok(!cache.has("grok"), "grok cache entry should be invalidated after saveXaiOAuthTokens (post-fix)");
+    });
+  });
+
   test("ProviderRegistry.get('xai') constructs an OpenAICompat provider (not CodexProvider) for the xai OAuth branch", async () => {
     // The unit-level test for the auto-refresh path lives in
     // the xai-oauth.test.ts "refresh" describe block above —
