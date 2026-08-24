@@ -16,6 +16,47 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## Unreleased
 
+### Fix: xai OAuth login no longer flips defaultProvider from "grok" to "xai" (alias-aware default preservation)
+
+`applyXaiOAuthTokens` always set
+`settings.defaultProvider = "xai"` on a successful
+login (unless `makeDefault: false`). The xai and grok
+presets are aliases for the same xAI API (both use
+`https://api.x.ai/v1` and share the same OAuth
+metadata shape `profile.options.xaiOAuth.{refreshToken,expiresAt}`).
+
+Impact: a user whose `defaultProvider` was `"grok"`
+and who ran `ch provider login xai` to refresh their
+OAuth tokens would silently get their default
+flipped to `"xai"`. The next agent run would use
+the xai alias instead of grok, even though the
+two are interchangeable from the user's
+perspective. The user had to manually run
+`/provider grok` after every login to switch back.
+
+Fix: if the current `defaultProvider` is one of the
+xAI aliases (`"xai"` OR `"grok"`), leave it alone.
+Only flip to `"xai"` if the user is currently on a
+different provider. The alias-preservation logic
+is a no-op for users who were already on `"xai"`
+(their default stays `"xai"`), and it only kicks
+in for the `"grok"` → `"xai"` and `"xai"` → `"grok"`
+cross-flip cases.
+
+Three new tests in `src/__tests__/xai-oauth.test.ts`:
+- `preserves defaultProvider when it is the xAI
+  alias 'grok'` — pins the post-fix behavior
+- `preserves defaultProvider when it is already
+  'xai'` — regression guard
+- `flips defaultProvider to 'xai' when the user is
+  on a different provider` — confirms the alias
+  logic only kicks in for xAI aliases (the login
+  flow should still flip the default when the user
+  is coming from openai / anthropic / etc.)
+
+878 → 881 pass / 0 fail across 54 files (+3 tests).
+5/5 stable full-suite runs.
+
 ### Fix: saveXaiOAuthTokens now invalidates BOTH xai AND grok cache entries (high-impact alias bug)
 
 `HarnessRuntime.saveXaiOAuthTokens` called

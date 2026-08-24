@@ -307,7 +307,23 @@ export function applyXaiOAuthTokens(
   if (opts?.model) profile.model = opts.model;
   settings.providers.xai = profile;
   if (opts?.makeDefault !== false) {
-    settings.defaultProvider = "xai";
+    // If the user was already on an xAI alias (grok or xai),
+    // keep their current default. The xai and grok presets
+    // share the same OAuth metadata shape and the same
+    // baseUrl (https://api.x.ai/v1) — they're aliases for
+    // the same xAI API. Flipping the default from "grok"
+    // to "xai" on every login would silently change which
+    // alias the next agent run uses, which is surprising
+    // and destructive. Pre-fix, the default always flipped
+    // to "xai" on login, forcing the user to manually
+    // switch back to "grok" after every refresh. Post-fix:
+    // if the current default is one of the xAI aliases,
+    // leave it alone; only flip to "xai" if the user was
+    // on a different provider.
+    const currentDefault = settings.defaultProvider;
+    if (currentDefault !== "xai" && currentDefault !== "grok") {
+      settings.defaultProvider = "xai";
+    }
     settings.defaultModel = profile.model ?? settings.defaultModel;
   }
   return settings;

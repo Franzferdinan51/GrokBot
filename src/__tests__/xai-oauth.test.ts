@@ -409,6 +409,58 @@ describe("xai OAuth: applyXaiOAuthTokens", () => {
     }, { makeDefault: false });
     assert.equal(settings.defaultProvider, "openai");
   });
+
+  test("preserves defaultProvider when it is the xAI alias 'grok' (post-fix: alias-aware default)", () => {
+    // The xai and grok presets are aliases for the same xAI
+    // API (both use https://api.x.ai/v1 and share the same
+    // OAuth metadata shape). Pre-fix: when a user whose
+    // defaultProvider was "grok" ran `ch provider login xai`
+    // to refresh their OAuth tokens, the default would
+    // silently flip from "grok" to "xai" — the user would
+    // then have to manually run `/provider grok` to switch
+    // back. Post-fix: if the current default is one of the
+    // xAI aliases (xai OR grok), applyXaiOAuthTokens leaves
+    // it alone. The xai and grok OAuth flows are
+    // interchangeable from the user's perspective, so the
+    // default should be stable across logins.
+    const settings: Settings = { defaultProvider: "grok", providers: {} };
+    applyXaiOAuthTokens(settings, {
+      accessToken: "xai-access-token-alias",
+      refreshToken: "xai-refresh-token-alias",
+      expiresAt: Date.now() + 3600_000,
+    });
+    assert.equal(settings.defaultProvider, "grok", "default should stay grok after xai login");
+  });
+
+  test("preserves defaultProvider when it is already 'xai' (no flip on re-login)", () => {
+    // If the user is already on "xai" and runs `ch provider
+    // login xai` again (to refresh), the default should
+    // stay "xai" (obviously), but this test pins the
+    // behavior to catch a future regression where someone
+    // might accidentally flip it to something else.
+    const settings: Settings = { defaultProvider: "xai", providers: {} };
+    applyXaiOAuthTokens(settings, {
+      accessToken: "xai-access-token-relogin",
+      refreshToken: "xai-refresh-token-relogin",
+      expiresAt: Date.now() + 3600_000,
+    });
+    assert.equal(settings.defaultProvider, "xai");
+  });
+
+  test("flips defaultProvider to 'xai' when the user is on a different provider", () => {
+    // If the user is currently on, say, "openai" and runs
+    // `ch provider login xai`, the default SHOULD flip to
+    // "xai" — that's the whole point of the login flow.
+    // The alias-preservation logic only kicks in for the
+    // xAI aliases themselves.
+    const settings: Settings = { defaultProvider: "openai", providers: {} };
+    applyXaiOAuthTokens(settings, {
+      accessToken: "xai-access-token-flip",
+      refreshToken: "xai-refresh-token-flip",
+      expiresAt: Date.now() + 3600_000,
+    });
+    assert.equal(settings.defaultProvider, "xai");
+  });
 });
 
 // ---------------------------------------------------------------------------
