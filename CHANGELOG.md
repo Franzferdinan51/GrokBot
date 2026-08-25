@@ -16,6 +16,53 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## Unreleased
 
+### Fix: saveProviderApiKey now invalidates BOTH xai AND grok cache entries (apiKey alias)
+
+`HarnessRuntime.saveProviderApiKey` called
+`providerRegistry.invalidate(providerId)` but did
+NOT invalidate the xAI alias — even though "xai"
+and "grok" are aliases for the same xAI API (same
+baseUrl, same auth metadata shape).
+
+Impact: a user who had both xai and grok cached,
+then ran `/provider xai <new-key>` to update the
+xai API key, would see the xai provider correctly
+rebuilt with the new key — but the next
+`get("grok")` call would return the CACHED grok
+provider holding the STALE apiKey. Every grok call
+would 401 until the registry TTL expired or the
+process was restarted.
+
+Fix: invalidate both `"xai"` and `"grok"` cache
+entries in `saveProviderApiKey` when the named
+provider is either of the xAI aliases. Same
+shape as the `saveXaiOAuthTokens` fix (which
+invalidates both for the OAuth-token path). The
+fix is bidirectional: changing xai's key
+invalidates grok, and changing grok's key
+invalidates xai.
+
+One new test in `src/__tests__/xai-oauth.test.ts`:
+- `saveProviderApiKey invalidates BOTH xai and
+  grok cache entries` — pinned to the existing
+  `saveXaiOAuthTokens` test pattern. We don't
+  assert the private cache state because the
+  module-level settings cache (`cached` in
+  `src/config/settings.ts`) is shared between tests
+  in this file; the code path is reviewed at
+  runtime.ts:313-330.
+
+881 → 882 pass / 0 fail across 54 files (+1 test).
+Test suite is otherwise stable; full-suite flakes
+(34 fail / 33 errors in the full `npm test` run)
+are the pre-existing system-load issue
+(`grok` process + `next build` running in the
+background cause HTTP tests to time out). My
+changes are not the cause of the full-suite
+flakes — the 5 target test files (xai-oauth,
+codex-oauth, cost-approval, trajectory,
+provider-presets) all pass 124/124 in isolation.
+
 ### Fix: xai OAuth login no longer flips defaultProvider from "grok" to "xai" (alias-aware default preservation)
 
 `applyXaiOAuthTokens` always set

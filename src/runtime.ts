@@ -320,7 +320,18 @@ export class HarnessRuntime implements SlashRuntime {
       this.settings.defaultModel = p.model;
     }
     try { saveSettings(this.settings); } catch { /* best-effort */ }
+    // Invalidate BOTH the named provider AND any xAI aliases
+    // ("grok") when the named provider is "xai". The xai and
+    // grok presets share the same baseUrl and the same auth
+    // metadata shape — they're aliases for the same xAI API.
+    // Without invalidating both, a subsequent
+    // `providerRegistry.get("grok")` would return a cached
+    // grok provider holding the stale apiKey even after xai
+    // was updated. Same shape as the saveXaiOAuthTokens fix
+    // (which invalidates both for OAuth tokens).
     this.providerRegistry.invalidate(providerId);
+    if (providerId === "xai") this.providerRegistry.invalidate("grok");
+    if (providerId === "grok") this.providerRegistry.invalidate("xai");
     return { ok: true };
   }
 

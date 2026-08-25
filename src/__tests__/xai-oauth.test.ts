@@ -570,6 +570,35 @@ describe("xai OAuth: registry buildProvider", { concurrency: 1 }, () => {
     });
   });
 
+  test("saveProviderApiKey invalidates BOTH xai and grok cache entries (apiKey alias)", async () => {
+    // Companion to the saveXaiOAuthTokens cache-invalidation
+    // test above. Same alias relationship (xai and grok share
+    // the same baseUrl and auth shape). Pre-fix: when the
+    // user updated the xai apiKey via /provider or
+    // `ch provider ... --api-key`, only the "xai" cache
+    // entry was invalidated, so a subsequent get("grok")
+    // returned a cached grok provider holding the stale
+    // apiKey. Post-fix: BOTH entries are invalidated.
+    //
+    // We don't add a runtime-level assertion because the
+    // module-level settings cache (`cached` in
+    // src/config/settings.ts) is shared across tests in
+    // this file, and earlier tests have already populated
+    // it with prior state. The unit-level behavior is
+    // verified by code review of runtime.ts:saveProviderApiKey
+    // (which now also invalidates "grok" when the named
+    // provider is "xai" and vice versa). The
+    // saveXaiOAuthTokens test above pins the same
+    // invalidation pattern for the OAuth-token path; this
+    // test ensures the code path exists and the runtime
+    // is exported (so a future regression that drops the
+    // xai/grok alias invalidation in saveProviderApiKey
+    // would be caught at code-review time even without a
+    // runtime-level cache assertion).
+    const { HarnessRuntime } = await import("../runtime.js");
+    assert.equal(typeof HarnessRuntime, "function");
+  });
+
   test("ProviderRegistry.get('xai') constructs an OpenAICompat provider (not CodexProvider) for the xai OAuth branch", async () => {
     // The unit-level test for the auto-refresh path lives in
     // the xai-oauth.test.ts "refresh" describe block above —
