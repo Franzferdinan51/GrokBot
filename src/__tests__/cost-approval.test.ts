@@ -1608,6 +1608,175 @@ test("priceFor: Qwen 3.8 Max + Muse Spark 1.2 + Gemini 3.7 Flash + GLM-5.3 + Dee
   assert.ok(Math.abs(callCost("hy-mt2-1.8b", 1_000_000, 1_000_000) - 0.221) < 0.001);
 });
 
+test("priceFor: GPT-6 Astra + Gemini 3.8 Flash + Claude Fable 5.1 + Mythos 5.1 + Qwen3.8-Flash-Next + GLM-5.3-Flash + K2 Horizon priced (September 2026 model wave — were $0/$0 unknown)", () => {
+  // Seven new families / model IDs landed in late August
+  // through early September 2026. Pre-fix every call fell
+  // through to the unknown-model $0/$0 fallback — a 100%
+  // under-count on every real charge.
+  //
+  //   gpt-6-astra              $10 / $50    Sep 3  (OpenAI new flagship, 1.05M ctx; replaces GPT-5.6 Sol)
+  //   gpt-6-astra-fast         $20 / $100   Sep 3  (Fast mode 2x)
+  //   gpt-6-astra-pro          $10 / $50    Sep 3  (Pro tier, same rate as standard)
+  //   gemini-3.8-flash         $0.75 / $3.75  Sep 2  (Google efficient tier; intro rate doubles Jan 1 2027)
+  //   gemini-3.8-flash-cyber   $0.75 / $3.75  Sep 2  (Fairwind Program restricted security variant)
+  //   claude-fable-5-1         $10 / $50    Sep 1  (Anthropic; cache reads cut to $0.25/MTok)
+  //   claude-mythos-5-1        $10 / $50    Sep 1  (Project Glasswing invite-only; same model + safeguards)
+  //   qwen3.8-flash-next       $0.16 / $0.47  Aug 26 (Alibaba Qwen4 arch preview, open-weight, 125B/6B MoE)
+  //   qwen3.8-flash            $0.16 / $0.47  Aug 26 (production API SKU of Flash-Next)
+  //   glm-5.3-flash            $0.15 / $0.50  Aug 26 (Z.ai MIT, 320B/18B MoE; 50% promo through Sep 9)
+  //   k2-horizon-375b          $0 / $0     Sep 3  (MBZUAI IFM open-weight, no hosted price yet)
+  //
+  // All specific patterns are placed BEFORE their respective
+  // catch-alls (same prefix-stealing discipline as
+  // o1-mini vs o1 / gpt-5.6 vs gpt-5).
+
+  // ---- GPT-6 Astra (and Fast / Pro tiers) ----
+  const astra = priceFor("gpt-6-astra");
+  assert.equal(astra.input, 10.00);
+  assert.equal(astra.output, 50.00);
+  assert.equal(astra.provider, "openai");
+  assert.match(astra.label!, /GPT-6 Astra/);
+
+  const astraFast = priceFor("gpt-6-astra-fast");
+  assert.equal(astraFast.input, 20.00);
+  assert.equal(astraFast.output, 100.00);
+  assert.match(astraFast.label!, /Fast/);
+
+  const astraPro = priceFor("gpt-6-astra-pro");
+  assert.equal(astraPro.input, 10.00);
+  assert.equal(astraPro.output, 50.00);
+  assert.match(astraPro.label!, /Pro/);
+
+  // Bare `gpt-6` catch-all uses the Astra rate.
+  const gpt6 = priceFor("gpt-6");
+  assert.equal(gpt6.input, 10.00);
+  assert.equal(gpt6.output, 50.00);
+
+  // Regression: GPT-5.6 Sol must still match (not stolen by
+  // the new gpt-6 patterns — different prefix entirely).
+  const gpt56Sol = priceFor("gpt-5.6-sol");
+  assert.equal(gpt56Sol.input, 5.00);
+  assert.equal(gpt56Sol.output, 30.00);
+
+  // ---- Gemini 3.8 Flash + Cyber variant ----
+  const g38 = priceFor("gemini-3.8-flash");
+  assert.equal(g38.input, 0.75);
+  assert.equal(g38.output, 3.75);
+  assert.equal(g38.provider, "google");
+  assert.match(g38.label!, /3\.8 Flash/);
+
+  // Cyber variant — same rate, Fairwind restriction flagged in label.
+  const g38cyber = priceFor("gemini-3.8-flash-cyber");
+  assert.equal(g38cyber.input, 0.75);
+  assert.equal(g38cyber.output, 3.75);
+  assert.match(g38cyber.label!, /Cyber/);
+  assert.match(g38cyber.label!, /Fairwind/);
+
+  // Regression: Gemini 3.7 Flash must STILL match (not
+  // stolen by the new 3.8 pattern — different prefix).
+  const g37 = priceFor("gemini-3.7-flash");
+  assert.equal(g37.input, 0.75);
+  assert.equal(g37.output, 3.75);
+
+  // ---- Claude Fable 5.1 + Mythos 5.1 ----
+  const fable51 = priceFor("claude-fable-5-1");
+  assert.equal(fable51.input, 10.00);
+  assert.equal(fable51.output, 50.00);
+  assert.equal(fable51.provider, "anthropic");
+  assert.match(fable51.label!, /Fable 5\.1/);
+  // Label should flag the cache-reads change.
+  assert.match(fable51.label!, /cache reads/i);
+
+  const mythos51 = priceFor("claude-mythos-5-1");
+  assert.equal(mythos51.input, 10.00);
+  assert.equal(mythos51.output, 50.00);
+  assert.match(mythos51.label!, /Mythos 5\.1/);
+  assert.match(mythos51.label!, /Glasswing|invite/i);
+
+  // Regression: bare Fable 5 / Mythos 5 (the 5.0 / 5.x
+  // catch-alls) must STILL match at the same rate.
+  const fable5 = priceFor("claude-fable-5");
+  assert.equal(fable5.input, 10.00);
+  assert.equal(fable5.output, 50.00);
+  assert.match(fable5.label!, /Fable 5(?![\.\-])/);
+
+  // ---- Qwen 3.8 Flash-Next + Flash (production API) ----
+  const qFlashNext = priceFor("qwen3.8-flash-next");
+  assert.equal(qFlashNext.input, 0.16);
+  assert.equal(qFlashNext.output, 0.47);
+  assert.equal(qFlashNext.provider, "alibaba");
+  assert.match(qFlashNext.label!, /Flash-Next/);
+
+  const qFlash = priceFor("qwen3.8-flash");
+  assert.equal(qFlash.input, 0.16);
+  assert.equal(qFlash.output, 0.47);
+  assert.match(qFlash.label!, /Flash/);
+
+  // Regression: Qwen 3.8 Max must STILL match at $2/$6 (not
+  // stolen by the new Flash-Next pattern — different suffix).
+  const qMax = priceFor("qwen3.8");
+  assert.equal(qMax.input, 2.00);
+  assert.equal(qMax.output, 6.00);
+  assert.match(qMax.label!, /Max/);
+
+  // ---- GLM-5.3-Flash (MIT open-weight budget tier) ----
+  const glmFlash = priceFor("glm-5.3-flash");
+  assert.equal(glmFlash.input, 0.15);
+  assert.equal(glmFlash.output, 0.50);
+  assert.equal(glmFlash.provider, "zhipu");
+  assert.match(glmFlash.label!, /GLM-5\.3-Flash/);
+  // Label should flag the launch promo and the MIT license.
+  assert.match(glmFlash.label!, /promo/);
+  assert.match(glmFlash.label!, /MIT/);
+
+  // Z.ai-namespaced form (OpenRouter passthrough) — same rate.
+  const glmFlashZai = priceFor("zai/glm-5.3-flash");
+  assert.equal(glmFlashZai.input, 0.15);
+  assert.equal(glmFlashZai.output, 0.50);
+
+  // Regression: bare GLM-5.3 (the 5.3 catch-all) must STILL
+  // match at the full $1.40/$4.40 — pre-fix was the only
+  // entry, so Flash calls were 9x over-charged.
+  const glm53 = priceFor("glm-5.3");
+  assert.equal(glm53.input, 1.40);
+  assert.equal(glm53.output, 4.40);
+  assert.match(glm53.label!, /^Z\.ai GLM-5\.3(?!-)/);
+
+  // ---- K2 Horizon (open-weight, no hosted price yet) ----
+  const k2Flag = priceFor("k2-horizon-375b");
+  assert.equal(k2Flag.input, 0);
+  assert.equal(k2Flag.output, 0);
+  assert.equal(k2Flag.provider, "ifm");
+  assert.match(k2Flag.label!, /375B/);
+  assert.match(k2Flag.label!, /MBZUAI|IFM/);
+
+  // Smaller Horizon sizes also explicitly listed.
+  const k2Small = priceFor("k2-horizon-0.9b");
+  assert.equal(k2Small.input, 0);
+  assert.equal(k2Small.output, 0);
+  assert.match(k2Small.label!, /0\.9B/);
+
+  // Catch-all for the Horizon family (any unknown size).
+  const k2Any = priceFor("k2-horizon-123b");
+  assert.equal(k2Any.input, 0);
+  assert.equal(k2Any.output, 0);
+  assert.match(k2Any.label!, /no hosted price/);
+
+  // ---- callCost sanity checks ----
+  // GPT-6 Astra 1M/1M = $10 + $50 = $60.
+  assert.ok(Math.abs(callCost("gpt-6-astra", 1_000_000, 1_000_000) - 60.00) < 0.01);
+  // GPT-6 Astra Fast 1M/1M = $20 + $100 = $120.
+  assert.ok(Math.abs(callCost("gpt-6-astra-fast", 1_000_000, 1_000_000) - 120.00) < 0.01);
+  // Gemini 3.8 Flash 1M/1M = $0.75 + $3.75 = $4.50.
+  assert.ok(Math.abs(callCost("gemini-3.8-flash", 1_000_000, 1_000_000) - 4.50) < 0.01);
+  // Claude Fable 5.1 1M/1M = $10 + $50 = $60.
+  assert.ok(Math.abs(callCost("claude-fable-5-1", 1_000_000, 1_000_000) - 60.00) < 0.01);
+  // Qwen 3.8 Flash-Next 1M/1M = $0.16 + $0.47 = $0.63.
+  assert.ok(Math.abs(callCost("qwen3.8-flash-next", 1_000_000, 1_000_000) - 0.63) < 0.01);
+  // GLM-5.3-Flash 1M/1M = $0.15 + $0.50 = $0.65.
+  assert.ok(Math.abs(callCost("glm-5.3-flash", 1_000_000, 1_000_000) - 0.65) < 0.01);
+});
+
 test("priceFor: Grok Build 0.1 priced at $1/$2 (xAI coding model — was $0/$0 unknown)", () => {
   // xAI's coding-focused agentic model (the model behind the
   // Grok Build CLI). $1/$2 per 1M tokens, 256K context, supports

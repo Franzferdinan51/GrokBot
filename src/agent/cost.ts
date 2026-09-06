@@ -26,6 +26,24 @@ const TABLE: Array<{ match: RegExp; price: ModelPrice }> = [
   // pricing page. Real numbers per OpenAI's API pricing
   // page as of July 2026:
   { match: /^gpt-5\.5-pro/,          price: { input: 30.00, output: 180.00, provider: "openai", label: "GPT-5.5 pro" } },
+  // GPT-6 Astra (launched September 3, 2026) — OpenAI's new
+  // frontier flagship replacing the GPT-5.6 Sol/Terra/Luna
+  // lineup. $10/$50 on the standard API tier, 1,050,000-token
+  // context window. Cache reads $1/MTok, cache writes $12.50/
+  // MTok, Fast mode 2x the rate, long-context tier (≥272K
+  // input) bills the WHOLE request at $20/$75. Pre-fix: no
+  // GPT-6 entry existed, so every `gpt-6-astra` call fell
+  // through to the unknown-model $0/$0 fallback — a 100%
+  // under-count on a real $10/$50 per 1M charge. The Fast
+  // mode pattern MUST come BEFORE the bare `^gpt-6-astra/`
+  // catch-all (same prefix-stealing class as the
+  // GPT-5.6 Sol Fast / Sol pair above). Known limitation:
+  // the long-context (≥272K) tier is not modeled — the
+  // label flags it. Same for cache read/write rates.
+  { match: /^gpt-6-astra-fast/,     price: { input: 20.00, output: 100.00, provider: "openai", label: "GPT-6 Astra Fast (2x standard, $20/$100; long-context ≥272K: $40/$150 not modeled)" } },
+  { match: /^gpt-6-astra-pro/,      price: { input: 10.00, output: 50.00,  provider: "openai", label: "GPT-6 Astra Pro (Sep 3, 2026; same rate as standard)" } },
+  { match: /^gpt-6-astra/,          price: { input: 10.00, output: 50.00,  provider: "openai", label: "GPT-6 Astra (Sep 3, 2026; cache $1 read / $12.50 write; long-context ≥272K: $20/$75 not modeled)" } },
+  { match: /^gpt-6/,                price: { input: 10.00, output: 50.00,  provider: "openai", label: "GPT-6 (unknown tier; default Astra rate)" } },
   // GPT-5.6 (Sol/Terra/Luna) — launched July 9, 2026.
   // Must precede the bare /^gpt-5/ prefix (which would
   // otherwise match at the GPT-5 (Aug 2025) $1.25/$10 rate
@@ -175,6 +193,24 @@ const TABLE: Array<{ match: RegExp; price: ModelPrice }> = [
   // come BEFORE the ^claude-sonnet-4- entry if Anthropic
   // ever ships a "claude-sonnet-5-*" variant.
   { match: /^claude-sonnet-5/,       price: { input: 3.00,  output: 15.00, provider: "anthropic", label: "Claude Sonnet 5" } },
+  // Claude Fable 5.1 / Mythos 5.1 (launched September 1,
+  // 2026) — successor to Fable 5 / Mythos 5. SAME list price
+  // ($10/$50), but cache reads were cut 75% (now $0.25/MTok,
+  // down from $1.00/MTok on Fable 5). Cache reads is the
+  // only pricing change Anthropic made on the new tier —
+  // Anthropic estimates 25% cheaper on typical workloads,
+  // up to 45% cheaper on cache-heavy agentic work. The 5.1
+  // patterns MUST come BEFORE the bare `^claude-fable-5/`
+  // and `^claude-mythos-5/` patterns (same prefix-stealing
+  // class as o1-mini vs o1 / gpt-5.6 vs gpt-5). Pre-fix:
+  // no 5.1 entry existed, so every `claude-fable-5-1` call
+  // fell through to the unknown-model $0/$0 fallback — a
+  // 100% under-count on a real $10/$50 per 1M charge.
+  // Known limitation: cache reads at $0.25/MTok are not
+  // modeled separately (the cost tracker doesn't know
+  // about cache hit/miss accounting at the call level).
+  { match: /^claude-fable-5-1/,      price: { input: 10.00, output: 50.00, provider: "anthropic", label: "Claude Fable 5.1 (Sep 1, 2026; cache reads cut to $0.25/MTok, $10/$50 standard)" } },
+  { match: /^claude-mythos-5-1/,     price: { input: 10.00, output: 50.00, provider: "anthropic", label: "Claude Mythos 5.1 (Sep 1, 2026; invite-only via Project Glasswing; same $10/$50)" } },
   // Claude Fable 5 / Mythos 5 (Mythos-class, launched
   // June 9, 2026). $10/$50 — 2x Opus 4.8. Fable is the
   // public version with safety classifiers; Mythos 5 is the
@@ -337,6 +373,21 @@ const TABLE: Array<{ match: RegExp; price: ModelPrice }> = [
   // Google's pricing page. MUST come BEFORE the 3.6 Flash
   // pattern (different major.minor, so the regex doesn't
   // shadow, but the order is for clarity / future-proofing).
+  // Gemini 3.8 Flash + 3.8 Flash Cyber (launched September 2,
+  // 2026) — Google's newest Flash-tier model. $0.75/$3.75 at
+  // the same promotional rate as 3.7 Flash, through
+  // December 31, 2026; standard pricing doubles to
+  // $1.50/$7.50 on January 1, 2027. 1,048,576-token context.
+  // The Cyber variant is a restricted-access defense model
+  // (Fairwind Program only), same rate as the public
+  // version. The 3.8 pattern MUST come BEFORE the bare
+  // `^gemini-3\.7-flash/` catch-all and any other Gemini-3
+  // pattern (same prefix-stealing class as o1-mini vs o1).
+  // Pre-fix: no 3.8 entry existed, so every `gemini-3.8-flash`
+  // call fell through to the unknown-model $0/$0 fallback —
+  // a 100% under-count on a real $0.75/$3.75 per 1M charge.
+  { match: /^gemini-3\.8-flash-cyber/, price: { input: 0.75, output: 3.75, provider: "google", label: "Gemini 3.8 Flash Cyber (Sep 2, 2026; Fairwind Program, restricted; $0.75/$3.75 intro through Dec 31 2026)" } },
+  { match: /^gemini-3\.8-flash/,     price: { input: 0.75,  output: 3.75,  provider: "google", label: "Gemini 3.8 Flash (Sep 2, 2026; intro rate, doubles Jan 1 2027)" } },
   { match: /^gemini-3\.7-flash/,     price: { input: 0.75,  output: 3.75,  provider: "google", label: "Gemini 3.7 Flash (Aug 13, 2026; intro rate, doubles Jan 1 2027)" } },
   { match: /^gemini-3\.6-flash/,     price: { input: 1.50,  output: 7.50,  provider: "google", label: "Gemini 3.6 Flash (Jul 21, 2026; replaces 3.5 Flash)" } },
   { match: /^gemini-3\.5-flash-lite/,price: { input: 0.30,  output: 2.50,  provider: "google", label: "Gemini 3.5 Flash-Lite (Jul 21, 2026)" } },
@@ -535,6 +586,21 @@ const TABLE: Array<{ match: RegExp; price: ModelPrice }> = [
   // 3.7 patterns must come BEFORE the 3.6 patterns (same
   // prefix-stealing class as o1-mini vs o1 / gpt-5.6 vs
   // gpt-5 / muse-spark vs muse).
+  // Qwen3.8-Flash-Next (Aug 26, 2026) — Alibaba's
+  // cost-efficient workhorse and the architectural preview
+  // for the upcoming Qwen4 generation. 125B+51B+4B / 6B
+  // active MoE, 1M context, open-weight on Hugging Face
+  // (Qwen/Qwen3.8-Flash-Next). The production API SKU on
+  // QwenCloud is `qwen3.8-flash` at $0.16/$0.47 per 1M
+  // tokens — roughly 12x cheaper than Qwen3.8-Max on both
+  // axes. The Flash-Next and Flash patterns MUST come
+  // BEFORE the bare `^qwen3\.8/` catch-all (same prefix-
+  // stealing class as o1-mini vs o1 / gpt-5.6 vs gpt-5).
+  // Pre-fix: no Flash-Next entry existed, so every
+  // `qwen3.8-flash` call fell through to Qwen3.8 Max at
+  // $2/$6 — a 12x over-charge on every Flash-Next call.
+  { match: /^qwen3\.8-flash-next/,  price: { input: 0.16,  output: 0.47,  provider: "alibaba", label: "Qwen 3.8 Flash-Next (Aug 26, 2026; 125B/6B MoE, Qwen4 arch preview, open weight, $0.16/$0.47)" } },
+  { match: /^qwen3\.8-flash/,       price: { input: 0.16,  output: 0.47,  provider: "alibaba", label: "Qwen 3.8 Flash (Aug 26, 2026; Flash-Next production API SKU, $0.16/$0.47)" } },
   { match: /^qwen3\.8/,             price: { input: 2.00,  output: 6.00,  provider: "alibaba", label: "Qwen 3.8 Max (Aug 3, 2026; 2.4T MoE flagship, $2/$6)" } },
   { match: /^qwen3\.7-max/,         price: { input: 1.25,  output: 3.75,  provider: "alibaba", label: "Qwen 3.7 Max (50% promo off $2.50/$7.50 list)" } },
   { match: /^qwen3\.7-plus/,        price: { input: 0.32,  output: 1.28,  provider: "alibaba", label: "Qwen 3.7 Plus (Jun 1, 2026; tiered by context)" } },
@@ -595,6 +661,22 @@ const TABLE: Array<{ match: RegExp; price: ModelPrice }> = [
   // GLM-5.2 (no premium over the previous gen). Must come
   // BEFORE the bare `^glm-5\.2/` pattern so the explicit
   // entry wins on first-match-wins iteration.
+  // GLM-5.3-Flash (Aug 26, 2026) — Z.ai's budget tier and
+  // the direct rival to Qwen3.8-Flash-Next. 320B/18B-active
+  // MoE, 1M context, MIT-licensed open weights on Hugging
+  // Face. List price $0.15/$0.50 with a 50% launch promo
+  // through September 9, 2026 ($0.075/$0.25). The Flash
+  // patterns MUST come BEFORE the bare `^glm-5\.3/` and
+  // `^zai\/glm-5\.3/` catch-alls (same prefix-stealing
+  // class as o1-mini vs o1) — pre-fix, every GLM-5.3-Flash
+  // call fell through to GLM-5.3 at $1.40/$4.40, a 9x
+  // over-charge on input and 9x on output. Note the
+  // `^zai\/glm-5\.3-flash/` MUST come BEFORE the existing
+  // `^zai\/glm-5\.3/` on line 664 (which is a prefix match
+  // that would otherwise catch `zai/glm-5.3-flash` at the
+  // GLM-5.3 rate).
+  { match: /^zai\/glm-5\.3-flash/,  price: { input: 0.15,  output: 0.50,  provider: "zhipu", label: "Z.ai GLM-5.3-Flash (Aug 26, 2026; 320B/18B MoE, MIT, $0.15/$0.50; 50% promo through Sep 9 2026)" } },
+  { match: /^glm-5\.3-flash/,       price: { input: 0.15,  output: 0.50,  provider: "zhipu", label: "Z.ai GLM-5.3-Flash (Aug 26, 2026; 320B/18B MoE, MIT, $0.15/$0.50; 50% promo through Sep 9 2026)" } },
   { match: /^zai\/glm-5\.3/,        price: { input: 1.40,  output: 4.40,  provider: "zhipu", label: "Z.ai GLM-5.3 (Aug 14, 2026; coding flagship on 5.2 base)" } },
   { match: /^glm-5\.3/,             price: { input: 1.40,  output: 4.40,  provider: "zhipu", label: "Z.ai GLM-5.3" } },
   { match: /^zai\/glm-5\.2-fast/,   price: { input: 2.10,  output: 6.60,  provider: "zhipu", label: "Z.ai GLM-5.2 Fast (Jun 23, 2026)" } },
@@ -683,6 +765,27 @@ const TABLE: Array<{ match: RegExp; price: ModelPrice }> = [
   // preview window. Must come BEFORE the bare `^stealth/`
   // catch-all if/when more stealth models are added.
   { match: /^stealth\/ox-alpha/,     price: { input: 0,     output: 0,     provider: "openrouter", label: "Ox Alpha (stealth/ox-alpha; $0/$0 free preview through ~Aug 27)" } },
+  // K2 Horizon (Sep 3, 2026) — MBZUAI's Institute of
+  // Foundation Models released a fleet of six open-weight
+  // models (0.9B → 375B-A23B flagship, 47 on the Artificial
+  // Analysis Intelligence Index). All weights under Apache
+  // 2.0, training data + code + recipes also published.
+  // NO hosted commercial price yet — IFM serves via
+  // inference partners (Compass, Cerebras, Nebius) but
+  // published list price is unset. Until a hosted price
+  // appears, $0/$0 is correct for the cost tracker; the
+  // explicit entry prevents the model from being hidden
+  // in the generic unknown-model fallback. The specific
+  // size patterns (`^k2-horizon-375b/`, `^k2-horizon-36b/`,
+  // etc.) come BEFORE the bare `^k2-horizon/` catch-all
+  // (same prefix-stealing class as o1-mini vs o1).
+  { match: /^k2-horizon-375b/,     price: { input: 0,     output: 0,     provider: "ifm", label: "K2 Horizon 375B-A23B (Sep 3, 2026; MBZUAI IFM open-weight flagship, no hosted price yet)" } },
+  { match: /^k2-horizon-36b/,      price: { input: 0,     output: 0,     provider: "ifm", label: "K2 Horizon 36B-A4B (Sep 3, 2026; MBZUAI IFM open-weight mid-tier)" } },
+  { match: /^k2-horizon-32b/,      price: { input: 0,     output: 0,     provider: "ifm", label: "K2 Horizon 32B (Sep 3, 2026; MBZUAI IFM open-weight dense)" } },
+  { match: /^k2-horizon-7b/,       price: { input: 0,     output: 0,     provider: "ifm", label: "K2 Horizon 7B (Sep 3, 2026; MBZUAI IFM open-weight dense)" } },
+  { match: /^k2-horizon-3\.7b/,    price: { input: 0,     output: 0,     provider: "ifm", label: "K2 Horizon 3.7B (Sep 3, 2026; MBZUAI IFM open-weight dense)" } },
+  { match: /^k2-horizon-0\.9b/,    price: { input: 0,     output: 0,     provider: "ifm", label: "K2 Horizon 0.9B (Sep 3, 2026; MBZUAI IFM open-weight dense)" } },
+  { match: /^k2-horizon/,          price: { input: 0,     output: 0,     provider: "ifm", label: "K2 Horizon (Sep 3, 2026; MBZUAI IFM open-weight, no hosted price yet)" } },
 ];
 
 const FALLBACK: ModelPrice = { input: 0, output: 0, label: "unknown" };

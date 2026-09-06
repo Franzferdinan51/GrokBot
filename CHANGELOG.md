@@ -16,6 +16,69 @@ Format follows [Keep a Changelog](https://keepachangelog.com/).
 
 ## Unreleased
 
+### Fix: 7 new model families priced (September 2026 model wave — were $0/$0 unknown)
+
+Seven new model families / IDs landed in late August through
+early September 2026. Pre-fix every call fell through to
+the unknown-model `$0/$0` fallback — a 100% under-count
+on every real charge. Web-searched and verified against
+vendor pricing pages (OpenAI / Anthropic / Google /
+Alibaba / Z.ai / IFM) on 2026-09-05:
+
+| Model | Input/Output (per 1M) | Provider | Released | Notes |
+|---|---|---|---|---|
+| `gpt-6-astra` | $10 / $50 | openai | Sep 3 | OpenAI new flagship, 1.05M ctx, replaces GPT-5.6 Sol |
+| `gpt-6-astra-fast` | $20 / $100 | openai | Sep 3 | Fast mode 2x standard rate |
+| `gpt-6-astra-pro` | $10 / $50 | openai | Sep 3 | Pro tier, same rate as standard |
+| `gemini-3.8-flash` | $0.75 / $3.75 | google | Sep 2 | Google efficient tier; intro rate doubles Jan 1 2027 |
+| `gemini-3.8-flash-cyber` | $0.75 / $3.75 | google | Sep 2 | Fairwind Program restricted security variant |
+| `claude-fable-5-1` | $10 / $50 | anthropic | Sep 1 | Cache reads cut to $0.25/MTok (75% cut) |
+| `claude-mythos-5-1` | $10 / $50 | anthropic | Sep 1 | Project Glasswing invite-only; same model as Fable 5.1 |
+| `qwen3.8-flash-next` | $0.16 / $0.47 | alibaba | Aug 26 | 125B/6B MoE, Qwen4 arch preview, open-weight |
+| `qwen3.8-flash` | $0.16 / $0.47 | alibaba | Aug 26 | Production API SKU of Flash-Next |
+| `glm-5.3-flash` | $0.15 / $0.50 | zhipu | Aug 26 | 320B/18B MoE, MIT, 50% promo through Sep 9 |
+| `k2-horizon-*` (6 sizes) | $0 / $0 | ifm | Sep 3 | MBZUAI IFM open-weight, no hosted price yet |
+
+All specific patterns placed BEFORE their catch-alls
+(same prefix-stealing discipline as o1-mini vs o1 /
+gpt-5.6 vs gpt-5 / claude-opus-5-fast vs claude-opus-5).
+The `^zai\/glm-5\.3-flash/` pattern is BEFORE the existing
+`^zai\/glm-5\.3/` (which would otherwise prefix-match
+`zai/glm-5.3-flash` at the GLM-5.3 rate — a 9x over-charge
+on input and 9x on output).
+
+Known limitations (flagged in labels):
+- GPT-6 Astra long-context tier (≥272K input) bills the
+  WHOLE request at $20/$75, Fast at $40/$150. Not modeled
+  (cost tracker doesn't inspect prompt length).
+- GPT-6 Astra cache reads at $1/MTok and cache writes at
+  $12.50/MTok are not modeled separately (cost tracker
+  doesn't know cache hit/miss accounting at the call level).
+- Claude Fable 5.1 cache reads at $0.25/MTok are not
+  modeled separately (same reason).
+- Gemini 3.7 + 3.8 Flash promo rate doubles on Jan 1 2027
+  to $1.50/$7.50 (label flags the date).
+- GLM-5.3-Flash 50% launch promo through Sep 9 2026, then
+  reverts to $0.15/$0.50 list (label flags the date).
+- K2 Horizon has no hosted commercial price yet — IFM
+  serves via Compass / Cerebras / Nebius; $0/$0 is correct
+  for the cost tracker until a hosted price appears.
+
+One new test in `src/__tests__/cost-approval.test.ts`:
+- `priceFor: GPT-6 Astra + Gemini 3.8 Flash + Claude
+  Fable 5.1 + Mythos 5.1 + Qwen3.8-Flash-Next +
+  GLM-5.3-Flash + K2 Horizon priced (September 2026
+  model wave — were $0/$0 unknown)` — pins the new
+  rates, the regression guards (GPT-5.6 Sol, Gemini
+  3.7 Flash, Qwen 3.8 Max, bare GLM-5.3 all still
+  match), and the `assert.match` label assertions for
+  future-proofing.
+
+882 → 883 pass / 0 fail across 54 files (+1 test).
+5/5 stable targeted runs (cost-approval, xai-oauth,
+codex-oauth, trajectory, provider-presets all pass in
+isolation). Typecheck clean.
+
 ### Fix: saveProviderApiKey now invalidates BOTH xai AND grok cache entries (apiKey alias)
 
 `HarnessRuntime.saveProviderApiKey` called
